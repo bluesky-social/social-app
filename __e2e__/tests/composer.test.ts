@@ -1,6 +1,9 @@
 /* eslint-env detox/detox */
 
-import {openApp, loginAsAlice, createServer, sleep} from '../util'
+import {beforeAll, describe, it} from '@jest/globals'
+import {expect} from 'detox'
+
+import {createServer, loginAsAlice, openApp, sleep} from '../util'
 
 describe('Composer', () => {
   beforeAll(async () => {
@@ -45,6 +48,8 @@ describe('Composer', () => {
   })
 
   it('Reply text only', async () => {
+    await element(by.id('e2eRefreshHome')).tap()
+
     const post = by.id('feedItem-by-alice.test')
     await element(by.id('replyBtn').withAncestor(post)).atIndex(0).tap()
     await element(by.id('composerTextInput')).typeText('Reply text only')

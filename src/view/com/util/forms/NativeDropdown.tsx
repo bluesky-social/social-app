@@ -1,13 +1,14 @@
 import React from 'react'
+import {Platform, Pressable, StyleSheet, View, ViewStyle} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet, Platform, View} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useTheme} from 'lib/ThemeContext'
+
 import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {isWeb} from 'platform/detection'
 
 // Custom Dropdown Menu Components
 // ==
@@ -151,6 +152,7 @@ type Props = {
   testID?: string
   accessibilityLabel?: string
   accessibilityHint?: string
+  triggerStyle?: ViewStyle
 }
 
 /* The `NativeDropdown` function uses native iOS and Android dropdown menus.

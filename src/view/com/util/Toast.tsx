@@ -1,15 +1,22 @@
-import RootSiblings from 'react-native-root-siblings'
 import React from 'react'
 import {Animated, StyleSheet, View} from 'react-native'
-import {Text} from './text/Text'
+import RootSiblings from 'react-native-root-siblings'
+import {Props as FontAwesomeProps} from '@fortawesome/react-native-fontawesome'
+
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {IS_TEST} from '#/env'
+import {Text} from './text/Text'
 
 const TIMEOUT = 4e3
 
-export function show(message: string) {
+export function show(
+  message: string,
+  _icon: FontAwesomeProps['icon'] = 'check',
+) {
+  if (IS_TEST) return
   const item = new RootSiblings(<Toast message={message} />)
   setTimeout(() => {
     item.destroy()

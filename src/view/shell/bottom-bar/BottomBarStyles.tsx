@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+
 import {colors} from 'lib/styles'
 
 export const styles = StyleSheet.create({
@@ -11,6 +12,10 @@ export const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingLeft: 5,
     paddingRight: 10,
+  },
+  bottomBarWeb: {
+    // @ts-ignore web-only
+    position: 'fixed',
   },
   ctrl: {
     flex: 1,

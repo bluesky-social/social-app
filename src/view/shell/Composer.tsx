@@ -1,33 +1,23 @@
 import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
 import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
-import {ComposePost} from '../com/composer/Composer'
-import {ComposerOpts} from 'state/models/ui/shell'
+import {observer} from 'mobx-react-lite'
+
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useComposerState} from 'state/shell/composer'
+import {ComposePost} from '../com/composer/Composer'
 
 export const Composer = observer(function ComposerImpl({
-  active,
   winHeight,
-  replyTo,
-  onPost,
-  onClose,
-  quote,
-  mention,
 }: {
-  active: boolean
   winHeight: number
-  replyTo?: ComposerOpts['replyTo']
-  onPost?: ComposerOpts['onPost']
-  onClose: () => void
-  quote?: ComposerOpts['quote']
-  mention?: ComposerOpts['mention']
 }) {
+  const state = useComposerState()
   const pal = usePalette('default')
   const initInterp = useAnimatedValue(0)
 
   useEffect(() => {
-    if (active) {
+    if (state) {
       Animated.timing(initInterp, {
         toValue: 1,
         duration: 300,
@@ -37,7 +27,7 @@ export const Composer = observer(function ComposerImpl({
     } else {
       initInterp.setValue(0)
     }
-  }, [initInterp, active])
+  }, [initInterp, state])
   const wrapperAnimStyle = {
     transform: [
       {
@@ -52,7 +42,7 @@ export const Composer = observer(function ComposerImpl({
   // rendering
   // =
 
-  if (!active) {
+  if (!state) {
     return <View />
   }
 
@@ -62,11 +52,12 @@ export const Composer = observer(function ComposerImpl({
       aria-modal
       accessibilityViewIsModal>
       <ComposePost
-        replyTo={replyTo}
-        onPost={onPost}
-        onClose={onClose}
-        quote={quote}
-        mention={mention}
+        replyTo={state.replyTo}
+        onPost={state.onPost}
+        quote={state.quote}
+        mention={state.mention}
+        text={state.text}
+        imageUris={state.imageUris}
       />
     </Animated.View>
   )

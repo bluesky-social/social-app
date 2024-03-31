@@ -4,10 +4,15 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from '../text/Text'
-import {useTheme} from 'lib/ThemeContext'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useTheme} from 'lib/ThemeContext'
+import {ViewHeader} from 'view/com/util/ViewHeader'
 import {Button} from '../forms/Button'
+import {Text} from '../text/Text'
 import {CenteredView} from '../Views'
 
 export function ErrorScreen({
@@ -16,62 +21,72 @@ export function ErrorScreen({
   details,
   onPressTryAgain,
   testID,
+  showHeader,
 }: {
   title: string
   message: string
   details?: string
   onPressTryAgain?: () => void
   testID?: string
+  showHeader?: boolean
 }) {
   const theme = useTheme()
+  const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   return (
-    <CenteredView testID={testID} style={[styles.outer, pal.view]}>
-      <View style={styles.errorIconContainer}>
-        <View
-          style={[
-            styles.errorIcon,
-            {backgroundColor: theme.palette.inverted.background},
-          ]}>
-          <FontAwesomeIcon
-            icon="exclamation"
-            style={pal.textInverted as FontAwesomeIconStyle}
-            size={24}
-          />
-        </View>
-      </View>
-      <Text type="title-lg" style={[styles.title, pal.text]}>
-        {title}
-      </Text>
-      <Text style={[styles.message, pal.text]}>{message}</Text>
-      {details && (
-        <Text
-          testID={`${testID}-details`}
-          style={[styles.details, pal.text, pal.viewLight]}>
-          {details}
-        </Text>
-      )}
-      {onPressTryAgain && (
-        <View style={styles.btnContainer}>
-          <Button
-            testID="errorScreenTryAgainButton"
-            type="default"
-            style={[styles.btn]}
-            onPress={onPressTryAgain}
-            accessibilityLabel="Retry"
-            accessibilityHint="Retries the last action, which errored out">
+    <>
+      {showHeader && isMobile && <ViewHeader title="Error" showBorder />}
+      <CenteredView testID={testID} style={[styles.outer, pal.view]}>
+        <View style={styles.errorIconContainer}>
+          <View
+            style={[
+              styles.errorIcon,
+              {backgroundColor: theme.palette.inverted.background},
+            ]}>
             <FontAwesomeIcon
-              icon="arrows-rotate"
-              style={pal.link as FontAwesomeIconStyle}
-              size={16}
+              icon="exclamation"
+              style={pal.textInverted as FontAwesomeIconStyle}
+              size={24}
             />
-            <Text type="button" style={[styles.btnText, pal.link]}>
-              Try again
-            </Text>
-          </Button>
+          </View>
         </View>
-      )}
-    </CenteredView>
+        <Text type="title-lg" style={[styles.title, pal.text]}>
+          {title}
+        </Text>
+        <Text style={[styles.message, pal.text]}>{message}</Text>
+        {details && (
+          <Text
+            testID={`${testID}-details`}
+            style={[styles.details, pal.text, pal.viewLight]}>
+            {details}
+          </Text>
+        )}
+        {onPressTryAgain && (
+          <View style={styles.btnContainer}>
+            <Button
+              testID="errorScreenTryAgainButton"
+              type="default"
+              style={[styles.btn]}
+              onPress={onPressTryAgain}
+              accessibilityLabel={_(msg`Retry`)}
+              accessibilityHint={_(
+                msg`Retries the last action, which errored out`,
+              )}>
+              <FontAwesomeIcon
+                icon="arrows-rotate"
+                style={pal.link as FontAwesomeIconStyle}
+                size={16}
+              />
+              <Text type="button" style={[styles.btnText, pal.link]}>
+                <Trans context="action">Try again</Trans>
+              </Text>
+            </Button>
+          </View>
+        )}
+      </CenteredView>
+    </>
   )
 }
 

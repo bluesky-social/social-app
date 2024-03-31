@@ -1,16 +1,19 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import ImageEditor from 'react-avatar-editor'
-import {Slider} from '@miblanchard/react-native-slider'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import LinearGradient from 'react-native-linear-gradient'
-import {Text} from 'view/com/util/text/Text'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Slider} from '@miblanchard/react-native-slider'
+import ImageEditor from 'react-avatar-editor'
+
+import {useModalControls} from '#/state/modals'
+import {usePalette} from 'lib/hooks/usePalette'
+import {RectTallIcon, RectWideIcon, SquareIcon} from 'lib/icons'
 import {Dimensions} from 'lib/media/types'
 import {getDataUriSize} from 'lib/media/util'
-import {s, gradients} from 'lib/styles'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
-import {SquareIcon, RectWideIcon, RectTallIcon} from 'lib/icons'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {gradients, s} from 'lib/styles'
+import {Text} from 'view/com/util/text/Text'
 
 enum AspectRatio {
   Square = 'square',
@@ -33,8 +36,9 @@ export function Component({
   uri: string
   onSelect: (img?: RNImage) => void
 }) {
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [as, setAs] = React.useState<AspectRatio>(AspectRatio.Square)
   const [scale, setScale] = React.useState<number>(1)
   const editorRef = React.useRef<ImageEditor>(null)
@@ -43,7 +47,7 @@ export function Component({
 
   const onPressCancel = () => {
     onSelect(undefined)
-    store.shell.closeModal()
+    closeModal()
   }
   const onPressDone = () => {
     const canvas = editorRef.current?.getImageScaledToCanvas()
@@ -59,7 +63,7 @@ export function Component({
     } else {
       onSelect(undefined)
     }
-    store.shell.closeModal()
+    closeModal()
   }
 
   let cropperStyle
@@ -96,31 +100,31 @@ export function Component({
         <TouchableOpacity
           onPress={doSetAs(AspectRatio.Wide)}
           accessibilityRole="button"
-          accessibilityLabel="Wide"
-          accessibilityHint="Sets image aspect ratio to wide">
+          accessibilityLabel={_(msg`Wide`)}
+          accessibilityHint={_(msg`Sets image aspect ratio to wide`)}>
           <RectWideIcon
             size={24}
-            style={as === AspectRatio.Wide ? s.blue3 : undefined}
+            style={as === AspectRatio.Wide ? s.blue3 : pal.text}
           />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doSetAs(AspectRatio.Tall)}
           accessibilityRole="button"
-          accessibilityLabel="Tall"
-          accessibilityHint="Sets image aspect ratio to tall">
+          accessibilityLabel={_(msg`Tall`)}
+          accessibilityHint={_(msg`Sets image aspect ratio to tall`)}>
           <RectTallIcon
             size={24}
-            style={as === AspectRatio.Tall ? s.blue3 : undefined}
+            style={as === AspectRatio.Tall ? s.blue3 : pal.text}
           />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={doSetAs(AspectRatio.Square)}
           accessibilityRole="button"
-          accessibilityLabel="Square"
-          accessibilityHint="Sets image aspect ratio to square">
+          accessibilityLabel={_(msg`Square`)}
+          accessibilityHint={_(msg`Sets image aspect ratio to square`)}>
           <SquareIcon
             size={24}
-            style={as === AspectRatio.Square ? s.blue3 : undefined}
+            style={as === AspectRatio.Square ? s.blue3 : pal.text}
           />
         </TouchableOpacity>
       </View>
@@ -128,25 +132,25 @@ export function Component({
         <TouchableOpacity
           onPress={onPressCancel}
           accessibilityRole="button"
-          accessibilityLabel="Cancel image crop"
-          accessibilityHint="Exits image cropping process">
+          accessibilityLabel={_(msg`Cancel image crop`)}
+          accessibilityHint={_(msg`Exits image cropping process`)}>
           <Text type="xl" style={pal.link}>
-            Cancel
+            <Trans>Cancel</Trans>
           </Text>
         </TouchableOpacity>
         <View style={s.flex1} />
         <TouchableOpacity
           onPress={onPressDone}
           accessibilityRole="button"
-          accessibilityLabel="Save image crop"
-          accessibilityHint="Saves image crop settings">
+          accessibilityLabel={_(msg`Save image crop`)}
+          accessibilityHint={_(msg`Saves image crop settings`)}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={[styles.btn]}>
             <Text type="xl-medium" style={s.white}>
-              Done
+              <Trans>Done</Trans>
             </Text>
           </LinearGradient>
         </TouchableOpacity>

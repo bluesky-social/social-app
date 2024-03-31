@@ -1,8 +1,13 @@
 import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
-import lande from 'lande'
-import {hasProp} from 'lib/type-guards'
 import * as bcp47Match from 'bcp-47-match'
-import {LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3} from './languages'
+import lande from 'lande'
+
+import {hasProp} from 'lib/type-guards'
+import {
+  AppLanguage,
+  LANGUAGES_MAP_CODE2,
+  LANGUAGES_MAP_CODE3,
+} from './languages'
 
 export function code2ToCode3(lang: string): string {
   if (lang.length === 2) {
@@ -16,6 +21,14 @@ export function code3ToCode2(lang: string): string {
     return LANGUAGES_MAP_CODE3[lang]?.code2 || lang
   }
   return lang
+}
+
+export function code3ToCode2Strict(lang: string): string | undefined {
+  if (lang.length === 3) {
+    return LANGUAGES_MAP_CODE3[lang]?.code2
+  }
+
+  return undefined
 }
 
 export function codeToLanguageName(lang: string): string {
@@ -83,4 +96,58 @@ export function getTranslatorLink(text: string, lang: string): string {
   return `https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(
     text,
   )}`
+}
+
+/**
+ * Returns a valid `appLanguage` value from an arbitrary string.
+ *
+ * Contenxt: post-refactor, we populated some user's `appLanguage` setting with
+ * `postLanguage`, which can be a comma-separated list of values. This breaks
+ * `appLanguage` handling in the app, so we introduced this util to parse out a
+ * valid `appLanguage` from the pre-populated `postLanguage` values.
+ *
+ * The `appLanguage` will continue to be incorrect until the user returns to
+ * language settings and selects a new option, at which point we'll re-save
+ * their choice, which should then be a valid option. Since we don't know when
+ * this will happen, we should leave this here until we feel it's safe to
+ * remove, or we re-migrate their storage.
+ */
+export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
+  const langs = appLanguage.split(',').filter(Boolean)
+
+  for (const lang of langs) {
+    switch (lang) {
+      case 'en':
+        return AppLanguage.en
+      case 'de':
+        return AppLanguage.de
+      case 'es':
+        return AppLanguage.es
+      case 'fi':
+        return AppLanguage.fi
+      case 'fr':
+        return AppLanguage.fr
+      case 'hi':
+        return AppLanguage.hi
+      case 'id':
+        return AppLanguage.id
+      case 'ja':
+        return AppLanguage.ja
+      case 'ko':
+        return AppLanguage.ko
+      case 'pt-BR':
+        return AppLanguage.pt_BR
+      case 'uk':
+        return AppLanguage.uk
+      case 'ca':
+        return AppLanguage.ca
+      case 'zh-CN':
+        return AppLanguage.zh_CN
+      case 'it':
+        return AppLanguage.it
+      default:
+        continue
+    }
+  }
+  return AppLanguage.en
 }

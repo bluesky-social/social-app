@@ -1,14 +1,20 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
-import {UserAvatar} from '../util/UserAvatar'
-import {Text} from '../util/text/Text'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 
 export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
-  const store = useStores()
+  const {currentAccount} = useSession()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
   return (
     <TouchableOpacity
@@ -16,16 +22,20 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
       style={[pal.view, pal.border, styles.prompt]}
       onPress={() => onPressCompose()}
       accessibilityRole="button"
-      accessibilityLabel="Compose reply"
-      accessibilityHint="Opens composer">
-      <UserAvatar avatar={store.me.avatar} size={38} />
+      accessibilityLabel={_(msg`Compose reply`)}
+      accessibilityHint={_(msg`Opens composer`)}>
+      <UserAvatar
+        avatar={profile?.avatar}
+        size={38}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+      />
       <Text
         type="xl"
         style={[
           pal.text,
           isDesktop ? styles.labelDesktopWeb : styles.labelMobile,
         ]}>
-        Write your reply
+        <Trans>Write your reply</Trans>
       </Text>
     </TouchableOpacity>
   )
@@ -44,6 +54,6 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   labelDesktopWeb: {
-    paddingLeft: 20,
+    paddingLeft: 12,
   },
 })

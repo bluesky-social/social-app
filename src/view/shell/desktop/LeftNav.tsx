@@ -1,55 +1,75 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   useLinkProps,
   useNavigation,
   useNavigationState,
 } from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Link} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {emitSoftReset} from '#/state/events'
+import {useFetchHandle} from '#/state/queries/handle'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s, colors} from 'lib/styles'
 import {
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
-  UserIconSolid,
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
   HandIcon,
   HashtagIcon,
+  HomeIcon,
+  HomeIconSolid,
+  ListIcon,
+  MagnifyingGlassIcon2,
+  MagnifyingGlassIcon2Solid,
+  UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
-import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
-import {router} from '../../../routes'
+import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
+import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {Link} from 'view/com/util/Link'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {router} from '../../../routes'
 
-const ProfileCard = observer(function ProfileCardImpl() {
-  const store = useStores()
+function ProfileCard() {
+  const {currentAccount} = useSession()
+  const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
   const {isDesktop} = useWebMediaQueries()
+  const {_} = useLingui()
   const size = 48
-  return store.me.handle ? (
+
+  return !isLoading && profile ? (
     <Link
-      href={makeProfileLink(store.me)}
+      href={makeProfileLink({
+        did: currentAccount!.did,
+        handle: currentAccount!.handle,
+      })}
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
-      title="My Profile"
+      title={_(msg`My Profile`)}
       asAnchor>
-      <UserAvatar avatar={store.me.avatar} size={size} />
+      <UserAvatar
+        avatar={profile.avatar}
+        size={size}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+      />
     </Link>
   ) : (
     <View style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}>
@@ -60,12 +80,13 @@ const ProfileCard = observer(function ProfileCardImpl() {
       />
     </View>
   )
-})
+}
 
 function BackBtn() {
   const {isTablet} = useWebMediaQueries()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
   const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
 
   const onPressBack = React.useCallback(() => {
@@ -85,7 +106,7 @@ function BackBtn() {
       onPress={onPressBack}
       style={styles.backBtn}
       accessibilityRole="button"
-      accessibilityLabel="Go back"
+      accessibilityLabel={_(msg`Go back`)}
       accessibilityHint="">
       <FontAwesomeIcon
         size={24}
@@ -103,15 +124,9 @@ interface NavItemProps {
   iconFilled: JSX.Element
   label: string
 }
-const NavItem = observer(function NavItemImpl({
-  count,
-  href,
-  icon,
-  iconFilled,
-  label,
-}: NavItemProps) {
+function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {currentAccount} = useSession()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
@@ -124,7 +139,7 @@ const NavItem = observer(function NavItemImpl({
     currentRouteInfo.name === 'Profile'
       ? isTab(currentRouteInfo.name, pathName) &&
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-          store.me.handle
+          currentAccount?.handle
       : isTab(currentRouteInfo.name, pathName)
   const {onPress} = useLinkProps({to: href})
   const onPressWrapped = React.useCallback(
@@ -134,12 +149,12 @@ const NavItem = observer(function NavItemImpl({
       }
       e.preventDefault()
       if (isCurrent) {
-        store.emitScreenSoftReset()
+        emitSoftReset()
       } else {
         onPress()
       }
     },
-    [onPress, isCurrent, store],
+    [onPress, isCurrent],
   )
 
   return (
@@ -178,30 +193,42 @@ const NavItem = observer(function NavItemImpl({
       )}
     </PressableWithHover>
   )
-})
+}
 
 function ComposeBtn() {
-  const store = useStores()
+  const {currentAccount} = useSession()
   const {getState} = useNavigation()
+  const {openComposer} = useComposerControls()
+  const {_} = useLingui()
   const {isTablet} = useWebMediaQueries()
+  const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
+  const fetchHandle = useFetchHandle()
 
   const getProfileHandle = async () => {
-    const {routes} = getState()
-    const currentRoute = routes[routes.length - 1]
+    const routes = getState()?.routes
+    const currentRoute = routes?.[routes?.length - 1]
 
-    if (currentRoute.name === 'Profile') {
+    if (currentRoute?.name === 'Profile') {
       let handle: string | undefined = (
         currentRoute.params as CommonNavigatorParams['Profile']
       ).name
 
       if (handle.startsWith('did:')) {
-        const cached = await store.profiles.cache.get(handle)
-        const profile = cached ? cached.data : undefined
-        // if we can't resolve handle, set to undefined
-        handle = profile?.handle || undefined
+        try {
+          setIsFetchingHandle(true)
+          handle = await fetchHandle(handle)
+        } catch (e) {
+          handle = undefined
+        } finally {
+          setIsFetchingHandle(false)
+        }
       }
 
-      if (!handle || handle === store.me.handle || handle === 'handle.invalid')
+      if (
+        !handle ||
+        handle === currentAccount?.handle ||
+        isInvalidHandle(handle)
+      )
         return undefined
 
       return handle
@@ -211,36 +238,45 @@ function ComposeBtn() {
   }
 
   const onPressCompose = async () =>
-    store.shell.openComposer({mention: await getProfileHandle()})
+    openComposer({mention: await getProfileHandle()})
 
   if (isTablet) {
     return null
   }
   return (
-    <TouchableOpacity
-      style={[styles.newPostBtn]}
-      onPress={onPressCompose}
-      accessibilityRole="button"
-      accessibilityLabel="New post"
-      accessibilityHint="">
-      <View style={styles.newPostBtnIconWrapper}>
-        <ComposeIcon2
-          size={19}
-          strokeWidth={2}
-          style={styles.newPostBtnLabel}
-        />
-      </View>
-      <Text type="button" style={styles.newPostBtnLabel}>
-        New Post
-      </Text>
-    </TouchableOpacity>
+    <View style={styles.newPostBtnContainer}>
+      <TouchableOpacity
+        disabled={isFetchingHandle}
+        style={styles.newPostBtn}
+        onPress={onPressCompose}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint="">
+        <View style={styles.newPostBtnIconWrapper}>
+          <ComposeIcon2
+            size={19}
+            strokeWidth={2}
+            style={styles.newPostBtnLabel}
+          />
+        </View>
+        <Text type="button" style={styles.newPostBtnLabel}>
+          <Trans context="action">New Post</Trans>
+        </Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
-export const DesktopLeftNav = observer(function DesktopLeftNav() {
-  const store = useStores()
+export function DesktopLeftNav() {
+  const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const numUnread = useUnreadNotifications()
+
+  if (!hasSession && !isDesktop) {
+    return null
+  }
 
   return (
     <View
@@ -250,142 +286,172 @@ export const DesktopLeftNav = observer(function DesktopLeftNav() {
         pal.view,
         pal.border,
       ]}>
-      {store.session.hasSession && <ProfileCard />}
-      <BackBtn />
-      <NavItem
-        href="/"
-        icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
-        iconFilled={
-          <HomeIconSolid
-            strokeWidth={4}
-            size={isDesktop ? 24 : 28}
-            style={pal.text}
+      {hasSession ? (
+        <ProfileCard />
+      ) : isDesktop ? (
+        <View style={{paddingHorizontal: 12}}>
+          <NavSignupCard />
+        </View>
+      ) : null}
+
+      {hasSession && (
+        <>
+          <BackBtn />
+
+          <NavItem
+            href="/"
+            icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
+            iconFilled={
+              <HomeIconSolid
+                strokeWidth={4}
+                size={isDesktop ? 24 : 28}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Home`)}
           />
-        }
-        label="Home"
-      />
-      <NavItem
-        href="/search"
-        icon={
-          <MagnifyingGlassIcon2
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
+          <NavItem
+            href="/search"
+            icon={
+              <MagnifyingGlassIcon2
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <MagnifyingGlassIcon2Solid
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Search`)}
           />
-        }
-        iconFilled={
-          <MagnifyingGlassIcon2Solid
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
+          <NavItem
+            href="/feeds"
+            icon={
+              <HashtagIcon
+                strokeWidth={2.25}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            iconFilled={
+              <HashtagIcon
+                strokeWidth={4}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            label={_(msg`Feeds`)}
           />
-        }
-        label="Search"
-      />
-      <NavItem
-        href="/feeds"
-        icon={
-          <HashtagIcon
-            strokeWidth={2.25}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
+          <NavItem
+            href="/notifications"
+            count={numUnread}
+            icon={
+              <BellIcon
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <BellIconSolid
+                strokeWidth={1.5}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Notifications`)}
           />
-        }
-        iconFilled={
-          <HashtagIcon
-            strokeWidth={2.5}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
+          <NavItem
+            href="/lists"
+            icon={
+              <ListIcon
+                style={pal.text}
+                size={isDesktop ? 26 : 30}
+                strokeWidth={2}
+              />
+            }
+            iconFilled={
+              <ListIcon
+                style={pal.text}
+                size={isDesktop ? 26 : 30}
+                strokeWidth={3}
+              />
+            }
+            label={_(msg`Lists`)}
           />
-        }
-        label="Feeds"
-      />
-      <NavItem
-        href="/notifications"
-        count={store.me.notifications.unreadCountLabel}
-        icon={
-          <BellIcon
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
+          <NavItem
+            href="/moderation"
+            icon={
+              <HandIcon
+                style={pal.text}
+                size={isDesktop ? 24 : 27}
+                strokeWidth={5.5}
+              />
+            }
+            iconFilled={
+              <FontAwesomeIcon
+                icon="hand"
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 23 : 26}
+              />
+            }
+            label={_(msg`Moderation`)}
           />
-        }
-        iconFilled={
-          <BellIconSolid
-            strokeWidth={1.5}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
+          <NavItem
+            href={currentAccount ? makeProfileLink(currentAccount) : '/'}
+            icon={
+              <UserIcon
+                strokeWidth={1.75}
+                size={isDesktop ? 28 : 30}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <UserIconSolid
+                strokeWidth={1.75}
+                size={isDesktop ? 28 : 30}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Profile`)}
           />
-        }
-        label="Notifications"
-      />
-      <NavItem
-        href="/moderation"
-        icon={
-          <HandIcon
-            strokeWidth={5.5}
-            style={pal.text}
-            size={isDesktop ? 24 : 27}
+          <NavItem
+            href="/settings"
+            icon={
+              <CogIcon
+                strokeWidth={1.75}
+                size={isDesktop ? 28 : 32}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <CogIconSolid
+                strokeWidth={1.5}
+                size={isDesktop ? 28 : 32}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Settings`)}
           />
-        }
-        iconFilled={
-          <FontAwesomeIcon
-            icon="hand"
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 20 : 26}
-          />
-        }
-        label="Moderation"
-      />
-      {store.session.hasSession && (
-        <NavItem
-          href={makeProfileLink(store.me)}
-          icon={
-            <UserIcon
-              strokeWidth={1.75}
-              size={isDesktop ? 28 : 30}
-              style={pal.text}
-            />
-          }
-          iconFilled={
-            <UserIconSolid
-              strokeWidth={1.75}
-              size={isDesktop ? 28 : 30}
-              style={pal.text}
-            />
-          }
-          label="Profile"
-        />
+
+          <ComposeBtn />
+        </>
       )}
-      <NavItem
-        href="/settings"
-        icon={
-          <CogIcon
-            strokeWidth={1.75}
-            size={isDesktop ? 28 : 32}
-            style={pal.text}
-          />
-        }
-        iconFilled={
-          <CogIconSolid
-            strokeWidth={1.5}
-            size={isDesktop ? 28 : 32}
-            style={pal.text}
-          />
-        }
-        label="Settings"
-      />
-      {store.session.hasSession && <ComposeBtn />}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   leftNav: {
-    position: 'absolute',
+    // @ts-ignore web only
+    position: 'fixed',
     top: 10,
     // @ts-ignore web only
-    right: 'calc(50vw + 312px)',
+    left: 'calc(50vw - 300px - 220px - 20px)',
     width: 220,
     // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',
@@ -454,24 +520,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
+  newPostBtnContainer: {
+    flexDirection: 'row',
+  },
   newPostBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 140,
     borderRadius: 24,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 12, // visually aligns the text vertically inside the button
+    paddingLeft: 16,
+    paddingRight: 18, // looks nicer like this
     backgroundColor: colors.blue3,
     marginLeft: 12,
     marginTop: 20,
     marginBottom: 10,
     gap: 8,
   },
-  newPostBtnIconWrapper: {},
+  newPostBtnIconWrapper: {
+    marginTop: 2, // aligns the icon visually with the text
+  },
   newPostBtnLabel: {
     color: colors.white,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 })

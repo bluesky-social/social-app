@@ -1,9 +1,10 @@
 import React, {
+  ComponentProps,
   forwardRef,
   useCallback,
-  useRef,
   useMemo,
-  ComponentProps,
+  useRef,
+  useState,
 } from 'react'
 import {
   NativeSyntheticEvent,
@@ -12,33 +13,34 @@ import {
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
-import {Autocomplete} from './mobile/Autocomplete'
-import {Text} from 'view/com/util/text/Text'
+
+import {POST_IMG_MAX} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {downloadAndResize} from 'lib/media/manip'
+import {isUriImage} from 'lib/media/util'
 import {cleanError} from 'lib/strings/errors'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isUriImage} from 'lib/media/util'
-import {downloadAndResize} from 'lib/media/manip'
-import {POST_IMG_MAX} from 'lib/constants'
+import {isIOS} from 'platform/detection'
+import {Text} from 'view/com/util/text/Text'
+import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
   focus: () => void
   blur: () => void
+  getCursorPosition: () => DOMRect | undefined
 }
 
 interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
   suggestedLinks: Set<string>
-  autocompleteView: UserAutocompleteModel
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
@@ -56,7 +58,6 @@ export const TextInput = forwardRef(function TextInputImpl(
     richtext,
     placeholder,
     suggestedLinks,
-    autocompleteView,
     setRichText,
     onPhotoPasted,
     onSuggestedLinksChanged,
@@ -69,12 +70,14 @@ export const TextInput = forwardRef(function TextInputImpl(
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
+  const [autocompletePrefix, setAutocompletePrefix] = useState('')
 
   React.useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
     blur: () => {
       textInput.current?.blur()
     },
+    getCursorPosition: () => undefined, // Not implemented on native
   }))
 
   const onChangeText = useCallback(
@@ -99,10 +102,9 @@ export const TextInput = forwardRef(function TextInputImpl(
           textInputSelection.current?.start || 0,
         )
         if (prefix) {
-          autocompleteView.setActive(true)
-          autocompleteView.setPrefix(prefix.value)
-        } else {
-          autocompleteView.setActive(false)
+          setAutocompletePrefix(prefix.value)
+        } else if (autocompletePrefix) {
+          setAutocompletePrefix('')
         }
 
         const set: Set<string> = new Set()
@@ -139,7 +141,8 @@ export const TextInput = forwardRef(function TextInputImpl(
     },
     [
       setRichText,
-      autocompleteView,
+      autocompletePrefix,
+      setAutocompletePrefix,
       suggestedLinks,
       onSuggestedLinksChanged,
       onPhotoPasted,
@@ -179,24 +182,26 @@ export const TextInput = forwardRef(function TextInputImpl(
           item,
         ),
       )
-      autocompleteView.setActive(false)
+      setAutocompletePrefix('')
     },
-    [onChangeText, richtext, autocompleteView],
+    [onChangeText, richtext, setAutocompletePrefix],
   )
 
   const textDecorated = useMemo(() => {
     let i = 0
 
-    return Array.from(richtext.segments()).map(segment => (
-      <Text
-        key={i++}
-        style={[
-          !segment.facet ? pal.text : pal.link,
-          styles.textInputFormatting,
-        ]}>
-        {segment.text}
-      </Text>
-    ))
+    return Array.from(richtext.segments()).map(segment => {
+      return (
+        <Text
+          key={i++}
+          style={[
+            segment.facet ? pal.link : pal.text,
+            styles.textInputFormatting,
+          ]}>
+          {segment.text}
+        </Text>
+      )
+    })
   }, [richtext, pal.link, pal.text])
 
   return (
@@ -213,12 +218,19 @@ export const TextInput = forwardRef(function TextInputImpl(
         autoFocus={true}
         allowFontScaling
         multiline
-        style={[pal.text, styles.textInput, styles.textInputFormatting]}
+        scrollEnabled={false}
+        numberOfLines={4}
+        style={[
+          pal.text,
+          styles.textInput,
+          styles.textInputFormatting,
+          {textAlignVertical: 'top'},
+        ]}
         {...props}>
         {textDecorated}
       </PasteInput>
       <Autocomplete
-        view={autocompleteView}
+        prefix={autocompletePrefix}
         onSelect={onSelectAutocompleteItem}
       />
     </View>
@@ -241,6 +253,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: 0.2,
     fontWeight: '400',
-    lineHeight: 23.4, // 1.3*16
+    // This is broken on ios right now, so don't set it there.
+    lineHeight: isIOS ? undefined : 23.4, // 1.3*16
   },
 })

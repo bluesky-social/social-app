@@ -14,31 +14,52 @@
 
 import React from 'react'
 import {
-  FlatList as RNFlatList,
   FlatListProps,
-  ScrollView as RNScrollView,
   ScrollViewProps,
   StyleSheet,
   View,
   ViewProps,
 } from 'react-native'
-import {addStyle} from 'lib/styles'
+import Animated from 'react-native-reanimated'
+
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {addStyle} from 'lib/styles'
 
 interface AddedProps {
-  desktopFixedHeight?: boolean
+  desktopFixedHeight?: boolean | number
 }
 
 export function CenteredView({
   style,
+  sideBorders,
+  topBorder,
   ...props
-}: React.PropsWithChildren<ViewProps>) {
-  style = addStyle(style, styles.container)
+}: React.PropsWithChildren<
+  ViewProps & {sideBorders?: boolean; topBorder?: boolean}
+>) {
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
+  if (!isMobile) {
+    style = addStyle(style, styles.container)
+  }
+  if (sideBorders) {
+    style = addStyle(style, {
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+    })
+    style = addStyle(style, pal.border)
+  }
+  if (topBorder) {
+    style = addStyle(style, {
+      borderTopWidth: 1,
+    })
+    style = addStyle(style, pal.border)
+  }
   return <View style={style} {...props} />
 }
 
-export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
+export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   {
     contentContainerStyle,
     style,
@@ -46,14 +67,16 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<RNFlatList>,
+  ref: React.Ref<Animated.FlatList<ItemT>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
-  contentContainerStyle = addStyle(
-    contentContainerStyle,
-    styles.containerScroll,
-  )
+  if (!isMobile) {
+    contentContainerStyle = addStyle(
+      contentContainerStyle,
+      styles.containerScroll,
+    )
+  }
   if (contentOffset && contentOffset?.y !== 0) {
     // NOTE
     // we use paddingTop & contentOffset to space around the floating header
@@ -68,7 +91,14 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     })
   }
   if (desktopFixedHeight) {
-    style = addStyle(style, styles.fixedHeight)
+    if (typeof desktopFixedHeight === 'number') {
+      // @ts-ignore Web only -prf
+      style = addStyle(style, {
+        height: `calc(100vh - ${desktopFixedHeight}px)`,
+      })
+    } else {
+      style = addStyle(style, styles.fixedHeight)
+    }
     if (!isMobile) {
       // NOTE
       // react native web produces *three* wrapping divs
@@ -85,12 +115,12 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
     }
   }
   return (
-    <RNFlatList
+    <Animated.FlatList
       ref={ref}
       contentContainerStyle={[
+        styles.contentContainer,
         contentContainerStyle,
         pal.border,
-        styles.contentContainer,
       ]}
       style={style}
       contentOffset={contentOffset}
@@ -101,21 +131,25 @@ export const FlatList = React.forwardRef(function FlatListImpl<ItemT>(
 
 export const ScrollView = React.forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
-  ref: React.Ref<RNScrollView>,
+  ref: React.Ref<Animated.ScrollView>,
 ) {
   const pal = usePalette('default')
 
-  contentContainerStyle = addStyle(
-    contentContainerStyle,
-    styles.containerScroll,
-  )
+  const {isMobile} = useWebMediaQueries()
+  if (!isMobile) {
+    contentContainerStyle = addStyle(
+      contentContainerStyle,
+      styles.containerScroll,
+    )
+  }
   return (
-    <RNScrollView
+    <Animated.ScrollView
       contentContainerStyle={[
+        styles.contentContainer,
         contentContainerStyle,
         pal.border,
-        styles.contentContainer,
       ]}
+      // @ts-ignore something is wrong with the reanimated types -prf
       ref={ref}
       {...props}
     />

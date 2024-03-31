@@ -1,16 +1,17 @@
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {Text} from './text/Text'
-import {TextLink} from './Link'
 import {
   H1 as ExpoH1,
   H2 as ExpoH2,
   H3 as ExpoH3,
   H4 as ExpoH4,
 } from '@expo/html-elements'
+
+import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useTheme} from 'lib/ThemeContext'
+import {TextLink} from './Link'
+import {Text} from './text/Text'
 
 /**
  * These utilities are used to define long documents in an html-like
@@ -30,6 +31,7 @@ export function H1({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-xl']
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH1 style={[typography, pal.text, styles.h1]}>{children}</ExpoH1>
 }
 
@@ -37,6 +39,7 @@ export function H2({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-lg']
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH2 style={[typography, pal.text, styles.h2]}>{children}</ExpoH2>
 }
 
@@ -44,6 +47,7 @@ export function H3({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography.title
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH3 style={[typography, pal.text, styles.h3]}>{children}</ExpoH3>
 }
 
@@ -51,6 +55,7 @@ export function H4({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-sm']
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH4 style={[typography, pal.text, styles.h4]}>{children}</ExpoH4>
 }
 

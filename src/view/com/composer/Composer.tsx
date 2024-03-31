@@ -1,77 +1,107 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
+  BackHandler,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {RichText} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {observer} from 'mobx-react-lite'
+
+import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
+import {emitPostCreated} from '#/state/events'
+import {useModals} from '#/state/modals'
+import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  toPostLanguages,
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+} from '#/state/preferences/languages'
+import {useProfileQuery} from '#/state/queries/profile'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {getAgent, useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
+import * as apilib from 'lib/api/index'
+import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {ExternalEmbed} from './ExternalEmbed'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {cleanError} from 'lib/strings/errors'
+import {insertMentionAt} from 'lib/strings/mention-manip'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {toShortUrl} from 'lib/strings/url-helpers'
+import {colors, gradients, s} from 'lib/styles'
+import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
+import {useDialogStateControlContext} from 'state/dialogs'
+import {GalleryModel} from 'state/models/media/gallery'
+import {ComposerOpts} from 'state/shell/composer'
+import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import * as Prompt from '#/components/Prompt'
+import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
+import {UserAvatar} from '../util/UserAvatar'
+import {CharProgress} from './char-progress/CharProgress'
+import {ExternalEmbed} from './ExternalEmbed'
+import {LabelsBtn} from './labels/LabelsBtn'
+import {Gallery} from './photos/Gallery'
+import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
+import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
 import {TextInput, TextInputRef} from './text-input/TextInput'
-import {CharProgress} from './char-progress/CharProgress'
-import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from 'state/index'
-import * as apilib from 'lib/api/index'
-import {ComposerOpts} from 'state/models/ui/shell'
-import {s, colors, gradients} from 'lib/styles'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {cleanError} from 'lib/strings/errors'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {toShortUrl} from 'lib/strings/url-helpers'
-import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
-import {OpenCameraBtn} from './photos/OpenCameraBtn'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isWeb, isNative, isAndroid, isIOS} from 'platform/detection'
-import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
-import {GalleryModel} from 'state/models/media/gallery'
-import {Gallery} from './photos/Gallery'
-import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
-import {LabelsBtn} from './labels/LabelsBtn'
-import {SelectLangBtn} from './select-language/SelectLangBtn'
-import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
-import {insertMentionAt} from 'lib/strings/mention-manip'
 
-type Props = ComposerOpts & {
-  onClose: () => void
-}
-
+type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
   replyTo,
   onPost,
-  onClose,
   quote: initQuote,
   mention: initMention,
+  openPicker,
+  text: initText,
+  imageUris: initImageUris,
 }: Props) {
+  const {currentAccount} = useSession()
+  const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
+  const {isModalActive} = useModals()
+  const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
-  const store = useStores()
+  const {_} = useLingui()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
+  const discardPromptControl = Prompt.usePromptControl()
+  const {closeAllDialogs} = useDialogStateControlContext()
+
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
   const [richtext, setRichText] = useState(
     new RichText({
-      text: initMention
+      text: initText
+        ? initText
+        : initMention
         ? insertMentionAt(
             `@${initMention}`,
             initMention.length + 1,
@@ -88,13 +118,15 @@ export const ComposePost = observer(function ComposePost({
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [labels, setLabels] = useState<string[]>([])
+  const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const gallery = useMemo(() => new GalleryModel(store), [store])
-
-  const autocompleteView = useMemo<UserAutocompleteModel>(
-    () => new UserAutocompleteModel(store),
-    [store],
+  const gallery = useMemo(
+    () => new GalleryModel(initImageUris),
+    [initImageUris],
   )
+  const onClose = useCallback(() => {
+    closeComposer()
+  }, [closeComposer])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -108,32 +140,38 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
-        store.shell.closeModal()
-      }
+      closeAllDialogs()
       if (Keyboard) {
         Keyboard.dismiss()
       }
-      store.shell.openModal({
-        name: 'confirm',
-        title: 'Discard draft',
-        onPressConfirm: onClose,
-        onPressCancel: () => {
-          store.shell.closeModal()
-        },
-        message: "Are you sure you'd like to discard this draft?",
-        confirmBtnText: 'Discard',
-        confirmBtnStyle: {backgroundColor: colors.red4},
-      })
+      discardPromptControl.open()
     } else {
       onClose()
     }
-  }, [store, onClose, graphemeLength, gallery])
-
-  // initial setup
+  }, [
+    graphemeLength,
+    gallery.isEmpty,
+    closeAllDialogs,
+    discardPromptControl,
+    onClose,
+  ])
+  // android back button
   useEffect(() => {
-    autocompleteView.setup()
-  }, [autocompleteView])
+    if (!isAndroid) {
+      return
+    }
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        onPressCancel()
+        return true
+      },
+    )
+
+    return () => {
+      backHandler.remove()
+    }
+  }, [onPressCancel])
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
@@ -145,11 +183,11 @@ export const ComposePost = observer(function ComposePost({
     [onPressCancel],
   )
   useEffect(() => {
-    if (isWeb) {
+    if (isWeb && !isModalActive) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
-  }, [onEscape])
+  }, [onEscape, isModalActive])
 
   const onPressAddLinkCard = useCallback(
     (uri: string) => {
@@ -170,32 +208,44 @@ export const ComposePost = observer(function ComposePost({
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
-    if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
+    if (requireAltTextEnabled && gallery.needsAltText) {
       return
     }
 
     setError('')
 
-    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
-      setError('Did you want to say anything?')
+    if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
+      setError(_(msg`Did you want to say anything?`))
+      return
+    }
+    if (extLink?.isLoading) {
+      setError(_(msg`Please wait for your link card to finish loading`))
       return
     }
 
     setIsProcessing(true)
 
+    let postUri
     try {
-      await apilib.post(store, {
-        rawText: richtext.text,
-        replyTo: replyTo?.uri,
-        images: gallery.images,
-        quote,
-        extLink,
-        labels,
-        onStateChange: setProcessingState,
-        knownHandles: autocompleteView.knownHandles,
-        langs: store.preferences.postLanguages,
-      })
+      postUri = (
+        await apilib.post(getAgent(), {
+          rawText: richtext.text,
+          replyTo: replyTo?.uri,
+          images: gallery.images,
+          quote,
+          extLink,
+          labels,
+          threadgate,
+          onStateChange: setProcessingState,
+          langs: toPostLanguages(langPrefs.postLanguage),
+        })
+      ).uri
     } catch (e: any) {
+      logger.error(e, {
+        message: `Composer: create post failed`,
+        hasImages: gallery.size > 0,
+      })
+
       if (extLink) {
         setExtLink({
           ...extLink,
@@ -207,34 +257,50 @@ export const ComposePost = observer(function ComposePost({
       setIsProcessing(false)
       return
     } finally {
+      if (postUri) {
+        logEvent('post:create', {
+          imageCount: gallery.size,
+          isReply: replyTo != null,
+          hasLink: extLink != null,
+          hasQuote: quote != null,
+          langs: langPrefs.postLanguage,
+          logContext: 'Composer',
+        })
+      }
       track('Create Post', {
         imageCount: gallery.size,
       })
       if (replyTo && replyTo.uri) track('Post:Reply')
     }
-    if (!replyTo) {
-      store.me.mainFeed.onPostCreated()
+    if (postUri && !replyTo) {
+      emitPostCreated()
     }
-    store.preferences.savePostLanguageToHistory()
+    setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
-    Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
+    Toast.show(
+      replyTo
+        ? _(msg`Your reply has been published`)
+        : _(msg`Your post has been published`),
+    )
   }
 
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
-      (!store.preferences.requireAltTextEnabled || !gallery.needsAltText),
-    [
-      graphemeLength,
-      store.preferences.requireAltTextEnabled,
-      gallery.needsAltText,
-    ],
+      (!requireAltTextEnabled || !gallery.needsAltText),
+    [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
-  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
+  const selectTextInputPlaceholder = replyTo
+    ? _(msg`Write your reply`)
+    : _(msg`What's up?`)
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
+
+  const onEmojiButtonPress = useCallback(() => {
+    openPicker?.(textInput.current?.getCursorPosition())
+  }, [openPicker])
 
   return (
     <KeyboardAvoidingView
@@ -248,9 +314,13 @@ export const ComposePost = observer(function ComposePost({
             onPress={onPressCancel}
             onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Cancel"
-            accessibilityHint="Closes post composer and discards post draft">
-            <Text style={[pal.link, s.f18]}>Cancel</Text>
+            accessibilityLabel={_(msg`Cancel`)}
+            accessibilityHint={_(
+              msg`Closes post composer and discards post draft`,
+            )}>
+            <Text style={[pal.link, s.f18]}>
+              <Trans>Cancel</Trans>
+            </Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -267,13 +337,19 @@ export const ComposePost = observer(function ComposePost({
                 onChange={setLabels}
                 hasMedia={hasMedia}
               />
+              {replyTo ? null : (
+                <ThreadgateBtn
+                  threadgate={threadgate}
+                  onChange={setThreadgate}
+                />
+              )}
               {canPost ? (
                 <TouchableOpacity
                   testID="composerPublishBtn"
                   onPress={onPressPublish}
                   accessibilityRole="button"
                   accessibilityLabel={
-                    replyTo ? 'Publish reply' : 'Publish post'
+                    replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
                   }
                   accessibilityHint="">
                   <LinearGradient
@@ -285,19 +361,25 @@ export const ComposePost = observer(function ComposePost({
                     end={{x: 1, y: 1}}
                     style={styles.postBtn}>
                     <Text style={[s.white, s.f16, s.bold]}>
-                      {replyTo ? 'Reply' : 'Post'}
+                      {replyTo ? (
+                        <Trans context="action">Reply</Trans>
+                      ) : (
+                        <Trans context="action">Post</Trans>
+                      )}
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
-                  <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
+                  <Text style={[pal.textLight, s.f16, s.bold]}>
+                    <Trans context="action">Post</Trans>
+                  </Text>
                 </View>
               )}
             </>
           )}
         </View>
-        {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
+        {requireAltTextEnabled && gallery.needsAltText && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
               <FontAwesomeIcon
@@ -307,7 +389,7 @@ export const ComposePost = observer(function ComposePost({
               />
             </View>
             <Text style={[pal.text, s.flex1]}>
-              One or more images is missing alt text.
+              <Trans>One or more images is missing alt text.</Trans>
             </Text>
           </View>
         )}
@@ -326,22 +408,7 @@ export const ComposePost = observer(function ComposePost({
         <ScrollView
           style={styles.scrollView}
           keyboardShouldPersistTaps="always">
-          {replyTo ? (
-            <View style={[pal.border, styles.replyToLayout]}>
-              <UserAvatar avatar={replyTo.author.avatar} size={50} />
-              <View style={styles.replyToPost}>
-                <Text type="xl-medium" style={[pal.text]}>
-                  {sanitizeDisplayName(
-                    replyTo.author.displayName ||
-                      sanitizeHandle(replyTo.author.handle),
-                  )}
-                </Text>
-                <Text type="post-text" style={pal.text} numberOfLines={6}>
-                  {replyTo.text}
-                </Text>
-              </View>
-            </View>
-          ) : undefined}
+          {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
           <View
             style={[
@@ -349,13 +416,16 @@ export const ComposePost = observer(function ComposePost({
               styles.textInputLayout,
               isNative && styles.textInputLayoutMobile,
             ]}>
-            <UserAvatar avatar={store.me.avatar} size={50} />
+            <UserAvatar
+              avatar={currentProfile?.avatar}
+              size={50}
+              type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+            />
             <TextInput
               ref={textInput}
               richtext={richtext}
               placeholder={selectTextInputPlaceholder}
               suggestedLinks={suggestedLinks}
-              autocompleteView={autocompleteView}
               autoFocus={true}
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}
@@ -363,8 +433,10 @@ export const ComposePost = observer(function ComposePost({
               onSuggestedLinksChanged={setSuggestedLinks}
               onError={setError}
               accessible={true}
-              accessibilityLabel="Write post"
-              accessibilityHint={`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`}
+              accessibilityLabel={_(msg`Write post`)}
+              accessibilityHint={_(
+                msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+              )}
             />
           </View>
 
@@ -376,7 +448,7 @@ export const ComposePost = observer(function ComposePost({
             />
           )}
           {quote ? (
-            <View style={[s.mt5, isWeb && s.mb10]}>
+            <View style={[s.mt5, isWeb && s.mb10, {pointerEvents: 'none'}]}>
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}
@@ -392,16 +464,19 @@ export const ComposePost = observer(function ComposePost({
                   style={[pal.borderDark, styles.addExtLinkBtn]}
                   onPress={() => onPressAddLinkCard(url)}
                   accessibilityRole="button"
-                  accessibilityLabel="Add link card"
-                  accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
+                  accessibilityLabel={_(msg`Add link card`)}
+                  accessibilityHint={_(
+                    msg`Creates a card with a thumbnail. The card links to ${url}`,
+                  )}>
                   <Text style={pal.text}>
-                    Add link card:{' '}
-                    <Text style={pal.link}>{toShortUrl(url)}</Text>
+                    <Trans>Add link card:</Trans>{' '}
+                    <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
                   </Text>
                 </TouchableOpacity>
               ))}
           </View>
         ) : null}
+        <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
             <>
@@ -409,12 +484,39 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {isDesktop ? <EmojiPickerButton /> : null}
+          {!isMobile ? (
+            <Pressable
+              onPress={onEmojiButtonPress}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open emoji picker`)}
+              accessibilityHint={_(msg`Open emoji picker`)}>
+              <FontAwesomeIcon
+                icon={['far', 'face-smile']}
+                color={pal.colors.link}
+                size={22}
+              />
+            </Pressable>
+          ) : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
         </View>
       </View>
+
+      <Prompt.Basic
+        control={discardPromptControl}
+        title={_(msg`Discard draft?`)}
+        description={_(msg`Are you sure you'd like to discard this draft?`)}
+        onConfirm={() => {
+          if (isWeb) {
+            onClose()
+          } else {
+            discardPromptControl.close(onClose)
+          }
+        }}
+        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonColor="negative"
+      />
     </KeyboardAvoidingView>
   )
 })
@@ -428,9 +530,11 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingTop: 6,
     paddingBottom: 4,
     paddingHorizontal: 20,
     height: 55,
+    gap: 4,
   },
   topbarDesktop: {
     paddingTop: 10,
@@ -440,6 +544,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 6,
+    marginLeft: 12,
   },
   errorLine: {
     flexDirection: 'row',
@@ -481,17 +586,6 @@ const styles = StyleSheet.create({
   },
   textInputLayoutMobile: {
     flex: 1,
-  },
-  replyToLayout: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingTop: 16,
-    paddingBottom: 16,
-  },
-  replyToPost: {
-    flex: 1,
-    paddingLeft: 13,
-    paddingRight: 8,
   },
   addExtLinkBtn: {
     borderWidth: 1,

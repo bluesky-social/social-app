@@ -1,7 +1,11 @@
-import {AppBskyEmbedImages} from '@atproto/api'
 import React, {ComponentProps, FC} from 'react'
-import {StyleSheet, Text, Pressable, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {Image} from 'expo-image'
+import {AppBskyEmbedImages} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {isWeb} from 'platform/detection'
 
 type EventFunction = (index: number) => void
 
@@ -22,20 +26,21 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onPressIn,
   onLongPress,
 }) => {
+  const {_} = useLingui()
   const image = images[index]
-
   return (
-    <View>
+    <View style={styles.fullWidth}>
       <Pressable
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
+        style={styles.fullWidth}
         accessibilityRole="button"
-        accessibilityLabel={image.alt || 'Image'}
+        accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
-          style={imageStyle}
+          style={[styles.image, imageStyle]}
           accessible={true}
           accessibilityLabel={image.alt}
           accessibilityHint=""
@@ -54,14 +59,23 @@ export const GalleryItem: FC<GalleryItemProps> = ({
 }
 
 const styles = StyleSheet.create({
+  fullWidth: {
+    flex: 1,
+  },
+  image: {
+    flex: 1,
+    borderRadius: 4,
+  },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    left: 6,
-    bottom: 6,
+    // Related to margin/gap hack. This keeps the alt label in the same position
+    // on all platforms
+    left: isWeb ? 8 : 5,
+    bottom: isWeb ? 8 : 5,
   },
   alt: {
     color: 'white',

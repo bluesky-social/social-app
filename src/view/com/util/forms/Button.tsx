@@ -1,22 +1,21 @@
 import React from 'react'
 import {
+  ActivityIndicator,
   GestureResponderEvent,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
+  Pressable,
+  PressableStateCallbackType,
   StyleProp,
   StyleSheet,
   TextStyle,
-  Pressable,
-  ViewStyle,
-  PressableStateCallbackType,
-  ActivityIndicator,
   View,
+  ViewStyle,
 } from 'react-native'
-import {Text} from '../text/Text'
-import {useTheme} from 'lib/ThemeContext'
-import {choose} from 'lib/functions'
 
-type Event =
-  | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  | GestureResponderEvent
+import {choose} from 'lib/functions'
+import {useTheme} from 'lib/ThemeContext'
+import {Text} from '../text/Text'
 
 export type ButtonType =
   | 'primary'
@@ -52,19 +51,21 @@ export function Button({
   accessibilityLabelledBy,
   onAccessibilityEscape,
   withLoading = false,
+  disabled = false,
 }: React.PropsWithChildren<{
   type?: ButtonType
   label?: string
   style?: StyleProp<ViewStyle>
   labelContainerStyle?: StyleProp<ViewStyle>
   labelStyle?: StyleProp<TextStyle>
-  onPress?: () => void | Promise<void>
+  onPress?: (e: NativeSyntheticEvent<NativeTouchEvent>) => void | Promise<void>
   testID?: string
   accessibilityLabel?: string
   accessibilityHint?: string
   accessibilityLabelledBy?: string
   onAccessibilityEscape?: () => void
   withLoading?: boolean
+  disabled?: boolean
 }>) {
   const theme = useTheme()
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
@@ -146,11 +147,11 @@ export function Button({
 
   const [isLoading, setIsLoading] = React.useState(false)
   const onPressWrapped = React.useCallback(
-    async (event: Event) => {
+    async (event: GestureResponderEvent) => {
       event.stopPropagation()
       event.preventDefault()
       withLoading && setIsLoading(true)
-      await onPress?.()
+      await onPress?.(event)
       withLoading && setIsLoading(false)
     },
     [onPress, withLoading],
@@ -198,7 +199,7 @@ export function Button({
     <Pressable
       style={getStyle}
       onPress={onPressWrapped}
-      disabled={isLoading}
+      disabled={disabled || isLoading}
       testID={testID}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}

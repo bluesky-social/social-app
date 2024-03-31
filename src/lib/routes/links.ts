@@ -7,9 +7,31 @@ export function makeProfileLink(
   },
   ...segments: string[]
 ) {
-  return [
-    `/profile`,
-    `${isInvalidHandle(info.handle) ? info.did : info.handle}`,
-    ...segments,
-  ].join('/')
+  let handleSegment = info.did
+  if (info.handle && !isInvalidHandle(info.handle)) {
+    handleSegment = info.handle
+  }
+  return [`/profile`, handleSegment, ...segments].join('/')
+}
+
+export function makeCustomFeedLink(
+  did: string,
+  rkey: string,
+  ...segments: string[]
+) {
+  return [`/profile`, did, 'feed', rkey, ...segments].join('/')
+}
+
+export function makeListLink(did: string, rkey: string, ...segments: string[]) {
+  return [`/profile`, did, 'lists', rkey, ...segments].join('/')
+}
+
+export function makeTagLink(did: string) {
+  return `/search?q=${encodeURIComponent(did)}`
+}
+
+export function makeSearchLink(props: {query: string; from?: 'me' | string}) {
+  return `/search?q=${encodeURIComponent(
+    props.query + (props.from ? ` from:${props.from}` : ''),
+  )}`
 }

@@ -1,70 +1,91 @@
-import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
-import {CenteredView, FlatList} from '../util/Views'
-import {LikesModel, LikeItem} from 'state/models/lists/likes'
-import {ErrorMessage} from '../util/error/ErrorMessage'
+import React, {useCallback, useMemo, useState} from 'react'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {useLikedByQuery} from '#/state/queries/post-liked-by'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List} from '../util/List'
+import {LoadingScreen} from '../util/LoadingScreen'
+import {CenteredView} from '../util/Views'
 
-export const PostLikedBy = observer(function PostLikedByImpl({
-  uri,
-}: {
-  uri: string
-}) {
-  const pal = usePalette('default')
-  const store = useStores()
-  const view = React.useMemo(() => new LikesModel(store, {uri}), [store, uri])
+export function PostLikedBy({uri}: {uri: string}) {
+  const [isPTRing, setIsPTRing] = useState(false)
+  const {
+    data: resolvedUri,
+    error: resolveError,
+    isFetching: isFetchingResolvedUri,
+  } = useResolveUriQuery(uri)
+  const {
+    data,
+    isFetching,
+    isFetched,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isError,
+    error,
+    refetch,
+  } = useLikedByQuery(resolvedUri?.uri)
+  const likes = useMemo(() => {
+    if (data?.pages) {
+      return data.pages.flatMap(page => page.likes)
+    }
+  }, [data])
 
-  useEffect(() => {
-    view.loadMore().catch(err => store.log.error('Failed to fetch likes', err))
-  }, [view, store.log])
+  const onRefresh = useCallback(async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh likes', {message: err})
+    }
+    setIsPTRing(false)
+  }, [refetch, setIsPTRing])
 
-  const onRefresh = () => {
-    view.refresh()
-  }
-  const onEndReached = () => {
-    view
-      .loadMore()
-      .catch(err => view?.rootStore.log.error('Failed to load more likes', err))
-  }
+  const onEndReached = useCallback(async () => {
+    if (isFetching || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more likes', {message: err})
+    }
+  }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  if (!view.hasLoaded) {
+  const renderItem = useCallback(({item}: {item: GetLikes.Like}) => {
     return (
-      <CenteredView>
-        <ActivityIndicator />
-      </CenteredView>
+      <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
     )
+  }, [])
+
+  if (isFetchingResolvedUri || !isFetched) {
+    return <LoadingScreen />
   }
 
   // error
   // =
-  if (view.hasError) {
+  if (resolveError || isError) {
     return (
       <CenteredView>
-        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
+        <ErrorMessage
+          message={cleanError(resolveError || error)}
+          onPressTryAgain={onRefresh}
+        />
       </CenteredView>
     )
   }
 
   // loaded
   // =
-  const renderItem = ({item}: {item: LikeItem}) => (
-    <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
-  )
   return (
-    <FlatList
-      data={view.likes}
+    <List
+      data={likes}
       keyExtractor={item => item.actor.did}
-      refreshControl={
-        <RefreshControl
-          refreshing={view.isRefreshing}
-          onRefresh={onRefresh}
-          tintColor={pal.colors.text}
-          titleColor={pal.colors.text}
-        />
-      }
+      refreshing={isPTRing}
+      onRefresh={onRefresh}
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}
@@ -72,15 +93,14 @@ export const PostLikedBy = observer(function PostLikedByImpl({
       // eslint-disable-next-line react/no-unstable-nested-components
       ListFooterComponent={() => (
         <View style={styles.footer}>
-          {view.isLoading && <ActivityIndicator />}
+          {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
         </View>
       )}
-      extraData={view.isLoading}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
     />
   )
-})
+}
 
 const styles = StyleSheet.create({
   footer: {

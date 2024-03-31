@@ -1,6 +1,9 @@
 /* eslint-env detox/detox */
 
-import {openApp, login, createServer} from '../util'
+import {beforeAll, describe, it} from '@jest/globals'
+import {expect} from 'detox'
+
+import {createServer, login, openApp} from '../util'
 
 describe('Login', () => {
   let service: string
@@ -10,6 +13,8 @@ describe('Login', () => {
   })
 
   it('As Alice, I can login', async () => {
+    await element(by.id('e2eOpenLoggedOutView')).tap()
+
     await expect(element(by.id('signInButton'))).toBeVisible()
     await login(service, 'alice', 'hunter2', {
       takeScreenshots: true,

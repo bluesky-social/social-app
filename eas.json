@@ -1,48 +1,58 @@
 {
   "cli": {
     "version": ">= 3.8.1",
-    "promptToConfigurePushNotifications": false
+    "promptToConfigurePushNotifications": false,
+    "appVersionSource": "remote"
   },
   "build": {
+    "base": {
+      "node": "18.18.2"
+    },
     "development": {
+      "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
+      "channel": "development",
       "ios": {
         "simulator": true,
-        "resourceClass": "m-large"
-      },
-      "channel": "development"
-    },
-    "development-device": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "resourceClass": "m-large"
-      },
-      "channel": "development"
+        "resourceClass": "large"
+      }
     },
     "preview": {
+      "extends": "base",
       "distribution": "internal",
+      "channel": "preview",
       "ios": {
-        "resourceClass": "m-large"
-      },
-      "channel": "preview"
+        "resourceClass": "large"
+      }
     },
     "production": {
+      "extends": "base",
       "ios": {
-        "resourceClass": "m-large"
+        "resourceClass": "large",
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
       },
       "channel": "production"
     },
-    "dev-android-apk": {
-      "developmentClient": true,
+    "github": {
+      "extends": "base",
+      "ios": {
+        "autoIncrement": true
+      },
       "android": {
-        "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      }
+        "autoIncrement": true
+      },
+      "channel": "production"
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "6444370199"
+      }
+    }
   }
 }

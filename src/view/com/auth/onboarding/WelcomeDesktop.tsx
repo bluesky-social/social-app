@@ -1,26 +1,25 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {useMediaQuery} from 'react-responsive'
-import {Text} from 'view/com/util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
+import {Trans} from '@lingui/macro'
+import {useMediaQuery} from 'react-responsive'
+
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 import {Button} from 'view/com/util/forms/Button'
-import {observer} from 'mobx-react-lite'
+import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
+import {Text} from 'view/com/util/text/Text'
 
 type Props = {
   next: () => void
   skip: () => void
 }
 
-export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
-  next,
-}: Props) {
+export function WelcomeDesktop({next}: Props) {
   const pal = usePalette('default')
   const horizontal = useMediaQuery({minWidth: 1300})
   const title = (
-    <>
+    <Trans>
       <Text
         style={[
           pal.textLight,
@@ -43,7 +42,7 @@ export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
         ]}>
         Bluesky
       </Text>
-    </>
+    </Trans>
   )
   return (
     <TitleColumnLayout
@@ -55,10 +54,12 @@ export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
         <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
         <View style={[styles.rowText]}>
           <Text type="xl-bold" style={[pal.text]}>
-            Bluesky is public.
+            <Trans>Bluesky is public.</Trans>
           </Text>
           <Text type="xl" style={[pal.text, s.pt2]}>
-            Your posts, likes, and blocks are public. Mutes are private.
+            <Trans>
+              Your posts, likes, and blocks are public. Mutes are private.
+            </Trans>
           </Text>
         </View>
       </View>
@@ -66,10 +67,10 @@ export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
         <FontAwesomeIcon icon={'at'} size={36} color={pal.colors.link} />
         <View style={[styles.rowText]}>
           <Text type="xl-bold" style={[pal.text]}>
-            Bluesky is open.
+            <Trans>Bluesky is open.</Trans>
           </Text>
           <Text type="xl" style={[pal.text, s.pt2]}>
-            Never lose access to your followers and data.
+            <Trans>Never lose access to your followers and data.</Trans>
           </Text>
         </View>
       </View>
@@ -77,10 +78,13 @@ export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
         <FontAwesomeIcon icon={'gear'} size={36} color={pal.colors.link} />
         <View style={[styles.rowText]}>
           <Text type="xl-bold" style={[pal.text]}>
-            Bluesky is flexible.
+            <Trans>Bluesky is flexible.</Trans>
           </Text>
           <Text type="xl" style={[pal.text, s.pt2]}>
-            Choose the algorithms that power your experience with custom feeds.
+            <Trans>
+              Choose the algorithms that power your experience with custom
+              feeds.
+            </Trans>
           </Text>
         </View>
       </View>
@@ -97,7 +101,7 @@ export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Next
+              <Trans context="action">Next</Trans>
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>
@@ -105,7 +109,7 @@ export const WelcomeDesktop = observer(function WelcomeDesktopImpl({
       </View>
     </TitleColumnLayout>
   )
-})
+}
 
 const styles = StyleSheet.create({
   row: {

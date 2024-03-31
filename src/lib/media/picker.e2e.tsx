@@ -1,18 +1,18 @@
-import {RootStoreModel} from 'state/index'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import RNFS from 'react-native-fs'
-import {CropperOptions} from './types'
-import {compressIfNeeded} from './manip'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
-let _imageCounter = 0
+import {compressIfNeeded} from './manip'
+import {CropperOptions} from './types'
+
 async function getFile() {
-  const files = await RNFS.readDir(
+  let files = await RNFS.readDir(
     RNFS.LibraryDirectoryPath.split('/')
       .slice(0, -5)
       .concat(['Media', 'DCIM', '100APPLE'])
       .join('/'),
   )
-  const file = files[_imageCounter++ % files.length]
+  files = files.filter(file => file.path.endsWith('.JPG'))
+  const file = files[0]
   return await compressIfNeeded({
     path: file.path,
     mime: 'image/jpeg',
@@ -22,18 +22,15 @@ async function getFile() {
   })
 }
 
-export async function openPicker(_store: RootStoreModel): Promise<RNImage[]> {
+export async function openPicker(): Promise<RNImage[]> {
   return [await getFile()]
 }
 
-export async function openCamera(_store: RootStoreModel): Promise<RNImage> {
+export async function openCamera(): Promise<RNImage> {
   return await getFile()
 }
 
-export async function openCropper(
-  _store: RootStoreModel,
-  opts: CropperOptions,
-): Promise<RNImage> {
+export async function openCropper(opts: CropperOptions): Promise<RNImage> {
   return {
     path: opts.path,
     mime: 'image/jpeg',

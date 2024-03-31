@@ -1,24 +1,27 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useWindowDimensions} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
+import {MaterialIcons} from '@expo/vector-icons'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Slider} from '@miblanchard/react-native-slider'
+import {observer} from 'mobx-react-lite'
+import ImageEditor, {Position} from 'react-avatar-editor'
+
+import {useModalControls} from '#/state/modals'
+import {MAX_ALT_TEXT} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {RectTallIcon, RectWideIcon, SquareIcon} from 'lib/icons'
+import {enforceLen} from 'lib/strings/helpers'
 import {gradients, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../util/text/Text'
-import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from 'state/index'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import ImageEditor, {Position} from 'react-avatar-editor'
-import {TextInput} from './util'
-import {enforceLen} from 'lib/strings/helpers'
-import {MAX_ALT_TEXT} from 'lib/constants'
+import {getKeys} from 'lib/type-assertions'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ImageModel} from 'state/models/media/image'
-import {SquareIcon, RectWideIcon, RectTallIcon} from 'lib/icons'
-import {Slider} from '@miblanchard/react-native-slider'
-import {MaterialIcons} from '@expo/vector-icons'
-import {observer} from 'mobx-react-lite'
-import {getKeys} from 'lib/type-assertions'
+import {Text} from '../util/text/Text'
+import {TextInput} from './util'
 
 export const snapPoints = ['80%']
 
@@ -52,9 +55,10 @@ export const Component = observer(function EditImageImpl({
 }: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
-  const store = useStores()
+  const {_} = useLingui()
   const windowDimensions = useWindowDimensions()
   const {isMobile} = useWebMediaQueries()
+  const {closeModal} = useModalControls()
 
   const {
     aspectRatio,
@@ -109,16 +113,16 @@ export const Component = observer(function EditImageImpl({
       // },
       {
         name: 'flip' as const,
-        label: 'Flip horizontal',
+        label: _(msg`Flip horizontal`),
         onPress: onFlipHorizontal,
       },
       {
         name: 'flip' as const,
-        label: 'Flip vertically',
+        label: _(msg`Flip vertically`),
         onPress: onFlipVertical,
       },
     ],
-    [onFlipHorizontal, onFlipVertical],
+    [onFlipHorizontal, onFlipVertical, _],
   )
 
   useEffect(() => {
@@ -128,8 +132,8 @@ export const Component = observer(function EditImageImpl({
   }, [image])
 
   const onCloseModal = useCallback(() => {
-    store.shell.closeModal()
-  }, [store.shell])
+    closeModal()
+  }, [closeModal])
 
   const onPressCancel = useCallback(async () => {
     await gallery.previous(image)
@@ -200,7 +204,9 @@ export const Component = observer(function EditImageImpl({
           paddingHorizontal: isMobile ? 16 : undefined,
         },
       ]}>
-      <Text style={[styles.title, pal.text]}>Edit image</Text>
+      <Text style={[styles.title, pal.text]}>
+        <Trans>Edit image</Trans>
+      </Text>
       <View style={[styles.gap18, s.flexRow]}>
         <View>
           <View
@@ -228,7 +234,7 @@ export const Component = observer(function EditImageImpl({
         <View>
           {!isMobile ? (
             <Text type="sm-bold" style={pal.text}>
-              Ratios
+              <Trans>Ratios</Trans>
             </Text>
           ) : null}
           <View style={imgControlStyles}>
@@ -263,7 +269,7 @@ export const Component = observer(function EditImageImpl({
           </View>
           {!isMobile ? (
             <Text type="sm-bold" style={[pal.text, styles.subsection]}>
-              Transformations
+              <Trans>Transformations</Trans>
             </Text>
           ) : null}
           <View style={imgControlStyles}>
@@ -279,7 +285,7 @@ export const Component = observer(function EditImageImpl({
                   size={label?.startsWith('Flip') ? 22 : 24}
                   style={[
                     pal.text,
-                    label === 'Flip vertically'
+                    label === _(msg`Flip vertically`)
                       ? styles.flipVertical
                       : undefined,
                   ]}
@@ -291,7 +297,7 @@ export const Component = observer(function EditImageImpl({
       </View>
       <View style={[styles.gap18, styles.bottomSection, pal.border]}>
         <Text type="sm-bold" style={pal.text} nativeID="alt-text">
-          Accessibility
+          <Trans>Accessibility</Trans>
         </Text>
         <TextInput
           testID="altTextImageInput"
@@ -307,7 +313,7 @@ export const Component = observer(function EditImageImpl({
           multiline
           value={altText}
           onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
-          accessibilityLabel="Alt text"
+          accessibilityLabel={_(msg`Alt text`)}
           accessibilityHint=""
           accessibilityLabelledBy="alt-text"
         />
@@ -315,7 +321,7 @@ export const Component = observer(function EditImageImpl({
       <View style={styles.btns}>
         <Pressable onPress={onPressCancel} accessibilityRole="button">
           <Text type="xl" style={pal.link}>
-            Cancel
+            <Trans>Cancel</Trans>
           </Text>
         </Pressable>
         <Pressable onPress={onPressSave} accessibilityRole="button">
@@ -325,7 +331,7 @@ export const Component = observer(function EditImageImpl({
             end={{x: 1, y: 1}}
             style={[styles.btn]}>
             <Text type="xl-medium" style={s.white}>
-              Done
+              <Trans context="action">Done</Trans>
             </Text>
           </LinearGradient>
         </Pressable>

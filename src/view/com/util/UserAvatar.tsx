@@ -1,43 +1,63 @@
-import React, {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
-import Svg, {Circle, Rect, Path} from 'react-native-svg'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HighPriorityImage} from 'view/com/util/images/Image'
-import {ModerationUI} from '@atproto/api'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {
-  usePhotoLibraryPermission,
-  useCameraPermission,
-} from 'lib/hooks/usePermissions'
-import {useStores} from 'state/index'
-import {colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid} from 'platform/detection'
+import React, {memo, useMemo} from 'react'
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {UserPreviewLink} from './UserPreviewLink'
-import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
+import Svg, {Circle, Path, Rect} from 'react-native-svg'
+import {ModerationUI} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-type Type = 'user' | 'algo' | 'list'
+import {usePalette} from 'lib/hooks/usePalette'
+import {
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from 'lib/hooks/usePermissions'
+import {colors} from 'lib/styles'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {HighPriorityImage} from 'view/com/util/images/Image'
+import {tokens, useTheme} from '#/alf'
+import {
+  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+  Camera_Stroke2_Corner0_Rounded as Camera,
+} from '#/components/icons/Camera'
+import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import * as Menu from '#/components/Menu'
+import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
+import {UserPreviewLink} from './UserPreviewLink'
+
+export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
 interface BaseUserAvatarProps {
-  type?: Type
+  type?: UserAvatarType
   size: number
   avatar?: string | null
-  moderation?: ModerationUI
 }
 
 interface UserAvatarProps extends BaseUserAvatarProps {
-  onSelectNewAvatar?: (img: RNImage | null) => void
+  moderation?: ModerationUI
+  usePlainRNImage?: boolean
+}
+
+interface EditableUserAvatarProps extends BaseUserAvatarProps {
+  onSelectNewAvatar: (img: RNImage | null) => void
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
+  moderation?: ModerationUI
   did: string
   handle: string
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
-function DefaultAvatar({type, size}: {type: Type; size: number}) {
+let DefaultAvatar = ({
+  type,
+  size,
+}: {
+  type: UserAvatarType
+  size: number
+}): React.ReactNode => {
   if (type === 'algo') {
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
@@ -81,6 +101,33 @@ function DefaultAvatar({type, size}: {type: Type; size: number}) {
       </Svg>
     )
   }
+  if (type === 'labeler') {
+    return (
+      <Svg
+        testID="userAvatarFallback"
+        width={size}
+        height={size}
+        viewBox="0 0 32 32"
+        fill="none"
+        stroke="none">
+        <Rect
+          x="0"
+          y="0"
+          width="32"
+          height="32"
+          rx="3"
+          fill={tokens.color.temp_purple}
+        />
+        <Path
+          d="M24 9.75L16 7L8 9.75V15.9123C8 20.8848 12 23 16 25.1579C20 23 24 20.8848 24 15.9123V9.75Z"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="square"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    )
+  }
   return (
     <Svg
       testID="userAvatarFallback"
@@ -100,16 +147,93 @@ function DefaultAvatar({type, size}: {type: Type; size: number}) {
     </Svg>
   )
 }
+DefaultAvatar = memo(DefaultAvatar)
+export {DefaultAvatar}
 
-export function UserAvatar({
+let UserAvatar = ({
   type = 'user',
   size,
   avatar,
   moderation,
-  onSelectNewAvatar,
-}: UserAvatarProps) {
-  const store = useStores()
+  usePlainRNImage = false,
+}: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
+  const backgroundColor = pal.colors.backgroundLight
+
+  const aviStyle = useMemo(() => {
+    if (type === 'algo' || type === 'list' || type === 'labeler') {
+      return {
+        width: size,
+        height: size,
+        borderRadius: size > 32 ? 8 : 3,
+        backgroundColor,
+      }
+    }
+    return {
+      width: size,
+      height: size,
+      borderRadius: Math.floor(size / 2),
+      backgroundColor,
+    }
+  }, [type, size, backgroundColor])
+
+  const alert = useMemo(() => {
+    if (!moderation?.alert) {
+      return null
+    }
+    return (
+      <View style={[styles.alertIconContainer, pal.view]}>
+        <FontAwesomeIcon
+          icon="exclamation-circle"
+          style={styles.alertIcon}
+          size={Math.floor(size / 3)}
+        />
+      </View>
+    )
+  }, [moderation?.alert, size, pal])
+
+  return avatar &&
+    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
+    <View style={{width: size, height: size}}>
+      {usePlainRNImage ? (
+        <Image
+          accessibilityIgnoresInvertColors
+          testID="userAvatarImage"
+          style={aviStyle}
+          resizeMode="cover"
+          source={{uri: avatar}}
+          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+        />
+      ) : (
+        <HighPriorityImage
+          testID="userAvatarImage"
+          style={aviStyle}
+          contentFit="cover"
+          source={{uri: avatar}}
+          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+        />
+      )}
+      {alert}
+    </View>
+  ) : (
+    <View style={{width: size, height: size}}>
+      <DefaultAvatar type={type} size={size} />
+      {alert}
+    </View>
+  )
+}
+UserAvatar = memo(UserAvatar)
+export {UserAvatar}
+
+let EditableUserAvatar = ({
+  type = 'user',
+  size,
+  avatar,
+  onSelectNewAvatar,
+}: EditableUserAvatarProps): React.ReactNode => {
+  const t = useTheme()
+  const pal = usePalette('default')
+  const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
@@ -128,158 +252,134 @@ export function UserAvatar({
     }
   }, [type, size])
 
-  const dropdownItems = useMemo(
-    () =>
-      [
-        !isWeb && {
-          testID: 'changeAvatarCameraBtn',
-          label: 'Camera',
-          icon: {
-            ios: {
-              name: 'camera',
-            },
-            android: 'ic_menu_camera',
-            web: 'camera',
-          },
-          onPress: async () => {
-            if (!(await requestCameraAccessIfNeeded())) {
-              return
-            }
-
-            onSelectNewAvatar?.(
-              await openCamera(store, {
-                width: 1000,
-                height: 1000,
-                cropperCircleOverlay: true,
-              }),
-            )
-          },
-        },
-        {
-          testID: 'changeAvatarLibraryBtn',
-          label: 'Library',
-          icon: {
-            ios: {
-              name: 'photo.on.rectangle.angled',
-            },
-            android: 'ic_menu_gallery',
-            web: 'gallery',
-          },
-          onPress: async () => {
-            if (!(await requestPhotoAccessIfNeeded())) {
-              return
-            }
-
-            const items = await openPicker({
-              aspect: [1, 1],
-            })
-            const item = items[0]
-
-            const croppedImage = await openCropper(store, {
-              mediaType: 'photo',
-              cropperCircleOverlay: true,
-              height: item.height,
-              width: item.width,
-              path: item.path,
-            })
-
-            onSelectNewAvatar?.(croppedImage)
-          },
-        },
-        !!avatar && {
-          label: 'separator',
-        },
-        !!avatar && {
-          testID: 'changeAvatarRemoveBtn',
-          label: 'Remove',
-          icon: {
-            ios: {
-              name: 'trash',
-            },
-            android: 'ic_delete',
-            web: 'trash',
-          },
-          onPress: async () => {
-            onSelectNewAvatar?.(null)
-          },
-        },
-      ].filter(Boolean) as DropdownItem[],
-    [
-      avatar,
-      onSelectNewAvatar,
-      requestCameraAccessIfNeeded,
-      requestPhotoAccessIfNeeded,
-      store,
-    ],
-  )
-
-  const alert = useMemo(() => {
-    if (!moderation?.alert) {
-      return null
+  const onOpenCamera = React.useCallback(async () => {
+    if (!(await requestCameraAccessIfNeeded())) {
+      return
     }
-    return (
-      <View style={[styles.alertIconContainer, pal.view]}>
-        <FontAwesomeIcon
-          icon="exclamation-circle"
-          style={styles.alertIcon}
-          size={Math.floor(size / 3)}
-        />
-      </View>
-    )
-  }, [moderation?.alert, size, pal])
 
-  // onSelectNewAvatar is only passed as prop on the EditProfile component
-  return onSelectNewAvatar ? (
-    <NativeDropdown
-      testID="changeAvatarBtn"
-      items={dropdownItems}
-      accessibilityLabel="Image options"
-      accessibilityHint="">
-      {avatar ? (
-        <HighPriorityImage
-          testID="userAvatarImage"
-          style={aviStyle}
-          source={{uri: avatar}}
-          accessibilityRole="image"
-        />
-      ) : (
-        <DefaultAvatar type={type} size={size} />
-      )}
-      <View style={[styles.editButtonContainer, pal.btn]}>
-        <FontAwesomeIcon
-          icon="camera"
-          size={12}
-          color={pal.text.color as string}
-        />
-      </View>
-    </NativeDropdown>
-  ) : avatar &&
-    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
-    <View style={{width: size, height: size}}>
-      <HighPriorityImage
-        testID="userAvatarImage"
-        style={aviStyle}
-        contentFit="cover"
-        source={{uri: avatar}}
-        blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
-      />
-      {alert}
-    </View>
-  ) : (
-    <View style={{width: size, height: size}}>
-      <DefaultAvatar type={type} size={size} />
-      {alert}
-    </View>
+    onSelectNewAvatar(
+      await openCamera({
+        width: 1000,
+        height: 1000,
+        cropperCircleOverlay: true,
+      }),
+    )
+  }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
+
+  const onOpenLibrary = React.useCallback(async () => {
+    if (!(await requestPhotoAccessIfNeeded())) {
+      return
+    }
+
+    const items = await openPicker({
+      aspect: [1, 1],
+    })
+    const item = items[0]
+    if (!item) {
+      return
+    }
+
+    const croppedImage = await openCropper({
+      mediaType: 'photo',
+      cropperCircleOverlay: true,
+      height: item.height,
+      width: item.width,
+      path: item.path,
+    })
+
+    onSelectNewAvatar(croppedImage)
+  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
+
+  const onRemoveAvatar = React.useCallback(() => {
+    onSelectNewAvatar(null)
+  }, [onSelectNewAvatar])
+
+  return (
+    <Menu.Root>
+      <Menu.Trigger label={_(msg`Edit avatar`)}>
+        {({props}) => (
+          <TouchableOpacity
+            {...props}
+            activeOpacity={0.8}
+            testID="changeAvatarBtn">
+            {avatar ? (
+              <HighPriorityImage
+                testID="userAvatarImage"
+                style={aviStyle}
+                source={{uri: avatar}}
+                accessibilityRole="image"
+              />
+            ) : (
+              <DefaultAvatar type={type} size={size} />
+            )}
+            <View style={[styles.editButtonContainer, pal.btn]}>
+              <CameraFilled height={14} width={14} style={t.atoms.text} />
+            </View>
+          </TouchableOpacity>
+        )}
+      </Menu.Trigger>
+      <Menu.Outer showCancel>
+        <Menu.Group>
+          {isNative && (
+            <Menu.Item
+              testID="changeAvatarCameraBtn"
+              label={_(msg`Upload from Camera`)}
+              onPress={onOpenCamera}>
+              <Menu.ItemText>
+                <Trans>Upload from Camera</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Camera} />
+            </Menu.Item>
+          )}
+
+          <Menu.Item
+            testID="changeAvatarLibraryBtn"
+            label={_(msg`Upload from Library`)}
+            onPress={onOpenLibrary}>
+            <Menu.ItemText>
+              {isNative ? (
+                <Trans>Upload from Library</Trans>
+              ) : (
+                <Trans>Upload from Files</Trans>
+              )}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Library} />
+          </Menu.Item>
+        </Menu.Group>
+        {!!avatar && (
+          <>
+            <Menu.Divider />
+            <Menu.Group>
+              <Menu.Item
+                testID="changeAvatarRemoveBtn"
+                label={_(`Remove Avatar`)}
+                onPress={onRemoveAvatar}>
+                <Menu.ItemText>
+                  <Trans>Remove Avatar</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Trash} />
+              </Menu.Item>
+            </Menu.Group>
+          </>
+        )}
+      </Menu.Outer>
+    </Menu.Root>
   )
 }
+EditableUserAvatar = memo(EditableUserAvatar)
+export {EditableUserAvatar}
 
-export function PreviewableUserAvatar(props: PreviewableUserAvatarProps) {
+let PreviewableUserAvatar = (
+  props: PreviewableUserAvatarProps,
+): React.ReactNode => {
   return (
     <UserPreviewLink did={props.did} handle={props.handle}>
       <UserAvatar {...props} />
     </UserPreviewLink>
   )
 }
+PreviewableUserAvatar = memo(PreviewableUserAvatar)
+export {PreviewableUserAvatar}
 
 const styles = StyleSheet.create({
   editButtonContainer: {

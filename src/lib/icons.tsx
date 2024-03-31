@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, TextStyle, ViewStyle} from 'react-native'
-import Svg, {Path, Rect, Line, Ellipse} from 'react-native-svg'
+import Svg, {Ellipse, Line, Path, Rect} from 'react-native-svg'
 
 export function GridIcon({
   style,
@@ -943,6 +943,33 @@ export function ShieldExclamation({
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z"
+      />
+    </Svg>
+  )
+}
+
+export function ListIcon({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<TextStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth || 1.5}
+      stroke="currentColor"
+      width={size}
+      height={size}
+      style={style}>
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
       />
     </Svg>
   )

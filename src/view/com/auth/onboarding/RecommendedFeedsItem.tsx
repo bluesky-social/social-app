@@ -1,43 +1,75 @@
 import React from 'react'
 import {View} from 'react-native'
-import {observer} from 'mobx-react-lite'
+import {AppBskyFeedDefs, RichText as BskRichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from 'view/com/util/text/Text'
-import {Button} from 'view/com/util/forms/Button'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import * as Toast from 'view/com/util/Toast'
-import {HeartIcon} from 'lib/icons'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {logger} from '#/logger'
+import {
+  usePinFeedMutation,
+  usePreferencesQuery,
+  useRemoveFeedMutation,
+} from '#/state/queries/preferences'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {HeartIcon} from 'lib/icons'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
+import {Button} from 'view/com/util/forms/Button'
+import {RichText} from 'view/com/util/text/RichText'
+import {Text} from 'view/com/util/text/Text'
+import * as Toast from 'view/com/util/Toast'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 
-export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
+export function RecommendedFeedsItem({
   item,
 }: {
-  item: CustomFeedModel
+  item: AppBskyFeedDefs.GeneratorView
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
-  if (!item) return null
+  const {_} = useLingui()
+  const {data: preferences} = usePreferencesQuery()
+  const {
+    mutateAsync: pinFeed,
+    variables: pinnedFeed,
+    reset: resetPinFeed,
+  } = usePinFeedMutation()
+  const {
+    mutateAsync: removeFeed,
+    variables: removedFeed,
+    reset: resetRemoveFeed,
+  } = useRemoveFeedMutation()
+  const {track} = useAnalytics()
+
+  if (!item || !preferences) return null
+
+  const isPinned =
+    !removedFeed?.uri &&
+    (pinnedFeed?.uri || preferences.feeds.saved.includes(item.uri))
+
   const onToggle = async () => {
-    if (item.isSaved) {
+    if (isPinned) {
       try {
-        await item.unsave()
+        await removeFeed({uri: item.uri})
+        resetRemoveFeed()
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
-        console.error('Failed to unsave feed', {e})
+        Toast.show(_(msg`There was an issue contacting your server`))
+        logger.error('Failed to unsave feed', {message: e})
       }
     } else {
       try {
-        await item.save()
-        await item.pin()
+        await pinFeed({uri: item.uri})
+        resetPinFeed()
+        track('Onboarding:CustomFeedAdded')
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
-        console.error('Failed to pin feed', {e})
+        Toast.show(_(msg`There was an issue contacting your server`))
+        logger.error('Failed to pin feed', {message: e})
       }
     }
   }
+
   return (
     <View testID={`feed-${item.displayName}`}>
       <View
@@ -55,7 +87,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
           },
         ]}>
         <View style={{marginTop: 2}}>
-          <UserAvatar type="algo" size={42} avatar={item.data.avatar} />
+          <UserAvatar type="algo" size={42} avatar={item.avatar} />
         </View>
         <View style={{flex: isMobile ? 1 : undefined}}>
           <Text
@@ -66,11 +98,11 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
           </Text>
 
           <Text style={[pal.textLight, {marginBottom: 8}]} numberOfLines={1}>
-            by {sanitizeHandle(item.data.creator.handle, '@')}
+            <Trans>by {sanitizeHandle(item.creator.handle, '@')}</Trans>
           </Text>
 
-          {item.data.description ? (
-            <Text
+          {item.description ? (
+            <RichText
               type="xl"
               style={[
                 pal.text,
@@ -80,9 +112,9 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                   marginBottom: 18,
                 },
               ]}
-              numberOfLines={6}>
-              {item.data.description}
-            </Text>
+              richText={new BskRichText({text: item.description || ''})}
+              numberOfLines={6}
+            />
           ) : null}
 
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
@@ -97,7 +129,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                   paddingRight: 2,
                   gap: 6,
                 }}>
-                {item.isSaved ? (
+                {isPinned ? (
                   <>
                     <FontAwesomeIcon
                       icon="check"
@@ -105,7 +137,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                       color={pal.colors.textInverted}
                     />
                     <Text type="lg-medium" style={pal.textInverted}>
-                      Added
+                      <Trans>Added</Trans>
                     </Text>
                   </>
                 ) : (
@@ -116,7 +148,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                       color={pal.colors.textInverted}
                     />
                     <Text type="lg-medium" style={pal.textInverted}>
-                      Add
+                      <Trans>Add</Trans>
                     </Text>
                   </>
                 )}
@@ -130,7 +162,7 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
                 style={[pal.textLight, {position: 'relative', top: 2}]}
               />
               <Text type="lg-medium" style={[pal.text, pal.textLight]}>
-                {item.data.likeCount || 0}
+                {item.likeCount || 0}
               </Text>
             </View>
           </View>
@@ -138,4 +170,4 @@ export const RecommendedFeedsItem = observer(function RecommendedFeedsItemImpl({
       </View>
     </View>
   )
-})
+}

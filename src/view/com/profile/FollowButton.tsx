@@ -1,46 +1,74 @@
 import React from 'react'
 import {StyleProp, TextStyle, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
+import {AppBskyActorDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {Shadow} from '#/state/cache/types'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {Button, ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
-import {FollowState} from 'state/models/cache/my-follows'
-import {useFollowDid} from 'lib/hooks/useFollowDid'
 
-export const FollowButton = observer(function FollowButtonImpl({
+export function FollowButton({
   unfollowedType = 'inverted',
   followedType = 'default',
-  did,
-  onToggleFollow,
+  profile,
   labelStyle,
+  logContext,
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
-  did: string
-  onToggleFollow?: (v: boolean) => void
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   labelStyle?: StyleProp<TextStyle>
+  logContext: 'ProfileCard'
 }) {
-  const {state, following, toggle} = useFollowDid({did})
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    logContext,
+  )
+  const {_} = useLingui()
 
-  const onPress = React.useCallback(async () => {
+  const onPressFollow = async () => {
     try {
-      const {following} = await toggle()
-      onToggleFollow?.(following)
+      await queueFollow()
     } catch (e: any) {
-      Toast.show('An issue occurred, please try again.')
+      if (e?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`))
+      }
     }
-  }, [toggle, onToggleFollow])
+  }
 
-  if (state === FollowState.Unknown) {
+  const onPressUnfollow = async () => {
+    try {
+      await queueUnfollow()
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`))
+      }
+    }
+  }
+
+  if (!profile.viewer) {
     return <View />
   }
 
-  return (
-    <Button
-      type={following ? followedType : unfollowedType}
-      labelStyle={labelStyle}
-      onPress={onPress}
-      label={following ? 'Unfollow' : 'Follow'}
-      withLoading={true}
-    />
-  )
-})
+  if (profile.viewer.following) {
+    return (
+      <Button
+        type={followedType}
+        labelStyle={labelStyle}
+        onPress={onPressUnfollow}
+        label={_(msg({message: 'Unfollow', context: 'action'}))}
+      />
+    )
+  } else {
+    return (
+      <Button
+        type={unfollowedType}
+        labelStyle={labelStyle}
+        onPress={onPressFollow}
+        label={_(msg({message: 'Follow', context: 'action'}))}
+      />
+    )
+  }
+}
