@@ -1,6 +1,7 @@
 import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
+
+import {isWeb} from 'platform/detection'
 import {Theme, TypographyVariant} from './ThemeContext'
-import {isMobileWeb} from 'platform/detection'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
 export const colors = {
@@ -164,8 +165,10 @@ export const s = StyleSheet.create({
   flexRow: {flexDirection: 'row'},
   flexCol: {flexDirection: 'column'},
   flex1: {flex: 1},
+  flexGrow1: {flexGrow: 1},
   alignCenter: {alignItems: 'center'},
   alignBaseline: {alignItems: 'baseline'},
+  justifyCenter: {justifyContent: 'center'},
 
   // position
   absolute: {position: 'absolute'},
@@ -173,7 +176,7 @@ export const s = StyleSheet.create({
   // dimensions
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
-  hContentRegion: isMobileWeb ? {flex: 1} : {height: '100%'},
+  hContentRegion: isWeb ? {minHeight: '100%'} : {height: '100%'},
   window: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
@@ -234,7 +237,7 @@ export function lh(
   height: number,
 ): TextStyle {
   return {
-    lineHeight: (theme.typography[type].fontSize || 16) * height,
+    lineHeight: Math.round((theme.typography[type].fontSize || 16) * height),
   }
 }
 

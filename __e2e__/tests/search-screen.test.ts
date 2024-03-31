@@ -1,6 +1,9 @@
 /* eslint-env detox/detox */
 
-import {openApp, loginAsAlice, createServer} from '../util'
+import {beforeAll, describe, it} from '@jest/globals'
+import {expect} from 'detox'
+
+import {createServer, loginAsAlice, openApp} from '../util'
 
 describe('Search screen', () => {
   beforeAll(async () => {

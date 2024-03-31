@@ -1,17 +1,19 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
+import {Trans} from '@lingui/macro'
+import {useNavigation} from '@react-navigation/native'
+
+import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
-import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
 
 export function FollowingEmptyState() {
   const pal = usePalette('default')
@@ -28,60 +30,76 @@ export function FollowingEmptyState() {
   }, [navigation])
 
   const onPressDiscoverFeeds = React.useCallback(() => {
-    navigation.navigate('Feeds')
+    if (isWeb) {
+      navigation.navigate('Feeds')
+    } else {
+      navigation.navigate('FeedsTab')
+      navigation.popToTop()
+    }
   }, [navigation])
 
   return (
-    <View style={styles.emptyContainer}>
-      <View style={styles.emptyIconContainer}>
-        <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
-      </View>
-      <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        Your following feed is empty! Find some accounts to follow to fix this.
-      </Text>
-      <Button
-        type="inverted"
-        style={styles.emptyBtn}
-        onPress={onPressFindAccounts}>
-        <Text type="lg-medium" style={palInverted.text}>
-          Find accounts to follow
+    <View style={styles.container}>
+      <View style={styles.inner}>
+        <View style={styles.iconContainer}>
+          <MagnifyingGlassIcon style={[styles.icon, pal.text]} size={62} />
+        </View>
+        <Text type="xl-medium" style={[s.textCenter, pal.text]}>
+          <Trans>
+            Your following feed is empty! Follow more users to see what's
+            happening.
+          </Trans>
         </Text>
-        <FontAwesomeIcon
-          icon="angle-right"
-          style={palInverted.text as FontAwesomeIconStyle}
-          size={14}
-        />
-      </Button>
+        <Button
+          type="inverted"
+          style={styles.emptyBtn}
+          onPress={onPressFindAccounts}>
+          <Text type="lg-medium" style={palInverted.text}>
+            <Trans>Find accounts to follow</Trans>
+          </Text>
+          <FontAwesomeIcon
+            icon="angle-right"
+            style={palInverted.text as FontAwesomeIconStyle}
+            size={14}
+          />
+        </Button>
 
-      <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
-        You can also discover new Custom Feeds to follow.
-      </Text>
-      <Button
-        type="inverted"
-        style={[styles.emptyBtn, s.mt10]}
-        onPress={onPressDiscoverFeeds}>
-        <Text type="lg-medium" style={palInverted.text}>
-          Discover new custom feeds
+        <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
+          <Trans>You can also discover new Custom Feeds to follow.</Trans>
         </Text>
-        <FontAwesomeIcon
-          icon="angle-right"
-          style={palInverted.text as FontAwesomeIconStyle}
-          size={14}
-        />
-      </Button>
+        <Button
+          type="inverted"
+          style={[styles.emptyBtn, s.mt10]}
+          onPress={onPressDiscoverFeeds}>
+          <Text type="lg-medium" style={palInverted.text}>
+            <Trans>Discover new custom feeds</Trans>
+          </Text>
+          <FontAwesomeIcon
+            icon="angle-right"
+            style={palInverted.text as FontAwesomeIconStyle}
+            size={14}
+          />
+        </Button>
+      </View>
     </View>
   )
 }
 const styles = StyleSheet.create({
-  emptyContainer: {
+  container: {
     height: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
     paddingVertical: 40,
     paddingHorizontal: 30,
   },
-  emptyIconContainer: {
+  inner: {
+    width: '100%',
+    maxWidth: 460,
+  },
+  iconContainer: {
     marginBottom: 16,
   },
-  emptyIcon: {
+  icon: {
     marginLeft: 'auto',
     marginRight: 'auto',
   },
@@ -93,14 +111,5 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 24,
     borderRadius: 30,
-  },
-
-  feedsTip: {
-    position: 'absolute',
-    left: 22,
-  },
-  feedsTipArrow: {
-    marginLeft: 32,
-    marginTop: 8,
   },
 })

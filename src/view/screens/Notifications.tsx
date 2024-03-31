@@ -1,165 +1,174 @@
 import React from 'react'
-import {FlatList, View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {observer} from 'mobx-react-lite'
+import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
+import {emitSoftReset, listenSoftReset} from '#/state/events'
+import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {
+  useUnreadNotifications,
+  useUnreadNotificationsApi,
+} from '#/state/queries/notifications/unread'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useComposerControls} from '#/state/shell/composer'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ComposeIcon2} from 'lib/icons'
 import {
   NativeStackScreenProps,
   NotificationsTabNavigatorParams,
 } from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Feed} from '../com/notifications/Feed'
+import {colors, s} from 'lib/styles'
 import {TextLink} from 'view/com/util/Link'
-import {InvitedUsers} from '../com/notifications/InvitedUsers'
+import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {useStores} from 'state/index'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useTabFocusEffect} from 'lib/hooks/useTabFocusEffect'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s, colors} from 'lib/styles'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {isWeb} from 'platform/detection'
+import {Feed} from '../com/notifications/Feed'
+import {FAB} from '../com/util/fab/FAB'
+import {MainScrollProvider} from '../com/util/MainScrollProvider'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
-export const NotificationsScreen = withAuthRequired(
-  observer(function NotificationsScreenImpl({}: Props) {
-    const store = useStores()
-    const [onMainScroll, isScrolledDown, resetMainScroll] =
-      useOnMainScroll(store)
-    const scrollElRef = React.useRef<FlatList>(null)
-    const {screen} = useAnalytics()
-    const pal = usePalette('default')
-    const {isDesktop} = useWebMediaQueries()
+export function NotificationsScreen({}: Props) {
+  const {_} = useLingui()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const scrollElRef = React.useRef<ListMethods>(null)
+  const {screen} = useAnalytics()
+  const pal = usePalette('default')
+  const {isDesktop} = useWebMediaQueries()
+  const queryClient = useQueryClient()
+  const unreadNotifs = useUnreadNotifications()
+  const unreadApi = useUnreadNotificationsApi()
+  const hasNew = !!unreadNotifs
+  const isScreenFocused = useIsFocused()
+  const {openComposer} = useComposerControls()
 
-    const hasNew =
-      store.me.notifications.hasNewLatest &&
-      !store.me.notifications.isRefreshing
+  // event handlers
+  // =
+  const scrollToTop = React.useCallback(() => {
+    scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
+    setMinimalShellMode(false)
+  }, [scrollElRef, setMinimalShellMode])
 
-    // event handlers
-    // =
-    const onPressTryAgain = React.useCallback(() => {
-      store.me.notifications.refresh()
-    }, [store])
+  const onPressLoadLatest = React.useCallback(() => {
+    scrollToTop()
+    if (hasNew) {
+      // render what we have now
+      truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
+    } else {
+      // check with the server
+      unreadApi.checkUnread({invalidate: true})
+    }
+  }, [scrollToTop, queryClient, unreadApi, hasNew])
 
-    const scrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({offset: 0})
-      resetMainScroll()
-    }, [scrollElRef, resetMainScroll])
+  const onFocusCheckLatest = useNonReactiveCallback(() => {
+    // on focus, check for latest, but only invalidate if the user
+    // isnt scrolled down to avoid moving content underneath them
+    let currentIsScrolledDown
+    if (isNative) {
+      currentIsScrolledDown = isScrolledDown
+    } else {
+      // On the web, this isn't always updated in time so
+      // we're just going to look it up synchronously.
+      currentIsScrolledDown = window.scrollY > 200
+    }
+    unreadApi.checkUnread({invalidate: !currentIsScrolledDown})
+  })
 
-    const onPressLoadLatest = React.useCallback(() => {
-      scrollToTop()
-      store.me.notifications.refresh()
-    }, [store, scrollToTop])
+  // on-visible setup
+  // =
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+      logger.debug('NotificationsScreen: Focus')
+      screen('Notifications')
+      onFocusCheckLatest()
+    }, [screen, setMinimalShellMode, onFocusCheckLatest]),
+  )
+  React.useEffect(() => {
+    if (!isScreenFocused) {
+      return
+    }
+    return listenSoftReset(onPressLoadLatest)
+  }, [onPressLoadLatest, isScreenFocused])
 
-    // on-visible setup
-    // =
-    useFocusEffect(
-      React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
-        store.log.debug('NotificationsScreen: Updating feed')
-        const softResetSub = store.onScreenSoftReset(onPressLoadLatest)
-        store.me.notifications.update()
-        screen('Notifications')
-
-        return () => {
-          softResetSub.remove()
-          store.me.notifications.markAllRead()
-        }
-      }, [store, screen, onPressLoadLatest]),
-    )
-
-    useTabFocusEffect(
-      'Notifications',
-      React.useCallback(
-        isInside => {
-          // on mobile:
-          // fires with `isInside=true` when the user navigates to the root tab
-          // but not when the user goes back to the screen by pressing back
-          // on web:
-          // essentially equivalent to useFocusEffect because we dont used tabbed
-          // navigation
-          if (isInside) {
-            if (isWeb) {
-              store.me.notifications.syncQueue()
-            } else {
-              if (store.me.notifications.unreadCount > 0) {
-                store.me.notifications.refresh()
-              } else {
-                store.me.notifications.syncQueue()
-              }
+  const ListHeaderComponent = React.useCallback(() => {
+    if (isDesktop) {
+      return (
+        <View
+          style={[
+            pal.view,
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 18,
+              paddingVertical: 12,
+            },
+          ]}>
+          <TextLink
+            type="title-lg"
+            href="/notifications"
+            style={[pal.text, {fontWeight: 'bold'}]}
+            text={
+              <>
+                <Trans>Notifications</Trans>{' '}
+                {hasNew && (
+                  <View
+                    style={{
+                      top: -8,
+                      backgroundColor: colors.blue3,
+                      width: 8,
+                      height: 8,
+                      borderRadius: 4,
+                    }}
+                  />
+                )}
+              </>
             }
-          }
-        },
-        [store],
-      ),
-    )
+            onPress={emitSoftReset}
+          />
+        </View>
+      )
+    }
+    return <></>
+  }, [isDesktop, pal, hasNew])
 
-    const ListHeaderComponent = React.useCallback(() => {
-      if (isDesktop) {
-        return (
-          <View
-            style={[
-              pal.view,
-              {
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: 18,
-                paddingVertical: 12,
-              },
-            ]}>
-            <TextLink
-              type="title-lg"
-              href="/notifications"
-              style={[pal.text, {fontWeight: 'bold'}]}
-              text={
-                <>
-                  Notifications{' '}
-                  {hasNew && (
-                    <View
-                      style={{
-                        top: -8,
-                        backgroundColor: colors.blue3,
-                        width: 8,
-                        height: 8,
-                        borderRadius: 4,
-                      }}
-                    />
-                  )}
-                </>
-              }
-              onPress={() => store.emitScreenSoftReset()}
-            />
-          </View>
-        )
-      }
-      return <></>
-    }, [isDesktop, pal, store, hasNew])
-
-    return (
-      <View testID="notificationsScreen" style={s.hContentRegion}>
-        <ViewHeader title="Notifications" canGoBack={false} />
-        <InvitedUsers />
+  return (
+    <View testID="notificationsScreen" style={s.hContentRegion}>
+      <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
+      <MainScrollProvider>
         <Feed
-          view={store.me.notifications}
-          onPressTryAgain={onPressTryAgain}
-          onScroll={onMainScroll}
+          onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
           ListHeaderComponent={ListHeaderComponent}
         />
-        {(isScrolledDown || hasNew) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label="Load new notifications"
-            showIndicator={hasNew}
-            minimalShellMode={true}
-          />
-        )}
-      </View>
-    )
-  }),
-)
+      </MainScrollProvider>
+      {(isScrolledDown || hasNew) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label={_(msg`Load new notifications`)}
+          showIndicator={hasNew}
+        />
+      )}
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({})}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
+    </View>
+  )
+}

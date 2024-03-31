@@ -1,5 +1,6 @@
-import {resolveConfig} from 'detox/internals'
 import {execSync} from 'child_process'
+import {resolveConfig} from 'detox/internals'
+import http from 'http'
 
 const platform = device.getPlatform()
 
@@ -55,9 +56,10 @@ export async function login(
   if (takeScreenshots) {
     await device.takeScreenshot('2- opened service selector')
   }
+  await element(by.id('customSelectBtn')).tap()
   await element(by.id('customServerTextInput')).typeText(service)
   await element(by.id('customServerTextInput')).tapReturnKey()
-  await element(by.id('customServerSelectBtn')).tap()
+  await element(by.id('doneBtn')).tap()
   if (takeScreenshots) {
     await device.takeScreenshot('3- input custom service')
   }
@@ -104,10 +106,30 @@ async function openAppForDebugBuild(platform: string, opts: any) {
   await sleep(3000)
 }
 
-export async function createServer(path = '') {
-  const res = await fetch(`http://localhost:1986/${path}`, {method: 'POST'})
-  const resBody = await res.text()
-  return resBody
+export async function createServer(path = ''): Promise<string> {
+  return new Promise(function (resolve, reject) {
+    var req = http.request(
+      {
+        method: 'POST',
+        host: 'localhost',
+        port: 1986,
+        path: `/${path}`,
+      },
+      function (res) {
+        const body: Buffer[] = []
+        res.on('data', chunk => body.push(chunk))
+        res.on('end', function () {
+          try {
+            resolve(Buffer.concat(body).toString())
+          } catch (e) {
+            reject(e)
+          }
+        })
+      },
+    )
+    req.on('error', reject)
+    req.end()
+  })
 }
 
 const getDeepLinkUrl = (url: string) =>

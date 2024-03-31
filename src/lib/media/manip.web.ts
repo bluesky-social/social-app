@@ -1,6 +1,7 @@
-import {Dimensions} from './types'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {getDataUriSize, blobToDataUri} from './util'
+
+import {Dimensions} from './types'
+import {blobToDataUri, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
   img: RNImage,
@@ -117,9 +118,6 @@ function createResizedImage(
         return reject(new Error('Failed to resize image'))
       }
 
-      canvas.width = width
-      canvas.height = height
-
       let scale = 1
       if (mode === 'cover') {
         scale = img.width < img.height ? width / img.width : height / img.height
@@ -128,11 +126,15 @@ function createResizedImage(
       }
       let w = img.width * scale
       let h = img.height * scale
-      let x = (width - w) / 2
-      let y = (height - h) / 2
 
-      ctx.drawImage(img, x, y, w, h)
+      canvas.width = w
+      canvas.height = h
+
+      ctx.drawImage(img, 0, 0, w, h)
       resolve(canvas.toDataURL('image/jpeg', quality))
+    })
+    img.addEventListener('error', ev => {
+      reject(ev.error)
     })
     img.src = dataUri
   })

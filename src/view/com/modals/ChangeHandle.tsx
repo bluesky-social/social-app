@@ -1,95 +1,95 @@
 import React, {useState} from 'react'
-import Clipboard from '@react-native-clipboard/clipboard'
-import * as Toast from '../util/Toast'
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
+import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ScrollView, TextInput} from './util'
-import {Text} from '../util/text/Text'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import Clipboard from '@react-native-clipboard/clipboard'
+
+import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
+import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
+import {useServiceQuery} from '#/state/queries/service'
+import {
+  getAgent,
+  SessionAccount,
+  useSession,
+  useSessionApi,
+} from '#/state/session'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {cleanError} from 'lib/strings/errors'
+import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
+import {s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
-import {ServiceDescription} from 'state/models/session'
-import {s} from 'lib/styles'
-import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {cleanError} from 'lib/strings/errors'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
+import {ScrollView, TextInput} from './util'
 
 export const snapPoints = ['100%']
 
-export function Component({onChanged}: {onChanged: () => void}) {
-  const store = useStores()
-  const [error, setError] = useState<string>('')
+export type Props = {onChanged: () => void}
+
+export function Component(props: Props) {
+  const {currentAccount} = useSession()
+  const {
+    isLoading,
+    data: serviceInfo,
+    error: serviceInfoError,
+  } = useServiceQuery(getAgent().service.toString())
+
+  return isLoading || !currentAccount ? (
+    <View style={{padding: 18}}>
+      <ActivityIndicator />
+    </View>
+  ) : serviceInfoError || !serviceInfo ? (
+    <ErrorMessage message={cleanError(serviceInfoError)} />
+  ) : (
+    <Inner
+      {...props}
+      currentAccount={currentAccount}
+      serviceInfo={serviceInfo}
+    />
+  )
+}
+
+export function Inner({
+  currentAccount,
+  serviceInfo,
+  onChanged,
+}: Props & {
+  currentAccount: SessionAccount
+  serviceInfo: ComAtprotoServerDescribeServer.OutputSchema
+}) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
+  const {updateCurrentAccount} = useSessionApi()
+  const {closeModal} = useModalControls()
+  const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
+    useUpdateHandleMutation()
 
-  const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [retryDescribeTrigger, setRetryDescribeTrigger] = React.useState<any>(
-    {},
-  )
-  const [serviceDescription, setServiceDescription] = React.useState<
-    ServiceDescription | undefined
-  >(undefined)
-  const [userDomain, setUserDomain] = React.useState<string>('')
+  const [error, setError] = useState<string>('')
+
   const [isCustom, setCustom] = React.useState<boolean>(false)
   const [handle, setHandle] = React.useState<string>('')
   const [canSave, setCanSave] = React.useState<boolean>(false)
 
-  // init
-  // =
-  React.useEffect(() => {
-    let aborted = false
-    setError('')
-    setServiceDescription(undefined)
-    setProcessing(true)
-
-    // load the service description so we can properly provision handles
-    store.session.describeService(String(store.agent.service)).then(
-      desc => {
-        if (aborted) {
-          return
-        }
-        setServiceDescription(desc)
-        setUserDomain(desc.availableUserDomains[0])
-        setProcessing(false)
-      },
-      err => {
-        if (aborted) {
-          return
-        }
-        setProcessing(false)
-        store.log.warn(
-          `Failed to fetch service description for ${String(
-            store.agent.service,
-          )}`,
-          err,
-        )
-        setError(
-          'Unable to contact your service. Please check your Internet connection.',
-        )
-      },
-    )
-    return () => {
-      aborted = true
-    }
-  }, [store.agent.service, store.session, store.log, retryDescribeTrigger])
+  const userDomain = serviceInfo.availableUserDomains?.[0]
 
   // events
   // =
   const onPressCancel = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
-  const onPressRetryConnect = React.useCallback(
-    () => setRetryDescribeTrigger({}),
-    [setRetryDescribeTrigger],
-  )
+    closeModal()
+  }, [closeModal])
   const onToggleCustom = React.useCallback(() => {
     // toggle between a provided domain vs a custom one
     setHandle('')
@@ -100,32 +100,42 @@ export function Component({onChanged}: {onChanged: () => void}) {
     )
   }, [setCustom, isCustom, track])
   const onPressSave = React.useCallback(async () => {
-    setError('')
-    setProcessing(true)
+    if (!userDomain) {
+      logger.error(`ChangeHandle: userDomain is undefined`, {
+        service: serviceInfo,
+      })
+      setError(`The service you've selected has no domains configured.`)
+      return
+    }
+
     try {
       track('EditHandle:SetNewHandle')
       const newHandle = isCustom ? handle : createFullHandle(handle, userDomain)
-      store.log.debug(`Updating handle to ${newHandle}`)
-      await store.agent.updateHandle({
+      logger.debug(`Updating handle to ${newHandle}`)
+      await updateHandle({
         handle: newHandle,
       })
-      store.shell.closeModal()
+      updateCurrentAccount({
+        handle: newHandle,
+      })
+      closeModal()
       onChanged()
     } catch (err: any) {
       setError(cleanError(err))
-      store.log.error('Failed to update handle', {handle, err})
+      logger.error('Failed to update handle', {handle, message: err})
     } finally {
-      setProcessing(false)
     }
   }, [
     setError,
-    setProcessing,
     handle,
     userDomain,
-    store,
     isCustom,
     onChanged,
     track,
+    closeModal,
+    updateCurrentAccount,
+    updateHandle,
+    serviceInfo,
   ])
 
   // rendering
@@ -137,11 +147,11 @@ export function Component({onChanged}: {onChanged: () => void}) {
           <TouchableOpacity
             onPress={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Cancel change handle"
-            accessibilityHint="Exits handle change process"
+            accessibilityLabel={_(msg`Cancel change handle`)}
+            accessibilityHint={_(msg`Exits handle change process`)}
             onAccessibilityEscape={onPressCancel}>
             <Text type="lg" style={pal.textLight}>
-              Cancel
+              <Trans>Cancel</Trans>
             </Text>
           </TouchableOpacity>
         </View>
@@ -149,30 +159,19 @@ export function Component({onChanged}: {onChanged: () => void}) {
           type="2xl-bold"
           style={[styles.titleMiddle, pal.text]}
           numberOfLines={1}>
-          Change Handle
+          <Trans>Change Handle</Trans>
         </Text>
         <View style={styles.titleRight}>
-          {isProcessing ? (
+          {isUpdateHandlePending ? (
             <ActivityIndicator />
-          ) : error && !serviceDescription ? (
-            <TouchableOpacity
-              testID="retryConnectButton"
-              onPress={onPressRetryConnect}
-              accessibilityRole="button"
-              accessibilityLabel="Retry change handle"
-              accessibilityHint={`Retries handle change to ${handle}`}>
-              <Text type="xl-bold" style={[pal.link, s.pr5]}>
-                Retry
-              </Text>
-            </TouchableOpacity>
           ) : canSave ? (
             <TouchableOpacity
               onPress={onPressSave}
               accessibilityRole="button"
-              accessibilityLabel="Save handle change"
-              accessibilityHint={`Saves handle change to ${handle}`}>
+              accessibilityLabel={_(msg`Save handle change`)}
+              accessibilityHint={_(msg`Saves handle change to ${handle}`)}>
               <Text type="2xl-medium" style={pal.link}>
-                Save
+                <Trans>Save</Trans>
               </Text>
             </TouchableOpacity>
           ) : undefined}
@@ -187,8 +186,9 @@ export function Component({onChanged}: {onChanged: () => void}) {
 
         {isCustom ? (
           <CustomHandleForm
+            currentAccount={currentAccount}
             handle={handle}
-            isProcessing={isProcessing}
+            isProcessing={isUpdateHandlePending}
             canSave={canSave}
             onToggleCustom={onToggleCustom}
             setHandle={setHandle}
@@ -199,7 +199,7 @@ export function Component({onChanged}: {onChanged: () => void}) {
           <ProvidedHandleForm
             handle={handle}
             userDomain={userDomain}
-            isProcessing={isProcessing}
+            isProcessing={isUpdateHandlePending}
             onToggleCustom={onToggleCustom}
             setHandle={setHandle}
             setCanSave={setCanSave}
@@ -230,6 +230,7 @@ function ProvidedHandleForm({
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
+  const {_} = useLingui()
 
   // events
   // =
@@ -254,7 +255,7 @@ function ProvidedHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder="e.g. alice"
+          placeholder={_(msg`e.g. alice`)}
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}
@@ -262,23 +263,25 @@ function ProvidedHandleForm({
           onChangeText={onChangeHandle}
           editable={!isProcessing}
           accessible={true}
-          accessibilityLabel="Handle"
-          accessibilityHint="Sets Bluesky username"
+          accessibilityLabel={_(msg`Handle`)}
+          accessibilityHint={_(msg`Sets Bluesky username`)}
         />
       </View>
       <Text type="md" style={[pal.textLight, s.pl10, s.pt10]}>
-        Your full handle will be{' '}
-        <Text type="md-bold" style={pal.textLight}>
-          @{createFullHandle(handle, userDomain)}
-        </Text>
+        <Trans>
+          Your full handle will be{' '}
+          <Text type="md-bold" style={pal.textLight}>
+            @{createFullHandle(handle, userDomain)}
+          </Text>
+        </Trans>
       </Text>
       <TouchableOpacity
         onPress={onToggleCustom}
         accessibilityRole="button"
-        accessibilityHint="Hosting provider"
-        accessibilityLabel="Opens modal for using custom domain">
+        accessibilityLabel={_(msg`Hosting provider`)}
+        accessibilityHint={_(msg`Opens modal for using custom domain`)}>
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
-          I have my own domain
+          <Trans>I have my own domain</Trans>
         </Text>
       </TouchableOpacity>
     </>
@@ -289,6 +292,7 @@ function ProvidedHandleForm({
  * The form for using a custom domain
  */
 function CustomHandleForm({
+  currentAccount,
   handle,
   canSave,
   isProcessing,
@@ -297,6 +301,7 @@ function CustomHandleForm({
   onPressSave,
   setCanSave,
 }: {
+  currentAccount: SessionAccount
   handle: string
   canSave: boolean
   isProcessing: boolean
@@ -305,20 +310,23 @@ function CustomHandleForm({
   onPressSave: () => void
   setCanSave: (v: boolean) => void
 }) {
-  const store = useStores()
   const pal = usePalette('default')
   const palSecondary = usePalette('secondary')
   const palError = usePalette('error')
   const theme = useTheme()
+  const {_} = useLingui()
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [error, setError] = React.useState<string>('')
   const [isDNSForm, setDNSForm] = React.useState<boolean>(true)
+  const fetchDid = useFetchDid()
   // events
   // =
   const onPressCopy = React.useCallback(() => {
-    Clipboard.setString(isDNSForm ? `did=${store.me.did}` : store.me.did)
-    Toast.show('Copied to clipboard')
-  }, [store.me.did, isDNSForm])
+    Clipboard.setString(
+      isDNSForm ? `did=${currentAccount.did}` : currentAccount.did,
+    )
+    Toast.show(_(msg`Copied to clipboard`))
+  }, [currentAccount, isDNSForm, _])
   const onChangeHandle = React.useCallback(
     (v: string) => {
       setHandle(v)
@@ -333,30 +341,27 @@ function CustomHandleForm({
     try {
       setIsVerifying(true)
       setError('')
-      const res = await store.agent.com.atproto.identity.resolveHandle({
-        handle,
-      })
-      if (res.data.did === store.me.did) {
+      const did = await fetchDid(handle)
+      if (did === currentAccount.did) {
         setCanSave(true)
       } else {
-        setError(`Incorrect DID returned (got ${res.data.did})`)
+        setError(`Incorrect DID returned (got ${did})`)
       }
     } catch (err: any) {
       setError(cleanError(err))
-      store.log.error('Failed to verify domain', {handle, err})
+      logger.error('Failed to verify domain', {handle, error: err})
     } finally {
       setIsVerifying(false)
     }
   }, [
     handle,
-    store.me.did,
+    currentAccount,
     setIsVerifying,
     setCanSave,
     setError,
     canSave,
     onPressSave,
-    store.log,
-    store.agent,
+    fetchDid,
   ])
 
   // rendering
@@ -364,7 +369,7 @@ function CustomHandleForm({
   return (
     <>
       <Text type="md" style={[pal.text, s.pb5, s.pl5]} nativeID="customDomain">
-        Enter the domain you want to use
+        <Trans>Enter the domain you want to use</Trans>
       </Text>
       <View style={[pal.btn, styles.textInputWrapper]}>
         <FontAwesomeIcon
@@ -374,7 +379,7 @@ function CustomHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder="e.g. alice.com"
+          placeholder={_(msg`e.g. alice.com`)}
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}
@@ -382,8 +387,8 @@ function CustomHandleForm({
           onChangeText={onChangeHandle}
           editable={!isProcessing}
           accessibilityLabelledBy="customDomain"
-          accessibilityLabel="Custom domain"
-          accessibilityHint="Input your preferred hosting provider"
+          accessibilityLabel={_(msg`Custom domain`)}
+          accessibilityHint={_(msg`Input your preferred hosting provider`)}
         />
       </View>
       <View style={styles.spacer} />
@@ -391,18 +396,18 @@ function CustomHandleForm({
       <View style={[styles.selectableBtns]}>
         <SelectableBtn
           selected={isDNSForm}
-          label="DNS Panel"
+          label={_(msg`DNS Panel`)}
           left
           onSelect={() => setDNSForm(true)}
-          accessibilityHint="Use the DNS panel"
+          accessibilityHint={_(msg`Use the DNS panel`)}
           style={s.flex1}
         />
         <SelectableBtn
           selected={!isDNSForm}
-          label="No DNS Panel"
+          label={_(msg`No DNS Panel`)}
           right
           onSelect={() => setDNSForm(false)}
-          accessibilityHint="Use a file on your server"
+          accessibilityHint={_(msg`Use a file on your server`)}
           style={s.flex1}
         />
       </View>
@@ -410,11 +415,11 @@ function CustomHandleForm({
       {isDNSForm ? (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            Add the following DNS record to your domain:
+            <Trans>Add the following DNS record to your domain:</Trans>
           </Text>
           <View style={[styles.dnsTable, pal.btn]}>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              Host:
+              <Trans>Host:</Trans>
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
@@ -422,7 +427,7 @@ function CustomHandleForm({
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              Type:
+              <Trans>Type:</Trans>
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
@@ -430,16 +435,16 @@ function CustomHandleForm({
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              Value:
+              <Trans>Value:</Trans>
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                did={store.me.did}
+                did={currentAccount.did}
               </Text>
             </View>
           </View>
           <Text type="md" style={[pal.text, s.pt20, s.pl5]}>
-            This should create a domain record at:{' '}
+            <Trans>This should create a domain record at:</Trans>
           </Text>
           <Text type="mono" style={[styles.monoText, pal.text, s.pt5, s.pl5]}>
             _atproto.{handle}
@@ -448,7 +453,7 @@ function CustomHandleForm({
       ) : (
         <>
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            Upload a text file to:
+            <Trans>Upload a text file to:</Trans>
           </Text>
           <View style={[styles.valueContainer, pal.btn]}>
             <View style={[styles.dnsValue]}>
@@ -459,12 +464,12 @@ function CustomHandleForm({
           </View>
           <View style={styles.spacer} />
           <Text type="md" style={[pal.text, s.pb5, s.pl5]}>
-            That contains the following:
+            <Trans>That contains the following:</Trans>
           </Text>
           <View style={[styles.valueContainer, pal.btn]}>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
-                {store.me.did}
+                {currentAccount.did}
               </Text>
             </View>
           </View>
@@ -474,23 +479,25 @@ function CustomHandleForm({
       <View style={styles.spacer} />
       <Button type="default" style={[s.p20, s.mb10]} onPress={onPressCopy}>
         <Text type="xl" style={[pal.link, s.textCenter]}>
-          Copy {isDNSForm ? 'Domain Value' : 'File Contents'}
+          <Trans>
+            Copy {isDNSForm ? _(msg`Domain Value`) : _(msg`File Contents`)}
+          </Trans>
         </Text>
       </Button>
       {canSave === true && (
         <View style={[styles.message, palSecondary.view]}>
           <Text type="md-medium" style={palSecondary.text}>
-            Domain verified!
+            <Trans>Domain verified!</Trans>
           </Text>
         </View>
       )}
-      {error && (
+      {error ? (
         <View style={[styles.message, palError.view]}>
           <Text type="md-medium" style={palError.text}>
             {error}
           </Text>
         </View>
-      )}
+      ) : null}
       <Button
         type="primary"
         style={[s.p20, isVerifying && styles.dimmed]}
@@ -500,18 +507,18 @@ function CustomHandleForm({
         ) : (
           <Text type="xl-medium" style={[s.white, s.textCenter]}>
             {canSave
-              ? `Update to ${handle}`
-              : `Verify ${isDNSForm ? 'DNS Record' : 'Text File'}`}
+              ? _(msg`Update to ${handle}`)
+              : _(msg`Verify ${isDNSForm ? 'DNS Record' : 'Text File'}`)}
           </Text>
         )}
       </Button>
       <View style={styles.spacer} />
       <TouchableOpacity
         onPress={onToggleCustom}
-        accessibilityLabel="Use default provider"
-        accessibilityHint="Use bsky.social as hosting provider">
+        accessibilityLabel={_(msg`Use default provider`)}
+        accessibilityHint={_(msg`Use bsky.social as hosting provider`)}>
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
-          Nevermind, create a handle for me
+          <Trans>Nevermind, create a handle for me</Trans>
         </Text>
       </TouchableOpacity>
     </>

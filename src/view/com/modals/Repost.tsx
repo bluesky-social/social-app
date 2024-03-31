@@ -1,12 +1,15 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import {useStores} from 'state/index'
-import {s, colors, gradients} from 'lib/styles'
-import {Text} from '../util/text/Text'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useModalControls} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
 import {RepostIcon} from 'lib/icons'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {colors, gradients, s} from 'lib/styles'
+import {Text} from '../util/text/Text'
 
 export const snapPoints = [250]
 
@@ -20,10 +23,11 @@ export function Component({
   isReposted: boolean
   // TODO: Add author into component
 }) {
-  const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
+  const {closeModal} = useModalControls()
   const onPress = async () => {
-    store.shell.closeModal()
+    closeModal()
   }
 
   return (
@@ -34,11 +38,23 @@ export function Component({
           style={[styles.actionBtn]}
           onPress={onRepost}
           accessibilityRole="button"
-          accessibilityLabel={isReposted ? 'Undo repost' : 'Repost'}
-          accessibilityHint={isReposted ? 'Remove repost' : 'Repost '}>
+          accessibilityLabel={
+            isReposted
+              ? _(msg`Undo repost`)
+              : _(msg({message: `Repost`, context: 'action'}))
+          }
+          accessibilityHint={
+            isReposted
+              ? _(msg`Remove repost`)
+              : _(msg({message: `Repost`, context: 'action'}))
+          }>
           <RepostIcon strokeWidth={2} size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            {!isReposted ? 'Repost' : 'Undo repost'}
+            {!isReposted ? (
+              <Trans context="action">Repost</Trans>
+            ) : (
+              <Trans>Undo repost</Trans>
+            )}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -46,11 +62,13 @@ export function Component({
           style={[styles.actionBtn]}
           onPress={onQuote}
           accessibilityRole="button"
-          accessibilityLabel="Quote post"
+          accessibilityLabel={_(
+            msg({message: `Quote post`, context: 'action'}),
+          )}
           accessibilityHint="">
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            Quote Post
+            <Trans context="action">Quote Post</Trans>
           </Text>
         </TouchableOpacity>
       </View>
@@ -58,7 +76,7 @@ export function Component({
         testID="cancelBtn"
         onPress={onPress}
         accessibilityRole="button"
-        accessibilityLabel="Cancel quote post"
+        accessibilityLabel={_(msg`Cancel quote post`)}
         accessibilityHint=""
         onAccessibilityEscape={onPress}>
         <LinearGradient
@@ -66,7 +84,9 @@ export function Component({
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[styles.btn]}>
-          <Text style={[s.white, s.bold, s.f18]}>Cancel</Text>
+          <Text style={[s.white, s.bold, s.f18]}>
+            <Trans>Cancel</Trans>
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
     </View>

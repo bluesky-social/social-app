@@ -5,8 +5,9 @@ export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
   NotFound: undefined
+  Lists: undefined
   Moderation: undefined
-  ModerationMuteLists: undefined
+  ModerationModlists: undefined
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
   Settings: undefined
@@ -18,9 +19,11 @@ export type CommonNavigatorParams = {
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
-  CustomFeed: {name: string; rkey: string}
-  CustomFeedLikedBy: {name: string; rkey: string}
+  ProfileFeed: {name: string; rkey: string}
+  ProfileFeedLikedBy: {name: string; rkey: string}
+  ProfileLabelerLikedBy: {name: string}
   Debug: undefined
+  DebugMod: undefined
   Log: undefined
   Support: undefined
   PrivacyPolicy: undefined
@@ -29,8 +32,11 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
   AppPasswords: undefined
   SavedFeeds: undefined
-  PreferencesHomeFeed: undefined
+  PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined
+  PreferencesExternalEmbeds: undefined
+  Search: {q?: string}
+  Hashtag: {tag: string; author?: string}
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -66,6 +72,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   Feeds: undefined
   Notifications: undefined
+  Hashtag: {tag: string; author?: string}
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
@@ -78,6 +85,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   NotificationsTab: undefined
   Notifications: undefined
   MyProfileTab: undefined
+  Hashtag: {tag: string; author?: string}
 }
 
 // NOTE

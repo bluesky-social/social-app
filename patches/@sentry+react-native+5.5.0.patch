@@ -1,5 +1,5 @@
 diff --git a/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js b/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
-index 7e0b4cd..3fd7406 100644
+index 7e0b4cd..177454c 100644
 --- a/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
 +++ b/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
 @@ -3,6 +3,8 @@ import { LogBox } from 'react-native';
@@ -12,3 +12,4 @@ index 7e0b4cd..3fd7406 100644
 +    } catch (e) {}
  }
  //# sourceMappingURL=ignorerequirecyclelogs.js.map
+\ No newline at end of file

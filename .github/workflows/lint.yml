@@ -17,23 +17,35 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v3
       - name: Yarn install
-        run: yarn --frozen-lockfile
+        uses: Wandalen/wretry.action@master
+        with:
+          command: yarn --frozen-lockfile
+          attempt_limit: 3
+          attempt_delay: 2000
       - name: Lint check
         run: yarn lint
+      - name: Check & compile i18n
+        run: yarn intl:build
       - name: Type check
         run: yarn typecheck
   testing:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - name: Install node 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
       - name: Check out Git repository
         uses: actions/checkout@v3
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Yarn install
-        run: yarn --frozen-lockfile
+        uses: Wandalen/wretry.action@master
+        with:
+          command: yarn --frozen-lockfile
+          attempt_limit: 3
+          attempt_delay: 2000
+      - name: Check & compile i18n
+        run: yarn intl:build
       - name: Run tests
         run: |
-          yarn test --forceExit
+          NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test --forceExit

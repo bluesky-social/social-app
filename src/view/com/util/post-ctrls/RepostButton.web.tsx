@@ -1,15 +1,19 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useRequireAuth} from '#/state/session'
+import {useSession} from '#/state/session'
 import {RepostIcon} from 'lib/icons'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../text/Text'
-
-import {
-  NativeDropdown,
-  DropdownItem as NativeDropdownItem,
-} from '../forms/NativeDropdown'
 import {EventStopper} from '../EventStopper'
+import {
+  DropdownItem as NativeDropdownItem,
+  NativeDropdown,
+} from '../forms/NativeDropdown'
+import {Text} from '../text/Text'
 
 interface Props {
   isReposted: boolean
@@ -28,6 +32,9 @@ export const RepostButton = ({
   onQuote,
 }: Props) => {
   const theme = useTheme()
+  const {_} = useLingui()
+  const {hasSession} = useSession()
+  const requireAuth = useRequireAuth()
 
   const defaultControlColor = React.useMemo(
     () => ({
@@ -38,7 +45,7 @@ export const RepostButton = ({
 
   const dropdownItems: NativeDropdownItem[] = [
     {
-      label: isReposted ? 'Undo repost' : 'Repost',
+      label: isReposted ? _(msg`Undo repost`) : _(msg`Repost`),
       testID: 'repostDropdownRepostBtn',
       icon: {
         ios: {name: 'repeat'},
@@ -48,7 +55,7 @@ export const RepostButton = ({
       onPress: onRepost,
     },
     {
-      label: 'Quote post',
+      label: _(msg`Quote post`),
       testID: 'repostDropdownQuoteBtn',
       icon: {
         ios: {name: 'quote.bubble'},
@@ -59,44 +66,60 @@ export const RepostButton = ({
     },
   ]
 
-  return (
+  const inner = (
+    <View
+      style={[
+        styles.btn,
+        !big && styles.btnPad,
+        (isReposted
+          ? styles.reposted
+          : defaultControlColor) as StyleProp<ViewStyle>,
+      ]}>
+      <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
+      {typeof repostCount !== 'undefined' && repostCount > 0 ? (
+        <Text
+          testID="repostCount"
+          type={isReposted ? 'md-bold' : 'md'}
+          style={styles.repostCount}>
+          {repostCount}
+        </Text>
+      ) : undefined}
+    </View>
+  )
+
+  return hasSession ? (
     <EventStopper>
       <NativeDropdown
         items={dropdownItems}
-        accessibilityLabel="Repost or quote post"
+        accessibilityLabel={_(msg`Repost or quote post`)}
         accessibilityHint="">
-        <View
-          style={[
-            styles.control,
-            !big && styles.controlPad,
-            (isReposted
-              ? styles.reposted
-              : defaultControlColor) as StyleProp<ViewStyle>,
-          ]}>
-          <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
-          {typeof repostCount !== 'undefined' ? (
-            <Text
-              testID="repostCount"
-              type={isReposted ? 'md-bold' : 'md'}
-              style={styles.repostCount}>
-              {repostCount ?? 0}
-            </Text>
-          ) : undefined}
-        </View>
+        {inner}
       </NativeDropdown>
     </EventStopper>
+  ) : (
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => {
+        requireAuth(() => {})
+      }}
+      accessibilityLabel={_(msg`Repost or quote post`)}
+      accessibilityHint="">
+      {inner}
+    </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
-  control: {
-    display: 'flex',
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
-  controlPad: {
-    padding: 5,
+  btnPad: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   reposted: {
     color: colors.green3,

@@ -1,8 +1,8 @@
 import React from 'react'
 import {
+  StyleProp,
   StyleSheet,
   TouchableOpacity,
-  StyleProp,
   View,
   ViewStyle,
 } from 'react-native'
@@ -10,9 +10,12 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from '../text/Text'
-import {useTheme} from 'lib/ThemeContext'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {Text} from '../text/Text'
 
 export function ErrorMessage({
   message,
@@ -27,6 +30,7 @@ export function ErrorMessage({
 }) {
   const theme = useTheme()
   const pal = usePalette('error')
+  const {_} = useLingui()
   return (
     <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
       <View
@@ -49,8 +53,10 @@ export function ErrorMessage({
           style={styles.btn}
           onPress={onPressTryAgain}
           accessibilityRole="button"
-          accessibilityLabel="Retry"
-          accessibilityHint="Retries the last action, which errored out">
+          accessibilityLabel={_(msg`Retry`)}
+          accessibilityHint={_(
+            msg`Retries the last action, which errored out`,
+          )}>
           <FontAwesomeIcon
             icon="arrows-rotate"
             style={{color: theme.palette.error.icon}}

@@ -1,0 +1,19 @@
+diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+index b09e653..d290dab 100644
+--- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
++++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
+@@ -198,6 +198,14 @@ - (void)refreshControlValueChanged
+   [self setCurrentRefreshingState:super.refreshing];
+   _refreshingProgrammatically = NO;
+
++  if (@available(iOS 17.4, *)) {
++    if (_currentRefreshingState) {
++      UIImpactFeedbackGenerator *feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
++      [feedbackGenerator prepare];
++      [feedbackGenerator impactOccurred];
++    }
++  }
++
+   if (_onRefresh) {
+     _onRefresh(nil);
+   }

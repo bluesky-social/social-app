@@ -1,6 +1,9 @@
 /* eslint-env detox/detox */
 
-import {openApp, loginAsAlice, createServer, sleep} from '../util'
+import {beforeAll, describe, it} from '@jest/globals'
+import {expect} from 'detox'
+
+import {createServer, loginAsAlice, openApp, sleep} from '../util'
 
 describe('Profile screen', () => {
   beforeAll(async () => {
@@ -11,17 +14,16 @@ describe('Profile screen', () => {
   })
 
   it('Login and navigate to my profile', async () => {
-    await expect(element(by.id('signInButton'))).toBeVisible()
     await loginAsAlice()
     await element(by.id('bottomBarProfileBtn')).tap()
   })
 
   it('Can see feeds', async () => {
-    await element(by.id('selector')).swipe('left')
-    await element(by.id('selector-4')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-4')).tap()
     await expect(element(by.id('feed-alice-favs'))).toBeVisible()
-    await element(by.id('selector')).swipe('right')
-    await element(by.id('selector-0')).tap()
+    await element(by.id('profilePager-selector')).swipe('right')
+    await element(by.id('profilePager-selector-0')).tap()
   })
 
   it('Open and close edit profile modal', async () => {
@@ -69,10 +71,10 @@ describe('Profile screen', () => {
     await element(by.id('profileHeaderEditProfileButton')).tap()
     await expect(element(by.id('editProfileModal'))).toBeVisible()
     await element(by.id('changeBannerBtn')).tap()
-    await element(by.text('Library')).tap()
+    await element(by.text('Upload from Library')).tap()
     await sleep(3e3)
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Library')).tap()
+    await element(by.text('Upload from Library')).tap()
     await sleep(3e3)
     await element(by.id('editProfileSaveBtn')).tap()
     await expect(element(by.id('editProfileModal'))).not.toBeVisible()
@@ -86,9 +88,9 @@ describe('Profile screen', () => {
     await element(by.id('profileHeaderEditProfileButton')).tap()
     await expect(element(by.id('editProfileModal'))).toBeVisible()
     await element(by.id('changeBannerBtn')).tap()
-    await element(by.text('Remove')).tap()
+    await element(by.text('Remove Banner')).tap()
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Remove')).tap()
+    await element(by.text('Remove Avatar')).tap()
     await element(by.id('editProfileSaveBtn')).tap()
     await expect(element(by.id('editProfileModal'))).not.toBeVisible()
     await expect(element(by.id('userBannerFallback'))).toExist()
@@ -135,10 +137,18 @@ describe('Profile screen', () => {
   })
 
   it('Can like posts', async () => {
+    await element(by.id('postsFeed-flatlist')).swipe(
+      'down',
+      'slow',
+      1,
+      0.5,
+      0.5,
+    )
+
     const posts = by.id('feedItem-by-bob.test')
     await expect(
       element(by.id('likeCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('likeBtn').withAncestor(posts)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(posts)).atIndex(0),
@@ -146,14 +156,14 @@ describe('Profile screen', () => {
     await element(by.id('likeBtn').withAncestor(posts)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can repost posts', async () => {
     const posts = by.id('feedItem-by-bob.test')
     await expect(
       element(by.id('repostCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('repostBtn').withAncestor(posts)).atIndex(0).tap()
     await expect(element(by.id('repostModal'))).toBeVisible()
     await element(by.id('repostBtn').withAncestor(by.id('repostModal'))).tap()
@@ -167,7 +177,7 @@ describe('Profile screen', () => {
     await expect(element(by.id('repostModal'))).not.toBeVisible()
     await expect(
       element(by.id('repostCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can report posts', async () => {

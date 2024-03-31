@@ -1,21 +1,26 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {CenteredView} from './Views'
-import {Text} from './text/Text'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+
+import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
+import {useTheme} from '#/alf'
+import {Text} from './text/Text'
+import {CenteredView} from './Views'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
-export const ViewHeader = observer(function ViewHeaderImpl({
+export function ViewHeader({
   title,
+  subtitle,
   canGoBack,
   showBackButton = true,
   hideOnScroll,
@@ -24,6 +29,7 @@ export const ViewHeader = observer(function ViewHeaderImpl({
   renderButton,
 }: {
   title: string
+  subtitle?: string
   canGoBack?: boolean
   showBackButton?: boolean
   hideOnScroll?: boolean
@@ -32,10 +38,12 @@ export const ViewHeader = observer(function ViewHeaderImpl({
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {_} = useLingui()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const t = useTheme()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -47,8 +55,8 @@ export const ViewHeader = observer(function ViewHeaderImpl({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.openDrawer()
-  }, [track, store])
+    setDrawerOpen(true)
+  }, [track, setDrawerOpen])
 
   if (isDesktop) {
     if (showOnDesktop) {
@@ -68,46 +76,64 @@ export const ViewHeader = observer(function ViewHeaderImpl({
 
     return (
       <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
-        {showBackButton ? (
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            onPress={canGoBack ? onPressBack : onPressMenu}
-            hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-            accessibilityHint={
-              canGoBack ? '' : 'Access navigation links and settings'
-            }>
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : !isTablet ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="bars"
-                style={[styles.backIcon, pal.textLight]}
-              />
+        <View style={{flex: 1}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {showBackButton ? (
+              <TouchableOpacity
+                testID="viewHeaderDrawerBtn"
+                onPress={canGoBack ? onPressBack : onPressMenu}
+                hitSlop={BACK_HITSLOP}
+                style={canGoBack ? styles.backBtn : styles.backBtnWide}
+                accessibilityRole="button"
+                accessibilityLabel={canGoBack ? _(msg`Back`) : _(msg`Menu`)}
+                accessibilityHint={
+                  canGoBack ? '' : _(msg`Access navigation links and settings`)
+                }>
+                {canGoBack ? (
+                  <FontAwesomeIcon
+                    size={18}
+                    icon="angle-left"
+                    style={[styles.backIcon, pal.text]}
+                  />
+                ) : !isTablet ? (
+                  <FontAwesomeIcon
+                    size={18}
+                    icon="bars"
+                    style={[styles.backIcon, pal.textLight]}
+                  />
+                ) : null}
+              </TouchableOpacity>
             ) : null}
-          </TouchableOpacity>
-        ) : null}
-        <View style={styles.titleContainer} pointerEvents="none">
-          <Text type="title" style={[pal.text, styles.title]}>
-            {title}
-          </Text>
+            <View style={styles.titleContainer} pointerEvents="none">
+              <Text type="title" style={[pal.text, styles.title]}>
+                {title}
+              </Text>
+            </View>
+            {renderButton ? (
+              renderButton()
+            ) : showBackButton ? (
+              <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+            ) : null}
+          </View>
+          {subtitle ? (
+            <View
+              style={[styles.titleContainer, {marginTop: -3}]}
+              pointerEvents="none">
+              <Text
+                style={[
+                  pal.text,
+                  styles.subtitle,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {subtitle}
+              </Text>
+            </View>
+          ) : undefined}
         </View>
-        {renderButton ? (
-          renderButton()
-        ) : showBackButton ? (
-          <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
-        ) : null}
       </Container>
     )
   }
-})
+}
 
 function DesktopWebHeader({
   title,
@@ -123,7 +149,6 @@ function DesktopWebHeader({
     <CenteredView
       style={[
         styles.header,
-        styles.headerFixed,
         styles.desktopHeader,
         pal.border,
         {
@@ -140,7 +165,7 @@ function DesktopWebHeader({
   )
 }
 
-const Container = observer(function ContainerImpl({
+function Container({
   children,
   hideOnScroll,
   showBorder,
@@ -149,37 +174,14 @@ const Container = observer(function ContainerImpl({
   hideOnScroll: boolean
   showBorder?: boolean
 }) {
-  const store = useStores()
   const pal = usePalette('default')
-  const interp = useAnimatedValue(0)
-
-  React.useEffect(() => {
-    if (store.shell.minimalShellMode) {
-      Animated.timing(interp, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    } else {
-      Animated.timing(interp, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    }
-  }, [interp, store.shell.minimalShellMode])
-  const transform = {
-    transform: [{translateY: Animated.multiply(interp, -100)}],
-  }
+  const {headerMinimalShellTransform} = useMinimalShellMode()
 
   if (!hideOnScroll) {
     return (
       <View
         style={[
           styles.header,
-          styles.headerFixed,
           pal.view,
           pal.border,
           showBorder && styles.border,
@@ -195,26 +197,20 @@ const Container = observer(function ContainerImpl({
         styles.headerFloating,
         pal.view,
         pal.border,
-        transform,
+        headerMinimalShellTransform,
         showBorder && styles.border,
       ]}>
       {children}
     </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
     width: '100%',
-  },
-  headerFixed: {
-    maxWidth: 600,
-    marginLeft: 'auto',
-    marginRight: 'auto',
   },
   headerFloating: {
     position: 'absolute',
@@ -223,6 +219,9 @@ const styles = StyleSheet.create({
   },
   desktopHeader: {
     paddingVertical: 12,
+    maxWidth: 600,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   border: {
     borderBottomWidth: 1,
@@ -230,12 +229,14 @@ const styles = StyleSheet.create({
   titleContainer: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    paddingRight: 10,
+    alignItems: 'center',
   },
   title: {
     fontWeight: 'bold',
   },
-
+  subtitle: {
+    fontSize: 13,
+  },
   backBtn: {
     width: 30,
     height: 30,

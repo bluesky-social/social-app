@@ -1,52 +1,47 @@
-import {isNative, isWeb} from 'platform/detection'
-import {FC} from 'react'
-import * as Sentry from 'sentry-expo'
+/**
+ * Importing these separately from `platform/detection` and `lib/app-info` to
+ * avoid future conflicts and/or circular deps
+ */
 
-// Sentry Initialization
+import {Platform} from 'react-native'
+import app from 'react-native-version-number'
+import * as info from 'expo-updates'
+import {init} from 'sentry-expo'
 
-export const getRoutingInstrumentation = () => {
-  return new Sentry.Native.ReactNavigationInstrumentation() // initialize this in `onReady` prop of NavigationContainer
-}
+/**
+ * Matches the build profile `channel` props in `eas.json`
+ */
+const buildChannel = (info.channel || 'development') as
+  | 'development'
+  | 'preview'
+  | 'production'
 
-Sentry.init({
+/**
+ * Examples:
+ * - `dev`
+ * - `1.57.0`
+ */
+const release = app.appVersion ?? 'dev'
+
+/**
+ * Examples:
+ * - `web.dev`
+ * - `ios.dev`
+ * - `android.dev`
+ * - `web.1.57.0`
+ * - `ios.1.57.0.3`
+ * - `android.1.57.0.46`
+ */
+const dist = `${Platform.OS}.${release}${
+  app.buildVersion ? `.${app.buildVersion}` : ''
+}`
+
+init({
+  autoSessionTracking: false,
   dsn: 'https://05bc3789bf994b81bd7ce20c86ccd3ae@o4505071687041024.ingest.sentry.io/4505071690514432',
-  enableInExpoDevelopment: false, // if true, Sentry will try to send events/errors in development mode.
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
-  environment: __DEV__ ? 'development' : 'production', // Set the environment
-  // @ts-ignore exists but not in types, see https://docs.sentry.io/platforms/react-native/configuration/options/#enableAutoPerformanceTracking
-  enableAutoPerformanceTracking: true, // Enable auto performance tracking
-  tracesSampleRate: 0.5, // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring. // TODO: this might be too much in production
-  _experiments: {
-    // The sampling rate for profiling is relative to TracesSampleRate.
-    // In this case, we'll capture profiles for 50% of transactions.
-    profilesSampleRate: 0.5,
-  },
-  integrations: isNative
-    ? [
-        new Sentry.Native.ReactNativeTracing({
-          shouldCreateSpanForRequest: url => {
-            // Do not create spans for outgoing requests to a `/logs` endpoint as it is too noisy due to expo
-            return !url.match(/\/logs$/)
-          },
-          routingInstrumentation: getRoutingInstrumentation(),
-        }),
-      ]
-    : [], // no integrations for web, yet
+  enableInExpoDevelopment: false, // enable this to test in dev
+  environment: buildChannel,
+  dist,
+  release,
 })
-
-// if web, use Browser client, otherwise use Native client
-export function getSentryClient() {
-  if (isWeb) {
-    return Sentry.Browser
-  }
-  return Sentry.Native
-}
-
-// wrap root App component with Sentry for automatic touch event tracking and performance monitoring
-export function withSentry(Component: FC) {
-  if (isWeb) {
-    return Component // .wrap is not required or available for web
-  }
-  const sentryClient = getSentryClient()
-  return sentryClient.wrap(Component)
-}

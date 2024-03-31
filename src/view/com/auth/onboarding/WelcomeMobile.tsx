@@ -1,11 +1,13 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {Text} from 'view/com/util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 import {Button} from 'view/com/util/forms/Button'
-import {observer} from 'mobx-react-lite'
+import {Text} from 'view/com/util/text/Text'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 
 type Props = {
@@ -13,11 +15,9 @@ type Props = {
   skip: () => void
 }
 
-export const WelcomeMobile = observer(function WelcomeMobileImpl({
-  next,
-  skip,
-}: Props) {
+export function WelcomeMobile({next, skip}: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <View style={[styles.container]} testID="welcomeOnboarding">
@@ -32,7 +32,9 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
               accessibilityRole="button"
               style={[s.flexRow, s.alignCenter]}
               onPress={skip}>
-              <Text style={[pal.link]}>Skip</Text>
+              <Text style={[pal.link]}>
+                <Trans>Skip</Trans>
+              </Text>
               <FontAwesomeIcon
                 icon={'chevron-right'}
                 size={14}
@@ -44,18 +46,22 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
       />
       <View>
         <Text style={[pal.text, styles.title]}>
-          Welcome to{' '}
-          <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
+          <Trans>
+            Welcome to{' '}
+            <Text style={[pal.text, pal.link, styles.title]}>Bluesky</Text>
+          </Trans>
         </Text>
         <View style={styles.spacer} />
         <View style={[styles.row]}>
           <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
-              Bluesky is public.
+              <Trans>Bluesky is public.</Trans>
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              Your posts, likes, and blocks are public. Mutes are private.
+              <Trans>
+                Your posts, likes, and blocks are public. Mutes are private.
+              </Trans>
             </Text>
           </View>
         </View>
@@ -63,10 +69,10 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
           <FontAwesomeIcon icon={'at'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
-              Bluesky is open.
+              <Trans>Bluesky is open.</Trans>
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              Never lose access to your followers and data.
+              <Trans>Never lose access to your followers and data.</Trans>
             </Text>
           </View>
         </View>
@@ -74,11 +80,13 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
           <FontAwesomeIcon icon={'gear'} size={36} color={pal.colors.link} />
           <View style={[styles.rowText]}>
             <Text type="lg-bold" style={[pal.text]}>
-              Bluesky is flexible.
+              <Trans>Bluesky is flexible.</Trans>
             </Text>
             <Text type="lg-thin" style={[pal.text, s.pt2]}>
-              Choose the algorithms that power your experience with custom
-              feeds.
+              <Trans>
+                Choose the algorithms that power your experience with custom
+                feeds.
+              </Trans>
             </Text>
           </View>
         </View>
@@ -86,14 +94,14 @@ export const WelcomeMobile = observer(function WelcomeMobileImpl({
 
       <Button
         onPress={next}
-        label="Continue"
+        label={_(msg`Continue`)}
         testID="continueBtn"
         style={[styles.buttonContainer]}
         labelStyle={styles.buttonText}
       />
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

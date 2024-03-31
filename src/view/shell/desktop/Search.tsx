@@ -1,49 +1,205 @@
 import React from 'react'
-import {TextInput, View, StyleSheet, TouchableOpacity} from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
-import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationDecision,
+} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {StackActions, useNavigation} from '@react-navigation/native'
+
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {s} from '#/lib/styles'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useModerationOpts} from '#/state/queries/preferences'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {Link} from '#/view/com/util/Link'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 
-export const DesktopSearch = observer(function DesktopSearch() {
-  const store = useStores()
-  const pal = usePalette('default')
-  const textInput = React.useRef<TextInput>(null)
-  const [isInputFocused, setIsInputFocused] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>('')
-  const autocompleteView = React.useMemo<UserAutocompleteModel>(
-    () => new UserAutocompleteModel(store),
-    [store],
-  )
-  const navigation = useNavigation<NavigationProp>()
+export const MATCH_HANDLE =
+  /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
 
-  const onChangeQuery = React.useCallback(
-    (text: string) => {
+export function SearchLinkCard({
+  label,
+  to,
+  onPress,
+  style,
+}: {
+  label: string
+  to?: string
+  onPress?: () => void
+  style?: ViewStyle
+}) {
+  const pal = usePalette('default')
+
+  const inner = (
+    <View
+      style={[pal.border, {paddingVertical: 16, paddingHorizontal: 12}, style]}>
+      <Text type="md" style={[pal.text]}>
+        {label}
+      </Text>
+    </View>
+  )
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        accessibilityLabel={label}
+        accessibilityHint="">
+        {inner}
+      </TouchableOpacity>
+    )
+  }
+
+  return (
+    <Link href={to} asAnchor anchorNoUnderline>
+      <View
+        style={[
+          pal.border,
+          {paddingVertical: 16, paddingHorizontal: 12},
+          style,
+        ]}>
+        <Text type="md" style={[pal.text]}>
+          {label}
+        </Text>
+      </View>
+    </Link>
+  )
+}
+
+export function SearchProfileCard({
+  profile,
+  moderation,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  moderation: ModerationDecision
+}) {
+  const pal = usePalette('default')
+
+  return (
+    <Link
+      testID={`searchAutoCompleteResult-${profile.handle}`}
+      href={makeProfileLink(profile)}
+      title={profile.handle}
+      asAnchor
+      anchorNoUnderline>
+      <View
+        style={[
+          pal.border,
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
+          },
+        ]}>
+        <UserAvatar
+          size={40}
+          avatar={profile.avatar}
+          moderation={moderation.ui('avatar')}
+          type={profile.associated?.labeler ? 'labeler' : 'user'}
+        />
+        <View style={{flex: 1}}>
+          <Text
+            type="lg"
+            style={[s.bold, pal.text]}
+            numberOfLines={1}
+            lineHeight={1.2}>
+            {sanitizeDisplayName(
+              profile.displayName || sanitizeHandle(profile.handle),
+              moderation.ui('displayName'),
+            )}
+          </Text>
+          <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+            {sanitizeHandle(profile.handle, '@')}
+          </Text>
+        </View>
+      </View>
+    </Link>
+  )
+}
+
+export function DesktopSearch() {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+  const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
+    undefined,
+  )
+  const [isActive, setIsActive] = React.useState<boolean>(false)
+  const [isFetching, setIsFetching] = React.useState<boolean>(false)
+  const [query, setQuery] = React.useState<string>('')
+  const [searchResults, setSearchResults] = React.useState<
+    AppBskyActorDefs.ProfileViewBasic[]
+  >([])
+
+  const moderationOpts = useModerationOpts()
+  const search = useActorAutocompleteFn()
+
+  const onChangeText = React.useCallback(
+    async (text: string) => {
       setQuery(text)
-      if (text.length > 0 && isInputFocused) {
-        autocompleteView.setActive(true)
-        autocompleteView.setPrefix(text)
+
+      if (text.length > 0) {
+        setIsFetching(true)
+        setIsActive(true)
+
+        if (searchDebounceTimeout.current)
+          clearTimeout(searchDebounceTimeout.current)
+
+        searchDebounceTimeout.current = setTimeout(async () => {
+          const results = await search({query: text})
+
+          if (results) {
+            setSearchResults(results)
+            setIsFetching(false)
+          }
+        }, 300)
       } else {
-        autocompleteView.setActive(false)
+        if (searchDebounceTimeout.current)
+          clearTimeout(searchDebounceTimeout.current)
+        setSearchResults([])
+        setIsFetching(false)
+        setIsActive(false)
       }
     },
-    [setQuery, autocompleteView, isInputFocused],
+    [setQuery, search, setSearchResults],
   )
 
   const onPressCancelSearch = React.useCallback(() => {
     setQuery('')
-    autocompleteView.setActive(false)
-  }, [setQuery, autocompleteView])
-
+    setIsActive(false)
+    if (searchDebounceTimeout.current)
+      clearTimeout(searchDebounceTimeout.current)
+  }, [setQuery])
   const onSubmit = React.useCallback(() => {
+    setIsActive(false)
+    if (!query.length) return
+    setSearchResults([])
+    if (searchDebounceTimeout.current)
+      clearTimeout(searchDebounceTimeout.current)
     navigation.dispatch(StackActions.push('Search', {q: query}))
-    autocompleteView.setActive(false)
-  }, [query, navigation, autocompleteView])
+  }, [query, navigation, setSearchResults])
+
+  const queryMaybeHandle = React.useMemo(() => {
+    const match = MATCH_HANDLE.exec(query)
+    return match && match[1]
+  }, [query])
 
   return (
     <View style={[styles.container, pal.view]}>
@@ -56,31 +212,31 @@ export const DesktopSearch = observer(function DesktopSearch() {
           />
           <TextInput
             testID="searchTextInput"
-            ref={textInput}
-            placeholder="Search"
+            placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus
             returnKeyType="search"
             value={query}
             style={[pal.textLight, styles.input]}
-            onFocus={() => setIsInputFocused(true)}
-            onBlur={() => setIsInputFocused(false)}
-            onChangeText={onChangeQuery}
+            onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
-            accessibilityLabel="Search"
+            accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
+            autoCorrect={false}
+            autoComplete="off"
+            autoCapitalize="none"
           />
           {query ? (
             <View style={styles.cancelBtn}>
               <TouchableOpacity
                 onPress={onPressCancelSearch}
                 accessibilityRole="button"
-                accessibilityLabel="Cancel search"
-                accessibilityHint="Exits inputting search query"
+                accessibilityLabel={_(msg`Cancel search`)}
+                accessibilityHint={_(msg`Exits inputting search query`)}
                 onAccessibilityEscape={onPressCancelSearch}>
                 <Text type="lg" style={[pal.link]}>
-                  Cancel
+                  <Trans>Cancel</Trans>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -88,32 +244,46 @@ export const DesktopSearch = observer(function DesktopSearch() {
         </View>
       </View>
 
-      {query !== '' && (
+      {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {autocompleteView.searchRes.length ? (
+          {isFetching ? (
+            <View style={{padding: 8}}>
+              <ActivityIndicator />
+            </View>
+          ) : (
             <>
-              {autocompleteView.searchRes.map((item, i) => (
-                <ProfileCard key={item.did} profile={item} noBorder={i === 0} />
+              <SearchLinkCard
+                label={_(msg`Search for "${query}"`)}
+                to={`/search?q=${encodeURIComponent(query)}`}
+                style={{borderBottomWidth: 1}}
+              />
+
+              {queryMaybeHandle ? (
+                <SearchLinkCard
+                  label={_(msg`Go to @${queryMaybeHandle}`)}
+                  to={`/profile/${queryMaybeHandle}`}
+                />
+              ) : null}
+
+              {searchResults.map(item => (
+                <SearchProfileCard
+                  key={item.did}
+                  profile={item}
+                  moderation={moderateProfile(item, moderationOpts)}
+                />
               ))}
             </>
-          ) : (
-            <View>
-              <Text style={[pal.textLight, styles.noResults]}>
-                No results found for {autocompleteView.prefix}
-              </Text>
-            </View>
           )}
         </View>
       )}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
     width: 300,
-    paddingBottom: 18,
   },
   search: {
     paddingHorizontal: 16,
@@ -143,15 +313,11 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   resultsContainer: {
-    // @ts-ignore supported by web
-    // position: 'fixed',
     marginTop: 10,
-
     flexDirection: 'column',
     width: 300,
     borderWidth: 1,
     borderRadius: 6,
-    paddingVertical: 4,
   },
   noResults: {
     textAlign: 'center',

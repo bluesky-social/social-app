@@ -1,100 +1,120 @@
-import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
-import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
+import React from 'react'
+import {View} from 'react-native'
+import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
+import {useResolveDidQuery} from '#/state/queries/resolve-uri'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useSession} from 'state/session'
 import {
-  UserFollowersModel,
-  FollowerItem,
-} from 'state/models/lists/user-followers'
-import {CenteredView, FlatList} from '../util/Views'
-import {ErrorMessage} from '../util/error/ErrorMessage'
+  ListFooter,
+  ListHeaderDesktop,
+  ListMaybePlaceholder,
+} from '#/components/Lists'
+import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
 
-export const ProfileFollowers = observer(function ProfileFollowers({
-  name,
-}: {
-  name: string
-}) {
-  const pal = usePalette('default')
-  const store = useStores()
-  const view = React.useMemo(
-    () => new UserFollowersModel(store, {actor: name}),
-    [store, name],
+function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
+  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+}
+
+function keyExtractor(item: ActorDefs.ProfileViewBasic) {
+  return item.did
+}
+
+export function ProfileFollowers({name}: {name: string}) {
+  const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
+  const {currentAccount} = useSession()
+
+  const [isPTRing, setIsPTRing] = React.useState(false)
+  const {
+    data: resolvedDid,
+    isLoading: isDidLoading,
+    error: resolveError,
+  } = useResolveDidQuery(name)
+  const {
+    data,
+    isLoading: isFollowersLoading,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error,
+    refetch,
+  } = useProfileFollowersQuery(resolvedDid)
+
+  const isError = React.useMemo(
+    () => !!resolveError || !!error,
+    [resolveError, error],
   )
 
-  useEffect(() => {
-    view
-      .loadMore()
-      .catch(err => store.log.error('Failed to fetch user followers', err))
-  }, [view, store.log])
+  const isMe = React.useMemo(() => {
+    return resolvedDid === currentAccount?.did
+  }, [resolvedDid, currentAccount?.did])
 
-  const onRefresh = () => {
-    view.refresh()
-  }
-  const onEndReached = () => {
-    view
-      .loadMore()
-      .catch(err =>
-        view?.rootStore.log.error('Failed to load more followers', err),
-      )
-  }
+  const followers = React.useMemo(() => {
+    if (data?.pages) {
+      return data.pages.flatMap(page => page.followers)
+    }
+    return []
+  }, [data])
 
-  if (!view.hasLoaded) {
-    return (
-      <CenteredView>
-        <ActivityIndicator />
-      </CenteredView>
-    )
-  }
+  const onRefresh = React.useCallback(async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh followers', {message: err})
+    }
+    setIsPTRing(false)
+  }, [refetch, setIsPTRing])
 
-  // error
-  // =
-  if (view.hasError) {
-    return (
-      <CenteredView>
-        <ErrorMessage message={view.error} onPressTryAgain={onRefresh} />
-      </CenteredView>
-    )
+  const onEndReached = async () => {
+    if (isFetching || !hasNextPage || !!error) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more followers', {message: err})
+    }
   }
 
-  // loaded
-  // =
-  const renderItem = ({item}: {item: FollowerItem}) => (
-    <ProfileCardWithFollowBtn key={item.did} profile={item} />
-  )
   return (
-    <FlatList
-      data={view.followers}
-      keyExtractor={item => item.did}
-      refreshControl={
-        <RefreshControl
-          refreshing={view.isRefreshing}
+    <View style={{flex: 1}}>
+      <ListMaybePlaceholder
+        isLoading={isDidLoading || isFollowersLoading}
+        isEmpty={followers.length < 1}
+        isError={isError}
+        emptyType="results"
+        emptyMessage={
+          isMe
+            ? _(msg`You do not have any followers.`)
+            : _(msg`This user doesn't have any followers.`)
+        }
+        errorMessage={cleanError(resolveError || error)}
+        onRetry={isError ? refetch : undefined}
+      />
+      {followers.length > 0 && (
+        <List
+          data={followers}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          refreshing={isPTRing}
           onRefresh={onRefresh}
-          tintColor={pal.colors.text}
-          titleColor={pal.colors.text}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={4}
+          ListHeaderComponent={<ListHeaderDesktop title={_(msg`Followers`)} />}
+          ListFooterComponent={<ListFooter isFetching={isFetchingNextPage} />}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
         />
-      }
-      onEndReached={onEndReached}
-      renderItem={renderItem}
-      initialNumToRender={15}
-      // FIXME(dan)
-      // eslint-disable-next-line react/no-unstable-nested-components
-      ListFooterComponent={() => (
-        <View style={styles.footer}>
-          {view.isLoading && <ActivityIndicator />}
-        </View>
       )}
-      extraData={view.isLoading}
-      // @ts-ignore our .web version only -prf
-      desktopFixedHeight
-    />
+    </View>
   )
-})
-
-const styles = StyleSheet.create({
-  footer: {
-    height: 200,
-    paddingTop: 20,
-  },
-})
+}

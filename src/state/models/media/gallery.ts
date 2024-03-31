@@ -1,18 +1,25 @@
-import {makeAutoObservable, runInAction} from 'mobx'
-import {RootStoreModel} from 'state/index'
-import {ImageModel} from './image'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {openPicker} from 'lib/media/picker'
+import {makeAutoObservable, runInAction} from 'mobx'
+
 import {getImageDim} from 'lib/media/manip'
-import {isNative} from 'platform/detection'
+import {openPicker} from 'lib/media/picker'
+import {ImageModel} from './image'
+
+interface InitialImageUri {
+  uri: string
+  width: number
+  height: number
+}
 
 export class GalleryModel {
   images: ImageModel[] = []
 
-  constructor(public rootStore: RootStoreModel) {
-    makeAutoObservable(this, {
-      rootStore: false,
-    })
+  constructor(uris?: {uri: string; width: number; height: number}[]) {
+    makeAutoObservable(this)
+
+    if (uris) {
+      this.addFromUris(uris)
+    }
   }
 
   get isEmpty() {
@@ -27,30 +34,18 @@ export class GalleryModel {
     return this.images.some(image => image.altText.trim() === '')
   }
 
-  async add(image_: Omit<RNImage, 'size'>) {
+  *add(image_: Omit<RNImage, 'size'>) {
     if (this.size >= 4) {
       return
     }
 
     // Temporarily enforce uniqueness but can eventually also use index
     if (!this.images.some(i => i.path === image_.path)) {
-      const image = new ImageModel(this.rootStore, image_)
+      const image = new ImageModel(image_)
 
       // Initial resize
       image.manipulate({})
       this.images.push(image)
-    }
-  }
-
-  async edit(image: ImageModel) {
-    if (isNative) {
-      this.crop(image)
-    } else {
-      this.rootStore.shell.openModal({
-        name: 'edit-image',
-        image,
-        gallery: this,
-      })
     }
   }
 
@@ -101,5 +96,16 @@ export class GalleryModel {
         this.add(image)
       }),
     )
+  }
+
+  async addFromUris(uris: InitialImageUri[]) {
+    for (const uriObj of uris) {
+      this.add({
+        mime: 'image/jpeg',
+        height: uriObj.height,
+        width: uriObj.width,
+        path: uriObj.uri,
+      })
+    }
   }
 }

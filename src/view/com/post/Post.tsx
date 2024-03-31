@@ -1,205 +1,155 @@
-import React, {useState} from 'react'
+import React, {useMemo, useState} from 'react'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
-  ActivityIndicator,
-  Linking,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {AppBskyFeedPost as FeedPost} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri} from '@atproto/api'
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  ModerationDecision,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {PostThreadModel} from 'state/models/content/post-thread'
-import {PostThreadItemModel} from 'state/models/content/post-thread-item'
-import {Link} from '../util/Link'
-import {UserInfoText} from '../util/UserInfoText'
-import {PostMeta} from '../util/PostMeta'
-import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {PostAlerts} from '../util/moderation/PostAlerts'
-import {Text} from '../util/text/Text'
-import {RichText} from '../util/text/RichText'
-import * as Toast from '../util/Toast'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {useStores} from 'state/index'
-import {s, colors} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useComposerControls} from '#/state/shell/composer'
+import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
-import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
+import {countLines} from 'lib/strings/helpers'
+import {colors, s} from 'lib/styles'
+import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../components/moderation/ContentHider'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {Link, TextLink} from '../util/Link'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostMeta} from '../util/PostMeta'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {UserInfoText} from '../util/UserInfoText'
 
-export const Post = observer(function PostImpl({
-  view,
+export function Post({
+  post,
   showReplyLine,
-  hideError,
   style,
 }: {
-  view: PostThreadModel
+  post: AppBskyFeedDefs.PostView
   showReplyLine?: boolean
-  hideError?: boolean
   style?: StyleProp<ViewStyle>
 }) {
-  const pal = usePalette('default')
-  const [deleted, setDeleted] = useState(false)
-
-  // deleted
-  // =
-  if (deleted) {
-    return <View />
-  }
-
-  // loading
-  // =
-  if (!view.hasContent && view.isLoading) {
-    return (
-      <View style={pal.view}>
-        <ActivityIndicator />
-      </View>
-    )
-  }
-
-  // error
-  // =
-  if (view.hasError || !view.thread || !view.thread?.postRecord) {
-    if (hideError) {
-      return <View />
-    }
-    return (
-      <View style={pal.view}>
-        <Text>{view.error || 'Thread not found'}</Text>
-      </View>
-    )
-  }
-
-  // loaded
-  // =
-
-  return (
-    <PostLoaded
-      item={view.thread}
-      record={view.thread.postRecord}
-      setDeleted={setDeleted}
-      showReplyLine={showReplyLine}
-      style={style}
-    />
+  const moderationOpts = useModerationOpts()
+  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+    () =>
+      AppBskyFeedPost.isRecord(post.record) &&
+      AppBskyFeedPost.validateRecord(post.record).success
+        ? post.record
+        : undefined,
+    [post],
   )
-})
+  const postShadowed = usePostShadow(post)
+  const richText = useMemo(
+    () =>
+      record
+        ? new RichTextAPI({
+            text: record.text,
+            facets: record.facets,
+          })
+        : undefined,
+    [record],
+  )
+  const moderation = useMemo(
+    () => (moderationOpts ? moderatePost(post, moderationOpts) : undefined),
+    [moderationOpts, post],
+  )
+  if (postShadowed === POST_TOMBSTONE) {
+    return null
+  }
+  if (record && richText && moderation) {
+    return (
+      <PostInner
+        post={postShadowed}
+        record={record}
+        richText={richText}
+        moderation={moderation}
+        showReplyLine={showReplyLine}
+        style={style}
+      />
+    )
+  }
+  return null
+}
 
-const PostLoaded = observer(function PostLoadedImpl({
-  item,
+function PostInner({
+  post,
   record,
-  setDeleted,
+  richText,
+  moderation,
   showReplyLine,
   style,
 }: {
-  item: PostThreadItemModel
-  record: FeedPost.Record
-  setDeleted: (v: boolean) => void
+  post: Shadow<AppBskyFeedDefs.PostView>
+  record: AppBskyFeedPost.Record
+  richText: RichTextAPI
+  moderation: ModerationDecision
   showReplyLine?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const store = useStores()
-
-  const itemUri = item.post.uri
-  const itemCid = item.post.cid
-  const itemUrip = new AtUri(item.post.uri)
-  const itemHref = makeProfileLink(item.post.author, 'post', itemUrip.rkey)
-  const itemTitle = `Post by ${item.post.author.handle}`
+  const {_} = useLingui()
+  const {openComposer} = useComposerControls()
+  const [limitLines, setLimitLines] = useState(
+    () => countLines(richText?.text) >= MAX_POST_LINES,
+  )
+  const itemUrip = new AtUri(post.uri)
+  const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
   let replyAuthorDid = ''
   if (record.reply) {
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     replyAuthorDid = urip.hostname
   }
 
-  const translatorUrl = getTranslatorLink(
-    record?.text || '',
-    store.preferences.primaryLanguage,
-  )
-
   const onPressReply = React.useCallback(() => {
-    store.shell.openComposer({
+    openComposer({
       replyTo: {
-        uri: item.post.uri,
-        cid: item.post.cid,
-        text: record.text as string,
-        author: {
-          handle: item.post.author.handle,
-          displayName: item.post.author.displayName,
-          avatar: item.post.author.avatar,
-        },
+        uri: post.uri,
+        cid: post.cid,
+        text: record.text,
+        author: post.author,
+        embed: post.embed,
+        moderation,
       },
     })
-  }, [store, item, record])
+  }, [openComposer, post, record, moderation])
 
-  const onPressToggleRepost = React.useCallback(() => {
-    return item
-      .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
-  }, [item, store])
-
-  const onPressToggleLike = React.useCallback(() => {
-    return item
-      .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
-  }, [item, store])
-
-  const onCopyPostText = React.useCallback(() => {
-    Clipboard.setString(record.text)
-    Toast.show('Copied to clipboard')
-  }, [record])
-
-  const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(translatorUrl)
-  }, [translatorUrl])
-
-  const onToggleThreadMute = React.useCallback(async () => {
-    try {
-      await item.toggleThreadMute()
-      if (item.isThreadMuted) {
-        Toast.show('You will no longer receive notifications for this thread')
-      } else {
-        Toast.show('You will now receive notifications for this thread')
-      }
-    } catch (e) {
-      store.log.error('Failed to toggle thread mute', e)
-    }
-  }, [item, store])
-
-  const onDeletePost = React.useCallback(() => {
-    item.delete().then(
-      () => {
-        setDeleted(true)
-        Toast.show('Post deleted')
-      },
-      e => {
-        store.log.error('Failed to delete post', e)
-        Toast.show('Failed to delete post, please try again')
-      },
-    )
-  }, [item, setDeleted, store])
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
 
   return (
-    <Link href={itemHref} style={[styles.outer, pal.view, pal.border, style]}>
+    <Link href={itemHref} style={[styles.outer, pal.border, style]}>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={item.post.author.did}
-            handle={item.post.author.handle}
-            avatar={item.post.author.avatar}
-            moderation={item.moderation.avatar}
+            did={post.author.did}
+            handle={post.author.handle}
+            avatar={post.author.avatar}
+            moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
-            author={item.post.author}
-            authorHasWarning={!!item.post.author.labels?.length}
-            timestamp={item.post.indexedAt}
+            author={post.author}
+            moderation={moderation}
+            authorHasWarning={!!post.author.labels?.length}
+            timestamp={post.indexedAt}
             postHref={itemHref}
           />
           {replyAuthorDid !== '' && (
@@ -214,74 +164,63 @@ const PostLoaded = observer(function PostLoadedImpl({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reply to{' '}
-                <UserInfoText
-                  type="sm"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
+                <Trans context="description">
+                  Reply to{' '}
+                  <UserInfoText
+                    type="sm"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight]}
+                  />
+                </Trans>
               </Text>
             </View>
           )}
+          <LabelsOnMyPost post={post} />
           <ContentHider
-            moderation={item.moderation.content}
+            modui={moderation.ui('contentView')}
             style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
-              moderation={item.moderation.content}
-              style={styles.alert}
+              modui={moderation.ui('contentView')}
+              style={[a.py_xs]}
             />
-            {item.richText?.text ? (
+            {richText.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
+                  enableTags
                   testID="postText"
-                  type="post-text"
-                  richText={item.richText}
-                  lineHeight={1.3}
-                  style={s.flex1}
+                  value={richText}
+                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                  style={[a.flex_1, a.text_md]}
+                  authorHandle={post.author.handle}
                 />
               </View>
             ) : undefined}
-            {item.post.embed ? (
-              <ContentHider
-                moderation={item.moderation.embed}
-                style={styles.contentHider}>
-                <PostEmbeds
-                  embed={item.post.embed}
-                  moderation={item.moderation.embed}
-                />
-              </ContentHider>
+            {limitLines ? (
+              <TextLink
+                text={_(msg`Show More`)}
+                style={pal.link}
+                onPress={onPressShowMore}
+                href="#"
+              />
+            ) : undefined}
+            {post.embed ? (
+              <PostEmbeds embed={post.embed} moderation={moderation} />
             ) : null}
           </ContentHider>
           <PostCtrls
-            itemUri={itemUri}
-            itemCid={itemCid}
-            itemHref={itemHref}
-            itemTitle={itemTitle}
-            author={item.post.author}
-            indexedAt={item.post.indexedAt}
-            text={item.richText?.text || record.text}
-            isAuthor={item.post.author.did === store.me.did}
-            replyCount={item.post.replyCount}
-            repostCount={item.post.repostCount}
-            likeCount={item.post.likeCount}
-            isReposted={!!item.post.viewer?.repost}
-            isLiked={!!item.post.viewer?.like}
-            isThreadMuted={item.isThreadMuted}
+            post={post}
+            record={record}
+            richText={richText}
             onPressReply={onPressReply}
-            onPressToggleRepost={onPressToggleRepost}
-            onPressToggleLike={onPressToggleLike}
-            onCopyPostText={onCopyPostText}
-            onOpenTranslate={onOpenTranslate}
-            onToggleThreadMute={onToggleThreadMute}
-            onDeletePost={onDeletePost}
+            logContext="Post"
           />
         </View>
       </View>
     </Link>
   )
-})
+}
 
 const styles = StyleSheet.create({
   outer: {
@@ -290,6 +229,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     borderTopWidth: 1,
+    // @ts-ignore web only -prf
     cursor: 'pointer',
   },
   layout: {

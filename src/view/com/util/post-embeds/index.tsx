@@ -1,36 +1,35 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
-  StyleSheet,
+  InteractionManager,
   StyleProp,
+  StyleSheet,
+  Text,
   View,
   ViewStyle,
-  Text,
-  InteractionManager,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
-  AppBskyEmbedImages,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
-  ModerationUI,
+  ModerationDecision,
 } from '@atproto/api'
-import {Link} from '../Link'
-import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {ImagesLightbox} from 'state/models/ui/shell'
-import {useStores} from 'state/index'
+
+import {shareUrl} from '#/lib/sharing'
+import {isNative} from '#/platform/detection'
+import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {YoutubeEmbed} from './YoutubeEmbed'
-import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {getYoutubeVideoId} from 'lib/strings/url-helpers'
-import {MaybeQuoteEmbed} from './QuoteEmbed'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {AutoSizedImage} from '../images/AutoSizedImage'
-import {CustomFeedEmbed} from './CustomFeedEmbed'
+import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
+import {Link} from '../Link'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
-import {isCauseALabelOnUri} from 'lib/moderation'
+import {MaybeQuoteEmbed} from './QuoteEmbed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -45,25 +44,29 @@ export function PostEmbeds({
   style,
 }: {
   embed?: Embed
-  moderation: ModerationUI
+  moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const store = useStores()
-  const {isMobile} = useWebMediaQueries()
+  const {openLightbox} = useLightboxControls()
+
+  const externalUri = AppBskyEmbedExternal.isView(embed)
+    ? embed.external.uri
+    : null
+
+  const onShareExternal = useCallback(() => {
+    if (externalUri && isNative) {
+      shareUrl(externalUri)
+    }
+  }, [externalUri])
 
   // quote post with media
   // =
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-    const isModOnQuote =
-      AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-      isCauseALabelOnUri(moderation.cause, embed.record.record.uri)
-    const mediaModeration = isModOnQuote ? {} : moderation
-    const quoteModeration = isModOnQuote ? moderation : {}
     return (
-      <View style={[styles.stackContainer, style]}>
-        <PostEmbeds embed={embed.media} moderation={mediaModeration} />
-        <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
+      <View style={style}>
+        <PostEmbeds embed={embed.media} moderation={moderation} />
+        <MaybeQuoteEmbed embed={embed.record} />
       </View>
     )
   }
@@ -72,19 +75,25 @@ export function PostEmbeds({
     // custom feed embed (i.e. generator view)
     // =
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <CustomFeedEmbed record={embed.record} />
+      // TODO moderation
+      return (
+        <FeedSourceCard
+          feedUri={embed.record.uri}
+          style={[pal.view, pal.border, styles.customFeedOuter]}
+          showLikes
+        />
+      )
     }
 
-    // list embed (e.g. mute lists; i.e. ListView)
+    // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
+      // TODO moderation
       return <ListEmbed item={embed.record} />
     }
 
     // quote post
     // =
-    return (
-      <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
-    )
+    return <MaybeQuoteEmbed embed={embed} style={style} />
   }
 
   // image embed
@@ -98,8 +107,8 @@ export function PostEmbeds({
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
-      const openLightbox = (index: number) => {
-        store.shell.openLightbox(new ImagesLightbox(items, index))
+      const _openLightbox = (index: number) => {
+        openLightbox(new ImagesLightbox(items, index))
       }
       const onPressIn = (_: number) => {
         InteractionManager.runAfterInteractions(() => {
@@ -110,42 +119,41 @@ export function PostEmbeds({
       if (images.length === 1) {
         const {alt, thumb, aspectRatio} = images[0]
         return (
-          <View style={[styles.imagesContainer, style]}>
-            <AutoSizedImage
-              alt={alt}
-              uri={thumb}
-              dimensionsHint={aspectRatio}
-              onPress={() => openLightbox(0)}
-              onPressIn={() => onPressIn(0)}
-              style={[
-                styles.singleImage,
-                isMobile && styles.singleImageMobile,
-              ]}>
-              {alt === '' ? null : (
-                <View style={styles.altContainer}>
-                  <Text style={styles.alt} accessible={false}>
-                    ALT
-                  </Text>
-                </View>
-              )}
-            </AutoSizedImage>
-          </View>
+          <ContentHider modui={moderation?.ui('contentMedia')}>
+            <View style={[styles.imagesContainer, style]}>
+              <AutoSizedImage
+                alt={alt}
+                uri={thumb}
+                dimensionsHint={aspectRatio}
+                onPress={() => _openLightbox(0)}
+                onPressIn={() => onPressIn(0)}
+                style={[styles.singleImage]}>
+                {alt === '' ? null : (
+                  <View style={styles.altContainer}>
+                    <Text style={styles.alt} accessible={false}>
+                      ALT
+                    </Text>
+                  </View>
+                )}
+              </AutoSizedImage>
+            </View>
+          </ContentHider>
         )
       }
 
       return (
-        <View style={[styles.imagesContainer, style]}>
-          <ImageLayoutGrid
-            images={embed.images}
-            onPress={openLightbox}
-            onPressIn={onPressIn}
-            style={
-              embed.images.length === 1
-                ? [styles.singleImage, isMobile && styles.singleImageMobile]
-                : undefined
-            }
-          />
-        </View>
+        <ContentHider modui={moderation?.ui('contentMedia')}>
+          <View style={[styles.imagesContainer, style]}>
+            <ImageLayoutGrid
+              images={embed.images}
+              onPress={_openLightbox}
+              onPressIn={onPressIn}
+              style={
+                embed.images.length === 1 ? [styles.singleImage] : undefined
+              }
+            />
+          </View>
+        </ContentHider>
       )
     }
   }
@@ -154,19 +162,19 @@ export function PostEmbeds({
   // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
-    const youtubeVideoId = getYoutubeVideoId(link.uri)
-
-    if (youtubeVideoId) {
-      return <YoutubeEmbed link={link} style={style} />
-    }
 
     return (
-      <Link
-        asAnchor
-        style={[styles.extOuter, pal.view, pal.border, style]}
-        href={link.uri}>
-        <ExternalLinkEmbed link={link} />
-      </Link>
+      <ContentHider modui={moderation?.ui('contentMedia')}>
+        <Link
+          asAnchor
+          anchorNoUnderline
+          href={link.uri}
+          style={[styles.extOuter, pal.view, pal.borderDark, style]}
+          hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+          onLongPress={onShareExternal}>
+          <ExternalLinkEmbed link={link} />
+        </Link>
+      </ContentHider>
     )
   }
 
@@ -174,18 +182,11 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
-  stackContainer: {
-    gap: 6,
-  },
   imagesContainer: {
     marginTop: 8,
   },
   singleImage: {
     borderRadius: 8,
-    maxHeight: 1000,
-  },
-  singleImageMobile: {
-    maxHeight: 500,
   },
   extOuter: {
     borderWidth: 1,
@@ -205,5 +206,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  customFeedOuter: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
 })

@@ -1,0 +1,60 @@
+{
+    "$type": "app.bsky.feed.post",
+    "createdAt": "2023-12-04T19:30:03.024Z",
+    "embed": {
+        "$type": "app.bsky.embed.external",
+        "external": {
+        "description": "🕸 Bridges the IndieWeb to Mastodon and the fediverse via ActivityPub. - GitHub - snarfed/bridgy-fed: 🕸 Bridges the IndieWeb to Mastodon and the fediverse via ActivityPub.",
+        "thumb": {
+            "$type": "blob",
+            "ref": {
+            "$link": "bafkreidplhjcnrl2c74r3xs7nh7k7q3ny6ul7cgxr2fophblvdeky6t64e"
+            },
+            "mimeType": "image/jpeg",
+            "size": 347998
+        },
+        "title": "GitHub - snarfed/bridgy-fed: 🕸 Bridges the IndieWeb to Mastodon and the fediverse via ActivityPub...",
+        "uri": "https://github.com/snarfed/bridgy-fed"
+        }
+    },
+    "facets": [
+        {
+        "features": [
+            {
+            "$type": "app.bsky.richtext.facet#link",
+            "uri": "https://github.com/snarfed/bridgy-fed"
+            }
+        ],
+        "index": {
+            "byteEnd": 92,
+            "byteStart": 66
+        }
+        },
+        {
+        "features": [
+            {
+            "$type": "app.bsky.richtext.facet#mention",
+            "did": "did:plc:fdme4gb7mu7zrie7peay7tst"
+            }
+        ],
+        "index": {
+            "byteEnd": 149,
+            "byteStart": 137
+        }
+        }
+    ],
+    "langs": [
+        "en"
+    ],
+    "reply": {
+        "parent": {
+        "cid": "bafyreifaidyl62p4snkdwsygviemsxyidi3cd7dxvjomh5644sovxhsppa",
+        "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/app.bsky.feed.post/3kfqklhpalh2c"
+        },
+        "root": {
+        "cid": "bafyreibiimdwmsp5mqpm7utqcdmvo6fdqmofblp5obs3h7ub6652zyooci",
+        "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/app.bsky.feed.post/3kfqkkjdkic2e"
+        }
+    },
+    "text": "Bridgy Fed is an open-source project — check out the code here: github.com/snarfed/brid...\n\nStay updated with the project by following @snarfed.org!"
+}

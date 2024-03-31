@@ -1,10 +1,13 @@
 /* eslint-env detox/detox */
 
-import {openApp, loginAsAlice, createServer} from '../util'
+import {beforeAll, describe, it} from '@jest/globals'
+import {expect} from 'detox'
+
+import {createServer, loginAsAlice, openApp} from '../util'
 
 describe('Home screen', () => {
   beforeAll(async () => {
-    await createServer('?users&follows&posts')
+    await createServer('?users&follows&posts&feeds')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
@@ -13,11 +16,28 @@ describe('Home screen', () => {
     await element(by.id('homeScreenFeedTabs-Following')).tap()
   })
 
+  it('Can go to feeds page using feeds button in tab bar', async () => {
+    await element(by.id('homeScreenFeedTabs-Feeds ✨')).tap()
+    await expect(element(by.text('Discover New Feeds'))).toBeVisible()
+  })
+
+  it('Feeds button disappears after pinning a feed', async () => {
+    await element(by.id('bottomBarProfileBtn')).tap()
+    await element(by.id('profilePager-selector')).swipe('left')
+    await element(by.id('profilePager-selector-4')).tap()
+    await element(by.id('feed-alice-favs')).tap()
+    await element(by.id('pinBtn')).tap()
+    await element(by.id('bottomBarHomeBtn')).tap()
+    await expect(
+      element(by.id('homeScreenFeedTabs-Feeds ✨')),
+    ).not.toBeVisible()
+  })
+
   it('Can like posts', async () => {
     const carlaPosts = by.id('feedItem-by-carla.test')
     await expect(
       element(by.id('likeCount').withAncestor(carlaPosts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('likeBtn').withAncestor(carlaPosts)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(carlaPosts)).atIndex(0),
@@ -25,14 +45,14 @@ describe('Home screen', () => {
     await element(by.id('likeBtn').withAncestor(carlaPosts)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(carlaPosts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can repost posts', async () => {
     const carlaPosts = by.id('feedItem-by-carla.test')
     await expect(
       element(by.id('repostCount').withAncestor(carlaPosts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('repostBtn').withAncestor(carlaPosts)).atIndex(0).tap()
     await expect(element(by.id('repostModal'))).toBeVisible()
     await element(by.id('repostBtn').withAncestor(by.id('repostModal'))).tap()
@@ -46,7 +66,7 @@ describe('Home screen', () => {
     await expect(element(by.id('repostModal'))).not.toBeVisible()
     await expect(
       element(by.id('repostCount').withAncestor(carlaPosts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can report posts', async () => {
@@ -65,14 +85,14 @@ describe('Home screen', () => {
 
   it('Can swipe between feeds', async () => {
     await element(by.id('homeScreen')).swipe('left', 'fast', 0.75)
-    await expect(element(by.id('whatshotFeedPage'))).toBeVisible()
+    await expect(element(by.id('customFeedPage'))).toBeVisible()
     await element(by.id('homeScreen')).swipe('right', 'fast', 0.75)
     await expect(element(by.id('followingFeedPage'))).toBeVisible()
   })
 
   it('Can tap between feeds', async () => {
-    await element(by.id("homeScreenFeedTabs-What's hot")).tap()
-    await expect(element(by.id('whatshotFeedPage'))).toBeVisible()
+    await element(by.id('homeScreenFeedTabs-alice-favs')).tap()
+    await expect(element(by.id('customFeedPage'))).toBeVisible()
     await element(by.id('homeScreenFeedTabs-Following')).tap()
     await expect(element(by.id('followingFeedPage'))).toBeVisible()
   })

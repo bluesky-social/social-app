@@ -1,32 +1,43 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {StatusBar} from 'expo-status-bar'
 import {
+  BackHandler,
   DimensionValue,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {StatusBar} from 'expo-status-bar'
 import {useNavigationState} from '@react-navigation/native'
-import {useStores} from 'state/index'
-import {ModalsContainer} from 'view/com/modals/Modal'
-import {Lightbox} from 'view/com/lightbox/Lightbox'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {DrawerContent} from './Drawer'
-import {Composer} from './Composer'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import * as backHandler from 'lib/routes/back-handler'
-import {RoutesContainer, TabsNavigator} from '../../Navigation'
-import {isStateAtTabRoot} from 'lib/routes/helpers'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {useOTAUpdate} from 'lib/hooks/useOTAUpdate'
 
-const ShellInner = observer(function ShellInnerImpl() {
-  const store = useStores()
-  useOTAUpdate() // this hook polls for OTA updates every few seconds
+import {useSession} from '#/state/session'
+import {
+  useIsDrawerOpen,
+  useIsDrawerSwipeDisabled,
+  useSetDrawerOpen,
+} from '#/state/shell'
+import {useCloseAnyActiveElement} from '#/state/util'
+import {usePalette} from 'lib/hooks/usePalette'
+import * as notifications from 'lib/notifications/notifications'
+import {isStateAtTabRoot} from 'lib/routes/helpers'
+import {useTheme} from 'lib/ThemeContext'
+import {isAndroid} from 'platform/detection'
+import {useDialogStateContext} from 'state/dialogs'
+import {Lightbox} from 'view/com/lightbox/Lightbox'
+import {ModalsContainer} from 'view/com/modals/Modal'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {Outlet as PortalOutlet} from '#/components/Portal'
+import {RoutesContainer, TabsNavigator} from '../../Navigation'
+import {Composer} from './Composer'
+import {DrawerContent} from './Drawer'
+
+function ShellInner() {
+  const isDrawerOpen = useIsDrawerOpen()
+  const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
+  const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
   const containerPadding = React.useMemo(
@@ -35,66 +46,80 @@ const ShellInner = observer(function ShellInnerImpl() {
   )
   const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = React.useCallback(
-    () => store.shell.openDrawer(),
-    [store],
+    () => setIsDrawerOpen(true),
+    [setIsDrawerOpen],
   )
   const onCloseDrawer = React.useCallback(
-    () => store.shell.closeDrawer(),
-    [store],
+    () => setIsDrawerOpen(false),
+    [setIsDrawerOpen],
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
+  const {hasSession, currentAccount} = useSession()
+  const closeAnyActiveElement = useCloseAnyActiveElement()
+  const {importantForAccessibility} = useDialogStateContext()
+  // start undefined
+  const currentAccountDid = React.useRef<string | undefined>(undefined)
+
   React.useEffect(() => {
-    backHandler.init(store)
-  }, [store])
+    let listener = {remove() {}}
+    if (isAndroid) {
+      listener = BackHandler.addEventListener('hardwareBackPress', () => {
+        return closeAnyActiveElement()
+      })
+    }
+    return () => {
+      listener.remove()
+    }
+  }, [closeAnyActiveElement])
+
+  React.useEffect(() => {
+    // only runs when did changes
+    if (currentAccount && currentAccountDid.current !== currentAccount.did) {
+      currentAccountDid.current = currentAccount.did
+      notifications.requestPermissionsAndRegisterToken(currentAccount)
+      const unsub = notifications.registerTokenChangeHandler(currentAccount)
+      return unsub
+    }
+  }, [currentAccount])
 
   return (
     <>
-      <View style={containerPadding}>
+      <Animated.View
+        style={containerPadding}
+        importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
           <Drawer
             renderDrawerContent={renderDrawerContent}
-            open={store.shell.isDrawerOpen}
+            open={isDrawerOpen}
             onOpen={onOpenDrawer}
             onClose={onCloseDrawer}
             swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={
-              !canGoBack &&
-              store.session.hasSession &&
-              !store.shell.isDrawerSwipeDisabled
-            }>
+            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
-      </View>
-      <Composer
-        active={store.shell.isComposerActive}
-        onClose={() => store.shell.closeComposer()}
-        winHeight={winDim.height}
-        replyTo={store.shell.composerOpts?.replyTo}
-        onPost={store.shell.composerOpts?.onPost}
-        quote={store.shell.composerOpts?.quote}
-        mention={store.shell.composerOpts?.mention}
-      />
+      </Animated.View>
+      <Composer winHeight={winDim.height} />
       <ModalsContainer />
+      <MutedWordsDialog />
       <Lightbox />
+      <PortalOutlet />
     </>
   )
-})
+}
 
-export const Shell: React.FC = observer(function ShellImpl() {
+export const Shell: React.FC = function ShellImpl() {
   const pal = usePalette('default')
   const theme = useTheme()
   return (
-    <SafeAreaProvider style={pal.view}>
-      <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
-        <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
-        <RoutesContainer>
-          <ShellInner />
-        </RoutesContainer>
-      </View>
-    </SafeAreaProvider>
+    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
+      <StatusBar style={theme.colorScheme === 'dark' ? 'light' : 'dark'} />
+      <RoutesContainer>
+        <ShellInner />
+      </RoutesContainer>
+    </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   outerContainer: {

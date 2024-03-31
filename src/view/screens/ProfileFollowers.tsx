@@ -1,27 +1,30 @@
 import React from 'react'
 import {View} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {ViewHeader} from '../com/util/ViewHeader'
+
+import {useSetMinimalShellMode} from '#/state/shell'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/ProfileFollowers'
-import {useStores} from 'state/index'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>
-export const ProfileFollowersScreen = withAuthRequired(({route}: Props) => {
-  const store = useStores()
+export const ProfileFollowersScreen = ({route}: Props) => {
   const {name} = route.params
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {_} = useLingui()
 
   useFocusEffect(
     React.useCallback(() => {
-      store.shell.setMinimalShellMode(false)
-    }, [store]),
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
   )
 
   return (
-    <View>
-      <ViewHeader title="Followers" />
+    <View style={{flex: 1}}>
+      <ViewHeader title={_(msg`Followers`)} />
       <ProfileFollowersComponent name={name} />
     </View>
   )
-})
+}

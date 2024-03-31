@@ -1,0 +1,10 @@
+diff --git a/node_modules/@lingui/core/dist/index.mjs b/node_modules/@lingui/core/dist/index.mjs
+index 9759736..881f67b 100644
+--- a/node_modules/@lingui/core/dist/index.mjs
++++ b/node_modules/@lingui/core/dist/index.mjs
+@@ -1,4 +1,4 @@
+-import unraw from 'unraw';
++import { unraw } from 'unraw';
+ import { compileMessage } from '@lingui/message-utils/compileMessage';
+ 
+ const isString = (s) => typeof s === "string";

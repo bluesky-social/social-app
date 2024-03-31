@@ -1,0 +1,65 @@
+---
+name: Build and Submit Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        description: Build profile to use
+        options:
+          - production
+
+jobs:
+  build:
+    name: Build and Submit Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: >
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: 🔨 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⛏️ Setup EAS local builds
+        run: yarn global add eas-cli-local-build-plugin
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: ⚙️ Install dependencies
+        run: yarn install
+
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
+      - name: ✏️ Write environment variables
+        run: |
+          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "$json" > google-services.json
+
+      - name: 🏗️ EAS Build
+        run: yarn use-build-number eas build -p android --profile production --local --output build.aab --non-interactive
+
+      - name: 🚀 Deploy
+        run: eas submit -p android --non-interactive --path build.aab

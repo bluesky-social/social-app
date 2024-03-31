@@ -1,16 +1,19 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AtUri, AppBskyGraphDefs, RichText} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {RichText as RichTextCom} from '../util/text/RichText'
-import {UserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
+import {AppBskyGraphDefs, AtUri, RichText} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+
+import {useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
+import {s} from 'lib/styles'
+import {atoms as a} from '#/alf'
+import {RichText as RichTextCom} from '#/components/RichText'
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 
 export const ListCard = ({
   testID,
@@ -28,7 +31,7 @@ export const ListCard = ({
   style?: StyleProp<ViewStyle>
 }) => {
   const pal = usePalette('default')
-  const store = useStores()
+  const {currentAccount} = useSession()
 
   const rkey = React.useMemo(() => {
     try {
@@ -76,20 +79,40 @@ export const ListCard = ({
             {sanitizeDisplayName(list.name)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list'} by{' '}
-            {list.creator.did === store.me.did
-              ? 'you'
-              : sanitizeHandle(list.creator.handle, '@')}
+            {list.purpose === 'app.bsky.graph.defs#curatelist' &&
+              (list.creator.did === currentAccount?.did ? (
+                <Trans>User list by you</Trans>
+              ) : (
+                <Trans>
+                  User list by {sanitizeHandle(list.creator.handle, '@')}
+                </Trans>
+              ))}
+            {list.purpose === 'app.bsky.graph.defs#modlist' &&
+              (list.creator.did === currentAccount?.did ? (
+                <Trans>Moderation list by you</Trans>
+              ) : (
+                <Trans>
+                  Moderation list by {sanitizeHandle(list.creator.handle, '@')}
+                </Trans>
+              ))}
           </Text>
-          {!!list.viewer?.muted && (
-            <View style={s.flexRow}>
+          <View style={s.flexRow}>
+            {list.viewer?.muted ? (
               <View style={[s.mt5, pal.btn, styles.pill]}>
                 <Text type="xs" style={pal.text}>
-                  Subscribed
+                  <Trans>Muted</Trans>
                 </Text>
               </View>
-            </View>
-          )}
+            ) : null}
+
+            {list.viewer?.blocked ? (
+              <View style={[s.mt5, pal.btn, styles.pill]}>
+                <Text type="xs" style={pal.text}>
+                  <Trans>Blocked</Trans>
+                </Text>
+              </View>
+            ) : null}
+          </View>
         </View>
         {renderButton ? (
           <View style={styles.layoutButton}>{renderButton()}</View>
@@ -98,9 +121,9 @@ export const ListCard = ({
       {descriptionRichText ? (
         <View style={styles.details}>
           <RichTextCom
-            style={[pal.text, s.flex1]}
+            style={[a.flex_1]}
             numberOfLines={20}
-            richText={descriptionRichText}
+            value={descriptionRichText}
           />
         </View>
       ) : undefined}

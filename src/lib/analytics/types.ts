@@ -1,25 +1,16 @@
-export type TrackEvent = (
-  event: keyof TrackPropertiesMap,
-  properties?: TrackPropertiesMap[keyof TrackPropertiesMap],
-) => Promise<void>
-
-export type ScreenEvent = (
-  name: keyof ScreenPropertiesMap,
-  properties?: ScreenPropertiesMap[keyof ScreenPropertiesMap],
-) => Promise<void>
-interface TrackPropertiesMap {
+export type TrackPropertiesMap = {
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
   'Create Account': {} // CAN BE SERVER
   'Try Create Account': {}
-  'Create Account Successfully': {}
   'Signin:PressedForgotPassword': {}
   'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
-  'Create Post': {imageCount: string} // CAN BE SERVER
+  'Create Post': {imageCount: string | number} // CAN BE SERVER
   'Composer:PastedPhotos': {}
   'Composer:CameraOpened': {}
   'Composer:GalleryOpened': {}
+  'Composer:ThreadgateOpened': {}
   'HomeScreen:PressCompose': {}
   'ProfileScreen:PressCompose': {}
   // EDIT PROFILE events
@@ -41,12 +32,6 @@ interface TrackPropertiesMap {
   'Post:ThreadMute': {} // CAN BE SERVER
   'Post:ThreadUnmute': {} // CAN BE SERVER
   'Post:Reply': {} // CAN BE SERVER
-  // FEED ITEM events
-  'FeedItem:PostReply': {} // CAN BE SERVER
-  'FeedItem:PostRepost': {} // CAN BE SERVER
-  'FeedItem:PostLike': {} // CAN BE SERVER
-  'FeedItem:PostDelete': {} // CAN BE SERVER
-  'FeedItem:ThreadMute': {} // CAN BE SERVER
   // PROFILE events
   'Profile:Follow': {
     username: string
@@ -79,7 +64,6 @@ interface TrackPropertiesMap {
   'Settings:AddAccountButtonClicked': {}
   'Settings:ChangeHandleButtonClicked': {}
   'Settings:InvitecodesButtonClicked': {}
-  'Settings:ContentfilteringButtonClicked': {}
   'Settings:SignOutButtonClicked': {}
   'Settings:ContentlanguagesButtonClicked': {}
   // MENU events
@@ -97,10 +81,15 @@ interface TrackPropertiesMap {
   // LISTS events
   'Lists:onRefresh': {}
   'Lists:onEndReached': {}
-  'CreateMuteList:AvatarSelected': {}
-  'CreateMuteList:Save': {} // CAN BE SERVER
-  'Lists:Subscribe': {} // CAN BE SERVER
-  'Lists:Unsubscribe': {} // CAN BE SERVER
+  'CreateList:AvatarSelected': {}
+  'CreateList:SaveCurateList': {} // CAN BE SERVER
+  'CreateList:SaveModList': {} // CAN BE SERVER
+  'Lists:Mute': {} // CAN BE SERVER
+  'Lists:Unmute': {} // CAN BE SERVER
+  'Lists:Block': {} // CAN BE SERVER
+  'Lists:Unblock': {} // CAN BE SERVER
+  'Lists:Delete': {} // CAN BE SERVER
+  'Lists:Share': {} // CAN BE SERVER
   // CUSTOM FEED events
   'CustomFeed:Save': {}
   'CustomFeed:Unsave': {}
@@ -109,15 +98,15 @@ interface TrackPropertiesMap {
   'CustomFeed:Share': {}
   'CustomFeed:Pin': {
     uri: string
-    name: string
+    name?: string
   }
   'CustomFeed:Unpin': {
     uri: string
-    name: string
+    name?: string
   }
   'CustomFeed:Reorder': {
     uri: string
-    name: string
+    name?: string
     index: number
   }
   'CustomFeed:LoadMore': {}
@@ -131,9 +120,42 @@ interface TrackPropertiesMap {
   'Onboarding:Skipped': {}
   'Onboarding:Reset': {}
   'Onboarding:SuggestedFollowFollowed': {}
+  'Onboarding:CustomFeedAdded': {}
+  // Onboarding v2
+  'OnboardingV2:Begin': {}
+  'OnboardingV2:StepInterests:Start': {}
+  'OnboardingV2:StepInterests:End': {
+    selectedInterests: string[]
+    selectedInterestsLength: number
+  }
+  'OnboardingV2:StepInterests:Error': {}
+  'OnboardingV2:StepSuggestedAccounts:Start': {}
+  'OnboardingV2:StepSuggestedAccounts:End': {
+    selectedAccountsLength: number
+  }
+  'OnboardingV2:StepFollowingFeed:Start': {}
+  'OnboardingV2:StepFollowingFeed:End': {}
+  'OnboardingV2:StepAlgoFeeds:Start': {}
+  'OnboardingV2:StepAlgoFeeds:End': {
+    selectedPrimaryFeeds: string[]
+    selectedPrimaryFeedsLength: number
+    selectedSecondaryFeeds: string[]
+    selectedSecondaryFeedsLength: number
+  }
+  'OnboardingV2:StepTopicalFeeds:Start': {}
+  'OnboardingV2:StepTopicalFeeds:End': {
+    selectedFeeds: string[]
+    selectedFeedsLength: number
+  }
+  'OnboardingV2:StepModeration:Start': {}
+  'OnboardingV2:StepModeration:End': {}
+  'OnboardingV2:StepFinished:Start': {}
+  'OnboardingV2:StepFinished:End': {}
+  'OnboardingV2:Complete': {}
+  'OnboardingV2:Skip': {}
 }
 
-interface ScreenPropertiesMap {
+export type ScreenPropertiesMap = {
   Login: {}
   CreateAccount: {}
   'Choose Account': {}
@@ -147,6 +169,7 @@ interface ScreenPropertiesMap {
   Settings: {}
   AppPasswords: {}
   Moderation: {}
+  PreferencesExternalEmbeds: {}
   BlockedAccounts: {}
   MutedAccounts: {}
   SavedFeeds: {}

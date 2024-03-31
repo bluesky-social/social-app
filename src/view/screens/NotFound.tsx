@@ -1,27 +1,31 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
-  useNavigation,
   StackActions,
   useFocusEffect,
+  useNavigation,
 } from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Text} from '../com/util/text/Text'
-import {Button} from 'view/com/util/forms/Button'
-import {NavigationProp} from 'lib/routes/types'
+
+import {useSetMinimalShellMode} from '#/state/shell'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import {NavigationProp} from 'lib/routes/types'
 import {s} from 'lib/styles'
+import {Button} from 'view/com/util/forms/Button'
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 export const NotFoundScreen = () => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const store = useStores()
+  const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
     React.useCallback(() => {
-      store.shell.setMinimalShellMode(false)
-    }, [store]),
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
   )
 
   const canGoBack = navigation.canGoBack()
@@ -36,17 +40,25 @@ export const NotFoundScreen = () => {
 
   return (
     <View testID="notFoundView" style={pal.view}>
-      <ViewHeader title="Page not found" />
+      <ViewHeader title={_(msg`Page Not Found`)} />
       <View style={styles.container}>
         <Text type="title-2xl" style={[pal.text, s.mb10]}>
-          Page not found
+          <Trans>Page not found</Trans>
         </Text>
         <Text type="md" style={[pal.text, s.mb10]}>
-          We're sorry! We can't find the page you were looking for.
+          <Trans>
+            We're sorry! We can't find the page you were looking for.
+          </Trans>
         </Text>
         <Button
           type="primary"
-          label={canGoBack ? 'Go back' : 'Go home'}
+          label={canGoBack ? _(msg`Go Back`) : _(msg`Go Home`)}
+          accessibilityLabel={canGoBack ? _(msg`Go back`) : _(msg`Go home`)}
+          accessibilityHint={
+            canGoBack
+              ? _(msg`Returns to previous page`)
+              : _(msg`Returns to home page`)
+          }
           onPress={onPressHome}
         />
       </View>

@@ -1,17 +1,20 @@
-import React, {useMemo, useState, useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
-  TouchableOpacity,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedImages,
-  ProfileModeration,
-  moderateProfile,
   AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  moderateProfile,
+  ModerationDecision,
+  ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
@@ -19,27 +22,29 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {NotificationsFeedItemModel} from 'state/models/feeds/notifications'
-import {PostThreadModel} from 'state/models/content/post-thread'
-import {s, colors} from 'lib/styles'
-import {niceDate} from 'lib/strings/time'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {FeedNotification} from '#/state/queries/notifications/feed'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {HeartIconSolid} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
-import {HeartIconSolid} from 'lib/icons'
-import {Text} from '../util/text/Text'
-import {UserAvatar, PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserPreviewLink} from '../util/UserPreviewLink'
-import {ImageHorzList} from '../util/images/ImageHorzList'
-import {Post} from '../post/Post'
-import {Link, TextLink} from '../util/Link'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {formatCount} from '../util/numeric/format'
-import {makeProfileLink} from 'lib/routes/links'
-import {TimeElapsed} from '../util/TimeElapsed'
+import {niceDate} from 'lib/strings/time'
+import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {FeedSourceCard} from '../feeds/FeedSourceCard'
+import {Post} from '../post/Post'
+import {ImageHorzList} from '../util/images/ImageHorzList'
+import {Link, TextLink} from '../util/Link'
+import {formatCount} from '../util/numeric/format'
+import {Text} from '../util/text/Text'
+import {TimeElapsed} from '../util/TimeElapsed'
+import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
+import {UserPreviewLink} from '../util/UserPreviewLink'
 
 const MAX_AUTHORS = 5
 
@@ -51,42 +56,38 @@ interface Author {
   handle: string
   displayName?: string
   avatar?: string
-  moderation: ProfileModeration
+  moderation: ModerationDecision
+  associated?: AppBskyActorDefs.ProfileAssociated
 }
 
-export const FeedItem = observer(function FeedItemImpl({
+let FeedItem = ({
   item,
+  moderationOpts,
 }: {
-  item: NotificationsFeedItemModel
-}) {
-  const store = useStores()
+  item: FeedNotification
+  moderationOpts: ModerationOpts
+}): React.ReactNode => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
-    if (item.isLike || item.isRepost) {
-      const urip = new AtUri(item.subjectUri)
+    if (item.type === 'post-like' || item.type === 'repost') {
+      if (item.subjectUri) {
+        const urip = new AtUri(item.subjectUri)
+        return `/profile/${urip.host}/post/${urip.rkey}`
+      }
+    } else if (item.type === 'follow') {
+      return makeProfileLink(item.notification.author)
+    } else if (item.type === 'reply') {
+      const urip = new AtUri(item.notification.uri)
       return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (item.isFollow) {
-      return makeProfileLink(item.author)
-    } else if (item.isReply) {
-      const urip = new AtUri(item.uri)
-      return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (item.isCustomFeedLike) {
-      const urip = new AtUri(item.subjectUri)
-      return `/profile/${urip.host}/feed/${urip.rkey}`
+    } else if (item.type === 'feedgen-like') {
+      if (item.subjectUri) {
+        const urip = new AtUri(item.subjectUri)
+        return `/profile/${urip.host}/feed/${urip.rkey}`
+      }
     }
     return ''
-  }, [item])
-  const itemTitle = useMemo(() => {
-    if (item.isLike || item.isRepost) {
-      return 'Post'
-    } else if (item.isFollow) {
-      return item.author.handle
-    } else if (item.isReply) {
-      return 'Post'
-    } else if (item.isCustomFeedLike) {
-      return 'Custom Feed'
-    }
   }, [item])
 
   const onToggleAuthorsExpanded = () => {
@@ -96,15 +97,13 @@ export const FeedItem = observer(function FeedItemImpl({
   const authors: Author[] = useMemo(() => {
     return [
       {
-        href: makeProfileLink(item.author),
-        did: item.author.did,
-        handle: item.author.handle,
-        displayName: item.author.displayName,
-        avatar: item.author.avatar,
-        moderation: moderateProfile(
-          item.author,
-          store.preferences.moderationOpts,
-        ),
+        href: makeProfileLink(item.notification.author),
+        did: item.notification.author.did,
+        handle: item.notification.author.handle,
+        displayName: item.notification.author.displayName,
+        avatar: item.notification.author.avatar,
+        moderation: moderateProfile(item.notification.author, moderationOpts),
+        associated: item.notification.author.associated,
       },
       ...(item.additional?.map(({author}) => {
         return {
@@ -113,33 +112,36 @@ export const FeedItem = observer(function FeedItemImpl({
           handle: author.handle,
           displayName: author.displayName,
           avatar: author.avatar,
-          moderation: moderateProfile(author, store.preferences.moderationOpts),
+          moderation: moderateProfile(author, moderationOpts),
+          associated: author.associated,
         }
       }) || []),
     ]
-  }, [store, item.additional, item.author])
+  }, [item, moderationOpts])
 
-  if (item.additionalPost?.notFound) {
+  if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
     return <View />
   }
 
-  if (item.isReply || item.isMention || item.isQuote) {
-    if (!item.additionalPost || item.additionalPost?.error) {
-      // hide errors - it doesnt help the user to show them
-      return <View />
+  if (
+    item.type === 'reply' ||
+    item.type === 'mention' ||
+    item.type === 'quote'
+  ) {
+    if (!item.subject) {
+      return null
     }
     return (
       <Link
-        testID={`feedItem-by-${item.author.handle}`}
+        testID={`feedItem-by-${item.notification.author.handle}`}
         href={itemHref}
-        title={itemTitle}
         noFeedback
         accessible={false}>
         <Post
-          view={item.additionalPost}
+          post={item.subject}
           style={
-            item.isRead
+            item.notification.isRead
               ? undefined
               : {
                   backgroundColor: pal.colors.unreadNotifBg,
@@ -154,23 +156,23 @@ export const FeedItem = observer(function FeedItemImpl({
   let action = ''
   let icon: Props['icon'] | 'HeartIconSolid'
   let iconStyle: Props['style'] = []
-  if (item.isLike) {
-    action = 'liked your post'
+  if (item.type === 'post-like') {
+    action = _(msg`liked your post`)
     icon = 'HeartIconSolid'
     iconStyle = [
       s.likeColor as FontAwesomeIconStyle,
       {position: 'relative', top: -4},
     ]
-  } else if (item.isRepost) {
-    action = 'reposted your post'
+  } else if (item.type === 'repost') {
+    action = _(msg`reposted your post`)
     icon = 'retweet'
     iconStyle = [s.green3 as FontAwesomeIconStyle]
-  } else if (item.isFollow) {
-    action = 'followed you'
+  } else if (item.type === 'follow') {
+    action = _(msg`followed you`)
     icon = 'user-plus'
     iconStyle = [s.blue3 as FontAwesomeIconStyle]
-  } else if (item.isCustomFeedLike) {
-    action = `liked your custom feed '${new AtUri(item.subjectUri).rkey}'`
+  } else if (item.type === 'feedgen-like') {
+    action = _(msg`liked your custom feed`)
     icon = 'HeartIconSolid'
     iconStyle = [
       s.likeColor as FontAwesomeIconStyle,
@@ -182,12 +184,11 @@ export const FeedItem = observer(function FeedItemImpl({
 
   return (
     <Link
-      testID={`feedItem-by-${item.author.handle}`}
+      testID={`feedItem-by-${item.notification.author.handle}`}
       style={[
         styles.outer,
-        pal.view,
         pal.border,
-        item.isRead
+        item.notification.isRead
           ? undefined
           : {
               backgroundColor: pal.colors.unreadNotifBg,
@@ -195,9 +196,11 @@ export const FeedItem = observer(function FeedItemImpl({
             },
       ]}
       href={itemHref}
-      title={itemTitle}
       noFeedback
-      accessible={(item.isLike && authors.length === 1) || item.isRepost}>
+      accessible={
+        (item.type === 'post-like' && authors.length === 1) ||
+        item.type === 'repost'
+      }>
       <View style={styles.layoutIcon}>
         {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
@@ -229,10 +232,14 @@ export const FeedItem = observer(function FeedItemImpl({
               text={sanitizeDisplayName(
                 authors[0].displayName || authors[0].handle,
               )}
+              disableMismatchWarning
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text]}> and </Text>
+                <Text style={[pal.text, s.mr5, s.ml5]}>
+                  {' '}
+                  <Trans>and</Trans>{' '}
+                </Text>
                 <Text style={[pal.text, s.bold]}>
                   {formatCount(authors.length - 1)}{' '}
                   {pluralize(authors.length - 1, 'other')}
@@ -240,24 +247,33 @@ export const FeedItem = observer(function FeedItemImpl({
               </>
             ) : undefined}
             <Text style={[pal.text]}> {action}</Text>
-            <TimeElapsed timestamp={item.indexedAt}>
+            <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
                 <Text
                   style={[pal.textLight, styles.pointer]}
-                  title={niceDate(item.indexedAt)}>
+                  title={niceDate(item.notification.indexedAt)}>
                   {' ' + timeElapsed}
                 </Text>
               )}
             </TimeElapsed>
           </Text>
         </ExpandListPressable>
-        {item.isLike || item.isRepost || item.isQuote ? (
-          <AdditionalPostText additionalPost={item.additionalPost} />
+        {item.type === 'post-like' || item.type === 'repost' ? (
+          <AdditionalPostText post={item.subject} />
+        ) : null}
+        {item.type === 'feedgen-like' && item.subjectUri ? (
+          <FeedSourceCard
+            feedUri={item.subjectUri}
+            style={[pal.view, pal.border, styles.feedcard]}
+            showLikes
+          />
         ) : null}
       </View>
     </Link>
   )
-})
+}
+FeedItem = memo(FeedItem)
+export {FeedItem}
 
 function ExpandListPressable({
   hasMultipleAuthors,
@@ -292,6 +308,8 @@ function CondensedAuthorsList({
   onToggleAuthorsExpanded: () => void
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   if (!visible) {
     return (
       <View style={styles.avis}>
@@ -299,15 +317,17 @@ function CondensedAuthorsList({
           style={styles.expandedAuthorsCloseBtn}
           onPress={onToggleAuthorsExpanded}
           accessibilityRole="button"
-          accessibilityLabel="Hide user list"
-          accessibilityHint="Collapses list of users for a given notification">
+          accessibilityLabel={_(msg`Hide user list`)}
+          accessibilityHint={_(
+            msg`Collapses list of users for a given notification`,
+          )}>
           <FontAwesomeIcon
             icon="angle-up"
             size={18}
             style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
           />
           <Text type="sm-medium" style={pal.text}>
-            Hide
+            <Trans context="action">Hide</Trans>
           </Text>
         </TouchableOpacity>
       </View>
@@ -321,15 +341,18 @@ function CondensedAuthorsList({
           did={authors[0].did}
           handle={authors[0].handle}
           avatar={authors[0].avatar}
-          moderation={authors[0].moderation.avatar}
+          moderation={authors[0].moderation.ui('avatar')}
+          type={authors[0].associated?.labeler ? 'labeler' : 'user'}
         />
       </View>
     )
   }
   return (
     <TouchableOpacity
-      accessibilityLabel="Show users"
-      accessibilityHint="Opens an expanded list of users in this notification"
+      accessibilityLabel={_(msg`Show users`)}
+      accessibilityHint={_(
+        msg`Opens an expanded list of users in this notification`,
+      )}
       onPress={onToggleAuthorsExpanded}>
       <View style={styles.avis}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
@@ -337,7 +360,8 @@ function CondensedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              moderation={author.moderation.avatar}
+              moderation={author.moderation.ui('avatar')}
+              type={author.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
         ))}
@@ -395,7 +419,8 @@ function ExpandedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              moderation={author.moderation.avatar}
+              moderation={author.moderation.ui('avatar')}
+              type={author.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
           <View style={s.flex1}>
@@ -417,34 +442,25 @@ function ExpandedAuthorsList({
   )
 }
 
-function AdditionalPostText({
-  additionalPost,
-}: {
-  additionalPost?: PostThreadModel
-}) {
+function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
-  if (
-    !additionalPost ||
-    !additionalPost.thread?.postRecord ||
-    additionalPost.error
-  ) {
-    return <View />
+  if (post && AppBskyFeedPost.isRecord(post?.record)) {
+    const text = post.record.text
+    const images = AppBskyEmbedImages.isView(post.embed)
+      ? post.embed.images
+      : AppBskyEmbedRecordWithMedia.isView(post.embed) &&
+        AppBskyEmbedImages.isView(post.embed.media)
+      ? post.embed.media.images
+      : undefined
+    return (
+      <>
+        {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
+        {images && images?.length > 0 && (
+          <ImageHorzList images={images} style={styles.additionalPostImages} />
+        )}
+      </>
+    )
   }
-  const text = additionalPost.thread?.postRecord.text
-  const images = AppBskyEmbedImages.isView(additionalPost.thread.post.embed)
-    ? additionalPost.thread.post.embed.images
-    : AppBskyEmbedRecordWithMedia.isView(additionalPost.thread.post.embed) &&
-      AppBskyEmbedImages.isView(additionalPost.thread.post.embed.media)
-    ? additionalPost.thread.post.embed.media.images
-    : undefined
-  return (
-    <>
-      {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
-      {images && images?.length > 0 && (
-        <ImageHorzList images={images} style={styles.additionalPostImages} />
-      )}
-    </>
-  )
 }
 
 const styles = StyleSheet.create({
@@ -498,6 +514,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft: 2,
     opacity: 0.8,
+  },
+  feedcard: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    marginTop: 6,
   },
 
   addedContainer: {

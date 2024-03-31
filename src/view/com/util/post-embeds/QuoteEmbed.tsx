@@ -1,30 +1,38 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
-  AppBskyEmbedRecord,
-  AppBskyFeedPost,
+  AppBskyEmbedExternal,
   AppBskyEmbedImages,
+  AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  ModerationUI,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  moderatePost,
+  ModerationDecision,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {PostMeta} from '../PostMeta'
-import {Link} from '../Link'
-import {Text} from '../text/Text'
+import {Trans} from '@lingui/macro'
+
+import {useModerationOpts} from '#/state/queries/preferences'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/models/ui/shell'
-import {PostEmbeds} from '.'
-import {PostAlerts} from '../moderation/PostAlerts'
-import {makeProfileLink} from 'lib/routes/links'
 import {InfoCircleIcon} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import {ComposerOptsQuote} from 'state/shell/composer'
+import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
+import {PostAlerts} from '../../../../components/moderation/PostAlerts'
+import {Link} from '../Link'
+import {PostMeta} from '../PostMeta'
+import {Text} from '../text/Text'
+import {PostEmbeds} from '.'
 
 export function MaybeQuoteEmbed({
   embed,
-  moderation,
   style,
 }: {
   embed: AppBskyEmbedRecord.View
-  moderation: ModerationUI
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -34,16 +42,9 @@ export function MaybeQuoteEmbed({
     AppBskyFeedPost.validateRecord(embed.record.value).success
   ) {
     return (
-      <QuoteEmbed
-        quote={{
-          author: embed.record.author,
-          cid: embed.record.cid,
-          uri: embed.record.uri,
-          indexedAt: embed.record.indexedAt,
-          text: embed.record.value.text,
-          embeds: embed.record.embeds,
-        }}
-        moderation={moderation}
+      <QuoteEmbedModerated
+        viewRecord={embed.record}
+        postRecord={embed.record.value}
         style={style}
       />
     )
@@ -52,7 +53,7 @@ export function MaybeQuoteEmbed({
       <View style={[styles.errorContainer, pal.borderDark]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
-          Blocked
+          <Trans>Blocked</Trans>
         </Text>
       </View>
     )
@@ -61,12 +62,41 @@ export function MaybeQuoteEmbed({
       <View style={[styles.errorContainer, pal.borderDark]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
-          Deleted
+          <Trans>Deleted</Trans>
         </Text>
       </View>
     )
   }
   return null
+}
+
+function QuoteEmbedModerated({
+  viewRecord,
+  postRecord,
+  style,
+}: {
+  viewRecord: AppBskyEmbedRecord.ViewRecord
+  postRecord: AppBskyFeedPost.Record
+  style?: StyleProp<ViewStyle>
+}) {
+  const moderationOpts = useModerationOpts()
+  const moderation = React.useMemo(() => {
+    return moderationOpts
+      ? moderatePost(viewRecordToPostView(viewRecord), moderationOpts)
+      : undefined
+  }, [viewRecord, moderationOpts])
+
+  const quote = {
+    author: viewRecord.author,
+    cid: viewRecord.cid,
+    uri: viewRecord.uri,
+    indexedAt: viewRecord.indexedAt,
+    text: postRecord.text,
+    facets: postRecord.facets,
+    embeds: viewRecord.embeds,
+  }
+
+  return <QuoteEmbed quote={quote} moderation={moderation} style={style} />
 }
 
 export function QuoteEmbed({
@@ -75,57 +105,81 @@ export function QuoteEmbed({
   style,
 }: {
   quote: ComposerOptsQuote
-  moderation?: ModerationUI
+  moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
-  const isEmpty = React.useMemo(
-    () => quote.text.trim().length === 0,
-    [quote.text],
-  )
-  const imagesEmbed = React.useMemo(
+
+  const richText = React.useMemo(
     () =>
-      quote.embeds?.find(
-        embed =>
-          AppBskyEmbedImages.isView(embed) ||
-          AppBskyEmbedRecordWithMedia.isView(embed),
-      ),
-    [quote.embeds],
+      quote.text.trim()
+        ? new RichTextAPI({text: quote.text, facets: quote.facets})
+        : undefined,
+    [quote.text, quote.facets],
   )
+
+  const embed = React.useMemo(() => {
+    const e = quote.embeds?.[0]
+
+    if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+      return e
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(e) &&
+      (AppBskyEmbedImages.isView(e.media) ||
+        AppBskyEmbedExternal.isView(e.media))
+    ) {
+      return e.media
+    }
+  }, [quote.embeds])
+
   return (
-    <Link
-      style={[styles.container, pal.borderDark, style]}
-      href={itemHref}
-      title={itemTitle}>
-      <PostMeta
-        author={quote.author}
-        showAvatar
-        authorHasWarning={false}
-        postHref={itemHref}
-        timestamp={quote.indexedAt}
-      />
-      {moderation ? (
-        <PostAlerts moderation={moderation} style={styles.alert} />
-      ) : null}
-      {!isEmpty ? (
-        <Text type="post-text" style={pal.text} numberOfLines={6}>
-          {quote.text}
-        </Text>
-      ) : null}
-      {AppBskyEmbedImages.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed} moderation={{}} />
-      )}
-      {AppBskyEmbedRecordWithMedia.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed.media} moderation={{}} />
-      )}
-    </Link>
+    <ContentHider modui={moderation?.ui('contentList')}>
+      <Link
+        style={[styles.container, pal.borderDark, style]}
+        hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+        href={itemHref}
+        title={itemTitle}>
+        <View pointerEvents="none">
+          <PostMeta
+            author={quote.author}
+            moderation={moderation}
+            showAvatar
+            authorHasWarning={false}
+            postHref={itemHref}
+            timestamp={quote.indexedAt}
+          />
+        </View>
+        {moderation ? (
+          <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
+        ) : null}
+        {richText ? (
+          <RichText
+            value={richText}
+            style={[a.text_md]}
+            numberOfLines={20}
+            disableLinks
+          />
+        ) : null}
+        {embed && <PostEmbeds embed={embed} moderation={moderation} />}
+      </Link>
+    </ContentHider>
   )
 }
 
-export default QuoteEmbed
+function viewRecordToPostView(
+  viewRecord: AppBskyEmbedRecord.ViewRecord,
+): AppBskyFeedDefs.PostView {
+  const {value, embeds, ...rest} = viewRecord
+  return {
+    ...rest,
+    $type: 'app.bsky.feed.defs#postView',
+    record: value,
+    embed: embeds?.[0],
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

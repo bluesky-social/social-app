@@ -1,112 +1,266 @@
-import React, {MutableRefObject} from 'react'
-import {observer} from 'mobx-react-lite'
+import React, {memo} from 'react'
 import {
   ActivityIndicator,
-  RefreshControl,
+  AppState,
+  Dimensions,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
-import {FlatList} from '../util/Views'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {PostsFeedModel} from 'state/models/feeds/posts'
-import {FeedSlice} from './FeedSlice'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
-import {s} from 'lib/styles'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
+import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {listenPostCreated} from '#/state/events'
+import {STALE} from '#/state/queries'
+import {
+  FeedDescriptor,
+  FeedParams,
+  pollLatest,
+  RQKEY,
+  usePostFeedQuery,
+} from '#/state/queries/post-feed'
+import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useTheme} from 'lib/ThemeContext'
+import {List, ListRef} from '../util/List'
+import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
+import {FeedErrorMessage} from './FeedErrorMessage'
+import {FeedSlice} from './FeedSlice'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-export const Feed = observer(function Feed({
+// DISABLED need to check if this is causing random feed refreshes -prf
+// const REFRESH_AFTER = STALE.HOURS.ONE
+const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
+
+let Feed = ({
   feed,
+  feedParams,
+  ignoreFilterFor,
   style,
+  enabled,
+  pollInterval,
+  disablePoll,
   scrollElRef,
-  onPressTryAgain,
-  onScroll,
-  scrollEventThrottle,
+  onScrolledDownChange,
+  onHasNew,
   renderEmptyState,
+  renderEndOfFeed,
   testID,
   headerOffset = 0,
+  desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
 }: {
-  feed: PostsFeedModel
+  feed: FeedDescriptor
+  feedParams?: FeedParams
+  ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
-  scrollElRef?: MutableRefObject<FlatList<any> | null>
-  onPressTryAgain?: () => void
-  onScroll?: OnScrollCb
-  scrollEventThrottle?: number
-  renderEmptyState?: () => JSX.Element
+  enabled?: boolean
+  pollInterval?: number
+  disablePoll?: boolean
+  scrollElRef?: ListRef
+  onHasNew?: (v: boolean) => void
+  onScrolledDownChange?: (isScrolledDown: boolean) => void
+  renderEmptyState: () => JSX.Element
+  renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
-}) {
-  const pal = usePalette('default')
+}): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const {_} = useLingui()
+  const queryClient = useQueryClient()
+  const {currentAccount} = useSession()
+  const initialNumToRender = useInitialNumToRender()
+  const [isPTRing, setIsPTRing] = React.useState(false)
+  const checkForNewRef = React.useRef<(() => void) | null>(null)
+  const lastFetchRef = React.useRef<number>(Date.now())
+  const feedType = feed.split('|')[0]
 
-  const data = React.useMemo(() => {
-    let feedItems: any[] = []
-    if (feed.hasLoaded) {
-      if (feed.hasError) {
-        feedItems = feedItems.concat([ERROR_ITEM])
+  const opts = React.useMemo(
+    () => ({enabled, ignoreFilterFor}),
+    [enabled, ignoreFilterFor],
+  )
+  const {
+    data,
+    isFetching,
+    isFetched,
+    isError,
+    error,
+    refetch,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = usePostFeedQuery(feed, feedParams, opts)
+  if (data?.pages[0]) {
+    lastFetchRef.current = data?.pages[0].fetchedAt
+  }
+  const isEmpty = React.useMemo(
+    () => !isFetching && !data?.pages?.some(page => page.slices.length),
+    [isFetching, data],
+  )
+
+  const checkForNew = React.useCallback(async () => {
+    if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
+      return
+    }
+    try {
+      if (await pollLatest(data.pages[0])) {
+        onHasNew(true)
       }
-      if (feed.isEmpty) {
-        feedItems = feedItems.concat([EMPTY_FEED_ITEM])
-      } else {
-        feedItems = feedItems.concat(feed.slices)
-      }
-      if (feed.loadMoreError) {
-        feedItems = feedItems.concat([LOAD_MORE_ERROR_ITEM])
+    } catch (e) {
+      logger.error('Poll latest failed', {feed, message: String(e)})
+    }
+  }, [feed, data, isFetching, onHasNew, enabled, disablePoll])
+
+  const myDid = currentAccount?.did || ''
+  const onPostCreated = React.useCallback(() => {
+    // NOTE
+    // only invalidate if there's 1 page
+    // more than 1 page can trigger some UI freakouts on iOS and android
+    // -prf
+    if (
+      data?.pages.length === 1 &&
+      (feed === 'following' ||
+        feed === 'home' ||
+        feed === `author|${myDid}|posts_and_author_threads`)
+    ) {
+      queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+    }
+  }, [queryClient, feed, data, myDid])
+  React.useEffect(() => {
+    return listenPostCreated(onPostCreated)
+  }, [onPostCreated])
+
+  React.useEffect(() => {
+    // we store the interval handler in a ref to avoid needless
+    // reassignments in other effects
+    checkForNewRef.current = checkForNew
+  }, [checkForNew])
+  React.useEffect(() => {
+    if (enabled) {
+      const timeSinceFirstLoad = Date.now() - lastFetchRef.current
+      // DISABLED need to check if this is causing random feed refreshes -prf
+      /*if (timeSinceFirstLoad > REFRESH_AFTER) {
+        // do a full refresh
+        scrollElRef?.current?.scrollToOffset({offset: 0, animated: false})
+        queryClient.resetQueries({queryKey: RQKEY(feed)})
+      } else*/ if (
+        timeSinceFirstLoad > CHECK_LATEST_AFTER &&
+        checkForNewRef.current
+      ) {
+        // check for new on enable (aka on focus)
+        checkForNewRef.current()
       }
     }
-    return feedItems
-  }, [
-    feed.hasError,
-    feed.hasLoaded,
-    feed.isEmpty,
-    feed.slices,
-    feed.loadMoreError,
-  ])
+  }, [enabled, feed, queryClient, scrollElRef])
+  React.useEffect(() => {
+    let cleanup1: () => void | undefined, cleanup2: () => void | undefined
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      // check for new on app foreground
+      if (nextAppState === 'active') {
+        checkForNewRef.current?.()
+      }
+    })
+    cleanup1 = () => subscription.remove()
+    if (pollInterval) {
+      // check for new on interval
+      const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
+      cleanup2 = () => clearInterval(i)
+    }
+    return () => {
+      cleanup1?.()
+      cleanup2?.()
+    }
+  }, [pollInterval])
+
+  const feedItems = React.useMemo(() => {
+    let arr: any[] = []
+    if (isFetched) {
+      if (isError && isEmpty) {
+        arr = arr.concat([ERROR_ITEM])
+      } else if (isEmpty) {
+        arr = arr.concat([EMPTY_FEED_ITEM])
+      } else if (data) {
+        for (const page of data?.pages) {
+          arr = arr.concat(page.slices)
+        }
+      }
+      if (isError && !isEmpty) {
+        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
+      }
+    } else {
+      arr.push(LOADING_ITEM)
+    }
+    return arr
+  }, [isFetched, isError, isEmpty, data])
 
   // events
   // =
 
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
-    setIsRefreshing(true)
+    logEvent('feed:refresh', {
+      feedType: feedType,
+      reason: 'pull-to-refresh',
+    })
+    setIsPTRing(true)
     try {
-      await feed.refresh()
+      await refetch()
+      onHasNew?.(false)
     } catch (err) {
-      feed.rootStore.log.error('Failed to refresh posts feed', err)
+      logger.error('Failed to refresh posts feed', {message: err})
     }
-    setIsRefreshing(false)
-  }, [feed, track, setIsRefreshing])
+    setIsPTRing(false)
+  }, [refetch, track, setIsPTRing, onHasNew, feedType])
 
   const onEndReached = React.useCallback(async () => {
-    if (!feed.hasLoaded) return
+    if (isFetching || !hasNextPage || isError) return
 
+    logEvent('feed:endReached', {
+      feedType: feedType,
+      itemCount: feedItems.length,
+    })
     track('Feed:onEndReached')
     try {
-      await feed.loadMore()
+      await fetchNextPage()
     } catch (err) {
-      feed.rootStore.log.error('Failed to load more posts', err)
+      logger.error('Failed to load more posts', {message: err})
     }
-  }, [feed, track])
+  }, [
+    isFetching,
+    hasNextPage,
+    isError,
+    fetchNextPage,
+    track,
+    feedType,
+    feedItems.length,
+  ])
+
+  const onPressTryAgain = React.useCallback(() => {
+    refetch()
+    onHasNew?.(false)
+  }, [refetch, onHasNew])
 
   const onPressRetryLoadMore = React.useCallback(() => {
-    feed.retryLoadMore()
-  }, [feed])
+    fetchNextPage()
+  }, [fetchNextPage])
 
   // rendering
   // =
@@ -114,79 +268,94 @@ export const Feed = observer(function Feed({
   const renderItem = React.useCallback(
     ({item}: {item: any}) => {
       if (item === EMPTY_FEED_ITEM) {
-        if (renderEmptyState) {
-          return renderEmptyState()
-        }
-        return <View />
+        return renderEmptyState()
       } else if (item === ERROR_ITEM) {
         return (
-          <ErrorMessage
-            message={feed.error}
+          <FeedErrorMessage
+            feedDesc={feed}
+            error={error ?? undefined}
             onPressTryAgain={onPressTryAgain}
           />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label="There was an issue fetching posts. Tap here to try again."
+            label={_(
+              msg`There was an issue fetching posts. Tap here to try again.`,
+            )}
             onPress={onPressRetryLoadMore}
           />
         )
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
+      } else if (item.rootUri === FALLBACK_MARKER_POST.post.uri) {
+        // HACK
+        // tell the user we fell back to discover
+        // see home.ts (feed api) for more info
+        // -prf
+        return <DiscoverFallbackHeader />
       }
       return <FeedSlice slice={item} />
     },
-    [feed, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
+    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState, _],
   )
 
-  const FeedFooter = React.useCallback(
-    () =>
-      feed.isLoading ? (
-        <View style={styles.feedFooter}>
-          <ActivityIndicator />
-        </View>
-      ) : (
-        <View />
-      ),
-    [feed],
-  )
+  const shouldRenderEndOfFeed =
+    !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
+  const FeedFooter = React.useCallback(() => {
+    /**
+     * A bit of padding at the bottom of the feed as you scroll and when you
+     * reach the end, so that content isn't cut off by the bottom of the
+     * screen.
+     */
+    const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
+
+    return isFetchingNextPage ? (
+      <View style={[styles.feedFooter]}>
+        <ActivityIndicator />
+        <View style={{height: offset}} />
+      </View>
+    ) : shouldRenderEndOfFeed ? (
+      <View style={{minHeight: offset}}>{renderEndOfFeed()}</View>
+    ) : (
+      <View style={{height: offset}} />
+    )
+  }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 
   return (
     <View testID={testID} style={style}>
-      <FlatList
+      <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={!feed.hasLoaded ? [LOADING_ITEM] : data}
+        data={feedItems}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
         ListHeaderComponent={ListHeaderComponent}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
-            tintColor={pal.colors.text}
-            titleColor={pal.colors.text}
-            progressViewOffset={headerOffset}
-          />
-        }
-        contentContainerStyle={s.contentContainer}
-        style={{paddingTop: headerOffset}}
-        onScroll={onScroll}
-        scrollEventThrottle={scrollEventThrottle}
+        refreshing={isPTRing}
+        onRefresh={onRefresh}
+        headerOffset={headerOffset}
+        contentContainerStyle={{
+          minHeight: Dimensions.get('window').height * 1.5,
+        }}
+        onScrolledDownChange={onScrolledDownChange}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
-        onEndReachedThreshold={0.6}
+        onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
-        contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}
         // @ts-ignore our .web version only -prf
-        desktopFixedHeight
+        desktopFixedHeight={
+          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+        }
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
       />
     </View>
   )
-})
+}
+Feed = memo(Feed)
+export {Feed}
 
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
