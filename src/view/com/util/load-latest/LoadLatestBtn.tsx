@@ -11,7 +11,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {colors} from 'lib/styles'
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
-import {isWeb} from 'platform/detection'
+import {isNativeTablet, isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 
 export function LoadLatestBtn({
@@ -33,7 +33,9 @@ export function LoadLatestBtn({
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
-  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+  const showBottomBar = hasSession
+    ? isMobile || isNativeTablet
+    : isTabletOrMobile
 
   return (
     <AnimatedTouchableOpacity
@@ -43,7 +45,7 @@ export function LoadLatestBtn({
           (isTallViewport
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
-        isTablet && styles.loadLatestInline,
+        isTablet && !isNativeTablet && styles.loadLatestInline,
         pal.borderDark,
         pal.view,
         showBottomBar && fabMinimalShellTransform,
