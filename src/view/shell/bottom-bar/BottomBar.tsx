@@ -27,7 +27,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {emitSoftReset} from '#/state/events'
+import {emitSearchTrigger, emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -84,10 +84,16 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     [track, navigation, dedupe],
   )
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
-  const onPressSearch = React.useCallback(
-    () => onPressTab('Search'),
-    [onPressTab],
-  )
+  const onPressSearch = React.useCallback(() => {
+    const captured = emitSearchTrigger()
+
+    // We don't want to do the navigation if the trigger has been captured,
+    // as that would reset the search page and you'll lose the search results
+    // you were looking at before.
+    if (!captured) {
+      onPressTab('Search')
+    }
+  }, [onPressTab])
   const onPressFeeds = React.useCallback(
     () => onPressTab('Feeds'),
     [onPressTab],

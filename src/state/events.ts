@@ -29,3 +29,16 @@ export function listenPostCreated(fn: () => void): UnlistenFn {
   emitter.on('post-created', fn)
   return () => emitter.off('post-created', fn)
 }
+
+/**
+ * Notify listener to focus on a search input, returns a boolean that indicates
+ * if it's been captured by one.
+ */
+export function emitSearchTrigger() {
+  emitter.emit('search-trigger')
+  return emitter.listenerCount('search-trigger') > 0
+}
+export function listenSearchTrigger(fn: () => void): UnlistenFn {
+  emitter.on('search-trigger', fn)
+  return () => emitter.off('search-trigger', fn)
+}
