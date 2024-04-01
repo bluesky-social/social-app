@@ -533,7 +533,7 @@ msgstr "Borrar imagens"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
-msgstr "Borrar imagens e filtrar dos feesd"
+msgstr "Borrar imagens e filtrar dos feeds"
 
 #: src/screens/Onboarding/index.tsx:33
 msgid "Books"
