@@ -1364,7 +1364,7 @@ msgstr "ex. Artista, amo cachorros, leitora ávida."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "E.g. nudez artística."
+msgstr "Ex. nudez artística."
 
 #: src/view/com/modals/CreateOrEditList.tsx:283
 msgid "e.g. Great Posters"
