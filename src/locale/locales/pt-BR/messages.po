@@ -1356,7 +1356,7 @@ msgstr "ex. Alice Roberts"
 
 #: src/view/com/modals/ChangeHandle.tsx:381
 msgid "e.g. alice.com"
-msgstr "e.g. alice.com"
+msgstr "ex. alice.com"
 
 #: src/view/com/modals/EditProfile.tsx:203
 msgid "e.g. Artist, dog-lover, and avid reader."
