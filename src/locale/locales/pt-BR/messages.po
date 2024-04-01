@@ -1348,7 +1348,7 @@ msgstr "Devido a políticas da Apple, o conteúdo adulto só pode ser habilitado
 
 #: src/view/com/modals/ChangeHandle.tsx:257
 msgid "e.g. alice"
-msgstr "e.g. alice"
+msgstr "ex. alice"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
