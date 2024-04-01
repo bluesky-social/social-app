@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -98,15 +99,19 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
 }
 
 const styles = StyleSheet.create({
-  rightNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    // @ts-ignore web only
-    left: 'calc(50vw + 300px + 20px)',
-    width: 300,
-    maxHeight: '100%',
-    overflowY: 'auto',
-  },
+  // @ts-ignore web only
+  rightNav: isWeb
+    ? {
+        position: 'fixed',
+        left: 'calc(50vw + 300px + 20px)',
+        width: 300,
+        maxHeight: '100%',
+        overflowY: 'auto',
+      }
+    : {
+        width: 300,
+        maxHeight: '100%',
+      },
 
   message: {
     paddingVertical: 18,
