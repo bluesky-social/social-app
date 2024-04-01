@@ -529,7 +529,7 @@ msgstr "O Bluesky não mostrará seu perfil e publicações para usuários desco
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
-msgstr "Borrar imagens"
+msgstr "Desfocar imagens"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
