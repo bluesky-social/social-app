@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-01 13:03\n"
+"PO-Revision-Date: 2024-03-22 11:51\n"
 "Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -327,7 +327,7 @@ msgstr "Contestar"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:202
 msgid "Appeal \"{0}\" label"
-msgstr "Constestar label \"{0}\""
+msgstr "Contestar rótulo \"{0}\""
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 #: src/view/com/util/forms/PostDropdownBtn.tsx:346
@@ -487,7 +487,7 @@ msgstr "Bloqueios são públicos. Contas bloqueadas não podem te responder, men
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "Bloquear não previne "
+msgstr "Bloquear não previne rótulos de serem aplicados na sua conta, mas vai impedir esta conta de interagir com você."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:97
 #: src/view/com/auth/SplashScreen.web.tsx:133
@@ -2981,7 +2981,7 @@ msgstr "Nota sobre compartilhamento"
 
 #: src/screens/Moderation/index.tsx:542
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta configuração limita somente a visibilidade do seu conteúdo no site e aplicativo do Bluesky, e outros aplicativos podem não respeitar esta configuração. Seu conteúdo ainda poderá ser exibido para usuários desautenticados por outros aplicativos e sites."
+msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta configuração limita somente a visibilidade do seu conteúdo no site e aplicativo do Bluesky, e outros aplicativos podem não respeitar esta configuração. Seu conteúdo ainda poderá ser exibido para usuários não autenticados por outros aplicativos e sites."
 
 #: src/Navigation.tsx:469
 #: src/view/screens/Notifications.tsx:124
