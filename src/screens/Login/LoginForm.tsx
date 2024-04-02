@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {isAndroid} from 'platform/detection'
+import {useLogin} from '#/screens/Login/hooks/useLogin'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -32,10 +33,10 @@ export const LoginForm = ({
   setServiceUrl: (v: string) => void
   onPressRetryConnect: () => void
   onPressBack: () => void
-  onPressForgotPassword: () => void
 }) => {
   const {track} = useAnalytics()
   const {_} = useLingui()
+  const {openAuthSession} = useLogin(serviceUrl)
 
   // This improves speed at which the browser presents itself on Android
   React.useEffect(() => {
@@ -48,24 +49,6 @@ export const LoginForm = ({
     Keyboard.dismiss()
     track('Signin:PressedSelectService')
   }, [track])
-
-  const onPressNext = async () => {
-    const authSession = await Browser.openAuthSessionAsync(
-      'https://bsky.app/login', // Replace this with the PDS auth url
-      'bsky://login', // Replace this as well with the appropriate link
-      {
-        windowFeatures: {},
-      },
-    )
-
-    if (authSession.type !== 'success') {
-      return
-    }
-
-    // Handle session storage here
-  }
-
-  console.log(serviceDescription)
 
   return (
     <FormContainer testID="loginForm" title={<Trans>Sign in</Trans>}>
@@ -80,7 +63,7 @@ export const LoginForm = ({
         />
       </View>
       <FormError error={error} />
-      <View style={[a.flex_row, a.align_center, a.justify_between, a.pt_md]}>
+      <View style={[a.flex_row, a.align_center, a.justify_between, a.pt_5xl]}>
         <Button
           label={_(msg`Back`)}
           variant="solid"
@@ -96,7 +79,7 @@ export const LoginForm = ({
           variant="solid"
           color="primary"
           size="medium"
-          onPress={onPressNext}
+          onPress={openAuthSession}
           disabled={!serviceDescription}>
           <ButtonText>
             <Trans>Sign In</Trans>
