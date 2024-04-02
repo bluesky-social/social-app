@@ -1,9 +1,9 @@
 import React from 'react'
-import {StyleProp, TextStyle, TextProps as RNTextProps} from 'react-native'
+import {StyleProp, TextProps as RNTextProps, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
-import {useTheme, atoms, web, flatten} from '#/alf'
 import {isNative} from '#/platform/detection'
+import {atoms, flatten, useTheme, web} from '#/alf'
 
 export type TextProps = RNTextProps & {
   /**
@@ -57,7 +57,7 @@ export function Text({style, selectable, ...rest}: TextProps) {
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
 
-  return <UITextView selectable={!!selectable} uiTextView style={s} {...rest} />
+  return <UITextView selectable={selectable} uiTextView style={s} {...rest} />
 }
 
 export function createHeadingElement({level}: {level: number}) {

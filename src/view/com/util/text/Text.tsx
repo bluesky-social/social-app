@@ -1,8 +1,9 @@
 import React from 'react'
 import {Text as RNText, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
-import {s, lh} from 'lib/styles'
-import {useTheme, TypographyVariant} from 'lib/ThemeContext'
+
+import {lh, s} from 'lib/styles'
+import {TypographyVariant, useTheme} from 'lib/ThemeContext'
 import {isIOS, isWeb} from 'platform/detection'
 
 export type CustomTextProps = TextProps & {
@@ -36,7 +37,7 @@ export function Text({
     return (
       <UITextView
         style={[s.black, typography, lineHeightStyle, style]}
-        selectable={!!selectable}
+        selectable={selectable}
         uiTextView
         {...props}>
         {children}
