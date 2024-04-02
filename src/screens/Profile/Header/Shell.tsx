@@ -12,7 +12,6 @@ import {useSession} from '#/state/session'
 import {BACK_HITSLOP} from 'lib/constants'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {BlurView} from 'view/com/util/BlurView'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {UserBanner} from 'view/com/util/UserBanner'
@@ -97,9 +96,7 @@ let ProfileHeaderShell = ({
           accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
-            <BlurView style={styles.backBtn} blurType="dark">
-              <FontAwesomeIcon size={18} icon="angle-left" color="white" />
-            </BlurView>
+            <FontAwesomeIcon size={18} icon="angle-left" color="white" />
           </View>
         </TouchableWithoutFeedback>
       )}
