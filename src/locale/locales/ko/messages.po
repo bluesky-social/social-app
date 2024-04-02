@@ -556,14 +556,14 @@ msgid "Cancel"
 msgstr "취소"
 
 #: src/view/com/modals/CreateOrEditList.tsx:360
-#: src/view/com/modals/DeleteAccount.tsx:156
-#: src/view/com/modals/DeleteAccount.tsx:234
+#: src/view/com/modals/DeleteAccount.tsx:155
+#: src/view/com/modals/DeleteAccount.tsx:233
 msgctxt "action"
 msgid "Cancel"
 msgstr "취소"
 
-#: src/view/com/modals/DeleteAccount.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:230
+#: src/view/com/modals/DeleteAccount.tsx:151
+#: src/view/com/modals/DeleteAccount.tsx:229
 msgid "Cancel account deletion"
 msgstr "계정 삭제 취소"
 
@@ -644,7 +644,7 @@ msgstr "몇 가지 추천 피드를 확인하세요. +를 탭하여 고정된 �
 msgid "Check out some recommended users. Follow them to see similar users."
 msgstr "추천 사용자를 확인하세요. 해당 사용자를 팔로우하여 비슷한 사용자를 만날 수 있습니다."
 
-#: src/view/com/modals/DeleteAccount.tsx:169
+#: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "받은 편지함에서 아래에 입력하는 확인 코드가 포함된 이메일이 있는지 확인하세요:"
 
@@ -833,7 +833,7 @@ msgstr "변경 확인"
 msgid "Confirm content language settings"
 msgstr "콘텐츠 언어 설정 확인"
 
-#: src/view/com/modals/DeleteAccount.tsx:220
+#: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Confirm delete account"
 msgstr "계정 삭제 확인"
 
@@ -846,8 +846,8 @@ msgid "Confirm your birthdate"
 msgstr "생년월일 확인"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
-#: src/view/com/modals/DeleteAccount.tsx:176
-#: src/view/com/modals/DeleteAccount.tsx:182
+#: src/view/com/modals/DeleteAccount.tsx:175
+#: src/view/com/modals/DeleteAccount.tsx:181
 #: src/view/com/modals/VerifyEmail.tsx:165
 msgid "Confirmation code"
 msgstr "확인 코드"
@@ -1080,7 +1080,7 @@ msgstr "삭제"
 msgid "Delete account"
 msgstr "계정 삭제"
 
-#: src/view/com/modals/DeleteAccount.tsx:87
+#: src/view/com/modals/DeleteAccount.tsx:86
 msgid "Delete Account"
 msgstr "계정 삭제"
 
@@ -1096,7 +1096,7 @@ msgstr "앱 비밀번호를 삭제하시겠습니까?"
 msgid "Delete List"
 msgstr "리스트 삭제"
 
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:222
 msgid "Delete my account"
 msgstr "내 계정 삭제"
 
@@ -1478,7 +1478,7 @@ msgstr "모두"
 msgid "Excessive mentions or replies"
 msgstr "과도한 멘션 또는 답글"
 
-#: src/view/com/modals/DeleteAccount.tsx:231
+#: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Exits account deletion process"
 msgstr "계정 삭제 프로세스를 종료합니다"
 
@@ -1753,7 +1753,7 @@ msgstr "나를 팔로우함"
 msgid "Food"
 msgstr "음식"
 
-#: src/view/com/modals/DeleteAccount.tsx:111
+#: src/view/com/modals/DeleteAccount.tsx:110
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "보안상의 이유로 이메일 주소로 확인 코드를 보내야 합니다."
 
@@ -1812,6 +1812,7 @@ msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 msgid "Go back"
 msgstr "뒤로"
 
+#: src/components/Error.tsx:91
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/view/screens/NotFound.tsx:54
@@ -2034,7 +2035,7 @@ msgstr "신원 또는 소속에 대한 사칭 또는 허위 주장"
 msgid "Input code sent to your email for password reset"
 msgstr "비밀번호 재설정을 위해 이메일로 전송된 코드를 입력합니다"
 
-#: src/view/com/modals/DeleteAccount.tsx:184
+#: src/view/com/modals/DeleteAccount.tsx:183
 msgid "Input confirmation code for account deletion"
 msgstr "계정 삭제를 위한 확인 코드를 입력합니다"
 
@@ -2046,7 +2047,7 @@ msgstr "앱 비밀번호의 이름을 입력합니다"
 msgid "Input new password"
 msgstr "새 비밀번호를 입력합니다"
 
-#: src/view/com/modals/DeleteAccount.tsx:203
+#: src/view/com/modals/DeleteAccount.tsx:202
 msgid "Input password for account deletion"
 msgstr "계정을 삭제하기 위해 비밀번호를 입력합니다"
 
@@ -3037,8 +3038,8 @@ msgstr "페이지를 찾을 수 없음"
 
 #: src/screens/Login/LoginForm.tsx:178
 #: src/screens/Signup/StepInfo/index.tsx:101
-#: src/view/com/modals/DeleteAccount.tsx:195
-#: src/view/com/modals/DeleteAccount.tsx:202
+#: src/view/com/modals/DeleteAccount.tsx:194
+#: src/view/com/modals/DeleteAccount.tsx:201
 msgid "Password"
 msgstr "비밀번호"
 
@@ -3136,7 +3137,7 @@ msgstr "뮤트할 단어나 태그 또는 문구를 입력하세요"
 msgid "Please enter your email."
 msgstr "이메일을 입력하세요."
 
-#: src/view/com/modals/DeleteAccount.tsx:191
+#: src/view/com/modals/DeleteAccount.tsx:190
 msgid "Please enter your password as well:"
 msgstr "비밀번호도 입력해 주세요:"
 
@@ -3240,6 +3241,7 @@ msgstr "오해의 소지가 있는 링크"
 msgid "Press to change hosting provider"
 msgstr "호스팅 제공자를 변경하려면 누릅니다"
 
+#: src/components/Error.tsx:74
 #: src/components/Lists.tsx:88
 #: src/screens/Signup/index.tsx:186
 msgid "Press to retry"
@@ -3586,6 +3588,7 @@ msgstr "로그인을 다시 시도합니다"
 msgid "Retries the last action, which errored out"
 msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 
+#: src/components/Error.tsx:79
 #: src/components/Lists.tsx:98
 #: src/screens/Login/LoginForm.tsx:234
 #: src/screens/Login/LoginForm.tsx:240
@@ -3597,6 +3600,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 msgid "Retry"
 msgstr "다시 시도"
 
+#: src/components/Error.tsx:86
 #: src/view/screens/ProfileList.tsx:917
 msgid "Return to previous page"
 msgstr "이전 페이지로 돌아갑니다"
@@ -3821,11 +3825,11 @@ msgstr "보조 알고리즘 피드를 선택하세요"
 msgid "Send Confirmation Email"
 msgstr "확인 이메일 보내기"
 
-#: src/view/com/modals/DeleteAccount.tsx:131
+#: src/view/com/modals/DeleteAccount.tsx:130
 msgid "Send email"
 msgstr "이메일 보내기"
 
-#: src/view/com/modals/DeleteAccount.tsx:144
+#: src/view/com/modals/DeleteAccount.tsx:143
 msgctxt "action"
 msgid "Send Email"
 msgstr "이메일 보내기"
@@ -3844,7 +3848,7 @@ msgstr "신고 보내기"
 msgid "Send report to {0}"
 msgstr "{0} 님에게 신고 보내기"
 
-#: src/view/com/modals/DeleteAccount.tsx:133
+#: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
 msgstr "계정 삭제를 위한 확인 코드가 포함된 이메일을 전송합니다"
 
@@ -5336,7 +5340,7 @@ msgstr "피드 끝에 도달했습니다! 팔로우할 계정을 더 찾아보�
 msgid "Your account"
 msgstr "내 계정"
 
-#: src/view/com/modals/DeleteAccount.tsx:67
+#: src/view/com/modals/DeleteAccount.tsx:68
 msgid "Your account has been deleted"
 msgstr "계정을 삭제했습니다"
 
