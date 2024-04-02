@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import * as Browser from 'expo-web-browser'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -57,12 +58,33 @@ export const LoginForm = ({
   const {_} = useLingui()
   const {login} = useSessionApi()
 
+  // This improves speed at which the browser presents itself on Android
+  React.useEffect(() => {
+    Browser.warmUpAsync()
+  }, [])
+
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
     track('Signin:PressedSelectService')
   }, [track])
 
-  const onPressNext = async () => {}
+  const onPressNext = async () => {
+    const authSession = await Browser.openAuthSessionAsync(
+      'https://bsky.app/login', // Replace this with the PDS auth url
+      'bsky://login', // Replace this as well with the appropriate link
+      {
+        // Similar to how Google auth works. Sessions will be remembered so that we can
+        // usually proceed without needing credentials
+        preferEphemeralSession: true,
+      },
+    )
+
+    if (authSession.type !== 'success') {
+      return
+    }
+
+    // Handle session storage here
+  }
 
   return (
     <FormContainer testID="loginForm" title={<Trans>Sign in</Trans>}>
