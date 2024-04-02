@@ -1,31 +1,17 @@
-import React, {useRef, useState} from 'react'
-import {
-  ActivityIndicator,
-  Keyboard,
-  LayoutAnimation,
-  TextInput,
-  View,
-} from 'react-native'
+import React from 'react'
+import {Keyboard, View} from 'react-native'
 import * as Browser from 'expo-web-browser'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {useSessionApi} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {isAndroid} from 'platform/detection'
+import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -34,17 +20,14 @@ export const LoginForm = ({
   error,
   serviceUrl,
   serviceDescription,
-  initialHandle,
   setError,
   setServiceUrl,
   onPressRetryConnect,
   onPressBack,
-  onPressForgotPassword,
 }: {
   error: string
   serviceUrl: string
   serviceDescription: ServiceDescription | undefined
-  initialHandle: string
   setError: (v: string) => void
   setServiceUrl: (v: string) => void
   onPressRetryConnect: () => void
@@ -52,15 +35,13 @@ export const LoginForm = ({
   onPressForgotPassword: () => void
 }) => {
   const {track} = useAnalytics()
-  const t = useTheme()
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
-  const {login} = useSessionApi()
 
   // This improves speed at which the browser presents itself on Android
   React.useEffect(() => {
-    Browser.warmUpAsync()
+    if (isAndroid) {
+      Browser.warmUpAsync()
+    }
   }, [])
 
   const onPressSelectService = React.useCallback(() => {
@@ -73,9 +54,7 @@ export const LoginForm = ({
       'https://bsky.app/login', // Replace this with the PDS auth url
       'bsky://login', // Replace this as well with the appropriate link
       {
-        // Similar to how Google auth works. Sessions will be remembered so that we can
-        // usually proceed without needing credentials
-        preferEphemeralSession: true,
+        windowFeatures: {},
       },
     )
 
@@ -85,6 +64,8 @@ export const LoginForm = ({
 
     // Handle session storage here
   }
+
+  console.log(serviceDescription)
 
   return (
     <FormContainer testID="loginForm" title={<Trans>Sign in</Trans>}>
@@ -115,9 +96,10 @@ export const LoginForm = ({
           variant="solid"
           color="primary"
           size="medium"
-          onPress={onPressBack}>
+          onPress={onPressNext}
+          disabled={!serviceDescription}>
           <ButtonText>
-            <Trans>Login</Trans>
+            <Trans>Sign In</Trans>
           </ButtonText>
         </Button>
       </View>
