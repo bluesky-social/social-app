@@ -1,27 +1,28 @@
 import React from 'react'
-import {View, StyleSheet, Pressable, ScrollView} from 'react-native'
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import * as Toast from '../util/Toast'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Button} from 'view/com/util/forms/Button'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {Link} from 'view/com/util/Link'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {Trans} from '@lingui/macro'
+import {Button} from 'view/com/util/forms/Button'
+import {Link} from 'view/com/util/Link'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import * as Toast from '../util/Toast'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -98,9 +99,11 @@ export function ProfileHeaderSuggestedFollows({
               <SuggestedFollowSkeleton />
             </>
           ) : data ? (
-            data.suggestions.map(profile => (
-              <SuggestedFollow key={profile.did} profile={profile} />
-            ))
+            data.suggestions
+              .filter(s => (s.associated?.labeler ? false : true))
+              .map(profile => (
+                <SuggestedFollow key={profile.did} profile={profile} />
+              ))
           ) : (
             <View />
           )}
@@ -168,9 +171,13 @@ function SuggestedFollow({
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const profile = useProfileShadow(profileUnshadowed)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'ProfileHeaderSuggestedFollows',
+  )
 
   const onPressFollow = React.useCallback(async () => {
     try {
@@ -178,20 +185,20 @@ function SuggestedFollow({
       await queueFollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show('An issue occurred, please try again.')
+        Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
-  }, [queueFollow, track])
+  }, [queueFollow, track, _])
 
   const onPressUnfollow = React.useCallback(async () => {
     try {
       await queueUnfollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show('An issue occurred, please try again.')
+        Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
-  }, [queueUnfollow])
+  }, [queueUnfollow, _])
 
   if (!moderationOpts) {
     return null
@@ -214,7 +221,7 @@ function SuggestedFollow({
         <UserAvatar
           size={60}
           avatar={profile.avatar}
-          moderation={moderation.avatar}
+          moderation={moderation.ui('avatar')}
         />
 
         <View style={{width: '100%', paddingVertical: 12}}>
@@ -224,7 +231,7 @@ function SuggestedFollow({
             numberOfLines={1}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
           <Text
@@ -236,7 +243,7 @@ function SuggestedFollow({
         </View>
 
         <Button
-          label={following ? 'Unfollow' : 'Follow'}
+          label={following ? _(msg`Unfollow`) : _(msg`Follow`)}
           type="inverted"
           labelStyle={{textAlign: 'center'}}
           onPress={following ? onPressUnfollow : onPressFollow}

@@ -1,13 +1,14 @@
 import React, {useEffect, useRef} from 'react'
-import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
+import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {Trans} from '@lingui/macro'
-import {AppBskyActorDefs} from '@atproto/api'
 
 export function Autocomplete({
   prefix,
@@ -78,7 +79,11 @@ export function Autocomplete({
                   accessibilityLabel={`Select ${item.handle}`}
                   accessibilityHint="">
                   <View style={styles.avatarAndHandle}>
-                    <UserAvatar avatar={item.avatar ?? null} size={24} />
+                    <UserAvatar
+                      avatar={item.avatar ?? null}
+                      size={24}
+                      type={item.associated?.labeler ? 'labeler' : 'user'}
+                    />
                     <Text type="md-medium" style={pal.text}>
                       {displayName}
                     </Text>

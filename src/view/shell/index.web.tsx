@@ -1,22 +1,24 @@
 import React, {useEffect} from 'react'
-import {View, StyleSheet, TouchableOpacity} from 'react-native'
-import {ErrorBoundary} from '../com/util/ErrorBoundary'
-import {Lightbox} from '../com/lightbox/Lightbox'
-import {ModalsContainer} from '../com/modals/Modal'
-import {Composer} from './Composer.web'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {s, colors} from 'lib/styles'
-import {RoutesContainer, FlatNavigator} from '../../Navigation'
-import {DrawerContent} from './Drawer'
-import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {NavigationProp} from 'lib/routes/types'
-import {t} from '@lingui/macro'
+
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
-import {Outlet as PortalOutlet} from '#/components/Portal'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {Outlet as PortalOutlet} from '#/components/Portal'
+import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
+import {FlatNavigator, RoutesContainer} from '../../Navigation'
+import {Lightbox} from '../com/lightbox/Lightbox'
+import {ModalsContainer} from '../com/modals/Modal'
+import {ErrorBoundary} from '../com/util/ErrorBoundary'
+import {Composer} from './Composer.web'
+import {DrawerContent} from './Drawer'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -24,6 +26,7 @@ function ShellInner() {
   const {isDesktop} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const {_} = useLingui()
 
   useWebBodyScrollLock(isDrawerOpen)
 
@@ -42,14 +45,15 @@ function ShellInner() {
       <Composer winHeight={0} />
       <ModalsContainer />
       <MutedWordsDialog />
-      <PortalOutlet />
       <Lightbox />
+      <PortalOutlet />
+
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}
           style={styles.drawerMask}
-          accessibilityLabel={t`Close navigation footer`}
-          accessibilityHint={t`Closes bottom navigation bar`}>
+          accessibilityLabel={_(msg`Close navigation footer`)}
+          accessibilityHint={_(msg`Closes bottom navigation bar`)}>
           <View style={styles.drawerContainer}>
             <DrawerContent />
           </View>

@@ -1,19 +1,20 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
-  useNavigation,
   StackActions,
   useFocusEffect,
+  useNavigation,
 } from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Text} from '../com/util/text/Text'
-import {Button} from 'view/com/util/forms/Button'
-import {NavigationProp} from 'lib/routes/types'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+
 import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {usePalette} from 'lib/hooks/usePalette'
+import {NavigationProp} from 'lib/routes/types'
+import {s} from 'lib/styles'
+import {Button} from 'view/com/util/forms/Button'
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 export const NotFoundScreen = () => {
   const pal = usePalette('default')
@@ -51,7 +52,13 @@ export const NotFoundScreen = () => {
         </Text>
         <Button
           type="primary"
-          label={canGoBack ? 'Go back' : 'Go home'}
+          label={canGoBack ? _(msg`Go Back`) : _(msg`Go Home`)}
+          accessibilityLabel={canGoBack ? _(msg`Go back`) : _(msg`Go home`)}
+          accessibilityHint={
+            canGoBack
+              ? _(msg`Returns to previous page`)
+              : _(msg`Returns to home page`)
+          }
           onPress={onPressHome}
         />
       </View>

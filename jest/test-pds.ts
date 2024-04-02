@@ -1,8 +1,8 @@
+import {AtUri, BskyAgent} from '@atproto/api'
+import {TestNetwork, TestPds} from '@atproto/dev-env'
+import fs from 'fs'
 import net from 'net'
 import path from 'path'
-import fs from 'fs'
-import {TestNetwork, TestPds} from '@atproto/dev-env'
-import {AtUri, BskyAgent} from '@atproto/api'
 
 export interface TestUser {
   email: string
@@ -72,6 +72,7 @@ export async function createServer(
   const phoneParams = phoneRequired
     ? {
         phoneVerificationRequired: true,
+        phoneVerificationProvider: 'twilio',
         twilioAccountSid: 'ACXXXXXXX',
         twilioAuthToken: 'AUTH',
         twilioServiceSid: 'VAXXXXXXXX',
@@ -94,6 +95,35 @@ export async function createServer(
     plc: {port: port2},
   })
   mockTwilio(testNet.pds)
+
+  // add the test mod authority
+  if (!phoneRequired) {
+    const agent = new BskyAgent({service: pdsUrl})
+    const res = await agent.api.com.atproto.server.createAccount({
+      email: 'mod-authority@test.com',
+      handle: 'mod-authority.test',
+      password: 'hunter2',
+    })
+    agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+    await agent.api.app.bsky.actor.profile.create(
+      {repo: res.data.did},
+      {
+        displayName: 'Dev-env Moderation',
+        description: `The pretend version of mod.bsky.app`,
+      },
+    )
+
+    await agent.api.app.bsky.labeler.service.create(
+      {repo: res.data.did, rkey: 'self'},
+      {
+        policies: {
+          labelValues: ['!hide', '!warn'],
+          labelValueDefinitions: [],
+        },
+        createdAt: new Date().toISOString(),
+      },
+    )
+  }
 
   const pic = fs.readFileSync(
     path.join(__dirname, '..', 'assets', 'default-avatar.png'),
@@ -455,13 +485,13 @@ async function getPort(start = 3000) {
 }
 
 export const mockTwilio = (pds: TestPds) => {
-  if (!pds.ctx.twilio) return
+  if (!pds.ctx.phoneVerifier) return
 
-  pds.ctx.twilio.sendCode = async (_number: string) => {
+  pds.ctx.phoneVerifier.sendCode = async (_number: string) => {
     // do nothing
   }
 
-  pds.ctx.twilio.verifyCode = async (_number: string, code: string) => {
+  pds.ctx.phoneVerifier.verifyCode = async (_number: string, code: string) => {
     return code === '000000'
   }
 }

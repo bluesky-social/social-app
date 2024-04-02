@@ -6,17 +6,17 @@ import {
   moderateProfile,
 } from '@atproto/api'
 import {
-  useInfiniteQuery,
-  useQueryClient,
-  useQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
-import {useSession, getAgent} from '#/state/session'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {getAgent, useSession} from '#/state/session'
 
 const suggestedFollowsQueryKey = ['suggested-follows']
 const suggestedFollowsByActorQueryKey = (did: string) => [
@@ -46,7 +46,8 @@ export function useSuggestedFollowsQuery() {
 
       res.data.actors = res.data.actors
         .filter(
-          actor => !moderateProfile(actor, moderationOpts!).account.filter,
+          actor =>
+            !moderateProfile(actor, moderationOpts!).ui('profileList').filter,
         )
         .filter(actor => {
           const viewer = actor.viewer

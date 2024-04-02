@@ -1,20 +1,19 @@
 import React, {useImperativeHandle} from 'react'
-import {View, TouchableWithoutFeedback} from 'react-native'
-import {FocusScope} from '@tamagui/focus-scope'
-import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
+import {TouchableWithoutFeedback, View} from 'react-native'
+import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {FocusScope} from '@tamagui/focus-scope'
 
-import {useTheme, atoms as a, useBreakpoints, web, flatten} from '#/alf'
+import {useDialogStateControlContext} from '#/state/dialogs'
+import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {Context} from '#/components/Dialog/context'
+import {DialogInnerProps, DialogOuterProps} from '#/components/Dialog/types'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
 
-import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
-import {Context} from '#/components/Dialog/context'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {useDialogStateControlContext} from '#/state/dialogs'
-
-export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
+export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 export {Input} from '#/components/forms/TextField'
 
@@ -99,7 +98,7 @@ export function Outer({
                     style={[
                       web(a.fixed),
                       a.inset_0,
-                      {opacity: 0.5, backgroundColor: t.palette.black},
+                      {opacity: 0.8, backgroundColor: t.palette.black},
                     ]}
                   />
                 )}

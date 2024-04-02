@@ -1,11 +1,12 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {navigate} from '../../../Navigation'
-import {useModalControls} from '#/state/modals'
 import {useQueryClient} from '@tanstack/react-query'
-import {useSessionApi} from '#/state/session'
+
+import {useModalControls} from '#/state/modals'
 import {useSetFeedViewPreferencesMutation} from '#/state/queries/preferences'
+import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {navigate} from '../../../Navigation'
 
 /**
  * This utility component is only included in the test simulator
@@ -22,18 +23,24 @@ export function TestCtrls() {
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
-    await login({
-      service: 'http://localhost:3000',
-      identifier: 'alice.test',
-      password: 'hunter2',
-    })
+    await login(
+      {
+        service: 'http://localhost:3000',
+        identifier: 'alice.test',
+        password: 'hunter2',
+      },
+      'LoginForm',
+    )
   }
   const onPressSignInBob = async () => {
-    await login({
-      service: 'http://localhost:3000',
-      identifier: 'bob.test',
-      password: 'hunter2',
-    })
+    await login(
+      {
+        service: 'http://localhost:3000',
+        identifier: 'bob.test',
+        password: 'hunter2',
+      },
+      'LoginForm',
+    )
   }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
@@ -51,7 +58,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eSignOut"
-        onPress={() => logout()}
+        onPress={() => logout('Settings')}
         accessibilityRole="button"
         style={BTN}
       />

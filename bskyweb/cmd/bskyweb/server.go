@@ -2,11 +2,9 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
@@ -29,24 +27,18 @@ import (
 )
 
 type Server struct {
-	echo     *echo.Echo
-	httpd    *http.Server
-	mailmodo *Mailmodo
-	xrpcc    *xrpc.Client
+	echo  *echo.Echo
+	httpd *http.Server
+	xrpcc *xrpc.Client
 }
 
 func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
 	appviewHost := cctx.String("appview-host")
-	mailmodoAPIKey := cctx.String("mailmodo-api-key")
-	mailmodoListName := cctx.String("mailmodo-list-name")
 
 	// Echo
 	e := echo.New()
-
-	// Mailmodo client.
-	mailmodo := NewMailmodo(mailmodoAPIKey, mailmodoListName)
 
 	// create a new session (no auth)
 	xrpcc := &xrpc.Client{
@@ -77,9 +69,8 @@ func serve(cctx *cli.Context) error {
 	// server
 	//
 	server := &Server{
-		echo:     e,
-		mailmodo: mailmodo,
-		xrpcc:    xrpcc,
+		echo:  e,
+		xrpcc: xrpcc,
 	}
 
 	// Create the HTTP server.
@@ -197,6 +188,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/threads", server.WebGeneric)
 	e.GET("/settings/external-embeds", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
+	e.GET("/sys/debug-mod", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
 	e.GET("/support", server.WebGeneric)
 	e.GET("/support/privacy", server.WebGeneric)
@@ -212,6 +204,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/lists/:rkey", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/labeler/liked-by", server.WebGeneric)
 
 	// profile RSS feed (DID not handle)
 	e.GET("/profile/:ident/rss", server.WebProfileRSS)
@@ -220,9 +213,6 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/post/:rkey", server.WebPost)
 	e.GET("/profile/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
-
-	// Mailmodo
-	e.POST("/api/waitlist", server.apiWaitlist)
 
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
@@ -397,37 +387,4 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
 	return c.Render(http.StatusOK, "profile.html", data)
-}
-
-func (srv *Server) apiWaitlist(c echo.Context) error {
-	type jsonError struct {
-		Error string `json:"error"`
-	}
-
-	// Read the API request.
-	type apiRequest struct {
-		Email string `json:"email"`
-	}
-
-	bodyReader := http.MaxBytesReader(c.Response(), c.Request().Body, 16*1024)
-	payload, err := ioutil.ReadAll(bodyReader)
-	if err != nil {
-		return err
-	}
-	var req apiRequest
-	if err := json.Unmarshal(payload, &req); err != nil {
-		return c.JSON(http.StatusBadRequest, jsonError{Error: "Invalid API request"})
-	}
-
-	if req.Email == "" {
-		return c.JSON(http.StatusBadRequest, jsonError{Error: "Please enter a valid email address."})
-	}
-
-	if err := srv.mailmodo.AddToList(c.Request().Context(), req.Email); err != nil {
-		log.Errorf("adding email to waitlist failed: %s", err)
-		return c.JSON(http.StatusBadRequest, jsonError{
-			Error: "Storing email in waitlist failed. Please enter a valid email address.",
-		})
-	}
-	return c.JSON(http.StatusOK, map[string]bool{"success": true})
 }

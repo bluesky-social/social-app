@@ -1,14 +1,15 @@
 import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {FeedPostSlice} from '#/state/queries/post-feed'
-import {AtUri} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
-import {FeedItem} from './FeedItem'
+import {AtUri} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+
+import {FeedPostSlice} from '#/state/queries/post-feed'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
-import {Trans} from '@lingui/macro'
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {FeedItem} from './FeedItem'
 
 let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
@@ -78,11 +79,7 @@ function ViewFullThread({slice}: {slice: FeedPostSlice}) {
   }, [slice.rootUri])
 
   return (
-    <Link
-      style={[pal.view, styles.viewFullThread]}
-      href={itemHref}
-      asAnchor
-      noFeedback>
+    <Link style={[styles.viewFullThread]} href={itemHref} asAnchor noFeedback>
       <View style={styles.viewFullThreadDots}>
         <Svg width="4" height="40">
           <Line

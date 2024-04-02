@@ -1,5 +1,4 @@
 import {ModerationUI} from '@atproto/api'
-import {describeModerationCause} from '../moderation'
 
 // \u2705 = ✅
 // \u2713 = ✓
@@ -14,7 +13,7 @@ export function sanitizeDisplayName(
   moderation?: ModerationUI,
 ): string {
   if (moderation?.blur) {
-    return `⚠${describeModerationCause(moderation.cause, 'account').name}`
+    return ''
   }
   if (typeof str === 'string') {
     return str.replace(CHECK_MARKS_RE, '').replace(CONTROL_CHARS_RE, '').trim()

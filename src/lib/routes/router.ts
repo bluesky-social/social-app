@@ -1,10 +1,16 @@
-import {RouteParams, Route} from './types'
+import {Route, RouteParams} from './types'
 
 export class Router {
   routes: [string, Route][] = []
-  constructor(description: Record<string, string>) {
+  constructor(description: Record<string, string | string[]>) {
     for (const [screen, pattern] of Object.entries(description)) {
-      this.routes.push([screen, createRoute(pattern)])
+      if (typeof pattern === 'string') {
+        this.routes.push([screen, createRoute(pattern)])
+      } else {
+        pattern.forEach(subPattern => {
+          this.routes.push([screen, createRoute(subPattern)])
+        })
+      }
     }
   }
 

@@ -1,8 +1,9 @@
 /* eslint-env detox/detox */
 
-import {describe, beforeAll, it} from '@jest/globals'
+import {beforeAll, describe, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, createServer, sleep} from '../util'
+
+import {createServer, loginAsAlice, openApp, sleep} from '../util'
 
 describe('Profile screen', () => {
   beforeAll(async () => {
@@ -70,10 +71,10 @@ describe('Profile screen', () => {
     await element(by.id('profileHeaderEditProfileButton')).tap()
     await expect(element(by.id('editProfileModal'))).toBeVisible()
     await element(by.id('changeBannerBtn')).tap()
-    await element(by.text('Library')).tap()
+    await element(by.text('Upload from Library')).tap()
     await sleep(3e3)
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Library')).tap()
+    await element(by.text('Upload from Library')).tap()
     await sleep(3e3)
     await element(by.id('editProfileSaveBtn')).tap()
     await expect(element(by.id('editProfileModal'))).not.toBeVisible()
@@ -87,9 +88,9 @@ describe('Profile screen', () => {
     await element(by.id('profileHeaderEditProfileButton')).tap()
     await expect(element(by.id('editProfileModal'))).toBeVisible()
     await element(by.id('changeBannerBtn')).tap()
-    await element(by.text('Remove')).tap()
+    await element(by.text('Remove Banner')).tap()
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Remove')).tap()
+    await element(by.text('Remove Avatar')).tap()
     await element(by.id('editProfileSaveBtn')).tap()
     await expect(element(by.id('editProfileModal'))).not.toBeVisible()
     await expect(element(by.id('userBannerFallback'))).toExist()

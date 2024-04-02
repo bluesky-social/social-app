@@ -1,26 +1,23 @@
 import React, {memo} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {Text} from './text/Text'
-import {TextLinkOnWebOnly} from './Link'
-import {niceDate} from 'lib/strings/time'
+import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
+
+import {usePrefetchProfileQuery} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {UserAvatar} from './UserAvatar'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {niceDate} from 'lib/strings/time'
+import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
+import {TextLinkOnWebOnly} from './Link'
+import {Text} from './text/Text'
 import {TimeElapsed} from './TimeElapsed'
-import {makeProfileLink} from 'lib/routes/links'
-import {ModerationUI} from '@atproto/api'
-import {usePrefetchProfileQuery} from '#/state/queries/profile'
+import {UserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
-  author: {
-    avatar?: string
-    did: string
-    handle: string
-    displayName?: string | undefined
-  }
+  author: AppBskyActorDefs.ProfileViewBasic
+  moderation: ModerationDecision | undefined
   authorHasWarning: boolean
   postHref: string
   timestamp: string
@@ -46,6 +43,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             avatar={opts.author.avatar}
             size={opts.avatarSize || 16}
             moderation={opts.avatarModeration}
+            type={opts.author.associated?.labeler ? 'labeler' : 'user'}
           />
         </View>
       )}
@@ -55,9 +53,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           style={[pal.text, opts.displayNameStyle]}
           numberOfLines={1}
           lineHeight={1.2}
+          disableMismatchWarning
           text={
             <>
-              {sanitizeDisplayName(displayName)}&nbsp;
+              {sanitizeDisplayName(
+                displayName,
+                opts.moderation?.ui('displayName'),
+              )}
+              &nbsp;
               <Text
                 type="md"
                 numberOfLines={1}

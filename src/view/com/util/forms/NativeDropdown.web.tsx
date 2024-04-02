@@ -1,12 +1,13 @@
 import React from 'react'
+import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import {Pressable, StyleSheet, View, Text, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+
+import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {HITSLOP_10} from 'lib/constants'
 
 // Custom Dropdown Menu Components
 // ==
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     borderRadius: 8,
     fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
     outline: 0,
     border: 0,
   },

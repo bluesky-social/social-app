@@ -1,19 +1,20 @@
 import React from 'react'
 import {
-  View,
+  AccessibilityProps,
+  StyleSheet,
   TextInput,
   TextInputProps,
   TextStyle,
+  View,
   ViewStyle,
-  StyleSheet,
-  AccessibilityProps,
 } from 'react-native'
 
+import {mergeRefs} from '#/lib/merge-refs'
 import {HITSLOP_20} from 'lib/constants'
-import {useTheme, atoms as a, web, android} from '#/alf'
-import {Text} from '#/components/Typography'
+import {android, atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import {Text} from '#/components/Typography'
 
 const Context = React.createContext<{
   inputRef: React.RefObject<TextInput> | null
@@ -125,9 +126,10 @@ export function useSharedInputStyles() {
 
 export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   label: string
-  value: string
-  onChangeText: (value: string) => void
+  value?: string
+  onChangeText?: (value: string) => void
   isInvalid?: boolean
+  inputRef?: React.RefObject<TextInput>
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -137,6 +139,7 @@ export function createInput(Component: typeof TextInput) {
     value,
     onChangeText,
     isInvalid,
+    inputRef,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -161,19 +164,22 @@ export function createInput(Component: typeof TextInput) {
       )
     }
 
+    const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
+
     return (
       <>
         <Component
           accessibilityHint={undefined}
           {...rest}
           accessibilityLabel={label}
-          ref={ctx.inputRef}
+          ref={refs}
           value={value}
           onChangeText={onChangeText}
           onFocus={ctx.onFocus}
           onBlur={ctx.onBlur}
           placeholder={placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
+          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           hitSlop={HITSLOP_20}
           style={[
             a.relative,
@@ -271,7 +277,7 @@ export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
       <Comp
         size="md"
         style={[
-          {color: t.palette.contrast_500, pointerEvents: 'none'},
+          {color: t.palette.contrast_500, pointerEvents: 'none', flexShrink: 0},
           ctx.hovered ? hover : {},
           ctx.focused ? focus : {},
           ctx.isInvalid && ctx.hovered ? errorHover : {},

@@ -1,17 +1,20 @@
 import React, {useMemo} from 'react'
 import {TouchableWithoutFeedback} from 'react-native'
-import {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
 import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {t} from '@lingui/macro'
+import {BottomSheetBackdropProps} from '@discord/bottom-sheet/src'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function createCustomBackdrop(
   onClose?: (() => void) | undefined,
 ): React.FC<BottomSheetBackdropProps> {
   const CustomBackdrop = ({animatedIndex, style}: BottomSheetBackdropProps) => {
+    const {_} = useLingui()
+
     // animated variables
     const opacity = useAnimatedStyle(() => ({
       opacity: interpolate(
@@ -30,7 +33,7 @@ export function createCustomBackdrop(
     return (
       <TouchableWithoutFeedback
         onPress={onClose}
-        accessibilityLabel={t`Close bottom drawer`}
+        accessibilityLabel={_(msg`Close bottom drawer`)}
         accessibilityHint=""
         onAccessibilityEscape={() => {
           if (onClose !== undefined) {

@@ -1,12 +1,14 @@
 import * as Notifications from 'expo-notifications'
 import {QueryClient} from '@tanstack/react-query'
-import {resetToTab} from '../../Navigation'
-import {devicePlatform, isIOS} from 'platform/detection'
-import {track} from 'lib/analytics/analytics'
+
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {SessionAccount, getAgent} from '#/state/session'
+import {getAgent, SessionAccount} from '#/state/session'
+import {track} from 'lib/analytics/analytics'
+import {devicePlatform, isIOS} from 'platform/detection'
+import {resetToTab} from '../../Navigation'
+import {logEvent} from '../statsig/statsig'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -123,6 +125,7 @@ export function init(queryClient: QueryClient) {
         logger.DebugContext.notifications,
       )
       track('Notificatons:OpenApp')
+      logEvent('notifications:openApp', {})
       truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
       resetToTab('NotificationsTab') // open notifications tab
     }

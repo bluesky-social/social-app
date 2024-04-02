@@ -40,6 +40,8 @@ module.exports = function (config) {
       ? process.env.BSKY_ANDROID_VERSION_CODE
       : process.env.BSKY_IOS_BUILD_NUMBER
 
+  const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+
   return {
     expo: {
       version: VERSION,
@@ -103,7 +105,7 @@ module.exports = function (config) {
                 scheme: 'https',
                 host: 'bsky.app',
               },
-              {
+              IS_DEV && {
                 scheme: 'http',
                 host: 'localhost:19006',
               },
@@ -153,11 +155,13 @@ module.exports = function (config) {
           'expo-notifications',
           {
             icon: './assets/icon-android-notification.png',
-            color: '#ffffff',
+            color: '#1185fe',
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {

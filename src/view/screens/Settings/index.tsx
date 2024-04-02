@@ -3,70 +3,71 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
-  StyleSheet,
   Pressable,
+  StyleSheet,
   TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {setStringAsync} from 'expo-clipboard'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import * as AppInfo from 'lib/app-info'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useCustomPalette} from 'lib/hooks/useCustomPalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {NavigationProp} from 'lib/routes/types'
-import {HandIcon, HashtagIcon} from 'lib/icons'
-import {setStringAsync} from 'expo-clipboard'
-import {makeProfileLink} from 'lib/routes/links'
-import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {
-  useSetMinimalShellMode,
-  useThemePrefs,
-  useSetThemePrefs,
-  useOnboardingDispatch,
-} from '#/state/shell'
+import {clearLegacyStorage} from '#/state/persisted/legacy'
+// TODO import {useInviteCodesQuery} from '#/state/queries/invites'
+import {clear as clearStorage} from '#/state/persisted/store'
 import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
-import {useSession, useSessionApi, SessionAccount} from '#/state/session'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useClearPreferencesMutation} from '#/state/queries/preferences'
-// TODO import {useInviteCodesQuery} from '#/state/queries/invites'
-import {clear as clearStorage} from '#/state/persisted/store'
-import {clearLegacyStorage} from '#/state/persisted/legacy'
-import {STATUS_PAGE_URL} from 'lib/constants'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
-import {isNative} from '#/platform/detection'
-import {useDialogControl} from '#/components/Dialog'
-
-import {s, colors} from 'lib/styles'
-import {ScrollView} from 'view/com/util/Views'
+import {useClearPreferencesMutation} from '#/state/queries/preferences'
+import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
+import {useProfileQuery} from '#/state/queries/profile'
+import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {
+  useOnboardingDispatch,
+  useSetMinimalShellMode,
+  useSetThemePrefs,
+  useThemePrefs,
+} from '#/state/shell'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import {useAnalytics} from 'lib/analytics/analytics'
+import * as AppInfo from 'lib/app-info'
+import {STATUS_PAGE_URL} from 'lib/constants'
+import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
+import {useCustomPalette} from 'lib/hooks/useCustomPalette'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {HandIcon, HashtagIcon} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
+import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
+import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {Link, TextLink} from 'view/com/util/Link'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
-import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
+import {ScrollView} from 'view/com/util/Views'
+import {useDialogControl} from '#/components/Dialog'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {ExportCarDialog} from './ExportCarDialog'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
@@ -81,7 +82,11 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
   const contents = (
     <View style={[pal.view, styles.linkCard]}>
       <View style={styles.avi}>
-        <UserAvatar size={40} avatar={profile?.avatar} />
+        <UserAvatar
+          size={40}
+          avatar={profile?.avatar}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        />
       </View>
       <View style={[s.flex1]}>
         <Text type="md-bold" style={pal.text}>
@@ -95,7 +100,9 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       {isCurrentAccount ? (
         <TouchableOpacity
           testID="signOutBtn"
-          onPress={logout}
+          onPress={() => {
+            logout('Settings')
+          }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
           accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
@@ -124,7 +131,9 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       testID={`switchToAccountBtn-${account.handle}`}
       key={account.did}
       onPress={
-        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+        isSwitchingAccounts
+          ? undefined
+          : () => onPressSwitchAccount(account, 'Settings')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}
@@ -159,6 +168,7 @@ export function SettingsScreen({}: Props) {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
+  const birthdayControl = useDialogControl()
 
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
@@ -261,6 +271,10 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('Debug')
   }, [navigation])
 
+  const onPressDebugModeration = React.useCallback(() => {
+    navigation.navigate('DebugMod')
+  }, [navigation])
+
   const onPressSavedFeeds = React.useCallback(() => {
     navigation.navigate('SavedFeeds')
   }, [navigation])
@@ -268,6 +282,10 @@ export function SettingsScreen({}: Props) {
   const onPressStatusPage = React.useCallback(() => {
     Linking.openURL(STATUS_PAGE_URL)
   }, [])
+
+  const onPressBirthday = React.useCallback(() => {
+    birthdayControl.open()
+  }, [birthdayControl])
 
   const clearAllStorage = React.useCallback(async () => {
     await clearStorage()
@@ -281,6 +299,7 @@ export function SettingsScreen({}: Props) {
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
+      <BirthDateSettingsDialog control={birthdayControl} />
 
       <SimpleViewHeader
         showBackButton={isMobile}
@@ -339,7 +358,7 @@ export function SettingsScreen({}: Props) {
               <Text type="lg-medium" style={pal.text}>
                 <Trans>Birthday:</Trans>{' '}
               </Text>
-              <Link onPress={() => openModal({name: 'birth-date-settings'})}>
+              <Link onPress={onPressBirthday}>
                 <Text type="lg" style={pal.link}>
                   <Trans>Show</Trans>
                 </Text>
@@ -472,20 +491,20 @@ export function SettingsScreen({}: Props) {
               label={_(msg`System`)}
               left
               onSelect={() => setColorMode('system')}
-              accessibilityHint={_(msg`Set color theme to system setting`)}
+              accessibilityHint={_(msg`Sets color theme to system setting`)}
             />
             <SelectableBtn
               selected={colorMode === 'light'}
               label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
-              accessibilityHint={_(msg`Set color theme to light`)}
+              accessibilityHint={_(msg`Sets color theme to light`)}
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
               label={_(msg`Dark`)}
               right
               onSelect={() => setColorMode('dark')}
-              accessibilityHint={_(msg`Set color theme to dark`)}
+              accessibilityHint={_(msg`Sets color theme to dark`)}
             />
           </View>
         </View>
@@ -504,14 +523,14 @@ export function SettingsScreen({}: Props) {
                   label={_(msg`Dim`)}
                   left
                   onSelect={() => setDarkTheme('dim')}
-                  accessibilityHint={_(msg`Set dark theme to the dim theme`)}
+                  accessibilityHint={_(msg`Sets dark theme to the dim theme`)}
                 />
                 <SelectableBtn
                   selected={darkTheme === 'dark'}
                   label={_(msg`Dark`)}
                   right
                   onSelect={() => setDarkTheme('dark')}
-                  accessibilityHint={_(msg`Set dark theme to the dark theme`)}
+                  accessibilityHint={_(msg`Sets dark theme to the dark theme`)}
                 />
               </View>
             </View>
@@ -531,8 +550,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openFollowingFeedPreferences}
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens the home feed preferences`)}>
+          accessibilityLabel={_(msg`Following feed preferences`)}
+          accessibilityHint={_(msg`Opens the Following feed preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="sliders"
@@ -552,8 +571,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openThreadsPreferences}
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens the threads preferences`)}>
+          accessibilityLabel={_(msg`Thread preferences`)}
+          accessibilityHint={_(msg`Opens the threads preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon={['far', 'comments']}
@@ -572,9 +591,10 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
-          accessibilityHint="My Saved Feeds"
-          accessibilityLabel={_(msg`Opens screen with all saved feeds`)}
-          onPress={onPressSavedFeeds}>
+          onPress={onPressSavedFeeds}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`My saved feeds`)}
+          accessibilityHint={_(msg`Opens screen with all saved feeds`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
           </View>
@@ -673,7 +693,7 @@ export function SettingsScreen({}: Props) {
           onPress={onPressAppPasswords}
           accessibilityRole="button"
           accessibilityLabel={_(msg`App password settings`)}
-          accessibilityHint={_(msg`Opens the app password settings page`)}>
+          accessibilityHint={_(msg`Opens the app password settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
@@ -694,7 +714,9 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
-          accessibilityHint={_(msg`Choose a new Bluesky username or create`)}>
+          accessibilityHint={_(
+            msg`Opens modal for choosing a new Bluesky handle`,
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="at"
@@ -730,7 +752,9 @@ export function SettingsScreen({}: Props) {
           onPress={() => openModal({name: 'change-password'})}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change password`)}
-          accessibilityHint={_(msg`Change your Bluesky password`)}>
+          accessibilityHint={_(
+            msg`Opens modal for changing your Bluesky password`,
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
@@ -752,7 +776,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Export my data`)}
           accessibilityHint={_(
-            msg`Download Bluesky account data (repository)`,
+            msg`Opens modal for downloading your Bluesky account data (repository)`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
@@ -771,7 +795,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Delete account`)}
           accessibilityHint={_(
-            msg`Opens modal for account deletion confirmation. Requires email code.`,
+            msg`Opens modal for account deletion confirmation. Requires email code`,
           )}>
           <View style={[styles.iconContainer, dangerBg]}>
             <FontAwesomeIcon
@@ -789,8 +813,8 @@ export function SettingsScreen({}: Props) {
           style={[pal.view, styles.linkCardNoIcon]}
           onPress={onPressSystemLog}
           accessibilityRole="button"
-          accessibilityHint="Open system log"
-          accessibilityLabel={_(msg`Opens the system log page`)}>
+          accessibilityLabel={_(msg`Open system log`)}
+          accessibilityHint={_(msg`Opens the system log page`)}>
           <Text type="lg" style={pal.text}>
             <Trans>System log</Trans>
           </Text>
@@ -809,9 +833,19 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressDebugModeration}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open storybook page`)}
+              accessibilityHint={_(msg`Opens the storybook page`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Debug Moderation</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetPreferences}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset preferences`)}
+              accessibilityLabel={_(msg`Reset preferences state`)}
               accessibilityHint={_(msg`Resets the preferences state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset preferences state</Trans>
@@ -821,7 +855,7 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset onboarding`)}
+              accessibilityLabel={_(msg`Reset onboarding state`)}
               accessibilityHint={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
@@ -832,7 +866,7 @@ export function SettingsScreen({}: Props) {
               onPress={clearAllLegacyStorage}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear all legacy storage data`)}
-              accessibilityHint={_(msg`Clear all legacy storage data`)}>
+              accessibilityHint={_(msg`Clears all legacy storage data`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>
                   Clear all legacy storage data (restart after this)
@@ -844,7 +878,7 @@ export function SettingsScreen({}: Props) {
               onPress={clearAllStorage}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear all storage data`)}
-              accessibilityHint={_(msg`Clear all storage data`)}>
+              accessibilityHint={_(msg`Clears all storage data`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Clear all storage data (restart after this)</Trans>
               </Text>
@@ -933,7 +967,7 @@ function EmailConfirmationNotice() {
             ]}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Verify my email`)}
-            accessibilityHint=""
+            accessibilityHint={_(msg`Opens modal for email verification`)}
             onPress={() => openModal({name: 'verify-email'})}>
             <FontAwesomeIcon
               icon="envelope"

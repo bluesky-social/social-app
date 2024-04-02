@@ -1,11 +1,13 @@
 import {useCallback} from 'react'
 import {AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {Shadow} from '#/state/cache/types'
-import {getAgent} from '#/state/session'
-import {updatePostShadow} from '#/state/cache/post-shadow'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+
 import {track} from '#/lib/analytics/analytics'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
+import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {updatePostShadow} from '#/state/cache/post-shadow'
+import {Shadow} from '#/state/cache/types'
+import {getAgent} from '#/state/session'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
 
@@ -58,12 +60,14 @@ export function useGetPost() {
 
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
+  logContext: LogEvents['post:like']['logContext'] &
+    LogEvents['post:unlike']['logContext'],
 ) {
   const postUri = post.uri
   const postCid = post.cid
   const initialLikeUri = post.viewer?.like
-  const likeMutation = usePostLikeMutation()
-  const unlikeMutation = usePostUnlikeMutation()
+  const likeMutation = usePostLikeMutation(logContext)
+  const unlikeMutation = usePostUnlikeMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialLikeUri,
@@ -111,22 +115,30 @@ export function usePostLikeMutationQueue(
   return [queueLike, queueUnlike]
 }
 
-function usePostLikeMutation() {
+function usePostLikeMutation(logContext: LogEvents['post:like']['logContext']) {
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
     {uri: string; cid: string} // the post's uri and cid
   >({
-    mutationFn: post => getAgent().like(post.uri, post.cid),
+    mutationFn: post => {
+      logEvent('post:like', {logContext})
+      return getAgent().like(post.uri, post.cid)
+    },
     onSuccess() {
       track('Post:Like')
     },
   })
 }
 
-function usePostUnlikeMutation() {
+function usePostUnlikeMutation(
+  logContext: LogEvents['post:unlike']['logContext'],
+) {
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
-    mutationFn: ({likeUri}) => getAgent().deleteLike(likeUri),
+    mutationFn: ({likeUri}) => {
+      logEvent('post:unlike', {logContext})
+      return getAgent().deleteLike(likeUri)
+    },
     onSuccess() {
       track('Post:Unlike')
     },
@@ -135,12 +147,14 @@ function usePostUnlikeMutation() {
 
 export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
+  logContext: LogEvents['post:repost']['logContext'] &
+    LogEvents['post:unrepost']['logContext'],
 ) {
   const postUri = post.uri
   const postCid = post.cid
   const initialRepostUri = post.viewer?.repost
-  const repostMutation = usePostRepostMutation()
-  const unrepostMutation = usePostUnrepostMutation()
+  const repostMutation = usePostRepostMutation(logContext)
+  const unrepostMutation = usePostUnrepostMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialRepostUri,
@@ -188,22 +202,32 @@ export function usePostRepostMutationQueue(
   return [queueRepost, queueUnrepost]
 }
 
-function usePostRepostMutation() {
+function usePostRepostMutation(
+  logContext: LogEvents['post:repost']['logContext'],
+) {
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
     {uri: string; cid: string} // the post's uri and cid
   >({
-    mutationFn: post => getAgent().repost(post.uri, post.cid),
+    mutationFn: post => {
+      logEvent('post:repost', {logContext})
+      return getAgent().repost(post.uri, post.cid)
+    },
     onSuccess() {
       track('Post:Repost')
     },
   })
 }
 
-function usePostUnrepostMutation() {
+function usePostUnrepostMutation(
+  logContext: LogEvents['post:unrepost']['logContext'],
+) {
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
-    mutationFn: ({repostUri}) => getAgent().deleteRepost(repostUri),
+    mutationFn: ({repostUri}) => {
+      logEvent('post:unrepost', {logContext})
+      return getAgent().deleteRepost(repostUri)
+    },
     onSuccess() {
       track('Post:Unrepost')
     },

@@ -6,24 +6,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ScrollView} from './util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {TextInput} from './util'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {s, colors} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import * as EmailValidator from 'email-validator'
+
+import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
+import {getAgent, useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isAndroid, isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import {checkAndFormatResetCode} from 'lib/strings/password'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
-import {useSession, getAgent} from '#/state/session'
-import * as EmailValidator from 'email-validator'
-import {logger} from '#/logger'
+import {colors, s} from 'lib/styles'
+import {isAndroid, isWeb} from 'platform/detection'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import {ScrollView} from './util'
+import {TextInput} from './util'
 
 enum Stages {
   RequestCode,
@@ -137,7 +138,9 @@ export function Component() {
         <View>
           <View style={styles.titleSection}>
             <Text type="title-lg" style={[pal.text, styles.title]}>
-              {stage !== Stages.Done ? 'Change Password' : 'Password Changed'}
+              {stage !== Stages.Done
+                ? _(msg`Change Password`)
+                : _(msg`Password Changed`)}
             </Text>
           </View>
 
@@ -180,7 +183,7 @@ export function Component() {
                 <TextInput
                   testID="codeInput"
                   style={[pal.text, styles.textInput]}
-                  placeholder="Reset code"
+                  placeholder={_(msg`Reset code`)}
                   placeholderTextColor={pal.colors.textLight}
                   value={resetCode}
                   onChangeText={setResetCode}
@@ -207,7 +210,7 @@ export function Component() {
                 <TextInput
                   testID="codeInput"
                   style={[pal.text, styles.textInput]}
-                  placeholder="New password"
+                  placeholder={_(msg`New password`)}
                   placeholderTextColor={pal.colors.textLight}
                   onChangeText={setNewPassword}
                   secureTextEntry

@@ -1,36 +1,38 @@
 import React from 'react'
-import {StatusBar} from 'expo-status-bar'
 import {
+  BackHandler,
   DimensionValue,
   StyleSheet,
   useWindowDimensions,
   View,
-  BackHandler,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {StatusBar} from 'expo-status-bar'
 import {useNavigationState} from '@react-navigation/native'
-import {ModalsContainer} from 'view/com/modals/Modal'
-import {Lightbox} from 'view/com/lightbox/Lightbox'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {DrawerContent} from './Drawer'
-import {Composer} from './Composer'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {RoutesContainer, TabsNavigator} from '../../Navigation'
-import {isStateAtTabRoot} from 'lib/routes/helpers'
+
+import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
-  useSetDrawerOpen,
   useIsDrawerSwipeDisabled,
+  useSetDrawerOpen,
 } from '#/state/shell'
-import {isAndroid} from 'platform/detection'
-import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
+import {usePalette} from 'lib/hooks/usePalette'
 import * as notifications from 'lib/notifications/notifications'
-import {Outlet as PortalOutlet} from '#/components/Portal'
+import {isStateAtTabRoot} from 'lib/routes/helpers'
+import {useTheme} from 'lib/ThemeContext'
+import {isAndroid} from 'platform/detection'
+import {useDialogStateContext} from 'state/dialogs'
+import {Lightbox} from 'view/com/lightbox/Lightbox'
+import {ModalsContainer} from 'view/com/modals/Modal'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
-import {useDialogStateContext} from '#/state/dialogs'
+import {Outlet as PortalOutlet} from '#/components/Portal'
+import {RoutesContainer, TabsNavigator} from '../../Navigation'
+import {Composer} from './Composer'
+import {DrawerContent} from './Drawer'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -54,9 +56,9 @@ function ShellInner() {
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession, currentAccount} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
+  const {importantForAccessibility} = useDialogStateContext()
   // start undefined
   const currentAccountDid = React.useRef<string | undefined>(undefined)
-  const {openDialogs} = useDialogStateContext()
 
   React.useEffect(() => {
     let listener = {remove() {}}
@@ -80,19 +82,9 @@ function ShellInner() {
     }
   }, [currentAccount])
 
-  /**
-   * The counterpart to `accessibilityViewIsModal` for Android. This property
-   * applies to the parent of all non-modal views, and prevents TalkBack from
-   * navigating within content beneath an open dialog.
-   *
-   * @see https://reactnative.dev/docs/accessibility#importantforaccessibility-android
-   */
-  const importantForAccessibility =
-    openDialogs.length > 0 ? 'no-hide-descendants' : undefined
-
   return (
     <>
-      <View
+      <Animated.View
         style={containerPadding}
         importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
@@ -106,12 +98,12 @@ function ShellInner() {
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
-      </View>
+      </Animated.View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
-      <PortalOutlet />
       <Lightbox />
+      <PortalOutlet />
     </>
   )
 }

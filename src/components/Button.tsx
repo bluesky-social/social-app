@@ -1,20 +1,23 @@
 import React from 'react'
 import {
-  Pressable,
-  Text,
-  PressableProps,
-  TextProps,
-  ViewStyle,
   AccessibilityProps,
-  View,
-  TextStyle,
-  StyleSheet,
+  Pressable,
+  PressableProps,
   StyleProp,
+  StyleSheet,
+  Text,
+  TextProps,
+  TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
+import {Trans} from '@lingui/macro'
 
-import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
+import {logger} from '#/logger'
+import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import {normalizeTextStyles} from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
@@ -27,7 +30,7 @@ export type ButtonColor =
   | 'gradient_sunset'
   | 'gradient_nordic'
   | 'gradient_bonfire'
-export type ButtonSize = 'tiny' | 'small' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
@@ -139,7 +142,7 @@ export function Button({
     }))
   }, [setState])
 
-  const {baseStyles, hoverStyles, focusStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles} = React.useMemo(() => {
     const baseStyles: ViewStyle[] = []
     const hoverStyles: ViewStyle[] = []
     const light = t.name === 'light'
@@ -191,14 +194,14 @@ export function Button({
       if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
-            backgroundColor: t.palette.contrast_50,
+            backgroundColor: t.palette.contrast_25,
           })
           hoverStyles.push({
-            backgroundColor: t.palette.contrast_100,
+            backgroundColor: t.palette.contrast_50,
           })
         } else {
           baseStyles.push({
-            backgroundColor: t.palette.contrast_200,
+            backgroundColor: t.palette.contrast_100,
           })
         }
       } else if (variant === 'outline') {
@@ -274,6 +277,8 @@ export function Button({
     if (shape === 'default') {
       if (size === 'large') {
         baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_md)
+      } else if (size === 'medium') {
+        baseStyles.push({paddingVertical: 12}, a.px_2xl, a.rounded_sm, a.gap_md)
       } else if (size === 'small') {
         baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
       } else if (size === 'tiny') {
@@ -306,12 +311,6 @@ export function Button({
     return {
       baseStyles,
       hoverStyles,
-      focusStyles: [
-        ...hoverStyles,
-        {
-          outline: 0,
-        } as ViewStyle,
-      ],
     }
   }, [t, variant, color, size, shape, disabled])
 
@@ -374,10 +373,8 @@ export function Button({
         a.flex_row,
         a.align_center,
         a.justify_center,
-        a.justify_center,
         flattenedBaseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
-        ...(state.focused ? focusStyles : []),
         flatten(style),
       ]}
       onPressIn={onPressIn}
@@ -396,7 +393,7 @@ export function Button({
           ]}>
           <LinearGradient
             colors={
-              state.hovered || state.pressed || state.focused
+              state.hovered || state.pressed
                 ? gradientHoverColors
                 : gradientColors
             }
@@ -408,16 +405,49 @@ export function Button({
         </View>
       )}
       <Context.Provider value={context}>
-        {typeof children === 'string' ? (
-          <ButtonText>{children}</ButtonText>
-        ) : typeof children === 'function' ? (
-          children(context)
-        ) : (
-          children
-        )}
+        <ButtonTextErrorBoundary>
+          {/* @ts-ignore */}
+          {typeof children === 'string' || children?.type === Trans ? (
+            /* @ts-ignore */
+            <ButtonText>{children}</ButtonText>
+          ) : typeof children === 'function' ? (
+            children(context)
+          ) : (
+            children
+          )}
+        </ButtonTextErrorBoundary>
       </Context.Provider>
     </Pressable>
   )
+}
+
+export class ButtonTextErrorBoundary extends React.Component<
+  React.PropsWithChildren<{}>,
+  {hasError: boolean; error: Error | undefined}
+> {
+  public state = {
+    hasError: false,
+    error: undefined,
+  }
+
+  public static getDerivedStateFromError(error: Error) {
+    return {hasError: true, error}
+  }
+
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    logger.error('ButtonTextErrorBoundary caught an error', {
+      message: error.message,
+      errorInfo,
+    })
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return <ButtonText>ERROR</ButtonText>
+    }
+
+    return this.props.children
+  }
 }
 
 export function useSharedButtonTextStyles() {
@@ -525,7 +555,14 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text
+      {...rest}
+      style={normalizeTextStyles([
+        a.font_bold,
+        a.text_center,
+        textStyles,
+        style,
+      ])}>
       {children}
     </Text>
   )

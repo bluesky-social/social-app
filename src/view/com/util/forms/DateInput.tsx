@@ -1,17 +1,18 @@
-import React, {useState, useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+import DatePicker from 'react-native-date-picker'
+import {getLocales} from 'expo-localization'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {isIOS, isAndroid} from 'platform/detection'
-import {Button, ButtonType} from './Button'
-import {Text} from '../text/Text'
+
+import {usePalette} from 'lib/hooks/usePalette'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getLocales} from 'expo-localization'
-import DatePicker from 'react-native-date-picker'
+import {isAndroid, isIOS} from 'platform/detection'
+import {Text} from '../text/Text'
+import {Button, ButtonType} from './Button'
 
 const LOCALE = getLocales()[0]
 
@@ -81,6 +82,7 @@ export function DateInput(props: Props) {
       )}
       {(isIOS || show) && (
         <DatePicker
+          timeZoneOffsetInMinutes={0}
           modal={isAndroid}
           open={isAndroid}
           theme={theme.colorScheme}

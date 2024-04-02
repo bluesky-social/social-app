@@ -1,19 +1,20 @@
-import React, {memo, useMemo, useState, useEffect} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
-  TouchableOpacity,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedImages,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  ModerationOpts,
-  ProfileModeration,
   moderateProfile,
-  AppBskyEmbedRecordWithMedia,
+  ModerationDecision,
+  ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
@@ -21,28 +22,29 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {FeedNotification} from '#/state/queries/notifications/feed'
-import {s, colors} from 'lib/styles'
-import {niceDate} from 'lib/strings/time'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {HeartIconSolid} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
-import {HeartIconSolid} from 'lib/icons'
-import {Text} from '../util/text/Text'
-import {UserAvatar, PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserPreviewLink} from '../util/UserPreviewLink'
-import {ImageHorzList} from '../util/images/ImageHorzList'
-import {Post} from '../post/Post'
-import {Link, TextLink} from '../util/Link'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {formatCount} from '../util/numeric/format'
-import {makeProfileLink} from 'lib/routes/links'
-import {TimeElapsed} from '../util/TimeElapsed'
+import {niceDate} from 'lib/strings/time'
+import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
+import {Post} from '../post/Post'
+import {ImageHorzList} from '../util/images/ImageHorzList'
+import {Link, TextLink} from '../util/Link'
+import {formatCount} from '../util/numeric/format'
+import {Text} from '../util/text/Text'
+import {TimeElapsed} from '../util/TimeElapsed'
+import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
+import {UserPreviewLink} from '../util/UserPreviewLink'
 
 const MAX_AUTHORS = 5
 
@@ -54,7 +56,8 @@ interface Author {
   handle: string
   displayName?: string
   avatar?: string
-  moderation: ProfileModeration
+  moderation: ModerationDecision
+  associated?: AppBskyActorDefs.ProfileAssociated
 }
 
 let FeedItem = ({
@@ -100,6 +103,7 @@ let FeedItem = ({
         displayName: item.notification.author.displayName,
         avatar: item.notification.author.avatar,
         moderation: moderateProfile(item.notification.author, moderationOpts),
+        associated: item.notification.author.associated,
       },
       ...(item.additional?.map(({author}) => {
         return {
@@ -109,6 +113,7 @@ let FeedItem = ({
           displayName: author.displayName,
           avatar: author.avatar,
           moderation: moderateProfile(author, moderationOpts),
+          associated: author.associated,
         }
       }) || []),
     ]
@@ -182,7 +187,6 @@ let FeedItem = ({
       testID={`feedItem-by-${item.notification.author.handle}`}
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         item.notification.isRead
           ? undefined
@@ -337,7 +341,8 @@ function CondensedAuthorsList({
           did={authors[0].did}
           handle={authors[0].handle}
           avatar={authors[0].avatar}
-          moderation={authors[0].moderation.avatar}
+          moderation={authors[0].moderation.ui('avatar')}
+          type={authors[0].associated?.labeler ? 'labeler' : 'user'}
         />
       </View>
     )
@@ -355,7 +360,8 @@ function CondensedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              moderation={author.moderation.avatar}
+              moderation={author.moderation.ui('avatar')}
+              type={author.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
         ))}
@@ -413,7 +419,8 @@ function ExpandedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              moderation={author.moderation.avatar}
+              moderation={author.moderation.ui('avatar')}
+              type={author.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
           <View style={s.flex1}>

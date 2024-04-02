@@ -12,53 +12,57 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Text} from '../text/Text'
-import {PostDropdownBtn} from '../forms/PostDropdownBtn'
-import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
-import {s} from 'lib/styles'
-import {pluralize} from 'lib/strings/helpers'
-import {useTheme} from 'lib/ThemeContext'
-import {RepostButton} from './RepostButton'
-import {Haptics} from 'lib/haptics'
-import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useComposerControls} from '#/state/shell/composer'
-import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {shareUrl} from 'lib/sharing'
+import {useComposerControls} from '#/state/shell/composer'
+import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+import {Haptics} from 'lib/haptics'
+import {CommentBottomArrow, HeartIcon, HeartIconSolid} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
+import {shareUrl} from 'lib/sharing'
+import {pluralize} from 'lib/strings/helpers'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {PostDropdownBtn} from '../forms/PostDropdownBtn'
+import {Text} from '../text/Text'
+import {RepostButton} from './RepostButton'
 
 let PostCtrls = ({
   big,
   post,
   record,
   richText,
-  showAppealLabelItem,
   style,
   onPressReply,
+  logContext,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
 }): React.ReactNode => {
   const theme = useTheme()
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
-  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post)
-  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post)
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
+  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
+    post,
+    logContext,
+  )
   const requireAuth = useRequireAuth()
 
   const defaultCtrlColor = React.useMemo(
@@ -212,9 +216,7 @@ let PostCtrls = ({
             style={[styles.btn]}
             onPress={onShare}
             accessibilityRole="button"
-            accessibilityLabel={`${
-              post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-            } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+            accessibilityLabel={`${_(msg`Share`)}`}
             accessibilityHint=""
             hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
             <ArrowOutOfBox style={[defaultCtrlColor, styles.mt1]} width={22} />
@@ -229,8 +231,8 @@ let PostCtrls = ({
           postUri={post.uri}
           record={record}
           richText={richText}
-          showAppealLabelItem={showAppealLabelItem}
           style={styles.btnPad}
+          hitSlop={big ? HITSLOP_20 : HITSLOP_10}
         />
       </View>
     </View>

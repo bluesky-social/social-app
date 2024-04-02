@@ -1,31 +1,33 @@
 import {useCallback} from 'react'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
-  AtUri,
   AppBskyActorDefs,
-  AppBskyActorProfile,
   AppBskyActorGetProfile,
-  AppBskyFeedDefs,
+  AppBskyActorProfile,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AtUri,
 } from '@atproto/api'
 import {
+  QueryClient,
+  useMutation,
   useQuery,
   useQueryClient,
-  useMutation,
-  QueryClient,
 } from '@tanstack/react-query'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useSession, getAgent} from '../session'
-import {updateProfileShadow} from '../cache/profile-shadow'
+
+import {track} from '#/lib/analytics/analytics'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
-import {Shadow} from '#/state/cache/types'
-import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
+import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
-import {track} from '#/lib/analytics/analytics'
+import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {updateProfileShadow} from '../cache/profile-shadow'
+import {getAgent, useSession} from '../session'
+import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
+import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {ThreadNode} from './post-thread'
 
 export const RQKEY = (did: string) => ['profile', did]
@@ -186,11 +188,13 @@ export function useProfileUpdateMutation() {
 
 export function useProfileFollowMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  logContext: LogEvents['profile:follow']['logContext'] &
+    LogEvents['profile:unfollow']['logContext'],
 ) {
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
-  const followMutation = useProfileFollowMutation()
-  const unfollowMutation = useProfileUnfollowMutation()
+  const followMutation = useProfileFollowMutation(logContext)
+  const unfollowMutation = useProfileUnfollowMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialFollowingUri,
@@ -237,9 +241,12 @@ export function useProfileFollowMutationQueue(
   return [queueFollow, queueUnfollow]
 }
 
-function useProfileFollowMutation() {
+function useProfileFollowMutation(
+  logContext: LogEvents['profile:follow']['logContext'],
+) {
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
+      logEvent('profile:follow', {logContext})
       return await getAgent().follow(did)
     },
     onSuccess(data, variables) {
@@ -248,9 +255,12 @@ function useProfileFollowMutation() {
   })
 }
 
-function useProfileUnfollowMutation() {
+function useProfileUnfollowMutation(
+  logContext: LogEvents['profile:unfollow']['logContext'],
+) {
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
+      logEvent('profile:unfollow', {logContext})
       track('Profile:Unfollow', {username: followUri})
       return await getAgent().deleteFollow(followUri)
     },

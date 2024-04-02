@@ -3,16 +3,16 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {isInvalidHandle} from '#/lib/strings/handles'
-import {EventStopper} from '#/view/com/util/EventStopper'
-import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
 import {NavigationProp} from '#/lib/routes/types'
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {enforceLen} from '#/lib/strings/helpers'
 import {
   usePreferencesQuery,
-  useUpsertMutedWordsMutation,
   useRemoveMutedWordMutation,
+  useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
-import {enforceLen} from '#/lib/strings/helpers'
+import {EventStopper} from '#/view/com/util/EventStopper'
+import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
 import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 
@@ -50,7 +50,7 @@ export function TagMenu({
   const {mutateAsync: removeMutedWord, variables: optimisticRemove} =
     useRemoveMutedWordMutation()
   const isMuted = Boolean(
-    (preferences?.mutedWords?.find(
+    (preferences?.moderationPrefs.mutedWords?.find(
       m => m.value === tag && m.targets.includes('tag'),
     ) ??
       optimisticUpsert?.find(
@@ -66,7 +66,7 @@ export function TagMenu({
         label: _(msg`See ${truncatedTag} posts`),
         onPress() {
           navigation.push('Hashtag', {
-            tag: tag.replaceAll('#', '%23'),
+            tag: encodeURIComponent(tag),
           })
         },
         testID: 'tagMenuSearch',
@@ -83,11 +83,11 @@ export function TagMenu({
           label: _(msg`See ${truncatedTag} posts by user`),
           onPress() {
             navigation.push('Hashtag', {
-              tag: tag.replaceAll('#', '%23'),
+              tag: encodeURIComponent(tag),
               author: authorHandle,
             })
           },
-          testID: 'tagMenuSeachByUser',
+          testID: 'tagMenuSearchByUser',
           icon: {
             ios: {
               name: 'magnifyingglass',
