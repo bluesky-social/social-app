@@ -11,13 +11,17 @@ import {
 } from 'expo-updates'
 
 import {logger} from '#/logger'
+import {IS_TESTFLIGHT} from 'lib/app-info'
 import {isIOS} from 'platform/detection'
-import {IS_TESTFLIGHT} from '#/env'
+
+const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 
 async function setExtraParams() {
   await setExtraParamAsync(
     isIOS ? 'ios-build-number' : 'android-build-number',
-    app.buildVersion,
+    // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
+    // This just ensures it gets passed as a string
+    `${app.buildVersion}`,
   )
   await setExtraParamAsync(
     'channel',
@@ -25,7 +29,7 @@ async function setExtraParams() {
   )
 }
 
-export function useUpdateCheck() {
+export function useOTAUpdates() {
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
@@ -40,14 +44,12 @@ export function useUpdateCheck() {
         logger.debug('Checking for update...')
         const res = await checkForUpdateAsync()
 
-        if (!res.isAvailable) {
+        if (res.isAvailable) {
+          logger.debug('Attempting to fetch update...')
+          await fetchUpdateAsync()
+        } else {
           logger.debug('No update available.')
-          return
         }
-
-        logger.debug('Attempting to fetch update...')
-        await fetchUpdateAsync()
-        logger.debug('Successfully fetched update')
       } catch (e) {
         logger.warn('OTA Update Error', {error: `${e}`})
       }
@@ -56,9 +58,9 @@ export function useUpdateCheck() {
 
   const onIsTestFlight = React.useCallback(() => {
     setTimeout(async () => {
-      await setExtraParams()
-
       try {
+        await setExtraParams()
+
         const res = await checkForUpdateAsync()
         if (res.isAvailable) {
           await fetchUpdateAsync()
@@ -84,7 +86,7 @@ export function useUpdateCheck() {
       } catch (e: any) {
         // No need to handle
       }
-    }, 3000)
+    }, 3e3)
   }, [])
 
   React.useEffect(() => {
@@ -117,7 +119,7 @@ export function useUpdateCheck() {
         ) {
           // If it's been 15 minutes since the last "minimize", we should feel comfortable updating the client since
           // chances are that there isn't anything important going on in the current session.
-          if (lastMinimize.current <= Date.now() - 15 * 60e3) {
+          if (lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME) {
             if (isUpdatePending) {
               await reloadAsync()
             } else {

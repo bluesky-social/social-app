@@ -19,7 +19,7 @@ import {init as initPersistedState} from '#/state/persisted'
 import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import {useUpdateCheck} from 'lib/hooks/useUpdateCheck'
+import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import * as notifications from 'lib/notifications/notifications'
 import {
   asyncStoragePersister,
@@ -61,7 +61,7 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
-  useUpdateCheck()
+  useOTAUpdates()
 
   // init
   useEffect(() => {

@@ -10,7 +10,7 @@ echo "Creating tarball..."
 node scripts/bundleUpdate.js
 
 if [ -z "$RUNTIME_VERSION" ]; then
-  RUNTIME_VERSION=$(cat package.json | jq '.version')
+  RUNTIME_VERSION=$(cat package.json | jq '.version' -r)
 fi
 
 cd bundleTempDir || exit

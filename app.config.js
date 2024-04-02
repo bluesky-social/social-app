@@ -43,11 +43,7 @@ module.exports = function (config) {
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
 
-  const UPDATES_CHANNEL = IS_DEV
-    ? 'development'
-    : IS_TESTFLIGHT
-    ? 'testflight'
-    : 'production'
+  const UPDATES_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
 
   return {
     expo: {
