@@ -1,9 +1,0 @@
-{
-  "name": "react-native-scroll-forwarder",
-  "version": "0.0.1",
-  "description": "Forward pan gestures to another RCTScrollView, all on the native side.",
-  "main": "src/index",
-  "author": "bluesky-social",
-  "license": "MIT",
-  "homepage": "#readme"
-}

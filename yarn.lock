@@ -18672,10 +18672,6 @@ react-native-screens@~3.29.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-"react-native-scroll-forwarder@link:./modules/scroll-forwarder":
-  version "0.0.0"
-  uid ""
-
 react-native-svg@14.1.0:
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-14.1.0.tgz#7903bddd3c71bf3a8a503918253c839e6edaa724"
