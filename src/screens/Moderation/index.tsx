@@ -41,7 +41,7 @@ import {InlineLink, Link} from '#/components/Link'
 import {Button, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as LabelingService from '#/components/LabelingServiceCard'
-import {GlobalModerationLabelPref} from '#/components/moderation/GlobalModerationLabelPref'
+import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -352,17 +352,17 @@ export function ModerationScreenInner({
           )}
           {!isUnderage && adultContentEnabled && (
             <>
-              <GlobalModerationLabelPref labelValueDefinition={LABELS.porn} />
+              <GlobalLabelPreference labelDefinition={LABELS.porn} />
               <Divider />
-              <GlobalModerationLabelPref labelValueDefinition={LABELS.sexual} />
+              <GlobalLabelPreference labelDefinition={LABELS.sexual} />
               <Divider />
-              <GlobalModerationLabelPref
-                labelValueDefinition={LABELS['graphic-media']}
+              <GlobalLabelPreference
+                labelDefinition={LABELS['graphic-media']}
               />
               <Divider />
             </>
           )}
-          <GlobalModerationLabelPref labelValueDefinition={LABELS.nudity} />
+          <GlobalLabelPreference labelDefinition={LABELS.nudity} />
         </View>
       </View>
 

@@ -10,7 +10,6 @@ import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
 import * as SplashScreen from 'expo-splash-screen'
-import {StatusBar} from 'expo-status-bar'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client'
@@ -28,7 +27,6 @@ import {
 } from 'lib/react-query'
 import {s} from 'lib/styles'
 import {ThemeProvider} from 'lib/ThemeContext'
-import {isAndroid} from 'platform/detection'
 import {Provider as DialogStateProvider} from 'state/dialogs'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as LightboxStateProvider} from 'state/lightbox'
@@ -76,7 +74,6 @@ function InnerApp() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      {isAndroid && <StatusBar />}
       <Alf theme={theme}>
         <Splash isReady={!isInitialLoad}>
           <React.Fragment
