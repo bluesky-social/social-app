@@ -678,7 +678,7 @@ export function SearchScreen(
               // HACK
               // give 100ms to not stop click handlers in the search history
               // -prf
-              setTimeout(() => setInputIsFocused(false), 100)
+              setTimeout(() => setInputIsFocused(false), 250)
             }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
