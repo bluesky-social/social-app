@@ -8,6 +8,7 @@ import {
   useGate as useStatsigGate,
 } from 'statsig-react-native-expo'
 
+import {logger} from '#/logger'
 import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 
@@ -46,11 +47,18 @@ export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
-  const fullMetadata = {
-    ...rawMetadata,
-  } as Record<string, string> // Statsig typings are unnecessarily strict here.
-  fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
-  Statsig.logEvent(eventName, null, fullMetadata)
+  try {
+    const fullMetadata = {
+      ...rawMetadata,
+    } as Record<string, string> // Statsig typings are unnecessarily strict here.
+    fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
+    if (Statsig.initializeCalled()) {
+      Statsig.logEvent(eventName, null, fullMetadata)
+    }
+  } catch (e) {
+    // A log should never interrupt the calling code, whatever happens.
+    logger.error('Failed to log an event', {message: e})
+  }
 }
 
 export function useGate(gateName: string) {
