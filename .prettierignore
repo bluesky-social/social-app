@@ -1,11 +1,14 @@
-# Ignore everything except the code in src/.
+# Ignore everything except JS-ey code.
 # Based on https://stackoverflow.com/a/70715829/458193
 *
-!src/**/*.js
-!src/**/*.jsx
-!src/**/*.ts
-!src/**/*.tsx
+!**/*.js
+!**/*.jsx
+!**/*.ts
+!**/*.tsx
 !*/
 
 # More specific ignores go below.
+.expo
+android
+ios
 src/locale/locales
