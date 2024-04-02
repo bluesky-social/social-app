@@ -9,9 +9,6 @@ export function useLogin(serviceUrl: string | undefined) {
     const authSession = await Browser.openAuthSessionAsync(
       serviceUrl, // This isn't actually how this will work
       'bsky://login', // Replace this as well with the appropriate link
-      {
-        windowFeatures: {},
-      },
     )
 
     if (authSession.type !== 'success') {
