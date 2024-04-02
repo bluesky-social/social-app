@@ -64,6 +64,10 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
 
     if sender.state == .ended {
       var currentVelocity = sender.velocity(in: self).y
+      
+      if sv.contentOffset.y <= -130 {
+        self.rctRefreshCtrl?.setRefreshing(true)
+      }
 
       // A check for a velocity under 250 prevents animations from occurring when they wouldn't in a normal
       // scroll view
@@ -105,13 +109,8 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
   }
   
   func dampenOffset(_ offset: CGFloat) -> CGFloat {
-    // We can probably uncomment this later, but for now let's just not allow refreshing
-    //    if offset < 0 {
-    //      return offset - (offset * 0.55)
-    //    }
-    
     if offset < 0 {
-      return 0
+      return offset - (offset * 0.55)
     }
     
     return offset
