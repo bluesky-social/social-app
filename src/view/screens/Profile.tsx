@@ -29,7 +29,6 @@ import {combinedDisplayName} from 'lib/strings/display-names'
 import {
   FeedDescriptor,
   resetProfilePostsQueries,
-  RQKEY,
 } from '#/state/queries/post-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -145,7 +144,6 @@ function ProfileScreenLoaded({
   hideBackButton: boolean
   isPlaceholderProfile: boolean
 }) {
-  const client = useQueryClient()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -158,7 +156,6 @@ function ProfileScreenLoaded({
 
   const [scrollViewTag, setScrollViewTag] =
     React.useState<[number, FeedDescriptor]>()
-  const [refreshing, setRefreshing] = React.useState(false)
 
   const postsSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
@@ -276,25 +273,12 @@ function ProfileScreenLoaded({
     [scrollSectionToTop],
   )
 
-  // This onRefresh is used by the ScrollForwarder, since we cannot easily access the onRefresh callback from the
-  // list. The ScrollForwarder wil handle the refresh control with the refreshing state value.
-  const onRefresh = React.useCallback(async () => {
-    if (!scrollViewTag?.[1]) return
-    setRefreshing(true)
-    await client.refetchQueries({
-      queryKey: RQKEY(scrollViewTag[1]),
-    })
-    setRefreshing(false)
-  }, [client, scrollViewTag])
-
   // rendering
   // =
 
   const renderHeader = React.useCallback(() => {
     return (
-      <ExpoScrollForwarderView
-        scrollViewTag={scrollViewTag?.[0]}
-        scrollViewRefreshing={refreshing}>
+      <ExpoScrollForwarderView scrollViewTag={scrollViewTag?.[0]}>
         <ProfileHeader
           profile={profile}
           descriptionRT={hasDescription ? descriptionRT : null}
@@ -306,8 +290,6 @@ function ProfileScreenLoaded({
     )
   }, [
     scrollViewTag,
-    onRefresh,
-    refreshing,
     profile,
     hasDescription,
     descriptionRT,

@@ -63,65 +63,57 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     }
 
     if sender.state == .ended {
-      if sv.contentOffset.y < 0, sv.contentOffset.y > -130 {
+      var currentVelocity = sender.velocity(in: self).y
+
+      // A check for a velocity under 250 prevents animations from occurring when they wouldn't in a normal
+      // scroll view
+      if abs(currentVelocity) < 250 {
+        return
+      }
+
+      // Because this is the header, we just need to scroll to the top. We can't be far enough down the screen to where we need
+      // to deal with animating this.
+      if velocity > 0 {
         self.scrollToOffset(0)
-      } else if sv.contentOffset.y <= -130 {
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
-        
-        if self.rctRefreshCtrl?.onRefresh != nil {
-//          self.scrollToOffset(-75)
-//          self.rctRefreshCtrl?.beginRefreshing()
-//          self.rctRefreshCtrl?.onRefresh(nil)
-          
-        }
-      } else {
-        var currentVelocity = sender.velocity(in: self).y
+        return
+      }
 
-        // A check for a velocity under 250 prevents animations from occurring when they wouldn't in a normal
-        // scroll view
-        if abs(currentVelocity) < 250 {
-          return
-        }
+      self.enableCancelGestureRecognizers()
 
-        // Because this is the header, we just need to scroll to the top. We can't be far enough down the screen to where we need
-        // to deal with animating this.
-        if velocity > 0 {
+      // Clamping the velocity to a maximum of 5000 incase of any weirdness. I haven't seen any cases where we could
+      // easily exceed this number, but just to make sure.
+      currentVelocity = max(currentVelocity, -5000)
+
+      // Ideally, we would use UIView.animate to do this. However, that messes with the FlatList's virtualization.
+      // Running this on a timer instead simulates us actually dragging to update the content offset.
+      var animTranslation = -translation
+      self.animTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 120, repeats: true) { timer in
+        currentVelocity *= 0.9875
+        animTranslation = (-currentVelocity / 120) + animTranslation
+        sv.contentOffset.y = self.dampenOffset(animTranslation + self.initialOffset)
+
+        if animTranslation <= -100 {
           self.scrollToOffset(0)
-          return
+          self.stopTimer()
         }
 
-        self.enableCancelGestureRecognizers()
-
-        // Clamping the velocity to a maximum of 5000 incase of any weirdness. I haven't seen any cases where we could
-        // easily exceed this number, but just to make sure.
-        currentVelocity = max(currentVelocity, -5000)
-
-        // Ideally, we would use UIView.animate to do this. However, that messes with the FlatList's virtualization.
-        // Running this on a timer instead simulates us actually dragging to update the content offset.
-        var animTranslation = -translation
-        self.animTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 120, repeats: true) { timer in
-          currentVelocity *= 0.9875
-          animTranslation = (-currentVelocity / 120) + animTranslation
-          sv.contentOffset.y = self.dampenOffset(animTranslation + self.initialOffset)
-
-          if animTranslation <= -100 {
-            self.scrollToOffset(0)
-            self.stopTimer()
-          }
-
-          if abs(currentVelocity) < 5 {
-            self.stopTimer()
-          }
+        if abs(currentVelocity) < 5 {
+          self.stopTimer()
         }
       }
     }
   }
   
   func dampenOffset(_ offset: CGFloat) -> CGFloat {
+    // We can probably uncomment this later, but for now let's just not allow refreshing
+    //    if offset < 0 {
+    //      return offset - (offset * 0.55)
+    //    }
+    
     if offset < 0 {
-      return offset - (offset * 0.55)
+      return 0
     }
+    
     return offset
   }
   
@@ -165,8 +157,8 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     }
   }
   
-  func scrollToOffset(_ offset: Int) -> Void {
-    self.rctScrollView?.scroll(toOffset: CGPoint(x: 0, y: offset), animated: true)
+  func scrollToOffset(_ offset: Int, animated: Bool = true) -> Void {
+    self.rctScrollView?.scroll(toOffset: CGPoint(x: 0, y: offset), animated: animated)
   }
 
   func stopTimer() -> Void {
