@@ -10,11 +10,6 @@ on:
         options:
           - testflight
           - production
-  workflow_call:
-    inputs:
-      profile:
-        required: true
-        type: string
 
 jobs:
   build:
