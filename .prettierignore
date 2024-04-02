@@ -1,12 +1,11 @@
-ios
-android
-src/third-party
-src/app.json
-public
-/bskyweb/templates
-/dist/
-/.watchmanconfig
-/app.json
+# Ignore everything except the code in src/.
+# Based on https://stackoverflow.com/a/70715829/458193
+*
+!src/**/*.js
+!src/**/*.jsx
+!src/**/*.ts
+!src/**/*.tsx
+!*/
 
-web/index.html
-web-build/*
+# More specific ignores go below.
+src/locale/locales
