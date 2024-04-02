@@ -3,43 +3,42 @@ import {View} from 'react-native'
 import {
   AppBskyActorDefs,
   AppBskyLabelerDefs,
-  ModerationOpts,
   moderateProfile,
+  ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {RichText} from '#/components/RichText'
-import {useModalControls} from '#/state/modals'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useSession} from '#/state/session'
+import {Haptics} from '#/lib/haptics'
+import {isAppLabeler} from '#/lib/moderation'
+import {pluralize} from '#/lib/strings/helpers'
+import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
-import {useProfileShadow} from 'state/cache/profile-shadow'
+import {useModalControls} from '#/state/modals'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
-import {logger} from '#/logger'
-import {Haptics} from '#/lib/haptics'
-import {pluralize} from '#/lib/strings/helpers'
-import {isAppLabeler} from '#/lib/moderation'
-
-import {atoms as a, useTheme, tokens} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import * as Toast from '#/view/com/util/Toast'
-import {ProfileHeaderShell} from './Shell'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useSession} from '#/state/session'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {DialogOuterProps} from '#/components/Dialog'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
+  Heart2_Stroke2_Corner0_Rounded as Heart,
+} from '#/components/icons/Heart2'
+import {Link} from '#/components/Link'
+import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
-import {
-  Heart2_Stroke2_Corner0_Rounded as Heart,
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-} from '#/components/icons/Heart2'
-import {DialogOuterProps} from '#/components/Dialog'
-import * as Prompt from '#/components/Prompt'
-import {Link} from '#/components/Link'
+import {ProfileHeaderShell} from './Shell'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -312,6 +311,7 @@ function CantSubscribePrompt({
 }: {
   control: DialogOuterProps['control']
 }) {
+  const {_} = useLingui()
   return (
     <Prompt.Outer control={control}>
       <Prompt.Title>Unable to subscribe</Prompt.Title>
@@ -322,7 +322,7 @@ function CantSubscribePrompt({
         </Trans>
       </Prompt.Description>
       <Prompt.Actions>
-        <Prompt.Action onPress={control.close}>OK</Prompt.Action>
+        <Prompt.Action onPress={control.close} cta={_(msg`OK`)} />
       </Prompt.Actions>
     </Prompt.Outer>
   )

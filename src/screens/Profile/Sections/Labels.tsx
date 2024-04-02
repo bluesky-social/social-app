@@ -23,7 +23,7 @@ import {Loader} from '#/components/Loader'
 import {Divider} from '#/components/Divider'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {ErrorState} from '../ErrorState'
-import {ModerationLabelPref} from '#/components/moderation/ModerationLabelPref'
+import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 
 interface LabelsSectionProps {
@@ -197,9 +197,9 @@ export function ProfileLabelsSectionInner({
               return (
                 <React.Fragment key={labelDef.identifier}>
                   {i !== 0 && <Divider />}
-                  <ModerationLabelPref
+                  <LabelerLabelPreference
                     disabled={isSubscribed ? undefined : true}
-                    labelValueDefinition={labelDef}
+                    labelDefinition={labelDef}
                     labelerDid={labelerInfo.creator.did}
                   />
                 </React.Fragment>

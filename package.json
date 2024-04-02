@@ -1,10 +1,11 @@
 {
   "name": "bsky.app",
-  "version": "1.74.0",
+  "version": "1.75.0",
   "private": true,
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "yarn@1.22.19",
   "scripts": {
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile",
@@ -25,7 +26,7 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "lint": "yarn eslint --cache --ext .js,.jsx,.ts,.tsx src",
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
     "e2e:metro": "NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
@@ -313,6 +314,9 @@
     ]
   },
   "lint-staged": {
-    "*{.js,.jsx,.ts,.tsx}": "yarn eslint --fix"
+    "*{.js,.jsx,.ts,.tsx}": [
+      "eslint --cache --fix",
+      "prettier --cache --write --ignore-unknown"
+    ]
   }
 }
