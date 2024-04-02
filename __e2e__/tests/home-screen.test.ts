@@ -1,8 +1,9 @@
 /* eslint-env detox/detox */
 
-import {describe, beforeAll, it} from '@jest/globals'
+import {beforeAll, describe, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, createServer} from '../util'
+
+import {createServer, loginAsAlice, openApp} from '../util'
 
 describe('Home screen', () => {
   beforeAll(async () => {
@@ -17,7 +18,7 @@ describe('Home screen', () => {
 
   it('Can go to feeds page using feeds button in tab bar', async () => {
     await element(by.id('homeScreenFeedTabs-Feeds ✨')).tap()
-    await expect(element(by.text('Discover new feeds'))).toBeVisible()
+    await expect(element(by.text('Discover New Feeds'))).toBeVisible()
   })
 
   it('Feeds button disappears after pinning a feed', async () => {

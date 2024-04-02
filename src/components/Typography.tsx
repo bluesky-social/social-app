@@ -1,9 +1,14 @@
 import React from 'react'
-import {Text as RNText, TextStyle, TextProps as RNTextProps} from 'react-native'
+import {
+  StyleProp,
+  Text as RNText,
+  TextProps as RNTextProps,
+  TextStyle,
+} from 'react-native'
 import {UITextView} from 'react-native-ui-text-view'
 
-import {useTheme, atoms, web, flatten} from '#/alf'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
+import {atoms, flatten, useTheme, web} from '#/alf'
 
 export type TextProps = RNTextProps & {
   /**
@@ -34,17 +39,17 @@ export function leading<
  * If the `lineHeight` value is > 2, we assume it's an absolute value and
  * returns it as-is.
  */
-function normalizeTextStyles(styles: TextStyle[]) {
+export function normalizeTextStyles(styles: StyleProp<TextStyle>) {
   const s = flatten(styles)
   // should always be defined on these components
   const fontSize = s.fontSize || atoms.text_md.fontSize
 
   if (s?.lineHeight) {
-    if (s.lineHeight <= 2) {
+    if (s.lineHeight !== 0 && s.lineHeight <= 2) {
       s.lineHeight = Math.round(fontSize * s.lineHeight)
     }
-  } else {
-    s.lineHeight = fontSize
+  } else if (!isNative) {
+    s.lineHeight = s.fontSize
   }
 
   return s

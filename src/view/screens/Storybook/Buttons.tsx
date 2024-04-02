@@ -4,15 +4,15 @@ import {View} from 'react-native'
 import {atoms as a} from '#/alf'
 import {
   Button,
-  ButtonVariant,
   ButtonColor,
   ButtonIcon,
   ButtonText,
+  ButtonVariant,
 } from '#/components/Button'
-import {H1} from '#/components/Typography'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/ArrowTopRight'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {H1} from '#/components/Typography'
 
 export function Buttons() {
   return (
@@ -129,6 +129,15 @@ export function Buttons() {
           <ButtonIcon icon={Globe} position="left" />
           <ButtonText>Link out</ButtonText>
         </Button>
+
+        <Button
+          variant="gradient"
+          color="gradient_sky"
+          size="tiny"
+          label="Link out">
+          <ButtonIcon icon={Globe} position="left" />
+          <ButtonText>Link out</ButtonText>
+        </Button>
       </View>
 
       <View style={[a.flex_row, a.gap_md, a.align_start]}>
@@ -149,6 +158,14 @@ export function Buttons() {
           <ButtonIcon icon={ChevronLeft} />
         </Button>
         <Button
+          variant="gradient"
+          color="gradient_sunset"
+          size="tiny"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
           variant="outline"
           color="primary"
           size="large"
@@ -160,6 +177,14 @@ export function Buttons() {
           variant="ghost"
           color="primary"
           size="small"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="ghost"
+          color="primary"
+          size="tiny"
           shape="round"
           label="Link out">
           <ButtonIcon icon={ChevronLeft} />
@@ -184,6 +209,14 @@ export function Buttons() {
           <ButtonIcon icon={ChevronLeft} />
         </Button>
         <Button
+          variant="gradient"
+          color="gradient_sunset"
+          size="tiny"
+          shape="square"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
           variant="outline"
           color="primary"
           size="large"
@@ -195,6 +228,14 @@ export function Buttons() {
           variant="ghost"
           color="primary"
           size="small"
+          shape="square"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="ghost"
+          color="primary"
+          size="tiny"
           shape="square"
           label="Link out">
           <ButtonIcon icon={ChevronLeft} />

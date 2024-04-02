@@ -1,8 +1,9 @@
-import {it, describe, expect} from '@jest/globals'
+import {describe, expect, it} from '@jest/globals'
 
 import {
-  linkRequiresWarning,
   isPossiblyAUrl,
+  isTrustedUrl,
+  linkRequiresWarning,
   splitApexDomain,
 } from '../../../src/lib/strings/url-helpers'
 
@@ -74,6 +75,10 @@ describe('linkRequiresWarning', () => {
     // bad uri inputs, default to true
     ['', '', true],
     ['example.com', 'example.com', true],
+    ['/profile', 'Username', false],
+    ['#', 'Show More', false],
+    ['https://docs.bsky.app', 'https://docs.bsky.app', false],
+    ['https://bsky.app/compose/intent?text=test', 'Compose a post', false],
   ]
 
   it.each(cases)(
@@ -138,4 +143,37 @@ describe('splitApexDomain', () => {
       expect(output[1]).toEqual(expected2)
     },
   )
+})
+
+describe('isTrustedUrl', () => {
+  const cases = [
+    ['#', true],
+    ['#profile', true],
+    ['/', true],
+    ['/profile', true],
+    ['/profile/', true],
+    ['/profile/bob.test', true],
+    ['https://bsky.app', true],
+    ['https://bsky.app/', true],
+    ['https://bsky.app/profile/bob.test', true],
+    ['https://www.bsky.app', true],
+    ['https://www.bsky.app/', true],
+    ['https://docs.bsky.app', true],
+    ['https://bsky.social', true],
+    ['https://bsky.social/blog', true],
+    ['https://blueskyweb.xyz', true],
+    ['https://blueskyweb.zendesk.com', true],
+    ['http://bsky.app', true],
+    ['http://bsky.social', true],
+    ['http://blueskyweb.xyz', true],
+    ['http://blueskyweb.zendesk.com', true],
+    ['https://google.com', false],
+    ['https://docs.google.com', false],
+    ['https://google.com/#', false],
+  ]
+
+  it.each(cases)('given input uri %p, returns %p', (str, expected) => {
+    const output = isTrustedUrl(str)
+    expect(output).toEqual(expected)
+  })
 })

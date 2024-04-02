@@ -6,28 +6,29 @@ import {
   View,
 } from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
-import {MyLists} from '../lists/MyLists'
-import {Button} from '../util/forms/Button'
-import * as Toast from '../util/Toast'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid, isMobileWeb} from 'platform/detection'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {cleanError} from '#/lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {
-  useDangerousListMembershipsQuery,
   getMembership,
   ListMembersip,
+  useDangerousListMembershipsQuery,
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
-import {cleanError} from '#/lib/strings/errors'
 import {useSession} from '#/state/session'
+import {usePalette} from 'lib/hooks/usePalette'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {s} from 'lib/styles'
+import {isAndroid, isMobileWeb, isWeb} from 'platform/detection'
+import {MyLists} from '../lists/MyLists'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
+import {UserAvatar} from '../util/UserAvatar'
 
 export const snapPoints = ['fullscreen']
 
@@ -180,7 +181,7 @@ function ListItem({
         },
       ]}>
       <View style={styles.listItemAvi}>
-        <UserAvatar size={40} avatar={list.avatar} />
+        <UserAvatar size={40} avatar={list.avatar} type="list" />
       </View>
       <View style={styles.listItemContent}>
         <Text

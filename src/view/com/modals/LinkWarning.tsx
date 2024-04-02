@@ -1,18 +1,19 @@
 import React from 'react'
 import {SafeAreaView, StyleSheet, View} from 'react-native'
-import {ScrollView} from './util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isPossiblyAUrl, splitApexDomain} from 'lib/strings/url-helpers'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isPossiblyAUrl, splitApexDomain} from 'lib/strings/url-helpers'
+import {colors, s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import {ScrollView} from './util'
 
 export const snapPoints = ['50%']
 
@@ -73,8 +74,8 @@ export function Component({text, href}: {text: string; href: string}) {
             type="primary"
             onPress={onPressVisit}
             accessibilityLabel={_(msg`Visit Site`)}
-            accessibilityHint=""
-            label="Visit Site"
+            accessibilityHint={_(msg`Opens the linked website`)}
+            label={_(msg`Visit Site`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />
@@ -85,8 +86,8 @@ export function Component({text, href}: {text: string; href: string}) {
               closeModal()
             }}
             accessibilityLabel={_(msg`Cancel`)}
-            accessibilityHint=""
-            label="Cancel"
+            accessibilityHint={_(msg`Cancels opening the linked website`)}
+            label={_(msg`Cancel`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />

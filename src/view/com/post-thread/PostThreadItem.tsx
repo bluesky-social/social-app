@@ -1,50 +1,51 @@
 import React, {memo, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
-  AtUri,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AtUri,
+  ModerationDecision,
   RichText as RichTextAPI,
-  PostModeration,
 } from '@atproto/api'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
-import {Link, TextLink} from '../util/Link'
-import {RichText} from '#/components/RichText'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
-import {niceDate} from 'lib/strings/time'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useLanguagePrefs} from '#/state/preferences'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {ThreadPost} from '#/state/queries/post-thread'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useComposerControls} from '#/state/shell/composer'
+import {MAX_POST_LINES} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines, pluralize} from 'lib/strings/helpers'
-import {isEmbedByEmbedder} from 'lib/embeds'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {PostMeta} from '../util/PostMeta'
-import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostHider} from '../util/moderation/PostHider'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {PostAlerts} from '../util/moderation/PostAlerts'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {usePalette} from 'lib/hooks/usePalette'
-import {formatCount} from '../util/numeric/format'
-import {makeProfileLink} from 'lib/routes/links'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {MAX_POST_LINES} from 'lib/constants'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useLanguagePrefs} from '#/state/preferences'
-import {useComposerControls} from '#/state/shell/composer'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
-import {ThreadPost} from '#/state/queries/post-thread'
+import {niceDate} from 'lib/strings/time'
+import {s} from 'lib/styles'
 import {useSession} from 'state/session'
-import {WhoCanReply} from '../threadgate/WhoCanReply'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../components/moderation/ContentHider'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {PostHider} from '../../../components/moderation/PostHider'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {WhoCanReply} from '../threadgate/WhoCanReply'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Link, TextLink} from '../util/Link'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {formatCount} from '../util/numeric/format'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostMeta} from '../util/PostMeta'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 
 export function PostThreadItem({
   post,
@@ -147,7 +148,7 @@ let PostThreadItemLoaded = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  moderation: PostModeration
+  moderation: ModerationDecision
   treeView: boolean
   depth: number
   prevPost: ThreadPost | undefined
@@ -175,7 +176,6 @@ let PostThreadItemLoaded = ({
   const itemTitle = _(msg`Post by ${post.author.handle}`)
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
-  const isAuthorMuted = post.author.viewer?.muted
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
@@ -206,11 +206,7 @@ let PostThreadItemLoaded = ({
         uri: post.uri,
         cid: post.cid,
         text: record.text,
-        author: {
-          handle: post.author.handle,
-          displayName: post.author.displayName,
-          avatar: post.author.avatar,
-        },
+        author: post.author,
         embed: post.embed,
         moderation,
       },
@@ -256,7 +252,8 @@ let PostThreadItemLoaded = ({
                 did={post.author.did}
                 handle={post.author.handle}
                 avatar={post.author.avatar}
-                moderation={moderation.avatar}
+                moderation={moderation.ui('avatar')}
+                type={post.author.associated?.labeler ? 'labeler' : 'user'}
               />
             </View>
             <View style={styles.layoutContent}>
@@ -271,35 +268,12 @@ let PostThreadItemLoaded = ({
                     {sanitizeDisplayName(
                       post.author.displayName ||
                         sanitizeHandle(post.author.handle),
+                      moderation.ui('displayName'),
                     )}
                   </Text>
                 </Link>
               </View>
               <View style={styles.meta}>
-                {isAuthorMuted && (
-                  <View
-                    style={[
-                      pal.viewLight,
-                      {
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: 4,
-                        borderRadius: 6,
-                        paddingHorizontal: 6,
-                        paddingVertical: 2,
-                        marginRight: 4,
-                      },
-                    ]}>
-                    <FontAwesomeIcon
-                      icon={['far', 'eye-slash']}
-                      size={12}
-                      color={pal.colors.textLight}
-                    />
-                    <Text type="sm-medium" style={pal.textLight}>
-                      Muted
-                    </Text>
-                  </View>
-                )}
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text type="md" style={[pal.textLight]} numberOfLines={1}>
                     {sanitizeHandle(post.author.handle, '@')}
@@ -312,15 +286,16 @@ let PostThreadItemLoaded = ({
             )}
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
+            <LabelsOnMyPost post={post} />
             <ContentHider
-              moderation={moderation.content}
+              modui={moderation.ui('contentView')}
               ignoreMute
               style={styles.contentHider}
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
-                moderation={moderation.content}
+                modui={moderation.ui('contentView')}
                 includeMute
-                style={styles.alert}
+                style={[a.pt_2xs, a.pb_sm]}
               />
               {richText?.text ? (
                 <View
@@ -338,18 +313,9 @@ let PostThreadItemLoaded = ({
                 </View>
               ) : undefined}
               {post.embed && (
-                <ContentHider
-                  moderation={moderation.embed}
-                  moderationDecisions={moderation.decisions}
-                  ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
-                  ignoreQuoteDecisions
-                  style={s.mb10}>
-                  <PostEmbeds
-                    embed={post.embed}
-                    moderation={moderation.embed}
-                    moderationDecisions={moderation.decisions}
-                  />
-                </ContentHider>
+                <View style={[a.pb_sm]}>
+                  <PostEmbeds embed={post.embed} moderation={moderation} />
+                </View>
               )}
             </ContentHider>
             <ExpandedPostDetails
@@ -407,6 +373,7 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
+                logContext="PostThreadItem"
               />
             </View>
           </View>
@@ -432,7 +399,7 @@ let PostThreadItemLoaded = ({
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
             style={[pal.view]}
-            moderation={moderation.content}
+            modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 26 : 38}
             iconStyles={
               isThreadedChild
@@ -482,7 +449,8 @@ let PostThreadItemLoaded = ({
                     did={post.author.did}
                     handle={post.author.handle}
                     avatar={post.author.avatar}
-                    moderation={moderation.avatar}
+                    moderation={moderation.ui('avatar')}
+                    type={post.author.associated?.labeler ? 'labeler' : 'user'}
                   />
 
                   {showChildReplyLine && (
@@ -508,19 +476,21 @@ let PostThreadItemLoaded = ({
                 }>
                 <PostMeta
                   author={post.author}
+                  moderation={moderation}
                   authorHasWarning={!!post.author.labels?.length}
                   timestamp={post.indexedAt}
                   postHref={postHref}
                   showAvatar={isThreadedChild}
-                  avatarModeration={moderation.avatar}
+                  avatarModeration={moderation.ui('avatar')}
                   avatarSize={28}
                   displayNameType="md-bold"
                   displayNameStyle={isThreadedChild && s.ml2}
                   style={isThreadedChild && s.mb2}
                 />
+                <LabelsOnMyPost post={post} />
                 <PostAlerts
-                  moderation={moderation.content}
-                  style={styles.alert}
+                  modui={moderation.ui('contentList')}
+                  style={[a.pt_xs, a.pb_sm]}
                 />
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
@@ -542,24 +512,16 @@ let PostThreadItemLoaded = ({
                   />
                 ) : undefined}
                 {post.embed && (
-                  <ContentHider
-                    style={styles.contentHider}
-                    moderation={moderation.embed}
-                    moderationDecisions={moderation.decisions}
-                    ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
-                    ignoreQuoteDecisions>
-                    <PostEmbeds
-                      embed={post.embed}
-                      moderation={moderation.embed}
-                      moderationDecisions={moderation.decisions}
-                    />
-                  </ContentHider>
+                  <View style={[a.pb_xs]}>
+                    <PostEmbeds embed={post.embed} moderation={moderation} />
+                  </View>
                 )}
                 <PostCtrls
                   post={post}
                   record={record}
                   richText={richText}
                   onPressReply={onPressReply}
+                  logContext="PostThreadItem"
                 />
               </View>
             </View>
@@ -577,7 +539,7 @@ let PostThreadItemLoaded = ({
                 title={itemTitle}
                 noFeedback>
                 <Text type="sm-medium" style={pal.textLight}>
-                  More
+                  <Trans>More</Trans>
                 </Text>
                 <FontAwesomeIcon
                   icon="angle-right"
@@ -620,7 +582,6 @@ function PostOuterWrapper({
     return (
       <View
         style={[
-          pal.view,
           pal.border,
           styles.cursor,
           {
@@ -648,7 +609,6 @@ function PostOuterWrapper({
     <View
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         styles.cursor,

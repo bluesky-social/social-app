@@ -1,37 +1,36 @@
 import React from 'react'
 import {Keyboard, View} from 'react-native'
+import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 
-import {
-  usePreferencesQuery,
-  useUpsertMutedWordsMutation,
-  useRemoveMutedWordMutation,
-} from '#/state/queries/preferences'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
+  usePreferencesQuery,
+  useRemoveMutedWordMutation,
+  useUpsertMutedWordsMutation,
+} from '#/state/queries/preferences'
+import {
   atoms as a,
-  useTheme,
+  native,
   useBreakpoints,
+  useTheme,
   ViewStyleProp,
   web,
-  native,
 } from '#/alf'
-import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
-import {Divider} from '#/components/Divider'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
-import {logger} from '#/logger'
-import * as Dialog from '#/components/Dialog'
-import * as Toggle from '#/components/forms/Toggle'
 import * as Prompt from '#/components/Prompt'
-
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {Text} from '#/components/Typography'
 
 export function MutedWordsDialog() {
   const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
@@ -233,8 +232,8 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
                 </Trans>
               </Text>
             </View>
-          ) : preferences.mutedWords.length ? (
-            [...preferences.mutedWords]
+          ) : preferences.moderationPrefs.mutedWords.length ? (
+            [...preferences.moderationPrefs.mutedWords]
               .reverse()
               .map((word, i) => (
                 <MutedWordRow
@@ -254,9 +253,9 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
         </View>
 
         {isNative && <View style={{height: 20}} />}
-
-        <Dialog.Close />
       </View>
+
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
@@ -277,29 +276,16 @@ function MutedWordRow({
 
   return (
     <>
-      <Prompt.Outer control={control}>
-        <Prompt.Title>
-          <Trans>Are you sure?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            This will delete {word.value} from your muted words. You can always
-            add it back later.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>
-            <ButtonText>
-              <Trans>Nevermind</Trans>
-            </ButtonText>
-          </Prompt.Cancel>
-          <Prompt.Action onPress={remove}>
-            <ButtonText>
-              <Trans>Remove</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={control}
+        title={_(msg`Are you sure?`)}
+        description={_(
+          msg`This will delete ${word.value} from your muted words. You can always add it back later.`,
+        )}
+        onConfirm={remove}
+        confirmButtonCta={_(msg`Remove`)}
+        confirmButtonColor="negative"
+      />
 
       <View
         style={[

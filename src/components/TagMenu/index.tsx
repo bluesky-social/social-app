@@ -1,27 +1,27 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
-import {atoms as a, native, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Text} from '#/components/Typography'
-import {Button, ButtonText} from '#/components/Button'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {Divider} from '#/components/Divider'
-import {Link} from '#/components/Link'
 import {makeSearchLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
+import {isInvalidHandle} from '#/lib/strings/handles'
 import {
   usePreferencesQuery,
-  useUpsertMutedWordsMutation,
   useRemoveMutedWordMutation,
+  useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
+import {atoms as a, native, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
+import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {Text} from '#/components/Typography'
 
 export function useTagMenuControl() {
   return Dialog.useDialogControl()
@@ -59,7 +59,7 @@ export function TagMenu({
   const displayTag = '#' + tag
 
   const isMuted = Boolean(
-    (preferences?.mutedWords?.find(
+    (preferences?.moderationPrefs.mutedWords?.find(
       m => m.value === tag && m.targets.includes('tag'),
     ) ??
       optimisticUpsert?.find(
@@ -98,7 +98,7 @@ export function TagMenu({
 
                     control.close(() => {
                       navigation.push('Hashtag', {
-                        tag: tag.replaceAll('#', '%23'),
+                        tag: encodeURIComponent(tag),
                       })
                     })
 
@@ -153,7 +153,7 @@ export function TagMenu({
 
                         control.close(() => {
                           navigation.push('Hashtag', {
-                            tag: tag.replaceAll('#', '%23'),
+                            tag: encodeURIComponent(tag),
                             author: authorHandle,
                           })
                         })
@@ -264,7 +264,9 @@ export function TagMenu({
                 variant="ghost"
                 color="secondary"
                 onPress={() => control.close()}>
-                <ButtonText>Cancel</ButtonText>
+                <ButtonText>
+                  <Trans>Cancel</Trans>
+                </ButtonText>
               </Button>
             </>
           )}

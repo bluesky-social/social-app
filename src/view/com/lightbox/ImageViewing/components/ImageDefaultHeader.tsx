@@ -6,9 +6,17 @@
  *
  */
 import React from 'react'
-import {createHitslop} from 'lib/constants'
-import {SafeAreaView, Text, TouchableOpacity, StyleSheet} from 'react-native'
-import {t} from '@lingui/macro'
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {createHitslop} from '#/lib/constants'
 
 type Props = {
   onRequestClose: () => void
@@ -16,20 +24,23 @@ type Props = {
 
 const HIT_SLOP = createHitslop(16)
 
-const ImageDefaultHeader = ({onRequestClose}: Props) => (
-  <SafeAreaView style={styles.root}>
-    <TouchableOpacity
-      style={styles.closeButton}
-      onPress={onRequestClose}
-      hitSlop={HIT_SLOP}
-      accessibilityRole="button"
-      accessibilityLabel={t`Close image`}
-      accessibilityHint={t`Closes viewer for header image`}
-      onAccessibilityEscape={onRequestClose}>
-      <Text style={styles.closeText}>✕</Text>
-    </TouchableOpacity>
-  </SafeAreaView>
-)
+const ImageDefaultHeader = ({onRequestClose}: Props) => {
+  const {_} = useLingui()
+  return (
+    <SafeAreaView style={styles.root}>
+      <TouchableOpacity
+        style={[styles.closeButton, styles.blurredBackground]}
+        onPress={onRequestClose}
+        hitSlop={HIT_SLOP}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Close image`)}
+        accessibilityHint={_(msg`Closes viewer for header image`)}
+        onAccessibilityEscape={onRequestClose}>
+        <FontAwesomeIcon icon="close" color={'#fff'} size={22} />
+      </TouchableOpacity>
+    </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -37,8 +48,8 @@ const styles = StyleSheet.create({
     pointerEvents: 'box-none',
   },
   closeButton: {
-    marginRight: 8,
-    marginTop: 8,
+    marginRight: 10,
+    marginTop: 10,
     width: 44,
     height: 44,
     alignItems: 'center',
@@ -46,13 +57,10 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     backgroundColor: '#00000077',
   },
-  closeText: {
-    lineHeight: 22,
-    fontSize: 19,
-    textAlign: 'center',
-    color: '#FFF',
-    includeFontPadding: false,
-  },
+  blurredBackground: {
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+  } as ViewStyle,
 })
 
 export default ImageDefaultHeader

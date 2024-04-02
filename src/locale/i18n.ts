@@ -1,23 +1,23 @@
 import {useEffect} from 'react'
 import {i18n} from '@lingui/core'
 
-import {useLanguagePrefs} from '#/state/preferences'
-import {messages as messagesEn} from '#/locale/locales/en/messages'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {AppLanguage} from '#/locale/languages'
+import {messages as messagesCa} from '#/locale/locales/ca/messages'
 import {messages as messagesDe} from '#/locale/locales/de/messages'
-import {messages as messagesId} from '#/locale/locales/id/messages'
+import {messages as messagesEn} from '#/locale/locales/en/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
+import {messages as messagesFi} from '#/locale/locales/fi/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
 import {messages as messagesHi} from '#/locale/locales/hi/messages'
+import {messages as messagesId} from '#/locale/locales/id/messages'
+import {messages as messagesIt} from '#/locale/locales/it/messages'
 import {messages as messagesJa} from '#/locale/locales/ja/messages'
 import {messages as messagesKo} from '#/locale/locales/ko/messages'
 import {messages as messagesPt_BR} from '#/locale/locales/pt-BR/messages'
 import {messages as messagesUk} from '#/locale/locales/uk/messages'
-import {messages as messagesCa} from '#/locale/locales/ca/messages'
 import {messages as messagesZh_CN} from '#/locale/locales/zh-CN/messages'
-import {messages as messagesIt} from '#/locale/locales/it/messages'
-
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {AppLanguage} from '#/locale/languages'
+import {useLanguagePrefs} from '#/state/preferences'
 
 /**
  * We do a dynamic import of just the catalog that we need
@@ -30,6 +30,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
+      break
+    }
+    case AppLanguage.fi: {
+      i18n.loadAndActivate({locale, messages: messagesFi})
       break
     }
     case AppLanguage.fr: {

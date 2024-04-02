@@ -1,14 +1,15 @@
 import React from 'react'
-import {View, AccessibilityProps, TextStyle, ViewStyle} from 'react-native'
+import {AccessibilityProps, TextStyle, View, ViewStyle} from 'react-native'
 
-import {atoms as a, useTheme, native} from '#/alf'
-import {Text} from '#/components/Typography'
-
+import {atoms as a, native, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
+import {Text} from '#/components/Typography'
 
 export type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps &
-  React.PropsWithChildren<{testID?: string}>
+  React.PropsWithChildren<{
+    testID?: string
+  }>
 
 export type GroupProps = Omit<Toggle.GroupProps, 'style' | 'type'> & {
   multiple?: boolean
@@ -101,12 +102,12 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         native({
           paddingBottom: 10,
         }),
-        a.px_sm,
+        a.px_md,
         t.atoms.bg,
         t.atoms.border_contrast_low,
         baseStyles,
         activeStyles,
-        (state.hovered || state.focused || state.pressed) && hoverStyles,
+        (state.hovered || state.pressed) && hoverStyles,
       ]}>
       {typeof children === 'string' ? (
         <Text

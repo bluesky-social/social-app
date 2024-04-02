@@ -1,12 +1,14 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {Text} from 'view/com/util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 import {Button} from 'view/com/util/forms/Button'
+import {Text} from 'view/com/util/text/Text'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {Trans} from '@lingui/macro'
 
 type Props = {
   next: () => void
@@ -15,6 +17,7 @@ type Props = {
 
 export function WelcomeMobile({next, skip}: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <View style={[styles.container]} testID="welcomeOnboarding">
@@ -91,7 +94,7 @@ export function WelcomeMobile({next, skip}: Props) {
 
       <Button
         onPress={next}
-        label="Continue"
+        label={_(msg`Continue`)}
         testID="continueBtn"
         style={[styles.buttonContainer]}
         labelStyle={styles.buttonText}

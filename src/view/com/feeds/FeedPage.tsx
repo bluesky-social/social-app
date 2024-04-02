@@ -1,27 +1,29 @@
 import React from 'react'
-import {useNavigation} from '@react-navigation/native'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useQueryClient} from '@tanstack/react-query'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {MainScrollProvider} from '../util/MainScrollProvider'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
-import {ComposeIcon2} from 'lib/icons'
-import {s} from 'lib/styles'
-import {View, useWindowDimensions} from 'react-native'
-import {ListMethods} from '../util/List'
-import {Feed} from '../posts/Feed'
-import {FAB} from '../util/fab/FAB'
-import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
+import {useWindowDimensions, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
-import {listenSoftReset} from '#/state/events'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {TabState, getTabState, getRootNavigation} from '#/lib/routes/helpers'
+import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
+import {logEvent} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {useSession} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useComposerControls} from '#/state/shell/composer'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ComposeIcon2} from 'lib/icons'
+import {s} from 'lib/styles'
+import {Feed} from '../posts/Feed'
+import {FAB} from '../util/fab/FAB'
+import {ListMethods} from '../util/List'
+import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
+import {MainScrollProvider} from '../util/MainScrollProvider'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -68,6 +70,10 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
+      logEvent('feed:refresh', {
+        feedType: feed.split('|')[0],
+        reason: 'soft-reset',
+      })
     }
   }, [navigation, isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
@@ -89,6 +95,10 @@ export function FeedPage({
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
+    logEvent('feed:refresh', {
+      feedType: feed.split('|')[0],
+      reason: 'load-latest',
+    })
   }, [scrollToTop, feed, queryClient, setHasNew])
 
   return (

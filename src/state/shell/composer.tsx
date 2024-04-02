@@ -1,22 +1,20 @@
 import React from 'react'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
-  PostModeration,
+  ModerationDecision,
 } from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ComposerOptsPostRef {
   uri: string
   cid: string
   text: string
-  author: {
-    handle: string
-    displayName?: string
-    avatar?: string
-  }
+  author: AppBskyActorDefs.ProfileViewBasic
   embed?: AppBskyEmbedRecord.ViewRecord['embed']
-  moderation?: PostModeration
+  moderation?: ModerationDecision
 }
 export interface ComposerOptsQuote {
   uri: string

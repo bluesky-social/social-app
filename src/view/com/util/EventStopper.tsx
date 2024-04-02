@@ -8,7 +8,14 @@ import {View, ViewStyle} from 'react-native'
 export function EventStopper({
   children,
   style,
-}: React.PropsWithChildren<{style?: ViewStyle | ViewStyle[]}>) {
+  onKeyDown = true,
+}: React.PropsWithChildren<{
+  style?: ViewStyle | ViewStyle[]
+  /**
+   * Default `true`. Set to `false` to allow onKeyDown to propagate
+   */
+  onKeyDown?: boolean
+}>) {
   const stop = (e: any) => {
     e.stopPropagation()
   }
@@ -18,7 +25,7 @@ export function EventStopper({
       onTouchEnd={stop}
       // @ts-ignore web only -prf
       onClick={stop}
-      onKeyDown={stop}
+      onKeyDown={onKeyDown ? stop : undefined}
       style={style}>
       {children}
     </View>

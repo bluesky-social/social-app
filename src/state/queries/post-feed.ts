@@ -4,37 +4,37 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  PostModeration,
+  ModerationDecision,
 } from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
-  QueryKey,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
-import {useFeedTuners} from '../preferences/feed-tuners'
-import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
-import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
-import {FollowingFeedAPI} from 'lib/api/feed/following'
-import {AuthorFeedAPI} from 'lib/api/feed/author'
-import {LikesFeedAPI} from 'lib/api/feed/likes'
-import {CustomFeedAPI} from 'lib/api/feed/custom'
-import {ListFeedAPI} from 'lib/api/feed/list'
-import {MergeFeedAPI} from 'lib/api/feed/merge'
+
 import {HomeFeedAPI} from '#/lib/api/feed/home'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {precacheFeedPostProfiles} from './profile'
-import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getModerationOpts} from '#/state/queries/preferences/moderation'
-import {KnownError} from '#/view/com/posts/FeedErrorMessage'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
-import {useModerationOpts} from './preferences'
-import {queryClient} from 'lib/react-query'
+import {getAgent} from '#/state/session'
+import {AuthorFeedAPI} from 'lib/api/feed/author'
+import {CustomFeedAPI} from 'lib/api/feed/custom'
+import {FollowingFeedAPI} from 'lib/api/feed/following'
+import {LikesFeedAPI} from 'lib/api/feed/likes'
+import {ListFeedAPI} from 'lib/api/feed/list'
+import {MergeFeedAPI} from 'lib/api/feed/merge'
+import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
+import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
+import {queryClient} from 'lib/react-query'
+import {KnownError} from '#/view/com/posts/FeedErrorMessage'
+import {useFeedTuners} from '../preferences/feed-tuners'
+import {useModerationOpts} from './preferences'
+import {precacheFeedPostProfiles} from './profile'
+import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
 type AuthorFilter =
@@ -69,7 +69,7 @@ export interface FeedPostSliceItem {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
-  moderation: PostModeration
+  moderation: ModerationDecision
 }
 
 export interface FeedPostSlice {
@@ -250,9 +250,17 @@ export function usePostFeedQuery(
 
                   // apply moderation filter
                   for (let i = 0; i < slice.items.length; i++) {
+                    const ignoreFilter =
+                      slice.items[i].post.author.did === ignoreFilterFor
+                    if (ignoreFilter) {
+                      // remove mutes to avoid confused UIs
+                      moderations[i].causes = moderations[i].causes.filter(
+                        cause => cause.type !== 'muted',
+                      )
+                    }
                     if (
-                      moderations[i]?.content.filter &&
-                      slice.items[i].post.author.did !== ignoreFilterFor
+                      !ignoreFilter &&
+                      moderations[i]?.ui('contentList').filter
                     ) {
                       return undefined
                     }
@@ -435,13 +443,12 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   let somePostsPassModeration = false
 
   for (const item of feed) {
-    const moderationOpts = getModerationOpts({
-      userDid: '',
-      preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
+    const moderation = moderatePost(item.post, {
+      userDid: undefined,
+      prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
     })
-    const moderation = moderatePost(item.post, moderationOpts)
 
-    if (!moderation.content.filter) {
+    if (!moderation.ui('contentList').filter) {
       // we have a sfw post
       somePostsPassModeration = true
     }

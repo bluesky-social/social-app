@@ -1,18 +1,19 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import ImageEditor from 'react-avatar-editor'
-import {Slider} from '@miblanchard/react-native-slider'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {LinearGradient} from 'expo-linear-gradient'
-import {Text} from 'view/com/util/text/Text'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Slider} from '@miblanchard/react-native-slider'
+import ImageEditor from 'react-avatar-editor'
+
+import {useModalControls} from '#/state/modals'
+import {usePalette} from 'lib/hooks/usePalette'
+import {RectTallIcon, RectWideIcon, SquareIcon} from 'lib/icons'
 import {Dimensions} from 'lib/media/types'
 import {getDataUriSize} from 'lib/media/util'
-import {s, gradients} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {SquareIcon, RectWideIcon, RectTallIcon} from 'lib/icons'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
+import {gradients, s} from 'lib/styles'
+import {Text} from 'view/com/util/text/Text'
 
 enum AspectRatio {
   Square = 'square',
@@ -100,7 +101,7 @@ export function Component({
           onPress={doSetAs(AspectRatio.Wide)}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Wide`)}
-          accessibilityHint="Sets image aspect ratio to wide">
+          accessibilityHint={_(msg`Sets image aspect ratio to wide`)}>
           <RectWideIcon
             size={24}
             style={as === AspectRatio.Wide ? s.blue3 : pal.text}
@@ -110,7 +111,7 @@ export function Component({
           onPress={doSetAs(AspectRatio.Tall)}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Tall`)}
-          accessibilityHint="Sets image aspect ratio to tall">
+          accessibilityHint={_(msg`Sets image aspect ratio to tall`)}>
           <RectTallIcon
             size={24}
             style={as === AspectRatio.Tall ? s.blue3 : pal.text}
@@ -120,7 +121,7 @@ export function Component({
           onPress={doSetAs(AspectRatio.Square)}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Square`)}
-          accessibilityHint="Sets image aspect ratio to square">
+          accessibilityHint={_(msg`Sets image aspect ratio to square`)}>
           <SquareIcon
             size={24}
             style={as === AspectRatio.Square ? s.blue3 : pal.text}
@@ -132,9 +133,9 @@ export function Component({
           onPress={onPressCancel}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Cancel image crop`)}
-          accessibilityHint="Exits image cropping process">
+          accessibilityHint={_(msg`Exits image cropping process`)}>
           <Text type="xl" style={pal.link}>
-            Cancel
+            <Trans>Cancel</Trans>
           </Text>
         </TouchableOpacity>
         <View style={s.flex1} />
@@ -142,7 +143,7 @@ export function Component({
           onPress={onPressDone}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Save image crop`)}
-          accessibilityHint="Saves image crop settings">
+          accessibilityHint={_(msg`Saves image crop settings`)}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

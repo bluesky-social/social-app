@@ -1,36 +1,35 @@
 import React, {useCallback} from 'react'
 import {
-  StyleSheet,
+  InteractionManager,
   StyleProp,
+  StyleSheet,
+  Text,
   View,
   ViewStyle,
-  Text,
-  InteractionManager,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
-  AppBskyEmbedImages,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
-  ModerationUI,
-  PostModeration,
+  ModerationDecision,
 } from '@atproto/api'
-import {Link} from '../Link'
-import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {MaybeQuoteEmbed} from './QuoteEmbed'
-import {AutoSizedImage} from '../images/AutoSizedImage'
-import {ListEmbed} from './ListEmbed'
-import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {ContentHider} from '../moderation/ContentHider'
-import {isNative} from '#/platform/detection'
+
 import {shareUrl} from '#/lib/sharing'
+import {isNative} from '#/platform/detection'
+import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {usePalette} from 'lib/hooks/usePalette'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
+import {AutoSizedImage} from '../images/AutoSizedImage'
+import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
+import {Link} from '../Link'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
+import {ListEmbed} from './ListEmbed'
+import {MaybeQuoteEmbed} from './QuoteEmbed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -42,12 +41,10 @@ type Embed =
 export function PostEmbeds({
   embed,
   moderation,
-  moderationDecisions,
   style,
 }: {
   embed?: Embed
-  moderation: ModerationUI
-  moderationDecisions?: PostModeration['decisions']
+  moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -66,18 +63,10 @@ export function PostEmbeds({
   // quote post with media
   // =
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-    const isModOnQuote =
-      (AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-        isCauseALabelOnUri(moderation.cause, embed.record.record.uri)) ||
-      (moderationDecisions && isQuoteBlurred(moderationDecisions))
-    const mediaModeration = isModOnQuote ? {} : moderation
-    const quoteModeration = isModOnQuote ? moderation : {}
     return (
       <View style={style}>
-        <PostEmbeds embed={embed.media} moderation={mediaModeration} />
-        <ContentHider moderation={quoteModeration}>
-          <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
-        </ContentHider>
+        <PostEmbeds embed={embed.media} moderation={moderation} />
+        <MaybeQuoteEmbed embed={embed.record} />
       </View>
     )
   }
@@ -86,6 +75,7 @@ export function PostEmbeds({
     // custom feed embed (i.e. generator view)
     // =
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
+      // TODO moderation
       return (
         <FeedSourceCard
           feedUri={embed.record.uri}
@@ -97,16 +87,13 @@ export function PostEmbeds({
 
     // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
+      // TODO moderation
       return <ListEmbed item={embed.record} />
     }
 
     // quote post
     // =
-    return (
-      <ContentHider moderation={moderation}>
-        <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
-      </ContentHider>
-    )
+    return <MaybeQuoteEmbed embed={embed} style={style} />
   }
 
   // image embed
@@ -132,35 +119,41 @@ export function PostEmbeds({
       if (images.length === 1) {
         const {alt, thumb, aspectRatio} = images[0]
         return (
-          <View style={[styles.imagesContainer, style]}>
-            <AutoSizedImage
-              alt={alt}
-              uri={thumb}
-              dimensionsHint={aspectRatio}
-              onPress={() => _openLightbox(0)}
-              onPressIn={() => onPressIn(0)}
-              style={[styles.singleImage]}>
-              {alt === '' ? null : (
-                <View style={styles.altContainer}>
-                  <Text style={styles.alt} accessible={false}>
-                    ALT
-                  </Text>
-                </View>
-              )}
-            </AutoSizedImage>
-          </View>
+          <ContentHider modui={moderation?.ui('contentMedia')}>
+            <View style={[styles.imagesContainer, style]}>
+              <AutoSizedImage
+                alt={alt}
+                uri={thumb}
+                dimensionsHint={aspectRatio}
+                onPress={() => _openLightbox(0)}
+                onPressIn={() => onPressIn(0)}
+                style={[styles.singleImage]}>
+                {alt === '' ? null : (
+                  <View style={styles.altContainer}>
+                    <Text style={styles.alt} accessible={false}>
+                      ALT
+                    </Text>
+                  </View>
+                )}
+              </AutoSizedImage>
+            </View>
+          </ContentHider>
         )
       }
 
       return (
-        <View style={[styles.imagesContainer, style]}>
-          <ImageLayoutGrid
-            images={embed.images}
-            onPress={_openLightbox}
-            onPressIn={onPressIn}
-            style={embed.images.length === 1 ? [styles.singleImage] : undefined}
-          />
-        </View>
+        <ContentHider modui={moderation?.ui('contentMedia')}>
+          <View style={[styles.imagesContainer, style]}>
+            <ImageLayoutGrid
+              images={embed.images}
+              onPress={_openLightbox}
+              onPressIn={onPressIn}
+              style={
+                embed.images.length === 1 ? [styles.singleImage] : undefined
+              }
+            />
+          </View>
+        </ContentHider>
       )
     }
   }
@@ -171,15 +164,17 @@ export function PostEmbeds({
     const link = embed.external
 
     return (
-      <Link
-        asAnchor
-        anchorNoUnderline
-        href={link.uri}
-        style={[styles.extOuter, pal.view, pal.borderDark, style]}
-        hoverStyle={{borderColor: pal.colors.borderLinkHover}}
-        onLongPress={onShareExternal}>
-        <ExternalLinkEmbed link={link} />
-      </Link>
+      <ContentHider modui={moderation?.ui('contentMedia')}>
+        <Link
+          asAnchor
+          anchorNoUnderline
+          href={link.uri}
+          style={[styles.extOuter, pal.view, pal.borderDark, style]}
+          hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+          onLongPress={onShareExternal}>
+          <ExternalLinkEmbed link={link} />
+        </Link>
+      </ContentHider>
     )
   }
 

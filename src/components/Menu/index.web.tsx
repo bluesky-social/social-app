@@ -1,21 +1,26 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react'
-import {View, Pressable} from 'react-native'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
+import {atoms as a, flatten, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {atoms as a, useTheme, flatten, web} from '#/alf'
-import {Text} from '#/components/Typography'
-
+import {Context} from '#/components/Menu/context'
 import {
   ContextType,
-  TriggerProps,
-  ItemProps,
   GroupProps,
-  ItemTextProps,
   ItemIconProps,
+  ItemProps,
+  ItemTextProps,
+  RadixPassThroughTriggerProps,
+  TriggerProps,
 } from '#/components/Menu/types'
-import {Context} from '#/components/Menu/context'
+import {Portal} from '#/components/Portal'
+import {Text} from '#/components/Typography'
 
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = React.useId()
@@ -47,6 +52,7 @@ export function Root({
 }: React.PropsWithChildren<{
   control?: Dialog.DialogOuterProps['control']
 }>) {
+  const {_} = useLingui()
   const defaultControl = useMenuControl()
   const context = React.useMemo<ContextType>(
     () => ({
@@ -67,6 +73,18 @@ export function Root({
 
   return (
     <Context.Provider value={context}>
+      {context.control.isOpen && (
+        <Portal>
+          <Pressable
+            style={[a.fixed, a.inset_0, a.z_50]}
+            onPress={() => context.control.close()}
+            accessibilityHint=""
+            accessibilityLabel={_(
+              msg`Context menu backdrop, click to close the menu.`,
+            )}
+          />
+        </Portal>
+      )}
       <DropdownMenu.Root
         open={context.control.isOpen}
         onOpenChange={onOpenChange}>
@@ -76,7 +94,24 @@ export function Root({
   )
 }
 
-export function Trigger({children, label, style}: TriggerProps) {
+const RadixTriggerPassThrough = React.forwardRef(
+  (
+    props: {
+      children: (
+        props: RadixPassThroughTriggerProps & {
+          ref: React.Ref<any>
+        },
+      ) => React.ReactNode
+    },
+    ref,
+  ) => {
+    // @ts-expect-error Radix provides no types of this stuff
+    return props.children({...props, ref})
+  },
+)
+RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
+
+export function Trigger({children, label}: TriggerProps) {
   const {control} = React.useContext(Context)
   const {
     state: hovered,
@@ -87,35 +122,42 @@ export function Trigger({children, label, style}: TriggerProps) {
 
   return (
     <DropdownMenu.Trigger asChild>
-      <Pressable
-        accessibilityHint=""
-        accessibilityLabel={label}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        style={flatten([style, web({outline: 0})])}
-        onPointerDown={() => {
-          control.open()
-        }}
-        {...web({
-          onMouseEnter,
-          onMouseLeave,
-        })}>
-        {children({
-          isNative: false,
-          control,
-          state: {
-            hovered,
-            focused,
-            pressed: false,
-          },
-          props: {},
-        })}
-      </Pressable>
+      <RadixTriggerPassThrough>
+        {props =>
+          children({
+            isNative: false,
+            control,
+            state: {
+              hovered,
+              focused,
+              pressed: false,
+            },
+            props: {
+              ...props,
+              // disable on web, use `onPress`
+              onPointerDown: () => false,
+              onPress: () =>
+                control.isOpen ? control.close() : control.open(),
+              onFocus: onFocus,
+              onBlur: onBlur,
+              onMouseEnter,
+              onMouseLeave,
+              accessibilityLabel: label,
+            },
+          })
+        }
+      </RadixTriggerPassThrough>
     </DropdownMenu.Trigger>
   )
 }
 
-export function Outer({children}: React.PropsWithChildren<{}>) {
+export function Outer({
+  children,
+  style,
+}: React.PropsWithChildren<{
+  showCancel?: boolean
+  style?: StyleProp<ViewStyle>
+}>) {
   const t = useTheme()
 
   return (
@@ -127,10 +169,12 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
             a.p_xs,
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
+            style,
           ]}>
           {children}
         </View>
 
+        {/* Disabled until we can fix positioning
         <DropdownMenu.Arrow
           className="DropdownMenuArrow"
           fill={
@@ -138,6 +182,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
               .backgroundColor
           }
         />
+          */}
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   )
@@ -177,7 +222,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
         style={flatten([
           a.flex_row,
           a.align_center,
-          a.gap_sm,
+          a.gap_lg,
           a.py_sm,
           a.rounded_xs,
           {minHeight: 32, paddingHorizontal: 10},

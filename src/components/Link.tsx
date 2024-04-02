@@ -1,26 +1,23 @@
 import React from 'react'
 import {GestureResponderEvent} from 'react-native'
-import {
-  useLinkProps,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
+import {StackActions, useLinkProps} from '@react-navigation/native'
 
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {isWeb} from '#/platform/detection'
-import {useTheme, web, flatten, TextStyleProp, atoms as a} from '#/alf'
-import {Button, ButtonProps} from '#/components/Button'
-import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {AllNavigatorParams} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
+import {isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {router} from '#/routes'
-import {Text, TextProps} from '#/components/Typography'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 import {useOpenLink} from 'state/preferences/in-app-browser'
+import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
+import {Button, ButtonProps} from '#/components/Button'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Text, TextProps} from '#/components/Typography'
+import {router} from '#/routes'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -74,7 +71,7 @@ export function useLink({
 }: BaseLinkProps & {
   displayText: string
 }) {
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const {href} = useLinkProps<AllNavigatorParams>({
     to:
       typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
@@ -231,6 +228,7 @@ export function InlineLink({
   onPress: outerOnPress,
   download,
   selectable,
+  label,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -253,12 +251,13 @@ export function InlineLink({
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
-  const flattenedStyle = flatten(style)
+  const flattenedStyle = flatten(style) || {}
 
   return (
     <Text
       selectable={selectable}
-      label={href}
+      accessibilityHint=""
+      accessibilityLabel={label || href}
       {...rest}
       style={[
         {color: t.palette.primary_500},

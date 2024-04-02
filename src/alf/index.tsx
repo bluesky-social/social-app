@@ -1,12 +1,13 @@
 import React from 'react'
 import {Dimensions} from 'react-native'
+
 import * as themes from '#/alf/themes'
 
-export * from '#/alf/types'
-export * as tokens from '#/alf/tokens'
 export {atoms} from '#/alf/atoms'
-export * from '#/alf/util/platform'
+export * as tokens from '#/alf/tokens'
+export * from '#/alf/types'
 export * from '#/alf/util/flatten'
+export * from '#/alf/util/platform'
 
 type BreakpointName = keyof typeof breakpoints
 
@@ -16,6 +17,7 @@ type BreakpointName = keyof typeof breakpoints
 const breakpoints: {
   [key: string]: number
 } = {
+  gtPhone: 500,
   gtMobile: 800,
   gtTablet: 1300,
 }
@@ -26,6 +28,7 @@ function getActiveBreakpoints({width}: {width: number}) {
 
   return {
     active: active[active.length - 1],
+    gtPhone: active.includes('gtPhone'),
     gtMobile: active.includes('gtMobile'),
     gtTablet: active.includes('gtTablet'),
   }
@@ -39,6 +42,7 @@ export const Context = React.createContext<{
   theme: themes.Theme
   breakpoints: {
     active: BreakpointName | undefined
+    gtPhone: boolean
     gtMobile: boolean
     gtTablet: boolean
   }
@@ -47,6 +51,7 @@ export const Context = React.createContext<{
   theme: themes.light,
   breakpoints: {
     active: undefined,
+    gtPhone: false,
     gtMobile: false,
     gtTablet: false,
   },

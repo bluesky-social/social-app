@@ -1,24 +1,24 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 
 import {logger} from '#/logger'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
-import {s} from 'lib/styles'
+import {track} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {s} from 'lib/styles'
 import {Shadow, useProfileShadow} from 'state/cache/profile-shadow'
-import {track} from 'lib/analytics/analytics'
 import {
   useProfileFollowMutationQueue,
   useProfileQuery,
 } from 'state/queries/profile'
 import {useRequireAuth} from 'state/session'
+import {Text} from 'view/com/util/text/Text'
+import * as Toast from 'view/com/util/Toast'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -42,7 +42,10 @@ function PostThreadFollowBtnLoaded({
   const {isTabletOrDesktop} = useWebMediaQueries()
   const profile: Shadow<AppBskyActorDefs.ProfileViewBasic> =
     useProfileShadow(profileUnshadowed)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'PostThreadItem',
+  )
   const requireAuth = useRequireAuth()
 
   const isFollowing = !!profile.viewer?.following

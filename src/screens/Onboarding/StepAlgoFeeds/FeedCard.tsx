@@ -1,18 +1,17 @@
 import React from 'react'
 import {View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react'
+import {LinearGradient} from 'expo-linear-gradient'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a} from '#/alf'
-import * as Toggle from '#/components/forms/Toggle'
-import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {Text} from '#/components/Typography'
-import {RichText} from '#/components/RichText'
-
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {FeedConfig} from '#/screens/Onboarding/StepAlgoFeeds'
+import {atoms as a, useTheme} from '#/alf'
+import * as Toggle from '#/components/forms/Toggle'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 
 function PrimaryFeedCardInner({
   feed,
@@ -238,13 +237,14 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
           />
         </View>
 
-        <View style={[a.pt_2xs, a.flex_grow]}>
+        <View style={[a.pt_2xs, a.flex_1, a.flex_grow]}>
           <Text
             style={[
               a.text_md,
               a.font_bold,
               ctx.selected && styles.textSelected,
-            ]}>
+            ]}
+            numberOfLines={1}>
             {feed.displayName}
           </Text>
           <Text

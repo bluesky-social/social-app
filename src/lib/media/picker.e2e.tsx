@@ -1,9 +1,9 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import RNFS from 'react-native-fs'
-import {CropperOptions} from './types'
-import {compressIfNeeded} from './manip'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
-let _imageCounter = 0
+import {compressIfNeeded} from './manip'
+import {CropperOptions} from './types'
+
 async function getFile() {
   let files = await RNFS.readDir(
     RNFS.LibraryDirectoryPath.split('/')
@@ -12,7 +12,7 @@ async function getFile() {
       .join('/'),
   )
   files = files.filter(file => file.path.endsWith('.JPG'))
-  const file = files[_imageCounter++ % files.length]
+  const file = files[0]
   return await compressIfNeeded({
     path: file.path,
     mime: 'image/jpeg',
