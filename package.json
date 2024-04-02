@@ -26,10 +26,7 @@
     "test-watch": "NODE_ENV=test jest --watchAll",
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
-    "lint-some": "eslint --cache",
-    "lint-all": "yarn lint-some src --ext .js,.jsx,.ts,.tsx",
-    "prettier-some": "prettier --cache",
-    "prettier-all": "yarn prettier-some .",
+    "lint": "yarn eslint --cache --ext .js,.jsx,.ts,.tsx src",
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
     "e2e:metro": "NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
@@ -318,8 +315,8 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "yarn lint-some --fix",
-      "yarn prettier-some --write --ignore-unknown"
+      "eslint --cache --fix",
+      "prettier --cache --write --ignore-unknown"
     ]
   }
 }
