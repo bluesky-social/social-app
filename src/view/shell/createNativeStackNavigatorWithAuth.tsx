@@ -35,7 +35,7 @@ import {Onboarding as NewOnboarding} from '#/screens/Onboarding'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {Onboarding} from '../com/auth/Onboarding'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
-import {DesktopLeftNav} from './desktop/LeftNav'
+import {LeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
@@ -145,9 +145,9 @@ function NativeStackNavigator({
         descriptors={newDescriptors}
       />
       {isWeb && showBottomBar && <BottomBarWeb />}
-      {!showBottomBar && (
+      {isWeb && !showBottomBar && (
         <>
-          <DesktopLeftNav />
+          <LeftNav />
           <DesktopRightNav routeName={activeRoute.name} />
         </>
       )}

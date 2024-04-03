@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {isNativeTablet, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {clamp} from 'lib/numbers'
@@ -40,7 +40,7 @@ export function FABInner({testID, icon, ...props}: FABProps) {
           styles.outer,
           size,
           tabletSpacing,
-          (isMobile || isNativeTablet) && fabMinimalShellTransform,
+          isMobile && fabMinimalShellTransform,
         ]}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}

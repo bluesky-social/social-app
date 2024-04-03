@@ -268,7 +268,7 @@ function ComposeBtn() {
   )
 }
 
-export function DesktopLeftNav() {
+export function LeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -458,9 +458,7 @@ const styles = StyleSheet.create({
         overflowY: 'auto',
       }
     : {
-        height: '100%',
-        position: 'absolute',
-        left: 0,
+        paddingTop: 12,
       },
   leftNavTablet: {
     top: 0,
