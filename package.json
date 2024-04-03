@@ -157,7 +157,7 @@
     "react-native-date-picker": "^4.4.0",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-gesture-handler": "~2.14.0",
-    "react-native-get-random-values": "~1.8.0",
+    "react-native-get-random-values": "~1.11.0",
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-pager-view": "6.2.3",
