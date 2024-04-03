@@ -191,7 +191,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  const upsertAccount = React.useCallback(
+  const setCurrentAccount = React.useCallback(
     (account: SessionAccount, expired = false) => {
       setStateAndPersist(s => {
         return {
@@ -207,6 +207,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
+    BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
     setStateAndPersist(s => ({
       ...s,
       currentAccount: undefined,
@@ -275,22 +276,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           account,
           ({expired, refreshedAccount}) => {
             if (expired) {
-              __globalAgent = PUBLIC_BSKY_AGENT
+              clearCurrentAccount()
             }
-            upsertAccount(refreshedAccount, expired)
+            setCurrentAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
       )
 
       __globalAgent = agent
-      upsertAccount(account)
+      setCurrentAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [upsertAccount, clearCurrentAccount],
+    [setCurrentAccount, clearCurrentAccount],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -323,23 +324,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           account,
           ({expired, refreshedAccount}) => {
             if (expired) {
-              __globalAgent = PUBLIC_BSKY_AGENT
+              clearCurrentAccount()
             }
-            upsertAccount(refreshedAccount, expired)
+            setCurrentAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
       )
 
       __globalAgent = agent
-      upsertAccount(account)
+      setCurrentAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
 
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [upsertAccount, clearCurrentAccount],
+    [setCurrentAccount, clearCurrentAccount],
   )
 
   const logout = React.useCallback<ApiContext['logout']>(
@@ -369,15 +370,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         service: account.service,
         persistSession: createPersistSessionHandler(
           account,
-          async ({expired, refreshedAccount}) => {
+          ({expired, refreshedAccount}) => {
             if (expired) {
-              __globalAgent = PUBLIC_BSKY_AGENT
+              clearCurrentAccount()
             } else {
               __globalAgent = agent
-              await configureModeration(agent, account)
+              setCurrentAccount(refreshedAccount, expired)
             }
-
-            upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
@@ -407,6 +406,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.error(`session: could not decode jwt`)
       }
 
+      // optimistic, we'll update this if we can't reuse or resume the session
+      await configureModeration(agent, account)
+
       if (canReusePrevSession) {
         logger.debug(
           `session: attempting to reuse previous session`,
@@ -415,18 +417,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         )
         agent.session = prevSession
         __globalAgent = agent
-        await configureModeration(agent, account)
-        upsertAccount(account)
+        setCurrentAccount(account)
       } else {
         logger.debug(
-          `session: attempting to resume using previous session`,
+          `session: attempting to resumeSession using previous session`,
           {},
           logger.DebugContext.session,
         )
-        await networkRetry(1, () => agent.resumeSession(prevSession))
+        try {
+          // will call `persistSession` on `BskyAgent` instance above if success
+          await networkRetry(1, () => agent.resumeSession(prevSession))
+        } catch (e) {
+          logger.error(`session: resumeSession failed`, {message: e})
+          clearCurrentAccount()
+        }
       }
     },
-    [upsertAccount, clearCurrentAccount],
+    [setCurrentAccount, clearCurrentAccount],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
@@ -544,7 +551,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           /*
            * Use updated session in this tab's agent. Do not call
-           * upsertAccount, since that will only persist the session that's
+           * setCurrentAccount, since that will only persist the session that's
            * already persisted, and we'll get a loop between tabs.
            */
           // @ts-ignore we checked for `refreshJwt` above
