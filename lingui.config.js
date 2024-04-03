@@ -16,6 +16,7 @@ module.exports = {
     'zh-CN',
     'zh-TW',
     'it',
+    'tr',
   ],
   catalogs: [
     {

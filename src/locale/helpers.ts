@@ -1,7 +1,8 @@
 import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
-import lande from 'lande'
-import {hasProp} from 'lib/type-guards'
 import * as bcp47Match from 'bcp-47-match'
+import lande from 'lande'
+
+import {hasProp} from 'lib/type-guards'
 import {
   AppLanguage,
   LANGUAGES_MAP_CODE2,
@@ -146,6 +147,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.zh_TW
       case 'it':
         return AppLanguage.it
+      case 'tr':
+        return AppLanguage.tr
       default:
         continue
     }
