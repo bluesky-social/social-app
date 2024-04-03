@@ -1,5 +1,6 @@
 import * as React from 'react'
 import {JSX} from 'react/jsx-runtime'
+import {View} from 'react-native'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
@@ -15,11 +16,12 @@ import {
   StackActions,
 } from '@react-navigation/native'
 
-import {timeout} from 'lib/async/timeout'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {usePalette} from 'lib/hooks/usePalette'
-import {buildStateObject} from 'lib/routes/helpers'
-import {
+import {init as initAnalytics} from '#/lib/analytics/analytics'
+import {timeout} from '#/lib/async/timeout'
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
+import {buildStateObject} from '#/lib/routes/helpers'
+import type {
   AllNavigatorParams,
   BottomTabNavigatorParams,
   FeedsTabNavigatorParams,
@@ -28,59 +30,60 @@ import {
   MyProfileTabNavigatorParams,
   NotificationsTabNavigatorParams,
   SearchTabNavigatorParams,
-} from 'lib/routes/types'
-import {RouteParams, State} from 'lib/routes/types'
-import {bskyTitle} from 'lib/strings/headings'
-import {isAndroid, isNative} from 'platform/detection'
-import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
-import {AppPasswords} from 'view/screens/AppPasswords'
-import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
-import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
-import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
-import {PreferencesThreads} from 'view/screens/PreferencesThreads'
-import {SavedFeeds} from 'view/screens/SavedFeeds'
-import HashtagScreen from '#/screens/Hashtag'
-import {ModerationScreen} from '#/screens/Moderation'
-import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
-import {init as initAnalytics} from './lib/analytics/analytics'
-import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
-import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
-import {router} from './routes'
-import {useModalControls} from './state/modals'
-import {useUnreadNotifications} from './state/queries/notifications/unread'
-import {useSession} from './state/session'
+  SideTabNavigatorParams,
+} from '#/lib/routes/types'
+import {RouteParams, State} from '#/lib/routes/types'
+import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
+import {bskyTitle} from '#/lib/strings/headings'
+import {isAndroid, isNative, isNativeTablet} from '#/platform/detection'
+import {useModalControls} from '#/state/modals'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useSession} from '#/state/session'
 import {
   setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
-} from './state/shell/reminders'
-import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
-import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
-import {DebugModScreen} from './view/screens/DebugMod'
-import {FeedsScreen} from './view/screens/Feeds'
-import {HomeScreen} from './view/screens/Home'
-import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
-import {ListsScreen} from './view/screens/Lists'
-import {LogScreen} from './view/screens/Log'
-import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
-import {NotFoundScreen} from './view/screens/NotFound'
-import {NotificationsScreen} from './view/screens/Notifications'
-import {PostLikedByScreen} from './view/screens/PostLikedBy'
-import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
-import {PostThreadScreen} from './view/screens/PostThread'
-import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
-import {ProfileScreen} from './view/screens/Profile'
-import {ProfileFeedScreen} from './view/screens/ProfileFeed'
-import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
-import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
-import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
-import {ProfileListScreen} from './view/screens/ProfileList'
-import {SearchScreen} from './view/screens/Search'
-import {SettingsScreen} from './view/screens/Settings'
-import {Storybook} from './view/screens/Storybook'
-import {SupportScreen} from './view/screens/Support'
-import {TermsOfServiceScreen} from './view/screens/TermsOfService'
-import {BottomBar} from './view/shell/bottom-bar/BottomBar'
-import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
+} from '#/state/shell/reminders'
+import {AppPasswords} from '#/view/screens/AppPasswords'
+import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
+import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
+import {DebugModScreen} from '#/view/screens/DebugMod'
+import {FeedsScreen} from '#/view/screens/Feeds'
+import {HomeScreen} from '#/view/screens/Home'
+import {LanguageSettingsScreen} from '#/view/screens/LanguageSettings'
+import {ListsScreen} from '#/view/screens/Lists'
+import {LogScreen} from '#/view/screens/Log'
+import {ModerationBlockedAccounts} from '#/view/screens/ModerationBlockedAccounts'
+import {ModerationModlistsScreen} from '#/view/screens/ModerationModlists'
+import {ModerationMutedAccounts} from '#/view/screens/ModerationMutedAccounts'
+import {NotFoundScreen} from '#/view/screens/NotFound'
+import {NotificationsScreen} from '#/view/screens/Notifications'
+import {PostLikedByScreen} from '#/view/screens/PostLikedBy'
+import {PostRepostedByScreen} from '#/view/screens/PostRepostedBy'
+import {PostThreadScreen} from '#/view/screens/PostThread'
+import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
+import {PreferencesFollowingFeed} from '#/view/screens/PreferencesFollowingFeed'
+import {PreferencesThreads} from '#/view/screens/PreferencesThreads'
+import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
+import {ProfileScreen} from '#/view/screens/Profile'
+import {ProfileFeedScreen} from '#/view/screens/ProfileFeed'
+import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
+import {ProfileFollowersScreen} from '#/view/screens/ProfileFollowers'
+import {ProfileFollowsScreen} from '#/view/screens/ProfileFollows'
+import {ProfileListScreen} from '#/view/screens/ProfileList'
+import {SavedFeeds} from '#/view/screens/SavedFeeds'
+import {SearchScreen} from '#/view/screens/Search'
+import {SettingsScreen} from '#/view/screens/Settings'
+import {Storybook} from '#/view/screens/Storybook'
+import {SupportScreen} from '#/view/screens/Support'
+import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
+import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
+import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {LeftNav} from '#/view/shell/desktop/LeftNav'
+import HashtagScreen from '#/screens/Hashtag'
+import {ModerationScreen} from '#/screens/Moderation'
+import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {atoms as a, useTheme} from '#/alf'
+import {router} from '#/routes'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -91,15 +94,23 @@ const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
 const MyProfileTab =
   createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
+const ListsTab = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
+const ModerationTab = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
+const SettingsTab = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
-const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
+
+const MobileTab = createBottomTabNavigator<BottomTabNavigatorParams>()
+const TabletTab = createBottomTabNavigator<SideTabNavigatorParams>()
 
 /**
  * These "common screens" are reused across stacks.
  */
-function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
+function commonScreens(
+  Stack: typeof HomeTab,
+  opts?: {unreadCountLabel?: string},
+) {
   const title = (page: MessageDescriptor) =>
-    bskyTitle(i18n._(page), unreadCountLabel)
+    bskyTitle(i18n._(page), opts?.unreadCountLabel)
 
   return (
     <>
@@ -107,16 +118,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="NotFound"
         getComponent={() => NotFoundScreen}
         options={{title: title(msg`Not Found`)}}
-      />
-      <Stack.Screen
-        name="Lists"
-        component={ListsScreen}
-        options={{title: title(msg`Lists`), requireAuth: true}}
-      />
-      <Stack.Screen
-        name="Moderation"
-        getComponent={() => ModerationScreen}
-        options={{title: title(msg`Moderation`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationModlists"
@@ -134,11 +135,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Blocked Accounts`), requireAuth: true}}
       />
       <Stack.Screen
-        name="Settings"
-        getComponent={() => SettingsScreen}
-        options={{title: title(msg`Settings`), requireAuth: true}}
-      />
-      <Stack.Screen
         name="LanguageSettings"
         getComponent={() => LanguageSettingsScreen}
         options={{title: title(msg`Language Settings`), requireAuth: true}}
@@ -147,7 +143,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Profile"
         getComponent={() => ProfileScreen}
         options={({route}) => ({
-          title: bskyTitle(`@${route.params.name}`, unreadCountLabel),
+          title: bskyTitle(`@${route.params.name}`, opts?.unreadCountLabel),
         })}
       />
       <Stack.Screen
@@ -281,15 +277,38 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
       />
+      {!isNativeTablet && (
+        <>
+          <Stack.Screen
+            name="Moderation"
+            getComponent={() => ModerationScreen}
+            options={{title: title(msg`Moderation`), requireAuth: true}}
+          />
+          <Stack.Screen
+            name="Lists"
+            component={ListsScreen}
+            options={{title: title(msg`Lists`), requireAuth: true}}
+          />
+          <Stack.Screen
+            name="Settings"
+            getComponent={() => SettingsScreen}
+            options={{title: title(msg`Settings`), requireAuth: true}}
+          />
+        </>
+      )}
     </>
   )
 }
 
 /**
  * The TabsNavigator is used by native mobile to represent the routes
- * in 3 distinct tab-stacks with a different root screen on each.
+ * in the distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
+  return isNativeTablet ? <TabNavigatorTablet /> : <TabsNavigatorMobile />
+}
+
+function TabsNavigatorMobile() {
   const tabBar = React.useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
@@ -298,28 +317,88 @@ function TabsNavigator() {
   )
 
   return (
-    <Tab.Navigator
+    <MobileTab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
       screenOptions={{headerShown: false, lazy: true}}
       tabBar={tabBar}>
-      <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
-      <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
-      <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
-      <Tab.Screen
+      <MobileTab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
+      <MobileTab.Screen
+        name="SearchTab"
+        getComponent={() => SearchTabNavigator}
+      />
+      <MobileTab.Screen
+        name="FeedsTab"
+        getComponent={() => FeedsTabNavigator}
+      />
+      <MobileTab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
       />
-      <Tab.Screen
+      <MobileTab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
       />
-    </Tab.Navigator>
+    </MobileTab.Navigator>
+  )
+}
+
+/**
+ * The TabNavigatorTablet is used by native tablet to represent the routes
+ * in all the extra tabs shown in the tablet left nav.
+ */
+function TabNavigatorTablet() {
+  // we can't style the wrapper component of the tab navigator
+  // to set it to flex_row, so put the left nav outside of the tab navigator
+  const tabBar = React.useCallback(() => null, [])
+
+  return (
+    <View style={[a.flex_row, a.flex_1]}>
+      <LeftNav />
+      <TabletTab.Navigator
+        initialRouteName="HomeTab"
+        backBehavior="initialRoute"
+        screenOptions={{headerShown: false, lazy: true}}
+        tabBar={tabBar}>
+        <TabletTab.Screen
+          name="HomeTab"
+          getComponent={() => HomeTabNavigator}
+        />
+        <TabletTab.Screen
+          name="SearchTab"
+          getComponent={() => SearchTabNavigator}
+        />
+        <TabletTab.Screen
+          name="FeedsTab"
+          getComponent={() => FeedsTabNavigator}
+        />
+        <TabletTab.Screen
+          name="NotificationsTab"
+          getComponent={() => NotificationsTabNavigator}
+        />
+        <TabletTab.Screen
+          name="ListsTab"
+          getComponent={() => ListsTabNavigator}
+        />
+        <TabletTab.Screen
+          name="ModerationTab"
+          getComponent={() => ModerationTabNavigator}
+        />
+        <TabletTab.Screen
+          name="MyProfileTab"
+          getComponent={() => MyProfileTabNavigator}
+        />
+        <TabletTab.Screen
+          name="SettingsTab"
+          getComponent={() => SettingsTabNavigator}
+        />
+      </TabletTab.Navigator>
+    </View>
   )
 }
 
 function HomeTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
 
   return (
     <HomeTab.Navigator
@@ -329,7 +408,7 @@ function HomeTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <HomeTab.Screen
         name="Home"
@@ -342,7 +421,7 @@ function HomeTabNavigator() {
 }
 
 function SearchTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <SearchTab.Navigator
       screenOptions={{
@@ -351,7 +430,7 @@ function SearchTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
@@ -360,7 +439,7 @@ function SearchTabNavigator() {
 }
 
 function FeedsTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <FeedsTab.Navigator
       screenOptions={{
@@ -369,7 +448,7 @@ function FeedsTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <FeedsTab.Screen
         name="Feeds"
@@ -382,7 +461,7 @@ function FeedsTabNavigator() {
 }
 
 function NotificationsTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <NotificationsTab.Navigator
       screenOptions={{
@@ -391,7 +470,7 @@ function NotificationsTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <NotificationsTab.Screen
         name="Notifications"
@@ -404,7 +483,7 @@ function NotificationsTabNavigator() {
 }
 
 function MyProfileTabNavigator() {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <MyProfileTab.Navigator
       screenOptions={{
@@ -413,7 +492,7 @@ function MyProfileTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <MyProfileTab.Screen
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
@@ -428,12 +507,78 @@ function MyProfileTabNavigator() {
   )
 }
 
+function ListsTabNavigator() {
+  const t = useTheme()
+  return (
+    <ListsTab.Navigator
+      screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle: t.atoms.bg,
+      }}>
+      <ListsTab.Screen
+        name="Lists"
+        getComponent={() => ListsScreen}
+        options={{requireAuth: true}}
+      />
+      {commonScreens(ListsTab as typeof HomeTab)}
+    </ListsTab.Navigator>
+  )
+}
+
+function ModerationTabNavigator() {
+  const t = useTheme()
+  return (
+    <ModerationTab.Navigator
+      screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle: t.atoms.bg,
+      }}>
+      <ModerationTab.Screen
+        name="Moderation"
+        getComponent={() => ModerationScreen}
+        options={{requireAuth: true}}
+      />
+      {commonScreens(ModerationTab as typeof HomeTab)}
+    </ModerationTab.Navigator>
+  )
+}
+
+function SettingsTabNavigator() {
+  const t = useTheme()
+  return (
+    <SettingsTab.Navigator
+      screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle: t.atoms.bg,
+      }}>
+      <SettingsTab.Screen
+        name="Settings"
+        getComponent={() => SettingsScreen}
+        options={{requireAuth: true}}
+      />
+      {commonScreens(SettingsTab as typeof HomeTab)}
+    </SettingsTab.Navigator>
+  )
+}
+
 /**
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
  */
 const FlatNavigator = () => {
-  const pal = usePalette('default')
+  const t = useTheme()
   const numUnread = useUnreadNotifications()
   const screenListeners = useWebScrollRestoration()
   const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread)
@@ -446,7 +591,7 @@ const FlatNavigator = () => {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: pal.view,
+        contentStyle: t.atoms.bg,
       }}>
       <Flat.Screen
         name="Home"
@@ -468,7 +613,7 @@ const FlatNavigator = () => {
         getComponent={() => NotificationsScreen}
         options={{title: title(msg`Notifications`), requireAuth: true}}
       />
-      {commonScreens(Flat as typeof HomeTab, numUnread)}
+      {commonScreens(Flat as typeof HomeTab, {unreadCountLabel: numUnread})}
     </Flat.Navigator>
   )
 }
@@ -515,11 +660,25 @@ const LINKING = {
       if (name === 'Search') {
         return buildStateObject('SearchTab', 'Search', params)
       }
+      if (name === 'Feeds') {
+        return buildStateObject('FeedsTab', 'Feeds', params)
+      }
       if (name === 'Notifications') {
         return buildStateObject('NotificationsTab', 'Notifications', params)
       }
       if (name === 'Home') {
         return buildStateObject('HomeTab', 'Home', params)
+      }
+      if (isNativeTablet) {
+        if (name === 'Lists') {
+          return buildStateObject('ListsTab', 'Lists', params)
+        }
+        if (name === 'Moderation') {
+          return buildStateObject('ModerationTab', 'Moderation', params)
+        }
+        if (name === 'Settings') {
+          return buildStateObject('SettingsTab', 'Settings', params)
+        }
       }
       // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
       return buildStateObject('HomeTab', name, params, [
@@ -703,5 +862,6 @@ export {
   reset,
   resetToTab,
   RoutesContainer,
+  TabNavigatorTablet,
   TabsNavigator,
 }

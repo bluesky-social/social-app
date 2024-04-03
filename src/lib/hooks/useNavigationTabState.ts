@@ -1,4 +1,5 @@
 import {useNavigationState} from '@react-navigation/native'
+
 import {getTabState, TabState} from 'lib/routes/helpers'
 
 export function useNavigationTabState() {
