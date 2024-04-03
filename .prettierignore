@@ -1,12 +1,14 @@
-ios
-android
-src/third-party
-src/app.json
-public
-/bskyweb/templates
-/dist/
-/.watchmanconfig
-/app.json
+# Ignore everything except JS-ey code.
+# Based on https://stackoverflow.com/a/70715829/458193
+*
+!**/*.js
+!**/*.jsx
+!**/*.ts
+!**/*.tsx
+!*/
 
-web/index.html
-web-build/*
+# More specific ignores go below.
+.expo
+android
+ios
+src/locale/locales
