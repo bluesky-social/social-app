@@ -12,20 +12,16 @@ import {
 import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
 import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import {useNotificationsListener} from 'lib/notifications/notifications'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
-import {
-  asyncStoragePersister,
-  dehydrateOptions,
-  queryClient,
-} from 'lib/react-query'
+import {useNotificationsListener} from 'lib/notifications/notifications'
+import {QueryProvider} from 'lib/react-query'
 import {s} from 'lib/styles'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {Provider as DialogStateProvider} from 'state/dialogs'
@@ -58,8 +54,10 @@ SplashScreen.preventAutoHideAsync()
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
+  const queryClient = useQueryClient()
   const theme = useColorModeTheme()
   const {_} = useLingui()
+
   useIntentHandler()
   useNotificationsListener(queryClient)
   useOTAUpdates()
@@ -123,9 +121,7 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
+    <QueryProvider>
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>
@@ -147,7 +143,7 @@ function App() {
           </PrefsStateProvider>
         </ShellStateProvider>
       </SessionProvider>
-    </PersistQueryClientProvider>
+    </QueryProvider>
   )
 }
 
