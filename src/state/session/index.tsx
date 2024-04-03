@@ -192,11 +192,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const setCurrentAccount = React.useCallback(
-    (account: SessionAccount, expired = false) => {
+    (account: SessionAccount) => {
       setStateAndPersist(s => {
         return {
           ...s,
-          currentAccount: expired ? undefined : account,
+          currentAccount: account,
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
         }
       })
@@ -277,8 +277,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ({expired, refreshedAccount}) => {
             if (expired) {
               clearCurrentAccount()
+            } else {
+              setCurrentAccount(refreshedAccount)
             }
-            setCurrentAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
@@ -325,8 +326,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ({expired, refreshedAccount}) => {
             if (expired) {
               clearCurrentAccount()
+            } else {
+              setCurrentAccount(refreshedAccount)
             }
-            setCurrentAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
@@ -375,7 +377,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               clearCurrentAccount()
             } else {
               __globalAgent = agent
-              setCurrentAccount(refreshedAccount, expired)
+              setCurrentAccount(refreshedAccount)
             }
           },
           {networkErrorCallback: clearCurrentAccount},
