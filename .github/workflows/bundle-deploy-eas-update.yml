@@ -46,6 +46,7 @@ jobs:
           fetch-depth: 100
 
       - name: ⬇️ Fetch commits from base branch
+        if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main --depth 100
 
       # This should get the current production release's commit's hash to see if the update is compatible
