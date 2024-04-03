@@ -36,14 +36,19 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
-jest.mock('rn-fetch-blob', () => ({
-  config: jest.fn().mockReturnThis(),
-  cancel: jest.fn(),
-  fetch: jest.fn(),
+jest.mock('expo-file-system', () => ({
+  createDownloadResumable: jest.fn(),
+  deleteAsync: jest.fn(),
+  getInfoAsync: jest.fn().mockResolvedValue({
+    size: 100,
+  }),
 }))
 
-jest.mock('@bam.tech/react-native-image-resizer', () => ({
-  createResizedImage: jest.fn(),
+jest.mock('expo-image-manipulator', () => ({
+  manipulateAsync: jest.fn().mockResolvedValue({
+    uri: 'file://resized-image',
+  }),
+  SaveFormat: jest.requireActual('expo-image-manipulator').SaveFormat,
 }))
 
 jest.mock('@segment/analytics-react-native', () => ({
