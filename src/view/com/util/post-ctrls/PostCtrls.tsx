@@ -15,6 +15,15 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
+import {Haptics} from '#/lib/haptics'
+import {CommentBottomArrow, HeartIcon, HeartIconSolid} from '#/lib/icons'
+import {makeProfileLink} from '#/lib/routes/links'
+import {shareUrl} from '#/lib/sharing'
+import {pluralize} from '#/lib/strings/helpers'
+import {toShareUrl} from '#/lib/strings/url-helpers'
+import {s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
@@ -23,16 +32,9 @@ import {
 } from '#/state/queries/post'
 import {useRequireAuth} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
-import {Haptics} from 'lib/haptics'
-import {CommentBottomArrow, HeartIcon, HeartIconSolid} from 'lib/icons'
-import {makeProfileLink} from 'lib/routes/links'
-import {shareUrl} from 'lib/sharing'
-import {pluralize} from 'lib/strings/helpers'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
+import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {Text} from '../text/Text'
 import {RepostButton} from './RepostButton'
@@ -64,6 +66,13 @@ let PostCtrls = ({
     logContext,
   )
   const requireAuth = useRequireAuth()
+  const loggedOutWarningPromptControl = useDialogControl()
+
+  const shouldShowLoggedOutWarning = React.useMemo(() => {
+    return !!post.author.labels?.find(
+      label => label.val === '!no-unauthenticated',
+    )
+  }, [post])
 
   const defaultCtrlColor = React.useMemo(
     () => ({
@@ -210,18 +219,38 @@ let PostCtrls = ({
         </TouchableOpacity>
       </View>
       {big && (
-        <View style={styles.ctrlBig}>
-          <TouchableOpacity
-            testID="shareBtn"
-            style={[styles.btn]}
-            onPress={onShare}
-            accessibilityRole="button"
-            accessibilityLabel={`${_(msg`Share`)}`}
-            accessibilityHint=""
-            hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-            <ArrowOutOfBox style={[defaultCtrlColor, styles.mt1]} width={22} />
-          </TouchableOpacity>
-        </View>
+        <>
+          <View style={styles.ctrlBig}>
+            <TouchableOpacity
+              testID="shareBtn"
+              style={[styles.btn]}
+              onPress={() => {
+                if (shouldShowLoggedOutWarning) {
+                  loggedOutWarningPromptControl.open()
+                } else {
+                  onShare()
+                }
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={`${_(msg`Share`)}`}
+              accessibilityHint=""
+              hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+              <ArrowOutOfBox
+                style={[defaultCtrlColor, styles.mt1]}
+                width={22}
+              />
+            </TouchableOpacity>
+          </View>
+          <Prompt.Basic
+            control={loggedOutWarningPromptControl}
+            title={_(msg`Note about sharing`)}
+            description={_(
+              msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+            )}
+            onConfirm={onShare}
+            confirmButtonCta={_(msg`Share anyway`)}
+          />
+        </>
       )}
       <View style={big ? styles.ctrlBig : styles.ctrl}>
         <PostDropdownBtn

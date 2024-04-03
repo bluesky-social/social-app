@@ -79,7 +79,7 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
     <View
       style={[
         a.w_full,
-        a.gap_sm,
+        a.gap_md,
         a.justify_end,
         gtMobile
           ? [a.flex_row, a.flex_row_reverse, a.justify_start]

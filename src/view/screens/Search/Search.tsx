@@ -54,6 +54,7 @@ import {
   SearchProfileCard,
 } from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {atoms as a} from '#/alf'
 
 function Loader() {
   const pal = usePalette('default')
@@ -776,16 +777,24 @@ export function SearchScreen(
                   <Trans>Recent Searches</Trans>
                 </Text>
                 {searchHistory.map((historyItem, index) => (
-                  <View key={index} style={styles.historyItemContainer}>
+                  <View
+                    key={index}
+                    style={[
+                      a.flex_row,
+                      a.mt_md,
+                      a.justify_center,
+                      a.justify_between,
+                    ]}>
                     <Pressable
                       accessibilityRole="button"
                       onPress={() => handleHistoryItemClick(historyItem)}
-                      style={styles.historyItem}>
+                      style={[a.flex_1, a.py_sm]}>
                       <Text style={pal.text}>{historyItem}</Text>
                     </Pressable>
                     <Pressable
                       accessibilityRole="button"
-                      onPress={() => handleRemoveHistoryItem(historyItem)}>
+                      onPress={() => handleRemoveHistoryItem(historyItem)}
+                      style={[a.px_md, a.py_xs, a.justify_center]}>
                       <FontAwesomeIcon
                         icon="xmark"
                         size={16}
@@ -871,14 +880,5 @@ const styles = StyleSheet.create({
   },
   searchHistoryTitle: {
     fontWeight: 'bold',
-  },
-  historyItem: {
-    paddingVertical: 8,
-  },
-  historyItemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
   },
 })
