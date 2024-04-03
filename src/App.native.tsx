@@ -20,6 +20,7 @@ import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {useNotificationsListener} from 'lib/notifications/notifications'
+import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {
   asyncStoragePersister,
   dehydrateOptions,
@@ -61,6 +62,7 @@ function InnerApp() {
   const {_} = useLingui()
   useIntentHandler()
   useNotificationsListener(queryClient)
+  useOTAUpdates()
 
   // init
   useEffect(() => {

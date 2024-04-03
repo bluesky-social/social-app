@@ -59,7 +59,7 @@ jobs:
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
-        run: yarn use-build-number eas build -p android --profile production --local --output build.aab --non-interactive
+        run: yarn use-build-number-with-bump eas build -p android --profile production --local --output build.aab --non-interactive
 
       - name: 🚀 Deploy
         run: eas submit -p android --non-interactive --path build.aab
