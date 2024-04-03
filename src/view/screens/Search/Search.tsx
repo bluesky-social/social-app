@@ -668,7 +668,7 @@ export function SearchScreen(
             ref={textInput}
             placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus
+            
             returnKeyType="search"
             value={query}
             style={[pal.text, styles.headerSearchInput]}
