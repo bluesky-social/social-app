@@ -12,12 +12,10 @@ import {IS_TEST_USER} from '#/lib/constants'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
 
@@ -328,8 +326,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
-      // @ts-ignore
-      if (IS_DEV && isWeb) window.agent = agent
       upsertAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
@@ -367,15 +363,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         service: account.service,
         persistSession: createPersistSessionHandler(
           account,
-          ({expired, refreshedAccount}) => {
+          async ({expired, refreshedAccount}) => {
+            __globalAgent = agent
+            await configureModeration(agent, account)
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
       })
-      // @ts-ignore
-      if (IS_DEV && isWeb) window.agent = agent
-      await configureModeration(agent, account)
+
+      const prevSession = {
+        accessJwt: account.accessJwt || '',
+        refreshJwt: account.refreshJwt || '',
+        did: account.did,
+        handle: account.handle,
+        deactivated:
+          isSessionDeactivated(account.accessJwt) || account.deactivated,
+      }
 
       let canReusePrevSession = false
       try {
@@ -392,94 +396,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.error(`session: could not decode jwt`)
       }
 
-      const prevSession = {
-        accessJwt: account.accessJwt || '',
-        refreshJwt: account.refreshJwt || '',
-        did: account.did,
-        handle: account.handle,
-        deactivated:
-          isSessionDeactivated(account.accessJwt) || account.deactivated,
-      }
-
       if (canReusePrevSession) {
-        logger.debug(`session: attempting to reuse previous session`)
-
+        logger.debug(
+          `session: attempting to reuse previous session`,
+          {},
+          logger.DebugContext.session,
+        )
         agent.session = prevSession
         __globalAgent = agent
+        await configureModeration(agent, account)
         upsertAccount(account)
-
-        if (prevSession.deactivated) {
-          // don't attempt to resume
-          // use will be taken to the deactivated screen
-          logger.debug(`session: reusing session for deactivated account`)
-          return
-        }
-
-        // Intentionally not awaited to unblock the UI:
-        resumeSessionWithFreshAccount()
-          .then(freshAccount => {
-            if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
-              logger.info(
-                `session: reuse of previous session returned a fresh account, upserting`,
-              )
-              upsertAccount(freshAccount)
-            }
-          })
-          .catch(e => {
-            /*
-             * Note: `agent.persistSession` is also called when this fails, and
-             * we handle that failure via `createPersistSessionHandler`
-             */
-            logger.info(`session: resumeSessionWithFreshAccount failed`, {
-              message: e,
-            })
-
-            __globalAgent = PUBLIC_BSKY_AGENT
-          })
       } else {
-        logger.debug(`session: attempting to resume using previous session`)
-
-        try {
-          const freshAccount = await resumeSessionWithFreshAccount()
-          __globalAgent = agent
-          upsertAccount(freshAccount)
-        } catch (e) {
-          /*
-           * Note: `agent.persistSession` is also called when this fails, and
-           * we handle that failure via `createPersistSessionHandler`
-           */
-          logger.info(`session: resumeSessionWithFreshAccount failed`, {
-            message: e,
-          })
-
-          __globalAgent = PUBLIC_BSKY_AGENT
-        }
-      }
-
-      async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
-        logger.debug(`session: resumeSessionWithFreshAccount`)
-
+        logger.debug(
+          `session: attempting to resume using previous session`,
+          {},
+          logger.DebugContext.session,
+        )
         await networkRetry(1, () => agent.resumeSession(prevSession))
-
-        /*
-         * If `agent.resumeSession` fails above, it'll throw. This is just to
-         * make TypeScript happy.
-         */
-        if (!agent.session) {
-          throw new Error(`session: initSession failed to establish a session`)
-        }
-
-        // ensure changes in handle/email etc are captured on reload
-        return {
-          service: agent.service.toString(),
-          did: agent.session.did,
-          handle: agent.session.handle,
-          email: agent.session.email,
-          emailConfirmed: agent.session.emailConfirmed || false,
-          refreshJwt: agent.session.refreshJwt,
-          accessJwt: agent.session.accessJwt,
-          deactivated: isSessionDeactivated(agent.session.accessJwt),
-        }
       }
     },
     [upsertAccount, clearCurrentAccount],
@@ -576,7 +509,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [state])
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
+    return persisted.onUpdate(async () => {
       const session = persisted.get('session')
 
       logger.debug(`session: persisted onUpdate`, {})
@@ -594,7 +527,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             },
           })
 
-          initSession(session.currentAccount)
+          await initSession(session.currentAccount)
         } else {
           logger.debug(`session: persisted onUpdate, updating session`, {})
 
