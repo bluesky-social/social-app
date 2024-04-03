@@ -1,33 +1,33 @@
-import {useMemo, createContext, useContext} from 'react'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
+import {createContext, useContext, useMemo} from 'react'
 import {
-  LabelPreference,
-  BskyFeedViewPreference,
-  ModerationOpts,
   AppBskyActorDefs,
   BSKY_LABELER_DID,
+  BskyFeedViewPreference,
+  LabelPreference,
+  ModerationOpts,
 } from '@atproto/api'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
-import {getAgent, useSession} from '#/state/session'
-import {
-  UsePreferencesQueryResponse,
-  ThreadViewPreferences,
-} from '#/state/queries/preferences/types'
+import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
+import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
-  DEFAULT_THREAD_VIEW_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
+  DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
-import {STALE} from '#/state/queries'
-import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
+import {
+  ThreadViewPreferences,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences/types'
+import {getAgent, useSession} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
 
-export * from '#/state/queries/preferences/types'
-export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/const'
+export * from '#/state/queries/preferences/moderation'
+export * from '#/state/queries/preferences/types'
 
 export const preferencesQueryKey = ['getPreferences']
 
@@ -39,6 +39,8 @@ export function usePreferencesQuery() {
     queryKey: preferencesQueryKey,
     queryFn: async () => {
       const agent = getAgent()
+
+      console.log('GET PREFERENCES', agent.session?.did)
 
       if (agent.session?.did === undefined) {
         return DEFAULT_LOGGED_OUT_PREFERENCES

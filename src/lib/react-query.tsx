@@ -113,6 +113,7 @@ function QueryProviderInner({
       dehydrateOptions,
     }
   })
+  console.log('QUERY', currentDid)
   return (
     <PersistQueryClientProvider
       client={queryClient}

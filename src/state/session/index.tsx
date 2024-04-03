@@ -368,6 +368,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         persistSession: createPersistSessionHandler(
           account,
           ({expired, refreshedAccount}) => {
+            console.log('PERSIST CALLBACK', refreshedAccount.did)
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
@@ -441,6 +442,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
+          console.log('RESUMED SESSION', freshAccount.did)
           __globalAgent = agent
           upsertAccount(freshAccount)
         } catch (e) {
