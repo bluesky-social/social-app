@@ -154,7 +154,7 @@
     "react-dom": "^18.2.0",
     "react-keyed-flatten-children": "^3.0.0",
     "react-native": "0.73.2",
-    "react-native-date-picker": "^4.4.0",
+    "react-native-date-picker": "^5.0.0",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-get-random-values": "~1.11.0",
