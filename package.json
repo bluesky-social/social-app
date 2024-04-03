@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.75.0",
+  "version": "1.76.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -14,11 +14,12 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
+    "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
     "build-web": "expo export:web && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/",
-    "build-all": "yarn intl:build && yarn use-build-number eas build --platform all",
-    "build-ios": "yarn use-build-number eas build -p ios",
-    "build-android": "yarn use-build-number eas build -p android",
-    "build": "yarn use-build-number eas build",
+    "build-all": "yarn intl:build && yarn use-build-number-with-bump eas build --platform all",
+    "build-ios": "yarn use-build-number-with-bump eas build -p ios",
+    "build-android": "yarn use-build-number-with-bump eas build -p android",
+    "build": "yarn use-build-number-with-bump eas build",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
@@ -43,8 +44,7 @@
     "intl:compile": "lingui compile",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
-    "export": "npx expo export",
-    "make-deploy-bundle": "bash scripts/bundleUpdate.sh"
+    "export": "npx expo export"
   },
   "dependencies": {
     "@atproto/api": "^0.12.2",
