@@ -2,6 +2,9 @@
 name: Bundle and Deploy EAS Update
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       channel:
