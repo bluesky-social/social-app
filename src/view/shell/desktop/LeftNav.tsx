@@ -515,6 +515,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 4,
     borderRadius: 6,
+    overflow: 'hidden',
   },
   navItemCountTablet: {
     left: 18,
