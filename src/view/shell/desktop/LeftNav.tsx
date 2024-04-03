@@ -48,6 +48,7 @@ import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {useTheme} from '#/alf'
 import {router} from '../../../routes'
 
 function ProfileCard() {
@@ -269,8 +270,9 @@ function ComposeBtn() {
 }
 
 export function LeftNav() {
-  const {hasSession, currentAccount} = useSession()
+  const t = useTheme()
   const pal = usePalette('default')
+  const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
@@ -284,8 +286,8 @@ export function LeftNav() {
       style={[
         styles.leftNav,
         isTablet && styles.leftNavTablet,
-        pal.view,
-        pal.border,
+        t.atoms.bg,
+        t.atoms.border_contrast_medium,
       ]}>
       {hasSession ? (
         <ProfileCard />

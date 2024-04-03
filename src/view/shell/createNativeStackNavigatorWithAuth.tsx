@@ -30,13 +30,13 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {isWeb} from 'platform/detection'
+import {LoggedOut} from '#/view/com/auth/LoggedOut'
+import {Onboarding} from '#/view/com/auth/Onboarding'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding as NewOnboarding} from '#/screens/Onboarding'
-import {LoggedOut} from '../com/auth/LoggedOut'
-import {Onboarding} from '../com/auth/Onboarding'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {LeftNav} from './desktop/LeftNav'
-import {DesktopRightNav} from './desktop/RightNav'
+import {RightNav} from './desktop/RightNav'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean
@@ -148,7 +148,7 @@ function NativeStackNavigator({
       {isWeb && !showBottomBar && (
         <>
           <LeftNav />
-          <DesktopRightNav routeName={activeRoute.name} />
+          <RightNav />
         </>
       )}
     </NavigationContent>

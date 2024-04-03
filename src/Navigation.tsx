@@ -79,6 +79,7 @@ import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {LeftNav} from '#/view/shell/desktop/LeftNav'
+import {RightNav} from '#/view/shell/desktop/RightNav'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
@@ -393,6 +394,7 @@ function TabNavigatorTablet() {
           getComponent={() => SettingsTabNavigator}
         />
       </TabletTab.Navigator>
+      <RightNav />
     </View>
   )
 }

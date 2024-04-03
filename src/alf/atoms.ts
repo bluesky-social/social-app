@@ -134,8 +134,14 @@ export const atoms = {
   flex_grow: {
     flexGrow: 1,
   },
+  flex_grow_0: {
+    flexGrow: 0,
+  },
   flex_shrink: {
     flexShrink: 1,
+  },
+  flex_shrink_0: {
+    flexShrink: 0,
   },
   justify_start: {
     justifyContent: 'flex-start',

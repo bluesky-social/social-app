@@ -1,100 +1,133 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigationState} from '@react-navigation/native'
 
-import {isWeb} from '#/platform/detection'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {getCurrentRoute} from '#/lib/routes/helpers'
+import {isNativeTablet, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
-import {TextLink} from 'view/com/util/Link'
-import {Text} from 'view/com/util/text/Text'
+import {TextLink} from '#/view/com/util/Link'
+import {Text} from '#/view/com/util/text/Text'
+import {atoms as a, useTheme} from '#/alf'
 import {DesktopFeeds} from './Feeds'
-import {DesktopSearch} from './Search'
+import {DesktopSearch, SearchButton} from './Search'
 
-export function DesktopRightNav({routeName}: {routeName: string}) {
+export function RightNav() {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {hasSession, currentAccount} = useSession()
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  const {width} = useWindowDimensions()
 
   const {isTablet} = useWebMediaQueries()
-  if (isTablet) {
+  if (isWeb && isTablet) {
+    return null
+  }
+
+  // for tablet, we want the main feed to be 600px wide
+  const targetWidth = width - 600 - 80 // 600 for main feed, 80 for left nav
+
+  if (isNativeTablet && targetWidth < 250) {
     return null
   }
 
   return (
-    <View style={[styles.rightNav, pal.view]}>
-      <View style={{paddingVertical: 20}}>
-        {routeName === 'Search' ? (
+    <ScrollView
+      style={[
+        isWeb
+          ? styles.rightNav
+          : [
+              a.border_l,
+              t.atoms.border_contrast_medium,
+              a.px_md,
+              a.flex_grow_0,
+              {width: targetWidth},
+              // looks silly beyond 400px
+              {maxWidth: 400},
+            ],
+        t.atoms.bg,
+      ]}>
+      <View style={a.py_xl}>
+        {currentRouteInfo.name.startsWith('Search') ? (
           <View style={{marginBottom: 18}}>
             <DesktopFeeds />
           </View>
         ) : (
           <>
-            <DesktopSearch />
+            {isWeb ? <DesktopSearch /> : <SearchButton />}
 
             {hasSession && (
-              <View style={[pal.border, styles.desktopFeedsContainer]}>
+              <View
+                style={[
+                  t.atoms.border_contrast_medium,
+                  a.border_t,
+                  a.my_lg,
+                  isWeb && a.border_b,
+                ]}>
                 <DesktopFeeds />
               </View>
             )}
           </>
         )}
 
-        <View
-          style={[
-            styles.message,
-            {
-              paddingTop: hasSession ? 0 : 18,
-            },
-          ]}>
-          <View style={[{flexWrap: 'wrap'}, s.flexRow]}>
-            {hasSession && (
-              <>
-                <TextLink
-                  type="md"
-                  style={pal.link}
-                  href={FEEDBACK_FORM_URL({
-                    email: currentAccount?.email,
-                    handle: currentAccount?.handle,
-                  })}
-                  text={_(msg`Feedback`)}
-                />
-                <Text type="md" style={pal.textLight}>
-                  &nbsp;&middot;&nbsp;
-                </Text>
-              </>
-            )}
-            <TextLink
-              type="md"
-              style={pal.link}
-              href="https://bsky.social/about/support/privacy-policy"
-              text={_(msg`Privacy`)}
-            />
-            <Text type="md" style={pal.textLight}>
-              &nbsp;&middot;&nbsp;
-            </Text>
-            <TextLink
-              type="md"
-              style={pal.link}
-              href="https://bsky.social/about/support/tos"
-              text={_(msg`Terms`)}
-            />
-            <Text type="md" style={pal.textLight}>
-              &nbsp;&middot;&nbsp;
-            </Text>
-            <TextLink
-              type="md"
-              style={pal.link}
-              href={HELP_DESK_URL}
-              text={_(msg`Help`)}
-            />
+        {isWeb && (
+          <View style={[a.pb_lg, a.px_md, hasSession && a.pt_lg]}>
+            <View style={[a.flex_wrap, a.flex_row]}>
+              {hasSession && (
+                <>
+                  <TextLink
+                    type="md"
+                    style={pal.link}
+                    href={FEEDBACK_FORM_URL({
+                      email: currentAccount?.email,
+                      handle: currentAccount?.handle,
+                    })}
+                    text={_(msg`Feedback`)}
+                  />
+                  <Text type="md" style={pal.textLight}>
+                    &nbsp;&middot;&nbsp;
+                  </Text>
+                </>
+              )}
+              <TextLink
+                type="md"
+                style={pal.link}
+                href="https://bsky.social/about/support/privacy-policy"
+                text={_(msg`Privacy`)}
+              />
+              <Text type="md" style={pal.textLight}>
+                &nbsp;&middot;&nbsp;
+              </Text>
+              <TextLink
+                type="md"
+                style={pal.link}
+                href="https://bsky.social/about/support/tos"
+                text={_(msg`Terms`)}
+              />
+              <Text type="md" style={pal.textLight}>
+                &nbsp;&middot;&nbsp;
+              </Text>
+              <TextLink
+                type="md"
+                style={pal.link}
+                href={HELP_DESK_URL}
+                text={_(msg`Help`)}
+              />
+            </View>
           </View>
-        </View>
+        )}
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -106,23 +139,6 @@ const styles = StyleSheet.create({
         left: 'calc(50vw + 300px + 20px)',
         width: 300,
         maxHeight: '100%',
-        overflowY: 'auto',
       }
-    : {
-        width: 300,
-      },
-
-  message: {
-    paddingVertical: 18,
-    paddingHorizontal: 12,
-  },
-  messageLine: {
-    marginBottom: 10,
-  },
-  desktopFeedsContainer: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    marginTop: 18,
-    marginBottom: 18,
-  },
+    : {},
 })

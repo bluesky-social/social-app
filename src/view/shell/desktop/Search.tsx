@@ -28,6 +28,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
+import {Button} from '#/components/Button'
 
 export const MATCH_HANDLE =
   /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
@@ -280,23 +281,52 @@ export function DesktopSearch() {
   )
 }
 
+// looks identical to DesktopSearch, but is a button instead of a text input
+export function SearchButton() {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const navigation = useNavigation<NavigationProp>()
+
+  return (
+    <Button
+      label={_(msg`Search`)}
+      accessibilityRole="link"
+      onPress={() => navigation.navigate('Search', {})}>
+      <View style={[styles.container, pal.view]}>
+        <View
+          style={[
+            {backgroundColor: pal.colors.backgroundLight},
+            styles.search,
+          ]}>
+          <View style={[styles.inputContainer]}>
+            <MagnifyingGlassIcon2
+              size={18}
+              style={[pal.textLight, styles.iconWrapper]}
+            />
+            <Text style={[pal.textLight, styles.input]}>{_(msg`Search`)}</Text>
+          </View>
+        </View>
+      </View>
+    </Button>
+  )
+}
+
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    width: 300,
+    flex: 1,
   },
   search: {
     paddingHorizontal: 16,
     paddingVertical: 2,
-    width: 300,
     borderRadius: 20,
+    flex: 1,
   },
   inputContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   iconWrapper: {
-    position: 'relative',
-    top: 2,
     paddingVertical: 7,
     marginRight: 8,
   },
