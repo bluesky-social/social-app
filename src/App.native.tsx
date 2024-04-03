@@ -19,8 +19,8 @@ import {init as initPersistedState} from '#/state/persisted'
 import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
+import {useNotificationsListener} from 'lib/notifications/notifications'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
-import * as notifications from 'lib/notifications/notifications'
 import {
   asyncStoragePersister,
   dehydrateOptions,
@@ -61,11 +61,11 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
+  useNotificationsListener(queryClient)
   useOTAUpdates()
 
   // init
   useEffect(() => {
-    notifications.init(queryClient)
     listenSessionDropped(() => {
       Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
     })
