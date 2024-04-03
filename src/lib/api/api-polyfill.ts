@@ -1,5 +1,5 @@
-import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
 import {cacheDirectory, copyAsync, moveAsync} from 'expo-file-system'
+import {BskyAgent, jsonToLex, stringifyLex} from '@atproto/api'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
@@ -52,6 +52,7 @@ async function fetchHandler(
           from: reqBody,
           to: newPath,
         })
+        reqBody = newPath
       }
     }
     // NOTE
