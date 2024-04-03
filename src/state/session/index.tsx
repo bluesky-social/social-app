@@ -274,6 +274,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         createPersistSessionHandler(
           account,
           ({expired, refreshedAccount}) => {
+            if (expired) {
+              __globalAgent = PUBLIC_BSKY_AGENT
+            }
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
@@ -319,6 +322,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         createPersistSessionHandler(
           account,
           ({expired, refreshedAccount}) => {
+            if (expired) {
+              __globalAgent = PUBLIC_BSKY_AGENT
+            }
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
@@ -364,8 +370,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         persistSession: createPersistSessionHandler(
           account,
           async ({expired, refreshedAccount}) => {
-            __globalAgent = agent
-            await configureModeration(agent, account)
+            if (expired) {
+              __globalAgent = PUBLIC_BSKY_AGENT
+            } else {
+              __globalAgent = agent
+              await configureModeration(agent, account)
+            }
+
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
