@@ -59,36 +59,6 @@ export function Button({
   )
 }
 
-export function ButtonText({children}: {children: React.ReactNode}) {
-  const t = useTheme()
-  const state = Toggle.useItemContext()
-
-  const textStyles = React.useMemo(() => {
-    const text: TextStyle[] = []
-    if (state.selected) {
-      text.push(t.atoms.text_inverted)
-    }
-    if (state.disabled) {
-      text.push({
-        opacity: 0.5,
-      })
-    }
-    return text
-  }, [t, state])
-
-  return (
-    <Text
-      style={[
-        a.text_center,
-        a.font_bold,
-        t.atoms.text_contrast_medium,
-        textStyles,
-      ]}>
-      {children}
-    </Text>
-  )
-}
-
 function ButtonInner({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const state = Toggle.useItemContext()
@@ -151,5 +121,35 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
       ]}>
       {children}
     </View>
+  )
+}
+
+export function ButtonText({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  const state = Toggle.useItemContext()
+
+  const textStyles = React.useMemo(() => {
+    const text: TextStyle[] = []
+    if (state.selected) {
+      text.push(t.atoms.text_inverted)
+    }
+    if (state.disabled) {
+      text.push({
+        opacity: 0.5,
+      })
+    }
+    return text
+  }, [t, state])
+
+  return (
+    <Text
+      style={[
+        a.text_center,
+        a.font_bold,
+        t.atoms.text_contrast_medium,
+        textStyles,
+      ]}>
+      {children}
+    </Text>
   )
 }
