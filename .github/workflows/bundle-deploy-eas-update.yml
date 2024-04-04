@@ -86,11 +86,13 @@ jobs:
 
       - name: 👀 Debug fingerprint
         id: fingerprint-debug
+        env:
+          fingerprint-diff: ${{ steps.fingerprint.outputs.fingerprint-diff }}
         run: |
           echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
           echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
           
-          if [[ "${{ steps.fingerprint.outputs.fingerprint-diff }}" =~ "bareRncliAutolinking" || "${{ steps.fingerprint.outputs.fingerprint-diff }}" =~ "expoAutolinkingAndroid" || "${{ steps.fingerprint.outputs.fingerprint-diff }}" =~ "expoAutolinkingIos" ]]; then
+          if [[ $fingerprint-diff =~ "bareRncliAutolinking" || $fingerprint-diff =~ "expoAutolinkingAndroid" || $fingerprint-diff =~ "expoAutolinkingIos" ]]; then
             echo fingerprint-is-different="true" >> "$GITHUB_OUTPUT"
           else
             echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
