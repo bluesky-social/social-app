@@ -1,5 +1,3 @@
-const bskyEslint = require('./eslint')
-
 module.exports = {
   root: true,
   extends: [
@@ -27,7 +25,6 @@ module.exports = {
       {
         impliedTextComponents: [
           'Button', // TODO: Not always safe.
-          'ButtonText',
           'DateField.Label',
           'Description',
           'H1',
