@@ -19,6 +19,9 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
 
+/**
+ * @deprecated use `agent` from `useSession` instead
+ */
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
 /**
@@ -26,6 +29,8 @@ let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
  * Never hold on to the object returned by this function.
  * Call `getAgent()` at the time of invocation to ensure
  * that you never have a stale agent.
+ *
+ * @deprecated use `agent` from `useSession` instead
  */
 export function getAgent() {
   return __globalAgent
@@ -33,14 +38,13 @@ export function getAgent() {
 
 export type SessionAccount = persisted.PersistedAccount
 
-export type SessionState = {
+export type StateContext = {
+  agent: BskyAgent
   isInitialLoad: boolean
   isSwitchingAccounts: boolean
+  hasSession: boolean
   accounts: SessionAccount[]
   currentAccount: SessionAccount | undefined
-}
-export type StateContext = SessionState & {
-  hasSession: boolean
 }
 export type ApiContext = {
   createAccount: (props: {
@@ -83,14 +87,14 @@ export type ApiContext = {
     account: SessionAccount,
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
-  updateCurrentAccount: (
-    account: Partial<
-      Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
-    >,
-  ) => void
+  /**
+   * Refreshes the BskyAgent's session and derive a fresh `currentAccount`
+   */
+  refreshSession: () => void
 }
 
 const StateContext = React.createContext<StateContext>({
+  agent: PUBLIC_BSKY_AGENT,
   isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
@@ -106,9 +110,42 @@ const ApiContext = React.createContext<ApiContext>({
   resumeSession: async () => {},
   removeAccount: () => {},
   selectAccount: async () => {},
-  updateCurrentAccount: () => {},
+  refreshSession: () => {},
   clearCurrentAccount: () => {},
 })
+
+function agentToSessionAccount(agent: BskyAgent): SessionAccount | undefined {
+  if (!agent.session) return undefined
+
+  return {
+    service: agent.service.toString(),
+    did: agent.session.did,
+    handle: agent.session.handle,
+    email: agent.session.email,
+    emailConfirmed: agent.session.emailConfirmed,
+    deactivated: isSessionDeactivated(agent.session.accessJwt),
+
+    /*
+     * Tokens are undefined if the session expires, or if creation fails for
+     * any reason e.g. tokens are invalid, network error, etc.
+     */
+    refreshJwt: agent.session.refreshJwt,
+    accessJwt: agent.session.accessJwt,
+  }
+}
+
+function sessionAccountToAgentSession(
+  account: SessionAccount,
+): BskyAgent['session'] {
+  return {
+    did: account.did,
+    handle: account.handle,
+    email: account.email,
+    emailConfirmed: account.emailConfirmed,
+    accessJwt: account.accessJwt || '',
+    refreshJwt: account.refreshJwt || '',
+  }
+}
 
 function createPersistSessionHandler(
   account: SessionAccount,
@@ -176,43 +213,40 @@ function createPersistSessionHandler(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const isDirty = React.useRef(false)
-  const [state, setState] = React.useState<SessionState>({
-    isInitialLoad: true,
-    isSwitchingAccounts: false,
-    accounts: persisted.get('session').accounts,
-    currentAccount: undefined, // assume logged out to start
-  })
-
-  const setStateAndPersist = React.useCallback(
-    (fn: (prev: SessionState) => SessionState) => {
-      isDirty.current = true
-      setState(fn)
-    },
-    [setState],
+  const [agent, setAgent] = React.useState<BskyAgent>(PUBLIC_BSKY_AGENT)
+  const [accounts, setAccounts] = React.useState<SessionAccount[]>(
+    persisted.get('session').accounts,
+  )
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true)
+  const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
+  const currentAccount = React.useMemo(
+    () => agentToSessionAccount(agent),
+    [agent],
   )
 
-  const setCurrentAccount = React.useCallback(
+  const persistNextUpdate = React.useCallback(
+    () => (isDirty.current = true),
+    [],
+  )
+
+  const upsertAccount = React.useCallback(
     (account: SessionAccount) => {
-      setStateAndPersist(s => {
-        return {
-          ...s,
-          currentAccount: account,
-          accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
-        }
-      })
+      persistNextUpdate()
+      setAccounts(accounts => [
+        account,
+        ...accounts.filter(a => a.did !== account.did),
+      ])
     },
-    [setStateAndPersist],
+    [setAccounts, persistNextUpdate],
   )
 
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
-    __globalAgent = PUBLIC_BSKY_AGENT
+
+    persistNextUpdate()
+    setAgent(PUBLIC_BSKY_AGENT)
     BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-    setStateAndPersist(s => ({
-      ...s,
-      currentAccount: undefined,
-    }))
-  }, [setStateAndPersist])
+  }, [persistNextUpdate, setAgent])
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({
@@ -258,16 +292,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         })
       }
 
-      const account: SessionAccount = {
-        service: agent.service.toString(),
-        did: agent.session.did,
-        handle: agent.session.handle,
-        email: agent.session.email!, // TODO this is always defined?
-        emailConfirmed: false,
-        refreshJwt: agent.session.refreshJwt,
-        accessJwt: agent.session.accessJwt,
-        deactivated,
-      }
+      const account = agentToSessionAccount(agent)!
 
       await configureModeration(agent, account)
 
@@ -275,24 +300,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         createPersistSessionHandler(
           account,
           ({expired, refreshedAccount}) => {
-            if (expired) {
-              clearCurrentAccount()
-            } else {
-              setCurrentAccount(refreshedAccount)
-            }
+            upsertAccount(refreshedAccount)
+            if (expired) clearCurrentAccount()
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
       )
 
-      __globalAgent = agent
-      setCurrentAccount(account)
+      setAgent(agent)
+      upsertAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [setCurrentAccount, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -300,68 +322,54 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({service})
-
       await agent.login({identifier, password})
 
       if (!agent.session) {
         throw new Error(`session: login failed to establish a session`)
       }
 
-      const account: SessionAccount = {
-        service: agent.service.toString(),
-        did: agent.session.did,
-        handle: agent.session.handle,
-        email: agent.session.email,
-        emailConfirmed: agent.session.emailConfirmed || false,
-        refreshJwt: agent.session.refreshJwt,
-        accessJwt: agent.session.accessJwt,
-        deactivated: isSessionDeactivated(agent.session.accessJwt),
-      }
-
+      const account = agentToSessionAccount(agent)!
       await configureModeration(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
           account,
           ({expired, refreshedAccount}) => {
-            if (expired) {
-              clearCurrentAccount()
-            } else {
-              setCurrentAccount(refreshedAccount)
-            }
+            upsertAccount(refreshedAccount)
+            if (expired) clearCurrentAccount()
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
       )
 
-      __globalAgent = agent
-      setCurrentAccount(account)
+      setAgent(agent)
+      upsertAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
 
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [setCurrentAccount, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const logout = React.useCallback<ApiContext['logout']>(
     async logContext => {
       logger.debug(`session: logout`)
+
       clearCurrentAccount()
-      setStateAndPersist(s => {
-        return {
-          ...s,
-          accounts: s.accounts.map(a => ({
-            ...a,
-            refreshJwt: undefined,
-            accessJwt: undefined,
-          })),
-        }
-      })
+      persistNextUpdate()
+      setAccounts(accounts =>
+        accounts.map(a => ({
+          ...a,
+          accessJwt: undefined,
+          refreshJwt: undefined,
+        })),
+      )
+
       logEvent('account:loggedOut', {logContext})
     },
-    [clearCurrentAccount, setStateAndPersist],
+    [clearCurrentAccount, persistNextUpdate, setAccounts],
   )
 
   const initSession = React.useCallback<ApiContext['initSession']>(
@@ -373,24 +381,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         persistSession: createPersistSessionHandler(
           account,
           ({expired, refreshedAccount}) => {
-            if (expired) {
-              clearCurrentAccount()
-            } else {
-              __globalAgent = agent
-              setCurrentAccount(refreshedAccount)
-            }
+            upsertAccount(refreshedAccount)
+            if (expired) clearCurrentAccount()
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
       })
 
       const prevSession = {
+        ...account,
         accessJwt: account.accessJwt || '',
         refreshJwt: account.refreshJwt || '',
-        did: account.did,
-        handle: account.handle,
-        deactivated:
-          isSessionDeactivated(account.accessJwt) || account.deactivated,
       }
 
       let canReusePrevSession = false
@@ -418,8 +419,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           logger.DebugContext.session,
         )
         agent.session = prevSession
-        __globalAgent = agent
-        setCurrentAccount(account)
+        setAgent(agent)
+        upsertAccount(account)
       } else {
         logger.debug(
           `session: attempting to resumeSession using previous session`,
@@ -429,13 +430,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         try {
           // will call `persistSession` on `BskyAgent` instance above if success
           await networkRetry(1, () => agent.resumeSession(prevSession))
+          setAgent(agent)
         } catch (e) {
           logger.error(`session: resumeSession failed`, {message: e})
           clearCurrentAccount()
         }
       }
     },
-    [setCurrentAccount, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
@@ -447,119 +449,92 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
       } finally {
-        setState(s => ({
-          ...s,
-          isInitialLoad: false,
-        }))
+        setIsInitialLoad(false)
       }
     },
-    [initSession],
+    [initSession, setIsInitialLoad],
   )
 
   const removeAccount = React.useCallback<ApiContext['removeAccount']>(
     account => {
-      setStateAndPersist(s => {
-        return {
-          ...s,
-          accounts: s.accounts.filter(a => a.did !== account.did),
-        }
-      })
+      persistNextUpdate()
+      setAccounts(accounts => accounts.filter(a => a.did !== account.did))
     },
-    [setStateAndPersist],
+    [setAccounts, persistNextUpdate],
   )
 
-  const updateCurrentAccount = React.useCallback<
-    ApiContext['updateCurrentAccount']
-  >(
-    account => {
-      setStateAndPersist(s => {
-        const currentAccount = s.currentAccount
-
-        // ignore, should never happen
-        if (!currentAccount) return s
-
-        const updatedAccount = {
-          ...currentAccount,
-          handle: account.handle || currentAccount.handle,
-          email: account.email || currentAccount.email,
-          emailConfirmed:
-            account.emailConfirmed !== undefined
-              ? account.emailConfirmed
-              : currentAccount.emailConfirmed,
-        }
-
-        return {
-          ...s,
-          currentAccount: updatedAccount,
-          accounts: [
-            updatedAccount,
-            ...s.accounts.filter(a => a.did !== currentAccount.did),
-          ],
-        }
-      })
-    },
-    [setStateAndPersist],
-  )
+  const refreshSession = React.useCallback<
+    ApiContext['refreshSession']
+  >(async () => {
+    await agent.refreshSession()
+    persistNextUpdate()
+    upsertAccount(agentToSessionAccount(agent)!)
+    setAgent(agent.clone())
+  }, [agent, setAgent, persistNextUpdate, upsertAccount])
 
   const selectAccount = React.useCallback<ApiContext['selectAccount']>(
     async (account, logContext) => {
-      setState(s => ({...s, isSwitchingAccounts: true}))
+      setIsSwitchingAccounts(true)
       try {
         await initSession(account)
-        setState(s => ({...s, isSwitchingAccounts: false}))
+        setIsSwitchingAccounts(false)
         logEvent('account:loggedIn', {logContext, withPassword: false})
       } catch (e) {
         // reset this in case of error
-        setState(s => ({...s, isSwitchingAccounts: false}))
+        setIsSwitchingAccounts(false)
         // but other listeners need a throw
         throw e
       }
     },
-    [setState, initSession],
+    [setIsSwitchingAccounts, initSession],
   )
 
   React.useEffect(() => {
     if (isDirty.current) {
       isDirty.current = false
       persisted.write('session', {
-        accounts: state.accounts,
-        currentAccount: state.currentAccount,
+        accounts,
+        currentAccount,
       })
     }
-  }, [state])
+  }, [accounts, currentAccount])
 
   React.useEffect(() => {
     return persisted.onUpdate(async () => {
-      const session = persisted.get('session')
+      const persistedSession = persisted.get('session')
 
-      logger.debug(`session: persisted onUpdate`, {})
+      logger.debug(`session: persisted onUpdate`, {
+        persistedCurrentAccount: persistedSession.currentAccount,
+        currentAccount,
+      })
 
-      if (session.currentAccount && session.currentAccount.refreshJwt) {
-        if (session.currentAccount?.did !== state.currentAccount?.did) {
+      setAccounts(persistedSession.accounts)
+
+      if (
+        persistedSession.currentAccount &&
+        persistedSession.currentAccount.refreshJwt
+      ) {
+        if (persistedSession.currentAccount?.did !== currentAccount?.did) {
           logger.debug(`session: persisted onUpdate, switching accounts`, {
             from: {
-              did: state.currentAccount?.did,
-              handle: state.currentAccount?.handle,
+              did: currentAccount?.did,
+              handle: currentAccount?.handle,
             },
             to: {
-              did: session.currentAccount.did,
-              handle: session.currentAccount.handle,
+              did: persistedSession.currentAccount.did,
+              handle: persistedSession.currentAccount.handle,
             },
           })
 
-          await initSession(session.currentAccount)
+          await initSession(persistedSession.currentAccount)
         } else {
           logger.debug(`session: persisted onUpdate, updating session`, {})
-
-          /*
-           * Use updated session in this tab's agent. Do not call
-           * setCurrentAccount, since that will only persist the session that's
-           * already persisted, and we'll get a loop between tabs.
-           */
-          // @ts-ignore we checked for `refreshJwt` above
-          __globalAgent.session = session.currentAccount
+          agent.session = sessionAccountToAgentSession(
+            persistedSession.currentAccount,
+          )
+          setAgent(agent.clone())
         }
-      } else if (!session.currentAccount && state.currentAccount) {
+      } else if (!persistedSession.currentAccount && currentAccount) {
         logger.debug(
           `session: persisted onUpdate, logging out`,
           {},
@@ -574,20 +549,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
          */
         clearCurrentAccount()
       }
-
-      setState(s => ({
-        ...s,
-        accounts: session.accounts,
-      }))
     })
-  }, [state, setState, clearCurrentAccount, initSession])
+  }, [
+    currentAccount,
+    setAccounts,
+    clearCurrentAccount,
+    initSession,
+    agent,
+    setAgent,
+  ])
 
   const stateContext = React.useMemo(
     () => ({
-      ...state,
-      hasSession: !!state.currentAccount,
+      agent,
+      isInitialLoad,
+      isSwitchingAccounts,
+      currentAccount,
+      accounts,
+      hasSession: Boolean(currentAccount),
     }),
-    [state],
+    [agent, isInitialLoad, isSwitchingAccounts, accounts, currentAccount],
   )
 
   const api = React.useMemo(
@@ -599,7 +580,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       selectAccount,
-      updateCurrentAccount,
+      refreshSession,
       clearCurrentAccount,
     }),
     [
@@ -610,10 +591,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       selectAccount,
-      updateCurrentAccount,
+      refreshSession,
       clearCurrentAccount,
     ],
   )
+
+  // as we migrate, continue to keep this updated
+  __globalAgent = agent
 
   return (
     <StateContext.Provider value={stateContext}>
