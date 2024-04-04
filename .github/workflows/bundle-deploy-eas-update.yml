@@ -83,16 +83,16 @@ jobs:
         uses: expo/expo-github-action/fingerprint@main
         with:
           previous-git-commit: ${{ steps.base-commit.outputs.base-commit }}
+          args:
 
       - name: 👀 Debug fingerprint
         id: fingerprint-debug
-        env:
-          fingerprint-diff: ${{ steps.fingerprint.outputs.fingerprint-diff }}
         run: |
           echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
           echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
           
-          if [[ $fingerprint-diff =~ "bareRncliAutolinking" || $fingerprint-diff =~ "expoAutolinkingAndroid" || $fingerprint-diff =~ "bareGitIgnore" ]]; then
+          fingerprintDiff="${{ steps.fingerprint.outputs.fingerprint-diff }}"
+          if [[ $fingerprintDiff =~ "bareRncliAutolinking" || $fingerprintDiff =~ "expoAutolinkingAndroid" || $fingerprintDiff =~ "bareGitIgnore" ]]; then
             echo fingerprint-is-different="true" >> "$GITHUB_OUTPUT"
           else
             echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
