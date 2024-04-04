@@ -381,7 +381,7 @@ msgstr "Haluatko varmasti poistaa sovellussalasanan \"{name}\"?"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "Haluatko varmasti poistaa {0} syöteistäsi?"
+msgstr "Haluatko varmasti poistaa {0} syötteistäsi?"
 
 #: src/view/com/composer/Composer.tsx:508
 msgid "Are you sure you'd like to discard this draft?"
