@@ -1,8 +1,9 @@
-import {isIOS, isAndroid} from 'platform/detection'
+import {Share} from 'react-native'
 // import * as Sharing from 'expo-sharing'
 import Clipboard from '@react-native-clipboard/clipboard'
-import * as Toast from '../view/com/util/Toast'
-import {Share} from 'react-native'
+
+import {isAndroid, isIOS} from 'platform/detection'
+import * as Toast from '#/view/com/util/Toast'
 
 /**
  * This function shares a URL using the native Share API if available, or copies it to the clipboard

@@ -122,6 +122,7 @@ export interface LinkWarningModal {
   name: 'link-warning'
   text: string
   href: string
+  share?: boolean
 }
 
 export interface EmbedConsentModal {
