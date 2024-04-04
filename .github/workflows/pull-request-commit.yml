@@ -19,6 +19,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     permissions:
       pull-requests: write
+      actions: write
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
@@ -95,12 +96,9 @@ jobs:
   test-suite-fingerprint:
     runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
-    # REQUIRED: limit concurrency when pushing main(default) branch to prevent conflict for this action to update its fingerprint database
     concurrency: fingerprint-${{ github.event_name != 'pull_request' && 'main' || github.run_id }}
     permissions:
-      # REQUIRED: Allow comments of PRs
       pull-requests: write
-      # REQUIRED: Allow updating fingerprint in acton caches
       actions: write
     steps:
       - name: ⬇️ Checkout
@@ -136,66 +134,6 @@ jobs:
           echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
           echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
 
-      - name: 🏷️ Labeling PR
-        uses: actions/github-script@v6
-        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' }}
-        with:
-          script: |
-            try {
-              await github.rest.issues.removeLabel({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: ['bot: fingerprint changed']
-              })
-            } catch (e) {
-              if (e.status != 404) {
-                throw e;
-              }
-            }
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['bot: fingerprint compatible']
-            })
-
-      - name: 🏷️ Labeling PR
-        uses: actions/github-script@v6
-        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' }}
-        with:
-          script: |
-            try {
-              await github.rest.issues.removeLabel({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: ['bot: fingerprint compatible']
-              })
-            } catch (e) {
-              if (e.status != 404) {
-                throw e;
-              }
-            }
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['bot: fingerprint changed']
-            })
-
-      - name: 💬 Delete comment with fingerprint
-        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' && steps.old_comment.outputs.comment-id != '' }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.deleteComment({
-              issue_number: context.issue.number,
-              comment_id: '${{ steps.old_comment.outputs.comment-id }}',
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            });
-
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' }}
@@ -205,9 +143,9 @@ jobs:
             The Pull Request introduced fingerprint changes against the base commit: ${{ steps.fingerprint.outputs.previous-git-commit }}
             <details><summary>Fingerprint diff</summary>
 
-            \`\`\`json
-            ${diff}
-            \`\`\`
+            ```json
+            ${{ steps.fingerprint.outputs.fingerprint-diff }}
+            ```
 
             </details>
 
