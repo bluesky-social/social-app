@@ -349,7 +349,7 @@ msgstr "Valita"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:202
 msgid "Appeal \"{0}\" label"
-msgstr "Valita \"{0}\" label"
+msgstr "Valita \"{0}\" -merkinnästä"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:295
 #~ msgid "Appeal content warning"
