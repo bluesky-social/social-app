@@ -6,23 +6,24 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {Svg, Circle, Path} from 'react-native-svg'
-import {ScrollView, TextInput} from './util'
+import {Circle, Path, Svg} from 'react-native-svg'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import * as Toast from '../util/Toast'
-import {s, colors} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
+import {getAgent, useSession, useSessionApi} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
-import {useSession, useSessionApi, getAgent} from '#/state/session'
-import {logger} from '#/logger'
+import {colors, s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
+import {ScrollView, TextInput} from './util'
 
 export const snapPoints = ['90%']
 
@@ -35,7 +36,7 @@ enum Stages {
 export function Component({showReminder}: {showReminder?: boolean}) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {updateCurrentAccount} = useSessionApi()
+  const {refreshSession} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
     showReminder ? Stages.Reminder : Stages.Email,
@@ -74,7 +75,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
         email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })
-      updateCurrentAccount({emailConfirmed: true})
+      refreshSession()
       Toast.show(_(msg`Email verified`))
       closeModal()
     } catch (e) {
