@@ -1,18 +1,16 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyLabelerDefs} from '@atproto/api'
 
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 import {getLabelingServiceTitle} from '#/lib/moderation'
-
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, useButtonContext} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as LabelingServiceCard from '#/components/LabelingServiceCard'
-
+import {Text} from '#/components/Typography'
 import {ReportDialogProps} from './types'
 
 export function SelectLabelerView({

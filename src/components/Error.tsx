@@ -1,9 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/core'
-import {StackActions} from '@react-navigation/native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/core'
+import {StackActions} from '@react-navigation/native'
 
 import {NavigationProp} from 'lib/routes/types'
 import {CenteredView} from 'view/com/util/Views'

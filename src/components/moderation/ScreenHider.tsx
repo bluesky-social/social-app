@@ -1,27 +1,26 @@
 import React from 'react'
 import {
-  TouchableWithoutFeedback,
   StyleProp,
+  TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 import {ModerationUI} from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-
-import {useTheme, atoms as a} from '#/alf'
 import {CenteredView} from '#/view/com/util/Views'
-import {Text} from '#/components/Typography'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
+import {Text} from '#/components/Typography'
 
 export function ScreenHider({
   testID,
@@ -125,7 +124,15 @@ export function ScreenHider({
               accessibilityRole="button"
               accessibilityLabel={_(msg`Learn more about this warning`)}
               accessibilityHint="">
-              <Text style={[a.text_lg, {color: t.palette.primary_500}]}>
+              <Text
+                style={[
+                  a.text_lg,
+                  {
+                    color: t.palette.primary_500,
+                    // @ts-ignore web only -prf
+                    cursor: 'pointer',
+                  },
+                ]}>
                 <Trans>Learn More</Trans>
               </Text>
             </TouchableWithoutFeedback>

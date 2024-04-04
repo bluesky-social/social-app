@@ -14,7 +14,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient'
 import {Trans} from '@lingui/macro'
 
-import {logger} from '#/logger'
 import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {normalizeTextStyles} from '#/components/Typography'
@@ -405,49 +404,18 @@ export function Button({
         </View>
       )}
       <Context.Provider value={context}>
-        <ButtonTextErrorBoundary>
-          {/* @ts-ignore */}
-          {typeof children === 'string' || children?.type === Trans ? (
-            /* @ts-ignore */
-            <ButtonText>{children}</ButtonText>
-          ) : typeof children === 'function' ? (
-            children(context)
-          ) : (
-            children
-          )}
-        </ButtonTextErrorBoundary>
+        {/* @ts-ignore */}
+        {typeof children === 'string' || children?.type === Trans ? (
+          /* @ts-ignore */
+          <ButtonText>{children}</ButtonText>
+        ) : typeof children === 'function' ? (
+          children(context)
+        ) : (
+          children
+        )}
       </Context.Provider>
     </Pressable>
   )
-}
-
-export class ButtonTextErrorBoundary extends React.Component<
-  React.PropsWithChildren<{}>,
-  {hasError: boolean; error: Error | undefined}
-> {
-  public state = {
-    hasError: false,
-    error: undefined,
-  }
-
-  public static getDerivedStateFromError(error: Error) {
-    return {hasError: true, error}
-  }
-
-  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    logger.error('ButtonTextErrorBoundary caught an error', {
-      message: error.message,
-      errorInfo,
-    })
-  }
-
-  public render() {
-    if (this.state.hasError) {
-      return <ButtonText>ERROR</ButtonText>
-    }
-
-    return this.props.children
-  }
 }
 
 export function useSharedButtonTextStyles() {
