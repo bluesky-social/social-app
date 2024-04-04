@@ -3,11 +3,10 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonColor, ButtonText} from '#/components/Button'
-
 import * as Dialog from '#/components/Dialog'
+import {Text} from '#/components/Typography'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
@@ -80,7 +79,7 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
     <View
       style={[
         a.w_full,
-        a.gap_sm,
+        a.gap_md,
         a.justify_end,
         gtMobile
           ? [a.flex_row, a.flex_row_reverse, a.justify_start]

@@ -15,6 +15,8 @@ module.exports = {
     'simple-import-sort',
   ],
   rules: {
+    // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
+    'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
     'simple-import-sort/imports': [
