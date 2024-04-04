@@ -44,7 +44,10 @@
     "intl:compile": "lingui compile",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
-    "export": "npx expo export"
+    "export": "npx expo export",
+    "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
+    "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 yarn build-web",
+    "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
     "@atproto/api": "^0.12.2",
@@ -257,6 +260,7 @@
     "typescript": "^5.3.3",
     "url-loader": "^4.1.1",
     "webpack": "^5.75.0",
+    "webpack-bundle-analyzer": "^4.10.1",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1"
   },

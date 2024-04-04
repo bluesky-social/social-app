@@ -54,12 +54,10 @@ SplashScreen.preventAutoHideAsync()
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
-  const queryClient = useQueryClient()
   const theme = useColorModeTheme()
   const {_} = useLingui()
 
   useIntentHandler()
-  useNotificationsListener(queryClient)
   useOTAUpdates()
 
   // init
@@ -79,30 +77,40 @@ function InnerApp() {
           <React.Fragment
             // Resets the entire tree below when it changes:
             key={currentAccount?.did}>
-            <StatsigProvider>
-              <LabelDefsProvider>
-                <LoggedOutViewProvider>
-                  <SelectedFeedProvider>
-                    <UnreadNotifsProvider>
-                      <ThemeProvider theme={theme}>
-                        {/* All components should be within this provider */}
-                        <RootSiblingParent>
-                          <GestureHandlerRootView style={s.h100pct}>
-                            <TestCtrls />
-                            <Shell />
-                          </GestureHandlerRootView>
-                        </RootSiblingParent>
-                      </ThemeProvider>
-                    </UnreadNotifsProvider>
-                  </SelectedFeedProvider>
-                </LoggedOutViewProvider>
-              </LabelDefsProvider>
-            </StatsigProvider>
+            <QueryProvider currentDid={currentAccount?.did}>
+              <PushNotificationsListener>
+                <StatsigProvider>
+                  <LabelDefsProvider>
+                    <LoggedOutViewProvider>
+                      <SelectedFeedProvider>
+                        <UnreadNotifsProvider>
+                          <ThemeProvider theme={theme}>
+                            {/* All components should be within this provider */}
+                            <RootSiblingParent>
+                              <GestureHandlerRootView style={s.h100pct}>
+                                <TestCtrls />
+                                <Shell />
+                              </GestureHandlerRootView>
+                            </RootSiblingParent>
+                          </ThemeProvider>
+                        </UnreadNotifsProvider>
+                      </SelectedFeedProvider>
+                    </LoggedOutViewProvider>
+                  </LabelDefsProvider>
+                </StatsigProvider>
+              </PushNotificationsListener>
+            </QueryProvider>
           </React.Fragment>
         </Splash>
       </Alf>
     </SafeAreaProvider>
   )
+}
+
+function PushNotificationsListener({children}: {children: React.ReactNode}) {
+  const queryClient = useQueryClient()
+  useNotificationsListener(queryClient)
+  return children
 }
 
 function App() {
@@ -121,29 +129,27 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <QueryProvider>
-      <SessionProvider>
-        <ShellStateProvider>
-          <PrefsStateProvider>
-            <MutedThreadsProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <PortalProvider>
-                          <InnerApp />
-                        </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </MutedThreadsProvider>
-          </PrefsStateProvider>
-        </ShellStateProvider>
-      </SessionProvider>
-    </QueryProvider>
+    <SessionProvider>
+      <ShellStateProvider>
+        <PrefsStateProvider>
+          <MutedThreadsProvider>
+            <InvitesStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <PortalProvider>
+                        <InnerApp />
+                      </PortalProvider>
+                    </I18nProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
+            </InvitesStateProvider>
+          </MutedThreadsProvider>
+        </PrefsStateProvider>
+      </ShellStateProvider>
+    </SessionProvider>
   )
 }
 

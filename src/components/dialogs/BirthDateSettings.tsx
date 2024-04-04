@@ -1,23 +1,23 @@
 import React from 'react'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
 import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import * as Dialog from '#/components/Dialog'
-import {Text} from '../Typography'
-import {DateInput} from '#/view/com/util/forms/DateInput'
+import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isIOS, isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
-  usePreferencesSetBirthDateMutation,
   UsePreferencesQueryResponse,
+  usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
-import {Button, ButtonIcon, ButtonText} from '../Button'
-import {atoms as a, useTheme} from '#/alf'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {cleanError} from '#/lib/strings/errors'
-import {isIOS, isWeb} from '#/platform/detection'
+import {DateInput} from '#/view/com/util/forms/DateInput'
+import {atoms as a, useTheme} from '#/alf'
+import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import {Button, ButtonIcon, ButtonText} from '../Button'
+import {Text} from '../Typography'
 
 export function BirthDateSettingsDialog({
   control,

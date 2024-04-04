@@ -24,7 +24,6 @@ import * as LinkWarningModal from './LinkWarning'
 import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
-import * as SwitchAccountModal from './SwitchAccount'
 import * as ThreadgateModal from './Threadgate'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
@@ -114,9 +113,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'change-password') {
     snapPoints = ChangePasswordModal.snapPoints
     element = <ChangePasswordModal.Component />
-  } else if (activeModal?.name === 'switch-account') {
-    snapPoints = SwitchAccountModal.snapPoints
-    element = <SwitchAccountModal.Component />
   } else if (activeModal?.name === 'link-warning') {
     snapPoints = LinkWarningModal.snapPoints
     element = <LinkWarningModal.Component {...activeModal} />

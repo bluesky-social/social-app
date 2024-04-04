@@ -54,25 +54,27 @@ function InnerApp() {
       <React.Fragment
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>
-        <StatsigProvider>
-          <LabelDefsProvider>
-            <LoggedOutViewProvider>
-              <SelectedFeedProvider>
-                <UnreadNotifsProvider>
-                  <ThemeProvider theme={theme}>
-                    {/* All components should be within this provider */}
-                    <RootSiblingParent>
-                      <SafeAreaProvider>
-                        <Shell />
-                      </SafeAreaProvider>
-                    </RootSiblingParent>
-                    <ToastContainer />
-                  </ThemeProvider>
-                </UnreadNotifsProvider>
-              </SelectedFeedProvider>
-            </LoggedOutViewProvider>
-          </LabelDefsProvider>
-        </StatsigProvider>
+        <QueryProvider currentDid={currentAccount?.did}>
+          <StatsigProvider>
+            <LabelDefsProvider>
+              <LoggedOutViewProvider>
+                <SelectedFeedProvider>
+                  <UnreadNotifsProvider>
+                    <ThemeProvider theme={theme}>
+                      {/* All components should be within this provider */}
+                      <RootSiblingParent>
+                        <SafeAreaProvider>
+                          <Shell />
+                        </SafeAreaProvider>
+                      </RootSiblingParent>
+                      <ToastContainer />
+                    </ThemeProvider>
+                  </UnreadNotifsProvider>
+                </SelectedFeedProvider>
+              </LoggedOutViewProvider>
+            </LabelDefsProvider>
+          </StatsigProvider>
+        </QueryProvider>
       </React.Fragment>
     </Alf>
   )
@@ -94,29 +96,27 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <QueryProvider>
-      <SessionProvider>
-        <ShellStateProvider>
-          <PrefsStateProvider>
-            <MutedThreadsProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <PortalProvider>
-                          <InnerApp />
-                        </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </MutedThreadsProvider>
-          </PrefsStateProvider>
-        </ShellStateProvider>
-      </SessionProvider>
-    </QueryProvider>
+    <SessionProvider>
+      <ShellStateProvider>
+        <PrefsStateProvider>
+          <MutedThreadsProvider>
+            <InvitesStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <PortalProvider>
+                        <InnerApp />
+                      </PortalProvider>
+                    </I18nProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
+            </InvitesStateProvider>
+          </MutedThreadsProvider>
+        </PrefsStateProvider>
+      </ShellStateProvider>
+    </SessionProvider>
   )
 }
 
