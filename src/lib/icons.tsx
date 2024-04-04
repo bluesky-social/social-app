@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, TextStyle, ViewStyle} from 'react-native'
-import Svg, {Path, Rect, Line, Ellipse} from 'react-native-svg'
+import Svg, {Ellipse, Line, Path, Rect} from 'react-native-svg'
 
 export function GridIcon({
   style,
