@@ -220,6 +220,21 @@
     .nativeDropdown-item:focus {
       outline: none;
     }
+
+    /* Spinner component */
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .rotate-500ms {
+      position: absolute;
+      inset:0;
+      animation: rotate 500ms linear infinite;
+    }
   </style>
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
