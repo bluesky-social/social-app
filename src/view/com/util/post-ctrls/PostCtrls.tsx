@@ -16,7 +16,7 @@ import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
-import {CommentBottomArrow, HeartIcon, HeartIconSolid} from '#/lib/icons'
+import {CommentBottomArrow} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -34,6 +34,10 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useHaptics} from 'lib/haptics'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
+  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
+} from '#/components/icons/Heart2'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {Text} from '../text/Text'
@@ -250,12 +254,11 @@ let PostCtrls = ({
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           {post.viewer?.like ? (
-            <HeartIconSolid style={s.likeColor} size={big ? 22 : 16} />
+            <HeartIconFilled style={s.likeColor} size={big ? 'lg' : 'md'} />
           ) : (
-            <HeartIcon
+            <HeartIconOutline
               style={[defaultCtrlColor, big ? styles.mt1 : undefined]}
-              strokeWidth={3}
-              size={big ? 20 : 16}
+              size={big ? 'lg' : 'md'}
             />
           )}
           {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
