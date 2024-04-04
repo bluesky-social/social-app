@@ -466,11 +466,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const refreshSession = React.useCallback<
     ApiContext['refreshSession']
   >(async () => {
-    await agent.refreshSession()
+    if (!currentAccount) return
+    await agent.resumeSession(sessionAccountToAgentSession(currentAccount)!)
     persistNextUpdate()
     upsertAccount(agentToSessionAccount(agent)!)
     setAgent(agent.clone())
-  }, [agent, setAgent, persistNextUpdate, upsertAccount])
+  }, [currentAccount, agent, setAgent, persistNextUpdate, upsertAccount])
 
   const selectAccount = React.useCallback<ApiContext['selectAccount']>(
     async (account, logContext) => {
