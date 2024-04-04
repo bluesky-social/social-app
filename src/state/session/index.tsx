@@ -398,6 +398,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           setAgent(agent)
         } catch (e) {
           logger.error(`session: resumeSession failed`, {message: e})
+          setAccounts(accounts => {
+            return accounts.map(a =>
+              a.did === account.did
+                ? {...a, accessJwt: undefined, refreshJwt: undefined}
+                : a,
+            )
+          })
           clearCurrentAccount()
         }
       }
