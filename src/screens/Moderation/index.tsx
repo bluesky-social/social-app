@@ -1,51 +1,49 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {ComAtprotoLabelDefs} from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {LABELS} from '@atproto/api'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
+import {ComAtprotoLabelDefs} from '@atproto/api'
+import {LABELS} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
 
-import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
-import {CenteredView} from '#/view/com/util/Views'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useSession} from '#/state/session'
+import {getLabelingServiceTitle} from '#/lib/moderation'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {logger} from '#/logger'
+import {
+  useMyLabelersQuery,
+  usePreferencesQuery,
+  UsePreferencesQueryResponse,
+  usePreferencesSetAdultContentMutation,
+} from '#/state/queries/preferences'
 import {
   useProfileQuery,
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
-
-import {
-  UsePreferencesQueryResponse,
-  useMyLabelersQuery,
-  usePreferencesQuery,
-  usePreferencesSetAdultContentMutation,
-} from '#/state/queries/preferences'
-
-import {getLabelingServiceTitle} from '#/lib/moderation'
-import {logger} from '#/logger'
-import {useTheme, atoms as a, useBreakpoints, ViewStyleProp} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
+import {Props as SVGIconProps} from '#/components/icons/common'
+import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
-import {Text} from '#/components/Typography'
-import * as Toggle from '#/components/forms/Toggle'
-import {InlineLink, Link} from '#/components/Link'
-import {Button, ButtonText} from '#/components/Button'
-import {Loader} from '#/components/Loader'
 import * as LabelingService from '#/components/LabelingServiceCard'
+import {InlineLink, Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {Props as SVGIconProps} from '#/components/icons/common'
-import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import * as Dialog from '#/components/Dialog'
+import {Text} from '#/components/Typography'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
