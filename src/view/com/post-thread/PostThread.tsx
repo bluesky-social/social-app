@@ -1,36 +1,36 @@
 import React, {useEffect, useRef} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {List, ListMethods} from '../util/List'
-import {PostThreadItem} from './PostThreadItem'
-import {ComposePrompt} from '../composer/Prompt'
-import {ViewHeader} from '../util/ViewHeader'
-import {Text} from '../util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
-  ThreadNode,
-  ThreadPost,
-  ThreadNotFound,
-  ThreadBlocked,
-  usePostThreadQuery,
   sortThread,
+  ThreadBlocked,
+  ThreadNode,
+  ThreadNotFound,
+  ThreadPost,
+  usePostThreadQuery,
 } from '#/state/queries/post-thread'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {
   useModerationOpts,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {ComposePrompt} from '../composer/Prompt'
+import {List, ListMethods} from '../util/List'
+import {Text} from '../util/text/Text'
+import {ViewHeader} from '../util/ViewHeader'
+import {PostThreadItem} from './PostThreadItem'
 
 // FlatList maintainVisibleContentPosition breaks if too many items
 // are prepended. This seems to be an optimal number based on *shrug*.
@@ -368,47 +368,52 @@ export function PostThread({
     ],
   )
 
-  return (
-    <>
+  if (error || !thread) {
+    return (
       <ListMaybePlaceholder
-        isLoading={!preferences || !thread}
+        isLoading={(!preferences || !thread) && !error}
         isError={!!error}
+        noEmpty
         onRetry={refetch}
         errorTitle={error?.title}
         errorMessage={error?.message}
       />
-      {!error && thread && (
-        <List
-          ref={ref}
-          data={posts}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
-          onStartReached={onStartReached}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={2}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          onScrollToTop={onScrollToTop}
-          maintainVisibleContentPosition={
-            isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
-          }
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-          removeClippedSubviews={isAndroid ? false : undefined}
-          ListFooterComponent={
-            <ListFooter
-              isFetching={isFetching}
-              onRetry={refetch}
-              // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
-              // work without causing weird jumps on web or glitches on native
-              height={windowHeight - 200}
-            />
-          }
-          initialNumToRender={initialNumToRender}
-          windowSize={11}
+    )
+  }
+
+  return (
+    <List
+      ref={ref}
+      data={posts}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+      onStartReached={onStartReached}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={2}
+      onMomentumScrollEnd={onMomentumScrollEnd}
+      onScrollToTop={onScrollToTop}
+      maintainVisibleContentPosition={
+        isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
+      }
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
+      removeClippedSubviews={isAndroid ? false : undefined}
+      ListFooterComponent={
+        <ListFooter
+          // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
+          // initial render
+          isFetchingNextPage={isFetching}
+          error={cleanError(threadError)}
+          onRetry={refetch}
+          // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
+          // work without causing weird jumps on web or glitches on native
+          height={windowHeight - 200}
         />
-      )}
-    </>
+      }
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
+    />
   )
 }
 

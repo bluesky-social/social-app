@@ -1,11 +1,10 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
-import {isWeb} from '#/platform/detection'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
@@ -54,7 +53,14 @@ export function StepCaptcha() {
   return (
     <ScreenTransition>
       <View style={[a.gap_lg]}>
-        <View style={[styles.container, completed && styles.center]}>
+        <View
+          style={[
+            a.w_full,
+            a.pb_xl,
+            a.overflow_hidden,
+            {minHeight: 500},
+            completed && [a.align_center, a.justify_center],
+          ]}>
           {!completed ? (
             <CaptchaWebView
               url={url}
@@ -72,24 +78,3 @@ export function StepCaptcha() {
     </ScreenTransition>
   )
 }
-
-const styles = StyleSheet.create({
-  error: {
-    borderRadius: 6,
-    marginTop: 10,
-  },
-  // @ts-expect-error: Suppressing error due to incomplete `ViewStyle` type definition in react-native-web, missing `cursor` prop as discussed in https://github.com/necolas/react-native-web/issues/832.
-  touchable: {
-    ...(isWeb && {cursor: 'pointer'}),
-  },
-  container: {
-    minHeight: 500,
-    width: '100%',
-    paddingBottom: 20,
-    overflow: 'hidden',
-  },
-  center: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})

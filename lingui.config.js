@@ -6,6 +6,7 @@ module.exports = {
     'es',
     'fi',
     'fr',
+    'ga',
     'hi',
     'id',
     'ja',
@@ -14,7 +15,9 @@ module.exports = {
     'uk',
     'ca',
     'zh-CN',
+    'zh-TW',
     'it',
+    'tr',
   ],
   catalogs: [
     {
