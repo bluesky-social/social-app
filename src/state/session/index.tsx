@@ -124,11 +124,6 @@ function agentToSessionAccount(agent: BskyAgent): SessionAccount | undefined {
     email: agent.session.email,
     emailConfirmed: agent.session.emailConfirmed,
     deactivated: isSessionDeactivated(agent.session.accessJwt),
-
-    /*
-     * Tokens are undefined if the session expires, or if creation fails for
-     * any reason e.g. tokens are invalid, network error, etc.
-     */
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
   }
@@ -144,70 +139,6 @@ function sessionAccountToAgentSession(
     emailConfirmed: account.emailConfirmed,
     accessJwt: account.accessJwt || '',
     refreshJwt: account.refreshJwt || '',
-  }
-}
-
-function createPersistSessionHandler(
-  account: SessionAccount,
-  persistSessionCallback: (props: {
-    expired: boolean
-    refreshedAccount: SessionAccount
-  }) => void,
-  {
-    networkErrorCallback,
-  }: {
-    networkErrorCallback?: () => void
-  } = {},
-): AtpPersistSessionHandler {
-  return function persistSession(event, session) {
-    const expired = event === 'expired' || event === 'create-failed'
-
-    if (event === 'network-error') {
-      logger.warn(`session: persistSessionHandler received network-error event`)
-      networkErrorCallback?.()
-      return
-    }
-
-    const refreshedAccount: SessionAccount = {
-      service: account.service,
-      did: session?.did || account.did,
-      handle: session?.handle || account.handle,
-      email: session?.email || account.email,
-      emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
-      deactivated: isSessionDeactivated(session?.accessJwt),
-
-      /*
-       * Tokens are undefined if the session expires, or if creation fails for
-       * any reason e.g. tokens are invalid, network error, etc.
-       */
-      refreshJwt: session?.refreshJwt,
-      accessJwt: session?.accessJwt,
-    }
-
-    logger.debug(`session: persistSession`, {
-      event,
-      deactivated: refreshedAccount.deactivated,
-    })
-
-    if (expired) {
-      logger.warn(`session: expired`)
-      emitSessionDropped()
-    }
-
-    /*
-     * If the session expired, or it was successfully created/updated, we want
-     * to update/persist the data.
-     *
-     * If the session creation failed, it could be a network error, or it could
-     * be more serious like an invalid token(s). We can't differentiate, so in
-     * order to allow the user to get a fresh token (if they need it), we need
-     * to persist this data and wipe their tokens, effectively logging them
-     * out.
-     */
-    persistSessionCallback({
-      expired,
-      refreshedAccount,
-    })
   }
 }
 
@@ -247,6 +178,62 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     setAgent(PUBLIC_BSKY_AGENT)
     BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
   }, [persistNextUpdate, setAgent])
+
+  const persistSession = React.useCallback<
+    (agent: BskyAgent) => AtpPersistSessionHandler
+  >(
+    agent => {
+      return (event, session) => {
+        logger.debug(
+          `session: persistSession`,
+          {event},
+          logger.DebugContext.session,
+        )
+
+        const expired = event === 'expired' || event === 'create-failed'
+
+        if (event === 'network-error') {
+          logger.warn(
+            `session: persistSessionHandler received network-error event`,
+          )
+          emitSessionDropped()
+          clearCurrentAccount()
+          return
+        }
+
+        agent.session = session
+        const refreshedAccount = agentToSessionAccount(agent)
+
+        if (!refreshedAccount) {
+          logger.error(
+            `session: persistSession failed to get refreshed account`,
+          )
+          emitSessionDropped()
+          clearCurrentAccount()
+          return
+        }
+
+        if (expired) {
+          logger.warn(`session: expired`)
+          emitSessionDropped()
+          clearCurrentAccount()
+        }
+
+        /*
+         * If the session expired, or it was successfully created/updated, we want
+         * to update/persist the data.
+         *
+         * If the session creation failed, it could be a network error, or it could
+         * be more serious like an invalid token(s). We can't differentiate, so in
+         * order to allow the user to get a fresh token (if they need it), we need
+         * to persist this data and wipe their tokens, effectively logging them
+         * out.
+         */
+        upsertAccount(refreshedAccount)
+      }
+    },
+    [clearCurrentAccount, upsertAccount],
+  )
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({
@@ -296,16 +283,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       await configureModeration(agent, account)
 
-      agent.setPersistSessionHandler(
-        createPersistSessionHandler(
-          account,
-          ({expired, refreshedAccount}) => {
-            upsertAccount(refreshedAccount)
-            if (expired) clearCurrentAccount()
-          },
-          {networkErrorCallback: clearCurrentAccount},
-        ),
-      )
+      agent.setPersistSessionHandler(persistSession(agent))
 
       setAgent(agent)
       upsertAccount(account)
@@ -314,7 +292,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [upsertAccount, clearCurrentAccount],
+    [upsertAccount, persistSession],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -331,16 +309,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const account = agentToSessionAccount(agent)!
       await configureModeration(agent, account)
 
-      agent.setPersistSessionHandler(
-        createPersistSessionHandler(
-          account,
-          ({expired, refreshedAccount}) => {
-            upsertAccount(refreshedAccount)
-            if (expired) clearCurrentAccount()
-          },
-          {networkErrorCallback: clearCurrentAccount},
-        ),
-      )
+      agent.setPersistSessionHandler(persistSession(agent))
 
       setAgent(agent)
       upsertAccount(account)
@@ -350,7 +319,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [upsertAccount, clearCurrentAccount],
+    [upsertAccount, persistSession],
   )
 
   const logout = React.useCallback<ApiContext['logout']>(
@@ -378,15 +347,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       const agent = new BskyAgent({
         service: account.service,
-        persistSession: createPersistSessionHandler(
-          account,
-          ({expired, refreshedAccount}) => {
-            upsertAccount(refreshedAccount)
-            if (expired) clearCurrentAccount()
-          },
-          {networkErrorCallback: clearCurrentAccount},
-        ),
       })
+      agent.setPersistSessionHandler(persistSession(agent))
 
       const prevSession = {
         ...account,
@@ -437,7 +399,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     },
-    [upsertAccount, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount, persistSession],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
@@ -504,10 +466,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return persisted.onUpdate(async () => {
       const persistedSession = persisted.get('session')
 
-      logger.debug(`session: persisted onUpdate`, {
-        persistedCurrentAccount: persistedSession.currentAccount,
-        currentAccount,
-      })
+      logger.debug(
+        `session: persisted onUpdate`,
+        {},
+        logger.DebugContext.session,
+      )
 
       setAccounts(persistedSession.accounts)
 
@@ -516,20 +479,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         persistedSession.currentAccount.refreshJwt
       ) {
         if (persistedSession.currentAccount?.did !== currentAccount?.did) {
-          logger.debug(`session: persisted onUpdate, switching accounts`, {
-            from: {
-              did: currentAccount?.did,
-              handle: currentAccount?.handle,
+          logger.debug(
+            `session: persisted onUpdate, switching accounts`,
+            {
+              from: {
+                did: currentAccount?.did,
+                handle: currentAccount?.handle,
+              },
+              to: {
+                did: persistedSession.currentAccount.did,
+                handle: persistedSession.currentAccount.handle,
+              },
             },
-            to: {
-              did: persistedSession.currentAccount.did,
-              handle: persistedSession.currentAccount.handle,
-            },
-          })
+            logger.DebugContext.session,
+          )
 
           await initSession(persistedSession.currentAccount)
         } else {
-          logger.debug(`session: persisted onUpdate, updating session`, {})
+          logger.debug(
+            `session: persisted onUpdate, updating session`,
+            {},
+            logger.DebugContext.session,
+          )
           agent.session = sessionAccountToAgentSession(
             persistedSession.currentAccount,
           )
