@@ -1,14 +1,14 @@
 import React from 'react'
-import {AppBskyActorDefs, ModerationOpts, moderateProfile} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
-import {useMyFollowsQuery} from '#/state/queries/my-follows'
-import {STALE} from '#/state/queries'
-import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
-import {isInvalidHandle} from '#/lib/strings/handles'
 import {isJustAMute} from '#/lib/moderation'
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
+import {STALE} from '#/state/queries'
+import {useMyFollowsQuery} from '#/state/queries/my-follows'
+import {getAgent} from '#/state/session'
+import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 
 const DEFAULT_MOD_OPTS = {
   userDid: undefined,
@@ -29,7 +29,7 @@ export function useActorAutocompleteQuery(prefix: string) {
     async queryFn() {
       const res = prefix
         ? await getAgent().searchActorsTypeahead({
-            term: prefix,
+            q: prefix,
             limit: 8,
           })
         : undefined
@@ -67,7 +67,7 @@ export function useActorAutocompleteFn() {
             queryKey: RQKEY(query || ''),
             queryFn: () =>
               getAgent().searchActorsTypeahead({
-                term: query,
+                q: query,
                 limit,
               }),
           })
