@@ -1,4 +1,4 @@
-# Credit https://github.com/expo/expo
+# Credit for fingerprint action https://github.com/expo/expo
 # https://github.com/expo/expo/blob/main/.github/workflows/pr-labeler.yml
 ---
 name: PR labeler
@@ -14,9 +14,123 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  webpack-analyzer:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event_name == 'pull_request' }}
+    permissions:
+      pull-requests: write
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: ⚙️ Install Dependencies
+        run: yarn install
+
+      - name: Ensure tracking relevant branches and checkout base
+        run: |
+          git checkout ${{ github.head_ref }}
+          git checkout ${{ github.base_ref }}
+
+      - name: Get the base commit
+        id: base-commit
+        run: echo base-commit=$(git log -n 1 ${{ github.base_ref }} --pretty=format:'%H') >> "$GITHUB_OUTPUT"
+
+      - name: Merge PR commit
+        run: |
+          # Have to set a git config for the merge to work
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git merge --no-edit ${{ github.head_ref }}
+
+      - name: 🔦 Generate stats file for PR
+        run: |
+          yarn generate-webpack-stats-file
+          mv stats.json ../stats-new.json
+
+      - name: ⬇️ Get base stats from cache
+        id: get-base-stats
+        uses: actions/cache@v4
+        with:
+          path: stats-base.json
+          key: stats-base-${{ steps.base-commit.outputs.base-commit }}
+
+      - name: Restore to base commit
+        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        run: |
+          git reset HEAD~
+          git restore .
+
+      - name: 🔦 Generate stats file from base commit
+        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        run: |
+          yarn generate-webpack-stats-file
+          mv stats.json stats-base.json
+
+      - name: ％ Get diff
+        id: get-diff
+        uses: NejcZdovc/bundle-size-diff@v1
+        with:
+          base_path: 'stats-base.json'
+          pr_path: '../stats-new.json'
+          excluded_assets: '(.+).js.map|(.+).json|(.+).png'
+
+      - name: 🔍 Find old comment if it exists
+        uses: peter-evans/find-comment@v2
+        if: ${{ github.event_name == 'pull_request' }}
+        id: old_comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: <!-- webpack-analyzer comment -->
+
+      - name: 💬 Add comment with diff
+        uses: actions/github-script@v6
+        if: ${{ steps.old_comment.outputs.comment-id == '' }}
+        with:
+          script: |
+            const body = `<!-- webpack-analyzer comment -->
+            | Old size | New size | Diff                  |
+            |----------|----------|-----------------------|
+            | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}% |
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body,
+            });
+
+      - name: 💬 Update comment with fingerprint
+        if: ${{ steps.old_comment.outputs.comment-id != '' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const body = `<!-- webpack-analyzer comment -->
+            | Old size | New size | Diff                  |
+            |----------|----------|-----------------------|
+            | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}%) |
+            `;
+
+            github.rest.issues.updateComment({
+              issue_number: context.issue.number,
+              comment_id: '${{ steps.old_comment.outputs.comment-id }}',
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body,
+            });
+
   test-suite-fingerprint:
     runs-on: ubuntu-22.04
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push' }}
+    if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
     # REQUIRED: limit concurrency when pushing main(default) branch to prevent conflict for this action to update its fingerprint database
     concurrency: fingerprint-${{ github.event_name != 'pull_request' && 'main' || github.run_id }}
     permissions:
@@ -45,9 +159,7 @@ jobs:
 
       - name: Get the base commit
         id: base-commit
-        run: |
-          # Since we limit this pr-labeler workflow only triggered from limited paths, we should use custom base commit
-          echo base-commit=$(git log -n 1 main --pretty=format:'%H') >> "$GITHUB_OUTPUT"
+        run: echo base-commit=$(git log -n 1 main --pretty=format:'%H') >> "$GITHUB_OUTPUT"
 
       - name: 📷 Check fingerprint
         id: fingerprint
