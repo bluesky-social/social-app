@@ -12,10 +12,12 @@ import {IS_TEST_USER} from '#/lib/constants'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
 
@@ -587,6 +589,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   // as we migrate, continue to keep this updated
   __globalAgent = agent
+
+  if (IS_DEV && isWeb) {
+    // @ts-ignore
+    window.agent = agent
+  }
 
   return (
     <StateContext.Provider value={stateContext}>
