@@ -51,11 +51,11 @@ export const LoginForm = ({
   }, [track])
 
   return (
-    <FormContainer testID="loginForm" title={<Trans>Sign in</Trans>}>
+    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
-        <TextField.Label>
+        <TextField.LabelText>
           <Trans>Hosting provider</Trans>
-        </TextField.Label>
+        </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
           onSelectServiceUrl={setServiceUrl}
