@@ -12,6 +12,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {type I18n} from '@lingui/core'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -191,7 +192,13 @@ type SearchResultSlice =
       key: string
     }
 
-function SearchScreenPostResults({query}: {query: string}) {
+function SearchScreenPostResults({
+  query,
+  sort,
+}: {
+  query: string
+  sort: 'top' | 'latest'
+}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
@@ -209,7 +216,7 @@ function SearchScreenPostResults({query}: {query: string}) {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery})
+  } = useSearchPostsQuery({query: augmentedQuery, sort})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -316,8 +323,25 @@ function SearchScreenUserResults({query}: {query: string}) {
   )
 }
 
-const SECTIONS_LOGGEDOUT = ['Users']
-const SECTIONS_LOGGEDIN = ['Posts', 'Users']
+const SECTIONS_LOGGEDOUT = ['PEOPLE'] as const
+const SECTIONS_LOGGEDIN = ['TOP', 'LATEST', 'PEOPLE'] as const
+
+function getSectionName(
+  i18n: I18n,
+  section:
+    | (typeof SECTIONS_LOGGEDIN)[number]
+    | (typeof SECTIONS_LOGGEDOUT)[number],
+) {
+  switch (section) {
+    case 'TOP':
+      return i18n._(msg`Top`)
+    case 'LATEST':
+      return i18n._(msg`Latest`)
+    case 'PEOPLE':
+      return i18n._(msg`People`)
+  }
+}
+
 export function SearchScreenInner({
   query,
   primarySearch,
@@ -330,6 +354,7 @@ export function SearchScreenInner({
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
+  const {i18n} = useLingui()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -337,6 +362,13 @@ export function SearchScreenInner({
       setDrawerSwipeDisabled(index > 0)
     },
     [setDrawerSwipeDisabled, setMinimalShellMode],
+  )
+
+  const sections = hasSession ? SECTIONS_LOGGEDIN : SECTIONS_LOGGEDOUT
+
+  const tabBarItems = React.useMemo(
+    () => sections.map(section => getSectionName(i18n, section)),
+    [sections, i18n],
   )
 
   if (hasSession) {
@@ -347,12 +379,15 @@ export function SearchScreenInner({
           <CenteredView
             sideBorders
             style={[pal.border, pal.view, styles.tabBarContainer]}>
-            <TabBar items={SECTIONS_LOGGEDIN} {...props} />
+            <TabBar items={tabBarItems} {...props} />
           </CenteredView>
         )}
         initialPage={0}>
         <View>
-          <SearchScreenPostResults query={query} />
+          <SearchScreenPostResults query={query} sort="top" />
+        </View>
+        <View>
+          <SearchScreenPostResults query={query} sort="latest" />
         </View>
         <View>
           <SearchScreenUserResults query={query} />
@@ -389,7 +424,7 @@ export function SearchScreenInner({
         <CenteredView
           sideBorders
           style={[pal.border, pal.view, styles.tabBarContainer]}>
-          <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
+          <TabBar items={tabBarItems} {...props} />
         </CenteredView>
       )}
       initialPage={0}>
