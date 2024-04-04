@@ -1,9 +1,9 @@
 import {useEffect} from 'react'
 import {i18n} from '@lingui/core'
 
-import {useLanguagePrefs} from '#/state/preferences'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
+import {useLanguagePrefs} from '#/state/preferences'
 
 /**
  * We do a dynamic import of just the catalog that we need
@@ -66,6 +66,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.it: {
       mod = await import(`./locales/it/messages`)
+      break
+    }
+    case AppLanguage.tr: {
+      mod = await import(`./locales/tr/messages`)
       break
     }
     default: {
