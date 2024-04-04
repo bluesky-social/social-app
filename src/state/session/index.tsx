@@ -44,8 +44,12 @@ export type StateContext = {
   isSwitchingAccounts: boolean
   hasSession: boolean
   accounts: SessionAccount[]
+  /**
+   * This value is derived from `BskyAgent.session`
+   */
   currentAccount: SessionAccount | undefined
 }
+
 export type ApiContext = {
   createAccount: (props: {
     service: string
@@ -160,7 +164,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [],
   )
 
-  const upsertAccount = React.useCallback(
+  const upsertAndPersistAccount = React.useCallback(
     (account: SessionAccount) => {
       persistNextUpdate()
       setAccounts(accounts => [
@@ -173,7 +177,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
-
     persistNextUpdate()
     setAgent(PUBLIC_BSKY_AGENT)
     BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
@@ -229,10 +232,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
          * to persist this data and wipe their tokens, effectively logging them
          * out.
          */
-        upsertAccount(refreshedAccount)
+        upsertAndPersistAccount(refreshedAccount)
       }
     },
-    [clearCurrentAccount, upsertAccount],
+    [clearCurrentAccount, upsertAndPersistAccount],
   )
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
@@ -286,13 +289,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       agent.setPersistSessionHandler(persistSession(agent))
 
       setAgent(agent)
-      upsertAccount(account)
+      upsertAndPersistAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [upsertAccount, persistSession],
+    [upsertAndPersistAccount, persistSession],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -312,14 +315,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       agent.setPersistSessionHandler(persistSession(agent))
 
       setAgent(agent)
-      upsertAccount(account)
+      upsertAndPersistAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
 
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [upsertAccount, persistSession],
+    [upsertAndPersistAccount, persistSession],
   )
 
   const logout = React.useCallback<ApiContext['logout']>(
@@ -382,7 +385,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         )
         agent.session = prevSession
         setAgent(agent)
-        upsertAccount(account)
+        upsertAndPersistAccount(account)
       } else {
         logger.debug(
           `session: attempting to resumeSession using previous session`,
@@ -399,7 +402,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     },
-    [upsertAccount, clearCurrentAccount, persistSession],
+    [upsertAndPersistAccount, clearCurrentAccount, persistSession],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
@@ -431,9 +434,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     if (!currentAccount) return
     await agent.resumeSession(sessionAccountToAgentSession(currentAccount)!)
     persistNextUpdate()
-    upsertAccount(agentToSessionAccount(agent)!)
+    upsertAndPersistAccount(agentToSessionAccount(agent)!)
     setAgent(agent.clone())
-  }, [currentAccount, agent, setAgent, persistNextUpdate, upsertAccount])
+  }, [
+    currentAccount,
+    agent,
+    setAgent,
+    persistNextUpdate,
+    upsertAndPersistAccount,
+  ])
 
   const selectAccount = React.useCallback<ApiContext['selectAccount']>(
     async (account, logContext) => {
@@ -472,6 +481,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.DebugContext.session,
       )
 
+      // already persisted on other side of broadcast
       setAccounts(persistedSession.accounts)
 
       if (
