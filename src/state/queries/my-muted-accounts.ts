@@ -1,14 +1,15 @@
 import {AppBskyActorDefs, AppBskyGraphGetMutes} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 
-export const RQKEY = () => ['my-muted-accounts']
+const RQKEY_ROOT = 'my-muted-accounts'
+export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyMutedAccountsQuery() {
@@ -39,7 +40,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyGraphGetMutes.OutputSchema>
   >({
-    queryKey: ['my-muted-accounts'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

@@ -117,14 +117,11 @@ export interface ChangePasswordModal {
   name: 'change-password'
 }
 
-export interface SwitchAccountModal {
-  name: 'switch-account'
-}
-
 export interface LinkWarningModal {
   name: 'link-warning'
   text: string
   href: string
+  share?: boolean
 }
 
 export interface InAppBrowserConsentModal {
@@ -141,7 +138,6 @@ export type Modal =
   | VerifyEmailModal
   | ChangeEmailModal
   | ChangePasswordModal
-  | SwitchAccountModal
 
   // Curation
   | ContentLanguagesSettingsModal

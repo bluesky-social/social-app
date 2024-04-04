@@ -19,28 +19,30 @@
 import {useEffect, useRef} from 'react'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
-  QueryKey,
-  useQueryClient,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
-import {useModerationOpts} from '../preferences'
-import {useUnreadNotificationsApi} from './unread'
-import {fetchPage} from './util'
-import {FeedPage} from './types'
+
 import {useMutedThreads} from '#/state/muted-threads'
 import {STALE} from '..'
+import {useModerationOpts} from '../preferences'
 import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
+import {FeedPage} from './types'
+import {useUnreadNotificationsApi} from './unread'
+import {fetchPage} from './util'
 
-export type {NotificationType, FeedNotification, FeedPage} from './types'
+export type {FeedNotification, FeedPage, NotificationType} from './types'
 
 const PAGE_SIZE = 30
 
 type RQPageParam = string | undefined
 
+const RQKEY_ROOT = 'notification-feed'
 export function RQKEY() {
-  return ['notification-feed']
+  return [RQKEY_ROOT]
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
@@ -138,7 +140,7 @@ export function* findAllPostsInQueryData(
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
-    queryKey: ['notification-feed'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
