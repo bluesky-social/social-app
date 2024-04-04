@@ -1,70 +1,71 @@
-import React, {useMemo, useCallback} from 'react'
-import {StyleSheet, View, Pressable} from 'react-native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useIsFocused, useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
-import {usePalette} from 'lib/hooks/usePalette'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {s} from 'lib/styles'
-import {FeedDescriptor} from '#/state/queries/post-feed'
-import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
-import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
-import {Feed} from 'view/com/posts/Feed'
-import {InlineLink} from '#/components/Link'
-import {ListRef} from 'view/com/util/List'
-import {Button} from 'view/com/util/forms/Button'
-import {Text} from 'view/com/util/text/Text'
-import {RichText} from '#/components/RichText'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {FAB} from 'view/com/util/fab/FAB'
-import {EmptyState} from 'view/com/util/EmptyState'
-import {LoadingScreen} from 'view/com/util/LoadingScreen'
-import * as Toast from 'view/com/util/Toast'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {shareUrl} from 'lib/sharing'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {Haptics} from 'lib/haptics'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {makeCustomFeedLink} from 'lib/routes/links'
-import {pluralize} from 'lib/strings/helpers'
-import {CenteredView} from 'view/com/util/Views'
-import {NavigationProp} from 'lib/routes/types'
-import {ComposeIcon2} from 'lib/icons'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+import React, {useCallback, useMemo} from 'react'
+import {Pressable, StyleSheet, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
-import {useFeedSourceInfoQuery, FeedSourceFeedInfo} from '#/state/queries/feed'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {
-  UsePreferencesQueryResponse,
-  usePreferencesQuery,
-  useSaveFeedMutation,
-  useRemoveFeedMutation,
-  usePinFeedMutation,
-  useUnpinFeedMutation,
-} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
-import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
-import {useComposerControls} from '#/state/shell/composer'
-import {truncateAndInvalidate} from '#/state/queries/util'
+import {useIsFocused, useNavigation} from '@react-navigation/native'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {HITSLOP_20} from '#/lib/constants'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {atoms as a, useTheme} from '#/alf'
-import * as Menu from '#/components/Menu'
-import {HITSLOP_20} from '#/lib/constants'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
+import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
+import {FeedDescriptor} from '#/state/queries/post-feed'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
-  Heart2_Stroke2_Corner0_Rounded as HeartOutline,
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-} from '#/components/icons/Heart2'
+  usePinFeedMutation,
+  usePreferencesQuery,
+  UsePreferencesQueryResponse,
+  useRemoveFeedMutation,
+  useSaveFeedMutation,
+  useUnpinFeedMutation,
+} from '#/state/queries/preferences'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {Haptics} from 'lib/haptics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {ComposeIcon2} from 'lib/icons'
+import {makeCustomFeedLink} from 'lib/routes/links'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {NavigationProp} from 'lib/routes/types'
+import {shareUrl} from 'lib/sharing'
+import {pluralize} from 'lib/strings/helpers'
+import {makeRecordUri} from 'lib/strings/url-helpers'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {s} from 'lib/styles'
+import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
+import {Feed} from 'view/com/posts/Feed'
+import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
+import {EmptyState} from 'view/com/util/EmptyState'
+import {FAB} from 'view/com/util/fab/FAB'
+import {Button} from 'view/com/util/forms/Button'
+import {ListRef} from 'view/com/util/List'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {LoadingScreen} from 'view/com/util/LoadingScreen'
+import {Text} from 'view/com/util/text/Text'
+import * as Toast from 'view/com/util/Toast'
+import {CenteredView} from 'view/com/util/Views'
+import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonText} from '#/components/Button'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
+  Heart2_Stroke2_Corner0_Rounded as HeartOutline,
+} from '#/components/icons/Heart2'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {InlineLinkText} from '#/components/Link'
+import * as Menu from '#/components/Menu'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {RichText} from '#/components/RichText'
 
 const SECTION_TITLES = ['Posts']
 
@@ -580,12 +581,12 @@ function AboutSection({
           )}
         </NewButton>
         {typeof likeCount === 'number' && (
-          <InlineLink
+          <InlineLinkText
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             style={[t.atoms.text_contrast_medium, a.font_bold]}>
             {_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
-          </InlineLink>
+          </InlineLinkText>
         )}
       </View>
     </View>

@@ -60,9 +60,9 @@ export const ChooseAccountForm = ({
       testID="chooseAccountForm"
       title={<Trans>Select account</Trans>}>
       <View>
-        <TextField.Label>
+        <TextField.LabelText>
           <Trans>Sign in as...</Trans>
-        </TextField.Label>
+        </TextField.LabelText>
         <AccountList
           onSelectAccount={onSelect}
           onSelectOther={() => onSelectAccount()}

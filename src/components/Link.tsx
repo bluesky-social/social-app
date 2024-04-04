@@ -250,7 +250,7 @@ export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
 >
 
-export function InlineLink({
+export function InlineLinkText({
   children,
   to,
   action = 'push',

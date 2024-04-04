@@ -85,9 +85,9 @@ export const ForgotPasswordForm = ({
       testID="forgotPasswordForm"
       title={<Trans>Reset password</Trans>}>
       <View>
-        <TextField.Label>
+        <TextField.LabelText>
           <Trans>Hosting provider</Trans>
-        </TextField.Label>
+        </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
           onSelectServiceUrl={setServiceUrl}
@@ -95,9 +95,9 @@ export const ForgotPasswordForm = ({
         />
       </View>
       <View>
-        <TextField.Label>
+        <TextField.LabelText>
           <Trans>Email address</Trans>
-        </TextField.Label>
+        </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={At} />
           <TextField.Input

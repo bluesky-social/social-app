@@ -7,7 +7,7 @@ import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {InlineLink} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {Text, TextProps} from '#/components/Typography'
 
@@ -84,7 +84,7 @@ export function RichText({
       !disableLinks
     ) {
       els.push(
-        <InlineLink
+        <InlineLinkText
           selectable={selectable}
           key={key}
           to={`/profile/${mention.did}`}
@@ -92,14 +92,14 @@ export function RichText({
           // @ts-ignore TODO
           dataSet={WORD_WRAP}>
           {segment.text}
-        </InlineLink>,
+        </InlineLinkText>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       if (disableLinks) {
         els.push(toShortUrl(segment.text))
       } else {
         els.push(
-          <InlineLink
+          <InlineLinkText
             selectable={selectable}
             key={key}
             to={link.uri}
@@ -108,7 +108,7 @@ export function RichText({
             dataSet={WORD_WRAP}
             shareOnLongPress>
             {toShortUrl(segment.text)}
-          </InlineLink>,
+          </InlineLinkText>,
         )
       }
     } else if (

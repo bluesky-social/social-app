@@ -13,7 +13,7 @@ import {
 } from '#/state/queries/preferences'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {InlineLink} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
 
@@ -243,9 +243,9 @@ export function LabelerLabelPreference({
               ) : isGlobalLabel ? (
                 <Trans>
                   Configured in{' '}
-                  <InlineLink to="/moderation" style={a.text_sm}>
+                  <InlineLinkText to="/moderation" style={a.text_sm}>
                     moderation settings
-                  </InlineLink>
+                  </InlineLinkText>
                   .
                 </Trans>
               ) : null}
