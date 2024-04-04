@@ -1,9 +1,9 @@
 import {AppBskyActorDefs, AppBskyFeedGetRepostedBy} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
@@ -12,7 +12,8 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
-export const RQKEY = (resolvedUri: string) => ['post-reposted-by', resolvedUri]
+const RQKEY_ROOT = 'post-reposted-by'
+export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
   return useInfiniteQuery<
@@ -44,7 +45,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedGetRepostedBy.OutputSchema>
   >({
-    queryKey: ['post-reposted-by'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

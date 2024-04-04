@@ -1,16 +1,18 @@
 import {AppBskyGraphDefs} from '@atproto/api'
-import {useQuery, QueryClient} from '@tanstack/react-query'
+import {QueryClient, useQuery} from '@tanstack/react-query'
 
 import {accumulate} from '#/lib/async/accumulate'
-import {useSession, getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {getAgent, useSession} from '#/state/session'
 
 export type MyListsFilter =
   | 'all'
   | 'curate'
   | 'mod'
   | 'all-including-subscribed'
-export const RQKEY = (filter: MyListsFilter) => ['my-lists', filter]
+
+const RQKEY_ROOT = 'my-lists'
+export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter]
 
 export function useMyListsQuery(filter: MyListsFilter) {
   const {currentAccount} = useSession()
@@ -91,6 +93,6 @@ export function invalidate(qc: QueryClient, filter?: MyListsFilter) {
   if (filter) {
     qc.invalidateQueries({queryKey: RQKEY(filter)})
   } else {
-    qc.invalidateQueries({queryKey: ['my-lists']})
+    qc.invalidateQueries({queryKey: [RQKEY_ROOT]})
   }
 }

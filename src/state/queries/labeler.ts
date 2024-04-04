@@ -6,13 +6,21 @@ import {STALE} from '#/state/queries'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 
-export const labelerInfoQueryKey = (did: string) => ['labeler-info', did]
+const labelerInfoQueryKeyRoot = 'labeler-info'
+export const labelerInfoQueryKey = (did: string) => [
+  labelerInfoQueryKeyRoot,
+  did,
+]
+
+const labelersInfoQueryKeyRoot = 'labelers-info'
 export const labelersInfoQueryKey = (dids: string[]) => [
-  'labelers-info',
+  labelersInfoQueryKeyRoot,
   dids.slice().sort(),
 ]
+
+const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
 export const labelersDetailedInfoQueryKey = (dids: string[]) => [
-  'labelers-detailed-info',
+  labelersDetailedInfoQueryKeyRoot,
   dids,
 ]
 

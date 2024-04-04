@@ -1,14 +1,16 @@
 import {AppBskyActorDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
-import {useSession, getAgent} from '../session'
+
 import {STALE} from '#/state/queries'
+import {getAgent, useSession} from '../session'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000
 const PAGE_SIZE = 100
 // ...which comes 10,000k follows
 
-export const RQKEY = () => ['my-follows']
+const RQKEY_ROOT = 'my-follows'
+export const RQKEY = () => [RQKEY_ROOT]
 
 export function useMyFollowsQuery() {
   const {currentAccount} = useSession()
