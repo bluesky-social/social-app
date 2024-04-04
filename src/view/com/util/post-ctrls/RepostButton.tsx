@@ -58,7 +58,11 @@ let RepostButton = ({
         {typeof repostCount !== 'undefined' && repostCount > 0 ? (
           <Text
             testID="repostCount"
-            style={[color, a.text_md, isReposted && a.font_bold]}>
+            style={[
+              color,
+              size === 'lg' ? a.text_md : {fontSize: 15},
+              isReposted && a.font_bold,
+            ]}>
             {repostCount}
           </Text>
         ) : undefined}
