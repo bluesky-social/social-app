@@ -91,15 +91,13 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
 }
 
 export function Cancel({
-  children,
   cta,
-}: React.PropsWithChildren<{
+}: {
   /**
-   * Optional i18n string, used in lieu of `children` for simple buttons. If
-   * undefined (and `children` is undefined), it will default to "Cancel".
+   * Optional i18n string. If undefined, it will default to "Cancel".
    */
   cta?: string
-}>) {
+}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
@@ -114,27 +112,25 @@ export function Cancel({
       size={gtMobile ? 'small' : 'medium'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
-      {children ? children : <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>}
+      <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
     </Button>
   )
 }
 
 export function Action({
-  children,
   onPress,
   color = 'primary',
   cta,
   testID,
-}: React.PropsWithChildren<{
+}: {
   onPress: () => void
   color?: ButtonColor
   /**
-   * Optional i18n string, used in lieu of `children` for simple buttons. If
-   * undefined (and `children` is undefined), it will default to "Confirm".
+   * Optional i18n string. If undefined, it will default to "Confirm".
    */
   cta?: string
   testID?: string
-}>) {
+}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
@@ -151,7 +147,7 @@ export function Action({
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>
-      {children ? children : <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>}
+      <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>
     </Button>
   )
 }

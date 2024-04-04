@@ -32,8 +32,6 @@ module.exports = {
           'H5',
           'H6',
           'P',
-          'Prompt.Cancel', // TODO: Not always safe.
-          'Prompt.Action', // TODO: Not always safe.
         ],
         impliedTextProps: [],
       },
