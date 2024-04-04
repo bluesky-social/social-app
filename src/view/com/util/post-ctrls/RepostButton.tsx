@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
@@ -81,16 +81,12 @@ let RepostButton = ({
                 }}
                 size="large"
                 variant="outline">
-                <ButtonIcon
-                  icon={Repost}
-                  size="lg"
-                  color={t.palette.primary_500}
-                />
-                <ButtonText style={a.text_xl}>
+                <Repost size="lg" fill={t.palette.primary_500} />
+                <Text style={[a.font_bold, a.text_xl]}>
                   {isReposted
                     ? _(msg`Remove repost`)
                     : _(msg({message: `Repost`, context: 'action'}))}
-                </ButtonText>
+                </Text>
               </Button>
               <Button
                 style={[a.justify_start, a.px_sm]}
@@ -101,12 +97,10 @@ let RepostButton = ({
                 }}
                 size="large"
                 variant="outline">
-                <ButtonIcon
-                  icon={Quote}
-                  size="lg"
-                  color={t.palette.primary_500}
-                />
-                <ButtonText style={a.text_xl}>{_(msg`Quote post`)}</ButtonText>
+                <Quote size="lg" fill={t.palette.primary_500} />
+                <Text style={[a.font_bold, a.text_xl]}>
+                  {_(msg`Quote post`)}
+                </Text>
               </Button>
             </View>
             <Button
