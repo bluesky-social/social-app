@@ -6,7 +6,7 @@ import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 
 import {
   usePreferencesQuery,
-  useUpsertMutedWordsMutation,
+  useAddMutedWordMutation,
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 import {isNative} from '#/platform/detection'
@@ -52,7 +52,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
     data: preferences,
     error: preferencesError,
   } = usePreferencesQuery()
-  const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
+  const {isPending, mutateAsync: addMutedWord} = useAddMutedWordMutation()
   const [field, setField] = React.useState('')
   const [options, setOptions] = React.useState(['content'])
   const [error, setError] = React.useState('')
@@ -71,7 +71,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
     try {
       // send raw value and rely on SDK as sanitization source of truth
-      await addMutedWord([{value: field, targets}])
+      await addMutedWord({value: field, targets})
       setField('')
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
