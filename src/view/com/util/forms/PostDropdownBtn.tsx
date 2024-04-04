@@ -1,5 +1,10 @@
 import React, {memo} from 'react'
-import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyActorDefs,
@@ -68,6 +73,7 @@ let PostDropdownBtn = ({
   richText,
   style,
   hitSlop,
+  size,
   timestamp,
 }: {
   testID: string
@@ -79,6 +85,7 @@ let PostDropdownBtn = ({
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   hitSlop?: PressableProps['hitSlop']
+  size?: 'lg' | 'md' | 'sm'
   timestamp: string
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
@@ -244,6 +251,7 @@ let PostDropdownBtn = ({
                 <DotsHorizontal
                   fill={defaultCtrlColor}
                   style={{pointerEvents: 'none'}}
+                  size={size}
                 />
               </Pressable>
             )

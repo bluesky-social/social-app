@@ -367,7 +367,7 @@ let PostThreadItemLoaded = ({
                 ) : null}
               </View>
             ) : null}
-            <View style={[s.pl10, s.pr10, s.pb5]}>
+            <View style={[s.pl10, s.pr10]}>
               <PostCtrls
                 big
                 post={post}
@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     marginTop: 5,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   expandedInfoItem: {
     marginRight: 10,

@@ -1,13 +1,13 @@
 import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {OpenQuote_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner3_Rounded as Repost} from '#/components/icons/Repost'
+import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {EventStopper} from '../EventStopper'
@@ -17,7 +17,7 @@ interface Props {
   repostCount?: number
   onRepost: () => void
   onQuote: () => void
-  style?: StyleProp<ViewStyle>
+  size?: 'lg' | 'md' | 'sm'
 }
 
 export const RepostButton = ({
@@ -25,6 +25,7 @@ export const RepostButton = ({
   repostCount,
   onRepost,
   onQuote,
+  size,
 }: Props) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -56,6 +57,7 @@ export const RepostButton = ({
                   isReposted={isReposted}
                   color={color}
                   repostCount={repostCount}
+                  size={size}
                 />
               </Pressable>
             )
@@ -93,6 +95,7 @@ export const RepostButton = ({
         isReposted={isReposted}
         color={color}
         repostCount={repostCount}
+        size={size}
       />
     </Pressable>
   )
@@ -102,13 +105,15 @@ const RepostInner = ({
   isReposted,
   color,
   repostCount,
+  size,
 }: {
   isReposted: boolean
   color: {color: string}
   repostCount?: number
+  size?: 'lg' | 'md' | 'sm'
 }) => (
   <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
-    <Repost style={color} />
+    <Repost style={color} size={size} />
     {typeof repostCount !== 'undefined' && repostCount > 0 ? (
       <Text
         testID="repostCount"
