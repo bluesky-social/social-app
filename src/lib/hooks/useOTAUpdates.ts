@@ -1,6 +1,6 @@
 import React from 'react'
 import {Alert, AppState, AppStateStatus} from 'react-native'
-import app from 'react-native-version-number'
+import {nativeBuildVersion} from 'expo-application'
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
@@ -21,7 +21,7 @@ async function setExtraParams() {
     isIOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
-    `${app.buildVersion}`,
+    `${nativeBuildVersion}`,
   )
   await setExtraParamAsync(
     'channel',

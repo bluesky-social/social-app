@@ -173,7 +173,7 @@
     "react-native-uuid": "^2.0.1",
     "react-native-web": "~0.19.6",
     "react-native-web-webview": "^1.0.2",
-    "react-native-webview": "13.8.4",
+    "react-native-webview": "13.6.4",
     "react-responsive": "^9.0.2",
     "sentry-expo": "~7.0.1",
     "statsig-react-native-expo": "^4.6.1",

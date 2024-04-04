@@ -3,10 +3,7 @@ import {Text as RNText, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {lh, s} from 'lib/styles'
-import {lh, s} from 'lib/styles'
 import {TypographyVariant, useTheme} from 'lib/ThemeContext'
-import {TypographyVariant, useTheme} from 'lib/ThemeContext'
-import {isIOS, isWeb} from 'platform/detection'
 import {isIOS, isWeb} from 'platform/detection'
 
 export type CustomTextProps = TextProps & {
