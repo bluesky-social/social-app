@@ -1,21 +1,22 @@
 import React from 'react'
-import {AppBskyActorDefs, ModerationOpts, moderateProfile} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
-import {useMyFollowsQuery} from '#/state/queries/my-follows'
-import {STALE} from '#/state/queries'
-import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
-import {isInvalidHandle} from '#/lib/strings/handles'
 import {isJustAMute} from '#/lib/moderation'
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
+import {STALE} from '#/state/queries'
+import {useMyFollowsQuery} from '#/state/queries/my-follows'
+import {getAgent} from '#/state/session'
+import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 
 const DEFAULT_MOD_OPTS = {
   userDid: undefined,
   prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
 }
 
-export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
+const RQKEY_ROOT = 'actor-autocomplete'
+export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
 export function useActorAutocompleteQuery(prefix: string) {
   const {data: follows, isFetching} = useMyFollowsQuery()

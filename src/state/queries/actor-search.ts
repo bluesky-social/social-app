@@ -1,10 +1,11 @@
 import {AppBskyActorDefs} from '@atproto/api'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {getAgent} from '#/state/session'
 
-export const RQKEY = (prefix: string) => ['actor-search', prefix]
+const RQKEY_ROOT = 'actor-search'
+export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
 export function useActorSearch(prefix: string) {
   return useQuery<AppBskyActorDefs.ProfileView[]>({
@@ -26,7 +27,7 @@ export function* findAllProfilesInQueryData(
 ) {
   const queryDatas = queryClient.getQueriesData<AppBskyActorDefs.ProfileView[]>(
     {
-      queryKey: ['actor-search'],
+      queryKey: [RQKEY_ROOT],
     },
   )
   for (const [_queryKey, queryData] of queryDatas) {

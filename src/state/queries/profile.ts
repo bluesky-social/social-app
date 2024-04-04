@@ -30,10 +30,18 @@ import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {ThreadNode} from './post-thread'
 
-export const RQKEY = (did: string) => ['profile', did]
-export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
+const RQKEY_ROOT = 'profile'
+export const RQKEY = (did: string) => [RQKEY_ROOT, did]
+
+const profilesQueryKeyRoot = 'profiles'
+export const profilesQueryKey = (handles: string[]) => [
+  profilesQueryKeyRoot,
+  handles,
+]
+
+const profileBasicQueryKeyRoot = 'profileBasic'
 export const profileBasicQueryKey = (didOrHandle: string) => [
-  'profileBasic',
+  profileBasicQueryKeyRoot,
   didOrHandle,
 ]
 
@@ -511,7 +519,7 @@ export function* findAllProfilesInQueryData(
 ): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
   const queryDatas =
     queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
-      queryKey: ['profile'],
+      queryKey: [RQKEY_ROOT],
     })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {
