@@ -8,7 +8,7 @@ import * as TextField from '#/components/forms/TextField'
 import {DateFieldButton} from './index.shared'
 
 export * as utils from '#/components/forms/DateField/utils'
-export const Label = TextField.Label
+export const LabelText = TextField.LabelText
 
 export function DateField({
   value,

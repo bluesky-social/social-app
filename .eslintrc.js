@@ -1,5 +1,3 @@
-const bskyEslint = require('./eslint')
-
 module.exports = {
   root: true,
   extends: [
@@ -27,29 +25,18 @@ module.exports = {
       {
         impliedTextComponents: [
           'Button', // TODO: Not always safe.
-          'ButtonText',
-          'DateField.Label',
-          'Description',
           'H1',
           'H2',
           'H3',
           'H4',
           'H5',
           'H6',
-          'InlineLink',
-          'Label',
           'P',
-          'Prompt.Title',
-          'Prompt.Description',
           'Prompt.Cancel', // TODO: Not always safe.
           'Prompt.Action', // TODO: Not always safe.
-          'TextField.Label',
-          'TextField.Suffix',
-          'Title',
-          'Toggle.Label',
           'ToggleButton.Button', // TODO: Not always safe.
         ],
-        impliedTextProps: ['FormContainer title'],
+        impliedTextProps: [],
       },
     ],
     'simple-import-sort/imports': [
