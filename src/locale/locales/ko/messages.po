@@ -54,7 +54,7 @@ msgid "⚠Invalid Handle"
 msgstr "⚠잘못된 핸들"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:648
+#: src/view/screens/Search/Search.tsx:649
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
@@ -203,11 +203,11 @@ msgstr "답글이 피드에 표시되기 위해 필요한 좋아요 수를 조�
 msgid "Adult Content"
 msgstr "성인 콘텐츠"
 
-#: src/components/moderation/LabelPreference.tsx:243
+#: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
 msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 
-#: src/screens/Moderation/index.tsx:377
+#: src/screens/Moderation/index.tsx:375
 #: src/view/screens/Settings/index.tsx:684
 msgid "Advanced"
 msgstr "고급"
@@ -408,7 +408,7 @@ msgstr "이 계정들을 차단하시겠습니까?"
 msgid "Blocked"
 msgstr "차단됨"
 
-#: src/screens/Moderation/index.tsx:269
+#: src/screens/Moderation/index.tsx:267
 msgid "Blocked accounts"
 msgstr "차단한 계정"
 
@@ -429,7 +429,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 msgid "Blocked post."
 msgstr "차단된 게시물."
 
-#: src/screens/Profile/Sections/Labels.tsx:153
+#: src/screens/Profile/Sections/Labels.tsx:152
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "차단하더라도 이 라벨러가 내 계정에 라벨을 붙이는 것을 막지는 못합니다."
 
@@ -471,7 +471,7 @@ msgstr "Bluesky는 열려 있습니다."
 msgid "Bluesky is public."
 msgstr "Bluesky는 공개적입니다."
 
-#: src/screens/Moderation/index.tsx:535
+#: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "로그아웃한 사용자에게 내 프로필과 게시물을 표시하지 않습니다. 다른 앱에서는 이 설정을 따르지 않을 수 있습니다. 내 계정을 비공개로 전환하지는 않습니다."
 
@@ -488,8 +488,8 @@ msgid "Books"
 msgstr "책"
 
 #: src/view/screens/Settings/index.tsx:893
-msgid "Build version {0} {1}"
-msgstr "빌드 버전 {0} {1}"
+#~ msgid "Build version {0} {1}"
+#~ msgstr "빌드 버전 {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:92
 #: src/view/com/auth/SplashScreen.web.tsx:166
@@ -529,8 +529,8 @@ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must 
 msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
 
 #: src/components/Menu/index.tsx:213
-#: src/components/Prompt.tsx:116
-#: src/components/Prompt.tsx:118
+#: src/components/Prompt.tsx:115
+#: src/components/Prompt.tsx:117
 #: src/components/TagMenu/index.tsx:268
 #: src/view/com/composer/Composer.tsx:317
 #: src/view/com/composer/Composer.tsx:322
@@ -550,7 +550,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/Repost.tsx:87
 #: src/view/com/modals/VerifyEmail.tsx:247
 #: src/view/com/modals/VerifyEmail.tsx:253
-#: src/view/screens/Search/Search.tsx:717
+#: src/view/screens/Search/Search.tsx:718
 #: src/view/shell/desktop/Search.tsx:239
 msgid "Cancel"
 msgstr "취소"
@@ -690,7 +690,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:698
+#: src/view/screens/Search/Search.tsx:699
 msgid "Clear search query"
 msgstr "검색어 지우기"
 
@@ -806,16 +806,16 @@ msgstr "답글 작성하기"
 msgid "Configure content filtering setting for category: {0}"
 msgstr "{0} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니다."
 
-#: src/components/moderation/LabelPreference.tsx:82
+#: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
 msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니다."
 
-#: src/components/moderation/LabelPreference.tsx:245
+#: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>검토 설정</0>에서 설정합니다."
 
-#: src/components/Prompt.tsx:152
-#: src/components/Prompt.tsx:155
+#: src/components/Prompt.tsx:151
+#: src/components/Prompt.tsx:154
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:231
 #: src/view/com/modals/VerifyEmail.tsx:233
@@ -837,11 +837,11 @@ msgstr "콘텐츠 언어 설정 확인"
 msgid "Confirm delete account"
 msgstr "계정 삭제 확인"
 
-#: src/screens/Moderation/index.tsx:303
+#: src/screens/Moderation/index.tsx:301
 msgid "Confirm your age:"
 msgstr "나이를 확인하세요:"
 
-#: src/screens/Moderation/index.tsx:294
+#: src/screens/Moderation/index.tsx:292
 msgid "Confirm your birthdate"
 msgstr "생년월일 확인"
 
@@ -868,7 +868,7 @@ msgstr "콘텐츠"
 msgid "Content Blocked"
 msgstr "콘텐츠 차단됨"
 
-#: src/screens/Moderation/index.tsx:287
+#: src/screens/Moderation/index.tsx:285
 msgid "Content filters"
 msgstr "콘텐츠 필터"
 
@@ -883,7 +883,7 @@ msgid "Content Not Available"
 msgstr "콘텐츠를 사용할 수 없음"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:47
-#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:99
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:38
 msgid "Content Warning"
@@ -1011,7 +1011,7 @@ msgstr "앱 비밀번호 만들기"
 msgid "Create new account"
 msgstr "새 계정 만들기"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:94
+#: src/components/ReportDialog/SelectReportOptionView.tsx:93
 msgid "Create report for {0}"
 msgstr "{0}에 대한 신고 작성하기"
 
@@ -1143,7 +1143,7 @@ msgstr "어둑함"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
-#: src/screens/Moderation/index.tsx:343
+#: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "비활성화됨"
 
@@ -1155,8 +1155,8 @@ msgstr "삭제"
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
-#: src/screens/Moderation/index.tsx:520
-#: src/screens/Moderation/index.tsx:524
+#: src/screens/Moderation/index.tsx:518
+#: src/screens/Moderation/index.tsx:522
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "앱이 로그아웃한 사용자에게 내 계정을 표시하지 않도록 설정하기"
 
@@ -1379,7 +1379,7 @@ msgstr "이메일:"
 msgid "Enable {0} only"
 msgstr "{0}만 사용"
 
-#: src/screens/Moderation/index.tsx:331
+#: src/screens/Moderation/index.tsx:329
 msgid "Enable adult content"
 msgstr "성인 콘텐츠 활성화"
 
@@ -1404,7 +1404,7 @@ msgstr "미디어 플레이어를 사용할 외부 사이트"
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "내가 팔로우하는 사람들 간의 답글만 표시합니다."
 
-#: src/screens/Moderation/index.tsx:341
+#: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "활성화됨"
 
@@ -1466,7 +1466,7 @@ msgstr "사용자 이름 및 비밀번호 입력"
 msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 
-#: src/view/screens/Search/Search.tsx:110
+#: src/view/screens/Search/Search.tsx:111
 msgid "Error:"
 msgstr "오류:"
 
@@ -1586,7 +1586,7 @@ msgstr "피드백"
 #: src/Navigation.tsx:464
 #: src/view/screens/Feeds.tsx:419
 #: src/view/screens/Feeds.tsx:524
-#: src/view/screens/Profile.tsx:192
+#: src/view/screens/Profile.tsx:194
 #: src/view/shell/bottom-bar/BottomBar.tsx:183
 #: src/view/shell/desktop/LeftNav.tsx:346
 #: src/view/shell/Drawer.tsx:479
@@ -1624,11 +1624,11 @@ msgstr "마무리 중"
 msgid "Find accounts to follow"
 msgstr "팔로우할 계정 찾아보기"
 
-#: src/view/screens/Search/Search.tsx:441
+#: src/view/screens/Search/Search.tsx:442
 msgid "Find users on Bluesky"
 msgstr "Bluesky에서 사용자 찾기"
 
-#: src/view/screens/Search/Search.tsx:439
+#: src/view/screens/Search/Search.tsx:440
 msgid "Find users with the search tool on the right"
 msgstr "오른쪽의 검색 도구로 사용자 찾기"
 
@@ -1801,8 +1801,8 @@ msgstr "시작하기"
 msgid "Glaring violations of law or terms of service"
 msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 
-#: src/components/moderation/ScreenHider.tsx:144
-#: src/components/moderation/ScreenHider.tsx:153
+#: src/components/moderation/ScreenHider.tsx:151
+#: src/components/moderation/ScreenHider.tsx:160
 #: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:83
 #: src/view/screens/NotFound.tsx:55
@@ -1821,7 +1821,7 @@ msgstr "뒤로"
 msgid "Go Back"
 msgstr "뒤로"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:74
+#: src/components/ReportDialog/SelectReportOptionView.tsx:73
 #: src/components/ReportDialog/SubmitView.tsx:104
 #: src/screens/Onboarding/Layout.tsx:104
 #: src/screens/Onboarding/Layout.tsx:193
@@ -1837,7 +1837,7 @@ msgstr "홈으로 이동"
 msgid "Go Home"
 msgstr "홈으로 이동"
 
-#: src/view/screens/Search/Search.tsx:748
+#: src/view/screens/Search/Search.tsx:749
 #: src/view/shell/desktop/Search.tsx:263
 msgid "Go to @{queryMaybeHandle}"
 msgstr "@{queryMaybeHandle}(으)로 이동"
@@ -1893,7 +1893,7 @@ msgid "Here is your app password."
 msgstr "앱 비밀번호입니다."
 
 #: src/components/moderation/ContentHider.tsx:115
-#: src/components/moderation/LabelPreference.tsx:135
+#: src/components/moderation/LabelPreference.tsx:134
 #: src/components/moderation/PostHider.tsx:107
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
@@ -1948,7 +1948,7 @@ msgstr "피드 서버에서 잘못된 응답을 보냈습니다. 피드 소유�
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었을 수 있습니다."
 
-#: src/screens/Moderation/index.tsx:61
+#: src/screens/Moderation/index.tsx:59
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr "이 데이터를 불러오는 데 문제가 있는 것 같습니다. 자세한 내용은 아래를 참조하세요. 이 문제가 지속되면 문의해 주세요."
 
@@ -2124,11 +2124,11 @@ msgstr "{0} 님이 라벨 지정함."
 msgid "Labeled by the author."
 msgstr "작성자가 라벨 지정함."
 
-#: src/view/screens/Profile.tsx:186
+#: src/view/screens/Profile.tsx:188
 msgid "Labels"
 msgstr "라벨"
 
-#: src/screens/Profile/Sections/Labels.tsx:143
+#: src/screens/Profile/Sections/Labels.tsx:142
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "라벨은 사용자 및 콘텐츠에 대한 주석입니다. 네트워크를 숨기고, 경고하고, 분류하는 데 사용할 수 있습니다."
 
@@ -2161,7 +2161,7 @@ msgstr "언어 설정"
 msgid "Languages"
 msgstr "언어"
 
-#: src/components/moderation/ScreenHider.tsx:129
+#: src/components/moderation/ScreenHider.tsx:136
 msgid "Learn More"
 msgstr "더 알아보기"
 
@@ -2171,11 +2171,11 @@ msgid "Learn more about the moderation applied to this content."
 msgstr "이 콘텐츠에 적용된 검토 설정에 대해 자세히 알아보세요."
 
 #: src/components/moderation/PostHider.tsx:85
-#: src/components/moderation/ScreenHider.tsx:126
+#: src/components/moderation/ScreenHider.tsx:125
 msgid "Learn more about this warning"
 msgstr "이 경고에 대해 더 알아보기"
 
-#: src/screens/Moderation/index.tsx:551
+#: src/screens/Moderation/index.tsx:549
 msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky에서 공개되는 항목에 대해 자세히 알아보세요."
 
@@ -2212,7 +2212,7 @@ msgstr "출발!"
 msgid "Light"
 msgstr "밝음"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:185
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
 msgid "Like"
 msgstr "좋아요"
 
@@ -2255,7 +2255,7 @@ msgstr "님이 내 맞춤 피드를 좋아합니다"
 msgid "liked your post"
 msgstr "님이 내 게시물을 좋아합니다"
 
-#: src/view/screens/Profile.tsx:191
+#: src/view/screens/Profile.tsx:193
 msgid "Likes"
 msgstr "좋아요"
 
@@ -2300,8 +2300,8 @@ msgid "List unmuted"
 msgstr "리스트 언뮤트됨"
 
 #: src/Navigation.tsx:114
-#: src/view/screens/Profile.tsx:187
-#: src/view/screens/Profile.tsx:193
+#: src/view/screens/Profile.tsx:189
+#: src/view/screens/Profile.tsx:195
 #: src/view/shell/desktop/LeftNav.tsx:383
 #: src/view/shell/Drawer.tsx:495
 #: src/view/shell/Drawer.tsx:496
@@ -2334,7 +2334,7 @@ msgstr "로그"
 msgid "Log out"
 msgstr "로그아웃"
 
-#: src/screens/Moderation/index.tsx:444
+#: src/screens/Moderation/index.tsx:442
 msgid "Logged-out visibility"
 msgstr "로그아웃 표시"
 
@@ -2354,7 +2354,7 @@ msgstr "이곳이 당신이 가고자 하는 곳인지 확인하세요!"
 msgid "Manage your muted words and tags"
 msgstr "뮤트한 단어 및 태그 관리"
 
-#: src/view/screens/Profile.tsx:190
+#: src/view/screens/Profile.tsx:192
 msgid "Media"
 msgstr "미디어"
 
@@ -2367,7 +2367,7 @@ msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
 #: src/view/com/util/ViewHeader.tsx:87
-#: src/view/screens/Search/Search.tsx:647
+#: src/view/screens/Search/Search.tsx:648
 msgid "Menu"
 msgstr "메뉴"
 
@@ -2380,7 +2380,7 @@ msgid "Misleading Account"
 msgstr "오해의 소지가 있는 계정"
 
 #: src/Navigation.tsx:119
-#: src/screens/Moderation/index.tsx:106
+#: src/screens/Moderation/index.tsx:104
 #: src/view/screens/Settings/index.tsx:645
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:514
@@ -2415,7 +2415,7 @@ msgstr "검토 리스트 생성됨"
 msgid "Moderation list updated"
 msgstr "검토 리스트 업데이트됨"
 
-#: src/screens/Moderation/index.tsx:245
+#: src/screens/Moderation/index.tsx:243
 msgid "Moderation lists"
 msgstr "검토 리스트"
 
@@ -2432,7 +2432,7 @@ msgstr "검토 설정"
 msgid "Moderation states"
 msgstr "검토 상태"
 
-#: src/screens/Moderation/index.tsx:217
+#: src/screens/Moderation/index.tsx:215
 msgid "Moderation tools"
 msgstr "검토 도구"
 
@@ -2517,7 +2517,7 @@ msgstr "단어 및 태그 뮤트"
 msgid "Muted"
 msgstr "뮤트됨"
 
-#: src/screens/Moderation/index.tsx:257
+#: src/screens/Moderation/index.tsx:255
 msgid "Muted accounts"
 msgstr "뮤트한 계정"
 
@@ -2534,7 +2534,7 @@ msgstr "계정을 뮤트하면 피드와 알림에서 해당 계정의 게시물
 msgid "Muted by \"{0}\""
 msgstr "\"{0}\" 님이 뮤트함"
 
-#: src/screens/Moderation/index.tsx:233
+#: src/screens/Moderation/index.tsx:231
 msgid "Muted words & tags"
 msgstr "뮤트한 단어 및 태그"
 
@@ -2592,7 +2592,7 @@ msgstr "다음 화면으로 이동합니다"
 msgid "Navigates to your profile"
 msgstr "내 프로필로 이동합니다"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:123
+#: src/components/ReportDialog/SelectReportOptionView.tsx:122
 msgid "Need to report a copyright violation?"
 msgstr "저작권 위반을 신고해야 하나요?"
 
@@ -2642,7 +2642,7 @@ msgstr "새 게시물"
 
 #: src/view/screens/Feeds.tsx:555
 #: src/view/screens/Notifications.tsx:168
-#: src/view/screens/Profile.tsx:450
+#: src/view/screens/Profile.tsx:452
 #: src/view/screens/ProfileFeed.tsx:433
 #: src/view/screens/ProfileList.tsx:199
 #: src/view/screens/ProfileList.tsx:227
@@ -2733,14 +2733,14 @@ msgid "No results found for \"{query}\""
 msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:282
-#: src/view/screens/Search/Search.tsx:310
+#: src/view/screens/Search/Search.tsx:283
+#: src/view/screens/Search/Search.tsx:311
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/EmbedConsent.tsx:129
 msgid "No thanks"
-msgstr "괜찮습니다"
+msgstr "사용하지 않음"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -2760,7 +2760,7 @@ msgid "Not Applicable."
 msgstr "해당 없음."
 
 #: src/Navigation.tsx:109
-#: src/view/screens/Profile.tsx:97
+#: src/view/screens/Profile.tsx:99
 msgid "Not Found"
 msgstr "찾을 수 없음"
 
@@ -2771,10 +2771,11 @@ msgstr "나중에 하기"
 
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/util/forms/PostDropdownBtn.tsx:342
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:246
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
-#: src/screens/Moderation/index.tsx:542
+#: src/screens/Moderation/index.tsx:540
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은 Bluesky 앱과 웹사이트에서만 내 콘텐츠가 표시되는 것을 제한하며, 다른 앱에서는 이 설정을 준수하지 않을 수 있습니다. 다른 앱과 웹사이트에서는 로그아웃한 사용자에게 내 콘텐츠가 계속 표시될 수 있습니다."
 
@@ -2847,7 +2848,7 @@ msgstr "이런, 뭔가 잘못되었습니다!"
 
 #: src/components/Lists.tsx:157
 #: src/view/screens/AppPasswords.tsx:67
-#: src/view/screens/Profile.tsx:97
+#: src/view/screens/Profile.tsx:99
 msgid "Oops!"
 msgstr "이런!"
 
@@ -2868,7 +2869,7 @@ msgstr "피드 옵션 메뉴 열기"
 msgid "Open links with in-app browser"
 msgstr "링크를 인앱 브라우저로 열기"
 
-#: src/screens/Moderation/index.tsx:229
+#: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
 msgstr "뮤트한 단어 및 태그 설정 열기"
 
@@ -2953,7 +2954,7 @@ msgstr "새로운 Bluesky 핸들을 선택하기 위한 대화 상자를 엽니�
 msgid "Opens modal for downloading your Bluesky account data (repository)"
 msgstr "Bluesky 계정 데이터(저장소)를 다운로드하기 위한 대화 상자를 엽니다"
 
-#: src/view/screens/Settings/index.tsx:970
+#: src/view/screens/Settings/index.tsx:968
 msgid "Opens modal for email verification"
 msgstr "이메일 인증을 위한 대화 상자를 엽니다"
 
@@ -3221,7 +3222,7 @@ msgstr "게시물을 찾을 수 없음"
 msgid "posts"
 msgstr "게시물"
 
-#: src/view/screens/Profile.tsx:188
+#: src/view/screens/Profile.tsx:190
 msgid "Posts"
 msgstr "게시물"
 
@@ -3267,7 +3268,7 @@ msgstr "개인정보"
 #: src/Navigation.tsx:231
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings/index.tsx:925
+#: src/view/screens/Settings/index.tsx:923
 #: src/view/shell/Drawer.tsx:265
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
@@ -3277,7 +3278,7 @@ msgid "Processing..."
 msgstr "처리 중…"
 
 #: src/view/screens/DebugMod.tsx:888
-#: src/view/screens/Profile.tsx:340
+#: src/view/screens/Profile.tsx:342
 msgid "profile"
 msgstr "프로필"
 
@@ -3293,7 +3294,7 @@ msgstr "프로필"
 msgid "Profile updated"
 msgstr "프로필 업데이트됨"
 
-#: src/view/screens/Settings/index.tsx:983
+#: src/view/screens/Settings/index.tsx:981
 msgid "Protect your account by verifying your email."
 msgstr "이메일을 인증하여 계정을 보호하세요."
 
@@ -3339,7 +3340,7 @@ msgstr "무작위"
 msgid "Ratios"
 msgstr "비율"
 
-#: src/view/screens/Search/Search.tsx:776
+#: src/view/screens/Search/Search.tsx:777
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -3428,7 +3429,7 @@ msgstr "내 피드에서 제거됨"
 msgid "Removes default thumbnail from {0}"
 msgstr "{0}에서 기본 미리보기 이미지를 제거합니다"
 
-#: src/view/screens/Profile.tsx:189
+#: src/view/screens/Profile.tsx:191
 msgid "Replies"
 msgstr "답글"
 
@@ -3474,23 +3475,23 @@ msgstr "리스트 신고"
 msgid "Report post"
 msgstr "게시물 신고"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:43
+#: src/components/ReportDialog/SelectReportOptionView.tsx:42
 msgid "Report this content"
 msgstr "이 콘텐츠 신고하기"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:56
+#: src/components/ReportDialog/SelectReportOptionView.tsx:55
 msgid "Report this feed"
 msgstr "이 피드 신고하기"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:53
+#: src/components/ReportDialog/SelectReportOptionView.tsx:52
 msgid "Report this list"
 msgstr "이 리스트 신고하기"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:50
+#: src/components/ReportDialog/SelectReportOptionView.tsx:49
 msgid "Report this post"
 msgstr "이 게시물 신고하기"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:47
+#: src/components/ReportDialog/SelectReportOptionView.tsx:46
 msgid "Report this user"
 msgstr "이 사용자 신고하기"
 
@@ -3689,9 +3690,9 @@ msgstr "맨 위로 스크롤"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:420
-#: src/view/screens/Search/Search.tsx:669
-#: src/view/screens/Search/Search.tsx:687
+#: src/view/screens/Search/Search.tsx:421
+#: src/view/screens/Search/Search.tsx:670
+#: src/view/screens/Search/Search.tsx:688
 #: src/view/shell/bottom-bar/BottomBar.tsx:161
 #: src/view/shell/desktop/LeftNav.tsx:328
 #: src/view/shell/desktop/Search.tsx:215
@@ -3701,7 +3702,7 @@ msgstr "맨 위로 스크롤"
 msgid "Search"
 msgstr "검색"
 
-#: src/view/screens/Search/Search.tsx:736
+#: src/view/screens/Search/Search.tsx:737
 #: src/view/shell/desktop/Search.tsx:256
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
@@ -3764,7 +3765,7 @@ msgstr "기존 계정에서 선택"
 msgid "Select languages"
 msgstr "언어 선택"
 
-#: src/components/ReportDialog/SelectLabelerView.tsx:32
+#: src/components/ReportDialog/SelectLabelerView.tsx:30
 msgid "Select moderator"
 msgstr "검토자 선택"
 
@@ -3844,7 +3845,7 @@ msgstr "피드백 보내기"
 msgid "Send report"
 msgstr "신고 보내기"
 
-#: src/components/ReportDialog/SelectLabelerView.tsx:46
+#: src/components/ReportDialog/SelectLabelerView.tsx:44
 msgid "Send report to {0}"
 msgstr "{0} 님에게 신고 보내기"
 
@@ -3856,7 +3857,7 @@ msgstr "계정 삭제를 위한 확인 코드가 포함된 이메일을 전송�
 msgid "Server address"
 msgstr "서버 주소"
 
-#: src/screens/Moderation/index.tsx:306
+#: src/screens/Moderation/index.tsx:304
 msgid "Set birthdate"
 msgstr "생년월일 설정"
 
@@ -3953,13 +3954,14 @@ msgstr "공유"
 #: src/view/com/profile/ProfileMenu.tsx:224
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:237
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:218
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:235
 #: src/view/screens/ProfileList.tsx:388
 msgid "Share"
 msgstr "공유"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:347
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:251
 msgid "Share anyway"
 msgstr "무시하고 공유"
 
@@ -3969,7 +3971,7 @@ msgid "Share feed"
 msgstr "피드 공유"
 
 #: src/components/moderation/ContentHider.tsx:115
-#: src/components/moderation/LabelPreference.tsx:137
+#: src/components/moderation/LabelPreference.tsx:136
 #: src/components/moderation/PostHider.tsx:107
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:54
 #: src/view/screens/Settings/index.tsx:363
@@ -3980,8 +3982,8 @@ msgstr "표시"
 msgid "Show all replies"
 msgstr "모든 답글 표시"
 
-#: src/components/moderation/ScreenHider.tsx:162
-#: src/components/moderation/ScreenHider.tsx:165
+#: src/components/moderation/ScreenHider.tsx:169
+#: src/components/moderation/ScreenHider.tsx:172
 msgid "Show anyway"
 msgstr "무시하고 표시"
 
@@ -4135,7 +4137,7 @@ msgstr "가입하기"
 msgid "Sign up or sign in to join the conversation"
 msgstr "가입 또는 로그인하여 대화에 참여하세요"
 
-#: src/components/moderation/ScreenHider.tsx:98
+#: src/components/moderation/ScreenHider.tsx:97
 #: src/lib/moderation/useGlobalLabelStrings.ts:28
 msgid "Sign-in Required"
 msgstr "로그인 필요"
@@ -4167,8 +4169,8 @@ msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
 #: src/components/ReportDialog/index.tsx:59
-#: src/screens/Moderation/index.tsx:116
-#: src/screens/Profile/Sections/Labels.tsx:77
+#: src/screens/Moderation/index.tsx:114
+#: src/screens/Profile/Sections/Labels.tsx:76
 msgid "Something went wrong, please try again."
 msgstr "뭔가 잘못되었습니다. 다시 시도해 주세요."
 
@@ -4204,7 +4206,7 @@ msgstr "스포츠"
 msgid "Square"
 msgstr "정사각형"
 
-#: src/view/screens/Settings/index.tsx:905
+#: src/view/screens/Settings/index.tsx:903
 msgid "Status page"
 msgstr "상태 페이지"
 
@@ -4230,7 +4232,7 @@ msgstr "확인"
 msgid "Subscribe"
 msgstr "구독"
 
-#: src/screens/Profile/Sections/Labels.tsx:181
+#: src/screens/Profile/Sections/Labels.tsx:180
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "이 라벨을 사용하려면 @{0} 님을 구독하세요:"
 
@@ -4251,7 +4253,7 @@ msgstr "이 라벨러 구독하기"
 msgid "Subscribe to this list"
 msgstr "이 리스트 구독하기"
 
-#: src/view/screens/Search/Search.tsx:375
+#: src/view/screens/Search/Search.tsx:376
 msgid "Suggested Follows"
 msgstr "팔로우 추천"
 
@@ -4317,7 +4319,7 @@ msgstr "이용약관"
 
 #: src/Navigation.tsx:236
 #: src/screens/Signup/StepInfo/Policies.tsx:49
-#: src/view/screens/Settings/index.tsx:919
+#: src/view/screens/Settings/index.tsx:917
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:259
 msgid "Terms of Service"
@@ -4489,11 +4491,11 @@ msgstr "Bluesky에 신규 사용자가 몰리고 있습니다! 최대한 빨리 
 msgid "These are popular accounts you might like:"
 msgstr "내가 좋아할 만한 인기 계정입니다:"
 
-#: src/components/moderation/ScreenHider.tsx:117
+#: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
 msgstr "이 {screenDescription}에 다음 플래그가 지정되었습니다:"
 
-#: src/components/moderation/ScreenHider.tsx:112
+#: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
 msgstr "이 계정의 프로필을 보려면 로그인해야 합니다."
 
@@ -4552,7 +4554,7 @@ msgstr "이는 이메일을 변경하거나 비밀번호를 재설정해야 할 
 msgid "This label was applied by {0}."
 msgstr "이 라벨은 {0}이(가) 적용했습니다."
 
-#: src/screens/Profile/Sections/Labels.tsx:168
+#: src/screens/Profile/Sections/Labels.tsx:167
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "이 라벨러는 라벨을 게시하지 않았으며 활성화되어 있지 않을 수 있습니다."
 
@@ -4577,6 +4579,7 @@ msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:344
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:248
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
@@ -4646,7 +4649,7 @@ msgstr "스레드 모드"
 msgid "Threads Preferences"
 msgstr "스레드 설정"
 
-#: src/components/ReportDialog/SelectLabelerView.tsx:35
+#: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "이 신고를 누구에게 보내시겠습니까?"
 
@@ -4658,7 +4661,7 @@ msgstr "뮤트한 단어 옵션 사이를 전환합니다."
 msgid "Toggle dropdown"
 msgstr "드롭다운 열기 및 닫기"
 
-#: src/screens/Moderation/index.tsx:334
+#: src/screens/Moderation/index.tsx:332
 msgid "Toggle to enable or disable adult content"
 msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
@@ -4747,7 +4750,7 @@ msgstr "{0} 님을 언팔로우"
 msgid "Unfollow Account"
 msgstr "계정 언팔로우"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:185
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
 msgid "Unlike"
 msgstr "좋아요 취소"
 
@@ -4952,15 +4955,15 @@ msgstr "값:"
 msgid "Verify {0}"
 msgstr "{0} 확인"
 
-#: src/view/screens/Settings/index.tsx:944
+#: src/view/screens/Settings/index.tsx:942
 msgid "Verify email"
 msgstr "이메일 인증"
 
-#: src/view/screens/Settings/index.tsx:969
+#: src/view/screens/Settings/index.tsx:967
 msgid "Verify my email"
 msgstr "내 이메일 인증하기"
 
-#: src/view/screens/Settings/index.tsx:978
+#: src/view/screens/Settings/index.tsx:976
 msgid "Verify My Email"
 msgstr "내 이메일 인증하기"
 
@@ -4972,6 +4975,10 @@ msgstr "새 이메일 인증"
 #: src/view/com/modals/VerifyEmail.tsx:103
 msgid "Verify Your Email"
 msgstr "이메일 인증하기"
+
+#: src/view/screens/Settings/index.tsx:893
+msgid "Version {0}"
+msgstr "버전 {0}"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
@@ -4985,11 +4992,11 @@ msgstr "{0} 님의 아바타를 봅니다"
 msgid "View debug entry"
 msgstr "디버그 항목 보기"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:132
+#: src/components/ReportDialog/SelectReportOptionView.tsx:131
 msgid "View details"
 msgstr "세부 정보 보기"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:127
+#: src/components/ReportDialog/SelectReportOptionView.tsx:126
 msgid "View details for reporting a copyright violation"
 msgstr "저작권 위반 신고에 대한 세부 정보 보기"
 
@@ -5022,7 +5029,7 @@ msgstr "이 피드를 좋아하는 사용자 보기"
 msgid "Visit Site"
 msgstr "사이트 방문"
 
-#: src/components/moderation/LabelPreference.tsx:136
+#: src/components/moderation/LabelPreference.tsx:135
 #: src/lib/moderation/useLabelBehaviorDescription.ts:17
 #: src/lib/moderation/useLabelBehaviorDescription.ts:22
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:53
@@ -5069,7 +5076,7 @@ msgstr "\"Discover\" 피드를 권장합니다:"
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr "생년월일 설정을 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/screens/Moderation/index.tsx:387
+#: src/screens/Moderation/index.tsx:385
 msgid "We were unable to load your configured labelers at this time."
 msgstr "현재 구성된 라벨러를 불러올 수 없습니다."
 
@@ -5097,7 +5104,7 @@ msgstr "죄송하지만 이 리스트를 불러올 수 없습니다. 이 문제�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/view/screens/Search/Search.tsx:255
+#: src/view/screens/Search/Search.tsx:256
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
@@ -5137,23 +5144,23 @@ msgstr "알고리즘 피드에 어떤 언어를 표시하시겠습니까?"
 msgid "Who can reply"
 msgstr "답글을 달 수 있는 사람"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:44
+#: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Why should this content be reviewed?"
 msgstr "이 콘텐츠를 검토해야 하는 이유는 무엇인가요?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:57
+#: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Why should this feed be reviewed?"
 msgstr "이 피드를 검토해야 하는 이유는 무엇인가요?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:54
+#: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Why should this list be reviewed?"
 msgstr "이 리스트를 검토해야 하는 이유는 무엇인가요?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:51
+#: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Why should this post be reviewed?"
 msgstr "이 게시물을 검토해야 하는 이유는 무엇인가요?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:48
+#: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Why should this user be reviewed?"
 msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 
