@@ -242,6 +242,8 @@ let ProfileHeaderLabeler = ({
                   style={[a.text_md]}
                   numberOfLines={15}
                   value={descriptionRT}
+                  enableTags
+                  authorHandle={profile.handle}
                 />
               </View>
             ) : undefined}
