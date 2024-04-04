@@ -11404,6 +11404,10 @@ eslint-module-utils@^2.8.0:
   dependencies:
     debug "^3.2.7"
 
+"eslint-plugin-bsky-internal@link:./eslint":
+  version "0.0.0"
+  uid ""
+
 eslint-plugin-detox@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-detox/-/eslint-plugin-detox-1.0.0.tgz#2d9c0130e8ebc4ced56efb6eeaf0d0f5c163398d"

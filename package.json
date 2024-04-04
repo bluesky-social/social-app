@@ -236,6 +236,7 @@
     "babel-preset-expo": "^10.0.0",
     "detox": "^20.14.8",
     "eslint": "^8.19.0",
+    "eslint-plugin-bsky-internal": "link:./eslint",
     "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-ft-flow": "^2.0.3",
     "eslint-plugin-lingui": "^0.2.0",
