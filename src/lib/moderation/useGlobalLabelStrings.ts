@@ -1,6 +1,6 @@
+import {useMemo} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMemo} from 'react'
 
 export type GlobalLabelStrings = Record<
   string,
@@ -31,7 +31,7 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
         ),
       },
       porn: {
-        name: _(msg`Pornography`),
+        name: _(msg`Adult Content`),
         description: _(msg`Explicit sexual images.`),
       },
       sexual: {
