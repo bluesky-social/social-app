@@ -99,7 +99,7 @@ export const SetNewPasswordForm = ({
   return (
     <FormContainer
       testID="setNewPasswordForm"
-      title={<Trans>Set new password</Trans>}>
+      titleText={<Trans>Set new password</Trans>}>
       <Text style={[a.leading_snug, a.mb_sm]}>
         <Trans>
           You will receive an email with a "reset code." Enter that code here,

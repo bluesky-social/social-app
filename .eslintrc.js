@@ -36,7 +36,7 @@ module.exports = {
           'Prompt.Action', // TODO: Not always safe.
           'ToggleButton.Button', // TODO: Not always safe.
         ],
-        impliedTextProps: ['FormContainer title'],
+        impliedTextProps: [],
       },
     ],
     'simple-import-sort/imports': [

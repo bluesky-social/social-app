@@ -83,7 +83,7 @@ export const ForgotPasswordForm = ({
   return (
     <FormContainer
       testID="forgotPasswordForm"
-      title={<Trans>Reset password</Trans>}>
+      titleText={<Trans>Reset password</Trans>}>
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>

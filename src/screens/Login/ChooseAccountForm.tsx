@@ -58,7 +58,7 @@ export const ChooseAccountForm = ({
   return (
     <FormContainer
       testID="chooseAccountForm"
-      title={<Trans>Select account</Trans>}>
+      titleText={<Trans>Select account</Trans>}>
       <View>
         <TextField.LabelText>
           <Trans>Sign in as...</Trans>

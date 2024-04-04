@@ -128,7 +128,7 @@ export const LoginForm = ({
 
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
-    <FormContainer testID="loginForm" title={<Trans>Sign in</Trans>}>
+    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
