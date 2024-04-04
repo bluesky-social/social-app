@@ -92,7 +92,7 @@ jobs:
           echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
           echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
           
-          if [[ $fingerprint-diff =~ "bareRncliAutolinking" || $fingerprint-diff =~ "expoAutolinkingAndroid" || $fingerprint-diff =~ "expoAutolinkingIos" ]]; then
+          if [[ $fingerprint-diff =~ "bareRncliAutolinking" || $fingerprint-diff =~ "expoAutolinkingAndroid" || $fingerprint-diff =~ "bareGitIgnore" ]]; then
             echo fingerprint-is-different="true" >> "$GITHUB_OUTPUT"
           else
             echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
