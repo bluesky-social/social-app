@@ -1,15 +1,15 @@
-import {z} from 'zod'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {AppBskyLabelerDefs} from '@atproto/api'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {z} from 'zod'
 
-import {getAgent} from '#/state/session'
-import {preferencesQueryKey} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
+import {preferencesQueryKey} from '#/state/queries/preferences'
+import {getAgent} from '#/state/session'
 
 export const labelerInfoQueryKey = (did: string) => ['labeler-info', did]
 export const labelersInfoQueryKey = (dids: string[]) => [
   'labelers-info',
-  dids.sort(),
+  dids.slice().sort(),
 ]
 export const labelersDetailedInfoQueryKey = (dids: string[]) => [
   'labelers-detailed-info',
