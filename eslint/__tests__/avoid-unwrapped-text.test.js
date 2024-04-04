@@ -35,12 +35,54 @@ describe('avoid-unwrapped-text', () => {
 
       {
         code: `
+<Text>
+  <>
+    foo
+  </>
+</Text>
+        `,
+      },
+
+      {
+        code: `
+<Text>
+  {foo && <Trans>foo</Trans>}
+</Text>
+        `,
+      },
+
+      {
+        code: `
+<Text>
+  {foo ? <Trans>foo</Trans> : <Trans>bar</Trans>}
+</Text>
+        `,
+      },
+
+      {
+        code: `
 <Trans>
   <Text>
     foo
   </Text>
 </Trans>
         `,
+      },
+
+      {
+        code: `
+<Trans>
+  {foo && <Text>foo</Text>}
+</Trans>
+              `,
+      },
+
+      {
+        code: `
+<Trans>
+  {foo ? <Text>foo</Text> : <Text>bar</Text>}
+</Trans>
+              `,
       },
 
       {
@@ -138,7 +180,17 @@ describe('avoid-unwrapped-text', () => {
       {
         code: `
 <View prop={
-  <Text>foo</Text>
+  foo && <Text>foo</Text>
+}>
+  <Bar />
+</View>
+        `,
+      },
+
+      {
+        code: `
+<View prop={
+  foo ? <Text>foo</Text> : <Text>bar</Text>
 }>
   <Bar />
 </View>
@@ -174,13 +226,51 @@ describe('avoid-unwrapped-text', () => {
 </Foo>
         `,
       },
+
+      {
+        code: `
+<Foo propText={
+  foo && <Trans>foo</Trans>
+}>
+  <Bar />
+</Foo>
+              `,
+      },
+
+      {
+        code: `
+<Foo propText={
+  foo ? <Trans>foo</Trans> : <Trans>bar</Trans>
+}>
+  <Bar />
+</Foo>
+              `,
+      },
     ],
 
     invalid: [
       {
         code: `
+<View> </View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
 <View>
   foo
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <>
+    foo
+  </>
 </View>
         `,
         errors: 1,
@@ -195,6 +285,24 @@ describe('avoid-unwrapped-text', () => {
 </View>
         `,
         errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {foo && <Trans>foo</Trans>}
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {foo ? <Trans>foo</Trans> : <Trans>bar</Trans>}
+</View>
+        `,
+        errors: 2,
       },
 
       {
@@ -248,6 +356,28 @@ describe('avoid-unwrapped-text', () => {
 </Text>
         `,
         errors: 1,
+      },
+
+      {
+        code: `
+<Text prop={
+  foo && <View>foo</View>
+}>
+  <Bar />
+</Text>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<Text prop={
+  foo ? <View>foo</View> : <View>bar</View>
+}>
+  <Bar />
+</Text>
+        `,
+        errors: 2,
       },
 
       {

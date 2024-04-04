@@ -36,7 +36,6 @@ exports.create = function create(context) {
   const textProps = [...impliedTextProps]
   const textComponents = ['Text', ...impliedTextComponents]
   return {
-    // TODO: Validate expressions.
     JSXText(node) {
       if (typeof node.value !== 'string' || hasOnlyLineBreak(node.value)) {
         return
