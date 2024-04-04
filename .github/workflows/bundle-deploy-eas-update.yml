@@ -87,7 +87,6 @@ jobs:
       - name: 👀 Debug fingerprint
         id: fingerprint-debug
         run: |
-          echo "fingerprint-diff=${{ steps.fingerprint.outputs.fingerprint-diff }}"
           echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
           echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
           
