@@ -39,9 +39,9 @@ export const profilesQueryKey = (handles: string[]) => [
   handles,
 ]
 
-const profilesBasicQueryKeyRoot = 'profileBasic'
+const profileBasicQueryKeyRoot = 'profileBasic'
 export const profileBasicQueryKey = (didOrHandle: string) => [
-  profilesBasicQueryKeyRoot,
+  profileBasicQueryKeyRoot,
   didOrHandle,
 ]
 
