@@ -82,15 +82,16 @@ jobs:
         uses: expo/expo-github-action/fingerprint@main
         with:
           previous-git-commit: ${{ steps.base-commit.outputs.base-commit }}
+          args:
 
       - name: 👀 Debug fingerprint
         id: fingerprint-debug
         run: |
-          echo "fingerprint-diff=${{ steps.fingerprint.outputs.fingerprint-diff }}"
           echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
           echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
           
-          if [ "${{ steps.fingerprint.outputs.fingerprint-diff }}" != '[]' ]; then
+          fingerprintDiff="${{ steps.fingerprint.outputs.fingerprint-diff }}"
+          if [[ $fingerprintDiff =~ "bareRncliAutolinking" || $fingerprintDiff =~ "expoAutolinkingAndroid" || $fingerprintDiff =~ "expoAutolinkingIos" ]]; then
             echo fingerprint-is-different="true" >> "$GITHUB_OUTPUT"
           else
             echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
@@ -98,37 +99,37 @@ jobs:
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@v8
-        if: ${{ steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         with:
           expo-version: latest
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup Expo
-        if: ${{ steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         run: yarn global add eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
-        if: ${{ steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         uses: dcarbone/install-jq-action@v2
 
       - name: 🔤 Compile Translations
-        if: ${{ steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         run: yarn intl:build
 
       - name: ✏️ Write environment variables
-        if: ${{ steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "$json" > google-services.json
 
       - name: 🏗️ Create Bundle
-        if: ${{ steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         run: EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
-        if: ${{ steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         run: yarn use-build-number bash scripts/bundleUpdate.sh
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}

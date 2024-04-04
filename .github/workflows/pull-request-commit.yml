@@ -80,7 +80,7 @@ jobs:
         with:
           base_path: 'stats-base.json'
           pr_path: '../stats-new.json'
-          excluded_assets: '(.+).js.map|(.+).json|(.+).png'
+          excluded_assets: '(.+).chunk.js|(.+).js.map|(.+).json|(.+).png'
 
       - name: 🔍 Find old comment if it exists
         uses: peter-evans/find-comment@v2
@@ -99,7 +99,7 @@ jobs:
             const body = `<!-- webpack-analyzer comment -->
             | Old size | New size | Diff                  |
             |----------|----------|-----------------------|
-            | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}% |
+            | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}%) |
             `;
             
             github.rest.issues.createComment({

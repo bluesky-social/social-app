@@ -39,7 +39,6 @@ export function ProfileFollows({name}: {name: string}) {
   const {
     data,
     isLoading: isFollowsLoading,
-    isFetching,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
@@ -47,14 +46,8 @@ export function ProfileFollows({name}: {name: string}) {
     refetch,
   } = useProfileFollowsQuery(resolvedDid)
 
-  const isError = React.useMemo(
-    () => !!resolveError || !!error,
-    [resolveError, error],
-  )
-
-  const isMe = React.useMemo(() => {
-    return resolvedDid === currentAccount?.did
-  }, [resolvedDid, currentAccount?.did])
+  const isError = !!resolveError || !!error
+  const isMe = resolvedDid === currentAccount?.did
 
   const follows = React.useMemo(() => {
     if (data?.pages) {
@@ -73,20 +66,19 @@ export function ProfileFollows({name}: {name: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = async () => {
-    if (isFetching || !hasNextPage || !!error) return
+  const onEndReached = React.useCallback(async () => {
+    if (isFetchingNextPage || !hasNextPage || !!error) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more follows', {error: err})
     }
-  }
+  }, [error, fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  return (
-    <>
+  if (follows.length < 1) {
+    return (
       <ListMaybePlaceholder
         isLoading={isDidLoading || isFollowsLoading}
-        isEmpty={follows.length < 1}
         isError={isError}
         emptyType="results"
         emptyMessage={
@@ -97,23 +89,30 @@ export function ProfileFollows({name}: {name: string}) {
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
       />
-      {follows.length > 0 && (
-        <List
-          data={follows}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={4}
-          ListHeaderComponent={<ListHeaderDesktop title={_(msg`Following`)} />}
-          ListFooterComponent={<ListFooter isFetching={isFetchingNextPage} />}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-          initialNumToRender={initialNumToRender}
-          windowSize={11}
+    )
+  }
+
+  return (
+    <List
+      data={follows}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      refreshing={isPTRing}
+      onRefresh={onRefresh}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={4}
+      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Following`)} />}
+      ListFooterComponent={
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          error={cleanError(error)}
+          onRetry={fetchNextPage}
         />
-      )}
-    </>
+      }
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
+    />
   )
 }

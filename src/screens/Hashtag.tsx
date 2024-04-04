@@ -10,6 +10,7 @@ import {HITSLOP_10} from 'lib/constants'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
+import {cleanError} from 'lib/strings/errors'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {enforceLen} from 'lib/strings/helpers'
 import {isNative} from 'platform/detection'
@@ -62,9 +63,8 @@ export default function HashtagScreen({
 
   const {
     data,
-    isFetching,
+    isFetchingNextPage,
     isLoading,
-    isRefetching,
     isError,
     error,
     refetch,
@@ -98,9 +98,9 @@ export default function HashtagScreen({
   }, [refetch])
 
   const onEndReached = React.useCallback(() => {
-    if (isFetching || !hasNextPage || error) return
+    if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
-  }, [isFetching, hasNextPage, error, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   return (
     <>
@@ -124,16 +124,16 @@ export default function HashtagScreen({
             : undefined
         }
       />
-      <ListMaybePlaceholder
-        isLoading={isLoading || isRefetching}
-        isError={isError}
-        isEmpty={posts.length < 1}
-        onRetry={refetch}
-        emptyTitle="results"
-        emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
-      />
-      {!isLoading && posts.length > 0 && (
-        <List<PostView>
+      {posts.length < 1 ? (
+        <ListMaybePlaceholder
+          isLoading={isLoading}
+          isError={isError}
+          onRetry={refetch}
+          emptyType="results"
+          emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
+        />
+      ) : (
+        <List
           data={posts}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
@@ -151,9 +151,8 @@ export default function HashtagScreen({
           }
           ListFooterComponent={
             <ListFooter
-              isFetching={isFetching && !isRefetching}
-              isError={isError}
-              error={error?.name}
+              isFetchingNextPage={isFetchingNextPage}
+              error={cleanError(error)}
               onRetry={fetchNextPage}
             />
           }
