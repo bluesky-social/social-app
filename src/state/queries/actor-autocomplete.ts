@@ -30,7 +30,7 @@ export function useActorAutocompleteQuery(prefix: string) {
     async queryFn() {
       const res = prefix
         ? await getAgent().searchActorsTypeahead({
-            term: prefix,
+            q: prefix,
             limit: 8,
           })
         : undefined
@@ -68,7 +68,7 @@ export function useActorAutocompleteFn() {
             queryKey: RQKEY(query || ''),
             queryFn: () =>
               getAgent().searchActorsTypeahead({
-                term: query,
+                q: query,
                 limit,
               }),
           })

@@ -13,7 +13,7 @@ export function useActorSearch(prefix: string) {
     queryKey: RQKEY(prefix || ''),
     async queryFn() {
       const res = await getAgent().searchActors({
-        term: prefix,
+        q: prefix,
       })
       return res.data.actors
     },
