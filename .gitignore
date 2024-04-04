@@ -18,7 +18,6 @@ xcuserdata
 *.moved-aside
 DerivedData
 *.hmap
-*.ipa
 *.xcuserstate
 
 # Android/IntelliJ
@@ -110,3 +109,8 @@ google-services.json
 # i18n
 src/locale/locales/_build/
 src/locale/locales/**/*.js
+
+# local builds
+*.apk
+*.aab
+*.ipa

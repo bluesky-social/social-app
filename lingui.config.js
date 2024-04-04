@@ -7,14 +7,17 @@ module.exports = {
     'es',
     'fi',
     'fr',
+    'ga',
     'hi',
     'id',
     'it',
     'ja',
     'ko',
     'pt-BR',
+    'tr',
     'uk',
     'zh-CN',
+    'zh-TW',
   ],
   catalogs: [
     {
