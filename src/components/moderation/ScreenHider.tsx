@@ -124,7 +124,15 @@ export function ScreenHider({
               accessibilityRole="button"
               accessibilityLabel={_(msg`Learn more about this warning`)}
               accessibilityHint="">
-              <Text style={[a.text_lg, {color: t.palette.primary_500}]}>
+              <Text
+                style={[
+                  a.text_lg,
+                  {
+                    color: t.palette.primary_500,
+                    // @ts-ignore web only -prf
+                    cursor: 'pointer',
+                  },
+                ]}>
                 <Trans>Learn More</Trans>
               </Text>
             </TouchableWithoutFeedback>

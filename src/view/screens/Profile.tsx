@@ -9,6 +9,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isInvalidHandle} from '#/lib/strings/handles'
@@ -48,6 +49,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen({route}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
   const name =
     route.params.name === 'me' ? currentAccount?.did : route.params.name
   const moderationOpts = useModerationOpts()
@@ -78,9 +80,9 @@ export function ProfileScreen({route}: Props) {
   // When we open the profile, we want to reset the posts query if we are blocked.
   React.useEffect(() => {
     if (resolvedDid && profile?.viewer?.blockedBy) {
-      resetProfilePostsQueries(resolvedDid)
+      resetProfilePostsQueries(queryClient, resolvedDid)
     }
-  }, [profile?.viewer?.blockedBy, resolvedDid])
+  }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
   if (isLoadingDid || isLoadingProfile) {

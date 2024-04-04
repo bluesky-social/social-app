@@ -29,7 +29,6 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
 import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
-import {queryClient} from 'lib/react-query'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from './preferences'
@@ -459,7 +458,11 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   }
 }
 
-export function resetProfilePostsQueries(did: string, timeout = 0) {
+export function resetProfilePostsQueries(
+  queryClient: QueryClient,
+  did: string,
+  timeout = 0,
+) {
   setTimeout(() => {
     queryClient.resetQueries({
       predicate: query =>

@@ -4,18 +4,13 @@ import 'view/icons'
 import React, {useEffect, useState} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
 import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import {
-  asyncStoragePersister,
-  dehydrateOptions,
-  queryClient,
-} from 'lib/react-query'
+import {QueryProvider} from 'lib/react-query'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {Provider as DialogStateProvider} from 'state/dialogs'
 import {Provider as InvitesStateProvider} from 'state/invites'
@@ -59,25 +54,27 @@ function InnerApp() {
       <React.Fragment
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>
-        <StatsigProvider>
-          <LabelDefsProvider>
-            <LoggedOutViewProvider>
-              <SelectedFeedProvider>
-                <UnreadNotifsProvider>
-                  <ThemeProvider theme={theme}>
-                    {/* All components should be within this provider */}
-                    <RootSiblingParent>
-                      <SafeAreaProvider>
-                        <Shell />
-                      </SafeAreaProvider>
-                    </RootSiblingParent>
-                    <ToastContainer />
-                  </ThemeProvider>
-                </UnreadNotifsProvider>
-              </SelectedFeedProvider>
-            </LoggedOutViewProvider>
-          </LabelDefsProvider>
-        </StatsigProvider>
+        <QueryProvider currentDid={currentAccount?.did}>
+          <StatsigProvider>
+            <LabelDefsProvider>
+              <LoggedOutViewProvider>
+                <SelectedFeedProvider>
+                  <UnreadNotifsProvider>
+                    <ThemeProvider theme={theme}>
+                      {/* All components should be within this provider */}
+                      <RootSiblingParent>
+                        <SafeAreaProvider>
+                          <Shell />
+                        </SafeAreaProvider>
+                      </RootSiblingParent>
+                      <ToastContainer />
+                    </ThemeProvider>
+                  </UnreadNotifsProvider>
+                </SelectedFeedProvider>
+              </LoggedOutViewProvider>
+            </LabelDefsProvider>
+          </StatsigProvider>
+        </QueryProvider>
       </React.Fragment>
     </Alf>
   )
@@ -99,31 +96,27 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
-      <SessionProvider>
-        <ShellStateProvider>
-          <PrefsStateProvider>
-            <MutedThreadsProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <PortalProvider>
-                          <InnerApp />
-                        </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </MutedThreadsProvider>
-          </PrefsStateProvider>
-        </ShellStateProvider>
-      </SessionProvider>
-    </PersistQueryClientProvider>
+    <SessionProvider>
+      <ShellStateProvider>
+        <PrefsStateProvider>
+          <MutedThreadsProvider>
+            <InvitesStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <PortalProvider>
+                        <InnerApp />
+                      </PortalProvider>
+                    </I18nProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
+            </InvitesStateProvider>
+          </MutedThreadsProvider>
+        </PrefsStateProvider>
+      </ShellStateProvider>
+    </SessionProvider>
   )
 }
 

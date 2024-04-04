@@ -127,6 +127,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.fi
       case 'fr':
         return AppLanguage.fr
+      case 'ga':
+        return AppLanguage.ga
       case 'hi':
         return AppLanguage.hi
       case 'id':
@@ -143,8 +145,12 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.ca
       case 'zh-CN':
         return AppLanguage.zh_CN
+      case 'zh-TW':
+        return AppLanguage.zh_TW
       case 'it':
         return AppLanguage.it
+      case 'tr':
+        return AppLanguage.tr
       default:
         continue
     }
