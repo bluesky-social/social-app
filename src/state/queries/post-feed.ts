@@ -58,8 +58,9 @@ export interface FeedParams {
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
 
+const RQKEY_ROOT = 'post-feed'
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
-  return ['post-feed', feedDesc, params || {}]
+  return [RQKEY_ROOT, feedDesc, params || {}]
 }
 
 export interface FeedPostSliceItem {
@@ -402,7 +403,7 @@ export function* findAllPostsInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
-    queryKey: ['post-feed'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
@@ -467,7 +468,7 @@ export function resetProfilePostsQueries(
     queryClient.resetQueries({
       predicate: query =>
         !!(
-          query.queryKey[0] === 'post-feed' &&
+          query.queryKey[0] === RQKEY_ROOT &&
           (query.queryKey[1] as string)?.includes(did)
         ),
     })

@@ -2,8 +2,7 @@ import {Share} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 
 import {isAndroid, isIOS} from 'platform/detection'
-// import * as Sharing from 'expo-sharing'
-import * as Toast from '../view/com/util/Toast'
+import * as Toast from '#/view/com/util/Toast'
 
 /**
  * This function shares a URL using the native Share API if available, or copies it to the clipboard

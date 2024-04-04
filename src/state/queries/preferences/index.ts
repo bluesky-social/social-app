@@ -29,7 +29,8 @@ export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/types'
 
-export const preferencesQueryKey = ['getPreferences']
+const preferencesQueryKeyRoot = 'getPreferences'
+export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   return useQuery({

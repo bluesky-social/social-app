@@ -2,6 +2,7 @@
 module.exports = {
   locales: [
     'en',
+    'ca',
     'de',
     'es',
     'fi',
@@ -9,15 +10,14 @@ module.exports = {
     'ga',
     'hi',
     'id',
+    'it',
     'ja',
     'ko',
     'pt-BR',
+    'tr',
     'uk',
-    'ca',
     'zh-CN',
     'zh-TW',
-    'it',
-    'tr',
   ],
   catalogs: [
     {

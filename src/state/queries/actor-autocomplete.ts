@@ -15,7 +15,8 @@ const DEFAULT_MOD_OPTS = {
   prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
 }
 
-export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
+const RQKEY_ROOT = 'actor-autocomplete'
+export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
 export function useActorAutocompleteQuery(prefix: string) {
   const {data: follows, isFetching} = useMyFollowsQuery()
@@ -29,7 +30,7 @@ export function useActorAutocompleteQuery(prefix: string) {
     async queryFn() {
       const res = prefix
         ? await getAgent().searchActorsTypeahead({
-            term: prefix,
+            q: prefix,
             limit: 8,
           })
         : undefined
@@ -67,7 +68,7 @@ export function useActorAutocompleteFn() {
             queryKey: RQKEY(query || ''),
             queryFn: () =>
               getAgent().searchActorsTypeahead({
-                term: query,
+                q: query,
                 limit,
               }),
           })

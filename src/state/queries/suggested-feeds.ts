@@ -1,10 +1,11 @@
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
 import {AppBskyFeedGetSuggestedFeeds} from '@atproto/api'
+import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {getAgent} from '#/state/session'
 
-export const suggestedFeedsQueryKey = ['suggestedFeeds']
+const suggestedFeedsQueryKeyRoot = 'suggestedFeeds'
+export const suggestedFeedsQueryKey = [suggestedFeedsQueryKeyRoot]
 
 export function useSuggestedFeedsQuery() {
   return useInfiniteQuery<

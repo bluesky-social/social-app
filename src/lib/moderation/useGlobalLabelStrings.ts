@@ -31,7 +31,7 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
         ),
       },
       porn: {
-        name: _(msg`Pornography`),
+        name: _(msg`Adult Content`),
         description: _(msg`Explicit sexual images.`),
       },
       sexual: {

@@ -9,7 +9,8 @@ import {updatePostShadow} from '#/state/cache/post-shadow'
 import {Shadow} from '#/state/cache/types'
 import {getAgent} from '#/state/session'
 
-export const RQKEY = (postUri: string) => ['post', postUri]
+const RQKEY_ROOT = 'post'
+export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
   return useQuery<AppBskyFeedDefs.PostView>({

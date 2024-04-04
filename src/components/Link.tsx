@@ -4,15 +4,16 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {AllNavigatorParams} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
-import {useOpenLink} from 'state/preferences/in-app-browser'
 import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -60,6 +61,11 @@ type BaseLinkProps = Pick<
    * Web-only attribute. Sets `download` attr on web.
    */
   download?: string
+
+  /**
+   * Native-only attribute. If true, will open the share sheet on long press.
+   */
+  shareOnLongPress?: boolean
 }
 
 export function useLink({
@@ -68,6 +74,7 @@ export function useLink({
   action = 'push',
   disableMismatchWarning,
   onPress: outerOnPress,
+  shareOnLongPress,
 }: BaseLinkProps & {
   displayText: string
 }) {
@@ -157,10 +164,34 @@ export function useLink({
     ],
   )
 
+  const handleLongPress = React.useCallback(() => {
+    const requiresWarning = Boolean(
+      !disableMismatchWarning &&
+        displayText &&
+        isExternal &&
+        linkRequiresWarning(href, displayText),
+    )
+
+    if (requiresWarning) {
+      openModal({
+        name: 'link-warning',
+        text: displayText,
+        href: href,
+        share: true,
+      })
+    } else {
+      shareUrl(href)
+    }
+  }, [disableMismatchWarning, displayText, href, isExternal, openModal])
+
+  const onLongPress =
+    isNative && isExternal && shareOnLongPress ? handleLongPress : undefined
+
   return {
     isExternal,
     href,
     onPress,
+    onLongPress,
   }
 }
 
@@ -229,16 +260,18 @@ export function InlineLink({
   download,
   selectable,
   label,
+  shareOnLongPress,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
   const stringChildren = typeof children === 'string'
-  const {href, isExternal, onPress} = useLink({
+  const {href, isExternal, onPress, onLongPress} = useLink({
     to,
     displayText: stringChildren ? children : '',
     action,
     disableMismatchWarning,
     onPress: outerOnPress,
+    shareOnLongPress,
   })
   const {
     state: hovered,
@@ -270,6 +303,7 @@ export function InlineLink({
       ]}
       role="link"
       onPress={download ? undefined : onPress}
+      onLongPress={onLongPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       onFocus={onFocus}
