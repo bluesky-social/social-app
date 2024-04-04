@@ -136,7 +136,7 @@ jobs:
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' }}
         with:
           header: fingerprint-diff
           message: |
