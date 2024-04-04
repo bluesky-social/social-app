@@ -1,17 +1,17 @@
 import React from 'react'
 import {View} from 'react-native'
-import {LabelPreference, InterpretedLabelValueDefinition} from '@atproto/api'
-import {useLingui} from '@lingui/react'
+import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
+import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {
   usePreferencesQuery,
   usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences'
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
+import {Text} from '#/components/Typography'
 
 export function ModerationOption({
   labelValueDefinition,
@@ -82,15 +82,15 @@ export function ModerationOption({
             )}
             values={[visibility ?? 'hide']}
             onChange={onChange}>
-            <ToggleButton.Button name="ignore" label={labels.show}>
+            <ToggleButton.ButtonWithText name="ignore" label={labels.show}>
               {labels.show}
-            </ToggleButton.Button>
-            <ToggleButton.Button name="warn" label={labels.warn}>
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="warn" label={labels.warn}>
               {labels.warn}
-            </ToggleButton.Button>
-            <ToggleButton.Button name="hide" label={labels.hide}>
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="hide" label={labels.hide}>
               {labels.hide}
-            </ToggleButton.Button>
+            </ToggleButton.ButtonWithText>
           </ToggleButton.Group>
         )}
       </View>

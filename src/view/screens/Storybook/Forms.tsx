@@ -201,15 +201,15 @@ export function Forms() {
           label="Preferences"
           values={toggleGroupDValues}
           onChange={setToggleGroupDValues}>
-          <ToggleButton.Button name="hide" label="Hide">
+          <ToggleButton.ButtonWithText name="hide" label="Hide">
             Hide
-          </ToggleButton.Button>
-          <ToggleButton.Button name="warn" label="Warn">
+          </ToggleButton.ButtonWithText>
+          <ToggleButton.ButtonWithText name="warn" label="Warn">
             Warn
-          </ToggleButton.Button>
-          <ToggleButton.Button name="show" label="Show">
+          </ToggleButton.ButtonWithText>
+          <ToggleButton.ButtonWithText name="show" label="Show">
             Show
-          </ToggleButton.Button>
+          </ToggleButton.ButtonWithText>
         </ToggleButton.Group>
 
         <View>
@@ -217,15 +217,15 @@ export function Forms() {
             label="Preferences"
             values={toggleGroupDValues}
             onChange={setToggleGroupDValues}>
-            <ToggleButton.Button name="hide" label="Hide">
+            <ToggleButton.ButtonWithText name="hide" label="Hide">
               Hide
-            </ToggleButton.Button>
-            <ToggleButton.Button name="warn" label="Warn">
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="warn" label="Warn">
               Warn
-            </ToggleButton.Button>
-            <ToggleButton.Button name="show" label="Show">
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="show" label="Show">
               Show
-            </ToggleButton.Button>
+            </ToggleButton.ButtonWithText>
           </ToggleButton.Group>
         </View>
       </View>

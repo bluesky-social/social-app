@@ -34,7 +34,6 @@ module.exports = {
           'P',
           'Prompt.Cancel', // TODO: Not always safe.
           'Prompt.Action', // TODO: Not always safe.
-          'ToggleButton.Button', // TODO: Not always safe.
         ],
         impliedTextProps: [],
       },

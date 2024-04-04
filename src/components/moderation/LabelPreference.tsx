@@ -83,19 +83,19 @@ export function Buttons({
         values={values}
         onChange={onChange}>
         {ignoreLabel && (
-          <ToggleButton.Button name="ignore" label={ignoreLabel}>
+          <ToggleButton.ButtonWithText name="ignore" label={ignoreLabel}>
             {ignoreLabel}
-          </ToggleButton.Button>
+          </ToggleButton.ButtonWithText>
         )}
         {warnLabel && (
-          <ToggleButton.Button name="warn" label={warnLabel}>
+          <ToggleButton.ButtonWithText name="warn" label={warnLabel}>
             {warnLabel}
-          </ToggleButton.Button>
+          </ToggleButton.ButtonWithText>
         )}
         {hideLabel && (
-          <ToggleButton.Button name="hide" label={hideLabel}>
+          <ToggleButton.ButtonWithText name="hide" label={hideLabel}>
             {hideLabel}
-          </ToggleButton.Button>
+          </ToggleButton.ButtonWithText>
         )}
       </ToggleButton.Group>
     </View>
