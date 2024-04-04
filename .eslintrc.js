@@ -26,7 +26,6 @@ module.exports = {
         impliedTextComponents: [
           'Button', // TODO: Not always safe.
           'DateField.Label',
-          'Description',
           'H1',
           'H2',
           'H3',
@@ -36,13 +35,10 @@ module.exports = {
           'InlineLink',
           'Label',
           'P',
-          'Prompt.Title',
-          'Prompt.Description',
           'Prompt.Cancel', // TODO: Not always safe.
           'Prompt.Action', // TODO: Not always safe.
           'TextField.Label',
           'TextField.Suffix',
-          'Title',
           'Toggle.Label',
           'ToggleButton.Button', // TODO: Not always safe.
         ],

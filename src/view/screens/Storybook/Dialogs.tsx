@@ -1,12 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
 
+import {useDialogStateControlContext} from '#/state/dialogs'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
-import {H3, P} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
-import {useDialogStateControlContext} from '#/state/dialogs'
+import {H3, P} from '#/components/Typography'
 
 export function Dialogs() {
   const scrollable = Dialog.useDialogControl()
@@ -61,11 +61,11 @@ export function Dialogs() {
       </Button>
 
       <Prompt.Outer control={prompt}>
-        <Prompt.Title>This is a prompt</Prompt.Title>
-        <Prompt.Description>
+        <Prompt.TitleText>This is a prompt</Prompt.TitleText>
+        <Prompt.DescriptionText>
           This is a generic prompt component. It accepts a title and a
           description, as well as two actions.
-        </Prompt.Description>
+        </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Cancel>Cancel</Prompt.Cancel>
           <Prompt.Action onPress={() => {}}>Confirm</Prompt.Action>

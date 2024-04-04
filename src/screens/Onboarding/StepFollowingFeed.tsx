@@ -10,9 +10,9 @@ import {
   useSetFeedViewPreferencesMutation,
 } from 'state/queries/preferences'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {atoms as a} from '#/alf'
@@ -58,12 +58,12 @@ export function StepFollowingFeed() {
     <View style={[a.align_start]}>
       <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Your default feed is "Following"</Trans>
-      </Title>
-      <Description style={[a.mb_md]}>
+      </TitleText>
+      <DescriptionText style={[a.mb_md]}>
         <Trans>It shows posts from the people you follow as they happen.</Trans>
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full]}>
         <Toggle.Item
@@ -139,9 +139,9 @@ export function StepFollowingFeed() {
         </Toggle.Item>
       </View>
 
-      <Description style={[a.mt_lg]}>
+      <DescriptionText style={[a.mt_lg]}>
         <Trans>You can change these settings later.</Trans>
-      </Description>
+      </DescriptionText>
 
       <OnboardingControls.Portal>
         <Button
