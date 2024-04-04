@@ -2,6 +2,7 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
+import {labelersDetailedInfoQueryKeyRoot} from '#/lib/react-query'
 import {STALE} from '#/state/queries'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
@@ -18,7 +19,6 @@ export const labelersInfoQueryKey = (dids: string[]) => [
   dids.slice().sort(),
 ]
 
-const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
 export const labelersDetailedInfoQueryKey = (dids: string[]) => [
   labelersDetailedInfoQueryKeyRoot,
   dids,
