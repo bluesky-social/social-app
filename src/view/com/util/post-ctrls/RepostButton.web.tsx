@@ -7,7 +7,7 @@ import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {OpenQuote_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner0_Rounded as Repost} from '#/components/icons/Repost'
+import {Repost_Stroke2_Corner3_Rounded as Repost} from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {EventStopper} from '../EventStopper'
@@ -15,7 +15,6 @@ import {EventStopper} from '../EventStopper'
 interface Props {
   isReposted: boolean
   repostCount?: number
-  big?: boolean
   onRepost: () => void
   onQuote: () => void
   style?: StyleProp<ViewStyle>
@@ -24,7 +23,6 @@ interface Props {
 export const RepostButton = ({
   isReposted,
   repostCount,
-  big,
   onRepost,
   onQuote,
 }: Props) => {
@@ -51,17 +49,12 @@ export const RepostButton = ({
                 style={[
                   a.rounded_full,
                   (state.hovered || state.pressed) && {
-                    backgroundColor: t.palette.positive_100,
+                    backgroundColor: t.palette.contrast_50,
                   },
                 ]}>
                 <RepostInner
-                  big={big}
                   isReposted={isReposted}
-                  color={
-                    state.hovered || state.pressed
-                      ? {color: t.palette.positive_600}
-                      : color
-                  }
+                  color={color}
                   repostCount={repostCount}
                 />
               </Pressable>
@@ -97,7 +90,6 @@ export const RepostButton = ({
       accessibilityLabel={_(msg`Repost or quote post`)}
       accessibilityHint="">
       <RepostInner
-        big={big}
         isReposted={isReposted}
         color={color}
         repostCount={repostCount}
@@ -107,18 +99,16 @@ export const RepostButton = ({
 }
 
 const RepostInner = ({
-  big,
   isReposted,
   color,
   repostCount,
 }: {
-  big?: boolean
   isReposted: boolean
   color: {color: string}
   repostCount?: number
 }) => (
   <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
-    <Repost size={big ? 'lg' : 'md'} style={color} />
+    <Repost style={color} />
     {typeof repostCount !== 'undefined' && repostCount > 0 ? (
       <Text
         testID="repostCount"
