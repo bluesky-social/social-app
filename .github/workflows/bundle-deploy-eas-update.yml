@@ -92,7 +92,7 @@ jobs:
           echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
           
           fingerprintDiff="${{ steps.fingerprint.outputs.fingerprint-diff }}"
-          if [[ $fingerprintDiff =~ "bareRncliAutolinking" || $fingerprintDiff =~ "expoAutolinkingAndroid" || $fingerprintDiff =~ "bareGitIgnore" ]]; then
+          if [[ $fingerprintDiff =~ "bareRncliAutolinking" || $fingerprintDiff =~ "expoAutolinkingAndroid" || $fingerprintDiff =~ "expoAutolinkingIos" ]]; then
             echo fingerprint-is-different="true" >> "$GITHUB_OUTPUT"
           else
             echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
