@@ -220,7 +220,6 @@ let PostCtrls = ({
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <RepostButton
-          big={big}
           isReposted={!!post.viewer?.repost}
           repostCount={post.repostCount}
           onRepost={onRepost}
@@ -270,6 +269,7 @@ let PostCtrls = ({
           <View style={a.align_center}>
             <Button
               testID="shareBtn"
+              style={{padding: 5}}
               onPress={() => {
                 if (shouldShowLoggedOutWarning) {
                   loggedOutWarningPromptControl.open()
