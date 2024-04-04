@@ -129,7 +129,7 @@ export default function HashtagScreen({
           isLoading={isLoading}
           isError={isError}
           onRetry={refetch}
-          emptyType={_(msg`No results found`)}
+          emptyType="results"
           emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
         />
       ) : (
