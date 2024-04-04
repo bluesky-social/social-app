@@ -12,7 +12,7 @@ const ruleTester = new RuleTester({
   },
 })
 
-describe('prefer-lingui-msg', () => {
+describe('avoid-unwrapped-text', () => {
   const tests = {
     valid: [
       {
@@ -20,6 +20,44 @@ describe('prefer-lingui-msg', () => {
 <Text>
   foo
 </Text>
+        `,
+      },
+
+      {
+        code: `
+<Text>
+  <Trans>
+    foo
+  </Trans>
+</Text>
+        `,
+      },
+
+      {
+        code: `
+<Trans>
+  <Text>
+    foo
+  </Text>
+</Trans>
+        `,
+      },
+
+      {
+        code: `
+<CustomText>
+  foo
+</CustomText>
+        `,
+      },
+
+      {
+        code: `
+<CustomText>
+  <Trans>
+    foo
+  </Trans>
+</CustomText>
         `,
       },
 
@@ -76,6 +114,36 @@ describe('prefer-lingui-msg', () => {
 </View>
         `,
       },
+
+      {
+        code: `
+<View>
+  <CustomText>
+    foo
+  </CustomText>
+</View>
+        `,
+      },
+
+      {
+        code: `
+<View prop={
+  <Text>foo</Text>
+}>
+  <Bar />
+</View>
+        `,
+      },
+
+      {
+        code: `
+<View prop={
+  <Text>foo</Text>
+}>
+  <Bar />
+</View>
+        `,
+      },
     ],
 
     invalid: [
@@ -84,6 +152,28 @@ describe('prefer-lingui-msg', () => {
 <View>
   foo
 </View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>
+    foo
+  </Trans>
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<Trans>
+  <View>
+    foo
+  </View>
+</Trans>
         `,
         errors: 1,
       },
@@ -109,12 +199,22 @@ describe('prefer-lingui-msg', () => {
       },
 
       {
-        // That's actually kind of allowed but let's avoid for now.'
         code: `
 <Text>
   <View>
     foo
   </View>
+</Text>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<Text prop={
+  <View>foo</View>
+}>
+  <Bar />
 </Text>
         `,
         errors: 1,
