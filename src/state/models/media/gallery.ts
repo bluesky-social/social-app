@@ -8,6 +8,7 @@ interface InitialImageUri {
   uri: string
   width: number
   height: number
+  hash?: string
 }
 
 export class GalleryModel {
@@ -48,7 +49,7 @@ export class GalleryModel {
     }
   }
 
-  async paste(uri: string) {
+  async paste(uri: string, hash?: string) {
     if (this.size >= 4) {
       return
     }
@@ -60,11 +61,14 @@ export class GalleryModel {
       height,
       width,
       mime: 'image/jpeg',
+      hash,
     }
 
-    runInAction(() => {
-      this.add(image)
-    })
+    if (!this.images.some(i => i.hash === hash)) {
+      runInAction(() => {
+        this.add(image)
+      })
+    }
   }
 
   setAltText(image: ImageModel, altText: string) {

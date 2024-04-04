@@ -197,9 +197,11 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const onPhotoPasted = useCallback(
-    async (uri: string) => {
+    async (uri: string, hash?: string) => {
       track('Composer:PastedPhotos')
-      await gallery.paste(uri)
+      if (!gallery.images.some(image => image.hash === hash)) {
+        await gallery.paste(uri, hash)
+      }
     },
     [gallery, track],
   )
@@ -437,6 +439,7 @@ export const ComposePost = observer(function ComposePost({
               accessibilityHint={_(
                 msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
               )}
+              gallery={gallery}
             />
           </View>
 
