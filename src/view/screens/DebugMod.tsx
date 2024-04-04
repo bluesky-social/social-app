@@ -273,15 +273,15 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
             label="Scenario"
             values={scenario}
             onChange={setScenario}>
-            <ToggleButton.Button name="label" label="Label">
+            <ToggleButton.ButtonWithText name="label" label="Label">
               Label
-            </ToggleButton.Button>
-            <ToggleButton.Button name="block" label="Block">
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="block" label="Block">
               Block
-            </ToggleButton.Button>
-            <ToggleButton.Button name="mute" label="Mute">
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="mute" label="Mute">
               Mute
-            </ToggleButton.Button>
+            </ToggleButton.ButtonWithText>
           </ToggleButton.Group>
 
           {scenario[0] === 'label' && (
@@ -473,18 +473,20 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
           <Heading title="" subtitle="Results" />
 
           <ToggleButton.Group label="Results" values={view} onChange={setView}>
-            <ToggleButton.Button name="post" label="Post">
+            <ToggleButton.ButtonWithText name="post" label="Post">
               Post
-            </ToggleButton.Button>
-            <ToggleButton.Button name="notifications" label="Notifications">
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText
+              name="notifications"
+              label="Notifications">
               Notifications
-            </ToggleButton.Button>
-            <ToggleButton.Button name="account" label="Account">
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="account" label="Account">
               Account
-            </ToggleButton.Button>
-            <ToggleButton.Button name="data" label="Data">
+            </ToggleButton.ButtonWithText>
+            <ToggleButton.ButtonWithText name="data" label="Data">
               Data
-            </ToggleButton.Button>
+            </ToggleButton.ButtonWithText>
           </ToggleButton.Group>
 
           <View
