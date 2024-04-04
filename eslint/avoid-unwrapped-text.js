@@ -31,49 +31,81 @@ function getTagName(node) {
 
 exports.create = function create(context) {
   const options = context.options[0] || {}
-  const impliedTextComponents = options.impliedTextComponents
-    ? options.impliedTextComponents
-    : []
+  const impliedTextProps = options.impliedTextProps ?? []
+  const impliedTextComponents = options.impliedTextComponents ?? []
+  const textProps = [...impliedTextProps]
   const textComponents = ['Text', ...impliedTextComponents]
   return {
     // TODO: Validate expressions.
-    // TODO: Validate text in props separately from children.
     JSXText(node) {
       if (typeof node.value !== 'string' || hasOnlyLineBreak(node.value)) {
         return
       }
       let parent = node.parent
       while (parent) {
-        if (parent.type !== 'JSXElement') {
-          parent = parent.parent
-          continue
-        }
-        const tagName = getTagName(parent)
-        if (textComponents.includes(tagName) || tagName.endsWith('Text')) {
-          // We're good.
+        if (parent.type === 'JSXElement') {
+          const tagName = getTagName(parent)
+          if (textComponents.includes(tagName) || tagName.endsWith('Text')) {
+            // We're good.
+            return
+          }
+          if (tagName === 'Trans') {
+            // Skip over it and check above.
+            // TODO: Maybe validate that it's present.
+            parent = parent.parent
+            continue
+          }
+          let message = 'Wrap this string in <Text>.'
+          if (tagName !== 'View') {
+            message +=
+              ' If <' +
+              tagName +
+              '> is guaranteed to render <Text>, ' +
+              'rename it to <' +
+              tagName +
+              'Text> or add it to impliedTextComponents.'
+          }
+          context.report({
+            node,
+            message,
+          })
           return
         }
-        if (tagName === 'Trans') {
-          // Skip over it and check above.
-          // TODO: Maybe validate that it's present.
-          parent = parent.parent
-          continue
+
+        if (
+          parent.type === 'JSXAttribute' &&
+          parent.name.type === 'JSXIdentifier' &&
+          parent.parent.type === 'JSXOpeningElement' &&
+          parent.parent.parent.type === 'JSXElement'
+        ) {
+          const tagName = getTagName(parent.parent.parent)
+          const propName = parent.name.name
+          if (
+            textProps.includes(tagName + ' ' + propName) ||
+            propName === 'text' ||
+            propName.endsWith('Text')
+          ) {
+            // We're good.
+            return
+          }
+          const message =
+            'Wrap this string in <Text>.' +
+            ' If `' +
+            propName +
+            '` is guaranteed to be wrapped in <Text>, ' +
+            'rename it to `' +
+            propName +
+            'Text' +
+            '` or add it to impliedTextProps.'
+          context.report({
+            node,
+            message,
+          })
+          return
         }
-        let message = 'Wrap this string in <Text>.'
-        if (tagName !== 'View') {
-          message +=
-            ' If <' +
-            tagName +
-            '> is guaranteed to render <Text>, ' +
-            'rename it to <' +
-            tagName +
-            'Text> or add it to impliedTextComponents.'
-        }
-        context.report({
-          node,
-          message,
-        })
-        return
+
+        parent = parent.parent
+        continue
       }
     },
   }

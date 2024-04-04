@@ -144,6 +144,36 @@ describe('avoid-unwrapped-text', () => {
 </View>
         `,
       },
+
+      {
+        code: `
+<View prop={
+  <Trans><Text>foo</Text></Trans>
+}>
+  <Bar />
+</View>
+        `,
+      },
+
+      {
+        code: `
+<View prop={
+  <Text><Trans>foo</Trans></Text>
+}>
+  <Bar />
+</View>
+        `,
+      },
+
+      {
+        code: `
+<Foo propText={
+  <Trans>foo</Trans>
+}>
+  <Bar />
+</Foo>
+        `,
+      },
     ],
 
     invalid: [
@@ -216,6 +246,17 @@ describe('avoid-unwrapped-text', () => {
 }>
   <Bar />
 </Text>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<Foo prop={
+  <Trans>foo</Trans>
+}>
+  <Bar />
+</Foo>
         `,
         errors: 1,
       },

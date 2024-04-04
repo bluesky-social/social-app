@@ -26,13 +26,10 @@ module.exports = {
       'error',
       {
         impliedTextComponents: [
-          // TODO: This is too permissive. Tighten them up.
-          // TODO: Some of these are only here due to props like label. Add a separate option for that.
-          'Button',
+          'Button', // TODO: Not always safe.
           'ButtonText',
           'DateField.Label',
           'Description',
-          'FormContainer',
           'H1',
           'H2',
           'H3',
@@ -41,22 +38,18 @@ module.exports = {
           'H6',
           'InlineLink',
           'Label',
-          'Menu.ItemText',
           'P',
           'Prompt.Title',
           'Prompt.Description',
-          'Prompt.Cancel',
-          'Prompt.Action',
-          'Prompt.Title',
+          'Prompt.Cancel', // TODO: Not always safe.
+          'Prompt.Action', // TODO: Not always safe.
           'TextField.Label',
           'TextField.Suffix',
-          'TextLink',
-          'TextLinkOnWebOnly',
           'Title',
           'Toggle.Label',
-          'ToggleButton.Label',
-          'ToggleButton.Button',
+          'ToggleButton.Button', // TODO: Not always safe.
         ],
+        impliedTextProps: ['FormContainer title'],
       },
     ],
     'simple-import-sort/imports': [
