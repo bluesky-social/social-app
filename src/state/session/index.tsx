@@ -578,7 +578,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(s => ({
         ...s,
         accounts: session.accounts,
-        currentAccount: session.currentAccount,
       }))
     })
   }, [state, setState, clearCurrentAccount, initSession])
