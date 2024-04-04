@@ -1,7 +1,8 @@
 import {BskyAgent} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
-export const RQKEY = (serviceUrl: string) => ['service', serviceUrl]
+const RQKEY_ROOT = 'service'
+export const RQKEY = (serviceUrl: string) => [RQKEY_ROOT, serviceUrl]
 
 export function useServiceQuery(serviceUrl: string) {
   return useQuery({

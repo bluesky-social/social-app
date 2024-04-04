@@ -1,59 +1,60 @@
 import React from 'react'
 import {
-  View,
-  StyleSheet,
   ActivityIndicator,
-  TextInput,
-  Pressable,
   Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
 } from 'react-native'
-import {ScrollView, CenteredView} from '#/view/com/util/Views'
-import {List} from '#/view/com/util/List'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {HITSLOP_10} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {MagnifyingGlassIcon} from '#/lib/icons'
+import {NavigationProp} from '#/lib/routes/types'
+import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {isNative, isWeb} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useActorSearch} from '#/state/queries/actor-search'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
+import {useSession} from '#/state/session'
+import {useSetDrawerOpen} from '#/state/shell'
+import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
-import {Text} from '#/view/com/util/text/Text'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
-import {Post} from '#/view/com/post/Post'
+import {useTheme} from 'lib/ThemeContext'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
-import {HITSLOP_10} from '#/lib/constants'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {useSession} from '#/state/session'
-import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
-import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useActorSearch} from '#/state/queries/actor-search'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {useSetDrawerOpen} from '#/state/shell'
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {MagnifyingGlassIcon} from '#/lib/icons'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {Post} from '#/view/com/post/Post'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {List} from '#/view/com/util/List'
+import {Text} from '#/view/com/util/text/Text'
+import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {
   MATCH_HANDLE,
   SearchLinkCard,
   SearchProfileCard,
 } from '#/view/shell/desktop/Search'
-import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {isNative, isWeb} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
-import {s} from '#/lib/styles'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {NavigationProp} from '#/lib/routes/types'
+import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {atoms as a} from '#/alf'
 
 function Loader() {
   const pal = usePalette('default')
@@ -776,16 +777,24 @@ export function SearchScreen(
                   <Trans>Recent Searches</Trans>
                 </Text>
                 {searchHistory.map((historyItem, index) => (
-                  <View key={index} style={styles.historyItemContainer}>
+                  <View
+                    key={index}
+                    style={[
+                      a.flex_row,
+                      a.mt_md,
+                      a.justify_center,
+                      a.justify_between,
+                    ]}>
                     <Pressable
                       accessibilityRole="button"
                       onPress={() => handleHistoryItemClick(historyItem)}
-                      style={styles.historyItem}>
+                      style={[a.flex_1, a.py_sm]}>
                       <Text style={pal.text}>{historyItem}</Text>
                     </Pressable>
                     <Pressable
                       accessibilityRole="button"
-                      onPress={() => handleRemoveHistoryItem(historyItem)}>
+                      onPress={() => handleRemoveHistoryItem(historyItem)}
+                      style={[a.px_md, a.py_xs, a.justify_center]}>
                       <FontAwesomeIcon
                         icon="xmark"
                         size={16}
@@ -871,14 +880,5 @@ const styles = StyleSheet.create({
   },
   searchHistoryTitle: {
     fontWeight: 'bold',
-  },
-  historyItem: {
-    paddingVertical: 8,
-  },
-  historyItemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
   },
 })

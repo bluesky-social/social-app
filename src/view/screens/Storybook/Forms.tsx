@@ -2,13 +2,13 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
-import {H1, H3} from '#/components/Typography'
+import {Button} from '#/components/Button'
+import {DateField, LabelText} from '#/components/forms/DateField'
 import * as TextField from '#/components/forms/TextField'
-import {DateField, Label} from '#/components/forms/DateField'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {Button} from '#/components/Button'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {H1, H3} from '#/components/Typography'
 
 export function Forms() {
   const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
@@ -42,7 +42,7 @@ export function Forms() {
         </TextField.Root>
 
         <View style={[a.w_full]}>
-          <TextField.Label>Text field</TextField.Label>
+          <TextField.LabelText>Text field</TextField.LabelText>
           <TextField.Root>
             <TextField.Icon icon={Globe} />
             <TextField.Input
@@ -50,12 +50,14 @@ export function Forms() {
               onChangeText={setValue}
               label="Text field"
             />
-            <TextField.Suffix label="@gmail.com">@gmail.com</TextField.Suffix>
+            <TextField.SuffixText label="@gmail.com">
+              @gmail.com
+            </TextField.SuffixText>
           </TextField.Root>
         </View>
 
         <View style={[a.w_full]}>
-          <TextField.Label>Textarea</TextField.Label>
+          <TextField.LabelText>Textarea</TextField.LabelText>
           <TextField.Input
             multiline
             numberOfLines={4}
@@ -68,7 +70,7 @@ export function Forms() {
         <H3>DateField</H3>
 
         <View style={[a.w_full]}>
-          <Label>Date</Label>
+          <LabelText>Date</LabelText>
           <DateField
             testID="date"
             value={date}
@@ -86,7 +88,7 @@ export function Forms() {
 
         <Toggle.Item name="a" label="Click me">
           <Toggle.Checkbox />
-          <Toggle.Label>Uncontrolled toggle</Toggle.Label>
+          <Toggle.LabelText>Uncontrolled toggle</Toggle.LabelText>
         </Toggle.Item>
 
         <Toggle.Group
@@ -98,23 +100,23 @@ export function Forms() {
           <View style={[a.gap_md]}>
             <Toggle.Item name="a" label="Click me">
               <Toggle.Switch />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="b" label="Click me">
               <Toggle.Switch />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="c" label="Click me">
               <Toggle.Switch />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="d" disabled label="Click me">
               <Toggle.Switch />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="e" isInvalid label="Click me">
               <Toggle.Switch />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
           </View>
         </Toggle.Group>
@@ -128,23 +130,23 @@ export function Forms() {
           <View style={[a.gap_md]}>
             <Toggle.Item name="a" label="Click me">
               <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="b" label="Click me">
               <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="c" label="Click me">
               <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="d" disabled label="Click me">
               <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="e" isInvalid label="Click me">
               <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
           </View>
         </Toggle.Group>
@@ -157,23 +159,23 @@ export function Forms() {
           <View style={[a.gap_md]}>
             <Toggle.Item name="a" label="Click me">
               <Toggle.Radio />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="b" label="Click me">
               <Toggle.Radio />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="c" label="Click me">
               <Toggle.Radio />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="d" disabled label="Click me">
               <Toggle.Radio />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
             <Toggle.Item name="e" isInvalid label="Click me">
               <Toggle.Radio />
-              <Toggle.Label>Click me</Toggle.Label>
+              <Toggle.LabelText>Click me</Toggle.LabelText>
             </Toggle.Item>
           </View>
         </Toggle.Group>

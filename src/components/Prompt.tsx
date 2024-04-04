@@ -3,11 +3,10 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonColor, ButtonText} from '#/components/Button'
-
 import * as Dialog from '#/components/Dialog'
+import {Text} from '#/components/Typography'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
@@ -52,7 +51,7 @@ export function Outer({
   )
 }
 
-export function Title({children}: React.PropsWithChildren<{}>) {
+export function TitleText({children}: React.PropsWithChildren<{}>) {
   const {titleId} = React.useContext(Context)
   return (
     <Text nativeID={titleId} style={[a.text_2xl, a.font_bold, a.pb_sm]}>
@@ -61,7 +60,7 @@ export function Title({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function Description({children}: React.PropsWithChildren<{}>) {
+export function DescriptionText({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
@@ -80,7 +79,7 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
     <View
       style={[
         a.w_full,
-        a.gap_sm,
+        a.gap_md,
         a.justify_end,
         gtMobile
           ? [a.flex_row, a.flex_row_reverse, a.justify_start]
@@ -176,8 +175,8 @@ export function Basic({
 }>) {
   return (
     <Outer control={control} testID="confirmModal">
-      <Title>{title}</Title>
-      <Description>{description}</Description>
+      <TitleText>{title}</TitleText>
+      <DescriptionText>{description}</DescriptionText>
       <Actions>
         <Action
           cta={confirmButtonCta}

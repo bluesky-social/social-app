@@ -24,7 +24,7 @@ import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
-import {InlineLink} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -215,9 +215,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             <View style={[a.w_full, a.py_lg]}>
               <Text style={[t.atoms.text_contrast_medium]}>
                 <Trans>Having trouble?</Trans>{' '}
-                <InlineLink to={FEEDBACK_FORM_URL({email: state.email})}>
+                <InlineLinkText to={FEEDBACK_FORM_URL({email: state.email})}>
                   <Trans>Contact support</Trans>
-                </InlineLink>
+                </InlineLinkText>
               </Text>
             </View>
           </View>

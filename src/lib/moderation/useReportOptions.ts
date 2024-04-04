@@ -1,7 +1,7 @@
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useMemo} from 'react'
 import {ComAtprotoModerationDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export interface ReportOption {
   reason: string
@@ -68,7 +68,7 @@ export function useReportOptions(): ReportOptions {
         {
           reason: ComAtprotoModerationDefs.REASONSEXUAL,
           title: _(msg`Unwanted Sexual Content`),
-          description: _(msg`Nudity or pornography not labeled as such`),
+          description: _(msg`Nudity or adult content not labeled as such`),
         },
         ...common,
       ],

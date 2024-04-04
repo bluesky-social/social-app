@@ -1,6 +1,10 @@
 const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 const {withAlias} = require('@expo/webpack-config/addons')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
+
+const GENERATE_STATS = process.env.EXPO_PUBLIC_GENERATE_STATS === '1'
+const OPEN_ANALYZER = process.env.EXPO_PUBLIC_OPEN_ANALYZER === '1'
 
 const reactNativeWebWebviewConfiguration = {
   test: /postMock.html$/,
@@ -25,6 +29,18 @@ module.exports = async function (env, argv) {
   ]
   if (env.mode === 'development') {
     config.plugins.push(new ReactRefreshWebpackPlugin())
+  }
+
+  if (GENERATE_STATS || OPEN_ANALYZER) {
+    config.plugins.push(
+      new BundleAnalyzerPlugin({
+        openAnalyzer: OPEN_ANALYZER,
+        generateStatsFile: true,
+        statsFilename: '../stats.json',
+        analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
+        defaultSizes: 'parsed',
+      }),
+    )
   }
   return config
 }
