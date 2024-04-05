@@ -124,22 +124,24 @@ module.exports = function (config) {
       web: {
         favicon: './assets/favicon.png',
       },
-      // TODO Eventually we want to enable this for all environments, but for now it will only be used for
-      // TestFlight builds
-      updates: IS_TESTFLIGHT
-        ? {
-            url: 'https://updates.bsky.app/manifest',
-            enabled: true,
-            fallbackToCacheTimeout: 30000,
-            codeSigningCertificate: './code-signing/certificate.pem',
-            codeSigningMetadata: {
+      updates: {
+        url: 'https://updates.bsky.app/manifest',
+        // TODO Eventually we want to enable this for all environments, but for now it will only be used for
+        // TestFlight builds
+        enabled: IS_TESTFLIGHT,
+        fallbackToCacheTimeout: 30000,
+        codeSigningCertificate: IS_TESTFLIGHT
+          ? './code-signing/certificate.pem'
+          : undefined,
+        codeSigningMetadata: IS_TESTFLIGHT
+          ? {
               keyid: 'main',
               alg: 'rsa-v1_5-sha256',
-            },
-            checkAutomatically: 'NEVER',
-            channel: UPDATES_CHANNEL,
-          }
-        : undefined,
+            }
+          : undefined,
+        checkAutomatically: 'NEVER',
+        channel: UPDATES_CHANNEL,
+      },
       assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
