@@ -36,7 +36,7 @@ msgstr "<0>{0}</0> following"
 
 #: src/screens/Profile/Header/Metrics.tsx:46
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following} </0><1>folowing</1>"
+msgstr "<0>{following} </0><1>following</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -48,7 +48,7 @@ msgstr "<0>Segui alcuni</0><1>utenti</1><2>consigliati</2>"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
 msgid "<0>Welcome to</0><1>Bluesky</1>"
-msgstr "<0>Ti diamo il benvenuto a</0><1>Bluesky</1>"
+msgstr "<0>Ti diamo il benvenuto su</0><1>Bluesky</1>"
 
 #: src/screens/Profile/Header/Handle.tsx:42
 msgid "⚠Invalid Handle"
@@ -153,11 +153,11 @@ msgstr "Aggiungi la Password per l'App"
 
 #: src/view/com/composer/Composer.tsx:466
 msgid "Add link card"
-msgstr "Aggiungi la scheda collegata al link"
+msgstr "Aggiungi anteprima del link"
 
 #: src/view/com/composer/Composer.tsx:471
 msgid "Add link card:"
-msgstr "Aggiungi la scheda relazionata al link:"
+msgstr "Aggiungi anteprima del link:"
 
 #: src/components/dialogs/MutedWords.tsx:158
 msgid "Add mute word for configured settings"
@@ -351,7 +351,7 @@ msgstr "Indietro"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr "Basato su i tuoi interessi {interestsText}"
+msgstr "Basato sui tuoi interessi {interestsText}"
 
 #: src/view/screens/Settings/index.tsx:542
 msgid "Basics"
