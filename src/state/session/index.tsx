@@ -419,15 +419,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           await networkRetry(1, () => agent.resumeSession(prevSession))
           setCurrentAgent(agent)
         } catch (e) {
+          // this can fail on bad connections as well, so `clearCurrentAccount`
+          // bumps them out to login, but doesn't rug tokens
           logger.error(`session: resumeSession failed`, {message: e})
-          // TODO flaky connectin could cause this too
-          setAccounts(accounts => {
-            return accounts.map(a =>
-              a.did === account.did
-                ? {...a, accessJwt: undefined, refreshJwt: undefined}
-                : a,
-            )
-          })
           clearCurrentAccount()
         }
       }
