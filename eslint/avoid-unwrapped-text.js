@@ -113,7 +113,118 @@ exports.create = function create(context) {
         continue
       }
     },
-    // Mostly a copy-paste of the above traversal with a few tweaks for <Trans>.
+    Literal(node) {
+      if (typeof node.value !== 'string' && typeof node.value !== 'number') {
+        return
+      }
+      let parent = node.parent
+      while (parent) {
+        if (parent.type === 'JSXElement') {
+          const tagName = getTagName(parent)
+          if (isTextComponent(tagName)) {
+            // We're good.
+            return
+          }
+          if (tagName === 'Trans') {
+            // Exit and rely on the traversal for <Trans> JSXElement (code below).
+            // TODO: Maybe validate that it's present.
+            return
+          }
+          const suggestedWrapper = suggestedTextWrappers[tagName]
+          let message = `Wrap this string in <${suggestedWrapper ?? 'Text'}>.`
+          if (tagName !== 'View' && !suggestedWrapper) {
+            message +=
+              ' If <' +
+              tagName +
+              '> is guaranteed to render <Text>, ' +
+              'rename it to <' +
+              tagName +
+              'Text> or add it to impliedTextComponents.'
+          }
+          context.report({
+            node,
+            message,
+          })
+          return
+        }
+
+        if (parent.type === 'BinaryExpression' && parent.operator === '+') {
+          parent = parent.parent
+          continue
+        }
+
+        if (
+          parent.type === 'JSXExpressionContainer' ||
+          parent.type === 'LogicalExpression'
+        ) {
+          parent = parent.parent
+          continue
+        }
+
+        // Be conservative for other types.
+        return
+      }
+    },
+    TemplateLiteral(node) {
+      let parent = node.parent
+      while (parent) {
+        if (parent.type === 'JSXElement') {
+          const tagName = getTagName(parent)
+          if (isTextComponent(tagName)) {
+            // We're good.
+            return
+          }
+          if (tagName === 'Trans') {
+            // Exit and rely on the traversal for <Trans> JSXElement (code below).
+            // TODO: Maybe validate that it's present.
+            return
+          }
+          const suggestedWrapper = suggestedTextWrappers[tagName]
+          let message = `Wrap this string in <${suggestedWrapper ?? 'Text'}>.`
+          if (tagName !== 'View' && !suggestedWrapper) {
+            message +=
+              ' If <' +
+              tagName +
+              '> is guaranteed to render <Text>, ' +
+              'rename it to <' +
+              tagName +
+              'Text> or add it to impliedTextComponents.'
+          }
+          context.report({
+            node,
+            message,
+          })
+          return
+        }
+
+        if (
+          parent.type === 'CallExpression' &&
+          parent.callee.type === 'Identifier' &&
+          parent.callee.name === '_'
+        ) {
+          // This is a user-facing string, keep going up.
+          parent = parent.parent
+          continue
+        }
+
+        if (parent.type === 'BinaryExpression' && parent.operator === '+') {
+          parent = parent.parent
+          continue
+        }
+
+        if (
+          parent.type === 'JSXExpressionContainer' ||
+          parent.type === 'LogicalExpression' ||
+          parent.type === 'TaggedTemplateExpression'
+        ) {
+          parent = parent.parent
+          continue
+        }
+
+        // Be conservative for other types.
+        return
+      }
+    },
     JSXElement(node) {
       if (getTagName(node) !== 'Trans') {
         return
@@ -127,10 +238,9 @@ exports.create = function create(context) {
             return
           }
           if (tagName === 'Trans') {
-            // Keep going up.
+            // Exit and rely on the traversal for this JSXElement.
             // TODO: Should nested <Trans> even be allowed?
-            parent = parent.parent
-            continue
+            return
           }
           const suggestedWrapper = suggestedTextWrappers[tagName]
           let message = `Wrap this <Trans> in <${suggestedWrapper ?? 'Text'}>.`
