@@ -82,15 +82,15 @@ export function ModerationOption({
             )}
             values={[visibility ?? 'hide']}
             onChange={onChange}>
-            <ToggleButton.ButtonWithText name="ignore" label={labels.show}>
-              {labels.show}
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="warn" label={labels.warn}>
-              {labels.warn}
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="hide" label={labels.hide}>
-              {labels.hide}
-            </ToggleButton.ButtonWithText>
+            <ToggleButton.Button name="ignore" label={labels.show}>
+              <ToggleButton.ButtonText>{labels.show}</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="warn" label={labels.warn}>
+              <ToggleButton.ButtonText>{labels.warn}</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="hide" label={labels.hide}>
+              <ToggleButton.ButtonText>{labels.hide}</ToggleButton.ButtonText>
+            </ToggleButton.Button>
           </ToggleButton.Group>
         )}
       </View>

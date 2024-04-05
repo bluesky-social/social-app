@@ -273,15 +273,15 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
             label="Scenario"
             values={scenario}
             onChange={setScenario}>
-            <ToggleButton.ButtonWithText name="label" label="Label">
-              Label
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="block" label="Block">
-              Block
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="mute" label="Mute">
-              Mute
-            </ToggleButton.ButtonWithText>
+            <ToggleButton.Button name="label" label="Label">
+              <ToggleButton.ButtonText>Label</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="block" label="Block">
+              <ToggleButton.ButtonText>Block</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="mute" label="Mute">
+              <ToggleButton.ButtonText>Mute</ToggleButton.ButtonText>
+            </ToggleButton.Button>
           </ToggleButton.Group>
 
           {scenario[0] === 'label' && (
@@ -473,20 +473,18 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
           <Heading title="" subtitle="Results" />
 
           <ToggleButton.Group label="Results" values={view} onChange={setView}>
-            <ToggleButton.ButtonWithText name="post" label="Post">
-              Post
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText
-              name="notifications"
-              label="Notifications">
-              Notifications
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="account" label="Account">
-              Account
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="data" label="Data">
-              Data
-            </ToggleButton.ButtonWithText>
+            <ToggleButton.Button name="post" label="Post">
+              <ToggleButton.ButtonText>Post</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="notifications" label="Notifications">
+              <ToggleButton.ButtonText>Notifications</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="account" label="Account">
+              <ToggleButton.ButtonText>Account</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="data" label="Data">
+              <ToggleButton.ButtonText>Data</ToggleButton.ButtonText>
+            </ToggleButton.Button>
           </ToggleButton.Group>
 
           <View

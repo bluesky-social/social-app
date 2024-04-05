@@ -86,17 +86,19 @@ export function ServerInputDialog({
             label="Preferences"
             values={fixedOption}
             onChange={setFixedOption}>
-            <ToggleButton.ButtonWithText
-              name={BSKY_SERVICE}
-              label={_(msg`Bluesky`)}>
-              {_(msg`Bluesky`)}
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText
+            <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
+              <ToggleButton.ButtonText>
+                {_(msg`Bluesky`)}
+              </ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button
               testID="customSelectBtn"
               name="custom"
               label={_(msg`Custom`)}>
-              {_(msg`Custom`)}
-            </ToggleButton.ButtonWithText>
+              <ToggleButton.ButtonText>
+                {_(msg`Custom`)}
+              </ToggleButton.ButtonText>
+            </ToggleButton.Button>
           </ToggleButton.Group>
 
           {fixedOption[0] === 'custom' && (
