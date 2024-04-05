@@ -1,6 +1,6 @@
 import React from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
-import LinearGradient from 'expo-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

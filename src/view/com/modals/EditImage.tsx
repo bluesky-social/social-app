@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {useWindowDimensions} from 'react-native'
-import LinearGradient from 'expo-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {MaterialIcons} from '@expo/vector-icons'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

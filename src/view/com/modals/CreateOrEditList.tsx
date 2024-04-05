@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import LinearGradient from 'expo-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {
   AppBskyGraphDefs,
   AppBskyRichtextFacet,
