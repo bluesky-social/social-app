@@ -135,8 +135,7 @@ export function Action({
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
-    close()
-    onPress()
+    close(onPress)
   }, [close, onPress])
 
   return (
