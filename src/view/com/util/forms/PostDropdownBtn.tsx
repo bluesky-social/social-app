@@ -1,5 +1,6 @@
 import React, {memo} from 'react'
 import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
+import {setStringAsync} from 'expo-clipboard'
 import {
   AppBskyActorDefs,
   AppBskyFeedPost,
@@ -9,7 +10,6 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import Clipboard from '@react-native-clipboard/clipboard'
 import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -154,7 +154,7 @@ let PostDropdownBtn = ({
   const onCopyPostText = React.useCallback(() => {
     const str = richTextToString(richText, true)
 
-    Clipboard.setString(str)
+    setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
