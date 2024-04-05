@@ -2,39 +2,38 @@ import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
-  ModerationOpts,
   moderateProfile,
+  ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {useModalControls} from '#/state/modals'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useSession, useRequireAuth} from '#/state/session'
-import {Shadow} from '#/state/cache/types'
-import {useProfileShadow} from 'state/cache/profile-shadow'
-import {
-  useProfileFollowMutationQueue,
-  useProfileBlockMutationQueue,
-} from '#/state/queries/profile'
 import {logger} from '#/logger'
+import {Shadow} from '#/state/cache/types'
+import {useModalControls} from '#/state/modals'
+import {
+  useProfileBlockMutationQueue,
+  useProfileFollowMutationQueue,
+} from '#/state/queries/profile'
+import {useRequireAuth, useSession} from '#/state/session'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import * as Toast from '#/view/com/util/Toast'
-import {ProfileHeaderShell} from './Shell'
+import {useProfileShadow} from 'state/cache/profile-shadow'
+import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
-import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
-import {RichText} from '#/components/RichText'
-import * as Prompt from '#/components/Prompt'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {ProfileHeaderShell} from './Shell'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -248,6 +247,8 @@ let ProfileHeaderStandard = ({
                   style={[a.text_md]}
                   numberOfLines={15}
                   value={descriptionRT}
+                  enableTags
+                  authorHandle={profile.handle}
                 />
               </View>
             ) : undefined}

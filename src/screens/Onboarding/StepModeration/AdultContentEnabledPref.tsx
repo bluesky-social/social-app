@@ -113,15 +113,15 @@ export function AdultContentEnabledPref({
       )}
 
       <Prompt.Outer control={prompt}>
-        <Prompt.Title>
+        <Prompt.TitleText>
           <Trans>Adult Content</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
           <Trans>
             Due to Apple policies, adult content can only be enabled on the web
             after completing sign up.
           </Trans>
-        </Prompt.Description>
+        </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action onPress={() => prompt.close()} cta={_(msg`OK`)} />
         </Prompt.Actions>

@@ -10,9 +10,9 @@ import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -87,12 +87,12 @@ export function StepFinished() {
     <View style={[a.align_start]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>You're ready to go!</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         <Trans>We hope you have a wonderful time. Remember, Bluesky is:</Trans>
-      </Description>
+      </DescriptionText>
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
         <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>

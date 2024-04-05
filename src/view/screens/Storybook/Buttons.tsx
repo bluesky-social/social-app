@@ -4,15 +4,15 @@ import {View} from 'react-native'
 import {atoms as a} from '#/alf'
 import {
   Button,
-  ButtonVariant,
   ButtonColor,
   ButtonIcon,
   ButtonText,
+  ButtonVariant,
 } from '#/components/Button'
-import {H1} from '#/components/Typography'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/ArrowTopRight'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {H1} from '#/components/Typography'
 
 export function Buttons() {
   return (
@@ -29,7 +29,7 @@ export function Buttons() {
                   color={color as ButtonColor}
                   size="large"
                   label="Click here">
-                  Button
+                  <ButtonText>Button</ButtonText>
                 </Button>
                 <Button
                   disabled
@@ -37,7 +37,7 @@ export function Buttons() {
                   color={color as ButtonColor}
                   size="large"
                   label="Click here">
-                  Button
+                  <ButtonText>Button</ButtonText>
                 </Button>
               </React.Fragment>
             ))}
@@ -54,7 +54,7 @@ export function Buttons() {
                     color={name as ButtonColor}
                     size="large"
                     label="Click here">
-                    Button
+                    <ButtonText>Button</ButtonText>
                   </Button>
                   <Button
                     disabled
@@ -62,7 +62,7 @@ export function Buttons() {
                     color={name as ButtonColor}
                     size="large"
                     label="Click here">
-                    Button
+                    <ButtonText>Button</ButtonText>
                   </Button>
                 </React.Fragment>
               ),
@@ -77,7 +77,7 @@ export function Buttons() {
                     color={name as ButtonColor}
                     size="large"
                     label="Click here">
-                    Button
+                    <ButtonText>Button</ButtonText>
                   </Button>
                   <Button
                     disabled
@@ -85,7 +85,7 @@ export function Buttons() {
                     color={name as ButtonColor}
                     size="large"
                     label="Click here">
-                    Button
+                    <ButtonText>Button</ButtonText>
                   </Button>
                 </React.Fragment>
               ),

@@ -1,28 +1,30 @@
 import React from 'react'
 import {ListRenderItemInfo, Pressable} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {useSetMinimalShellMode} from 'state/shell'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {useSearchPostsQuery} from 'state/queries/search-posts'
-import {Post} from 'view/com/post/Post'
 import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+
+import {HITSLOP_10} from 'lib/constants'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {shareUrl} from 'lib/sharing'
+import {cleanError} from 'lib/strings/errors'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {enforceLen} from 'lib/strings/helpers'
+import {isNative} from 'platform/detection'
+import {useSearchPostsQuery} from 'state/queries/search-posts'
+import {useSetMinimalShellMode} from 'state/shell'
+import {Post} from 'view/com/post/Post'
+import {List} from 'view/com/util/List'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
 import {
   ListFooter,
   ListHeaderDesktop,
   ListMaybePlaceholder,
 } from '#/components/Lists'
-import {List} from 'view/com/util/List'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
-import {shareUrl} from 'lib/sharing'
-import {HITSLOP_10} from 'lib/constants'
-import {isNative} from 'platform/detection'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -61,9 +63,8 @@ export default function HashtagScreen({
 
   const {
     data,
-    isFetching,
+    isFetchingNextPage,
     isLoading,
-    isRefetching,
     isError,
     error,
     refetch,
@@ -97,9 +98,9 @@ export default function HashtagScreen({
   }, [refetch])
 
   const onEndReached = React.useCallback(() => {
-    if (isFetching || !hasNextPage || error) return
+    if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
-  }, [isFetching, hasNextPage, error, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   return (
     <>
@@ -123,16 +124,16 @@ export default function HashtagScreen({
             : undefined
         }
       />
-      <ListMaybePlaceholder
-        isLoading={isLoading || isRefetching}
-        isError={isError}
-        isEmpty={posts.length < 1}
-        onRetry={refetch}
-        emptyTitle="results"
-        emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
-      />
-      {!isLoading && posts.length > 0 && (
-        <List<PostView>
+      {posts.length < 1 ? (
+        <ListMaybePlaceholder
+          isLoading={isLoading}
+          isError={isError}
+          onRetry={refetch}
+          emptyType="results"
+          emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
+        />
+      ) : (
+        <List
           data={posts}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
@@ -150,9 +151,8 @@ export default function HashtagScreen({
           }
           ListFooterComponent={
             <ListFooter
-              isFetching={isFetching && !isRefetching}
-              isError={isError}
-              error={error?.name}
+              isFetchingNextPage={isFetchingNextPage}
+              error={cleanError(error)}
               onRetry={fetchNextPage}
             />
           }

@@ -1,24 +1,25 @@
 import React, {useState} from 'react'
-import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isNative} from 'platform/detection'
+import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
+import {setStringAsync} from 'expo-clipboard'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import Clipboard from '@react-native-clipboard/clipboard'
-import * as Toast from '../util/Toast'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {
-  useAppPasswordsQuery,
   useAppPasswordCreateMutation,
+  useAppPasswordsQuery,
 } from '#/state/queries/app-passwords'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {isNative} from 'platform/detection'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
 
 export const snapPoints = ['70%']
 
@@ -72,7 +73,7 @@ export function Component({}: {}) {
 
   const onCopy = React.useCallback(() => {
     if (appPassword) {
-      Clipboard.setString(appPassword)
+      setStringAsync(appPassword)
       Toast.show(_(msg`Copied to clipboard`))
       setWasCopied(true)
     }

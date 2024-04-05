@@ -6,12 +6,12 @@ import {Text} from '#/components/Typography'
 
 export function FormContainer({
   testID,
-  title,
+  titleText,
   children,
   style,
 }: {
   testID?: string
-  title?: React.ReactNode
+  titleText?: React.ReactNode
   children: React.ReactNode
   style?: StyleProp<ViewStyle>
 }) {
@@ -21,9 +21,9 @@ export function FormContainer({
     <View
       testID={testID}
       style={[a.gap_md, a.flex_1, !gtMobile && [a.px_lg, a.py_md], style]}>
-      {title && !gtMobile && (
+      {titleText && !gtMobile && (
         <Text style={[a.text_xl, a.font_bold, t.atoms.text_contrast_high]}>
-          {title}
+          {titleText}
         </Text>
       )}
       {children}

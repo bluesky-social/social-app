@@ -9,9 +9,9 @@ import {capitalize} from '#/lib/strings/capitalize'
 import {IS_TEST_USER} from 'lib/constants'
 import {useSession} from 'state/session'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
@@ -76,10 +76,10 @@ export function StepTopicalFeeds() {
     <View style={[a.align_start]}>
       <IconCircle icon={ListMagnifyingGlass} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Feeds can be topical as well!</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         {state.interestsStepResults.selectedInterests.length ? (
           <Trans>
             Here are some topical feeds based on your interests: {interestsText}
@@ -91,7 +91,7 @@ export function StepTopicalFeeds() {
             many as you like.
           </Trans>
         )}
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pb_2xl, a.pt_2xl]}>
         <Toggle.Group

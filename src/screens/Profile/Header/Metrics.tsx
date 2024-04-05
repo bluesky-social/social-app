@@ -1,16 +1,15 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {Trans, msg, plural} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Shadow} from '#/state/cache/types'
 import {makeProfileLink} from 'lib/routes/links'
 import {formatCount} from 'view/com/util/numeric/format'
-
 import {atoms as a, useTheme} from '#/alf'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {InlineLink} from '#/components/Link'
 
 export function ProfileHeaderMetrics({
   profile,
@@ -34,7 +33,7 @@ export function ProfileHeaderMetrics({
     <View
       style={[a.flex_row, a.gap_sm, a.align_center, a.pb_md]}
       pointerEvents="box-none">
-      <InlineLink
+      <InlineLinkText
         testID="profileHeaderFollowersButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'followers')}
@@ -45,8 +44,8 @@ export function ProfileHeaderMetrics({
             {pluralizedFollowers}
           </Text>
         </Trans>
-      </InlineLink>
-      <InlineLink
+      </InlineLinkText>
+      <InlineLinkText
         testID="profileHeaderFollowsButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'follows')}
@@ -57,7 +56,7 @@ export function ProfileHeaderMetrics({
             {pluralizedFollowings}
           </Text>
         </Trans>
-      </InlineLink>
+      </InlineLinkText>
       <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
         <Trans>
           {formatCount(profile.postsCount || 0)}{' '}

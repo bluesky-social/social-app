@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {InlineLink} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export const Policies = ({
@@ -45,16 +45,16 @@ export const Policies = ({
   const els = []
   if (tos) {
     els.push(
-      <InlineLink key="tos" to={tos}>
+      <InlineLinkText key="tos" to={tos}>
         {_(msg`Terms of Service`)}
-      </InlineLink>,
+      </InlineLinkText>,
     )
   }
   if (pp) {
     els.push(
-      <InlineLink key="pp" to={pp}>
+      <InlineLinkText key="pp" to={pp}>
         {_(msg`Privacy Policy`)}
-      </InlineLink>,
+      </InlineLinkText>,
     )
   }
   if (els.length === 2) {

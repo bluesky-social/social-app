@@ -1,38 +1,47 @@
 import {useCallback} from 'react'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
-  AtUri,
   AppBskyActorDefs,
-  AppBskyActorProfile,
   AppBskyActorGetProfile,
-  AppBskyFeedDefs,
+  AppBskyActorProfile,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AtUri,
 } from '@atproto/api'
 import {
+  QueryClient,
+  useMutation,
   useQuery,
   useQueryClient,
-  useMutation,
-  QueryClient,
 } from '@tanstack/react-query'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useSession, getAgent} from '../session'
-import {updateProfileShadow} from '../cache/profile-shadow'
+
+import {track} from '#/lib/analytics/analytics'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
-import {Shadow} from '#/state/cache/types'
-import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
-import {STALE} from '#/state/queries'
-import {track} from '#/lib/analytics/analytics'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {Shadow} from '#/state/cache/types'
+import {STALE} from '#/state/queries'
+import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import {updateProfileShadow} from '../cache/profile-shadow'
+import {getAgent, useSession} from '../session'
+import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
+import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {ThreadNode} from './post-thread'
 
-export const RQKEY = (did: string) => ['profile', did]
-export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
+const RQKEY_ROOT = 'profile'
+export const RQKEY = (did: string) => [RQKEY_ROOT, did]
+
+const profilesQueryKeyRoot = 'profiles'
+export const profilesQueryKey = (handles: string[]) => [
+  profilesQueryKeyRoot,
+  handles,
+]
+
+const profileBasicQueryKeyRoot = 'profileBasic'
 export const profileBasicQueryKey = (didOrHandle: string) => [
-  'profileBasic',
+  profileBasicQueryKeyRoot,
   didOrHandle,
 ]
 
@@ -190,6 +199,7 @@ export function useProfileFollowMutationQueue(
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext'],
 ) {
+  const queryClient = useQueryClient()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
   const followMutation = useProfileFollowMutation(logContext)
@@ -215,7 +225,7 @@ export function useProfileFollowMutationQueue(
     },
     onSuccess(finalFollowingUri) {
       // finalize
-      updateProfileShadow(did, {
+      updateProfileShadow(queryClient, did, {
         followingUri: finalFollowingUri,
       })
     },
@@ -223,19 +233,19 @@ export function useProfileFollowMutationQueue(
 
   const queueFollow = useCallback(() => {
     // optimistically update
-    updateProfileShadow(did, {
+    updateProfileShadow(queryClient, did, {
       followingUri: 'pending',
     })
     return queueToggle(true)
-  }, [did, queueToggle])
+  }, [queryClient, did, queueToggle])
 
   const queueUnfollow = useCallback(() => {
     // optimistically update
-    updateProfileShadow(did, {
+    updateProfileShadow(queryClient, did, {
       followingUri: undefined,
     })
     return queueToggle(false)
-  }, [did, queueToggle])
+  }, [queryClient, did, queueToggle])
 
   return [queueFollow, queueUnfollow]
 }
@@ -269,6 +279,7 @@ function useProfileUnfollowMutation(
 export function useProfileMuteMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
+  const queryClient = useQueryClient()
   const did = profile.did
   const initialMuted = profile.viewer?.muted
   const muteMutation = useProfileMuteMutation()
@@ -291,25 +302,25 @@ export function useProfileMuteMutationQueue(
     },
     onSuccess(finalMuted) {
       // finalize
-      updateProfileShadow(did, {muted: finalMuted})
+      updateProfileShadow(queryClient, did, {muted: finalMuted})
     },
   })
 
   const queueMute = useCallback(() => {
     // optimistically update
-    updateProfileShadow(did, {
+    updateProfileShadow(queryClient, did, {
       muted: true,
     })
     return queueToggle(true)
-  }, [did, queueToggle])
+  }, [queryClient, did, queueToggle])
 
   const queueUnmute = useCallback(() => {
     // optimistically update
-    updateProfileShadow(did, {
+    updateProfileShadow(queryClient, did, {
       muted: false,
     })
     return queueToggle(false)
-  }, [did, queueToggle])
+  }, [queryClient, did, queueToggle])
 
   return [queueMute, queueUnmute]
 }
@@ -341,6 +352,7 @@ function useProfileUnmuteMutation() {
 export function useProfileBlockMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
+  const queryClient = useQueryClient()
   const did = profile.did
   const initialBlockingUri = profile.viewer?.blocking
   const blockMutation = useProfileBlockMutation()
@@ -366,7 +378,7 @@ export function useProfileBlockMutationQueue(
     },
     onSuccess(finalBlockingUri) {
       // finalize
-      updateProfileShadow(did, {
+      updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
     },
@@ -374,19 +386,19 @@ export function useProfileBlockMutationQueue(
 
   const queueBlock = useCallback(() => {
     // optimistically update
-    updateProfileShadow(did, {
+    updateProfileShadow(queryClient, did, {
       blockingUri: 'pending',
     })
     return queueToggle(true)
-  }, [did, queueToggle])
+  }, [queryClient, did, queueToggle])
 
   const queueUnblock = useCallback(() => {
     // optimistically update
-    updateProfileShadow(did, {
+    updateProfileShadow(queryClient, did, {
       blockingUri: undefined,
     })
     return queueToggle(false)
-  }, [did, queueToggle])
+  }, [queryClient, did, queueToggle])
 
   return [queueBlock, queueUnblock]
 }
@@ -406,13 +418,14 @@ function useProfileBlockMutation() {
     },
     onSuccess(_, {did}) {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
-      resetProfilePostsQueries(did, 1000)
+      resetProfilePostsQueries(queryClient, did, 1000)
     },
   })
 }
 
 function useProfileUnblockMutation() {
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {
       if (!currentAccount) {
@@ -425,7 +438,7 @@ function useProfileUnblockMutation() {
       })
     },
     onSuccess(_, {did}) {
-      resetProfilePostsQueries(did, 1000)
+      resetProfilePostsQueries(queryClient, did, 1000)
     },
   })
 }
@@ -506,7 +519,7 @@ export function* findAllProfilesInQueryData(
 ): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
   const queryDatas =
     queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
-      queryKey: ['profile'],
+      queryKey: [RQKEY_ROOT],
     })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {
