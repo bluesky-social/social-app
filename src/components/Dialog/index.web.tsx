@@ -50,7 +50,7 @@ export function Outer({
   }, [control.id, onClose, setDialogIsOpen])
 
   const close = React.useCallback<DialogControlProps['close']>(
-    async cb => {
+    cb => {
       if (cb && typeof cb === 'function') {
         cb()
       }
