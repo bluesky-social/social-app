@@ -55,10 +55,9 @@ exports.create = function create(context) {
             return
           }
           if (tagName === 'Trans') {
-            // Skip over it and check above.
+            // Exit and rely on the traversal for <Trans> JSXElement (code below).
             // TODO: Maybe validate that it's present.
-            parent = parent.parent
-            continue
+            return
           }
           const suggestedWrapper = suggestedTextWrappers[tagName]
           let message = `Wrap this string in <${suggestedWrapper ?? 'Text'}>.`
@@ -96,6 +95,79 @@ exports.create = function create(context) {
           }
           const message =
             'Wrap this string in <Text>.' +
+            ' If `' +
+            propName +
+            '` is guaranteed to be wrapped in <Text>, ' +
+            'rename it to `' +
+            propName +
+            'Text' +
+            '` or add it to impliedTextProps.'
+          context.report({
+            node,
+            message,
+          })
+          return
+        }
+
+        parent = parent.parent
+        continue
+      }
+    },
+    // Mostly a copy-paste of the above traversal with a few tweaks for <Trans>.
+    JSXElement(node) {
+      if (getTagName(node) !== 'Trans') {
+        return
+      }
+      let parent = node.parent
+      while (parent) {
+        if (parent.type === 'JSXElement') {
+          const tagName = getTagName(parent)
+          if (isTextComponent(tagName)) {
+            // We're good.
+            return
+          }
+          if (tagName === 'Trans') {
+            // Keep going up.
+            // TODO: Should nested <Trans> even be allowed?
+            parent = parent.parent
+            continue
+          }
+          const suggestedWrapper = suggestedTextWrappers[tagName]
+          let message = `Wrap this <Trans> in <${suggestedWrapper ?? 'Text'}>.`
+          if (tagName !== 'View' && !suggestedWrapper) {
+            message +=
+              ' If <' +
+              tagName +
+              '> is guaranteed to render <Text>, ' +
+              'rename it to <' +
+              tagName +
+              'Text> or add it to impliedTextComponents.'
+          }
+          context.report({
+            node,
+            message,
+          })
+          return
+        }
+
+        if (
+          parent.type === 'JSXAttribute' &&
+          parent.name.type === 'JSXIdentifier' &&
+          parent.parent.type === 'JSXOpeningElement' &&
+          parent.parent.parent.type === 'JSXElement'
+        ) {
+          const tagName = getTagName(parent.parent.parent)
+          const propName = parent.name.name
+          if (
+            textProps.includes(tagName + ' ' + propName) ||
+            propName === 'text' ||
+            propName.endsWith('Text')
+          ) {
+            // We're good.
+            return
+          }
+          const message =
+            'Wrap this <Trans> in <Text>.' +
             ' If `' +
             propName +
             '` is guaranteed to be wrapped in <Text>, ' +

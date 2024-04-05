@@ -199,7 +199,7 @@ describe('avoid-unwrapped-text', () => {
 
       {
         code: `
-<View prop={
+<View propText={
   <Trans><Text>foo</Text></Trans>
 }>
   <Bar />
@@ -452,6 +452,44 @@ function MyText({ foo }) {
   }
   return <Text>foo</Text>
 }
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>foo</Trans>
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{foo}</Trans>
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{'foo'}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View prop={
+  <Trans><Text>foo</Text></Trans>
+}>
+  <Bar />
+</View>
         `,
         errors: 1,
       },
