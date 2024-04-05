@@ -66,7 +66,6 @@
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-clipboard/clipboard": "^1.10.0",
-    "@react-native-community/blur": "^4.3.0",
     "@react-native-masked-view/masked-view": "0.3.0",
     "@react-native-menu/menu": "^0.8.0",
     "@react-native-picker/picker": "2.6.1",
