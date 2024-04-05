@@ -11735,15 +11735,15 @@ expect@^29.7.0:
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
 
+expo-application@^5.8.3:
+  version "5.8.3"
+  resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-5.8.3.tgz#43991bd81d05c987b07b2f430c036cda1572bc62"
+  integrity sha512-IISxzpPX+Xe4ynnwX8yY52T6dm1g9sME1GCj4lvUlrdc5xeTPM6U35x7Wj82V7lLWBaVGe+/Tg9EeKqfylCEwA==
+
 expo-application@~5.8.0:
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-5.8.0.tgz#b82cb98a08f91d61f047f6578e883e0deb9661f2"
   integrity sha512-nNQ/ayC4P1ue0ZQSmUlG/K2ZHTPwHyYGsb0QtEmCFUCitsjPKIx4coNvAreZMuELvY7pD1zKr+pdtN/ULnljBA==
-
-expo-application@~5.8.3:
-  version "5.8.3"
-  resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-5.8.3.tgz#43991bd81d05c987b07b2f430c036cda1572bc62"
-  integrity sha512-IISxzpPX+Xe4ynnwX8yY52T6dm1g9sME1GCj4lvUlrdc5xeTPM6U35x7Wj82V7lLWBaVGe+/Tg9EeKqfylCEwA==
 
 expo-asset@~9.0.2:
   version "9.0.2"
@@ -18696,11 +18696,6 @@ react-native-uuid@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.1.tgz#ed4e2dfb1683eddb66967eb5dca140dfe1abddb9"
   integrity sha512-cptnoIbL53GTCrWlb/+jrDC6tvb7ypIyzbXNJcpR3Vab0mkeaaVd5qnB3f0whXYzS+SMoSQLcUUB0gEWqkPC0g==
-
-react-native-version-number@^0.3.6:
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/react-native-version-number/-/react-native-version-number-0.3.6.tgz#dd8b1435fc217df0a166d7e4a61fdc993f3e7437"
-  integrity sha512-TdyXiK90NiwmSbmAUlUBOV6WI1QGoqtvZZzI5zQY4fKl67B3ZrZn/h+Wy/OYIKKFMfePSiyfeIs8LtHGOZ/NgA==
 
 react-native-web-linear-gradient@^1.1.2:
   version "1.1.2"
