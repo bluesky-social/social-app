@@ -4,7 +4,7 @@
  */
 
 import {Platform} from 'react-native'
-import app from 'react-native-version-number'
+import {nativeApplicationVersion, nativeBuildVersion} from 'expo-application'
 import * as info from 'expo-updates'
 import {init} from 'sentry-expo'
 
@@ -21,7 +21,7 @@ const buildChannel = (info.channel || 'development') as
  * - `dev`
  * - `1.57.0`
  */
-const release = app.appVersion ?? 'dev'
+const release = nativeApplicationVersion ?? 'dev'
 
 /**
  * Examples:
@@ -33,7 +33,7 @@ const release = app.appVersion ?? 'dev'
  * - `android.1.57.0.46`
  */
 const dist = `${Platform.OS}.${release}${
-  app.buildVersion ? `.${app.buildVersion}` : ''
+  nativeBuildVersion ? `.${nativeBuildVersion}` : ''
 }`
 
 init({
