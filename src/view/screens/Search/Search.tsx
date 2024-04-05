@@ -337,7 +337,6 @@ export function SearchScreenInner({
   const {isDesktop} = useWebMediaQueries()
   const {_} = useLingui()
 
-  // New Search feature gate
   const isNewSearch = useNewSearchGate()
 
   const onPageSelected = React.useCallback(
