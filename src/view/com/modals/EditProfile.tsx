@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Animated, {FadeOut} from 'react-native-reanimated'
-import LinearGradient from 'expo-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
