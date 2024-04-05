@@ -97,6 +97,18 @@ jobs:
             echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Lint check
+        run: yarn lint
+
+      - name: Prettier check
+        run: yarn prettier --check .
+
+      - name: Check & compile i18n
+        run: yarn intl:build
+
+      - name: Type check
+        run: yarn typecheck
+
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@v8
         if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
@@ -112,10 +124,6 @@ jobs:
       - name: 🪛 Setup jq
         if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
         uses: dcarbone/install-jq-action@v2
-
-      - name: 🔤 Compile Translations
-        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
-        run: yarn intl:build
 
       - name: ✏️ Write environment variables
         if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
