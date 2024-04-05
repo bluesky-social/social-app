@@ -32,9 +32,6 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
-      - name: ⚙️ Install Dependencies
-        run: yarn install
-
       - name: Ensure tracking relevant branches and checkout base
         run: |
           git checkout ${{ github.head_ref }}
@@ -50,6 +47,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           git merge --no-edit ${{ github.head_ref }}
+          yarn install
 
       - name: 🔦 Generate stats file for PR
         run: |
@@ -72,6 +70,7 @@ jobs:
       - name: 🔦 Generate stats file from base commit
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         run: |
+          yarn install
           yarn generate-webpack-stats-file
           mv stats.json stats-base.json
 
