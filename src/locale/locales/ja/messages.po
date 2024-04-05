@@ -1763,7 +1763,7 @@ msgstr "パスワードを忘れた"
 #: src/view/com/auth/login/Login.tsx:127
 #: src/view/com/auth/login/Login.tsx:143
 msgid "Forgot password?"
-msgstr "パスワードを忘れた"
+msgstr "パスワードを忘れた？"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Forgot?"
