@@ -6,7 +6,8 @@ name: PR labeler
 on:
   push:
     branches: [main]
-  pull_request_target:
+  pull_request:
+    types: [opened, synchronize]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
@@ -20,7 +21,7 @@ permissions:
 jobs:
   webpack-analyzer:
     runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
@@ -95,7 +96,7 @@ jobs:
 
   test-suite-fingerprint:
     runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push' }}
     concurrency: fingerprint-${{ github.event_name != 'pull_request' && 'main' || github.run_id }}
     steps:
       - name: ⬇️ Checkout
