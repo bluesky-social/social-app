@@ -6,9 +6,9 @@ import {useLingui} from '@lingui/react'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
@@ -105,15 +105,15 @@ export function StepAlgoFeeds() {
     <View style={[a.align_start]}>
       <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Choose your main feeds</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         <Trans>
           Custom feeds built by the community bring you new experiences and help
           you find the content you love.
         </Trans>
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group

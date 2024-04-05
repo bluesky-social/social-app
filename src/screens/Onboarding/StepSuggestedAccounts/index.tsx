@@ -10,9 +10,9 @@ import {capitalize} from '#/lib/strings/capitalize'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -136,16 +136,16 @@ export function StepSuggestedAccounts() {
     <View style={[a.align_start]}>
       <IconCircle icon={At} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Here are some accounts for you to follow</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         {state.interestsStepResults.selectedInterests.length ? (
           <Trans>Based on your interest in {interestsText}</Trans>
         ) : (
           <Trans>These are popular accounts you might like:</Trans>
         )}
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pt_xl]}>
         {isLoading ? (

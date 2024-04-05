@@ -51,7 +51,7 @@ export function Outer({
   )
 }
 
-export function Title({children}: React.PropsWithChildren<{}>) {
+export function TitleText({children}: React.PropsWithChildren<{}>) {
   const {titleId} = React.useContext(Context)
   return (
     <Text nativeID={titleId} style={[a.text_2xl, a.font_bold, a.pb_sm]}>
@@ -60,7 +60,7 @@ export function Title({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function Description({children}: React.PropsWithChildren<{}>) {
+export function DescriptionText({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
@@ -175,8 +175,8 @@ export function Basic({
 }>) {
   return (
     <Outer control={control} testID="confirmModal">
-      <Title>{title}</Title>
-      <Description>{description}</Description>
+      <TitleText>{title}</TitleText>
+      <DescriptionText>{description}</DescriptionText>
       <Actions>
         <Action
           cta={confirmButtonCta}

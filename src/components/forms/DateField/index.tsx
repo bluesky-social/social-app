@@ -13,7 +13,7 @@ import * as TextField from '#/components/forms/TextField'
 import {DateFieldButton} from './index.shared'
 
 export * as utils from '#/components/forms/DateField/utils'
-export const Label = TextField.Label
+export const LabelText = TextField.LabelText
 
 /**
  * Date-only input. Accepts a date in the format YYYY-MM-DD, and reports date

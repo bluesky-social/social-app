@@ -11,9 +11,9 @@ import {logger} from '#/logger'
 import {getAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {ApiResponseMap, Context} from '#/screens/Onboarding/state'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
@@ -163,8 +163,8 @@ export function StepInterests() {
         ]}
       />
 
-      <Title>{title}</Title>
-      <Description>{description}</Description>
+      <TitleText>{title}</TitleText>
+      <DescriptionText>{description}</DescriptionText>
 
       <View style={[a.w_full, a.pt_2xl]}>
         {isLoading ? (

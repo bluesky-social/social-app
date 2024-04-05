@@ -3,16 +3,16 @@ import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
 import {
-  useTheme,
   atoms as a,
-  native,
   flatten,
-  ViewStyleProp,
+  native,
   TextStyleProp,
+  useTheme,
+  ViewStyleProp,
 } from '#/alf'
-import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
+import {Text} from '#/components/Typography'
 
 export type ItemState = {
   name: string
@@ -234,7 +234,7 @@ export function Item({
   )
 }
 
-export function Label({
+export function LabelText({
   children,
   style,
 }: React.PropsWithChildren<TextStyleProp>) {

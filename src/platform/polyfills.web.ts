@@ -19,6 +19,14 @@ if (process.env.NODE_ENV !== 'production') {
       typeof msgOrError === 'string' &&
       msgOrError.startsWith('Unexpected text node')
     ) {
+      if (
+        msgOrError ===
+        'Unexpected text node: . A text node cannot be a child of a <View>.'
+      ) {
+        // This is due to a stray empty string.
+        // React already handles this fine, so RNW warning is a false positive. Ignore.
+        return
+      }
       const err = new Error(msgOrError)
       thrownErrors.add(err)
       throw err

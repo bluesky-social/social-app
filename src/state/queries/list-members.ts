@@ -1,18 +1,19 @@
 import {AppBskyActorDefs, AppBskyGraphGetList} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {getAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-export const RQKEY = (uri: string) => ['list-members', uri]
+const RQKEY_ROOT = 'list-members'
+export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListMembersQuery(uri: string) {
   return useInfiniteQuery<
@@ -44,7 +45,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyGraphGetList.OutputSchema>
   >({
-    queryKey: ['list-members'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {

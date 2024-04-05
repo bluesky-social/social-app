@@ -11,7 +11,8 @@ import {
 import {isNative} from '#/platform/detection'
 
 // any query keys in this array will be persisted to AsyncStorage
-const STORED_CACHE_QUERY_KEYS = ['labelers-detailed-info']
+export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
+const STORED_CACHE_QUERY_KEY_ROOTS = [labelersDetailedInfoQueryKeyRoot]
 
 focusManager.setEventListener(onFocus => {
   if (isNative) {
@@ -65,7 +66,7 @@ const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehyd
   {
     shouldDehydrateMutation: (_: any) => false,
     shouldDehydrateQuery: query => {
-      return STORED_CACHE_QUERY_KEYS.includes(String(query.queryKey[0]))
+      return STORED_CACHE_QUERY_KEY_ROOTS.includes(String(query.queryKey[0]))
     },
   }
 

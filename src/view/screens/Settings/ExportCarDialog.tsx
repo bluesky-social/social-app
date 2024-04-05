@@ -1,14 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Text, P} from '#/components/Typography'
-import {Button, ButtonText} from '#/components/Button'
-import {InlineLink, Link} from '#/components/Link'
 import {getAgent, useSession} from '#/state/session'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {InlineLinkText, Link} from '#/components/Link'
+import {P, Text} from '#/components/Typography'
 
 export function ExportCarDialog({
   control,
@@ -75,11 +75,11 @@ export function ExportCarDialog({
             <Trans>
               This feature is in beta. You can read more about repository
               exports in{' '}
-              <InlineLink
+              <InlineLinkText
                 to="https://docs.bsky.app/blog/repo-export"
                 style={[a.text_sm]}>
                 this blogpost
-              </InlineLink>
+              </InlineLinkText>
               .
             </Trans>
           </P>
