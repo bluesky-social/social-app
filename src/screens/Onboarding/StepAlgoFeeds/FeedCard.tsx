@@ -1,18 +1,17 @@
 import React from 'react'
 import {View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react'
+import LinearGradient from 'expo-linear-gradient'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a} from '#/alf'
-import * as Toggle from '#/components/forms/Toggle'
-import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {Text} from '#/components/Typography'
-import {RichText} from '#/components/RichText'
-
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {FeedConfig} from '#/screens/Onboarding/StepAlgoFeeds'
+import {atoms as a, useTheme} from '#/alf'
+import * as Toggle from '#/components/forms/Toggle'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 
 function PrimaryFeedCardInner({
   feed,
