@@ -23,7 +23,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
+import {useNewSearchGate} from '#/lib/statsig/gates'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -366,7 +366,7 @@ export function SearchScreenInner({
   const {i18n} = useLingui()
 
   // New Search feature gate
-  const isNewSearch = useGate('new_search')
+  const isNewSearch = useNewSearchGate()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
