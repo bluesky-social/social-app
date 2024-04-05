@@ -3,10 +3,13 @@ import {isWeb} from 'platform/detection'
 export const OAUTH_CLIENT_ID = 'https://bsky.app'
 export const OAUTH_REDIRECT_URI = 'https://bsky.app/auth/callback'
 export const OAUTH_SCOPE = 'openid profile email phone offline_access'
-export const OAUTH_GRANT_TYPES = ['authorization_code', 'refresh_token']
-export const OAUTH_RESPONSE_TYPES = ['code', 'code id_token']
+export const OAUTH_GRANT_TYPES = [
+  'authorization_code',
+  'refresh_token',
+] as const
+export const OAUTH_RESPONSE_TYPES = ['code', 'code id_token'] as const
 export const DPOP_BOUND_ACCESS_TOKENS = true
-export const APPLICATION_TYPE = isWeb ? 'web' : 'native' // TODO what should we put here for native
+export const OAUTH_APPLICATION_TYPE = isWeb ? 'web' : 'native' // TODO what should we put here for native
 
 export const buildOAuthUrl = (serviceUrl: string, state: string) => {
   const url = new URL(serviceUrl)

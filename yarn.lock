@@ -77,6 +77,12 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
+"@atproto/b64@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/b64?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/b64?feat-oauth-server#00a0db82a412e99828a9bd241790bdf6e07b9b1590de8de8d31cd97e8efa74ed9ab6d779b0168c9c0e98c43a407570e1b1526efab5076db2cb22a6ca7655255c"
+  dependencies:
+    base64-js "^1.5.1"
+
 "@atproto/bsky@^0.0.28":
   version "0.0.28"
   resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.28.tgz#d9516f682883ceba60f52e3944d93dbd81375a7e"
@@ -131,6 +137,12 @@
     pino "^8.15.0"
     pino-http "^8.2.1"
     typed-emitter "^2.1.0"
+
+"@atproto/caching@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/caching?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/caching?feat-oauth-server#55421450c3f7e2db1f873a4e3537338ee1afc4f3d35b5d2b56bc5cd72dd68c831f93be4affa1cab8219064e3e392e7bec15af6858f8c447e9f4172fbfa262d68"
+  dependencies:
+    lru-cache "^10.2.0"
 
 "@atproto/common-web@^0.2.3":
   version "0.2.3"
@@ -233,6 +245,50 @@
     sharp "^0.32.6"
     uint8arrays "3.0.0"
 
+"@atproto/did@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/did?feat-oauth-server":
+  version "0.0.1"
+  uid d8e31a16bcecd25fc34b1aadb99b12b01a9cd280f432cfe8e0dd8cf78201749c551884f6783523f7704e6568a07d59a0e4a8e7d4d635c0c66c8d8f12767f0031
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/did?feat-oauth-server#d8e31a16bcecd25fc34b1aadb99b12b01a9cd280f432cfe8e0dd8cf78201749c551884f6783523f7704e6568a07d59a0e4a8e7d4d635c0c66c8d8f12767f0031"
+  dependencies:
+    "@atproto/caching" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/caching?feat-oauth-server"
+    "@atproto/fetch" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch?feat-oauth-server"
+    "@atproto/jwk" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/jwk?feat-oauth-server"
+    "@atproto/transformer" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/transformer?feat-oauth-server"
+    zod "^3.22.4"
+
+"@atproto/fetch-dpop@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch-dpop?feat-oauth-server":
+  version "0.0.0"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch-dpop?feat-oauth-server#cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e"
+
+"@atproto/fetch@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch?feat-oauth-server":
+  version "0.0.1"
+  uid "7fe9c1ef0eaa7b976e9817a3caf432e667cc540498fc9a63f9d1262dd604d48cc53aa0d5c059e9912ff401b51259d36e954b37935cf8578e8f6a682f8573405a"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch?feat-oauth-server#7fe9c1ef0eaa7b976e9817a3caf432e667cc540498fc9a63f9d1262dd604d48cc53aa0d5c059e9912ff401b51259d36e954b37935cf8578e8f6a682f8573405a"
+  dependencies:
+    "@atproto/transformer" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/transformer?feat-oauth-server"
+    tslib "^2.6.2"
+    zod "^3.22.4"
+
+"@atproto/handle-resolver@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/handle-resolver?feat-oauth-server":
+  version "0.0.1"
+  uid fe063702cb0ba71eddf1072d8d3838c04be573f4300d5161fb8775b8d2f3ee2aa5b434bfa2799f3fb275bdbe100be0069ef0af3381cbc778fa1b365f1477d651
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/handle-resolver?feat-oauth-server#fe063702cb0ba71eddf1072d8d3838c04be573f4300d5161fb8775b8d2f3ee2aa5b434bfa2799f3fb275bdbe100be0069ef0af3381cbc778fa1b365f1477d651"
+  dependencies:
+    "@atproto/caching" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/caching?feat-oauth-server"
+    "@atproto/did" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/did?feat-oauth-server"
+    "@atproto/fetch" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch?feat-oauth-server"
+    lru-cache "^10.2.0"
+    zod "^3.22.4"
+
+"@atproto/identity-resolver@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/identity-resolver?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/identity-resolver?feat-oauth-server#d3be310a6b9bb004e1183f336cc9507b8fa1d451641d6ac8da6b37a0aa9bb8dd25faad661c2d93d3f7ca16fc4961af54f2ad1c65fd0f01549a2c8aef959ab0d4"
+  dependencies:
+    "@atproto/did" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/did?feat-oauth-server"
+    "@atproto/fetch" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch?feat-oauth-server"
+    "@atproto/handle-resolver" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/handle-resolver?feat-oauth-server"
+    "@atproto/syntax" "workspace:*"
+
 "@atproto/identity@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@atproto/identity/-/identity-0.3.2.tgz#8a0536bc19ccbc45a04df84c3f30d86f58f964ee"
@@ -241,6 +297,14 @@
     "@atproto/common-web" "^0.2.3"
     "@atproto/crypto" "^0.3.0"
     axios "^0.27.2"
+
+"@atproto/jwk@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/jwk?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/jwk?feat-oauth-server#4a9e5a00740b15287e73e34d76de2c56c5a131f680f66963c2b2e4e5b34a517d265629ad498ed51256b27e87ee120e5c82ef1564c5ad3ff8ef1ec7d6c57f8074"
+  dependencies:
+    "@atproto/b64" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/b64?feat-oauth-server"
+    tslib "^2.6.2"
+    zod "^3.22.4"
 
 "@atproto/lexicon@^0.3.1":
   version "0.3.1"
@@ -263,6 +327,44 @@
     iso-datestring-validator "^2.2.2"
     multiformats "^9.9.0"
     zod "^3.21.4"
+
+"@atproto/oauth-client-metadata@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-client-metadata?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-client-metadata?feat-oauth-server#a3ec43488818d43579d1884487983fb9525c99293efc46e4c2d366090848c9ddfdd40ec5b6a5f67ddd77018fcb332e3a60abbf2b9059f325b233bac9c7d14298"
+  dependencies:
+    "@atproto/jwk" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/jwk?feat-oauth-server"
+    zod "^3.22.4"
+
+"@atproto/oauth-client@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-client?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-client?feat-oauth-server#108b0d02de722083b5c4a8ccfe1c120a1017b53f9b855df8a6552bcb87f07d94c94d63021716b7a04f10db47bb8d78980bffb0c0a7e928752638bb0bd13df888"
+  dependencies:
+    "@atproto/b64" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/b64?feat-oauth-server"
+    "@atproto/caching" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/caching?feat-oauth-server"
+    "@atproto/did" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/did?feat-oauth-server"
+    "@atproto/fetch" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch?feat-oauth-server"
+    "@atproto/fetch-dpop" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch-dpop?feat-oauth-server"
+    "@atproto/handle-resolver" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/handle-resolver?feat-oauth-server"
+    "@atproto/identity-resolver" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/identity-resolver?feat-oauth-server"
+    "@atproto/jwk" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/jwk?feat-oauth-server"
+    "@atproto/oauth-client-metadata" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-client-metadata?feat-oauth-server"
+    "@atproto/oauth-server-metadata" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-server-metadata?feat-oauth-server"
+    "@atproto/oauth-server-metadata-resolver" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-server-metadata-resolver?feat-oauth-server"
+
+"@atproto/oauth-server-metadata-resolver@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-server-metadata-resolver?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-server-metadata-resolver?feat-oauth-server#013607541029653b2d4078d390d8c2db53da818ab5e16682d34b8661d5d662c3caa9751c89c20cff3974baa1596eac24baf47cf43938971c38f719c99cdffb78"
+  dependencies:
+    "@atproto/caching" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/caching?feat-oauth-server"
+    "@atproto/fetch" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/fetch?feat-oauth-server"
+    "@atproto/oauth-server-metadata" "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-server-metadata?feat-oauth-server"
+    zod "^3.22.4"
+
+"@atproto/oauth-server-metadata@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-server-metadata?feat-oauth-server":
+  version "0.0.1"
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/oauth-server-metadata?feat-oauth-server#9674d5d704a1662d22e675aa0d5b44ca1f27fdce5a5d3360032567fe895fe66f21c6c5f2d98dd3cd3be3cc90c814300d6ade3be03811a58a19196e91216ca434"
+  dependencies:
+    zod "^3.22.4"
 
 "@atproto/ozone@^0.0.7":
   version "0.0.7"
@@ -359,10 +461,17 @@
   dependencies:
     "@atproto/common-web" "^0.2.3"
 
-"@atproto/syntax@^0.3.0":
+"@atproto/syntax@^0.3.0", "@atproto/syntax@workspace:*":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.0.tgz#fafa2dbea9add37253005cb663e7373e05e618b3"
   integrity sha512-Weq0ZBxffGHDXHl9U7BQc2BFJi/e23AL+k+i5+D9hUq/bzT4yjGsrCejkjq0xt82xXDjmhhvQSZ0LqxyZ5woxA==
+
+"@atproto/transformer@https://gitpkg.now.sh/haileyok/atproto-oauth/packages/transformer?feat-oauth-server":
+  version "0.0.1"
+  uid ebc22db7baa265745f1021cbd95280c3ef0150eed0f1286a3e761d5a288af207d6878e5da450023613fa2cf66523e4f4708dbd755f1442e3624bf10e9df03fe9
+  resolved "https://gitpkg.now.sh/haileyok/atproto-oauth/packages/transformer?feat-oauth-server#ebc22db7baa265745f1021cbd95280c3ef0150eed0f1286a3e761d5a288af207d6878e5da450023613fa2cf66523e4f4708dbd755f1442e3624bf10e9df03fe9"
+  dependencies:
+    tslib "^2.6.2"
 
 "@atproto/xrpc-server@^0.4.2":
   version "0.4.2"
@@ -15753,6 +15862,11 @@ lower-case@^2.0.2:
   dependencies:
     tslib "^2.0.3"
 
+lru-cache@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.2.0.tgz#0bd445ca57363465900f4d1f9bd8db343a4d95c3"
+  integrity "sha1-C9RFylc2NGWQD00fm9jbNDpNlcM= sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q=="
+
 lru-cache@^4.0.1:
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.5.tgz#8bbe50ea85bed59bc9e33dcab8235ee9bcf443cd"
@@ -20999,7 +21113,7 @@ tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.4.1, tslib@^2.5.0, tslib@^2.5.3:
+tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.4.1, tslib@^2.5.0, tslib@^2.5.3, tslib@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
@@ -22390,3 +22504,8 @@ zod@^3.14.2, zod@^3.20.2, zod@^3.21.4:
   version "3.22.2"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.2.tgz#3add8c682b7077c05ac6f979fea6998b573e157b"
   integrity sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==
+
+zod@^3.22.4:
+  version "3.22.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.4.tgz#f31c3a9386f61b1f228af56faa9255e845cf3fff"
+  integrity "sha1-8xw6k4b2Gx8iivVvqpJV6EXPP/8= sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg=="
