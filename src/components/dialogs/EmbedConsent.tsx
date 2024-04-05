@@ -51,8 +51,10 @@ export function EmbedConsentDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
 
-      <Dialog.ScrollableInner label={_(msg`External Media`)}>
-        <View style={[a.gap_sm]}>
+      <Dialog.ScrollableInner
+        label={_(msg`External Media`)}
+        style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
+        <View style={a.gap_sm}>
           <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>External Media</Trans>
           </Text>
@@ -73,32 +75,30 @@ export function EmbedConsentDialog({
           </Text>
         </View>
         <View style={[a.mt_xl, a.gap_md]}>
-          <View style={[a.gap_md, gtMobile && [a.w_full, a.flex_row]]}>
-            <Button
-              style={gtMobile && a.flex_1}
-              label={_(msg`Enable external media`)}
-              onPress={onShowAllPress}
-              onAccessibilityEscape={control.close}
-              color="primary"
-              size="medium"
-              variant="solid">
-              <ButtonText>
-                <Trans>Enable external media</Trans>
-              </ButtonText>
-            </Button>
-            <Button
-              style={gtMobile && a.flex_1}
-              label={_(msg`Enable this source only`)}
-              onPress={onShowPress}
-              onAccessibilityEscape={control.close}
-              color="secondary"
-              size="medium"
-              variant="solid">
-              <ButtonText>
-                <Trans>Enable {externalEmbedLabels[source]} only</Trans>
-              </ButtonText>
-            </Button>
-          </View>
+          <Button
+            style={gtMobile && a.flex_1}
+            label={_(msg`Enable external media`)}
+            onPress={onShowAllPress}
+            onAccessibilityEscape={control.close}
+            color="primary"
+            size="medium"
+            variant="solid">
+            <ButtonText>
+              <Trans>Enable external media</Trans>
+            </ButtonText>
+          </Button>
+          <Button
+            style={gtMobile && a.flex_1}
+            label={_(msg`Enable this source only`)}
+            onPress={onShowPress}
+            onAccessibilityEscape={control.close}
+            color="secondary"
+            size="medium"
+            variant="solid">
+            <ButtonText>
+              <Trans>Enable {externalEmbedLabels[source]} only</Trans>
+            </ButtonText>
+          </Button>
           <Button
             label={_(msg`No thanks`)}
             onAccessibilityEscape={control.close}
