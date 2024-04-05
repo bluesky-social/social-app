@@ -4857,11 +4857,6 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-camera-roll/camera-roll@^5.2.2":
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/@react-native-camera-roll/camera-roll/-/camera-roll-5.7.2.tgz#db11525ae26c8a61630c424aebd323a7c784a921"
-  integrity sha512-s8VAUG1Kvi+tEJkLHObmOJdXAL/uclnXJ/IdnJtx2fCKiWA3Ho0ln9gDQqCYHHHHu+sXk7wovsH/I2/AYy0brg==
-
 "@react-native-clipboard/clipboard@^1.10.0":
   version "1.11.2"
   resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.11.2.tgz#e826d0336b34e67294aaffa6878308900bc7d197"
@@ -10615,11 +10610,6 @@ deprecated-react-native-prop-types@^5.0.0:
     invariant "^2.2.4"
     prop-types "^15.8.1"
 
-dequal@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/dequal/-/dequal-1.0.0.tgz#41c6065e70de738541c82cdbedea5292277a017e"
-  integrity sha512-/Nd1EQbQbI9UbSHrMiKZjFLrXSnU328iQdZKPQf78XQI6C+gutkFUeoHpG5J08Ioa6HeRbRNFpSIclh1xyG0mw==
-
 dequal@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.3.tgz#2644214f1997d39ed0ee0ece72335490a7ac67be"
@@ -15711,11 +15701,6 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lru_map@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/lru_map/-/lru_map-0.4.1.tgz#f7b4046283c79fb7370c36f8fca6aee4324b0a98"
-  integrity sha512-I+lBvqMMFfqaV8CJCISjI3wbjmwVu/VyOoU7+qtu9d7ioW5klMgsTTiUOUp+DJvfTTzKXoPbyC6YfgkNcyPSOg==
-
 magic-string@^0.25.0, magic-string@^0.25.7:
   version "0.25.9"
   resolved "https://registry.yarnpkg.com/magic-string/-/magic-string-0.25.9.tgz#de7f9faf91ef8a1c91d02c2e5314c8277dbcdd1c"
@@ -18493,11 +18478,6 @@ react-avatar-editor@^13.0.0:
     "@babel/runtime" "^7.12.5"
     prop-types "^15.7.2"
 
-react-circular-progressbar@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-circular-progressbar/-/react-circular-progressbar-2.1.0.tgz#99e5ae499c21de82223b498289e96f66adb8fa3a"
-  integrity sha512-xp4THTrod4aLpGy68FX/k1Q3nzrfHUjUe5v6FsdwXBl3YVMwgeXYQKDrku7n/D6qsJA9CuunarAboC2xCiKs1g==
-
 react-dev-utils@^12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-12.0.1.tgz#ba92edb4a1f379bd46ccd6bcd4e7bc398df33e73"
@@ -18575,11 +18555,6 @@ react-keyed-flatten-children@^3.0.0:
   integrity sha512-tSH6gvOyQjt3qtjG+kU9sTypclL1672yjpVufcE3aHNM0FhvjBUQZqsb/awIux4zEuVC3k/DP4p0GdTT/QUt/Q==
   dependencies:
     react-is "^18.2.0"
-
-react-native-appstate-hook@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-appstate-hook/-/react-native-appstate-hook-1.0.6.tgz#cbc16e7b89cfaea034cabd999f00e99053cabd06"
-  integrity sha512-0hPVyf5yLxCSVrrNEuGqN1ZnSSj3Ye2gZex0NtcK/AHYwMc0rXWFNZjBKOoZSouspqu3hXBbQ6NOUSTzrME1AQ==
 
 react-native-date-picker@^4.4.0:
   version "4.4.0"
@@ -21295,13 +21270,6 @@ use-callback-ref@^1.3.0:
   integrity sha512-3FT9PRuRdbB9HfXhEq35u4oZkvpJ5kuYbpqhCfmiZyReuRgpnhDlbr2ZEnnuS0RrJAPn6l23xjFg9kpDM+Ms7w==
   dependencies:
     tslib "^2.0.0"
-
-use-deep-compare@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/use-deep-compare/-/use-deep-compare-1.1.0.tgz#85580dde751f68400bf6ef7e043c7f986595cef8"
-  integrity sha512-6yY3zmKNCJ1jjIivfZMZMReZjr8e6iC6Uqtp701jvWJ6ejC/usXD+JjmslZDPJQgX8P4B1Oi5XSLHkOLeYSJsA==
-  dependencies:
-    dequal "1.0.0"
 
 use-latest-callback@^0.1.5:
   version "0.1.6"
