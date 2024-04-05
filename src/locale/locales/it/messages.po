@@ -709,7 +709,7 @@ msgstr "Chiudi"
 #: src/components/Dialog/index.web.tsx:84
 #: src/components/Dialog/index.web.tsx:198
 msgid "Close active dialog"
-msgstr "Chiudi il dialogo attivo"
+msgstr "Chiudi la finestra attiva"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
 msgid "Close alert"
@@ -733,7 +733,7 @@ msgstr "Chiudi la navigazione del footer"
 
 #: src/components/Menu/index.tsx:207 src/components/TagMenu/index.tsx:262
 msgid "Close this dialog"
-msgstr "Chiudi il dialogo"
+msgstr "Chiudi la finestra"
 
 #: src/view/shell/index.web.tsx:56
 msgid "Closes bottom navigation bar"
