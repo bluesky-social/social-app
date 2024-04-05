@@ -1,51 +1,51 @@
 import React from 'react'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {View} from 'react-native'
 import {
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  ComAtprotoLabelDefs,
+  interpretLabelValueDefinition,
+  LabelPreference,
   LABELS,
   mock,
   moderatePost,
   moderateProfile,
-  ModerationOpts,
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  LabelPreference,
-  ModerationDecision,
   ModerationBehavior,
+  ModerationDecision,
+  ModerationOpts,
   RichText,
-  ComAtprotoLabelDefs,
-  interpretLabelValueDefinition,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {moderationOptsOverrideContext} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
+
+import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {FeedNotification} from '#/state/queries/notifications/types'
 import {
   groupNotifications,
   shouldFilterNotif,
 } from '#/state/queries/notifications/util'
-
-import {atoms as a, useTheme} from '#/alf'
+import {moderationOptsOverrideContext} from '#/state/queries/preferences'
+import {useSession} from '#/state/session'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {H1, H3, P, Text} from '#/components/Typography'
-import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
+import {ProfileHeaderStandard} from '#/screens/Profile/Header/ProfileHeaderStandard'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
 } from '#/components/icons/Chevron'
+import {H1, H3, P, Text} from '#/components/Typography'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
-import {ProfileHeaderStandard} from '#/screens/Profile/Header/ProfileHeaderStandard'
-import {ProfileCard} from '../com/profile/ProfileCard'
-import {FeedItem} from '../com/posts/FeedItem'
 import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
 import {PostThreadItem} from '../com/post-thread/PostThreadItem'
-import {Divider} from '#/components/Divider'
+import {FeedItem} from '../com/posts/FeedItem'
+import {ProfileCard} from '../com/profile/ProfileCard'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
@@ -320,7 +320,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                           disabled={disabled}
                           style={disabled ? {opacity: 0.5} : undefined}>
                           <Toggle.Radio />
-                          <Toggle.Label>{labelValue}</Toggle.Label>
+                          <Toggle.LabelText>{labelValue}</Toggle.LabelText>
                         </Toggle.Item>
                       )
                     })}
@@ -330,7 +330,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       disabled={isSelfLabel}
                       style={isSelfLabel ? {opacity: 0.5} : undefined}>
                       <Toggle.Radio />
-                      <Toggle.Label>Custom label</Toggle.Label>
+                      <Toggle.LabelText>Custom label</Toggle.LabelText>
                     </Toggle.Item>
                   </View>
                 </Toggle.Group>
@@ -358,23 +358,23 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                     <View style={[a.gap_md, a.flex_row, a.flex_wrap, a.pt_md]}>
                       <Toggle.Item name="targetMe" label="Target is me">
                         <Toggle.Checkbox />
-                        <Toggle.Label>Target is me</Toggle.Label>
+                        <Toggle.LabelText>Target is me</Toggle.LabelText>
                       </Toggle.Item>
                       <Toggle.Item name="following" label="Following target">
                         <Toggle.Checkbox />
-                        <Toggle.Label>Following target</Toggle.Label>
+                        <Toggle.LabelText>Following target</Toggle.LabelText>
                       </Toggle.Item>
                       <Toggle.Item name="selfLabel" label="Self label">
                         <Toggle.Checkbox />
-                        <Toggle.Label>Self label</Toggle.Label>
+                        <Toggle.LabelText>Self label</Toggle.LabelText>
                       </Toggle.Item>
                       <Toggle.Item name="noAdult" label="Adult disabled">
                         <Toggle.Checkbox />
-                        <Toggle.Label>Adult disabled</Toggle.Label>
+                        <Toggle.LabelText>Adult disabled</Toggle.LabelText>
                       </Toggle.Item>
                       <Toggle.Item name="loggedOut" label="Logged out">
                         <Toggle.Checkbox />
-                        <Toggle.Label>Logged out</Toggle.Label>
+                        <Toggle.LabelText>Logged out</Toggle.LabelText>
                       </Toggle.Item>
                     </View>
                   </Toggle.Group>
@@ -400,15 +400,15 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                           ]}>
                           <Toggle.Item name="hide" label="Hide">
                             <Toggle.Radio />
-                            <Toggle.Label>Hide</Toggle.Label>
+                            <Toggle.LabelText>Hide</Toggle.LabelText>
                           </Toggle.Item>
                           <Toggle.Item name="warn" label="Warn">
                             <Toggle.Radio />
-                            <Toggle.Label>Warn</Toggle.Label>
+                            <Toggle.LabelText>Warn</Toggle.LabelText>
                           </Toggle.Item>
                           <Toggle.Item name="ignore" label="Ignore">
                             <Toggle.Radio />
-                            <Toggle.Label>Ignore</Toggle.Label>
+                            <Toggle.LabelText>Ignore</Toggle.LabelText>
                           </Toggle.Item>
                         </View>
                       </Toggle.Group>
@@ -446,19 +446,19 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
                         <Toggle.Item name="account" label="Account">
                           <Toggle.Radio />
-                          <Toggle.Label>Account</Toggle.Label>
+                          <Toggle.LabelText>Account</Toggle.LabelText>
                         </Toggle.Item>
                         <Toggle.Item name="profile" label="Profile">
                           <Toggle.Radio />
-                          <Toggle.Label>Profile</Toggle.Label>
+                          <Toggle.LabelText>Profile</Toggle.LabelText>
                         </Toggle.Item>
                         <Toggle.Item name="post" label="Post">
                           <Toggle.Radio />
-                          <Toggle.Label>Post</Toggle.Label>
+                          <Toggle.LabelText>Post</Toggle.LabelText>
                         </Toggle.Item>
                         <Toggle.Item name="embed" label="Embed">
                           <Toggle.Radio />
-                          <Toggle.Label>Embed</Toggle.Label>
+                          <Toggle.LabelText>Embed</Toggle.LabelText>
                         </Toggle.Item>
                       </View>
                     </Toggle.Group>
@@ -623,15 +623,15 @@ function CustomLabelForm({
             <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
               <Toggle.Item name="content" label="Content">
                 <Toggle.Radio />
-                <Toggle.Label>Content</Toggle.Label>
+                <Toggle.LabelText>Content</Toggle.LabelText>
               </Toggle.Item>
               <Toggle.Item name="media" label="Media">
                 <Toggle.Radio />
-                <Toggle.Label>Media</Toggle.Label>
+                <Toggle.LabelText>Media</Toggle.LabelText>
               </Toggle.Item>
               <Toggle.Item name="none" label="None">
                 <Toggle.Radio />
-                <Toggle.Label>None</Toggle.Label>
+                <Toggle.LabelText>None</Toggle.LabelText>
               </Toggle.Item>
             </View>
           </Toggle.Group>
@@ -658,15 +658,15 @@ function CustomLabelForm({
             <View style={[a.flex_row, a.gap_md, a.flex_wrap, a.align_center]}>
               <Toggle.Item name="alert" label="Alert">
                 <Toggle.Radio />
-                <Toggle.Label>Alert</Toggle.Label>
+                <Toggle.LabelText>Alert</Toggle.LabelText>
               </Toggle.Item>
               <Toggle.Item name="inform" label="Inform">
                 <Toggle.Radio />
-                <Toggle.Label>Inform</Toggle.Label>
+                <Toggle.LabelText>Inform</Toggle.LabelText>
               </Toggle.Item>
               <Toggle.Item name="none" label="None">
                 <Toggle.Radio />
-                <Toggle.Label>None</Toggle.Label>
+                <Toggle.LabelText>None</Toggle.LabelText>
               </Toggle.Item>
             </View>
           </Toggle.Group>

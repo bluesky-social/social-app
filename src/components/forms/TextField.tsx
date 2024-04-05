@@ -225,7 +225,7 @@ export function createInput(Component: typeof TextInput) {
 
 export const Input = createInput(TextInput)
 
-export function Label({
+export function LabelText({
   nativeID,
   children,
 }: React.PropsWithChildren<{nativeID?: string}>) {
@@ -288,7 +288,7 @@ export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
   )
 }
 
-export function Suffix({
+export function SuffixText({
   children,
   label,
   accessibilityHint,

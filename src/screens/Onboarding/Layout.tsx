@@ -1,29 +1,27 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {IS_DEV} from '#/env'
 import {isWeb} from '#/platform/detection'
 import {useOnboardingDispatch} from '#/state/shell'
-
-import {
-  useTheme,
-  atoms as a,
-  useBreakpoints,
-  web,
-  native,
-  flatten,
-  TextStyleProp,
-} from '#/alf'
-import {P, leading, Text} from '#/components/Typography'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
-import {Button, ButtonIcon} from '#/components/Button'
 import {ScrollView} from '#/view/com/util/Views'
-import {createPortalGroup} from '#/components/Portal'
-
 import {Context} from '#/screens/Onboarding/state'
+import {
+  atoms as a,
+  flatten,
+  native,
+  TextStyleProp,
+  useBreakpoints,
+  useTheme,
+  web,
+} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {createPortalGroup} from '#/components/Portal'
+import {leading, P, Text} from '#/components/Typography'
+import {IS_DEV} from '#/env'
 
 const COL_WIDTH = 500
 
@@ -204,7 +202,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function Title({
+export function TitleText({
   children,
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
@@ -224,7 +222,7 @@ export function Title({
   )
 }
 
-export function Description({
+export function DescriptionText({
   children,
   style,
 }: React.PropsWithChildren<TextStyleProp>) {

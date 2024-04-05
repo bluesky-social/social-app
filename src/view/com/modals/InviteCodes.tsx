@@ -1,36 +1,37 @@
 import React from 'react'
 import {
+  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
-  ActivityIndicator,
 } from 'react-native'
+import {setStringAsync} from 'expo-clipboard'
 import {ComAtprotoServerDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import * as Toast from '../util/Toast'
-import {ScrollView} from './util'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans, msg} from '@lingui/macro'
-import {cleanError} from 'lib/strings/errors'
-import {useModalControls} from '#/state/modals'
-import {useInvitesState, useInvitesAPI} from '#/state/invites'
-import {UserInfoText} from '../util/UserInfoText'
-import {makeProfileLink} from '#/lib/routes/links'
-import {Link} from '../util/Link'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {
-  useInviteCodesQuery,
-  InviteCodesQueryResponse,
-} from '#/state/queries/invites'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {makeProfileLink} from '#/lib/routes/links'
+import {useInvitesAPI, useInvitesState} from '#/state/invites'
+import {useModalControls} from '#/state/modals'
+import {
+  InviteCodesQueryResponse,
+  useInviteCodesQuery,
+} from '#/state/queries/invites'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {cleanError} from 'lib/strings/errors'
+import {isWeb} from 'platform/detection'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
+import {UserInfoText} from '../util/UserInfoText'
+import {ScrollView} from './util'
 
 export const snapPoints = ['70%']
 
@@ -148,7 +149,7 @@ function InviteCode({
   const uses = invite.uses
 
   const onPress = React.useCallback(() => {
-    Clipboard.setString(invite.code)
+    setStringAsync(invite.code)
     Toast.show(_(msg`Copied to clipboard`))
     setInviteCopied(invite.code)
   }, [setInviteCopied, invite, _])

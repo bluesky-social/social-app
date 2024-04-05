@@ -1,20 +1,19 @@
 import React from 'react'
 import {View} from 'react-native'
+import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
 
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {getAgent} from '#/state/session'
-
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
-import * as Dialog from '#/components/Dialog'
-import {Button, ButtonText} from '#/components/Button'
-import {InlineLink} from '#/components/Link'
 import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {InlineLinkText} from '#/components/Link'
+import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
 
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
@@ -145,13 +144,13 @@ function Label({
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
         <Text style={[t.atoms.text_contrast_medium]}>
           <Trans>Source:</Trans>{' '}
-          <InlineLink
+          <InlineLinkText
             to={makeProfileLink(
               labeler ? labeler.creator : {did: label.src, handle: ''},
             )}
             onPress={() => control.close()}>
             {labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src}
-          </InlineLink>
+          </InlineLinkText>
         </Text>
       </View>
     </View>
@@ -204,14 +203,14 @@ function AppealForm({
       <Text style={[a.text_md, a.leading_snug]}>
         <Trans>
           This appeal will be sent to{' '}
-          <InlineLink
+          <InlineLinkText
             to={makeProfileLink(
               labeler ? labeler.creator : {did: label.src, handle: ''},
             )}
             onPress={() => control.close()}
             style={[a.text_md, a.leading_snug]}>
             {labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src}
-          </InlineLink>
+          </InlineLinkText>
           .
         </Trans>
       </Text>

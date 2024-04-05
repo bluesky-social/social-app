@@ -246,6 +246,41 @@ describe('avoid-unwrapped-text', () => {
 </Foo>
               `,
       },
+
+      {
+        code: `
+function Stuff() {
+  return <Text>foo</Text>
+}
+        `,
+      },
+
+      {
+        code: `
+function Stuff({ foo }) {
+  return <View>{foo}</View>
+}
+        `,
+      },
+
+      {
+        code: `
+function MyText() {
+  return <Text>foo</Text>
+}
+        `,
+      },
+
+      {
+        code: `
+function MyText({ foo }) {
+  if (foo) {
+    return <Text>foo</Text>
+  }
+  return <Text>foo</Text>
+}
+        `,
+      },
     ],
 
     invalid: [
@@ -387,6 +422,36 @@ describe('avoid-unwrapped-text', () => {
 }>
   <Bar />
 </Foo>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+function MyText() {
+  return <Foo />
+}
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+function MyText({ foo }) {
+  return <Foo>{foo}</Foo>
+}
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+function MyText({ foo }) {
+  if (foo) {
+    return <Foo>{foo}</Foo>
+  }
+  return <Text>foo</Text>
+}
         `,
         errors: 1,
       },

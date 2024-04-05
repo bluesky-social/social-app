@@ -35,6 +35,11 @@ exports.create = function create(context) {
   const impliedTextComponents = options.impliedTextComponents ?? []
   const textProps = [...impliedTextProps]
   const textComponents = ['Text', ...impliedTextComponents]
+
+  function isTextComponent(tagName) {
+    return textComponents.includes(tagName) || tagName.endsWith('Text')
+  }
+
   return {
     JSXText(node) {
       if (typeof node.value !== 'string' || hasOnlyLineBreak(node.value)) {
@@ -44,7 +49,7 @@ exports.create = function create(context) {
       while (parent) {
         if (parent.type === 'JSXElement') {
           const tagName = getTagName(parent)
-          if (textComponents.includes(tagName) || tagName.endsWith('Text')) {
+          if (isTextComponent(tagName)) {
             // We're good.
             return
           }
@@ -105,6 +110,37 @@ exports.create = function create(context) {
 
         parent = parent.parent
         continue
+      }
+    },
+    ReturnStatement(node) {
+      let fnScope = context.getScope()
+      while (fnScope && fnScope.type !== 'function') {
+        fnScope = fnScope.upper
+      }
+      if (!fnScope) {
+        return
+      }
+      const fn = fnScope.block
+      if (!fn.id || fn.id.type !== 'Identifier' || !fn.id.name) {
+        return
+      }
+      if (!/^[A-Z]\w*Text$/.test(fn.id.name)) {
+        return
+      }
+      if (!node.argument || node.argument.type !== 'JSXElement') {
+        return
+      }
+      const openingEl = node.argument.openingElement
+      if (openingEl.name.type !== 'JSXIdentifier') {
+        return
+      }
+      const returnedComponentName = openingEl.name.name
+      if (!isTextComponent(returnedComponentName)) {
+        context.report({
+          node,
+          message:
+            'Components ending with *Text must return <Text> or <SomeText>.',
+        })
       }
     },
   }

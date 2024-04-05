@@ -9,7 +9,7 @@ import * as TextField from '#/components/forms/TextField'
 import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
 
 export * as utils from '#/components/forms/DateField/utils'
-export const Label = TextField.Label
+export const LabelText = TextField.LabelText
 
 const InputBase = React.forwardRef<HTMLInputElement, TextInputProps>(
   ({style, ...props}, ref) => {

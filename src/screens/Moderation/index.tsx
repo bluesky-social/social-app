@@ -40,7 +40,7 @@ import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filte
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import * as LabelingService from '#/components/LabelingServiceCard'
-import {InlineLink, Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
@@ -518,11 +518,11 @@ function PwiOptOut() {
             msg`Discourage apps from showing my account to logged-out users`,
           )}>
           <Toggle.Switch />
-          <Toggle.Label style={[a.text_md, a.flex_1]}>
+          <Toggle.LabelText style={[a.text_md, a.flex_1]}>
             <Trans>
               Discourage apps from showing my account to logged-out users
             </Trans>
-          </Toggle.Label>
+          </Toggle.LabelText>
         </Toggle.Item>
 
         {updateProfile.isPending && <Loader />}
@@ -545,9 +545,9 @@ function PwiOptOut() {
           </Trans>
         </Text>
 
-        <InlineLink to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
+        <InlineLinkText to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
           <Trans>Learn more about what is public on Bluesky.</Trans>
-        </InlineLink>
+        </InlineLinkText>
       </View>
     </View>
   )
