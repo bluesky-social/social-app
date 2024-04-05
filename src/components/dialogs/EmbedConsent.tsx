@@ -59,22 +59,24 @@ export function EmbedConsentDialog({
             <Trans>External Media</Trans>
           </Text>
 
-          <Text>
-            <Trans>
-              This content is hosted by {externalEmbedLabels[source]}. Do you
-              want to enable external media?
-            </Trans>
-          </Text>
+          <View style={[a.mt_sm, a.mb_2xl, a.gap_lg]}>
+            <Text>
+              <Trans>
+                This content is hosted by {externalEmbedLabels[source]}. Do you
+                want to enable external media?
+              </Trans>
+            </Text>
 
-          <Text style={t.atoms.text_contrast_medium}>
-            <Trans>
-              External media may allow websites to collect information about you
-              and your device. No information is sent or requested until you
-              press the "play" button.
-            </Trans>
-          </Text>
+            <Text style={t.atoms.text_contrast_medium}>
+              <Trans>
+                External media may allow websites to collect information about
+                you and your device. No information is sent or requested until
+                you press the "play" button.
+              </Trans>
+            </Text>
+          </View>
         </View>
-        <View style={[a.mt_xl, a.gap_md]}>
+        <View style={a.gap_md}>
           <Button
             style={gtMobile && a.flex_1}
             label={_(msg`Enable external media`)}
