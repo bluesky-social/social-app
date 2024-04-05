@@ -201,15 +201,15 @@ export function Forms() {
           label="Preferences"
           values={toggleGroupDValues}
           onChange={setToggleGroupDValues}>
-          <ToggleButton.ButtonWithText name="hide" label="Hide">
-            Hide
-          </ToggleButton.ButtonWithText>
-          <ToggleButton.ButtonWithText name="warn" label="Warn">
-            Warn
-          </ToggleButton.ButtonWithText>
-          <ToggleButton.ButtonWithText name="show" label="Show">
-            Show
-          </ToggleButton.ButtonWithText>
+          <ToggleButton.Button name="hide" label="Hide">
+            <ToggleButton.ButtonText>Hide</ToggleButton.ButtonText>
+          </ToggleButton.Button>
+          <ToggleButton.Button name="warn" label="Warn">
+            <ToggleButton.ButtonText>Warn</ToggleButton.ButtonText>
+          </ToggleButton.Button>
+          <ToggleButton.Button name="show" label="Show">
+            <ToggleButton.ButtonText>Show</ToggleButton.ButtonText>
+          </ToggleButton.Button>
         </ToggleButton.Group>
 
         <View>
@@ -217,15 +217,15 @@ export function Forms() {
             label="Preferences"
             values={toggleGroupDValues}
             onChange={setToggleGroupDValues}>
-            <ToggleButton.ButtonWithText name="hide" label="Hide">
-              Hide
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="warn" label="Warn">
-              Warn
-            </ToggleButton.ButtonWithText>
-            <ToggleButton.ButtonWithText name="show" label="Show">
-              Show
-            </ToggleButton.ButtonWithText>
+            <ToggleButton.Button name="hide" label="Hide">
+              <ToggleButton.ButtonText>Hide</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="warn" label="Warn">
+              <ToggleButton.ButtonText>Warn</ToggleButton.ButtonText>
+            </ToggleButton.Button>
+            <ToggleButton.Button name="show" label="Show">
+              <ToggleButton.ButtonText>Show</ToggleButton.ButtonText>
+            </ToggleButton.Button>
           </ToggleButton.Group>
         </View>
       </View>

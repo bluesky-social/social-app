@@ -33,19 +33,6 @@ export function Group({children, multiple, ...props}: GroupProps) {
   )
 }
 
-export function ButtonWithText({
-  children,
-  ...props
-}: ItemProps & {
-  children: React.ReactNode
-}) {
-  return (
-    <Button {...props}>
-      <ButtonText>{children}</ButtonText>
-    </Button>
-  )
-}
-
 export function Button({
   children,
   ...props
