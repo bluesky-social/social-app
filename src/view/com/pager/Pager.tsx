@@ -1,12 +1,10 @@
 import React, {forwardRef} from 'react'
 import {Animated, View} from 'react-native'
 import PagerView, {
-  PagerViewOnPageScrollEvent,
   PagerViewOnPageSelectedEvent,
+  PagerViewOnPageScrollEvent,
   PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view'
-import flattenReactChildren from 'react-keyed-flatten-children'
-
 import {s} from 'lib/styles'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
@@ -133,7 +131,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
           onPageScrollStateChanged={handlePageScrollStateChanged}
           onPageSelected={onPageSelectedInner}
           onPageScroll={onPageScroll}>
-          {flattenReactChildren(children)}
+          {children}
         </AnimatedPagerView>
       </View>
     )
