@@ -92,7 +92,9 @@ export function ExportCarDialog({
               size={gtMobile ? 'small' : 'large'}
               onPress={() => control.close()}
               label={_(msg`Done`)}>
-              {_(msg`Done`)}
+              <ButtonText>
+                <Trans>Done</Trans>
+              </ButtonText>
             </Button>
           </View>
 

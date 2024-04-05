@@ -167,7 +167,7 @@ export function ServerInputDialog({
               size="small"
               onPress={() => control.close()}
               label={_(msg`Done`)}>
-              {_(msg`Done`)}
+              <ButtonText>{_(msg`Done`)}</ButtonText>
             </Button>
           </View>
         </View>

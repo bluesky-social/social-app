@@ -199,7 +199,7 @@ describe('avoid-unwrapped-text', () => {
 
       {
         code: `
-<View prop={
+<View propText={
   <Trans><Text>foo</Text></Trans>
 }>
   <Bar />
@@ -280,6 +280,170 @@ function MyText({ foo }) {
   return <Text>foo</Text>
 }
         `,
+      },
+
+      {
+        code: `
+<View>
+  <Text>{'foo'}</Text>
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  <Text>{foo + 'foo'}</Text>
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  <Text><Trans>{'foo'}</Trans></Text>
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {foo['bar'] && <Bar />}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {(foo === 'bar') && <Bar />}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {(foo !== 'bar') && <Bar />}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  <Text>{\`foo\`}</Text>
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  <Text><Trans>{\`foo\`}</Trans></Text>
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  <Text>{_(msg\`foo\`)}</Text>
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  <Text><Trans>{_(msg\`foo\`)}</Trans></Text>
+</View>
+       `,
+      },
+
+      {
+        code: `
+<Foo>
+  <View prop={stuff('foo')}>
+    <Bar />
+  </View>
+</Foo>
+       `,
+      },
+
+      {
+        code: `
+<Foo>
+  <View onClick={() => stuff('foo')}>
+    <Bar />
+  </View>
+</Foo>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {renderItem('foo')}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {foo === 'foo' && <Bar />}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {foo['foo'] && <Bar />}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {check('foo') && <Bar />}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {foo.bar && <Bar />}
+</View>
+        `,
+      },
+
+      {
+        code: `
+<Text>
+  <Trans>{renderItem('foo')}</Trans>
+</Text>
+       `,
+      },
+
+      {
+        code: `
+<View>
+  {null}
+</View>
+       `,
+      },
+
+      {
+        code: `
+<Text>
+  <Trans>{null}</Trans>
+</Text>
+       `,
       },
     ],
 
@@ -452,6 +616,179 @@ function MyText({ foo }) {
   }
   return <Text>foo</Text>
 }
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {'foo'}
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {foo && 'foo'}
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{'foo'}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {foo && <Trans>{'foo'}</Trans>}
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {10}
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{10}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{foo + 10}</Trans>
+</View>
+             `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {\`foo\`}
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{\`foo\`}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{foo + \`foo\`}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {_(msg\`foo\`)}
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  {foo + _(msg\`foo\`)}
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{_(msg\`foo\`)}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{foo + _(msg\`foo\`)}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>foo</Trans>
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans><Trans>foo</Trans></Trans>
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{foo}</Trans>
+</View>
+        `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View>
+  <Trans>{'foo'}</Trans>
+</View>
+       `,
+        errors: 1,
+      },
+
+      {
+        code: `
+<View prop={
+  <Trans><Text>foo</Text></Trans>
+}>
+  <Bar />
+</View>
         `,
         errors: 1,
       },
