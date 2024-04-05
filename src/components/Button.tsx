@@ -11,7 +11,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import LinearGradient from 'expo-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {Trans} from '@lingui/macro'
 
 import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'

@@ -2,7 +2,7 @@ import React, {ComponentProps} from 'react'
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import LinearGradient from 'expo-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {isWeb} from '#/platform/detection'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
