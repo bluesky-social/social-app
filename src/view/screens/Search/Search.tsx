@@ -23,6 +23,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {NavigationProp} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -197,7 +198,7 @@ function SearchScreenPostResults({
   sort,
 }: {
   query: string
-  sort: 'top' | 'latest'
+  sort?: 'top' | 'latest'
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -325,12 +326,16 @@ function SearchScreenUserResults({query}: {query: string}) {
 
 const SECTIONS_LOGGEDOUT = ['PEOPLE'] as const
 const SECTIONS_LOGGEDIN = ['TOP', 'LATEST', 'PEOPLE'] as const
+const SECTIONS_LOGGEDOUT_LEGACY = ['USERS'] as const
+const SECTIONS_LOGGEDIN_LEGACY = ['POSTS', 'USERS'] as const
 
 function getSectionName(
   i18n: I18n,
   section:
     | (typeof SECTIONS_LOGGEDIN)[number]
-    | (typeof SECTIONS_LOGGEDOUT)[number],
+    | (typeof SECTIONS_LOGGEDOUT)[number]
+    | (typeof SECTIONS_LOGGEDIN_LEGACY)[number]
+    | (typeof SECTIONS_LOGGEDOUT_LEGACY)[number],
 ) {
   switch (section) {
     case 'TOP':
@@ -339,6 +344,10 @@ function getSectionName(
       return i18n._(msg`Latest`)
     case 'PEOPLE':
       return i18n._(msg`People`)
+    case 'POSTS':
+      return i18n._(msg`Posts`)
+    case 'USERS':
+      return i18n._(msg`Users`)
   }
 }
 
@@ -356,6 +365,9 @@ export function SearchScreenInner({
   const {isDesktop} = useWebMediaQueries()
   const {i18n} = useLingui()
 
+  // New Search feature gate
+  const isNewSearch = useGate('new_search')
+
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
@@ -364,7 +376,13 @@ export function SearchScreenInner({
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
-  const sections = hasSession ? SECTIONS_LOGGEDIN : SECTIONS_LOGGEDOUT
+  const sections = React.useMemo(() => {
+    if (isNewSearch) {
+      return hasSession ? SECTIONS_LOGGEDIN : SECTIONS_LOGGEDOUT
+    } else {
+      return hasSession ? SECTIONS_LOGGEDIN_LEGACY : SECTIONS_LOGGEDOUT_LEGACY
+    }
+  }, [hasSession, isNewSearch])
 
   const tabBarItems = React.useMemo(
     () => sections.map(section => getSectionName(i18n, section)),
@@ -383,12 +401,20 @@ export function SearchScreenInner({
           </CenteredView>
         )}
         initialPage={0}>
-        <View>
-          <SearchScreenPostResults query={query} sort="top" />
-        </View>
-        <View>
-          <SearchScreenPostResults query={query} sort="latest" />
-        </View>
+        {isNewSearch ? (
+          <>
+            <View>
+              <SearchScreenPostResults query={query} sort="top" />
+            </View>
+            <View>
+              <SearchScreenPostResults query={query} sort="latest" />
+            </View>
+          </>
+        ) : (
+          <View>
+            <SearchScreenPostResults query={query} />
+          </View>
+        )}
         <View>
           <SearchScreenUserResults query={query} />
         </View>
