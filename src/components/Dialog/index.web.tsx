@@ -5,6 +5,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {FocusScope} from '@tamagui/focus-scope'
 
+import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -51,10 +52,17 @@ export function Outer({
 
   const close = React.useCallback<DialogControlProps['close']>(
     cb => {
-      if (cb && typeof cb === 'function') {
-        cb()
+      try {
+        if (cb && typeof cb === 'function') {
+          cb()
+        }
+      } catch (e: any) {
+        logger.error(`Dialog closeCallback failed`, {
+          message: e.message,
+        })
+      } finally {
+        onCloseInner()
       }
-      onCloseInner()
     },
     [onCloseInner],
   )
