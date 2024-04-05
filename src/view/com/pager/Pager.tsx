@@ -1,10 +1,11 @@
 import React, {forwardRef} from 'react'
 import {Animated, View} from 'react-native'
 import PagerView, {
-  PagerViewOnPageSelectedEvent,
   PagerViewOnPageScrollEvent,
+  PagerViewOnPageSelectedEvent,
   PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view'
+
 import {s} from 'lib/styles'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent

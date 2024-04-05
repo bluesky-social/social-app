@@ -401,23 +401,26 @@ export function SearchScreenInner({
           </CenteredView>
         )}
         initialPage={0}>
-        {isNewSearch ? (
-          <>
-            <View>
-              <SearchScreenPostResults query={query} sort="top" />
-            </View>
-            <View>
-              <SearchScreenPostResults query={query} sort="latest" />
-            </View>
-          </>
-        ) : (
-          <View>
-            <SearchScreenPostResults query={query} />
-          </View>
-        )}
-        <View>
-          <SearchScreenUserResults query={query} />
-        </View>
+        {isNewSearch
+          ? [
+              <View key="top">
+                <SearchScreenPostResults query={query} sort="top" />
+              </View>,
+              <View key="latest">
+                <SearchScreenPostResults query={query} sort="latest" />
+              </View>,
+              <View key="people">
+                <SearchScreenUserResults query={query} />
+              </View>,
+            ]
+          : [
+              <View key="posts">
+                <SearchScreenPostResults query={query} />
+              </View>,
+              <View key="users">
+                <SearchScreenUserResults query={query} />
+              </View>,
+            ]}
       </Pager>
     ) : (
       <View>
