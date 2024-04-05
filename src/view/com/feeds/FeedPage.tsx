@@ -1,5 +1,5 @@
 import React from 'react'
-import {useWindowDimensions,View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
