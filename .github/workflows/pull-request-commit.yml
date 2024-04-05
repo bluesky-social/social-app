@@ -6,20 +6,24 @@ name: PR labeler
 on:
   push:
     branches: [main]
-  pull_request:
-    types: [opened, synchronize]
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  pull-requests: write
+  actions: write
+  contents: read
+
 jobs:
   webpack-analyzer:
     runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'pull_request' }}
-    permissions:
-      pull-requests: write
-      actions: write
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
@@ -96,9 +100,6 @@ jobs:
     runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
     concurrency: fingerprint-${{ github.event_name != 'pull_request' && 'main' || github.run_id }}
-    permissions:
-      pull-requests: write
-      actions: write
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
