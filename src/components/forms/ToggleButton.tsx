@@ -7,6 +7,7 @@ import {Text} from '#/components/Typography'
 
 type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps & {
+    children: React.ReactElement
     testID?: string
   }
 
@@ -33,12 +34,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
   )
 }
 
-export function Button({
-  children,
-  ...props
-}: ItemProps & {
-  children: React.ReactElement
-}) {
+export function Button({children, ...props}: ItemProps) {
   return (
     <Toggle.Item {...props} style={[a.flex_grow]}>
       <ButtonInner>{children}</ButtonInner>
