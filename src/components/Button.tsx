@@ -405,7 +405,6 @@ export function Button({
         </View>
       )}
       <Context.Provider value={context}>
-        {/* @ts-ignore */}
         {typeof children === 'function' ? children(context) : children}
       </Context.Provider>
     </Pressable>
