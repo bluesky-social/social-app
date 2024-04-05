@@ -7,9 +7,6 @@ on:
   push:
     branches: [main]
   pull_request_target:
-    types:
-      - opened
-      - synchronize
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
