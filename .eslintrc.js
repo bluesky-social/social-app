@@ -25,6 +25,10 @@ module.exports = {
       {
         impliedTextComponents: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P'],
         impliedTextProps: [],
+        suggestedTextWrappers: {
+          Button: 'ButtonText',
+          'ToggleButton.Button': 'ToggleButton.ButtonText',
+        },
       },
     ],
     'simple-import-sort/imports': [

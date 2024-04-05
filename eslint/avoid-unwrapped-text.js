@@ -33,6 +33,7 @@ exports.create = function create(context) {
   const options = context.options[0] || {}
   const impliedTextProps = options.impliedTextProps ?? []
   const impliedTextComponents = options.impliedTextComponents ?? []
+  const suggestedTextWrappers = options.suggestedTextWrappers ?? {}
   const textProps = [...impliedTextProps]
   const textComponents = ['Text', ...impliedTextComponents]
 
@@ -59,8 +60,9 @@ exports.create = function create(context) {
             parent = parent.parent
             continue
           }
-          let message = 'Wrap this string in <Text>.'
-          if (tagName !== 'View') {
+          const suggestedWrapper = suggestedTextWrappers[tagName]
+          let message = `Wrap this string in <${suggestedWrapper ?? 'Text'}>.`
+          if (tagName !== 'View' && !suggestedWrapper) {
             message +=
               ' If <' +
               tagName +
