@@ -237,7 +237,9 @@ export const LoginForm = ({
             color="secondary"
             size="medium"
             onPress={onPressRetryConnect}>
-            {_(msg`Retry`)}
+            <ButtonText>
+              <Trans>Retry</Trans>
+            </ButtonText>
           </Button>
         ) : !serviceDescription ? (
           <>

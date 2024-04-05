@@ -23,16 +23,7 @@ module.exports = {
     'bsky-internal/avoid-unwrapped-text': [
       'error',
       {
-        impliedTextComponents: [
-          'Button', // TODO: Not always safe.
-          'H1',
-          'H2',
-          'H3',
-          'H4',
-          'H5',
-          'H6',
-          'P',
-        ],
+        impliedTextComponents: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P'],
         impliedTextProps: [],
       },
     ],

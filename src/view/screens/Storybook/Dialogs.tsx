@@ -3,7 +3,7 @@ import {View} from 'react-native'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {atoms as a} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {H3, P} from '#/components/Typography'
@@ -26,7 +26,7 @@ export function Dialogs() {
           basic.open()
         }}
         label="Open basic dialog">
-        Open all dialogs
+        <ButtonText>Open all dialogs</ButtonText>
       </Button>
 
       <Button
@@ -37,7 +37,7 @@ export function Dialogs() {
           scrollable.open()
         }}
         label="Open basic dialog">
-        Open scrollable dialog
+        <ButtonText>Open scrollable dialog</ButtonText>
       </Button>
 
       <Button
@@ -48,7 +48,7 @@ export function Dialogs() {
           basic.open()
         }}
         label="Open basic dialog">
-        Open basic dialog
+        <ButtonText>Open basic dialog</ButtonText>
       </Button>
 
       <Button
@@ -57,7 +57,7 @@ export function Dialogs() {
         size="small"
         onPress={() => prompt.open()}
         label="Open prompt">
-        Open prompt
+        <ButtonText>Open prompt</ButtonText>
       </Button>
 
       <Prompt.Outer control={prompt}>
@@ -102,7 +102,7 @@ export function Dialogs() {
               size="small"
               onPress={closeAllDialogs}
               label="Close all dialogs">
-              Close all dialogs
+              <ButtonText>Close all dialogs</ButtonText>
             </Button>
             <View style={{height: 1000}} />
             <View style={[a.flex_row, a.justify_end]}>
@@ -116,7 +116,7 @@ export function Dialogs() {
                   })
                 }
                 label="Open basic dialog">
-                Close dialog
+                <ButtonText>Close dialog</ButtonText>
               </Button>
             </View>
           </View>

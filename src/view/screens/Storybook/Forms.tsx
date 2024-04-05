@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {DateField, LabelText} from '#/components/forms/DateField'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
@@ -191,7 +191,7 @@ export function Forms() {
           setToggleGroupBValues(['a', 'b'])
           setToggleGroupCValues(['a'])
         }}>
-        Reset all toggles
+        <ButtonText>Reset all toggles</ButtonText>
       </Button>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>
