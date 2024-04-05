@@ -7,7 +7,6 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
-import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {QueryProvider} from 'lib/react-query'
@@ -21,6 +20,7 @@ import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
+  readLastActiveAccount,
   useSession,
   useSessionApi,
 } from 'state/session'
@@ -42,7 +42,7 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    const account = persisted.get('session').currentAccount
+    const account = readLastActiveAccount()
     resumeSession(account)
   }, [resumeSession])
 

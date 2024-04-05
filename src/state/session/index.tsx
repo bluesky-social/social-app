@@ -38,18 +38,24 @@ export function getAgent() {
   return __globalAgent
 }
 
+;(() => {
+  window.__id = Math.floor(Math.random() * 100).toString(36)
+  console.log(`\nID ${window.__id}\n\n`)
+})()
+
 export type SessionAccount = persisted.PersistedAccount
 
 export type StateContext = {
-  agent: BskyAgent
+  currentAgent: BskyAgent
   isInitialLoad: boolean
   isSwitchingAccounts: boolean
   hasSession: boolean
   accounts: SessionAccount[]
   /**
-   * This value is derived from `BskyAgent.session`
+   * This value is derived from `BskyAgent.session` and should contain the full
+   * account object persisted to storage, minus the access tokens.
    */
-  currentAccount: SessionAccount | undefined
+  currentAccount: Omit<SessionAccount, 'accessJwt' | 'refreshJwt'> | undefined
 }
 
 export type ApiContext = {
@@ -100,7 +106,7 @@ export type ApiContext = {
 }
 
 const StateContext = React.createContext<StateContext>({
-  agent: PUBLIC_BSKY_AGENT,
+  currentAgent: PUBLIC_BSKY_AGENT,
   isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
@@ -135,6 +141,15 @@ function agentToSessionAccount(agent: BskyAgent): SessionAccount | undefined {
   }
 }
 
+function agentToCurrentAccount(
+  agent: BskyAgent,
+): StateContext['currentAccount'] {
+  const sessionAccount = agentToSessionAccount(agent)
+  delete sessionAccount?.accessJwt
+  delete sessionAccount?.refreshJwt
+  return sessionAccount
+}
+
 function sessionAccountToAgentSession(
   account: SessionAccount,
 ): BskyAgent['session'] {
@@ -150,15 +165,16 @@ function sessionAccountToAgentSession(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const isDirty = React.useRef(false)
-  const [agent, setAgent] = React.useState<BskyAgent>(PUBLIC_BSKY_AGENT)
+  const [currentAgent, setCurrentAgent] =
+    React.useState<BskyAgent>(PUBLIC_BSKY_AGENT)
   const [accounts, setAccounts] = React.useState<SessionAccount[]>(
     persisted.get('session').accounts,
   )
   const [isInitialLoad, setIsInitialLoad] = React.useState(true)
   const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
   const currentAccount = React.useMemo(
-    () => agentToSessionAccount(agent),
-    [agent],
+    () => agentToCurrentAccount(currentAgent),
+    [currentAgent],
   )
 
   const persistNextUpdate = React.useCallback(
@@ -180,9 +196,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     persistNextUpdate()
-    setAgent(PUBLIC_BSKY_AGENT)
+    setCurrentAgent(PUBLIC_BSKY_AGENT)
     BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-  }, [persistNextUpdate, setAgent])
+  }, [persistNextUpdate, setCurrentAgent])
 
   const persistSession = React.useCallback<
     (agent: BskyAgent) => AtpPersistSessionHandler
@@ -194,6 +210,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           {event},
           logger.DebugContext.session,
         )
+        console.log('PERSIST', window.__id, {
+          event,
+          refreshJwt: session?.refreshJwt?.slice(-10),
+        })
 
         const expired = event === 'expired' || event === 'create-failed'
 
@@ -290,7 +310,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       agent.setPersistSessionHandler(persistSession(agent))
 
-      setAgent(agent)
+      setCurrentAgent(agent)
       upsertAndPersistAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
@@ -316,7 +336,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       agent.setPersistSessionHandler(persistSession(agent))
 
-      setAgent(agent)
+      setCurrentAgent(agent)
       upsertAndPersistAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
@@ -386,7 +406,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           logger.DebugContext.session,
         )
         agent.session = prevSession
-        setAgent(agent)
+        setCurrentAgent(agent)
         upsertAndPersistAccount(account)
       } else {
         logger.debug(
@@ -397,9 +417,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         try {
           // will call `persistSession` on `BskyAgent` instance above if success
           await networkRetry(1, () => agent.resumeSession(prevSession))
-          setAgent(agent)
+          setCurrentAgent(agent)
         } catch (e) {
           logger.error(`session: resumeSession failed`, {message: e})
+          // TODO flaky connectin could cause this too
           setAccounts(accounts => {
             return accounts.map(a =>
               a.did === account.did
@@ -440,15 +461,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const refreshSession = React.useCallback<
     ApiContext['refreshSession']
   >(async () => {
-    if (!currentAccount) return
-    await agent.resumeSession(sessionAccountToAgentSession(currentAccount)!)
+    const {accounts: persistedAccounts} = persisted.get('session')
+    const selectedAccount = persistedAccounts.find(
+      a => a.did === currentAccount?.did,
+    )
+    if (!selectedAccount) return
+    await currentAgent.resumeSession(
+      sessionAccountToAgentSession(selectedAccount)!,
+    )
     persistNextUpdate()
-    upsertAndPersistAccount(agentToSessionAccount(agent)!)
-    setAgent(agent.clone())
+    upsertAndPersistAccount(agentToSessionAccount(currentAgent)!)
+    setCurrentAgent(currentAgent.clone())
   }, [
     currentAccount,
-    agent,
-    setAgent,
+    currentAgent,
+    setCurrentAgent,
     persistNextUpdate,
     upsertAndPersistAccount,
   ])
@@ -475,7 +502,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       isDirty.current = false
       persisted.write('session', {
         accounts,
-        currentAccount,
+        currentAccount: currentAccount
+          ? {
+              did: currentAccount.did,
+            }
+          : undefined,
       })
     }
   }, [accounts, currentAccount])
@@ -493,11 +524,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // already persisted on other side of broadcast
       setAccounts(persistedSession.accounts)
 
-      if (
-        persistedSession.currentAccount &&
-        persistedSession.currentAccount.refreshJwt
-      ) {
-        if (persistedSession.currentAccount?.did !== currentAccount?.did) {
+      const selectedAccount = persistedSession.accounts.find(
+        a => a.did === persistedSession.currentAccount?.did,
+      )
+
+      if (selectedAccount && selectedAccount.refreshJwt) {
+        if (selectedAccount?.did !== currentAccount?.did) {
           logger.debug(
             `session: persisted onUpdate, switching accounts`,
             {
@@ -506,26 +538,29 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                 handle: currentAccount?.handle,
               },
               to: {
-                did: persistedSession.currentAccount.did,
-                handle: persistedSession.currentAccount.handle,
+                did: selectedAccount.did,
+                handle: selectedAccount.handle,
               },
             },
             logger.DebugContext.session,
           )
 
-          await initSession(persistedSession.currentAccount)
+          await initSession(selectedAccount)
         } else {
           logger.debug(
             `session: persisted onUpdate, updating session`,
             {},
             logger.DebugContext.session,
           )
-          agent.session = sessionAccountToAgentSession(
-            persistedSession.currentAccount,
-          )
-          setAgent(agent.clone())
+          // updates silently, all subsequent calls will use the new session
+          currentAgent.session = sessionAccountToAgentSession(selectedAccount)
+          // replace agent to re-derive currentAccount and trigger rerender with fresh data
+          setCurrentAgent(currentAgent.clone())
+          console.log('UPDATE', window.__id, {
+            refreshJwt: currentAgent.session.refreshJwt.slice(-10),
+          })
         }
-      } else if (!persistedSession.currentAccount && currentAccount) {
+      } else if (!selectedAccount && currentAccount) {
         logger.debug(
           `session: persisted onUpdate, logging out`,
           {},
@@ -546,20 +581,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     setAccounts,
     clearCurrentAccount,
     initSession,
-    agent,
-    setAgent,
+    currentAgent,
+    setCurrentAgent,
   ])
 
   const stateContext = React.useMemo(
     () => ({
-      agent,
+      currentAgent,
       isInitialLoad,
       isSwitchingAccounts,
       currentAccount,
       accounts,
       hasSession: Boolean(currentAccount),
     }),
-    [agent, isInitialLoad, isSwitchingAccounts, accounts, currentAccount],
+    [
+      currentAgent,
+      isInitialLoad,
+      isSwitchingAccounts,
+      accounts,
+      currentAccount,
+    ],
   )
 
   const api = React.useMemo(
@@ -588,11 +629,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   // as we migrate, continue to keep this updated
-  __globalAgent = agent
+  __globalAgent = currentAgent
 
   if (IS_DEV && isWeb) {
     // @ts-ignore
-    window.agent = agent
+    window.agent = currentAgent
   }
 
   return (
@@ -658,4 +699,9 @@ export function isSessionDeactivated(accessJwt: string | undefined) {
     )
   }
   return false
+}
+
+export function readLastActiveAccount() {
+  const {currentAccount, accounts} = persisted.get('session')
+  return accounts.find(a => a.did === currentAccount?.did)
 }

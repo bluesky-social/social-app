@@ -1,4 +1,5 @@
 import {z} from 'zod'
+
 import {deviceLocales} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const
@@ -16,12 +17,17 @@ const accountSchema = z.object({
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 
+const currentAccountSchema = z.object({
+  did: z.string(),
+})
+export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
+
 export const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
   session: z.object({
     accounts: z.array(accountSchema),
-    currentAccount: accountSchema.optional(),
+    currentAccount: currentAccountSchema.optional(),
   }),
   reminders: z.object({
     lastEmailConfirm: z.string().optional(),
