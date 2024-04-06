@@ -45,10 +45,12 @@ export type LogEvents = {
   'onboarding:moderation:nextPressed': {}
   'onboarding:finished:nextPressed': {}
   'feed:endReached': {
+    feedUrl: string
     feedType: string
     itemCount: number
   }
   'feed:refresh': {
+    feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
