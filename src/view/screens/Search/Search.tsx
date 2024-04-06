@@ -453,7 +453,7 @@ export function SearchScreenInner({
         </CenteredView>
       )}
       initialPage={0}>
-      {sections.map(section => section.title)}
+      {sections.map(section => section.component)}
     </Pager>
   ) : (
     <CenteredView sideBorders style={pal.border}>
