@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {getRootNavigation,getTabState,TabState} from '#/lib/routes/helpers'
+import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isNative, isNativeTablet} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
