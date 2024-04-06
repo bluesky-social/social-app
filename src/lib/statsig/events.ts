@@ -67,6 +67,7 @@ export type LogEvents = {
   'post:like': {
     doesLikerFollowPoster: boolean | undefined
     doesPosterFollowLiker: boolean | undefined
+    likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
@@ -82,6 +83,7 @@ export type LogEvents = {
   'profile:follow': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined
+    followerClout: number | undefined
     logContext:
       | 'RecommendedFollowsItem'
       | 'PostThreadItem'

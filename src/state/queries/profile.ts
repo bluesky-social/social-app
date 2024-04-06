@@ -254,8 +254,14 @@ function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
+      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      if (currentAccount) {
+        ownProfile = findProfileQueryData(queryClient, currentAccount.did)
+      }
       logEvent('profile:follow', {
         logContext,
         didBecomeMutual: profile.viewer
@@ -264,6 +270,10 @@ function useProfileFollowMutation(
         followeeClout:
           profile.followersCount != null
             ? Math.max(0, Math.round(Math.log(profile.followersCount)))
+            : undefined,
+        followerClout:
+          ownProfile?.followersCount != null
+            ? Math.max(0, Math.round(Math.log(ownProfile.followersCount)))
             : undefined,
       })
       return await getAgent().follow(did)
@@ -539,4 +549,13 @@ export function* findAllProfilesInQueryData(
       yield queryData
     }
   }
+}
+
+export function findProfileQueryData(
+  queryClient: QueryClient,
+  did: string,
+): AppBskyActorDefs.ProfileViewDetailed | undefined {
+  return queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+    RQKEY(did),
+  )
 }
