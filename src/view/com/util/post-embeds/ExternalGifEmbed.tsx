@@ -13,9 +13,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {EmbedPlayerParams, getGifDims} from '#/lib/strings/embed-player'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {useExternalEmbedsPrefs} from '#/state/preferences'
+import {EmbedPlayerParams, getGifDims} from 'lib/strings/embed-player'
+import {useExternalEmbedsPrefs} from 'state/preferences'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 
