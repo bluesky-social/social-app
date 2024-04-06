@@ -592,7 +592,7 @@ msgstr "来自 <0/>"
 
 #: src/view/com/auth/create/Policies.tsx:87
 msgid "By creating an account you agree to the {els}."
-msgstr "通过创建账户，你同意遵守 {els}。"
+msgstr "创建账户即默认表明你同意我们的 {els}。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "by you"
