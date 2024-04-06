@@ -21,22 +21,7 @@ import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {
-  BellIcon,
-  BellIconSolid,
-  CogIcon,
-  CogIconSolid,
-  ComposeIcon2,
-  HandIcon,
-  HashtagIcon,
-  HomeIcon,
-  HomeIconSolid,
-  ListIcon,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  UserIcon,
-  UserIconSolid,
-} from 'lib/icons'
+import {ComposeIcon2} from 'lib/icons'
 import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
@@ -50,23 +35,27 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useTheme} from '#/alf'
 import {Bars3_Stroke2_Corner0_Rounded} from '#/components/icons/Bars'
 import {
-  Bell2_Filled_Corner0_Rounded,
-  Bell2_Stroke2_Corner0_Rounded,
+  Bell2_Filled_Corner0_Rounded as BellFilled,
+  Bell2_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
 import {
-  SettingsGear2_Filled_Corner0_Rounded,
-  SettingsGear2_Stroke2_Corner0_Rounded,
+  SettingsGear2_Filled_Corner0_Rounded as GearFilled,
+  SettingsGear2_Stroke2_Corner0_Rounded as Gear,
 } from '#/components/icons/Gear'
-import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
-import {Person_Stroke2_Corner0_Rounded} from '#/components/icons/Person'
+import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {
-  PersonCircle_Filled_Corner0_Rounded,
-  PersonCircle_Stroke2_Corner0_Rounded,
+  Home_Filled_Corner0_Rounded as HomeFilled,
+  Home_Stroke2_Corner0_Rounded as Home,
+} from '#/components/icons/Home'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass_Filled_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass2'
+import {
+  PersonCircle_Filled_Corner0_Rounded as PersonCircleFilled,
+  PersonCircle_Stroke2_Corner0_Rounded as PersonCircle,
 } from '#/components/icons/PersonCircle'
 import {
-  RaisingHand_Filled_Corner0_Rounded,
-  RaisingHand_Stroke2_Corner0_Rounded,
-  RaisingHande4Finger_Stroke2_Corner0_Rounded,
+  RaisingHand_Filled_Corner0_Rounded as RaisingHandFilled,
+  RaisingHand_Stroke2_Corner0_Rounded as RaisingHand,
 } from '#/components/icons/RaisingHand'
 import {router} from '../../../routes'
 
@@ -322,57 +311,31 @@ export function DesktopLeftNav() {
 
           <NavItem
             href="/"
-            icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
-            iconFilled={
-              <HomeIconSolid
-                strokeWidth={4}
-                size={isDesktop ? 24 : 28}
-                style={pal.text}
-              />
-            }
+            icon={<Home style={t.atoms.text} size="xl" />}
+            iconFilled={<HomeFilled style={t.atoms.text} size="xl" />}
             label={_(msg`Home`)}
           />
           <NavItem
             href="/search"
-            icon={
-              <MagnifyingGlassIcon2
-                strokeWidth={2}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
-            }
+            icon={<MagnifyingGlass style={t.atoms.text} size="xl" />}
             iconFilled={
-              <MagnifyingGlassIcon2Solid
-                strokeWidth={2}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
+              <MagnifyingGlassFilled style={t.atoms.text} size="xl" />
             }
             label={_(msg`Search`)}
           />
           <NavItem
             href="/feeds"
-            icon={
-              <Hashtag_Stroke2_Corner0_Rounded style={t.atoms.text} size="xl" />
-            }
+            icon={<Hashtag style={t.atoms.text} size="xl" />}
             iconFilled={
-              <Hashtag_Stroke2_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-                strokeWidth={3}
-              />
+              <Hashtag style={t.atoms.text} size="xl" strokeWidth={3} />
             }
             label={_(msg`Feeds`)}
           />
           <NavItem
             href="/notifications"
             count={numUnread}
-            icon={
-              <Bell2_Stroke2_Corner0_Rounded style={t.atoms.text} size="xl" />
-            }
-            iconFilled={
-              <Bell2_Filled_Corner0_Rounded style={t.atoms.text} size="xl" />
-            }
+            icon={<Bell style={t.atoms.text} size="xl" />}
+            iconFilled={<BellFilled style={t.atoms.text} size="xl" />}
             label={_(msg`Notifications`)}
           />
           <NavItem
@@ -391,50 +354,20 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/moderation"
-            icon={
-              <RaisingHand_Stroke2_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-              />
-            }
-            iconFilled={
-              <RaisingHand_Filled_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-              />
-            }
+            icon={<RaisingHand style={t.atoms.text} size="xl" />}
+            iconFilled={<RaisingHandFilled style={t.atoms.text} size="xl" />}
             label={_(msg`Moderation`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-            icon={
-              <PersonCircle_Stroke2_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-              />
-            }
-            iconFilled={
-              <PersonCircle_Filled_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-              />
-            }
+            icon={<PersonCircle style={t.atoms.text} size="xl" />}
+            iconFilled={<PersonCircleFilled style={t.atoms.text} size="xl" />}
             label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
-            icon={
-              <SettingsGear2_Stroke2_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-              />
-            }
-            iconFilled={
-              <SettingsGear2_Filled_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-              />
-            }
+            icon={<Gear style={t.atoms.text} size="xl" />}
+            iconFilled={<GearFilled style={t.atoms.text} size="xl" />}
             label={_(msg`Settings`)}
           />
 
