@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
@@ -103,6 +103,17 @@ export function FeedPage({
     })
   }, [scrollToTop, feed, queryClient, setHasNew])
 
+  let feedPollInterval
+  if (
+    useGate('disable_poll_on_discover') &&
+    feed === // Discover
+      'feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+  ) {
+    feedPollInterval = undefined
+  } else {
+    feedPollInterval = POLL_FREQ
+  }
+
   return (
     <View testID={testID} style={s.h100pct}>
       <MainScrollProvider>
@@ -111,7 +122,7 @@ export function FeedPage({
           enabled={isPageFocused}
           feed={feed}
           feedParams={feedParams}
-          pollInterval={POLL_FREQ}
+          pollInterval={feedPollInterval}
           disablePoll={hasNew}
           scrollElRef={scrollElRef}
           onScrolledDownChange={setIsScrolledDown}
