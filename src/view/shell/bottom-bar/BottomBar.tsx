@@ -13,15 +13,6 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {
-  BellIcon,
-  BellIconSolid,
-  HashtagIcon,
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-} from '#/lib/icons'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {s} from '#/lib/styles'
@@ -37,9 +28,21 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
-import {styles} from './BottomBarStyles'
+import {
+  Bell2_Filled_Corner0_Rounded as BellFilled,
+  Bell2_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
+import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {
+  Home_Filled_Corner0_Rounded as HomeFilled,
+  Home_Stroke2_Corner0_Rounded as Home,
+} from '#/components/icons/Home'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass_Filled_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass2'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -59,6 +62,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
+  const t = useTheme()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -114,10 +118,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
       <Animated.View
         style={[
-          styles.bottomBar,
-          pal.view,
-          pal.border,
-          {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
+          a.absolute,
+          a.flex_row,
+          a.w_full,
+          a.border_t,
+          {bottom: 0, paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
           footerMinimalShellTransform,
         ]}
         onLayout={e => {
@@ -129,17 +136,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarHomeBtn"
               icon={
                 isAtHome ? (
-                  <HomeIconSolid
-                    strokeWidth={4}
-                    size={24}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-                  />
+                  <HomeFilled style={t.atoms.text} size="xl" />
                 ) : (
-                  <HomeIcon
-                    strokeWidth={4}
-                    size={24}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-                  />
+                  <Home style={t.atoms.text} size="xl" />
                 )
               }
               onPress={onPressHome}
@@ -151,17 +150,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarSearchBtn"
               icon={
                 isAtSearch ? (
-                  <MagnifyingGlassIcon2Solid
-                    size={25}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    strokeWidth={1.8}
-                  />
+                  <MagnifyingGlassFilled style={t.atoms.text} size="xl" />
                 ) : (
-                  <MagnifyingGlassIcon2
-                    size={25}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    strokeWidth={1.8}
-                  />
+                  <MagnifyingGlass style={t.atoms.text} size="xl" />
                 )
               }
               onPress={onPressSearch}
@@ -173,17 +164,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarFeedsBtn"
               icon={
                 isAtFeeds ? (
-                  <HashtagIcon
-                    size={24}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    strokeWidth={4}
-                  />
+                  <Hashtag style={t.atoms.text} size="xl" />
                 ) : (
-                  <HashtagIcon
-                    size={24}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    strokeWidth={2.25}
-                  />
+                  <Hashtag style={t.atoms.text} size="xl" />
                 )
               }
               onPress={onPressFeeds}
@@ -195,17 +178,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarNotificationsBtn"
               icon={
                 isAtNotifications ? (
-                  <BellIconSolid
-                    size={24}
-                    strokeWidth={1.9}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
+                  <BellFilled style={t.atoms.text} size="xl" />
                 ) : (
-                  <BellIcon
-                    size={24}
-                    strokeWidth={1.9}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
+                  <Bell style={t.atoms.text} size="xl" />
                 )
               }
               onPress={onPressNotifications}
@@ -222,15 +197,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
             <Btn
               testID="bottomBarProfileBtn"
               icon={
-                <View style={styles.ctrlIconSizingWrapper}>
+                <View style={{height: 27}}>
                   {isAtMyProfile ? (
                     <View
                       style={[
-                        styles.ctrlIcon,
                         pal.text,
-                        styles.profileIcon,
-                        styles.onProfile,
-                        {borderColor: pal.text.color},
+                        a.border,
+                        a.rounded_full,
+                        {borderColor: t.atoms.text.color},
                       ]}>
                       <UserAvatar
                         avatar={profile?.avatar}
@@ -241,8 +215,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       />
                     </View>
                   ) : (
-                    <View
-                      style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
+                    <View style={[pal.text]}>
                       <UserAvatar
                         avatar={profile?.avatar}
                         size={28}
@@ -337,10 +310,12 @@ function Btn({
   accessibilityHint,
   accessibilityLabel,
 }: BtnProps) {
+  const t = useTheme()
+
   return (
     <TouchableOpacity
       testID={testID}
-      style={styles.ctrl}
+      style={[a.flex_1, a.align_center, a.pt_md, a.pb_md]}
       onPress={onLongPress ? onPress : undefined}
       onPressIn={onLongPress ? undefined : onPress}
       onLongPress={onLongPress}
@@ -348,8 +323,27 @@ function Btn({
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}>
       {notificationCount ? (
-        <View style={[styles.notificationCount]}>
-          <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
+        <View
+          style={[
+            a.absolute,
+            a.rounded_sm,
+            {
+              left: '52%',
+              top: 8,
+              zIndex: 1,
+              backgroundColor: t.palette.primary_500,
+              paddingVertical: 2,
+              paddingHorizontal: 4,
+            },
+          ]}>
+          <Text
+            style={[
+              a.text_xs,
+              a.font_bold,
+              {color: t.palette.white, fontVariant: ['tabular-nums']},
+            ]}>
+            {notificationCount}
+          </Text>
         </View>
       ) : undefined}
       {icon}
