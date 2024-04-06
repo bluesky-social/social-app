@@ -1,52 +1,74 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   useLinkProps,
   useNavigation,
   useNavigationState,
 } from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Link} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {emitSoftReset} from '#/state/events'
+import {useFetchHandle} from '#/state/queries/handle'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s, colors} from 'lib/styles'
 import {
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
-  UserIconSolid,
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
-  ListIcon,
-  HashtagIcon,
   HandIcon,
+  HashtagIcon,
+  HomeIcon,
+  HomeIconSolid,
+  ListIcon,
+  MagnifyingGlassIcon2,
+  MagnifyingGlassIcon2Solid,
+  UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
-import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
-import {router} from '../../../routes'
+import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useComposerControls} from '#/state/shell/composer'
-import {useFetchHandle} from '#/state/queries/handle'
-import {emitSoftReset} from '#/state/events'
+import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {Link} from 'view/com/util/Link'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {useTheme} from '#/alf'
+import {Bars3_Stroke2_Corner0_Rounded} from '#/components/icons/Bars'
+import {
+  Bell2_Filled_Corner0_Rounded,
+  Bell2_Stroke2_Corner0_Rounded,
+} from '#/components/icons/Bell'
+import {
+  SettingsGear2_Filled_Corner0_Rounded,
+  SettingsGear2_Stroke2_Corner0_Rounded,
+} from '#/components/icons/Gear'
+import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
+import {Person_Stroke2_Corner0_Rounded} from '#/components/icons/Person'
+import {
+  PersonCircle_Filled_Corner0_Rounded,
+  PersonCircle_Stroke2_Corner0_Rounded,
+} from '#/components/icons/PersonCircle'
+import {
+  RaisingHand_Filled_Corner0_Rounded,
+  RaisingHand_Stroke2_Corner0_Rounded,
+  RaisingHande4Finger_Stroke2_Corner0_Rounded,
+} from '#/components/icons/RaisingHand'
+import {router} from '../../../routes'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -272,6 +294,7 @@ export function DesktopLeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
+  const t = useTheme()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -330,17 +353,13 @@ export function DesktopLeftNav() {
           <NavItem
             href="/feeds"
             icon={
-              <HashtagIcon
-                strokeWidth={2.25}
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
-              />
+              <Hashtag_Stroke2_Corner0_Rounded style={t.atoms.text} size="xl" />
             }
             iconFilled={
-              <HashtagIcon
-                strokeWidth={4}
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
+              <Hashtag_Stroke2_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
+                strokeWidth={3}
               />
             }
             label={_(msg`Feeds`)}
@@ -349,34 +368,22 @@ export function DesktopLeftNav() {
             href="/notifications"
             count={numUnread}
             icon={
-              <BellIcon
-                strokeWidth={2}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
+              <Bell2_Stroke2_Corner0_Rounded style={t.atoms.text} size="xl" />
             }
             iconFilled={
-              <BellIconSolid
-                strokeWidth={1.5}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
+              <Bell2_Filled_Corner0_Rounded style={t.atoms.text} size="xl" />
             }
             label={_(msg`Notifications`)}
           />
           <NavItem
             href="/lists"
             icon={
-              <ListIcon
-                style={pal.text}
-                size={isDesktop ? 26 : 30}
-                strokeWidth={2}
-              />
+              <Bars3_Stroke2_Corner0_Rounded style={t.atoms.text} size="xl" />
             }
             iconFilled={
-              <ListIcon
-                style={pal.text}
-                size={isDesktop ? 26 : 30}
+              <Bars3_Stroke2_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
                 strokeWidth={3}
               />
             }
@@ -385,17 +392,15 @@ export function DesktopLeftNav() {
           <NavItem
             href="/moderation"
             icon={
-              <HandIcon
-                style={pal.text}
-                size={isDesktop ? 24 : 27}
-                strokeWidth={5.5}
+              <RaisingHand_Stroke2_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
               />
             }
             iconFilled={
-              <FontAwesomeIcon
-                icon="hand"
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 23 : 26}
+              <RaisingHand_Filled_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
               />
             }
             label={_(msg`Moderation`)}
@@ -403,17 +408,15 @@ export function DesktopLeftNav() {
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
             icon={
-              <UserIcon
-                strokeWidth={1.75}
-                size={isDesktop ? 28 : 30}
-                style={pal.text}
+              <PersonCircle_Stroke2_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
               />
             }
             iconFilled={
-              <UserIconSolid
-                strokeWidth={1.75}
-                size={isDesktop ? 28 : 30}
-                style={pal.text}
+              <PersonCircle_Filled_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
               />
             }
             label={_(msg`Profile`)}
@@ -421,17 +424,15 @@ export function DesktopLeftNav() {
           <NavItem
             href="/settings"
             icon={
-              <CogIcon
-                strokeWidth={1.75}
-                size={isDesktop ? 28 : 32}
-                style={pal.text}
+              <SettingsGear2_Stroke2_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
               />
             }
             iconFilled={
-              <CogIconSolid
-                strokeWidth={1.5}
-                size={isDesktop ? 28 : 32}
-                style={pal.text}
+              <SettingsGear2_Filled_Corner0_Rounded
+                style={t.atoms.text}
+                size="xl"
               />
             }
             label={_(msg`Settings`)}
