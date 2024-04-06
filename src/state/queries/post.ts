@@ -4,7 +4,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {Shadow} from '#/state/cache/types'
 import {getAgent, useSession} from '#/state/session'
@@ -143,20 +143,12 @@ function usePostLikeMutation(
         doesLikerFollowPoster: postAuthor.viewer
           ? Boolean(postAuthor.viewer.following)
           : undefined,
-        likerClout:
-          ownProfile?.followersCount != null
-            ? Math.max(0, Math.round(Math.log(ownProfile.followersCount)))
-            : undefined,
+        likerClout: toClout(ownProfile?.followersCount),
         postClout:
           post.likeCount != null &&
           post.repostCount != null &&
           post.replyCount != null
-            ? Math.max(
-                0,
-                Math.round(
-                  Math.log(post.likeCount + post.repostCount + post.replyCount),
-                ),
-              )
+            ? toClout(post.likeCount + post.repostCount + post.replyCount)
             : undefined,
       })
       return getAgent().like(uri, cid)

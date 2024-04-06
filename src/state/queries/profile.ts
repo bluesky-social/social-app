@@ -20,7 +20,7 @@ import {track} from '#/lib/analytics/analytics'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
@@ -267,14 +267,8 @@ function useProfileFollowMutation(
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
           : undefined,
-        followeeClout:
-          profile.followersCount != null
-            ? Math.max(0, Math.round(Math.log(profile.followersCount)))
-            : undefined,
-        followerClout:
-          ownProfile?.followersCount != null
-            ? Math.max(0, Math.round(Math.log(ownProfile.followersCount)))
-            : undefined,
+        followeeClout: toClout(profile.followersCount),
+        followerClout: toClout(ownProfile?.followersCount),
       })
       return await getAgent().follow(did)
     },
