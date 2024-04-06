@@ -1,13 +1,21 @@
-import RNFetchBlob from 'rn-fetch-blob'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
-import {Image as RNImage, Share as RNShare} from 'react-native'
+import {Image as RNImage} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
-import * as RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
-import * as Sharing from 'expo-sharing'
+import {
+  cacheDirectory,
+  copyAsync,
+  createDownloadResumable,
+  deleteAsync,
+  FileInfo,
+  getInfoAsync,
+} from 'expo-file-system'
+import {Image as ExpoImage} from 'expo-image'
+import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
+import * as Sharing from 'expo-sharing'
+
+import {POST_IMG_MAX} from 'lib/constants'
 import {Dimensions} from './types'
-import {isAndroid, isIOS} from 'platform/detection'
 
 export async function compressIfNeeded(
   img: Image,
@@ -53,26 +61,13 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
     return
   }
 
-  let downloadRes
+  const path = createPath(appendExt)
+
   try {
-    const downloadResPromise = RNFetchBlob.config({
-      fileCache: true,
-      appendExt,
-    }).fetch('GET', opts.uri)
-    const to1 = setTimeout(() => downloadResPromise.cancel(), opts.timeout)
-    downloadRes = await downloadResPromise
-    clearTimeout(to1)
-
-    let localUri = downloadRes.path()
-    if (!localUri.startsWith('file://')) {
-      localUri = `file://${localUri}`
-    }
-
-    return await doResize(localUri, opts)
+    await downloadImage(opts.uri, path, opts.timeout)
+    return await doResize(path, opts)
   } finally {
-    if (downloadRes) {
-      downloadRes.flush()
-    }
+    deleteAsync(path)
   }
 }
 
@@ -81,47 +76,45 @@ export async function shareImageModal({uri}: {uri: string}) {
     // TODO might need to give an error to the user in this case -prf
     return
   }
-  const downloadResponse = await RNFetchBlob.config({
-    fileCache: true,
-  }).fetch('GET', uri)
 
-  // NOTE
-  // assuming PNG
-  // we're currently relying on the fact our CDN only serves pngs
-  // -prf
-
-  let imagePath = downloadResponse.path()
-  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
-
-  // NOTE
-  // for some reason expo-sharing refuses to work on iOS
-  // ...and visa versa
-  // -prf
-  if (isIOS) {
-    await RNShare.share({url: imagePath})
-  } else {
-    await Sharing.shareAsync(imagePath, {
-      mimeType: 'image/png',
-      UTI: 'image/png',
-    })
+  // Usually whenever we share an image it will already be available in the cache. If it isn't, then we
+  // will download it.
+  let imageUri = await ExpoImage.getCachePathAsync(uri)
+  if (!imageUri) {
+    // NOTE
+    // assuming PNG
+    // we're currently relying on the fact our CDN only serves pngs
+    // -prf
+    imageUri = await downloadImage(uri, createPath('png'), 5e3)
   }
-  RNFS.unlink(imagePath)
+
+  const imagePath = await moveToPermanentPath(imageUri, '.png')
+
+  await Sharing.shareAsync(imagePath, {
+    mimeType: 'image/png',
+    UTI: 'image/png',
+  })
+
+  deleteAsync(imagePath)
 }
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  // download the file to cache
-  // NOTE
-  // assuming PNG
-  // we're currently relying on the fact our CDN only serves pngs
-  // -prf
-  const downloadResponse = await RNFetchBlob.config({
-    fileCache: true,
-  }).fetch('GET', uri)
-  let imagePath = downloadResponse.path()
-  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
+  let imageUri = await ExpoImage.getCachePathAsync(uri)
+  if (!imageUri) {
+    // download the file to cache
+    // NOTE
+    // assuming PNG
+    // we're currently relying on the fact our CDN only serves pngs
+    // -prf
+    imageUri = await downloadImage(uri, createPath('png'), 5e3)
+  }
+
+  const imagePath = await moveToPermanentPath(imageUri, '.png')
 
   // save
   await MediaLibrary.createAssetAsync(imagePath)
+
+  deleteAsync(imagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
@@ -147,27 +140,48 @@ interface DoResizeOpts {
 }
 
 async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+  // This is a bit of a hack, but it lets us get the original size of the image. The old image manipulation library
+  // allowed us to supply a max height/width and it would handle the resizing. With expo-image-manipulator, we have
+  // to supply the exact size and width that we want to resize to instead. We will calculate that ourselves based on
+  // the height/width results of this first manipulation
+  const imageRes = await manipulateAsync(localUri, [], {
+    format: SaveFormat.JPEG,
+  })
+
+  const newDimensions = getResizedDimensions({
+    width: imageRes.width,
+    height: imageRes.height,
+  })
+
   for (let i = 0; i < 9; i++) {
-    const quality = 100 - i * 10
-    const resizeRes = await ImageResizer.createResizedImage(
+    const quality = 0.9 - 0.1 * i
+    const resizeRes = await manipulateAsync(
       localUri,
-      opts.width,
-      opts.height,
-      'JPEG',
-      quality,
-      undefined,
-      undefined,
-      undefined,
-      {mode: opts.mode},
+      [{resize: {height: newDimensions.height, width: newDimensions.width}}],
+      {
+        format: SaveFormat.JPEG,
+        compress: quality,
+      },
     )
-    if (resizeRes.size < opts.maxSize) {
+
+    // @ts-ignore This is valid, `getInfoAsync` will always return a size. The type is wonky
+    const info: FileInfo & {size: number} = await getInfoAsync(resizeRes.uri, {
+      size: true,
+    })
+
+    // We want to clean up every resize _except_ the final result. We'll clean that one up later when we're finished
+    // with it
+    if (info.size < opts.maxSize) {
+      await deleteAsync(imageRes.uri)
       return {
-        path: normalizePath(resizeRes.path),
+        path: normalizePath(resizeRes.uri),
         mime: 'image/jpeg',
-        size: resizeRes.size,
+        size: info.size,
         width: resizeRes.width,
         height: resizeRes.height,
       }
+    } else {
+      await deleteAsync(resizeRes.uri)
     }
   }
   throw new Error(
@@ -182,12 +196,29 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
   https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
   */
   const filename = uuid.v4()
+  const destinationPath = joinPath(cacheDirectory ?? '', `${filename}${ext}`)
 
-  const destinationPath = joinPath(
-    RNFS.TemporaryDirectoryPath,
-    `${filename}${ext}`,
-  )
-  await RNFS.moveFile(path, destinationPath)
+  await copyAsync({
+    from: normalizePath(path),
+    to: destinationPath,
+  })
+
+  // This is just to try and clean up whenever we can. We won't always be able to, so in cases where we can't
+  // we just catch the error. We can't simply move some files though such as image caches, so we will copy then
+  // and attempt to clean up the original file
+  // Paths that are image caches shouldn't be removed. com.hackemist.SDImageCache is used by SDWebImage and
+  // image_manager_disk_cache is used by Glide
+  if (
+    !path.includes('com.hackemist.SDImageCache') &&
+    !path.includes('image_manager_disk_cache')
+  ) {
+    try {
+      deleteAsync(path)
+    } catch (e) {
+      // No need to handle
+    }
+  }
+
   return normalizePath(destinationPath)
 }
 
@@ -203,11 +234,53 @@ function joinPath(a: string, b: string) {
   return a + '/' + b
 }
 
-function normalizePath(str: string, allPlatforms = false): string {
-  if (isAndroid || allPlatforms) {
-    if (!str.startsWith('file://')) {
-      return `file://${str}`
-    }
+function normalizePath(str: string): string {
+  if (!str.startsWith('file://')) {
+    return `file://${str}`
   }
   return str
+}
+
+function createPath(ext: string) {
+  // cacheDirectory will never be null on native, so the null check here is not necessary except for typescript.
+  // we use a web-only function for downloadAndResize on web
+  return `${cacheDirectory ?? ''}/${uuid.v4()}.${ext}`
+}
+
+async function downloadImage(uri: string, path: string, timeout: number) {
+  const downloadResumable = createDownloadResumable(uri, path, {
+    cache: true,
+  })
+
+  const to1 = setTimeout(() => downloadResumable.cancelAsync(), timeout)
+  const downloadRes = await downloadResumable.downloadAsync()
+  clearTimeout(to1)
+
+  if (!downloadRes?.uri) {
+    throw new Error()
+  }
+
+  return normalizePath(downloadRes.uri)
+}
+
+export function getResizedDimensions(originalDims: {
+  width: number
+  height: number
+}) {
+  if (
+    originalDims.width <= POST_IMG_MAX.width &&
+    originalDims.height <= POST_IMG_MAX.height
+  ) {
+    return originalDims
+  }
+
+  const ratio = Math.min(
+    POST_IMG_MAX.width / originalDims.width,
+    POST_IMG_MAX.height / originalDims.height,
+  )
+
+  return {
+    width: Math.round(originalDims.width * ratio),
+    height: Math.round(originalDims.height * ratio),
+  }
 }

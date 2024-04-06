@@ -1,25 +1,29 @@
+import {createDownloadResumable, deleteAsync} from 'expo-file-system'
+import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+
 import {
   downloadAndResize,
   DownloadAndResizeOpts,
-} from '../../src/lib/media/manip'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
-import RNFetchBlob from 'rn-fetch-blob'
+  getResizedDimensions,
+} from 'lib/media/manip'
 
 describe('downloadAndResize', () => {
   const errorSpy = jest.spyOn(global.console, 'error')
 
   const mockResizedImage = {
-    path: jest.fn().mockReturnValue('file://resized-image.jpg'),
+    path: 'file://resized-image.jpg',
     size: 100,
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     mime: 'image/jpeg',
   }
 
   beforeEach(() => {
-    const mockedCreateResizedImage =
-      ImageResizer.createResizedImage as jest.Mock
-    mockedCreateResizedImage.mockResolvedValue(mockResizedImage)
+    const mockedCreateResizedImage = manipulateAsync as jest.Mock
+    mockedCreateResizedImage.mockResolvedValue({
+      uri: 'file://resized-image.jpg',
+      ...mockResizedImage,
+    })
   })
 
   afterEach(() => {
@@ -27,10 +31,12 @@ describe('downloadAndResize', () => {
   })
 
   it('should return resized image for valid URI and options', async () => {
-    const mockedFetch = RNFetchBlob.fetch as jest.Mock
-    mockedFetch.mockResolvedValueOnce({
-      path: jest.fn().mockReturnValue('file://downloaded-image.jpg'),
-      flush: jest.fn(),
+    const mockedFetch = createDownloadResumable as jest.Mock
+    mockedFetch.mockReturnValue({
+      cancelAsync: jest.fn(),
+      downloadAsync: jest
+        .fn()
+        .mockResolvedValue({uri: 'file://resized-image.jpg'}),
     })
 
     const opts: DownloadAndResizeOpts = {
@@ -44,25 +50,22 @@ describe('downloadAndResize', () => {
 
     const result = await downloadAndResize(opts)
     expect(result).toEqual(mockResizedImage)
-    expect(RNFetchBlob.config).toHaveBeenCalledWith({
-      fileCache: true,
-      appendExt: 'jpeg',
+    expect(createDownloadResumable).toHaveBeenCalledWith(
+      opts.uri,
+      expect.anything(),
+      {
+        cache: true,
+      },
+    )
+    expect(manipulateAsync).toHaveBeenCalledWith(expect.anything(), [], {
+      format: SaveFormat.JPEG,
     })
-    expect(RNFetchBlob.fetch).toHaveBeenCalledWith(
-      'GET',
-      'https://example.com/image.jpg',
+    expect(manipulateAsync).toHaveBeenCalledWith(
+      expect.anything(),
+      [{resize: {height: opts.height, width: opts.width}}],
+      {format: SaveFormat.JPEG, compress: 0.9},
     )
-    expect(ImageResizer.createResizedImage).toHaveBeenCalledWith(
-      'file://downloaded-image.jpg',
-      100,
-      100,
-      'JPEG',
-      100,
-      undefined,
-      undefined,
-      undefined,
-      {mode: 'cover'},
-    )
+    expect(deleteAsync).toHaveBeenCalledWith(expect.anything())
   })
 
   it('should return undefined for invalid URI', async () => {
@@ -81,10 +84,12 @@ describe('downloadAndResize', () => {
   })
 
   it('should return undefined for unsupported file type', async () => {
-    const mockedFetch = RNFetchBlob.fetch as jest.Mock
-    mockedFetch.mockResolvedValueOnce({
-      path: jest.fn().mockReturnValue('file://downloaded-image'),
-      flush: jest.fn(),
+    const mockedFetch = createDownloadResumable as jest.Mock
+    mockedFetch.mockReturnValue({
+      cancelAsync: jest.fn(),
+      downloadAsync: jest
+        .fn()
+        .mockResolvedValue({uri: 'file://downloaded-image'}),
     })
 
     const opts: DownloadAndResizeOpts = {
@@ -98,24 +103,63 @@ describe('downloadAndResize', () => {
 
     const result = await downloadAndResize(opts)
     expect(result).toEqual(mockResizedImage)
-    expect(RNFetchBlob.config).toHaveBeenCalledWith({
-      fileCache: true,
-      appendExt: 'jpeg',
+    expect(createDownloadResumable).toHaveBeenCalledWith(
+      opts.uri,
+      expect.anything(),
+      {
+        cache: true,
+      },
+    )
+    expect(manipulateAsync).toHaveBeenCalledWith(expect.anything(), [], {
+      format: SaveFormat.JPEG,
     })
-    expect(RNFetchBlob.fetch).toHaveBeenCalledWith(
-      'GET',
-      'https://example.com/image',
+    expect(manipulateAsync).toHaveBeenCalledWith(
+      expect.anything(),
+      [{resize: {height: opts.height, width: opts.width}}],
+      {format: SaveFormat.JPEG, compress: 0.9},
     )
-    expect(ImageResizer.createResizedImage).toHaveBeenCalledWith(
-      'file://downloaded-image',
-      100,
-      100,
-      'JPEG',
-      100,
-      undefined,
-      undefined,
-      undefined,
-      {mode: 'cover'},
-    )
+    expect(deleteAsync).toHaveBeenCalledWith(expect.anything())
+  })
+})
+
+describe('produces correct new sizes for images', () => {
+  it('should not downsize whenever dimensions are below the max dimensions', () => {
+    const initialDimensionsOne = {
+      width: 1200,
+      height: 1000,
+    }
+    const resizedDimensionsOne = getResizedDimensions(initialDimensionsOne)
+
+    const initialDimensionsTwo = {
+      width: 1000,
+      height: 1200,
+    }
+    const resizedDimensionsTwo = getResizedDimensions(initialDimensionsTwo)
+
+    expect(resizedDimensionsOne).toEqual(initialDimensionsOne)
+    expect(resizedDimensionsTwo).toEqual(initialDimensionsTwo)
+  })
+
+  it('should resize dimensions and maintain aspect ratio if they are above the max dimensons', () => {
+    const initialDimensionsOne = {
+      width: 3000,
+      height: 1500,
+    }
+    const resizedDimensionsOne = getResizedDimensions(initialDimensionsOne)
+
+    const initialDimensionsTwo = {
+      width: 2000,
+      height: 4000,
+    }
+    const resizedDimensionsTwo = getResizedDimensions(initialDimensionsTwo)
+
+    expect(resizedDimensionsOne).toEqual({
+      width: 2000,
+      height: 1000,
+    })
+    expect(resizedDimensionsTwo).toEqual({
+      width: 1000,
+      height: 2000,
+    })
   })
 })

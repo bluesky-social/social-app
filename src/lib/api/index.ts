@@ -1,6 +1,7 @@
+import {deleteAsync} from 'expo-file-system'
 import {
-  AppBskyEmbedImages,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedThreadgate,
@@ -11,13 +12,14 @@ import {
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {isNetworkError} from 'lib/strings/errors'
-import {LinkMeta} from '../link-meta/link-meta'
-import {isWeb} from 'platform/detection'
-import {ImageModel} from 'state/models/media/image'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
+
 import {logger} from '#/logger'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {isNetworkError} from 'lib/strings/errors'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {isWeb} from 'platform/detection'
+import {ImageModel} from 'state/models/media/image'
+import {LinkMeta} from '../link-meta/link-meta'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -39,10 +41,14 @@ export async function uploadBlob(
     })
   } else {
     // `blob` should be a path to a file in the local FS
-    return agent.uploadBlob(
+    const res = await agent.uploadBlob(
       blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
       {encoding},
     )
+    try {
+      deleteAsync(blob)
+    } catch (e) {} // Don't need to handle
+    return res
   }
 }
 
