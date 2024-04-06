@@ -202,7 +202,7 @@ export function useProfileFollowMutationQueue(
   const queryClient = useQueryClient()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
-  const followMutation = useProfileFollowMutation(logContext)
+  const followMutation = useProfileFollowMutation(logContext, profile)
   const unfollowMutation = useProfileUnfollowMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
@@ -252,10 +252,16 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      logEvent('profile:follow', {logContext})
+      logEvent('profile:follow', {
+        logContext,
+        didBecomeMutual: profile.viewer
+          ? Boolean(profile.viewer.followedBy)
+          : undefined,
+      })
       return await getAgent().follow(did)
     },
     onSuccess(data, variables) {

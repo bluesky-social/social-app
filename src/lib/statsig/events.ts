@@ -77,6 +77,7 @@ export type LogEvents = {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
   'profile:follow': {
+    didBecomeMutual: boolean | undefined
     logContext:
       | 'RecommendedFollowsItem'
       | 'PostThreadItem'
