@@ -244,7 +244,7 @@ msgstr "成人内容"
 
 #: src/components/moderation/ModerationLabelPref.tsx:114
 msgid "Adult content is disabled."
-msgstr "已停止显示成人内容"
+msgstr "成人内容显示已被禁用"
 
 #: src/screens/Moderation/index.tsx:377
 #: src/view/screens/Settings/index.tsx:684
@@ -551,11 +551,11 @@ msgstr "Bluesky 不会向未登录的用户显示你的个人资料和帖子。�
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
-msgstr "模糊图片"
+msgstr "模糊化图片"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
-msgstr "模糊图片并从信息流中过滤"
+msgstr "模糊化图片并从信息流中过滤"
 
 #: src/screens/Onboarding/index.tsx:33
 msgid "Books"
@@ -2849,7 +2849,7 @@ msgstr "名称是必填项"
 #: src/lib/moderation/useReportOptions.ts:78
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Name or Description Violates Community Standards"
-msgstr "名称或描述违反了社区准则"
+msgstr "名称或描述违反了社群准则"
 
 #: src/screens/Onboarding/index.tsx:25
 msgid "Nature"
@@ -4789,7 +4789,7 @@ msgstr "服务条款"
 #: src/lib/moderation/useReportOptions.ts:79
 #: src/lib/moderation/useReportOptions.ts:87
 msgid "Terms used violate community standards"
-msgstr "所使用的术语违反了社区准则"
+msgstr "用词违反了社群准则"
 
 #: src/components/dialogs/MutedWords.tsx:324
 msgid "text"
