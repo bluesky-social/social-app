@@ -411,7 +411,7 @@ msgstr "Gli account bloccati non possono rispondere alle tue discussioni, menzio
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:115
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Gli account bloccati non possono rispondere nelle tue discussioni, menzionarti in nessun altro modo con te. Non vedrai il loro contenuto e non vedranno il tuo."
+msgstr "Gli account bloccati non possono rispondere alle tue discussioni, menzionarti, o interagire in nessun altro modo con te. Non vedrai il loro contenuto e non vedranno il tuo."
 
 #: src/view/com/post-thread/PostThread.tsx:313
 msgid "Blocked post."
