@@ -354,30 +354,22 @@ export function SearchScreenInner({
         return [
           {
             title: _(msg`Top`),
-            component: (
-              <SearchScreenPostResults key="top" query={query} sort="top" />
-            ),
+            component: <SearchScreenPostResults query={query} sort="top" />,
           },
           {
             title: _(msg`Latest`),
-            component: (
-              <SearchScreenPostResults
-                key="latest"
-                query={query}
-                sort="latest"
-              />
-            ),
+            component: <SearchScreenPostResults query={query} sort="latest" />,
           },
           {
             title: _(msg`People`),
-            component: <SearchScreenUserResults key="people" query={query} />,
+            component: <SearchScreenUserResults query={query} />,
           },
         ]
       } else {
         return [
           {
             title: _(msg`People`),
-            component: <SearchScreenUserResults key="people" query={query} />,
+            component: <SearchScreenUserResults query={query} />,
           },
         ]
       }
@@ -386,18 +378,18 @@ export function SearchScreenInner({
         return [
           {
             title: _(msg`Posts`),
-            component: <SearchScreenPostResults key="posts" query={query} />,
+            component: <SearchScreenPostResults query={query} />,
           },
           {
             title: _(msg`Users`),
-            component: <SearchScreenUserResults key="users" query={query} />,
+            component: <SearchScreenUserResults query={query} />,
           },
         ]
       } else {
         return [
           {
             title: _(msg`Users`),
-            component: <SearchScreenUserResults key="users" query={query} />,
+            component: <SearchScreenUserResults query={query} />,
           },
         ]
       }
@@ -416,7 +408,9 @@ export function SearchScreenInner({
           </CenteredView>
         )}
         initialPage={0}>
-        {sections.map(section => section.component)}
+        {sections.map((section, i) => (
+          <View key={i}>{section.component}</View>
+        ))}
       </Pager>
     ) : (
       <View>
@@ -453,7 +447,9 @@ export function SearchScreenInner({
         </CenteredView>
       )}
       initialPage={0}>
-      {sections.map(section => section.component)}
+      {sections.map((section, i) => (
+        <View key={i}>{section.component}</View>
+      ))}
     </Pager>
   ) : (
     <CenteredView sideBorders style={pal.border}>
