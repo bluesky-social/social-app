@@ -1,23 +1,25 @@
 import React from 'react'
-import {View, ActivityIndicator, StyleSheet} from 'react-native'
+import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
+
+import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {useGate} from '#/lib/statsig/statsig'
+import {emitSoftReset} from '#/state/events'
+import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {useSession} from '#/state/session'
+import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {FeedPage} from 'view/com/feeds/FeedPage'
+import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
-import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {HomeHeader} from '../com/home/HomeHeader'
-import {Pager, RenderTabBarFnProps, PagerRef} from 'view/com/pager/Pager'
-import {FeedPage} from 'view/com/feeds/FeedPage'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
-import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {usePinnedFeedsInfos, FeedSourceInfo} from '#/state/queries/feed'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {emitSoftReset} from '#/state/events'
-import {useSession} from '#/state/session'
-import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -93,6 +95,22 @@ function HomeScreenReady({
       }
     }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
   )
+
+  const disableMinShellOnForegrounding = useGate(
+    'disable_min_shell_on_foregrounding',
+  )
+  React.useEffect(() => {
+    if (disableMinShellOnForegrounding) {
+      const listener = AppState.addEventListener('change', nextAppState => {
+        if (nextAppState === 'active') {
+          setMinimalShellMode(false)
+        }
+      })
+      return () => {
+        listener.remove()
+      }
+    }
+  }, [setMinimalShellMode, disableMinShellOnForegrounding])
 
   const onPageSelected = React.useCallback(
     (index: number) => {
