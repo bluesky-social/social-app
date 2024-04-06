@@ -22,7 +22,7 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg,Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {FeedNotification} from '#/state/queries/notifications/feed'
@@ -34,7 +34,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
-import {colors, s} from 'lib/styles'
+import {colors,s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
@@ -43,7 +43,7 @@ import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
-import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
+import {PreviewableUserAvatar,UserAvatar} from '../util/UserAvatar'
 import {UserPreviewLink} from '../util/UserPreviewLink'
 
 const MAX_AUTHORS = 5
