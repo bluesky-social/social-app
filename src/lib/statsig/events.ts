@@ -65,6 +65,8 @@ export type LogEvents = {
     logContext: 'Composer'
   }
   'post:like': {
+    doesLikerFollowPoster: boolean | undefined
+    doesPosterFollowLiker: boolean | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
   'post:repost': {

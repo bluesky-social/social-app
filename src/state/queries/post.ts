@@ -68,7 +68,7 @@ export function usePostLikeMutationQueue(
   const postUri = post.uri
   const postCid = post.cid
   const initialLikeUri = post.viewer?.like
-  const likeMutation = usePostLikeMutation(logContext)
+  const likeMutation = usePostLikeMutation(logContext, post)
   const unlikeMutation = usePostUnlikeMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
@@ -117,15 +117,27 @@ export function usePostLikeMutationQueue(
   return [queueLike, queueUnlike]
 }
 
-function usePostLikeMutation(logContext: LogEvents['post:like']['logContext']) {
+function usePostLikeMutation(
+  logContext: LogEvents['post:like']['logContext'],
+  post: Shadow<AppBskyFeedDefs.PostView>,
+) {
+  const postAuthorViewer = post.author.viewer
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
     {uri: string; cid: string} // the post's uri and cid
   >({
-    mutationFn: post => {
-      logEvent('post:like', {logContext})
-      return getAgent().like(post.uri, post.cid)
+    mutationFn: ({uri, cid}) => {
+      logEvent('post:like', {
+        logContext,
+        doesPosterFollowLiker: postAuthorViewer
+          ? Boolean(postAuthorViewer.followedBy)
+          : undefined,
+        doesLikerFollowPoster: postAuthorViewer
+          ? Boolean(postAuthorViewer.following)
+          : undefined,
+      })
+      return getAgent().like(uri, cid)
     },
     onSuccess() {
       track('Post:Like')
