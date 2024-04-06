@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {useCommonSVGProps, Props} from '#/components/icons/common'
+import {Props, useCommonSVGProps} from '#/components/icons/common'
 
 export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
   function LogoImpl(props: Props, ref) {
@@ -28,7 +28,14 @@ export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
   },
 )
 
-export function createSinglePathSVG({path}: {path: string}) {
+export function createSinglePathSVG({
+  path,
+  strokeWidth = 0,
+}: {
+  path: string
+  strokeWidth?: number
+}) {
+  console.log(strokeWidth)
   return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, ...rest} = useCommonSVGProps(props)
 
@@ -40,7 +47,9 @@ export function createSinglePathSVG({path}: {path: string}) {
         viewBox="0 0 24 24"
         width={size}
         height={size}
-        style={[style]}>
+        style={[style]}
+        strokeWidth={strokeWidth}
+        stroke={fill}>
         <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
       </Svg>
     )

@@ -36,7 +36,10 @@ import {
   Bell2_Filled_Corner0_Rounded as BellFilled,
   Bell2_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
 import {
   Home_Filled_Corner0_Rounded as HomeFilled,
   Home_Stroke2_Corner0_Rounded as Home,
@@ -164,7 +167,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarFeedsBtn"
               icon={
                 isAtFeeds ? (
-                  <Hashtag style={t.atoms.text} size="xl" />
+                  <HashtagFilled style={t.atoms.text} size="xl" />
                 ) : (
                   <Hashtag style={t.atoms.text} size="xl" />
                 )

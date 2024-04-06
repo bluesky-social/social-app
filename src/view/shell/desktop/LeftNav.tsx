@@ -33,7 +33,10 @@ import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useTheme} from '#/alf'
-import {Bars3_Stroke2_Corner0_Rounded} from '#/components/icons/Bars'
+import {
+  Bars3_Filled_Corner0_Rounded as BarsFilled,
+  Bars3_Stroke2_Corner0_Rounded as Bars,
+} from '#/components/icons/Bars'
 import {
   Bell2_Filled_Corner0_Rounded as BellFilled,
   Bell2_Stroke2_Corner0_Rounded as Bell,
@@ -42,7 +45,10 @@ import {
   SettingsGear2_Filled_Corner0_Rounded as GearFilled,
   SettingsGear2_Stroke2_Corner0_Rounded as Gear,
 } from '#/components/icons/Gear'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
 import {
   Home_Filled_Corner0_Rounded as HomeFilled,
   Home_Stroke2_Corner0_Rounded as Home,
@@ -327,7 +333,7 @@ export function DesktopLeftNav() {
             href="/feeds"
             icon={<Hashtag style={t.atoms.text} size="xl" />}
             iconFilled={
-              <Hashtag style={t.atoms.text} size="xl" strokeWidth={3} />
+              <HashtagFilled style={t.atoms.text} size="xl" strokeWidth={3} />
             }
             label={_(msg`Feeds`)}
           />
@@ -340,15 +346,9 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/lists"
-            icon={
-              <Bars3_Stroke2_Corner0_Rounded style={t.atoms.text} size="xl" />
-            }
+            icon={<Bars style={t.atoms.text} size="xl" />}
             iconFilled={
-              <Bars3_Stroke2_Corner0_Rounded
-                style={t.atoms.text}
-                size="xl"
-                strokeWidth={3}
-              />
+              <BarsFilled style={t.atoms.text} size="xl" strokeWidth={3} />
             }
             label={_(msg`Lists`)}
           />

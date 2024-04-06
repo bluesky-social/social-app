@@ -26,7 +26,10 @@ import {
   Bell2_Filled_Corner0_Rounded as BellFilled,
   Bell2_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
 import {
   Home_Filled_Corner0_Rounded as HomeFilled,
   Home_Stroke2_Corner0_Rounded as Home,
@@ -91,10 +94,9 @@ export function BottomBarWeb() {
           {hasSession && (
             <>
               <NavItem routeName="Feeds" href="/feeds">
-                {/* TODO */}
-                {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
                 {({isActive}) => {
-                  return <Hashtag style={t.atoms.text} size="xl" />
+                  const Icon = isActive ? Hashtag : HashtagFilled
+                  return <Icon style={t.atoms.text} size="xl" />
                 }}
               </NavItem>
               <NavItem routeName="Notifications" href="/notifications">
