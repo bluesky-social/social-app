@@ -4013,7 +4013,7 @@ msgstr "已保存信息流"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll."
-msgstr "已保存到相机相册"
+msgstr "已保存到相机胶卷"
 
 #: src/view/screens/ProfileFeed.tsx:212
 msgid "Saved to your feeds"
