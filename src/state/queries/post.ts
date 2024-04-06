@@ -121,7 +121,7 @@ function usePostLikeMutation(
   logContext: LogEvents['post:like']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-  const postAuthorViewer = post.author.viewer
+  const postAuthor = post.author
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
@@ -130,12 +130,23 @@ function usePostLikeMutation(
     mutationFn: ({uri, cid}) => {
       logEvent('post:like', {
         logContext,
-        doesPosterFollowLiker: postAuthorViewer
-          ? Boolean(postAuthorViewer.followedBy)
+        doesPosterFollowLiker: postAuthor.viewer
+          ? Boolean(postAuthor.viewer.followedBy)
           : undefined,
-        doesLikerFollowPoster: postAuthorViewer
-          ? Boolean(postAuthorViewer.following)
+        doesLikerFollowPoster: postAuthor.viewer
+          ? Boolean(postAuthor.viewer.following)
           : undefined,
+        postClout:
+          post.likeCount != null &&
+          post.repostCount != null &&
+          post.replyCount != null
+            ? Math.max(
+                0,
+                Math.round(
+                  Math.log(post.likeCount + post.repostCount + post.replyCount),
+                ),
+              )
+            : undefined,
       })
       return getAgent().like(uri, cid)
     },

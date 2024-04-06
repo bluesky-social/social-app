@@ -261,6 +261,10 @@ function useProfileFollowMutation(
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
           : undefined,
+        followeeClout:
+          profile.followersCount != null
+            ? Math.max(0, Math.round(Math.log(profile.followersCount)))
+            : undefined,
       })
       return await getAgent().follow(did)
     },
