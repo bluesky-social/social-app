@@ -2933,7 +2933,7 @@ msgstr "开启密码修改界面"
 
 #: src/view/screens/Settings/index.tsx:718
 msgid "Opens modal for choosing a new Bluesky handle"
-msgstr "开启创建新的用户标识符界面"
+msgstr "开启创建新的用户识别符界面"
 
 #: src/view/screens/Settings/index.tsx:779
 msgid "Opens modal for downloading your Bluesky account data (repository)"
