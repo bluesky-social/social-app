@@ -53,8 +53,10 @@ import {
   Home_Filled_Corner0_Rounded as HomeFilled,
   Home_Stroke2_Corner0_Rounded as Home,
 } from '#/components/icons/Home'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass_Filled_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass2'
+import {
+  MagnifyingGlass2_Filled_Corner0_Rounded as MagnifyingGlassFilled,
+  MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass,
+} from '#/components/icons/MagnifyingGlass2'
 import {
   PersonCircle_Filled_Corner0_Rounded as PersonCircleFilled,
   PersonCircle_Stroke2_Corner0_Rounded as PersonCircle,
