@@ -1227,7 +1227,7 @@ msgstr "受 Apple 政策限制，显示成人内容只能在完成注册后在�
 
 #: src/view/com/modals/ChangeHandle.tsx:257
 msgid "e.g. alice"
-msgstr "例如：爱丽丝"
+msgstr "例如：alice"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
