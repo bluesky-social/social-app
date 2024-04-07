@@ -146,32 +146,6 @@ export function HeartIconSolid({
   )
 }
 
-export function UpIcon({
-  style,
-  size,
-  strokeWidth = 1.3,
-}: {
-  style?: StyleProp<ViewStyle>
-  size?: string | number
-  strokeWidth: number
-}) {
-  return (
-    <Svg
-      viewBox="0 0 14 14"
-      width={size || 24}
-      height={size || 24}
-      style={style}>
-      <Path
-        strokeWidth={strokeWidth}
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M 7 3 L 2 8 L 4.5 8 L 4.5 11.5 L 9.5 11.5 L 9.5 8 L 12 8 L 7 3 Z"
-      />
-    </Svg>
-  )
-}
-
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
 export function CommentBottomArrow({
