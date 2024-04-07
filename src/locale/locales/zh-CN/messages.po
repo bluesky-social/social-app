@@ -2117,7 +2117,7 @@ msgstr "标记"
 
 #: src/screens/Profile/Sections/Labels.tsx:143
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "标记是对特定内容及用户的提示。可以针对特定内容显示警告；默认隐藏内容，或关闭此标记功能。"
+msgstr "标记是对特定内容及用户的提示。可以针对特定内容默认隐藏内容、显示警告或直接显示。"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 msgid "labels have been placed on this {labelTarget}"
