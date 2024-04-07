@@ -13,6 +13,7 @@ export const sizes = {
   xs: 12,
   sm: 16,
   md: 20,
+  md2: 22,
   lg: 24,
   lg2: 26,
   xl: 28,
