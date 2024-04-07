@@ -141,9 +141,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarHomeBtn"
               icon={
                 isAtHome ? (
-                  <HomeFilled style={t.atoms.text} size="xl" />
+                  <HomeFilled style={t.atoms.text} size="lg2" />
                 ) : (
-                  <Home style={t.atoms.text} size="xl" />
+                  <Home style={t.atoms.text} size="lg2" />
                 )
               }
               onPress={onPressHome}
@@ -155,9 +155,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarSearchBtn"
               icon={
                 isAtSearch ? (
-                  <MagnifyingGlassFilled style={t.atoms.text} size="xl" />
+                  <MagnifyingGlassFilled style={t.atoms.text} size="lg2" />
                 ) : (
-                  <MagnifyingGlass style={t.atoms.text} size="xl" />
+                  <MagnifyingGlass style={t.atoms.text} size="lg2" />
                 )
               }
               onPress={onPressSearch}
@@ -169,9 +169,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarFeedsBtn"
               icon={
                 isAtFeeds ? (
-                  <HashtagFilled style={t.atoms.text} size="xl" />
+                  <HashtagFilled style={t.atoms.text} size="lg2" />
                 ) : (
-                  <Hashtag style={t.atoms.text} size="xl" />
+                  <Hashtag style={t.atoms.text} size="lg2" />
                 )
               }
               onPress={onPressFeeds}
@@ -183,9 +183,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarNotificationsBtn"
               icon={
                 isAtNotifications ? (
-                  <BellFilled style={t.atoms.text} size="xl" />
+                  <BellFilled style={t.atoms.text} size="lg2" />
                 ) : (
-                  <Bell style={t.atoms.text} size="xl" />
+                  <Bell style={t.atoms.text} size="lg2" />
                 )
               }
               onPress={onPressNotifications}

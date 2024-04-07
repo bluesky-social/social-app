@@ -319,57 +319,57 @@ export function DesktopLeftNav() {
 
           <NavItem
             href="/"
-            icon={<Home style={t.atoms.text} size="xl" />}
-            iconFilled={<HomeFilled style={t.atoms.text} size="xl" />}
+            icon={<Home style={t.atoms.text} size="lg2" />}
+            iconFilled={<HomeFilled style={t.atoms.text} size="lg2" />}
             label={_(msg`Home`)}
           />
           <NavItem
             href="/search"
-            icon={<MagnifyingGlass style={t.atoms.text} size="xl" />}
+            icon={<MagnifyingGlass style={t.atoms.text} size="lg2" />}
             iconFilled={
-              <MagnifyingGlassFilled style={t.atoms.text} size="xl" />
+              <MagnifyingGlassFilled style={t.atoms.text} size="lg2" />
             }
             label={_(msg`Search`)}
           />
           <NavItem
             href="/feeds"
-            icon={<Hashtag style={t.atoms.text} size="xl" />}
+            icon={<Hashtag style={t.atoms.text} size="lg2" />}
             iconFilled={
-              <HashtagFilled style={t.atoms.text} size="xl" strokeWidth={3} />
+              <HashtagFilled style={t.atoms.text} size="lg2" strokeWidth={3} />
             }
             label={_(msg`Feeds`)}
           />
           <NavItem
             href="/notifications"
             count={numUnread}
-            icon={<Bell style={t.atoms.text} size="xl" />}
-            iconFilled={<BellFilled style={t.atoms.text} size="xl" />}
+            icon={<Bell style={t.atoms.text} size="lg2" />}
+            iconFilled={<BellFilled style={t.atoms.text} size="lg2" />}
             label={_(msg`Notifications`)}
           />
           <NavItem
             href="/lists"
-            icon={<Bars style={t.atoms.text} size="xl" />}
+            icon={<Bars style={t.atoms.text} size="lg2" />}
             iconFilled={
-              <BarsFilled style={t.atoms.text} size="xl" strokeWidth={3} />
+              <BarsFilled style={t.atoms.text} size="lg2" strokeWidth={3} />
             }
             label={_(msg`Lists`)}
           />
           <NavItem
             href="/moderation"
-            icon={<RaisingHand style={t.atoms.text} size="xl" />}
-            iconFilled={<RaisingHandFilled style={t.atoms.text} size="xl" />}
+            icon={<RaisingHand style={t.atoms.text} size="lg2" />}
+            iconFilled={<RaisingHandFilled style={t.atoms.text} size="lg2" />}
             label={_(msg`Moderation`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-            icon={<PersonCircle style={t.atoms.text} size="xl" />}
-            iconFilled={<PersonCircleFilled style={t.atoms.text} size="xl" />}
+            icon={<PersonCircle style={t.atoms.text} size="lg2" />}
+            iconFilled={<PersonCircleFilled style={t.atoms.text} size="lg2" />}
             label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
-            icon={<Gear style={t.atoms.text} size="xl" />}
-            iconFilled={<GearFilled style={t.atoms.text} size="xl" />}
+            icon={<Gear style={t.atoms.text} size="lg2" />}
+            iconFilled={<GearFilled style={t.atoms.text} size="lg2" />}
             label={_(msg`Settings`)}
           />
 

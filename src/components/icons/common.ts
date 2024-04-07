@@ -1,5 +1,5 @@
 import {StyleSheet, TextProps} from 'react-native'
-import type {SvgProps, PathProps} from 'react-native-svg'
+import type {PathProps, SvgProps} from 'react-native-svg'
 
 import {tokens} from '#/alf'
 
@@ -14,6 +14,7 @@ export const sizes = {
   sm: 16,
   md: 20,
   lg: 24,
+  lg2: 26,
   xl: 28,
 }
 

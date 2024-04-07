@@ -83,13 +83,13 @@ export function BottomBarWeb() {
           <NavItem routeName="Home" href="/">
             {({isActive}) => {
               const Icon = isActive ? HomeFilled : Home
-              return <Icon style={t.atoms.text} size="xl" />
+              return <Icon style={t.atoms.text} size="lg2" />
             }}
           </NavItem>
           <NavItem routeName="Search" href="/search">
             {({isActive}) => {
               const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
-              return <Icon style={t.atoms.text} size="xl" />
+              return <Icon style={t.atoms.text} size="lg2" />
             }}
           </NavItem>
 
@@ -98,13 +98,13 @@ export function BottomBarWeb() {
               <NavItem routeName="Feeds" href="/feeds">
                 {({isActive}) => {
                   const Icon = isActive ? Hashtag : HashtagFilled
-                  return <Icon style={t.atoms.text} size="xl" />
+                  return <Icon style={t.atoms.text} size="lg2" />
                 }}
               </NavItem>
               <NavItem routeName="Notifications" href="/notifications">
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
-                  return <Icon style={t.atoms.text} size="xl" />
+                  return <Icon style={t.atoms.text} size="lg2" />
                 }}
               </NavItem>
               <NavItem
@@ -119,7 +119,7 @@ export function BottomBarWeb() {
                 }>
                 {({isActive}) => {
                   const Icon = isActive ? PersonCircleFilled : PersonCircle
-                  return <Icon style={t.atoms.text} size="xl" />
+                  return <Icon style={t.atoms.text} size="lg2" />
                 }}
               </NavItem>
             </>
