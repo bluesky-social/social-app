@@ -2795,7 +2795,7 @@ msgstr "未标记的裸露或色情内容"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
-msgstr "关闭"
+msgstr "显示"
 
 #: src/view/com/util/ErrorBoundary.tsx:49
 msgid "Oh no!"
