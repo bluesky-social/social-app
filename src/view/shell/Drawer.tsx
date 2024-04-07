@@ -3,55 +3,59 @@ import {
   Linking,
   SafeAreaView,
   ScrollView,
-  StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {s, colors} from 'lib/styles'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {
-  HomeIcon,
-  HomeIconSolid,
-  BellIcon,
-  BellIconSolid,
-  UserIcon,
-  CogIcon,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  UserIconSolid,
-  HashtagIcon,
-  ListIcon,
-  HandIcon,
-} from 'lib/icons'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Text} from 'view/com/util/text/Text'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {StackActions, useNavigation} from '@react-navigation/native'
+
+import {emitSoftReset} from '#/state/events'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {SessionAccount, useSession} from '#/state/session'
+import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {pluralize} from 'lib/strings/helpers'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {pluralize} from 'lib/strings/helpers'
+import {colors, s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
 import {isWeb} from 'platform/detection'
-import {formatCountShortOnly} from 'view/com/util/numeric/format'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useSetDrawerOpen} from '#/state/shell'
-import {useSession, SessionAccount} from '#/state/session'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {emitSoftReset} from '#/state/events'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {TextLink} from '../com/util/Link'
-
+import {formatCountShortOnly} from 'view/com/util/numeric/format'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useTheme as useAlfTheme} from '#/alf'
+import {Bars3_Stroke2_Corner0_Rounded as Bars} from '#/components/icons/Bars'
+import {
+  Bell2_Filled_Corner0_Rounded as BellFilled,
+  Bell2_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/Gear'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
+import {
+  Home_Filled_Corner0_Rounded as HomeFilled,
+  Home_Stroke2_Corner0_Rounded as Home,
+} from '#/components/icons/Home'
+import {
+  MagnifyingGlass2_Filled_Corner0_Rounded as MagnifyingGlassFilled,
+  MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass,
+} from '#/components/icons/MagnifyingGlass2'
+import {PersonCircle_Stroke2_Corner0_Rounded as PersonCircle} from '#/components/icons/PersonCircle'
+import {RaisingHand_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
+import {TextLink} from '../com/util/Link'
 
 let DrawerProfileCard = ({
   account,
@@ -344,22 +348,14 @@ let SearchMenuItem = ({
   onPress: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   return (
     <MenuItem
       icon={
         isActive ? (
-          <MagnifyingGlassIcon2Solid
-            style={pal.text as StyleProp<ViewStyle>}
-            size={24}
-            strokeWidth={1.7}
-          />
+          <MagnifyingGlassFilled style={t.atoms.text} size="xl" />
         ) : (
-          <MagnifyingGlassIcon2
-            style={pal.text as StyleProp<ViewStyle>}
-            size={24}
-            strokeWidth={1.7}
-          />
+          <MagnifyingGlass style={t.atoms.text} size="xl" />
         )
       }
       label={_(msg`Search`)}
@@ -380,22 +376,14 @@ let HomeMenuItem = ({
   onPress: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   return (
     <MenuItem
       icon={
         isActive ? (
-          <HomeIconSolid
-            style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={3.25}
-          />
+          <HomeFilled style={t.atoms.text} size="xl" />
         ) : (
-          <HomeIcon
-            style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={3.25}
-          />
+          <Home style={t.atoms.text} size="xl" />
         )
       }
       label={_(msg`Home`)}
@@ -416,23 +404,15 @@ let NotificationsMenuItem = ({
   onPress: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   const numUnreadNotifications = useUnreadNotifications()
   return (
     <MenuItem
       icon={
         isActive ? (
-          <BellIconSolid
-            style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={1.7}
-          />
+          <BellFilled style={t.atoms.text} size="xl" />
         ) : (
-          <BellIcon
-            style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={1.7}
-          />
+          <Bell style={t.atoms.text} size="xl" />
         )
       }
       label={_(msg`Notifications`)}
@@ -458,22 +438,14 @@ let FeedsMenuItem = ({
   onPress: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   return (
     <MenuItem
       icon={
         isActive ? (
-          <HashtagIcon
-            strokeWidth={3}
-            style={pal.text as FontAwesomeIconStyle}
-            size={24}
-          />
+          <HashtagFilled style={t.atoms.text} size="xl" />
         ) : (
-          <HashtagIcon
-            strokeWidth={2}
-            style={pal.text as FontAwesomeIconStyle}
-            size={24}
-          />
+          <Hashtag style={t.atoms.text} size="xl" />
         )
       }
       label={_(msg`Feeds`)}
@@ -488,10 +460,10 @@ FeedsMenuItem = React.memo(FeedsMenuItem)
 
 let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   return (
     <MenuItem
-      icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
+      icon={<Bars style={t.atoms.text} size="xl" />}
       label={_(msg`Lists`)}
       accessibilityLabel={_(msg`Lists`)}
       accessibilityHint=""
@@ -507,10 +479,10 @@ let ModerationMenuItem = ({
   onPress: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   return (
     <MenuItem
-      icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
+      icon={<RaisingHand style={t.atoms.text} size="xl" />}
       label={_(msg`Moderation`)}
       accessibilityLabel={_(msg`Moderation`)}
       accessibilityHint=""
@@ -521,31 +493,16 @@ let ModerationMenuItem = ({
 ModerationMenuItem = React.memo(ModerationMenuItem)
 
 let ProfileMenuItem = ({
-  isActive,
   onPress,
 }: {
   isActive: boolean
   onPress: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   return (
     <MenuItem
-      icon={
-        isActive ? (
-          <UserIconSolid
-            style={pal.text as StyleProp<ViewStyle>}
-            size="26"
-            strokeWidth={1.5}
-          />
-        ) : (
-          <UserIcon
-            style={pal.text as StyleProp<ViewStyle>}
-            size="26"
-            strokeWidth={1.5}
-          />
-        )
-      }
+      icon={<PersonCircle style={t.atoms.text} size="xl" />}
       label={_(msg`Profile`)}
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint=""
@@ -557,16 +514,10 @@ ProfileMenuItem = React.memo(ProfileMenuItem)
 
 let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useAlfTheme()
   return (
     <MenuItem
-      icon={
-        <CogIcon
-          style={pal.text as StyleProp<ViewStyle>}
-          size="26"
-          strokeWidth={1.75}
-        />
-      }
+      icon={<Gear style={t.atoms.text} size="xl" />}
       label={_(msg`Settings`)}
       accessibilityLabel={_(msg`Settings`)}
       accessibilityHint=""
