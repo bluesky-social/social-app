@@ -373,32 +373,6 @@ export function HandIcon({
   )
 }
 
-export function HashtagIcon({
-  style,
-  size,
-  strokeWidth = 1.5,
-}: {
-  style?: StyleProp<TextStyle>
-  size?: string | number
-  strokeWidth?: number
-}) {
-  return (
-    <Svg
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 30 30"
-      strokeWidth={strokeWidth}
-      width={size}
-      height={size}
-      style={style}>
-      <Path d="M2 10H28" strokeLinecap="round" />
-      <Path d="M2 20H28" strokeLinecap="round" />
-      <Path d="M11 3L9 27" strokeLinecap="round" />
-      <Path d="M21 3L19 27" strokeLinecap="round" />
-    </Svg>
-  )
-}
-
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
 export function ShieldExclamation({

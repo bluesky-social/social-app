@@ -52,7 +52,6 @@ import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {HashtagIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
@@ -69,6 +68,7 @@ import {ScrollView} from 'view/com/util/Views'
 import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {RaisingHand_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -599,7 +599,7 @@ export function SettingsScreen({}: Props) {
           accessibilityLabel={_(msg`My saved feeds`)}
           accessibilityHint={_(msg`Opens screen with all saved feeds`)}>
           <View style={[styles.iconContainer, pal.btn]}>
-            <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
+            <Hashtag style={t.atoms.text} size="md" />
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>My Saved Feeds</Trans>
