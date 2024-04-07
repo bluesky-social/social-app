@@ -14,6 +14,7 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
   private var cancelGestureRecognizers: [UIGestureRecognizer]?
   private var animTimer: Timer?
   private var initialOffset: CGFloat = 0.0
+  private var didImpact: Bool = false
   
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -34,6 +35,27 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     self.cancelGestureRecognizers = [lpg, tg]
   }
   
+
+  // We don't want to recognize the scroll pan gesture and the swipe back gesture together
+  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    if gestureRecognizer is UIPanGestureRecognizer, otherGestureRecognizer is UIPanGestureRecognizer {
+      return false
+    }
+    
+    return true
+  }
+  
+  // We only want the "scroll" gesture to happen whenever the pan is vertical, otherwise it will
+  // interfere with the native swipe back gesture.
+  override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    guard let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer else {
+      return true
+    }
+    
+    let velocity = gestureRecognizer.velocity(in: self)
+    return abs(velocity.y) > abs(velocity.x)
+  }
+  
   // This will be used to cancel the scroll animation whenever we tap inside of the header. We don't need another
   // recognizer for this one.
   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -52,58 +74,82 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     }
 
     let translation = sender.translation(in: self).y
-    let velocity = sender.translation(in: self).y
-
+    
     if sender.state == .began {
+      if sv.contentOffset.y < 0 {
+        sv.contentOffset.y = 0
+      }
+      
       self.initialOffset = sv.contentOffset.y
     }
 
     if sender.state == .changed {
       sv.contentOffset.y = self.dampenOffset(-translation + self.initialOffset)
+      
+      if sv.contentOffset.y <= -130, !didImpact {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        
+        self.didImpact = true
+      }
     }
 
     if sender.state == .ended {
-      var currentVelocity = sender.velocity(in: self).y
+      let velocity = sender.velocity(in: self).y
+      self.didImpact = false
       
       if sv.contentOffset.y <= -130 {
-        self.rctRefreshCtrl?.setRefreshing(true)
+        self.rctRefreshCtrl?.forwarderBeginRefreshing()
+        return
       }
 
       // A check for a velocity under 250 prevents animations from occurring when they wouldn't in a normal
       // scroll view
-      if abs(currentVelocity) < 250 {
+      if abs(velocity) < 250, sv.contentOffset.y >= 0 {
         return
       }
-
-      // Because this is the header, we just need to scroll to the top. We can't be far enough down the screen to where we need
-      // to deal with animating this.
-      if velocity > 0 {
-        self.scrollToOffset(0)
-        return
-      }
-
-      self.enableCancelGestureRecognizers()
-
-      // Clamping the velocity to a maximum of 5000 incase of any weirdness. I haven't seen any cases where we could
-      // easily exceed this number, but just to make sure.
-      currentVelocity = max(currentVelocity, -5000)
-
-      // Ideally, we would use UIView.animate to do this. However, that messes with the FlatList's virtualization.
-      // Running this on a timer instead simulates us actually dragging to update the content offset.
-      var animTranslation = -translation
-      self.animTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 120, repeats: true) { timer in
-        currentVelocity *= 0.9875
-        animTranslation = (-currentVelocity / 120) + animTranslation
-        sv.contentOffset.y = self.dampenOffset(animTranslation + self.initialOffset)
-
-        if animTranslation <= -100 {
+      
+      self.startDecayAnimation(translation, velocity)
+    }
+  }
+  
+  func startDecayAnimation(_ translation: CGFloat, _ velocity: CGFloat) {
+    guard let sv = self.rctScrollView?.scrollView else {
+      return
+    }
+    
+    var velocity = velocity
+    
+    self.enableCancelGestureRecognizers()
+    
+    if velocity > 0 {
+      velocity = min(velocity, 5000)
+    } else {
+      velocity = max(velocity, -5000)
+    }
+    
+    var animTranslation = -translation
+    self.animTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 120, repeats: true) { timer in
+      velocity *= 0.9875
+      animTranslation = (-velocity / 120) + animTranslation
+      
+      let nextOffset = self.dampenOffset(animTranslation + self.initialOffset)
+      
+      if nextOffset <= 0 {
+        if self.initialOffset <= 1 {
           self.scrollToOffset(0)
-          self.stopTimer()
+        } else {
+          sv.contentOffset.y = 0
         }
+        
+        self.stopTimer()
+        return
+      } else {
+        sv.contentOffset.y = nextOffset
+      }
 
-        if abs(currentVelocity) < 5 {
-          self.stopTimer()
-        }
+      if abs(velocity) < 5 {
+        self.stopTimer()
       }
     }
   }
@@ -132,17 +178,18 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     self.addCancelGestureRecognizers()
   }
   
-  func removeCancelGestureRecognizers() {
-    self.cancelGestureRecognizers?.forEach { r in
-      self.rctScrollView?.scrollView?.removeGestureRecognizer(r)
-    }
-  }
-  
   func addCancelGestureRecognizers() {
     self.cancelGestureRecognizers?.forEach { r in
       self.rctScrollView?.scrollView?.addGestureRecognizer(r)
     }
   }
+  
+  func removeCancelGestureRecognizers() {
+    self.cancelGestureRecognizers?.forEach { r in
+      self.rctScrollView?.scrollView?.removeGestureRecognizer(r)
+    }
+  }
+
   
   func enableCancelGestureRecognizers() {
     self.cancelGestureRecognizers?.forEach { r in

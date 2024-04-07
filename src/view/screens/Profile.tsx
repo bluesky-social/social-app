@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {findNodeHandle, StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
   moderateProfile,
@@ -8,6 +8,7 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -25,19 +26,21 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {combinedDisplayName} from 'lib/strings/display-names'
+import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
+import {listenSoftReset} from 'state/events'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
+import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
 import {ProfileLists} from '../com/lists/ProfileLists'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {FAB} from '../com/util/fab/FAB'
 import {ListRef} from '../com/util/List'
 import {CenteredView} from '../com/util/Views'
-import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -150,10 +153,8 @@ function ProfileScreenLoaded({
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
 
-  const [scrollViewTag, setScrollViewTag] =
-    React.useState<[number, FeedDescriptor]>()
+  const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
   const postsSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
@@ -316,10 +317,11 @@ function ProfileScreenLoaded({
 
   const renderHeader = React.useCallback(() => {
     return (
-      <ExpoScrollForwarderView scrollViewTag={scrollViewTag?.[0]}>
+      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
           profile={profile}
-          labeler={labelerInfo}descriptionRT={hasDescription ? descriptionRT : null}
+          labeler={labelerInfo}
+          descriptionRT={hasDescription ? descriptionRT : null}
           moderationOpts={moderationOpts}
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
@@ -332,7 +334,6 @@ function ProfileScreenLoaded({
     labelerInfo,
     descriptionRT,
     hasDescription,
-    descriptionRT,
     moderationOpts,
     hideBackButton,
     showPlaceholder,
@@ -352,7 +353,7 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}>
         {showFiltersTab
-          ? ({headerHeight, scrollElRef}) => (
+          ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection
                 ref={labelsSectionRef}
                 labelerInfo={labelerInfo}
@@ -361,6 +362,7 @@ function ProfileScreenLoaded({
                 moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
                 headerHeight={headerHeight}
+                isFocused={isFocused}
                 setScrollViewTag={setScrollViewTag}
               />
             )
@@ -406,15 +408,16 @@ function ProfileScreenLoaded({
         {showMediaTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
-            ref={mediaSectionRef}
-            feed={`author|${profile.did}|posts_with_media`}
-            headerHeight={headerHeight}
-            isFocused={isFocused}
-            scrollElRef={scrollElRef as ListRef}
-            ignoreFilterFor={profile.did}
-            setScrollViewTag={setScrollViewTag}
-          />
-        ): null}
+                ref={mediaSectionRef}
+                feed={`author|${profile.did}|posts_with_media`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
         {showLikesTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
@@ -436,19 +439,21 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
         {showListsTab && !profile.associated?.labeler
           ? ({headerHeight, isFocused, scrollElRef}) => (
-            <ProfileLists
-              ref={listsSectionRef}
-              did={profile.did}
-              scrollElRef={scrollElRef as ListRef}
-              headerOffset={headerHeight}
-              enabled={isFocused}
-            />
-          )
+              <ProfileLists
+                ref={listsSectionRef}
+                did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
           : null}
       </PagerWithHeader>
       {hasSession && (

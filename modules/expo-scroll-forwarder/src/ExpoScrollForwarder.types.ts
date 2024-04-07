@@ -1,8 +1,6 @@
 import React from 'react'
 
 export interface ExpoScrollForwarderViewProps {
-  scrollViewTag?: number
-  onScrollViewRefresh?: () => Promise<void>
-  scrollViewRefreshing?: boolean
+  scrollViewTag: number | null
   children: React.ReactNode
 }
