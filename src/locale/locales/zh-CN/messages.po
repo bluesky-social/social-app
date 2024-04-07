@@ -1995,7 +1995,7 @@ msgstr "如果你想要更改密码，我们将向你发送一个验证码以验
 
 #: src/lib/moderation/useReportOptions.ts:36
 msgid "Illegal and Urgent"
-msgstr "非法且紧急"
+msgstr "违法"
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
