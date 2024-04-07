@@ -71,11 +71,11 @@ export function ProfileSubpageHeader({
     }
   }, [openLightbox, avatar])
 
-  const useMobileLayout = isMobile || isNativeTablet
+  const isMobileLayout = isMobile || isNativeTablet
 
   return (
     <CenteredView style={pal.view}>
-      {useMobileLayout && (
+      {isMobileLayout && (
         <View
           style={[
             {
@@ -84,7 +84,7 @@ export function ProfileSubpageHeader({
               borderBottomWidth: 1,
               paddingTop: isNative ? 0 : 8,
               paddingBottom: 8,
-              paddingHorizontal: useMobileLayout ? 12 : 14,
+              paddingHorizontal: isMobileLayout ? 12 : 14,
             },
             pal.border,
           ]}>
@@ -121,7 +121,7 @@ export function ProfileSubpageHeader({
           gap: 10,
           paddingTop: 14,
           paddingBottom: 6,
-          paddingHorizontal: useMobileLayout ? 12 : 14,
+          paddingHorizontal: isMobileLayout ? 12 : 14,
         }}>
         <Pressable
           testID="headerAviButton"
@@ -172,7 +172,7 @@ export function ProfileSubpageHeader({
             </Text>
           )}
         </View>
-        {!useMobileLayout && (
+        {!isMobileLayout && (
           <View
             style={{
               flexDirection: 'row',
