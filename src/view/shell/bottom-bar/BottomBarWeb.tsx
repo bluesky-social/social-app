@@ -74,7 +74,6 @@ export function BottomBarWeb() {
         a.w_full,
         a.border_t,
         a.absolute,
-        a.fixed,
         {bottom: 0, paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
         footerMinimalShellTransform,
       ]}>
