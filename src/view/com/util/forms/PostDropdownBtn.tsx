@@ -1,51 +1,50 @@
 import React, {memo} from 'react'
-import {StyleProp, ViewStyle, Pressable, PressableProps} from 'react-native'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
+import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
+import {setStringAsync} from 'expo-clipboard'
 import {
   AppBskyActorDefs,
   AppBskyFeedPost,
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {useTheme} from 'lib/ThemeContext'
-import {shareUrl} from 'lib/sharing'
-import * as Toast from '../Toast'
-import {EventStopper} from '../EventStopper'
-import {useDialogControl} from '#/components/Dialog'
-import * as Prompt from '#/components/Prompt'
-import {useModalControls} from '#/state/modals'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {getCurrentRoute} from 'lib/routes/helpers'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
-import {usePostDeleteMutation} from '#/state/queries/post'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {logger} from '#/logger'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {usePostDeleteMutation} from '#/state/queries/post'
 import {useSession} from '#/state/session'
-import {isWeb} from '#/platform/detection'
-import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-
+import {getCurrentRoute} from 'lib/routes/helpers'
+import {shareUrl} from 'lib/sharing'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {useTheme} from 'lib/ThemeContext'
 import {atoms as a, useTheme as useAlf} from '#/alf'
-import * as Menu from '#/components/Menu'
-import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
+import {useDialogControl} from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
+import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
-import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import * as Menu from '#/components/Menu'
+import * as Prompt from '#/components/Prompt'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {EventStopper} from '../EventStopper'
+import * as Toast from '../Toast'
 
 let PostDropdownBtn = ({
   testID,
@@ -55,7 +54,6 @@ let PostDropdownBtn = ({
   record,
   richText,
   style,
-  showAppealLabelItem,
   hitSlop,
 }: {
   testID: string
@@ -65,7 +63,6 @@ let PostDropdownBtn = ({
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
-  showAppealLabelItem?: boolean
   hitSlop?: PressableProps['hitSlop']
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
@@ -73,7 +70,6 @@ let PostDropdownBtn = ({
   const alf = useAlf()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
-  const {openModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
@@ -83,6 +79,7 @@ let PostDropdownBtn = ({
   const openLink = useOpenLink()
   const navigation = useNavigation()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
   const loggedOutWarningPromptControl = useDialogControl()
@@ -157,7 +154,7 @@ let PostDropdownBtn = ({
   const onCopyPostText = React.useCallback(() => {
     const str = richTextToString(richText, true)
 
-    Clipboard.setString(str)
+    setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
@@ -293,13 +290,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownReportBtn"
                 label={_(msg`Report post`)}
-                onPress={() => {
-                  openModal({
-                    name: 'report',
-                    uri: postUri,
-                    cid: postCid,
-                  })
-                }}>
+                onPress={() => reportDialogControl.open()}>
                 <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={Warning} position="right" />
               </Menu.Item>
@@ -313,28 +304,6 @@ let PostDropdownBtn = ({
                 <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={Trash} position="right" />
               </Menu.Item>
-            )}
-
-            {showAppealLabelItem && (
-              <>
-                <Menu.Divider />
-
-                <Menu.Item
-                  testID="postDropdownAppealBtn"
-                  label={_(msg`Appeal content warning`)}
-                  onPress={() => {
-                    openModal({
-                      name: 'appeal-label',
-                      uri: postUri,
-                      cid: postCid,
-                    })
-                  }}>
-                  <Menu.ItemText>
-                    {_(msg`Appeal content warning`)}
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={CircleInfo} position="right" />
-                </Menu.Item>
-              </>
             )}
           </Menu.Group>
         </Menu.Outer>
@@ -357,6 +326,15 @@ let PostDropdownBtn = ({
         description={_(msg`This post will be hidden from feeds.`)}
         onConfirm={onHidePost}
         confirmButtonCta={_(msg`Hide`)}
+      />
+
+      <ReportDialog
+        control={reportDialogControl}
+        params={{
+          type: 'post',
+          uri: postUri,
+          cid: postCid,
+        }}
       />
 
       <Prompt.Basic

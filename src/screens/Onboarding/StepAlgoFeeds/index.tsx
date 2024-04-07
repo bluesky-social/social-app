@@ -1,26 +1,26 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {IS_PROD} from '#/env'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
+import {
+  DescriptionText,
+  OnboardingControls,
+  TitleText,
+} from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
+import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {atoms as a, tokens, useTheme} from '#/alf'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {Text} from '#/components/Typography'
-import {Loader} from '#/components/Loader'
-import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
-import {useAnalytics} from '#/lib/analytics/analytics'
-
-import {Context} from '#/screens/Onboarding/state'
-import {
-  Title,
-  Description,
-  OnboardingControls,
-} from '#/screens/Onboarding/Layout'
-import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+import {IS_PROD} from '#/env'
 
 export type FeedConfig = {
   default: boolean
@@ -89,6 +89,12 @@ export function StepAlgoFeeds() {
       selectedSecondaryFeeds: secondaryFeedUris,
       selectedSecondaryFeedsLength: secondaryFeedUris.length,
     })
+    logEvent('onboarding:algoFeeds:nextPressed', {
+      selectedPrimaryFeeds: primaryFeedUris,
+      selectedPrimaryFeedsLength: primaryFeedUris.length,
+      selectedSecondaryFeeds: secondaryFeedUris,
+      selectedSecondaryFeedsLength: secondaryFeedUris.length,
+    })
   }, [primaryFeedUris, secondaryFeedUris, dispatch, track])
 
   React.useEffect(() => {
@@ -99,15 +105,15 @@ export function StepAlgoFeeds() {
     <View style={[a.align_start]}>
       <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Choose your main feeds</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         <Trans>
           Custom feeds built by the community bring you new experiences and help
           you find the content you love.
         </Trans>
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group

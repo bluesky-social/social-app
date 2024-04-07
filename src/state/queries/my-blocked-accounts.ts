@@ -1,14 +1,15 @@
 import {AppBskyActorDefs, AppBskyGraphGetBlocks} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 
-export const RQKEY = () => ['my-blocked-accounts']
+const RQKEY_ROOT = 'my-blocked-accounts'
+export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyBlockedAccountsQuery() {
@@ -39,7 +40,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyGraphGetBlocks.OutputSchema>
   >({
-    queryKey: ['my-blocked-accounts'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

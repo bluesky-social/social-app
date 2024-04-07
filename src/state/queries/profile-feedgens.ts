@@ -1,5 +1,5 @@
 import {AppBskyFeedGetActorFeeds} from '@atproto/api'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 
@@ -7,7 +7,8 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
-export const RQKEY = (did: string) => ['profile-feedgens', did]
+const RQKEY_ROOT = 'profile-feedgens'
+export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileFeedgensQuery(
   did: string,

@@ -1,5 +1,6 @@
 import React from 'react'
 import {SharedValue, useSharedValue} from 'react-native-reanimated'
+
 import {DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 
@@ -53,7 +54,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   >('auto')
 
   const closeAllDialogs = React.useCallback(() => {
-    activeDialogs.current.forEach(dialog => dialog.current.close())
+    openDialogs.current.forEach(id => {
+      const dialog = activeDialogs.current.get(id)
+      if (dialog) dialog.current.close()
+    })
     return openDialogs.current.size > 0
   }, [])
 
@@ -74,15 +78,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const context = React.useMemo<IDialogContext>(
     () => ({
-      activeDialogs: {
-        current: new Map(),
-      },
-      openDialogs: {
-        current: new Set(),
-      },
+      activeDialogs,
+      openDialogs,
       importantForAccessibility,
     }),
-    [importantForAccessibility],
+    [importantForAccessibility, activeDialogs, openDialogs],
   )
   const controls = React.useMemo(
     () => ({closeAllDialogs, setDialogIsOpen}),

@@ -1,27 +1,28 @@
 import React from 'react'
-import {View, Pressable} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {isIOS, isNative} from 'platform/detection'
-import {Login} from 'view/com/auth/login/Login'
-import {CreateAccount} from 'view/com/auth/create/CreateAccount'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {SplashScreen} from './SplashScreen'
-import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {logEvent} from '#/lib/statsig/statsig'
+import {s} from '#/lib/styles'
+import {isIOS, isNative} from '#/platform/detection'
+import {useSession} from '#/state/session'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {useSession} from '#/state/session'
-import {Text} from '#/view/com/util/text/Text'
+import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 import {NavigationProp} from 'lib/routes/types'
+import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
+import {Text} from '#/view/com/util/text/Text'
+import {Login} from '#/screens/Login'
+import {Signup} from '#/screens/Signup'
+import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -133,10 +134,14 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
 
         {screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen
-            onPressSignin={() => setScreenState(ScreenState.S_Login)}
-            onPressCreateAccount={() =>
+            onPressSignin={() => {
+              setScreenState(ScreenState.S_Login)
+              logEvent('splash:signInPressed', {})
+            }}
+            onPressCreateAccount={() => {
               setScreenState(ScreenState.S_CreateAccount)
-            }
+              logEvent('splash:createAccountPressed', {})
+            }}
           />
         ) : undefined}
         {screenState === ScreenState.S_Login ? (
@@ -148,7 +153,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
-          <CreateAccount
+          <Signup
             onPressBack={() =>
               setScreenState(ScreenState.S_LoginOrCreateAccount)
             }

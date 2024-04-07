@@ -41,6 +41,9 @@ module.exports = function (config) {
       : process.env.BSKY_IOS_BUILD_NUMBER
 
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+  const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
+
+  const UPDATES_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
 
   return {
     expo: {
@@ -122,10 +125,24 @@ module.exports = function (config) {
         favicon: './assets/favicon.png',
       },
       updates: {
-        enabled: true,
-        fallbackToCacheTimeout: 1000,
-        url: 'https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302',
+        url: 'https://updates.bsky.app/manifest',
+        // TODO Eventually we want to enable this for all environments, but for now it will only be used for
+        // TestFlight builds
+        enabled: IS_TESTFLIGHT,
+        fallbackToCacheTimeout: 30000,
+        codeSigningCertificate: IS_TESTFLIGHT
+          ? './code-signing/certificate.pem'
+          : undefined,
+        codeSigningMetadata: IS_TESTFLIGHT
+          ? {
+              keyid: 'main',
+              alg: 'rsa-v1_5-sha256',
+            }
+          : undefined,
+        checkAutomatically: 'NEVER',
+        channel: UPDATES_CHANNEL,
       },
+      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -146,12 +163,6 @@ module.exports = function (config) {
           },
         ],
         [
-          'expo-updates',
-          {
-            username: 'blueskysocial',
-          },
-        ],
-        [
           'expo-notifications',
           {
             icon: './assets/icon-android-notification.png',
@@ -161,6 +172,7 @@ module.exports = function (config) {
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {

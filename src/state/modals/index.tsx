@@ -1,11 +1,11 @@
 import React from 'react'
-import {AppBskyActorDefs, AppBskyGraphDefs, ModerationUI} from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
-import {ImageModel} from '#/state/models/media/image'
-import {GalleryModel} from '#/state/models/media/gallery'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {EmbedPlayerSource} from '#/lib/strings/embed-player'
+import {GalleryModel} from '#/state/models/media/gallery'
+import {ImageModel} from '#/state/models/media/image'
 import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface EditProfileModal {
@@ -13,32 +13,6 @@ export interface EditProfileModal {
   profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }
-
-export interface ModerationDetailsModal {
-  name: 'moderation-details'
-  context: 'account' | 'content'
-  moderation: ModerationUI
-}
-
-export type ReportModal = {
-  name: 'report'
-} & (
-  | {
-      uri: string
-      cid: string
-    }
-  | {did: string}
-)
-
-export type AppealLabelModal = {
-  name: 'appeal-label'
-} & (
-  | {
-      uri: string
-      cid: string
-    }
-  | {did: string}
-)
 
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
@@ -123,10 +97,6 @@ export interface AddAppPasswordModal {
   name: 'add-app-password'
 }
 
-export interface ContentFilteringSettingsModal {
-  name: 'content-filtering-settings'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -148,14 +118,11 @@ export interface ChangePasswordModal {
   name: 'change-password'
 }
 
-export interface SwitchAccountModal {
-  name: 'switch-account'
-}
-
 export interface LinkWarningModal {
   name: 'link-warning'
   text: string
   href: string
+  share?: boolean
 }
 
 export interface EmbedConsentModal {
@@ -178,17 +145,10 @@ export type Modal =
   | VerifyEmailModal
   | ChangeEmailModal
   | ChangePasswordModal
-  | SwitchAccountModal
 
   // Curation
-  | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
   | PostLanguagesSettingsModal
-
-  // Moderation
-  | ModerationDetailsModal
-  | ReportModal
-  | AppealLabelModal
 
   // Lists
   | CreateOrEditListModal

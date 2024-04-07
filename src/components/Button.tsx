@@ -1,20 +1,21 @@
 import React from 'react'
 import {
-  Pressable,
-  Text,
-  PressableProps,
-  TextProps,
-  ViewStyle,
   AccessibilityProps,
-  View,
-  TextStyle,
-  StyleSheet,
+  Pressable,
+  PressableProps,
   StyleProp,
+  StyleSheet,
+  Text,
+  TextProps,
+  TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
-import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
+import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import {normalizeTextStyles} from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
@@ -57,6 +58,10 @@ export type ButtonState = {
 
 export type ButtonContext = VariantProps & ButtonState
 
+type NonTextElements =
+  | React.ReactElement
+  | Iterable<React.ReactElement | null | undefined | boolean>
+
 export type ButtonProps = Pick<
   PressableProps,
   'disabled' | 'onPress' | 'testID'
@@ -66,11 +71,9 @@ export type ButtonProps = Pick<
     testID?: string
     label: string
     style?: StyleProp<ViewStyle>
-    children:
-      | React.ReactNode
-      | string
-      | ((context: ButtonContext) => React.ReactNode | string)
+    children: NonTextElements | ((context: ButtonContext) => NonTextElements)
   }
+
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
 const Context = React.createContext<VariantProps & ButtonState>({
@@ -139,7 +142,7 @@ export function Button({
     }))
   }, [setState])
 
-  const {baseStyles, hoverStyles, focusStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles} = React.useMemo(() => {
     const baseStyles: ViewStyle[] = []
     const hoverStyles: ViewStyle[] = []
     const light = t.name === 'light'
@@ -191,14 +194,14 @@ export function Button({
       if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
-            backgroundColor: t.palette.contrast_50,
+            backgroundColor: t.palette.contrast_25,
           })
           hoverStyles.push({
-            backgroundColor: t.palette.contrast_100,
+            backgroundColor: t.palette.contrast_50,
           })
         } else {
           baseStyles.push({
-            backgroundColor: t.palette.contrast_200,
+            backgroundColor: t.palette.contrast_100,
           })
         }
       } else if (variant === 'outline') {
@@ -308,12 +311,6 @@ export function Button({
     return {
       baseStyles,
       hoverStyles,
-      focusStyles: [
-        ...hoverStyles,
-        {
-          outline: 0,
-        } as ViewStyle,
-      ],
     }
   }, [t, variant, color, size, shape, disabled])
 
@@ -376,10 +373,8 @@ export function Button({
         a.flex_row,
         a.align_center,
         a.justify_center,
-        a.justify_center,
         flattenedBaseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
-        ...(state.focused ? focusStyles : []),
         flatten(style),
       ]}
       onPressIn={onPressIn}
@@ -398,7 +393,7 @@ export function Button({
           ]}>
           <LinearGradient
             colors={
-              state.hovered || state.pressed || state.focused
+              state.hovered || state.pressed
                 ? gradientHoverColors
                 : gradientColors
             }
@@ -410,13 +405,7 @@ export function Button({
         </View>
       )}
       <Context.Provider value={context}>
-        {typeof children === 'string' ? (
-          <ButtonText>{children}</ButtonText>
-        ) : typeof children === 'function' ? (
-          children(context)
-        ) : (
-          children
-        )}
+        {typeof children === 'function' ? children(context) : children}
       </Context.Provider>
     </Pressable>
   )
@@ -527,7 +516,14 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text
+      {...rest}
+      style={normalizeTextStyles([
+        a.font_bold,
+        a.text_center,
+        textStyles,
+        style,
+      ])}>
       {children}
     </Text>
   )

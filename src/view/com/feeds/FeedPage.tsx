@@ -22,6 +22,7 @@ import {listenSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {TabState, getTabState, getRootNavigation} from '#/lib/routes/helpers'
 import {isNative} from '#/platform/detection'
+import {logEvent} from '#/lib/statsig/statsig'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -68,6 +69,10 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
+      logEvent('feed:refresh', {
+        feedType: feed.split('|')[0],
+        reason: 'soft-reset',
+      })
     }
   }, [navigation, isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
@@ -89,6 +94,10 @@ export function FeedPage({
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
+    logEvent('feed:refresh', {
+      feedType: feed.split('|')[0],
+      reason: 'load-latest',
+    })
   }, [scrollToTop, feed, queryClient, setHasNew])
 
   return (

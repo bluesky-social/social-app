@@ -59,7 +59,7 @@ export function TagMenu({
   const displayTag = '#' + tag
 
   const isMuted = Boolean(
-    (preferences?.mutedWords?.find(
+    (preferences?.moderationPrefs.mutedWords?.find(
       m => m.value === tag && m.targets.includes('tag'),
     ) ??
       optimisticUpsert?.find(
@@ -264,7 +264,9 @@ export function TagMenu({
                 variant="ghost"
                 color="secondary"
                 onPress={() => control.close()}>
-                <ButtonText>Cancel</ButtonText>
+                <ButtonText>
+                  <Trans>Cancel</Trans>
+                </ButtonText>
               </Button>
             </>
           )}

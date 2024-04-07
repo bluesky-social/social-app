@@ -1,11 +1,15 @@
 import React from 'react'
+import {Platform} from 'react-native'
+import {AppState, AppStateStatus} from 'react-native'
+import {sha256} from 'js-sha256'
 import {
   Statsig,
   StatsigProvider,
   useGate as useStatsigGate,
 } from 'statsig-react-native-expo'
+
+import {logger} from '#/logger'
 import {useSession} from '../../state/session'
-import {sha256} from 'js-sha256'
 import {LogEvents} from './events'
 
 export type {LogEvents}
@@ -22,7 +26,13 @@ const statsigOptions = {
 
 type FlatJSONRecord = Record<
   string,
-  string | number | boolean | null | undefined
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  // Technically not scalar but Statsig will stringify it which works for us:
+  | string[]
 >
 
 let getCurrentRouteName: () => string | null | undefined = () => null
@@ -37,11 +47,18 @@ export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
-  const fullMetadata = {
-    ...rawMetadata,
-  } as Record<string, string> // Statsig typings are unnecessarily strict here.
-  fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
-  Statsig.logEvent(eventName, null, fullMetadata)
+  try {
+    const fullMetadata = {
+      ...rawMetadata,
+    } as Record<string, string> // Statsig typings are unnecessarily strict here.
+    fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
+    if (Statsig.initializeCalled()) {
+      Statsig.logEvent(eventName, null, fullMetadata)
+    }
+  } catch (e) {
+    // A log should never interrupt the calling code, whatever happens.
+    logger.error('Failed to log an event', {message: e})
+  }
 }
 
 export function useGate(gateName: string) {
@@ -58,8 +75,33 @@ function toStatsigUser(did: string | undefined) {
   if (did) {
     userID = sha256(did)
   }
-  return {userID}
+  return {
+    userID,
+    platform: Platform.OS,
+  }
 }
+
+let lastState: AppStateStatus = AppState.currentState
+let lastActive = lastState === 'active' ? performance.now() : null
+AppState.addEventListener('change', (state: AppStateStatus) => {
+  if (state === lastState) {
+    return
+  }
+  lastState = state
+  if (state === 'active') {
+    lastActive = performance.now()
+    logEvent('state:foreground', {})
+  } else {
+    let secondsActive = 0
+    if (lastActive != null) {
+      secondsActive = Math.round((performance.now() - lastActive) / 1e3)
+    }
+    lastActive = null
+    logEvent('state:background', {
+      secondsActive,
+    })
+  }
+})
 
 export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount} = useSession()

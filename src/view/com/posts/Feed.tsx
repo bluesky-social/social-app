@@ -90,6 +90,7 @@ let Feed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
+  const feedType = feed.split('|')[0]
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -214,6 +215,10 @@ let Feed = ({
 
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
+    logEvent('feed:refresh', {
+      feedType: feedType,
+      reason: 'pull-to-refresh',
+    })
     setIsPTRing(true)
     try {
       await refetch()
@@ -222,9 +227,8 @@ let Feed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onHasNew])
+  }, [refetch, track, setIsPTRing, onHasNew, feedType])
 
-  const feedType = feed.split('|')[0]
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 

@@ -78,7 +78,11 @@ export function Autocomplete({
                   accessibilityLabel={`Select ${item.handle}`}
                   accessibilityHint="">
                   <View style={styles.avatarAndHandle}>
-                    <UserAvatar avatar={item.avatar ?? null} size={24} />
+                    <UserAvatar
+                      avatar={item.avatar ?? null}
+                      size={24}
+                      type={item.associated?.labeler ? 'labeler' : 'user'}
+                    />
                     <Text type="md-medium" style={pal.text}>
                       {displayName}
                     </Text>
