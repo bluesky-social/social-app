@@ -419,7 +419,7 @@ msgstr "Post bloccato."
 
 #: src/screens/Profile/Sections/Labels.tsx:153
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "Il blocco non impedisce all'etichettatore di inserire etichette nel tuo account."
+msgstr "Il blocco non impedisce al labeler di inserire etichette nel tuo account."
 
 #: src/view/screens/ProfileList.tsx:631
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
