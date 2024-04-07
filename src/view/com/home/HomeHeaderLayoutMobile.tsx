@@ -11,7 +11,7 @@ import {useLingui} from '@lingui/react'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {isWeb} from 'platform/detection'
+import {isNativeTablet, isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
 
 import {IS_DEV} from '#/env'
@@ -42,23 +42,28 @@ export function HomeHeaderLayoutMobile({
         headerHeight.value = e.nativeEvent.layout.height
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <View style={[pal.view, {width: 100}]}>
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            onPress={onPressAvi}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Open navigation`)}
-            accessibilityHint={_(
-              msg`Access profile and other navigation links`,
-            )}
-            hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
-          </TouchableOpacity>
-        </View>
+        {!isNativeTablet ? (
+          <View style={[pal.view, {width: 100}]}>
+            <TouchableOpacity
+              testID="viewHeaderDrawerBtn"
+              onPress={onPressAvi}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open navigation`)}
+              accessibilityHint={_(
+                msg`Access profile and other navigation links`,
+              )}
+              hitSlop={HITSLOP_10}>
+              <FontAwesomeIcon
+                icon="bars"
+                size={18}
+                color={pal.colors.textLight}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          // subtract width of LeftNav
+          <View style={{width: 100 - 77}} />
+        )}
         <View>
           <Logo width={30} />
         </View>

@@ -24,7 +24,7 @@ import {
   useSetDrawerOpen,
   useIsDrawerSwipeDisabled,
 } from '#/state/shell'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isNativeTablet} from 'platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
@@ -87,15 +87,19 @@ function ShellInner() {
         style={containerPadding}
         importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
-          <Drawer
-            renderDrawerContent={renderDrawerContent}
-            open={isDrawerOpen}
-            onOpen={onOpenDrawer}
-            onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
+          {!isNativeTablet ? (
+            <Drawer
+              renderDrawerContent={renderDrawerContent}
+              open={isDrawerOpen}
+              onOpen={onOpenDrawer}
+              onClose={onCloseDrawer}
+              swipeEdgeWidth={winDim.width / 2}
+              swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
+              <TabsNavigator />
+            </Drawer>
+          ) : (
             <TabsNavigator />
-          </Drawer>
+          )}
         </ErrorBoundary>
       </Animated.View>
       <Composer winHeight={winDim.height} />
