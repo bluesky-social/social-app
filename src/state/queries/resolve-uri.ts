@@ -1,11 +1,12 @@
+import {AppBskyActorDefs, AtUri} from '@atproto/api'
 import {useQuery, useQueryClient, UseQueryResult} from '@tanstack/react-query'
-import {AtUri, AppBskyActorDefs} from '@atproto/api'
 
-import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from './profile'
-import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {getAgent} from '#/state/session'
+import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from './profile'
 
-export const RQKEY = (didOrHandle: string) => ['resolved-did', didOrHandle]
+const RQKEY_ROOT = 'resolved-did'
+export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]
 
 type UriUseQueryResult = UseQueryResult<{did: string; uri: string}, Error>
 export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {

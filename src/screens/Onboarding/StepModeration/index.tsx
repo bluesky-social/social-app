@@ -9,9 +9,9 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
@@ -56,14 +56,14 @@ export function StepModeration() {
     <View style={[a.align_start]}>
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>You're in control</Trans>
-      </Title>
-      <Description style={[a.mb_xl]}>
+      </TitleText>
+      <DescriptionText style={[a.mb_xl]}>
         <Trans>
           Select what you want to see (or not see), and we’ll handle the rest.
         </Trans>
-      </Description>
+      </DescriptionText>
 
       {!preferences ? (
         <View style={[a.pt_md]}>

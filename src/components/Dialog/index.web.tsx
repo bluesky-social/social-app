@@ -1,20 +1,24 @@
 import React, {useImperativeHandle} from 'react'
-import {View, TouchableWithoutFeedback} from 'react-native'
-import {FocusScope} from '@tamagui/focus-scope'
-import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
+import {TouchableWithoutFeedback, View} from 'react-native'
+import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {FocusScope} from '@tamagui/focus-scope'
 
-import {useTheme, atoms as a, useBreakpoints, web, flatten} from '#/alf'
+import {logger} from '#/logger'
+import {useDialogStateControlContext} from '#/state/dialogs'
+import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {Context} from '#/components/Dialog/context'
+import {
+  DialogControlProps,
+  DialogInnerProps,
+  DialogOuterProps,
+} from '#/components/Dialog/types'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
 
-import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
-import {Context} from '#/components/Dialog/context'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {useDialogStateControlContext} from '#/state/dialogs'
-
-export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
+export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 export {Input} from '#/components/forms/TextField'
 
@@ -37,14 +41,31 @@ export function Outer({
     setDialogIsOpen(control.id, true)
   }, [setIsOpen, setDialogIsOpen, control.id])
 
-  const close = React.useCallback(async () => {
+  const onCloseInner = React.useCallback(async () => {
     setIsVisible(false)
     await new Promise(resolve => setTimeout(resolve, 150))
     setIsOpen(false)
     setIsVisible(true)
     setDialogIsOpen(control.id, false)
     onClose?.()
-  }, [onClose, setIsOpen, setDialogIsOpen, control.id])
+  }, [control.id, onClose, setDialogIsOpen])
+
+  const close = React.useCallback<DialogControlProps['close']>(
+    cb => {
+      try {
+        if (cb && typeof cb === 'function') {
+          cb()
+        }
+      } catch (e: any) {
+        logger.error(`Dialog closeCallback failed`, {
+          message: e.message,
+        })
+      } finally {
+        onCloseInner()
+      }
+    },
+    [onCloseInner],
+  )
 
   useImperativeHandle(
     control.ref,
@@ -52,7 +73,7 @@ export function Outer({
       open,
       close,
     }),
-    [open, close],
+    [close, open],
   )
 
   React.useEffect(() => {
@@ -65,7 +86,7 @@ export function Outer({
     document.addEventListener('keydown', handler)
 
     return () => document.removeEventListener('keydown', handler)
-  }, [isOpen, close])
+  }, [close, isOpen])
 
   const context = React.useMemo(
     () => ({
@@ -82,7 +103,7 @@ export function Outer({
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
-              onPress={close}>
+              onPress={onCloseInner}>
               <View
                 style={[
                   web(a.fixed),

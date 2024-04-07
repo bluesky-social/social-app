@@ -1,19 +1,18 @@
 import React from 'react'
 import {View} from 'react-native'
+import {ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {ModerationCause} from '@atproto/api'
 
-import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {makeProfileLink} from '#/lib/routes/links'
-
+import {listUriToHref} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
-import {useTheme, atoms as a} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {InlineLink} from '#/components/Link'
 import {Divider} from '#/components/Divider'
+import {InlineLinkText} from '#/components/Link'
+import {Text} from '#/components/Typography'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
 
@@ -55,9 +54,9 @@ function ModerationDetailsDialogInner({
       description = (
         <Trans>
           This user is included in the{' '}
-          <InlineLink to={listUriToHref(list.uri)} style={[a.text_sm]}>
+          <InlineLinkText to={listUriToHref(list.uri)} style={[a.text_sm]}>
             {list.name}
-          </InlineLink>{' '}
+          </InlineLinkText>{' '}
           list which you have blocked.
         </Trans>
       )
@@ -84,9 +83,9 @@ function ModerationDetailsDialogInner({
       description = (
         <Trans>
           This user is included in the{' '}
-          <InlineLink to={listUriToHref(list.uri)} style={[a.text_sm]}>
+          <InlineLinkText to={listUriToHref(list.uri)} style={[a.text_sm]}>
             {list.name}
-          </InlineLink>{' '}
+          </InlineLinkText>{' '}
           list which you have muted.
         </Trans>
       )
@@ -127,12 +126,12 @@ function ModerationDetailsDialogInner({
               {modcause.source.type === 'user' ? (
                 <Trans>the author</Trans>
               ) : (
-                <InlineLink
+                <InlineLinkText
                   to={makeProfileLink({did: modcause.label.src, handle: ''})}
                   onPress={() => control.close()}
                   style={a.text_md}>
                   {desc.source}
-                </InlineLink>
+                </InlineLinkText>
               )}
               .
             </Trans>

@@ -13,12 +13,24 @@ module.exports = {
     'react',
     'lingui',
     'simple-import-sort',
+    'bsky-internal',
   ],
   rules: {
     // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
     'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
+    'bsky-internal/avoid-unwrapped-text': [
+      'error',
+      {
+        impliedTextComponents: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P'],
+        impliedTextProps: [],
+        suggestedTextWrappers: {
+          Button: 'ButtonText',
+          'ToggleButton.Button': 'ToggleButton.ButtonText',
+        },
+      },
+    ],
     'simple-import-sort/imports': [
       'warn',
       {

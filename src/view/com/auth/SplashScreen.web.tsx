@@ -14,7 +14,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {InlineLink} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
 
@@ -162,15 +162,15 @@ function Footer() {
         a.flex_1,
         t.atoms.border_contrast_medium,
       ]}>
-      <InlineLink to="https://bsky.social">
+      <InlineLinkText to="https://bsky.social">
         <Trans>Business</Trans>
-      </InlineLink>
-      <InlineLink to="https://bsky.social/about/blog">
+      </InlineLinkText>
+      <InlineLinkText to="https://bsky.social/about/blog">
         <Trans>Blog</Trans>
-      </InlineLink>
-      <InlineLink to="https://bsky.social/about/join">
+      </InlineLinkText>
+      <InlineLinkText to="https://bsky.social/about/join">
         <Trans>Jobs</Trans>
-      </InlineLink>
+      </InlineLinkText>
 
       <View style={a.flex_1} />
 
