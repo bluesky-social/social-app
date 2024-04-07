@@ -353,9 +353,9 @@ let SearchMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <MagnifyingGlassFilled style={t.atoms.text} size="xl" />
+          <MagnifyingGlassFilled style={t.atoms.text} size="lg2" />
         ) : (
-          <MagnifyingGlass style={t.atoms.text} size="xl" />
+          <MagnifyingGlass style={t.atoms.text} size="lg2" />
         )
       }
       label={_(msg`Search`)}
@@ -381,9 +381,9 @@ let HomeMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <HomeFilled style={t.atoms.text} size="xl" />
+          <HomeFilled style={t.atoms.text} size="lg2" />
         ) : (
-          <Home style={t.atoms.text} size="xl" />
+          <Home style={t.atoms.text} size="lg2" />
         )
       }
       label={_(msg`Home`)}
@@ -410,9 +410,9 @@ let NotificationsMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <BellFilled style={t.atoms.text} size="xl" />
+          <BellFilled style={t.atoms.text} size="lg2" />
         ) : (
-          <Bell style={t.atoms.text} size="xl" />
+          <Bell style={t.atoms.text} size="lg2" />
         )
       }
       label={_(msg`Notifications`)}
@@ -443,9 +443,9 @@ let FeedsMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <HashtagFilled style={t.atoms.text} size="xl" />
+          <HashtagFilled style={t.atoms.text} size="lg2" />
         ) : (
-          <Hashtag style={t.atoms.text} size="xl" />
+          <Hashtag style={t.atoms.text} size="lg2" />
         )
       }
       label={_(msg`Feeds`)}
@@ -463,7 +463,7 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const t = useAlfTheme()
   return (
     <MenuItem
-      icon={<Bars style={t.atoms.text} size="xl" />}
+      icon={<Bars style={t.atoms.text} size="lg2" />}
       label={_(msg`Lists`)}
       accessibilityLabel={_(msg`Lists`)}
       accessibilityHint=""
@@ -482,7 +482,7 @@ let ModerationMenuItem = ({
   const t = useAlfTheme()
   return (
     <MenuItem
-      icon={<RaisingHand style={t.atoms.text} size="xl" />}
+      icon={<RaisingHand style={t.atoms.text} size="lg2" />}
       label={_(msg`Moderation`)}
       accessibilityLabel={_(msg`Moderation`)}
       accessibilityHint=""
@@ -502,7 +502,7 @@ let ProfileMenuItem = ({
   const t = useAlfTheme()
   return (
     <MenuItem
-      icon={<PersonCircle style={t.atoms.text} size="xl" />}
+      icon={<PersonCircle style={t.atoms.text} size="lg2" />}
       label={_(msg`Profile`)}
       accessibilityLabel={_(msg`Profile`)}
       accessibilityHint=""
@@ -517,7 +517,7 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const t = useAlfTheme()
   return (
     <MenuItem
-      icon={<Gear style={t.atoms.text} size="xl" />}
+      icon={<Gear style={t.atoms.text} size="lg2" />}
       label={_(msg`Settings`)}
       accessibilityLabel={_(msg`Settings`)}
       accessibilityHint=""
