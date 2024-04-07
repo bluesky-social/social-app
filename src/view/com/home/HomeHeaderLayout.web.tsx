@@ -1,20 +1,21 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
-import {Logo} from '#/view/icons/Logo'
-import {Link} from '../util/Link'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {CogIcon} from '#/lib/icons'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useLingui} from '@lingui/react'
+
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Logo} from '#/view/icons/Logo'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/Gear'
+import {Link} from '../util/Link'
+import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
   children: React.ReactNode
@@ -61,7 +62,7 @@ function HomeHeaderLayoutDesktopAndTablet({
           accessibilityRole="button"
           accessibilityLabel={_(msg`Edit Saved Feeds`)}
           accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+          <Gear style={pal.textLight} size="md2" />
         </Link>
       </View>
       {tabBarAnchor}

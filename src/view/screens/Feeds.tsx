@@ -1,52 +1,54 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  StyleSheet,
-  View,
   type FlatList,
   Pressable,
+  StyleSheet,
+  View,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {FAB} from 'view/com/util/fab/FAB'
-import {Link} from 'view/com/util/Link'
-import {NativeStackScreenProps, FeedsTabNavigatorParams} from 'lib/routes/types'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ComposeIcon2, CogIcon, MagnifyingGlassIcon2} from 'lib/icons'
-import {s} from 'lib/styles'
-import {atoms as a, useTheme} from '#/alf'
-import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {
-  LoadingPlaceholder,
-  FeedFeedLoadingPlaceholder,
-} from 'view/com/util/LoadingPlaceholder'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import debounce from 'lodash.debounce'
-import {Text} from 'view/com/util/text/Text'
-import {List} from 'view/com/util/List'
-import {useFocusEffect} from '@react-navigation/native'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useFocusEffect} from '@react-navigation/native'
+import debounce from 'lodash.debounce'
+
+import {isNative, isWeb} from '#/platform/detection'
 import {
+  getAvatarTypeFromUri,
   useFeedSourceInfoQuery,
   useGetPopularFeedsQuery,
   useSearchPopularFeedsMutation,
-  getAvatarTypeFromUri,
 } from '#/state/queries/feed'
-import {cleanError} from 'lib/strings/errors'
-import {useComposerControls} from '#/state/shell/composer'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isNative, isWeb} from '#/platform/detection'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useComposerControls} from '#/state/shell/composer'
 import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ComposeIcon2, MagnifyingGlassIcon2} from 'lib/icons'
+import {FeedsTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {cleanError} from 'lib/strings/errors'
+import {s} from 'lib/styles'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {FAB} from 'view/com/util/fab/FAB'
+import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
+import {Link} from 'view/com/util/Link'
+import {List} from 'view/com/util/List'
+import {
+  FeedFeedLoadingPlaceholder,
+  LoadingPlaceholder,
+} from 'view/com/util/LoadingPlaceholder'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {atoms as a, useTheme} from '#/alf'
 import {IconCircle} from '#/components/IconCircle'
-import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/Gear'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
+import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -354,7 +356,7 @@ export function FeedsScreen(_props: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Edit Saved Feeds`)}
           accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+          <Gear style={pal.textLight} size="md2" />
         </Link>
       </View>
     )
@@ -433,7 +435,7 @@ export function FeedsScreen(_props: Props) {
                     href="/settings/saved-feeds"
                     accessibilityLabel={_(msg`Edit My Feeds`)}
                     accessibilityHint="">
-                    <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+                    <Gear style={pal.textLight} size="lg" />
                   </Link>
                 </View>
               </View>
