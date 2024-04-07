@@ -52,7 +52,7 @@ import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {HandIcon, HashtagIcon} from 'lib/icons'
+import {HashtagIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
@@ -66,8 +66,10 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {RaisingHand_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
 import {ExportCarDialog} from './ExportCarDialog'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
@@ -149,6 +151,7 @@ export function SettingsScreen({}: Props) {
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -639,7 +642,7 @@ export function SettingsScreen({}: Props) {
           accessibilityLabel={_(msg`Moderation settings`)}
           accessibilityHint={_(msg`Opens moderation settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
-            <HandIcon style={pal.text} size={18} strokeWidth={6} />
+            <RaisingHand style={t.atoms.text} size="md" />
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>Moderation</Trans>
