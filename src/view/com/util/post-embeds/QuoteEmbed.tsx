@@ -1,31 +1,32 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyEmbedRecord,
-  AppBskyFeedPost,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
   AppBskyEmbedExternal,
-  RichText as RichTextAPI,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
   moderatePost,
   ModerationDecision,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {PostMeta} from '../PostMeta'
-import {Link} from '../Link'
-import {Text} from '../text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/shell/composer'
-import {PostEmbeds} from '.'
-import {PostAlerts} from '../../../../components/moderation/PostAlerts'
-import {makeProfileLink} from 'lib/routes/links'
-import {InfoCircleIcon} from 'lib/icons'
 import {Trans} from '@lingui/macro'
+
 import {useModerationOpts} from '#/state/queries/preferences'
-import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {RichText} from '#/components/RichText'
+import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
+import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
+import {PostAlerts} from '../../../../components/moderation/PostAlerts'
+import {Link} from '../Link'
+import {PostMeta} from '../PostMeta'
+import {Text} from '../text/Text'
+import {PostEmbeds} from '.'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -50,7 +51,7 @@ export function MaybeQuoteEmbed({
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
     return (
       <View style={[styles.errorContainer, pal.borderDark]}>
-        <InfoCircleIcon size={18} style={pal.text} />
+        <CircleInfo size="md2" style={pal.text} />
         <Text type="lg" style={pal.text}>
           <Trans>Blocked</Trans>
         </Text>
@@ -59,7 +60,7 @@ export function MaybeQuoteEmbed({
   } else if (AppBskyEmbedRecord.isViewNotFound(embed.record)) {
     return (
       <View style={[styles.errorContainer, pal.borderDark]}>
-        <InfoCircleIcon size={18} style={pal.text} />
+        <CircleInfo size="md2" style={pal.text} />
         <Text type="lg" style={pal.text}>
           <Trans>Deleted</Trans>
         </Text>
