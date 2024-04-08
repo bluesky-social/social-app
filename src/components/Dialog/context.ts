@@ -39,8 +39,7 @@ export function useDialogControl(): DialogOuterProps['control'] {
         control.current.open()
       },
       close: cb => {
-        control.current.close()
-        cb?.()
+        control.current.close(cb)
       },
     }),
     [id, control],

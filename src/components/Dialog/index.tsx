@@ -107,8 +107,14 @@ export function Outer({
 
   const close = React.useCallback<DialogControlProps['close']>(cb => {
     if (cb && typeof cb === 'function') {
+      if (closeCallback.current) {
+        logger.error(
+          `Dialog close was passed multiple callbacks, you shouldn't do that`,
+        )
+      }
       closeCallback.current = cb
     }
+    // initiates a close animation, the actual "close" happens in `onCloseInner`
     sheet.current?.close()
   }, [])
 
@@ -122,7 +128,10 @@ export function Outer({
   )
 
   const onCloseInner = React.useCallback(() => {
+    setDialogIsOpen(control.id, false)
+    setOpenIndex(-1)
     try {
+      logger.debug(`Dialog closeCallback`, {controlId: control.id})
       closeCallback.current?.()
     } catch (e: any) {
       logger.error(`Dialog closeCallback failed`, {
@@ -131,9 +140,7 @@ export function Outer({
     } finally {
       closeCallback.current = undefined
     }
-    setDialogIsOpen(control.id, false)
     onClose?.()
-    setOpenIndex(-1)
   }, [control.id, onClose, setDialogIsOpen])
 
   const context = React.useMemo(() => ({close}), [close])

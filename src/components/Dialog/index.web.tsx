@@ -41,17 +41,13 @@ export function Outer({
     setDialogIsOpen(control.id, true)
   }, [setIsOpen, setDialogIsOpen, control.id])
 
-  const onCloseInner = React.useCallback(async () => {
-    setIsVisible(false)
-    await new Promise(resolve => setTimeout(resolve, 150))
-    setIsOpen(false)
-    setIsVisible(true)
-    setDialogIsOpen(control.id, false)
-    onClose?.()
-  }, [control.id, onClose, setDialogIsOpen])
-
   const close = React.useCallback<DialogControlProps['close']>(
     cb => {
+      setDialogIsOpen(control.id, false)
+      setIsVisible(false)
+      setIsOpen(false)
+      setIsVisible(true)
+
       try {
         if (cb && typeof cb === 'function') {
           cb()
@@ -60,12 +56,16 @@ export function Outer({
         logger.error(`Dialog closeCallback failed`, {
           message: e.message,
         })
-      } finally {
-        onCloseInner()
       }
+
+      onClose?.()
     },
-    [onCloseInner],
+    [control.id, onClose, setDialogIsOpen],
   )
+
+  const handleBackgroundPress = React.useCallback(async () => {
+    close()
+  }, [close])
 
   useImperativeHandle(
     control.ref,
@@ -103,7 +103,7 @@ export function Outer({
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
-              onPress={onCloseInner}>
+              onPress={handleBackgroundPress}>
               <View
                 style={[
                   web(a.fixed),
