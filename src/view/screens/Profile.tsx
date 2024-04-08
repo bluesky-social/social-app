@@ -25,6 +25,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {useGate} from 'lib/statsig/statsig'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
@@ -153,6 +154,7 @@ function ProfileScreenLoaded({
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const shouldUseScrollableHeader = useGate('new_profile_scroll_component')
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -316,8 +318,21 @@ function ProfileScreenLoaded({
   // =
 
   const renderHeader = React.useCallback(() => {
-    return (
-      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
+    if (shouldUseScrollableHeader) {
+      return (
+        <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
+          <ProfileHeader
+            profile={profile}
+            labeler={labelerInfo}
+            descriptionRT={hasDescription ? descriptionRT : null}
+            moderationOpts={moderationOpts}
+            hideBackButton={hideBackButton}
+            isPlaceholderProfile={showPlaceholder}
+          />
+        </ExpoScrollForwarderView>
+      )
+    } else {
+      return (
         <ProfileHeader
           profile={profile}
           labeler={labelerInfo}
@@ -326,14 +341,15 @@ function ProfileScreenLoaded({
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
         />
-      </ExpoScrollForwarderView>
-    )
+      )
+    }
   }, [
+    shouldUseScrollableHeader,
     scrollViewTag,
     profile,
     labelerInfo,
-    descriptionRT,
     hasDescription,
+    descriptionRT,
     moderationOpts,
     hideBackButton,
     showPlaceholder,
