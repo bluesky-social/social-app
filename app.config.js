@@ -130,11 +130,15 @@ module.exports = function (config) {
         // TestFlight builds
         enabled: IS_TESTFLIGHT,
         fallbackToCacheTimeout: 30000,
-        codeSigningCertificate: './code-signing/certificate.pem',
-        codeSigningMetadata: {
-          keyid: 'main',
-          alg: 'rsa-v1_5-sha256',
-        },
+        codeSigningCertificate: IS_TESTFLIGHT
+          ? './code-signing/certificate.pem'
+          : undefined,
+        codeSigningMetadata: IS_TESTFLIGHT
+          ? {
+              keyid: 'main',
+              alg: 'rsa-v1_5-sha256',
+            }
+          : undefined,
         checkAutomatically: 'NEVER',
         channel: UPDATES_CHANNEL,
       },

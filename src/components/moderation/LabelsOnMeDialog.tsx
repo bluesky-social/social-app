@@ -244,7 +244,7 @@ function AppealForm({
           size="medium"
           onPress={onPressBack}
           label={_(msg`Back`)}>
-          {_(msg`Back`)}
+          <ButtonText>{_(msg`Back`)}</ButtonText>
         </Button>
         <Button
           testID="submitBtn"
@@ -253,7 +253,7 @@ function AppealForm({
           size="medium"
           onPress={onSubmit}
           label={_(msg`Submit`)}>
-          {_(msg`Submit`)}
+          <ButtonText>{_(msg`Submit`)}</ButtonText>
         </Button>
       </View>
     </>
