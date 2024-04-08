@@ -3,7 +3,6 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {EmbedPlayerSource} from '#/lib/strings/embed-player'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {ImageModel} from '#/state/models/media/image'
 import {ThreadgateSetting} from '../queries/threadgate'
@@ -125,12 +124,6 @@ export interface LinkWarningModal {
   share?: boolean
 }
 
-export interface EmbedConsentModal {
-  name: 'embed-consent'
-  source: EmbedPlayerSource
-  onAccept: () => void
-}
-
 export interface InAppBrowserConsentModal {
   name: 'in-app-browser-consent'
   href: string
@@ -169,7 +162,6 @@ export type Modal =
 
   // Generic
   | LinkWarningModal
-  | EmbedConsentModal
   | InAppBrowserConsentModal
 
 const ModalContext = React.createContext<{
