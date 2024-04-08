@@ -1,18 +1,12 @@
-import {resolve} from 'node:path'
-
-// @ts-expect-error - not important
-import preactRefresh from '@prefresh/vite'
+import preact from '@preact/preset-vite'
 import type {UserConfig} from 'vite'
 import paths from 'vite-tsconfig-paths'
 
 const config: UserConfig = {
-  jsx: {
-    factory: 'h',
-    fragment: 'Fragment',
+  plugins: [preact(), paths()],
+  build: {
+    assetsDir: 'static/embed/assets',
   },
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  plugins: [preactRefresh(), paths()],
-  assetsDir: 'static/embed/assets',
 }
 
 export default config
