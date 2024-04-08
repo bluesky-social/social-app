@@ -213,6 +213,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         console.log('PERSIST', window.__id, {
           event,
           refreshJwt: session?.refreshJwt?.slice(-10),
+          agent: agent.session?.refreshJwt.slice(-10),
         })
 
         const expired = event === 'expired' || event === 'create-failed'
@@ -226,7 +227,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           return
         }
 
-        agent.session = session
         const refreshedAccount = agentToSessionAccount(agent)
 
         if (!refreshedAccount) {
@@ -414,19 +414,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           {},
           logger.DebugContext.session,
         )
-        try {
-          // will call `persistSession` on `BskyAgent` instance above if success
-          await networkRetry(1, () => agent.resumeSession(prevSession))
-          setCurrentAgent(agent)
-        } catch (e) {
-          // this can fail on bad connections as well, so `clearCurrentAccount`
-          // bumps them out to login, but doesn't rug tokens
-          logger.error(`session: resumeSession failed`, {message: e})
-          clearCurrentAccount()
-        }
+        // will call `persistSession` on `BskyAgent` instance above if success
+        await networkRetry(1, () => agent.resumeSession(prevSession))
+        setCurrentAgent(agent)
       }
     },
-    [upsertAndPersistAccount, clearCurrentAccount, persistSession],
+    [upsertAndPersistAccount, persistSession],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
