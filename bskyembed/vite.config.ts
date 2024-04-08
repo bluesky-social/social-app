@@ -12,7 +12,7 @@ const config: UserConfig = {
   },
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   plugins: [preactRefresh(), paths()],
-  assetsDir: 'static/embed/assets',
+  assetsDir: 'static/embed',
 }
 
 export default config
