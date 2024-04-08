@@ -17,6 +17,7 @@ import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import * as Toast from '#/view/com/util/Toast'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
@@ -201,20 +202,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [persistNextUpdate, setCurrentAgent])
 
   const persistSession = React.useCallback<
-    (agent: BskyAgent) => AtpPersistSessionHandler
+    (localAgent: BskyAgent) => AtpPersistSessionHandler
   >(
-    agent => {
-      return (event, session) => {
+    localAgent => {
+      return event => {
         logger.debug(
           `session: persistSession`,
           {event},
           logger.DebugContext.session,
         )
-        console.log('PERSIST', window.__id, {
-          event,
-          refreshJwt: session?.refreshJwt?.slice(-10),
-          agent: agent.session?.refreshJwt.slice(-10),
-        })
 
         const expired = event === 'expired' || event === 'create-failed'
 
@@ -224,10 +220,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           )
           emitSessionDropped()
           clearCurrentAccount()
+          setTimeout(() => {
+            Toast.show(
+              `Your internet connection is unstable. Please try again.`,
+            )
+          }, 100)
           return
         }
 
-        const refreshedAccount = agentToSessionAccount(agent)
+        // TODO this will get stale with agent.clone()
+        const refreshedAccount = agentToSessionAccount(localAgent)
 
         if (!refreshedAccount) {
           logger.error(
@@ -235,6 +237,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           )
           emitSessionDropped()
           clearCurrentAccount()
+          setTimeout(() => {
+            Toast.show(`Sorry! We need you to enter your password.`)
+          }, 100)
           return
         }
 
@@ -242,6 +247,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           logger.warn(`session: expired`)
           emitSessionDropped()
           clearCurrentAccount()
+          setTimeout(() => {
+            Toast.show(`Sorry! We need you to enter your password.`)
+          }, 100)
         }
 
         /*
@@ -543,9 +551,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           currentAgent.session = sessionAccountToAgentSession(selectedAccount)
           // replace agent to re-derive currentAccount and trigger rerender with fresh data
           setCurrentAgent(currentAgent.clone())
-          console.log('UPDATE', window.__id, {
-            refreshJwt: currentAgent.session.refreshJwt.slice(-10),
-          })
         }
       } else if (!selectedAccount && currentAccount) {
         logger.debug(
