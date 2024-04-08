@@ -151,6 +151,7 @@ func serve(cctx *cli.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 	})
 	e.GET("/iframe/youtube.html", echo.WrapHandler(staticHandler))
+	e.GET("/embed/post.html", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			path := c.Request().URL.Path

@@ -4,16 +4,13 @@ import type {UserConfig} from 'vite'
 import paths from 'vite-tsconfig-paths'
 
 const config: UserConfig = {
-  plugins: [
-    preact(),
-    paths(),
-    legacy({
-      targets: ['defaults', 'not IE 11'],
-    }),
-  ],
-  build: {
-    assetsDir: 'static/embed/assets',
+  jsx: {
+    factory: 'h',
+    fragment: 'Fragment',
   },
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  plugins: [preactRefresh(), paths()],
+  assetsDir: 'static/embed/assets',
 }
 
 export default config
