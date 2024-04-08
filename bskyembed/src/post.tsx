@@ -5,6 +5,7 @@ import {useRef} from 'preact/hooks'
 import replyIcon from '../../assets/icons/bubble_stroke2_corner2_rounded.svg'
 import likeIcon from '../../assets/icons/heart2_stroke2_corner0_rounded.svg'
 import repostIcon from '../../assets/icons/repost_stroke2_corner2_rounded.svg'
+import logo from '../assets/logo.svg'
 import {Link} from './link'
 import {niceDate} from './time'
 
@@ -64,6 +65,12 @@ export function Post({thread}: Props) {
             <img src={repostIcon as string} className="w-4 h-4" />
             <p>{post.repostCount}</p>
           </div>
+          <div className="flex-1" />
+          <Link
+            href="https://bsky.social/about"
+            className="transition-transform hover:scale-125">
+            <img src={logo as string} className="h-4" />
+          </Link>
         </div>
       </div>
     </Container>
