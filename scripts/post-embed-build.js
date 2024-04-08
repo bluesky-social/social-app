@@ -11,9 +11,16 @@
 //   'dist',
 //   'static',
 //   'embed',
+//   'assets',
 // )
 
-// const embedAssetDest = path.join(projectRoot, 'web-build', 'static', 'embed')
+// const embedAssetDest = path.join(
+//   projectRoot,
+//   'web-build',
+//   'static',
+//   'embed',
+//   'assets',
+// )
 
 // fs.cpSync(embedAssetSource, embedAssetDest, {recursive: true})
 
@@ -29,9 +36,10 @@
 
 // const embedHtmlDest = path.join(
 //   projectRoot,
-//   'bskyweb',
-//   'templates',
-//   'post-embed.html',
+//   'web-build',
+//   'static',
+//   'embed',
+//   'post.html',
 // )
 
 // fs.copyFileSync(embedHtmlSource, embedHtmlDest)
