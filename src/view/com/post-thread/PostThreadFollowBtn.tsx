@@ -1,24 +1,25 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
-import {s} from 'lib/styles'
+import {track} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {s} from 'lib/styles'
 import {Shadow, useProfileShadow} from 'state/cache/profile-shadow'
-import {track} from 'lib/analytics/analytics'
 import {
   useProfileFollowMutationQueue,
   useProfileQuery,
 } from 'state/queries/profile'
 import {useRequireAuth} from 'state/session'
+import {Text} from 'view/com/util/text/Text'
+import * as Toast from 'view/com/util/Toast'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -47,8 +48,10 @@ function PostThreadFollowBtnLoaded({
     'PostThreadItem',
   )
   const requireAuth = useRequireAuth()
+  const showFollowBackLabel = useGate('show_follow_back_label')
 
   const isFollowing = !!profile.viewer?.following
+  const isFollowedBy = !!profile.viewer?.followedBy
   const [wasFollowing, setWasFollowing] = React.useState<boolean>(isFollowing)
 
   // This prevents the button from disappearing as soon as we follow.
@@ -136,7 +139,15 @@ function PostThreadFollowBtnLoaded({
             type="button"
             style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
             numberOfLines={1}>
-            {!isFollowing ? <Trans>Follow</Trans> : <Trans>Following</Trans>}
+            {!isFollowing ? (
+              showFollowBackLabel && isFollowedBy ? (
+                <Trans>Follow Back</Trans>
+              ) : (
+                <Trans>Follow</Trans>
+              )
+            ) : (
+              <Trans>Following</Trans>
+            )}
           </Text>
         </TouchableOpacity>
       </View>
