@@ -143,6 +143,7 @@ function ProfileScreenLoaded({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
+  const shouldUseScrollableHeader = useGate('new_profile_scroll_component')
   const {
     data: labelerInfo,
     error: labelerError,
@@ -154,7 +155,6 @@ function ProfileScreenLoaded({
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const shouldUseScrollableHeader = useGate('new_profile_scroll_component')
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
