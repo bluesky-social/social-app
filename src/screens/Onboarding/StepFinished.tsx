@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
@@ -55,7 +56,9 @@ export function StepFinished() {
 
     try {
       await Promise.all([
-        bulkWriteFollows(suggestedAccountsStepResults.accountDids),
+        bulkWriteFollows(
+          suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
+        ),
         // these must be serial
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
