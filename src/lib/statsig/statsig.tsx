@@ -78,6 +78,10 @@ function toStatsigUser(did: string | undefined) {
   return {
     userID,
     platform: Platform.OS,
+    custom: {
+      // Need to specify here too for gating.
+      platform: Platform.OS,
+    },
   }
 }
 
