@@ -1,28 +1,29 @@
 import React from 'react'
-import {useNavigation} from '@react-navigation/native'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useQueryClient} from '@tanstack/react-query'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {MainScrollProvider} from '../util/MainScrollProvider'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
-import {ComposeIcon2} from 'lib/icons'
-import {s} from 'lib/styles'
-import {View, useWindowDimensions} from 'react-native'
-import {ListMethods} from '../util/List'
-import {Feed} from '../posts/Feed'
-import {FAB} from '../util/fab/FAB'
-import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
+import {useWindowDimensions, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
-import {listenSoftReset} from '#/state/events'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {TabState, getTabState, getRootNavigation} from '#/lib/routes/helpers'
+import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
-import {logEvent} from '#/lib/statsig/statsig'
+import {listenSoftReset} from '#/state/events'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {useSession} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useComposerControls} from '#/state/shell/composer'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ComposeIcon2} from 'lib/icons'
+import {s} from 'lib/styles'
+import {Feed} from '../posts/Feed'
+import {FAB} from '../util/fab/FAB'
+import {ListMethods} from '../util/List'
+import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
+import {MainScrollProvider} from '../util/MainScrollProvider'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -71,6 +72,7 @@ export function FeedPage({
       setHasNew(false)
       logEvent('feed:refresh', {
         feedType: feed.split('|')[0],
+        feedUrl: feed,
         reason: 'soft-reset',
       })
     }
@@ -96,9 +98,21 @@ export function FeedPage({
     setHasNew(false)
     logEvent('feed:refresh', {
       feedType: feed.split('|')[0],
+      feedUrl: feed,
       reason: 'load-latest',
     })
   }, [scrollToTop, feed, queryClient, setHasNew])
+
+  let feedPollInterval
+  if (
+    useGate('disable_poll_on_discover') &&
+    feed === // Discover
+      'feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+  ) {
+    feedPollInterval = undefined
+  } else {
+    feedPollInterval = POLL_FREQ
+  }
 
   return (
     <View testID={testID} style={s.h100pct}>
@@ -108,7 +122,7 @@ export function FeedPage({
           enabled={isPageFocused}
           feed={feed}
           feedParams={feedParams}
-          pollInterval={POLL_FREQ}
+          pollInterval={feedPollInterval}
           disablePoll={hasNew}
           scrollElRef={scrollElRef}
           onScrolledDownChange={setIsScrolledDown}

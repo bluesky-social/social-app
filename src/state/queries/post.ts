@@ -1,13 +1,14 @@
 import {useCallback} from 'react'
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {Shadow} from '#/state/cache/types'
-import {getAgent} from '#/state/session'
+import {getAgent, useSession} from '#/state/session'
+import {findProfileQueryData} from './profile'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
@@ -68,7 +69,7 @@ export function usePostLikeMutationQueue(
   const postUri = post.uri
   const postCid = post.cid
   const initialLikeUri = post.viewer?.like
-  const likeMutation = usePostLikeMutation(logContext)
+  const likeMutation = usePostLikeMutation(logContext, post)
   const unlikeMutation = usePostUnlikeMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
@@ -117,15 +118,40 @@ export function usePostLikeMutationQueue(
   return [queueLike, queueUnlike]
 }
 
-function usePostLikeMutation(logContext: LogEvents['post:like']['logContext']) {
+function usePostLikeMutation(
+  logContext: LogEvents['post:like']['logContext'],
+  post: Shadow<AppBskyFeedDefs.PostView>,
+) {
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
+  const postAuthor = post.author
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
     {uri: string; cid: string} // the post's uri and cid
   >({
-    mutationFn: post => {
-      logEvent('post:like', {logContext})
-      return getAgent().like(post.uri, post.cid)
+    mutationFn: ({uri, cid}) => {
+      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      if (currentAccount) {
+        ownProfile = findProfileQueryData(queryClient, currentAccount.did)
+      }
+      logEvent('post:like', {
+        logContext,
+        doesPosterFollowLiker: postAuthor.viewer
+          ? Boolean(postAuthor.viewer.followedBy)
+          : undefined,
+        doesLikerFollowPoster: postAuthor.viewer
+          ? Boolean(postAuthor.viewer.following)
+          : undefined,
+        likerClout: toClout(ownProfile?.followersCount),
+        postClout:
+          post.likeCount != null &&
+          post.repostCount != null &&
+          post.replyCount != null
+            ? toClout(post.likeCount + post.repostCount + post.replyCount)
+            : undefined,
+      })
+      return getAgent().like(uri, cid)
     },
     onSuccess() {
       track('Post:Like')

@@ -87,13 +87,17 @@ export function ServerInputDialog({
             values={fixedOption}
             onChange={setFixedOption}>
             <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
-              {_(msg`Bluesky`)}
+              <ToggleButton.ButtonText>
+                {_(msg`Bluesky`)}
+              </ToggleButton.ButtonText>
             </ToggleButton.Button>
             <ToggleButton.Button
               testID="customSelectBtn"
               name="custom"
               label={_(msg`Custom`)}>
-              {_(msg`Custom`)}
+              <ToggleButton.ButtonText>
+                {_(msg`Custom`)}
+              </ToggleButton.ButtonText>
             </ToggleButton.Button>
           </ToggleButton.Group>
 
@@ -163,7 +167,7 @@ export function ServerInputDialog({
               size="small"
               onPress={() => control.close()}
               label={_(msg`Done`)}>
-              {_(msg`Done`)}
+              <ButtonText>{_(msg`Done`)}</ButtonText>
             </Button>
           </View>
         </View>

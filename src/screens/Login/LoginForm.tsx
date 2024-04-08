@@ -21,9 +21,7 @@ export const LoginForm = ({
   error,
   serviceUrl,
   serviceDescription,
-  setError,
   setServiceUrl,
-  onPressRetryConnect,
   onPressBack,
 }: {
   error: string
