@@ -9,6 +9,8 @@ import {
 } from '@atproto/api'
 import {h} from 'preact'
 
+import {Link} from './link'
+
 export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
   if (!content) return null
 
@@ -18,10 +20,10 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
       return <ImageEmbed content={content} />
     }
 
-    //   // Case 2: External link
-    //   if (AppBskyEmbedExternal.isView(content)) {
-    //     return <ExternalEmbed content={content} />
-    //   }
+    // Case 2: External link
+    if (AppBskyEmbedExternal.isView(content)) {
+      return <ExternalEmbed content={content} />
+    }
 
     //   // Case 3: Record (quote or linked post)
     //   if (AppBskyEmbedRecord.isView(content)) {
@@ -83,7 +85,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
     // console.error("Error rendering embed", content);
     return (
       <div className="mt-1.5 flex-1 flex-row items-center rounded-lg border py-2">
-        <p className="ml-2">
+        <p className="px-4">
           {err instanceof Error ? err.message : 'An error occurred'}
         </p>
       </div>
@@ -97,6 +99,7 @@ const ImageEmbed = ({content}: {content: AppBskyEmbedImages.View}) => {
       return (
         <img
           src={content.images[0].thumb}
+          alt={content.images[0].alt}
           className="w-full rounded-lg overflow-hidden object-cover h-auto max-h-[1000px]"
         />
       )
@@ -107,6 +110,7 @@ const ImageEmbed = ({content}: {content: AppBskyEmbedImages.View}) => {
             <img
               key={i}
               src={image.thumb}
+              alt={image.alt}
               className="w-1/2 h-full object-cover rounded-sm"
             />
           ))}
@@ -117,6 +121,7 @@ const ImageEmbed = ({content}: {content: AppBskyEmbedImages.View}) => {
         <div className="flex gap-1 rounded-lg overflow-hidden w-full aspect-[2/1]">
           <img
             src={content.images[0].thumb}
+            alt={content.images[0].alt}
             className="flex-[3] object-cover rounded-sm"
           />
           <div className="flex flex-col gap-1 flex-[2]">
@@ -124,6 +129,7 @@ const ImageEmbed = ({content}: {content: AppBskyEmbedImages.View}) => {
               <img
                 key={i}
                 src={image.thumb}
+                alt={image.alt}
                 className="w-full h-full object-cover rounded-sm"
               />
             ))}
@@ -137,6 +143,7 @@ const ImageEmbed = ({content}: {content: AppBskyEmbedImages.View}) => {
             <img
               key={i}
               src={image.thumb}
+              alt={image.alt}
               className="aspect-square w-full object-cover rounded-sm"
             />
           ))}
@@ -145,4 +152,36 @@ const ImageEmbed = ({content}: {content: AppBskyEmbedImages.View}) => {
     default:
       return null
   }
+}
+
+function ExternalEmbed({content}: {content: AppBskyEmbedExternal.View}) {
+  function toNiceDomain(url: string): string {
+    try {
+      const urlp = new URL(url)
+      return urlp.host ? urlp.host : url
+    } catch (e) {
+      return url
+    }
+  }
+  return (
+    <Link
+      href={content.external.uri}
+      className="w-full rounded-lg overflow-hidden border flex flex-col items-stretch">
+      {content.external.thumb && (
+        <img
+          src={content.external.thumb}
+          className="aspect-[1.91/1] object-cover"
+        />
+      )}
+      <div className="py-3 px-4">
+        <p className="text-sm text-textLight line-clamp-1">
+          {toNiceDomain(content.external.uri)}
+        </p>
+        <p className="font-semibold line-clamp-3">{content.external.title}</p>
+        <p className="text-sm text-textLight line-clamp-2 mt-0.5">
+          {content.external.description}
+        </p>
+      </div>
+    </Link>
+  )
 }
