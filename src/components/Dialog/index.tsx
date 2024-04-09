@@ -82,7 +82,8 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
-  const closeCallback = React.useRef<() => void>()
+  const isClosing = React.useRef<boolean>(false)
+  const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   /*
@@ -107,9 +108,14 @@ export function Outer({
   // This is the function that we call when we want to dismiss the dialog.
   const close = React.useCallback<DialogControlProps['close']>(cb => {
     if (typeof cb === 'function') {
-      closeCallback.current = cb
+      closeCallbacks.current?.push(cb)
+      closeCallbacks.current?.push(cb)
     }
-    sheet.current?.close()
+
+    if (!isClosing.current) {
+      sheet.current?.close()
+      isClosing.current = true
+    }
   }, [])
 
   // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
@@ -120,13 +126,14 @@ export function Outer({
     setDialogIsOpen(control.id, false)
     setOpenIndex(-1)
 
-    try {
-      if (closeCallback.current) {
-        closeCallback.current()
+    if (closeCallbacks.current && closeCallbacks.current.length > 0) {
+      for (const cb of closeCallbacks.current) {
+        try {
+          cb()
+        } catch {}
       }
-    } finally {
-      onClose?.()
     }
+    onClose?.()
   }, [control.id, onClose, setDialogIsOpen])
 
   useImperativeHandle(
