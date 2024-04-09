@@ -102,6 +102,9 @@ export function Outer({
       setDialogIsOpen(control.id, true)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
+
+      isClosing.current = false
+      closeCallbacks.current = []
     },
     [setOpenIndex, setDialogIsOpen, control.id],
   )
@@ -136,6 +139,9 @@ export function Outer({
       }
     }
     onClose?.()
+
+    isClosing.current = false
+    closeCallbacks.current = []
   }, [control.id, onClose, setDialogIsOpen])
 
   useImperativeHandle(
