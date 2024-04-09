@@ -10,6 +10,7 @@ import {
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
 
+import infoIcon from '../assets/circleInfo_stroke2_corner0_rounded.svg'
 import {Link} from './link'
 import {getRkey} from './utils'
 
@@ -38,13 +39,10 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         )
         if (pwiOptOut) {
           return (
-            <GenericBox disabled>
-              <span className="block font-semibold text-xs mb-2 text-textLight">
-                (Contains quoted post)
-              </span>
-              The author of this post has requested their posts not be displayed
-              on external sites.
-            </GenericBox>
+            <Info disabled>
+              The author of this quoted post has requested their posts not be
+              displayed on external sites.
+            </Info>
           )
         }
 
@@ -128,15 +126,13 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
       // Case 3.5: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
         return (
-          <GenericBox disabled>
-            Quoted post not found - it may have been deleted
-          </GenericBox>
+          <Info disabled>Quoted post not found - it may have been deleted</Info>
         )
       }
 
       // Case 3.6: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
-        return <GenericBox disabled>The quoted post is blocked</GenericBox>
+        return <Info disabled>The quoted post is blocked</Info>
       }
 
       throw new Error('Unknown embed type')
@@ -159,16 +155,13 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 
     throw new Error('Unsupported embed type')
   } catch (err) {
-    // console.error("Error rendering embed", content);
     return (
-      <GenericBox>
-        {err instanceof Error ? err.message : 'An error occurred'}
-      </GenericBox>
+      <Info>{err instanceof Error ? err.message : 'An error occurred'}</Info>
     )
   }
 }
 
-function GenericBox({
+function Info({
   children,
   disabled,
 }: {
@@ -177,10 +170,11 @@ function GenericBox({
 }) {
   return (
     <div
-      className={`w-full rounded-lg border py-2 px-3 ${
+      className={`w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 ${
         disabled ? 'bg-neutral-50' : ''
       }`}>
-      <p className="text-sm">{children}</p>
+      <img src={infoIcon as string} className="w-4 h-4 shrink-0 mt-0.5" />
+      <p className="text-sm text-textLight">{children}</p>
     </div>
   )
 }
