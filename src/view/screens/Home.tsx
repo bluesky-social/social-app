@@ -2,8 +2,9 @@ import React from 'react'
 import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {useGate} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -79,7 +80,7 @@ function HomeScreenReady({
     // This is supposed to only happen on the web when you use the right nav.
     if (selectedIndex !== lastPagerReportedIndexRef.current) {
       lastPagerReportedIndexRef.current = selectedIndex
-      pagerRef.current?.setPage(selectedIndex)
+      pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
   }, [selectedIndex])
 
@@ -94,6 +95,17 @@ function HomeScreenReady({
         setDrawerSwipeDisabled(false)
       }
     }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
+  )
+
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      logEvent('home:feedDisplayed', {
+        index: selectedIndex,
+        feedType: selectedFeed.split('|')[0],
+        feedUrl: selectedFeed,
+        reason: 'focus',
+      })
+    }),
   )
 
   const disableMinShellOnForegrounding = useGate(
@@ -121,6 +133,19 @@ function HomeScreenReady({
       lastPagerReportedIndexRef.current = index
     },
     [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
+  )
+
+  const onPageSelecting = React.useCallback(
+    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
+      const feed = allFeeds[index]
+      logEvent('home:feedDisplayed', {
+        index,
+        feedType: feed.split('|')[0],
+        feedUrl: feed,
+        reason,
+      })
+    },
+    [allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
@@ -175,6 +200,7 @@ function HomeScreenReady({
       ref={pagerRef}
       testID="homeScreen"
       initialPage={selectedIndex}
+      onPageSelecting={onPageSelecting}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
