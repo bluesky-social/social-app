@@ -47,7 +47,11 @@ export function Outer({
 
       try {
         if (cb && typeof cb === 'function') {
-          cb()
+          // This timeout ensures that the callback runs at the same time as it would on native. I.e.
+          // console.log('Step 1') -> close(() => console.log('Step 3')) -> console.log('Step 2')
+          // This should always output 'Step 1', 'Step 2', 'Step 3', but without the timeout it would output
+          // 'Step 1', 'Step 3', 'Step 2'.
+          setTimeout(cb)
         }
       } catch (e: any) {
         logger.error(`Dialog closeCallback failed`, {
