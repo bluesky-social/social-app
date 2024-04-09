@@ -113,8 +113,8 @@ export function Outer({
     }
 
     if (!isClosing.current) {
-      sheet.current?.close()
       isClosing.current = true
+      sheet.current?.close()
     }
   }, [])
 
