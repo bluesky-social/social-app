@@ -33,20 +33,17 @@ export function Outer({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
-  const [isVisible, setIsVisible] = React.useState(true)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   const open = React.useCallback(() => {
-    setIsOpen(true)
     setDialogIsOpen(control.id, true)
+    setIsOpen(true)
   }, [setIsOpen, setDialogIsOpen, control.id])
 
   const close = React.useCallback<DialogControlProps['close']>(
     cb => {
       setDialogIsOpen(control.id, false)
-      setIsVisible(false)
       setIsOpen(false)
-      setIsVisible(true)
 
       try {
         if (cb && typeof cb === 'function') {
@@ -113,17 +110,15 @@ export function Outer({
                   gtMobile ? a.p_lg : a.p_md,
                   {overflowY: 'auto'},
                 ]}>
-                {isVisible && (
-                  <Animated.View
-                    entering={FadeIn.duration(150)}
-                    // exiting={FadeOut.duration(150)}
-                    style={[
-                      web(a.fixed),
-                      a.inset_0,
-                      {opacity: 0.8, backgroundColor: t.palette.black},
-                    ]}
-                  />
-                )}
+                <Animated.View
+                  entering={FadeIn.duration(150)}
+                  // exiting={FadeOut.duration(150)}
+                  style={[
+                    web(a.fixed),
+                    a.inset_0,
+                    {opacity: 0.8, backgroundColor: t.palette.black},
+                  ]}
+                />
 
                 <View
                   style={[
@@ -135,7 +130,7 @@ export function Outer({
                       minHeight: web('calc(90vh - 36px)') || undefined,
                     },
                   ]}>
-                  {isVisible ? children : null}
+                  {children}
                 </View>
               </View>
             </TouchableWithoutFeedback>

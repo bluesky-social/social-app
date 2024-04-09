@@ -12,7 +12,6 @@ import BottomSheet, {
   WINDOW_HEIGHT,
 } from '@discord/bottom-sheet/src'
 
-import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {isNative} from 'platform/detection'
 import {atoms as a, flatten, useTheme} from '#/alf'
@@ -105,18 +104,33 @@ export function Outer({
     [setOpenIndex, setDialogIsOpen, control.id],
   )
 
+  // This is the function that we call when we want to dismiss the dialog.
   const close = React.useCallback<DialogControlProps['close']>(cb => {
-    if (cb && typeof cb === 'function') {
-      if (closeCallback.current) {
-        logger.error(
-          `Dialog close was passed multiple callbacks, you shouldn't do that`,
-        )
-      }
+    if (typeof cb === 'function') {
       closeCallback.current = cb
     }
-    // initiates a close animation, the actual "close" happens in `onCloseInner`
     sheet.current?.close()
   }, [])
+
+  // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
+  // happen before we run this. It is passed to the `BottomSheet` component.
+  const onCloseAnimationComplete = React.useCallback(() => {
+    // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
+    // tells us that we need to toggle the accessibility overlay setting
+    setDialogIsOpen(control.id, false)
+    setOpenIndex(-1)
+
+    try {
+      if (closeCallback.current) {
+        closeCallback.current()
+      }
+    } catch (e) {
+      // No need to handle this here
+    } finally {
+      onClose?.()
+      setDialogIsOpen(control.id, false)
+    }
+  }, [control.id, onClose, setDialogIsOpen])
 
   useImperativeHandle(
     control.ref,
@@ -126,22 +140,6 @@ export function Outer({
     }),
     [open, close],
   )
-
-  const onCloseInner = React.useCallback(() => {
-    setDialogIsOpen(control.id, false)
-    setOpenIndex(-1)
-    try {
-      logger.debug(`Dialog closeCallback`, {controlId: control.id})
-      closeCallback.current?.()
-    } catch (e: any) {
-      logger.error(`Dialog closeCallback failed`, {
-        message: e.message,
-      })
-    } finally {
-      closeCallback.current = undefined
-    }
-    onClose?.()
-  }, [control.id, onClose, setDialogIsOpen])
 
   const context = React.useMemo(() => ({close}), [close])
 
@@ -170,7 +168,7 @@ export function Outer({
             backdropComponent={Backdrop}
             handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
             handleStyle={{display: 'none'}}
-            onClose={onCloseInner}>
+            onClose={onCloseAnimationComplete}>
             <Context.Provider value={context}>
               <View
                 style={[
