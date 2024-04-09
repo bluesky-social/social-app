@@ -6,6 +6,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphDefs,
+  AppBskyLabelerDefs,
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
 
@@ -95,16 +96,31 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         )
       }
 
-      // Case 3.4: Post not found
-      if (AppBskyEmbedRecord.isViewNotFound(record)) {
+      // Case 3.4: Labeler
+      // I don't think this is used, but leaving it here just in case
+      if (AppBskyLabelerDefs.isLabelerView(record)) {
         return (
-          <GenericBox>Post not found - it may have been deleted</GenericBox>
+          <GenericWithImage
+            image={record.creator.avatar}
+            title={record.creator.displayName || record.creator.handle}
+            href={`/profile/${record.creator.did}`}
+            subtitle="Labeler"
+          />
         )
       }
 
-      // Case 3.5: Post blocked
+      // Case 3.5: Post not found
+      if (AppBskyEmbedRecord.isViewNotFound(record)) {
+        return (
+          <GenericBox>
+            Quoted post not found - it may have been deleted
+          </GenericBox>
+        )
+      }
+
+      // Case 3.6: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
-        return <GenericBox>This post is blocked</GenericBox>
+        return <GenericBox>The quoted post is blocked</GenericBox>
       }
 
       throw new Error('Unknown embed type')
