@@ -1,5 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -18,6 +19,12 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
+import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {InlineLinkText, Link} from '#/components/Link'
+import * as Prompt from '#/components/Prompt'
+import {P, Text} from '#/components/Typography'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
 import {HomeHeader} from '../com/home/HomeHeader'
 
@@ -169,44 +176,107 @@ function HomeScreenReady({
     }
   }, [preferences])
 
-  return hasSession ? (
-    <Pager
-      key={allFeeds.join(',')}
-      ref={pagerRef}
-      testID="homeScreen"
-      initialPage={selectedIndex}
-      onPageSelected={onPageSelected}
-      onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}>
-      <FeedPage
-        key={homeFeed}
-        testID="followingFeedPage"
-        isPageFocused={selectedFeed === homeFeed}
-        feed={homeFeed}
-        feedParams={homeFeedParams}
-        renderEmptyState={renderFollowingEmptyState}
-        renderEndOfFeed={FollowingEndOfFeed}
-      />
-      {customFeeds.map(feed => {
-        return (
-          <FeedPage
-            key={feed}
-            testID="customFeedPage"
-            isPageFocused={selectedFeed === feed}
-            feed={feed}
-            renderEmptyState={renderCustomFeedEmptyState}
-          />
-        )
-      })}
-    </Pager>
-  ) : (
-    <Pager
-      testID="homeScreen"
-      onPageSelected={onPageSelected}
-      onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}>
-      <HomeLoggedOutCTA />
-    </Pager>
+  const firstDialogControl = Dialog.useDialogControl()
+
+  return (
+    <View style={{flex: 1}}>
+      <Text>What's up</Text>
+
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={firstDialogControl.open}
+        label="one">
+        <ButtonText>Open Dialog One</ButtonText>
+      </Button>
+
+      <Text>Test</Text>
+
+      <Dialog.Outer control={firstDialogControl}>
+        <Dialog.Handle />
+
+        <Dialog.ScrollableInner
+          accessibilityDescribedBy="dialog-description"
+          accessibilityLabelledBy="dialog-title">
+          <View style={[a.relative, a.gap_md, a.w_full]}>
+            <Text>Test Dialog</Text>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                firstDialogControl.close(() => {
+                  console.log('close callback')
+                })
+              }}
+              label="Close It">
+              <ButtonText>Normal Use (Should just log)</ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                setTimeout(() => {
+                  firstDialogControl.open()
+                }, 100)
+
+                firstDialogControl.close(() => {
+                  console.log('close callback')
+                })
+              }}
+              label="Close It">
+              <ButtonText>
+                Calls `.open()` in 100ms (Should log before reopening)
+              </ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                setTimeout(() => {
+                  firstDialogControl.open()
+                }, 2e3)
+
+                firstDialogControl.close(() => {
+                  console.log('close callback')
+                })
+              }}
+              label="Close It">
+              <ButtonText>
+                Calls `.open()` in 2000ms (Should log after close animation and
+                not log on open)
+              </ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                firstDialogControl.close(() => {
+                  console.log('close callback')
+                })
+                setTimeout(() => {
+                  firstDialogControl.close(() => {
+                    console.log('close callback after 100ms')
+                  })
+                }, 100)
+              }}
+              label="Close It">
+              <ButtonText>
+                Calls `.open()` then again in 100ms (should log twice)
+              </ButtonText>
+            </Button>
+          </View>
+        </Dialog.ScrollableInner>
+      </Dialog.Outer>
+    </View>
   )
 }
 
