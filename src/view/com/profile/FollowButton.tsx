@@ -53,7 +53,7 @@ export function FollowButton({
   }
 
   return (
-    <View>
+    <View style={a.pl_lg}>
       <Button
         testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
         size={isNative ? 'small' : 'medium'}
