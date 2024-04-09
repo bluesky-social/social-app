@@ -6,6 +6,17 @@ cfg.resolver.sourceExts = process.env.RN_SRC_EXT
   ? process.env.RN_SRC_EXT.split(',').concat(cfg.resolver.sourceExts)
   : cfg.resolver.sourceExts
 
+cfg.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === 'crypto' && platform !== 'web') {
+    return context.resolveRequest(
+      context,
+      'react-native-quick-crypto',
+      platform,
+    )
+  }
+  return context.resolveRequest(context, moduleName, platform)
+}
+
 cfg.transformer.getTransformOptions = async () => ({
   transform: {
     experimentalImportSupport: true,
