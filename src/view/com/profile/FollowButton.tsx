@@ -1,31 +1,32 @@
 import React from 'react'
 import {StyleProp, TextStyle, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {Button, ButtonType} from '../util/forms/Button'
-import * as Toast from '../util/Toast'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {Shadow} from '#/state/cache/types'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+
+import {Shadow} from '#/state/cache/types'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {useGate} from 'lib/statsig/statsig'
+import {isNative} from 'platform/detection'
+import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Toast from '../util/Toast'
 
 export function FollowButton({
-  unfollowedType = 'inverted',
-  followedType = 'default',
   profile,
-  labelStyle,
   logContext,
 }: {
-  unfollowedType?: ButtonType
-  followedType?: ButtonType
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   labelStyle?: StyleProp<TextStyle>
-  logContext: 'ProfileCard'
+  logContext: 'ProfileCard' | 'PostThreadItem'
 }) {
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
   )
   const {_} = useLingui()
+  const showFollowBackLabel =
+    useGate('show_follow_back_label') && logContext === 'PostThreadItem'
 
   const onPressFollow = async () => {
     try {
@@ -51,23 +52,32 @@ export function FollowButton({
     return <View />
   }
 
-  if (profile.viewer.following) {
-    return (
+  return (
+    <View>
       <Button
-        type={followedType}
-        labelStyle={labelStyle}
-        onPress={onPressUnfollow}
-        label={_(msg({message: 'Unfollow', context: 'action'}))}
-      />
-    )
-  } else {
-    return (
-      <Button
-        type={unfollowedType}
-        labelStyle={labelStyle}
-        onPress={onPressFollow}
-        label={_(msg({message: 'Follow', context: 'action'}))}
-      />
-    )
-  }
+        testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
+        size={isNative ? 'small' : 'medium'}
+        color={profile.viewer?.following ? 'secondary' : 'primary'}
+        variant="solid"
+        label={
+          profile.viewer?.following
+            ? _(msg`Unfollow ${profile.handle}`)
+            : _(msg`Follow ${profile.handle}`)
+        }
+        onPress={profile.viewer?.following ? onPressUnfollow : onPressFollow}
+        style={[a.rounded_full, a.gap_xs]}>
+        <ButtonText>
+          {!profile.viewer?.following ? (
+            showFollowBackLabel && profile.viewer?.followedBy ? (
+              <Trans>Follow Back</Trans>
+            ) : (
+              <Trans>Follow</Trans>
+            )
+          ) : (
+            <Trans>Following</Trans>
+          )}
+        </ButtonText>
+      </Button>
+    </View>
+  )
 }
