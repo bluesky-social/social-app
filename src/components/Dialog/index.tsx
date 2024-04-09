@@ -109,7 +109,6 @@ export function Outer({
   const close = React.useCallback<DialogControlProps['close']>(cb => {
     if (typeof cb === 'function') {
       closeCallbacks.current?.push(cb)
-      closeCallbacks.current?.push(cb)
     }
 
     if (!isClosing.current) {
