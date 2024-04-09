@@ -15,7 +15,7 @@ if (!root) throw new Error('No root element')
 const searchParams = new URLSearchParams(window.location.search)
 
 const agent = new BskyAgent({
-  service: searchParams.get('service') || 'https://public.api.bsky.app',
+  service: 'https://public.api.bsky.app',
 })
 
 const uri = searchParams.get('uri')
