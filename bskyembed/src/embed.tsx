@@ -39,7 +39,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         )
         if (pwiOptOut) {
           return (
-            <Info disabled>
+            <Info>
               The author of this quoted post has requested their posts not be
               displayed on external sites.
             </Info>
@@ -125,14 +125,12 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 
       // Case 3.5: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
-        return (
-          <Info disabled>Quoted post not found - it may have been deleted</Info>
-        )
+        return <Info>Quoted post not found - it may have been deleted</Info>
       }
 
       // Case 3.6: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
-        return <Info disabled>The quoted post is blocked</Info>
+        return <Info>The quoted post is blocked</Info>
       }
 
       throw new Error('Unknown embed type')
@@ -161,18 +159,9 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
   }
 }
 
-function Info({
-  children,
-  disabled,
-}: {
-  children: ComponentChildren
-  disabled?: boolean
-}) {
+function Info({children}: {children: ComponentChildren}) {
   return (
-    <div
-      className={`w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 ${
-        disabled ? 'bg-neutral-50' : ''
-      }`}>
+    <div className="w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
       <img src={infoIcon as string} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight">{children}</p>
     </div>
