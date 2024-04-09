@@ -11,6 +11,7 @@ import {
 import {ComponentChildren, h} from 'preact'
 
 import {Link} from './link'
+import {getRkey} from './utils'
 
 export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
   if (!content) return null
@@ -32,6 +33,18 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 
       // Case 3.1: Post
       if (AppBskyEmbedRecord.isViewRecord(record)) {
+        const pwiOptOut = !!record.author.labels?.find(
+          label => label.val === '!no-unauthenticated',
+        )
+        if (pwiOptOut) {
+          return (
+            <GenericBox>
+              Quoted post, whose author has opted out of being displayed on
+              third-party websites
+            </GenericBox>
+          )
+        }
+
         let text
         if (AppBskyFeedPost.isRecord(record.value)) {
           text = record.value.text
@@ -154,8 +167,8 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 
 function GenericBox({children}: {children: ComponentChildren}) {
   return (
-    <div className="w-full rounded-lg border py-2 px-4">
-      <p>{children}</p>
+    <div className="w-full rounded-lg border py-2 px-3">
+      <p className="text-sm">{children}</p>
     </div>
   )
 }
@@ -288,8 +301,4 @@ function GenericWithImage({
       {description && <p className="text-textLight text-sm">{description}</p>}
     </Link>
   )
-}
-
-function getRkey({uri}: {uri: string}): string {
-  return uri.split('/').pop() as string
 }
