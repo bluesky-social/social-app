@@ -291,6 +291,24 @@ function HomeScreenReady({
                 Call close twice immediately (should just log twice)
               </ButtonText>
             </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                console.log('Step 1')
+                firstDialogControl.close(() => {
+                  console.log('Step 3')
+                })
+                console.log('Step 2')
+              }}
+              label="Close It">
+              <ButtonText>
+                Log before `close()`, after `close()` and in the `close()`
+                callback. Should be an order of 1 2 3
+              </ButtonText>
+            </Button>
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
