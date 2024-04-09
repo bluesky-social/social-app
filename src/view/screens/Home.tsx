@@ -273,6 +273,24 @@ function HomeScreenReady({
                 Calls `.open()` then again in 100ms (should log twice)
               </ButtonText>
             </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                firstDialogControl.close(() => {
+                  console.log('close callback')
+                })
+                firstDialogControl.close(() => {
+                  console.log('close callback 2')
+                })
+              }}
+              label="Close It">
+              <ButtonText>
+                Call close twice immediately (should just log twice)
+              </ButtonText>
+            </Button>
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
