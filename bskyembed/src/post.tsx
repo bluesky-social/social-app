@@ -1,11 +1,12 @@
 import {AppBskyFeedDefs, AppBskyFeedPost, RichText} from '@atproto/api'
-import {ComponentChildren, h} from 'preact'
-import {useRef} from 'preact/hooks'
+import {h} from 'preact'
 
 import replyIcon from '../../assets/icons/bubble_stroke2_corner2_rounded.svg'
 import likeIcon from '../../assets/icons/heart2_stroke2_corner0_rounded.svg'
 import repostIcon from '../../assets/icons/repost_stroke2_corner2_rounded.svg'
 import logo from '../assets/logo.svg'
+import {Container} from './container'
+// import repostIcon from '../assets/repost_stroke2_corner2_rounded.svg'
 import {Link} from './link'
 import {niceDate} from './time'
 
@@ -74,34 +75,6 @@ export function Post({thread}: Props) {
         </div>
       </div>
     </Container>
-  )
-}
-
-function Container({
-  children,
-  href,
-}: {
-  children: ComponentChildren
-  href: string
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  return (
-    <div
-      ref={ref}
-      className="w-full hover:bg-neutral-50 transition-colors max-w-[550px] min-w-[300px] flex border rounded-xl px-4 pt-3 pb-2.5"
-      onClick={() => {
-        if (ref.current) {
-          // forwardRef requires preact/compat - let's keep it simple
-          // to keep the bundle size down
-          const anchor = ref.current.querySelector('a')
-          if (anchor) {
-            anchor.click()
-          }
-        }
-      }}>
-      <Link href={href} />
-      {children}
-    </div>
   )
 }
 
