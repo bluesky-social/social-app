@@ -128,7 +128,6 @@ export function Outer({
       // No need to handle this here
     } finally {
       onClose?.()
-      setDialogIsOpen(control.id, false)
     }
   }, [control.id, onClose, setDialogIsOpen])
 
