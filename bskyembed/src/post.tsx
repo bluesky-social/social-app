@@ -6,6 +6,7 @@ import likeIcon from '../../assets/icons/heart2_stroke2_corner0_rounded.svg'
 import repostIcon from '../../assets/icons/repost_stroke2_corner2_rounded.svg'
 import logo from '../assets/logo.svg'
 import {Container} from './container'
+import {Embed} from './embed'
 // import repostIcon from '../assets/repost_stroke2_corner2_rounded.svg'
 import {Link} from './link'
 import {niceDate} from './time'
@@ -47,7 +48,8 @@ export function Post({thread}: Props) {
             </Link>
           </div>
         </div>
-        {record && <PostContent record={record} />}
+        <PostContent record={record} />
+        <Embed content={post.embed} />
         <time
           datetime={new Date(post.indexedAt).toISOString()}
           className="text-textLight mt-1 text-sm">
@@ -78,7 +80,9 @@ export function Post({thread}: Props) {
   )
 }
 
-function PostContent({record}: {record: AppBskyFeedPost.Record}) {
+function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
+  if (!record) return null
+
   const rt = new RichText({
     text: record.text,
     facets: record.facets,
