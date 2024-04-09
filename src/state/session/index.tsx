@@ -216,7 +216,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
 
-      // TODO this will get stale with agent.clone()
       const refreshedAccount = agentToSessionAccount(currentAgent)
 
       if (!refreshedAccount) {
