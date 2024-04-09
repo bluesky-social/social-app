@@ -423,11 +423,11 @@ msgstr "Il blocco non impedisce al labeler di inserire etichette nel tuo account
 
 #: src/view/screens/ProfileList.tsx:631
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Il blocco è pubblico. Gli accounts bloccati non possono rispondere nelle tue discussioni, menzionarti o interagire con te in nessun altro modo."
+msgstr "l blocco è pubblico. Gli account bloccati non possono rispondere alle tue discussioni, menzionarti, o interagire con te in nessun altro modo."
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "Il blocco non impedirà l'applicazione delle etichette al tuo account, ma impedirà a questo account di rispondere ai tuoi thread o di interagire con te."
+msgstr "Il blocco non impedirà l'applicazione delle etichette al tuo account, ma impedirà a questo account di rispondere alle tue discussioni o di interagire con te."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:97
 #: src/view/com/auth/SplashScreen.web.tsx:133
@@ -442,7 +442,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:150
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky è una network aperto in cui puoi scegliere il tuo provider di hosting. L'hosting personalizzato adesso è disponibile in versione beta per i developers."
+msgstr "Bluesky è un network aperto in cui puoi scegliere il tuo provider di hosting. L'hosting personalizzato è adesso disponibile in versione beta per gli sviluppatori."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
@@ -461,7 +461,7 @@ msgstr "Bluesky è pubblico."
 
 #: src/screens/Moderation/index.tsx:535
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky non mostrerà il tuo profilo e i tuoi post agli utenti disconnessi. Altre app potrebbero non rispettare questa richiesta. Questo non rende il tuo account privato."
+msgstr "Bluesky non mostrerà il tuo profilo e i tuoi post agli utenti non loggati. Altre applicazioni potrebbero non rispettare questa istruzione. Ciò non rende il tuo account privato."
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -486,7 +486,7 @@ msgstr "Attività commerciale"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
-msgstr "da—"
+msgstr "da —"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
 msgid "by {0}"
@@ -574,7 +574,7 @@ msgstr "Annulla la ricerca"
 
 #: src/view/com/modals/LinkWarning.tsx:88
 msgid "Cancels opening the linked website"
-msgstr "Annulla l'apertura del sito Web collegato"
+msgstr "Annulla l'apertura del sito collegato"
 
 #: src/view/com/modals/VerifyEmail.tsx:152
 msgid "Change"
@@ -621,7 +621,7 @@ msgstr "Verifica il mio stato"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "Dai un'occhiata ad alcuni feed consigliati. Clicca + per aggiungerli al tuo elenco dei feeds."
+msgstr "Dai un'occhiata ad alcuni feed consigliati. Clicca + per aggiungerli al tuo elenco dei feed."
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
@@ -646,7 +646,7 @@ msgstr "Scegli gli algoritmi che compilano i tuoi feed personalizzati."
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
 msgid "Choose the algorithms that power your experience with custom feeds."
-msgstr "Scegli gli algoritmi che alimentano la tua esperienza con feed personalizzati."
+msgstr "Scegli gli algoritmi che migliorano la tua esperienza con i feed personalizzati."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
