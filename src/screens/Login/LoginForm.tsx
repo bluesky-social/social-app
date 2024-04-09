@@ -250,6 +250,7 @@ export const LoginForm = ({
           </>
         ) : isReady ? (
           <Button
+            testID="loginNextButton"
             label={_(msg`Next`)}
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"
