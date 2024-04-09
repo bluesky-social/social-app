@@ -83,7 +83,6 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
-  const isClosing = React.useRef<boolean>(false)
   const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
 
@@ -116,7 +115,6 @@ export function Outer({
       setOpenIndex(index || 0)
 
       callQueuedCallbacks()
-      isClosing.current = false
     },
     [setDialogIsOpen, control.id, callQueuedCallbacks],
   )
@@ -126,11 +124,7 @@ export function Outer({
     if (typeof cb === 'function') {
       closeCallbacks.current.push(cb)
     }
-
-    if (!isClosing.current) {
-      isClosing.current = true
-      sheet.current?.close()
-    }
+    sheet.current?.close()
   }, [])
 
   // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
@@ -143,7 +137,6 @@ export function Outer({
 
     callQueuedCallbacks()
     onClose?.()
-    isClosing.current = false
   }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
   useImperativeHandle(
