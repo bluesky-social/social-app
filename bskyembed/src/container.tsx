@@ -14,7 +14,7 @@ export function Container({
   return (
     <div
       ref={ref}
-      className="w-full hover:bg-neutral-50 relative transition-colors max-w-[550px] min-w-[300px] flex border rounded-xl px-4 pt-3 pb-2.5"
+      className="w-full bg-white hover:bg-neutral-50 relative transition-colors max-w-[550px] min-w-[300px] flex border rounded-xl px-4 pt-3 pb-2.5"
       onClick={() => {
         if (ref.current) {
           // forwardRef requires preact/compat - let's keep it simple

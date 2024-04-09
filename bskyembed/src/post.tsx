@@ -9,7 +9,7 @@ import {Container} from './container'
 import {Embed} from './embed'
 // import repostIcon from '../assets/repost_stroke2_corner2_rounded.svg'
 import {Link} from './link'
-import {niceDate} from './time'
+import {getRkey, niceDate} from './utils'
 
 interface Props {
   thread: AppBskyFeedDefs.ThreadViewPost
@@ -23,10 +23,8 @@ export function Post({thread}: Props) {
     record = post.record
   }
 
-  const rkey = post.uri.split('/').pop() as string
-
   return (
-    <Container href={`/profile/${post.author.did}/post/${rkey}`}>
+    <Container href={`/profile/${post.author.did}/post/${getRkey(post)}`}>
       <div className="flex-1 flex-col flex gap-2">
         <div className="flex gap-2.5 items-center">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
