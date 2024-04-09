@@ -1,25 +1,24 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {track} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
+import {isNative, isWeb} from 'platform/detection'
 import {Shadow, useProfileShadow} from 'state/cache/profile-shadow'
 import {
   useProfileFollowMutationQueue,
   useProfileQuery,
 } from 'state/queries/profile'
 import {useRequireAuth} from 'state/session'
-import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -38,9 +37,6 @@ function PostThreadFollowBtnLoaded({
 }) {
   const navigation = useNavigation()
   const {_} = useLingui()
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
-  const {isTabletOrDesktop} = useWebMediaQueries()
   const profile: Shadow<AppBskyActorDefs.ProfileViewBasic> =
     useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -48,10 +44,8 @@ function PostThreadFollowBtnLoaded({
     'PostThreadItem',
   )
   const requireAuth = useRequireAuth()
-  const showFollowBackLabel = useGate('show_follow_back_label')
 
   const isFollowing = !!profile.viewer?.following
-  const isFollowedBy = !!profile.viewer?.followedBy
   const [wasFollowing, setWasFollowing] = React.useState<boolean>(isFollowing)
 
   // This prevents the button from disappearing as soon as we follow.
@@ -118,51 +112,33 @@ function PostThreadFollowBtnLoaded({
   if (!showFollowBtn) return null
 
   return (
-    <View style={{width: isTabletOrDesktop ? 130 : 120}}>
-      <View style={styles.btnOuter}>
-        <TouchableOpacity
-          testID="followBtn"
-          onPress={onPress}
-          style={[styles.btn, !isFollowing ? palInverted.view : pal.viewLight]}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Follow ${profile.handle}`)}
-          accessibilityHint={_(
-            msg`Shows posts from ${profile.handle} in your feed`,
-          )}>
-          {isTabletOrDesktop && (
-            <FontAwesomeIcon
-              icon={!isFollowing ? 'plus' : 'check'}
-              style={[!isFollowing ? palInverted.text : pal.text, s.mr5]}
-            />
+    <View>
+      <Button
+        testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
+        size={isNative ? 'small' : 'medium'}
+        color={profile.viewer?.following ? 'secondary' : 'primary'}
+        variant="solid"
+        label={
+          profile.viewer?.following
+            ? _(msg`Unfollow ${profile.handle}`)
+            : _(msg`Follow ${profile.handle}`)
+        }
+        onPress={onPress}
+        style={[a.rounded_full, a.gap_xs]}>
+        {isWeb && (
+          <ButtonIcon
+            position="left"
+            icon={profile.viewer?.following ? Check : Plus}
+          />
+        )}
+        <ButtonText>
+          {profile.viewer?.following ? (
+            <Trans>Following</Trans>
+          ) : (
+            <Trans>Follow</Trans>
           )}
-          <Text
-            type="button"
-            style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
-            numberOfLines={1}>
-            {!isFollowing ? (
-              showFollowBackLabel && isFollowedBy ? (
-                <Trans>Follow Back</Trans>
-              ) : (
-                <Trans>Follow</Trans>
-              )
-            ) : (
-              <Trans>Following</Trans>
-            )}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        </ButtonText>
+      </Button>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  btnOuter: {
-    marginLeft: 'auto',
-  },
-  btn: {
-    flexDirection: 'row',
-    borderRadius: 50,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-  },
-})
