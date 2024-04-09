@@ -10,8 +10,8 @@ export function CenteredView(props) {
 }
 
 export function ScrollView(props) {
-  const showsVerticalScrollIndicator = useGate(
-    'shows_vertical_scroll_indicator',
+  const showsVerticalScrollIndicator = !useGate(
+    'hide_vertical_scroll_indicators',
   )
 
   return (
