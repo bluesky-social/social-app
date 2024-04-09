@@ -1,6 +1,6 @@
-import { Jwk } from './jwk.js'
+import {Jwk} from './jwk'
 
-declare const process: undefined | { versions?: { node?: string } }
+declare const process: undefined | {versions?: {node?: string}}
 const IS_NODE_RUNTIME =
   typeof process !== 'undefined' && typeof process?.versions?.node === 'string'
 

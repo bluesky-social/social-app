@@ -1,6 +1,6 @@
-import { z } from 'zod'
+import {z} from 'zod'
 
-import { jwkPubSchema, jwkSchema } from './jwk.js'
+import {jwkPubSchema, jwkSchema} from './jwk'
 
 export const jwksSchema = z
   .object({

@@ -1,8 +1,8 @@
-import { jwkAlgorithms } from './alg.js'
-import { Jwk, jwkSchema } from './jwk.js'
-import { VerifyOptions, VerifyPayload, VerifyResult } from './jwt-verify.js'
-import { Jwt, JwtHeader, JwtPayload } from './jwt.js'
-import { cachedGetter } from './util.js'
+import {jwkAlgorithms} from './alg'
+import {Jwk, jwkSchema} from './jwk'
+import {Jwt, JwtHeader, JwtPayload} from './jwt'
+import {VerifyOptions, VerifyPayload, VerifyResult} from './jwt-verify'
+import {cachedGetter} from './util'
 
 export abstract class Key {
   constructor(protected jwk: Jwk) {
@@ -11,13 +11,13 @@ export abstract class Key {
   }
 
   get isPrivate(): boolean {
-    const { jwk } = this
+    const {jwk} = this
     if ('d' in jwk && jwk.d !== undefined) return true
     return this.isSymetric
   }
 
   get isSymetric(): boolean {
-    const { jwk } = this
+    const {jwk} = this
     if ('k' in jwk && jwk.k !== undefined) return true
     return false
   }
@@ -30,7 +30,7 @@ export abstract class Key {
   get publicJwk(): Jwk | undefined {
     if (this.isSymetric) return undefined
     if (this.isPrivate) {
-      const { d: _, ...jwk } = this.jwk as any
+      const {d: _, ...jwk} = this.jwk as any
       return jwk
     }
     return this.jwk
@@ -39,8 +39,8 @@ export abstract class Key {
   @cachedGetter
   get bareJwk(): Jwk | undefined {
     if (this.isSymetric) return undefined
-    const { kty, crv, e, n, x, y } = this.jwk as any
-    return jwkSchema.parse({ crv, e, kty, n, x, y })
+    const {kty, crv, e, n, x, y} = this.jwk as any
+    return jwkSchema.parse({crv, e, kty, n, x, y})
   }
 
   get use() {
@@ -60,7 +60,7 @@ export abstract class Key {
   }
 
   get crv() {
-    return (this.jwk as undefined | Extract<Jwk, { crv: unknown }>)?.crv
+    return (this.jwk as undefined | Extract<Jwk, {crv: unknown}>)?.crv
   }
 
   get canVerify() {

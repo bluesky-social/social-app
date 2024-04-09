@@ -1,6 +1,6 @@
-import { z } from 'zod'
+import {z} from 'zod'
 
-import { jwkPubSchema } from './jwk.js'
+import {jwkPubSchema} from './jwk'
 
 export const JWT_REGEXP = /^[A-Za-z0-9_-]{2,}(?:\.[A-Za-z0-9_-]{2,}){1,2}$/
 export const jwtSchema = z

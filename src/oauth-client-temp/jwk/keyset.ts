@@ -1,16 +1,16 @@
-import { Jwk } from './jwk.js'
-import { Jwks } from './jwks.js'
-import { unsafeDecodeJwt } from './jwt-decode.js'
-import { VerifyOptions } from './jwt-verify.js'
-import { Jwt, JwtHeader, JwtPayload } from './jwt.js'
-import { Key } from './key.js'
+import {Jwk} from './jwk'
+import {Jwks} from './jwks'
+import {Jwt, JwtHeader, JwtPayload} from './jwt'
+import {unsafeDecodeJwt} from './jwt-decode'
+import {VerifyOptions} from './jwt-verify'
+import {Key} from './key'
 import {
-  Override,
   cachedGetter,
   isDefined,
   matchesAny,
+  Override,
   preferredOrderCmp,
-} from './util.js'
+} from './util'
 
 export type JwtSignHeader = Override<JwtHeader, Pick<KeySearch, 'alg' | 'kid'>>
 
@@ -50,7 +50,7 @@ export class Keyset<K extends Key = Key> implements Iterable<K> {
     if (!keys.length) throw new Error('Keyset is empty')
 
     const kids = new Set<string>()
-    for (const { kid } of keys) {
+    for (const {kid} of keys) {
       if (!kid) continue
 
       if (kids.has(kid)) throw new Error(`Duplicate key id: ${kid}`)
@@ -87,7 +87,7 @@ export class Keyset<K extends Key = Key> implements Iterable<K> {
   }
 
   has(kid: string): boolean {
-    return this.keys.some((key) => key.kid === kid)
+    return this.keys.some(key => key.kid === kid)
   }
 
   get(search: KeySearch): K {
@@ -115,7 +115,7 @@ export class Keyset<K extends Key = Key> implements Iterable<K> {
       }
 
       if (Array.isArray(search.alg)) {
-        if (!search.alg.some((a) => key.algorithms.includes(a))) continue
+        if (!search.alg.some(a => key.algorithms.includes(a))) continue
       } else if (typeof search.alg === 'string') {
         if (!key.algorithms.includes(search.alg)) continue
       }
@@ -125,10 +125,10 @@ export class Keyset<K extends Key = Key> implements Iterable<K> {
   }
 
   findSigningKey(search: Omit<KeySearch, 'use'>): [key: Key, alg: string] {
-    const { kid, alg } = search
+    const {kid, alg} = search
     const matchingKeys: Key[] = []
 
-    for (const key of this.list({ kid, alg, use: 'sig' })) {
+    for (const key of this.list({kid, alg, use: 'sig'})) {
       // Not a signing key
       if (!key.canSign) continue
 
@@ -140,7 +140,7 @@ export class Keyset<K extends Key = Key> implements Iterable<K> {
 
     const isAllowedAlg = matchesAny(alg)
     const candidates = matchingKeys.map(
-      (key) => [key, key.algorithms.filter(isAllowedAlg)] as const,
+      key => [key, key.algorithms.filter(isAllowedAlg)] as const,
     )
 
     // Return the first candidates that matches the preferred algorithms
@@ -165,11 +165,11 @@ export class Keyset<K extends Key = Key> implements Iterable<K> {
   }
 
   async sign(
-    { alg: searchAlg, kid: searchKid, ...header }: JwtSignHeader,
+    {alg: searchAlg, kid: searchKid, ...header}: JwtSignHeader,
     payload: JwtPayload | JwtPayloadGetter,
   ) {
-    const [key, alg] = this.findSigningKey({ alg: searchAlg, kid: searchKid })
-    const protectedHeader = { ...header, alg, kid: key.kid }
+    const [key, alg] = this.findSigningKey({alg: searchAlg, kid: searchKid})
+    const protectedHeader = {...header, alg, kid: key.kid}
 
     if (typeof payload === 'function') {
       payload = await payload(protectedHeader, key)
@@ -182,12 +182,12 @@ export class Keyset<K extends Key = Key> implements Iterable<K> {
     P extends Record<string, unknown> = JwtPayload,
     C extends string = string,
   >(token: Jwt, options?: VerifyOptions<C>) {
-    const { header } = unsafeDecodeJwt(token)
-    const { kid, alg } = header
+    const {header} = unsafeDecodeJwt(token)
+    const {kid, alg} = header
 
     const errors: unknown[] = []
 
-    for (const key of this.list({ use: 'sig', kid, alg })) {
+    for (const key of this.list({use: 'sig', kid, alg})) {
       try {
         return await key.verifyJwt<P, C>(token, options)
       } catch (err) {
