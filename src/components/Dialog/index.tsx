@@ -110,11 +110,13 @@ export function Outer({
 
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
+      // Run any leftover callbacks that might have been queued up before calling `.open()`
+      callQueuedCallbacks()
+
       setDialogIsOpen(control.id, true)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
-
-      callQueuedCallbacks()
+      sheet.current?.snapToIndex(index || 0)
     },
     [setDialogIsOpen, control.id, callQueuedCallbacks],
   )
