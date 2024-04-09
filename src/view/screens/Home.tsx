@@ -220,13 +220,13 @@ function HomeScreenReady({
               color="primary"
               size="small"
               onPress={() => {
-                setTimeout(() => {
-                  firstDialogControl.open()
-                }, 100)
-
                 firstDialogControl.close(() => {
                   console.log('close callback')
                 })
+
+                setTimeout(() => {
+                  firstDialogControl.open()
+                }, 100)
               }}
               label="Close It">
               <ButtonText>
