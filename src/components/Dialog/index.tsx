@@ -12,6 +12,7 @@ import BottomSheet, {
   WINDOW_HEIGHT,
 } from '@discord/bottom-sheet/src'
 
+import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {isNative} from 'platform/detection'
 import {atoms as a, flatten, useTheme} from '#/alf'
@@ -129,7 +130,9 @@ export function Outer({
       for (const cb of closeCallbacks.current) {
         try {
           cb()
-        } catch {}
+        } catch (e: any) {
+          logger.error('Error running close callback', e)
+        }
       }
     }
     onClose?.()
