@@ -44,6 +44,12 @@ export type LogEvents = {
   }
   'onboarding:moderation:nextPressed': {}
   'onboarding:finished:nextPressed': {}
+  'home:feedDisplayed': {
+    feedUrl: string
+    feedType: string
+    index: number
+    reason: 'focus' | 'tabbar-click' | 'pager-swipe' | 'desktop-sidebar-click'
+  }
   'feed:endReached': {
     feedUrl: string
     feedType: string
