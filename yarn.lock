@@ -4478,6 +4478,14 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@pagopa/io-react-native-jwt@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@pagopa/io-react-native-jwt/-/io-react-native-jwt-1.1.0.tgz#9a8e99672a683a32a27785eb01a7f108561ca8dd"
+  integrity sha512-R/Cgiu3Qb/7LnzQstUTGkNnsKfQ5lc/O3eSAkzZPGQqQb4hoSch4N/2JgqXRZPeTNfFA2vDmYbV6fSidMDL2xA==
+  dependencies:
+    abab "^2.0.6"
+    zod "^3.21.4"
+
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.11", "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.5.11.tgz#7c2268cedaa0644d677e8c4f377bc8fb304f714a"

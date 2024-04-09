@@ -63,6 +63,7 @@
     "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.3.1",
+    "@pagopa/io-react-native-jwt": "^1.1.0",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-masked-view/masked-view": "0.3.0",
