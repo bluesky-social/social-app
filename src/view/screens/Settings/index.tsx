@@ -10,13 +10,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {setStringAsync} from 'expo-clipboard'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import Clipboard from '@react-native-clipboard/clipboard'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -245,7 +245,7 @@ export function SettingsScreen({}: Props) {
   }, [onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
-    Clipboard.setString(
+    setStringAsync(
       `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))

@@ -1,23 +1,22 @@
 import React, {memo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {NavigationProp} from 'lib/routes/types'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {BACK_HITSLOP} from 'lib/constants'
-import {useSession} from '#/state/session'
-import {Shadow} from '#/state/cache/types'
-import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
+import {useNavigation} from '@react-navigation/native'
 
-import {atoms as a, useTheme} from '#/alf'
-import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
-import {BlurView} from 'view/com/util/BlurView'
+import {Shadow} from '#/state/cache/types'
+import {ProfileImageLightbox, useLightboxControls} from '#/state/lightbox'
+import {useSession} from '#/state/session'
+import {BACK_HITSLOP} from 'lib/constants'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {NavigationProp} from 'lib/routes/types'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {UserBanner} from 'view/com/util/UserBanner'
+import {atoms as a, useTheme} from '#/alf'
+import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 
 interface Props {
@@ -97,9 +96,7 @@ let ProfileHeaderShell = ({
           accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
-            <BlurView style={styles.backBtn} blurType="dark">
-              <FontAwesomeIcon size={18} icon="angle-left" color="white" />
-            </BlurView>
+            <FontAwesomeIcon size={18} icon="angle-left" color="white" />
           </View>
         </TouchableWithoutFeedback>
       )}

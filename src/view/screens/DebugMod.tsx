@@ -274,13 +274,13 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
             values={scenario}
             onChange={setScenario}>
             <ToggleButton.Button name="label" label="Label">
-              Label
+              <ToggleButton.ButtonText>Label</ToggleButton.ButtonText>
             </ToggleButton.Button>
             <ToggleButton.Button name="block" label="Block">
-              Block
+              <ToggleButton.ButtonText>Block</ToggleButton.ButtonText>
             </ToggleButton.Button>
             <ToggleButton.Button name="mute" label="Mute">
-              Mute
+              <ToggleButton.ButtonText>Mute</ToggleButton.ButtonText>
             </ToggleButton.Button>
           </ToggleButton.Group>
 
@@ -474,16 +474,16 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 
           <ToggleButton.Group label="Results" values={view} onChange={setView}>
             <ToggleButton.Button name="post" label="Post">
-              Post
+              <ToggleButton.ButtonText>Post</ToggleButton.ButtonText>
             </ToggleButton.Button>
             <ToggleButton.Button name="notifications" label="Notifications">
-              Notifications
+              <ToggleButton.ButtonText>Notifications</ToggleButton.ButtonText>
             </ToggleButton.Button>
             <ToggleButton.Button name="account" label="Account">
-              Account
+              <ToggleButton.ButtonText>Account</ToggleButton.ButtonText>
             </ToggleButton.Button>
             <ToggleButton.Button name="data" label="Data">
-              Data
+              <ToggleButton.ButtonText>Data</ToggleButton.ButtonText>
             </ToggleButton.Button>
           </ToggleButton.Group>
 

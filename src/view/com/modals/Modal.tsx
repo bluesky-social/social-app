@@ -15,7 +15,6 @@ import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as EditProfileModal from './EditProfile'
-import * as EmbedConsentModal from './EmbedConsent'
 import * as InAppBrowserConsentModal from './InAppBrowserConsent'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
@@ -116,9 +115,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'link-warning') {
     snapPoints = LinkWarningModal.snapPoints
     element = <LinkWarningModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'embed-consent') {
-    snapPoints = EmbedConsentModal.snapPoints
-    element = <EmbedConsentModal.Component {...activeModal} />
   } else if (activeModal?.name === 'in-app-browser-consent') {
     snapPoints = InAppBrowserConsentModal.snapPoints
     element = <InAppBrowserConsentModal.Component {...activeModal} />

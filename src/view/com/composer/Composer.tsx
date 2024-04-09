@@ -11,8 +11,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {LinearGradient} from 'expo-linear-gradient'
 import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -508,11 +508,7 @@ export const ComposePost = observer(function ComposePost({
         title={_(msg`Discard draft?`)}
         description={_(msg`Are you sure you'd like to discard this draft?`)}
         onConfirm={() => {
-          if (isWeb) {
-            onClose()
-          } else {
-            discardPromptControl.close(onClose)
-          }
+          discardPromptControl.close(onClose)
         }}
         confirmButtonCta={_(msg`Discard`)}
         confirmButtonColor="negative"

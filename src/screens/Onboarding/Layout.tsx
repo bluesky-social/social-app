@@ -17,7 +17,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {createPortalGroup} from '#/components/Portal'
 import {leading, P, Text} from '#/components/Typography'
@@ -73,7 +73,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             onPress={() => onboardDispatch({type: 'skip'})}
             // DEV ONLY
             label="Clear onboarding state">
-            Clear
+            <ButtonText>Clear</ButtonText>
           </Button>
         </View>
       )}
