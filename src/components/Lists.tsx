@@ -1,25 +1,23 @@
 import React from 'react'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
 
-import {CenteredView} from 'view/com/util/Views'
-import {Loader} from '#/components/Loader'
 import {cleanError} from 'lib/strings/errors'
-import {Button} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import {CenteredView} from 'view/com/util/Views'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {Error} from '#/components/Error'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
 export function ListFooter({
-  isFetching,
-  isError,
+  isFetchingNextPage,
   error,
   onRetry,
   height,
 }: {
-  isFetching?: boolean
-  isError?: boolean
+  isFetchingNextPage?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
   height?: number
@@ -36,32 +34,26 @@ export function ListFooter({
         t.atoms.border_contrast_low,
         {height: height ?? 180, paddingTop: 30},
       ]}>
-      {isFetching ? (
+      {isFetchingNextPage ? (
         <Loader size="xl" />
       ) : (
-        <ListFooterMaybeError
-          isError={isError}
-          error={error}
-          onRetry={onRetry}
-        />
+        <ListFooterMaybeError error={error} onRetry={onRetry} />
       )}
     </View>
   )
 }
 
 function ListFooterMaybeError({
-  isError,
   error,
   onRetry,
 }: {
-  isError?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
 }) {
   const t = useTheme()
   const {_} = useLingui()
 
-  if (!isError) return null
+  if (!error) return null
 
   return (
     <View style={[a.w_full, a.px_lg]}>
@@ -95,7 +87,9 @@ function ListFooterMaybeError({
             a.py_sm,
           ]}
           onPress={onRetry}>
-          <Trans>Retry</Trans>
+          <ButtonText>
+            <Trans>Retry</Trans>
+          </ButtonText>
         </Button>
       </View>
     </View>
@@ -128,7 +122,7 @@ export function ListHeaderDesktop({
 
 export function ListMaybePlaceholder({
   isLoading,
-  isEmpty,
+  noEmpty,
   isError,
   emptyTitle,
   emptyMessage,
@@ -138,7 +132,7 @@ export function ListMaybePlaceholder({
   onRetry,
 }: {
   isLoading: boolean
-  isEmpty?: boolean
+  noEmpty?: boolean
   isError?: boolean
   emptyTitle?: string
   emptyMessage?: string
@@ -150,16 +144,6 @@ export function ListMaybePlaceholder({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
-
-  if (!isLoading && isError) {
-    return (
-      <Error
-        title={errorTitle ?? _(msg`Oops!`)}
-        message={errorMessage ?? _(`Something went wrong!`)}
-        onRetry={onRetry}
-      />
-    )
-  }
 
   if (isLoading) {
     return (
@@ -180,7 +164,17 @@ export function ListMaybePlaceholder({
     )
   }
 
-  if (isEmpty) {
+  if (isError) {
+    return (
+      <Error
+        title={errorTitle ?? _(msg`Oops!`)}
+        message={errorMessage ?? _(`Something went wrong!`)}
+        onRetry={onRetry}
+      />
+    )
+  }
+
+  if (!noEmpty) {
     return (
       <Error
         title={
@@ -197,4 +191,6 @@ export function ListMaybePlaceholder({
       />
     )
   }
+
+  return null
 }

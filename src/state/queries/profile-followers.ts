@@ -1,9 +1,9 @@
 import {AppBskyActorDefs, AppBskyGraphGetFollowers} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
@@ -11,7 +11,8 @@ import {getAgent} from '#/state/session'
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-export const RQKEY = (did: string) => ['profile-followers', did]
+const RQKEY_ROOT = 'profile-followers'
+export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileFollowersQuery(did: string | undefined) {
   return useInfiniteQuery<
@@ -43,7 +44,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyGraphGetFollowers.OutputSchema>
   >({
-    queryKey: ['profile-followers'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

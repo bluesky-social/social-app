@@ -1,16 +1,17 @@
 import {AppBskyFeedDefs, AppBskyFeedSearchPosts} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
-  QueryKey,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
+const searchPostsQueryKeyRoot = 'search-posts'
 const searchPostsQueryKey = ({query}: {query: string}) => [
-  'search-posts',
+  searchPostsQueryKeyRoot,
   query,
 ]
 
@@ -43,7 +44,7 @@ export function* findAllPostsInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
   >({
-    queryKey: ['search-posts'],
+    queryKey: [searchPostsQueryKeyRoot],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

@@ -6,9 +6,9 @@ import {useLingui} from '@lingui/react'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
-  Description,
+  DescriptionText,
   OnboardingControls,
-  Title,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
@@ -32,11 +32,6 @@ export const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: IS_PROD, // these feeds are only available in prod
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
-    gradient: tokens.gradients.midnight,
-  },
-  {
-    default: IS_PROD, // these feeds are only available in prod
-    uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
     gradient: tokens.gradients.midnight,
   },
 ]
@@ -105,15 +100,15 @@ export function StepAlgoFeeds() {
     <View style={[a.align_start]}>
       <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Choose your main feeds</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         <Trans>
           Custom feeds built by the community bring you new experiences and help
           you find the content you love.
         </Trans>
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group
@@ -130,16 +125,6 @@ export function StepAlgoFeeds() {
             <Trans>We recommend our "Discover" feed:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[0]} />
-          <Text
-            style={[
-              a.text_md,
-              a.pt_4xl,
-              a.pb_lg,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>We also think you'll like "For You" by Skygaze:</Trans>
-          </Text>
-          <FeedCard config={PRIMARY_FEEDS[1]} />
         </Toggle.Group>
 
         <Toggle.Group

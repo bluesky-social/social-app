@@ -8,32 +8,33 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {useQueryClient} from '@tanstack/react-query'
-import {List, ListRef} from '../util/List'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {FeedErrorMessage} from './FeedErrorMessage'
-import {FeedSlice} from './FeedSlice'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useTheme} from 'lib/ThemeContext'
-import {logger} from '#/logger'
-import {
-  RQKEY,
-  FeedDescriptor,
-  FeedParams,
-  usePostFeedQuery,
-  pollLatest,
-} from '#/state/queries/post-feed'
-import {isWeb} from '#/platform/detection'
-import {listenPostCreated} from '#/state/events'
-import {useSession} from '#/state/session'
-import {STALE} from '#/state/queries'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
+import {useQueryClient} from '@tanstack/react-query'
+
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {listenPostCreated} from '#/state/events'
+import {STALE} from '#/state/queries'
+import {
+  FeedDescriptor,
+  FeedParams,
+  pollLatest,
+  RQKEY,
+  usePostFeedQuery,
+} from '#/state/queries/post-feed'
+import {useSession} from '#/state/session'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useTheme} from 'lib/ThemeContext'
+import {List, ListRef} from '../util/List'
+import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
+import {FeedErrorMessage} from './FeedErrorMessage'
+import {FeedSlice} from './FeedSlice'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -217,6 +218,7 @@ let Feed = ({
     track('Feed:onRefresh')
     logEvent('feed:refresh', {
       feedType: feedType,
+      feedUrl: feed,
       reason: 'pull-to-refresh',
     })
     setIsPTRing(true)
@@ -227,13 +229,14 @@ let Feed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onHasNew, feedType])
+  }, [refetch, track, setIsPTRing, onHasNew, feed, feedType])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
     logEvent('feed:endReached', {
       feedType: feedType,
+      feedUrl: feed,
       itemCount: feedItems.length,
     })
     track('Feed:onEndReached')
@@ -248,6 +251,7 @@ let Feed = ({
     isError,
     fetchNextPage,
     track,
+    feed,
     feedType,
     feedItems.length,
   ])

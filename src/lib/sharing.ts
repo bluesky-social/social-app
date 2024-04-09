@@ -1,8 +1,9 @@
-import {isIOS, isAndroid} from 'platform/detection'
-// import * as Sharing from 'expo-sharing'
-import Clipboard from '@react-native-clipboard/clipboard'
-import * as Toast from '../view/com/util/Toast'
 import {Share} from 'react-native'
+// import * as Sharing from 'expo-sharing'
+import {setStringAsync} from 'expo-clipboard'
+
+import {isAndroid, isIOS} from 'platform/detection'
+import * as Toast from '#/view/com/util/Toast'
 import {t} from '@lingui/macro'
 
 /**
@@ -19,7 +20,7 @@ export async function shareUrl(url: string) {
   } else {
     // React Native Share is not supported by web. Web Share API
     // has increasing but not full support, so default to clipboard
-    Clipboard.setString(url)
-    Toast.show(t`Copied to clipboard`)
+    setStringAsync(url)
+    Toast.show(t'Copied to clipboard')
   }
 }

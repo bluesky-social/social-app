@@ -1,47 +1,54 @@
 import React from 'react'
-import {View} from 'react-native'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {List} from '#/view/com/util/List'
-import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useLikedByQuery} from '#/state/queries/post-liked-by'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {ListFooter} from '#/components/Lists'
+import {cleanError} from 'lib/strings/errors'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {List} from '#/view/com/util/List'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+function renderItem({item}: {item: GetLikes.Like}) {
+  return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
+}
+
+function keyExtractor(item: GetLikes.Like) {
+  return item.actor.did
+}
 
 export function LikedByList({uri}: {uri: string}) {
-  const t = useTheme()
+  const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = React.useState(false)
+
   const {
     data: resolvedUri,
     error: resolveError,
-    isFetching: isFetchingResolvedUri,
+    isLoading: isUriLoading,
   } = useResolveUriQuery(uri)
   const {
     data,
-    isFetching,
-    isFetched,
-    isRefetching,
+    isLoading: isLikedByLoading,
+    isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    isError,
     error: likedByError,
     refetch,
   } = useLikedByQuery(resolvedUri?.uri)
+
+  const error = resolveError || likedByError
+  const isError = !!resolveError || !!likedByError
+
   const likes = React.useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
     }
     return []
   }, [data])
-  const initialNumToRender = useInitialNumToRender()
-  const error = resolveError || likedByError
 
   const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
@@ -54,56 +61,47 @@ export function LikedByList({uri}: {uri: string}) {
   }, [refetch, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more likes', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = React.useCallback(({item}: {item: GetLikes.Like}) => {
+  if (likes.length < 1) {
     return (
-      <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
-    )
-  }, [])
-
-  if (isFetchingResolvedUri || !isFetched) {
-    return (
-      <View style={[a.w_full, a.align_center, a.p_lg]}>
-        <Loader size="xl" />
-      </View>
+      <ListMaybePlaceholder
+        isLoading={isUriLoading || isLikedByLoading}
+        isError={isError}
+        emptyType="results"
+        emptyMessage={_(
+          msg`Nobody has liked this yet. Maybe you should be the first!`,
+        )}
+        errorMessage={cleanError(resolveError || error)}
+        onRetry={isError ? refetch : undefined}
+      />
     )
   }
 
-  return likes.length ? (
+  return (
     <List
       data={likes}
-      keyExtractor={item => item.actor.did}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
-      onEndReachedThreshold={3}
-      renderItem={renderItem}
-      initialNumToRender={initialNumToRender}
-      ListFooterComponent={() => (
+      ListFooterComponent={
         <ListFooter
-          isFetching={isFetching && !isRefetching}
-          isError={isError}
-          error={error ? error.toString() : undefined}
+          isFetchingNextPage={isFetchingNextPage}
+          error={cleanError(error)}
           onRetry={fetchNextPage}
         />
-      )}
+      }
+      onEndReachedThreshold={3}
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
     />
-  ) : (
-    <View style={[a.p_lg]}>
-      <View style={[a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
-        <Text style={[a.text_md, a.leading_snug]}>
-          <Trans>
-            Nobody has liked this yet. Maybe you should be the first!
-          </Trans>
-        </Text>
-      </View>
-    </View>
   )
 }

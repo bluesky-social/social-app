@@ -1,22 +1,21 @@
 import React from 'react'
 import {View} from 'react-native'
 import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
+import {useLabelBehaviorDescription} from '#/lib/moderation/useLabelBehaviorDescription'
+import {getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {
   usePreferencesQuery,
   usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences'
-import {useLabelBehaviorDescription} from '#/lib/moderation/useLabelBehaviorDescription'
-import {getLabelStrings} from '#/lib/moderation/useLabelInfo'
-
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
-import {Text} from '#/components/Typography'
-import {InlineLink} from '#/components/Link'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
+import {InlineLinkText} from '#/components/Link'
+import {Text} from '#/components/Typography'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
 
 export function Outer({children}: React.PropsWithChildren<{}>) {
   return (
@@ -85,17 +84,17 @@ export function Buttons({
         onChange={onChange}>
         {ignoreLabel && (
           <ToggleButton.Button name="ignore" label={ignoreLabel}>
-            {ignoreLabel}
+            <ToggleButton.ButtonText>{ignoreLabel}</ToggleButton.ButtonText>
           </ToggleButton.Button>
         )}
         {warnLabel && (
           <ToggleButton.Button name="warn" label={warnLabel}>
-            {warnLabel}
+            <ToggleButton.ButtonText>{warnLabel}</ToggleButton.ButtonText>
           </ToggleButton.Button>
         )}
         {hideLabel && (
           <ToggleButton.Button name="hide" label={hideLabel}>
-            {hideLabel}
+            <ToggleButton.ButtonText>{hideLabel}</ToggleButton.ButtonText>
           </ToggleButton.Button>
         )}
       </ToggleButton.Group>
@@ -244,9 +243,9 @@ export function LabelerLabelPreference({
               ) : isGlobalLabel ? (
                 <Trans>
                   Configured in{' '}
-                  <InlineLink to="/moderation" style={a.text_sm}>
+                  <InlineLinkText to="/moderation" style={a.text_sm}>
                     moderation settings
-                  </InlineLink>
+                  </InlineLinkText>
                   .
                 </Trans>
               ) : null}
