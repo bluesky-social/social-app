@@ -7,7 +7,7 @@ import {
   AppBskyFeedPost,
   AppBskyGraphDefs,
 } from '@atproto/api'
-import {h} from 'preact'
+import {ComponentChildren, h} from 'preact'
 
 import {Link} from './link'
 
@@ -25,75 +25,107 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
       return <ExternalEmbed content={content} />
     }
 
-    //   // Case 3: Record (quote or linked post)
-    //   if (AppBskyEmbedRecord.isView(content)) {
-    //     const record = content.record
+    // Case 3: Record (quote or linked post)
+    if (AppBskyEmbedRecord.isView(content)) {
+      const record = content.record
 
-    //     // Case 3.1: Post
-    //     if (AppBskyEmbedRecord.isViewRecord(record)) {
-    //       let text
-    //       if (AppBskyFeedPost.isRecord(record.value)) {
-    //         text = record.value.text
-    //       }
-    //       return (
-    //         <div className="mt-1.5">
-    //           <PostEmbed post={record}>
-    //             {text && <p className="mt-1 text-base leading-5">{text}</p>}
-    //             {record.embeds?.map(embed => (
-    //               <Embed key={embed.$type} content={embed} />
-    //             ))}
-    //           </PostEmbed>
-    //         </div>
-    //       )
-    //     }
+      // Case 3.1: Post
+      if (AppBskyEmbedRecord.isViewRecord(record)) {
+        let text
+        if (AppBskyFeedPost.isRecord(record.value)) {
+          text = record.value.text
+        }
+        const rkey = record.uri.split('/').pop() as string
+        return (
+          <Link
+            href={`/profile/${record.author.did}/post/${rkey}`}
+            className="transition-colors hover:bg-neutral-100 border rounded-lg p-2 gap-1.5 w-full flex flex-col">
+            <div className="flex gap-1.5 items-center">
+              <img
+                src={record.author.avatar}
+                className="w-4 h-4 rounded-full bg-neutral-300 shrink-0"
+              />
+              <p className="line-clamp-1 text-sm">
+                <span className="font-bold">{record.author.displayName}</span>
+                <span className="text-textLight ml-1">
+                  @{record.author.handle}
+                </span>
+              </p>
+            </div>
+            {text && <p className="text-sm">{text}</p>}
+            {record.embeds
+              ?.filter(embed => {
+                if (AppBskyEmbedImages.isView(embed)) return true
+                if (AppBskyEmbedExternal.isView(embed)) return true
+                return false
+              })
+              .map(embed => (
+                <Embed key={embed.$type} content={embed} />
+              ))}
+          </Link>
+        )
+      }
 
-    //     // Case 3.2: List
-    //     if (AppBskyGraphDefs.isListView(record)) {
-    //       return <ListEmbed list={record} />
-    //     }
+      // // Case 3.2: List
+      // if (AppBskyGraphDefs.isListView(record)) {
+      //   return <ListEmbed list={record} />
+      // }
 
-    //     // Case 3.3: Feed
-    //     if (AppBskyFeedDefs.isGeneratorView(record)) {
-    //       return <FeedGeneratorEmbed generator={record} />
-    //     }
+      // // Case 3.3: Feed
+      // if (AppBskyFeedDefs.isGeneratorView(record)) {
+      //   return <FeedGeneratorEmbed generator={record} />
+      // }
 
-    //     // Case 3.4: Post not found
-    //     if (AppBskyEmbedRecord.isViewNotFound(record)) {
-    //       return <ViewNotFound />
-    //     }
+      // Case 3.4: Post not found
+      if (AppBskyEmbedRecord.isViewNotFound(record)) {
+        return (
+          <GenericBox>Post not found - it may have been deleted</GenericBox>
+        )
+      }
 
-    //     throw new Error('Unsupported record type')
-    //   }
+      // Case 3.5: Post blocked
+      if (AppBskyEmbedRecord.isViewBlocked(record)) {
+        return <GenericBox>This post is blocked</GenericBox>
+      }
 
-    //   // Case 4: Record with media
-    //   if (AppBskyEmbedRecordWithMedia.isView(content)) {
-    //     return (
-    //       <div className="mt-1.5 flex flex-col gap-x-1.5">
-    //         <Embed content={content.media} />
-    //         <Embed
-    //           content={{
-    //             $type: 'app.bsky.embed.record#view',
-    //             record: content.record.record,
-    //           }}
-    //         />
-    //       </div>
-    //     )
-    //   }
+      throw new Error('Unknown embed type')
+    }
+
+    // Case 4: Record with media
+    if (AppBskyEmbedRecordWithMedia.isView(content)) {
+      return (
+        <div className="flex flex-col gap-2">
+          <Embed content={content.media} />
+          <Embed
+            content={{
+              $type: 'app.bsky.embed.record#view',
+              record: content.record.record,
+            }}
+          />
+        </div>
+      )
+    }
 
     throw new Error('Unsupported embed type')
   } catch (err) {
     // console.error("Error rendering embed", content);
     return (
-      <div className="mt-1.5 flex-1 flex-row items-center rounded-lg border py-2">
-        <p className="px-4">
-          {err instanceof Error ? err.message : 'An error occurred'}
-        </p>
-      </div>
+      <GenericBox>
+        {err instanceof Error ? err.message : 'An error occurred'}
+      </GenericBox>
     )
   }
 }
 
-const ImageEmbed = ({content}: {content: AppBskyEmbedImages.View}) => {
+function GenericBox({children}: {children: ComponentChildren}) {
+  return (
+    <div className="mt-1.5 flex-1 flex-row items-center rounded-lg border py-2">
+      <p className="px-4">{children}</p>
+    </div>
+  )
+}
+
+function ImageEmbed({content}: {content: AppBskyEmbedImages.View}) {
   switch (content.images.length) {
     case 1:
       return (
