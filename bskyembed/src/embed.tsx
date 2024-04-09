@@ -38,10 +38,10 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         )
         if (pwiOptOut) {
           return (
-            <GenericBox>
-              (Contains quoted post)
-              <br />
-              <br />
+            <GenericBox disabled>
+              <span className="block font-semibold text-xs mb-2 text-textLight">
+                (Contains quoted post)
+              </span>
               The author of this post has requested their posts not be displayed
               on external sites.
             </GenericBox>
@@ -128,7 +128,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
       // Case 3.5: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
         return (
-          <GenericBox>
+          <GenericBox disabled>
             Quoted post not found - it may have been deleted
           </GenericBox>
         )
@@ -136,7 +136,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 
       // Case 3.6: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
-        return <GenericBox>The quoted post is blocked</GenericBox>
+        return <GenericBox disabled>The quoted post is blocked</GenericBox>
       }
 
       throw new Error('Unknown embed type')
@@ -168,9 +168,18 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
   }
 }
 
-function GenericBox({children}: {children: ComponentChildren}) {
+function GenericBox({
+  children,
+  disabled,
+}: {
+  children: ComponentChildren
+  disabled?: boolean
+}) {
   return (
-    <div className="w-full rounded-lg border py-2 px-3">
+    <div
+      className={`w-full rounded-lg border py-2 px-3 ${
+        disabled ? 'bg-neutral-50' : ''
+      }`}>
       <p className="text-sm">{children}</p>
     </div>
   )
