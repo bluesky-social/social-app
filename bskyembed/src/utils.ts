@@ -9,3 +9,7 @@ export function niceDate(date: number | string | Date) {
     minute: '2-digit',
   })}`
 }
+
+export function getRkey({uri}: {uri: string}): string {
+  return uri.split('/').pop() as string
+}
