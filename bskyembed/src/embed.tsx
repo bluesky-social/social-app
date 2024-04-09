@@ -74,7 +74,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
             title={record.name}
             href={`/profile/${record.creator.did}/lists/${getRkey(record)}`}
             subtitle={
-              record.purpose === AppBskyGraphDefs.CURATELIST
+              record.purpose === AppBskyGraphDefs.MODLIST
                 ? `Moderation list by @${record.creator.handle}`
                 : `User list by @${record.creator.handle}`
             }
@@ -97,7 +97,6 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
       }
 
       // Case 3.4: Labeler
-      // I don't think this is used, but leaving it here just in case
       if (AppBskyLabelerDefs.isLabelerView(record)) {
         return (
           <GenericWithImage
@@ -105,6 +104,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
             title={record.creator.displayName || record.creator.handle}
             href={`/profile/${record.creator.did}`}
             subtitle="Labeler"
+            description={`Liked by ${record.likeCount ?? 0} users`}
           />
         )
       }
