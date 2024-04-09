@@ -45,10 +45,12 @@ export type LogEvents = {
   'onboarding:moderation:nextPressed': {}
   'onboarding:finished:nextPressed': {}
   'feed:endReached': {
+    feedUrl: string
     feedType: string
     itemCount: number
   }
   'feed:refresh': {
+    feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
@@ -65,6 +67,10 @@ export type LogEvents = {
     logContext: 'Composer'
   }
   'post:like': {
+    doesLikerFollowPoster: boolean | undefined
+    doesPosterFollowLiker: boolean | undefined
+    likerClout: number | undefined
+    postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
   'post:repost': {
@@ -77,6 +83,9 @@ export type LogEvents = {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
   'profile:follow': {
+    didBecomeMutual: boolean | undefined
+    followeeClout: number | undefined
+    followerClout: number | undefined
     logContext:
       | 'RecommendedFollowsItem'
       | 'PostThreadItem'

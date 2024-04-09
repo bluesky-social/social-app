@@ -34,11 +34,6 @@ export const PRIMARY_FEEDS: FeedConfig[] = [
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
     gradient: tokens.gradients.midnight,
   },
-  {
-    default: IS_PROD, // these feeds are only available in prod
-    uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
-    gradient: tokens.gradients.midnight,
-  },
 ]
 
 const SECONDARY_FEEDS: FeedConfig[] = [
@@ -130,16 +125,6 @@ export function StepAlgoFeeds() {
             <Trans>We recommend our "Discover" feed:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[0]} />
-          <Text
-            style={[
-              a.text_md,
-              a.pt_4xl,
-              a.pb_lg,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>We also think you'll like "For You" by Skygaze:</Trans>
-          </Text>
-          <FeedCard config={PRIMARY_FEEDS[1]} />
         </Toggle.Group>
 
         <Toggle.Group
