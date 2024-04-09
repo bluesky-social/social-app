@@ -39,8 +39,11 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         if (pwiOptOut) {
           return (
             <GenericBox>
-              Quoted post, whose author has opted out of being displayed on
-              third-party websites
+              (Contains quoted post)
+              <br />
+              <br />
+              The author of this post has requested their posts not be displayed
+              on external sites.
             </GenericBox>
           )
         }

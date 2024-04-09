@@ -59,8 +59,8 @@ function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
       </Link>
       <div className="w-full py-12 gap-4 flex flex-col items-center">
         <p className="max-w-80 text-center w-full text-textLight">
-          This user has opted out of their posts being displayed on third-party
-          websites
+          The author of this post has requested their posts not be displayed on
+          external sites.
         </p>
         <Link
           href={href}
