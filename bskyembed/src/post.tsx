@@ -46,7 +46,7 @@ export function Post({thread}: Props) {
           </div>
           <Link
             href="https://bsky.social/about"
-            className="transition-transform hover:scale-125 shrink-0 self-start">
+            className="transition-transform hover:scale-110 shrink-0 self-start">
             <img src={logo as string} className="h-8" />
           </Link>
         </div>
@@ -71,7 +71,7 @@ export function Post({thread}: Props) {
             <p>{post.repostCount}</p>
           </div> */}
           <div className="flex-1" />
-          <p className="cursor-pointer text-brand font-bold">
+          <p className="cursor-pointer text-brand font-bold hover:underline">
             {post.replyCount
               ? `Read ${post.replyCount} ${
                   post.replyCount > 1 ? 'replies' : 'reply'
