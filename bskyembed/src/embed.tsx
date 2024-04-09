@@ -35,10 +35,9 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         if (AppBskyFeedPost.isRecord(record.value)) {
           text = record.value.text
         }
-        const rkey = record.uri.split('/').pop() as string
         return (
           <Link
-            href={`/profile/${record.author.did}/post/${rkey}`}
+            href={`/profile/${record.author.did}/post/${getRkey(record)}`}
             className="transition-colors hover:bg-neutral-100 border rounded-lg p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
               <img
@@ -66,15 +65,35 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         )
       }
 
-      // // Case 3.2: List
-      // if (AppBskyGraphDefs.isListView(record)) {
-      //   return <ListEmbed list={record} />
-      // }
+      // Case 3.2: List
+      if (AppBskyGraphDefs.isListView(record)) {
+        return (
+          <GenericWithImage
+            image={record.avatar}
+            title={record.name}
+            href={`/profile/${record.creator.did}/lists/${getRkey(record)}`}
+            subtitle={
+              record.purpose === AppBskyGraphDefs.CURATELIST
+                ? `Moderation list by @${record.creator.handle}`
+                : `User list by @${record.creator.handle}`
+            }
+            description={record.description}
+          />
+        )
+      }
 
-      // // Case 3.3: Feed
-      // if (AppBskyFeedDefs.isGeneratorView(record)) {
-      //   return <FeedGeneratorEmbed generator={record} />
-      // }
+      // Case 3.3: Feed
+      if (AppBskyFeedDefs.isGeneratorView(record)) {
+        return (
+          <GenericWithImage
+            image={record.avatar}
+            title={record.displayName}
+            href={`/profile/${record.creator.did}/feed/${getRkey(record)}`}
+            subtitle={`Feed by @${record.creator.handle}`}
+            description={`Liked by ${record.likeCount ?? 0} users`}
+          />
+        )
+      }
 
       // Case 3.4: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
@@ -119,8 +138,8 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 
 function GenericBox({children}: {children: ComponentChildren}) {
   return (
-    <div className="mt-1.5 flex-1 flex-row items-center rounded-lg border py-2">
-      <p className="px-4">{children}</p>
+    <div className="w-full rounded-lg border py-2 px-4">
+      <p>{children}</p>
     </div>
   )
 }
@@ -216,4 +235,45 @@ function ExternalEmbed({content}: {content: AppBskyEmbedExternal.View}) {
       </div>
     </Link>
   )
+}
+
+function GenericWithImage({
+  title,
+  subtitle,
+  href,
+  image,
+  description,
+}: {
+  title: string
+  subtitle: string
+  href: string
+  image?: string
+  description?: string
+}) {
+  return (
+    <Link
+      href={href}
+      className="w-full rounded-lg border py-2 px-3 flex flex-col gap-2">
+      <div className="flex gap-2.5 items-center">
+        {image ? (
+          <img
+            src={image}
+            alt={title}
+            className="w-8 h-8 rounded-md bg-neutral-300 shrink-0"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-md bg-brand shrink-0" />
+        )}
+        <div className="flex-1">
+          <p className="font-bold text-sm">{title}</p>
+          <p className="text-textLight text-sm">{subtitle}</p>
+        </div>
+      </div>
+      {description && <p className="text-textLight text-sm">{description}</p>}
+    </Link>
+  )
+}
+
+function getRkey({uri}: {uri: string}): string {
+  return uri.split('/').pop() as string
 }
