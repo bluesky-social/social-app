@@ -128,11 +128,9 @@ function HomeScreenReady({
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
-      if (lastPagerReportedIndexRef.current !== index) {
-        lastPagerReportedIndexRef.current = index
-        const feed = allFeeds[index]
-        setSelectedFeed(feed)
-      }
+      const feed = allFeeds[index]
+      setSelectedFeed(feed)
+      lastPagerReportedIndexRef.current = index
     },
     [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
   )
