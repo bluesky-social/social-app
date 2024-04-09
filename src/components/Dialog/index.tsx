@@ -97,16 +97,28 @@ export function Outer({
    */
   const isOpen = openIndex > -1
 
+  const callQueuedCallbacks = React.useCallback(() => {
+    for (const cb of closeCallbacks.current) {
+      try {
+        cb()
+      } catch (e: any) {
+        logger.error('Error running close callback', e)
+      }
+    }
+
+    closeCallbacks.current = []
+  }, [])
+
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
       setDialogIsOpen(control.id, true)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
 
+      callQueuedCallbacks()
       isClosing.current = false
-      closeCallbacks.current = []
     },
-    [setOpenIndex, setDialogIsOpen, control.id],
+    [setDialogIsOpen, control.id, callQueuedCallbacks],
   )
 
   // This is the function that we call when we want to dismiss the dialog.
@@ -129,20 +141,10 @@ export function Outer({
     setDialogIsOpen(control.id, false)
     setOpenIndex(-1)
 
-    if (closeCallbacks.current && closeCallbacks.current.length > 0) {
-      for (const cb of closeCallbacks.current) {
-        try {
-          cb()
-        } catch (e: any) {
-          logger.error('Error running close callback', e)
-        }
-      }
-    }
+    callQueuedCallbacks()
     onClose?.()
-
     isClosing.current = false
-    closeCallbacks.current = []
-  }, [control.id, onClose, setDialogIsOpen])
+  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
   useImperativeHandle(
     control.ref,
