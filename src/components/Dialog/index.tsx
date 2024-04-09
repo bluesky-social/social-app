@@ -124,8 +124,6 @@ export function Outer({
       if (closeCallback.current) {
         closeCallback.current()
       }
-    } catch (e) {
-      // No need to handle this here
     } finally {
       onClose?.()
     }
