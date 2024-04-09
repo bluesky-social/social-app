@@ -1,8 +1,9 @@
 /* eslint-env detox/detox */
 
-import {describe, beforeAll, it} from '@jest/globals'
+import {beforeAll, describe, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, createServer} from '../util'
+
+import {createServer, loginAsAlice, openApp} from '../util'
 
 describe('invite-codes', () => {
   let service: string
