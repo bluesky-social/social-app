@@ -80,7 +80,7 @@ jobs:
           retention-days: 30
           compression-level: 6
           name: build-${{ steps.timestamp.outputs.time }}.aab
-          path: build.apk
+          path: build.aab
 
       - name: 🚀 Upload Testflight Artifact
         id: upload-artifact-testflight
