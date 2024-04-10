@@ -125,6 +125,7 @@
     "expo-secure-store": "^12.8.1",
     "expo-sharing": "^11.10.0",
     "expo-splash-screen": "~0.26.4",
+    "expo-sqlite": "^13.4.0",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.3",
     "expo-task-manager": "~11.7.2",
