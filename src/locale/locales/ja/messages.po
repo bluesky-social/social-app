@@ -1605,7 +1605,7 @@ msgstr "フィードで成人向けコンテンツを有効にする"
 #: src/components/dialogs/EmbedConsent.tsx:82
 #: src/components/dialogs/EmbedConsent.tsx:89
 msgid "Enable external media"
-msgstr ""
+msgstr "外部メディアを有効にする"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 #~ msgid "Enable External Media"
@@ -1621,7 +1621,7 @@ msgstr "この設定を有効にすると、自分がフォローしているユ
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
-msgstr ""
+msgstr "このソースのみ有効にする"
 
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
@@ -1639,6 +1639,7 @@ msgstr "このアプリパスワードの名前を入力"
 msgid "Enter a password"
 msgstr "パスワードを入力"
 
+#: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
 msgid "Enter a word or tag"
 msgstr "ワードまたはタグを入力"
@@ -1942,7 +1943,7 @@ msgstr "すべてのアカウントをフォロー"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
-msgstr ""
+msgstr "フォローバック"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
