@@ -22,6 +22,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {NavigationProp} from '#/lib/routes/types'
+import {useNewSearchGate} from '#/lib/statsig/gates'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -191,7 +192,13 @@ type SearchResultSlice =
       key: string
     }
 
-function SearchScreenPostResults({query}: {query: string}) {
+function SearchScreenPostResults({
+  query,
+  sort,
+}: {
+  query: string
+  sort?: 'top' | 'latest'
+}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
@@ -209,7 +216,7 @@ function SearchScreenPostResults({query}: {query: string}) {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery})
+  } = useSearchPostsQuery({query: augmentedQuery, sort})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -316,8 +323,6 @@ function SearchScreenUserResults({query}: {query: string}) {
   )
 }
 
-const SECTIONS_LOGGEDOUT = ['Users']
-const SECTIONS_LOGGEDIN = ['Posts', 'Users']
 export function SearchScreenInner({
   query,
   primarySearch,
@@ -330,6 +335,9 @@ export function SearchScreenInner({
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
+  const {_} = useLingui()
+
+  const isNewSearch = useNewSearchGate()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -339,6 +347,55 @@ export function SearchScreenInner({
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
+  const sections = React.useMemo(() => {
+    if (!query) return []
+    if (isNewSearch) {
+      if (hasSession) {
+        return [
+          {
+            title: _(msg`Top`),
+            component: <SearchScreenPostResults query={query} sort="top" />,
+          },
+          {
+            title: _(msg`Latest`),
+            component: <SearchScreenPostResults query={query} sort="latest" />,
+          },
+          {
+            title: _(msg`People`),
+            component: <SearchScreenUserResults query={query} />,
+          },
+        ]
+      } else {
+        return [
+          {
+            title: _(msg`People`),
+            component: <SearchScreenUserResults query={query} />,
+          },
+        ]
+      }
+    } else {
+      if (hasSession) {
+        return [
+          {
+            title: _(msg`Posts`),
+            component: <SearchScreenPostResults query={query} />,
+          },
+          {
+            title: _(msg`Users`),
+            component: <SearchScreenUserResults query={query} />,
+          },
+        ]
+      } else {
+        return [
+          {
+            title: _(msg`Users`),
+            component: <SearchScreenUserResults query={query} />,
+          },
+        ]
+      }
+    }
+  }, [hasSession, isNewSearch, _, query])
+
   if (hasSession) {
     return query ? (
       <Pager
@@ -347,16 +404,13 @@ export function SearchScreenInner({
           <CenteredView
             sideBorders
             style={[pal.border, pal.view, styles.tabBarContainer]}>
-            <TabBar items={SECTIONS_LOGGEDIN} {...props} />
+            <TabBar items={sections.map(section => section.title)} {...props} />
           </CenteredView>
         )}
         initialPage={0}>
-        <View>
-          <SearchScreenPostResults query={query} />
-        </View>
-        <View>
-          <SearchScreenUserResults query={query} />
-        </View>
+        {sections.map((section, i) => (
+          <View key={i}>{section.component}</View>
+        ))}
       </Pager>
     ) : (
       <View>
@@ -389,13 +443,13 @@ export function SearchScreenInner({
         <CenteredView
           sideBorders
           style={[pal.border, pal.view, styles.tabBarContainer]}>
-          <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
+          <TabBar items={sections.map(section => section.title)} {...props} />
         </CenteredView>
       )}
       initialPage={0}>
-      <View>
-        <SearchScreenUserResults query={query} />
-      </View>
+      {sections.map((section, i) => (
+        <View key={i}>{section.component}</View>
+      ))}
     </Pager>
   ) : (
     <CenteredView sideBorders style={pal.border}>
