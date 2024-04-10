@@ -1,16 +1,17 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {DesktopSearch} from './Search'
-import {DesktopFeeds} from './Feeds'
-import {Text} from 'view/com/util/text/Text'
-import {TextLink} from 'view/com/util/Link'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {s} from 'lib/styles'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useSession} from '#/state/session'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {TextLink} from 'view/com/util/Link'
+import {Text} from 'view/com/util/text/Text'
+import {DesktopFeeds} from './Feeds'
+import {DesktopSearch} from './Search'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')
@@ -97,15 +98,18 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
 }
 
 const styles = StyleSheet.create({
-  rightNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    // @ts-ignore web only
-    left: 'calc(50vw + 300px + 20px)',
-    width: 300,
-    maxHeight: '100%',
-    overflowY: 'auto',
-  },
+  // @ts-ignore web only
+  rightNav: isWeb
+    ? {
+        position: 'fixed',
+        left: 'calc(50vw + 300px + 20px)',
+        width: 300,
+        maxHeight: '100%',
+        overflowY: 'auto',
+      }
+    : {
+        width: 300,
+      },
 
   message: {
     paddingVertical: 18,

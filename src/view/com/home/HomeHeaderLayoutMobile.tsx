@@ -1,23 +1,23 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Link} from '../util/Link'
+import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {HITSLOP_10} from 'lib/constants'
-import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {isWeb} from 'platform/detection'
+import {HITSLOP_10} from 'lib/constants'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isNativeTablet, isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
-
-import {IS_DEV} from '#/env'
 import {atoms} from '#/alf'
-import {Link as Link2} from '#/components/Link'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
+import {Link as Link2} from '#/components/Link'
+import {IS_DEV} from '#/env'
+import {Link} from '../util/Link'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -42,23 +42,28 @@ export function HomeHeaderLayoutMobile({
         headerHeight.value = e.nativeEvent.layout.height
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <View style={[pal.view, {width: 100}]}>
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            onPress={onPressAvi}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Open navigation`)}
-            accessibilityHint={_(
-              msg`Access profile and other navigation links`,
-            )}
-            hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
-          </TouchableOpacity>
-        </View>
+        {!isNativeTablet ? (
+          <View style={[pal.view, {width: 100}]}>
+            <TouchableOpacity
+              testID="viewHeaderDrawerBtn"
+              onPress={onPressAvi}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open navigation`)}
+              accessibilityHint={_(
+                msg`Access profile and other navigation links`,
+              )}
+              hitSlop={HITSLOP_10}>
+              <FontAwesomeIcon
+                icon="bars"
+                size={18}
+                color={pal.colors.textLight}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          // subtract width of LeftNav
+          <View style={{width: 100 - 77}} />
+        )}
         <View>
           <Logo width={30} />
         </View>

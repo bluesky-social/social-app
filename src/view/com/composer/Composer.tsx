@@ -44,13 +44,7 @@ import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {colors, gradients, s} from 'lib/styles'
-import {
-  isAndroid,
-  isIOS,
-  isNative,
-  isNativeTablet,
-  isWeb,
-} from 'platform/detection'
+import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
@@ -490,7 +484,7 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {!(isMobile || isNativeTablet) ? (
+          {!isMobile && !isNative ? (
             <Pressable
               onPress={onEmojiButtonPress}
               accessibilityRole="button"

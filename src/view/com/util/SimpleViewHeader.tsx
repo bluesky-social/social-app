@@ -8,13 +8,14 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
-import {CenteredView} from './Views'
+
+import {isNativeTablet, isWeb} from '#/platform/detection'
+import {useSetDrawerOpen} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {useSetDrawerOpen} from '#/state/shell'
-import {isWeb} from '#/platform/detection'
+import {CenteredView} from './Views'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -71,13 +72,13 @@ export function SimpleViewHeader({
               icon="angle-left"
               style={[styles.backIcon, pal.text]}
             />
-          ) : (
+          ) : !isNativeTablet ? (
             <FontAwesomeIcon
               size={18}
               icon="bars"
               style={[styles.backIcon, pal.textLight]}
             />
-          )}
+          ) : null}
         </TouchableOpacity>
       ) : null}
       {children}
