@@ -195,13 +195,16 @@ type SearchResultSlice =
 function SearchScreenPostResults({
   query,
   sort,
+  active,
 }: {
   query: string
   sort?: 'top' | 'latest'
+  active: boolean
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
+  const hasBeenViewed = useHasBeenTrue(active)
 
   const augmentedQuery = React.useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -216,7 +219,7 @@ function SearchScreenPostResults({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery, sort})
+  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: hasBeenViewed})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -297,9 +300,20 @@ function SearchScreenPostResults({
   )
 }
 
-function SearchScreenUserResults({query}: {query: string}) {
+function SearchScreenUserResults({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}) {
   const {_} = useLingui()
-  const {data: results, isFetched} = useActorSearch(query)
+  const hasBeenViewed = useHasBeenTrue(active)
+
+  const {data: results, isFetched} = useActorSearch({
+    query,
+    enabled: hasBeenViewed,
+  })
 
   return isFetched && results ? (
     <>
@@ -335,6 +349,7 @@ export function SearchScreenInner({
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
+  const [activeTab, setActiveTab] = React.useState(0)
   const {_} = useLingui()
 
   const isNewSearch = useGate('new_search')
@@ -343,6 +358,7 @@ export function SearchScreenInner({
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
+      setActiveTab(index)
     },
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
@@ -354,22 +370,38 @@ export function SearchScreenInner({
         return [
           {
             title: _(msg`Top`),
-            component: <SearchScreenPostResults query={query} sort="top" />,
+            component: (
+              <SearchScreenPostResults
+                query={query}
+                sort="top"
+                active={activeTab === 0}
+              />
+            ),
           },
           {
             title: _(msg`Latest`),
-            component: <SearchScreenPostResults query={query} sort="latest" />,
+            component: (
+              <SearchScreenPostResults
+                query={query}
+                sort="latest"
+                active={activeTab === 1}
+              />
+            ),
           },
           {
             title: _(msg`People`),
-            component: <SearchScreenUserResults query={query} />,
+            component: (
+              <SearchScreenUserResults query={query} active={activeTab === 2} />
+            ),
           },
         ]
       } else {
         return [
           {
             title: _(msg`People`),
-            component: <SearchScreenUserResults query={query} />,
+            component: (
+              <SearchScreenUserResults query={query} active={activeTab === 0} />
+            ),
           },
         ]
       }
@@ -378,23 +410,29 @@ export function SearchScreenInner({
         return [
           {
             title: _(msg`Posts`),
-            component: <SearchScreenPostResults query={query} />,
+            component: (
+              <SearchScreenPostResults query={query} active={activeTab === 0} />
+            ),
           },
           {
             title: _(msg`Users`),
-            component: <SearchScreenUserResults query={query} />,
+            component: (
+              <SearchScreenUserResults query={query} active={activeTab === 1} />
+            ),
           },
         ]
       } else {
         return [
           {
             title: _(msg`Users`),
-            component: <SearchScreenUserResults query={query} />,
+            component: (
+              <SearchScreenUserResults query={query} active={activeTab === 0} />
+            ),
           },
         ]
       }
     }
-  }, [hasSession, isNewSearch, _, query])
+  }, [hasSession, isNewSearch, _, query, activeTab])
 
   if (hasSession) {
     return query ? (
@@ -874,6 +912,17 @@ function scrollToTopWeb() {
   if (isWeb) {
     window.scrollTo(0, 0)
   }
+}
+
+// takes a bool. returns true once the bool is true, and stays true forever
+function useHasBeenTrue(bool: boolean) {
+  const [isTrue, setIsTrue] = React.useState(bool)
+
+  React.useEffect(() => {
+    if (bool) setIsTrue(true)
+  }, [bool])
+
+  return isTrue
 }
 
 const HEADER_HEIGHT = 50
