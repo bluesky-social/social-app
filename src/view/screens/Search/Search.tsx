@@ -204,7 +204,6 @@ function SearchScreenPostResults({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
-  const hasBeenViewed = useHasBeenTrue(active)
 
   const augmentedQuery = React.useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -219,7 +218,7 @@ function SearchScreenPostResults({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: hasBeenViewed})
+  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -308,11 +307,10 @@ function SearchScreenUserResults({
   active: boolean
 }) {
   const {_} = useLingui()
-  const hasBeenViewed = useHasBeenTrue(active)
 
   const {data: results, isFetched} = useActorSearch({
     query,
-    enabled: hasBeenViewed,
+    enabled: active,
   })
 
   return isFetched && results ? (
@@ -912,17 +910,6 @@ function scrollToTopWeb() {
   if (isWeb) {
     window.scrollTo(0, 0)
   }
-}
-
-// takes a bool. returns true once the bool is true, and stays true forever
-function useHasBeenTrue(bool: boolean) {
-  const [isTrue, setIsTrue] = React.useState(bool)
-
-  React.useEffect(() => {
-    if (bool) setIsTrue(true)
-  }, [bool])
-
-  return isTrue
 }
 
 const HEADER_HEIGHT = 50
