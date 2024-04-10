@@ -4,15 +4,16 @@ import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useMediaQuery} from 'react-responsive'
 
-import {HITSLOP_20} from 'lib/constants'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {colors} from 'lib/styles'
+import {HITSLOP_20} from '#/lib/constants'
+import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {colors} from '#/lib/styles'
+import {isNativeTablet, isWeb} from '#/platform/detection'
+import {useSession} from '#/state/session'
+import {useTheme} from '#/alf'
+
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
-import {isNativeTablet, isWeb} from 'platform/detection'
-import {useSession} from 'state/session'
 
 export function LoadLatestBtn({
   onPress,
@@ -23,7 +24,7 @@ export function LoadLatestBtn({
   label: string
   showIndicator: boolean
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {fabMinimalShellTransform} = useMinimalShellMode()
@@ -33,9 +34,7 @@ export function LoadLatestBtn({
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
-  const showBottomBar = hasSession
-    ? isMobile || isNativeTablet
-    : isTabletOrMobile
+  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
 
   return (
     <AnimatedTouchableOpacity
@@ -46,8 +45,8 @@ export function LoadLatestBtn({
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
         isTablet && !isNativeTablet && styles.loadLatestInline,
-        pal.borderDark,
-        pal.view,
+        t.atoms.border_contrast_high,
+        t.atoms.bg,
         showBottomBar && fabMinimalShellTransform,
       ]}
       onPress={onPress}
@@ -55,8 +54,10 @@ export function LoadLatestBtn({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint="">
-      <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
-      {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
+      <FontAwesomeIcon icon="angle-up" color={t.atoms.text.color} size={19} />
+      {showIndicator && (
+        <View style={[styles.indicator, t.atoms.border_contrast_high]} />
+      )}
     </AnimatedTouchableOpacity>
   )
 }

@@ -1,52 +1,54 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   useLinkProps,
   useNavigation,
   useNavigationState,
 } from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Link} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {isWeb} from '#/platform/detection'
+import {emitSoftReset} from '#/state/events'
+import {useFetchHandle} from '#/state/queries/handle'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s, colors} from 'lib/styles'
 import {
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
-  UserIconSolid,
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
-  ListIcon,
-  HashtagIcon,
   HandIcon,
+  HashtagIcon,
+  HomeIcon,
+  HomeIconSolid,
+  ListIcon,
+  MagnifyingGlassIcon2,
+  MagnifyingGlassIcon2Solid,
+  UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
-import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
-import {router} from '../../../routes'
+import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useComposerControls} from '#/state/shell/composer'
-import {useFetchHandle} from '#/state/queries/handle'
-import {emitSoftReset} from '#/state/events'
+import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {Link} from 'view/com/util/Link'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {router} from '../../../routes'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -266,7 +268,7 @@ function ComposeBtn() {
   )
 }
 
-export function DesktopLeftNav() {
+export function LeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -445,17 +447,19 @@ export function DesktopLeftNav() {
 }
 
 const styles = StyleSheet.create({
-  leftNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    top: 10,
-    // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
-    width: 220,
-    // @ts-ignore web only
-    maxHeight: 'calc(100vh - 10px)',
-    overflowY: 'auto',
-  },
+  // @ts-ignore web only
+  leftNav: isWeb
+    ? {
+        position: 'fixed',
+        top: 10,
+        left: 'calc(50vw - 300px - 220px - 20px)',
+        width: 220,
+        maxHeight: 'calc(100vh - 10px)',
+        overflowY: 'auto',
+      }
+    : {
+        paddingTop: 12,
+      },
   leftNavTablet: {
     top: 0,
     left: 0,
@@ -513,6 +517,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 4,
     borderRadius: 6,
+    overflow: 'hidden',
   },
   navItemCountTablet: {
     left: 18,

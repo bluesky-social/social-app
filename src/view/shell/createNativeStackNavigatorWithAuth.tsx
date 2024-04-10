@@ -25,7 +25,7 @@ import type {NativeStackNavigatorProps} from '@react-navigation/native-stack/src
 import {NativeStackView} from '@react-navigation/native-stack'
 
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
-import {DesktopLeftNav} from './desktop/LeftNav'
+import {LeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useOnboardingState} from '#/state/shell'
@@ -149,7 +149,7 @@ function NativeStackNavigator({
       {isWeb && showBottomBar && <BottomBarWeb />}
       {isWeb && !showBottomBar && (
         <>
-          <DesktopLeftNav />
+          <LeftNav />
           <DesktopRightNav routeName={activeRoute.name} />
         </>
       )}
