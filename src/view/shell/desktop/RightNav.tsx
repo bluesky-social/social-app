@@ -119,15 +119,18 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
 }
 
 const styles = StyleSheet.create({
-  rightNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    // @ts-ignore web only
-    left: 'calc(50vw + 300px + 20px)',
-    width: 300,
-    maxHeight: '100%',
-    overflowY: 'auto',
-  },
+  // @ts-ignore web only
+  rightNav: isWeb
+    ? {
+        position: 'fixed',
+        left: 'calc(50vw + 300px + 20px)',
+        width: 300,
+        maxHeight: '100%',
+        overflowY: 'auto',
+      }
+    : {
+        width: 300,
+      },
 
   message: {
     paddingVertical: 18,

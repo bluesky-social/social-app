@@ -350,7 +350,7 @@ function ChatNavItem() {
   )
 }
 
-export function DesktopLeftNav() {
+export function LeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -519,17 +519,19 @@ export function DesktopLeftNav() {
 }
 
 const styles = StyleSheet.create({
-  leftNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    top: 10,
-    // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
-    width: 220,
-    // @ts-ignore web only
-    maxHeight: 'calc(100vh - 10px)',
-    overflowY: 'auto',
-  },
+  // @ts-ignore web only
+  leftNav: isWeb
+    ? {
+        position: 'fixed',
+        top: 10,
+        left: 'calc(50vw - 300px - 220px - 20px)',
+        width: 220,
+        maxHeight: 'calc(100vh - 10px)',
+        overflowY: 'auto',
+      }
+    : {
+        paddingTop: 12,
+      },
   leftNavTablet: {
     top: 0,
     left: 0,
@@ -555,5 +557,42 @@ const styles = StyleSheet.create({
     right: 12,
     width: 30,
     height: 30,
+  },
+
+  navItemWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    padding: 12,
+    borderRadius: 8,
+    gap: 10,
+  },
+  navItemIconWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 28,
+    height: 24,
+    marginTop: 2,
+    zIndex: 1,
+  },
+  navItemIconWrapperTablet: {
+    width: 40,
+    height: 40,
+  },
+  navItemCount: {
+    position: 'absolute',
+    top: 0,
+    left: 15,
+    backgroundColor: colors.blue3,
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingHorizontal: 4,
+    borderRadius: 6,
+    overflow: 'hidden',
+  },
+  navItemCountTablet: {
+    left: 18,
+    fontSize: 14,
   },
 })

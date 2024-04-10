@@ -1,5 +1,5 @@
 import React from 'react'
-import {BackHandler, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -14,7 +14,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isAndroid, isIOS, isNativeTablet} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
@@ -26,6 +26,7 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
+import {useTheme as useAlfTheme} from '#/alf'
 import {atoms as a, select, useTheme as useNewTheme} from '#/alf'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
@@ -98,25 +99,29 @@ function ShellInner() {
       <Animated.View style={[a.h_full]}>
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
-          <Drawer
-            renderDrawerContent={renderDrawerContent}
-            drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
-            open={isDrawerOpen}
-            onOpen={onOpenDrawer}
-            onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
-            overlayStyle={{
-              backgroundColor: select(t.name, {
-                light: 'rgba(0, 57, 117, 0.1)',
-                dark: isAndroid
-                  ? 'rgba(16, 133, 254, 0.1)'
-                  : 'rgba(1, 82, 168, 0.1)',
-                dim: 'rgba(10, 13, 16, 0.8)',
-              }),
-            }}>
+          {!isNativeTablet ? (
+            <Drawer
+              renderDrawerContent={renderDrawerContent}
+              drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
+              open={isDrawerOpen}
+              onOpen={onOpenDrawer}
+              onClose={onCloseDrawer}
+              swipeEdgeWidth={winDim.width / 2}
+              swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}
+              overlayStyle={{
+                backgroundColor: select(t.name, {
+                  light: 'rgba(0, 57, 117, 0.1)',
+                  dark: isAndroid
+                    ? 'rgba(16, 133, 254, 0.1)'
+                    : 'rgba(1, 82, 168, 0.1)',
+                  dim: 'rgba(10, 13, 16, 0.8)',
+                }),
+              }}>
+              <TabsNavigator />
+            </Drawer>
+          ) : (
             <TabsNavigator />
-          </Drawer>
+          )}
         </ErrorBoundary>
       </Animated.View>
       <Composer winHeight={winDim.height} />
@@ -132,8 +137,8 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
-  const pal = usePalette('default')
   const theme = useTheme()
+  const t = useAlfTheme
   useIntentHandler()
 
   React.useEffect(() => {
@@ -146,7 +151,7 @@ export const Shell: React.FC = function ShellImpl() {
     }
   }, [theme])
   return (
-    <View testID="mobileShellView" style={[styles.outerContainer, pal.view]}>
+    <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
       <StatusBar
         style={
           theme.colorScheme === 'dark' || (isIOS && fullyExpandedCount > 0)
@@ -161,9 +166,3 @@ export const Shell: React.FC = function ShellImpl() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  outerContainer: {
-    height: '100%',
-  },
-})
