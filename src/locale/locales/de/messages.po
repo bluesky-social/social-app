@@ -2380,17 +2380,17 @@ msgstr "Diesen Feed liken"
 #: src/Navigation.tsx:201
 #: src/Navigation.tsx:206
 msgid "Liked by"
-msgstr "Gelikt von"
+msgstr "Geliked von"
 
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr "Gelikt von"
+msgstr "Geliked von"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:268
 msgid "Liked by {0} {1}"
-msgstr "Von {0} {1} gelikt"
+msgstr "Von {0} {1} geliked"
 
 #: src/components/LabelingServiceCard/index.tsx:72
 msgid "Liked by {count} {0}"
@@ -2400,15 +2400,15 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:292
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "Liked by {likeCount} {0}"
-msgstr "Von {likeCount} {0} gelikt"
+msgstr "Von {likeCount} {0} geliked"
 
 #: src/view/com/notifications/FeedItem.tsx:174
 msgid "liked your custom feed"
-msgstr "hat deinen benutzerdefinierten Feed gelikt"
+msgstr "hat deinen benutzerdefinierten Feed geliked"
 
 #: src/view/com/notifications/FeedItem.tsx:159
 msgid "liked your post"
-msgstr "hat deinen Beitrag gelikt"
+msgstr "hat deinen Beitrag geliked"
 
 #: src/view/screens/Profile.tsx:193
 msgid "Likes"
