@@ -23,7 +23,7 @@ export function useSearchPostsQuery({
 }: {
   query: string
   sort?: 'top' | 'latest'
-  enabled: boolean
+  enabled?: boolean
 }) {
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,

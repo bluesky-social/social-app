@@ -12,7 +12,7 @@ export function useActorSearch({
   enabled,
 }: {
   query: string
-  enabled: boolean
+  enabled?: boolean
 }) {
   return useQuery<AppBskyActorDefs.ProfileView[]>({
     staleTime: STALE.MINUTES.ONE,
