@@ -1,21 +1,22 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import {List, ListRef} from '../util/List'
-import {ListCard} from './ListCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {Text} from '../util/text/Text'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useProfileListsQuery, RQKEY} from '#/state/queries/profile-lists'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
+import {logger} from '#/logger'
+import {isIOS, isNative} from '#/platform/detection'
+import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {isNative} from '#/platform/detection'
-import {useLingui} from '@lingui/react'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List, ListRef} from '../util/List'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {Text} from '../util/text/Text'
+import {ListCard} from './ListCard'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -182,6 +183,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           refreshing={isPTRing}
           onRefresh={onRefresh}
           headerOffset={headerOffset}
+          progressViewOffset={isIOS ? 0 : undefined}
           contentContainerStyle={
             isNative && {paddingBottom: headerOffset + 100}
           }
