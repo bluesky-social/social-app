@@ -4,7 +4,7 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import type {Modal as ModalIface} from '#/state/modals'
-import {useModalControls,useModals} from '#/state/modals'
+import {useModalControls, useModals} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as AddAppPassword from './AddAppPasswords'
