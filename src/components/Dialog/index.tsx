@@ -83,7 +83,7 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
-  const closeCallback = React.useRef<() => void>()
+  const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   /*
@@ -96,21 +96,50 @@ export function Outer({
    */
   const isOpen = openIndex > -1
 
+  const callQueuedCallbacks = React.useCallback(() => {
+    for (const cb of closeCallbacks.current) {
+      try {
+        cb()
+      } catch (e: any) {
+        logger.error('Error running close callback', e)
+      }
+    }
+
+    closeCallbacks.current = []
+  }, [])
+
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
+      // Run any leftover callbacks that might have been queued up before calling `.open()`
+      callQueuedCallbacks()
+
       setDialogIsOpen(control.id, true)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
+      sheet.current?.snapToIndex(index || 0)
     },
-    [setOpenIndex, setDialogIsOpen, control.id],
+    [setDialogIsOpen, control.id, callQueuedCallbacks],
   )
 
+  // This is the function that we call when we want to dismiss the dialog.
   const close = React.useCallback<DialogControlProps['close']>(cb => {
-    if (cb && typeof cb === 'function') {
-      closeCallback.current = cb
+    if (typeof cb === 'function') {
+      closeCallbacks.current.push(cb)
     }
     sheet.current?.close()
   }, [])
+
+  // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
+  // happen before we run this. It is passed to the `BottomSheet` component.
+  const onCloseAnimationComplete = React.useCallback(() => {
+    // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
+    // tells us that we need to toggle the accessibility overlay setting
+    setDialogIsOpen(control.id, false)
+    setOpenIndex(-1)
+
+    callQueuedCallbacks()
+    onClose?.()
+  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
   useImperativeHandle(
     control.ref,
@@ -120,21 +149,6 @@ export function Outer({
     }),
     [open, close],
   )
-
-  const onCloseInner = React.useCallback(() => {
-    try {
-      closeCallback.current?.()
-    } catch (e: any) {
-      logger.error(`Dialog closeCallback failed`, {
-        message: e.message,
-      })
-    } finally {
-      closeCallback.current = undefined
-    }
-    setDialogIsOpen(control.id, false)
-    onClose?.()
-    setOpenIndex(-1)
-  }, [control.id, onClose, setDialogIsOpen])
 
   const context = React.useMemo(() => ({close}), [close])
 
@@ -163,7 +177,7 @@ export function Outer({
             backdropComponent={Backdrop}
             handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
             handleStyle={{display: 'none'}}
-            onClose={onCloseInner}>
+            onClose={onCloseAnimationComplete}>
             <Context.Provider value={context}>
               <View
                 style={[

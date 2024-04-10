@@ -10,7 +10,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {AccountList} from '#/components/AccountList'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {FormContainer} from './FormContainer'
 
@@ -75,7 +75,7 @@ export const ChooseAccountForm = ({
           color="secondary"
           size="medium"
           onPress={onPressBack}>
-          {_(msg`Back`)}
+          <ButtonText>{_(msg`Back`)}</ButtonText>
         </Button>
         <View style={[a.flex_1]} />
       </View>

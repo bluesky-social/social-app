@@ -91,15 +91,13 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
 }
 
 export function Cancel({
-  children,
   cta,
-}: React.PropsWithChildren<{
+}: {
   /**
-   * Optional i18n string, used in lieu of `children` for simple buttons. If
-   * undefined (and `children` is undefined), it will default to "Cancel".
+   * Optional i18n string. If undefined, it will default to "Cancel".
    */
   cta?: string
-}>) {
+}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
@@ -114,33 +112,37 @@ export function Cancel({
       size={gtMobile ? 'small' : 'medium'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
-      {children ? children : <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>}
+      <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
     </Button>
   )
 }
 
 export function Action({
-  children,
   onPress,
   color = 'primary',
   cta,
   testID,
-}: React.PropsWithChildren<{
+}: {
+  /**
+   * Callback to run when the action is pressed. The method is called _after_
+   * the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onPress: () => void
   color?: ButtonColor
   /**
-   * Optional i18n string, used in lieu of `children` for simple buttons. If
-   * undefined (and `children` is undefined), it will default to "Confirm".
+   * Optional i18n string. If undefined, it will default to "Confirm".
    */
   cta?: string
   testID?: string
-}>) {
+}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
-    close()
-    onPress()
+    close(onPress)
   }, [close, onPress])
 
   return (
@@ -151,7 +153,7 @@ export function Action({
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>
-      {children ? children : <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>}
+      <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>
     </Button>
   )
 }
@@ -170,6 +172,13 @@ export function Basic({
   description: string
   cancelButtonCta?: string
   confirmButtonCta?: string
+  /**
+   * Callback to run when the Confirm button is pressed. The method is called
+   * _after_ the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onConfirm: () => void
   confirmButtonColor?: ButtonColor
 }>) {

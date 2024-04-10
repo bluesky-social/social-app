@@ -237,7 +237,9 @@ export const LoginForm = ({
             color="secondary"
             size="medium"
             onPress={onPressRetryConnect}>
-            {_(msg`Retry`)}
+            <ButtonText>
+              <Trans>Retry</Trans>
+            </ButtonText>
           </Button>
         ) : !serviceDescription ? (
           <>
@@ -248,6 +250,7 @@ export const LoginForm = ({
           </>
         ) : isReady ? (
           <Button
+            testID="loginNextButton"
             label={_(msg`Next`)}
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"

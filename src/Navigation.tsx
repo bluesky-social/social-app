@@ -539,8 +539,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
+  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
 
   function onReady() {
+    prevLoggedRouteName.current = getCurrentRouteName()
     initAnalytics(currentAccount)
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
@@ -555,7 +557,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate', {})
+        logEvent('router:navigate', {
+          from: prevLoggedRouteName.current,
+        })
+        prevLoggedRouteName.current = getCurrentRouteName()
       }}
       onReady={() => {
         attachRouteToLogEvents(getCurrentRouteName)

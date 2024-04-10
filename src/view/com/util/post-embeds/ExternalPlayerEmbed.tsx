@@ -13,20 +13,23 @@ import Animated, {
   useAnimatedRef,
   useFrameCallback,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
-import {WebView} from 'react-native-webview'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {WebView} from 'react-native-webview'
+import {Image} from 'expo-image'
+import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {AppBskyEmbedExternal} from '@atproto/api'
-import {EmbedPlayerParams, getPlayerAspect} from 'lib/strings/embed-player'
+
+import {NavigationProp} from '#/lib/routes/types'
+import {EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
+import {isNative} from '#/platform/detection'
+import {useExternalEmbedsPrefs} from '#/state/preferences'
+import {atoms as a} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
+import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {EventStopper} from '../EventStopper'
-import {isNative} from 'platform/detection'
-import {NavigationProp} from 'lib/routes/types'
-import {useExternalEmbedsPrefs} from 'state/preferences'
-import {useModalControls} from 'state/modals'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -48,7 +51,7 @@ function PlaceholderOverlay({
   if (isPlayerActive && !isLoading) return null
 
   return (
-    <View style={[styles.layer, styles.overlayLayer]}>
+    <View style={[a.absolute, a.inset_0, styles.overlayLayer]}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={_(msg`Play Video`)}
@@ -89,7 +92,7 @@ function Player({
   if (!isPlayerActive) return null
 
   return (
-    <EventStopper style={[styles.layer, styles.playerLayer]}>
+    <EventStopper style={[a.absolute, a.inset_0, styles.playerLayer]}>
       <WebView
         javaScriptEnabled={true}
         onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
@@ -119,7 +122,7 @@ export function ExternalPlayer({
   const insets = useSafeAreaInsets()
   const windowDims = useWindowDimensions()
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
-  const {openModal} = useModalControls()
+  const consentDialogControl = useDialogControl()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -187,37 +190,47 @@ export function ExternalPlayer({
       event.preventDefault()
 
       if (externalEmbedsPrefs?.[params.source] === undefined) {
-        openModal({
-          name: 'embed-consent',
-          source: params.source,
-          onAccept: () => {
-            setPlayerActive(true)
-          },
-        })
+        consentDialogControl.open()
         return
       }
 
       setPlayerActive(true)
     },
-    [externalEmbedsPrefs, openModal, params.source],
+    [externalEmbedsPrefs, consentDialogControl, params.source],
   )
 
+  const onAcceptConsent = React.useCallback(() => {
+    setPlayerActive(true)
+  }, [])
+
   return (
-    <Animated.View ref={viewRef} collapsable={false} style={[aspect]}>
-      {link.thumb && (!isPlayerActive || isLoading) && (
-        <Image
-          style={[{flex: 1}, styles.topRadius]}
-          source={{uri: link.thumb}}
-          accessibilityIgnoresInvertColors
-        />
-      )}
-      <PlaceholderOverlay
-        isLoading={isLoading}
-        isPlayerActive={isPlayerActive}
-        onPress={onPlayPress}
+    <>
+      <EmbedConsentDialog
+        control={consentDialogControl}
+        source={params.source}
+        onAccept={onAcceptConsent}
       />
-      <Player isPlayerActive={isPlayerActive} params={params} onLoad={onLoad} />
-    </Animated.View>
+
+      <Animated.View ref={viewRef} collapsable={false} style={[aspect]}>
+        {link.thumb && (!isPlayerActive || isLoading) && (
+          <Image
+            style={[a.flex_1, styles.topRadius]}
+            source={{uri: link.thumb}}
+            accessibilityIgnoresInvertColors
+          />
+        )}
+        <PlaceholderOverlay
+          isLoading={isLoading}
+          isPlayerActive={isPlayerActive}
+          onPress={onPlayPress}
+        />
+        <Player
+          isPlayerActive={isPlayerActive}
+          params={params}
+          onLoad={onLoad}
+        />
+      </Animated.View>
+    </>
   )
 }
 
@@ -225,13 +238,6 @@ const styles = StyleSheet.create({
   topRadius: {
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
-  },
-  layer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
   },
   overlayContainer: {
     flex: 1,

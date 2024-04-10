@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {cleanError} from 'lib/strings/errors'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {Error} from '#/components/Error'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -87,7 +87,9 @@ function ListFooterMaybeError({
             a.py_sm,
           ]}
           onPress={onRetry}>
-          <Trans>Retry</Trans>
+          <ButtonText>
+            <Trans>Retry</Trans>
+          </ButtonText>
         </Button>
       </View>
     </View>

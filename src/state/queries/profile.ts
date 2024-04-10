@@ -20,7 +20,7 @@ import {track} from '#/lib/analytics/analytics'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
@@ -202,7 +202,7 @@ export function useProfileFollowMutationQueue(
   const queryClient = useQueryClient()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
-  const followMutation = useProfileFollowMutation(logContext)
+  const followMutation = useProfileFollowMutation(logContext, profile)
   const unfollowMutation = useProfileUnfollowMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
@@ -252,10 +252,24 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
+  const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      logEvent('profile:follow', {logContext})
+      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      if (currentAccount) {
+        ownProfile = findProfileQueryData(queryClient, currentAccount.did)
+      }
+      logEvent('profile:follow', {
+        logContext,
+        didBecomeMutual: profile.viewer
+          ? Boolean(profile.viewer.followedBy)
+          : undefined,
+        followeeClout: toClout(profile.followersCount),
+        followerClout: toClout(ownProfile?.followersCount),
+      })
       return await getAgent().follow(did)
     },
     onSuccess(data, variables) {
@@ -529,4 +543,13 @@ export function* findAllProfilesInQueryData(
       yield queryData
     }
   }
+}
+
+export function findProfileQueryData(
+  queryClient: QueryClient,
+  did: string,
+): AppBskyActorDefs.ProfileViewDetailed | undefined {
+  return queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+    RQKEY(did),
+  )
 }

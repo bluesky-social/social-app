@@ -1,6 +1,8 @@
 import React from 'react'
-import {flushSync} from 'react-dom'
 import {View} from 'react-native'
+import {flushSync} from 'react-dom'
+
+import {LogEvents} from '#/lib/statsig/events'
 import {s} from 'lib/styles'
 
 export interface RenderTabBarFnProps {
@@ -14,7 +16,10 @@ interface Props {
   initialPage?: number
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
-  onPageSelecting?: (index: number) => void
+  onPageSelecting?: (
+    index: number,
+    reason: LogEvents['home:feedDisplayed']['reason'],
+  ) => void
 }
 export const Pager = React.forwardRef(function PagerImpl(
   {
@@ -31,11 +36,16 @@ export const Pager = React.forwardRef(function PagerImpl(
   const anchorRef = React.useRef(null)
 
   React.useImperativeHandle(ref, () => ({
-    setPage: (index: number) => onTabBarSelect(index),
+    setPage: (
+      index: number,
+      reason: LogEvents['home:feedDisplayed']['reason'],
+    ) => {
+      onTabBarSelect(index, reason)
+    },
   }))
 
   const onTabBarSelect = React.useCallback(
-    (index: number) => {
+    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
       const scrollY = window.scrollY
       // We want to determine if the tabbar is already "sticking" at the top (in which
       // case we should preserve and restore scroll), or if it is somewhere below in the
@@ -54,7 +64,7 @@ export const Pager = React.forwardRef(function PagerImpl(
       flushSync(() => {
         setSelectedPage(index)
         onPageSelected?.(index)
-        onPageSelecting?.(index)
+        onPageSelecting?.(index, reason)
       })
       if (isSticking) {
         const restoredScrollY = scrollYs.current[index]
@@ -73,7 +83,7 @@ export const Pager = React.forwardRef(function PagerImpl(
       {renderTabBar({
         selectedPage,
         tabBarAnchor: <View ref={anchorRef} />,
-        onSelect: onTabBarSelect,
+        onSelect: e => onTabBarSelect(e, 'tabbar-click'),
       })}
       {React.Children.map(children, (child, i) => (
         <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>
