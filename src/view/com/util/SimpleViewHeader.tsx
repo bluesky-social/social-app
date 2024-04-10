@@ -14,7 +14,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
-import {isNativeTablet, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -71,13 +71,13 @@ export function SimpleViewHeader({
               icon="angle-left"
               style={[styles.backIcon, pal.text]}
             />
-          ) : !isNativeTablet ? (
+          ) : (
             <FontAwesomeIcon
               size={18}
               icon="bars"
               style={[styles.backIcon, pal.textLight]}
             />
-          ) : null}
+          )}
         </TouchableOpacity>
       ) : null}
       {children}

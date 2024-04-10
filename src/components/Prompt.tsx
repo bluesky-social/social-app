@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isNativeTablet} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonColor, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -44,11 +43,7 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[
-            gtMobile && !isNativeTablet
-              ? {width: 'auto', maxWidth: 400}
-              : a.w_full,
-          ]}>
+          style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -86,7 +81,7 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
         a.w_full,
         a.gap_md,
         a.justify_end,
-        gtMobile && !isNativeTablet
+        gtMobile
           ? [a.flex_row, a.flex_row_reverse, a.justify_start]
           : [a.flex_col],
       ]}>

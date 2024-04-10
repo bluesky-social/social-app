@@ -484,7 +484,7 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {!isMobile && !isNative ? (
+          {!isMobile ? (
             <Pressable
               onPress={onEmojiButtonPress}
               accessibilityRole="button"

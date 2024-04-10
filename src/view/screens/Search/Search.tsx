@@ -461,7 +461,7 @@ export function SearchScreen(
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
+  const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
@@ -637,8 +637,8 @@ export function SearchScreen(
           pal.view,
           isTabletOrDesktop && {paddingTop: 10},
         ]}
-        sideBorders={isMobile}>
-        {isMobile && (
+        sideBorders={isTabletOrDesktop}>
+        {isTabletOrMobile && (
           <Pressable
             testID="viewHeaderBackOrMenuBtn"
             onPress={onPressMenu}
