@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useSession} from '#/state/session'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
