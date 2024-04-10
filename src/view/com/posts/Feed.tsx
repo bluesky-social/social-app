@@ -63,6 +63,7 @@ let Feed = ({
   desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
+  progressViewOffset,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -81,6 +82,7 @@ let Feed = ({
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
+  progressViewOffset?: number
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -338,6 +340,7 @@ let Feed = ({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
+        progressViewOffset={progressViewOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
