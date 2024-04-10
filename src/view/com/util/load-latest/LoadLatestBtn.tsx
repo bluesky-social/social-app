@@ -11,7 +11,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {colors} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
+import {isNativeTablet, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 
 const AnimatedTouchableOpacity =
@@ -37,7 +37,9 @@ export function LoadLatestBtn({
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
-  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+  const showBottomBar = hasSession
+    ? isMobile || isNativeTablet
+    : isTabletOrMobile
 
   const bottomPosition = isTablet
     ? {bottom: 50}
@@ -51,7 +53,7 @@ export function LoadLatestBtn({
           (isTallViewport
             ? styles.loadLatestOutOfLine
             : styles.loadLatestInline),
-        isTablet && styles.loadLatestInline,
+        isTablet && !isNativeTablet && styles.loadLatestInline,
         pal.borderDark,
         pal.view,
         bottomPosition,

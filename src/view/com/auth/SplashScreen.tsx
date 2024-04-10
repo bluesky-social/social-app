@@ -41,7 +41,14 @@ export const SplashScreen = ({
         </View>
         <View
           testID="signinOrCreateAccount"
-          style={[a.px_xl, a.gap_md, a.pb_2xl]}>
+          style={[
+            a.px_xl,
+            a.gap_md,
+            a.pb_2xl,
+            a.w_full,
+            a.mx_auto,
+            {maxWidth: 450},
+          ]}>
           <Button
             testID="createAccountButton"
             onPress={onPressCreateAccount}
