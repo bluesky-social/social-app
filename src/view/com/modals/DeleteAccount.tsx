@@ -82,13 +82,11 @@ export function Component({}: {}) {
     <SafeAreaView style={[s.flex1]}>
       <ScrollView style={[pal.view]} keyboardShouldPersistTaps="handled">
         <View style={[styles.titleContainer, pal.view]}>
-          <Trans>
-            <Text type="title-xl" style={[s.textCenter, pal.text]}>
+          <Text type="title-xl" style={[s.textCenter, pal.text]}>
+            <Trans>
               Delete Account{' '}
-            </Text>
-            <View style={[pal.view, s.flexRow]}>
               <Text type="title-xl" style={[pal.text, s.bold]}>
-                {'"'}
+                "
               </Text>
               <Text
                 type="title-xl"
@@ -101,10 +99,10 @@ export function Component({}: {}) {
                 {currentAccount?.handle}
               </Text>
               <Text type="title-xl" style={[pal.text, s.bold]}>
-                {'"'}
+                "
               </Text>
-            </View>
-          </Trans>
+            </Trans>
+          </Text>
         </View>
         {!isEmailSent ? (
           <>
