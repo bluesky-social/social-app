@@ -507,9 +507,7 @@ export const ComposePost = observer(function ComposePost({
         control={discardPromptControl}
         title={_(msg`Discard draft?`)}
         description={_(msg`Are you sure you'd like to discard this draft?`)}
-        onConfirm={() => {
-          discardPromptControl.close(onClose)
-        }}
+        onConfirm={onClose}
         confirmButtonCta={_(msg`Discard`)}
         confirmButtonColor="negative"
       />
