@@ -90,6 +90,7 @@ export function SelectReportOptionView({
           return (
             <Button
               key={reportOption.reason}
+              testID={reportOption.reason}
               label={_(msg`Create report for ${reportOption.title}`)}
               onPress={() => props.onSelectReportOption(reportOption)}>
               <ReportOptionButton
