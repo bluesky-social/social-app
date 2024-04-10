@@ -201,24 +201,6 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const FOLLOWING_FEED_STUB: FeedSourceInfo = {
-  type: 'feed',
-  displayName: 'Following',
-  uri: '',
-  route: {
-    href: '/',
-    name: 'Home',
-    params: {},
-  },
-  cid: '',
-  avatar: '',
-  description: new RichText({text: ''}),
-  creatorDid: '',
-  creatorHandle: '',
-  likeCount: 0,
-  likeUri: '',
-}
-
 const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
 export function usePinnedFeedsInfos() {
