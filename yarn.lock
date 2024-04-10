@@ -15031,6 +15031,11 @@ jose@^5.0.1:
   resolved "https://registry.yarnpkg.com/jose/-/jose-5.1.3.tgz#303959d85c51b5cb14725f930270b72be56abdca"
   integrity sha512-GPExOkcMsCLBTi1YetY2LmkoY559fss0+0KVa6kOfb2YFe84nAM7Nm/XzuZozah4iHgmBGrCOHL5/cy670SBRw==
 
+jose@^5.2.4:
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.2.4.tgz#c0d296caeeed0b8444a8b8c3b68403d61aa4ed72"
+  integrity sha512-6ScbIk2WWCeXkmzF6bRPmEuaqy1m8SbsRFMa/FLrSCkGIhj8OLVG/IH+XHVmNMx/KUo8cVWEE6oKR4dJ+S0Rkg==
+
 js-base64@^3.7.2:
   version "3.7.5"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-3.7.5.tgz#21e24cf6b886f76d6f5f165bfcd69cc55b9e3fca"
