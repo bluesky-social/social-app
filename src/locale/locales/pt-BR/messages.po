@@ -2488,7 +2488,7 @@ msgstr "Silenciar posts com {displayTag}"
 
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
-msgstr "Silenciar apenas as tags"
+msgstr "Silenciar apenas tags"
 
 #: src/components/dialogs/MutedWords.tsx:133
 msgid "Mute in text & tags"
