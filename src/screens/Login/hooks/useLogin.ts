@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Browser from 'expo-web-browser'
+import {BrowserOAuthClientFactory} from '@atproto/oauth-client-react-native'
 
 import {
   buildOAuthUrl,
@@ -11,16 +12,11 @@ import {
   OAUTH_RESPONSE_TYPES,
   OAUTH_SCOPE,
 } from 'lib/oauth'
-import {CryptoImplementation} from '#/oauth-client-temp/client/crypto-implementation'
-import {OAuthClientFactory} from '#/oauth-client-temp/client/oauth-client-factory'
-
-// TODO remove hack
-const serviceUrl = 'http://localhost'
 
 // Service URL here is just a placeholder, this isn't how it will actually work
 export function useLogin(serviceUrl: string | undefined) {
   const openAuthSession = React.useCallback(async () => {
-    const oauthFactory = new OAuthClientFactory({
+    const oauthFactory = new BrowserOAuthClientFactory({
       clientMetadata: {
         client_id: OAUTH_CLIENT_ID,
         redirect_uris: [OAUTH_REDIRECT_URI],
@@ -30,8 +26,11 @@ export function useLogin(serviceUrl: string | undefined) {
         dpop_bound_access_tokens: DPOP_BOUND_ACCESS_TOKENS,
         application_type: OAUTH_APPLICATION_TYPE,
       },
-      cryptoImplementation: new CryptoImplementation(crypto),
     })
+
+    await oauthFactory.signIn('afepwasfojefpaowejfpwef')
+
+    return
 
     if (!serviceUrl) return
 

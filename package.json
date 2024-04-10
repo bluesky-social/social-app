@@ -263,7 +263,8 @@
   },
   "resolutions": {
     "@types/react": "^18",
-    "**/zeed-dom": "0.10.9"
+    "**/zeed-dom": "0.10.9",
+    "browserify-sign": "4.2.2"
   },
   "jest": {
     "preset": "jest-expo/ios",
