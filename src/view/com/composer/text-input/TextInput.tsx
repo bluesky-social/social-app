@@ -19,12 +19,11 @@ import PasteInput, {
   type PasteInputRef, // @ts-expect-error no types when installing from github
 } from '@mattermost/react-native-paste-input'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {MAX_GRAPHEME_LENGTH, POST_IMG_MAX} from '#/lib/constants'
 import {downloadAndResize} from '#/lib/media/manip'
 import {isUriImage} from '#/lib/media/util'
 import {cleanError} from '#/lib/strings/errors'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
-import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isNative} from '#/platform/detection'
 import {
   type LinkFacetMatch,
@@ -74,7 +73,6 @@ export const TextInput = forwardRef(function TextInputImpl(
   const {theme: t, fonts} = useAlf()
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
-  const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
   const prevLength = React.useRef(richtext.length)
 
@@ -214,9 +212,31 @@ export const TextInput = forwardRef(function TextInputImpl(
   }, [t, fonts])
 
   const textDecorated = useMemo(() => {
+    let excess
+    let truncatedRichtext = richtext
+    if (richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
+      truncatedRichtext = richtext.clone()
+      const excessText =
+        truncatedRichtext.unicodeText.slice(MAX_GRAPHEME_LENGTH)
+      excess = (
+        <RNText
+          key="excess"
+          style={[
+            t.atoms.text,
+            inputTextStyle,
+            {backgroundColor: t.palette.negative_50, marginTop: -1},
+          ]}>
+          {excessText}
+        </RNText>
+      )
+      truncatedRichtext.delete(
+        MAX_GRAPHEME_LENGTH,
+        truncatedRichtext.graphemeLength,
+      )
+    }
     let i = 0
 
-    return Array.from(richtext.segments()).map(segment => {
+    const segments = Array.from(truncatedRichtext.segments()).map(segment => {
       return (
         <RNText
           key={i++}
@@ -231,6 +251,12 @@ export const TextInput = forwardRef(function TextInputImpl(
         </RNText>
       )
     })
+
+    if (excess) {
+      segments.push(excess)
+    }
+
+    return segments
   }, [t, richtext, inputTextStyle])
 
   return (
@@ -243,7 +269,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         onSelectionChange={onSelectionChange}
         placeholder={placeholder}
         placeholderTextColor={t.atoms.text_contrast_medium.color}
-        keyboardAppearance={theme.colorScheme}
+        keyboardAppearance={t.scheme}
         autoFocus={true}
         allowFontScaling
         multiline
