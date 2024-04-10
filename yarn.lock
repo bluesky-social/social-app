@@ -12191,11 +12191,6 @@ expo-pwa@0.0.127:
     commander "2.20.0"
     update-check "1.5.3"
 
-expo-secure-store@^12.8.1:
-  version "12.8.1"
-  resolved "https://registry.yarnpkg.com/expo-secure-store/-/expo-secure-store-12.8.1.tgz#369a570702fa1dc0c49ea41a5ab18aca2a986d38"
-  integrity sha512-Ju3jmkHby4w7rIzdYAt9kQyQ7HhHJ0qRaiQOInknhOLIltftHjEgF4I1UmzKc7P5RCfGNmVbEH729Pncp/sHXQ==
-
 expo-sharing@^11.10.0:
   version "11.10.0"
   resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-11.10.0.tgz#0e85197ee4d2634b00fe201e571fbdc64cf83eef"
@@ -18930,6 +18925,11 @@ react-native-ios-context-menu@^1.15.3:
   integrity sha512-UNkVl7ocvSpNaEpvBvE1aHOfDy/DFdZ5I+ElfnTXFsRxrVZmxLtST0b1q2wSWGWDmd2Ig2AYd7GRbYtcY222Ag==
   dependencies:
     "@dominicstop/ts-event-emitter" "^1.1.0"
+
+react-native-mmkv@^2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
+  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
 
 react-native-pager-view@6.2.3:
   version "6.2.3"
