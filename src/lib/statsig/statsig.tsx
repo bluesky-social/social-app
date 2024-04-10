@@ -11,6 +11,7 @@ import {
 import {logger} from '#/logger'
 import {useSession} from '../../state/session'
 import {LogEvents} from './events'
+import {Gate} from './gates'
 
 export type {LogEvents}
 
@@ -69,7 +70,7 @@ export function logEvent<E extends keyof LogEvents>(
   }
 }
 
-export function useGate(gateName: string) {
+export function useGate(gateName: Gate): boolean {
   const {isLoading, value} = useStatsigGate(gateName)
   if (isLoading) {
     // This should not happen because of waitForInitialization={true}.
