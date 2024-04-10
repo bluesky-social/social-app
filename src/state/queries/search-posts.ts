@@ -19,9 +19,11 @@ const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
 export function useSearchPostsQuery({
   query,
   sort,
+  enabled,
 }: {
   query: string
   sort?: 'top' | 'latest'
+  enabled?: boolean
 }) {
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
@@ -47,6 +49,7 @@ export function useSearchPostsQuery({
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    enabled,
   })
 }
 
