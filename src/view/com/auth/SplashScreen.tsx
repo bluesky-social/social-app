@@ -58,7 +58,9 @@ export const SplashScreen = ({
             <Trans>What's up?</Trans>
           </Text>
         </View>
-        <View testID="signinOrCreateAccount">
+        <View
+          testID="signinOrCreateAccount"
+          style={[a.w_full, a.mx_auto, {maxWidth: 450}]}>
           <Button
             testID="createAccountButton"
             onPress={onPressCreateAccount}
