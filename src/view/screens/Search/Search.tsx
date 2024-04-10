@@ -22,7 +22,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {NavigationProp} from '#/lib/routes/types'
-import {useNewSearchGate} from '#/lib/statsig/gates'
+import {useGate} from '#/lib/statsig/statsig'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -337,7 +337,7 @@ export function SearchScreenInner({
   const {isDesktop} = useWebMediaQueries()
   const {_} = useLingui()
 
-  const isNewSearch = useNewSearchGate()
+  const isNewSearch = useGate('new_search')
 
   const onPageSelected = React.useCallback(
     (index: number) => {

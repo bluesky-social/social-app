@@ -1,3 +1,7 @@
-import {useGate} from './statsig'
-
-export const useNewSearchGate = () => useGate('new_search')
+export type Gate =
+  | 'autoexpand_suggestions_on_profile_follow'
+  | 'disable_min_shell_on_foregrounding'
+  | 'disable_poll_on_discover'
+  | 'new_search'
+  | 'show_follow_back_label'
+  | 'start_session_with_following'
