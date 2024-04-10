@@ -3018,7 +3018,7 @@ msgstr "あなたのプロフィールに移動します"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:122
 msgid "Need to report a copyright violation?"
-msgstr "著作権違反を報告する必要がありますか？"
+msgstr "著作権侵害を報告する必要がありますか？"
 
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
