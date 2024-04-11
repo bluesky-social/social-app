@@ -164,10 +164,16 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
       },
     )
 
-    // @ts-ignore This is valid, `getInfoAsync` will always return a size. The type is wonky
-    const info: FileInfo & {size: number} = await getInfoAsync(resizeRes.uri, {
+    const info: FileInfo = await getInfoAsync(resizeRes.uri, {
       size: true,
     })
+
+    // I'm not sure this can happen, but if we don't check `.exists`, then the `.size` type is undefined.
+    if (!info.exists) {
+      throw new Error(
+        'The image manipulation library failed to create a new image.',
+      )
+    }
 
     // We want to clean up every resize _except_ the final result. We'll clean that one up later when we're finished
     // with it
@@ -204,8 +210,7 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
   })
 
   // This is just to try and clean up whenever we can. We won't always be able to, so in cases where we can't
-  // we just catch the error. We can't simply move some files though such as image caches, so we will copy then
-  // and attempt to clean up the original file
+  // we just catch the error.
   // Paths that are image caches shouldn't be removed. com.hackemist.SDImageCache is used by SDWebImage and
   // image_manager_disk_cache is used by Glide
   if (
