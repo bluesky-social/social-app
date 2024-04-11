@@ -1,22 +1,33 @@
 import React from 'react'
-import {BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
-import {jwtDecode} from 'jwt-decode'
+import {BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
-import {IS_TEST_USER} from '#/lib/constants'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
-import {hasProp} from '#/lib/type-guards'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
+import {
+  SessionAccount,
+  SessionApiContext,
+  SessionStateContext,
+} from '#/state/session/types'
+import {
+  agentToSessionAccount,
+  configureModeration,
+  createAgentAndCreateAccount,
+  createAgentAndLogin,
+  isSessionExpired,
+  sessionAccountToAgentSession,
+} from '#/state/session/util'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import * as Toast from '#/view/com/util/Toast'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
-import {readLabelers} from './agent-config'
+
+export type {CurrentAccount, SessionAccount} from '#/state/session/types'
 
 /**
  * Only used for the initial agent values in state and context. Replaced
@@ -41,70 +52,7 @@ export function getAgent() {
   return __globalAgent
 }
 
-export type SessionAccount = persisted.PersistedAccount
-export type CurrentAccount = Omit<SessionAccount, 'accessJwt' | 'refreshJwt'>
-
-export type StateContext = {
-  currentAgent: BskyAgent
-  isInitialLoad: boolean
-  isSwitchingAccounts: boolean
-  hasSession: boolean
-  accounts: SessionAccount[]
-  /**
-   * Contains the full account object persisted to storage, minus access
-   * tokens.
-   */
-  currentAccount: CurrentAccount | undefined
-}
-
-export type ApiContext = {
-  createAccount: (props: {
-    service: string
-    email: string
-    password: string
-    handle: string
-    inviteCode?: string
-    verificationPhone?: string
-    verificationCode?: string
-  }) => Promise<void>
-  login: (
-    props: {
-      service: string
-      identifier: string
-      password: string
-    },
-    logContext: LogEvents['account:loggedIn']['logContext'],
-  ) => Promise<void>
-  /**
-   * A full logout. Clears the `currentAccount` from session, AND removes
-   * access tokens from all accounts, so that returning as any user will
-   * require a full login.
-   */
-  logout: (
-    logContext: LogEvents['account:loggedOut']['logContext'],
-  ) => Promise<void>
-  /**
-   * A partial logout. Clears the `currentAccount` from session, but DOES NOT
-   * clear access tokens from accounts, allowing the user to return to their
-   * other accounts without logging in.
-   *
-   * Used when adding a new account, deleting an account.
-   */
-  clearCurrentAccount: () => void
-  initSession: (account: SessionAccount) => Promise<void>
-  resumeSession: (account?: SessionAccount) => Promise<void>
-  removeAccount: (account: SessionAccount) => void
-  selectAccount: (
-    account: SessionAccount,
-    logContext: LogEvents['account:loggedIn']['logContext'],
-  ) => Promise<void>
-  /**
-   * Refreshes the BskyAgent's session and derive a fresh `currentAccount`
-   */
-  refreshSession: () => void
-}
-
-const StateContext = React.createContext<StateContext>({
+const StateContext = React.createContext<SessionStateContext>({
   currentAgent: INITIAL_AGENT,
   isInitialLoad: true,
   isSwitchingAccounts: false,
@@ -113,7 +61,7 @@ const StateContext = React.createContext<StateContext>({
   hasSession: false,
 })
 
-const ApiContext = React.createContext<ApiContext>({
+const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
   logout: async () => {},
@@ -124,34 +72,6 @@ const ApiContext = React.createContext<ApiContext>({
   refreshSession: () => {},
   clearCurrentAccount: () => {},
 })
-
-function agentToSessionAccount(agent: BskyAgent): SessionAccount | undefined {
-  if (!agent.session) return undefined
-
-  return {
-    service: agent.service.toString(),
-    did: agent.session.did,
-    handle: agent.session.handle,
-    email: agent.session.email,
-    emailConfirmed: agent.session.emailConfirmed,
-    deactivated: isSessionDeactivated(agent.session.accessJwt),
-    refreshJwt: agent.session.refreshJwt,
-    accessJwt: agent.session.accessJwt,
-  }
-}
-
-function sessionAccountToAgentSession(
-  account: SessionAccount,
-): BskyAgent['session'] {
-  return {
-    did: account.did,
-    handle: account.handle,
-    email: account.email,
-    emailConfirmed: account.emailConfirmed,
-    accessJwt: account.accessJwt || '',
-    refreshJwt: account.refreshJwt || '',
-  }
-}
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const isDirty = React.useRef(false)
@@ -212,6 +132,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       const expired = event === 'expired' || event === 'create-failed'
 
+      /*
+       * Special case for a network error that occurs when calling
+       * `resumeSession`, which happens on page load or when switching
+       * accounts.
+       *
+       * When this occurs, we drop the user back out to the login screen, but
+       * we don't clear tokens, allowing them to quickly log back in when
+       * connection improves.
+       */
       if (event === 'network-error') {
         logger.warn(
           `session: persistSessionHandler received network-error event`,
@@ -224,8 +153,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
 
+      /**
+       * The updated account object, derived from the updated session we just
+       * received from this callback
+       */
       const refreshedAccount = agentToSessionAccount(currentAgent)
 
+      /*
+       * If a session was was dropped by BskyAgent, we want to drop the user
+       * back out to log in.
+       */
       if (!refreshedAccount) {
         logger.error(`session: persistSession failed to get refreshed account`)
         emitSessionDropped()
@@ -236,6 +173,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
 
+      /*
+       * If the session was expired naturally, we want to drop the user back out to log in.
+       */
       if (expired) {
         logger.warn(`session: expired`)
         emitSessionDropped()
@@ -248,18 +188,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       /*
        * If the session expired, or it was successfully created/updated, we want
        * to update/persist the data.
-       *
-       * If the session creation failed, it could be a network error, or it could
-       * be more serious like an invalid token(s). We can't differentiate, so in
-       * order to allow the user to get a fresh token (if they need it), we need
-       * to persist this data and wipe their tokens, effectively logging them
-       * out.
        */
       upsertAndPersistAccount(refreshedAccount)
     })
   }, [currentAgent, clearCurrentAccount, upsertAndPersistAccount])
 
-  const createAccount = React.useCallback<ApiContext['createAccount']>(
+  const createAccount = React.useCallback<SessionApiContext['createAccount']>(
     async ({
       service,
       email,
@@ -273,9 +207,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Try Create Account')
       logEvent('account:create:begin', {})
 
-      const agent = new BskyAgent({service})
-
-      await agent.createAccount({
+      const {agent, account} = await createAgentAndCreateAccount({
+        service,
         handle,
         password,
         email,
@@ -283,29 +216,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         verificationPhone,
         verificationCode,
       })
-
-      if (!agent.session) {
-        throw new Error(`session: createAccount failed to establish a session`)
-      }
-
-      const deactivated = isSessionDeactivated(agent.session.accessJwt)
-      if (!deactivated) {
-        /*dont await*/ agent.upsertProfile(_existing => {
-          return {
-            displayName: '',
-
-            // HACKFIX
-            // creating a bunch of identical profile objects is breaking the relay
-            // tossing this unspecced field onto it to reduce the size of the problem
-            // -prf
-            createdAt: new Date().toISOString(),
-          }
-        })
-      }
-
-      const account = agentToSessionAccount(agent)!
-
-      await configureModeration(agent, account)
 
       setCurrentAgent(agent)
       upsertAndPersistAccount(account)
@@ -317,19 +227,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [upsertAndPersistAccount],
   )
 
-  const login = React.useCallback<ApiContext['login']>(
+  const login = React.useCallback<SessionApiContext['login']>(
     async ({service, identifier, password}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
-      const agent = new BskyAgent({service})
-      await agent.login({identifier, password})
-
-      if (!agent.session) {
-        throw new Error(`session: login failed to establish a session`)
-      }
-
-      const account = agentToSessionAccount(agent)!
-      await configureModeration(agent, account)
+      const {agent, account} = await createAgentAndLogin({
+        service,
+        identifier,
+        password,
+      })
 
       setCurrentAgent(agent)
       upsertAndPersistAccount(account)
@@ -342,7 +248,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [upsertAndPersistAccount],
   )
 
-  const logout = React.useCallback<ApiContext['logout']>(
+  const logout = React.useCallback<SessionApiContext['logout']>(
     async logContext => {
       logger.debug(`session: logout`)
 
@@ -361,11 +267,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [clearCurrentAccount, persistNextUpdate, setAccounts],
   )
 
-  const initSession = React.useCallback<ApiContext['initSession']>(
+  const initSession = React.useCallback<SessionApiContext['initSession']>(
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
 
-      const agent = new BskyAgent({
+      const newAgent = new BskyAgent({
         service: account.service,
       })
 
@@ -375,48 +281,46 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         refreshJwt: account.refreshJwt || '',
       }
 
-      let canReusePrevSession = false
-      try {
-        if (account.accessJwt) {
-          const decoded = jwtDecode(account.accessJwt)
-          if (decoded.exp) {
-            const didExpire = Date.now() >= decoded.exp * 1000
-            if (!didExpire) {
-              canReusePrevSession = true
-            }
-          }
-        }
-      } catch (e) {
-        logger.error(`session: could not decode jwt`)
-      }
+      /**
+       * Optimistically update moderation services so that when the new agent
+       * is applied, they're ready.
+       *
+       * If session resumption fails, this will be reset by
+       * `clearCurrentAccount`.
+       */
+      await configureModeration(newAgent, account)
 
-      // optimistic, we'll update this if we can't reuse or resume the session
-      await configureModeration(agent, account)
-
-      if (canReusePrevSession) {
-        logger.debug(
-          `session: attempting to reuse previous session`,
-          {},
-          logger.DebugContext.session,
-        )
-        agent.session = prevSession
-        setCurrentAgent(agent)
-        upsertAndPersistAccount(account)
-      } else {
+      if (isSessionExpired(account)) {
+        /*
+         * If session is expired, attempt to refresh the session using the
+         * refresh token via `resumeSession`
+         */
         logger.debug(
           `session: attempting to resumeSession using previous session`,
           {},
           logger.DebugContext.session,
         )
-        await networkRetry(1, () => agent.resumeSession(prevSession))
-        setCurrentAgent(agent)
-        upsertAndPersistAccount(agentToSessionAccount(agent)!)
+        await networkRetry(1, () => newAgent.resumeSession(prevSession))
+        setCurrentAgent(newAgent)
+        upsertAndPersistAccount(agentToSessionAccount(newAgent)!)
+      } else {
+        /*
+         * If the session is not expired, assume we can reuse it.
+         */
+        logger.debug(
+          `session: attempting to reuse previous session`,
+          {},
+          logger.DebugContext.session,
+        )
+        newAgent.session = prevSession
+        setCurrentAgent(newAgent)
+        upsertAndPersistAccount(account)
       }
     },
     [upsertAndPersistAccount],
   )
 
-  const resumeSession = React.useCallback<ApiContext['resumeSession']>(
+  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
     async account => {
       try {
         if (account) {
@@ -431,7 +335,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [initSession, setIsInitialLoad],
   )
 
-  const removeAccount = React.useCallback<ApiContext['removeAccount']>(
+  const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
       persistNextUpdate()
       setAccounts(accounts => accounts.filter(a => a.did !== account.did))
@@ -440,7 +344,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const refreshSession = React.useCallback<
-    ApiContext['refreshSession']
+    SessionApiContext['refreshSession']
   >(async () => {
     const {accounts: persistedAccounts} = persisted.get('session')
     const selectedAccount = persistedAccounts.find(
@@ -464,7 +368,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     upsertAndPersistAccount,
   ])
 
-  const selectAccount = React.useCallback<ApiContext['selectAccount']>(
+  const selectAccount = React.useCallback<SessionApiContext['selectAccount']>(
     async (account, logContext) => {
       setIsSwitchingAccounts(true)
       try {
@@ -619,35 +523,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-async function configureModeration(agent: BskyAgent, account?: SessionAccount) {
-  if (account) {
-    if (IS_TEST_USER(account.handle)) {
-      const did = (
-        await agent
-          .resolveHandle({handle: 'mod-authority.test'})
-          .catch(_ => undefined)
-      )?.data.did
-      if (did) {
-        console.warn('USING TEST ENV MODERATION')
-        BskyAgent.configure({appLabelers: [did]})
-      }
-    } else {
-      BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-
-      if (account) {
-        const labelerDids = await readLabelers(account.did).catch(_ => {})
-        if (labelerDids) {
-          agent.configureLabelersHeader(
-            labelerDids.filter(did => did !== BSKY_LABELER_DID),
-          )
-        }
-      }
-    }
-  } else {
-    BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-  }
-}
-
 export function useSession() {
   return React.useContext(StateContext)
 }
@@ -672,19 +547,4 @@ export function useRequireAuth() {
     },
     [hasSession, setShowLoggedOut, closeAll],
   )
-}
-
-export function isSessionDeactivated(accessJwt: string | undefined) {
-  if (accessJwt) {
-    const sessData = jwtDecode(accessJwt)
-    return (
-      hasProp(sessData, 'scope') && sessData.scope === 'com.atproto.deactivated'
-    )
-  }
-  return false
-}
-
-export function readLastActiveAccount() {
-  const {currentAccount, accounts} = persisted.get('session')
-  return accounts.find(a => a.did === currentAccount?.did)
 }

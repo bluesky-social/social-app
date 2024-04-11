@@ -17,6 +17,12 @@ import {useQueryClient} from '@tanstack/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
+import {
+  Provider as SessionProvider,
+  useSession,
+  useSessionApi,
+} from '#/state/session'
+import {readLastActiveAccount} from '#/state/session/util'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useNotificationsListener} from 'lib/notifications/notifications'
@@ -30,12 +36,6 @@ import {Provider as ModalStateProvider} from 'state/modals'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
-import {
-  Provider as SessionProvider,
-  readLastActiveAccount,
-  useSession,
-  useSessionApi,
-} from 'state/session'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from 'state/shell/selected-feed'
