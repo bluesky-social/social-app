@@ -226,7 +226,7 @@ export function ProfileFeedScreenInner({
     isHapticsDisabled,
     isSaved,
     removeFeed,
-    feedInfo.uri,
+    feedInfo,
     resetRemoveFeed,
     _,
     saveFeed,
@@ -252,7 +252,7 @@ export function ProfileFeedScreenInner({
     isHapticsDisabled,
     isPinned,
     unpinFeed,
-    feedInfo.uri,
+    feedInfo,
     resetUnpinFeed,
     pinFeed,
     resetPinFeed,
@@ -566,8 +566,7 @@ function AboutSection({
     unlikeFeed,
     track,
     likeFeed,
-    feedInfo.uri,
-    feedInfo.cid,
+    feedInfo,
     _,
   ])
 
