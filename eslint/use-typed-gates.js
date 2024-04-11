@@ -18,14 +18,13 @@ exports.create = function create(context) {
         return
       }
       const source = node.parent.source.value
-      if (source.startsWith('.') || source.startsWith('#')) {
-        return
+      if (source.startsWith('statsig') || source.startsWith('@statsig')) {
+        context.report({
+          node,
+          message:
+            "Use useGate() from '#/lib/statsig/statsig' instead of the one on npm.",
+        })
       }
-      context.report({
-        node,
-        message:
-          "Use useGate() from '#/lib/statsig/statsig' instead of the one on npm.",
-      })
     },
   }
 }
