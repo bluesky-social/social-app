@@ -13,21 +13,21 @@ const hapticImpact: ImpactFeedbackStyle = isIOS
   : ImpactFeedbackStyle.Light // Users said the medium impact was too strong on Android; see APP-537s
 
 export class Haptics {
-  static default(enabled: boolean) {
-    if (!enabled || isWeb) {
+  static default(disabled: boolean) {
+    if (disabled || isWeb) {
       return
     }
 
     impactAsync(hapticImpact)
   }
-  static impact(type: ImpactFeedbackStyle = hapticImpact, enabled: boolean) {
-    if (!enabled || isWeb) {
+  static impact(type: ImpactFeedbackStyle = hapticImpact, disabled: boolean) {
+    if (disabled || isWeb) {
       return
     }
     impactAsync(type)
   }
-  static selection(enabled: boolean) {
-    if (!enabled || isWeb) {
+  static selection(disabled: boolean) {
+    if (disabled || isWeb) {
       return
     }
     selectionAsync()
