@@ -929,7 +929,7 @@ msgstr "Configura els filtres de continguts per la categoria: {0}"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr "Configura els filtres de continguts per la categoria: {nom}"
+msgstr "Configura els filtres de continguts per la categoria: {name}"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
