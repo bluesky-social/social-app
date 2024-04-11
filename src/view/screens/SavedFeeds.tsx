@@ -16,12 +16,11 @@ import {
 } from '#/state/queries/preferences'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {playHaptic} from 'lib/haptics'
+import {useHaptics} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
-import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {TextLink} from 'view/com/util/Link'
 import {Text} from 'view/com/util/text/Text'
@@ -191,14 +190,14 @@ function ListItem({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const isHapticsDisabled = useHapticsDisabled()
+  const playHaptic = useHaptics()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
   const isPending = isPinPending || isUnpinPending
 
   const onTogglePinned = React.useCallback(async () => {
-    playHaptic(isHapticsDisabled)
+    playHaptic()
 
     try {
       resetSaveFeedsMutationState()
@@ -213,7 +212,7 @@ function ListItem({
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
-    isHapticsDisabled,
+    playHaptic,
     resetSaveFeedsMutationState,
     isPinned,
     unpinFeed,

@@ -27,7 +27,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {playHaptic} from 'lib/haptics'
+import {useHaptics} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
@@ -39,7 +39,6 @@ import {pluralize} from 'lib/strings/helpers'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
-import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -160,7 +159,7 @@ export function ProfileFeedScreenInner({
   const reportDialogControl = useReportDialogControl()
   const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
-  const isHapticsDisabled = useHapticsDisabled()
+  const playHaptic = useHaptics()
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
@@ -203,7 +202,7 @@ export function ProfileFeedScreenInner({
 
   const onToggleSaved = React.useCallback(async () => {
     try {
-      playHaptic(isHapticsDisabled)
+      playHaptic()
 
       if (isSaved) {
         await removeFeed({uri: feedInfo.uri})
@@ -223,7 +222,7 @@ export function ProfileFeedScreenInner({
       logger.error('Failed up update feeds', {message: err})
     }
   }, [
-    isHapticsDisabled,
+    playHaptic,
     isSaved,
     removeFeed,
     feedInfo,
@@ -235,7 +234,7 @@ export function ProfileFeedScreenInner({
 
   const onTogglePinned = React.useCallback(async () => {
     try {
-      playHaptic(isHapticsDisabled)
+      playHaptic()
 
       if (isPinned) {
         await unpinFeed({uri: feedInfo.uri})
@@ -249,7 +248,7 @@ export function ProfileFeedScreenInner({
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
-    isHapticsDisabled,
+    playHaptic,
     isPinned,
     unpinFeed,
     feedInfo,
@@ -529,7 +528,7 @@ function AboutSection({
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
-  const isHapticsDisabled = useHapticsDisabled()
+  const playHaptic = useHaptics()
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -540,7 +539,7 @@ function AboutSection({
 
   const onToggleLiked = React.useCallback(async () => {
     try {
-      playHaptic(isHapticsDisabled)
+      playHaptic()
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
@@ -559,16 +558,7 @@ function AboutSection({
       )
       logger.error('Failed up toggle like', {message: err})
     }
-  }, [
-    isHapticsDisabled,
-    isLiked,
-    likeUri,
-    unlikeFeed,
-    track,
-    likeFeed,
-    feedInfo,
-    _,
-  ])
+  }, [playHaptic, isLiked, likeUri, unlikeFeed, track, likeFeed, feedInfo, _])
 
   return (
     <View style={[styles.aboutSectionContainer]}>

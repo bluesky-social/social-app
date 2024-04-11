@@ -8,7 +8,7 @@ import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {playHaptic} from '#/lib/haptics'
+import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
@@ -32,7 +32,6 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -60,7 +59,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
-  const isHapticsDisabled = useHapticsDisabled()
+  const playHaptic = useHaptics()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -106,9 +105,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [onPressTab])
 
   const onLongPressProfile = React.useCallback(() => {
-    playHaptic(isHapticsDisabled)
+    playHaptic()
     accountSwitchControl.open()
-  }, [accountSwitchControl, isHapticsDisabled])
+  }, [accountSwitchControl, playHaptic])
 
   return (
     <>

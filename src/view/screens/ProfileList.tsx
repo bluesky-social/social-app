@@ -33,7 +33,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {playHaptic} from 'lib/haptics'
+import {useHaptics} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -45,7 +45,6 @@ import {shareUrl} from 'lib/sharing'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
-import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {Feed} from 'view/com/posts/Feed'
@@ -256,7 +255,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
-  const isHapticsDisabled = useHapticsDisabled()
+  const playHaptic = useHaptics()
 
   const deleteListPromptControl = useDialogControl()
   const subscribeMutePromptControl = useDialogControl()
@@ -266,7 +265,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isSaved = preferences?.feeds?.saved?.includes(list.uri)
 
   const onTogglePinned = React.useCallback(async () => {
-    playHaptic(isHapticsDisabled)
+    playHaptic()
 
     try {
       if (isPinned) {
@@ -278,7 +277,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [isHapticsDisabled, isPinned, unpinFeed, list.uri, pinFeed, _])
+  }, [playHaptic, isPinned, unpinFeed, list.uri, pinFeed, _])
 
   const onSubscribeMute = useCallback(async () => {
     try {
