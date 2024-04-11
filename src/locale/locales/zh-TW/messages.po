@@ -601,7 +601,7 @@ msgstr "來自 <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:74
 msgid "By creating an account you agree to the {els}."
-msgstr 建立帳戶即表示你同意 {els}。""
+msgstr 建立帳戶即表示你同意 {els}。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "by you"
