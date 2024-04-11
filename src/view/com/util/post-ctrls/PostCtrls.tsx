@@ -16,7 +16,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
-import {Haptics} from '#/lib/haptics'
+import {playHaptic} from '#/lib/haptics'
 import {CommentBottomArrow, HeartIcon, HeartIconSolid} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -86,7 +86,7 @@ let PostCtrls = ({
   const onPressToggleLike = React.useCallback(async () => {
     try {
       if (!post.viewer?.like) {
-        Haptics.default(isHapticsDisabled)
+        playHaptic(isHapticsDisabled)
         await queueLike()
       } else {
         await queueUnlike()
@@ -102,7 +102,7 @@ let PostCtrls = ({
     closeModal()
     try {
       if (!post.viewer?.repost) {
-        Haptics.default(isHapticsDisabled)
+        playHaptic(isHapticsDisabled)
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -131,7 +131,7 @@ let PostCtrls = ({
         indexedAt: post.indexedAt,
       },
     })
-    Haptics.default(isHapticsDisabled)
+    playHaptic(isHapticsDisabled)
   }, [
     closeModal,
     openComposer,

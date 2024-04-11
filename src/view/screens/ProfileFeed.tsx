@@ -27,7 +27,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {Haptics} from 'lib/haptics'
+import {playHaptic} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
@@ -203,7 +203,7 @@ export function ProfileFeedScreenInner({
 
   const onToggleSaved = React.useCallback(async () => {
     try {
-      Haptics.default(isHapticsDisabled)
+      playHaptic(isHapticsDisabled)
 
       if (isSaved) {
         await removeFeed({uri: feedInfo.uri})
@@ -235,7 +235,7 @@ export function ProfileFeedScreenInner({
 
   const onTogglePinned = React.useCallback(async () => {
     try {
-      Haptics.default(isHapticsDisabled)
+      playHaptic(isHapticsDisabled)
 
       if (isPinned) {
         await unpinFeed({uri: feedInfo.uri})
@@ -540,7 +540,7 @@ function AboutSection({
 
   const onToggleLiked = React.useCallback(async () => {
     try {
-      Haptics.default(isHapticsDisabled)
+      playHaptic(isHapticsDisabled)
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})

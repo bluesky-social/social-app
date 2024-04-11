@@ -16,7 +16,7 @@ import {
 } from '#/state/queries/preferences'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {Haptics} from 'lib/haptics'
+import {playHaptic} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -198,7 +198,7 @@ function ListItem({
   const isPending = isPinPending || isUnpinPending
 
   const onTogglePinned = React.useCallback(async () => {
-    Haptics.default(isHapticsDisabled)
+    playHaptic(isHapticsDisabled)
 
     try {
       resetSaveFeedsMutationState()

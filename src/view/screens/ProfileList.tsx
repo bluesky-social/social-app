@@ -33,7 +33,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {Haptics} from 'lib/haptics'
+import {playHaptic} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -266,7 +266,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isSaved = preferences?.feeds?.saved?.includes(list.uri)
 
   const onTogglePinned = React.useCallback(async () => {
-    Haptics.default(isHapticsDisabled)
+    playHaptic(isHapticsDisabled)
 
     try {
       if (isPinned) {

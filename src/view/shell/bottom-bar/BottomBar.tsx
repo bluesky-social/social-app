@@ -8,7 +8,7 @@ import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {Haptics} from '#/lib/haptics'
+import {playHaptic} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
@@ -106,7 +106,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [onPressTab])
 
   const onLongPressProfile = React.useCallback(() => {
-    Haptics.default(isHapticsDisabled)
+    playHaptic(isHapticsDisabled)
     accountSwitchControl.open()
   }, [accountSwitchControl, isHapticsDisabled])
 
