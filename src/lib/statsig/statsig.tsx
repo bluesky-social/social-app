@@ -9,14 +9,21 @@ import {
 } from 'statsig-react-native-expo'
 
 import {logger} from '#/logger'
+import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {LogEvents} from './events'
+import {Gate} from './gates'
 
 export type {LogEvents}
 
 const statsigOptions = {
   environment: {
-    tier: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+    tier:
+      process.env.NODE_ENV === 'development'
+        ? 'development'
+        : IS_TESTFLIGHT
+        ? 'staging'
+        : 'production',
   },
   // Don't block on waiting for network. The fetched config will kick in on next load.
   // This ensures the UI is always consistent and doesn't update mid-session.
@@ -69,7 +76,7 @@ export function logEvent<E extends keyof LogEvents>(
   }
 }
 
-export function useGate(gateName: string) {
+export function useGate(gateName: Gate): boolean {
   const {isLoading, value} = useStatsigGate(gateName)
   if (isLoading) {
     // This should not happen because of waitForInitialization={true}.
