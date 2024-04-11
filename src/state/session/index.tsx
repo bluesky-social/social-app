@@ -128,17 +128,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.DebugContext.session,
       )
 
-      // console.log('PERSIST', {event, refreshJwt: currentAgent.session?.refreshJwt.slice(-10)})
-
       const expired = event === 'expired' || event === 'create-failed'
 
       /*
        * Special case for a network error that occurs when calling
-       * `resumeSession`, which happens on page load or when switching
-       * accounts.
+       * `resumeSession`, which happens on page load, when switching
+       * accounts, or when refreshing user session data.
        *
        * When this occurs, we drop the user back out to the login screen, but
-       * we don't clear tokens, allowing them to quickly log back in when
+       * we don't clear tokens, allowing them to quickly log back in when their
        * connection improves.
        */
       if (event === 'network-error') {
@@ -153,28 +151,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
 
-      /**
-       * The updated account object, derived from the updated session we just
-       * received from this callback
-       */
-      const refreshedAccount = agentToSessionAccount(currentAgent)
-
       /*
-       * If a session was was dropped by BskyAgent, we want to drop the user
-       * back out to log in.
-       */
-      if (!refreshedAccount) {
-        logger.error(`session: persistSession failed to get refreshed account`)
-        emitSessionDropped()
-        clearCurrentAccount()
-        setTimeout(() => {
-          Toast.show(`Sorry! We need you to enter your password.`)
-        }, 100)
-        return
-      }
-
-      /*
-       * If the session was expired naturally, we want to drop the user back out to log in.
+       * If the session was expired naturally, we want to drop the user back
+       * out to log in.
        */
       if (expired) {
         logger.warn(`session: expired`)
@@ -185,11 +164,31 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }, 100)
       }
 
-      /*
-       * If the session expired, or it was successfully created/updated, we want
-       * to update/persist the data.
+      /**
+       * The updated account object, derived from the updated session we just
+       * received from this callback.
        */
-      upsertAndPersistAccount(refreshedAccount)
+      const refreshedAccount = agentToSessionAccount(currentAgent)
+
+      if (refreshedAccount) {
+        /*
+         * If the session expired naturally, or it was otherwise successfully
+         * created/updated, we want to update/persist the data.
+         */
+        upsertAndPersistAccount(refreshedAccount)
+      } else {
+        /*
+         * This should never happen based on current `AtpAgent` handling, but
+         * it's here for TypeScript, and should result in the same handling as
+         * a session expiration.
+         */
+        logger.error(`session: persistSession failed to get refreshed account`)
+        emitSessionDropped()
+        clearCurrentAccount()
+        setTimeout(() => {
+          Toast.show(`Sorry! We need you to enter your password.`)
+        }, 100)
+      }
     })
   }, [currentAgent, clearCurrentAccount, upsertAndPersistAccount])
 
