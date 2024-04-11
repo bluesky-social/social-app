@@ -95,5 +95,5 @@ export const defaults: Schema = {
   useInAppBrowser: undefined,
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
-  disableHaptics: true,
+  disableHaptics: false,
 }
