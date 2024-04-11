@@ -20,9 +20,8 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {playHaptic} from 'lib/haptics'
+import {useHaptics} from 'lib/haptics'
 import {useProfileShadow} from 'state/cache/profile-shadow'
-import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -65,7 +64,7 @@ let ProfileHeaderLabeler = ({
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
-  const isHapticsDisabled = useHapticsDisabled()
+  const playHaptic = useHaptics()
   const cantSubscribePrompt = Prompt.usePromptControl()
   const isSelf = currentAccount?.did === profile.did
 
@@ -95,7 +94,7 @@ let ProfileHeaderLabeler = ({
       return
     }
     try {
-      playHaptic(isHapticsDisabled)
+      playHaptic()
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
@@ -116,7 +115,7 @@ let ProfileHeaderLabeler = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, isHapticsDisabled, likeUri, unlikeMod, track, likeMod, _])
+  }, [labeler, playHaptic, likeUri, unlikeMod, track, likeMod, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
