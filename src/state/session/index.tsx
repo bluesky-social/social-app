@@ -5,12 +5,12 @@ import {jwtDecode} from 'jwt-decode'
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
 import {IS_TEST_USER} from '#/lib/constants'
+import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import * as Toast from '#/view/com/util/Toast'
@@ -19,9 +19,15 @@ import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
 
 /**
+ * Only used for the initial agent values in state and context. Replaced
+ * immediately, and should not be reused.
+ */
+const INITIAL_AGENT = new BskyAgent({service: PUBLIC_BSKY_SERVICE})
+
+/**
  * @deprecated use `agent` from `useSession` instead
  */
-let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
+let __globalAgent: BskyAgent = INITIAL_AGENT
 
 /**
  * NOTE
@@ -36,6 +42,7 @@ export function getAgent() {
 }
 
 export type SessionAccount = persisted.PersistedAccount
+export type CurrentAccount = Omit<SessionAccount, 'accessJwt' | 'refreshJwt'>
 
 export type StateContext = {
   currentAgent: BskyAgent
@@ -44,10 +51,10 @@ export type StateContext = {
   hasSession: boolean
   accounts: SessionAccount[]
   /**
-   * This value is derived from `BskyAgent.session` and should contain the full
-   * account object persisted to storage, minus the access tokens.
+   * Contains the full account object persisted to storage, minus access
+   * tokens.
    */
-  currentAccount: Omit<SessionAccount, 'accessJwt' | 'refreshJwt'> | undefined
+  currentAccount: CurrentAccount | undefined
 }
 
 export type ApiContext = {
@@ -98,7 +105,7 @@ export type ApiContext = {
 }
 
 const StateContext = React.createContext<StateContext>({
-  currentAgent: PUBLIC_BSKY_AGENT,
+  currentAgent: INITIAL_AGENT,
   isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
@@ -133,15 +140,6 @@ function agentToSessionAccount(agent: BskyAgent): SessionAccount | undefined {
   }
 }
 
-function agentToCurrentAccount(
-  agent: BskyAgent,
-): StateContext['currentAccount'] {
-  const sessionAccount = agentToSessionAccount(agent)
-  delete sessionAccount?.accessJwt
-  delete sessionAccount?.refreshJwt
-  return sessionAccount
-}
-
 function sessionAccountToAgentSession(
   account: SessionAccount,
 ): BskyAgent['session'] {
@@ -158,15 +156,19 @@ function sessionAccountToAgentSession(
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const isDirty = React.useRef(false)
   const [currentAgent, setCurrentAgent] =
-    React.useState<BskyAgent>(PUBLIC_BSKY_AGENT)
+    React.useState<BskyAgent>(INITIAL_AGENT)
   const [accounts, setAccounts] = React.useState<SessionAccount[]>(
     persisted.get('session').accounts,
   )
   const [isInitialLoad, setIsInitialLoad] = React.useState(true)
   const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
-  const currentAccount = React.useMemo(
-    () => agentToCurrentAccount(currentAgent),
+  const currentAccountDid = React.useMemo(
+    () => currentAgent.session?.did,
     [currentAgent],
+  )
+  const currentAccount = React.useMemo(
+    () => accounts.find(a => a.did === currentAccountDid),
+    [accounts, currentAccountDid],
   )
 
   const persistNextUpdate = React.useCallback(
@@ -187,10 +189,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
+
+    // immediate clear this so any pending requests don't use it
+    currentAgent.setPersistSessionHandler(() => {})
+
     persistNextUpdate()
-    setCurrentAgent(PUBLIC_BSKY_AGENT)
-    BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-  }, [persistNextUpdate, setCurrentAgent])
+
+    const newAgent = new BskyAgent({service: PUBLIC_BSKY_SERVICE})
+    setCurrentAgent(newAgent)
+    configureModeration(newAgent)
+  }, [currentAgent, persistNextUpdate, setCurrentAgent])
 
   React.useMemo(() => {
     currentAgent.setPersistSessionHandler(event => {
@@ -436,17 +444,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   >(async () => {
     const {accounts: persistedAccounts} = persisted.get('session')
     const selectedAccount = persistedAccounts.find(
-      a => a.did === currentAccount?.did,
+      a => a.did === currentAccountDid,
     )
     if (!selectedAccount) return
-    await currentAgent.resumeSession(
-      sessionAccountToAgentSession(selectedAccount)!,
-    )
+
+    // update and swap agent to trigger render refresh
+    const newAgent = currentAgent.clone()
+    await newAgent.resumeSession(sessionAccountToAgentSession(selectedAccount)!)
+    const refreshedAccount = agentToSessionAccount(newAgent)
     persistNextUpdate()
-    upsertAndPersistAccount(agentToSessionAccount(currentAgent)!)
-    setCurrentAgent(currentAgent.clone())
+    upsertAndPersistAccount(refreshedAccount!)
+    setCurrentAgent(newAgent)
+    configureModeration(newAgent, refreshedAccount)
   }, [
-    currentAccount,
+    currentAccountDid,
     currentAgent,
     setCurrentAgent,
     persistNextUpdate,
@@ -475,11 +486,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       isDirty.current = false
       persisted.write('session', {
         accounts,
-        currentAccount: currentAccount
-          ? {
-              did: currentAccount.did,
-            }
-          : undefined,
+        currentAccount,
       })
     }
   }, [accounts, currentAccount])
@@ -502,17 +509,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       if (selectedAccount && selectedAccount.refreshJwt) {
-        if (selectedAccount?.did !== currentAccount?.did) {
+        if (selectedAccount?.did !== currentAccountDid) {
           logger.debug(
             `session: persisted onUpdate, switching accounts`,
             {
               from: {
-                did: currentAccount?.did,
-                handle: currentAccount?.handle,
+                did: currentAccountDid,
               },
               to: {
                 did: selectedAccount.did,
-                handle: selectedAccount.handle,
               },
             },
             logger.DebugContext.session,
@@ -526,12 +531,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             logger.DebugContext.session,
           )
           // console.log('UPDATE', { refreshJwt: selectedAccount.refreshJwt.slice(-10) })
-          // updates silently, all subsequent calls will use the new session
-          currentAgent.session = sessionAccountToAgentSession(selectedAccount)
-          // replace agent to re-derive currentAccount and trigger rerender with fresh data
-          setCurrentAgent(currentAgent.clone())
+          const newAgent = currentAgent.clone()
+          newAgent.session = sessionAccountToAgentSession(selectedAccount)
+          configureModeration(newAgent, selectedAccount)
+          setCurrentAgent(newAgent)
         }
-      } else if (!selectedAccount && currentAccount) {
+      } else if (!selectedAccount && currentAccountDid) {
         logger.debug(
           `session: persisted onUpdate, logging out`,
           {},
@@ -548,7 +553,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
     })
   }, [
-    currentAccount,
+    currentAccountDid,
     setAccounts,
     clearCurrentAccount,
     initSession,
@@ -614,25 +619,32 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-async function configureModeration(agent: BskyAgent, account: SessionAccount) {
-  if (IS_TEST_USER(account.handle)) {
-    const did = (
-      await agent
-        .resolveHandle({handle: 'mod-authority.test'})
-        .catch(_ => undefined)
-    )?.data.did
-    if (did) {
-      console.warn('USING TEST ENV MODERATION')
-      BskyAgent.configure({appLabelers: [did]})
+async function configureModeration(agent: BskyAgent, account?: SessionAccount) {
+  if (account) {
+    if (IS_TEST_USER(account.handle)) {
+      const did = (
+        await agent
+          .resolveHandle({handle: 'mod-authority.test'})
+          .catch(_ => undefined)
+      )?.data.did
+      if (did) {
+        console.warn('USING TEST ENV MODERATION')
+        BskyAgent.configure({appLabelers: [did]})
+      }
+    } else {
+      BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+
+      if (account) {
+        const labelerDids = await readLabelers(account.did).catch(_ => {})
+        if (labelerDids) {
+          agent.configureLabelersHeader(
+            labelerDids.filter(did => did !== BSKY_LABELER_DID),
+          )
+        }
+      }
     }
   } else {
     BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-    const labelerDids = await readLabelers(account.did).catch(_ => {})
-    if (labelerDids) {
-      agent.configureLabelersHeader(
-        labelerDids.filter(did => did !== BSKY_LABELER_DID),
-      )
-    }
   }
 }
 

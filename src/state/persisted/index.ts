@@ -6,11 +6,7 @@ import {migrate} from '#/state/persisted/legacy'
 import {defaults, Schema} from '#/state/persisted/schema'
 import * as store from '#/state/persisted/store'
 
-export type {
-  PersistedAccount,
-  PersistedCurrentAccount,
-  Schema,
-} from '#/state/persisted/schema'
+export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
 const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')

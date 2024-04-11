@@ -4,7 +4,10 @@ import {deviceLocales} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
-// only data needed for rendering account page
+/**
+ * A account persisted to storage. Stored in the `accounts[]` array. Contains
+ * base account info and access tokens.
+ */
 const accountSchema = z.object({
   service: z.string(),
   did: z.string(),
@@ -17,17 +20,25 @@ const accountSchema = z.object({
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 
-const currentAccountSchema = z.object({
-  did: z.string(),
+/**
+ * The current account. Stored in the `currentAccount` field.
+ *
+ * In previous versions, this included tokens and other info. Now, it's used
+ * only to reference the `did` field, and all other fields are marked as
+ * optional. They should be considered deprecated and not used, but are kept
+ * here for backwards compat.
+ */
+const currentAccountScheme = accountSchema.extend({
+  service: z.string().optional(),
+  handle: z.string().optional(),
 })
-export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 
 export const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
   session: z.object({
     accounts: z.array(accountSchema),
-    currentAccount: currentAccountSchema.optional(),
+    currentAccount: currentAccountScheme.optional(),
   }),
   reminders: z.object({
     lastEmailConfirm: z.string().optional(),
