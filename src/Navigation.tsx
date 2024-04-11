@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {JSX} from 'react/jsx-runtime'
-import {View} from 'react-native'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
@@ -82,7 +81,7 @@ import {LeftNav} from '#/view/shell/desktop/LeftNav'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
-import {atoms as a, useTheme} from '#/alf'
+import {useTheme} from '#/alf'
 import {router} from '#/routes'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -353,7 +352,7 @@ function TabNavigatorTablet() {
   const tabBar = React.useCallback(() => null, [])
 
   return (
-    <View style={[a.flex_row, a.flex_1]}>
+    <>
       <LeftNav />
       <TabletTab.Navigator
         initialRouteName="HomeTab"
@@ -393,7 +392,7 @@ function TabNavigatorTablet() {
           getComponent={() => SettingsTabNavigator}
         />
       </TabletTab.Navigator>
-    </View>
+    </>
   )
 }
 

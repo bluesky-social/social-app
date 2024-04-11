@@ -3,10 +3,10 @@ import {FlatListProps, RefreshControl, useWindowDimensions} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {isNativeTablet} from '#/platform/detection'
 import {addStyle} from 'lib/styles'
+import {useTheme} from '#/alf'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -39,7 +39,7 @@ function ListImpl<ItemT>(
 ) {
   const isScrolledDown = useSharedValue(false)
   const contextScrollHandlers = useScrollHandlers()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {width} = useWindowDimensions()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
@@ -72,8 +72,8 @@ function ListImpl<ItemT>(
       <RefreshControl
         refreshing={refreshing ?? false}
         onRefresh={onRefresh}
-        tintColor={pal.colors.text}
-        titleColor={pal.colors.text}
+        tintColor={t.atoms.text.color}
+        titleColor={t.atoms.text.color}
         progressViewOffset={headerOffset}
       />
     )
@@ -89,11 +89,11 @@ function ListImpl<ItemT>(
 
   if (isNativeTablet && width > 677) {
     contentContainerStyle = addStyle(contentContainerStyle, {
-      marginLeft: (width - 600) / 2 - 77,
-      marginRight: (width - 600) / 2,
+      marginLeft: (width - 600) / 2,
+      width: 600,
       borderLeftWidth: 1,
       borderRightWidth: 1,
-      ...pal.border,
+      ...t.atoms.border_contrast_medium,
     })
   }
 

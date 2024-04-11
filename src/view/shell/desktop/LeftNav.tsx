@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -274,6 +275,7 @@ export function LeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
+  const {top} = useSafeAreaInsets()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -283,7 +285,7 @@ export function LeftNav() {
     <View
       style={[
         styles.leftNav,
-        isTablet && styles.leftNavTablet,
+        isTablet && [styles.leftNavTablet, {top}],
         pal.view,
         pal.border,
       ]}>
@@ -461,13 +463,13 @@ const styles = StyleSheet.create({
         paddingTop: 12,
       },
   leftNavTablet: {
-    top: 0,
     left: 0,
-    right: 'auto',
     borderRightWidth: 1,
     height: '100%',
     width: 76,
     alignItems: 'center',
+    position: 'absolute',
+    zIndex: 1,
   },
 
   profileCard: {

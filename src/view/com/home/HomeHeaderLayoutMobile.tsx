@@ -1,8 +1,12 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -10,10 +14,9 @@ import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {usePalette} from 'lib/hooks/usePalette'
 import {isNativeTablet, isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
-import {atoms} from '#/alf'
+import {atoms, useTheme} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
 import {Link as Link2} from '#/components/Link'
 import {IS_DEV} from '#/env'
@@ -25,11 +28,22 @@ export function HomeHeaderLayoutMobile({
   children: React.ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
-  const pal = usePalette('default')
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
+  const {width} = useWindowDimensions()
+  const t = useTheme()
+
+  let tabBarTablet
+  if (isNativeTablet && width > 677) {
+    tabBarTablet = {
+      marginLeft: (width - 600) / 2,
+      width: 600,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+    }
+  }
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
@@ -37,13 +51,19 @@ export function HomeHeaderLayoutMobile({
 
   return (
     <Animated.View
-      style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
+      style={[
+        t.atoms.bg,
+        t.atoms.border_contrast_medium,
+        styles.tabBar,
+        tabBarTablet,
+        headerMinimalShellTransform,
+      ]}
       onLayout={e => {
         headerHeight.value = e.nativeEvent.layout.height
       }}>
-      <View style={[pal.view, styles.topBar]}>
-        {!isNativeTablet ? (
-          <View style={[pal.view, {width: 100}]}>
+      <View style={[t.atoms.bg, styles.topBar]}>
+        <View style={[t.atoms.bg, {width: 100}]}>
+          {!isNativeTablet ? (
             <TouchableOpacity
               testID="viewHeaderDrawerBtn"
               onPress={onPressAvi}
@@ -56,14 +76,11 @@ export function HomeHeaderLayoutMobile({
               <FontAwesomeIcon
                 icon="bars"
                 size={18}
-                color={pal.colors.textLight}
+                color={t.atoms.text_contrast_medium.color}
               />
             </TouchableOpacity>
-          </View>
-        ) : (
-          // subtract width of LeftNav
-          <View style={{width: 100 - 77}} />
-        )}
+          ) : null}
+        </View>
         <View>
           <Logo width={30} />
         </View>
@@ -73,7 +90,7 @@ export function HomeHeaderLayoutMobile({
             atoms.justify_end,
             atoms.align_center,
             atoms.gap_md,
-            pal.view,
+            t.atoms.bg,
             {width: 100},
           ]}>
           {IS_DEV && (
@@ -90,7 +107,7 @@ export function HomeHeaderLayoutMobile({
             accessibilityHint="">
             <FontAwesomeIcon
               icon="sliders"
-              style={pal.textLight as FontAwesomeIconStyle}
+              color={t.atoms.text_contrast_medium.color}
             />
           </Link>
         </View>

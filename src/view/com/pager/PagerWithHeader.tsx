@@ -1,26 +1,30 @@
 import * as React from 'react'
 import {
   LayoutChangeEvent,
+  NativeScrollEvent,
   ScrollView,
   StyleSheet,
+  useWindowDimensions,
   View,
-  NativeScrollEvent,
 } from 'react-native'
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
+  AnimatedRef,
   runOnJS,
   runOnUI,
   scrollTo,
-  useAnimatedRef,
-  AnimatedRef,
   SharedValue,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {TabBar} from './TabBar'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {ListMethods} from '../util/List'
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {isNativeTablet} from '#/platform/detection'
+import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {useTheme} from '#/alf'
+import {ListMethods} from '../util/List'
+import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
@@ -234,10 +238,24 @@ let PagerTabBar = ({
     ],
   }))
   const headerRef = React.useRef(null)
+  const {width} = useWindowDimensions()
+  const t = useTheme()
+
+  let tabBarTablet
+  if (isNativeTablet && width > 677) {
+    tabBarTablet = {
+      marginLeft: (width - 600) / 2,
+      width: 600,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      ...t.atoms.border_contrast_medium,
+    }
+  }
+
   return (
     <Animated.View
       pointerEvents="box-none"
-      style={[styles.tabBarMobile, headerTransform]}>
+      style={[styles.tabBarMobile, tabBarTablet, headerTransform]}>
       <View ref={headerRef} pointerEvents="box-none" collapsable={false}>
         {renderHeader?.()}
         {
