@@ -1,11 +1,13 @@
 import React, {memo} from 'react'
-import {FlatListProps, RefreshControl} from 'react-native'
-import {FlatList_INTERNAL} from './Views'
-import {addStyle} from 'lib/styles'
-import {useScrollHandlers} from '#/lib/ScrollContext'
+import {FlatListProps, RefreshControl, useWindowDimensions} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
+
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useScrollHandlers} from '#/lib/ScrollContext'
+import {isNativeTablet} from '#/platform/detection'
+import {addStyle} from 'lib/styles'
+import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<
@@ -37,6 +39,7 @@ function ListImpl<ItemT>(
   const isScrolledDown = useSharedValue(false)
   const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
+  const {width} = useWindowDimensions()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
@@ -91,6 +94,17 @@ function ListImpl<ItemT>(
       refreshControl={refreshControl}
       onScroll={scrollHandler}
       scrollEventThrottle={1}
+      contentContainerStyle={
+        isNativeTablet && [
+          {
+            marginLeft: (width - 600) / 2 - 77,
+            marginRight: (width - 600) / 2,
+            borderLeftWidth: 1,
+            borderRightWidth: 1,
+          },
+          pal.border,
+        ]
+      }
       style={style}
       ref={ref}
     />
