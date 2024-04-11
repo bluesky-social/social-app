@@ -32,6 +32,7 @@ function ListImpl<ItemT>(
     onRefresh,
     headerOffset,
     style,
+    contentContainerStyle,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -86,6 +87,16 @@ function ListImpl<ItemT>(
     contentOffset = {x: 0, y: headerOffset * -1}
   }
 
+  if (isNativeTablet && width > 677) {
+    contentContainerStyle = addStyle(contentContainerStyle, {
+      marginLeft: (width - 600) / 2 - 77,
+      marginRight: (width - 600) / 2,
+      borderLeftWidth: 1,
+      borderRightWidth: 1,
+      ...pal.border,
+    })
+  }
+
   return (
     <FlatList_INTERNAL
       {...props}
@@ -94,18 +105,8 @@ function ListImpl<ItemT>(
       refreshControl={refreshControl}
       onScroll={scrollHandler}
       scrollEventThrottle={1}
-      contentContainerStyle={
-        isNativeTablet && [
-          {
-            marginLeft: (width - 600) / 2 - 77,
-            marginRight: (width - 600) / 2,
-            borderLeftWidth: 1,
-            borderRightWidth: 1,
-          },
-          pal.border,
-        ]
-      }
       style={style}
+      contentContainerStyle={contentContainerStyle}
       ref={ref}
     />
   )
