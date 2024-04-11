@@ -6,3 +6,4 @@ export type Gate =
   | 'new_search'
   | 'show_follow_back_label'
   | 'start_session_with_following'
+  | 'new_profile_scroll_component'
