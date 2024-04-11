@@ -32,6 +32,7 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -59,6 +60,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
+  const isHapticsDisabled = useHapticsDisabled()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -104,9 +106,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [onPressTab])
 
   const onLongPressProfile = React.useCallback(() => {
-    Haptics.default()
+    Haptics.default(isHapticsDisabled)
     accountSwitchControl.open()
-  }, [accountSwitchControl])
+  }, [accountSwitchControl, isHapticsDisabled])
 
   return (
     <>

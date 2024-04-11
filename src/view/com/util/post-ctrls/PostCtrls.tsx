@@ -32,6 +32,7 @@ import {
 } from '#/state/queries/post'
 import {useRequireAuth} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import * as Prompt from '#/components/Prompt'
@@ -67,6 +68,7 @@ let PostCtrls = ({
   )
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
+  const isHapticsDisabled = useHapticsDisabled()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return !!post.author.labels?.find(
@@ -84,7 +86,7 @@ let PostCtrls = ({
   const onPressToggleLike = React.useCallback(async () => {
     try {
       if (!post.viewer?.like) {
-        Haptics.default()
+        Haptics.default(isHapticsDisabled)
         await queueLike()
       } else {
         await queueUnlike()
@@ -94,13 +96,13 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [post.viewer?.like, queueLike, queueUnlike])
+  }, [isHapticsDisabled, post.viewer?.like, queueLike, queueUnlike])
 
   const onRepost = useCallback(async () => {
     closeModal()
     try {
       if (!post.viewer?.repost) {
-        Haptics.default()
+        Haptics.default(isHapticsDisabled)
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -110,7 +112,13 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [post.viewer?.repost, queueRepost, queueUnrepost, closeModal])
+  }, [
+    closeModal,
+    post.viewer?.repost,
+    isHapticsDisabled,
+    queueRepost,
+    queueUnrepost,
+  ])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -123,15 +131,16 @@ let PostCtrls = ({
         indexedAt: post.indexedAt,
       },
     })
-    Haptics.default()
+    Haptics.default(isHapticsDisabled)
   }, [
+    closeModal,
+    openComposer,
     post.uri,
     post.cid,
     post.author,
     post.indexedAt,
     record.text,
-    openComposer,
-    closeModal,
+    isHapticsDisabled,
   ])
 
   const onShare = useCallback(() => {

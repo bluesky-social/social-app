@@ -39,6 +39,7 @@ import {pluralize} from 'lib/strings/helpers'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
+import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -159,6 +160,7 @@ export function ProfileFeedScreenInner({
   const reportDialogControl = useReportDialogControl()
   const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
+  const isHapticsDisabled = useHapticsDisabled()
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
@@ -201,7 +203,7 @@ export function ProfileFeedScreenInner({
 
   const onToggleSaved = React.useCallback(async () => {
     try {
-      Haptics.default()
+      Haptics.default(isHapticsDisabled)
 
       if (isSaved) {
         await removeFeed({uri: feedInfo.uri})
@@ -221,18 +223,19 @@ export function ProfileFeedScreenInner({
       logger.error('Failed up update feeds', {message: err})
     }
   }, [
-    feedInfo,
+    isHapticsDisabled,
     isSaved,
-    saveFeed,
     removeFeed,
-    resetSaveFeed,
+    feedInfo.uri,
     resetRemoveFeed,
     _,
+    saveFeed,
+    resetSaveFeed,
   ])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
-      Haptics.default()
+      Haptics.default(isHapticsDisabled)
 
       if (isPinned) {
         await unpinFeed({uri: feedInfo.uri})
@@ -245,7 +248,16 @@ export function ProfileFeedScreenInner({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed, _])
+  }, [
+    isHapticsDisabled,
+    isPinned,
+    unpinFeed,
+    feedInfo.uri,
+    resetUnpinFeed,
+    pinFeed,
+    resetPinFeed,
+    _,
+  ])
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
@@ -517,6 +529,7 @@ function AboutSection({
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
+  const isHapticsDisabled = useHapticsDisabled()
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -527,7 +540,7 @@ function AboutSection({
 
   const onToggleLiked = React.useCallback(async () => {
     try {
-      Haptics.default()
+      Haptics.default(isHapticsDisabled)
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
@@ -546,7 +559,17 @@ function AboutSection({
       )
       logger.error('Failed up toggle like', {message: err})
     }
-  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track, _])
+  }, [
+    isHapticsDisabled,
+    isLiked,
+    likeUri,
+    unlikeFeed,
+    track,
+    likeFeed,
+    feedInfo.uri,
+    feedInfo.cid,
+    _,
+  ])
 
   return (
     <View style={[styles.aboutSectionContainer]}>
