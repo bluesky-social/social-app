@@ -71,12 +71,15 @@ export function Post({thread}: Props) {
             <p>{post.repostCount}</p>
           </div> */}
           <div className="flex-1" />
-          <p className="cursor-pointer text-brand font-bold hover:underline">
+          <p className="cursor-pointer text-brand font-bold hover:underline hidden min-[420px]:inline">
             {post.replyCount
               ? `Read ${post.replyCount} ${
                   post.replyCount > 1 ? 'replies' : 'reply'
                 } on Bluesky`
               : `View on Bluesky`}
+          </p>
+          <p className="cursor-pointer text-brand font-bold hover:underline min-[420px]:hidden">
+            <span className="hidden min-[340px]:inline">View on </span>Bluesky
           </p>
         </div>
       </div>
@@ -130,5 +133,9 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
     counter++
   }
 
-  return <p className="text-lg leading-6">{richText}</p>
+  return (
+    <p className="text-lg leading-6 break-word break-words whitespace-pre-wrap">
+      {richText}
+    </p>
+  )
 }
