@@ -2438,7 +2438,7 @@ msgstr "招待コード：１個使用可能"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 msgid "It shows posts from the people you follow as they happen."
-msgstr "あなたがフォローした人の投稿が随時表示されます。"
+msgstr "あなたがフォローしたユーザーの投稿が随時表示されます。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:104
 #: src/view/com/auth/SplashScreen.web.tsx:172
@@ -2514,6 +2514,10 @@ msgstr "言語"
 #: src/view/com/auth/create/StepHeader.tsx:20
 #~ msgid "Last step!"
 #~ msgstr "最後のステップ！"
+
+#: src/view/screens/Search/Search.tsx:380
+msgid "Latest"
+msgstr "最新"
 
 #: src/view/com/util/moderation/ContentHider.tsx:103
 #~ msgid "Learn more"
@@ -3540,6 +3544,11 @@ msgstr "パスワードが更新されました"
 #: src/screens/Login/PasswordUpdatedForm.tsx:30
 msgid "Password updated!"
 msgstr "パスワードが更新されました！"
+
+#: src/view/screens/Search/Search.tsx:390
+#: src/view/screens/Search/Search.tsx:399
+msgid "People"
+msgstr "ユーザー"
 
 #: src/Navigation.tsx:164
 msgid "People followed by @{0}"
@@ -5423,6 +5432,10 @@ msgstr "ドロップダウンをトグル"
 #: src/screens/Moderation/index.tsx:332
 msgid "Toggle to enable or disable adult content"
 msgstr "成人向けコンテンツの有効もしくは無効の切り替え"
+
+#: src/view/screens/Search/Search.tsx:370
+msgid "Top"
+msgstr "トップ"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
