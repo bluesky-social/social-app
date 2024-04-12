@@ -36,7 +36,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         paddingTop: 6,
         marginBottom: 24,
       }}>
-      <Link to="/">
+      <Link to="/" label="Bluesky - Home">
         <Logo width={48} />
       </Link>
 
