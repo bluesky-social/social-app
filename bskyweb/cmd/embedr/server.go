@@ -13,8 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	appbsky "github.com/bluesky-social/indigo/api/bsky"
-	"github.com/bluesky-social/indigo/atproto/syntax"
+	"github.com/bluesky-social/indigo/atproto/identity"
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
 	"github.com/bluesky-social/social-app/bskyweb"
@@ -30,6 +29,7 @@ type Server struct {
 	echo  *echo.Echo
 	httpd *http.Server
 	xrpcc *xrpc.Client
+	dir   identity.Directory
 }
 
 func serve(cctx *cli.Context) error {
@@ -71,6 +71,7 @@ func serve(cctx *cli.Context) error {
 	server := &Server{
 		echo:  e,
 		xrpcc: xrpcc,
+		dir:   identity.DefaultDirectory(),
 	}
 
 	// Create the HTTP server.
@@ -140,7 +141,7 @@ func serve(cctx *cli.Context) error {
 			log.Debugf("serving static file from the local file system")
 			return http.FS(os.DirFS("static"))
 		}
-		fsys, err := fs.Sub(bskyweb.StaticFS, "static")
+		fsys, err := fs.Sub(bskyweb.EmbedrStaticFS, "static")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -172,6 +173,7 @@ func serve(cctx *cli.Context) error {
 
 	// actual routes
 	e.GET("/", server.WebHome)
+	e.GET("/iframe-resize.js", echo.WrapHandler(staticHandler))
 	e.GET("/embed.js", echo.WrapHandler(staticHandler))
 	e.GET("/oembed", server.WebOEmbed)
 	e.GET("/embed/:did/app.bsky.feed.post/:rkey", server.WebPostEmbed)
@@ -231,86 +233,4 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 		"statusCode": code,
 	}
 	c.Render(code, "error.html", data)
-}
-
-func (srv *Server) WebHome(c echo.Context) error {
-	data := map[string]interface{}{}
-	return c.Render(http.StatusOK, "home.html", data)
-}
-
-func (srv *Server) WebOEmbed(c echo.Context) error {
-	data := map[string]interface{}{}
-	return c.Render(http.StatusOK, "oembed.html", data)
-}
-
-func (srv *Server) WebPostEmbed(c echo.Context) error {
-	ctx := c.Request().Context()
-	data := map[string]interface{}{}
-
-	// sanity check arguments. don't 4xx, just let app handle if not expected format
-	rkeyParam := c.Param("rkey")
-	rkey, err := syntax.ParseRecordKey(rkeyParam)
-	if err != nil {
-		return c.Render(http.StatusOK, "postEmbed.html", data)
-	}
-	didParam := c.Param("did")
-	did, err := syntax.ParseDID(didParam)
-	if err != nil {
-		return c.Render(http.StatusOK, "postEmbed.html", data)
-	}
-
-	// requires two fetches: first fetch profile (!)
-	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, did.String())
-	if err != nil {
-		log.Warnf("failed to fetch profile for: %s\t%v", did, err)
-		return c.Render(http.StatusOK, "postEmbed.html", data)
-	}
-	unauthedViewingOkay := true
-	for _, label := range pv.Labels {
-		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-			unauthedViewingOkay = false
-		}
-	}
-
-	if !unauthedViewingOkay {
-		return c.Render(http.StatusOK, "postEmbed.html", data)
-	}
-	data["did"] = did.String()
-
-	// then fetch the post thread (with extra context)
-	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
-	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
-	if err != nil {
-		log.Warnf("failed to fetch post: %s\t%v", uri, err)
-		return c.Render(http.StatusOK, "postEmbed.html", data)
-	}
-	req := c.Request()
-	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
-	data["postView"] = postView
-	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-	if postView.Embed != nil {
-		if postView.Embed.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
-		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
-			}
-			data["imgThumbUrls"] = thumbUrls
-		}
-	}
-
-	if postView.Record != nil {
-		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
-		if ok {
-			_ = postRecord
-			data["postText"] = "" // XXX
-		}
-	}
-
-	return c.Render(http.StatusOK, "postEmbed.html", data)
 }
