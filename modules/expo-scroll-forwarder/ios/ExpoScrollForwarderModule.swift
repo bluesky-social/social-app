@@ -5,8 +5,9 @@ public class ExpoScrollForwarderModule: Module {
     Name("ExpoScrollForwarder")
     
     View(ExpoScrollForwarderView.self) {
-      Prop("scrollViewTag") { (view: ExpoScrollForwarderView, prop: Int) in
-        view.scrollViewTag = prop
+      // Still calling this scrollViewTag even though it is being converted to RCTScrollView
+      Prop("scrollViewTag") { (view: ExpoScrollForwarderView, prop: RCTScrollView) in
+        view.rctScrollView = prop
       }
     }
   }

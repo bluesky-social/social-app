@@ -1,15 +1,15 @@
 import ExpoModulesCore
 
-// This view will be used as a native component. Make sure to inherit from `ExpoView`
-// to apply the proper styling (e.g. border radius and shadows).
 class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
-  var scrollViewTag: Int? {
+  var rctScrollView: RCTScrollView? {
+    willSet {
+      self.removeCancelGestureRecognizers()
+    }
     didSet {
-      self.tryFindScrollView()
+      self.rctRefreshCtrl = self.rctScrollView?.scrollView.refreshControl as? RCTRefreshControl
+      self.addCancelGestureRecognizers()
     }
   }
-  
-  private var rctScrollView: RCTScrollView?
   private var rctRefreshCtrl: RCTRefreshControl?
   private var cancelGestureRecognizers: [UIGestureRecognizer]?
   private var animTimer: Timer?
@@ -160,22 +160,6 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     }
     
     return offset
-  }
-  
-  func tryFindScrollView() {
-    guard let scrollViewTag = scrollViewTag else {
-      return
-    }
-    
-    // Before we switch to a different scrollview, we always want to remove the cancel gesture recognizer.
-    // Otherwise we might end up with duplicates when we switch back to that scrollview.
-    self.removeCancelGestureRecognizers()
-    
-    self.rctScrollView = self.appContext?
-      .findView(withTag: scrollViewTag, ofType: RCTScrollView.self)
-    self.rctRefreshCtrl = self.rctScrollView?.scrollView.refreshControl as? RCTRefreshControl
-    
-    self.addCancelGestureRecognizers()
   }
   
   func addCancelGestureRecognizers() {
