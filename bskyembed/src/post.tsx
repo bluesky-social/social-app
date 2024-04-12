@@ -25,7 +25,7 @@ export function Post({thread}: Props) {
   const href = `/profile/${post.author.did}/post/${getRkey(post)}`
   return (
     <Container href={href}>
-      <div className="flex-1 flex-col flex gap-2">
+      <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
         <div className="flex gap-2.5 items-center">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
             <img
