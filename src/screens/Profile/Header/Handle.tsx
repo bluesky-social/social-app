@@ -26,6 +26,7 @@ export function ProfileHeaderHandle({
         </View>
       ) : undefined}
       <Text
+        numberOfLines={1}
         style={[
           invalidHandle
             ? [
@@ -36,7 +37,7 @@ export function ProfileHeaderHandle({
                 a.rounded_xs,
                 {borderColor: t.palette.contrast_200},
               ]
-            : [a.text_md, t.atoms.text_contrast_medium],
+            : [a.text_md, a.leading_tight, t.atoms.text_contrast_medium],
           web({wordBreak: 'break-all'}),
         ]}>
         {invalidHandle ? <Trans>⚠Invalid Handle</Trans> : `@${profile.handle}`}

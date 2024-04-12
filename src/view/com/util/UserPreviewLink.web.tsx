@@ -52,18 +52,14 @@ export function UserPreviewLink(
   props: React.PropsWithChildren<UserPreviewLinkProps>,
 ) {
   const prefetchProfileQuery = usePrefetchProfileQuery()
-
   const [hovered, setHovered] = React.useState(false)
-
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
   })
-
   const onPointerEnter = React.useCallback(() => {
     prefetchProfileQuery(props.did)
     setHovered(true)
   }, [props.did, prefetchProfileQuery, setHovered])
-
   const onPointerLeave = React.useCallback(() => {
     setHovered(false)
   }, [])

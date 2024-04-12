@@ -12,6 +12,7 @@ import {
   useCameraPermission,
   usePhotoLibraryPermission,
 } from 'lib/hooks/usePermissions'
+import {makeProfileLink} from 'lib/routes/links'
 import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {HighPriorityImage} from 'view/com/util/images/Image'
@@ -22,9 +23,10 @@ import {
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {Link} from '#/components/Link'
 import * as Menu from '#/components/Menu'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {UserPreviewLink} from './UserPreviewLink'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -373,9 +375,15 @@ let PreviewableUserAvatar = (
   props: PreviewableUserAvatarProps,
 ): React.ReactNode => {
   return (
-    <UserPreviewLink did={props.did} handle={props.handle}>
-      <UserAvatar {...props} />
-    </UserPreviewLink>
+    <ProfileHoverCard did={props.did}>
+      <Link
+        to={makeProfileLink({
+          did: props.did,
+          handle: props.handle,
+        })}>
+        <UserAvatar {...props} />
+      </Link>
+    </ProfileHoverCard>
   )
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
