@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-03-20 15:50+0800\n"
+"POT-Creation-Date: 2024-04-12 11:00+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -506,7 +506,7 @@ msgstr "已封鎖貼文。"
 
 #: src/screens/Profile/Sections/Labels.tsx:152
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "封鎖並不能阻止此標記者在您的帳戶上標記標籤。"
+msgstr "封鎖並不能阻止此標記者在你的帳戶上標記標籤。"
 
 #: src/view/screens/ProfileList.tsx:631
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1601,7 +1601,7 @@ msgstr "輸入密碼"
 #: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
 msgid "Enter a word or tag"
-msgstr "輸入文字或標籤"
+msgstr "輸入詞彙或標籤"
 
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
@@ -2105,7 +2105,7 @@ msgstr "這裡有一些熱門的話題訊息流。跟隨的訊息流數量沒有
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:84
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "這裡有一些根據您的興趣（{interestsText}）所推薦的熱門的話題訊息流。跟隨的訊息流數量沒有限制。"
+msgstr "這裡有一些根據你的興趣（{interestsText}）所推薦的熱門的話題訊息流。跟隨的訊息流數量沒有限制。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:154
 msgid "Here is your app password."
@@ -2231,7 +2231,7 @@ msgstr "若不勾選，則預設為全年齡向。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:83
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr "如果根據你所在國家的法律，你尚未成年，則你的父母或法定監護人必須代表您閱讀這些條款。"
+msgstr "如果根據你所在國家的法律，你尚未成年，則你的父母或法定監護人必須代表你閱讀這些條款。"
 
 #: src/view/screens/ProfileList.tsx:610
 msgid "If you delete this list, you won't be able to recover it."
@@ -2650,7 +2650,7 @@ msgstr "請確認這是你想要去的的地方！"
 
 #: src/components/dialogs/MutedWords.tsx:82
 msgid "Manage your muted words and tags"
-msgstr "管理您靜音的文字和標籤"
+msgstr "管理你靜音的文字和標籤"
 
 #: src/view/com/auth/create/Step2.tsx:118
 #~ msgid "May not be longer than 253 characters"
@@ -4390,7 +4390,7 @@ msgstr "將此設定項設為「開」以在分層視圖中顯示回覆。這是
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "將此設定為「是」以在你的追蹤訊息流中顯示您保存的訊息流。這是一個實驗性功能。"
+msgstr "將此設定為「是」以在你的追蹤訊息流中顯示你保存的訊息流。這是一個實驗性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -4945,7 +4945,7 @@ msgstr "以下步驟將幫助自訂你的 Bluesky 體驗。"
 #: src/view/com/post-thread/PostThread.tsx:153
 #: src/view/com/post-thread/PostThread.tsx:165
 msgid "The post may have been deleted."
-msgstr "此貼文可能已被刪除。"
+msgstr "這則貼文可能已被刪除。"
 
 #: src/view/screens/PrivacyPolicy.tsx:33
 msgid "The Privacy Policy has been moved to <0/>"
@@ -5010,7 +5010,7 @@ msgstr "取得列表時發生問題，點擊這裡重試。"
 
 #: src/components/ReportDialog/SubmitView.tsx:83
 msgid "There was an issue sending your report. Please check your internet connection."
-msgstr "提交你的檢舉時出現問題，請檢查您的網路連線。"
+msgstr "提交你的檢舉時出現問題，請檢查你的網路連線。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:65
 msgid "There was an issue syncing your preferences with the server"
@@ -5146,16 +5146,16 @@ msgstr "此名稱已被使用"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:125
 msgid "This post has been deleted."
-msgstr "此貼文已被刪除。"
+msgstr "這則貼文已被刪除。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:344
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:248
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "此貼文僅對登入使用者可見。 未登入的人將看不到它。"
+msgstr "這則貼文僅對登入使用者可見。 未登入的人將看不到它。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:326
 msgid "This post will be hidden from feeds."
-msgstr "此貼文將從訊息流中被隱藏。"
+msgstr "這則貼文將從訊息流中被隱藏。"
 
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -5212,11 +5212,11 @@ msgstr "此警告僅適用於附帶媒體的貼文。"
 
 #: src/components/dialogs/MutedWords.tsx:283
 msgid "This will delete {0} from your muted words. You can always add it back later."
-msgstr "這將從您的靜音詞中刪除 {0}，你隨時可以在稍後添加回來。"
+msgstr "這將從你的靜音詞中刪除 {0}，你隨時可以在稍後添加回來。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:282
 #~ msgid "This will hide this post from your feeds."
-#~ msgstr "這將在你的訊息流中隱藏此貼文。"
+#~ msgstr "這將在你的訊息流中隱藏這則貼文。"
 
 #: src/view/screens/Settings/index.tsx:574
 msgid "Thread preferences"
@@ -5414,7 +5414,7 @@ msgstr "更新列表中的 {displayName}"
 
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Update to {handle}"
-msgstr ""
+msgstr "更新至 {handle}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:186
 msgid "Updating..."
@@ -5429,23 +5429,23 @@ msgstr "上傳文字檔案至："
 #: src/view/com/util/UserBanner.tsx:116
 #: src/view/com/util/UserBanner.tsx:119
 msgid "Upload from Camera"
-msgstr ""
+msgstr "從相機上傳"
 
 #: src/view/com/util/UserAvatar.tsx:343
 #: src/view/com/util/UserBanner.tsx:133
 msgid "Upload from Files"
-msgstr ""
+msgstr "從檔案上傳"
 
 #: src/view/com/util/UserAvatar.tsx:337
 #: src/view/com/util/UserAvatar.tsx:341
 #: src/view/com/util/UserBanner.tsx:127
 #: src/view/com/util/UserBanner.tsx:131
 msgid "Upload from Library"
-msgstr ""
+msgstr "從圖庫上傳"
 
 #: src/view/com/modals/ChangeHandle.tsx:408
 msgid "Use a file on your server"
-msgstr ""
+msgstr "使用伺服器上的檔案"
 
 #: src/view/screens/AppPasswords.tsx:197
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
@@ -5453,7 +5453,7 @@ msgstr "使用應用程式專用密碼登入到其他 Bluesky 使用者端，而
 
 #: src/view/com/modals/ChangeHandle.tsx:517
 msgid "Use bsky.social as hosting provider"
-msgstr ""
+msgstr "使用 bsky.social 作為主機提供商"
 
 #: src/view/com/modals/ChangeHandle.tsx:516
 msgid "Use default provider"
@@ -5471,7 +5471,7 @@ msgstr "使用我的預設瀏覽器"
 
 #: src/view/com/modals/ChangeHandle.tsx:400
 msgid "Use the DNS panel"
-msgstr ""
+msgstr "使用 DNS 控制台"
 
 #: src/view/com/modals/AddAppPasswords.tsx:156
 msgid "Use this to sign into the other app along with your handle."
@@ -5492,7 +5492,7 @@ msgstr "使用者被封鎖"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:48
 msgid "User Blocked by \"{0}\""
-msgstr ""
+msgstr "使用者被\"{0}\"封鎖"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:53
 msgid "User Blocked by List"
@@ -5500,7 +5500,7 @@ msgstr "使用者被列表封鎖"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:66
 msgid "User Blocking You"
-msgstr ""
+msgstr "使用者封鎖了你"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 msgid "User Blocks You"
@@ -5555,11 +5555,11 @@ msgstr "「{0}」中的使用者"
 
 #: src/components/LikesDialog.tsx:85
 msgid "Users that have liked this content or profile"
-msgstr ""
+msgstr "喜歡此內容或個人資料的使用者"
 
 #: src/view/com/modals/ChangeHandle.tsx:436
 msgid "Value:"
-msgstr ""
+msgstr "值："
 
 #: src/view/com/auth/create/Step2.tsx:243
 #~ msgid "Verification code"
@@ -5567,7 +5567,7 @@ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:509
 msgid "Verify {0}"
-msgstr ""
+msgstr "驗證 {0}"
 
 #: src/view/screens/Settings/index.tsx:942
 msgid "Verify email"
@@ -5592,7 +5592,7 @@ msgstr "驗證你的電子郵件"
 
 #: src/view/screens/Settings/index.tsx:893
 msgid "Version {0}"
-msgstr ""
+msgstr "版本 {0}"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
@@ -5608,11 +5608,11 @@ msgstr "查看除錯項目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:131
 msgid "View details"
-msgstr ""
+msgstr "查看詳細信息"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:126
 msgid "View details for reporting a copyright violation"
-msgstr ""
+msgstr "查看詳細信息以檢舉侵權"
 
 #: src/view/com/posts/FeedSlice.tsx:99
 msgid "View full thread"
@@ -5620,7 +5620,7 @@ msgstr "查看整個對話串"
 
 #: src/components/moderation/LabelsOnMe.tsx:51
 msgid "View information about these labels"
-msgstr ""
+msgstr "查看有關這些標籤的信息"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:166
 msgid "View profile"
@@ -5632,11 +5632,11 @@ msgstr "查看頭像"
 
 #: src/components/LabelingServiceCard/index.tsx:140
 msgid "View the labeling service provided by @{0}"
-msgstr ""
+msgstr "查看由 @{0} 提供的標籤服務"
 
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "View users who like this feed"
-msgstr ""
+msgstr "查看喜歡此訊息流的使用者"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -5652,11 +5652,11 @@ msgstr "警告"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:48
 msgid "Warn content"
-msgstr ""
+msgstr "警告內容"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:46
 msgid "Warn content and filter from feeds"
-msgstr ""
+msgstr "警告內容並從訊息流中過濾"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
 #~ msgid "We also think you'll like \"For You\" by Skygaze:"
@@ -5664,7 +5664,7 @@ msgstr ""
 
 #: src/screens/Hashtag.tsx:133
 msgid "We couldn't find any results for that hashtag."
-msgstr ""
+msgstr "我們找不到任何與該標籤相關的結果。"
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -5680,7 +5680,7 @@ msgstr "你已看完了你跟隨的貼文。這是 <0/> 的最新貼文。"
 
 #: src/components/dialogs/MutedWords.tsx:203
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr ""
+msgstr "我們建議避免使用出現在許多貼文中的常用詞語，因為這可能導致沒有貼文可顯示。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
 msgid "We recommend our \"Discover\" feed:"
@@ -5688,11 +5688,11 @@ msgstr "我們推薦我們的「Discover」訊息流:"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr ""
+msgstr "我們無法加載你的出生日期設定偏好，請再試一次。"
 
 #: src/screens/Moderation/index.tsx:385
 msgid "We were unable to load your configured labelers at this time."
-msgstr ""
+msgstr "我們目前無法加載你已配置的標籤者。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:137
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -5720,7 +5720,7 @@ msgstr "很抱歉，我們無法解析此列表。如果問題持續發生，請
 
 #: src/components/dialogs/MutedWords.tsx:229
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr ""
+msgstr "很抱歉，我們目前無法加載你的靜音詞。請稍後再試。"
 
 #: src/view/screens/Search/Search.tsx:256
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -5733,7 +5733,7 @@ msgstr "很抱歉！我們找不到你正在尋找的頁面。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:321
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
-msgstr ""
+msgstr "抱歉！你只能訂閱十個標籤者，你已達到十個的限制。"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
 msgid "Welcome to <0>Bluesky</0>"
@@ -5768,23 +5768,23 @@ msgstr "誰可以回覆"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Why should this content be reviewed?"
-msgstr ""
+msgstr "為什麼應該審查這個內容？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Why should this feed be reviewed?"
-msgstr ""
+msgstr "為什麼應該審查這個訊息流？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Why should this list be reviewed?"
-msgstr ""
+msgstr "為什麼應該審查這個列表？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Why should this post be reviewed?"
-msgstr ""
+msgstr "為什麼應該審查這則貼文？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Why should this user be reviewed?"
-msgstr ""
+msgstr "為什麼應該審查這個使用者？"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:103
 msgid "Wide"
@@ -5823,7 +5823,7 @@ msgstr "輪到你了。"
 
 #: src/view/com/profile/ProfileFollows.tsx:86
 msgid "You are not following anyone."
-msgstr ""
+msgstr "你沒有跟隨任何人。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
@@ -5841,7 +5841,7 @@ msgstr "你現在可以使用新密碼登入。"
 
 #: src/view/com/profile/ProfileFollowers.tsx:86
 msgid "You do not have any followers."
-msgstr ""
+msgstr "你沒有任何跟隨者。"
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -5878,20 +5878,20 @@ msgstr "你輸入的邀請碼無效。它應該長得像這樣 XXXXX-XXXXX。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:109
 msgid "You have hidden this post"
-msgstr ""
+msgstr "你已隱藏這則貼文"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:101
 msgid "You have hidden this post."
-msgstr ""
+msgstr "你已隱藏這則貼文。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:94
 #: src/lib/moderation/useModerationCauseDescription.ts:92
 msgid "You have muted this account."
-msgstr ""
+msgstr "你已隱藏這個帳號。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:86
 msgid "You have muted this user"
-msgstr ""
+msgstr "你已隱藏這個使用者。"
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 #~ msgid "You have muted this user."
@@ -5908,7 +5908,7 @@ msgstr "你沒有列表。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
-msgstr ""
+msgstr "你還沒有封鎖任何帳號。要封鎖帳號，請轉到其個人資料並在其帳號上的選單中選擇「封鎖帳號」。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:132
 #~ msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
@@ -5920,7 +5920,7 @@ msgstr "你還沒有建立任何應用程式專用密碼，如你想建立一個
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
-msgstr ""
+msgstr "你還沒有靜音任何帳號。要靜音帳號，請轉到其個人資料並在其帳號上的選單中選擇「靜音帳號」。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 #~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
@@ -5932,11 +5932,11 @@ msgstr "你还没有隐藏任何词或话题标签"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr ""
+msgstr "如果你覺得這些標籤是錯誤的，你可以申訴這些標籤。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
-msgstr ""
+msgstr "你必須年滿 13 歲才能註冊。"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 #~ msgid "You must be 18 or older to enable adult content."
@@ -5948,7 +5948,7 @@ msgstr "你必須年滿 18 歲才能啟用成人內容"
 
 #: src/components/ReportDialog/SubmitView.tsx:205
 msgid "You must select at least one labeler for a report"
-msgstr ""
+msgstr "你必須選擇至少一個標籤者來提交檢舉"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:144
 msgid "You will no longer receive notifications for this thread"
@@ -5979,7 +5979,7 @@ msgstr "你已設定完成！"
 #: src/components/moderation/ModerationDetailsDialog.tsx:98
 #: src/lib/moderation/useModerationCauseDescription.ts:101
 msgid "You've chosen to hide a word or tag within this post."
-msgstr ""
+msgstr "您選擇在這則貼文中隱藏詞彙或標籤。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -6047,7 +6047,7 @@ msgstr "你的完整帳號代碼將修改為 <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:220
 msgid "Your muted words"
-msgstr ""
+msgstr "你的靜音詞"
 
 #: src/view/com/modals/ChangePassword.tsx:157
 msgid "Your password has been changed successfully!"
