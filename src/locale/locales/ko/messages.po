@@ -489,10 +489,6 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/view/screens/Settings/index.tsx:893
-#~ msgid "Build version {0} {1}"
-#~ msgstr "빌드 버전 {0} {1}"
-
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:92
 #: src/view/com/auth/SplashScreen.web.tsx:166
 msgid "Business"
@@ -2620,11 +2616,6 @@ msgstr "내 프로필로 이동합니다"
 msgid "Need to report a copyright violation?"
 msgstr "저작권 위반을 신고해야 하나요?"
 
-#: src/view/com/modals/EmbedConsent.tsx:107
-#: src/view/com/modals/EmbedConsent.tsx:123
-#~ msgid "Never load embeds from {0}"
-#~ msgstr "{0}에서 임베드를 불러오지 않습니다"
-
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
 msgid "Never lose access to your followers and data."
@@ -3191,10 +3182,6 @@ msgstr "정치"
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
 msgstr "음란물"
-
-#: src/lib/moderation/useGlobalLabelStrings.ts:34
-#~ msgid "Pornography"
-#~ msgstr "음란물"
 
 #: src/view/com/composer/Composer.tsx:367
 #: src/view/com/composer/Composer.tsx:375
@@ -4036,10 +4023,6 @@ msgstr "배지 표시"
 msgid "Show badge and filter from feeds"
 msgstr "배지 표시 및 피드에서 필터링"
 
-#: src/view/com/modals/EmbedConsent.tsx:87
-#~ msgid "Show embeds from {0}"
-#~ msgstr "{0} 임베드 표시"
-
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
 msgid "Show follows similar to {0}"
 msgstr "{0} 님과 비슷한 팔로우 표시"
@@ -4140,12 +4123,6 @@ msgstr "피드에 {0} 님의 게시물을 표시합니다"
 msgid "Sign in"
 msgstr "로그인"
 
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:82
-#: src/view/com/auth/SplashScreen.tsx:90
-#: src/view/com/auth/SplashScreen.web.tsx:118
-#~ msgid "Sign In"
-#~ msgstr "로그인"
-
 #: src/components/AccountList.tsx:109
 msgid "Sign in as {0}"
 msgstr "{0}(으)로 로그인"
@@ -4187,10 +4164,6 @@ msgstr "로그인한 계정"
 #: src/screens/Login/ChooseAccountForm.tsx:48
 msgid "Signed in as @{0}"
 msgstr "@{0}(으)로 로그인했습니다"
-
-#: src/view/com/modals/SwitchAccount.tsx:71
-#~ msgid "Signs {0} out of Bluesky"
-#~ msgstr "Bluesky에서 {0}을(를) 로그아웃합니다"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
@@ -5086,10 +5059,6 @@ msgstr "콘텐츠 경고"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:46
 msgid "Warn content and filter from feeds"
 msgstr "콘텐츠 경고 및 피드에서 필터링"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:140
-#~ msgid "We also think you'll like \"For You\" by Skygaze:"
-#~ msgstr "Skygaze의 \"For You\"를 사용해 볼 수도 있습니다:"
 
 #: src/screens/Hashtag.tsx:133
 msgid "We couldn't find any results for that hashtag."
