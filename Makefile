@@ -28,6 +28,7 @@ lint: ## Run style checks and verify syntax
 .PHONY: deps
 deps: ## Installs dependent libs using 'yarn install'
 	yarn install --frozen-lockfile
+	cd bskyembed && yarn install --frozen-lockfile
 
 .PHONY: nvm-setup
 nvm-setup: ## Use NVM to install and activate node+yarn
