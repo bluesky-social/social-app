@@ -1,23 +1,24 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Link} from '../util/Link'
+import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {HITSLOP_10} from 'lib/constants'
-import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+
+import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {HITSLOP_10} from 'lib/constants'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
-
-import {IS_DEV} from '#/env'
 import {atoms} from '#/alf'
-import {Link as Link2} from '#/components/Link'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
+import {Link as Link2} from '#/components/Link'
+import {IS_DEV} from '#/env'
+import {Link} from '../util/Link'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -30,6 +31,7 @@ export function HomeHeaderLayoutMobile({
   const setDrawerOpen = useSetDrawerOpen()
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
+  const {hasSession} = useSession()
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
@@ -76,18 +78,20 @@ export function HomeHeaderLayoutMobile({
               <ColorPalette size="md" />
             </Link2>
           )}
-          <Link
-            testID="viewHeaderHomeFeedPrefsBtn"
-            href="/settings/following-feed"
-            hitSlop={HITSLOP_10}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Following Feed Preferences`)}
-            accessibilityHint="">
-            <FontAwesomeIcon
-              icon="sliders"
-              style={pal.textLight as FontAwesomeIconStyle}
-            />
-          </Link>
+          {hasSession && (
+            <Link
+              testID="viewHeaderHomeFeedPrefsBtn"
+              href="/settings/following-feed"
+              hitSlop={HITSLOP_10}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Following Feed Preferences`)}
+              accessibilityHint="">
+              <FontAwesomeIcon
+                icon="sliders"
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+            </Link>
+          )}
         </View>
       </View>
       {children}

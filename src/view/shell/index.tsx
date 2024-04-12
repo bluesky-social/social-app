@@ -1,37 +1,39 @@
 import React from 'react'
-import {StatusBar} from 'expo-status-bar'
 import {
+  BackHandler,
   DimensionValue,
   StyleSheet,
   useWindowDimensions,
   View,
-  BackHandler,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {StatusBar} from 'expo-status-bar'
 import {useNavigationState} from '@react-navigation/native'
-import {ModalsContainer} from 'view/com/modals/Modal'
-import {Lightbox} from 'view/com/lightbox/Lightbox'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {DrawerContent} from './Drawer'
-import {Composer} from './Composer'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {RoutesContainer, TabsNavigator} from '../../Navigation'
-import {isStateAtTabRoot} from 'lib/routes/helpers'
+
+import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
-  useSetDrawerOpen,
   useIsDrawerSwipeDisabled,
+  useSetDrawerOpen,
 } from '#/state/shell'
-import {isAndroid} from 'platform/detection'
-import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
+import {usePalette} from 'lib/hooks/usePalette'
 import * as notifications from 'lib/notifications/notifications'
-import {Outlet as PortalOutlet} from '#/components/Portal'
-import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {isStateAtTabRoot} from 'lib/routes/helpers'
+import {useTheme} from 'lib/ThemeContext'
+import {isAndroid} from 'platform/detection'
 import {useDialogStateContext} from 'state/dialogs'
-import Animated from 'react-native-reanimated'
+import {Lightbox} from 'view/com/lightbox/Lightbox'
+import {ModalsContainer} from 'view/com/modals/Modal'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {SigninDialog} from '#/components/dialogs/Signin'
+import {Outlet as PortalOutlet} from '#/components/Portal'
+import {RoutesContainer, TabsNavigator} from '../../Navigation'
+import {Composer} from './Composer'
+import {DrawerContent} from './Drawer'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -101,6 +103,7 @@ function ShellInner() {
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
+      <SigninDialog />
       <Lightbox />
       <PortalOutlet />
     </>

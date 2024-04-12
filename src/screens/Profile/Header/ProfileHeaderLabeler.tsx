@@ -18,7 +18,7 @@ import {useModalControls} from '#/state/modals'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useHaptics} from 'lib/haptics'
 import {useProfileShadow} from 'state/cache/profile-shadow'
@@ -64,6 +64,7 @@ let ProfileHeaderLabeler = ({
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
+  const requireAuth = useRequireAuth()
   const playHaptic = useHaptics()
   const cantSubscribePrompt = Prompt.usePromptControl()
   const isSelf = currentAccount?.did === profile.did
@@ -125,27 +126,32 @@ let ProfileHeaderLabeler = ({
     })
   }, [track, openModal, profile])
 
-  const onPressSubscribe = React.useCallback(async () => {
-    if (!canSubscribe) {
-      cantSubscribePrompt.open()
-      return
-    }
-    try {
-      await toggleSubscription({
-        did: profile.did,
-        subscribe: !isSubscribed,
-      })
-    } catch (e: any) {
-      // setSubscriptionError(e.message)
-      logger.error(`Failed to subscribe to labeler`, {message: e.message})
-    }
-  }, [
-    toggleSubscription,
-    isSubscribed,
-    profile,
-    canSubscribe,
-    cantSubscribePrompt,
-  ])
+  const onPressSubscribe = React.useCallback(
+    () =>
+      requireAuth(async () => {
+        if (!canSubscribe) {
+          cantSubscribePrompt.open()
+          return
+        }
+        try {
+          await toggleSubscription({
+            did: profile.did,
+            subscribe: !isSubscribed,
+          })
+        } catch (e: any) {
+          // setSubscriptionError(e.message)
+          logger.error(`Failed to subscribe to labeler`, {message: e.message})
+        }
+      }),
+    [
+      requireAuth,
+      toggleSubscription,
+      isSubscribed,
+      profile,
+      canSubscribe,
+      cantSubscribePrompt,
+    ],
+  )
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -184,7 +190,6 @@ let ProfileHeaderLabeler = ({
                     ? _(msg`Unsubscribe from this labeler`)
                     : _(msg`Subscribe to this labeler`)
                 }
-                disabled={!hasSession}
                 onPress={onPressSubscribe}>
                 {state => (
                   <View

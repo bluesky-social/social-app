@@ -22,6 +22,7 @@ import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
@@ -212,10 +213,14 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
             <Divider />
 
-            <View style={[a.w_full, a.py_lg]}>
-              <Text style={[t.atoms.text_contrast_medium]}>
+            <View
+              style={[a.w_full, a.py_lg, a.flex_row, a.gap_lg, a.align_center]}>
+              <AppLanguageDropdown />
+              <Text style={[t.atoms.text, !gtMobile && a.text_md]}>
                 <Trans>Having trouble?</Trans>{' '}
-                <InlineLinkText to={FEEDBACK_FORM_URL({email: state.email})}>
+                <InlineLinkText
+                  to={FEEDBACK_FORM_URL({email: state.email})}
+                  style={[!gtMobile && a.text_md]}>
                   <Trans>Contact support</Trans>
                 </InlineLinkText>
               </Text>

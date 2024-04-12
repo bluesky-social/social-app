@@ -2,6 +2,7 @@ import React from 'react'
 import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
@@ -19,7 +20,6 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
-import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -231,7 +231,12 @@ function HomeScreenReady({
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
-      <HomeLoggedOutCTA />
+      <FeedPage
+        testID="customFeedPage"
+        isPageFocused
+        feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
+        renderEmptyState={renderCustomFeedEmptyState}
+      />
     </Pager>
   )
 }

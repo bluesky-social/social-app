@@ -1,20 +1,22 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
-import {Logo} from '#/view/icons/Logo'
-import {Link} from '../util/Link'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {CogIcon} from '#/lib/icons'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Logo} from '#/view/icons/Logo'
+import {Link} from '../util/Link'
+import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
   children: React.ReactNode
@@ -38,32 +40,35 @@ function HomeHeaderLayoutDesktopAndTablet({
   const pal = usePalette('default')
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
+  const {hasSession} = useSession()
   const {_} = useLingui()
 
   return (
     <>
-      <View style={[pal.view, pal.border, styles.bar, styles.topBar]}>
-        <Link
-          href="/settings/following-feed"
-          hitSlop={10}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Following Feed Preferences`)}
-          accessibilityHint="">
-          <FontAwesomeIcon
-            icon="sliders"
-            style={pal.textLight as FontAwesomeIconStyle}
-          />
-        </Link>
-        <Logo width={28} />
-        <Link
-          href="/settings/saved-feeds"
-          hitSlop={10}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Edit Saved Feeds`)}
-          accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
-        </Link>
-      </View>
+      {hasSession && (
+        <View style={[pal.view, pal.border, styles.bar, styles.topBar]}>
+          <Link
+            href="/settings/following-feed"
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Following Feed Preferences`)}
+            accessibilityHint="">
+            <FontAwesomeIcon
+              icon="sliders"
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          </Link>
+          <Logo width={28} />
+          <Link
+            href="/settings/saved-feeds"
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Edit Saved Feeds`)}
+            accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
+            <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+          </Link>
+        </View>
+      )}
       {tabBarAnchor}
       <Animated.View
         onLayout={e => {

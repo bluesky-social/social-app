@@ -71,6 +71,7 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {navigate, resetToTab} from '#/Navigation'
 import {ExportCarDialog} from './ExportCarDialog'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
@@ -104,7 +105,14 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
         <TouchableOpacity
           testID="signOutBtn"
           onPress={() => {
-            logout('Settings')
+            if (isNative) {
+              logout('Settings')
+              resetToTab('HomeTab')
+            } else {
+              navigate('Home').then(() => {
+                logout('Settings')
+              })
+            }
           }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
