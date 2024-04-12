@@ -196,12 +196,12 @@ func (srv *Server) WebPostEmbed(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
-	rkeyParam := c.QueryParam("rkey")
+	rkeyParam := c.Param("rkey")
 	rkey, err := syntax.ParseRecordKey(rkeyParam)
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid RecordKey: %v", err))
 	}
-	didParam := c.QueryParam("did")
+	didParam := c.Param("did")
 	did, err := syntax.ParseDID(didParam)
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid DID: %v", err))
