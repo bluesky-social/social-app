@@ -36,6 +36,8 @@ import {pluralize} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {Link as NewLink} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {ImageHorzList} from '../util/images/ImageHorzList'
@@ -44,7 +46,6 @@ import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
-import {UserPreviewLink} from '../util/UserPreviewLink'
 
 const MAX_AUTHORS = 5
 
@@ -387,6 +388,7 @@ function ExpandedAuthorsList({
   visible: boolean
   authors: Author[]
 }) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
@@ -410,33 +412,39 @@ function ExpandedAuthorsList({
         visible ? s.mb10 : undefined,
       ]}>
       {authors.map(author => (
-        <UserPreviewLink
+        <NewLink
           key={author.did}
-          did={author.did}
-          handle={author.handle}
-          style={styles.expandedAuthor}>
-          <View style={styles.expandedAuthorAvi}>
-            <UserAvatar
-              size={35}
-              avatar={author.avatar}
-              moderation={author.moderation.ui('avatar')}
-              type={author.associated?.labeler ? 'labeler' : 'user'}
-            />
-          </View>
-          <View style={s.flex1}>
-            <Text
-              type="lg-bold"
-              numberOfLines={1}
-              style={pal.text}
-              lineHeight={1.2}>
-              {sanitizeDisplayName(author.displayName || author.handle)}
-              &nbsp;
-              <Text style={[pal.textLight]} lineHeight={1.2}>
-                {sanitizeHandle(author.handle)}
+          label={_(msg`See profile`)}
+          to={makeProfileLink({
+            did: author.did,
+            handle: author.handle,
+          })}>
+          <View style={styles.expandedAuthor}>
+            <View style={styles.expandedAuthorAvi}>
+              <ProfileHoverCard did={author.did}>
+                <UserAvatar
+                  size={35}
+                  avatar={author.avatar}
+                  moderation={author.moderation.ui('avatar')}
+                  type={author.associated?.labeler ? 'labeler' : 'user'}
+                />
+              </ProfileHoverCard>
+            </View>
+            <View style={s.flex1}>
+              <Text
+                type="lg-bold"
+                numberOfLines={1}
+                style={pal.text}
+                lineHeight={1.2}>
+                {sanitizeDisplayName(author.displayName || author.handle)}
+                &nbsp;
+                <Text style={[pal.textLight]} lineHeight={1.2}>
+                  {sanitizeHandle(author.handle)}
+                </Text>
               </Text>
-            </Text>
+            </View>
           </View>
-        </UserPreviewLink>
+        </NewLink>
       ))}
     </Animated.View>
   )

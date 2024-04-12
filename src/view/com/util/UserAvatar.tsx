@@ -374,9 +374,11 @@ export {EditableUserAvatar}
 let PreviewableUserAvatar = (
   props: PreviewableUserAvatarProps,
 ): React.ReactNode => {
+  const {_} = useLingui()
   return (
     <ProfileHoverCard did={props.did}>
       <Link
+        label={_(msg`See profile`)}
         to={makeProfileLink({
           did: props.did,
           handle: props.handle,
