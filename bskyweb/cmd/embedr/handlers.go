@@ -126,14 +126,16 @@ func (srv *Server) postEmbedHTML(post *appbsky.FeedDefs_PostView) string {
 	if err != nil {
 		log.Error("bad AT-URI in reponse", "aturi", aturi)
 	}
-	// TODO: could add language, maybe other fiels here?
-	// XXX: should actually use html/template for this render
+	// XXX: should use html/template for this render
 	return fmt.Sprintf(
-		"<iframe src=\"%s\" class=\"bluesky-post-embed\" data-aturi=\"%s\" data-record-cid=\"%s\"></iframe><script src=\"%s\" async=\"async\"></script>",
-		fmt.Sprintf("https://embed.bsky.app/embed/%s/app.bsky.feed.post/%s", post.Author.Did, aturi.RecordKey()),
+		"<blockquote class=\"bluesky-embed\" data-bluesky-uri=\"%s\" data-bluesky-cid=\"%s\"><p lang=\"%s\">%s</p>&mdash; %s %s</blockquote><script async src=\"%s\" charset=\"utf-8\"></script>",
 		post.Uri,
 		post.Cid,
-		"https://embed.bsky.app/iframe-resize.js",
+		"en", // XXX
+		"<!-- post-text -->", // XXX
+		"<!-- display-name (<a href=\"profile-page\">@handle</a>) -->", // XXX
+		fmt.Sprintf("%s <!-- <a href=\"post-page\">human-date</a> -->", post.IndexedAt), // XXX: Record.CreatedAt
+		"https://embed.bsky.app/embed.js", // XXX: or iframe-resize.js, for clarity?
 	)
 }
 
@@ -143,6 +145,7 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		return c.String(http.StatusNotImplemented, "Unsupported oEmbed format: "+formatParam)
 	}
 
+	// XXX: do we actually do something with width?
 	width := 550
 	maxWidthParam := c.QueryParam("maxwidth")
 	if maxWidthParam != "" {
