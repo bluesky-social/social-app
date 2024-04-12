@@ -129,9 +129,9 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     }
     
     var animTranslation = -translation
-    self.animTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 120, repeats: true) { timer in
+    self.animTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 60, repeats: true) { timer in
       velocity *= 0.9875
-      animTranslation = (-velocity / 120) + animTranslation
+      animTranslation = (-velocity / 60) + animTranslation
       
       let nextOffset = self.dampenOffset(animTranslation + self.initialOffset)
       
