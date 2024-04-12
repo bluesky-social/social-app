@@ -13,6 +13,11 @@ build-web: ## Compile web bundle, copy to bskyweb directory
 	yarn intl:build
 	yarn build-web
 
+.PHONY: build-web-embed
+build-web-embed: ## Compile web embed bundle, copy to bskyweb/embedr* directories
+	yarn intl:build
+	yarn build-embed
+
 .PHONY: test
 test: ## Run all tests
 	NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test
