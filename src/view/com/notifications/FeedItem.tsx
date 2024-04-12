@@ -358,8 +358,10 @@ function CondensedAuthorsList({
       <View style={styles.avis}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
           <View key={author.href} style={s.mr5}>
-            <UserAvatar
+            <PreviewableUserAvatar
               size={35}
+              did={author.did}
+              handle={author.handle}
               avatar={author.avatar}
               moderation={author.moderation.ui('avatar')}
               type={author.associated?.labeler ? 'labeler' : 'user'}
