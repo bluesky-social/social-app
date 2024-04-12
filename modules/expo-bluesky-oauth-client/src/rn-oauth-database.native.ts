@@ -7,7 +7,7 @@ import {InternalStateData, Session, TokenSet} from '@atproto/oauth-client'
 import {OAuthServerMetadata} from '@atproto/oauth-server-metadata'
 import Storage from '@react-native-async-storage/async-storage'
 
-type Item = {
+type Item<T> = {
   value: string
   expiresAt: null | Date
 }
@@ -18,7 +18,7 @@ type EncodedKey = {
 }
 
 function encodeKey(key: Key): EncodedKey {
-  if (!(key instanceof WebcryptoKey) || !key.kid) {
+  if (!key.kid) {
     throw new Error('Invalid key object')
   }
   return {

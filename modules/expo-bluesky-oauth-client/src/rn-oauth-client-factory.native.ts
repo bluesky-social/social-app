@@ -8,7 +8,7 @@ import {
   Session,
 } from '@atproto/oauth-client'
 import {OAuthClientMetadata} from '@atproto/oauth-client-metadata'
-import IsomorphicOAuthServerMetadataResolver from '@atproto/oauth-server-metadata-resolver'
+import {IsomorphicOAuthServerMetadataResolver} from '@atproto/oauth-server-metadata-resolver'
 
 import {CryptoSubtle} from './crypto-subtle'
 import {DatabaseStore, RNOAuthDatabase} from './rn-oauth-database'
@@ -31,7 +31,7 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
     // "fragment" is safer as it is not sent to the server
     responseMode = 'fragment',
     responseType,
-    crypto = {subtle: CryptoSubtle},
+    crypto,
     fetch = globalThis.fetch,
   }: RNOAuthClientOptions) {
     const database = new RNOAuthDatabase()
@@ -41,7 +41,7 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
       responseMode,
       responseType,
       fetch,
-      cryptoImplementation: new CryptoSubtle(crypto),
+      cryptoImplementation: new CryptoSubtle(),
       sessionStore: database.getSessionStore(),
       stateStore: database.getStateStore(),
       metadataResolver: new IsomorphicOAuthServerMetadataResolver({
@@ -52,6 +52,8 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
         fetch,
         didCache: database.getDidCache(),
         handleCache: database.getHandleCache(),
+        plcDirectoryUrl: 'http://localhost:2582', // dev-env
+        atprotoLexiconUrl: 'http://localhost:2584', // dev-env (bsky appview)
       }),
       dpopNonceCache: database.getDpopNonceCache(),
     })

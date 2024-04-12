@@ -26,9 +26,11 @@ export function useLogin(serviceUrl: string | undefined) {
         dpop_bound_access_tokens: DPOP_BOUND_ACCESS_TOKENS,
         application_type: OAUTH_APPLICATION_TYPE,
       },
+      fetch: global.fetch,
     })
 
-    await oauthFactory.signIn('alice.test')
+    const res = await oauthFactory.signIn('http://localhost:2583/')
+    console.log(res)
 
     return
 
