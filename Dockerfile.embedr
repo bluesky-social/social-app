@@ -35,10 +35,10 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   yarn build-web
 
 # DEBUG
-RUN find ./bskyweb/static && find ./web-build/static
+RUN find ./bskyweb/embedr-static && find ./bskyweb/embedr-templates && find ./web-build/static
 
 #
-# Generate the bskyweb Go binary.
+# Generate the embedr Go binary.
 #
 RUN cd bskyweb/ && \
   go mod download && \
