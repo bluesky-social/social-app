@@ -39,7 +39,6 @@ import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link, TextLink} from '../util/Link'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {formatCount} from '../util/numeric/format'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
@@ -326,12 +325,6 @@ let PostThreadItemLoaded = ({
             {post.repostCount !== 0 || post.likeCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
               <View style={[styles.expandedInfo, pal.border]}>
-                {post.repostCount == null && post.likeCount == null && (
-                  // If we're still loading and not sure, assume this post has engagement.
-                  // This lets us avoid a layout shift for the common case (embedded post with likes/reposts).
-                  // TODO: embeds should include metrics to avoid us having to guess.
-                  <LoadingPlaceholder width={50} height={20} />
-                )}
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
