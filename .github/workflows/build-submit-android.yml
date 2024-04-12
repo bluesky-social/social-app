@@ -1,0 +1,117 @@
+---
+name: Build and Submit Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        description: Build profile to use
+        options:
+          - testflight-android
+          - production
+
+jobs:
+  build:
+    name: Build and Submit Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: >
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: 🔨 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⛏️ Setup EAS local builds
+        run: yarn global add eas-cli-local-build-plugin
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: ⚙️ Install dependencies
+        run: yarn install
+
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
+      - name: ✏️ Write environment variables
+        run: |
+          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "$json" > google-services.json
+
+      - name: 🏗️ EAS Build
+        run: yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
+
+      - name: ✍️ Rename Testflight bundle
+        if: ${{ inputs.profile != 'production' }}
+        run: mv build.aab build.apk
+
+      - name: ⏰ Get a timestamp
+        id: timestamp
+        uses: nanzm/get-time-action@master
+        with:
+          format: 'MM-DD-HH-mm-ss'
+
+      - name: 🚀 Upload Production Artifact
+        id: upload-artifact-production
+        if: ${{ inputs.profile == 'production' }}
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 30
+          compression-level: 6
+          name: build-${{ steps.timestamp.outputs.time }}.aab
+          path: build.aab
+
+      - name: 🚀 Upload Testflight Artifact
+        id: upload-artifact-testflight
+        if: ${{ inputs.profile != 'production' }}
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 30
+          compression-level: 6
+          name: build-${{ steps.timestamp.outputs.time }}.apk
+          path: build.apk
+
+      - name: 🔔 Notify Slack of Production Build
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android build is ready for submission. This is a production build! Download the artifact here: ${{ steps.upload-artifact-production.outputs.artifact-url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: 🔔 Notify Slack of Testflight Build
+        if: ${{ inputs.profile != 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

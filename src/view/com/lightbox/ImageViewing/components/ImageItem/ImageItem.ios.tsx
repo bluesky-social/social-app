@@ -7,9 +7,8 @@
  */
 
 import React, {useState} from 'react'
-
 import {Dimensions, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   interpolate,
   runOnJS,
@@ -17,12 +16,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {Image} from 'expo-image'
+
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import useImageDimensions from '../../hooks/useImageDimensions'
-
-import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 import {ImageLoading} from './ImageLoading'
 
 const SWIPE_CLOSE_OFFSET = 75
@@ -37,11 +35,18 @@ type Props = {
   onTap: () => void
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
+  showControls: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
+const ImageItem = ({
+  imageSrc,
+  onTap,
+  onZoom,
+  onRequestClose,
+  showControls,
+}: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
   const [loaded, setLoaded] = useState(false)
@@ -144,7 +149,7 @@ const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           onLoad={() => setLoaded(true)}
-          enableLiveTextInteraction={!scaled}
+          enableLiveTextInteraction={showControls && !scaled}
         />
       </Animated.ScrollView>
     </GestureDetector>

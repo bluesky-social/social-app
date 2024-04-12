@@ -1,27 +1,24 @@
-import React from 'react'
 import {
-  useQuery,
-  useInfiniteQuery,
-  InfiniteData,
-  QueryKey,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
-import {
-  AtUri,
-  RichText,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
+  AtUri,
+  RichText,
 } from '@atproto/api'
+import {
+  InfiniteData,
+  QueryKey,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {router} from '#/routes'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {getAgent} from '#/state/session'
-import {usePreferencesQuery} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {getAgent} from '#/state/session'
+import {router} from '#/routes'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
@@ -59,8 +56,9 @@ export type FeedSourceListInfo = {
 
 export type FeedSourceInfo = FeedSourceFeedInfo | FeedSourceListInfo
 
+const feedSourceInfoQueryKeyRoot = 'getFeedSourceInfo'
 export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
-  'getFeedSourceInfo',
+  feedSourceInfoQueryKeyRoot,
   uri,
 ]
 
@@ -219,83 +217,61 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
   likeUri: '',
 }
 
-export function usePinnedFeedsInfos(): {
-  feeds: FeedSourceInfo[]
-  hasPinnedCustom: boolean
-  isLoading: boolean
-} {
-  const queryClient = useQueryClient()
-  const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
-    FOLLOWING_FEED_STUB,
-  ])
-  const [isLoading, setLoading] = React.useState(true)
-  const {data: preferences} = usePreferencesQuery()
+const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
-  const hasPinnedCustom = React.useMemo<boolean>(() => {
-    return tabs.some(tab => tab !== FOLLOWING_FEED_STUB)
-  }, [tabs])
+export function usePinnedFeedsInfos() {
+  const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
+  const pinnedUris = preferences?.feeds?.pinned ?? []
 
-  React.useEffect(() => {
-    if (!preferences?.feeds?.pinned) return
-    const uris = preferences.feeds.pinned
+  return useQuery({
+    staleTime: STALE.INFINITY,
+    enabled: !isLoadingPrefs,
+    queryKey: [pinnedFeedInfosQueryKeyRoot, pinnedUris.join(',')],
+    queryFn: async () => {
+      let resolved = new Map()
 
-    async function fetchFeedInfo() {
-      const reqs = []
-
-      for (const uri of uris) {
-        const cached = queryClient.getQueryData<FeedSourceInfo>(
-          feedSourceInfoQueryKey({uri}),
-        )
-
-        if (cached) {
-          reqs.push(cached)
-        } else {
-          reqs.push(
-            (async () => {
-              // these requests can fail, need to filter those out
-              try {
-                return await queryClient.fetchQuery({
-                  staleTime: STALE.SECONDS.FIFTEEN,
-                  queryKey: feedSourceInfoQueryKey({uri}),
-                  queryFn: async () => {
-                    const type = getFeedTypeFromUri(uri)
-
-                    if (type === 'feed') {
-                      const res =
-                        await getAgent().app.bsky.feed.getFeedGenerator({
-                          feed: uri,
-                        })
-                      return hydrateFeedGenerator(res.data.view)
-                    } else {
-                      const res = await getAgent().app.bsky.graph.getList({
-                        list: uri,
-                        limit: 1,
-                      })
-                      return hydrateList(res.data.list)
-                    }
-                  },
-                })
-              } catch (e) {
-                // expected failure
-                logger.info(`usePinnedFeedsInfos: failed to fetch ${uri}`, {
-                  error: e,
-                })
-              }
-            })(),
-          )
-        }
+      // Get all feeds. We can do this in a batch.
+      const feedUris = pinnedUris.filter(
+        uri => getFeedTypeFromUri(uri) === 'feed',
+      )
+      let feedsPromise = Promise.resolve()
+      if (feedUris.length > 0) {
+        feedsPromise = getAgent()
+          .app.bsky.feed.getFeedGenerators({
+            feeds: feedUris,
+          })
+          .then(res => {
+            for (let feedView of res.data.feeds) {
+              resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
+            }
+          })
       }
 
-      const views = (await Promise.all(reqs)).filter(
-        Boolean,
-      ) as FeedSourceInfo[]
+      // Get all lists. This currently has to be done individually.
+      const listUris = pinnedUris.filter(
+        uri => getFeedTypeFromUri(uri) === 'list',
+      )
+      const listsPromises = listUris.map(listUri =>
+        getAgent()
+          .app.bsky.graph.getList({
+            list: listUri,
+            limit: 1,
+          })
+          .then(res => {
+            const listView = res.data.list
+            resolved.set(listView.uri, hydrateList(listView))
+          }),
+      )
 
-      setTabs([FOLLOWING_FEED_STUB].concat(views))
-      setLoading(false)
-    }
-
-    fetchFeedInfo()
-  }, [queryClient, setTabs, preferences?.feeds?.pinned])
-
-  return {feeds: tabs, hasPinnedCustom, isLoading}
+      // The returned result will have the original order.
+      const result = [FOLLOWING_FEED_STUB]
+      await Promise.allSettled([feedsPromise, ...listsPromises])
+      for (let pinnedUri of pinnedUris) {
+        if (resolved.has(pinnedUri)) {
+          result.push(resolved.get(pinnedUri))
+        }
+      }
+      return result
+    },
+  })
 }

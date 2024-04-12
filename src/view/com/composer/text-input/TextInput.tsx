@@ -1,10 +1,10 @@
 import React, {
+  ComponentProps,
   forwardRef,
   useCallback,
-  useRef,
   useMemo,
+  useRef,
   useState,
-  ComponentProps,
 } from 'react'
 import {
   NativeSyntheticEvent,
@@ -13,22 +13,23 @@ import {
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
-import {Autocomplete} from './mobile/Autocomplete'
-import {Text} from 'view/com/util/text/Text'
+
+import {POST_IMG_MAX} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {downloadAndResize} from 'lib/media/manip'
+import {isUriImage} from 'lib/media/util'
 import {cleanError} from 'lib/strings/errors'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isUriImage} from 'lib/media/util'
-import {downloadAndResize} from 'lib/media/manip'
-import {POST_IMG_MAX} from 'lib/constants'
 import {isIOS} from 'platform/detection'
+import {Text} from 'view/com/util/text/Text'
+import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
   focus: () => void
@@ -190,12 +191,11 @@ export const TextInput = forwardRef(function TextInputImpl(
     let i = 0
 
     return Array.from(richtext.segments()).map(segment => {
-      const isTag = AppBskyRichtextFacet.isTag(segment.facet?.features?.[0])
       return (
         <Text
           key={i++}
           style={[
-            segment.facet && !isTag ? pal.link : pal.text,
+            segment.facet ? pal.link : pal.text,
             styles.textInputFormatting,
           ]}>
           {segment.text}

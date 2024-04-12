@@ -1,0 +1,74 @@
+---
+name: Build and Submit iOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        description: Build profile to use
+        options:
+          - testflight
+          - production
+
+jobs:
+  build:
+    name: Build and Submit iOS
+    runs-on: macos-14
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: >
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: 🔨 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⛏️ Setup EAS local builds
+        run: yarn global add eas-cli-local-build-plugin
+
+      - name: ⚙️ Install dependencies
+        run: yarn install
+
+      - name: ☕️ Setup Cocoapods
+        uses: maxim-lobanov/setup-cocoapods@v1
+        with:
+          version: 1.14.3
+
+      - name: 💾 Cache Pods
+        uses: actions/cache@v3
+        id: pods-cache
+        with:
+          path: ./ios/Pods
+          # We'll use the yarn.lock for our hash since we don't yet have a Podfile.lock. Pod versions will not
+          # change unless the yarn version changes as well.
+          key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
+
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
+      - name: ✏️ Write environment variables
+        run: |
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
+
+      - name: 🏗️ EAS Build
+        run: yarn use-build-number-with-bump eas build -p ios --profile ${{ inputs.profile || 'testflight' }} --local --output build.ipa --non-interactive
+
+      - name: 🚀 Deploy
+        run: eas submit -p ios --non-interactive --path build.ipa

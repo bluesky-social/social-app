@@ -1,19 +1,18 @@
-import React, {useState, useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker'
+import DatePicker from 'react-native-date-picker'
+import {getLocales} from 'expo-localization'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {isIOS, isAndroid} from 'platform/detection'
-import {Button, ButtonType} from './Button'
-import {Text} from '../text/Text'
+
+import {usePalette} from 'lib/hooks/usePalette'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getLocales} from 'expo-localization'
+import {isAndroid, isIOS} from 'platform/detection'
+import {Text} from '../text/Text'
+import {Button, ButtonType} from './Button'
 
 const LOCALE = getLocales()[0]
 
@@ -43,11 +42,9 @@ export function DateInput(props: Props) {
   }, [props.handleAsUTC])
 
   const onChangeInternal = useCallback(
-    (event: DateTimePickerEvent, date: Date | undefined) => {
+    (date: Date) => {
       setShow(false)
-      if (date) {
-        props.onChange(date)
-      }
+      props.onChange(date)
     },
     [setShow, props],
   )
@@ -55,6 +52,10 @@ export function DateInput(props: Props) {
   const onPress = useCallback(() => {
     setShow(true)
   }, [setShow])
+
+  const onCancel = useCallback(() => {
+    setShow(false)
+  }, [])
 
   return (
     <View>
@@ -80,15 +81,17 @@ export function DateInput(props: Props) {
         </Button>
       )}
       {(isIOS || show) && (
-        <DateTimePicker
-          testID={props.testID ? `${props.testID}-datepicker` : undefined}
+        <DatePicker
+          timeZoneOffsetInMinutes={0}
+          modal={isAndroid}
+          open={isAndroid}
+          theme={theme.colorScheme}
+          date={props.value}
+          onDateChange={onChangeInternal}
+          onConfirm={onChangeInternal}
+          onCancel={onCancel}
           mode="date"
-          timeZoneName={props.handleAsUTC ? 'Etc/UTC' : undefined}
-          display="spinner"
-          // @ts-ignore applies in iOS only -prf
-          themeVariant={theme.colorScheme}
-          value={props.value}
-          onChange={onChangeInternal}
+          testID={props.testID ? `${props.testID}-datepicker` : undefined}
           accessibilityLabel={props.accessibilityLabel}
           accessibilityHint={props.accessibilityHint}
           accessibilityLabelledBy={props.accessibilityLabelledBy}

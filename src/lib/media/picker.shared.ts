@@ -3,8 +3,9 @@ import {
   launchImageLibraryAsync,
   MediaTypeOptions,
 } from 'expo-image-picker'
-import {getDataUriSize} from './util'
+
 import * as Toast from 'view/com/util/Toast'
+import {getDataUriSize} from './util'
 
 export async function openPicker(opts?: ImagePickerOptions) {
   const response = await launchImageLibraryAsync({
@@ -18,11 +19,18 @@ export async function openPicker(opts?: ImagePickerOptions) {
     Toast.show('You may only select up to 4 images')
   }
 
-  return (response.assets ?? []).slice(0, 4).map(image => ({
-    mime: 'image/jpeg',
-    height: image.height,
-    width: image.width,
-    path: image.uri,
-    size: getDataUriSize(image.uri),
-  }))
+  return (response.assets ?? [])
+    .slice(0, 4)
+    .filter(asset => {
+      if (asset.mimeType?.startsWith('image/')) return true
+      Toast.show('Only image files are supported')
+      return false
+    })
+    .map(image => ({
+      mime: 'image/jpeg',
+      height: image.height,
+      width: image.width,
+      path: image.uri,
+      size: getDataUriSize(image.uri),
+    }))
 }

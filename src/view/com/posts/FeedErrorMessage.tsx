@@ -1,21 +1,22 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyFeedGetAuthorFeed, AtUri} from '@atproto/api'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import * as Toast from '../util/Toast'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useNavigation} from '@react-navigation/native'
-import {NavigationProp} from 'lib/routes/types'
-import {logger} from '#/logger'
-import {useModalControls} from '#/state/modals'
 import {msg as msgLingui, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FeedDescriptor} from '#/state/queries/post-feed'
-import {EmptyState} from '../util/EmptyState'
+import {useNavigation} from '@react-navigation/native'
+
 import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
+import {usePalette} from 'lib/hooks/usePalette'
+import {NavigationProp} from 'lib/routes/types'
+import * as Prompt from '#/components/Prompt'
+import {EmptyState} from '../util/EmptyState'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
 
 export enum KnownError {
   Block = 'Block',
@@ -46,7 +47,7 @@ export function FeedErrorMessage({
   if (
     typeof knownError !== 'undefined' &&
     knownError !== KnownError.Unknown &&
-    feedDesc.startsWith('feedgen')
+    (feedDesc.startsWith('feedgen') || knownError === KnownError.FeedNSFPublic)
   ) {
     return (
       <FeedgenErrorMessage
@@ -118,35 +119,29 @@ function FeedgenErrorMessage({
   )
   const [_, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
-  const {openModal, closeModal} = useModalControls()
+  const removePromptControl = Prompt.usePromptControl()
   const {mutateAsync: removeFeed} = useRemoveFeedMutation()
 
   const onViewProfile = React.useCallback(() => {
     navigation.navigate('Profile', {name: ownerDid})
   }, [navigation, ownerDid])
 
+  const onPressRemoveFeed = React.useCallback(() => {
+    removePromptControl.open()
+  }, [removePromptControl])
+
   const onRemoveFeed = React.useCallback(async () => {
-    openModal({
-      name: 'confirm',
-      title: _l(msgLingui`Remove feed`),
-      message: _l(msgLingui`Remove this feed from your saved feeds?`),
-      async onPressConfirm() {
-        try {
-          await removeFeed({uri})
-        } catch (err) {
-          Toast.show(
-            _l(
-              msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
-            ),
-          )
-          logger.error('Failed to remove feed', {message: err})
-        }
-      },
-      onPressCancel() {
-        closeModal()
-      },
-    })
-  }, [openModal, closeModal, uri, removeFeed, _l])
+    try {
+      await removeFeed({uri})
+    } catch (err) {
+      Toast.show(
+        _l(
+          msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
+        ),
+      )
+      logger.error('Failed to remove feed', {message: err})
+    }
+  }, [uri, removeFeed, _l])
 
   const cta = React.useMemo(() => {
     switch (knownError) {
@@ -179,27 +174,38 @@ function FeedgenErrorMessage({
   }, [knownError, onViewProfile, onRemoveFeed, _l])
 
   return (
-    <View
-      style={[
-        pal.border,
-        pal.viewLight,
-        {
-          borderTopWidth: 1,
-          paddingHorizontal: 20,
-          paddingVertical: 18,
-          gap: 12,
-        },
-      ]}>
-      <Text style={pal.text}>{msg}</Text>
+    <>
+      <View
+        style={[
+          pal.border,
+          pal.viewLight,
+          {
+            borderTopWidth: 1,
+            paddingHorizontal: 20,
+            paddingVertical: 18,
+            gap: 12,
+          },
+        ]}>
+        <Text style={pal.text}>{msg}</Text>
 
-      {rawError?.message && (
-        <Text style={pal.textLight}>
-          <Trans>Message from server: {rawError.message}</Trans>
-        </Text>
-      )}
+        {rawError?.message && (
+          <Text style={pal.textLight}>
+            <Trans>Message from server: {rawError.message}</Trans>
+          </Text>
+        )}
 
-      {cta}
-    </View>
+        {cta}
+      </View>
+
+      <Prompt.Basic
+        control={removePromptControl}
+        title={_l(msgLingui`Remove feed?`)}
+        description={_l(msgLingui`Remove this feed from your saved feeds`)}
+        onConfirm={onPressRemoveFeed}
+        confirmButtonCta={_l(msgLingui`Remove`)}
+        confirmButtonColor="negative"
+      />
+    </>
   )
 }
 
@@ -235,6 +241,9 @@ function detectKnownError(
   if (typeof error !== 'string') {
     error = error.toString()
   }
+  if (error.includes(KnownError.FeedNSFPublic)) {
+    return KnownError.FeedNSFPublic
+  }
   if (!feedDesc.startsWith('feedgen')) {
     return KnownError.Unknown
   }
@@ -257,9 +266,6 @@ function detectKnownError(
   }
   if (error.includes('feed provided an invalid response')) {
     return KnownError.FeedgenBadResponse
-  }
-  if (error.includes(KnownError.FeedNSFPublic)) {
-    return KnownError.FeedNSFPublic
   }
   return KnownError.FeedgenUnknown
 }

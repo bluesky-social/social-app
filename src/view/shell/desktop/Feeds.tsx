@@ -1,21 +1,22 @@
 import React from 'react'
-import {View, StyleSheet} from 'react-native'
-import {useNavigationState, useNavigation} from '@react-navigation/native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {TextLink} from 'view/com/util/Link'
-import {getCurrentRoute} from 'lib/routes/helpers'
-import {useLingui} from '@lingui/react'
+import {StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
-import {usePinnedFeedsInfos} from '#/state/queries/feed'
-import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {FeedDescriptor} from '#/state/queries/post-feed'
-import {NavigationProp} from 'lib/routes/types'
+import {useLingui} from '@lingui/react'
+import {useNavigation, useNavigationState} from '@react-navigation/native'
+
 import {emitSoftReset} from '#/state/events'
+import {usePinnedFeedsInfos} from '#/state/queries/feed'
+import {FeedDescriptor} from '#/state/queries/post-feed'
+import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {usePalette} from 'lib/hooks/usePalette'
+import {getCurrentRoute} from 'lib/routes/helpers'
+import {NavigationProp} from 'lib/routes/types'
+import {TextLink} from 'view/com/util/Link'
 
 export function DesktopFeeds() {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {feeds: pinnedFeedInfos} = usePinnedFeedsInfos()
+  const {data: pinnedFeedInfos} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
   const navigation = useNavigation<NavigationProp>()
@@ -25,7 +26,9 @@ export function DesktopFeeds() {
     }
     return getCurrentRoute(state)
   })
-
+  if (!pinnedFeedInfos) {
+    return null
+  }
   return (
     <View style={[styles.container, pal.view]}>
       {pinnedFeedInfos.map(feedInfo => {

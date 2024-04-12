@@ -1,28 +1,30 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {RichText, AppBskyRichtextFacet} from '@atproto/api'
-import EventEmitter from 'eventemitter3'
-import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {Trans} from '@lingui/macro'
 import {Document} from '@tiptap/extension-document'
-import History from '@tiptap/extension-history'
 import Hardbreak from '@tiptap/extension-hard-break'
+import History from '@tiptap/extension-history'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
-import isEqual from 'lodash.isequal'
-import {createSuggestion} from './web/Autocomplete'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {isUriImage, blobToDataUri} from 'lib/media/util'
-import {Emoji} from './web/EmojiPicker.web'
-import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import EventEmitter from 'eventemitter3'
+import isEqual from 'lodash.isequal'
+
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {blobToDataUri, isUriImage} from 'lib/media/util'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
-import {Trans} from '@lingui/macro'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {createSuggestion} from './web/Autocomplete'
+import {Emoji} from './web/EmojiPicker.web'
+import {LinkDecorator} from './web/LinkDecorator'
+import {TagDecorator} from './web/TagDecorator'
 
 export interface TextInputRef {
   focus: () => void
@@ -67,6 +69,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     () => [
       Document,
       LinkDecorator,
+      TagDecorator,
       Mention.configure({
         HTMLAttributes: {
           class: 'mention',

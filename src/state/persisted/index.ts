@@ -1,11 +1,12 @@
 import EventEmitter from 'eventemitter3'
-import {logger} from '#/logger'
-import {defaults, Schema} from '#/state/persisted/schema'
-import {migrate} from '#/state/persisted/legacy'
-import * as store from '#/state/persisted/store'
-import BroadcastChannel from '#/lib/broadcast'
 
-export type {Schema, PersistedAccount} from '#/state/persisted/schema'
+import BroadcastChannel from '#/lib/broadcast'
+import {logger} from '#/logger'
+import {migrate} from '#/state/persisted/legacy'
+import {defaults, Schema} from '#/state/persisted/schema'
+import * as store from '#/state/persisted/store'
+
+export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
 const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')
@@ -19,7 +20,7 @@ const _emitter = new EventEmitter()
  * the Provider.
  */
 export async function init() {
-  logger.info('persisted state: initializing')
+  logger.debug('persisted state: initializing')
 
   broadcast.onmessage = onBroadcastMessage
 
@@ -27,11 +28,11 @@ export async function init() {
     await migrate() // migrate old store
     const stored = await store.read() // check for new store
     if (!stored) {
-      logger.info('persisted state: initializing default storage')
+      logger.debug('persisted state: initializing default storage')
       await store.write(defaults) // opt: init new store
     }
     _state = stored || defaults // return new store
-    logger.log('persisted state: initialized')
+    logger.debug('persisted state: initialized')
   } catch (e) {
     logger.error('persisted state: failed to load root state from storage', {
       message: e,

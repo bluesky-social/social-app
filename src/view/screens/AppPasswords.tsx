@@ -5,30 +5,33 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from 'react-native-gesture-handler'
-import {Text} from '../com/util/text/Text'
-import {Button} from '../com/util/forms/Button'
-import * as Toast from '../com/util/Toast'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useFocusEffect} from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
-import {Trans, msg} from '@lingui/macro'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+
+import {cleanError} from '#/lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs} from '#/state/preferences'
 import {
-  useAppPasswordsQuery,
   useAppPasswordDeleteMutation,
+  useAppPasswordsQuery,
 } from '#/state/queries/app-passwords'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {CenteredView} from 'view/com/util/Views'
+import {useDialogControl} from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {cleanError} from '#/lib/strings/errors'
+import {Button} from '../com/util/forms/Button'
+import {Text} from '../com/util/text/Text'
+import * as Toast from '../com/util/Toast'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {
@@ -212,23 +215,18 @@ function AppPassword({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {openModal} = useModalControls()
+  const control = useDialogControl()
   const {contentLanguages} = useLanguagePrefs()
   const deleteMutation = useAppPasswordDeleteMutation()
 
   const onDelete = React.useCallback(async () => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Delete app password`),
-      message: _(
-        msg`Are you sure you want to delete the app password "${name}"?`,
-      ),
-      async onPressConfirm() {
-        await deleteMutation.mutateAsync({name})
-        Toast.show(_(msg`App password deleted`))
-      },
-    })
-  }, [deleteMutation, openModal, name, _])
+    await deleteMutation.mutateAsync({name})
+    Toast.show(_(msg`App password deleted`))
+  }, [deleteMutation, name, _])
+
+  const onPress = React.useCallback(() => {
+    control.open()
+  }, [control])
 
   const primaryLocale =
     contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
@@ -237,7 +235,7 @@ function AppPassword({
     <TouchableOpacity
       testID={testID}
       style={[styles.item, pal.border]}
-      onPress={onDelete}
+      onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Delete app password`)}
       accessibilityHint="">
@@ -260,6 +258,17 @@ function AppPassword({
         </Text>
       </View>
       <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />
+
+      <Prompt.Basic
+        control={control}
+        title={_(msg`Delete app password?`)}
+        description={_(
+          msg`Are you sure you want to delete the app password "${name}"?`,
+        )}
+        onConfirm={onDelete}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
     </TouchableOpacity>
   )
 }

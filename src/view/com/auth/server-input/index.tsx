@@ -1,17 +1,17 @@
 import React from 'react'
 import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {PROD_SERVICE} from 'lib/constants'
-import * as persisted from '#/state/persisted'
 
+import * as persisted from '#/state/persisted'
+import {BSKY_SERVICE} from 'lib/constants'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Text, P} from '#/components/Typography'
 import {Button, ButtonText} from '#/components/Button'
-import * as ToggleButton from '#/components/forms/ToggleButton'
+import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {P, Text} from '#/components/Typography'
 
 export function ServerInputDialog({
   control,
@@ -26,7 +26,7 @@ export function ServerInputDialog({
   const [pdsAddressHistory, setPdsAddressHistory] = React.useState<string[]>(
     persisted.get('pdsAddressHistory') || [],
   )
-  const [fixedOption, setFixedOption] = React.useState([PROD_SERVICE])
+  const [fixedOption, setFixedOption] = React.useState([BSKY_SERVICE])
   const [customAddress, setCustomAddress] = React.useState('')
 
   const onClose = React.useCallback(() => {
@@ -86,14 +86,18 @@ export function ServerInputDialog({
             label="Preferences"
             values={fixedOption}
             onChange={setFixedOption}>
-            <ToggleButton.Button name={PROD_SERVICE} label={_(msg`Bluesky`)}>
-              {_(msg`Bluesky`)}
+            <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
+              <ToggleButton.ButtonText>
+                {_(msg`Bluesky`)}
+              </ToggleButton.ButtonText>
             </ToggleButton.Button>
             <ToggleButton.Button
               testID="customSelectBtn"
               name="custom"
               label={_(msg`Custom`)}>
-              {_(msg`Custom`)}
+              <ToggleButton.ButtonText>
+                {_(msg`Custom`)}
+              </ToggleButton.ButtonText>
             </ToggleButton.Button>
           </ToggleButton.Group>
 
@@ -106,16 +110,16 @@ export function ServerInputDialog({
                 a.px_md,
                 a.py_md,
               ]}>
-              <TextField.Label nativeID="address-input-label">
+              <TextField.LabelText nativeID="address-input-label">
                 <Trans>Server address</Trans>
-              </TextField.Label>
+              </TextField.LabelText>
               <TextField.Root>
                 <TextField.Icon icon={Globe} />
                 <Dialog.Input
                   testID="customServerTextInput"
                   value={customAddress}
                   onChangeText={setCustomAddress}
-                  label={_(msg`my-server.com`)}
+                  label="my-server.com"
                   accessibilityLabelledBy="address-input-label"
                   autoCapitalize="none"
                   keyboardType="url"
@@ -163,7 +167,7 @@ export function ServerInputDialog({
               size="small"
               onPress={() => control.close()}
               label={_(msg`Done`)}>
-              {_(msg`Done`)}
+              <ButtonText>{_(msg`Done`)}</ButtonText>
             </Button>
           </View>
         </View>

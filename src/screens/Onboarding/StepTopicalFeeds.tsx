@@ -1,42 +1,48 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {IS_PROD} from '#/env'
-import {atoms as a} from '#/alf'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import * as Toggle from '#/components/forms/Toggle'
-import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
-
-import {Context} from '#/screens/Onboarding/state'
+import {IS_TEST_USER} from 'lib/constants'
+import {useSession} from 'state/session'
 import {
-  Title,
-  Description,
+  DescriptionText,
   OnboardingControls,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
+import {Loader} from '#/components/Loader'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
   const {track} = useAnalytics()
+  const {currentAccount} = useSession()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
   const suggestedFeedUris = React.useMemo(() => {
-    if (!IS_PROD) return []
+    if (IS_TEST_USER(currentAccount?.handle)) return []
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedFeedUris,
-      state.interestsStepResults.apiResponse.suggestedFeedUris.default,
+      state.interestsStepResults.apiResponse.suggestedFeedUris.default || [],
     ).slice(0, 10)
-  }, [state.interestsStepResults])
+  }, [
+    currentAccount?.handle,
+    state.interestsStepResults.apiResponse.suggestedFeedUris,
+    state.interestsStepResults.selectedInterests,
+  ])
 
   const interestsText = React.useMemo(() => {
     const i = state.interestsStepResults.selectedInterests.map(
@@ -56,6 +62,10 @@ export function StepTopicalFeeds() {
       selectedFeeds: selectedFeedUris,
       selectedFeedsLength: selectedFeedUris.length,
     })
+    logEvent('onboarding:topicalFeeds:nextPressed', {
+      selectedFeeds: selectedFeedUris,
+      selectedFeedsLength: selectedFeedUris.length,
+    })
   }, [selectedFeedUris, dispatch, track])
 
   React.useEffect(() => {
@@ -66,10 +76,10 @@ export function StepTopicalFeeds() {
     <View style={[a.align_start]}>
       <IconCircle icon={ListMagnifyingGlass} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Feeds can be topical as well!</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         {state.interestsStepResults.selectedInterests.length ? (
           <Trans>
             Here are some topical feeds based on your interests: {interestsText}
@@ -81,7 +91,7 @@ export function StepTopicalFeeds() {
             many as you like.
           </Trans>
         )}
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pb_2xl, a.pt_2xl]}>
         <Toggle.Group

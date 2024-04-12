@@ -11,23 +11,22 @@ const DARK_SPLASH_CONFIG = {
   resizeMode: 'cover',
 }
 
-module.exports = function () {
+const SPLASH_CONFIG_ANDROID = {
+  backgroundColor: '#0c7cff',
+  image: './assets/splash.png',
+  resizeMode: 'cover',
+}
+const DARK_SPLASH_CONFIG_ANDROID = {
+  backgroundColor: '#0f141b',
+  image: './assets/splash-dark.png',
+  resizeMode: 'cover',
+}
+
+module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
   const VERSION = pkg.version
-
-  /**
-   * iOS build number. Must be incremented for each TestFlight version.
-   * WARNING: Always leave this variable on line 24! If it is moved, you need to update ./scripts/bumpIosBuildNumber.sh
-   */
-  const IOS_BUILD_NUMBER = '7'
-
-  /**
-   * Android build number. Must be incremented for each release.
-   * WARNING: Always leave this variable on line 30! If it is moved, you need to update ./scripts/bumpAndroidBuildNumber.sh
-   */
-  const ANDROID_VERSION_CODE = 62
 
   /**
    * Uses built-in Expo env vars
@@ -36,11 +35,15 @@ module.exports = function () {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
-  /**
-   * Additional granularity for the `dist` field
-   */
   const DIST_BUILD_NUMBER =
-    PLATFORM === 'android' ? ANDROID_VERSION_CODE : IOS_BUILD_NUMBER
+    PLATFORM === 'android'
+      ? process.env.BSKY_ANDROID_VERSION_CODE
+      : process.env.BSKY_IOS_BUILD_NUMBER
+
+  const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+  const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
+
+  const UPDATES_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
 
   return {
     expo: {
@@ -57,7 +60,6 @@ module.exports = function () {
       userInterfaceStyle: 'automatic',
       splash: SPLASH_CONFIG,
       ios: {
-        buildNumber: IOS_BUILD_NUMBER,
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
@@ -79,13 +81,15 @@ module.exports = function () {
           ...SPLASH_CONFIG,
           dark: DARK_SPLASH_CONFIG,
         },
+        entitlements: {
+          'com.apple.security.application-groups': 'group.app.bsky',
+        },
       },
       androidStatusBar: {
-        barStyle: 'dark-content',
-        backgroundColor: '#ffffff',
+        barStyle: 'light-content',
+        backgroundColor: '#00000000',
       },
       android: {
-        versionCode: ANDROID_VERSION_CODE,
         icon: './assets/icon.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
@@ -104,23 +108,41 @@ module.exports = function () {
                 scheme: 'https',
                 host: 'bsky.app',
               },
+              IS_DEV && {
+                scheme: 'http',
+                host: 'localhost:19006',
+              },
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
         splash: {
-          ...SPLASH_CONFIG,
-          dark: DARK_SPLASH_CONFIG,
+          ...SPLASH_CONFIG_ANDROID,
+          dark: DARK_SPLASH_CONFIG_ANDROID,
         },
       },
       web: {
         favicon: './assets/favicon.png',
       },
       updates: {
-        enabled: true,
-        fallbackToCacheTimeout: 1000,
-        url: 'https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302',
+        url: 'https://updates.bsky.app/manifest',
+        // TODO Eventually we want to enable this for all environments, but for now it will only be used for
+        // TestFlight builds
+        enabled: IS_TESTFLIGHT,
+        fallbackToCacheTimeout: 30000,
+        codeSigningCertificate: IS_TESTFLIGHT
+          ? './code-signing/certificate.pem'
+          : undefined,
+        codeSigningMetadata: IS_TESTFLIGHT
+          ? {
+              keyid: 'main',
+              alg: 'rsa-v1_5-sha256',
+            }
+          : undefined,
+        checkAutomatically: 'NEVER',
+        channel: UPDATES_CHANNEL,
       },
+      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -129,32 +151,49 @@ module.exports = function () {
           {
             ios: {
               deploymentTarget: '13.4',
+              newArchEnabled: false,
             },
             android: {
               compileSdkVersion: 34,
               targetSdkVersion: 34,
               buildToolsVersion: '34.0.0',
               kotlinVersion: '1.8.0',
+              newArchEnabled: false,
             },
-          },
-        ],
-        [
-          'expo-updates',
-          {
-            username: 'blueskysocial',
           },
         ],
         [
           'expo-notifications',
           {
             icon: './assets/icon-android-notification.png',
-            color: '#ffffff',
+            color: '#1185fe',
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/withAndroidManifestFCMIconPlugin.js',
+        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
+        './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
         eas: {
+          build: {
+            experimental: {
+              ios: {
+                appExtensions: [
+                  {
+                    targetName: 'Share-with-Bluesky',
+                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    entitlements: {
+                      'com.apple.security.application-groups': [
+                        'group.app.bsky',
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
       },

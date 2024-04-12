@@ -1,19 +1,20 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyFeedGetPostThread,
   AppBskyEmbedRecord,
+  AppBskyFeedDefs,
+  AppBskyFeedGetPostThread,
+  AppBskyFeedPost,
 } from '@atproto/api'
-import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
+import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {findPostInQueryData as findPostInFeedQueryData} from './post-feed'
-import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
+import {getAgent} from '#/state/session'
+import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
+import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
 import {precacheThreadPostProfiles} from './profile'
 import {getEmbeddedPost} from './util'
 
-export const RQKEY = (uri: string) => ['post-thread', uri]
+const RQKEY_ROOT = 'post-thread'
+export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
 export interface ThreadCtx {
@@ -82,21 +83,9 @@ export function usePostThreadQuery(uri: string | undefined) {
         return undefined
       }
       {
-        const item = findPostInQueryData(queryClient, uri)
-        if (item) {
-          return threadNodeToPlaceholderThread(item)
-        }
-      }
-      {
-        const item = findPostInFeedQueryData(queryClient, uri)
-        if (item) {
-          return postViewToPlaceholderThread(item)
-        }
-      }
-      {
-        const item = findPostInNotifsQueryData(queryClient, uri)
-        if (item) {
-          return postViewToPlaceholderThread(item)
+        const post = findPostInQueryData(queryClient, uri)
+        if (post) {
+          return post
         }
       }
       return undefined
@@ -171,11 +160,18 @@ function responseToThreadNodes(
     AppBskyFeedPost.isRecord(node.post.record) &&
     AppBskyFeedPost.validateRecord(node.post.record).success
   ) {
+    const post = node.post
+    // These should normally be present. They're missing only for
+    // posts that were *just* created. Ideally, the backend would
+    // know to return zeros. Fill them in manually to compensate.
+    post.replyCount ??= 0
+    post.likeCount ??= 0
+    post.repostCount ??= 0
     return {
       type: 'post',
       _reactKey: node.post.uri,
       uri: node.post.uri,
-      post: node.post,
+      post: post,
       record: node.post.record,
       parent:
         node.parent && direction !== 'down'
@@ -213,14 +209,24 @@ function responseToThreadNodes(
 function findPostInQueryData(
   queryClient: QueryClient,
   uri: string,
-): ThreadNode | undefined {
-  const generator = findAllPostsInQueryData(queryClient, uri)
-  const result = generator.next()
-  if (result.done) {
-    return undefined
-  } else {
-    return result.value
+): ThreadNode | void {
+  let partial
+  for (let item of findAllPostsInQueryData(queryClient, uri)) {
+    if (item.type === 'post') {
+      // Currently, the backend doesn't send full post info in some cases
+      // (for example, for quoted posts). We use missing `likeCount`
+      // as a way to detect that. In the future, we should fix this on
+      // the backend, which will let us always stop on the first result.
+      const hasAllInfo = item.post.likeCount != null
+      if (hasAllInfo) {
+        return item
+      } else {
+        partial = item
+        // Keep searching, we might still find a full post in the cache.
+      }
+    }
   }
+  return partial
 }
 
 export function* findAllPostsInQueryData(
@@ -228,7 +234,7 @@ export function* findAllPostsInQueryData(
   uri: string,
 ): Generator<ThreadNode, void> {
   const queryDatas = queryClient.getQueriesData<ThreadNode>({
-    queryKey: ['post-thread'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {
@@ -236,7 +242,10 @@ export function* findAllPostsInQueryData(
     }
     for (const item of traverseThread(queryData)) {
       if (item.uri === uri) {
-        yield item
+        const placeholder = threadNodeToPlaceholderThread(item)
+        if (placeholder) {
+          yield placeholder
+        }
       }
       const quotedPost =
         item.type === 'post' ? getEmbeddedPost(item.post.embed) : undefined
@@ -244,6 +253,12 @@ export function* findAllPostsInQueryData(
         yield embedViewRecordToPlaceholderThread(quotedPost)
       }
     }
+  }
+  for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
+    yield postViewToPlaceholderThread(post)
+  }
+  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+    yield postViewToPlaceholderThread(post)
   }
 }
 

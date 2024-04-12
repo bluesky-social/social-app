@@ -1,7 +1,8 @@
 {
   "cli": {
     "version": ">= 3.8.1",
-    "promptToConfigurePushNotifications": false
+    "promptToConfigurePushNotifications": false,
+    "appVersionSource": "remote"
   },
   "build": {
     "base": {
@@ -15,22 +16,62 @@
       "ios": {
         "simulator": true,
         "resourceClass": "large"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
       }
     },
     "preview": {
       "extends": "base",
       "distribution": "internal",
-      "channel": "preview",
+      "channel": "production",
       "ios": {
         "resourceClass": "large"
+      },
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
       }
     },
     "production": {
       "extends": "base",
       "ios": {
-        "resourceClass": "large"
+        "resourceClass": "large",
+        "autoIncrement": true
       },
-      "channel": "production"
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "testflight": {
+      "extends": "base",
+      "ios": {
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "testflight",
+      "env": {
+        "EXPO_PUBLIC_ENV": "testflight"
+      }
+    },
+    "testflight-android": {
+      "extends": "base",
+      "distribution": "internal",
+      "ios": {
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "testflight",
+      "env": {
+        "EXPO_PUBLIC_ENV": "testflight"
+      }
     }
   },
   "submit": {

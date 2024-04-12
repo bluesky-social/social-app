@@ -1,25 +1,31 @@
 import React from 'react'
 import {StyleProp, TextStyle, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {Shadow} from '#/state/cache/types'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {Button, ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {Shadow} from '#/state/cache/types'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 export function FollowButton({
   unfollowedType = 'inverted',
   followedType = 'default',
   profile,
   labelStyle,
+  logContext,
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   labelStyle?: StyleProp<TextStyle>
+  logContext: 'ProfileCard'
 }) {
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    logContext,
+  )
   const {_} = useLingui()
 
   const onPressFollow = async () => {

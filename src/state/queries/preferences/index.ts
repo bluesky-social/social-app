@@ -1,31 +1,36 @@
-import {useMemo} from 'react'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
+import {createContext, useContext, useMemo} from 'react'
+import {
+  AppBskyActorDefs,
+  BSKY_LABELER_DID,
+  BskyFeedViewPreference,
+  LabelPreference,
+  ModerationOpts,
+} from '@atproto/api'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
-import {useSession, getAgent} from '#/state/session'
-import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
-import {
-  ConfigurableLabelGroup,
-  UsePreferencesQueryResponse,
-  ThreadViewPreferences,
-} from '#/state/queries/preferences/types'
-import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
+import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
+import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
-  DEFAULT_THREAD_VIEW_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
+  DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
-import {getModerationOpts} from '#/state/queries/preferences/moderation'
-import {STALE} from '#/state/queries'
-import {useHiddenPosts} from '#/state/preferences/hidden-posts'
+import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
+import {
+  ThreadViewPreferences,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences/types'
+import {getAgent, useSession} from '#/state/session'
+import {saveLabelers} from '#/state/session/agent-config'
 
-export * from '#/state/queries/preferences/types'
-export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/const'
+export * from '#/state/queries/preferences/moderation'
+export * from '#/state/queries/preferences/types'
 
-export const preferencesQueryKey = ['getPreferences']
+const preferencesQueryKeyRoot = 'getPreferences'
+export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   return useQuery({
@@ -40,6 +45,13 @@ export function usePreferencesQuery() {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
         const res = await agent.getPreferences()
+
+        // save to local storage to ensure there are labels on initial requests
+        saveLabelers(
+          agent.session.did,
+          res.moderationPrefs.labelers.map(l => l.did),
+        )
+
         const preferences: UsePreferencesQueryResponse = {
           ...res,
           feeds: {
@@ -49,32 +61,6 @@ export function usePreferencesQuery() {
               res.feeds.saved?.filter(f => {
                 return !res.feeds.pinned?.includes(f)
               }) || [],
-          },
-          // labels are undefined until set by user
-          contentLabels: {
-            nsfw: temp__migrateLabelPref(
-              res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
-            ),
-            nudity: temp__migrateLabelPref(
-              res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
-            ),
-            suggestive: temp__migrateLabelPref(
-              res.contentLabels?.suggestive ||
-                DEFAULT_LABEL_PREFERENCES.suggestive,
-            ),
-            gore: temp__migrateLabelPref(
-              res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
-            ),
-            hate: temp__migrateLabelPref(
-              res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
-            ),
-            spam: temp__migrateLabelPref(
-              res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
-            ),
-            impersonation: temp__migrateLabelPref(
-              res.contentLabels?.impersonation ||
-                DEFAULT_LABEL_PREFERENCES.impersonation,
-            ),
           },
           feedViewPrefs: {
             ...DEFAULT_HOME_FEED_PREFS,
@@ -92,24 +78,41 @@ export function usePreferencesQuery() {
   })
 }
 
+// used in the moderation state devtool
+export const moderationOptsOverrideContext = createContext<
+  ModerationOpts | undefined
+>(undefined)
+
 export function useModerationOpts() {
+  const override = useContext(moderationOptsOverrideContext)
   const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
-  const hiddenPosts = useHiddenPosts()
-  const opts = useMemo(() => {
+  const {labelDefs} = useLabelDefinitions()
+  const hiddenPosts = useHiddenPosts() // TODO move this into pds-stored prefs
+  const opts = useMemo<ModerationOpts | undefined>(() => {
+    if (override) {
+      return override
+    }
     if (!prefs.data) {
       return
     }
-    const moderationOpts = getModerationOpts({
-      userDid: currentAccount?.did || '',
-      preferences: prefs.data,
-    })
-
     return {
-      ...moderationOpts,
-      hiddenPosts,
+      userDid: currentAccount?.did,
+      prefs: {
+        ...prefs.data.moderationPrefs,
+        labelers: prefs.data.moderationPrefs.labelers.length
+          ? prefs.data.moderationPrefs.labelers
+          : [
+              {
+                did: BSKY_LABELER_DID,
+                labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
+              },
+            ],
+        hiddenPosts: hiddenPosts || [],
+      },
+      labelDefs,
     }
-  }, [currentAccount?.did, prefs.data, hiddenPosts])
+  }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])
   return opts
 }
 
@@ -133,10 +136,32 @@ export function usePreferencesSetContentLabelMutation() {
   return useMutation<
     void,
     unknown,
-    {labelGroup: ConfigurableLabelGroup; visibility: LabelPreference}
+    {label: string; visibility: LabelPreference; labelerDid: string | undefined}
   >({
-    mutationFn: async ({labelGroup, visibility}) => {
-      await getAgent().setContentLabelPref(labelGroup, visibility)
+    mutationFn: async ({label, visibility, labelerDid}) => {
+      await getAgent().setContentLabelPref(label, visibility, labelerDid)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetContentLabelMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      label,
+      visibility,
+      labelerDid,
+    }: {
+      label: string
+      visibility: LabelPreference
+      labelerDid?: string
+    }) => {
+      await getAgent().setContentLabelPref(label, visibility, labelerDid)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -164,7 +189,7 @@ export function usePreferencesSetBirthDateMutation() {
 
   return useMutation<void, unknown, {birthDate: Date}>({
     mutationFn: async ({birthDate}: {birthDate: Date}) => {
-      await getAgent().setPersonalDetails({birthDate})
+      await getAgent().setPersonalDetails({birthDate: birthDate.toISOString()})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -271,6 +296,48 @@ export function useUnpinFeedMutation() {
     mutationFn: async ({uri}) => {
       await getAgent().removePinnedFeed(uri)
       track('CustomFeed:Unpin', {uri})
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useUpsertMutedWordsMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
+      await getAgent().upsertMutedWords(mutedWords)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useUpdateMutedWordMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+      await getAgent().updateMutedWord(mutedWord)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useRemoveMutedWordMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+      await getAgent().removeMutedWord(mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

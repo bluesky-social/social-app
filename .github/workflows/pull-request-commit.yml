@@ -1,0 +1,159 @@
+# Credit for fingerprint action https://github.com/expo/expo
+# https://github.com/expo/expo/blob/main/.github/workflows/pr-labeler.yml
+---
+name: PR labeler
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  pull-requests: write
+  actions: write
+  contents: read
+
+jobs:
+  webpack-analyzer:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Ensure tracking relevant branches and checkout base
+        run: |
+          git checkout ${{ github.head_ref }}
+          git checkout ${{ github.base_ref }}
+
+      - name: Get the base commit
+        id: base-commit
+        run: echo base-commit=$(git log -n 1 ${{ github.base_ref }} --pretty=format:'%H') >> "$GITHUB_OUTPUT"
+
+      - name: Merge PR commit
+        run: |
+          # Have to set a git config for the merge to work
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git merge --no-edit ${{ github.head_ref }}
+          yarn install
+
+      - name: 🔦 Generate stats file for PR
+        run: |
+          yarn generate-webpack-stats-file
+          mv stats.json ../stats-new.json
+
+      - name: ⬇️ Get base stats from cache
+        id: get-base-stats
+        uses: actions/cache@v4
+        with:
+          path: stats-base.json
+          key: stats-base-${{ steps.base-commit.outputs.base-commit }}
+
+      - name: Restore to base commit
+        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        run: |
+          git reset HEAD~
+          git restore .
+
+      - name: 🔦 Generate stats file from base commit
+        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        run: |
+          yarn install
+          yarn generate-webpack-stats-file
+          mv stats.json stats-base.json
+
+      - name: ％ Get diff
+        id: get-diff
+        uses: NejcZdovc/bundle-size-diff@v1
+        with:
+          base_path: 'stats-base.json'
+          pr_path: '../stats-new.json'
+          excluded_assets: '(.+).chunk.js|(.+).js.map|(.+).json|(.+).png'
+
+      - name: 💬 Drop a comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: bundle-diff
+          message: |
+            | Old size | New size | Diff                  |
+            |----------|----------|-----------------------|
+            | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}%) |
+            ---
+
+  test-suite-fingerprint:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.event_name == 'push' }}
+    concurrency: fingerprint-${{ github.event_name != 'pull_request' && 'main' || github.run_id }}
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
+
+      - name: ⬇️ Fetch commits from base branch
+        run: git fetch origin main:main --depth 100
+        if: github.event_name == 'pull_request'
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: ⚙️ Install Dependencies
+        run: yarn install
+
+      - name: Get the base commit
+        id: base-commit
+        run: echo base-commit=$(git log -n 1 main --pretty=format:'%H') >> "$GITHUB_OUTPUT"
+
+      - name: 📷 Check fingerprint
+        id: fingerprint
+        uses: expo/expo-github-action/fingerprint@main
+        with:
+          previous-git-commit: ${{ steps.base-commit.outputs.base-commit }}
+
+      - name: 👀 Debug fingerprint
+        run: |
+          echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
+          echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
+
+      - name: 💬 Drop a comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' }}
+        with:
+          header: fingerprint-diff
+          message: |
+            The Pull Request introduced fingerprint changes against the base commit: ${{ steps.fingerprint.outputs.previous-git-commit }}
+            <details><summary>Fingerprint diff</summary>
+
+            ```json
+            ${{ steps.fingerprint.outputs.fingerprint-diff }}
+            ```
+
+            </details>
+
+            ---
+            *Generated by [PR labeler](https://github.com/expo/expo/actions/workflows/pr-labeler.yml) 🤖*
+
+      - name: 💬 Delete comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' }}
+        with:
+          header: fingerprint-diff
+          delete: true
+

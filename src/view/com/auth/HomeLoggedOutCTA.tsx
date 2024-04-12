@@ -1,14 +1,15 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {ScrollView} from '../util/Views'
-import {Text} from '../util/text/Text'
+
 import {usePalette} from '#/lib/hooks/usePalette'
-import {colors, s} from '#/lib/styles'
-import {TextLink} from '../util/Link'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {colors, s} from '#/lib/styles'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {TextLink} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {ScrollView} from '../util/Views'
 
 export function HomeLoggedOutCTA() {
   const pal = usePalette('default')
@@ -52,7 +53,9 @@ export function HomeLoggedOutCTA() {
           onPress={showCreateAccount}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Create new account`)}
-          accessibilityHint="Opens flow to create a new Bluesky account">
+          accessibilityHint={_(
+            msg`Opens flow to create a new Bluesky account`,
+          )}>
           <Text
             style={[
               s.white,
@@ -68,14 +71,16 @@ export function HomeLoggedOutCTA() {
           onPress={showSignIn}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign in`)}
-          accessibilityHint="Opens flow to sign into your existing Bluesky account">
+          accessibilityHint={_(
+            msg`Opens flow to sign into your existing Bluesky account`,
+          )}>
           <Text
             style={[
               pal.text,
               styles.btnLabel,
               isMobile && styles.btnLabelMobile,
             ]}>
-            <Trans>Sign In</Trans>
+            <Trans>Sign in</Trans>
           </Text>
         </TouchableOpacity>
       </View>

@@ -1,40 +1,20 @@
+import React from 'react'
+import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
+
 import {isIOS, isWeb} from 'platform/detection'
-import ReactNativeHapticFeedback, {
-  HapticFeedbackTypes,
-} from 'react-native-haptic-feedback'
+import {useHapticsDisabled} from 'state/preferences/disable-haptics'
 
-const hapticImpact: HapticFeedbackTypes = isIOS ? 'impactMedium' : 'impactLight' // Users said the medium impact was too strong on Android; see APP-537s
+const hapticImpact: ImpactFeedbackStyle = isIOS
+  ? ImpactFeedbackStyle.Medium
+  : ImpactFeedbackStyle.Light // Users said the medium impact was too strong on Android; see APP-537s
 
-export class Haptics {
-  static default() {
-    if (isWeb) {
+export function useHaptics() {
+  const isHapticsDisabled = useHapticsDisabled()
+
+  return React.useCallback(() => {
+    if (isHapticsDisabled || isWeb) {
       return
     }
-    ReactNativeHapticFeedback.trigger(hapticImpact)
-  }
-  static impact(type: HapticFeedbackTypes = hapticImpact) {
-    if (isWeb) {
-      return
-    }
-    ReactNativeHapticFeedback.trigger(type)
-  }
-  static selection() {
-    if (isWeb) {
-      return
-    }
-    ReactNativeHapticFeedback.trigger('selection')
-  }
-  static notification = (type: 'success' | 'warning' | 'error') => {
-    if (isWeb) {
-      return
-    }
-    switch (type) {
-      case 'success':
-        return ReactNativeHapticFeedback.trigger('notificationSuccess')
-      case 'warning':
-        return ReactNativeHapticFeedback.trigger('notificationWarning')
-      case 'error':
-        return ReactNativeHapticFeedback.trigger('notificationError')
-    }
-  }
+    impactAsync(hapticImpact)
+  }, [isHapticsDisabled])
 }

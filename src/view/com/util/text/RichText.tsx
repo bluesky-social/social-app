@@ -1,15 +1,22 @@
 import React from 'react'
-import {TextStyle, StyleProp} from 'react-native'
-import {RichText as RichTextObj, AppBskyRichtextFacet} from '@atproto/api'
+import {StyleProp, TextStyle} from 'react-native'
+import {AppBskyRichtextFacet, RichText as RichTextObj} from '@atproto/api'
+
+import {isNative} from '#/platform/detection'
+import {usePalette} from 'lib/hooks/usePalette'
+import {makeTagLink} from 'lib/routes/links'
+import {toShortUrl} from 'lib/strings/url-helpers'
+import {lh} from 'lib/styles'
+import {TypographyVariant, useTheme} from 'lib/ThemeContext'
+import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {TextLink} from '../Link'
 import {Text} from './Text'
-import {lh} from 'lib/styles'
-import {toShortUrl} from 'lib/strings/url-helpers'
-import {useTheme, TypographyVariant} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
 
 const WORD_WRAP = {wordWrap: 1}
 
+/**
+ * @deprecated use `#/components/RichText`
+ */
 export function RichText({
   testID,
   type = 'md',
@@ -79,6 +86,7 @@ export function RichText({
   for (const segment of richText.segments()) {
     const link = segment.link
     const mention = segment.mention
+    const tag = segment.tag
     if (
       !noLinks &&
       mention &&
@@ -107,11 +115,25 @@ export function RichText({
             href={link.uri}
             style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
             dataSet={WORD_WRAP}
-            warnOnMismatchingLabel
             selectable={selectable}
           />,
         )
       }
+    } else if (
+      !noLinks &&
+      tag &&
+      AppBskyRichtextFacet.validateTag(tag).success
+    ) {
+      els.push(
+        <RichTextTag
+          key={key}
+          text={segment.text}
+          type={type}
+          style={style}
+          lineHeightStyle={lineHeightStyle}
+          selectable={selectable}
+        />,
+      )
     } else {
       els.push(segment.text)
     }
@@ -128,5 +150,52 @@ export function RichText({
       selectable={selectable}>
       {els}
     </Text>
+  )
+}
+
+function RichTextTag({
+  text: tag,
+  type,
+  style,
+  lineHeightStyle,
+  selectable,
+}: {
+  text: string
+  type?: TypographyVariant
+  style?: StyleProp<TextStyle>
+  lineHeightStyle?: TextStyle
+  selectable?: boolean
+}) {
+  const pal = usePalette('default')
+  const control = useTagMenuControl()
+
+  const open = React.useCallback(() => {
+    control.open()
+  }, [control])
+
+  return (
+    <React.Fragment>
+      <TagMenu control={control} tag={tag}>
+        {isNative ? (
+          <TextLink
+            type={type}
+            text={tag}
+            // segment.text has the leading "#" while tag.tag does not
+            href={makeTagLink(tag)}
+            style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
+            dataSet={WORD_WRAP}
+            selectable={selectable}
+            onPress={open}
+          />
+        ) : (
+          <Text
+            selectable={selectable}
+            type={type}
+            style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}>
+            {tag}
+          </Text>
+        )}
+      </TagMenu>
+    </React.Fragment>
   )
 }

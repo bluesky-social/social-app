@@ -1,14 +1,25 @@
-import {makeAutoObservable, runInAction} from 'mobx'
-import {ImageModel} from './image'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {openPicker} from 'lib/media/picker'
+import {makeAutoObservable, runInAction} from 'mobx'
+
 import {getImageDim} from 'lib/media/manip'
+import {openPicker} from 'lib/media/picker'
+import {ImageModel} from './image'
+
+interface InitialImageUri {
+  uri: string
+  width: number
+  height: number
+}
 
 export class GalleryModel {
   images: ImageModel[] = []
 
-  constructor() {
+  constructor(uris?: {uri: string; width: number; height: number}[]) {
     makeAutoObservable(this)
+
+    if (uris) {
+      this.addFromUris(uris)
+    }
   }
 
   get isEmpty() {
@@ -23,7 +34,7 @@ export class GalleryModel {
     return this.images.some(image => image.altText.trim() === '')
   }
 
-  async add(image_: Omit<RNImage, 'size'>) {
+  *add(image_: Omit<RNImage, 'size'>) {
     if (this.size >= 4) {
       return
     }
@@ -85,5 +96,16 @@ export class GalleryModel {
         this.add(image)
       }),
     )
+  }
+
+  async addFromUris(uris: InitialImageUri[]) {
+    for (const uriObj of uris) {
+      this.add({
+        mime: 'image/jpeg',
+        height: uriObj.height,
+        width: uriObj.width,
+        path: uriObj.uri,
+      })
+    }
   }
 }

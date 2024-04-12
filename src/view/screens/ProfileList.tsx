@@ -1,65 +1,70 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {useNavigation} from '@react-navigation/native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
-import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
-import {Feed} from 'view/com/posts/Feed'
-import {Text} from 'view/com/util/text/Text'
-import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
-import {CenteredView} from 'view/com/util/Views'
-import {EmptyState} from 'view/com/util/EmptyState'
-import {LoadingScreen} from 'view/com/util/LoadingScreen'
-import {RichText} from 'view/com/util/text/RichText'
-import {Button} from 'view/com/util/forms/Button'
-import {TextLink} from 'view/com/util/Link'
-import {ListRef} from 'view/com/util/List'
-import * as Toast from 'view/com/util/Toast'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {FAB} from 'view/com/util/fab/FAB'
-import {Haptics} from 'lib/haptics'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {isNative, isWeb} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
+import {useModalControls} from '#/state/modals'
+import {
+  useListBlockMutation,
+  useListDeleteMutation,
+  useListMuteMutation,
+  useListQuery,
+} from '#/state/queries/list'
 import {FeedDescriptor} from '#/state/queries/post-feed'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {
+  usePinFeedMutation,
+  usePreferencesQuery,
+  useSetSaveFeedsMutation,
+  useUnpinFeedMutation,
+} from '#/state/queries/preferences'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {useSession} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useComposerControls} from '#/state/shell/composer'
+import {useHaptics} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {NavigationProp} from 'lib/routes/types'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {shareUrl} from 'lib/sharing'
-import {s} from 'lib/styles'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink, makeListLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
+import {makeListLink, makeProfileLink} from 'lib/routes/links'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {NavigationProp} from 'lib/routes/types'
+import {shareUrl} from 'lib/sharing'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {s} from 'lib/styles'
 import {ListMembers} from '#/view/com/lists/ListMembers'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useModalControls} from '#/state/modals'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {
-  useListQuery,
-  useListMuteMutation,
-  useListBlockMutation,
-  useListDeleteMutation,
-} from '#/state/queries/list'
-import {cleanError} from '#/lib/strings/errors'
-import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
-import {isNative, isWeb} from '#/platform/detection'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {
-  usePreferencesQuery,
-  usePinFeedMutation,
-  useUnpinFeedMutation,
-  useSetSaveFeedsMutation,
-} from '#/state/queries/preferences'
-import {logger} from '#/logger'
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {listenSoftReset} from '#/state/events'
+import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
+import {Feed} from 'view/com/posts/Feed'
+import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
+import {EmptyState} from 'view/com/util/EmptyState'
+import {FAB} from 'view/com/util/fab/FAB'
+import {Button} from 'view/com/util/forms/Button'
+import {DropdownItem, NativeDropdown} from 'view/com/util/forms/NativeDropdown'
+import {TextLink} from 'view/com/util/Link'
+import {ListRef} from 'view/com/util/List'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {LoadingScreen} from 'view/com/util/LoadingScreen'
+import {Text} from 'view/com/util/text/Text'
+import * as Toast from 'view/com/util/Toast'
+import {CenteredView} from 'view/com/util/Views'
+import {atoms as a, useTheme} from '#/alf'
+import {useDialogControl} from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {RichText} from '#/components/RichText'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -233,7 +238,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
-  const {openModal, closeModal} = useModalControls()
+  const reportDialogControl = useReportDialogControl()
+  const {openModal} = useModalControls()
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
   const listDeleteMutation = useListDeleteMutation()
@@ -249,12 +255,17 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
+  const playHaptic = useHaptics()
+
+  const deleteListPromptControl = useDialogControl()
+  const subscribeMutePromptControl = useDialogControl()
+  const subscribeBlockPromptControl = useDialogControl()
 
   const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
   const isSaved = preferences?.feeds?.saved?.includes(list.uri)
 
   const onTogglePinned = React.useCallback(async () => {
-    Haptics.default()
+    playHaptic()
 
     try {
       if (isPinned) {
@@ -266,34 +277,21 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [list.uri, isPinned, pinFeed, unpinFeed, _])
+  }, [playHaptic, isPinned, unpinFeed, list.uri, pinFeed, _])
 
-  const onSubscribeMute = useCallback(() => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Mute these accounts?`),
-      message: _(
-        msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
-      ),
-      confirmBtnText: _(msg`Mute this List`),
-      async onPressConfirm() {
-        try {
-          await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
-          Toast.show(_(msg`List muted`))
-          track('Lists:Mute')
-        } catch {
-          Toast.show(
-            _(
-              msg`There was an issue. Please check your internet connection and try again.`,
-            ),
-          )
-        }
-      },
-      onPressCancel() {
-        closeModal()
-      },
-    })
-  }, [openModal, closeModal, list, listMuteMutation, track, _])
+  const onSubscribeMute = useCallback(async () => {
+    try {
+      await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
+      Toast.show(_(msg`List muted`))
+      track('Lists:Mute')
+    } catch {
+      Toast.show(
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
+      )
+    }
+  }, [list, listMuteMutation, track, _])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
@@ -309,32 +307,19 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listMuteMutation, track, _])
 
-  const onSubscribeBlock = useCallback(() => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Block these accounts?`),
-      message: _(
-        msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-      ),
-      confirmBtnText: _(msg`Block this List`),
-      async onPressConfirm() {
-        try {
-          await listBlockMutation.mutateAsync({uri: list.uri, block: true})
-          Toast.show(_(msg`List blocked`))
-          track('Lists:Block')
-        } catch {
-          Toast.show(
-            _(
-              msg`There was an issue. Please check your internet connection and try again.`,
-            ),
-          )
-        }
-      },
-      onPressCancel() {
-        closeModal()
-      },
-    })
-  }, [openModal, closeModal, list, listBlockMutation, track, _])
+  const onSubscribeBlock = useCallback(async () => {
+    try {
+      await listBlockMutation.mutateAsync({uri: list.uri, block: true})
+      Toast.show(_(msg`List blocked`))
+      track('Lists:Block')
+    } catch {
+      Toast.show(
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
+      )
+    }
+  }, [list, listBlockMutation, track, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
@@ -357,34 +342,26 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     })
   }, [openModal, list])
 
-  const onPressDelete = useCallback(() => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Delete List`),
-      message: _(msg`Are you sure?`),
-      async onPressConfirm() {
-        await listDeleteMutation.mutateAsync({uri: list.uri})
+  const onPressDelete = useCallback(async () => {
+    await listDeleteMutation.mutateAsync({uri: list.uri})
 
-        if (isSaved || isPinned) {
-          const {saved, pinned} = preferences!.feeds
+    if (isSaved || isPinned) {
+      const {saved, pinned} = preferences!.feeds
 
-          setSavedFeeds({
-            saved: isSaved ? saved.filter(uri => uri !== list.uri) : saved,
-            pinned: isPinned ? pinned.filter(uri => uri !== list.uri) : pinned,
-          })
-        }
+      setSavedFeeds({
+        saved: isSaved ? saved.filter(uri => uri !== list.uri) : saved,
+        pinned: isPinned ? pinned.filter(uri => uri !== list.uri) : pinned,
+      })
+    }
 
-        Toast.show(_(msg`List deleted`))
-        track('Lists:Delete')
-        if (navigation.canGoBack()) {
-          navigation.goBack()
-        } else {
-          navigation.navigate('Home')
-        }
-      },
-    })
+    Toast.show(_(msg`List deleted`))
+    track('Lists:Delete')
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
   }, [
-    openModal,
     list,
     listDeleteMutation,
     navigation,
@@ -397,12 +374,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   ])
 
   const onPressReport = useCallback(() => {
-    openModal({
-      name: 'report',
-      uri: list.uri,
-      cid: list.cid,
-    })
-  }, [openModal, list])
+    reportDialogControl.open()
+  }, [reportDialogControl])
 
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
@@ -442,7 +415,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       items.push({
         testID: 'listHeaderDropdownDeleteBtn',
         label: _(msg`Delete List`),
-        onPress: onPressDelete,
+        onPress: deleteListPromptControl.open,
         icon: {
           ios: {
             name: 'trash',
@@ -488,7 +461,9 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         items.push({
           testID: 'listHeaderDropdownMuteBtn',
           label: isMuting ? _(msg`Un-mute list`) : _(msg`Mute list`),
-          onPress: isMuting ? onUnsubscribeMute : onSubscribeMute,
+          onPress: isMuting
+            ? onUnsubscribeMute
+            : subscribeMutePromptControl.open,
           icon: {
             ios: {
               name: isMuting ? 'eye' : 'eye.slash',
@@ -503,7 +478,9 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         items.push({
           testID: 'listHeaderDropdownBlockBtn',
           label: isBlocking ? _(msg`Un-block list`) : _(msg`Block list`),
-          onPress: isBlocking ? onUnsubscribeBlock : onSubscribeBlock,
+          onPress: isBlocking
+            ? onUnsubscribeBlock
+            : subscribeBlockPromptControl.open,
           icon: {
             ios: {
               name: 'person.fill.xmark',
@@ -516,24 +493,24 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
     return items
   }, [
-    isOwner,
-    onPressShare,
-    onPressEdit,
-    onPressDelete,
-    onPressReport,
     _,
+    onPressShare,
+    isOwner,
     isModList,
     isPinned,
-    unpinFeed,
-    isPending,
-    list.uri,
     isCurateList,
-    isMuting,
+    onPressEdit,
+    deleteListPromptControl.open,
+    onPressReport,
+    isPending,
+    unpinFeed,
+    list.uri,
     isBlocking,
+    isMuting,
     onUnsubscribeMute,
-    onSubscribeMute,
+    subscribeMutePromptControl.open,
     onUnsubscribeBlock,
-    onSubscribeBlock,
+    subscribeBlockPromptControl.open,
   ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
@@ -541,7 +518,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       {
         testID: 'subscribeDropdownMuteBtn',
         label: _(msg`Mute accounts`),
-        onPress: onSubscribeMute,
+        onPress: subscribeMutePromptControl.open,
         icon: {
           ios: {
             name: 'speaker.slash',
@@ -553,7 +530,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       {
         testID: 'subscribeDropdownBlockBtn',
         label: _(msg`Block accounts`),
-        onPress: onSubscribeBlock,
+        onPress: subscribeBlockPromptControl.open,
         icon: {
           ios: {
             name: 'person.fill.xmark',
@@ -563,7 +540,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       },
     ]
-  }, [onSubscribeMute, onSubscribeBlock, _])
+  }, [_, subscribeMutePromptControl.open, subscribeBlockPromptControl.open])
 
   return (
     <ProfileSubpageHeader
@@ -573,6 +550,14 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       isOwner={list.creator.did === currentAccount?.did}
       creator={list.creator}
       avatarType="list">
+      <ReportDialog
+        control={reportDialogControl}
+        params={{
+          type: 'list',
+          uri: list.uri,
+          cid: list.cid,
+        }}
+      />
       {isCurateList || isPinned ? (
         <Button
           testID={isPinned ? 'unpinBtn' : 'pinBtn'}
@@ -619,6 +604,38 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
           <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
         </View>
       </NativeDropdown>
+
+      <Prompt.Basic
+        control={deleteListPromptControl}
+        title={_(msg`Delete this list?`)}
+        description={_(
+          msg`If you delete this list, you won't be able to recover it.`,
+        )}
+        onConfirm={onPressDelete}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
+
+      <Prompt.Basic
+        control={subscribeMutePromptControl}
+        title={_(msg`Mute these accounts?`)}
+        description={_(
+          msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
+        )}
+        onConfirm={onSubscribeMute}
+        confirmButtonCta={_(msg`Mute list`)}
+      />
+
+      <Prompt.Basic
+        control={subscribeBlockPromptControl}
+        title={_(msg`Block these accounts?`)}
+        description={_(
+          msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+        )}
+        onConfirm={onSubscribeBlock}
+        confirmButtonCta={_(msg`Block list`)}
+        confirmButtonColor="negative"
+      />
     </ProfileSubpageHeader>
   )
 }
@@ -698,6 +715,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     ref,
   ) {
     const pal = usePalette('default')
+    const t = useTheme()
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
@@ -742,9 +760,8 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             {descriptionRT ? (
               <RichText
                 testID="listDescription"
-                type="lg"
-                style={pal.text}
-                richText={descriptionRT}
+                style={[a.text_md]}
+                value={descriptionRT}
               />
             ) : (
               <Text
@@ -792,7 +809,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 paddingBottom: isMobile ? 14 : 18,
               },
             ]}>
-            <Text type="lg-bold">
+            <Text type="lg-bold" style={t.atoms.text}>
               <Trans>Users</Trans>
             </Text>
             {isOwner && (
@@ -817,14 +834,18 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
         </View>
       )
     }, [
-      pal,
-      list,
       isMobile,
+      pal.border,
+      pal.textLight,
+      pal.colors.link,
+      pal.link,
       descriptionRT,
       isCurateList,
       isOwner,
-      onPressAddUser,
+      list.creator,
+      t.atoms.text,
       _,
+      onPressAddUser,
     ])
 
     const renderEmptyState = useCallback(() => {
@@ -894,7 +915,7 @@ function ErrorScreen({error}: {error: string}) {
       <View style={{flexDirection: 'row'}}>
         <Button
           type="default"
-          accessibilityLabel={_(msg`Go Back`)}
+          accessibilityLabel={_(msg`Go back`)}
           accessibilityHint={_(msg`Return to previous page`)}
           onPress={onPressBack}
           style={{flexShrink: 1}}>

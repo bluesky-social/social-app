@@ -1,6 +1,6 @@
 import {
-  AppBskyEmbedImages,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedThreadgate,
@@ -11,13 +11,14 @@ import {
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {isNetworkError} from 'lib/strings/errors'
-import {LinkMeta} from '../link-meta/link-meta'
-import {isWeb} from 'platform/detection'
-import {ImageModel} from 'state/models/media/image'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
+
 import {logger} from '#/logger'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {isNetworkError} from 'lib/strings/errors'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {isWeb} from 'platform/detection'
+import {ImageModel} from 'state/models/media/image'
+import {LinkMeta} from '../link-meta/link-meta'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -104,18 +105,18 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
   // add image embed if present
   if (opts.images?.length) {
-    logger.info(`Uploading images`, {
+    logger.debug(`Uploading images`, {
       count: opts.images.length,
     })
 
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
-      logger.info(`Compressing image`)
+      logger.debug(`Compressing image`)
       await image.compress()
       const path = image.compressed?.path ?? image.path
       const {width, height} = image.compressed || image
-      logger.info(`Uploading image`)
+      logger.debug(`Uploading image`)
       const res = await uploadBlob(agent, path, 'image/jpeg')
       images.push({
         image: res.data.blob,

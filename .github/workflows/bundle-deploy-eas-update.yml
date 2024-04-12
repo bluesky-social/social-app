@@ -1,0 +1,315 @@
+---
+name: Bundle and Deploy EAS Update
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      channel:
+        type: choice
+        description: Deployment channel to use
+        options:
+          - testflight
+          - production
+      runtimeVersion:
+        type: string
+        description: Runtime version (in x.x.x format) that this update is for
+        required: true
+
+jobs:
+  bundleDeploy:
+    name: Bundle and Deploy EAS Update
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
+      cancel-in-progress: true
+    outputs:
+      fingerprint-is-different: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different }}
+
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: >
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      # Validate the version if one is supplied. This should generally happen if the update is for a production client
+      - name: 🧐 Validate version
+        if: ${{ inputs.runtimeVersion }}
+        run: |
+          if [ -z "${{ inputs.runtimeVersion }}" ]; then
+            [[ "${{ inputs.runtimeVersion }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
+          fi
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⬇️ Get last successful deployment commit from the cache
+        id: get-base-commit
+        uses: actions/cache@v4
+        with:
+          path: last-successful-commit-hash.txt
+          key: last-successful-deployment-commit-${{ github.ref_name }}
+
+      - name: Add the last successful deployment commit to the output
+        id: last-successful-commit
+        run: echo base-commit=$(cat last-successful-commit-hash.txt) >> "$GITHUB_OUTPUT"
+
+      - name: ⬇️ Fetch commits from base branch
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: git fetch origin main:main --depth 100
+
+      # This should get the current production release's commit's hash to see if the update is compatible
+      - name: 🕵️ Get the base commit
+        id: base-commit
+        run: |
+          if [ -z "${{ inputs.channel == 'production' }}" ]; then
+            echo base-commit=$(git show-ref -s ${{ inputs.runtimeVersion }}) >> "$GITHUB_OUTPUT"
+          else
+            echo base-commit=${{ steps.last-successful-commit.base-commit }} >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: ✓ Make sure we found a base commit
+        run: |
+          if [ -z "${{ steps.base-commit.outputs.base-commit }}" && ${{ inputs.channel == 'production' }} ]; then
+            echo "Could not find a base commit for this release. Exiting."
+            exit 1
+          fi
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: ⚙️ Install Dependencies
+        run: yarn install
+
+      # Run the fingerprint
+      - name: 📷 Check fingerprint
+        id: fingerprint
+        uses: expo/expo-github-action/fingerprint@main
+        with:
+          previous-git-commit: ${{ steps.base-commit.outputs.base-commit }}
+
+      - name: 👀 Debug fingerprint
+        id: fingerprint-debug
+        run: |
+          echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
+          echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
+          
+          fingerprintDiff='$(echo "${{ steps.fingerprint.outputs.fingerprint-diff }}")'
+          
+          if [[ $fingerprintDiff =~ "bareRncliAutolinking" || $fingerprintDiff =~ "expoAutolinkingAndroid" || $fingerprintDiff =~ "expoAutolinkingIos" ]]; then
+            echo fingerprint-is-different="true" >> "$GITHUB_OUTPUT"
+          else
+            echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Lint check
+        run: yarn lint
+
+      - name: Prettier check
+        run: yarn prettier --check .
+
+      - name: Check & compile i18n
+        run: yarn intl:build
+
+      - name: Type check
+        run: yarn typecheck
+
+      - name: 🔨 Setup EAS
+        uses: expo/expo-github-action@v8
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⛏️ Setup Expo
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        run: yarn global add eas-cli-local-build-plugin
+
+      - name: 🪛 Setup jq
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        uses: dcarbone/install-jq-action@v2
+
+      - name: ✏️ Write environment variables
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        run: |
+          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "$json" > google-services.json
+
+      - name: 🏗️ Create Bundle
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        run: EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
+
+      - name: 📦 Package Bundle and 🚀 Deploy
+        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        run: yarn use-build-number bash scripts/bundleUpdate.sh
+        env:
+          DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
+          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
+          CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
+
+      - name: Save successful deployment commit hash
+        run: echo ${{ steps.fingerprint.outputs.current-git-commit }} > last-successful-commit-hash.txt
+
+  # GitHub actions are horrible so let's just copy paste this in
+  buildIfNecessaryIOS:
+    name: Build and Submit iOS
+    runs-on: macos-14
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-ios
+      cancel-in-progress: false
+    needs: [bundleDeploy]
+    # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
+    # available here
+    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.fingerprint-is-different == 'true' }}
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: >
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: 🔨 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⛏️ Setup EAS local builds
+        run: yarn global add eas-cli-local-build-plugin
+
+      - name: ⚙️ Install dependencies
+        run: yarn install
+
+      - name: ☕️ Setup Cocoapods
+        uses: maxim-lobanov/setup-cocoapods@v1
+        with:
+          version: 1.14.3
+
+      - name: 💾 Cache Pods
+        uses: actions/cache@v3
+        id: pods-cache
+        with:
+          path: ./ios/Pods
+          # We'll use the yarn.lock for our hash since we don't yet have a Podfile.lock. Pod versions will not
+          # change unless the yarn version changes as well.
+          key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
+
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
+      - name: ✏️ Write environment variables
+        run: |
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
+
+      - name: 🏗️ EAS Build
+        run: yarn use-build-number-with-bump eas build -p ios --profile testflight --local --output build.ipa --non-interactive
+
+      - name: 🚀 Deploy
+        run: eas submit -p ios --non-interactive --path build.ipa
+
+  buildIfNecessaryAndroid:
+    name: Build and Submit Android
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-android
+      cancel-in-progress: false
+    needs: [ bundleDeploy ]
+    # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
+    # available here
+    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.fingerprint-is-different == 'true' }}
+
+    steps:
+      - name: Check for EXPO_TOKEN
+        run: >
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
+            exit 1
+          fi
+
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: 🔨 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: ⛏️ Setup EAS local builds
+        run: yarn global add eas-cli-local-build-plugin
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: ⚙️ Install dependencies
+        run: yarn install
+
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
+      - name: ✏️ Write environment variables
+        run: |
+          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "$json" > google-services.json
+
+      - name: 🏗️ EAS Build
+        run: yarn use-build-number-with-bump eas build -p android --profile testflight-android --local --output build.apk --non-interactive
+
+      - name: ⏰ Get a timestamp
+        id: timestamp
+        uses: nanzm/get-time-action@master
+        with:
+          format: 'MM-DD-HH-mm-ss'
+
+      - name: 🚀 Upload Artifact
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 30
+          compression-level: 0
+          name: build-${{ steps.timestamp.outputs.time }}.apk
+          path: build.apk
+
+      - name: 🔔 Notify Slack
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact.outputs.artifact-url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

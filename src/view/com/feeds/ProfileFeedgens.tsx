@@ -1,22 +1,29 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  findNodeHandle,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import {List, ListRef} from '../util/List'
-import {FeedSourceCardLoaded} from './FeedSourceCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {Text} from '../util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useProfileFeedgensQuery, RQKEY} from '#/state/queries/profile-feedgens'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {hydrateFeedGenerator} from '#/state/queries/feed'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {useLingui} from '@lingui/react'
+import {hydrateFeedGenerator} from '#/state/queries/feed'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
+import {usePalette} from 'lib/hooks/usePalette'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List, ListRef} from '../util/List'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {Text} from '../util/text/Text'
+import {FeedSourceCardLoaded} from './FeedSourceCard'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -34,13 +41,14 @@ interface ProfileFeedgensProps {
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
+  setScrollViewTag: (tag: number | null) => void
 }
 
 export const ProfileFeedgens = React.forwardRef<
   SectionRef,
   ProfileFeedgensProps
 >(function ProfileFeedgensImpl(
-  {did, scrollElRef, headerOffset, enabled, style, testID},
+  {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
   ref,
 ) {
   const pal = usePalette('default')
@@ -168,6 +176,13 @@ export const ProfileFeedgens = React.forwardRef<
     },
     [error, refetch, onPressRetryLoadMore, pal, preferences, _],
   )
+
+  React.useEffect(() => {
+    if (enabled && scrollElRef.current) {
+      const nativeTag = findNodeHandle(scrollElRef.current)
+      setScrollViewTag(nativeTag)
+    }
+  }, [enabled, scrollElRef, setScrollViewTag])
 
   return (
     <View testID={testID} style={style}>

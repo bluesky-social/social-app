@@ -1,82 +1,86 @@
 import * as React from 'react'
-import {
-  NavigationContainer,
-  createNavigationContainerRef,
-  CommonActions,
-  StackActions,
-  DefaultTheme,
-  DarkTheme,
-} from '@react-navigation/native'
+import {JSX} from 'react/jsx-runtime'
+import {i18n, MessageDescriptor} from '@lingui/core'
+import {msg} from '@lingui/macro'
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
-  HomeTabNavigatorParams,
-  SearchTabNavigatorParams,
-  FeedsTabNavigatorParams,
-  NotificationsTabNavigatorParams,
-  FlatNavigatorParams,
-  AllNavigatorParams,
-  MyProfileTabNavigatorParams,
-  BottomTabNavigatorParams,
-} from 'lib/routes/types'
-import {BottomBar} from './view/shell/bottom-bar/BottomBar'
-import {buildStateObject} from 'lib/routes/helpers'
-import {State, RouteParams} from 'lib/routes/types'
-import {isAndroid, isNative} from 'platform/detection'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {router} from './routes'
-import {usePalette} from 'lib/hooks/usePalette'
-import {bskyTitle} from 'lib/strings/headings'
-import {JSX} from 'react/jsx-runtime'
+  CommonActions,
+  createNavigationContainerRef,
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+  StackActions,
+} from '@react-navigation/native'
+
 import {timeout} from 'lib/async/timeout'
-import {useUnreadNotifications} from './state/queries/notifications/unread'
-import {useSession} from './state/session'
-import {useModalControls} from './state/modals'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {usePalette} from 'lib/hooks/usePalette'
+import {buildStateObject} from 'lib/routes/helpers'
 import {
-  shouldRequestEmailConfirmation,
-  setEmailConfirmationRequested,
-} from './state/shell/reminders'
+  AllNavigatorParams,
+  BottomTabNavigatorParams,
+  FeedsTabNavigatorParams,
+  FlatNavigatorParams,
+  HomeTabNavigatorParams,
+  MyProfileTabNavigatorParams,
+  NotificationsTabNavigatorParams,
+  SearchTabNavigatorParams,
+} from 'lib/routes/types'
+import {RouteParams, State} from 'lib/routes/types'
+import {bskyTitle} from 'lib/strings/headings'
+import {isAndroid, isNative} from 'platform/detection'
+import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
+import {AppPasswords} from 'view/screens/AppPasswords'
+import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
+import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
+import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
+import {PreferencesThreads} from 'view/screens/PreferencesThreads'
+import {SavedFeeds} from 'view/screens/SavedFeeds'
+import HashtagScreen from '#/screens/Hashtag'
+import {ModerationScreen} from '#/screens/Moderation'
+import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
-
-import {HomeScreen} from './view/screens/Home'
-import {SearchScreen} from './view/screens/Search'
-import {FeedsScreen} from './view/screens/Feeds'
-import {NotificationsScreen} from './view/screens/Notifications'
-import {ListsScreen} from './view/screens/Lists'
-import {ModerationScreen} from './view/screens/Moderation'
-import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
-import {NotFoundScreen} from './view/screens/NotFound'
-import {SettingsScreen} from './view/screens/Settings'
-import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
-import {ProfileScreen} from './view/screens/Profile'
-import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
-import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
-import {ProfileFeedScreen} from './view/screens/ProfileFeed'
-import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
-import {ProfileListScreen} from './view/screens/ProfileList'
-import {PostThreadScreen} from './view/screens/PostThread'
-import {PostLikedByScreen} from './view/screens/PostLikedBy'
-import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
-import {Storybook} from './view/screens/Storybook'
-import {LogScreen} from './view/screens/Log'
-import {SupportScreen} from './view/screens/Support'
-import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
-import {TermsOfServiceScreen} from './view/screens/TermsOfService'
+import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
+import {router} from './routes'
+import {useModalControls} from './state/modals'
+import {useUnreadNotifications} from './state/queries/notifications/unread'
+import {useSession} from './state/session'
+import {
+  setEmailConfirmationRequested,
+  shouldRequestEmailConfirmation,
+} from './state/shell/reminders'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
-import {AppPasswords} from 'view/screens/AppPasswords'
-import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
-import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
-import {SavedFeeds} from 'view/screens/SavedFeeds'
-import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
-import {PreferencesThreads} from 'view/screens/PreferencesThreads'
-import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
+import {DebugModScreen} from './view/screens/DebugMod'
+import {FeedsScreen} from './view/screens/Feeds'
+import {HomeScreen} from './view/screens/Home'
+import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
+import {ListsScreen} from './view/screens/Lists'
+import {LogScreen} from './view/screens/Log'
+import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
+import {NotFoundScreen} from './view/screens/NotFound'
+import {NotificationsScreen} from './view/screens/Notifications'
+import {PostLikedByScreen} from './view/screens/PostLikedBy'
+import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
+import {PostThreadScreen} from './view/screens/PostThread'
+import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
+import {ProfileScreen} from './view/screens/Profile'
+import {ProfileFeedScreen} from './view/screens/ProfileFeed'
+import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
+import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
+import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {ProfileListScreen} from './view/screens/ProfileList'
+import {SearchScreen} from './view/screens/Search'
+import {SettingsScreen} from './view/screens/Settings'
+import {Storybook} from './view/screens/Storybook'
+import {SupportScreen} from './view/screens/Support'
+import {TermsOfServiceScreen} from './view/screens/TermsOfService'
+import {BottomBar} from './view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
-import {msg} from '@lingui/macro'
-import {i18n, MessageDescriptor} from '@lingui/core'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -197,9 +201,19 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Liked by`)}}
       />
       <Stack.Screen
+        name="ProfileLabelerLikedBy"
+        getComponent={() => ProfileLabelerLikedByScreen}
+        options={{title: title(msg`Liked by`)}}
+      />
+      <Stack.Screen
         name="Debug"
         getComponent={() => Storybook}
         options={{title: title(msg`Storybook`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="DebugMod"
+        getComponent={() => DebugModScreen}
+        options={{title: title(msg`Moderation states`), requireAuth: true}}
       />
       <Stack.Screen
         name="Log"
@@ -242,9 +256,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Edit My Feeds`), requireAuth: true}}
       />
       <Stack.Screen
-        name="PreferencesHomeFeed"
-        getComponent={() => PreferencesHomeFeed}
-        options={{title: title(msg`Home Feed Preferences`), requireAuth: true}}
+        name="PreferencesFollowingFeed"
+        getComponent={() => PreferencesFollowingFeed}
+        options={{
+          title: title(msg`Following Feed Preferences`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="PreferencesThreads"
@@ -258,6 +275,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
           title: title(msg`External Media Preferences`),
           requireAuth: true,
         }}
+      />
+      <Stack.Screen
+        name="Hashtag"
+        getComponent={() => HashtagScreen}
+        options={{title: title(msg`Hashtag`)}}
       />
     </>
   )
@@ -457,7 +479,8 @@ const FlatNavigator = () => {
  */
 
 const LINKING = {
-  prefixes: ['bsky://', 'https://bsky.app'],
+  // TODO figure out what we are going to use
+  prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
@@ -476,6 +499,18 @@ const LINKING = {
 
   getStateFromPath(path: string) {
     const [name, params] = router.matchPath(path)
+
+    // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
+    // intent handler hook. We should check for the trailing slash, because if there isn't one then it isn't a valid
+    // intent
+    // On web, there is no route state that's created by default, so we should initialize it as the home route. On
+    // native, since the home tab and the home screen are defined as initial routes, we don't need to return a state
+    // since it will be created by react-navigation.
+    if (path.includes('intent/')) {
+      if (isNative) return
+      return buildStateObject('Flat', 'Home', params)
+    }
+
     if (isNative) {
       if (name === 'Search') {
         return buildStateObject('SearchTab', 'Search', params)
@@ -494,7 +529,8 @@ const LINKING = {
         },
       ])
     } else {
-      return buildStateObject('Flat', name, params)
+      const res = buildStateObject('Flat', name, params)
+      return res
     }
   },
 }
@@ -503,8 +539,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
+  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
 
   function onReady() {
+    prevLoggedRouteName.current = getCurrentRouteName()
     initAnalytics(currentAccount)
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
@@ -518,13 +556,29 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       ref={navigationRef}
       linking={LINKING}
       theme={theme}
+      onStateChange={() => {
+        logEvent('router:navigate', {
+          from: prevLoggedRouteName.current,
+        })
+        prevLoggedRouteName.current = getCurrentRouteName()
+      }}
       onReady={() => {
+        attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
+        logEvent('router:navigate', {})
       }}>
       {children}
     </NavigationContainer>
   )
+}
+
+function getCurrentRouteName() {
+  if (navigationRef.isReady()) {
+    return navigationRef.getCurrentRoute()?.name
+  } else {
+    return undefined
+  }
 }
 
 /**
@@ -626,11 +680,16 @@ function logModuleInitTime() {
     return
   }
   didInit = true
+
   const initMs = Math.round(
     // @ts-ignore Emitted by Metro in the bundle prelude
     performance.now() - global.__BUNDLE_START_TIME__,
   )
   console.log(`Time to first paint: ${initMs} ms`)
+  logEvent('init', {
+    initMs,
+  })
+
   if (__DEV__) {
     // This log is noisy, so keep false committed
     const shouldLog = false
@@ -643,11 +702,11 @@ function logModuleInitTime() {
 }
 
 export {
-  navigate,
-  resetToTab,
-  reset,
-  handleLink,
-  TabsNavigator,
   FlatNavigator,
+  handleLink,
+  navigate,
+  reset,
+  resetToTab,
   RoutesContainer,
+  TabsNavigator,
 }

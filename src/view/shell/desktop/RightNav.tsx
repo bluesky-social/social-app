@@ -1,22 +1,22 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {DesktopSearch} from './Search'
-import {DesktopFeeds} from './Feeds'
-import {Text} from 'view/com/util/text/Text'
-import {TextLink} from 'view/com/util/Link'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {s} from 'lib/styles'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
+
 import {useSession} from '#/state/session'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {s} from 'lib/styles'
+import {TextLink} from 'view/com/util/Link'
+import {Text} from 'view/com/util/text/Text'
+import {DesktopFeeds} from './Feeds'
+import {DesktopSearch} from './Search'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')
-  const palError = usePalette('error')
   const {_} = useLingui()
-  const {isSandbox, hasSession, currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -49,13 +49,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               paddingTop: hasSession ? 0 : 18,
             },
           ]}>
-          {isSandbox ? (
-            <View style={[palError.view, styles.messageLine, s.p10]}>
-              <Text type="md" style={[palError.text, s.bold]}>
-                <Trans>SANDBOX. Posts and accounts are not permanent.</Trans>
-              </Text>
-            </View>
-          ) : undefined}
           <View style={[{flexWrap: 'wrap'}, s.flexRow]}>
             {hasSession && (
               <>

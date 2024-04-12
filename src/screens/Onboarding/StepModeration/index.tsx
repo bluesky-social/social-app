@@ -1,40 +1,27 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
+import {LABELS} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
-import Animated, {Easing, Layout} from 'react-native-reanimated'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
 import {
-  configurableAdultLabelGroups,
-  configurableOtherLabelGroups,
-  usePreferencesSetAdultContentMutation,
-} from 'state/queries/preferences'
-import {Divider} from '#/components/Divider'
+  DescriptionText,
+  OnboardingControls,
+  TitleText,
+} from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
+import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
+import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
-import {usePreferencesQuery} from '#/state/queries/preferences'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/lib/analytics/analytics'
-
-import {
-  Description,
-  OnboardingControls,
-  Title,
-} from '#/screens/Onboarding/Layout'
-import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
-import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
-import {Context} from '#/screens/Onboarding/state'
-import {IconCircle} from '#/components/IconCircle'
-
-function AnimatedDivider() {
-  return (
-    <Animated.View layout={Layout.easing(Easing.ease).duration(200)}>
-      <Divider />
-    </Animated.View>
-  )
-}
 
 export function StepModeration() {
   const {_} = useLingui()
@@ -52,12 +39,13 @@ export function StepModeration() {
 
   const adultContentEnabled = !!(
     (variables && variables.enabled) ||
-    (!variables && preferences?.adultContentEnabled)
+    (!variables && preferences?.moderationPrefs.adultContentEnabled)
   )
 
   const onContinue = React.useCallback(() => {
     dispatch({type: 'next'})
     track('OnboardingV2:StepModeration:End')
+    logEvent('onboarding:moderation:nextPressed', {})
   }, [track, dispatch])
 
   React.useEffect(() => {
@@ -68,14 +56,14 @@ export function StepModeration() {
     <View style={[a.align_start]}>
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>You're in control</Trans>
-      </Title>
-      <Description style={[a.mb_xl]}>
+      </TitleText>
+      <DescriptionText style={[a.mb_xl]}>
         <Trans>
           Select what you want to see (or not see), and we’ll handle the rest.
         </Trans>
-      </Description>
+      </DescriptionText>
 
       {!preferences ? (
         <View style={[a.pt_md]}>
@@ -86,22 +74,19 @@ export function StepModeration() {
           <AdultContentEnabledPref mutate={mutate} variables={variables} />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {adultContentEnabled &&
-              configurableAdultLabelGroups.map((g, index) => (
-                <React.Fragment key={index}>
-                  {index === 0 && <AnimatedDivider />}
-                  <ModerationOption labelGroup={g} isMounted={isMounted} />
-                  <AnimatedDivider />
-                </React.Fragment>
-              ))}
-
-            {configurableOtherLabelGroups.map((g, index) => (
-              <React.Fragment key={index}>
-                {!adultContentEnabled && index === 0 && <AnimatedDivider />}
-                <ModerationOption labelGroup={g} isMounted={isMounted} />
-                <AnimatedDivider />
-              </React.Fragment>
-            ))}
+            <ModerationOption
+              labelValueDefinition={LABELS.porn}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption
+              labelValueDefinition={LABELS.sexual}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption
+              labelValueDefinition={LABELS['graphic-media']}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption labelValueDefinition={LABELS.nudity} />
           </View>
         </>
       )}

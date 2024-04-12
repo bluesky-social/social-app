@@ -1,8 +1,9 @@
 import {BskyAgent} from '@atproto/api'
-import {isBskyAppUrl} from '../strings/url-helpers'
-import {extractBskyMeta} from './bsky'
+
 import {LINK_META_PROXY} from 'lib/constants'
 import {getGiphyMetaUri} from 'lib/strings/embed-player'
+import {isBskyAppUrl} from '../strings/url-helpers'
+import {extractBskyMeta} from './bsky'
 
 export enum LikelyType {
   HTML,
@@ -26,7 +27,7 @@ export interface LinkMeta {
 export async function getLinkMeta(
   agent: BskyAgent,
   url: string,
-  timeout = 5e3,
+  timeout = 15e3,
 ): Promise<LinkMeta> {
   if (isBskyAppUrl(url)) {
     return extractBskyMeta(agent, url)

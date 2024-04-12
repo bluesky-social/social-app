@@ -1,27 +1,31 @@
 import React from 'react'
-import {View, ActivityIndicator, StyleSheet} from 'react-native'
+import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
+
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
+import {emitSoftReset} from '#/state/events'
+import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {useSession} from '#/state/session'
+import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {FeedPage} from 'view/com/feeds/FeedPage'
+import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
-import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {FeedsTabBar} from '../com/pager/FeedsTabBar'
-import {Pager, RenderTabBarFnProps, PagerRef} from 'view/com/pager/Pager'
-import {FeedPage} from 'view/com/feeds/FeedPage'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
-import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {usePinnedFeedsInfos, FeedSourceInfo} from '#/state/queries/feed'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {emitSoftReset} from '#/state/events'
-import {useSession} from '#/state/session'
-import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
-  const {feeds: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
+  const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
@@ -66,6 +70,8 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
 
+  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
+
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
@@ -74,7 +80,7 @@ function HomeScreenReady({
     // This is supposed to only happen on the web when you use the right nav.
     if (selectedIndex !== lastPagerReportedIndexRef.current) {
       lastPagerReportedIndexRef.current = selectedIndex
-      pagerRef.current?.setPage(selectedIndex)
+      pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
   }, [selectedIndex])
 
@@ -91,6 +97,33 @@ function HomeScreenReady({
     }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
   )
 
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      logEvent('home:feedDisplayed', {
+        index: selectedIndex,
+        feedType: selectedFeed.split('|')[0],
+        feedUrl: selectedFeed,
+        reason: 'focus',
+      })
+    }),
+  )
+
+  const disableMinShellOnForegrounding = useGate(
+    'disable_min_shell_on_foregrounding',
+  )
+  React.useEffect(() => {
+    if (disableMinShellOnForegrounding) {
+      const listener = AppState.addEventListener('change', nextAppState => {
+        if (nextAppState === 'active') {
+          setMinimalShellMode(false)
+        }
+      })
+      return () => {
+        listener.remove()
+      }
+    }
+  }, [setMinimalShellMode, disableMinShellOnForegrounding])
+
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
@@ -100,6 +133,19 @@ function HomeScreenReady({
       lastPagerReportedIndexRef.current = index
     },
     [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
+  )
+
+  const onPageSelecting = React.useCallback(
+    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
+      const feed = allFeeds[index]
+      logEvent('home:feedDisplayed', {
+        index,
+        feedType: feed.split('|')[0],
+        feedUrl: feed,
+        reason,
+      })
+    },
+    [allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
@@ -118,16 +164,16 @@ function HomeScreenReady({
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
       return (
-        <FeedsTabBar
+        <HomeHeader
           key="FEEDS_TAB_BAR"
-          selectedPage={props.selectedPage}
-          onSelect={props.onSelect}
+          {...props}
           testID="homeScreenFeedTabs"
           onPressSelected={onPressSelected}
+          feeds={pinnedFeedInfos}
         />
       )
     },
-    [onPressSelected],
+    [onPressSelected, pinnedFeedInfos],
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
@@ -154,6 +200,7 @@ function HomeScreenReady({
       ref={pagerRef}
       testID="homeScreen"
       initialPage={selectedIndex}
+      onPageSelecting={onPageSelecting}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>

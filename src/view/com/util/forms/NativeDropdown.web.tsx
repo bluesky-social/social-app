@@ -1,12 +1,13 @@
 import React from 'react'
+import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import {Pressable, StyleSheet, View, Text} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+
+import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {HITSLOP_10} from 'lib/constants'
 
 // Custom Dropdown Menu Components
 // ==
@@ -21,6 +22,7 @@ export const DropdownMenuItem = (props: ItemProps & {testID?: string}) => {
 
   return (
     <DropdownMenu.Item
+      className="nativeDropdown-item"
       {...props}
       style={StyleSheet.flatten([
         styles.item,
@@ -52,6 +54,7 @@ type Props = {
   testID?: string
   accessibilityLabel?: string
   accessibilityHint?: string
+  triggerStyle?: ViewStyle
 }
 
 export function NativeDropdown({
@@ -60,6 +63,7 @@ export function NativeDropdown({
   testID,
   accessibilityLabel,
   accessibilityHint,
+  triggerStyle,
 }: React.PropsWithChildren<Props>) {
   const pal = usePalette('default')
   const theme = useTheme()
@@ -119,7 +123,8 @@ export function NativeDropdown({
           accessibilityLabel={accessibilityLabel}
           accessibilityHint={accessibilityHint}
           onPress={() => setOpen(o => !o)}
-          hitSlop={HITSLOP_10}>
+          hitSlop={HITSLOP_10}
+          style={triggerStyle}>
           {children}
         </Pressable>
       </DropdownMenu.Trigger>
@@ -232,6 +237,10 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 12,
     borderRadius: 8,
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
+    outline: 0,
+    border: 0,
   },
   itemTitle: {
     fontSize: 16,

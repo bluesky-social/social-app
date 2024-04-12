@@ -7,23 +7,24 @@ import {
   View,
 } from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {Text} from '../com/util/text/Text'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {useMyBlockedAccountsQuery} from '#/state/queries/my-blocked-accounts'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useFocusEffect} from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {CenteredView} from 'view/com/util/Views'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
-import {logger} from '#/logger'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMyBlockedAccountsQuery} from '#/state/queries/my-blocked-accounts'
-import {cleanError} from '#/lib/strings/errors'
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -131,7 +132,7 @@ export function ModerationBlockedAccounts({}: Props) {
               <Text type="lg" style={[pal.text, styles.emptyText]}>
                 <Trans>
                   You have not blocked any accounts yet. To block an account, go
-                  to their profile and selected "Block account" from the menu on
+                  to their profile and select "Block account" from the menu on
                   their account.
                 </Trans>
               </Text>

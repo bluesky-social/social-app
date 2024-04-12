@@ -1,34 +1,39 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost, PostModeration} from '@atproto/api'
 import {
-  useInfiniteQuery,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  ModerationDecision,
+} from '@atproto/api'
+import {
   InfiniteData,
-  QueryKey,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
-import {useFeedTuners} from '../preferences/feed-tuners'
-import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
-import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
-import {FollowingFeedAPI} from 'lib/api/feed/following'
-import {AuthorFeedAPI} from 'lib/api/feed/author'
-import {LikesFeedAPI} from 'lib/api/feed/likes'
-import {CustomFeedAPI} from 'lib/api/feed/custom'
-import {ListFeedAPI} from 'lib/api/feed/list'
-import {MergeFeedAPI} from 'lib/api/feed/merge'
+
 import {HomeFeedAPI} from '#/lib/api/feed/home'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {precacheFeedPostProfiles} from './profile'
-import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getModerationOpts} from '#/state/queries/preferences/moderation'
+import {getAgent} from '#/state/session'
+import {AuthorFeedAPI} from 'lib/api/feed/author'
+import {CustomFeedAPI} from 'lib/api/feed/custom'
+import {FollowingFeedAPI} from 'lib/api/feed/following'
+import {LikesFeedAPI} from 'lib/api/feed/likes'
+import {ListFeedAPI} from 'lib/api/feed/list'
+import {MergeFeedAPI} from 'lib/api/feed/merge'
+import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
+import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
+import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from './preferences'
-import {queryClient} from 'lib/react-query'
+import {precacheFeedPostProfiles} from './profile'
+import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
 type AuthorFilter =
@@ -53,8 +58,9 @@ export interface FeedParams {
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
 
+const RQKEY_ROOT = 'post-feed'
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
-  return ['post-feed', feedDesc, params || {}]
+  return [RQKEY_ROOT, feedDesc, params || {}]
 }
 
 export interface FeedPostSliceItem {
@@ -63,7 +69,7 @@ export interface FeedPostSliceItem {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
-  moderation: PostModeration
+  moderation: ModerationDecision
 }
 
 export interface FeedPostSlice {
@@ -137,24 +143,41 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      const res = await api.fetch({cursor, limit: PAGE_SIZE})
-      precacheFeedPostProfiles(queryClient, res.feed)
+      try {
+        const res = await api.fetch({cursor, limit: PAGE_SIZE})
+        precacheFeedPostProfiles(queryClient, res.feed)
 
-      /*
-       * If this is a public view, we need to check if posts fail moderation.
-       * If all fail, we throw an error. If only some fail, we continue and let
-       * moderations happen later, which results in some posts being shown and
-       * some not.
-       */
-      if (!getAgent().session) {
-        assertSomePostsPassModeration(res.feed)
-      }
+        /*
+         * If this is a public view, we need to check if posts fail moderation.
+         * If all fail, we throw an error. If only some fail, we continue and let
+         * moderations happen later, which results in some posts being shown and
+         * some not.
+         */
+        if (!getAgent().session) {
+          assertSomePostsPassModeration(res.feed)
+        }
 
-      return {
-        api,
-        cursor: res.cursor,
-        feed: res.feed,
-        fetchedAt: Date.now(),
+        return {
+          api,
+          cursor: res.cursor,
+          feed: res.feed,
+          fetchedAt: Date.now(),
+        }
+      } catch (e) {
+        const feedDescParts = feedDesc.split('|')
+        const feedOwnerDid = new AtUri(feedDescParts[1]).hostname
+
+        if (
+          feedDescParts[0] === 'feedgen' &&
+          BSKY_FEED_OWNER_DIDS.includes(feedOwnerDid)
+        ) {
+          logger.error(`Bluesky feed may be offline: ${feedOwnerDid}`, {
+            feedDesc,
+            jsError: e,
+          })
+        }
+
+        throw e
       }
     },
     initialPageParam: undefined,
@@ -227,9 +250,17 @@ export function usePostFeedQuery(
 
                   // apply moderation filter
                   for (let i = 0; i < slice.items.length; i++) {
+                    const ignoreFilter =
+                      slice.items[i].post.author.did === ignoreFilterFor
+                    if (ignoreFilter) {
+                      // remove mutes to avoid confused UIs
+                      moderations[i].causes = moderations[i].causes.filter(
+                        cause => cause.type !== 'muted',
+                      )
+                    }
                     if (
-                      moderations[i]?.content.filter &&
-                      slice.items[i].post.author.did !== ignoreFilterFor
+                      !ignoreFilter &&
+                      moderations[i]?.ui('contentList').filter
                     ) {
                       return undefined
                     }
@@ -253,7 +284,7 @@ export function usePostFeedQuery(
                             .success
                         ) {
                           return {
-                            _reactKey: `${slice._reactKey}-${i}`,
+                            _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
                             post: item.post,
                             record: item.post.record,
@@ -365,23 +396,6 @@ function createApi(
   }
 }
 
-/**
- * This helper is used by the post-thread placeholder function to
- * find a post in the query-data cache
- */
-export function findPostInQueryData(
-  queryClient: QueryClient,
-  uri: string,
-): AppBskyFeedDefs.PostView | undefined {
-  const generator = findAllPostsInQueryData(queryClient, uri)
-  const result = generator.next()
-  if (result.done) {
-    return undefined
-  } else {
-    return result.value
-  }
-}
-
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
@@ -389,7 +403,7 @@ export function* findAllPostsInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
-    queryKey: ['post-feed'],
+    queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
@@ -429,13 +443,12 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   let somePostsPassModeration = false
 
   for (const item of feed) {
-    const moderationOpts = getModerationOpts({
-      userDid: '',
-      preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
+    const moderation = moderatePost(item.post, {
+      userDid: undefined,
+      prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
     })
-    const moderation = moderatePost(item.post, moderationOpts)
 
-    if (!moderation.content.filter) {
+    if (!moderation.ui('contentList').filter) {
       // we have a sfw post
       somePostsPassModeration = true
     }
@@ -446,12 +459,16 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   }
 }
 
-export function resetProfilePostsQueries(did: string, timeout = 0) {
+export function resetProfilePostsQueries(
+  queryClient: QueryClient,
+  did: string,
+  timeout = 0,
+) {
   setTimeout(() => {
     queryClient.resetQueries({
       predicate: query =>
         !!(
-          query.queryKey[0] === 'post-feed' &&
+          query.queryKey[0] === RQKEY_ROOT &&
           (query.queryKey[1] as string)?.includes(did)
         ),
     })

@@ -2,13 +2,13 @@ import React from 'react'
 import {View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 
-import {useTheme, atoms as a, flatten} from '#/alf'
-import {Text} from '#/components/Typography'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, flatten, useTheme} from '#/alf'
 import {useItemContext} from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 
 export function SuggestedAccountCard({
   profile,
@@ -88,7 +88,7 @@ export function SuggestedAccountCard({
             <UserAvatar
               size={48}
               avatar={profile.avatar}
-              moderation={moderation.avatar}
+              moderation={moderation.ui('avatar')}
             />
           </View>
           <View style={[a.flex_1]}>

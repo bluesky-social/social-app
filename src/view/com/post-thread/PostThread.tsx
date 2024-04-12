@@ -1,59 +1,50 @@
 import React, {useEffect, useRef} from 'react'
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {LoadingScreen} from '../util/LoadingScreen'
-import {List, ListMethods} from '../util/List'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {PostThreadItem} from './PostThreadItem'
-import {ComposePrompt} from '../composer/Prompt'
-import {ViewHeader} from '../util/ViewHeader'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {
-  ThreadNode,
-  ThreadPost,
-  ThreadNotFound,
-  ThreadBlocked,
-  usePostThreadQuery,
-  sortThread,
-} from '#/state/queries/post-thread'
-import {useNavigation} from '@react-navigation/native'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {cleanError} from '#/lib/strings/errors'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
-  UsePreferencesQueryResponse,
+  sortThread,
+  ThreadBlocked,
+  ThreadNode,
+  ThreadNotFound,
+  ThreadPost,
+  usePostThreadQuery,
+} from '#/state/queries/post-thread'
+import {
   useModerationOpts,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isAndroid, isNative} from '#/platform/detection'
-import {logger} from '#/logger'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {cleanError} from 'lib/strings/errors'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {ComposePrompt} from '../composer/Prompt'
+import {List, ListMethods} from '../util/List'
+import {Text} from '../util/text/Text'
+import {ViewHeader} from '../util/ViewHeader'
+import {PostThreadItem} from './PostThreadItem'
 
-const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 1}
+// FlatList maintainVisibleContentPosition breaks if too many items
+// are prepended. This seems to be an optimal number based on *shrug*.
+const PARENTS_CHUNK_SIZE = 15
+
+const MAINTAIN_VISIBLE_CONTENT_POSITION = {
+  // We don't insert any elements before the root row while loading.
+  // So the row we want to use as the scroll anchor is the first row.
+  minIndexForVisible: 0,
+}
 
 const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
-const CHILD_SPINNER = {_reactKey: '__child_spinner__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
-const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
 type YieldedItem = ThreadPost | ThreadBlocked | ThreadNotFound
 type RowItem =
@@ -61,9 +52,17 @@ type RowItem =
   // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
   | typeof TOP_COMPONENT
   | typeof REPLY_PROMPT
-  | typeof CHILD_SPINNER
   | typeof LOAD_MORE
-  | typeof BOTTOM_COMPONENT
+
+type ThreadSkeletonParts = {
+  parents: YieldedItem[]
+  highlightedPost: ThreadNode
+  replies: YieldedItem[]
+}
+
+const keyExtractor = (item: RowItem) => {
+  return item._reactKey
+}
 
 export function PostThread({
   uri,
@@ -72,17 +71,30 @@ export function PostThread({
 }: {
   uri: string | undefined
   onCanReply: (canReply: boolean) => void
-  onPressReply: () => void
+  onPressReply: () => unknown
 }) {
+  const {hasSession} = useSession()
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const initialNumToRender = useInitialNumToRender()
+  const {height: windowHeight} = useWindowDimensions()
+
+  const {data: preferences} = usePreferencesQuery()
   const {
-    isLoading,
-    isError,
-    error,
+    isFetching,
+    isError: isThreadError,
+    error: threadError,
     refetch,
     data: thread,
   } = usePostThreadQuery(uri)
-  const {data: preferences} = usePreferencesQuery()
 
+  const treeView = React.useMemo(
+    () =>
+      !!preferences?.threadViewPrefs?.lab_treeViewEnabled &&
+      hasBranchingReplies(thread),
+    [preferences?.threadViewPrefs, thread],
+  )
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
@@ -92,13 +104,22 @@ export function PostThread({
       rootPost && moderationOpts
         ? moderatePost(rootPost, moderationOpts)
         : undefined
-
-    const cause = mod?.content.cause
-
-    return cause
-      ? cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated'
-      : false
+    return !!mod
+      ?.ui('contentList')
+      .blurs.find(
+        cause =>
+          cause.type === 'label' &&
+          cause.labelDef.identifier === '!no-unauthenticated',
+      )
   }, [rootPost, moderationOpts])
+
+  // Values used for proper rendering of parents
+  const ref = useRef<ListMethods>(null)
+  const highlightedPostRef = useRef<View | null>(null)
+  const [maxParents, setMaxParents] = React.useState(
+    isWeb ? Infinity : PARENTS_CHUNK_SIZE,
+  )
+  const [maxReplies, setMaxReplies] = React.useState(50)
 
   useSetTitle(
     rootPost && !isNoPwi
@@ -107,156 +128,161 @@ export function PostThread({
         )}: "${rootPostRecord!.text}"`
       : '',
   )
+
+  // On native, this is going to start out `true`. We'll toggle it to `false` after the initial render if flushed.
+  // This ensures that the first render contains no parents--even if they are already available in the cache.
+  // We need to delay showing them so that we can use maintainVisibleContentPosition to keep the main post on screen.
+  // On the web this is not necessary because we can synchronously adjust the scroll in onContentSizeChange instead.
+  const [deferParents, setDeferParents] = React.useState(isNative)
+
+  const skeleton = React.useMemo(() => {
+    const threadViewPrefs = preferences?.threadViewPrefs
+    if (!threadViewPrefs || !thread) return null
+
+    return createThreadSkeleton(
+      sortThread(thread, threadViewPrefs),
+      hasSession,
+      treeView,
+    )
+  }, [thread, preferences?.threadViewPrefs, hasSession, treeView])
+
+  const error = React.useMemo(() => {
+    if (AppBskyFeedDefs.isNotFoundPost(thread)) {
+      return {
+        title: _(msg`Post not found`),
+        message: _(msg`The post may have been deleted.`),
+      }
+    } else if (skeleton?.highlightedPost.type === 'blocked') {
+      return {
+        title: _(msg`Post hidden`),
+        message: _(
+          msg`You have blocked the author or you have been blocked by the author.`,
+        ),
+      }
+    } else if (threadError?.message.startsWith('Post not found')) {
+      return {
+        title: _(msg`Post not found`),
+        message: _(msg`The post may have been deleted.`),
+      }
+    } else if (isThreadError) {
+      return {
+        message: threadError ? cleanError(threadError) : undefined,
+      }
+    }
+
+    return null
+  }, [thread, skeleton?.highlightedPost, isThreadError, _, threadError])
+
   useEffect(() => {
-    if (rootPost) {
+    if (error) {
+      onCanReply(false)
+    } else if (rootPost) {
       onCanReply(!rootPost.viewer?.replyDisabled)
     }
-  }, [rootPost, onCanReply])
-
-  if (isError || AppBskyFeedDefs.isNotFoundPost(thread)) {
-    return (
-      <PostThreadError
-        error={error}
-        notFound={AppBskyFeedDefs.isNotFoundPost(thread)}
-        onRefresh={refetch}
-      />
-    )
-  }
-  if (AppBskyFeedDefs.isBlockedPost(thread)) {
-    return <PostThreadBlocked />
-  }
-  if (!thread || isLoading || !preferences) {
-    return <LoadingScreen />
-  }
-  return (
-    <PostThreadLoaded
-      thread={thread}
-      threadViewPrefs={preferences.threadViewPrefs}
-      onRefresh={refetch}
-      onPressReply={onPressReply}
-    />
-  )
-}
-
-function PostThreadLoaded({
-  thread,
-  threadViewPrefs,
-  onRefresh,
-  onPressReply,
-}: {
-  thread: ThreadNode
-  threadViewPrefs: UsePreferencesQueryResponse['threadViewPrefs']
-  onRefresh: () => void
-  onPressReply: () => void
-}) {
-  const {hasSession} = useSession()
-  const {_} = useLingui()
-  const pal = usePalette('default')
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
-  const ref = useRef<ListMethods>(null)
-  const highlightedPostRef = useRef<View | null>(null)
-  const needsScrollAdjustment = useRef<boolean>(
-    !isNative || // web always uses scroll adjustment
-      (thread.type === 'post' && !thread.ctx.isParentLoading), // native only does it when not loading from placeholder
-  )
-  const [maxVisible, setMaxVisible] = React.useState(100)
-  const [isPTRing, setIsPTRing] = React.useState(false)
-  const treeView = React.useMemo(
-    () => !!threadViewPrefs.lab_treeViewEnabled && hasBranchingReplies(thread),
-    [threadViewPrefs, thread],
-  )
+  }, [rootPost, onCanReply, error])
 
   // construct content
   const posts = React.useMemo(() => {
-    const root = sortThread(thread, threadViewPrefs)
+    if (!skeleton) return []
+
+    const {parents, highlightedPost, replies} = skeleton
     let arr: RowItem[] = []
-    if (root.type === 'post') {
-      if (!root.ctx.isParentLoading) {
+    if (highlightedPost.type === 'post') {
+      const isRoot =
+        !highlightedPost.parent && !highlightedPost.ctx.isParentLoading
+      if (isRoot) {
+        // No parents to load.
         arr.push(TOP_COMPONENT)
-        for (const parent of flattenThreadParents(root, hasSession)) {
-          arr.push(parent)
+      } else {
+        if (highlightedPost.ctx.isParentLoading || deferParents) {
+          // We're loading parents of the highlighted post.
+          // In this case, we don't render anything above the post.
+          // If you add something here, you'll need to update both
+          // maintainVisibleContentPosition and onContentSizeChange
+          // to "hold onto" the correct row instead of the first one.
+        } else {
+          // Everything is loaded
+          let startIndex = Math.max(0, parents.length - maxParents)
+          if (startIndex === 0) {
+            arr.push(TOP_COMPONENT)
+          } else {
+            // When progressively revealing parents, rendering a placeholder
+            // here will cause scrolling jumps. Don't add it unless you test it.
+            // QT'ing this thread is a great way to test all the scrolling hacks:
+            // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
+          }
+          for (let i = startIndex; i < parents.length; i++) {
+            arr.push(parents[i])
+          }
         }
       }
-      arr.push(root)
-      if (!root.post.viewer?.replyDisabled) {
+      arr.push(highlightedPost)
+      if (!highlightedPost.post.viewer?.replyDisabled) {
         arr.push(REPLY_PROMPT)
       }
-      if (root.ctx.isChildLoading) {
-        arr.push(CHILD_SPINNER)
-      } else {
-        for (const reply of flattenThreadReplies(root, hasSession, treeView)) {
-          arr.push(reply)
+      for (let i = 0; i < replies.length; i++) {
+        arr.push(replies[i])
+        if (i === maxReplies) {
+          break
         }
-        arr.push(BOTTOM_COMPONENT)
       }
     }
-    if (arr.length > maxVisible) {
-      arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-    }
     return arr
-  }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
+  }, [skeleton, deferParents, maxParents, maxReplies])
 
-  /**
-   * NOTE
-   * Scroll positioning
-   *
-   * This callback is run if needsScrollAdjustment.current == true, which is...
-   *  - On web: always
-   *  - On native: when the placeholder cache is not being used
-   *
-   * It then only runs when viewing a reply, and the goal is to scroll the
-   * reply into view.
-   *
-   * On native, if the placeholder cache is being used then maintainVisibleContentPosition
-   * is a more effective solution, so we use that. Otherwise, typically we're loading from
-   * the react-query cache, so we just need to immediately scroll down to the post.
-   *
-   * On desktop, maintainVisibleContentPosition isn't supported so we just always use
-   * this technique.
-   *
-   * -prf
-   */
-  const onContentSizeChange = React.useCallback(() => {
+  // This is only used on the web to keep the post in view when its parents load.
+  // On native, we rely on `maintainVisibleContentPosition` instead.
+  const didAdjustScrollWeb = useRef<boolean>(false)
+  const onContentSizeChangeWeb = React.useCallback(() => {
     // only run once
-    if (!needsScrollAdjustment.current) {
+    if (didAdjustScrollWeb.current) {
       return
     }
-
     // wait for loading to finish
-    if (thread.type === 'post' && !!thread.parent) {
+    if (thread?.type === 'post' && !!thread.parent) {
       function onMeasure(pageY: number) {
         ref.current?.scrollToOffset({
           animated: false,
           offset: pageY,
         })
       }
-      if (isNative) {
-        highlightedPostRef.current?.measure(
-          (_x, _y, _width, _height, _pageX, pageY) => {
-            onMeasure(pageY)
-          },
-        )
-      } else {
-        // Measure synchronously to avoid a layout jump.
-        const domNode = highlightedPostRef.current
-        if (domNode) {
-          const pageY = (domNode as any as Element).getBoundingClientRect().top
-          onMeasure(pageY)
-        }
+      // Measure synchronously to avoid a layout jump.
+      const domNode = highlightedPostRef.current
+      if (domNode) {
+        const pageY = (domNode as any as Element).getBoundingClientRect().top
+        onMeasure(pageY)
       }
-      needsScrollAdjustment.current = false
+      didAdjustScrollWeb.current = true
     }
   }, [thread])
 
-  const onPTR = React.useCallback(async () => {
-    setIsPTRing(true)
-    try {
-      await onRefresh()
-    } catch (err) {
-      logger.error('Failed to refresh posts thread', {message: err})
+  // On native, we reveal parents in chunks. Although they're all already
+  // loaded and FlatList already has its own virtualization, unfortunately FlatList
+  // has a bug that causes the content to jump around if too many items are getting
+  // prepended at once. It also jumps around if items get prepended during scroll.
+  // To work around this, we prepend rows after scroll bumps against the top and rests.
+  const needsBumpMaxParents = React.useRef(false)
+  const onStartReached = React.useCallback(() => {
+    if (skeleton?.parents && maxParents < skeleton.parents.length) {
+      needsBumpMaxParents.current = true
     }
-    setIsPTRing(false)
-  }, [setIsPTRing, onRefresh])
+  }, [maxParents, skeleton?.parents])
+  const bumpMaxParentsIfNeeded = React.useCallback(() => {
+    if (!isNative) {
+      return
+    }
+    if (needsBumpMaxParents.current) {
+      needsBumpMaxParents.current = false
+      setMaxParents(n => n + PARENTS_CHUNK_SIZE)
+    }
+  }, [])
+  const onMomentumScrollEnd = bumpMaxParentsIfNeeded
+  const onScrollToTop = bumpMaxParentsIfNeeded
+
+  const onEndReached = React.useCallback(() => {
+    if (isFetching || posts.length < maxReplies) return
+    setMaxReplies(prev => prev + 50)
+  }, [isFetching, maxReplies, posts.length])
 
   const renderItem = React.useCallback(
     ({item, index}: {item: RowItem; index: number}) => {
@@ -288,46 +314,6 @@ function PostThreadLoaded({
             </Text>
           </View>
         )
-      } else if (item === LOAD_MORE) {
-        return (
-          <Pressable
-            onPress={() => setMaxVisible(n => n + 50)}
-            style={[pal.border, pal.view, styles.itemContainer]}
-            accessibilityLabel={_(msg`Load more posts`)}
-            accessibilityHint="">
-            <View
-              style={[
-                pal.viewLight,
-                {paddingHorizontal: 18, paddingVertical: 14, borderRadius: 6},
-              ]}>
-              <Text type="lg-medium" style={pal.text}>
-                <Trans>Load more posts</Trans>
-              </Text>
-            </View>
-          </Pressable>
-        )
-      } else if (item === BOTTOM_COMPONENT) {
-        // HACK
-        // due to some complexities with how flatlist works, this is the easiest way
-        // I could find to get a border positioned directly under the last item
-        // -prf
-        return (
-          <View
-            // @ts-ignore web-only
-            style={{
-              // Leave enough space below that the scroll doesn't jump
-              height: isNative ? 600 : '100vh',
-              borderTopWidth: 1,
-              borderColor: pal.colors.border,
-            }}
-          />
-        )
-      } else if (item === CHILD_SPINNER) {
-        return (
-          <View style={[pal.border, styles.childSpinner]}>
-            <ActivityIndicator />
-          </View>
-        )
       } else if (isThreadPost(item)) {
         const prev = isThreadPost(posts[index - 1])
           ? (posts[index - 1] as ThreadPost)
@@ -335,9 +321,14 @@ function PostThreadLoaded({
         const next = isThreadPost(posts[index - 1])
           ? (posts[index - 1] as ThreadPost)
           : undefined
+        const hasUnrevealedParents =
+          index === 0 &&
+          skeleton?.parents &&
+          maxParents < skeleton.parents.length
         return (
           <View
-            ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}>
+            ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
+            onLayout={deferParents ? () => setDeferParents(false) : undefined}>
             <PostThreadItem
               post={item.post}
               record={item.record}
@@ -349,8 +340,10 @@ function PostThreadLoaded({
               hasMore={item.ctx.hasMore}
               showChildReplyLine={item.ctx.showChildReplyLine}
               showParentReplyLine={item.ctx.showParentReplyLine}
-              hasPrecedingItem={!!prev?.ctx.showChildReplyLine}
-              onPostReply={onRefresh}
+              hasPrecedingItem={
+                !!prev?.ctx.showChildReplyLine || !!hasUnrevealedParents
+              }
+              onPostReply={refetch}
             />
           </View>
         )
@@ -360,140 +353,67 @@ function PostThreadLoaded({
     [
       hasSession,
       isTabletOrMobile,
+      _,
       isMobile,
       onPressReply,
       pal.border,
       pal.viewLight,
       pal.textLight,
-      pal.view,
-      pal.text,
-      pal.colors.border,
       posts,
-      onRefresh,
+      skeleton?.parents,
+      maxParents,
+      deferParents,
       treeView,
-      _,
+      refetch,
     ],
   )
+
+  if (error || !thread) {
+    return (
+      <ListMaybePlaceholder
+        isLoading={(!preferences || !thread) && !error}
+        isError={!!error}
+        noEmpty
+        onRetry={refetch}
+        errorTitle={error?.title}
+        errorMessage={error?.message}
+      />
+    )
+  }
 
   return (
     <List
       ref={ref}
       data={posts}
-      initialNumToRender={!isNative ? posts.length : undefined}
-      maintainVisibleContentPosition={
-        !needsScrollAdjustment.current
-          ? MAINTAIN_VISIBLE_CONTENT_POSITION
-          : undefined
-      }
-      keyExtractor={item => item._reactKey}
       renderItem={renderItem}
-      refreshing={isPTRing}
-      onRefresh={onPTR}
-      onContentSizeChange={onContentSizeChange}
-      style={s.hContentRegion}
+      keyExtractor={keyExtractor}
+      onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+      onStartReached={onStartReached}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={2}
+      onMomentumScrollEnd={onMomentumScrollEnd}
+      onScrollToTop={onScrollToTop}
+      maintainVisibleContentPosition={
+        isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
+      }
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
       removeClippedSubviews={isAndroid ? false : undefined}
+      ListFooterComponent={
+        <ListFooter
+          // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
+          // initial render
+          isFetchingNextPage={isFetching}
+          error={cleanError(threadError)}
+          onRetry={refetch}
+          // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
+          // work without causing weird jumps on web or glitches on native
+          height={windowHeight - 200}
+        />
+      }
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
     />
-  )
-}
-
-function PostThreadBlocked() {
-  const {_} = useLingui()
-  const pal = usePalette('default')
-  const navigation = useNavigation<NavigationProp>()
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  return (
-    <CenteredView>
-      <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-        <Text type="title-lg" style={[pal.text, s.mb5]}>
-          <Trans>Post hidden</Trans>
-        </Text>
-        <Text type="md" style={[pal.text, s.mb10]}>
-          <Trans>
-            You have blocked the author or you have been blocked by the author.
-          </Trans>
-        </Text>
-        <TouchableOpacity
-          onPress={onPressBack}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <Text type="2xl" style={pal.link}>
-            <FontAwesomeIcon
-              icon="angle-left"
-              style={[pal.link as FontAwesomeIconStyle, s.mr5]}
-              size={14}
-            />
-            <Trans context="action">Back</Trans>
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </CenteredView>
-  )
-}
-
-function PostThreadError({
-  onRefresh,
-  notFound,
-  error,
-}: {
-  onRefresh: () => void
-  notFound: boolean
-  error: Error | null
-}) {
-  const {_} = useLingui()
-  const pal = usePalette('default')
-  const navigation = useNavigation<NavigationProp>()
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  if (notFound) {
-    return (
-      <CenteredView>
-        <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-          <Text type="title-lg" style={[pal.text, s.mb5]}>
-            <Trans>Post not found</Trans>
-          </Text>
-          <Text type="md" style={[pal.text, s.mb10]}>
-            <Trans>The post may have been deleted.</Trans>
-          </Text>
-          <TouchableOpacity
-            onPress={onPressBack}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Back`)}
-            accessibilityHint="">
-            <Text type="2xl" style={pal.link}>
-              <FontAwesomeIcon
-                icon="angle-left"
-                style={[pal.link as FontAwesomeIconStyle, s.mr5]}
-                size={14}
-              />
-              <Trans>Back</Trans>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </CenteredView>
-    )
-  }
-  return (
-    <CenteredView>
-      <ErrorMessage message={cleanError(error)} onPressTryAgain={onRefresh} />
-    </CenteredView>
   )
 }
 
@@ -507,6 +427,20 @@ function isThreadNotFound(v: unknown): v is ThreadNotFound {
 
 function isThreadBlocked(v: unknown): v is ThreadBlocked {
   return !!v && typeof v === 'object' && 'type' in v && v.type === 'blocked'
+}
+
+function createThreadSkeleton(
+  node: ThreadNode,
+  hasSession: boolean,
+  treeView: boolean,
+): ThreadSkeletonParts | null {
+  if (!node) return null
+
+  return {
+    parents: Array.from(flattenThreadParents(node, hasSession)),
+    highlightedPost: node,
+    replies: Array.from(flattenThreadReplies(node, hasSession, treeView)),
+  }
 }
 
 function* flattenThreadParents(
@@ -558,7 +492,10 @@ function hasPwiOptOut(node: ThreadPost) {
   return !!node.post.author.labels?.find(l => l.val === '!no-unauthenticated')
 }
 
-function hasBranchingReplies(node: ThreadNode) {
+function hasBranchingReplies(node?: ThreadNode) {
+  if (!node) {
+    return false
+  }
   if (node.type !== 'post') {
     return false
   }
@@ -572,20 +509,9 @@ function hasBranchingReplies(node: ThreadNode) {
 }
 
 const styles = StyleSheet.create({
-  notFoundContainer: {
-    margin: 10,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 6,
-  },
   itemContainer: {
     borderTopWidth: 1,
     paddingHorizontal: 18,
     paddingVertical: 18,
-  },
-  childSpinner: {
-    borderTopWidth: 1,
-    paddingTop: 40,
-    paddingBottom: 200,
   },
 })

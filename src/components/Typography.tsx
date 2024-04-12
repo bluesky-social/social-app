@@ -1,7 +1,16 @@
 import React from 'react'
-import {Text as RNText, TextStyle, TextProps} from 'react-native'
+import {StyleProp, TextProps as RNTextProps, TextStyle} from 'react-native'
+import {UITextView} from 'react-native-uitextview'
 
-import {useTheme, atoms, web, flatten} from '#/alf'
+import {isNative} from '#/platform/detection'
+import {atoms, flatten, useTheme, web} from '#/alf'
+
+export type TextProps = RNTextProps & {
+  /**
+   * Lets the user select text, to use the native copy and paste functionality.
+   */
+  selectable?: boolean
+}
 
 /**
  * Util to calculate lineHeight from a text size atom and a leading atom
@@ -25,17 +34,17 @@ export function leading<
  * If the `lineHeight` value is > 2, we assume it's an absolute value and
  * returns it as-is.
  */
-function normalizeTextStyles(styles: TextStyle[]) {
+export function normalizeTextStyles(styles: StyleProp<TextStyle>) {
   const s = flatten(styles)
   // should always be defined on these components
   const fontSize = s.fontSize || atoms.text_md.fontSize
 
   if (s?.lineHeight) {
-    if (s.lineHeight <= 2) {
+    if (s.lineHeight !== 0 && s.lineHeight <= 2) {
       s.lineHeight = Math.round(fontSize * s.lineHeight)
     }
-  } else {
-    s.lineHeight = fontSize
+  } else if (!isNative) {
+    s.lineHeight = s.fontSize
   }
 
   return s
@@ -44,27 +53,21 @@ function normalizeTextStyles(styles: TextStyle[]) {
 /**
  * Our main text component. Use this most of the time.
  */
-export function Text({style, ...rest}: TextProps) {
+export function Text({style, selectable, ...rest}: TextProps) {
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
-  return <RNText style={s} {...rest} />
+
+  return <UITextView selectable={selectable} uiTextView style={s} {...rest} />
 }
 
 export function createHeadingElement({level}: {level: number}) {
   return function HeadingElement({style, ...rest}: TextProps) {
-    const t = useTheme()
     const attr =
       web({
         role: 'heading',
         'aria-level': level,
       }) || {}
-    return (
-      <RNText
-        {...attr}
-        {...rest}
-        style={normalizeTextStyles([t.atoms.text, flatten(style)])}
-      />
-    )
+    return <Text {...attr} {...rest} style={style} />
   }
 }
 
@@ -78,21 +81,15 @@ export const H4 = createHeadingElement({level: 4})
 export const H5 = createHeadingElement({level: 5})
 export const H6 = createHeadingElement({level: 6})
 export function P({style, ...rest}: TextProps) {
-  const t = useTheme()
   const attr =
     web({
       role: 'paragraph',
     }) || {}
   return (
-    <RNText
+    <Text
       {...attr}
       {...rest}
-      style={normalizeTextStyles([
-        atoms.text_md,
-        atoms.leading_normal,
-        t.atoms.text,
-        flatten(style),
-      ])}
+      style={[atoms.text_md, atoms.leading_normal, flatten(style)]}
     />
   )
 }

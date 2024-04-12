@@ -1,145 +1,160 @@
-import React, {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ModerationUI} from '@atproto/api'
+import React from 'react'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Image} from 'expo-image'
+import {ModerationUI} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+
+import {usePalette} from 'lib/hooks/usePalette'
+import {
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from 'lib/hooks/usePermissions'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
+import {isAndroid, isNative} from 'platform/detection'
+import {EventStopper} from 'view/com/util/EventStopper'
+import {tokens, useTheme as useAlfTheme} from '#/alf'
 import {
-  usePhotoLibraryPermission,
-  useCameraPermission,
-} from 'lib/hooks/usePermissions'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid} from 'platform/detection'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {NativeDropdown, DropdownItem} from './forms/NativeDropdown'
+  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+  Camera_Stroke2_Corner0_Rounded as Camera,
+} from '#/components/icons/Camera'
+import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import * as Menu from '#/components/Menu'
+import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
 export function UserBanner({
+  type,
   banner,
   moderation,
   onSelectNewBanner,
 }: {
+  type?: 'labeler' | 'default'
   banner?: string | null
   moderation?: ModerationUI
   onSelectNewBanner?: (img: RNImage | null) => void
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
+  const t = useAlfTheme()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
-  const dropdownItems: DropdownItem[] = useMemo(
-    () =>
-      [
-        !isWeb && {
-          testID: 'changeBannerCameraBtn',
-          label: _(msg`Camera`),
-          icon: {
-            ios: {
-              name: 'camera',
-            },
-            android: 'ic_menu_camera',
-            web: 'camera',
-          },
-          onPress: async () => {
-            if (!(await requestCameraAccessIfNeeded())) {
-              return
-            }
-            onSelectNewBanner?.(
-              await openCamera({
-                width: 3000,
-                height: 1000,
-              }),
-            )
-          },
-        },
-        {
-          testID: 'changeBannerLibraryBtn',
-          label: _(msg`Library`),
-          icon: {
-            ios: {
-              name: 'photo.on.rectangle.angled',
-            },
-            android: 'ic_menu_gallery',
-            web: 'gallery',
-          },
-          onPress: async () => {
-            if (!(await requestPhotoAccessIfNeeded())) {
-              return
-            }
-            const items = await openPicker()
-            if (!items[0]) {
-              return
-            }
+  const onOpenCamera = React.useCallback(async () => {
+    if (!(await requestCameraAccessIfNeeded())) {
+      return
+    }
+    onSelectNewBanner?.(
+      await openCamera({
+        width: 3000,
+        height: 1000,
+      }),
+    )
+  }, [onSelectNewBanner, requestCameraAccessIfNeeded])
 
-            onSelectNewBanner?.(
-              await openCropper({
-                mediaType: 'photo',
-                path: items[0].path,
-                width: 3000,
-                height: 1000,
-              }),
-            )
-          },
-        },
-        !!banner && {
-          testID: 'changeBannerRemoveBtn',
-          label: _(msg`Remove`),
-          icon: {
-            ios: {
-              name: 'trash',
-            },
-            android: 'ic_delete',
-            web: ['far', 'trash-can'],
-          },
-          onPress: () => {
-            onSelectNewBanner?.(null)
-          },
-        },
-      ].filter(Boolean) as DropdownItem[],
-    [
-      banner,
-      onSelectNewBanner,
-      requestCameraAccessIfNeeded,
-      requestPhotoAccessIfNeeded,
-      _,
-    ],
-  )
+  const onOpenLibrary = React.useCallback(async () => {
+    if (!(await requestPhotoAccessIfNeeded())) {
+      return
+    }
+    const items = await openPicker()
+    if (!items[0]) {
+      return
+    }
+
+    onSelectNewBanner?.(
+      await openCropper({
+        mediaType: 'photo',
+        path: items[0].path,
+        width: 3000,
+        height: 1000,
+      }),
+    )
+  }, [onSelectNewBanner, requestPhotoAccessIfNeeded])
+
+  const onRemoveBanner = React.useCallback(() => {
+    onSelectNewBanner?.(null)
+  }, [onSelectNewBanner])
 
   // setUserBanner is only passed as prop on the EditProfile component
   return onSelectNewBanner ? (
-    <NativeDropdown
-      testID="changeBannerBtn"
-      items={dropdownItems}
-      accessibilityLabel={_(msg`Image options`)}
-      accessibilityHint="">
-      {banner ? (
-        <Image
-          testID="userBannerImage"
-          style={styles.bannerImage}
-          source={{uri: banner}}
-          accessible={true}
-          accessibilityIgnoresInvertColors
-        />
-      ) : (
-        <View
-          testID="userBannerFallback"
-          style={[styles.bannerImage, styles.defaultBanner]}
-        />
-      )}
-      <View style={[styles.editButtonContainer, pal.btn]}>
-        <FontAwesomeIcon
-          icon="camera"
-          size={12}
-          style={{color: colors.white}}
-          color={pal.text.color as string}
-        />
-      </View>
-    </NativeDropdown>
+    <EventStopper onKeyDown={false}>
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Edit avatar`)}>
+          {({props}) => (
+            <TouchableOpacity
+              {...props}
+              activeOpacity={0.8}
+              testID="changeBannerBtn">
+              {banner ? (
+                <Image
+                  testID="userBannerImage"
+                  style={styles.bannerImage}
+                  source={{uri: banner}}
+                  accessible={true}
+                  accessibilityIgnoresInvertColors
+                />
+              ) : (
+                <View
+                  testID="userBannerFallback"
+                  style={[styles.bannerImage, styles.defaultBanner]}
+                />
+              )}
+              <View style={[styles.editButtonContainer, pal.btn]}>
+                <CameraFilled height={14} width={14} style={t.atoms.text} />
+              </View>
+            </TouchableOpacity>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer showCancel>
+          <Menu.Group>
+            {isNative && (
+              <Menu.Item
+                testID="changeBannerCameraBtn"
+                label={_(msg`Upload from Camera`)}
+                onPress={onOpenCamera}>
+                <Menu.ItemText>
+                  <Trans>Upload from Camera</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Camera} />
+              </Menu.Item>
+            )}
+
+            <Menu.Item
+              testID="changeBannerLibraryBtn"
+              label={_(msg`Upload from Library`)}
+              onPress={onOpenLibrary}>
+              <Menu.ItemText>
+                {isNative ? (
+                  <Trans>Upload from Library</Trans>
+                ) : (
+                  <Trans>Upload from Files</Trans>
+                )}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Library} />
+            </Menu.Item>
+          </Menu.Group>
+          {!!banner && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                <Menu.Item
+                  testID="changeBannerRemoveBtn"
+                  label={_(`Remove Banner`)}
+                  onPress={onRemoveBanner}>
+                  <Menu.ItemText>
+                    <Trans>Remove Banner</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Trash} />
+                </Menu.Item>
+              </Menu.Group>
+            </>
+          )}
+        </Menu.Outer>
+      </Menu.Root>
+    </EventStopper>
   ) : banner &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
@@ -157,7 +172,10 @@ export function UserBanner({
   ) : (
     <View
       testID="userBannerFallback"
-      style={[styles.bannerImage, styles.defaultBanner]}
+      style={[
+        styles.bannerImage,
+        type === 'labeler' ? styles.labelerBanner : styles.defaultBanner,
+      ]}
     />
   )
 }
@@ -180,5 +198,8 @@ const styles = StyleSheet.create({
   },
   defaultBanner: {
     backgroundColor: '#0070ff',
+  },
+  labelerBanner: {
+    backgroundColor: tokens.color.temp_purple,
   },
 })

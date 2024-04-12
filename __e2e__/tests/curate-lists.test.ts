@@ -1,8 +1,9 @@
 /* eslint-env detox/detox */
 
-import {describe, beforeAll, it} from '@jest/globals'
+import {beforeAll, describe, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
+
+import {createServer, loginAsAlice, loginAsBob, openApp, sleep} from '../util'
 
 describe('Curate lists', () => {
   beforeAll(async () => {
@@ -64,7 +65,7 @@ describe('Curate lists', () => {
     await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Library')).tap()
+    await element(by.text('Upload from Library')).tap()
     await sleep(3e3)
     await element(by.id('saveBtn')).tap()
     await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
@@ -81,7 +82,7 @@ describe('Curate lists', () => {
     await element(by.text('Edit list details')).tap()
     await expect(element(by.id('createOrEditListModal'))).toBeVisible()
     await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Remove')).tap()
+    await element(by.text('Remove Avatar')).tap()
     await element(by.id('saveBtn')).tap()
     await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
     await expect(element(by.id('userAvatarFallback'))).toExist()

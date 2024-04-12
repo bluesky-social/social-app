@@ -1,11 +1,12 @@
 import {useCallback} from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {useSessionApi, SessionAccount} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {useCloseAllActiveElements} from '#/state/util'
+import {isWeb} from '#/platform/detection'
+import {SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import * as Toast from '#/view/com/util/Toast'
+import {LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
   const {track} = useAnalytics()
@@ -14,7 +15,10 @@ export function useAccountSwitcher() {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
-    async (account: SessionAccount) => {
+    async (
+      account: SessionAccount,
+      logContext: LogEvents['account:loggedIn']['logContext'],
+    ) => {
       track('Settings:SwitchAccountButtonClicked')
 
       try {
@@ -28,7 +32,7 @@ export function useAccountSwitcher() {
             // So we change the URL ourselves. The navigator will pick it up on remount.
             history.pushState(null, '', '/')
           }
-          await selectAccount(account)
+          await selectAccount(account, logContext)
           setTimeout(() => {
             Toast.show(`Signed in as @${account.handle}`)
           }, 100)
