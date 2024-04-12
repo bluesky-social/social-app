@@ -1,3 +1,5 @@
+import {AtUri} from '@atproto/api'
+
 export function niceDate(date: number | string | Date) {
   const d = new Date(date)
   return `${d.toLocaleDateString('en-us', {
@@ -11,5 +13,6 @@ export function niceDate(date: number | string | Date) {
 }
 
 export function getRkey({uri}: {uri: string}): string {
-  return uri.split('/').pop() as string
+  const at = new AtUri(uri)
+  return at.rkey
 }
