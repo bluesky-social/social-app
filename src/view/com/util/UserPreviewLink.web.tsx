@@ -1,38 +1,32 @@
 import React from 'react'
 import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-
 import {
   AppBskyActorDefs,
+  moderateProfile,
   ModerationOpts,
   RichText as RichTextAPI,
-  moderateProfile,
 } from '@atproto/api'
-
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-
-import {getAgent} from '#/state/session'
-import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
-
-import {formatCount} from './numeric/format'
-import {pluralize} from '#/lib/strings/helpers'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
+import {pluralize} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
-
+import {useModerationOpts} from '#/state/queries/preferences'
+import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
+import {getAgent} from '#/state/session'
 import {Portal} from '#/components/Portal'
 import {Link} from './Link'
-import {UserAvatar} from './UserAvatar'
+import {formatCount} from './numeric/format'
 import {RichText} from './text/RichText'
 import {Text} from './text/Text'
 import {ThemedText} from './text/ThemedText'
+import {UserAvatar} from './UserAvatar'
 
 const floatingMiddlewares = [
   offset(4),
@@ -181,7 +175,7 @@ function Profile({
         <UserAvatar
           size={64}
           avatar={profile.avatar}
-          moderation={moderation.avatar}
+          moderation={moderation.ui('avatar')}
         />
       </View>
 
@@ -189,7 +183,7 @@ function Profile({
         <Text type="xl-medium" style={pal.text}>
           {sanitizeDisplayName(
             profile.displayName || sanitizeHandle(profile.handle),
-            moderation.profile,
+            moderation.ui('displayName'),
           )}
         </Text>
       </View>
@@ -247,17 +241,19 @@ function Profile({
               asAnchor
               accessibilityLabel={_(msg`${following} following`)}
               accessibilityHint={_(msg`Opens following list`)}>
-              <Trans>
-                <Text type="md" style={[s.bold, pal.text]}>
-                  {following}{' '}
-                </Text>
-                <Text type="md" style={pal.textLight}>
-                  following
-                </Text>
-              </Trans>
+              <Text type="md">
+                <Trans>
+                  <Text type="md" style={[s.bold, pal.text]}>
+                    {following}{' '}
+                  </Text>
+                  <Text type="md" style={pal.textLight}>
+                    following
+                  </Text>
+                </Trans>
+              </Text>
             </Link>
           </View>
-          {profile.description?.trim() && !moderation.profile.blur ? (
+          {profile.description?.trim() && !moderation.ui('profileView').blur ? (
             <View style={{marginTop: 8}} pointerEvents="auto">
               <RichText
                 style={pal.text}
