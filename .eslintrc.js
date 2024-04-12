@@ -31,6 +31,7 @@ module.exports = {
         },
       },
     ],
+    'bsky-internal/use-typed-gates': 'error',
     'simple-import-sort/imports': [
       'warn',
       {
