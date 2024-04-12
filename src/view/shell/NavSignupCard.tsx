@@ -3,13 +3,14 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from '#/view/com/util/text/Text'
-import {Button} from '#/view/com/util/forms/Button'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
+import {Link} from '#/components/Link'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
@@ -35,7 +36,9 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         paddingTop: 6,
         marginBottom: 24,
       }}>
-      <Logo width={48} />
+      <Link to="/">
+        <Logo width={48} />
+      </Link>
 
       <View style={{paddingTop: 18}}>
         <Text type="md-bold" style={[pal.text]}>
