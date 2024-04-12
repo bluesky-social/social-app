@@ -1,11 +1,12 @@
 import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedRecord,
 } from '@atproto/api'
-import {ReasonFeedSource} from './feed/types'
+
 import {isPostInLanguage} from '../../locale/helpers'
+import {ReasonFeedSource} from './feed/types'
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (
@@ -341,6 +342,8 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
+      const candidate = slices.slice()
+
       // early return if no languages have been specified
       if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
         return slices
@@ -357,10 +360,15 @@ export class FeedTuner {
 
         // if item does not fit preferred language, remove it
         if (!hasPreferredLang) {
-          slices.splice(i, 1)
+          candidate.splice(i, 1)
         }
       }
-      return slices
+
+      if (candidate.length === 0) {
+        return slices
+      }
+
+      return candidate
     }
   }
 }
