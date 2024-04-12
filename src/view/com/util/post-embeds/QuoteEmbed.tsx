@@ -138,6 +138,10 @@ export function QuoteEmbed({
     }
   }, [quote.embeds])
 
+  const onBeforePress = React.useCallback(() => {
+    queryClient.setQueryData(RQKEY_URI(quote.author.handle), quote.author.did)
+  }, [queryClient, quote.author.did, quote.author.handle])
+
   return (
     <ContentHider modui={moderation?.ui('contentList')}>
       <Link
@@ -145,12 +149,7 @@ export function QuoteEmbed({
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
         title={itemTitle}
-        onBeforePress={() => {
-          queryClient.setQueryData(
-            RQKEY_URI(quote.author.handle),
-            quote.author.did,
-          )
-        }}>
+        onBeforePress={onBeforePress}>
         <View pointerEvents="none">
           <PostMeta
             author={quote.author}
