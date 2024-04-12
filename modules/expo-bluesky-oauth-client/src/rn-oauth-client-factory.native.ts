@@ -11,11 +11,7 @@ import {OAuthClientMetadata} from '@atproto/oauth-client-metadata'
 import IsomorphicOAuthServerMetadataResolver from '@atproto/oauth-server-metadata-resolver'
 
 import {CryptoSubtle} from './crypto-subtle'
-import {
-  DatabaseStore,
-  PopupStateData,
-  RNOAuthDatabase,
-} from './rn-oauth-database'
+import {DatabaseStore, RNOAuthDatabase} from './rn-oauth-database'
 
 export type RNOAuthClientOptions = {
   responseMode?: OAuthResponseMode
@@ -28,7 +24,6 @@ export type RNOAuthClientOptions = {
 const POPUP_KEY_PREFIX = '@@oauth-popup-callback:'
 
 export class RNOAuthClientFactory extends OAuthClientFactory {
-  readonly popupStore: DatabaseStore<PopupStateData>
   readonly sessionStore: DatabaseStore<Session>
 
   constructor({
@@ -36,7 +31,7 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
     // "fragment" is safer as it is not sent to the server
     responseMode = 'fragment',
     responseType,
-    crypto = globalThis.crypto,
+    crypto = {subtle: CryptoSubtle},
     fetch = globalThis.fetch,
   }: RNOAuthClientOptions) {
     const database = new RNOAuthDatabase()
@@ -62,7 +57,6 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
     })
 
     this.sessionStore = database.getSessionStore()
-    this.popupStore = database.getPopupStore()
   }
 
   async restoreAll() {
