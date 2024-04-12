@@ -1,6 +1,5 @@
 import React from 'react'
 import * as Browser from 'expo-web-browser'
-import {BrowserOAuthClientFactory} from '@atproto/oauth-client-react-native'
 
 import {
   buildOAuthUrl,
@@ -12,11 +11,12 @@ import {
   OAUTH_RESPONSE_TYPES,
   OAUTH_SCOPE,
 } from 'lib/oauth'
+import {RNOAuthClientFactory} from '../../../../modules/expo-bluesky-oauth-client'
 
 // Service URL here is just a placeholder, this isn't how it will actually work
 export function useLogin(serviceUrl: string | undefined) {
   const openAuthSession = React.useCallback(async () => {
-    const oauthFactory = new BrowserOAuthClientFactory({
+    const oauthFactory = new RNOAuthClientFactory({
       clientMetadata: {
         client_id: OAUTH_CLIENT_ID,
         redirect_uris: [OAUTH_REDIRECT_URI],
@@ -28,7 +28,7 @@ export function useLogin(serviceUrl: string | undefined) {
       },
     })
 
-    await oauthFactory.signIn('afepwasfojefpaowejfpwef')
+    await oauthFactory.signIn('alice.test')
 
     return
 
