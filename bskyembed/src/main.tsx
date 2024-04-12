@@ -12,16 +12,16 @@ import {getRkey} from './utils'
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-const searchParams = new URLSearchParams(window.location.search)
-
 const agent = new BskyAgent({
   service: 'https://public.api.bsky.app',
 })
 
-const uri = searchParams.get('uri')
+const uri = `at://${window.location.pathname.slice('/embed/'.length)}`
+
+console.log(uri)
 
 if (!uri) {
-  throw new Error('No uri in query string')
+  throw new Error('No uri in path')
 }
 
 agent

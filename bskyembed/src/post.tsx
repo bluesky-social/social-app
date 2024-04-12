@@ -134,7 +134,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
   }
 
   return (
-    <p className="text-lg leading-6 break-word break-words whitespace-pre-wrap">
+    <p className="min-[300px]:text-lg leading-6 break-word break-words whitespace-pre-wrap">
       {richText}
     </p>
   )
