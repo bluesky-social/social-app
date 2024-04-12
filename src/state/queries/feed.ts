@@ -246,7 +246,7 @@ export function usePinnedFeedsInfos() {
     enabled: !isLoadingPrefs,
     queryKey: [
       pinnedFeedInfosQueryKeyRoot,
-      hasSession ? 'authed:' : 'unauthed:' + pinnedUris.join(','),
+      (hasSession ? 'authed:' : 'unauthed:') + pinnedUris.join(','),
     ],
     queryFn: async () => {
       let resolved = new Map()
