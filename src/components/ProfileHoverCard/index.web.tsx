@@ -62,22 +62,25 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const targetHovered = React.useRef(false)
   const cardHovered = React.useRef(false)
   const targetClicked = React.useRef(false)
+  const showTimeout = React.useRef<NodeJS.Timeout>()
 
   const onPointerEnterTarget = React.useCallback(() => {
-    targetHovered.current = true
+    showTimeout.current = setTimeout(async () => {
+      targetHovered.current = true
 
-    if (prefetchedProfile.current) {
-      // if we're navigating
-      if (targetClicked.current) return
-      setHovered(true)
-    } else {
-      prefetchProfileQuery(props.did).then(() => {
+      if (prefetchedProfile.current) {
+        // if we're navigating
+        if (targetClicked.current) return
+        setHovered(true)
+      } else {
+        await prefetchProfileQuery(props.did)
+
         if (targetHovered.current) {
           setHovered(true)
         }
         prefetchedProfile.current = true
-      })
-    }
+      }
+    }, 350)
   }, [props.did, prefetchProfileQuery])
   const onPointerEnterCard = React.useCallback(() => {
     cardHovered.current = true
@@ -86,6 +89,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     setHovered(true)
   }, [])
   const onPointerLeaveTarget = React.useCallback(() => {
+    clearTimeout(showTimeout.current)
     targetHovered.current = false
     setTimeout(() => {
       if (cardHovered.current) return
