@@ -118,8 +118,7 @@ function EmptyState({message, error}: {message: string; error?: string}) {
   )
 }
 
-function SearchScreenSuggestedFollows() {
-  const pal = usePalette('default')
+function useSuggestedFollows() {
   const {currentAccount} = useSession()
   const [suggestions, setSuggestions] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
@@ -161,6 +160,12 @@ function SearchScreenSuggestedFollows() {
       })
     }
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
+  return suggestions
+}
+
+function SearchScreenSuggestedFollows() {
+  const pal = usePalette('default')
+  const suggestions = useSuggestedFollows()
 
   return suggestions.length ? (
     <List
