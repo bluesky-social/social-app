@@ -1,10 +1,10 @@
-import {describe, expect, it} from '@jest/globals'
+import {it, describe, expect} from '@jest/globals'
 
 import {
-  isPossiblyAUrl,
-  isTrustedUrl,
   linkRequiresWarning,
+  isPossiblyAUrl,
   splitApexDomain,
+  isTrustedUrl,
 } from '../../../src/lib/strings/url-helpers'
 
 describe('linkRequiresWarning', () => {

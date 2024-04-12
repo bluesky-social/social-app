@@ -1,19 +1,18 @@
 import {
-  AppBskyEmbedRecord,
+  AppBskyNotificationListNotifications,
+  ModerationOpts,
+  moderateNotification,
   AppBskyFeedDefs,
-  AppBskyFeedLike,
   AppBskyFeedPost,
   AppBskyFeedRepost,
-  AppBskyNotificationListNotifications,
-  moderateNotification,
-  ModerationOpts,
+  AppBskyFeedLike,
+  AppBskyEmbedRecord,
 } from '@atproto/api'
-import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
-
+import {QueryClient} from '@tanstack/react-query'
 import {getAgent} from '../../session'
 import {precacheProfile} from '../profile'
-import {FeedNotification, FeedPage, NotificationType} from './types'
+import {NotificationType, FeedNotification, FeedPage} from './types'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const MS_1HR = 1e3 * 60 * 60

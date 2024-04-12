@@ -1,4 +1,4 @@
-import {BSKY_LABELER_DID, moderatePost} from '@atproto/api'
+import {moderatePost, BSKY_LABELER_DID} from '@atproto/api'
 
 type ModeratePost = typeof moderatePost
 type Options = Parameters<ModeratePost>[1]

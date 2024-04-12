@@ -1,9 +1,8 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {makeAutoObservable, runInAction} from 'mobx'
-
-import {getImageDim} from 'lib/media/manip'
-import {openPicker} from 'lib/media/picker'
 import {ImageModel} from './image'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+import {openPicker} from 'lib/media/picker'
+import {getImageDim} from 'lib/media/manip'
 
 interface InitialImageUri {
   uri: string

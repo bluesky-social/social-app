@@ -1,7 +1,6 @@
+import * as Updates from 'expo-updates'
 import {useCallback, useEffect} from 'react'
 import {AppState} from 'react-native'
-import * as Updates from 'expo-updates'
-
 import {logger} from '#/logger'
 
 export function useOTAUpdate() {

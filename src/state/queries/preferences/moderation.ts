@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  BskyAgent,
   DEFAULT_LABEL_SETTINGS,
+  BskyAgent,
   interpretLabelValueDefinitions,
 } from '@atproto/api'
 
-import {useLabelersDetailedInfoQuery} from '../labeler'
 import {usePreferencesQuery} from './index'
+import {useLabelersDetailedInfoQuery} from '../labeler'
 
 /**
  * More strict than our default settings for logged in users.

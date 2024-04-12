@@ -1,5 +1,4 @@
 import {Dimensions} from 'react-native'
-
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 

@@ -1,8 +1,8 @@
-import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
-  ThreadViewPreferences,
   UsePreferencesQueryResponse,
+  ThreadViewPreferences,
 } from '#/state/queries/preferences/types'
+import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 
 export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
   {

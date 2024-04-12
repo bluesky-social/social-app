@@ -1,9 +1,8 @@
 /* eslint-env detox/detox */
 
-import {beforeAll, describe, it} from '@jest/globals'
+import {describe, beforeAll, it} from '@jest/globals'
 import {expect} from 'detox'
-
-import {createServer, loginAsAlice, loginAsBob, openApp, sleep} from '../util'
+import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
 
 describe('Curate lists', () => {
   beforeAll(async () => {

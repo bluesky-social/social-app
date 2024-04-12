@@ -1,6 +1,6 @@
 import {
-  AppBskyEmbedExternal,
   AppBskyEmbedImages,
+  AppBskyEmbedExternal,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedThreadgate,
@@ -11,14 +11,13 @@ import {
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-
-import {logger} from '#/logger'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {isNetworkError} from 'lib/strings/errors'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {LinkMeta} from '../link-meta/link-meta'
 import {isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
-import {LinkMeta} from '../link-meta/link-meta'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {logger} from '#/logger'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
 
 export interface ExternalEmbedDraft {
   uri: string

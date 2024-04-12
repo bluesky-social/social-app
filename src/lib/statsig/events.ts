@@ -99,7 +99,6 @@ export type LogEvents = {
       | 'ProfileHeader'
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
-      | 'ProfileHoverCard'
   }
   'profile:unfollow': {
     logContext:
@@ -109,6 +108,5 @@ export type LogEvents = {
       | 'ProfileHeader'
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
-      | 'ProfileHoverCard'
   }
 }

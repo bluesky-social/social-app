@@ -90,8 +90,8 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
 export function usePrefetchProfileQuery() {
   const queryClient = useQueryClient()
   const prefetchProfileQuery = useCallback(
-    async (did: string) => {
-      await queryClient.prefetchQuery({
+    (did: string) => {
+      queryClient.prefetchQuery({
         queryKey: RQKEY(did),
         queryFn: async () => {
           const res = await getAgent().getProfile({actor: did || ''})
