@@ -43,7 +43,8 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Sign into Bluesky or create a new account`)}>
+      label={_(msg`Sign into Bluesky or create a new account`)}
+      style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
       <View>
         <View
           style={[
@@ -65,19 +66,13 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
           </Trans>
         </Text>
 
-        <View
-          style={
-            gtMobile
-              ? [a.flex_row, a.gap_md, a.justify_center]
-              : [a.flex_col, a.gap_md]
-          }>
+        <View style={[a.flex_col, a.gap_md]}>
           <Button
             variant="solid"
             color="primary"
             size="large"
             onPress={showCreateAccount}
-            label={_(msg`Create an account`)}
-            style={gtMobile ? [a.flex_1] : []}>
+            label={_(msg`Create an account`)}>
             <ButtonText>
               <Trans>Create an account</Trans>
             </ButtonText>
@@ -88,8 +83,7 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             color="secondary"
             size="large"
             onPress={showSignIn}
-            label={_(msg`Sign in`)}
-            style={gtMobile ? [a.flex_1] : []}>
+            label={_(msg`Sign in`)}>
             <ButtonText>
               <Trans>Sign in</Trans>
             </ButtonText>
