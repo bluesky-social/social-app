@@ -1,20 +1,19 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-
-import {useSetDrawerOpen} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {CenteredView} from './Views'
+import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import Animated from 'react-native-reanimated'
+import {useSetDrawerOpen} from '#/state/shell'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useTheme} from '#/alf'
-import {Text} from './text/Text'
-import {CenteredView} from './Views'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 

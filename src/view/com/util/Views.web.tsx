@@ -20,11 +20,10 @@ import {
   View,
   ViewProps,
 } from 'react-native'
-import Animated from 'react-native-reanimated'
-
+import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {addStyle} from 'lib/styles'
+import Animated from 'react-native-reanimated'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number

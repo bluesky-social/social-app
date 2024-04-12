@@ -6,23 +6,22 @@ import {
   ModerationCause,
   ModerationDecision,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
-
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {Shadow} from '#/state/cache/types'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
-import {makeProfileLink} from 'lib/routes/links'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {s} from 'lib/styles'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 import {FollowButton} from './FollowButton'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {makeProfileLink} from 'lib/routes/links'
+import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
+import {Shadow} from '#/state/cache/types'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useSession} from '#/state/session'
+import {Trans} from '@lingui/macro'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
 export function ProfileCard({
   testID,
