@@ -1,13 +1,13 @@
 import React from 'react'
 import {
-  AccessibilityProps,
   GestureResponderEvent,
   PressableProps,
+  AccessibilityProps,
 } from 'react-native'
 
-import {TextStyleProp, ViewStyleProp} from '#/alf'
-import * as Dialog from '#/components/Dialog'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import * as Dialog from '#/components/Dialog'
+import {TextStyleProp, ViewStyleProp} from '#/alf'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']

@@ -7,8 +7,9 @@
  */
 
 import React, {useState} from 'react'
+
 import {Dimensions, StyleSheet} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {Image} from 'expo-image'
 import Animated, {
   interpolate,
   runOnJS,
@@ -16,11 +17,12 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
-
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+
 import useImageDimensions from '../../hooks/useImageDimensions'
+
+import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 import {ImageLoading} from './ImageLoading'
 
 const SWIPE_CLOSE_OFFSET = 75

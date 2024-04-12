@@ -1,17 +1,16 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-
-import {useSession} from '#/state/session'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s} from 'lib/styles'
-import {TextLink} from 'view/com/util/Link'
-import {Text} from 'view/com/util/text/Text'
-import {DesktopFeeds} from './Feeds'
 import {DesktopSearch} from './Search'
+import {DesktopFeeds} from './Feeds'
+import {Text} from 'view/com/util/text/Text'
+import {TextLink} from 'view/com/util/Link'
+import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
+import {s} from 'lib/styles'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {useSession} from '#/state/session'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')

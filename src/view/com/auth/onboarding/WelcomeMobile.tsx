@@ -1,14 +1,13 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Button} from 'view/com/util/forms/Button'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 type Props = {
   next: () => void

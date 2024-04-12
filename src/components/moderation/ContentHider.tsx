@@ -1,19 +1,20 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
-import {isJustAMute} from '#/lib/moderation'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {isJustAMute} from '#/lib/moderation'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+
+import {atoms as a, useTheme, useBreakpoints, web} from '#/alf'
 import {Button} from '#/components/Button'
+import {Text} from '#/components/Typography'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
-import {Text} from '#/components/Typography'
 
 export function ContentHider({
   testID,

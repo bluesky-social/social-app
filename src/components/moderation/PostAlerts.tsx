@@ -1,11 +1,12 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationCause, ModerationUI} from '@atproto/api'
+import {ModerationUI, ModerationCause} from '@atproto/api'
 
-import {getModerationCauseKey} from '#/lib/moderation'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {getModerationCauseKey} from '#/lib/moderation'
+
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,

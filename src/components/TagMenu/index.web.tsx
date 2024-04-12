@@ -3,16 +3,16 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {enforceLen} from '#/lib/strings/helpers'
-import {
-  usePreferencesQuery,
-  useRemoveMutedWordMutation,
-  useUpsertMutedWordsMutation,
-} from '#/state/queries/preferences'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
+import {NavigationProp} from '#/lib/routes/types'
+import {
+  usePreferencesQuery,
+  useUpsertMutedWordsMutation,
+  useRemoveMutedWordMutation,
+} from '#/state/queries/preferences'
+import {enforceLen} from '#/lib/strings/helpers'
 import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 

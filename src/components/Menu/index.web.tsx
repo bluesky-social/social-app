@@ -1,26 +1,27 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
-import {atoms as a, flatten, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context} from '#/components/Menu/context'
+import {atoms as a, useTheme, flatten, web} from '#/alf'
+import {Text} from '#/components/Typography'
+
 import {
   ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  RadixPassThroughTriggerProps,
   TriggerProps,
+  ItemProps,
+  GroupProps,
+  ItemTextProps,
+  ItemIconProps,
+  RadixPassThroughTriggerProps,
 } from '#/components/Menu/types'
+import {Context} from '#/components/Menu/context'
 import {Portal} from '#/components/Portal'
-import {Text} from '#/components/Typography'
 
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = React.useId()

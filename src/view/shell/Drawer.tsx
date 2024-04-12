@@ -9,49 +9,49 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {useNavigation, StackActions} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {StackActions, useNavigation} from '@react-navigation/native'
-
-import {emitSoftReset} from '#/state/events'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useProfileQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession} from '#/state/session'
-import {useSetDrawerOpen} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
+import {s, colors} from 'lib/styles'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
-import {usePalette} from 'lib/hooks/usePalette'
 import {
-  BellIcon,
-  BellIconSolid,
-  CogIcon,
-  HandIcon,
-  HashtagIcon,
   HomeIcon,
   HomeIconSolid,
-  ListIcon,
+  BellIcon,
+  BellIconSolid,
+  UserIcon,
+  CogIcon,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  UserIcon,
   UserIconSolid,
+  HashtagIcon,
+  ListIcon,
+  HandIcon,
 } from 'lib/icons'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {Text} from 'view/com/util/text/Text'
+import {useTheme} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {pluralize} from 'lib/strings/helpers'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
-import {colors, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
-import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {formatCountShortOnly} from 'view/com/util/numeric/format'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useTheme as useAlfTheme} from '#/alf'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useSetDrawerOpen} from '#/state/shell'
+import {useSession, SessionAccount} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {emitSoftReset} from '#/state/events'
+import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {TextLink} from '../com/util/Link'
+
+import {useTheme as useAlfTheme} from '#/alf'
 
 let DrawerProfileCard = ({
   account,

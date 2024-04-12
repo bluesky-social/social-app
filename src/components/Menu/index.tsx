@@ -1,24 +1,25 @@
 import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isNative} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Text} from '#/components/Typography'
+
 import {Context} from '#/components/Menu/context'
 import {
   ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
   TriggerProps,
+  ItemProps,
+  GroupProps,
+  ItemTextProps,
+  ItemIconProps,
 } from '#/components/Menu/types'
-import {Text} from '#/components/Typography'
+import {Button, ButtonText} from '#/components/Button'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {isNative} from 'platform/detection'
 
 export {useDialogControl as useMenuControl} from '#/components/Dialog'
 
