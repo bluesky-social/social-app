@@ -283,29 +283,33 @@ let PostDropdownBtn = ({
             </>
           )}
 
-          <Menu.Divider />
+          {hasSession && (
+            <>
+              <Menu.Divider />
 
-          <Menu.Group>
-            {!isAuthor && (
-              <Menu.Item
-                testID="postDropdownReportBtn"
-                label={_(msg`Report post`)}
-                onPress={() => reportDialogControl.open()}>
-                <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={Warning} position="right" />
-              </Menu.Item>
-            )}
+              <Menu.Group>
+                {!isAuthor && (
+                  <Menu.Item
+                    testID="postDropdownReportBtn"
+                    label={_(msg`Report post`)}
+                    onPress={() => reportDialogControl.open()}>
+                    <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Warning} position="right" />
+                  </Menu.Item>
+                )}
 
-            {isAuthor && (
-              <Menu.Item
-                testID="postDropdownDeleteBtn"
-                label={_(msg`Delete post`)}
-                onPress={deletePromptControl.open}>
-                <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={Trash} position="right" />
-              </Menu.Item>
-            )}
-          </Menu.Group>
+                {isAuthor && (
+                  <Menu.Item
+                    testID="postDropdownDeleteBtn"
+                    label={_(msg`Delete post`)}
+                    onPress={deletePromptControl.open}>
+                    <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Trash} position="right" />
+                  </Menu.Item>
+                )}
+              </Menu.Group>
+            </>
+          )}
         </Menu.Outer>
       </Menu.Root>
 
