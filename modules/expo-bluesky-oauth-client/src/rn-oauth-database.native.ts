@@ -66,7 +66,7 @@ const STORES = [
   'metadataCache',
 ] as const
 
-export class BrowserOAuthDatabase {
+export class RNOAuthDatabase {
   async delete(key: string) {
     await Storage.removeItem(key)
   }

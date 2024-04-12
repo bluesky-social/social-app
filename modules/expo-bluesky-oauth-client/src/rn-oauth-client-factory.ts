@@ -27,7 +27,7 @@ export type BrowserOauthClientFactoryOptions = {
 
 const POPUP_KEY_PREFIX = '@@oauth-popup-callback:'
 
-export class BrowserOAuthClientFactory extends OAuthClientFactory {
+export class RNOAuthClientFactory extends OAuthClientFactory {
   readonly popupStore: DatabaseStore<PopupStateData>
   readonly sessionStore: DatabaseStore<Session>
 
