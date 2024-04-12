@@ -2,5 +2,5 @@ package bskyweb
 
 import "embed"
 
-//go:embed all:static/*
+//go:embed static/*
 var StaticFS embed.FS
