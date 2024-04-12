@@ -90,6 +90,9 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
   const onClickTarget = React.useCallback(() => {
     setHovered(false)
   }, [])
+  const hide = React.useCallback(() => {
+    setHovered(false)
+  }, [])
 
   return (
     <div
@@ -109,7 +112,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
               style={floatingStyles}
               onPointerEnter={onPointerEnterCard}
               onPointerLeave={onPointerLeaveCard}>
-              <Card did={props.did} />
+              <Card did={props.did} hide={hide} />
             </div>
           </Animated.View>
         </Portal>
@@ -118,7 +121,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
   )
 }
 
-function Card({did}: {did: string}) {
+function Card({did, hide}: {did: string; hide: () => void}) {
   const t = useTheme()
 
   const profile = useProfileQuery({did})
@@ -141,7 +144,7 @@ function Card({did}: {did: string}) {
         },
       ]}>
       {data && moderationOpts ? (
-        <Inner profile={data} moderationOpts={moderationOpts} />
+        <Inner profile={data} moderationOpts={moderationOpts} hide={hide} />
       ) : (
         <View style={[a.justify_center]}>
           <Loader size="xl" />
@@ -154,9 +157,11 @@ function Card({did}: {did: string}) {
 function Inner({
   profile,
   moderationOpts,
+  hide,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
+  hide: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -182,7 +187,7 @@ function Inner({
   return (
     <View>
       <View style={[a.flex_row, a.justify_between, a.align_start]}>
-        <Link to={profileURL} label={_(msg`View profile`)}>
+        <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
           <UserAvatar
             size={64}
             avatar={profile.avatar}
@@ -207,7 +212,7 @@ function Inner({
         </Button>
       </View>
 
-      <Link to={profileURL} label={_(msg`View profile`)}>
+      <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
         <View style={[a.pb_sm, a.flex_1]}>
           <Text style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold]}>
             {sanitizeDisplayName(
@@ -226,7 +231,8 @@ function Inner({
             <InlineLinkText
               to={makeProfileLink(profile, 'followers')}
               label={`${followers} ${pluralizedFollowers}`}
-              style={[t.atoms.text]}>
+              style={[t.atoms.text]}
+              onPress={hide}>
               <Trans>
                 <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
                 <Text>{pluralizedFollowers}</Text>
@@ -235,7 +241,8 @@ function Inner({
             <InlineLinkText
               to={makeProfileLink(profile, 'follows')}
               label={_(msg`${following} following`)}
-              style={[t.atoms.text]}>
+              style={[t.atoms.text]}
+              onPress={hide}>
               <Trans>
                 <Text style={[a.text_md, a.font_bold]}>{following} </Text>
                 <Text>following</Text>
@@ -245,7 +252,11 @@ function Inner({
 
           {profile.description?.trim() && !moderation.ui('profileView').blur ? (
             <View style={[a.pt_md]}>
-              <RichText numberOfLines={8} value={descriptionRT} />
+              <RichText
+                numberOfLines={8}
+                value={descriptionRT}
+                onLinkPress={hide}
+              />
             </View>
           ) : undefined}
         </>
