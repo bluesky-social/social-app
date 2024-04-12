@@ -13,8 +13,10 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {Trans} from '@lingui/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/queries/preferences'
+import {RQKEY as RQKEY_URI} from '#/state/queries/resolve-uri'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
@@ -108,6 +110,7 @@ export function QuoteEmbed({
   moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
@@ -135,13 +138,18 @@ export function QuoteEmbed({
     }
   }, [quote.embeds])
 
+  const onBeforePress = React.useCallback(() => {
+    queryClient.setQueryData(RQKEY_URI(quote.author.handle), quote.author.did)
+  }, [queryClient, quote.author.did, quote.author.handle])
+
   return (
     <ContentHider modui={moderation?.ui('contentList')}>
       <Link
         style={[styles.container, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
-        title={itemTitle}>
+        title={itemTitle}
+        onBeforePress={onBeforePress}>
         <View pointerEvents="none">
           <PostMeta
             author={quote.author}
