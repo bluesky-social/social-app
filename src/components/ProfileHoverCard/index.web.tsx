@@ -45,25 +45,55 @@ const floatingMiddlewares = [
 ]
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
-  const prefetchProfileQuery = usePrefetchProfileQuery()
   const [hovered, setHovered] = React.useState(false)
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
   })
-  const onPointerEnter = React.useCallback(() => {
-    prefetchProfileQuery(props.did)
+  const prefetchProfileQuery = usePrefetchProfileQuery()
+
+  const prefetchedProfile = React.useRef(false)
+  const targetHovered = React.useRef(false)
+  const cardHovered = React.useRef(false)
+
+  const onPointerEnterTarget = React.useCallback(() => {
+    targetHovered.current = true
+
+    if (prefetchedProfile.current) {
+      setHovered(true)
+    } else {
+      prefetchProfileQuery(props.did).then(() => {
+        if (targetHovered.current) {
+          setHovered(true)
+        }
+        prefetchedProfile.current = true
+      })
+    }
+  }, [props.did, prefetchProfileQuery])
+  const onPointerEnterCard = React.useCallback(() => {
+    cardHovered.current = true
     setHovered(true)
-  }, [props.did, prefetchProfileQuery, setHovered])
-  const onPointerLeave = React.useCallback(() => {
-    setHovered(false)
+  }, [])
+  const onPointerLeaveTarget = React.useCallback(() => {
+    targetHovered.current = false
+    setTimeout(() => {
+      if (cardHovered.current) return
+      setHovered(false)
+    }, 100)
+  }, [])
+  const onPointerLeaveCard = React.useCallback(() => {
+    cardHovered.current = false
+    setTimeout(() => {
+      if (targetHovered.current) return
+      setHovered(false)
+    }, 100)
   }, [])
 
   return (
     <div
       ref={refs.setReference}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
-      onClick={onPointerLeave}>
+      onPointerEnter={onPointerEnterTarget}
+      onPointerLeave={onPointerLeaveTarget}
+      onClick={onPointerLeaveTarget}>
       {props.children}
 
       {hovered && (
@@ -74,8 +104,8 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
             <div
               ref={refs.setFloating}
               style={floatingStyles}
-              onPointerEnter={onPointerEnter}
-              onPointerLeave={onPointerLeave}>
+              onPointerEnter={onPointerEnterCard}
+              onPointerLeave={onPointerLeaveCard}>
               <Card did={props.did} />
             </div>
           </Animated.View>
