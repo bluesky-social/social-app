@@ -67,6 +67,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     targetHovered.current = true
 
     if (prefetchedProfile.current) {
+      // if we're navigating
+      if (targetClicked.current) return
       setHovered(true)
     } else {
       prefetchProfileQuery(props.did).then(() => {
@@ -79,6 +81,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   }, [props.did, prefetchProfileQuery])
   const onPointerEnterCard = React.useCallback(() => {
     cardHovered.current = true
+    // if we're navigating
     if (targetClicked.current) return
     setHovered(true)
   }, [])
