@@ -20,10 +20,9 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {clearLegacyStorage} from '#/state/persisted/legacy'
-// TODO import {useInviteCodesQuery} from '#/state/queries/invites'
 import {clear as clearStorage} from '#/state/persisted/store'
 import {
   useRequireAltTextEnabled,
@@ -57,6 +56,10 @@ import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
+import {
+  useHapticsDisabled,
+  useSetHapticsDisabled,
+} from 'state/preferences/disable-haptics'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
@@ -155,6 +158,8 @@ export function SettingsScreen({}: Props) {
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
+  const isHapticsDisabled = useHapticsDisabled()
+  const setHapticsDisabled = useSetHapticsDisabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -162,9 +167,6 @@ export function SettingsScreen({}: Props) {
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
-  // TODO
-  // const {data: invites} = useInviteCodesQuery()
-  // const invitesAvailable = invites?.available?.length ?? 0
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
@@ -219,13 +221,6 @@ export function SettingsScreen({}: Props) {
   const onPressExportRepository = React.useCallback(() => {
     exportCarControl.open()
   }, [exportCarControl])
-
-  /* TODO
-  const onPressInviteCodes = React.useCallback(() => {
-    track('Settings:InvitecodesButtonClicked')
-    openModal({name: 'invite-codes'})
-  }, [track, openModal])
- */
 
   const onPressLanguageSettings = React.useCallback(() => {
     navigation.navigate('LanguageSettings')
@@ -413,58 +408,6 @@ export function SettingsScreen({}: Props) {
         </TouchableOpacity>
 
         <View style={styles.spacer20} />
-
-        {/* TODO (
-          <>
-            <Text type="xl-bold" style={[pal.text, styles.heading]}>
-              <Trans>Invite a Friend</Trans>
-            </Text>
-
-            <TouchableOpacity
-              testID="inviteFriendBtn"
-              style={[
-                styles.linkCard,
-                pal.view,
-                isSwitchingAccounts && styles.dimmed,
-              ]}
-              onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Invite`)}
-              accessibilityHint={_(msg`Opens invite code list`)}
-              disabled={invites?.disabled}>
-              <View
-                style={[
-                  styles.iconContainer,
-                  invitesAvailable > 0 ? primaryBg : pal.btn,
-                ]}>
-                <FontAwesomeIcon
-                  icon="ticket"
-                  style={
-                    (invitesAvailable > 0
-                      ? primaryText
-                      : pal.text) as FontAwesomeIconStyle
-                  }
-                />
-              </View>
-              <Text
-                type="lg"
-                style={invitesAvailable > 0 ? pal.link : pal.text}>
-                {invites?.disabled ? (
-                  <Trans>
-                    Your invite codes are hidden when logged in using an App
-                    Password
-                  </Trans>
-                ) : invitesAvailable === 1 ? (
-                  <Trans>{invitesAvailable} invite code available</Trans>
-                ) : (
-                  <Trans>{invitesAvailable} invite codes available</Trans>
-                )}
-              </Text>
-            </TouchableOpacity>
-
-            <View style={styles.spacer20} />
-          </>
-        )*/}
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Accessibility</Trans>
@@ -735,6 +678,19 @@ export function SettingsScreen({}: Props) {
               labelType="lg"
               isSelected={inAppBrowserPref ?? false}
               onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
+            />
+          </View>
+        )}
+        {isNative && (
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label={
+                isIOS ? _(msg`Disable haptics`) : _(msg`Disable vibrations`)
+              }
+              labelType="lg"
+              isSelected={isHapticsDisabled}
+              onPress={() => setHapticsDisabled(!isHapticsDisabled)}
             />
           </View>
         )}

@@ -10,7 +10,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Haptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
 import {pluralize} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
@@ -21,6 +20,7 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useHaptics} from 'lib/haptics'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
@@ -64,6 +64,7 @@ let ProfileHeaderLabeler = ({
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
+  const playHaptic = useHaptics()
   const cantSubscribePrompt = Prompt.usePromptControl()
   const isSelf = currentAccount?.did === profile.did
 
@@ -93,7 +94,7 @@ let ProfileHeaderLabeler = ({
       return
     }
     try {
-      Haptics.default()
+      playHaptic()
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
@@ -114,7 +115,7 @@ let ProfileHeaderLabeler = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, likeUri, likeMod, unlikeMod, track, _])
+  }, [labeler, playHaptic, likeUri, unlikeMod, track, likeMod, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
