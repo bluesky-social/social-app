@@ -107,7 +107,7 @@ export function useOTAUpdates() {
     ranInitialCheck.current = true
   }, [onIsTestFlight, setCheckTimeout, shouldReceiveUpdates])
 
-  // After the app has been minimized for 30 minutes, we want to either A. install an update if one has become available
+  // After the app has been minimized for 15 minutes, we want to either A. install an update if one has become available
   // or B check for an update again.
   React.useEffect(() => {
     if (!isEnabled) return
