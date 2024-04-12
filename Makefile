@@ -12,6 +12,7 @@ help: ## Print info about all commands
 build-web: ## Compile web bundle, copy to bskyweb directory
 	yarn intl:build
 	yarn build-web
+	yarn build-embed
 
 .PHONY: test
 test: ## Run all tests
