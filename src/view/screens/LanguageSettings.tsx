@@ -1,28 +1,27 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
+import {Text} from '../com/util/text/Text'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
+import {Button} from 'view/com/util/forms/Button'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
-
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {APP_LANGUAGES, LANGUAGES} from 'lib/../locale/languages'
+import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {APP_LANGUAGES, LANGUAGES} from 'lib/../locale/languages'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {Button} from 'view/com/util/forms/Button'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
-import {Text} from '../com/util/text/Text'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 

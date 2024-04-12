@@ -1,10 +1,9 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-
-import {logger} from '#/logger'
 import {ErrorScreen} from './error/ErrorScreen'
 import {CenteredView} from './Views'
+import {msg} from '@lingui/macro'
+import {logger} from '#/logger'
+import {useLingui} from '@lingui/react'
 
 interface Props {
   children?: ReactNode

@@ -5,33 +5,32 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {ScrollView} from 'react-native-gesture-handler'
+import {Text} from '../com/util/text/Text'
+import {Button} from '../com/util/forms/Button'
+import * as Toast from '../com/util/Toast'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-
-import {cleanError} from '#/lib/strings/errors'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useFocusEffect} from '@react-navigation/native'
+import {ViewHeader} from '../com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs} from '#/state/preferences'
 import {
-  useAppPasswordDeleteMutation,
   useAppPasswordsQuery,
+  useAppPasswordDeleteMutation,
 } from '#/state/queries/app-passwords'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {CenteredView} from 'view/com/util/Views'
-import {useDialogControl} from '#/components/Dialog'
-import * as Prompt from '#/components/Prompt'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {Button} from '../com/util/forms/Button'
-import {Text} from '../com/util/text/Text'
-import * as Toast from '../com/util/Toast'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {cleanError} from '#/lib/strings/errors'
+import * as Prompt from '#/components/Prompt'
+import {useDialogControl} from '#/components/Dialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {

@@ -6,11 +6,11 @@ import {
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-
-import {usePalette} from 'lib/hooks/usePalette'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
+import {usePalette} from 'lib/hooks/usePalette'
+
 import {ProfileHeaderStandard} from './ProfileHeaderStandard'
+import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')

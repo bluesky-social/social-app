@@ -1,6 +1,11 @@
 import React, {useMemo} from 'react'
 import {StyleSheet} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationOpts,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -13,7 +18,7 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useSession} from '#/state/session'
+import {getAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -29,7 +34,6 @@ import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {useRichText} from '#/components/hooks/useRichText'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
@@ -480,6 +484,35 @@ function ProfileScreenLoaded({
       )}
     </ScreenHider>
   )
+}
+
+function useRichText(text: string): [RichTextAPI, boolean] {
+  const [prevText, setPrevText] = React.useState(text)
+  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  if (text !== prevText) {
+    setPrevText(text)
+    setRawRT(new RichTextAPI({text}))
+    setResolvedRT(null)
+    // This will queue an immediate re-render
+  }
+  React.useEffect(() => {
+    let ignore = false
+    async function resolveRTFacets() {
+      // new each time
+      const resolvedRT = new RichTextAPI({text})
+      await resolvedRT.detectFacets(getAgent())
+      if (!ignore) {
+        setResolvedRT(resolvedRT)
+      }
+    }
+    resolveRTFacets()
+    return () => {
+      ignore = true
+    }
+  }, [text])
+  const isResolving = resolvedRT === null
+  return [resolvedRT ?? rawRT, isResolving]
 }
 
 const styles = StyleSheet.create({

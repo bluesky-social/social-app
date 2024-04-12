@@ -1,10 +1,10 @@
 import React, {
-  ComponentProps,
   forwardRef,
   useCallback,
-  useMemo,
   useRef,
+  useMemo,
   useState,
+  ComponentProps,
 } from 'react'
 import {
   NativeSyntheticEvent,
@@ -13,23 +13,22 @@ import {
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import isEqual from 'lodash.isequal'
-
-import {POST_IMG_MAX} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {downloadAndResize} from 'lib/media/manip'
-import {isUriImage} from 'lib/media/util'
+import {Autocomplete} from './mobile/Autocomplete'
+import {Text} from 'view/com/util/text/Text'
 import {cleanError} from 'lib/strings/errors'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
+import {isUriImage} from 'lib/media/util'
+import {downloadAndResize} from 'lib/media/manip'
+import {POST_IMG_MAX} from 'lib/constants'
 import {isIOS} from 'platform/detection'
-import {Text} from 'view/com/util/text/Text'
-import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
   focus: () => void

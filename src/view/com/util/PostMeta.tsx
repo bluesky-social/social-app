@@ -1,19 +1,18 @@
 import React, {memo} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
-
-import {usePrefetchProfileQuery} from '#/state/queries/profile'
+import {Text} from './text/Text'
+import {TextLinkOnWebOnly} from './Link'
+import {niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
+import {TypographyVariant} from 'lib/ThemeContext'
+import {UserAvatar} from './UserAvatar'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {niceDate} from 'lib/strings/time'
-import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
-import {TextLinkOnWebOnly} from './Link'
-import {Text} from './text/Text'
 import {TimeElapsed} from './TimeElapsed'
-import {UserAvatar} from './UserAvatar'
+import {makeProfileLink} from 'lib/routes/links'
+import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
+import {usePrefetchProfileQuery} from '#/state/queries/profile'
 
 interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic

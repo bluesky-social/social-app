@@ -1,35 +1,34 @@
 import React, {useCallback} from 'react'
 import {
-  InteractionManager,
-  StyleProp,
   StyleSheet,
-  Text,
+  StyleProp,
   View,
   ViewStyle,
+  Text,
+  InteractionManager,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
-  AppBskyEmbedExternal,
   AppBskyEmbedImages,
+  AppBskyEmbedExternal,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   ModerationDecision,
 } from '@atproto/api'
-
-import {shareUrl} from '#/lib/sharing'
-import {isNative} from '#/platform/detection'
-import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {Link} from '../Link'
+import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
+import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
+import {MaybeQuoteEmbed} from './QuoteEmbed'
+import {AutoSizedImage} from '../images/AutoSizedImage'
+import {ListEmbed} from './ListEmbed'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {AutoSizedImage} from '../images/AutoSizedImage'
-import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {Link} from '../Link'
-import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {ListEmbed} from './ListEmbed'
-import {MaybeQuoteEmbed} from './QuoteEmbed'
+import {isNative} from '#/platform/detection'
+import {shareUrl} from '#/lib/sharing'
 
 type Embed =
   | AppBskyEmbedRecord.View

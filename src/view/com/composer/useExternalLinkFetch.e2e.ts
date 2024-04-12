@@ -1,9 +1,8 @@
-import {useEffect, useState} from 'react'
-
-import {getAgent} from '#/state/session'
+import {useState, useEffect} from 'react'
 import * as apilib from 'lib/api/index'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
 import {ComposerOpts} from 'state/shell/composer'
+import {getAgent} from '#/state/session'
 
 export function useExternalLinkFetch({}: {
   setQuote: (opts: ComposerOpts['quote']) => void
