@@ -3,6 +3,7 @@ test-coverage.out
 
 # Don't check in the binary.
 /bskyweb
+/embedr
 
 # Don't accidentally commit JS-generated code
 static/js/*.js
