@@ -109,11 +109,12 @@ export function QuoteEmbed({
   moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
-  useAddDidToCache(quote.author.handle, quote.author.did)
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
+
+  useAddDidToCache(quote.author.handle, quote.author.did)
 
   const richText = React.useMemo(
     () =>
