@@ -1622,7 +1622,7 @@ msgstr "Posa un nom a aquesta contrasenya d'aplicació"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:139
 msgid "Enter a password"
-msgstr "Posa una contrasenya"
+msgstr "Introdueix una contrasenya"
 
 #: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
@@ -6029,7 +6029,7 @@ msgstr "Encara no has silenciat cap paraula ni etiqueta"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "Pots apel·lar aquestes etiquetes si creus que s'han col·locat per error,"
+msgstr "Pots apel·lar aquestes etiquetes si creus que s'han col·locat per error."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
