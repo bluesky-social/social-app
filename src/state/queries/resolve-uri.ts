@@ -49,3 +49,13 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     enabled: !!didOrHandle,
   })
 }
+
+export function useAddDidToCache(handle: string, did: string) {
+  return useQuery<string, Error>({
+    staleTime: STALE.HOURS.ONE,
+    queryKey: RQKEY(handle),
+    queryFn: async () => {
+      return did
+    },
+  })
+}

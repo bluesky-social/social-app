@@ -1,31 +1,33 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyEmbedRecord,
-  AppBskyFeedPost,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
   AppBskyEmbedExternal,
-  RichText as RichTextAPI,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
   moderatePost,
   ModerationDecision,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {PostMeta} from '../PostMeta'
-import {Link} from '../Link'
-import {Text} from '../text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/shell/composer'
-import {PostEmbeds} from '.'
-import {PostAlerts} from '../../../../components/moderation/PostAlerts'
-import {makeProfileLink} from 'lib/routes/links'
-import {InfoCircleIcon} from 'lib/icons'
 import {Trans} from '@lingui/macro'
+
 import {useModerationOpts} from '#/state/queries/preferences'
-import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {RichText} from '#/components/RichText'
+import {usePalette} from 'lib/hooks/usePalette'
+import {InfoCircleIcon} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import {useAddDidToCache} from 'state/queries/resolve-uri'
+import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
+import {PostAlerts} from '../../../../components/moderation/PostAlerts'
+import {Link} from '../Link'
+import {PostMeta} from '../PostMeta'
+import {Text} from '../text/Text'
+import {PostEmbeds} from '.'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -107,6 +109,7 @@ export function QuoteEmbed({
   moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
+  useAddDidToCache(quote.author.handle, quote.author.did)
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
