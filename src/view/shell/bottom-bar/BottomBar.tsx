@@ -348,12 +348,12 @@ function Btn({
       accessible={accessible}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}>
+      {icon}
       {notificationCount ? (
         <View style={[styles.notificationCount]}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : undefined}
-      {icon}
     </TouchableOpacity>
   )
 }
