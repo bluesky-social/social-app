@@ -9,6 +9,7 @@ test-coverage.out
 static/js/*.js
 static/js/*.map
 static/js/*.js.LICENSE.txt
+static/js/empty.txt
 templates/scripts.html
 templates/*-embed.html
 static/embed/*.html
