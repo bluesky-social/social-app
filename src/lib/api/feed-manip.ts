@@ -342,7 +342,7 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      const candidate = slices.slice()
+      const candidateSlices = slices.slice()
 
       // early return if no languages have been specified
       if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
@@ -360,15 +360,17 @@ export class FeedTuner {
 
         // if item does not fit preferred language, remove it
         if (!hasPreferredLang) {
-          candidate.splice(i, 1)
+          candidateSlices.splice(i, 1)
         }
       }
 
-      if (candidate.length === 0) {
+      // if the language filter cleared out the entire page, return the original set
+      // so that something always shows
+      if (candidateSlices.length === 0) {
         return slices
       }
 
-      return candidate
+      return candidateSlices
     }
   }
 }
