@@ -172,7 +172,9 @@ func serve(cctx *cli.Context) error {
 
 	// actual routes
 	e.GET("/", server.WebHome)
-	e.GET("/about", server.WebGeneric)
+	e.GET("/embed.js", echo.WrapHandler(staticHandler))
+	e.GET("/oembed", server.WebOEmbed)
+	e.GET("/embed/did/app.bsky.feed.post/rkey", server.WebPostEmbed)
 
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
@@ -231,18 +233,17 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 	c.Render(code, "error.html", data)
 }
 
-// handler for endpoint that have no specific server-side handling
-func (srv *Server) WebGeneric(c echo.Context) error {
-	data := map[string]interface{}{}
-	return c.Render(http.StatusOK, "base.html", data)
-}
-
 func (srv *Server) WebHome(c echo.Context) error {
 	data := map[string]interface{}{}
 	return c.Render(http.StatusOK, "home.html", data)
 }
 
-func (srv *Server) WebPost(c echo.Context) error {
+func (srv *Server) WebOEmbed(c echo.Context) error {
+	data := map[string]interface{}{}
+	return c.Render(http.StatusOK, "oembed.html", data)
+}
+
+func (srv *Server) WebPostEmbed(c echo.Context) error {
 	ctx := c.Request().Context()
 	data := map[string]interface{}{}
 
@@ -250,12 +251,12 @@ func (srv *Server) WebPost(c echo.Context) error {
 	rkeyParam := c.Param("rkey")
 	rkey, err := syntax.ParseRecordKey(rkeyParam)
 	if err != nil {
-		return c.Render(http.StatusOK, "post.html", data)
+		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
 	handleOrDIDParam := c.Param("handleOrDID")
 	handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
 	if err != nil {
-		return c.Render(http.StatusOK, "post.html", data)
+		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
 
 	identifier := handleOrDID.Normalize().String()
@@ -264,7 +265,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
 	if err != nil {
 		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
-		return c.Render(http.StatusOK, "post.html", data)
+		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
 	unauthedViewingOkay := true
 	for _, label := range pv.Labels {
@@ -274,7 +275,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	}
 
 	if !unauthedViewingOkay {
-		return c.Render(http.StatusOK, "post.html", data)
+		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
 	did := pv.Did
 	data["did"] = did
@@ -284,7 +285,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
 	if err != nil {
 		log.Warnf("failed to fetch post: %s\t%v", uri, err)
-		return c.Render(http.StatusOK, "post.html", data)
+		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
 	req := c.Request()
 	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
@@ -314,5 +315,5 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
-	return c.Render(http.StatusOK, "post.html", data)
+	return c.Render(http.StatusOK, "postEmbed.html", data)
 }
