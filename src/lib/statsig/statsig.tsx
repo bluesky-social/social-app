@@ -82,7 +82,10 @@ export function useGate(gateName: Gate): boolean {
     // This should not happen because of waitForInitialization={true}.
     console.error('Did not expected isLoading to ever be true.')
   }
-  return value
+  // This shouldn't technically be necessary but let's get a strong
+  // guarantee that a gate value can never change while mounted.
+  const [initialValue] = React.useState(value)
+  return initialValue
 }
 
 function toStatsigUser(did: string | undefined) {

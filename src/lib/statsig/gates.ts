@@ -7,3 +7,4 @@ export type Gate =
   | 'new_search'
   | 'show_follow_back_label'
   | 'start_session_with_following'
+  | 'use_new_suggestions_endpoint'

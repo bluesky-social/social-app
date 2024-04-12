@@ -210,7 +210,12 @@ function useSuggestedFollowsV2(): [
 
 function SearchScreenSuggestedFollows() {
   const pal = usePalette('default')
-  const [suggestions, onEndReached] = useSuggestedFollowsV1()
+  const useSuggestedFollows = useGate('use_new_suggestions_endpoint')
+    ? // Conditional hook call here is *only* OK because useGate()
+      // result won't change until a remount.
+      useSuggestedFollowsV2
+    : useSuggestedFollowsV1
+  const [suggestions, onEndReached] = useSuggestedFollows()
 
   return suggestions.length ? (
     <List
