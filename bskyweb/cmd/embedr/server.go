@@ -105,7 +105,7 @@ func serve(cctx *cli.Context) error {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		// Don't log requests for static content.
 		Skipper: func(c echo.Context) bool {
-			return strings.HasPrefix(c.Request().URL.Path, "/embedr-static")
+			return strings.HasPrefix(c.Request().URL.Path, "/static")
 		},
 	}))
 	e.Use(middleware.RateLimiterWithConfig(middleware.RateLimiterConfig{
@@ -139,9 +139,9 @@ func serve(cctx *cli.Context) error {
 	staticHandler := http.FileServer(func() http.FileSystem {
 		if debug {
 			log.Debugf("serving static file from the local file system")
-			return http.FS(os.DirFS("static"))
+			return http.FS(os.DirFS("embedr-static"))
 		}
-		fsys, err := fs.Sub(bskyweb.EmbedrStaticFS, "static")
+		fsys, err := fs.Sub(bskyweb.EmbedrStaticFS, "embedr-static")
 		if err != nil {
 			log.Fatal(err)
 		}
