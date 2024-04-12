@@ -1,14 +1,14 @@
 import {AppBskyFeedDefs, AppBskyFeedPost, RichText} from '@atproto/api'
 import {h} from 'preact'
 
-import replyIcon from '../assets/bubble_filled_stroke2_corner2_rounded.svg'
-import likeIcon from '../assets/heart2_filled_stroke2_corner0_rounded.svg'
-import logo from '../assets/logo.svg'
-import repostIcon from '../assets/repost_stroke2_corner2_rounded.svg'
+import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
+import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
+import logo from '../../assets/logo.svg'
+import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
+import {getRkey, niceDate} from '../utils'
 import {Container} from './container'
 import {Embed} from './embed'
 import {Link} from './link'
-import {getRkey, niceDate} from './utils'
 
 interface Props {
   thread: AppBskyFeedDefs.ThreadViewPost

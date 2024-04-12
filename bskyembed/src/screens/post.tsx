@@ -1,13 +1,13 @@
-import './index.css'
+import '../index.css'
 
 import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
 import {h, render} from 'preact'
 
-import logo from '../assets/logo.svg'
-import {Container} from './container'
-import {Link} from './link'
-import {Post} from './post'
-import {getRkey} from './utils'
+import logo from '../../assets/logo.svg'
+import {Container} from '../components/container'
+import {Link} from '../components/link'
+import {Post} from '../components/post'
+import {getRkey} from '../utils'
 
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
