@@ -1,11 +1,12 @@
 import React from 'react'
-import {Provider as LanguagesProvider} from './languages'
+
 import {Provider as AltTextRequiredProvider} from '../preferences/alt-text-required'
 import {Provider as HiddenPostsProvider} from '../preferences/hidden-posts'
+import {Provider as DisableHapticsProvider} from './disable-haptics'
 import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
+import {Provider as LanguagesProvider} from './languages'
 
-export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 export {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
@@ -16,6 +17,7 @@ export {
 } from './external-embeds-prefs'
 export * from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
+export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
@@ -23,7 +25,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       <AltTextRequiredProvider>
         <ExternalEmbedsProvider>
           <HiddenPostsProvider>
-            <InAppBrowserProvider>{children}</InAppBrowserProvider>
+            <InAppBrowserProvider>
+              <DisableHapticsProvider>{children}</DisableHapticsProvider>
+            </InAppBrowserProvider>
           </HiddenPostsProvider>
         </ExternalEmbedsProvider>
       </AltTextRequiredProvider>

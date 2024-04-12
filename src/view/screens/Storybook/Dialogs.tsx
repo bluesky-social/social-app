@@ -6,12 +6,13 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
-import {H3, P} from '#/components/Typography'
+import {H3, P, Text} from '#/components/Typography'
 
 export function Dialogs() {
   const scrollable = Dialog.useDialogControl()
   const basic = Dialog.useDialogControl()
   const prompt = Prompt.usePromptControl()
+  const testDialog = Dialog.useDialogControl()
   const {closeAllDialogs} = useDialogStateControlContext()
 
   return (
@@ -58,6 +59,15 @@ export function Dialogs() {
         onPress={() => prompt.open()}
         label="Open prompt">
         <ButtonText>Open prompt</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={testDialog.open}
+        label="one">
+        <ButtonText>Open Tester</ButtonText>
       </Button>
 
       <Prompt.Outer control={prompt}>
@@ -119,6 +129,131 @@ export function Dialogs() {
                 <ButtonText>Close dialog</ButtonText>
               </Button>
             </View>
+          </View>
+        </Dialog.ScrollableInner>
+      </Dialog.Outer>
+
+      <Dialog.Outer control={testDialog}>
+        <Dialog.Handle />
+
+        <Dialog.ScrollableInner
+          accessibilityDescribedBy="dialog-description"
+          accessibilityLabelledBy="dialog-title">
+          <View style={[a.relative, a.gap_md, a.w_full]}>
+            <Text>
+              Watch the console logs to test each of these dialog edge cases.
+              Functionality should be consistent across both native and web. If
+              not then *sad face* something is wrong.
+            </Text>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                testDialog.close(() => {
+                  console.log('close callback')
+                })
+              }}
+              label="Close It">
+              <ButtonText>Normal Use (Should just log)</ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                testDialog.close(() => {
+                  console.log('close callback')
+                })
+
+                setTimeout(() => {
+                  testDialog.open()
+                }, 100)
+              }}
+              label="Close It">
+              <ButtonText>
+                Calls `.open()` in 100ms (Should log when the animation switches
+                to open)
+              </ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                setTimeout(() => {
+                  testDialog.open()
+                }, 2e3)
+
+                testDialog.close(() => {
+                  console.log('close callback')
+                })
+              }}
+              label="Close It">
+              <ButtonText>
+                Calls `.open()` in 2000ms (Should log after close animation and
+                not log on open)
+              </ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                testDialog.close(() => {
+                  console.log('close callback')
+                })
+                setTimeout(() => {
+                  testDialog.close(() => {
+                    console.log('close callback after 100ms')
+                  })
+                }, 100)
+              }}
+              label="Close It">
+              <ButtonText>
+                Calls `.close()` then again in 100ms (should log twice)
+              </ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                testDialog.close(() => {
+                  console.log('close callback')
+                })
+                testDialog.close(() => {
+                  console.log('close callback 2')
+                })
+              }}
+              label="Close It">
+              <ButtonText>
+                Call `close()` twice immediately (should just log twice)
+              </ButtonText>
+            </Button>
+
+            <Button
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={() => {
+                console.log('Step 1')
+                testDialog.close(() => {
+                  console.log('Step 3')
+                })
+                console.log('Step 2')
+              }}
+              label="Close It">
+              <ButtonText>
+                Log before `close()`, after `close()` and in the `close()`
+                callback. Should be an order of 1 2 3
+              </ButtonText>
+            </Button>
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>

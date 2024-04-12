@@ -10,12 +10,21 @@ import {getAgent} from '#/state/session'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
-const searchPostsQueryKey = ({query}: {query: string}) => [
+const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
   searchPostsQueryKeyRoot,
   query,
+  sort,
 ]
 
-export function useSearchPostsQuery({query}: {query: string}) {
+export function useSearchPostsQuery({
+  query,
+  sort,
+  enabled,
+}: {
+  query: string
+  sort?: 'top' | 'latest'
+  enabled?: boolean
+}) {
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,
@@ -23,17 +32,24 @@ export function useSearchPostsQuery({query}: {query: string}) {
     QueryKey,
     string | undefined
   >({
-    queryKey: searchPostsQueryKey({query}),
+    queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.feed.searchPosts({
-        q: query,
-        limit: 25,
-        cursor: pageParam,
-      })
-      return res.data
+      // waiting on new APIs
+      switch (sort) {
+        // case 'top':
+        // case 'latest':
+        default:
+          const res = await getAgent().app.bsky.feed.searchPosts({
+            q: query,
+            limit: 25,
+            cursor: pageParam,
+          })
+          return res.data
+      }
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    enabled,
   })
 }
 

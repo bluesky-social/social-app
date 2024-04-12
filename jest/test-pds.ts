@@ -1,8 +1,8 @@
+import {AtUri, BskyAgent} from '@atproto/api'
+import {TestBsky, TestNetwork} from '@atproto/dev-env'
+import fs from 'fs'
 import net from 'net'
 import path from 'path'
-import fs from 'fs'
-import {TestNetwork, TestPds} from '@atproto/dev-env'
-import {AtUri, BskyAgent} from '@atproto/api'
 
 export interface TestUser {
   email: string
@@ -55,12 +55,8 @@ class StringIdGenerator {
 const ids = new StringIdGenerator()
 
 export async function createServer(
-  {
-    inviteRequired,
-    phoneRequired,
-  }: {inviteRequired: boolean; phoneRequired: boolean} = {
+  {inviteRequired}: {inviteRequired: boolean} = {
     inviteRequired: false,
-    phoneRequired: false,
   },
 ): Promise<TestPDS> {
   const port = 3000
@@ -69,23 +65,11 @@ export async function createServer(
   const pdsUrl = `http://localhost:${port}`
   const id = ids.next()
 
-  const phoneParams = phoneRequired
-    ? {
-        phoneVerificationRequired: true,
-        phoneVerificationProvider: 'twilio',
-        twilioAccountSid: 'ACXXXXXXX',
-        twilioAuthToken: 'AUTH',
-        twilioServiceSid: 'VAXXXXXXXX',
-      }
-    : {}
-
   const testNet = await TestNetwork.create({
     pds: {
       port,
       hostname: 'localhost',
-      dbPostgresSchema: `pds_${id}`,
       inviteRequired,
-      ...phoneParams,
     },
     bsky: {
       dbPostgresSchema: `bsky_${id}`,
@@ -94,36 +78,33 @@ export async function createServer(
     },
     plc: {port: port2},
   })
-  mockTwilio(testNet.pds)
 
   // add the test mod authority
-  if (!phoneRequired) {
-    const agent = new BskyAgent({service: pdsUrl})
-    const res = await agent.api.com.atproto.server.createAccount({
-      email: 'mod-authority@test.com',
-      handle: 'mod-authority.test',
-      password: 'hunter2',
-    })
-    agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-    await agent.api.app.bsky.actor.profile.create(
-      {repo: res.data.did},
-      {
-        displayName: 'Dev-env Moderation',
-        description: `The pretend version of mod.bsky.app`,
-      },
-    )
+  const agent = new BskyAgent({service: pdsUrl})
+  const res = await agent.api.com.atproto.server.createAccount({
+    email: 'mod-authority@test.com',
+    handle: 'mod-authority.test',
+    password: 'hunter2',
+  })
+  agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+  await agent.api.app.bsky.actor.profile.create(
+    {repo: res.data.did},
+    {
+      displayName: 'Dev-env Moderation',
+      description: `The pretend version of mod.bsky.app`,
+    },
+  )
 
-    await agent.api.app.bsky.labeler.service.create(
-      {repo: res.data.did, rkey: 'self'},
-      {
-        policies: {
-          labelValues: ['!hide', '!warn'],
-          labelValueDefinitions: [],
-        },
-        createdAt: new Date().toISOString(),
+  await agent.api.app.bsky.labeler.service.create(
+    {repo: res.data.did, rkey: 'self'},
+    {
+      policies: {
+        labelValues: ['!hide', '!warn'],
+        labelValueDefinitions: [],
       },
-    )
-  }
+      createdAt: new Date().toISOString(),
+    },
+  )
 
   const pic = fs.readFileSync(
     path.join(__dirname, '..', 'assets', 'default-avatar.png'),
@@ -181,7 +162,7 @@ class Mocker {
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1},
       {
-        headers: this.pds.adminAuthHeaders('admin'),
+        headers: this.pds.adminAuthHeaders(),
         encoding: 'application/json',
       },
     )
@@ -192,8 +173,6 @@ class Mocker {
       email,
       handle: name + '.test',
       password: 'hunter2',
-      verificationPhone: '1234567890',
-      verificationCode: '000000',
     })
     await agent.upsertProfile(async () => {
       const blob = await agent.uploadBlob(this.pic, {
@@ -358,7 +337,7 @@ class Mocker {
     await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1, forAccount},
       {
-        headers: this.pds.adminAuthHeaders('admin'),
+        headers: this.pds.adminAuthHeaders(),
         encoding: 'application/json',
       },
     )
@@ -373,18 +352,11 @@ class Mocker {
     if (!ctx) {
       throw new Error('Invalid appview')
     }
-    const labelSrvc = ctx.services.label(ctx.db.getPrimary())
-    await labelSrvc.createLabels([
-      {
-        // @ts-ignore
-        src: ctx.cfg.labelerDid,
-        uri: did,
-        cid: '',
-        val: label,
-        neg: false,
-        cts: new Date().toISOString(),
-      },
-    ])
+    await createLabel(this.bsky, {
+      uri: did,
+      cid: '',
+      val: label,
+    })
   }
 
   async labelProfile(label: string, user: string) {
@@ -403,18 +375,11 @@ class Mocker {
     if (!ctx) {
       throw new Error('Invalid appview')
     }
-    const labelSrvc = ctx.services.label(ctx.db.getPrimary())
-    await labelSrvc.createLabels([
-      {
-        // @ts-ignore
-        src: ctx.cfg.labelerDid,
-        uri: profile.uri,
-        cid: profile.cid,
-        val: label,
-        neg: false,
-        cts: new Date().toISOString(),
-      },
-    ])
+    await createLabel(this.bsky, {
+      uri: profile.uri,
+      cid: profile.cid,
+      val: label,
+    })
   }
 
   async labelPost(label: string, {uri, cid}: {uri: string; cid: string}) {
@@ -422,18 +387,11 @@ class Mocker {
     if (!ctx) {
       throw new Error('Invalid appview')
     }
-    const labelSrvc = ctx.services.label(ctx.db.getPrimary())
-    await labelSrvc.createLabels([
-      {
-        // @ts-ignore
-        src: ctx.cfg.labelerDid,
-        uri,
-        cid,
-        val: label,
-        neg: false,
-        cts: new Date().toISOString(),
-      },
-    ])
+    await createLabel(this.bsky, {
+      uri,
+      cid,
+      val: label,
+    })
   }
 
   async createMuteList(user: string, name: string): Promise<string> {
@@ -484,14 +442,19 @@ async function getPort(start = 3000) {
   throw new Error('Unable to find an available port')
 }
 
-export const mockTwilio = (pds: TestPds) => {
-  if (!pds.ctx.phoneVerifier) return
-
-  pds.ctx.phoneVerifier.sendCode = async (_number: string) => {
-    // do nothing
-  }
-
-  pds.ctx.phoneVerifier.verifyCode = async (_number: string, code: string) => {
-    return code === '000000'
-  }
+const createLabel = async (
+  bsky: TestBsky,
+  opts: {uri: string; cid: string; val: string},
+) => {
+  await bsky.db.db
+    .insertInto('label')
+    .values({
+      uri: opts.uri,
+      cid: opts.cid,
+      val: opts.val,
+      cts: new Date().toISOString(),
+      neg: false,
+      src: 'did:example:labeler',
+    })
+    .execute()
 }
