@@ -2,7 +2,6 @@ import React from 'react'
 import * as Browser from 'expo-web-browser'
 
 import {
-  buildOAuthUrl,
   DPOP_BOUND_ACCESS_TOKENS,
   OAUTH_APPLICATION_TYPE,
   OAUTH_CLIENT_ID,
@@ -14,7 +13,7 @@ import {
 import {RNOAuthClientFactory} from '../../../../modules/expo-bluesky-oauth-client'
 
 // Service URL here is just a placeholder, this isn't how it will actually work
-export function useLogin(serviceUrl: string | undefined) {
+export function useLogin() {
   const openAuthSession = React.useCallback(async () => {
     const oauthFactory = new RNOAuthClientFactory({
       clientMetadata: {
@@ -29,24 +28,19 @@ export function useLogin(serviceUrl: string | undefined) {
       fetch: global.fetch,
     })
 
-    const res = await oauthFactory.signIn('http://localhost:2583/')
-    console.log(res)
+    const url = await oauthFactory.signIn('http://localhost:2583/')
 
-    return
-
-    if (!serviceUrl) return
-
-    const url = buildOAuthUrl(serviceUrl, '123') // TODO replace '123' with the appropriate state
+    console.log(url.href)
 
     const authSession = await Browser.openAuthSessionAsync(
-      url, // This isn't actually how this will work
-      OAUTH_REDIRECT_URI, // Replace this as well with the appropriate link
+      url.href,
+      OAUTH_REDIRECT_URI,
     )
 
     if (authSession.type !== 'success') {
       return
     }
-  }, [serviceUrl])
+  }, [])
 
   return {
     openAuthSession,
