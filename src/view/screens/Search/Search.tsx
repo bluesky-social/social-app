@@ -224,10 +224,11 @@ function SearchScreenSuggestedFollows() {
       keyExtractor={item => item.did}
       // @ts-ignore web only -prf
       desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 1200}}
+      contentContainerStyle={{paddingBottom: 200}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       onEndReached={onEndReached}
+      onEndReachedThreshold={2}
     />
   ) : (
     <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
