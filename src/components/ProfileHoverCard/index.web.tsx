@@ -235,7 +235,9 @@ function Inner({
               onPress={hide}>
               <Trans>
                 <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
-                <Text>{pluralizedFollowers}</Text>
+                <Text style={[t.atoms.text_contrast_medium]}>
+                  {pluralizedFollowers}
+                </Text>
               </Trans>
             </InlineLinkText>
             <InlineLinkText
@@ -245,7 +247,7 @@ function Inner({
               onPress={hide}>
               <Trans>
                 <Text style={[a.text_md, a.font_bold]}>{following} </Text>
-                <Text>following</Text>
+                <Text style={[t.atoms.text_contrast_medium]}>following</Text>
               </Trans>
             </InlineLinkText>
           </View>
