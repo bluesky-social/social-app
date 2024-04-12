@@ -10,6 +10,8 @@ import {s} from 'lib/styles'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
+import {atoms as a} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Link} from '#/components/Link'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
@@ -64,6 +66,10 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
             <Trans>Sign in</Trans>
           </Text>
         </Button>
+      </View>
+
+      <View style={[a.pt_2xl, a.w_full]}>
+        <AppLanguageDropdown />
       </View>
     </View>
   )
