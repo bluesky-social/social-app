@@ -426,7 +426,7 @@ msgstr "Nuesa artística o no eròtica."
 
 #: src/screens/Signup/StepHandle.tsx:118
 msgid "At least 3 characters"
-msgstr ""
+msgstr "Almenys 3 caràcters"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 #: src/components/moderation/LabelsOnMeDialog.tsx:247
@@ -929,7 +929,7 @@ msgstr "Configura els filtres de continguts per la categoria: {0}"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr ""
+msgstr "Configura els filtres de continguts per la categoria: {name}"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
@@ -1053,7 +1053,7 @@ msgstr "Continua"
 
 #: src/components/AccountList.tsx:108
 msgid "Continue as {0} (currently signed in)"
-msgstr ""
+msgstr "Continua com a {0} (sessió actual)"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:151
 #: src/screens/Onboarding/StepInterests/index.tsx:249
@@ -1223,7 +1223,7 @@ msgstr "Tema fosc"
 
 #: src/screens/Signup/StepInfo/index.tsx:132
 msgid "Date of birth"
-msgstr ""
+msgstr "Data de naixement"
 
 #: src/view/screens/Settings/index.tsx:841
 msgid "Debug Moderation"
@@ -1370,7 +1370,7 @@ msgstr "No inclou nuesa."
 
 #: src/screens/Signup/StepHandle.tsx:104
 msgid "Doesn't begin or end with a hyphen"
-msgstr ""
+msgstr "No comença ni acaba amb un guionet"
 
 #: src/view/com/modals/ChangeHandle.tsx:481
 msgid "Domain Value"
@@ -1590,7 +1590,7 @@ msgstr "Habilita veure el contingut per adults als teus canals"
 #: src/components/dialogs/EmbedConsent.tsx:82
 #: src/components/dialogs/EmbedConsent.tsx:89
 msgid "Enable external media"
-msgstr ""
+msgstr "Habilita els continguts externs"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 #~ msgid "Enable External Media"
@@ -1606,7 +1606,7 @@ msgstr "Activa aquesta opció per a veure només les respostes entre els comptes
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
-msgstr ""
+msgstr "Habilita només per aquesta font"
 
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
@@ -1622,7 +1622,7 @@ msgstr "Posa un nom a aquesta contrasenya d'aplicació"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:139
 msgid "Enter a password"
-msgstr ""
+msgstr "Introdueix una contrasenya"
 
 #: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
@@ -1920,7 +1920,7 @@ msgstr "Segueix-los a tots"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
-msgstr ""
+msgstr "Segueix"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
@@ -2013,11 +2013,11 @@ msgstr "He oblidat la contrasenya"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Forgot password?"
-msgstr ""
+msgstr "Has oblidat la contrasenya?"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Forgot?"
-msgstr ""
+msgstr "Oblidada?"
 
 #: src/lib/moderation/useReportOptions.ts:52
 msgid "Frequently Posts Unwanted Content"
@@ -2684,7 +2684,7 @@ msgstr "Accedeix a un compte que no està llistat"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
-msgstr ""
+msgstr "Té l'aspecte XXXXX-XXXXX"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -3093,7 +3093,7 @@ msgstr "Ja no segueixes a {0}"
 
 #: src/screens/Signup/StepHandle.tsx:114
 msgid "No longer than 253 characters"
-msgstr ""
+msgstr "No pot tenir més de 253 caràcters"
 
 #: src/view/com/notifications/Feed.tsx:109
 msgid "No notifications yet!"
@@ -3176,7 +3176,7 @@ msgstr "Nuesa"
 
 #: src/lib/moderation/useReportOptions.ts:71
 msgid "Nudity or adult content not labeled as such"
-msgstr ""
+msgstr "Nuesa o contingut per adults no etiquetat com a tal"
 
 #: src/lib/moderation/useReportOptions.ts:71
 #~ msgid "Nudity or pornography not labeled as such"
@@ -3184,7 +3184,7 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:142
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -3225,7 +3225,7 @@ msgstr "Només {0} poden respondre."
 
 #: src/screens/Signup/StepHandle.tsx:97
 msgid "Only contains letters, numbers, and hyphens"
-msgstr ""
+msgstr "Només pot tenir lletres, nombres i guionets"
 
 #: src/components/Lists.tsx:75
 msgid "Oops, something went wrong!"
@@ -3695,7 +3695,7 @@ msgstr "Enllaç potencialment enganyós"
 
 #: src/components/forms/HostingProvider.tsx:45
 msgid "Press to change hosting provider"
-msgstr ""
+msgstr "Prem per canviar el proveïdor d'allotjament"
 
 #: src/components/Error.tsx:74
 #: src/components/Lists.tsx:80
@@ -3934,7 +3934,7 @@ msgstr "Informa del compte"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
-msgstr ""
+msgstr "Diàleg de l'informe"
 
 #: src/view/screens/ProfileFeed.tsx:352
 #: src/view/screens/ProfileFeed.tsx:354
@@ -4274,7 +4274,7 @@ msgstr "Selecciona {item}"
 
 #: src/screens/Login/ChooseAccountForm.tsx:61
 msgid "Select account"
-msgstr ""
+msgstr "Selecciona el compte"
 
 #: src/view/com/modals/ServerInput.tsx:75
 #~ msgid "Select Bluesky Social"
@@ -4335,7 +4335,7 @@ msgstr "Selecciona l'idioma de l'aplicació perquè el text predeterminat es mos
 
 #: src/screens/Signup/StepInfo/index.tsx:133
 msgid "Select your date of birth"
-msgstr ""
+msgstr "Selecciona la teva data de naixement"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:200
 msgid "Select your interests from the options below"
@@ -4564,11 +4564,11 @@ msgstr "Comparteix el canal"
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Share Link"
-msgstr ""
+msgstr "Comparteix l'enllaç"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
-msgstr ""
+msgstr "Comparteix la web enllaçada"
 
 #: src/components/moderation/ContentHider.tsx:115
 #: src/components/moderation/LabelPreference.tsx:136
@@ -4838,7 +4838,7 @@ msgstr "Pàgina d'estat"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Step"
-msgstr ""
+msgstr "Pas"
 
 #: src/view/com/auth/create/StepHeader.tsx:22
 #~ msgid "Step {0} of {numSteps}"
@@ -5682,7 +5682,7 @@ msgstr "Verifica el teu correu"
 
 #: src/view/screens/Settings/index.tsx:893
 msgid "Version {0}"
-msgstr ""
+msgstr "Versió {0}"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
@@ -6029,11 +6029,11 @@ msgstr "Encara no has silenciat cap paraula ni etiqueta"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "Pots apel·lar aquestes etiquetes si creus que s'han col·locat per error,"
+msgstr "Pots apel·lar aquestes etiquetes si creus que s'han col·locat per error."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
-msgstr ""
+msgstr "Has de tenir 13 anys o més per registrar-te"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 #~ msgid "You must be 18 or older to enable adult content."

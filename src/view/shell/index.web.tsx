@@ -1,24 +1,25 @@
 import React, {useEffect} from 'react'
-import {View, StyleSheet, TouchableOpacity} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
-import {ErrorBoundary} from '../com/util/ErrorBoundary'
-import {Lightbox} from '../com/lightbox/Lightbox'
-import {ModalsContainer} from '../com/modals/Modal'
-import {Composer} from './Composer.web'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {s, colors} from 'lib/styles'
-import {RoutesContainer, FlatNavigator} from '../../Navigation'
-import {DrawerContent} from './Drawer'
-import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
-import {Outlet as PortalOutlet} from '#/components/Portal'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {SigninDialog} from '#/components/dialogs/Signin'
+import {Outlet as PortalOutlet} from '#/components/Portal'
+import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
+import {FlatNavigator, RoutesContainer} from '../../Navigation'
+import {Lightbox} from '../com/lightbox/Lightbox'
+import {ModalsContainer} from '../com/modals/Modal'
+import {ErrorBoundary} from '../com/util/ErrorBoundary'
+import {Composer} from './Composer.web'
+import {DrawerContent} from './Drawer'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -45,6 +46,7 @@ function ShellInner() {
       <Composer winHeight={0} />
       <ModalsContainer />
       <MutedWordsDialog />
+      <SigninDialog />
       <Lightbox />
       <PortalOutlet />
 

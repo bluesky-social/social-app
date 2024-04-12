@@ -1,20 +1,20 @@
-import React, {memo, useMemo, useState, useEffect} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
-  TouchableOpacity,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedImages,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  ModerationOpts,
-  ModerationDecision,
   moderateProfile,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyActorDefs,
+  ModerationDecision,
+  ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
@@ -22,28 +22,30 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {FeedNotification} from '#/state/queries/notifications/feed'
-import {s, colors} from 'lib/styles'
-import {niceDate} from 'lib/strings/time'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {HeartIconSolid} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
-import {HeartIconSolid} from 'lib/icons'
-import {Text} from '../util/text/Text'
-import {UserAvatar, PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserPreviewLink} from '../util/UserPreviewLink'
-import {ImageHorzList} from '../util/images/ImageHorzList'
-import {Post} from '../post/Post'
-import {Link, TextLink} from '../util/Link'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {formatCount} from '../util/numeric/format'
-import {makeProfileLink} from 'lib/routes/links'
-import {TimeElapsed} from '../util/TimeElapsed'
+import {niceDate} from 'lib/strings/time'
+import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Link as NewLink} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
+import {Post} from '../post/Post'
+import {ImageHorzList} from '../util/images/ImageHorzList'
+import {Link, TextLink} from '../util/Link'
+import {formatCount} from '../util/numeric/format'
+import {Text} from '../util/text/Text'
+import {TimeElapsed} from '../util/TimeElapsed'
+import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 const MAX_AUTHORS = 5
 
@@ -356,8 +358,10 @@ function CondensedAuthorsList({
       <View style={styles.avis}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
           <View key={author.href} style={s.mr5}>
-            <UserAvatar
+            <PreviewableUserAvatar
               size={35}
+              did={author.did}
+              handle={author.handle}
               avatar={author.avatar}
               moderation={author.moderation.ui('avatar')}
               type={author.associated?.labeler ? 'labeler' : 'user'}
@@ -386,6 +390,7 @@ function ExpandedAuthorsList({
   visible: boolean
   authors: Author[]
 }) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
@@ -409,33 +414,39 @@ function ExpandedAuthorsList({
         visible ? s.mb10 : undefined,
       ]}>
       {authors.map(author => (
-        <UserPreviewLink
+        <NewLink
           key={author.did}
-          did={author.did}
-          handle={author.handle}
-          style={styles.expandedAuthor}>
-          <View style={styles.expandedAuthorAvi}>
-            <UserAvatar
-              size={35}
-              avatar={author.avatar}
-              moderation={author.moderation.ui('avatar')}
-              type={author.associated?.labeler ? 'labeler' : 'user'}
-            />
-          </View>
-          <View style={s.flex1}>
-            <Text
-              type="lg-bold"
-              numberOfLines={1}
-              style={pal.text}
-              lineHeight={1.2}>
-              {sanitizeDisplayName(author.displayName || author.handle)}
-              &nbsp;
-              <Text style={[pal.textLight]} lineHeight={1.2}>
-                {sanitizeHandle(author.handle)}
+          label={_(msg`See profile`)}
+          to={makeProfileLink({
+            did: author.did,
+            handle: author.handle,
+          })}>
+          <View style={styles.expandedAuthor}>
+            <View style={styles.expandedAuthorAvi}>
+              <ProfileHoverCard did={author.did}>
+                <UserAvatar
+                  size={35}
+                  avatar={author.avatar}
+                  moderation={author.moderation.ui('avatar')}
+                  type={author.associated?.labeler ? 'labeler' : 'user'}
+                />
+              </ProfileHoverCard>
+            </View>
+            <View style={s.flex1}>
+              <Text
+                type="lg-bold"
+                numberOfLines={1}
+                style={pal.text}
+                lineHeight={1.2}>
+                {sanitizeDisplayName(author.displayName || author.handle)}
+                &nbsp;
+                <Text style={[pal.textLight]} lineHeight={1.2}>
+                  {sanitizeHandle(author.handle)}
+                </Text>
               </Text>
-            </Text>
+            </View>
           </View>
-        </UserPreviewLink>
+        </NewLink>
       ))}
     </Animated.View>
   )

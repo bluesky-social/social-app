@@ -7,23 +7,26 @@ import {
   View,
 } from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {Text} from '../com/util/text/Text'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {useMyBlockedAccountsQuery} from '#/state/queries/my-blocked-accounts'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useFocusEffect} from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {useGate} from 'lib/statsig/statsig'
+import {isWeb} from 'platform/detection'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {CenteredView} from 'view/com/util/Views'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
-import {logger} from '#/logger'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMyBlockedAccountsQuery} from '#/state/queries/my-blocked-accounts'
-import {cleanError} from '#/lib/strings/errors'
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -35,6 +38,9 @@ export function ModerationBlockedAccounts({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen} = useAnalytics()
+  const showsVerticalScrollIndicator =
+    !useGate('hide_vertical_scroll_indicators') || isWeb
+
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data,
@@ -163,6 +169,7 @@ export function ModerationBlockedAccounts({}: Props) {
           )}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
+          showsVerticalScrollIndicator={showsVerticalScrollIndicator}
         />
       )}
     </CenteredView>

@@ -30,6 +30,7 @@ import {Lightbox} from 'view/com/lightbox/Lightbox'
 import {ModalsContainer} from 'view/com/modals/Modal'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {Composer} from './Composer'
@@ -103,6 +104,7 @@ function ShellInner() {
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
+      <SigninDialog />
       <Lightbox />
       <PortalOutlet />
     </>
