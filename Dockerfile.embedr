@@ -31,8 +31,9 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm use $NODE_VERSION && \
   npm install --global yarn && \
   yarn && \
+  cd bskyembed && yarn install --frozen-lockfile && cd .. && \
   yarn intl:build && \
-  yarn build-web
+  yarn build-embed
 
 # DEBUG
 RUN find ./bskyweb/embedr-static && find ./bskyweb/embedr-templates && find ./web-build/static
