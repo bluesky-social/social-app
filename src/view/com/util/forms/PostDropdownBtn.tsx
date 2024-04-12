@@ -247,7 +247,7 @@ let PostDropdownBtn = ({
               <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
 
-            {gtMobile && enableEmbedPost && (
+            {gtMobile && enableEmbedPost && !shouldShowLoggedOutWarning && (
               <Menu.Item
                 testID="postDropdownEmbedBtn"
                 label={_(msg`Embed post`)}
