@@ -87,13 +87,16 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
       setHovered(false)
     }, 100)
   }, [])
+  const onClickTarget = React.useCallback(() => {
+    setHovered(false)
+  }, [])
 
   return (
     <div
       ref={refs.setReference}
       onPointerEnter={onPointerEnterTarget}
       onPointerLeave={onPointerLeaveTarget}
-      onClick={onPointerLeaveTarget}>
+      onMouseUp={onClickTarget}>
       {props.children}
 
       {hovered && (
