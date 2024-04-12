@@ -72,7 +72,7 @@ const STORES = [
   'metadataCache',
 ] as const
 
-export class BrowserOAuthDatabase {
+export class RNOAuthDatabase {
   #dbPromise = DB.open<Schema>(
     '@atproto-oauth-client',
     [
