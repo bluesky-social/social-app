@@ -11,7 +11,7 @@ import {getAgent} from '#/state/session'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
 import {precacheThreadPostProfiles} from './profile'
-import {getEmbeddedPost} from './util'
+import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
@@ -332,14 +332,7 @@ function embedViewRecordToPlaceholderThread(
     type: 'post',
     _reactKey: record.uri,
     uri: record.uri,
-    post: {
-      uri: record.uri,
-      cid: record.cid,
-      author: record.author,
-      record: record.value,
-      indexedAt: record.indexedAt,
-      labels: record.labels,
-    },
+    post: embedViewRecordToPostView(record),
     record: record.value as AppBskyFeedPost.Record, // validated in getEmbeddedPost
     parent: undefined,
     replies: undefined,
