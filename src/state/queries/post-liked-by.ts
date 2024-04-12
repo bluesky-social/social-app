@@ -6,7 +6,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -16,6 +16,7 @@ const RQKEY_ROOT = 'liked-by'
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function useLikedByQuery(resolvedUri: string | undefined) {
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetLikes.OutputSchema,
     Error,
@@ -25,7 +26,7 @@ export function useLikedByQuery(resolvedUri: string | undefined) {
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().getLikes({
+      const res = await agent.getLikes({
         uri: resolvedUri || '',
         limit: PAGE_SIZE,
         cursor: pageParam,

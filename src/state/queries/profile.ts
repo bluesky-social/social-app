@@ -25,7 +25,7 @@ import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {updateProfileShadow} from '../cache/profile-shadow'
-import {getAgent, useSession} from '../session'
+import {getAgent, useAgent, useSession} from '../session'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {ThreadNode} from './post-thread'
@@ -53,6 +53,7 @@ export function useProfileQuery({
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -62,7 +63,7 @@ export function useProfileQuery({
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did ?? ''),
     queryFn: async () => {
-      const res = await getAgent().getProfile({actor: did ?? ''})
+      const res = await agent.getProfile({actor: did ?? ''})
       return res.data
     },
     placeholderData: () => {
@@ -77,11 +78,12 @@ export function useProfileQuery({
 }
 
 export function useProfilesQuery({handles}: {handles: string[]}) {
+  const agent = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: profilesQueryKey(handles),
     queryFn: async () => {
-      const res = await getAgent().getProfiles({actors: handles})
+      const res = await agent.getProfiles({actors: handles})
       return res.data
     },
   })
@@ -89,17 +91,18 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
 
 export function usePrefetchProfileQuery() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   const prefetchProfileQuery = useCallback(
     (did: string) => {
       queryClient.prefetchQuery({
         queryKey: RQKEY(did),
         queryFn: async () => {
-          const res = await getAgent().getProfile({actor: did || ''})
+          const res = await agent.getProfile({actor: did || ''})
           return res.data
         },
       })
     },
-    [queryClient],
+    [queryClient, agent],
   )
   return prefetchProfileQuery
 }
@@ -115,6 +118,7 @@ interface ProfileUpdateParams {
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -123,7 +127,7 @@ export function useProfileUpdateMutation() {
       newUserBanner,
       checkCommitted,
     }) => {
-      await getAgent().upsertProfile(async existing => {
+      await agent.upsertProfile(async existing => {
         existing = existing || {}
         if (typeof updates === 'function') {
           existing = updates(existing)
@@ -254,7 +258,7 @@ function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
-  const {currentAccount} = useSession()
+  const {currentAccount, agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -270,7 +274,7 @@ function useProfileFollowMutation(
         followeeClout: toClout(profile.followersCount),
         followerClout: toClout(ownProfile?.followersCount),
       })
-      return await getAgent().follow(did)
+      return await agent.follow(did)
     },
     onSuccess(data, variables) {
       track('Profile:Follow', {username: variables.did})
@@ -281,11 +285,12 @@ function useProfileFollowMutation(
 function useProfileUnfollowMutation(
   logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
+  const agent = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       logEvent('profile:unfollow', {logContext})
       track('Profile:Unfollow', {username: followUri})
-      return await getAgent().deleteFollow(followUri)
+      return await agent.deleteFollow(followUri)
     },
   })
 }
@@ -341,9 +346,10 @@ export function useProfileMuteMutationQueue(
 
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      await getAgent().mute(did)
+      await agent.mute(did)
     },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
@@ -353,9 +359,10 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      await getAgent().unmute(did)
+      await agent.unmute(did)
     },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
@@ -418,14 +425,14 @@ export function useProfileBlockMutationQueue(
 }
 
 function useProfileBlockMutation() {
-  const {currentAccount} = useSession()
+  const {currentAccount, agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      return await getAgent().app.bsky.graph.block.create(
+      return await agent.app.bsky.graph.block.create(
         {repo: currentAccount.did},
         {subject: did, createdAt: new Date().toISOString()},
       )
@@ -438,7 +445,7 @@ function useProfileBlockMutation() {
 }
 
 function useProfileUnblockMutation() {
-  const {currentAccount} = useSession()
+  const {currentAccount, agent} = useSession()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {
@@ -446,7 +453,7 @@ function useProfileUnblockMutation() {
         throw new Error('Not signed in')
       }
       const {rkey} = new AtUri(blockUri)
-      await getAgent().app.bsky.graph.block.delete({
+      await agent.app.bsky.graph.block.delete({
         repo: currentAccount.did,
         rkey,
       })

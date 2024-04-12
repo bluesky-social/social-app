@@ -53,7 +53,7 @@ export function getAgent() {
 }
 
 const StateContext = React.createContext<SessionStateContext>({
-  currentAgent: INITIAL_AGENT,
+  agent: INITIAL_AGENT,
   isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
@@ -477,7 +477,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const stateContext = React.useMemo(
     () => ({
-      currentAgent,
+      agent: currentAgent,
       isInitialLoad,
       isSwitchingAccounts,
       currentAccount,
@@ -535,6 +535,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
 export function useSession() {
   return React.useContext(StateContext)
+}
+
+export function useAgent() {
+  return useSession().agent
 }
 
 export function useSessionApi() {

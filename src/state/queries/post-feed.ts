@@ -19,7 +19,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
@@ -111,6 +111,7 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const lastPageCountRef = useRef(0)
+  const agent = useAgent()
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -153,7 +154,7 @@ export function usePostFeedQuery(
          * moderations happen later, which results in some posts being shown and
          * some not.
          */
-        if (!getAgent().session) {
+        if (!agent.session) {
           assertSomePostsPassModeration(res.feed)
         }
 

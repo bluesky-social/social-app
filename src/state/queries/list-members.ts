@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -16,6 +16,7 @@ const RQKEY_ROOT = 'list-members'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListMembersQuery(uri: string) {
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetList.OutputSchema,
     Error,
@@ -26,7 +27,7 @@ export function useListMembersQuery(uri: string) {
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getList({
+      const res = await agent.app.bsky.graph.getList({
         list: uri,
         limit: PAGE_SIZE,
         cursor: pageParam,

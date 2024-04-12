@@ -16,7 +16,7 @@ import {
 
 import {STALE} from '#/state/queries'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 const suggestedFollowsQueryKey = [suggestedFollowsQueryKeyRoot]
@@ -28,7 +28,7 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
 ]
 
 export function useSuggestedFollowsQuery() {
-  const {currentAccount} = useSession()
+  const {agent, currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
   return useInfiniteQuery<
@@ -42,7 +42,7 @@ export function useSuggestedFollowsQuery() {
     staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFollowsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.actor.getSuggestions({
+      const res = await agent.app.bsky.actor.getSuggestions({
         limit: 25,
         cursor: pageParam,
       })
@@ -79,10 +79,11 @@ export function useSuggestedFollowsQuery() {
 }
 
 export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
+  const agent = useAgent()
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.graph.getSuggestedFollowsByActor({
+      const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
         actor: did,
       })
       return res.data
@@ -92,6 +93,7 @@ export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
 
 export function useGetSuggestedFollowersByActor() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
 
   return React.useCallback(
     async (actor: string) => {
@@ -99,17 +101,16 @@ export function useGetSuggestedFollowersByActor() {
         staleTime: STALE.MINUTES.ONE,
         queryKey: suggestedFollowsByActorQueryKey(actor),
         queryFn: async () => {
-          const res =
-            await getAgent().app.bsky.graph.getSuggestedFollowsByActor({
-              actor: actor,
-            })
+          const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
+            actor: actor,
+          })
           return res.data
         },
       })
 
       return res
     },
-    [queryClient],
+    [queryClient, agent],
   )
 }
 

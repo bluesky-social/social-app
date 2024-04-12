@@ -17,7 +17,7 @@ export type CurrentAccount = Omit<SessionAccount, 'accessJwt' | 'refreshJwt'>
  * Context shape returned from `useSession()`
  */
 export type SessionStateContext = {
-  currentAgent: BskyAgent
+  agent: BskyAgent
   isInitialLoad: boolean
   isSwitchingAccounts: boolean
   hasSession: boolean
