@@ -32,8 +32,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   npm install --global yarn && \
   yarn && \
   yarn intl:build && \
-  yarn build-web && \
-  yarn build-embed
+  yarn build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
