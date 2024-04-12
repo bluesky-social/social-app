@@ -131,11 +131,11 @@ func (srv *Server) postEmbedHTML(post *appbsky.FeedDefs_PostView) string {
 		"<blockquote class=\"bluesky-embed\" data-bluesky-uri=\"%s\" data-bluesky-cid=\"%s\"><p lang=\"%s\">%s</p>&mdash; %s %s</blockquote><script async src=\"%s\" charset=\"utf-8\"></script>",
 		post.Uri,
 		post.Cid,
-		"en", // XXX
+		"en",                 // XXX
 		"<!-- post-text -->", // XXX
-		"<!-- display-name (<a href=\"profile-page\">@handle</a>) -->", // XXX
+		"<!-- display-name (<a href=\"profile-page\">@handle</a>) -->",                  // XXX
 		fmt.Sprintf("%s <!-- <a href=\"post-page\">human-date</a> -->", post.IndexedAt), // XXX: Record.CreatedAt
-		"https://embed.bsky.app/embed.js", // XXX: or iframe-resize.js, for clarity?
+		"https://embed.bsky.app/embed.js",                                               // XXX: or iframe-resize.js, for clarity?
 	)
 }
 
