@@ -13,7 +13,7 @@ import IsomorphicOAuthServerMetadataResolver from '@atproto/oauth-server-metadat
 import {CryptoSubtle} from './crypto-subtle'
 import {DatabaseStore, RNOAuthDatabase} from './rn-oauth-database'
 
-export type BrowserOauthClientFactoryOptions = {
+export type RNOAuthClientOptions = {
   responseMode?: OAuthResponseMode
   responseType?: OAuthResponseType
   clientMetadata: OAuthClientMetadata
@@ -33,7 +33,7 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
     responseType,
     crypto = {subtle: CryptoSubtle},
     fetch = globalThis.fetch,
-  }: BrowserOauthClientFactoryOptions) {
+  }: RNOAuthClientOptions) {
     const database = new RNOAuthDatabase()
 
     super({
