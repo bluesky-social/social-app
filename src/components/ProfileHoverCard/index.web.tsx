@@ -12,6 +12,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {pluralize} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -171,6 +172,7 @@ function Inner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -189,6 +191,10 @@ function Inner({
     did: profile.did,
     handle: profile.handle,
   })
+  const isMe = React.useMemo(
+    () => currentAccount?.did === profile.did,
+    [currentAccount, profile],
+  )
 
   return (
     <View>
@@ -201,21 +207,25 @@ function Inner({
           />
         </Link>
 
-        <Button
-          size="small"
-          color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
-          variant="solid"
-          label={profileShadow.viewer?.following ? _('Following') : _('Follow')}
-          style={[a.rounded_full]}
-          onPress={profileShadow.viewer?.following ? unfollow : follow}>
-          <ButtonIcon
-            position="left"
-            icon={profileShadow.viewer?.following ? Check : Plus}
-          />
-          <ButtonText>
-            {profileShadow.viewer?.following ? _('Following') : _('Follow')}
-          </ButtonText>
-        </Button>
+        {!isMe && (
+          <Button
+            size="small"
+            color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
+            variant="solid"
+            label={
+              profileShadow.viewer?.following ? _('Following') : _('Follow')
+            }
+            style={[a.rounded_full]}
+            onPress={profileShadow.viewer?.following ? unfollow : follow}>
+            <ButtonIcon
+              position="left"
+              icon={profileShadow.viewer?.following ? Check : Plus}
+            />
+            <ButtonText>
+              {profileShadow.viewer?.following ? _('Following') : _('Follow')}
+            </ButtonText>
+          </Button>
+        )}
       </View>
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
