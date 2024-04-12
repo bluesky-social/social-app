@@ -76,7 +76,8 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             color="primary"
             size="large"
             onPress={showCreateAccount}
-            label={_(msg`Create an account`)}>
+            label={_(msg`Create an account`)}
+            style={gtMobile ? [a.flex_1] : []}>
             <ButtonText>
               <Trans>Create an account</Trans>
             </ButtonText>
@@ -87,7 +88,8 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             color="secondary"
             size="large"
             onPress={showSignIn}
-            label={_(msg`Sign in`)}>
+            label={_(msg`Sign in`)}
+            style={gtMobile ? [a.flex_1] : []}>
             <ButtonText>
               <Trans>Sign in</Trans>
             </ButtonText>
