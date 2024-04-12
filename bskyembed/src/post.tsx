@@ -4,9 +4,9 @@ import {h} from 'preact'
 import replyIcon from '../assets/bubble_filled_stroke2_corner2_rounded.svg'
 import likeIcon from '../assets/heart2_filled_stroke2_corner0_rounded.svg'
 import logo from '../assets/logo.svg'
+import repostIcon from '../assets/repost_stroke2_corner2_rounded.svg'
 import {Container} from './container'
 import {Embed} from './embed'
-// import repostIcon from '../assets/repost_stroke2_corner2_rounded.svg'
 import {Link} from './link'
 import {getRkey, niceDate} from './utils'
 
@@ -58,28 +58,36 @@ export function Post({thread}: Props) {
           {niceDate(post.indexedAt)}
         </time>
         <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm">
-          <div className="flex items-center gap-2 cursor-pointer">
-            <img src={likeIcon as string} className="w-5 h-5" />
-            <p className="font-bold text-neutral-500">{post.likeCount}</p>
-          </div>
+          {!!post.likeCount && (
+            <div className="flex items-center gap-2 cursor-pointer">
+              <img src={likeIcon as string} className="w-5 h-5" />
+              <p className="font-bold text-neutral-500 mb-px">
+                {post.likeCount}
+              </p>
+            </div>
+          )}
+          {!!post.repostCount && (
+            <div className="flex items-center gap-2 cursor-pointer">
+              <img src={repostIcon as string} className="w-5 h-5" />
+              <p className="font-bold text-neutral-500 mb-px">
+                {post.repostCount}
+              </p>
+            </div>
+          )}
           <div className="flex items-center gap-2 cursor-pointer">
             <img src={replyIcon as string} className="w-5 h-5" />
-            <p className="font-bold text-neutral-500">Reply</p>
+            <p className="font-bold text-neutral-500 mb-px">Reply</p>
           </div>
-          {/* <div className="flex items-center gap-2">
-            <img src={repostIcon as string} className="w-4 h-4" />
-            <p>{post.repostCount}</p>
-          </div> */}
           <div className="flex-1" />
-          <p className="cursor-pointer text-brand font-bold hover:underline hidden min-[420px]:inline">
+          <p className="cursor-pointer text-brand font-bold hover:underline hidden min-[450px]:inline">
             {post.replyCount
               ? `Read ${post.replyCount} ${
                   post.replyCount > 1 ? 'replies' : 'reply'
                 } on Bluesky`
               : `View on Bluesky`}
           </p>
-          <p className="cursor-pointer text-brand font-bold hover:underline min-[420px]:hidden">
-            <span className="hidden min-[340px]:inline">View on </span>Bluesky
+          <p className="cursor-pointer text-brand font-bold hover:underline min-[450px]:hidden">
+            <span className="hidden min-[380px]:inline">View on </span>Bluesky
           </p>
         </div>
       </div>
