@@ -6,22 +6,23 @@ import {
   ModerationCause,
   ModerationDecision,
 } from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {FollowButton} from './FollowButton'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
+import {Trans} from '@lingui/macro'
+
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
-import {Trans} from '@lingui/macro'
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {usePalette} from 'lib/hooks/usePalette'
+import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
+import {makeProfileLink} from 'lib/routes/links'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {s} from 'lib/styles'
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {FollowButton} from './FollowButton'
 
 export function ProfileCard({
   testID,
@@ -76,8 +77,10 @@ export function ProfileCard({
       anchorNoUnderline>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar
+          <PreviewableUserAvatar
             size={40}
+            did={profile.did}
+            handle={profile.handle}
             avatar={profile.avatar}
             moderation={moderation.ui('avatar')}
             type={isLabeler ? 'labeler' : 'user'}
@@ -221,9 +224,11 @@ function FollowersList({
       {followersWithMods.slice(0, 3).map(({f, mod}) => (
         <View key={f.did} style={styles.followedByAviContainer}>
           <View style={[styles.followedByAvi, pal.view]}>
-            <UserAvatar
-              avatar={f.avatar}
+            <PreviewableUserAvatar
               size={32}
+              did={f.did}
+              handle={f.handle}
+              avatar={f.avatar}
               moderation={mod.ui('avatar')}
               type={f.associated?.labeler ? 'labeler' : 'user'}
             />
