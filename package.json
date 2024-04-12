@@ -124,6 +124,7 @@
     "expo-linking": "^6.2.2",
     "expo-localization": "~14.8.3",
     "expo-media-library": "~15.9.1",
+    "expo-navigation-bar": "~2.8.1",
     "expo-notifications": "~0.27.6",
     "expo-sharing": "^11.10.0",
     "expo-splash-screen": "~0.26.4",

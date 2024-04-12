@@ -95,6 +95,11 @@ module.exports = function (config) {
         barStyle: 'light-content',
         backgroundColor: '#00000000',
       },
+      // Dark nav bar in light mode is better than light nav bar in dark mode
+      androidNavigationBar: {
+        barStyle: 'light-content',
+        backgroundColor: DARK_SPLASH_CONFIG_ANDROID.backgroundColor,
+      },
       android: {
         icon: './assets/icon.png',
         adaptiveIcon: {
