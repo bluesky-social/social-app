@@ -61,6 +61,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const prefetchedProfile = React.useRef(false)
   const targetHovered = React.useRef(false)
   const cardHovered = React.useRef(false)
+  const targetClicked = React.useRef(false)
 
   const onPointerEnterTarget = React.useCallback(() => {
     targetHovered.current = true
@@ -78,6 +79,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   }, [props.did, prefetchProfileQuery])
   const onPointerEnterCard = React.useCallback(() => {
     cardHovered.current = true
+    if (targetClicked.current) return
     setHovered(true)
   }, [])
   const onPointerLeaveTarget = React.useCallback(() => {
@@ -95,6 +97,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     }, 100)
   }, [])
   const onClickTarget = React.useCallback(() => {
+    targetClicked.current = true
     setHovered(false)
   }, [])
   const hide = React.useCallback(() => {
