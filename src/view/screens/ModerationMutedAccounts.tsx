@@ -39,7 +39,7 @@ export function ModerationMutedAccounts({}: Props) {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen} = useAnalytics()
   const showsVerticalScrollIndicator =
-    !useGate('hide_vertical_scroll_indicators') && isWeb
+    !useGate('hide_vertical_scroll_indicators') || isWeb
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data,

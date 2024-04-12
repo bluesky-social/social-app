@@ -41,7 +41,7 @@ function ListImpl<ItemT>(
   const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
   const showsVerticalScrollIndicator =
-    !useGate('hide_vertical_scroll_indicators') && isWeb
+    !useGate('hide_vertical_scroll_indicators') || isWeb
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
   }
