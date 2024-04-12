@@ -4,6 +4,7 @@ import {QueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
+import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {getAgent, SessionAccount} from '#/state/session'
 import {track} from 'lib/analytics/analytics'
@@ -87,6 +88,7 @@ export function useNotificationsListener(queryClient: QueryClient) {
     // handle notifications that are received, both in the foreground or background
     // NOTE: currently just here for debug logging
     const sub1 = Notifications.addNotificationReceivedListener(event => {
+      invalidateCachedUnreadPage()
       logger.debug(
         'Notifications: received',
         {event},
@@ -131,11 +133,13 @@ export function useNotificationsListener(queryClient: QueryClient) {
           )
           track('Notificatons:OpenApp')
           logEvent('notifications:openApp', {})
+          invalidateCachedUnreadPage()
           truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
           resetToTab('NotificationsTab') // open notifications tab
         }
       },
     )
+
     return () => {
       sub1.remove()
       sub2.remove()
