@@ -19,7 +19,6 @@ import {init as initPersistedState} from '#/state/persisted'
 import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useNotificationsListener} from 'lib/notifications/notifications'
 import {QueryProvider} from 'lib/react-query'
 import {s} from 'lib/styles'
@@ -58,7 +57,6 @@ function InnerApp() {
   const {_} = useLingui()
 
   useIntentHandler()
-  useOTAUpdates()
 
   // init
   useEffect(() => {
