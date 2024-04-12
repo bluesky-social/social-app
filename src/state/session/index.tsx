@@ -120,7 +120,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     configureModeration(newAgent)
   }, [currentAgent, persistNextUpdate, setCurrentAgent])
 
-  React.useMemo(() => {
+  React.useEffect(() => {
+    /*
+     * This method is continually overwritten when `currentAgent` and dependent
+     * methods local to this file change, so that the freshest agent and
+     * handlers are always used.
+     */
     currentAgent.setPersistSessionHandler(event => {
       logger.debug(
         `session: persistSession`,
@@ -240,7 +245,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       upsertAndPersistAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
-
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
@@ -404,7 +408,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.DebugContext.session,
       )
 
-      // already persisted on other side of broadcast
+      /*
+       * Accounts are already persisted on other side of broadcast, but we need
+       * to update them in memory in this tab.
+       */
       setAccounts(persistedSession.accounts)
 
       const selectedAccount = persistedSession.accounts.find(
@@ -433,7 +440,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             {},
             logger.DebugContext.session,
           )
-          // console.log('UPDATE', { refreshJwt: selectedAccount.refreshJwt.slice(-10) })
+          /*
+           * Create a new agent for the same account, with updated data from
+           * other side of broadcast. Update on state to re-derive
+           * `currentAccount` and re-render the app.
+           */
           const newAgent = currentAgent.clone()
           newAgent.session = sessionAccountToAgentSession(selectedAccount)
           configureModeration(newAgent, selectedAccount)
