@@ -44,7 +44,13 @@ const floatingMiddlewares = [
   }),
 ]
 
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
+  return isTouchDevice ? props.children : <ProfileHoverCardInner {...props} />
+}
+
+export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const [hovered, setHovered] = React.useState(false)
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
