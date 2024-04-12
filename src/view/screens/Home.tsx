@@ -14,6 +14,7 @@ import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -51,6 +52,8 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: FeedSourceInfo[]
 }) {
+  useOTAUpdates()
+
   const allFeeds = React.useMemo(() => {
     const feeds: FeedDescriptor[] = []
     feeds.push('home')
