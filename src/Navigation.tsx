@@ -193,7 +193,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
-        options={{title: title(msg`Feed`), requireAuth: true}}
+        options={{title: title(msg`Feed`)}}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
@@ -331,11 +331,7 @@ function HomeTabNavigator() {
         animationDuration: 250,
         contentStyle: pal.view,
       }}>
-      <HomeTab.Screen
-        name="Home"
-        getComponent={() => HomeScreen}
-        options={{requireAuth: true}}
-      />
+      <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -371,11 +367,7 @@ function FeedsTabNavigator() {
         animationDuration: 250,
         contentStyle: pal.view,
       }}>
-      <FeedsTab.Screen
-        name="Feeds"
-        getComponent={() => FeedsScreen}
-        options={{requireAuth: true}}
-      />
+      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
       {commonScreens(FeedsTab as typeof HomeTab)}
     </FeedsTab.Navigator>
   )
@@ -451,7 +443,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: title(msg`Home`), requireAuth: true}}
+        options={{title: title(msg`Home`)}}
       />
       <Flat.Screen
         name="Search"
@@ -461,7 +453,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`), requireAuth: true}}
+        options={{title: title(msg`Feeds`)}}
       />
       <Flat.Screen
         name="Notifications"
