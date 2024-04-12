@@ -1,18 +1,19 @@
 import React, {memo} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {Text} from './text/Text'
-import {TextLinkOnWebOnly} from './Link'
-import {niceDate} from 'lib/strings/time'
+import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
+
+import {usePrefetchProfileQuery} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {UserAvatar} from './UserAvatar'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {niceDate} from 'lib/strings/time'
+import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
+import {TextLinkOnWebOnly} from './Link'
+import {Text} from './text/Text'
 import {TimeElapsed} from './TimeElapsed'
-import {makeProfileLink} from 'lib/routes/links'
-import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
-import {usePrefetchProfileQuery} from '#/state/queries/profile'
+import {PreviewableUserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic
@@ -38,9 +39,11 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     <View style={[styles.container, opts.style]}>
       {opts.showAvatar && (
         <View style={styles.avatar}>
-          <UserAvatar
-            avatar={opts.author.avatar}
+          <PreviewableUserAvatar
             size={opts.avatarSize || 16}
+            did={opts.author.did}
+            handle={opts.author.handle}
+            avatar={opts.author.avatar}
             moderation={opts.avatarModeration}
             type={opts.author.associated?.labeler ? 'labeler' : 'user'}
           />

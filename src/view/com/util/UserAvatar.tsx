@@ -1,30 +1,32 @@
 import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
-import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {ModerationUI} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {HighPriorityImage} from 'view/com/util/images/Image'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {
-  usePhotoLibraryPermission,
-  useCameraPermission,
-} from 'lib/hooks/usePermissions'
-import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid, isNative} from 'platform/detection'
-import {UserPreviewLink} from './UserPreviewLink'
-import * as Menu from '#/components/Menu'
 import {
-  Camera_Stroke2_Corner0_Rounded as Camera,
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from 'lib/hooks/usePermissions'
+import {makeProfileLink} from 'lib/routes/links'
+import {colors} from 'lib/styles'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {HighPriorityImage} from 'view/com/util/images/Image'
+import {tokens, useTheme} from '#/alf'
+import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+  Camera_Stroke2_Corner0_Rounded as Camera,
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {useTheme, tokens} from '#/alf'
+import {Link} from '#/components/Link'
+import * as Menu from '#/components/Menu'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -372,10 +374,18 @@ export {EditableUserAvatar}
 let PreviewableUserAvatar = (
   props: PreviewableUserAvatarProps,
 ): React.ReactNode => {
+  const {_} = useLingui()
   return (
-    <UserPreviewLink did={props.did} handle={props.handle}>
-      <UserAvatar {...props} />
-    </UserPreviewLink>
+    <ProfileHoverCard did={props.did}>
+      <Link
+        label={_(msg`See profile`)}
+        to={makeProfileLink({
+          did: props.did,
+          handle: props.handle,
+        })}>
+        <UserAvatar {...props} />
+      </Link>
+    </ProfileHoverCard>
   )
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)

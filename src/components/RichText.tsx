@@ -7,7 +7,7 @@ import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, LinkProps} from '#/components/Link'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {Text, TextProps} from '#/components/Typography'
 
@@ -22,6 +22,7 @@ export function RichText({
   selectable,
   enableTags = false,
   authorHandle,
+  onLinkPress,
 }: TextStyleProp &
   Pick<TextProps, 'selectable'> & {
     value: RichTextAPI | string
@@ -30,6 +31,7 @@ export function RichText({
     disableLinks?: boolean
     enableTags?: boolean
     authorHandle?: string
+    onLinkPress?: LinkProps['onPress']
   }) {
   const richText = React.useMemo(
     () =>
@@ -90,7 +92,8 @@ export function RichText({
           to={`/profile/${mention.did}`}
           style={[...styles, {pointerEvents: 'auto'}]}
           // @ts-ignore TODO
-          dataSet={WORD_WRAP}>
+          dataSet={WORD_WRAP}
+          onPress={onLinkPress}>
           {segment.text}
         </InlineLinkText>,
       )
@@ -106,7 +109,8 @@ export function RichText({
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
-            shareOnLongPress>
+            shareOnLongPress
+            onPress={onLinkPress}>
             {toShortUrl(segment.text)}
           </InlineLinkText>,
         )
