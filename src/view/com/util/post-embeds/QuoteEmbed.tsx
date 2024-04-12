@@ -13,12 +13,13 @@ import {
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {Trans} from '@lingui/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/queries/preferences'
+import {RQKEY as RQKEY_URI} from '#/state/queries/resolve-uri'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
-import {useAddDidToCache} from 'state/queries/resolve-uri'
 import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
@@ -109,12 +110,11 @@ export function QuoteEmbed({
   moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
-
-  useAddDidToCache(quote.author.handle, quote.author.did)
 
   const richText = React.useMemo(
     () =>
@@ -144,7 +144,13 @@ export function QuoteEmbed({
         style={[styles.container, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
-        title={itemTitle}>
+        title={itemTitle}
+        onBeforePress={() => {
+          queryClient.setQueryData(
+            RQKEY_URI(quote.author.handle),
+            quote.author.did,
+          )
+        }}>
         <View pointerEvents="none">
           <PostMeta
             author={quote.author}
