@@ -85,7 +85,7 @@ func serve(cctx *cli.Context) error {
 	e.HideBanner = true
 
 	tmpl := &Template{
-		templates: template.Must(template.ParseGlob("embed-templates/*.html")),
+		templates: template.Must(template.ParseFS(bskyweb.EmbedrTemplateFS, "embedr-templates/*.html")),
 	}
 	e.Renderer = tmpl
 	e.HTTPErrorHandler = server.errorHandler
@@ -104,7 +104,7 @@ func serve(cctx *cli.Context) error {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		// Don't log requests for static content.
 		Skipper: func(c echo.Context) bool {
-			return strings.HasPrefix(c.Request().URL.Path, "/embed-static")
+			return strings.HasPrefix(c.Request().URL.Path, "/embedr-static")
 		},
 	}))
 	e.Use(middleware.RateLimiterWithConfig(middleware.RateLimiterConfig{
@@ -174,7 +174,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/", server.WebHome)
 	e.GET("/embed.js", echo.WrapHandler(staticHandler))
 	e.GET("/oembed", server.WebOEmbed)
-	e.GET("/embed/did/app.bsky.feed.post/rkey", server.WebPostEmbed)
+	e.GET("/embed/:did/app.bsky.feed.post/:rkey", server.WebPostEmbed)
 
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
@@ -253,18 +253,16 @@ func (srv *Server) WebPostEmbed(c echo.Context) error {
 	if err != nil {
 		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
-	handleOrDIDParam := c.Param("handleOrDID")
-	handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
+	didParam := c.Param("did")
+	did, err := syntax.ParseDID(didParam)
 	if err != nil {
 		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
 
-	identifier := handleOrDID.Normalize().String()
-
 	// requires two fetches: first fetch profile (!)
-	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
+	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, did.String())
 	if err != nil {
-		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
+		log.Warnf("failed to fetch profile for: %s\t%v", did, err)
 		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
 	unauthedViewingOkay := true
@@ -277,8 +275,7 @@ func (srv *Server) WebPostEmbed(c echo.Context) error {
 	if !unauthedViewingOkay {
 		return c.Render(http.StatusOK, "postEmbed.html", data)
 	}
-	did := pv.Did
-	data["did"] = did
+	data["did"] = did.String()
 
 	// then fetch the post thread (with extra context)
 	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
