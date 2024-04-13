@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -51,15 +51,21 @@ function ShellInner() {
       <PortalOutlet />
 
       {!isDesktop && isDrawerOpen && (
-        <TouchableOpacity
-          onPress={() => setDrawerOpen(false)}
-          style={styles.drawerMask}
+        <TouchableWithoutFeedback
+          onPress={ev => {
+            // Only close if press happens outside of the drawer
+            if (ev.target === ev.currentTarget) {
+              setDrawerOpen(false)
+            }
+          }}
           accessibilityLabel={_(msg`Close navigation footer`)}
           accessibilityHint={_(msg`Closes bottom navigation bar`)}>
-          <View style={styles.drawerContainer}>
-            <DrawerContent />
+          <View style={styles.drawerMask}>
+            <View style={styles.drawerContainer}>
+              <DrawerContent />
+            </View>
           </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       )}
     </>
   )
