@@ -183,6 +183,8 @@ let PostDropdownBtn = ({
     shareUrl(url)
   }, [href])
 
+  const canEmbed = isWeb && gtMobile && !shouldShowLoggedOutWarning
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -245,7 +247,7 @@ let PostDropdownBtn = ({
               <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
 
-            {gtMobile && !shouldShowLoggedOutWarning && (
+            {canEmbed && (
               <Menu.Item
                 testID="postDropdownEmbedBtn"
                 label={_(msg`Embed post`)}
@@ -367,14 +369,16 @@ let PostDropdownBtn = ({
         confirmButtonCta={_(msg`Share anyway`)}
       />
 
-      <EmbedDialog
-        control={embedPostControl}
-        postCid={postCid}
-        postUri={postUri}
-        record={record}
-        postAuthor={postAuthor}
-        timestamp={timestamp}
-      />
+      {canEmbed && (
+        <EmbedDialog
+          control={embedPostControl}
+          postCid={postCid}
+          postUri={postUri}
+          record={record}
+          postAuthor={postAuthor}
+          timestamp={timestamp}
+        />
+      )}
     </EventStopper>
   )
 }
