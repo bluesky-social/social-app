@@ -31,7 +31,7 @@ export function Post({thread}: Props) {
   return (
     <Container href={href}>
       <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
-        <div className="flex gap-2.5 items-center">
+        <div className="flex gap-2.5 items-center cursor-pointer">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
             <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-300 shrink-0">
               <img
@@ -40,7 +40,7 @@ export function Post({thread}: Props) {
               />
             </div>
           </Link>
-          <div className="flex-1">
+          <div>
             <Link
               href={`/profile/${post.author.did}`}
               className="font-bold text-[17px] leading-5 line-clamp-1 hover:underline underline-offset-2 decoration-2">
@@ -52,6 +52,7 @@ export function Post({thread}: Props) {
               <p>@{post.author.handle}</p>
             </Link>
           </div>
+          <div className="flex-1" />
           <Link
             href={href}
             className="transition-transform hover:scale-110 shrink-0 self-start">
@@ -60,12 +61,14 @@ export function Post({thread}: Props) {
         </div>
         <PostContent record={record} />
         <Embed content={post.embed} labels={post.labels} />
-        <time
-          datetime={new Date(post.indexedAt).toISOString()}
-          className="text-textLight mt-1 text-sm">
-          {niceDate(post.indexedAt)}
-        </time>
-        <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm">
+        <Link href={href}>
+          <time
+            datetime={new Date(post.indexedAt).toISOString()}
+            className="text-textLight mt-1 text-sm hover:underline">
+            {niceDate(post.indexedAt)}
+          </time>
+        </Link>
+        <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">
           {!!post.likeCount && (
             <div className="flex items-center gap-2 cursor-pointer">
               <img src={likeIcon as string} className="w-5 h-5" />
