@@ -59,9 +59,17 @@ function scan(node = document) {
       continue
     }
 
+    const ref_url = encodeURIComponent(location.origin + location.pathname)
+
+    const searchParams = new URLSearchParams()
+    searchParams.set('id', id)
+    searchParams.set('ref_url', ref_url)
+
     const iframe = document.createElement('iframe')
     iframe.setAttribute('data-bluesky-id', id)
-    iframe.src = `${EMBED_URL}/embed/${aturi.slice('at://'.length)}?id=${id}`
+    iframe.src = `${EMBED_URL}/embed/${aturi.slice(
+      'at://'.length,
+    )}?${searchParams.toString()}`
     iframe.width = '100%'
     iframe.style.border = 'none'
     iframe.style.display = 'block'
