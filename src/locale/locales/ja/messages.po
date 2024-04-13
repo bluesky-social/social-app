@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-11-22 17:10-0800\n"
+"POT-Creation-Date: 2024-03-19 20:30-0700\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8,8 +8,8 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-03-24 09:30+0900\n"
-"Last-Translator: Hima-Zinn\n"
+"PO-Revision-Date: 2024-04-05 22:07+0900\n"
+"Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
 
@@ -433,7 +433,7 @@ msgstr "芸術的または性的ではないヌード。"
 
 #: src/screens/Signup/StepHandle.tsx:118
 msgid "At least 3 characters"
-msgstr ""
+msgstr "少なくとも３文字"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 #: src/components/moderation/LabelsOnMeDialog.tsx:247
@@ -466,11 +466,11 @@ msgstr "基本"
 
 #: src/components/dialogs/BirthDateSettings.tsx:107
 msgid "Birthday"
-msgstr "誕生日"
+msgstr "生年月日"
 
 #: src/view/screens/Settings/index.tsx:359
 msgid "Birthday:"
-msgstr "誕生日："
+msgstr "生年月日："
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:287
 #: src/view/com/profile/ProfileMenu.tsx:361
@@ -940,7 +940,7 @@ msgstr "このカテゴリのコンテンツフィルタリングを設定：{0}
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr ""
+msgstr "このカテゴリのコンテンツフィルタリングを設定：{name}"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
@@ -1064,7 +1064,7 @@ msgstr "続行"
 
 #: src/components/AccountList.tsx:108
 msgid "Continue as {0} (currently signed in)"
-msgstr ""
+msgstr "{0}として続行 (現在サインイン中)"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:151
 #: src/screens/Onboarding/StepInterests/index.tsx:249
@@ -1234,7 +1234,7 @@ msgstr "ダークテーマ"
 
 #: src/screens/Signup/StepInfo/index.tsx:132
 msgid "Date of birth"
-msgstr ""
+msgstr "生年月日"
 
 #: src/Navigation.tsx:204
 #~ msgid "Debug"
@@ -1385,7 +1385,7 @@ msgstr "ヌードは含まれません。"
 
 #: src/screens/Signup/StepHandle.tsx:104
 msgid "Doesn't begin or end with a hyphen"
-msgstr ""
+msgstr "ハイフンで始まったり終ったりしない"
 
 #: src/view/com/modals/ChangeHandle.tsx:481
 msgid "Domain Value"
@@ -1605,7 +1605,7 @@ msgstr "フィードで成人向けコンテンツを有効にする"
 #: src/components/dialogs/EmbedConsent.tsx:82
 #: src/components/dialogs/EmbedConsent.tsx:89
 msgid "Enable external media"
-msgstr ""
+msgstr "外部メディアを有効にする"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 #~ msgid "Enable External Media"
@@ -1621,7 +1621,7 @@ msgstr "この設定を有効にすると、自分がフォローしているユ
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
-msgstr ""
+msgstr "このソースのみ有効にする"
 
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
@@ -1637,7 +1637,7 @@ msgstr "このアプリパスワードの名前を入力"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:139
 msgid "Enter a password"
-msgstr ""
+msgstr "パスワードを入力"
 
 #: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
@@ -1666,7 +1666,7 @@ msgstr "アカウントの作成に使用したメールアドレスを入力し
 
 #: src/components/dialogs/BirthDateSettings.tsx:108
 msgid "Enter your birth date"
-msgstr "誕生日を入力してください"
+msgstr "生年月日を入力してください"
 
 #: src/view/com/modals/Waitlist.tsx:78
 #~ msgid "Enter your email"
@@ -1943,7 +1943,7 @@ msgstr "すべてのアカウントをフォロー"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
-msgstr ""
+msgstr "フォローバック"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
@@ -2040,11 +2040,11 @@ msgstr "パスワードを忘れた"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Forgot password?"
-msgstr ""
+msgstr "パスワードを忘れた？"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Forgot?"
-msgstr ""
+msgstr "忘れた？"
 
 #: src/lib/moderation/useReportOptions.ts:52
 msgid "Frequently Posts Unwanted Content"
@@ -2438,7 +2438,7 @@ msgstr "招待コード：１個使用可能"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 msgid "It shows posts from the people you follow as they happen."
-msgstr "あなたがフォローした人の投稿が随時表示されます。"
+msgstr "あなたがフォローしたユーザーの投稿が随時表示されます。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:104
 #: src/view/com/auth/SplashScreen.web.tsx:172
@@ -2514,6 +2514,10 @@ msgstr "言語"
 #: src/view/com/auth/create/StepHeader.tsx:20
 #~ msgid "Last step!"
 #~ msgstr "最後のステップ！"
+
+#: src/view/screens/Search/Search.tsx:380
+msgid "Latest"
+msgstr "最新"
 
 #: src/view/com/util/moderation/ContentHider.tsx:103
 #~ msgid "Learn more"
@@ -2736,7 +2740,7 @@ msgstr "リストにないアカウントにログイン"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
-msgstr ""
+msgstr "XXXXX-XXXXXみたいなもの"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2965,7 +2969,7 @@ msgstr "ミュートの設定は非公開です。ミュート中のアカウン
 #: src/components/dialogs/BirthDateSettings.tsx:35
 #: src/components/dialogs/BirthDateSettings.tsx:38
 msgid "My Birthday"
-msgstr "誕生日"
+msgstr "生年月日"
 
 #: src/view/screens/Feeds.tsx:663
 msgid "My Feeds"
@@ -3018,7 +3022,7 @@ msgstr "あなたのプロフィールに移動します"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:122
 msgid "Need to report a copyright violation?"
-msgstr "著作権違反を報告する必要がありますか?"
+msgstr "著作権侵害を報告する必要がありますか？"
 
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
@@ -3145,7 +3149,7 @@ msgstr "{0}のフォローを解除しました"
 
 #: src/screens/Signup/StepHandle.tsx:114
 msgid "No longer than 253 characters"
-msgstr ""
+msgstr "253文字まで"
 
 #: src/view/com/notifications/Feed.tsx:109
 msgid "No notifications yet!"
@@ -3232,7 +3236,7 @@ msgstr "ヌード"
 
 #: src/lib/moderation/useReportOptions.ts:71
 msgid "Nudity or adult content not labeled as such"
-msgstr ""
+msgstr "ヌードあるいは成人向けコンテンツと表示されていないもの"
 
 #: src/lib/moderation/useReportOptions.ts:71
 #~ msgid "Nudity or pornography not labeled as such"
@@ -3240,7 +3244,7 @@ msgstr ""
 
 #: src/screens/Signup/index.tsx:142
 msgid "of"
-msgstr ""
+msgstr "/"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -3281,7 +3285,7 @@ msgstr "{0}のみ返信可能"
 
 #: src/screens/Signup/StepHandle.tsx:97
 msgid "Only contains letters, numbers, and hyphens"
-msgstr ""
+msgstr "英数字とハイフンのみ"
 
 #: src/components/Lists.tsx:75
 msgid "Oops, something went wrong!"
@@ -3541,6 +3545,11 @@ msgstr "パスワードが更新されました"
 msgid "Password updated!"
 msgstr "パスワードが更新されました！"
 
+#: src/view/screens/Search/Search.tsx:390
+#: src/view/screens/Search/Search.tsx:399
+msgid "People"
+msgstr "ユーザー"
+
 #: src/Navigation.tsx:164
 msgid "People followed by @{0}"
 msgstr "@{0}がフォロー中のユーザー"
@@ -3757,7 +3766,7 @@ msgstr "誤解を招く可能性のあるリンク"
 
 #: src/components/forms/HostingProvider.tsx:45
 msgid "Press to change hosting provider"
-msgstr ""
+msgstr "ホスティングプロバイダーを変える"
 
 #: src/components/Error.tsx:74
 #: src/components/Lists.tsx:80
@@ -3996,7 +4005,7 @@ msgstr "アカウントを報告"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
-msgstr ""
+msgstr "報告ダイアログ"
 
 #: src/view/screens/ProfileFeed.tsx:352
 #: src/view/screens/ProfileFeed.tsx:354
@@ -4101,11 +4110,11 @@ msgstr "このプロバイダーに必要"
 
 #: src/view/com/modals/ChangePassword.tsx:185
 msgid "Reset code"
-msgstr "コードをリセット"
+msgstr "リセットコード"
 
 #: src/view/com/modals/ChangePassword.tsx:192
 msgid "Reset Code"
-msgstr "コードをリセット"
+msgstr "リセットコード"
 
 #: src/view/screens/Settings/index.tsx:824
 #~ msgid "Reset onboarding"
@@ -4199,7 +4208,7 @@ msgstr "ALTテキストを保存"
 
 #: src/components/dialogs/BirthDateSettings.tsx:119
 msgid "Save birthday"
-msgstr "誕生日を保存"
+msgstr "生年月日を保存"
 
 #: src/view/com/modals/EditProfile.tsx:233
 msgid "Save Changes"
@@ -4340,7 +4349,7 @@ msgstr "{item}を選択"
 
 #: src/screens/Login/ChooseAccountForm.tsx:61
 msgid "Select account"
-msgstr ""
+msgstr "アカウントを選択"
 
 #: src/view/com/modals/ServerInput.tsx:75
 #~ msgid "Select Bluesky Social"
@@ -4405,7 +4414,7 @@ msgstr "アプリに表示されるデフォルトのテキストの言語を選
 
 #: src/screens/Signup/StepInfo/index.tsx:133
 msgid "Select your date of birth"
-msgstr ""
+msgstr "生年月日を選択"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:200
 msgid "Select your interests from the options below"
@@ -4638,11 +4647,11 @@ msgstr "フィードを共有"
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Share Link"
-msgstr ""
+msgstr "リンクを共有"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
-msgstr ""
+msgstr "リンクしたウェブサイトを共有"
 
 #: src/components/moderation/ContentHider.tsx:115
 #: src/components/moderation/LabelPreference.tsx:136
@@ -4912,7 +4921,7 @@ msgstr "ステータスページ"
 
 #: src/screens/Signup/index.tsx:142
 msgid "Step"
-msgstr ""
+msgstr "ステップ"
 
 #: src/view/com/auth/create/StepHeader.tsx:22
 #~ msgid "Step {0} of {numSteps}"
@@ -5424,6 +5433,10 @@ msgstr "ドロップダウンをトグル"
 msgid "Toggle to enable or disable adult content"
 msgstr "成人向けコンテンツの有効もしくは無効の切り替え"
 
+#: src/view/screens/Search/Search.tsx:370
+msgid "Top"
+msgstr "トップ"
+
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
 msgstr "変換"
@@ -5769,7 +5782,7 @@ msgstr "メールアドレスを確認"
 
 #: src/view/screens/Settings/index.tsx:893
 msgid "Version {0}"
-msgstr ""
+msgstr "バージョン {0}"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
@@ -6133,7 +6146,7 @@ msgstr "これらのラベルが誤って貼られたと思った場合は、異
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
-msgstr ""
+msgstr "サインアップするには、13歳以上である必要があります。"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 #~ msgid "You must be 18 or older to enable adult content."
