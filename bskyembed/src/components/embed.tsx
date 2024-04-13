@@ -14,10 +14,40 @@ import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import {getRkey} from '../utils'
 import {Link} from './link'
 
-export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
+const ADULT_CONTENT_LABELS = ['porn', 'sexual', 'nudity']
+
+function labelToInfo(label: string): string {
+  switch (label) {
+    case 'porn':
+    case 'sexual':
+      return 'Adult Content'
+    case 'nudity':
+      return 'Non-sexual Nudity'
+    case 'graphic-media':
+      return 'Graphic Media'
+    default:
+      return 'Content Warning'
+  }
+}
+
+export function Embed({
+  content,
+  labels,
+}: {
+  content: AppBskyFeedDefs.PostView['embed']
+  labels: AppBskyFeedDefs.PostView['labels']
+}) {
   if (!content) return null
 
+  const isPostLabeled =
+    labels && labels?.some(label => ADULT_CONTENT_LABELS.includes(label.val))
+
   try {
+    // Case 0: Labelled post
+    if (isPostLabeled) {
+      return <Info>{labelToInfo(labels[0].val)}</Info>
+    }
+
     // Case 1: Image
     if (AppBskyEmbedImages.isView(content)) {
       return <ImageEmbed content={content} />
@@ -74,7 +104,11 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
                 return false
               })
               .map(embed => (
-                <Embed key={embed.$type} content={embed} />
+                <Embed
+                  key={embed.$type}
+                  content={embed}
+                  labels={record.labels}
+                />
               ))}
           </Link>
         )
@@ -137,15 +171,19 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
     }
 
     // Case 4: Record with media
-    if (AppBskyEmbedRecordWithMedia.isView(content)) {
+    if (
+      AppBskyEmbedRecordWithMedia.isView(content) &&
+      AppBskyEmbedRecord.isViewRecord(content.record.record)
+    ) {
       return (
         <div className="flex flex-col gap-2">
-          <Embed content={content.media} />
+          <Embed content={content.media} labels={labels} />
           <Embed
             content={{
               $type: 'app.bsky.embed.record#view',
               record: content.record.record,
             }}
+            labels={content.record.record.labels}
           />
         </div>
       )
@@ -162,7 +200,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 function Info({children}: {children: ComponentChildren}) {
   return (
     <div className="w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
-      <img src={infoIcon as string} className="w-4 h-4 shrink-0 mt-0.5" />
+      <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight">{children}</p>
     </div>
   )
