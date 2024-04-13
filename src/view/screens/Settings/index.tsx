@@ -57,6 +57,10 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
 import {
+  useAvatarHoverDisabled,
+  useSetAvatarHoverDisabled,
+} from 'state/preferences/disable-avatar-hover'
+import {
   useHapticsDisabled,
   useSetHapticsDisabled,
 } from 'state/preferences/disable-haptics'
@@ -168,6 +172,8 @@ export function SettingsScreen({}: Props) {
   const setUseInAppBrowser = useSetInAppBrowser()
   const isHapticsDisabled = useHapticsDisabled()
   const setHapticsDisabled = useSetHapticsDisabled()
+  const isAvatarHoverDisabled = useAvatarHoverDisabled()
+  const setAvatarHoverDisabled = useSetAvatarHoverDisabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -678,27 +684,37 @@ export function SettingsScreen({}: Props) {
             <Trans>Change Handle</Trans>
           </Text>
         </TouchableOpacity>
-        {isNative && (
+        {isNative ? (
+          <>
+            <View style={[pal.view, styles.toggleCard]}>
+              <ToggleButton
+                type="default-light"
+                label={_(msg`Open links with in-app browser`)}
+                labelType="lg"
+                isSelected={inAppBrowserPref ?? false}
+                onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
+              />
+            </View>
+            <View style={[pal.view, styles.toggleCard]}>
+              <ToggleButton
+                type="default-light"
+                label={
+                  isIOS ? _(msg`Disable haptics`) : _(msg`Disable vibrations`)
+                }
+                labelType="lg"
+                isSelected={isHapticsDisabled}
+                onPress={() => setHapticsDisabled(!isHapticsDisabled)}
+              />
+            </View>
+          </>
+        ) : (
           <View style={[pal.view, styles.toggleCard]}>
             <ToggleButton
               type="default-light"
-              label={_(msg`Open links with in-app browser`)}
+              label={_(msg`Disable profile previews on hover`)}
               labelType="lg"
-              isSelected={inAppBrowserPref ?? false}
-              onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
-            />
-          </View>
-        )}
-        {isNative && (
-          <View style={[pal.view, styles.toggleCard]}>
-            <ToggleButton
-              type="default-light"
-              label={
-                isIOS ? _(msg`Disable haptics`) : _(msg`Disable vibrations`)
-              }
-              labelType="lg"
-              isSelected={isHapticsDisabled}
-              onPress={() => setHapticsDisabled(!isHapticsDisabled)}
+              isSelected={isAvatarHoverDisabled ?? false}
+              onPress={() => setAvatarHoverDisabled(!isAvatarHoverDisabled)}
             />
           </View>
         )}

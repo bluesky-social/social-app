@@ -14,6 +14,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useProfileShadow} from 'state/cache/profile-shadow'
+import {useAvatarHoverDisabled} from 'state/preferences/disable-avatar-hover'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ProfileHeaderHandle} from '#/screens/Profile/Header/Handle'
@@ -48,7 +49,13 @@ const floatingMiddlewares = [
 const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
-  return isTouchDevice ? props.children : <ProfileHoverCardInner {...props} />
+  const isAvatarHoverDisabled = useAvatarHoverDisabled()
+
+  if (isAvatarHoverDisabled || isTouchDevice) {
+    return props.children
+  }
+
+  return <ProfileHoverCardInner {...props} />
 }
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
