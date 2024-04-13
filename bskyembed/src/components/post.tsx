@@ -55,7 +55,7 @@ export function Post({thread}: Props) {
           <Link
             href={href}
             className="transition-transform hover:scale-110 shrink-0 self-start">
-            <img src={logo} className="h-8" />
+            <img src={logo as string} className="h-8" />
           </Link>
         </div>
         <PostContent record={record} />
@@ -68,7 +68,7 @@ export function Post({thread}: Props) {
         <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm">
           {!!post.likeCount && (
             <div className="flex items-center gap-2 cursor-pointer">
-              <img src={likeIcon} className="w-5 h-5" />
+              <img src={likeIcon as string} className="w-5 h-5" />
               <p className="font-bold text-neutral-500 mb-px">
                 {post.likeCount}
               </p>
@@ -76,14 +76,14 @@ export function Post({thread}: Props) {
           )}
           {!!post.repostCount && (
             <div className="flex items-center gap-2 cursor-pointer">
-              <img src={repostIcon} className="w-5 h-5" />
+              <img src={repostIcon as string} className="w-5 h-5" />
               <p className="font-bold text-neutral-500 mb-px">
                 {post.repostCount}
               </p>
             </div>
           )}
           <div className="flex items-center gap-2 cursor-pointer">
-            <img src={replyIcon} className="w-5 h-5" />
+            <img src={replyIcon as string} className="w-5 h-5" />
             <p className="font-bold text-neutral-500 mb-px">Reply</p>
           </div>
           <div className="flex-1" />
