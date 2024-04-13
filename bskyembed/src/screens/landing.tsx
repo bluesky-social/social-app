@@ -159,6 +159,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
       return ''
     }
 
+    const lang = record.langs && record.langs.length > 0 ? record.langs[0] : ''
     const profileHref = toShareUrl(
       ['/profile', thread.post.author.did].join('/'),
     )
@@ -167,10 +168,9 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
       ['/profile', thread.post.author.did, 'post', urip.rkey].join('/'),
     )
 
-    const lang = record.langs ? record.langs[0] : ''
-
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
-    // DO NOT ADD ANY NEW INTERPOLATIOONS BELOW WITHOUT ESCAPING THEM!
+    // DO NOT ADD ANY NEW INTERPOLATIONS BELOW WITHOUT ESCAPING THEM!
+    // Also, keep this code synced with the app code in Embed.tsx.
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
     return `<blockquote class="bluesky-embed" data-bluesky-uri="${escapeHtml(
       thread.post.uri,
