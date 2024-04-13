@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build-snippet": "tsc --project tsconfig.snippet.json",
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx src"
   },
   "dependencies": {

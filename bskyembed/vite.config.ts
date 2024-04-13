@@ -1,3 +1,5 @@
+import {resolve} from 'node:path'
+
 import preact from '@preact/preset-vite'
 import legacy from '@vitejs/plugin-legacy'
 import type {UserConfig} from 'vite'
@@ -12,7 +14,13 @@ const config: UserConfig = {
     }),
   ],
   build: {
-    assetsDir: 'static/embed/assets',
+    assetsDir: 'static',
+    rollupOptions: {
+      input: {
+        index: resolve(__dirname, 'index.html'),
+        post: resolve(__dirname, 'post.html'),
+      },
+    },
   },
 }
 

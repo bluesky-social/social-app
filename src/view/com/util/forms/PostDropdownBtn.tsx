@@ -28,12 +28,14 @@ import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
-import {atoms as a, useTheme as useAlf} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {EmbedDialog} from '#/components/dialogs/Embed'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
+import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
@@ -55,6 +57,7 @@ let PostDropdownBtn = ({
   richText,
   style,
   hitSlop,
+  timestamp,
 }: {
   testID: string
   postAuthor: AppBskyActorDefs.ProfileViewBasic
@@ -64,10 +67,12 @@ let PostDropdownBtn = ({
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   hitSlop?: PressableProps['hitSlop']
+  timestamp: string
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const alf = useAlf()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
@@ -83,6 +88,7 @@ let PostDropdownBtn = ({
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
   const loggedOutWarningPromptControl = useDialogControl()
+  const embedPostControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -177,6 +183,8 @@ let PostDropdownBtn = ({
     shareUrl(url)
   }, [href])
 
+  const canEmbed = isWeb && gtMobile && !shouldShowLoggedOutWarning
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -238,6 +246,16 @@ let PostDropdownBtn = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
+
+            {canEmbed && (
+              <Menu.Item
+                testID="postDropdownEmbedBtn"
+                label={_(msg`Embed post`)}
+                onPress={embedPostControl.open}>
+                <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={CodeBrackets} position="right" />
+              </Menu.Item>
+            )}
           </Menu.Group>
 
           {hasSession && (
@@ -350,6 +368,17 @@ let PostDropdownBtn = ({
         onConfirm={onSharePost}
         confirmButtonCta={_(msg`Share anyway`)}
       />
+
+      {canEmbed && (
+        <EmbedDialog
+          control={embedPostControl}
+          postCid={postCid}
+          postUri={postUri}
+          record={record}
+          postAuthor={postAuthor}
+          timestamp={timestamp}
+        />
+      )}
     </EventStopper>
   )
 }

@@ -8,6 +8,7 @@ import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {InlineLinkText, LinkProps} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {Text, TextProps} from '#/components/Typography'
 
@@ -86,16 +87,17 @@ export function RichText({
       !disableLinks
     ) {
       els.push(
-        <InlineLinkText
-          selectable={selectable}
-          key={key}
-          to={`/profile/${mention.did}`}
-          style={[...styles, {pointerEvents: 'auto'}]}
-          // @ts-ignore TODO
-          dataSet={WORD_WRAP}
-          onPress={onLinkPress}>
-          {segment.text}
-        </InlineLinkText>,
+        <ProfileHoverCard key={key} inline did={mention.did}>
+          <InlineLinkText
+            selectable={selectable}
+            to={`/profile/${mention.did}`}
+            style={[...styles, {pointerEvents: 'auto'}]}
+            // @ts-ignore TODO
+            dataSet={WORD_WRAP}
+            onPress={onLinkPress}>
+            {segment.text}
+          </InlineLinkText>
+        </ProfileHoverCard>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       if (disableLinks) {
