@@ -18,7 +18,7 @@ const agent = new BskyAgent({
 
 const uri = `at://${window.location.pathname.slice('/embed/'.length)}`
 
-console.log(uri)
+/* console.log(uri) */
 
 if (!uri) {
   throw new Error('No uri in path')
