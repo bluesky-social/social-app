@@ -15,12 +15,12 @@ import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
-let refSrc: string | null
-let refUrl: string | null
+let refSrc: string | undefined
+let refUrl: string | undefined
 if (isWeb && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
-  refSrc = params.get('ref_src')
-  refUrl = params.get('ref_url')
+  refSrc = params.get('ref_src') ?? undefined
+  refUrl = params.get('ref_url') ?? undefined
 }
 
 export type {LogEvents}
