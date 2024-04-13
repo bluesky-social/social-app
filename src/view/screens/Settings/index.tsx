@@ -711,7 +711,7 @@ export function SettingsScreen({}: Props) {
           <View style={[pal.view, styles.toggleCard]}>
             <ToggleButton
               type="default-light"
-              label={_(msg`Disable avatar hover cards`)}
+              label={_(msg`Disable hover profile cards`)}
               labelType="lg"
               isSelected={isAvatarHoverDisabled ?? false}
               onPress={() => setAvatarHoverDisabled(!isAvatarHoverDisabled)}
