@@ -72,7 +72,7 @@ export function Inner({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const {refreshSession} = useSessionApi()
+  const {updateCurrentAccount} = useSessionApi()
   const {closeModal} = useModalControls()
   const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
     useUpdateHandleMutation()
@@ -115,7 +115,9 @@ export function Inner({
       await updateHandle({
         handle: newHandle,
       })
-      refreshSession()
+      updateCurrentAccount({
+        handle: newHandle,
+      })
       closeModal()
       onChanged()
     } catch (err: any) {
@@ -131,7 +133,7 @@ export function Inner({
     onChanged,
     track,
     closeModal,
-    refreshSession,
+    updateCurrentAccount,
     updateHandle,
     serviceInfo,
   ])

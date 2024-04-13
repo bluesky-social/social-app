@@ -371,6 +371,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     upsertAndPersistAccount,
   ])
 
+  const updateCurrentAccount = React.useCallback(async () => {
+    await refreshSession()
+  }, [refreshSession])
+
   const selectAccount = React.useCallback<SessionApiContext['selectAccount']>(
     async (account, logContext) => {
       setIsSwitchingAccounts(true)
@@ -504,6 +508,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       selectAccount,
       refreshSession,
       clearCurrentAccount,
+      updateCurrentAccount,
     }),
     [
       createAccount,
@@ -515,6 +520,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       selectAccount,
       refreshSession,
       clearCurrentAccount,
+      updateCurrentAccount,
     ],
   )
 

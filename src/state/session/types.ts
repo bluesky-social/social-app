@@ -77,4 +77,12 @@ export type SessionApiContext = {
    * Refreshes the BskyAgent's session and derive a fresh `currentAccount`
    */
   refreshSession: () => void
+  /**
+   * @deprecated Use `refreshSession` instead.
+   */
+  updateCurrentAccount: (
+    account: Partial<
+      Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
+    >,
+  ) => void
 }
