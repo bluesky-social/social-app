@@ -110,17 +110,15 @@ function LandingPage() {
         <img src={logo as string} className="h-10" />
       </Link>
 
-      <h1 className="text-4xl font-bold">Embed a Bluesky Post</h1>
+      <h1 className="text-4xl font-bold text-center">Embed a Bluesky Post</h1>
 
-      <div className="w-full max-w-[600px] flex flex-col gap-2">
-        <input
-          type="text"
-          value={uri}
-          onInput={e => setUri(e.currentTarget.value)}
-          className="border rounded-lg py-3 w-full max-w-[600px] px-4"
-          placeholder={DEFAULT_POST}
-        />
-      </div>
+      <input
+        type="text"
+        value={uri}
+        onInput={e => setUri(e.currentTarget.value)}
+        className="border rounded-lg py-3 w-full max-w-[600px] px-4"
+        placeholder={DEFAULT_POST}
+      />
 
       <img src={arrowBottom as string} className="w-6" />
 
@@ -128,7 +126,9 @@ function LandingPage() {
         {uri && !error && thread && <Snippet thread={thread} />}
         {!error && thread && <Post thread={thread} key={thread.post.uri} />}
         {error && (
-          <p className={`text-red-500 ${error ? '' : 'invisible'}`}>{error}</p>
+          <div className="w-full border border-red-500 bg-red-50 px-4 py-3 rounded-lg">
+            <p className="text-red-500 text-center">{error}</p>
+          </div>
         )}
       </div>
     </main>
