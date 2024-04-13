@@ -19,9 +19,11 @@ import {Link} from './link'
 export function Embed({
   content,
   labels,
+  hideRecord,
 }: {
   content: AppBskyFeedDefs.PostView['embed']
   labels: AppBskyFeedDefs.PostView['labels']
+  hideRecord?: boolean
 }) {
   const labelInfo = useMemo(() => labelsToInfo(labels), [labels])
 
@@ -40,6 +42,10 @@ export function Embed({
 
     // Case 3: Record (quote or linked post)
     if (AppBskyEmbedRecord.isView(content)) {
+      if (hideRecord) {
+        return null
+      }
+
       const record = content.record
 
       // Case 3.1: Post
@@ -84,19 +90,14 @@ export function Embed({
               </p>
             </div>
             {text && <p className="text-sm">{text}</p>}
-            {record.embeds
-              ?.filter(embed => {
-                if (AppBskyEmbedImages.isView(embed)) return true
-                if (AppBskyEmbedExternal.isView(embed)) return true
-                return false
-              })
-              .map(embed => (
-                <Embed
-                  key={embed.$type}
-                  content={embed}
-                  labels={record.labels}
-                />
-              ))}
+            {record.embeds?.map(embed => (
+              <Embed
+                key={embed.$type}
+                content={embed}
+                labels={record.labels}
+                hideRecord
+              />
+            ))}
           </Link>
         )
       }
@@ -164,13 +165,18 @@ export function Embed({
     ) {
       return (
         <div className="flex flex-col gap-2">
-          <Embed content={content.media} labels={labels} />
+          <Embed
+            content={content.media}
+            labels={labels}
+            hideRecord={hideRecord}
+          />
           <Embed
             content={{
               $type: 'app.bsky.embed.record#view',
               record: content.record.record,
             }}
             labels={content.record.record.labels}
+            hideRecord={hideRecord}
           />
         </div>
       )
