@@ -12,28 +12,9 @@ import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
+import {CONTENT_LABELS, labelsToInfo} from '../labels'
 import {getRkey} from '../utils'
 import {Link} from './link'
-
-const ADULT_CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
-
-function labelsToInfo(
-  labels?: AppBskyFeedDefs.PostView['labels'],
-): string | undefined {
-  const label = labels?.find(label => ADULT_CONTENT_LABELS.includes(label.val))
-
-  switch (label?.val) {
-    case 'porn':
-    case 'sexual':
-      return 'Adult Content'
-    case 'nudity':
-      return 'Non-sexual Nudity'
-    case 'graphic-media':
-      return 'Graphic Media'
-    default:
-      return undefined
-  }
-}
 
 export function Embed({
   content,
@@ -79,15 +60,22 @@ export function Embed({
         if (AppBskyFeedPost.isRecord(record.value)) {
           text = record.value.text
         }
+
+        const isAuthorLabeled = record.author.labels?.some(label =>
+          CONTENT_LABELS.includes(label.val),
+        )
+
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
             className="transition-colors hover:bg-neutral-100 border rounded-lg p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <img
-                src={record.author.avatar}
-                className="w-4 h-4 rounded-full bg-neutral-300 shrink-0"
-              />
+              <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 shrink-0">
+                <img
+                  src={record.author.avatar}
+                  style={isAuthorLabeled ? {filter: 'blur(1.5px)'} : undefined}
+                />
+              </div>
               <p className="line-clamp-1 text-sm">
                 <span className="font-bold">{record.author.displayName}</span>
                 <span className="text-textLight ml-1">
