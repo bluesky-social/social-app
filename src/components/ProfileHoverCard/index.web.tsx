@@ -74,6 +74,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const prefetchedProfile = React.useRef(false)
   const prefetchIfNeeded = React.useCallback(async () => {
     if (!prefetchedProfile.current) {
+      prefetchedProfile.current = true
       prefetchProfileQuery(props.did)
     }
   }, [prefetchProfileQuery, props.did])
