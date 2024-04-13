@@ -47,14 +47,9 @@ export function Embed({
   if (!content) return null
 
   try {
-    // Case 0: Labelled post
-    if (labelInfo) {
-      return <Info>{labelInfo}</Info>
-    }
-
     // Case 1: Image
     if (AppBskyEmbedImages.isView(content)) {
-      return <ImageEmbed content={content} />
+      return <ImageEmbed content={content} labelInfo={labelInfo} />
     }
 
     // Case 2: External link
@@ -210,7 +205,17 @@ function Info({children}: {children: ComponentChildren}) {
   )
 }
 
-function ImageEmbed({content}: {content: AppBskyEmbedImages.View}) {
+function ImageEmbed({
+  content,
+  labelInfo,
+}: {
+  content: AppBskyEmbedImages.View
+  labelInfo?: string
+}) {
+  if (labelInfo) {
+    return <Info>{labelInfo}</Info>
+  }
+
   switch (content.images.length) {
     case 1:
       return (
