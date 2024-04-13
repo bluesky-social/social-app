@@ -22,8 +22,9 @@ export function Post({thread}: Props) {
     record = post.record
   }
 
+  const href = `/profile/${post.author.did}/post/${getRkey(post)}`
   return (
-    <Container href={`/profile/${post.author.did}/post/${getRkey(post)}`}>
+    <Container href={href}>
       <div className="flex-1 flex-col flex gap-2">
         <div className="flex gap-2.5 items-center">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
@@ -45,7 +46,7 @@ export function Post({thread}: Props) {
             </Link>
           </div>
           <Link
-            href="https://bsky.social/about"
+            href={href}
             className="transition-transform hover:scale-110 shrink-0 self-start">
             <img src={logo as string} className="h-8" />
           </Link>

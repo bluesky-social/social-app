@@ -53,7 +53,7 @@ function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
   return (
     <Container href={href}>
       <Link
-        href="https://bsky.social/about"
+        href={href}
         className="transition-transform hover:scale-110 absolute top-4 right-4">
         <img src={logo as string} className="h-6" />
       </Link>
@@ -74,9 +74,9 @@ function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
 
 function ErrorMessage() {
   return (
-    <Container href="https://bsky.social/about">
+    <Container href="https://bsky.app/">
       <Link
-        href="https://bsky.social/about"
+        href="https://bsky.app/"
         className="transition-transform hover:scale-110 absolute top-4 right-4">
         <img src={logo as string} className="h-6" />
       </Link>
