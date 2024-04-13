@@ -1,9 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
+import {resetPostsFeedQueries} from '#/state/queries/post-feed'
 import {atoms as a, useTheme} from '#/alf'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
@@ -11,6 +13,7 @@ import {Text} from '#/components/Typography'
 export function AppLanguageDropdown() {
   const t = useTheme()
 
+  const queryClient = useQueryClient()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
 
@@ -26,8 +29,11 @@ export function AppLanguageDropdown() {
       }
       setLangPrefs.setPrimaryLanguage(value)
       setLangPrefs.setContentLanguage(value)
+
+      // reset feeds to refetch content
+      resetPostsFeedQueries(queryClient)
     },
-    [sanitizedLang, setLangPrefs],
+    [sanitizedLang, setLangPrefs, queryClient],
   )
 
   return (
