@@ -29,7 +29,16 @@ export function AppLanguageDropdown() {
   )
 
   return (
-    <View style={[a.flex_row, a.gap_sm, a.align_center, a.flex_shrink]}>
+    <View
+      style={[
+        // We don't have hitSlop here to increase the tap region,
+        // alternative is negative margins.
+        {height: 32, marginVertical: -((32 - 14) / 2)},
+        a.flex_row,
+        a.gap_sm,
+        a.align_center,
+        a.flex_shrink,
+      ]}>
       <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
         {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
       </Text>

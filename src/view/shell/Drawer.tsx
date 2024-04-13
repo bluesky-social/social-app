@@ -224,7 +224,9 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               />
             </View>
           ) : (
-            <NavSignupCard />
+            <View style={{paddingRight: 20}}>
+              <NavSignupCard />
+            </View>
           )}
 
           {hasSession ? (
