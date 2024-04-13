@@ -1,7 +1,7 @@
 import '../index.css'
 
 import {AppBskyFeedDefs, AppBskyFeedPost, AtUri, BskyAgent} from '@atproto/api'
-import {Fragment, h, render} from 'preact'
+import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
@@ -30,6 +30,7 @@ render(<LandingPage />, root)
 function LandingPage() {
   const [uri, setUri] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
   const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
     null,
   )
@@ -37,6 +38,8 @@ function LandingPage() {
   useEffect(() => {
     void (async () => {
       setError(null)
+      setThread(null)
+      setLoading(true)
       try {
         let atUri = DEFAULT_URI
 
@@ -98,6 +101,8 @@ function LandingPage() {
       } catch (err) {
         console.error(err)
         setError(err instanceof Error ? err.message : 'Invalid Bluesky URL')
+      } finally {
+        setLoading(false)
       }
     })()
   }, [uri])
@@ -122,16 +127,39 @@ function LandingPage() {
 
       <img src={arrowBottom as string} className="w-6" />
 
-      <div className="w-full max-w-[600px] gap-8 flex flex-col">
-        {uri && !error && thread && <Snippet thread={thread} />}
-        {!error && thread && <Post thread={thread} key={thread.post.uri} />}
-        {error && (
-          <div className="w-full border border-red-500 bg-red-50 px-4 py-3 rounded-lg">
-            <p className="text-red-500 text-center">{error}</p>
-          </div>
-        )}
-      </div>
+      {loading ? (
+        <Skeleton />
+      ) : (
+        <div className="w-full max-w-[600px] gap-8 flex flex-col">
+          {!error && thread && uri && <Snippet thread={thread} />}
+          {!error && thread && <Post thread={thread} key={thread.post.uri} />}
+          {error && (
+            <div className="w-full border border-red-500 bg-red-50 px-4 py-3 rounded-lg">
+              <p className="text-red-500 text-center">{error}</p>
+            </div>
+          )}
+        </div>
+      )}
     </main>
+  )
+}
+
+function Skeleton() {
+  return (
+    <Container>
+      <div className="flex-1 flex-col flex gap-2 pb-8">
+        <div className="flex gap-2.5 items-center">
+          <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-100 shrink-0 animate-pulse" />
+          <div className="flex-1">
+            <div className="bg-neutral-100 animate-pulse w-64 h-4 rounded" />
+            <div className="bg-neutral-100 animate-pulse w-32 h-3 mt-1 rounded" />
+          </div>
+        </div>
+        <div className="w-full h-4 mt-2 bg-neutral-100 rounded animate-pulse" />
+        <div className="w-5/6 h-4 bg-neutral-100 rounded animate-pulse" />
+        <div className="w-3/4 h-4 bg-neutral-100 rounded animate-pulse" />
+      </div>
+    </Container>
   )
 }
 
@@ -195,6 +223,9 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
         className="border rounded-lg py-3 w-full px-4"
         readOnly
         autoFocus
+        onFocus={() => {
+          ref.current?.select()
+        }}
       />
       <button
         className="rounded-lg bg-brand text-white color-white py-3 px-4 whitespace-nowrap min-w-28"
