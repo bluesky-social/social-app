@@ -14,6 +14,14 @@ import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
+let refSrc: string | null
+let refUrl: string | null
+if (typeof window !== 'undefined') {
+  const params = new URLSearchParams(window.location.search)
+  refSrc = params.get('ref_src')
+  refUrl = params.get('ref_url')
+}
+
 export type {LogEvents}
 
 const statsigOptions = {
@@ -97,6 +105,8 @@ function toStatsigUser(did: string | undefined) {
     userID,
     platform: Platform.OS,
     custom: {
+      refSrc,
+      refUrl,
       // Need to specify here too for gating.
       platform: Platform.OS,
     },
