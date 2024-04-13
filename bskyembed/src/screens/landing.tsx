@@ -96,7 +96,7 @@ function LandingPage() {
   }, [uri])
 
   return (
-    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32 xl:pt-64">
+    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32">
       <Link
         href="https://bsky.social/about"
         className="transition-transform hover:scale-110">
