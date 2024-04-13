@@ -85,8 +85,8 @@ export function ProfileCard({
       href={makeProfileLink(profile)}
       title={profile.handle}
       asAnchor
-      anchorNoUnderline
-      onBeforePress={onBeforePress}>
+      onBeforePress={onBeforePress}
+      anchorNoUnderline>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
