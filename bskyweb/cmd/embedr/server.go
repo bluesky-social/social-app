@@ -97,7 +97,7 @@ func serve(cctx *cli.Context) error {
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
 		ContentTypeNosniff: "nosniff",
 		// diable XFrameOptions; we're embedding here!
-		HSTSMaxAge:         31536000, // 365 days
+		HSTSMaxAge: 31536000, // 365 days
 		// TODO:
 		// ContentSecurityPolicy
 		// XSSProtection

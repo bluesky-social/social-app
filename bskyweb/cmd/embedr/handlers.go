@@ -121,24 +121,6 @@ func (srv *Server) parseBlueskyURL(ctx context.Context, raw string) (*syntax.ATU
 	}
 }
 
-func (srv *Server) postEmbedHTML(post *appbsky.FeedDefs_PostView) string {
-	aturi, err := syntax.ParseATURI(post.Uri)
-	if err != nil {
-		log.Error("bad AT-URI in reponse", "aturi", aturi)
-	}
-	// XXX: should use html/template for this render
-	return fmt.Sprintf(
-		"<blockquote class=\"bluesky-embed\" data-bluesky-uri=\"%s\" data-bluesky-cid=\"%s\"><p lang=\"%s\">%s</p>&mdash; %s %s</blockquote><script async src=\"%s\" charset=\"utf-8\"></script>",
-		post.Uri,
-		post.Cid,
-		"en",                 // XXX
-		"<!-- post-text -->", // XXX
-		"<!-- display-name (<a href=\"profile-page\">@handle</a>) -->",                  // XXX
-		fmt.Sprintf("%s <!-- <a href=\"post-page\">human-date</a> -->", post.IndexedAt), // XXX: Record.CreatedAt
-		"https://embed.bsky.app/embed.js",                                               // XXX: or iframe-resize.js, for clarity?
-	)
-}
-
 func (srv *Server) WebOEmbed(c echo.Context) error {
 	formatParam := c.QueryParam("format")
 	if formatParam != "" && formatParam != "json" {
@@ -178,6 +160,10 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("%v", err))
 	}
 
+	html, err := srv.postEmbedHTML(post)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, fmt.Sprintf("%v", err))
+	}
 	data := OEmbedResponse{
 		Type:         "rich",
 		Version:      "1.0",
@@ -187,7 +173,7 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		CacheAge:     86400,
 		Width:        width,
 		Height:       nil,
-		HTML:         srv.postEmbedHTML(post),
+		HTML:         html,
 	}
 	if post.Author.DisplayName != nil {
 		data.AuthorName = fmt.Sprintf("%s (@%s)", *post.Author.DisplayName, post.Author.Handle)
