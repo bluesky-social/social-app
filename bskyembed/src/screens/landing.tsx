@@ -200,10 +200,6 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
           ref.current?.select()
           void navigator.clipboard.writeText(snippet)
           setCopied(true)
-        }}
-        onPointerEnter={() => {
-          ref.current?.focus()
-          ref.current?.select()
         }}>
         {copied ? 'Copied!' : 'Copy code'}
       </button>
