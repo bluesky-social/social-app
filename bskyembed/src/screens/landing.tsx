@@ -194,7 +194,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
         autoFocus
       />
       <button
-        className="rounded-lg bg-brand text-white color-white py-3 px-4 whitespace-nowrap"
+        className="rounded-lg bg-brand text-white color-white py-3 px-4 whitespace-nowrap min-w-28"
         onClick={() => {
           ref.current?.focus()
           ref.current?.select()
