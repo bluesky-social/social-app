@@ -8,10 +8,10 @@ import {
   AppBskyGraphDefs,
   AppBskyLabelerDefs,
 } from '@atproto/api'
-import {h} from 'preact'
+import {ComponentChildren, h} from 'preact'
 
+import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import {getRkey} from '../utils'
-import {Info} from './info'
 import {Link} from './link'
 
 export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
@@ -157,6 +157,15 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
       <Info>{err instanceof Error ? err.message : 'An error occurred'}</Info>
     )
   }
+}
+
+function Info({children}: {children: ComponentChildren}) {
+  return (
+    <div className="w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
+      <img src={infoIcon as string} className="w-4 h-4 shrink-0 mt-0.5" />
+      <p className="text-sm text-textLight">{children}</p>
+    </div>
+  )
 }
 
 function ImageEmbed({content}: {content: AppBskyEmbedImages.View}) {
