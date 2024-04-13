@@ -20,20 +20,7 @@ var ErrPostNotPublic = errors.New("post is not publicly accessible")
 
 func (srv *Server) getBlueskyPost(ctx context.Context, did syntax.DID, rkey syntax.RecordKey) (*appbsky.FeedDefs_PostView, error) {
 
-	// requires two fetches: first fetch profile
-	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, did.String())
-	if err != nil {
-		log.Warnf("failed to fetch profile for: %s\t%v", did, err)
-		// TODO: detect 404, specifically?
-		return nil, ErrPostNotFound
-	}
-	for _, label := range pv.Labels {
-		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-			return nil, ErrPostNotPublic
-		}
-	}
-
-	// then fetch the post thread (with extra context)
+	// fetch the post post (with extra context)
 	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
 	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
 	if err != nil {
@@ -47,7 +34,14 @@ func (srv *Server) getBlueskyPost(ctx context.Context, did syntax.DID, rkey synt
 	} else if tpv.Thread.FeedDefs_ThreadViewPost.Post == nil {
 		return nil, ErrPostNotFound
 	}
-	return tpv.Thread.FeedDefs_ThreadViewPost.Post, nil
+
+	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+	for _, label := range postView.Author.Labels {
+		if label.Src == postView.Author.Did && label.Val == "!no-unauthenticated" {
+			return nil, ErrPostNotPublic
+		}
+	}
+	return postView, nil
 }
 
 func (srv *Server) WebHome(c echo.Context) error {
@@ -127,7 +121,7 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		return c.String(http.StatusNotImplemented, "Unsupported oEmbed format: "+formatParam)
 	}
 
-	// XXX: do we actually do something with width?
+	// TODO: do we actually do something with width?
 	width := 550
 	maxWidthParam := c.QueryParam("maxwidth")
 	if maxWidthParam != "" {
@@ -182,7 +176,6 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 }
 
 func (srv *Server) WebPostEmbed(c echo.Context) error {
-	ctx := c.Request().Context()
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
 	rkeyParam := c.Param("rkey")
@@ -195,18 +188,20 @@ func (srv *Server) WebPostEmbed(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, fmt.Sprintf("Invalid DID: %v", err))
 	}
+	_ = rkey
+	_ = did
 
-	postView, err := srv.getBlueskyPost(ctx, did, rkey)
-	if err == ErrPostNotFound {
-		return c.String(http.StatusNotFound, fmt.Sprintf("%v", err))
-	} else if err == ErrPostNotPublic {
-		return c.String(http.StatusForbidden, fmt.Sprintf("%v", err))
-	} else if err != nil {
-		return c.String(http.StatusInternalServerError, fmt.Sprintf("%v", err))
-	}
+	// NOTE: this request was't really necessary; the JS will do the same fetch
+	/*
+		postView, err := srv.getBlueskyPost(ctx, did, rkey)
+		if err == ErrPostNotFound {
+			return c.String(http.StatusNotFound, fmt.Sprintf("%v", err))
+		} else if err == ErrPostNotPublic {
+			return c.String(http.StatusForbidden, fmt.Sprintf("%v", err))
+		} else if err != nil {
+			return c.String(http.StatusInternalServerError, fmt.Sprintf("%v", err))
+		}
+	*/
 
-	data := map[string]interface{}{
-		"post": postView,
-	}
-	return c.Render(http.StatusOK, "postEmbed.html", data)
+	return c.Render(http.StatusOK, "postEmbed.html", nil)
 }
