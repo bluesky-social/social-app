@@ -1,0 +1,266 @@
+import '../index.css'
+
+import {AppBskyFeedDefs, AppBskyFeedPost, AtUri, BskyAgent} from '@atproto/api'
+import {Fragment, h, render} from 'preact'
+import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
+
+import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
+import logo from '../../assets/logo.svg'
+import {Container} from '../components/container'
+import {Link} from '../components/link'
+import {Post} from '../components/post'
+import {niceDate} from '../utils'
+
+const DEFAULT_POST = 'https://bsky.app/profile/emilyliu.me/post/3jzn6g7ixgq2y'
+const DEFAULT_URI =
+  'at://did:plc:vjug55kidv6sye7ykr5faxxn/app.bsky.feed.post/3jzn6g7ixgq2y'
+
+export const EMBED_SERVICE = 'https://embed.bsky.app'
+export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
+
+const root = document.getElementById('app')
+if (!root) throw new Error('No root element')
+
+const agent = new BskyAgent({
+  service: 'https://public.api.bsky.app',
+})
+
+render(<LandingPage />, root)
+
+function LandingPage() {
+  const [uri, setUri] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [thread, setThread] = useState<AppBskyFeedDefs.ThreadViewPost | null>(
+    null,
+  )
+
+  useEffect(() => {
+    void (async () => {
+      setError(null)
+      try {
+        let atUri = DEFAULT_URI
+
+        if (uri) {
+          if (uri.startsWith('at://')) {
+            atUri = uri
+          } else {
+            try {
+              const urlp = new URL(uri)
+              if (!urlp.hostname.endsWith('bsky.app')) {
+                throw new Error('Invalid hostname')
+              }
+              const split = urlp.pathname.slice(1).split('/')
+              if (split.length < 4) {
+                throw new Error('Invalid pathname')
+              }
+              const [profile, didOrHandle, type, rkey] = split
+              if (profile !== 'profile' || type !== 'post') {
+                throw new Error('Invalid profile or type')
+              }
+
+              let did = didOrHandle
+              if (!didOrHandle.startsWith('did:')) {
+                const resolution = await agent.resolveHandle({
+                  handle: didOrHandle,
+                })
+                if (!resolution.data.did) {
+                  throw new Error('No DID found')
+                }
+                did = resolution.data.did
+              }
+
+              atUri = `at://${did}/app.bsky.feed.post/${rkey}`
+            } catch (err) {
+              console.log(err)
+              throw new Error('Invalid Bluesky URL')
+            }
+          }
+        }
+
+        const {data} = await agent.getPostThread({
+          uri: atUri,
+          depth: 0,
+          parentHeight: 0,
+        })
+
+        if (!AppBskyFeedDefs.isThreadViewPost(data.thread)) {
+          throw new Error('Post not found')
+        }
+
+        setThread(data.thread)
+      } catch (err) {
+        console.error(err)
+        setError(err instanceof Error ? err.message : 'Invalid Bluesky URL')
+      }
+    })()
+  }, [uri])
+
+  return (
+    <main className="w-full min-h-screen flex flex-col items-center gap-8 py-14 px-4 md:pt-32">
+      <Link
+        href="https://bsky.social/about"
+        className="transition-transform hover:scale-110">
+        <img src={logo as string} className="h-10" />
+      </Link>
+
+      <h1 className="text-4xl font-bold">Embed a Bluesky Post</h1>
+
+      <div className="w-full max-w-[600px] flex flex-col gap-2">
+        <input
+          type="text"
+          value={uri}
+          onInput={e => setUri(e.currentTarget.value)}
+          className="border rounded-lg py-3 w-full max-w-[600px] px-4"
+          placeholder={DEFAULT_POST}
+        />
+        <p className={`text-red-500 ${error ? '' : 'invisible'}`}>{error}</p>
+      </div>
+
+      <img src={arrowBottom as string} className="w-6" />
+
+      <div className="w-full max-w-[600px] gap-8 flex flex-col">
+        {uri && !error && thread && <Snippet thread={thread} />}
+
+        {thread ? (
+          <Post thread={thread} key={thread.post.uri} />
+        ) : (
+          <Container href="https://bsky.social/about">
+            <Link
+              href="https://bsky.social/about"
+              className="transition-transform hover:scale-110 absolute top-4 right-4">
+              <img src={logo as string} className="h-8" />
+            </Link>
+            <div className="h-32" />
+          </Container>
+        )}
+      </div>
+    </main>
+  )
+}
+
+function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
+  const ref = useRef<HTMLInputElement>(null)
+  const [copied, setCopied] = useState(false)
+
+  // reset copied state after 2 seconds
+  useEffect(() => {
+    if (copied) {
+      const timeout = setTimeout(() => {
+        setCopied(false)
+      }, 2000)
+      return () => clearTimeout(timeout)
+    }
+  }, [copied])
+
+  const snippet = useMemo(() => {
+    const record = thread.post.record
+
+    if (!AppBskyFeedPost.isRecord(record)) {
+      return ''
+    }
+
+    const profileHref = toShareUrl(
+      ['/profile', thread.post.author.did].join('/'),
+    )
+    const urip = new AtUri(thread.post.uri)
+    const href = toShareUrl(
+      ['/profile', thread.post.author.did, 'post', urip.rkey].join('/'),
+    )
+
+    const lang = record.langs ? record.langs[0] : ''
+
+    // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+    // DO NOT ADD ANY NEW INTERPOLATIOONS BELOW WITHOUT ESCAPING THEM!
+    // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+    return `<blockquote class="bluesky-embed" data-bluesky-uri="${escapeHtml(
+      thread.post.uri,
+    )}" data-bluesky-cid="${escapeHtml(thread.post.cid)}"><p lang="${escapeHtml(
+      lang,
+    )}">${escapeHtml(record.text)}${
+      record.embed
+        ? `<br><br><a href="${escapeHtml(href)}">[image or embed]</a>`
+        : ''
+    }</p>&mdash; ${escapeHtml(
+      thread.post.author.displayName || thread.post.author.handle,
+    )} (<a href="${escapeHtml(profileHref)}">@${escapeHtml(
+      thread.post.author.handle,
+    )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
+      niceDate(thread.post.indexedAt),
+    )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
+  }, [thread])
+
+  return (
+    <div className="flex gap-2 w-full">
+      <input
+        ref={ref}
+        type="text"
+        value={snippet}
+        className="border rounded-lg py-3 w-full px-4"
+        readOnly
+        autoFocus
+      />
+      <button
+        className="rounded-lg bg-brand text-white color-white py-3 px-4 whitespace-nowrap min-w-28"
+        onClick={() => {
+          ref.current?.focus()
+          ref.current?.select()
+          void navigator.clipboard.writeText(snippet)
+          setCopied(true)
+        }}>
+        {copied ? 'Copied!' : 'Copy code'}
+      </button>
+    </div>
+  )
+}
+
+function toShareUrl(path: string) {
+  return `https://bsky.app${path}`
+}
+
+/**
+ * Based on a snippet of code from React, which itself was based on the escape-html library.
+ * Copyright (c) Meta Platforms, Inc. and affiliates
+ * Copyright (c) 2012-2013 TJ Holowaychuk
+ * Copyright (c) 2015 Andreas Lubbe
+ * Copyright (c) 2015 Tiancheng "Timothy" Gu
+ * Licensed as MIT.
+ */
+const matchHtmlRegExp = /["'&<>]/
+function escapeHtml(string: string) {
+  const str = String(string)
+  const match = matchHtmlRegExp.exec(str)
+  if (!match) {
+    return str
+  }
+  let escape
+  let html = ''
+  let index
+  let lastIndex = 0
+  for (index = match.index; index < str.length; index++) {
+    switch (str.charCodeAt(index)) {
+      case 34: // "
+        escape = '&quot;'
+        break
+      case 38: // &
+        escape = '&amp;'
+        break
+      case 39: // '
+        escape = '&#x27;'
+        break
+      case 60: // <
+        escape = '&lt;'
+        break
+      case 62: // >
+        escape = '&gt;'
+        break
+      default:
+        continue
+    }
+    if (lastIndex !== index) {
+      html += str.slice(lastIndex, index)
+    }
+    lastIndex = index + 1
+    html += escape
+  }
+  return lastIndex !== index ? html + str.slice(lastIndex, index) : html
+}

@@ -10,9 +10,9 @@ import {
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
 
-import infoIcon from '../assets/circleInfo_stroke2_corner0_rounded.svg'
+import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
+import {getRkey} from '../utils'
 import {Link} from './link'
-import {getRkey} from './utils'
 
 export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
   if (!content) return null

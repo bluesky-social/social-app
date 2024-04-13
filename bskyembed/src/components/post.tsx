@@ -1,14 +1,14 @@
 import {AppBskyFeedDefs, AppBskyFeedPost, RichText} from '@atproto/api'
 import {h} from 'preact'
 
-import replyIcon from '../assets/bubble_filled_stroke2_corner2_rounded.svg'
-import likeIcon from '../assets/heart2_filled_stroke2_corner0_rounded.svg'
-import logo from '../assets/logo.svg'
-import repostIcon from '../assets/repost_stroke2_corner2_rounded.svg'
+import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
+import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
+import logo from '../../assets/logo.svg'
+import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
+import {getRkey, niceDate} from '../utils'
 import {Container} from './container'
 import {Embed} from './embed'
 import {Link} from './link'
-import {getRkey, niceDate} from './utils'
 
 interface Props {
   thread: AppBskyFeedDefs.ThreadViewPost
@@ -25,7 +25,7 @@ export function Post({thread}: Props) {
   const href = `/profile/${post.author.did}/post/${getRkey(post)}`
   return (
     <Container href={href}>
-      <div className="flex-1 flex-col flex gap-2">
+      <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
         <div className="flex gap-2.5 items-center">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
             <img
@@ -143,7 +143,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
   }
 
   return (
-    <p className="text-lg leading-6 break-word break-words whitespace-pre-wrap">
+    <p className="min-[300px]:text-lg leading-6 break-word break-words whitespace-pre-wrap">
       {richText}
     </p>
   )
