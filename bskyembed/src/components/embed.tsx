@@ -9,23 +9,33 @@ import {
   AppBskyLabelerDefs,
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
+import {useMemo} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
+import {CONTENT_LABELS, labelsToInfo} from '../labels'
 import {getRkey} from '../utils'
 import {Link} from './link'
 
-export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
+export function Embed({
+  content,
+  labels,
+}: {
+  content: AppBskyFeedDefs.PostView['embed']
+  labels: AppBskyFeedDefs.PostView['labels']
+}) {
+  const labelInfo = useMemo(() => labelsToInfo(labels), [labels])
+
   if (!content) return null
 
   try {
     // Case 1: Image
     if (AppBskyEmbedImages.isView(content)) {
-      return <ImageEmbed content={content} />
+      return <ImageEmbed content={content} labelInfo={labelInfo} />
     }
 
     // Case 2: External link
     if (AppBskyEmbedExternal.isView(content)) {
-      return <ExternalEmbed content={content} />
+      return <ExternalEmbed content={content} labelInfo={labelInfo} />
     }
 
     // Case 3: Record (quote or linked post)
@@ -50,15 +60,22 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         if (AppBskyFeedPost.isRecord(record.value)) {
           text = record.value.text
         }
+
+        const isAuthorLabeled = record.author.labels?.some(label =>
+          CONTENT_LABELS.includes(label.val),
+        )
+
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
             className="transition-colors hover:bg-neutral-100 border rounded-lg p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <img
-                src={record.author.avatar}
-                className="w-4 h-4 rounded-full bg-neutral-300 shrink-0"
-              />
+              <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 shrink-0">
+                <img
+                  src={record.author.avatar}
+                  style={isAuthorLabeled ? {filter: 'blur(1.5px)'} : undefined}
+                />
+              </div>
               <p className="line-clamp-1 text-sm">
                 <span className="font-bold">{record.author.displayName}</span>
                 <span className="text-textLight ml-1">
@@ -74,7 +91,11 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
                 return false
               })
               .map(embed => (
-                <Embed key={embed.$type} content={embed} />
+                <Embed
+                  key={embed.$type}
+                  content={embed}
+                  labels={record.labels}
+                />
               ))}
           </Link>
         )
@@ -137,15 +158,19 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
     }
 
     // Case 4: Record with media
-    if (AppBskyEmbedRecordWithMedia.isView(content)) {
+    if (
+      AppBskyEmbedRecordWithMedia.isView(content) &&
+      AppBskyEmbedRecord.isViewRecord(content.record.record)
+    ) {
       return (
         <div className="flex flex-col gap-2">
-          <Embed content={content.media} />
+          <Embed content={content.media} labels={labels} />
           <Embed
             content={{
               $type: 'app.bsky.embed.record#view',
               record: content.record.record,
             }}
+            labels={content.record.record.labels}
           />
         </div>
       )
@@ -168,7 +193,17 @@ function Info({children}: {children: ComponentChildren}) {
   )
 }
 
-function ImageEmbed({content}: {content: AppBskyEmbedImages.View}) {
+function ImageEmbed({
+  content,
+  labelInfo,
+}: {
+  content: AppBskyEmbedImages.View
+  labelInfo?: string
+}) {
+  if (labelInfo) {
+    return <Info>{labelInfo}</Info>
+  }
+
   switch (content.images.length) {
     case 1:
       return (
@@ -229,7 +264,13 @@ function ImageEmbed({content}: {content: AppBskyEmbedImages.View}) {
   }
 }
 
-function ExternalEmbed({content}: {content: AppBskyEmbedExternal.View}) {
+function ExternalEmbed({
+  content,
+  labelInfo,
+}: {
+  content: AppBskyEmbedExternal.View
+  labelInfo?: string
+}) {
   function toNiceDomain(url: string): string {
     try {
       const urlp = new URL(url)
@@ -238,6 +279,11 @@ function ExternalEmbed({content}: {content: AppBskyEmbedExternal.View}) {
       return url
     }
   }
+
+  if (labelInfo) {
+    return <Info>{labelInfo}</Info>
+  }
+
   return (
     <Link
       href={content.external.uri}

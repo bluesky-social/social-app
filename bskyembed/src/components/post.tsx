@@ -5,6 +5,7 @@ import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
 import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
 import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
+import {CONTENT_LABELS} from '../labels'
 import {getRkey, niceDate} from '../utils'
 import {Container} from './container'
 import {Embed} from './embed'
@@ -17,6 +18,10 @@ interface Props {
 export function Post({thread}: Props) {
   const post = thread.post
 
+  const isAuthorLabeled = post.author.labels?.some(label =>
+    CONTENT_LABELS.includes(label.val),
+  )
+
   let record: AppBskyFeedPost.Record | null = null
   if (AppBskyFeedPost.isRecord(post.record)) {
     record = post.record
@@ -28,10 +33,12 @@ export function Post({thread}: Props) {
       <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
         <div className="flex gap-2.5 items-center">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
-            <img
-              src={post.author.avatar}
-              className="w-10 h-10 rounded-full bg-neutral-300 shrink-0"
-            />
+            <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-300 shrink-0">
+              <img
+                src={post.author.avatar}
+                style={isAuthorLabeled ? {filter: 'blur(2.5px)'} : undefined}
+              />
+            </div>
           </Link>
           <div className="flex-1">
             <Link
@@ -52,7 +59,7 @@ export function Post({thread}: Props) {
           </Link>
         </div>
         <PostContent record={record} />
-        <Embed content={post.embed} />
+        <Embed content={post.embed} labels={post.labels} />
         <time
           datetime={new Date(post.indexedAt).toISOString()}
           className="text-textLight mt-1 text-sm">
