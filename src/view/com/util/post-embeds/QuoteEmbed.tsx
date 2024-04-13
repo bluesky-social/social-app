@@ -22,6 +22,7 @@ import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
@@ -44,11 +45,29 @@ export function MaybeQuoteEmbed({
     AppBskyFeedPost.validateRecord(embed.record.value).success
   ) {
     return (
-      <QuoteEmbedModerated
-        viewRecord={embed.record}
-        postRecord={embed.record.value}
-        style={style}
-      />
+      <View style={[a.relative]}>
+        <ProfileHoverCard did={embed.record.author.did}>
+          <View
+            nativeID="foo"
+            style={[
+              a.absolute,
+              a.z_50,
+              {
+                top: a.pt_md.paddingTop,
+                left: a.pt_md.paddingTop,
+                height: a.pt_lg.paddingTop,
+                width: a.pt_lg.paddingTop,
+              },
+            ]}
+          />
+        </ProfileHoverCard>
+
+        <QuoteEmbedModerated
+          viewRecord={embed.record}
+          postRecord={embed.record.value}
+          style={style}
+        />
+      </View>
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
     return (
