@@ -48,7 +48,13 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         </Text>
       </View>
 
-      <View style={{flexDirection: 'row', paddingTop: 12, gap: 8}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          paddingTop: 12,
+          gap: 8,
+        }}>
         <Button
           onPress={showCreateAccount}
           accessibilityHint={_(msg`Sign up`)}
