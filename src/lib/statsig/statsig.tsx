@@ -9,6 +9,7 @@ import {
 } from 'statsig-react-native-expo'
 
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {LogEvents} from './events'
@@ -16,7 +17,7 @@ import {Gate} from './gates'
 
 let refSrc: string | null
 let refUrl: string | null
-if (typeof window !== 'undefined') {
+if (isWeb && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
   refSrc = params.get('ref_src')
   refUrl = params.get('ref_url')
