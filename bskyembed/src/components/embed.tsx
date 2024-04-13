@@ -9,15 +9,20 @@ import {
   AppBskyLabelerDefs,
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
+import {useMemo} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import {getRkey} from '../utils'
 import {Link} from './link'
 
-const ADULT_CONTENT_LABELS = ['porn', 'sexual', 'nudity']
+const ADULT_CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
 
-function labelToInfo(label: string): string {
-  switch (label) {
+function labelsToInfo(
+  labels?: AppBskyFeedDefs.PostView['labels'],
+): string | undefined {
+  const label = labels?.find(label => ADULT_CONTENT_LABELS.includes(label.val))
+
+  switch (label?.val) {
     case 'porn':
     case 'sexual':
       return 'Adult Content'
@@ -26,7 +31,7 @@ function labelToInfo(label: string): string {
     case 'graphic-media':
       return 'Graphic Media'
     default:
-      return 'Content Warning'
+      return undefined
   }
 }
 
@@ -37,15 +42,14 @@ export function Embed({
   content: AppBskyFeedDefs.PostView['embed']
   labels: AppBskyFeedDefs.PostView['labels']
 }) {
-  if (!content) return null
+  const labelInfo = useMemo(() => labelsToInfo(labels), [labels])
 
-  const isPostLabeled =
-    labels && labels?.some(label => ADULT_CONTENT_LABELS.includes(label.val))
+  if (!content) return null
 
   try {
     // Case 0: Labelled post
-    if (isPostLabeled) {
-      return <Info>{labelToInfo(labels[0].val)}</Info>
+    if (labelInfo) {
+      return <Info>{labelInfo}</Info>
     }
 
     // Case 1: Image
