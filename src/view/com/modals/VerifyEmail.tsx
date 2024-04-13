@@ -36,7 +36,7 @@ enum Stages {
 export function Component({showReminder}: {showReminder?: boolean}) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {refreshSession} = useSessionApi()
+  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
     showReminder ? Stages.Reminder : Stages.Email,
@@ -75,7 +75,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
         email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })
-      refreshSession()
+      updateCurrentAccount({emailConfirmed: true})
       Toast.show(_(msg`Email verified`))
       closeModal()
     } catch (e) {

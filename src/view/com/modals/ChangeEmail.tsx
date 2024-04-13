@@ -27,7 +27,7 @@ export const snapPoints = ['90%']
 export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {refreshSession} = useSessionApi()
+  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.InputEmail)
   const [email, setEmail] = useState<string>(currentAccount?.email || '')
@@ -50,7 +50,10 @@ export function Component() {
         setStage(Stages.ConfirmCode)
       } else {
         await getAgent().com.atproto.server.updateEmail({email: email.trim()})
-        refreshSession()
+        updateCurrentAccount({
+          email: email.trim(),
+          emailConfirmed: false,
+        })
         Toast.show(_(msg`Email updated`))
         setStage(Stages.Done)
       }
@@ -79,7 +82,10 @@ export function Component() {
         email: email.trim(),
         token: confirmationCode.trim(),
       })
-      refreshSession()
+      updateCurrentAccount({
+        email: email.trim(),
+        emailConfirmed: false,
+      })
       Toast.show(_(msg`Email updated`))
       setStage(Stages.Done)
     } catch (e) {
