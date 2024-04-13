@@ -16,7 +16,13 @@ const agent = new BskyAgent({
   service: 'https://public.api.bsky.app',
 })
 
-const uri = `at://${window.location.pathname.slice('/embed/'.length)}`
+let uri
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+if (import.meta.env.DEV) {
+  uri = new URLSearchParams(window.location.search).get('uri')
+} else {
+  uri = `at://${window.location.pathname.slice('/embed/'.length)}`
+}
 
 console.log(uri)
 
