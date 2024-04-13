@@ -37,6 +37,7 @@ function LandingPage() {
   useEffect(() => {
     void (async () => {
       setError(null)
+      setThread(null)
       try {
         let atUri = DEFAULT_URI
 
