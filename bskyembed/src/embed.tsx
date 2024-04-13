@@ -40,7 +40,7 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
         if (pwiOptOut) {
           return (
             <Info>
-              The author of this quoted post has requested their posts not be
+              The author of the quoted post has requested their posts not be
               displayed on external sites.
             </Info>
           )
@@ -125,12 +125,12 @@ export function Embed({content}: {content: AppBskyFeedDefs.PostView['embed']}) {
 
       // Case 3.5: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
-        return <Info>Quoted post not found - it may have been deleted</Info>
+        return <Info>Quoted post not found, it may have been deleted.</Info>
       }
 
       // Case 3.6: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
-        return <Info>The quoted post is blocked</Info>
+        return <Info>The quoted post is blocked.</Info>
       }
 
       throw new Error('Unknown embed type')

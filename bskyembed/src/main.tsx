@@ -81,7 +81,7 @@ function ErrorMessage() {
         <img src={logo as string} className="h-6" />
       </Link>
       <p className="my-16 text-center w-full text-textLight">
-        Post not found, it may have been deleted
+        Post not found, it may have been deleted.
       </p>
     </Container>
   )
