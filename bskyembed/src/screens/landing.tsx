@@ -126,7 +126,7 @@ function LandingPage() {
         {uri && !error && thread && <Snippet thread={thread} />}
         {!error && thread && <Post thread={thread} key={thread.post.uri} />}
         {error && (
-          <div className="w-full border border-red-500 bg-red-50 px-8 py-3 rounded-lg">
+          <div className="w-full border border-red-500 bg-red-50 px-4 py-3 rounded-lg">
             <p className="text-red-500 text-center">{error}</p>
           </div>
         )}
