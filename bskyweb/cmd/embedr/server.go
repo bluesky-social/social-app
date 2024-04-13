@@ -96,7 +96,7 @@ func serve(cctx *cli.Context) error {
 	// SECURITY: Do not modify without due consideration.
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
 		ContentTypeNosniff: "nosniff",
-		XFrameOptions:      "SAMEORIGIN",
+		// diable XFrameOptions; we're embedding here!
 		HSTSMaxAge:         31536000, // 365 days
 		// TODO:
 		// ContentSecurityPolicy
