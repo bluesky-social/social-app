@@ -29,7 +29,14 @@ export function AppLanguageDropdown() {
   )
 
   return (
-    <View style={[a.flex_row, a.gap_sm, a.align_center, a.flex_shrink]}>
+    <View
+      style={[
+        {height: 32},
+        a.flex_row,
+        a.gap_sm,
+        a.align_center,
+        a.flex_shrink,
+      ]}>
       <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
         {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
       </Text>

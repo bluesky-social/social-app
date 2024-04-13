@@ -154,7 +154,10 @@ function Footer() {
 
       <View style={a.flex_1} />
 
-      <AppLanguageDropdown />
+      {/* Offset the height imposed by <AppLanguageDropdown /> */}
+      <View style={{marginVertical: -9}}>
+        <AppLanguageDropdown />
+      </View>
     </View>
   )
 }
