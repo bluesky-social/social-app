@@ -1,49 +1,65 @@
-// const path = require('node:path')
-// const fs = require('node:fs')
+const path = require('node:path')
+const fs = require('node:fs')
 
-// const projectRoot = path.join(__dirname, '..')
+const projectRoot = path.join(__dirname, '..')
 
-// // copy embed assets to web-build
+// copy embed assets to embedr
 
-// const embedAssetSource = path.join(
-//   projectRoot,
-//   'bskyembed',
-//   'dist',
-//   'static',
-//   'embed',
-//   'assets',
-// )
+const embedAssetSource = path.join(projectRoot, 'bskyembed', 'dist', 'static')
 
-// const embedAssetDest = path.join(
-//   projectRoot,
-//   'web-build',
-//   'static',
-//   'embed',
-//   'assets',
-// )
+const embedAssetDest = path.join(projectRoot, 'bskyweb', 'embedr-static')
 
-// fs.cpSync(embedAssetSource, embedAssetDest, {recursive: true})
+fs.cpSync(embedAssetSource, embedAssetDest, {recursive: true})
 
-// // copy entrypoint(s) to web-build
+const embedEmbedJSSource = path.join(
+  projectRoot,
+  'bskyembed',
+  'dist',
+  'embed.js',
+)
 
-// // additional entrypoints will need more work, but this'll do for now
-// const embedHtmlSource = path.join(
-//   projectRoot,
-//   'bskyembed',
-//   'dist',
-//   'index.html',
-// )
+const embedEmbedJSDest = path.join(
+  projectRoot,
+  'bskyweb',
+  'embedr-static',
+  'embed.js',
+)
 
-// const embedHtmlDest = path.join(
-//   projectRoot,
-//   'web-build',
-//   'static',
-//   'embed',
-//   'post.html',
-// )
+fs.cpSync(embedEmbedJSSource, embedEmbedJSDest)
 
-// fs.copyFileSync(embedHtmlSource, embedHtmlDest)
+// copy entrypoint(s) to embedr
 
-// console.log(`Copied embed assets to web-build`)
+// additional entrypoints will need more work, but this'll do for now
+const embedHomeHtmlSource = path.join(
+  projectRoot,
+  'bskyembed',
+  'dist',
+  'index.html',
+)
 
-console.log('post-embed-build.js - waiting for embedr!')
+const embedHomeHtmlDest = path.join(
+  projectRoot,
+  'bskyweb',
+  'embedr-templates',
+  'home.html',
+)
+
+fs.copyFileSync(embedHomeHtmlSource, embedHomeHtmlDest)
+
+const embedPostHtmlSource = path.join(
+  projectRoot,
+  'bskyembed',
+  'dist',
+  'post.html',
+)
+
+const embedPostHtmlDest = path.join(
+  projectRoot,
+  'bskyweb',
+  'embedr-templates',
+  'postEmbed.html',
+)
+
+fs.copyFileSync(embedPostHtmlSource, embedPostHtmlDest)
+
+console.log(`Copied embed assets to embedr`)

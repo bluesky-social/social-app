@@ -20,7 +20,7 @@
     "build-ios": "yarn use-build-number-with-bump eas build -p ios",
     "build-android": "yarn use-build-number-with-bump eas build -p android",
     "build": "yarn use-build-number-with-bump eas build",
-    "build-embed": "cd bskyembed && yarn build && cd .. && node ./scripts/post-embed-build.js",
+    "build-embed": "cd bskyembed && yarn build && yarn build-snippet && cd .. && node ./scripts/post-embed-build.js",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
