@@ -87,10 +87,9 @@ export function RichText({
       !disableLinks
     ) {
       els.push(
-        <ProfileHoverCard inline did={mention.did}>
+        <ProfileHoverCard key={key} inline did={mention.did}>
           <InlineLinkText
             selectable={selectable}
-            key={key}
             to={`/profile/${mention.did}`}
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
