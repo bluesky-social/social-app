@@ -2,6 +2,7 @@ import React from 'react'
 
 import {Provider as AltTextRequiredProvider} from '../preferences/alt-text-required'
 import {Provider as HiddenPostsProvider} from '../preferences/hidden-posts'
+import {Provider as DisableAvatarHoverProvider} from './disable-avatar-hover'
 import {Provider as DisableHapticsProvider} from './disable-haptics'
 import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
@@ -26,7 +27,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         <ExternalEmbedsProvider>
           <HiddenPostsProvider>
             <InAppBrowserProvider>
-              <DisableHapticsProvider>{children}</DisableHapticsProvider>
+              <DisableHapticsProvider>
+                <DisableAvatarHoverProvider>
+                  {children}
+                </DisableAvatarHoverProvider>
+              </DisableHapticsProvider>
             </InAppBrowserProvider>
           </HiddenPostsProvider>
         </ExternalEmbedsProvider>

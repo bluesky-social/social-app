@@ -114,6 +114,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
     lastSelectedHomeFeed: defaults.lastSelectedHomeFeed,
     pdsAddressHistory: defaults.pdsAddressHistory,
     disableHaptics: defaults.disableHaptics,
+    disableAvatarHover: defaults.disableAvatarHover,
   }
 }
 
