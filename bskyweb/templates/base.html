@@ -235,6 +235,17 @@
       inset:0;
       animation: rotate 500ms linear infinite;
     }
+
+    @keyframes avatarHoverFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes avatarHoverFadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+  </style>
   </style>
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">

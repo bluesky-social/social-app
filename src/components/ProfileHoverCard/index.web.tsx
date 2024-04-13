@@ -1,6 +1,5 @@
 import React from 'react'
 import {View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, Trans} from '@lingui/macro'
@@ -52,7 +51,8 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
 }
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
-  const [hovered, setHovered] = React.useState(false)
+  const [shouldRender, setShouldRender] = React.useState(false)
+  const [isVisible, setIsVisible] = React.useState(false)
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
   })
@@ -61,55 +61,83 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const prefetchedProfile = React.useRef(false)
   const targetHovered = React.useRef(false)
   const cardHovered = React.useRef(false)
-  const targetClicked = React.useRef(false)
+
   const showTimeout = React.useRef<NodeJS.Timeout>()
+  const hideTimeout = React.useRef<NodeJS.Timeout>()
+  const unrenderTimeout = React.useRef<NodeJS.Timeout>()
 
+  const animationStyle = {
+    animation: `${
+      isVisible ? 'avatarHoverFadeIn' : 'avatarHoverFadeOut'
+    } 0.1s forwards`,
+  }
+
+  const setHideTimeout = React.useCallback(() => {
+    // Wait a second incase this is just a transition from the avatar to the card or vice versa
+    hideTimeout.current = setTimeout(() => {
+      if (targetHovered.current || cardHovered.current) return
+      setIsVisible(false)
+    }, 100)
+
+    // We need to wait 100ms for the animation to complete before removing the portal
+    unrenderTimeout.current = setTimeout(() => {
+      if (targetHovered.current || cardHovered.current) return
+      setShouldRender(false)
+    }, 200)
+  }, [])
+
+  // This is the first step
   const onPointerEnterTarget = React.useCallback(() => {
+    // We want to stop hiding every time we enter the avatar, so cancel the timeouts
+    clearTimeout(hideTimeout.current)
+    clearTimeout(unrenderTimeout.current)
+
+    targetHovered.current = true
+
     showTimeout.current = setTimeout(async () => {
-      targetHovered.current = true
-
-      if (prefetchedProfile.current) {
-        // if we're navigating
-        if (targetClicked.current) return
-        setHovered(true)
-      } else {
+      if (!prefetchedProfile.current) {
         await prefetchProfileQuery(props.did)
-
-        if (targetHovered.current) {
-          setHovered(true)
-        }
         prefetchedProfile.current = true
       }
-    }, 350)
+
+      setShouldRender(true)
+      setIsVisible(true)
+    }, 200)
   }, [props.did, prefetchProfileQuery])
+
   const onPointerEnterCard = React.useCallback(() => {
+    clearTimeout(hideTimeout.current)
+    clearTimeout(unrenderTimeout.current)
+
+    setIsVisible(true)
     cardHovered.current = true
-    // if we're navigating
-    if (targetClicked.current) return
-    setHovered(true)
   }, [])
+
   const onPointerLeaveTarget = React.useCallback(() => {
+    // If we were getting ready to show the card, cancel that
     clearTimeout(showTimeout.current)
     targetHovered.current = false
-    setTimeout(() => {
-      if (cardHovered.current) return
-      setHovered(false)
-    }, 100)
-  }, [])
+
+    if (shouldRender) {
+      setHideTimeout()
+    }
+  }, [shouldRender, setHideTimeout])
+
   const onPointerLeaveCard = React.useCallback(() => {
     cardHovered.current = false
     setTimeout(() => {
-      if (targetHovered.current) return
-      setHovered(false)
+      setHideTimeout()
     }, 100)
-  }, [])
-  const onClickTarget = React.useCallback(() => {
-    targetClicked.current = true
-    setHovered(false)
-  }, [])
+  }, [setHideTimeout])
+
   const hide = React.useCallback(() => {
-    setHovered(false)
+    setIsVisible(false)
+    setShouldRender(false)
   }, [])
+
+  const onClickTarget = React.useCallback(() => {
+    hide()
+  }, [hide])
 
   return (
     <div
@@ -121,12 +149,9 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
         display: props.inline ? 'inline' : 'block',
       }}>
       {props.children}
-
-      {hovered && (
+      {shouldRender && (
         <Portal>
-          <Animated.View
-            entering={FadeIn.duration(80)}
-            exiting={FadeOut.duration(80)}>
+          <div style={animationStyle}>
             <div
               ref={refs.setFloating}
               style={floatingStyles}
@@ -134,7 +159,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
               onPointerLeave={onPointerLeaveCard}>
               <Card did={props.did} hide={hide} />
             </div>
-          </Animated.View>
+          </div>
         </Portal>
       )}
     </div>
