@@ -116,7 +116,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       ref={refs.setReference}
       onPointerEnter={onPointerEnterTarget}
       onPointerLeave={onPointerLeaveTarget}
-      onMouseUp={onClickTarget}>
+      onMouseUp={onClickTarget}
+      style={{
+        display: props.inline ? 'inline' : 'block',
+      }}>
       {props.children}
 
       {hovered && (
