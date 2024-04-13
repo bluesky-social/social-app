@@ -1,11 +1,12 @@
 import {useCallback} from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {useSessionApi, SessionAccount} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {useCloseAllActiveElements} from '#/state/util'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import * as Toast from '#/view/com/util/Toast'
 import {LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
@@ -44,9 +45,14 @@ export function useAccountSwitcher() {
             'circle-exclamation',
           )
         }
-      } catch (e) {
-        Toast.show('Sorry! We need you to enter your password.')
+      } catch (e: any) {
+        logger.error(`switch account: selectAccount failed`, {
+          message: e.message,
+        })
         clearCurrentAccount() // back user out to login
+        setTimeout(() => {
+          Toast.show('Sorry! We need you to enter your password.')
+        }, 100)
       }
     },
     [
