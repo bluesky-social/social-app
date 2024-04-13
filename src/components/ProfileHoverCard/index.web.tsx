@@ -5,7 +5,6 @@ import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -51,7 +50,18 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
   return isTouchDevice ? props.children : <ProfileHoverCardInner {...props} />
 }
 
-type State = 'hidden' | 'might-show' | 'showing' | 'might-hide' | 'hiding'
+type State = {
+  stage: 'hidden' | 'might-show' | 'showing' | 'might-hide' | 'hiding'
+  effect?: () => () => any
+}
+
+type Action =
+  | 'pressed'
+  | 'hovered'
+  | 'unhovered'
+  | 'show-timer-elapsed'
+  | 'hide-timer-elapsed'
+  | 'hide-animation-completed'
 
 const SHOW_DELAY = 350
 const SHOW_DURATION = 300
@@ -59,16 +69,109 @@ const HIDE_DELAY = 200
 const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
-  const [state, setState] = React.useState<State>('hidden')
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
   })
-  const animationStyle = {
-    animation:
-      state === 'hiding'
-        ? `avatarHoverFadeOut ${HIDE_DURATION}ms both`
-        : `avatarHoverFadeIn ${SHOW_DURATION}ms both`,
-  }
+
+  const [currentState, dispatch] = React.useReducer(
+    // Tip: console.log(state, action) when debugging.
+    (state: State, action: Action): State => {
+      // Regardless of which stage we're in, pressing always hides the card.
+      if (action === 'pressed') {
+        return {stage: 'hidden'}
+      }
+
+      if (state.stage === 'hidden') {
+        // Our story starts when the card is hidden.
+        // If the user hovers, we kick off a grace period before showing the card.
+        if (action === 'hovered') {
+          return {
+            stage: 'might-show',
+            effect() {
+              const id = setTimeout(
+                () => dispatch('show-timer-elapsed'),
+                SHOW_DELAY,
+              )
+              return () => {
+                clearTimeout(id)
+              }
+            },
+          }
+        }
+      }
+
+      if (state.stage === 'might-show') {
+        // We're in the grace period when we decide whether to show the card.
+        // At this point, two things can happen. Either the user unhovers, and
+        // we go back to hidden--or they linger enough that we'll show the card.
+        if (action === 'unhovered') {
+          return {stage: 'hidden'}
+        }
+        if (action === 'show-timer-elapsed') {
+          return {stage: 'showing'}
+        }
+      }
+
+      if (state.stage === 'showing') {
+        // We're showing the card now.
+        // If the user unhovers, we'll start a grace period before hiding the card.
+        if (action === 'unhovered') {
+          return {
+            stage: 'might-hide',
+            effect() {
+              const id = setTimeout(
+                () => dispatch('hide-timer-elapsed'),
+                HIDE_DELAY,
+              )
+              return () => clearTimeout(id)
+            },
+          }
+        }
+      }
+
+      if (state.stage === 'might-hide') {
+        // We're in the grace period when we decide whether to hide the card.
+        // At this point, two things can happen. Either the user hovers, and
+        // we go back to showing it--or they linger enough that we'll start hiding the card.
+        if (action === 'hovered') {
+          return {stage: 'showing'}
+        }
+        if (action === 'hide-timer-elapsed') {
+          return {
+            stage: 'hiding',
+            effect() {
+              const id = setTimeout(
+                () => dispatch('hide-animation-completed'),
+                HIDE_DURATION,
+              )
+              return () => clearTimeout(id)
+            },
+          }
+        }
+      }
+
+      if (state.stage === 'hiding') {
+        // We're currently playing the hiding animation.
+        // We'll ignore all inputs now and wait for the animation to finish.
+        // At that point, we'll hide the entire thing, going back to square one.
+        if (action === 'hide-animation-completed') {
+          return {stage: 'hidden'}
+        }
+      }
+
+      // Something else happened. Keep calm and carry on.
+      return state
+    },
+    {stage: 'hidden'},
+  )
+
+  React.useEffect(() => {
+    if (currentState.effect) {
+      const effect = currentState.effect
+      delete currentState.effect // Mark as completed
+      return effect()
+    }
+  }, [currentState])
 
   const prefetchProfileQuery = usePrefetchProfileQuery()
   const prefetchedProfile = React.useRef(false)
@@ -79,95 +182,45 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     }
   }, [prefetchProfileQuery, props.did])
 
-  const isVisible =
-    state === 'showing' || state === 'might-hide' || state === 'hiding'
-
-  // We need at most one timeout at a time (to transition to the next state).
-  const nextTimeout = React.useRef<NodeJS.Timeout | null>(null)
-  const transitionToState = React.useCallback((nextState: State) => {
-    if (nextTimeout.current) {
-      clearTimeout(nextTimeout.current)
-      nextTimeout.current = null
-    }
-    setState(nextState)
-  }, [])
-
-  const onReadyToShow = useNonReactiveCallback(() => {
-    if (state === 'might-show') {
-      transitionToState('showing')
-    }
-  })
-
-  const onReadyToHide = useNonReactiveCallback(() => {
-    if (state === 'might-hide') {
-      transitionToState('hiding')
-      nextTimeout.current = setTimeout(onHidingAnimationEnd, HIDE_DURATION)
-    }
-  })
-
-  const onHidingAnimationEnd = useNonReactiveCallback(() => {
-    if (state === 'hiding') {
-      transitionToState('hidden')
-    }
-  })
-
-  const onReceiveHover = useNonReactiveCallback(() => {
-    prefetchIfNeeded()
-    if (state === 'hidden') {
-      transitionToState('might-show')
-      nextTimeout.current = setTimeout(onReadyToShow, SHOW_DELAY)
-    } else if (state === 'might-show') {
-      // Do nothing
-    } else if (state === 'showing') {
-      // Do nothing
-    } else if (state === 'might-hide') {
-      transitionToState('showing')
-    } else if (state === 'hiding') {
-      transitionToState('showing')
-    }
-  })
-
-  const onLoseHover = useNonReactiveCallback(() => {
-    if (state === 'hidden') {
-      // Do nothing
-    } else if (state === 'might-show') {
-      transitionToState('hidden')
-    } else if (state === 'showing') {
-      transitionToState('might-hide')
-      nextTimeout.current = setTimeout(onReadyToHide, HIDE_DELAY)
-    } else if (state === 'might-hide') {
-      // Do nothing
-    } else if (state === 'hiding') {
-      // Do nothing
-    }
-  })
-
   const onPointerEnterTarget = React.useCallback(() => {
-    onReceiveHover()
-  }, [onReceiveHover])
+    prefetchIfNeeded()
+    dispatch('hovered')
+  }, [prefetchIfNeeded])
 
   const onPointerLeaveTarget = React.useCallback(() => {
-    onLoseHover()
-  }, [onLoseHover])
+    dispatch('unhovered')
+  }, [])
 
   const onPointerEnterCard = React.useCallback(() => {
-    onReceiveHover()
-  }, [onReceiveHover])
+    dispatch('hovered')
+  }, [])
 
   const onPointerLeaveCard = React.useCallback(() => {
-    onLoseHover()
-  }, [onLoseHover])
+    dispatch('unhovered')
+  }, [])
 
-  const onDismiss = React.useCallback(() => {
-    transitionToState('hidden')
-  }, [transitionToState])
+  const onPress = React.useCallback(() => {
+    dispatch('pressed')
+  }, [])
+
+  const isVisible =
+    currentState.stage === 'showing' ||
+    currentState.stage === 'might-hide' ||
+    currentState.stage === 'hiding'
+
+  const animationStyle = {
+    animation:
+      currentState.stage === 'hiding'
+        ? `avatarHoverFadeOut ${HIDE_DURATION}ms both`
+        : `avatarHoverFadeIn ${SHOW_DURATION}ms both`,
+  }
 
   return (
     <div
       ref={refs.setReference}
       onPointerEnter={onPointerEnterTarget}
       onPointerLeave={onPointerLeaveTarget}
-      onMouseUp={onDismiss}
+      onMouseUp={onPress}
       style={{
         display: props.inline ? 'inline' : 'block',
       }}>
@@ -180,7 +233,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
               style={floatingStyles}
               onPointerEnter={onPointerEnterCard}
               onPointerLeave={onPointerLeaveCard}>
-              <Card did={props.did} hide={onDismiss} />
+              <Card did={props.did} hide={onPress} />
             </div>
           </div>
         </Portal>
