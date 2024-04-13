@@ -8,6 +8,7 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {getAgent} from '#/state/session'
+import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
 import {precacheThreadPostProfiles} from './profile'
@@ -258,6 +259,9 @@ export function* findAllPostsInQueryData(
     yield postViewToPlaceholderThread(post)
   }
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+    yield postViewToPlaceholderThread(post)
+  }
+  for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
 }
