@@ -31,7 +31,9 @@ export function AppLanguageDropdown() {
   return (
     <View
       style={[
-        {height: 32},
+        // We don't have hitSlop here to increase the tap region,
+        // alternative is negative margins.
+        {height: 32, marginVertical: -((32 - 14) / 2)},
         a.flex_row,
         a.gap_sm,
         a.align_center,
