@@ -8,8 +8,14 @@ export function Link({
   href: string
   className?: string
 } & h.JSX.HTMLAttributes<HTMLAnchorElement>) {
+  const searchParam = new URLSearchParams(window.location.search)
+  const ref_url = searchParam.get('ref_url')
+
   const newSearchParam = new URLSearchParams()
   newSearchParam.set('ref_src', 'embed')
+  if (ref_url) {
+    newSearchParam.set('ref_url', ref_url)
+  }
 
   return (
     <a
