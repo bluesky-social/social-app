@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -51,97 +51,144 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
   return isTouchDevice ? props.children : <ProfileHoverCardInner {...props} />
 }
 
+type State = 'hidden' | 'might-show' | 'showing' | 'might-hide' | 'hiding'
+
+const SHOW_DELAY = 350
+const SHOW_DURATION = 300
+const HIDE_DELAY = 200
+const HIDE_DURATION = 200
+
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
-  const [hovered, setHovered] = React.useState(false)
+  const [state, setState] = React.useState<State>('hidden')
   const {refs, floatingStyles} = useFloating({
     middleware: floatingMiddlewares,
   })
-  const prefetchProfileQuery = usePrefetchProfileQuery()
+  const animationStyle = {
+    animation:
+      state === 'hiding'
+        ? `avatarHoverFadeOut ${HIDE_DURATION}ms both`
+        : `avatarHoverFadeIn ${SHOW_DURATION}ms both`,
+  }
 
+  const prefetchProfileQuery = usePrefetchProfileQuery()
   const prefetchedProfile = React.useRef(false)
-  const targetHovered = React.useRef(false)
-  const cardHovered = React.useRef(false)
-  const targetClicked = React.useRef(false)
-  const showTimeout = React.useRef<NodeJS.Timeout>()
+  const prefetchIfNeeded = React.useCallback(async () => {
+    if (!prefetchedProfile.current) {
+      prefetchProfileQuery(props.did)
+    }
+  }, [prefetchProfileQuery, props.did])
+
+  const isVisible =
+    state === 'showing' || state === 'might-hide' || state === 'hiding'
+
+  // We need at most one timeout at a time (to transition to the next state).
+  const nextTimeout = React.useRef<NodeJS.Timeout | null>(null)
+  const transitionToState = React.useCallback((nextState: State) => {
+    if (nextTimeout.current) {
+      clearTimeout(nextTimeout.current)
+      nextTimeout.current = null
+    }
+    setState(nextState)
+  }, [])
+
+  const onReadyToShow = useNonReactiveCallback(() => {
+    if (state === 'might-show') {
+      transitionToState('showing')
+    }
+  })
+
+  const onReadyToHide = useNonReactiveCallback(() => {
+    if (state === 'might-hide') {
+      transitionToState('hiding')
+      nextTimeout.current = setTimeout(onHidingAnimationEnd, HIDE_DURATION)
+    }
+  })
+
+  const onHidingAnimationEnd = useNonReactiveCallback(() => {
+    if (state === 'hiding') {
+      transitionToState('hidden')
+    }
+  })
+
+  const onReceiveHover = useNonReactiveCallback(() => {
+    prefetchIfNeeded()
+    if (state === 'hidden') {
+      transitionToState('might-show')
+      nextTimeout.current = setTimeout(onReadyToShow, SHOW_DELAY)
+    } else if (state === 'might-show') {
+      // Do nothing
+    } else if (state === 'showing') {
+      // Do nothing
+    } else if (state === 'might-hide') {
+      transitionToState('showing')
+    } else if (state === 'hiding') {
+      transitionToState('showing')
+    }
+  })
+
+  const onLoseHover = useNonReactiveCallback(() => {
+    if (state === 'hidden') {
+      // Do nothing
+    } else if (state === 'might-show') {
+      transitionToState('hidden')
+    } else if (state === 'showing') {
+      transitionToState('might-hide')
+      nextTimeout.current = setTimeout(onReadyToHide, HIDE_DELAY)
+    } else if (state === 'might-hide') {
+      // Do nothing
+    } else if (state === 'hiding') {
+      // Do nothing
+    }
+  })
 
   const onPointerEnterTarget = React.useCallback(() => {
-    showTimeout.current = setTimeout(async () => {
-      targetHovered.current = true
+    onReceiveHover()
+  }, [onReceiveHover])
 
-      if (prefetchedProfile.current) {
-        // if we're navigating
-        if (targetClicked.current) return
-        setHovered(true)
-      } else {
-        await prefetchProfileQuery(props.did)
-
-        if (targetHovered.current) {
-          setHovered(true)
-        }
-        prefetchedProfile.current = true
-      }
-    }, 350)
-  }, [props.did, prefetchProfileQuery])
-  const onPointerEnterCard = React.useCallback(() => {
-    cardHovered.current = true
-    // if we're navigating
-    if (targetClicked.current) return
-    setHovered(true)
-  }, [])
   const onPointerLeaveTarget = React.useCallback(() => {
-    clearTimeout(showTimeout.current)
-    targetHovered.current = false
-    setTimeout(() => {
-      if (cardHovered.current) return
-      setHovered(false)
-    }, 100)
-  }, [])
+    onLoseHover()
+  }, [onLoseHover])
+
+  const onPointerEnterCard = React.useCallback(() => {
+    onReceiveHover()
+  }, [onReceiveHover])
+
   const onPointerLeaveCard = React.useCallback(() => {
-    cardHovered.current = false
-    setTimeout(() => {
-      if (targetHovered.current) return
-      setHovered(false)
-    }, 100)
-  }, [])
-  const onClickTarget = React.useCallback(() => {
-    targetClicked.current = true
-    setHovered(false)
-  }, [])
-  const hide = React.useCallback(() => {
-    setHovered(false)
-  }, [])
+    onLoseHover()
+  }, [onLoseHover])
+
+  const onDismiss = React.useCallback(() => {
+    transitionToState('hidden')
+  }, [transitionToState])
 
   return (
     <div
       ref={refs.setReference}
       onPointerEnter={onPointerEnterTarget}
       onPointerLeave={onPointerLeaveTarget}
-      onMouseUp={onClickTarget}
+      onMouseUp={onDismiss}
       style={{
         display: props.inline ? 'inline' : 'block',
       }}>
       {props.children}
-
-      {hovered && (
+      {isVisible && (
         <Portal>
-          <Animated.View
-            entering={FadeIn.duration(80)}
-            exiting={FadeOut.duration(80)}>
+          <div style={animationStyle}>
             <div
               ref={refs.setFloating}
               style={floatingStyles}
               onPointerEnter={onPointerEnterCard}
               onPointerLeave={onPointerLeaveCard}>
-              <Card did={props.did} hide={hide} />
+              <Card did={props.did} hide={onDismiss} />
             </div>
-          </Animated.View>
+          </div>
         </Portal>
       )}
     </div>
   )
 }
 
-function Card({did, hide}: {did: string; hide: () => void}) {
+let Card = ({did, hide}: {did: string; hide: () => void}): React.ReactNode => {
   const t = useTheme()
 
   const profile = useProfileQuery({did})
@@ -173,6 +220,7 @@ function Card({did, hide}: {did: string; hide: () => void}) {
     </View>
   )
 }
+Card = React.memo(Card)
 
 function Inner({
   profile,
