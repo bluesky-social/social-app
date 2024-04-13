@@ -14,7 +14,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
@@ -90,7 +89,6 @@ let PostDropdownBtn = ({
   const hidePromptControl = useDialogControl()
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
-  const enableEmbedPost = useGate('enable_embed_post_dialog')
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -247,7 +245,7 @@ let PostDropdownBtn = ({
               <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
 
-            {gtMobile && enableEmbedPost && !shouldShowLoggedOutWarning && (
+            {gtMobile && !shouldShowLoggedOutWarning && (
               <Menu.Item
                 testID="postDropdownEmbedBtn"
                 label={_(msg`Embed post`)}
