@@ -23,7 +23,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
-import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {transformSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
@@ -263,7 +263,7 @@ function SearchScreenPostResults({
   const [isPTR, setIsPTR] = React.useState(false)
 
   const augmentedQuery = React.useMemo(() => {
-    return augmentSearchQuery(query || '', {did: currentAccount?.did})
+    return transformSearchQuery(query || '', {did: currentAccount?.did})
   }, [query, currentAccount])
 
   const {
