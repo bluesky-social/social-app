@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"html/template"
 	"io/fs"
 	"net/http"
@@ -155,6 +154,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/security.txt", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 	})
+	/* XXX: intentionally break all routes
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			path := c.Request().URL.Path
@@ -177,6 +177,8 @@ func serve(cctx *cli.Context) error {
 	e.GET("/embed.js", echo.WrapHandler(staticHandler))
 	e.GET("/oembed", server.WebOEmbed)
 	e.GET("/embed/:did/app.bsky.feed.post/:rkey", server.WebPostEmbed)
+	*/
+	e.GET("/", server.WebHome)
 
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
