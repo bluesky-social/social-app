@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {memo, useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -15,7 +15,7 @@ import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components
 import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 
-export function EmbedDialog({
+let EmbedDialog = ({
   control,
   postAuthor,
   postCid,
@@ -29,7 +29,7 @@ export function EmbedDialog({
   postUri: string
   record: AppBskyFeedPost.Record
   timestamp: string
-}) {
+}): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const ref = useRef<TextInput>(null)
@@ -133,6 +133,8 @@ export function EmbedDialog({
     </Dialog.Outer>
   )
 }
+EmbedDialog = memo(EmbedDialog)
+export {EmbedDialog}
 
 /**
  * Based on a snippet of code from React, which itself was based on the escape-html library.
