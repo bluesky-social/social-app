@@ -242,7 +242,7 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
 }
 
 function toShareUrl(path: string) {
-  return `https://bsky.app${path}`
+  return `https://bsky.app${path}?ref_src=embed`
 }
 
 /**

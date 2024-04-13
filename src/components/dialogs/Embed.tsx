@@ -58,10 +58,14 @@ function EmbedDialogInner({
   }, [copied])
 
   const snippet = React.useMemo(() => {
+    function toEmbedUrl(href: string) {
+      return toShareUrl(href) + '?ref_src=embed'
+    }
+
     const lang = record.langs && record.langs.length > 0 ? record.langs[0] : ''
-    const profileHref = toShareUrl(['/profile', postAuthor.did].join('/'))
+    const profileHref = toEmbedUrl(['/profile', postAuthor.did].join('/'))
     const urip = new AtUri(postUri)
-    const href = toShareUrl(
+    const href = toEmbedUrl(
       ['/profile', postAuthor.did, 'post', urip.rkey].join('/'),
     )
 
