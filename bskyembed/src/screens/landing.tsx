@@ -86,7 +86,14 @@ function LandingPage() {
         if (!AppBskyFeedDefs.isThreadViewPost(data.thread)) {
           throw new Error('Post not found')
         }
-
+        const pwiOptOut = !!data.thread.post.author.labels?.find(
+          label => label.val === '!no-unauthenticated',
+        )
+        if (pwiOptOut) {
+          throw new Error(
+            'The author of this post has requested their posts not be displayed on external sites.',
+          )
+        }
         setThread(data.thread)
       } catch (err) {
         console.error(err)
@@ -113,25 +120,15 @@ function LandingPage() {
           className="border rounded-lg py-3 w-full max-w-[600px] px-4"
           placeholder={DEFAULT_POST}
         />
-        <p className={`text-red-500 ${error ? '' : 'invisible'}`}>{error}</p>
       </div>
 
       <img src={arrowBottom as string} className="w-6" />
 
       <div className="w-full max-w-[600px] gap-8 flex flex-col">
         {uri && !error && thread && <Snippet thread={thread} />}
-
-        {thread ? (
-          <Post thread={thread} key={thread.post.uri} />
-        ) : (
-          <Container href="https://bsky.social/about">
-            <Link
-              href="https://bsky.social/about"
-              className="transition-transform hover:scale-110 absolute top-4 right-4">
-              <img src={logo as string} className="h-8" />
-            </Link>
-            <div className="h-32" />
-          </Container>
+        {!error && thread && <Post thread={thread} key={thread.post.uri} />}
+        {error && (
+          <p className={`text-red-500 ${error ? '' : 'invisible'}`}>{error}</p>
         )}
       </div>
     </main>
