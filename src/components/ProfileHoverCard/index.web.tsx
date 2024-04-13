@@ -67,23 +67,23 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const unrenderTimeout = React.useRef<NodeJS.Timeout>()
 
   const animationStyle = {
-    animation: `${
-      isVisible ? 'avatarHoverFadeIn' : 'avatarHoverFadeOut'
-    } 0.1s forwards`,
+    animation: isVisible
+      ? 'avatarHoverFadeIn 0.3s forwards'
+      : 'avatarHoverFadeOut 0.2s forwards',
   }
 
   const setHideTimeout = React.useCallback(() => {
-    // Wait a second incase this is just a transition from the avatar to the card or vice versa
+    // Wait in case this is just a transition from the avatar to the card or vice versa
     hideTimeout.current = setTimeout(() => {
       if (targetHovered.current || cardHovered.current) return
       setIsVisible(false)
-    }, 100)
+    }, 200)
 
-    // We need to wait 100ms for the animation to complete before removing the portal
+    // We need to wait for the animation to complete before removing the portal
     unrenderTimeout.current = setTimeout(() => {
       if (targetHovered.current || cardHovered.current) return
       setShouldRender(false)
-    }, 200)
+    }, 500)
   }, [])
 
   // This is the first step
@@ -102,7 +102,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
       setShouldRender(true)
       setIsVisible(true)
-    }, 200)
+    }, 400)
   }, [props.did, prefetchProfileQuery])
 
   const onPointerEnterCard = React.useCallback(() => {
