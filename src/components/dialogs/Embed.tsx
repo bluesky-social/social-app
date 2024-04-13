@@ -15,21 +15,33 @@ import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components
 import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 
-let EmbedDialog = ({
-  control,
-  postAuthor,
-  postCid,
-  postUri,
-  record,
-  timestamp,
-}: {
+type EmbedDialogProps = {
   control: Dialog.DialogControlProps
   postAuthor: AppBskyActorDefs.ProfileViewBasic
   postCid: string
   postUri: string
   record: AppBskyFeedPost.Record
   timestamp: string
-}): React.ReactNode => {
+}
+
+let EmbedDialog = ({control, ...rest}: EmbedDialogProps): React.ReactNode => {
+  return (
+    <Dialog.Outer control={control}>
+      <Dialog.Handle />
+      <EmbedDialogInner {...rest} />
+    </Dialog.Outer>
+  )
+}
+EmbedDialog = memo(EmbedDialog)
+export {EmbedDialog}
+
+function EmbedDialogInner({
+  postAuthor,
+  postCid,
+  postUri,
+  record,
+  timestamp,
+}: Omit<EmbedDialogProps, 'control'>) {
   const t = useTheme()
   const {_} = useLingui()
   const ref = useRef<TextInput>(null)
@@ -75,66 +87,60 @@ let EmbedDialog = ({
   }, [postUri, postCid, record, timestamp, postAuthor])
 
   return (
-    <Dialog.Outer control={control}>
-      <Dialog.Handle />
-      <Dialog.Inner label="Embed post" style={[a.gap_md, {maxWidth: 500}]}>
-        <View style={[a.gap_sm, a.pb_lg]}>
-          <Text style={[a.text_2xl, a.font_bold]}>
-            <Trans>Embed post</Trans>
-          </Text>
-          <Text
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_normal]}>
-            <Trans>
-              Embed this post in your website. Simply copy the following snippet
-              and paste it into the HTML code of your website.
-            </Trans>
-          </Text>
-        </View>
+    <Dialog.Inner label="Embed post" style={[a.gap_md, {maxWidth: 500}]}>
+      <View style={[a.gap_sm, a.pb_lg]}>
+        <Text style={[a.text_2xl, a.font_bold]}>
+          <Trans>Embed post</Trans>
+        </Text>
+        <Text
+          style={[a.text_md, t.atoms.text_contrast_medium, a.leading_normal]}>
+          <Trans>
+            Embed this post in your website. Simply copy the following snippet
+            and paste it into the HTML code of your website.
+          </Trans>
+        </Text>
+      </View>
 
-        <View style={[a.flex_row, a.gap_sm]}>
-          <TextField.Root>
-            <TextField.Icon icon={CodeBrackets} />
-            <TextField.Input
-              label={_(msg`Embed HTML code`)}
-              editable={false}
-              selection={{start: 0, end: snippet.length}}
-              value={snippet}
-              style={{}}
-            />
-          </TextField.Root>
-          <Button
-            label={_(msg`Copy code`)}
-            color="primary"
-            variant="solid"
-            size="medium"
-            onPress={() => {
-              ref.current?.focus()
-              ref.current?.setSelection(0, snippet.length)
-              navigator.clipboard.writeText(snippet)
-              setCopied(true)
-            }}>
-            {copied ? (
-              <>
-                <ButtonIcon icon={Check} />
-                <ButtonText>
-                  <Trans>Copied!</Trans>
-                </ButtonText>
-              </>
-            ) : (
+      <View style={[a.flex_row, a.gap_sm]}>
+        <TextField.Root>
+          <TextField.Icon icon={CodeBrackets} />
+          <TextField.Input
+            label={_(msg`Embed HTML code`)}
+            editable={false}
+            selection={{start: 0, end: snippet.length}}
+            value={snippet}
+            style={{}}
+          />
+        </TextField.Root>
+        <Button
+          label={_(msg`Copy code`)}
+          color="primary"
+          variant="solid"
+          size="medium"
+          onPress={() => {
+            ref.current?.focus()
+            ref.current?.setSelection(0, snippet.length)
+            navigator.clipboard.writeText(snippet)
+            setCopied(true)
+          }}>
+          {copied ? (
+            <>
+              <ButtonIcon icon={Check} />
               <ButtonText>
-                <Trans>Copy code</Trans>
+                <Trans>Copied!</Trans>
               </ButtonText>
-            )}
-          </Button>
-        </View>
-
-        <Dialog.Close />
-      </Dialog.Inner>
-    </Dialog.Outer>
+            </>
+          ) : (
+            <ButtonText>
+              <Trans>Copy code</Trans>
+            </ButtonText>
+          )}
+        </Button>
+      </View>
+      <Dialog.Close />
+    </Dialog.Inner>
   )
 }
-EmbedDialog = memo(EmbedDialog)
-export {EmbedDialog}
 
 /**
  * Based on a snippet of code from React, which itself was based on the escape-html library.
