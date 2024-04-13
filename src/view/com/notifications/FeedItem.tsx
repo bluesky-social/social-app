@@ -420,31 +420,30 @@ function ExpandedAuthorsList({
           to={makeProfileLink({
             did: author.did,
             handle: author.handle,
-          })}>
-          <View style={styles.expandedAuthor}>
-            <View style={styles.expandedAuthorAvi}>
-              <ProfileHoverCard did={author.did}>
-                <UserAvatar
-                  size={35}
-                  avatar={author.avatar}
-                  moderation={author.moderation.ui('avatar')}
-                  type={author.associated?.labeler ? 'labeler' : 'user'}
-                />
-              </ProfileHoverCard>
-            </View>
-            <View style={s.flex1}>
-              <Text
-                type="lg-bold"
-                numberOfLines={1}
-                style={pal.text}
-                lineHeight={1.2}>
-                {sanitizeDisplayName(author.displayName || author.handle)}
-                &nbsp;
-                <Text style={[pal.textLight]} lineHeight={1.2}>
-                  {sanitizeHandle(author.handle)}
-                </Text>
+          })}
+          style={styles.expandedAuthor}>
+          <View style={styles.expandedAuthorAvi}>
+            <ProfileHoverCard did={author.did}>
+              <UserAvatar
+                size={35}
+                avatar={author.avatar}
+                moderation={author.moderation.ui('avatar')}
+                type={author.associated?.labeler ? 'labeler' : 'user'}
+              />
+            </ProfileHoverCard>
+          </View>
+          <View style={s.flex1}>
+            <Text
+              type="lg-bold"
+              numberOfLines={1}
+              style={pal.text}
+              lineHeight={1.2}>
+              {sanitizeDisplayName(author.displayName || author.handle)}
+              &nbsp;
+              <Text style={[pal.textLight]} lineHeight={1.2}>
+                {sanitizeHandle(author.handle)}
               </Text>
-            </View>
+            </Text>
           </View>
         </NewLink>
       ))}
