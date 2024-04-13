@@ -159,9 +159,6 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
       return ''
     }
 
-    const pAttrs =
-      record.langs && record.langs[0] ? ` lang="${record.langs[0]}"` : ''
-
     const profileHref = toShareUrl(
       ['/profile', thread.post.author.did].join('/'),
     )
@@ -170,16 +167,25 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
       ['/profile', thread.post.author.did, 'post', urip.rkey].join('/'),
     )
 
-    return `<blockquote class="bluesky-embed" data-bluesky-uri="${
-      thread.post.uri
-    }" data-bluesky-cid="${thread.post.cid}"><p${pAttrs}>${record.text}${
-      record.embed ? `<br><br><a href="${href}">[image or embed]</a>` : ''
-    }</p>&mdash; ${
-      thread.post.author.displayName || thread.post.author.handle
-    } (<a href="${profileHref}">@${
-      thread.post.author.handle
-    }</a>) <a href="${href}">${niceDate(
-      thread.post.indexedAt,
+    const lang = record.langs ? record.langs[0] : ''
+
+    // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+    // DO NOT ADD ANY NEW INTERPOLATIOONS BELOW WITHOUT ESCAPING THEM!
+    // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
+    return `<blockquote class="bluesky-embed" data-bluesky-uri="${escapeHtml(
+      thread.post.uri,
+    )}" data-bluesky-cid="${escapeHtml(thread.post.cid)}"><p lang="${escapeHtml(
+      lang,
+    )}">${escapeHtml(record.text)}${
+      record.embed
+        ? `<br><br><a href="${escapeHtml(href)}">[image or embed]</a>`
+        : ''
+    }</p>&mdash; ${escapeHtml(
+      thread.post.author.displayName || thread.post.author.handle,
+    )} (<a href="${escapeHtml(profileHref)}">@${escapeHtml(
+      thread.post.author.handle,
+    )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
+      niceDate(thread.post.indexedAt),
     )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
   }, [thread])
 
@@ -209,4 +215,52 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
 
 function toShareUrl(path: string) {
   return `https://bsky.app${path}`
+}
+
+/**
+ * Based on a snippet of code from React, which itself was based on the escape-html library.
+ * Copyright (c) Meta Platforms, Inc. and affiliates
+ * Copyright (c) 2012-2013 TJ Holowaychuk
+ * Copyright (c) 2015 Andreas Lubbe
+ * Copyright (c) 2015 Tiancheng "Timothy" Gu
+ * Licensed as MIT.
+ */
+const matchHtmlRegExp = /["'&<>]/
+function escapeHtml(string: string) {
+  const str = String(string)
+  const match = matchHtmlRegExp.exec(str)
+  if (!match) {
+    return str
+  }
+  let escape
+  let html = ''
+  let index
+  let lastIndex = 0
+  for (index = match.index; index < str.length; index++) {
+    switch (str.charCodeAt(index)) {
+      case 34: // "
+        escape = '&quot;'
+        break
+      case 38: // &
+        escape = '&amp;'
+        break
+      case 39: // '
+        escape = '&#x27;'
+        break
+      case 60: // <
+        escape = '&lt;'
+        break
+      case 62: // >
+        escape = '&gt;'
+        break
+      default:
+        continue
+    }
+    if (lastIndex !== index) {
+      html += str.slice(lastIndex, index)
+    }
+    lastIndex = index + 1
+    html += escape
+  }
+  return lastIndex !== index ? html + str.slice(lastIndex, index) : html
 }
