@@ -1,17 +1,22 @@
 import React, {forwardRef} from 'react'
 import {Animated, View} from 'react-native'
 import PagerView, {
-  PagerViewOnPageSelectedEvent,
   PagerViewOnPageScrollEvent,
+  PagerViewOnPageSelectedEvent,
   PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view'
+
+import {LogEvents} from '#/lib/statsig/events'
 import {s} from 'lib/styles'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
 
 export interface PagerRef {
-  setPage: (index: number) => void
+  setPage: (
+    index: number,
+    reason: LogEvents['home:feedDisplayed']['reason'],
+  ) => void
 }
 
 export interface RenderTabBarFnProps {
@@ -25,7 +30,10 @@ interface Props {
   initialPage?: number
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
-  onPageSelecting?: (index: number) => void
+  onPageSelecting?: (
+    index: number,
+    reason: LogEvents['home:feedDisplayed']['reason'],
+  ) => void
   onPageScrollStateChanged?: (
     scrollState: 'idle' | 'dragging' | 'settling',
   ) => void
@@ -51,7 +59,13 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     const pagerView = React.useRef<PagerView>(null)
 
     React.useImperativeHandle(ref, () => ({
-      setPage: (index: number) => pagerView.current?.setPage(index),
+      setPage: (
+        index: number,
+        reason: LogEvents['home:feedDisplayed']['reason'],
+      ) => {
+        pagerView.current?.setPage(index)
+        onPageSelecting?.(index, reason)
+      },
     }))
 
     const onPageSelectedInner = React.useCallback(
@@ -79,14 +93,14 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
         // -prf
         if (scrollState.current === 'settling') {
           if (lastDirection.current === -1 && offset < lastOffset.current) {
-            onPageSelecting?.(position)
+            onPageSelecting?.(position, 'pager-swipe')
             setSelectedPage(position)
             lastDirection.current = 0
           } else if (
             lastDirection.current === 1 &&
             offset > lastOffset.current
           ) {
-            onPageSelecting?.(position + 1)
+            onPageSelecting?.(position + 1, 'pager-swipe')
             setSelectedPage(position + 1)
             lastDirection.current = 0
           }
@@ -113,7 +127,7 @@ export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
     const onTabBarSelect = React.useCallback(
       (index: number) => {
         pagerView.current?.setPage(index)
-        onPageSelecting?.(index)
+        onPageSelecting?.(index, 'tabbar-click')
       },
       [pagerView, onPageSelecting],
     )

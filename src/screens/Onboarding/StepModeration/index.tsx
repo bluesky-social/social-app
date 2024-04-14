@@ -1,27 +1,27 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
 import {LABELS} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {atoms as a, useBreakpoints} from '#/alf'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
+import {
+  DescriptionText,
+  OnboardingControls,
+  TitleText,
+} from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
+import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
+import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
-import {usePreferencesQuery} from '#/state/queries/preferences'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/lib/analytics/analytics'
-
-import {
-  Description,
-  OnboardingControls,
-  Title,
-} from '#/screens/Onboarding/Layout'
-import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
-import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
-import {Context} from '#/screens/Onboarding/state'
-import {IconCircle} from '#/components/IconCircle'
 
 export function StepModeration() {
   const {_} = useLingui()
@@ -46,6 +46,7 @@ export function StepModeration() {
   const onContinue = React.useCallback(() => {
     dispatch({type: 'next'})
     track('OnboardingV2:StepModeration:End')
+    logEvent('onboarding:moderation:nextPressed', {})
   }, [track, dispatch])
 
   React.useEffect(() => {
@@ -56,14 +57,14 @@ export function StepModeration() {
     <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>You're in control</Trans>
-      </Title>
-      <Description style={[a.mb_xl]}>
+      </TitleText>
+      <DescriptionText style={[a.mb_xl]}>
         <Trans>
           Select what you want to see (or not see), and we’ll handle the rest.
         </Trans>
-      </Description>
+      </DescriptionText>
 
       {!preferences ? (
         <View style={[a.pt_md]}>

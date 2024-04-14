@@ -17,16 +17,17 @@
 import {AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useSession, getAgent} from '#/state/session'
-import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
 import {STALE} from '#/state/queries'
+import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
+import {getAgent, useSession} from '#/state/session'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000
 const PAGE_SIZE = 100
 // ...which comes 100,000k list members
 
-export const RQKEY = () => ['list-memberships']
+const RQKEY_ROOT = 'list-memberships'
+export const RQKEY = () => [RQKEY_ROOT]
 
 export interface ListMembersip {
   membershipUri: string

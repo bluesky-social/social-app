@@ -1,26 +1,26 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {IS_PROD} from '#/env'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
+import {
+  DescriptionText,
+  OnboardingControls,
+  TitleText,
+} from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
+import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
+import {atoms as a, tokens, useTheme, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {Text} from '#/components/Typography'
-import {Loader} from '#/components/Loader'
-import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
-import {useAnalytics} from '#/lib/analytics/analytics'
-
-import {Context} from '#/screens/Onboarding/state'
-import {
-  Title,
-  Description,
-  OnboardingControls,
-} from '#/screens/Onboarding/Layout'
-import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+import {IS_PROD} from '#/env'
 
 export type FeedConfig = {
   default: boolean
@@ -32,11 +32,6 @@ export const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: IS_PROD, // these feeds are only available in prod
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
-    gradient: tokens.gradients.midnight,
-  },
-  {
-    default: IS_PROD, // these feeds are only available in prod
-    uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
     gradient: tokens.gradients.midnight,
   },
 ]
@@ -90,6 +85,12 @@ export function StepAlgoFeeds() {
       selectedSecondaryFeeds: secondaryFeedUris,
       selectedSecondaryFeedsLength: secondaryFeedUris.length,
     })
+    logEvent('onboarding:algoFeeds:nextPressed', {
+      selectedPrimaryFeeds: primaryFeedUris,
+      selectedPrimaryFeedsLength: primaryFeedUris.length,
+      selectedSecondaryFeeds: secondaryFeedUris,
+      selectedSecondaryFeedsLength: secondaryFeedUris.length,
+    })
   }, [primaryFeedUris, secondaryFeedUris, dispatch, track])
 
   React.useEffect(() => {
@@ -100,15 +101,15 @@ export function StepAlgoFeeds() {
     <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Choose your main feeds</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         <Trans>
           Custom feeds built by the community bring you new experiences and help
           you find the content you love.
         </Trans>
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group
@@ -125,16 +126,6 @@ export function StepAlgoFeeds() {
             <Trans>We recommend our "Discover" feed:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[0]} />
-          <Text
-            style={[
-              a.text_md,
-              a.pt_4xl,
-              a.pb_lg,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>We also think you'll like "For You" by Skygaze:</Trans>
-          </Text>
-          <FeedCard config={PRIMARY_FEEDS[1]} />
         </Toggle.Group>
 
         <Toggle.Group

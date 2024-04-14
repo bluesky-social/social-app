@@ -1,15 +1,16 @@
 import React from 'react'
-import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
-import {useLingui} from '@lingui/react'
+import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
-import {InlineLink} from '#/components/Link'
-import {Text, TextProps} from '#/components/Typography'
-import {toShortUrl} from 'lib/strings/url-helpers'
-import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
+import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {InlineLinkText, LinkProps} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {Text, TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -22,6 +23,7 @@ export function RichText({
   selectable,
   enableTags = false,
   authorHandle,
+  onLinkPress,
 }: TextStyleProp &
   Pick<TextProps, 'selectable'> & {
     value: RichTextAPI | string
@@ -30,6 +32,7 @@ export function RichText({
     disableLinks?: boolean
     enableTags?: boolean
     authorHandle?: string
+    onLinkPress?: LinkProps['onPress']
   }) {
   const richText = React.useMemo(
     () =>
@@ -84,30 +87,34 @@ export function RichText({
       !disableLinks
     ) {
       els.push(
-        <InlineLink
-          selectable={selectable}
-          key={key}
-          to={`/profile/${mention.did}`}
-          style={[...styles, {pointerEvents: 'auto'}]}
-          // @ts-ignore TODO
-          dataSet={WORD_WRAP}>
-          {segment.text}
-        </InlineLink>,
+        <ProfileHoverCard key={key} inline did={mention.did}>
+          <InlineLinkText
+            selectable={selectable}
+            to={`/profile/${mention.did}`}
+            style={[...styles, {pointerEvents: 'auto'}]}
+            // @ts-ignore TODO
+            dataSet={WORD_WRAP}
+            onPress={onLinkPress}>
+            {segment.text}
+          </InlineLinkText>
+        </ProfileHoverCard>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       if (disableLinks) {
         els.push(toShortUrl(segment.text))
       } else {
         els.push(
-          <InlineLink
+          <InlineLinkText
             selectable={selectable}
             key={key}
             to={link.uri}
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
-            dataSet={WORD_WRAP}>
+            dataSet={WORD_WRAP}
+            shareOnLongPress
+            onPress={onLinkPress}>
             {toShortUrl(segment.text)}
-          </InlineLink>,
+          </InlineLinkText>,
         )
       }
     } else if (

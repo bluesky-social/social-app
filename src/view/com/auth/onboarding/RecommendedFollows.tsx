@@ -1,21 +1,22 @@
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
-import {Text} from 'view/com/util/text/Text'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
-import {Button} from 'view/com/util/forms/Button'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {usePalette} from 'lib/hooks/usePalette'
-import {RecommendedFollowsItem} from './RecommendedFollowsItem'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Button} from 'view/com/util/forms/Button'
+import {Mobile, TabletOrDesktop} from 'view/com/util/layouts/Breakpoints'
+import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
+import {Text} from 'view/com/util/text/Text'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {RecommendedFollowsItem} from './RecommendedFollowsItem'
 
 type Props = {
   next: () => void
@@ -202,6 +203,7 @@ export function RecommendedFollows({next}: Props) {
               )}
               keyExtractor={item => item.did}
               style={{flex: 1}}
+              showsVerticalScrollIndicator={false}
             />
           )}
           <Button

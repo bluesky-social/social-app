@@ -1,33 +1,31 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import BottomSheet from '@gorhom/bottom-sheet'
-import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
-import {usePalette} from 'lib/hooks/usePalette'
+import BottomSheet from '@discord/bottom-sheet/src'
 
-import {useModals, useModalControls} from '#/state/modals'
+import {useModalControls, useModals} from '#/state/modals'
+import {usePalette} from 'lib/hooks/usePalette'
+import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
+import * as AddAppPassword from './AddAppPasswords'
+import * as AltImageModal from './AltImage'
+import * as EditImageModal from './AltImage'
+import * as ChangeEmailModal from './ChangeEmail'
+import * as ChangeHandleModal from './ChangeHandle'
+import * as ChangePasswordModal from './ChangePassword'
+import * as CreateOrEditListModal from './CreateOrEditList'
+import * as DeleteAccountModal from './DeleteAccount'
 import * as EditProfileModal from './EditProfile'
+import * as InAppBrowserConsentModal from './InAppBrowserConsent'
+import * as InviteCodesModal from './InviteCodes'
+import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
+import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
+import * as LinkWarningModal from './LinkWarning'
+import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
 import * as ThreadgateModal from './Threadgate'
-import * as CreateOrEditListModal from './CreateOrEditList'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
-import * as ListAddUserModal from './ListAddRemoveUsers'
-import * as AltImageModal from './AltImage'
-import * as EditImageModal from './AltImage'
-import * as DeleteAccountModal from './DeleteAccount'
-import * as ChangeHandleModal from './ChangeHandle'
-import * as InviteCodesModal from './InviteCodes'
-import * as AddAppPassword from './AddAppPasswords'
-import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
-import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as VerifyEmailModal from './VerifyEmail'
-import * as ChangeEmailModal from './ChangeEmail'
-import * as ChangePasswordModal from './ChangePassword'
-import * as SwitchAccountModal from './SwitchAccount'
-import * as LinkWarningModal from './LinkWarning'
-import * as EmbedConsentModal from './EmbedConsent'
-import * as InAppBrowserConsentModal from './InAppBrowserConsent'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
@@ -114,15 +112,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'change-password') {
     snapPoints = ChangePasswordModal.snapPoints
     element = <ChangePasswordModal.Component />
-  } else if (activeModal?.name === 'switch-account') {
-    snapPoints = SwitchAccountModal.snapPoints
-    element = <SwitchAccountModal.Component />
   } else if (activeModal?.name === 'link-warning') {
     snapPoints = LinkWarningModal.snapPoints
     element = <LinkWarningModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'embed-consent') {
-    snapPoints = EmbedConsentModal.snapPoints
-    element = <EmbedConsentModal.Component {...activeModal} />
   } else if (activeModal?.name === 'in-app-browser-consent') {
     snapPoints = InAppBrowserConsentModal.snapPoints
     element = <InAppBrowserConsentModal.Component {...activeModal} />

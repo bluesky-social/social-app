@@ -1,20 +1,38 @@
 import React from 'react'
 import {Platform} from 'react-native'
+import {AppState, AppStateStatus} from 'react-native'
+import {sha256} from 'js-sha256'
 import {
   Statsig,
   StatsigProvider,
   useGate as useStatsigGate,
 } from 'statsig-react-native-expo'
-import {AppState, AppStateStatus} from 'react-native'
+
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
-import {sha256} from 'js-sha256'
 import {LogEvents} from './events'
+import {Gate} from './gates'
+
+let refSrc: string | undefined
+let refUrl: string | undefined
+if (isWeb && typeof window !== 'undefined') {
+  const params = new URLSearchParams(window.location.search)
+  refSrc = params.get('ref_src') ?? undefined
+  refUrl = params.get('ref_url') ?? undefined
+}
 
 export type {LogEvents}
 
 const statsigOptions = {
   environment: {
-    tier: process.env.NODE_ENV === 'development' ? 'development' : 'production',
+    tier:
+      process.env.NODE_ENV === 'development'
+        ? 'development'
+        : IS_TESTFLIGHT
+        ? 'staging'
+        : 'production',
   },
   // Don't block on waiting for network. The fetched config will kick in on next load.
   // This ensures the UI is always consistent and doesn't update mid-session.
@@ -24,7 +42,13 @@ const statsigOptions = {
 
 type FlatJSONRecord = Record<
   string,
-  string | number | boolean | null | undefined
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  // Technically not scalar but Statsig will stringify it which works for us:
+  | string[]
 >
 
 let getCurrentRouteName: () => string | null | undefined = () => null
@@ -35,24 +59,42 @@ export function attachRouteToLogEvents(
   getCurrentRouteName = getRouteName
 }
 
+export function toClout(n: number | null | undefined): number | undefined {
+  if (n == null) {
+    return undefined
+  } else {
+    return Math.max(0, Math.round(Math.log(n)))
+  }
+}
+
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
-  const fullMetadata = {
-    ...rawMetadata,
-  } as Record<string, string> // Statsig typings are unnecessarily strict here.
-  fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
-  Statsig.logEvent(eventName, null, fullMetadata)
+  try {
+    const fullMetadata = {
+      ...rawMetadata,
+    } as Record<string, string> // Statsig typings are unnecessarily strict here.
+    fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
+    if (Statsig.initializeCalled()) {
+      Statsig.logEvent(eventName, null, fullMetadata)
+    }
+  } catch (e) {
+    // A log should never interrupt the calling code, whatever happens.
+    logger.error('Failed to log an event', {message: e})
+  }
 }
 
-export function useGate(gateName: string) {
+export function useGate(gateName: Gate): boolean {
   const {isLoading, value} = useStatsigGate(gateName)
   if (isLoading) {
     // This should not happen because of waitForInitialization={true}.
     console.error('Did not expected isLoading to ever be true.')
   }
-  return value
+  // This shouldn't technically be necessary but let's get a strong
+  // guarantee that a gate value can never change while mounted.
+  const [initialValue] = React.useState(value)
+  return initialValue
 }
 
 function toStatsigUser(did: string | undefined) {
@@ -63,19 +105,34 @@ function toStatsigUser(did: string | undefined) {
   return {
     userID,
     platform: Platform.OS,
+    custom: {
+      refSrc,
+      refUrl,
+      // Need to specify here too for gating.
+      platform: Platform.OS,
+    },
   }
 }
 
 let lastState: AppStateStatus = AppState.currentState
+let lastActive = lastState === 'active' ? performance.now() : null
 AppState.addEventListener('change', (state: AppStateStatus) => {
   if (state === lastState) {
     return
   }
   lastState = state
   if (state === 'active') {
+    lastActive = performance.now()
     logEvent('state:foreground', {})
   } else {
-    logEvent('state:background', {})
+    let secondsActive = 0
+    if (lastActive != null) {
+      secondsActive = Math.round((performance.now() - lastActive) / 1e3)
+    }
+    lastActive = null
+    logEvent('state:background', {
+      secondsActive,
+    })
   }
 })
 

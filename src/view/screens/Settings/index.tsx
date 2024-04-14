@@ -3,72 +3,76 @@ import {
   ActivityIndicator,
   Linking,
   Platform,
-  StyleSheet,
   Pressable,
+  StyleSheet,
   TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {setStringAsync} from 'expo-clipboard'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import * as AppInfo from 'lib/app-info'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useCustomPalette} from 'lib/hooks/useCustomPalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {NavigationProp} from 'lib/routes/types'
-import {HandIcon, HashtagIcon} from 'lib/icons'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {makeProfileLink} from 'lib/routes/links'
-import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {isIOS, isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {
-  useSetMinimalShellMode,
-  useThemePrefs,
-  useSetThemePrefs,
-  useOnboardingDispatch,
-} from '#/state/shell'
+import {clearLegacyStorage} from '#/state/persisted/legacy'
+import {clear as clearStorage} from '#/state/persisted/store'
 import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
-import {useSession, useSessionApi, SessionAccount} from '#/state/session'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useClearPreferencesMutation} from '#/state/queries/preferences'
-// TODO import {useInviteCodesQuery} from '#/state/queries/invites'
-import {clear as clearStorage} from '#/state/persisted/store'
-import {clearLegacyStorage} from '#/state/persisted/legacy'
-import {STATUS_PAGE_URL} from 'lib/constants'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
-import {isNative} from '#/platform/detection'
-import {useDialogControl} from '#/components/Dialog'
-
-import {s, colors} from 'lib/styles'
-import {ScrollView} from 'view/com/util/Views'
+import {useClearPreferencesMutation} from '#/state/queries/preferences'
+import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
+import {useProfileQuery} from '#/state/queries/profile'
+import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {
+  useOnboardingDispatch,
+  useSetMinimalShellMode,
+  useSetThemePrefs,
+  useThemePrefs,
+} from '#/state/shell'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import {useAnalytics} from 'lib/analytics/analytics'
+import * as AppInfo from 'lib/app-info'
+import {STATUS_PAGE_URL} from 'lib/constants'
+import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
+import {useCustomPalette} from 'lib/hooks/useCustomPalette'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {HandIcon, HashtagIcon} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
+import {
+  useHapticsDisabled,
+  useSetHapticsDisabled,
+} from 'state/preferences/disable-haptics'
+import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
+import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {Link, TextLink} from 'view/com/util/Link'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
-import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
-import {ExportCarDialog} from './ExportCarDialog'
+import {ScrollView} from 'view/com/util/Views'
+import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {navigate, resetToTab} from '#/Navigation'
+import {ExportCarDialog} from './ExportCarDialog'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -100,7 +104,16 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       {isCurrentAccount ? (
         <TouchableOpacity
           testID="signOutBtn"
-          onPress={logout}
+          onPress={() => {
+            if (isNative) {
+              logout('Settings')
+              resetToTab('HomeTab')
+            } else {
+              navigate('Home').then(() => {
+                logout('Settings')
+              })
+            }
+          }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
           accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
@@ -129,7 +142,9 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       testID={`switchToAccountBtn-${account.handle}`}
       key={account.did}
       onPress={
-        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+        isSwitchingAccounts
+          ? undefined
+          : () => onPressSwitchAccount(account, 'Settings')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}
@@ -151,6 +166,8 @@ export function SettingsScreen({}: Props) {
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
+  const isHapticsDisabled = useHapticsDisabled()
+  const setHapticsDisabled = useSetHapticsDisabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -158,9 +175,6 @@ export function SettingsScreen({}: Props) {
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
-  // TODO
-  // const {data: invites} = useInviteCodesQuery()
-  // const invitesAvailable = invites?.available?.length ?? 0
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
@@ -216,13 +230,6 @@ export function SettingsScreen({}: Props) {
     exportCarControl.open()
   }, [exportCarControl])
 
-  /* TODO
-  const onPressInviteCodes = React.useCallback(() => {
-    track('Settings:InvitecodesButtonClicked')
-    openModal({name: 'invite-codes'})
-  }, [track, openModal])
- */
-
   const onPressLanguageSettings = React.useCallback(() => {
     navigation.navigate('LanguageSettings')
   }, [navigation])
@@ -241,7 +248,7 @@ export function SettingsScreen({}: Props) {
   }, [onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
-    Clipboard.setString(
+    setStringAsync(
       `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
@@ -409,58 +416,6 @@ export function SettingsScreen({}: Props) {
         </TouchableOpacity>
 
         <View style={styles.spacer20} />
-
-        {/* TODO (
-          <>
-            <Text type="xl-bold" style={[pal.text, styles.heading]}>
-              <Trans>Invite a Friend</Trans>
-            </Text>
-
-            <TouchableOpacity
-              testID="inviteFriendBtn"
-              style={[
-                styles.linkCard,
-                pal.view,
-                isSwitchingAccounts && styles.dimmed,
-              ]}
-              onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Invite`)}
-              accessibilityHint={_(msg`Opens invite code list`)}
-              disabled={invites?.disabled}>
-              <View
-                style={[
-                  styles.iconContainer,
-                  invitesAvailable > 0 ? primaryBg : pal.btn,
-                ]}>
-                <FontAwesomeIcon
-                  icon="ticket"
-                  style={
-                    (invitesAvailable > 0
-                      ? primaryText
-                      : pal.text) as FontAwesomeIconStyle
-                  }
-                />
-              </View>
-              <Text
-                type="lg"
-                style={invitesAvailable > 0 ? pal.link : pal.text}>
-                {invites?.disabled ? (
-                  <Trans>
-                    Your invite codes are hidden when logged in using an App
-                    Password
-                  </Trans>
-                ) : invitesAvailable === 1 ? (
-                  <Trans>{invitesAvailable} invite code available</Trans>
-                ) : (
-                  <Trans>{invitesAvailable} invite codes available</Trans>
-                )}
-              </Text>
-            </TouchableOpacity>
-
-            <View style={styles.spacer20} />
-          </>
-        )*/}
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Accessibility</Trans>
@@ -734,6 +689,19 @@ export function SettingsScreen({}: Props) {
             />
           </View>
         )}
+        {isNative && (
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label={
+                isIOS ? _(msg`Disable haptics`) : _(msg`Disable vibrations`)
+              }
+              labelType="lg"
+              isSelected={isHapticsDisabled}
+              onPress={() => setHapticsDisabled(!isHapticsDisabled)}
+            />
+          </View>
+        )}
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Account</Trans>
@@ -886,9 +854,7 @@ export function SettingsScreen({}: Props) {
             accessibilityRole="button"
             onPress={onPressBuildInfo}>
             <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>
-                Build version {AppInfo.appVersion} {AppInfo.updateChannel}
-              </Trans>
+              <Trans>Version {AppInfo.appVersion}</Trans>
             </Text>
           </TouchableOpacity>
           <Text type="sm" style={[pal.textLight]}>

@@ -1,10 +1,12 @@
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetFeed as GetCustomFeed,
+  AtpAgent,
 } from '@atproto/api'
-import {FeedAPI, FeedAPIResponse} from './types'
-import {getAgent} from '#/state/session'
+
 import {getContentLanguages} from '#/state/preferences/languages'
+import {getAgent} from '#/state/session'
+import {FeedAPI, FeedAPIResponse} from './types'
 
 export class CustomFeedAPI implements FeedAPI {
   constructor(public params: GetCustomFeed.QueryParams) {}
@@ -29,14 +31,17 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await getAgent().app.bsky.feed.getFeed(
-      {
-        ...this.params,
-        cursor,
-        limit,
-      },
-      {headers: {'Accept-Language': contentLangs}},
-    )
+    const agent = getAgent()
+    const res = agent.session
+      ? await getAgent().app.bsky.feed.getFeed(
+          {
+            ...this.params,
+            cursor,
+            limit,
+          },
+          {headers: {'Accept-Language': contentLangs}},
+        )
+      : await loggedOutFetch({...this.params, cursor, limit})
     if (res.success) {
       // NOTE
       // some custom feeds fail to enforce the pagination limit
@@ -53,5 +58,61 @@ export class CustomFeedAPI implements FeedAPI {
     return {
       feed: [],
     }
+  }
+}
+
+// HACK
+// we want feeds to give language-specific results immediately when a
+// logged-out user changes their language. this comes with two problems:
+// 1. not all languages have content, and
+// 2. our public caching layer isnt correctly busting against the accept-language header
+// for now we handle both of these with a manual workaround
+// -prf
+async function loggedOutFetch({
+  feed,
+  limit,
+  cursor,
+}: {
+  feed: string
+  limit: number
+  cursor?: string
+}) {
+  let contentLangs = getContentLanguages().join(',')
+
+  // manually construct fetch call so we can add the `lang` cache-busting param
+  let res = await AtpAgent.fetch!(
+    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
+      cursor ? `&cursor=${cursor}` : ''
+    }&limit=${limit}&lang=${contentLangs}`,
+    'GET',
+    {'Accept-Language': contentLangs},
+    undefined,
+  )
+  if (res.body?.feed?.length) {
+    return {
+      success: true,
+      data: res.body,
+    }
+  }
+
+  // no data, try again with language headers removed
+  res = await AtpAgent.fetch!(
+    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
+      cursor ? `&cursor=${cursor}` : ''
+    }&limit=${limit}`,
+    'GET',
+    {'Accept-Language': ''},
+    undefined,
+  )
+  if (res.body?.feed?.length) {
+    return {
+      success: true,
+      data: res.body,
+    }
+  }
+
+  return {
+    success: false,
+    data: {feed: []},
   }
 }

@@ -1,19 +1,19 @@
 import React from 'react'
 import {
-  Pressable,
-  Text,
-  PressableProps,
-  TextProps,
-  ViewStyle,
   AccessibilityProps,
-  View,
-  TextStyle,
-  StyleSheet,
+  Pressable,
+  PressableProps,
   StyleProp,
+  StyleSheet,
+  Text,
+  TextProps,
+  TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
-import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
+import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {normalizeTextStyles} from '#/components/Typography'
 
@@ -58,6 +58,10 @@ export type ButtonState = {
 
 export type ButtonContext = VariantProps & ButtonState
 
+type NonTextElements =
+  | React.ReactElement
+  | Iterable<React.ReactElement | null | undefined | boolean>
+
 export type ButtonProps = Pick<
   PressableProps,
   'disabled' | 'onPress' | 'testID'
@@ -67,11 +71,9 @@ export type ButtonProps = Pick<
     testID?: string
     label: string
     style?: StyleProp<ViewStyle>
-    children:
-      | React.ReactNode
-      | string
-      | ((context: ButtonContext) => React.ReactNode | string)
+    children: NonTextElements | ((context: ButtonContext) => NonTextElements)
   }
+
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
 const Context = React.createContext<VariantProps & ButtonState>({
@@ -403,13 +405,7 @@ export function Button({
         </View>
       )}
       <Context.Provider value={context}>
-        {typeof children === 'string' ? (
-          <ButtonText>{children}</ButtonText>
-        ) : typeof children === 'function' ? (
-          children(context)
-        ) : (
-          children
-        )}
+        {typeof children === 'function' ? children(context) : children}
       </Context.Provider>
     </Pressable>
   )

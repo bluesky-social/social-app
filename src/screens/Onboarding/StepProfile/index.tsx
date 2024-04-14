@@ -8,8 +8,8 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Context} from '#/screens/Onboarding/state'
 import {
-  Title,
-  Description,
+  TitleText,
+  DescriptionText,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {Emoji, emojiItems, AvatarColor, avatarColors} from './types'
@@ -165,15 +165,15 @@ export function StepProfile() {
       <View style={[a.align_start, t.atoms.bg, a.justify_between]}>
         <View style={[gtMobile ? a.px_5xl : a.px_xl]}>
           <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
-          <Title>
+          <TitleText>
             <Trans>Give your profile a face</Trans>
-          </Title>
-          <Description>
+          </TitleText>
+          <DescriptionText>
             <Trans>
               Help people know you're not a bot by uploading a picture or
               creating an avatar.
             </Trans>
-          </Description>
+          </DescriptionText>
         </View>
         <View style={[a.w_full, a.align_center, {paddingTop: 80}]}>
           <AvatarCircle
@@ -218,7 +218,7 @@ export function StepProfile() {
 
       <Dialog.Outer control={creatorControl}>
         <Dialog.Handle />
-        <Dialog.Inner label="Avatar creator" noHorizontalPadding>
+        <Dialog.Inner label="Avatar creator">
           <View style={[a.align_center, {paddingTop: 20}]}>
             <AvatarCreatorCircle avatar={avatar} />
           </View>

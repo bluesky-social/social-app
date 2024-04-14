@@ -1,31 +1,31 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions, Keyboard, Pressable} from 'react-native'
+import {Dimensions, Pressable, View} from 'react-native'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetScrollView,
+  BottomSheetScrollViewMethods,
   BottomSheetTextInput,
   BottomSheetView,
   useBottomSheet,
   WINDOW_HEIGHT,
-} from '@gorhom/bottom-sheet'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+} from '@discord/bottom-sheet/src'
 
-import {useTheme, atoms as a, flatten} from '#/alf'
-import {Portal} from '#/components/Portal'
-import {createInput} from '#/components/forms/TextField'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
-
+import {isNative} from 'platform/detection'
+import {atoms as a, flatten, useTheme} from '#/alf'
+import {Context} from '#/components/Dialog/context'
 import {
-  DialogOuterProps,
   DialogControlProps,
   DialogInnerProps,
+  DialogOuterProps,
 } from '#/components/Dialog/types'
-import {Context} from '#/components/Dialog/context'
-import {isNative} from 'platform/detection'
+import {createInput} from '#/components/forms/TextField'
+import {Portal} from '#/components/Portal'
 
-export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
+export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
@@ -83,7 +83,7 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
-  const closeCallback = React.useRef<() => void>()
+  const closeCallbacks = React.useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   /*
@@ -96,21 +96,50 @@ export function Outer({
    */
   const isOpen = openIndex > -1
 
+  const callQueuedCallbacks = React.useCallback(() => {
+    for (const cb of closeCallbacks.current) {
+      try {
+        cb()
+      } catch (e: any) {
+        logger.error('Error running close callback', e)
+      }
+    }
+
+    closeCallbacks.current = []
+  }, [])
+
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
+      // Run any leftover callbacks that might have been queued up before calling `.open()`
+      callQueuedCallbacks()
+
       setDialogIsOpen(control.id, true)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
+      sheet.current?.snapToIndex(index || 0)
     },
-    [setOpenIndex, setDialogIsOpen, control.id],
+    [setDialogIsOpen, control.id, callQueuedCallbacks],
   )
 
+  // This is the function that we call when we want to dismiss the dialog.
   const close = React.useCallback<DialogControlProps['close']>(cb => {
-    if (cb && typeof cb === 'function') {
-      closeCallback.current = cb
+    if (typeof cb === 'function') {
+      closeCallbacks.current.push(cb)
     }
     sheet.current?.close()
   }, [])
+
+  // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
+  // happen before we run this. It is passed to the `BottomSheet` component.
+  const onCloseAnimationComplete = React.useCallback(() => {
+    // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
+    // tells us that we need to toggle the accessibility overlay setting
+    setDialogIsOpen(control.id, false)
+    setOpenIndex(-1)
+
+    callQueuedCallbacks()
+    onClose?.()
+  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
   useImperativeHandle(
     control.ref,
@@ -120,22 +149,6 @@ export function Outer({
     }),
     [open, close],
   )
-
-  const onCloseInner = React.useCallback(() => {
-    Keyboard.dismiss()
-    try {
-      closeCallback.current?.()
-    } catch (e: any) {
-      logger.error(`Dialog closeCallback failed`, {
-        message: e.message,
-      })
-    } finally {
-      closeCallback.current = undefined
-    }
-    setDialogIsOpen(control.id, false)
-    onClose?.()
-    setOpenIndex(-1)
-  }, [control.id, onClose, setDialogIsOpen])
 
   const context = React.useMemo(() => ({close}), [close])
 
@@ -164,7 +177,7 @@ export function Outer({
             backdropComponent={Backdrop}
             handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
             handleStyle={{display: 'none'}}
-            onClose={onCloseInner}>
+            onClose={onCloseAnimationComplete}>
             <Context.Provider value={context}>
               <View
                 style={[
@@ -190,14 +203,13 @@ export function Outer({
 export function Inner({
   children,
   style,
-  noHorizontalPadding,
 }: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetView
       style={[
         a.py_xl,
-        !noHorizontalPadding && a.px_xl,
+        a.px_xl,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,
@@ -211,12 +223,14 @@ export function Inner({
   )
 }
 
-export function ScrollableInner({children, style}: DialogInnerProps) {
+export const ScrollableInner = React.forwardRef<
+  BottomSheetScrollViewMethods,
+  DialogInnerProps
+>(function ScrollableInner({children, style}, ref) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
@@ -228,24 +242,19 @@ export function ScrollableInner({children, style}: DialogInnerProps) {
         },
         flatten(style),
       ]}
-      contentContainerStyle={isNative ? a.pb_4xl : undefined}>
+      contentContainerStyle={isNative ? a.pb_4xl : undefined}
+      ref={ref}>
       {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
   )
-}
+})
 
 export function Handle() {
   const t = useTheme()
 
-  const onTouchStart = React.useCallback(() => {
-    Keyboard.dismiss()
-  }, [])
-
   return (
-    <View
-      style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}
-      onTouchStart={onTouchStart}>
+    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
       <View
         style={[
           a.rounded_sm,

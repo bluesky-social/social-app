@@ -3,43 +3,42 @@ import {View} from 'react-native'
 import {
   AppBskyActorDefs,
   AppBskyLabelerDefs,
-  ModerationOpts,
   moderateProfile,
+  ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {RichText} from '#/components/RichText'
-import {useModalControls} from '#/state/modals'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useSession} from '#/state/session'
+import {isAppLabeler} from '#/lib/moderation'
+import {pluralize} from '#/lib/strings/helpers'
+import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
-import {useProfileShadow} from 'state/cache/profile-shadow'
+import {useModalControls} from '#/state/modals'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
-import {logger} from '#/logger'
-import {Haptics} from '#/lib/haptics'
-import {pluralize} from '#/lib/strings/helpers'
-import {isAppLabeler} from '#/lib/moderation'
-
-import {atoms as a, useTheme, tokens} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import * as Toast from '#/view/com/util/Toast'
-import {ProfileHeaderShell} from './Shell'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useRequireAuth, useSession} from '#/state/session'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useHaptics} from 'lib/haptics'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {DialogOuterProps} from '#/components/Dialog'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
+  Heart2_Stroke2_Corner0_Rounded as Heart,
+} from '#/components/icons/Heart2'
+import {Link} from '#/components/Link'
+import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
-import {
-  Heart2_Stroke2_Corner0_Rounded as Heart,
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-} from '#/components/icons/Heart2'
-import {DialogOuterProps} from '#/components/Dialog'
-import * as Prompt from '#/components/Prompt'
-import {Link} from '#/components/Link'
+import {ProfileHeaderShell} from './Shell'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -65,6 +64,8 @@ let ProfileHeaderLabeler = ({
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
+  const requireAuth = useRequireAuth()
+  const playHaptic = useHaptics()
   const cantSubscribePrompt = Prompt.usePromptControl()
   const isSelf = currentAccount?.did === profile.did
 
@@ -94,7 +95,7 @@ let ProfileHeaderLabeler = ({
       return
     }
     try {
-      Haptics.default()
+      playHaptic()
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
@@ -115,7 +116,7 @@ let ProfileHeaderLabeler = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, likeUri, likeMod, unlikeMod, track, _])
+  }, [labeler, playHaptic, likeUri, unlikeMod, track, likeMod, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -125,27 +126,32 @@ let ProfileHeaderLabeler = ({
     })
   }, [track, openModal, profile])
 
-  const onPressSubscribe = React.useCallback(async () => {
-    if (!canSubscribe) {
-      cantSubscribePrompt.open()
-      return
-    }
-    try {
-      await toggleSubscription({
-        did: profile.did,
-        subscribe: !isSubscribed,
-      })
-    } catch (e: any) {
-      // setSubscriptionError(e.message)
-      logger.error(`Failed to subscribe to labeler`, {message: e.message})
-    }
-  }, [
-    toggleSubscription,
-    isSubscribed,
-    profile,
-    canSubscribe,
-    cantSubscribePrompt,
-  ])
+  const onPressSubscribe = React.useCallback(
+    () =>
+      requireAuth(async () => {
+        if (!canSubscribe) {
+          cantSubscribePrompt.open()
+          return
+        }
+        try {
+          await toggleSubscription({
+            did: profile.did,
+            subscribe: !isSubscribed,
+          })
+        } catch (e: any) {
+          // setSubscriptionError(e.message)
+          logger.error(`Failed to subscribe to labeler`, {message: e.message})
+        }
+      }),
+    [
+      requireAuth,
+      toggleSubscription,
+      isSubscribed,
+      profile,
+      canSubscribe,
+      cantSubscribePrompt,
+    ],
+  )
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -184,7 +190,6 @@ let ProfileHeaderLabeler = ({
                     ? _(msg`Unsubscribe from this labeler`)
                     : _(msg`Subscribe to this labeler`)
                 }
-                disabled={!hasSession}
                 onPress={onPressSubscribe}>
                 {state => (
                   <View
@@ -243,6 +248,8 @@ let ProfileHeaderLabeler = ({
                   style={[a.text_md]}
                   numberOfLines={15}
                   value={descriptionRT}
+                  enableTags
+                  authorHandle={profile.handle}
                 />
               </View>
             ) : undefined}
@@ -312,17 +319,18 @@ function CantSubscribePrompt({
 }: {
   control: DialogOuterProps['control']
 }) {
+  const {_} = useLingui()
   return (
     <Prompt.Outer control={control}>
-      <Prompt.Title>Unable to subscribe</Prompt.Title>
-      <Prompt.Description>
+      <Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
+      <Prompt.DescriptionText>
         <Trans>
           We're sorry! You can only subscribe to ten labelers, and you've
           reached your limit of ten.
         </Trans>
-      </Prompt.Description>
+      </Prompt.DescriptionText>
       <Prompt.Actions>
-        <Prompt.Action onPress={control.close}>OK</Prompt.Action>
+        <Prompt.Action onPress={control.close} cta={_(msg`OK`)} />
       </Prompt.Actions>
     </Prompt.Outer>
   )

@@ -1,18 +1,19 @@
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useSuggestedFeedsQuery} from '#/state/queries/suggested-feeds'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {Button} from 'view/com/util/forms/Button'
+import {Mobile, TabletOrDesktop} from 'view/com/util/layouts/Breakpoints'
+import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
 import {Text} from 'view/com/util/text/Text'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
-import {Button} from 'view/com/util/forms/Button'
 import {RecommendedFeedsItem} from './RecommendedFeedsItem'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useSuggestedFeedsQuery} from '#/state/queries/suggested-feeds'
 
 type Props = {
   next: () => void
@@ -130,6 +131,7 @@ export function RecommendedFeeds({next}: Props) {
               renderItem={({item}) => <RecommendedFeedsItem item={item} />}
               keyExtractor={item => item.uri}
               style={{flex: 1}}
+              showsVerticalScrollIndicator={false}
             />
           ) : isLoading ? (
             <View style={{flex: 1}}>

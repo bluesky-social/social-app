@@ -1,33 +1,33 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, useBreakpoints} from '#/alf'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {Loader} from '#/components/Loader'
-import * as Toggle from '#/components/forms/Toggle'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
-
-import {Context} from '#/screens/Onboarding/state'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {
-  Title,
-  Description,
+  DescriptionText,
   OnboardingControls,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
 import {
   SuggestedAccountCard,
   SuggestedAccountCardPlaceholder,
 } from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
+import {atoms as a, useBreakpoints} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
 export function Inner({
   profiles,
@@ -110,12 +110,20 @@ export function StepSuggestedAccounts() {
     track('OnboardingV2:StepSuggestedAccounts:End', {
       selectedAccountsLength: dids.length,
     })
+    logEvent('onboarding:suggestedAccounts:nextPressed', {
+      selectedAccountsLength: dids.length,
+      skipped: false,
+    })
   }, [dids, setSaving, dispatch, track])
 
   const handleSkip = React.useCallback(() => {
     // if a user comes back and clicks skip, erase follows
     dispatch({type: 'setSuggestedAccountsStepResults', accountDids: []})
     dispatch({type: 'next'})
+    logEvent('onboarding:suggestedAccounts:nextPressed', {
+      selectedAccountsLength: 0,
+      skipped: true,
+    })
   }, [dispatch])
 
   const isLoading = isProfilesLoading && moderationOpts
@@ -128,16 +136,16 @@ export function StepSuggestedAccounts() {
     <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={At} style={[a.mb_2xl]} />
 
-      <Title>
+      <TitleText>
         <Trans>Here are some accounts for you to follow</Trans>
-      </Title>
-      <Description>
+      </TitleText>
+      <DescriptionText>
         {state.interestsStepResults.selectedInterests.length ? (
           <Trans>Based on your interest in {interestsText}</Trans>
         ) : (
           <Trans>These are popular accounts you might like:</Trans>
         )}
-      </Description>
+      </DescriptionText>
 
       <View style={[a.w_full, a.pt_xl]}>
         {isLoading ? (

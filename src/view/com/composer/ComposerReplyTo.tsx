@@ -1,21 +1,22 @@
 import React from 'react'
 import {LayoutAnimation, Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
 } from '@atproto/api'
-import {ComposerOptsPostRef} from 'state/shell/composer'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Text} from 'view/com/util/text/Text'
+import {ComposerOptsPostRef} from 'state/shell/composer'
 import {QuoteEmbed} from 'view/com/util/post-embeds/QuoteEmbed'
+import {Text} from 'view/com/util/text/Text'
+import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const pal = usePalette('default')
@@ -83,9 +84,11 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       accessibilityHint={_(
         msg`Expand or collapse the full post you are replying to`,
       )}>
-      <UserAvatar
-        avatar={replyTo.author.avatar}
+      <PreviewableUserAvatar
         size={50}
+        did={replyTo.author.did}
+        handle={replyTo.author.handle}
+        avatar={replyTo.author.avatar}
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />
@@ -216,6 +219,7 @@ function ComposerReplyToImages({
 const styles = StyleSheet.create({
   replyToLayout: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
     borderTopWidth: 1,
     paddingTop: 16,
     paddingBottom: 16,

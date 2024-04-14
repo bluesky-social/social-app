@@ -1,6 +1,10 @@
 import React from 'react'
-import type {AccessibilityProps, GestureResponderEvent} from 'react-native'
-import {BottomSheetProps} from '@gorhom/bottom-sheet'
+import type {
+  AccessibilityProps,
+  GestureResponderEvent,
+  ScrollViewProps,
+} from 'react-native'
+import {BottomSheetProps} from '@discord/bottom-sheet/src'
 
 import {ViewStyleProp} from '#/alf'
 
@@ -61,11 +65,11 @@ export type DialogInnerProps =
       label?: undefined
       accessibilityLabelledBy: A11yProps['aria-labelledby']
       accessibilityDescribedBy: string
-      noHorizontalPadding?: boolean
+      keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
     }>
   | DialogInnerPropsBase<{
       label: string
       accessibilityLabelledBy?: undefined
       accessibilityDescribedBy?: undefined
-      noHorizontalPadding?: boolean
+      keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
     }>

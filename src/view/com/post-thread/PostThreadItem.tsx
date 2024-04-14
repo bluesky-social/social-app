@@ -1,50 +1,50 @@
 import React, {memo, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
-  AtUri,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  RichText as RichTextAPI,
+  AtUri,
   ModerationDecision,
+  RichText as RichTextAPI,
 } from '@atproto/api'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
-import {Link, TextLink} from '../util/Link'
-import {RichText} from '#/components/RichText'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
-import {niceDate} from 'lib/strings/time'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useLanguagePrefs} from '#/state/preferences'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {ThreadPost} from '#/state/queries/post-thread'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useComposerControls} from '#/state/shell/composer'
+import {MAX_POST_LINES} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines, pluralize} from 'lib/strings/helpers'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {PostMeta} from '../util/PostMeta'
-import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostHider} from '../../../components/moderation/PostHider'
-import {ContentHider} from '../../../components/moderation/ContentHider'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {usePalette} from 'lib/hooks/usePalette'
-import {formatCount} from '../util/numeric/format'
-import {makeProfileLink} from 'lib/routes/links'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {MAX_POST_LINES} from 'lib/constants'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useLanguagePrefs} from '#/state/preferences'
-import {useComposerControls} from '#/state/shell/composer'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
-import {ThreadPost} from '#/state/queries/post-thread'
+import {niceDate} from 'lib/strings/time'
+import {s} from 'lib/styles'
 import {useSession} from 'state/session'
-import {WhoCanReply} from '../threadgate/WhoCanReply'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../components/moderation/ContentHider'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {PostHider} from '../../../components/moderation/PostHider'
+import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {WhoCanReply} from '../threadgate/WhoCanReply'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Link, TextLink} from '../util/Link'
+import {formatCount} from '../util/numeric/format'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostMeta} from '../util/PostMeta'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
 
 export function PostThreadItem({
   post,
@@ -325,12 +325,6 @@ let PostThreadItemLoaded = ({
             {post.repostCount !== 0 || post.likeCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
               <View style={[styles.expandedInfo, pal.border]}>
-                {post.repostCount == null && post.likeCount == null && (
-                  // If we're still loading and not sure, assume this post has engagement.
-                  // This lets us avoid a layout shift for the common case (embedded post with likes/reposts).
-                  // TODO: embeds should include metrics to avoid us having to guess.
-                  <LoadingPlaceholder width={50} height={20} />
-                )}
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
