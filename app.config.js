@@ -42,8 +42,14 @@ module.exports = function (config) {
 
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
+  const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
 
-  const UPDATES_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
+  const UPDATES_CHANNEL = IS_TESTFLIGHT
+    ? 'testflight'
+    : IS_PRODUCTION
+    ? 'production'
+    : undefined
+  const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
   return {
     expo: {
@@ -89,6 +95,11 @@ module.exports = function (config) {
         barStyle: 'light-content',
         backgroundColor: '#00000000',
       },
+      // Dark nav bar in light mode is better than light nav bar in dark mode
+      androidNavigationBar: {
+        barStyle: 'light-content',
+        backgroundColor: DARK_SPLASH_CONFIG_ANDROID.backgroundColor,
+      },
       android: {
         icon: './assets/icon.png',
         adaptiveIcon: {
@@ -126,14 +137,12 @@ module.exports = function (config) {
       },
       updates: {
         url: 'https://updates.bsky.app/manifest',
-        // TODO Eventually we want to enable this for all environments, but for now it will only be used for
-        // TestFlight builds
-        enabled: IS_TESTFLIGHT,
+        enabled: UPDATES_ENABLED,
         fallbackToCacheTimeout: 30000,
-        codeSigningCertificate: IS_TESTFLIGHT
+        codeSigningCertificate: UPDATES_ENABLED
           ? './code-signing/certificate.pem'
           : undefined,
-        codeSigningMetadata: IS_TESTFLIGHT
+        codeSigningMetadata: UPDATES_ENABLED
           ? {
               keyid: 'main',
               alg: 'rsa-v1_5-sha256',

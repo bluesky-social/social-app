@@ -264,6 +264,7 @@ let PostCtrls = ({
           richText={richText}
           style={styles.btnPad}
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}
+          timestamp={post.indexedAt}
         />
       </View>
     </View>

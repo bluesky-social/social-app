@@ -15,8 +15,8 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
@@ -702,8 +702,8 @@ export function useSessionApi() {
 
 export function useRequireAuth() {
   const {hasSession} = useSession()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAll = useCloseAllActiveElements()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   return React.useCallback(
     (fn: () => void) => {
@@ -711,10 +711,10 @@ export function useRequireAuth() {
         fn()
       } else {
         closeAll()
-        setShowLoggedOut(true)
+        signinDialogControl.open()
       }
     },
-    [hasSession, setShowLoggedOut, closeAll],
+    [hasSession, signinDialogControl, closeAll],
   )
 }
 

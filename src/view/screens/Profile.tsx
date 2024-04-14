@@ -184,8 +184,7 @@ function ProfileScreenLoaded({
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
   const showLikesTab = isMe
-  const showFeedsTab =
-    hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
+  const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 

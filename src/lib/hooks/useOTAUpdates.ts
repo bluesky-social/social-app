@@ -12,6 +12,7 @@ import {
 
 import {logger} from '#/logger'
 import {IS_TESTFLIGHT} from 'lib/app-info'
+import {useGate} from 'lib/statsig/statsig'
 import {isIOS} from 'platform/detection'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
@@ -30,6 +31,9 @@ async function setExtraParams() {
 }
 
 export function useOTAUpdates() {
+  const shouldReceiveUpdates =
+    useGate('receive_updates') && isEnabled && !__DEV__
+
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
@@ -51,61 +55,59 @@ export function useOTAUpdates() {
           logger.debug('No update available.')
         }
       } catch (e) {
-        logger.warn('OTA Update Error', {error: `${e}`})
+        logger.error('OTA Update Error', {error: `${e}`})
       }
     }, 10e3)
   }, [])
 
-  const onIsTestFlight = React.useCallback(() => {
-    setTimeout(async () => {
-      try {
-        await setExtraParams()
+  const onIsTestFlight = React.useCallback(async () => {
+    try {
+      await setExtraParams()
 
-        const res = await checkForUpdateAsync()
-        if (res.isAvailable) {
-          await fetchUpdateAsync()
+      const res = await checkForUpdateAsync()
+      if (res.isAvailable) {
+        await fetchUpdateAsync()
 
-          Alert.alert(
-            'Update Available',
-            'A new version of the app is available. Relaunch now?',
-            [
-              {
-                text: 'No',
-                style: 'cancel',
+        Alert.alert(
+          'Update Available',
+          'A new version of the app is available. Relaunch now?',
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {
+              text: 'Relaunch',
+              style: 'default',
+              onPress: async () => {
+                await reloadAsync()
               },
-              {
-                text: 'Relaunch',
-                style: 'default',
-                onPress: async () => {
-                  await reloadAsync()
-                },
-              },
-            ],
-          )
-        }
-      } catch (e: any) {
-        // No need to handle
+            },
+          ],
+        )
       }
-    }, 3e3)
+    } catch (e: any) {
+      logger.error('Internal OTA Update Error', {error: `${e}`})
+    }
   }, [])
 
   React.useEffect(() => {
+    // We use this setTimeout to allow Statsig to initialize before we check for an update
     // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
     // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
     // immediately.
     if (IS_TESTFLIGHT) {
       onIsTestFlight()
       return
-    } else if (!isEnabled || __DEV__ || ranInitialCheck.current) {
-      // Development client shouldn't check for updates at all, so we skip that here.
+    } else if (!shouldReceiveUpdates || ranInitialCheck.current) {
       return
     }
 
     setCheckTimeout()
     ranInitialCheck.current = true
-  }, [onIsTestFlight, setCheckTimeout])
+  }, [onIsTestFlight, setCheckTimeout, shouldReceiveUpdates])
 
-  // After the app has been minimized for 30 minutes, we want to either A. install an update if one has become available
+  // After the app has been minimized for 15 minutes, we want to either A. install an update if one has become available
   // or B check for an update again.
   React.useEffect(() => {
     if (!isEnabled) return
