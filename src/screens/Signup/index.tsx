@@ -196,6 +196,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     </Button>
                   ) : (
                     <Button
+                      testID="nextBtn"
                       label={_(msg`Continue to next step`)}
                       variant="solid"
                       color="primary"
