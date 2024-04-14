@@ -328,7 +328,7 @@ function Inner({
             color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
             variant="solid"
             label={
-              profileShadow.viewer?.following ? _('Following') : _('Follow')
+              profileShadow.viewer?.following ? _(msg`Following`) : _(msg`Follow`)
             }
             style={[a.rounded_full]}
             onPress={profileShadow.viewer?.following ? unfollow : follow}>
@@ -337,7 +337,7 @@ function Inner({
               icon={profileShadow.viewer?.following ? Check : Plus}
             />
             <ButtonText>
-              {profileShadow.viewer?.following ? _('Following') : _('Follow')}
+              {profileShadow.viewer?.following ? _(msg`Following`) : _(msg`Follow`)}
             </ButtonText>
           </Button>
         )}
