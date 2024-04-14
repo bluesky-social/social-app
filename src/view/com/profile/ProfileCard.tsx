@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -7,6 +7,7 @@ import {
   ModerationDecision,
 } from '@atproto/api'
 import {Trans} from '@lingui/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -19,6 +20,8 @@ import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
+import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
+import {RQKEY as RQKEY_URI} from 'state/queries/resolve-uri'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -47,10 +50,19 @@ export function ProfileCard({
   onPress?: () => void
   style?: StyleProp<ViewStyle>
 }) {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const profile = useProfileShadow(profileUnshadowed)
   const moderationOpts = useModerationOpts()
   const isLabeler = profile?.associated?.labeler
+
+  const onBeforePress = React.useCallback(() => {
+    onPress?.()
+
+    queryClient.setQueryData(RQKEY_URI(profile.handle), profile.did)
+    queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
+  }, [onPress, profile, queryClient])
+
   if (!moderationOpts) {
     return null
   }
@@ -72,8 +84,8 @@ export function ProfileCard({
       ]}
       href={makeProfileLink(profile)}
       title={profile.handle}
-      onBeforePress={onPress}
       asAnchor
+      onBeforePress={onBeforePress}
       anchorNoUnderline>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
