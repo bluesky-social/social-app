@@ -3568,7 +3568,7 @@ msgstr "{0} 님이 재게시함"
 
 #: src/view/com/posts/FeedItem.tsx:216
 msgid "Reposted by <0><1/></0>"
-msgstr "<0/> 님이 재게시함"
+msgstr "<0><1/></0> 님이 재게시함"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "reposted your post"
