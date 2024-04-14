@@ -17,7 +17,7 @@ msgstr ""
 msgid "(no email)"
 msgstr "(이메일 없음)"
 
-#: src/components/ProfileHoverCard/index.web.tsx:323
+#: src/components/ProfileHoverCard/index.web.tsx:376
 #: src/screens/Profile/Header/Metrics.tsx:44
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
@@ -34,11 +34,11 @@ msgstr "<0/>의 멤버"
 msgid "<0>{0}</0> following"
 msgstr "<0>{0}</0> 팔로우 중"
 
-#: src/components/ProfileHoverCard/index.web.tsx:314
+#: src/components/ProfileHoverCard/index.web.tsx:367
 msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-msgstr ""
+msgstr "<0>{followers} </0><1>팔로워</1>"
 
-#: src/components/ProfileHoverCard/index.web.tsx:326
+#: src/components/ProfileHoverCard/index.web.tsx:379
 #: src/screens/Profile/Header/Metrics.tsx:45
 msgid "<0>{following} </0><1>following</1>"
 msgstr "<0>{following} </0><1>팔로우 중</1>"
@@ -747,7 +747,7 @@ msgstr "이미지 닫기"
 msgid "Close image viewer"
 msgstr "이미지 뷰어 닫기"
 
-#: src/view/shell/index.web.tsx:57
+#: src/view/shell/index.web.tsx:61
 msgid "Close navigation footer"
 msgstr "탐색 푸터 닫기"
 
@@ -756,7 +756,7 @@ msgstr "탐색 푸터 닫기"
 msgid "Close this dialog"
 msgstr "이 대화 상자 닫기"
 
-#: src/view/shell/index.web.tsx:58
+#: src/view/shell/index.web.tsx:62
 msgid "Closes bottom navigation bar"
 msgstr "하단 탐색 막대를 닫습니다"
 
@@ -953,7 +953,7 @@ msgstr "클립보드에 복사됨"
 
 #: src/components/dialogs/Embed.tsx:134
 msgid "Copied!"
-msgstr ""
+msgstr "복사했습니다!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:190
 msgid "Copies app password"
@@ -970,7 +970,7 @@ msgstr "{0} 복사"
 #: src/components/dialogs/Embed.tsx:120
 #: src/components/dialogs/Embed.tsx:139
 msgid "Copy code"
-msgstr ""
+msgstr "코드 복사"
 
 #: src/view/screens/ProfileList.tsx:390
 msgid "Copy link to list"
@@ -1015,7 +1015,7 @@ msgstr "계정 만들기"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr ""
+msgstr "계정 만들기"
 
 #: src/view/com/modals/AddAppPasswords.tsx:227
 msgid "Create App Password"
@@ -1400,17 +1400,17 @@ msgstr "이메일:"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed HTML code"
-msgstr ""
+msgstr "임베드 HTML 코드"
 
 #: src/components/dialogs/Embed.tsx:97
 #: src/view/com/util/forms/PostDropdownBtn.tsx:253
 #: src/view/com/util/forms/PostDropdownBtn.tsx:255
 msgid "Embed post"
-msgstr ""
+msgstr "게시물 임베드"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr ""
+msgstr "웹사이트에 이 게시물을 임베드하세요. 다음 코드를 복사하여 웹사이트에 HTML 코드로 붙여넣기만 하면 됩니다."
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
@@ -1744,7 +1744,7 @@ msgstr "선택한 계정을 팔로우하고 다음 단계를 계속 진행합니
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr "시작하려면 사용자 몇 명을 팔로우해 보세요. 누구에게 관심이 있는지를 기반으로 더 많은 사용자를 추천해 드릴 수 있습니다."
 
-#: src/view/com/profile/ProfileCard.tsx:219
+#: src/view/com/profile/ProfileCard.tsx:231
 msgid "Followed by {0}"
 msgstr "{0} 님이 팔로우함"
 
@@ -1792,7 +1792,7 @@ msgstr "팔로우 중 피드 설정"
 msgid "Follows you"
 msgstr "나를 팔로우함"
 
-#: src/view/com/profile/ProfileCard.tsx:144
+#: src/view/com/profile/ProfileCard.tsx:156
 msgid "Follows You"
 msgstr "나를 팔로우함"
 
@@ -3566,13 +3566,9 @@ msgstr "재게시한 사용자"
 msgid "Reposted by {0}"
 msgstr "{0} 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:214
-#~ msgid "Reposted by <0/>"
-#~ msgstr "<0/> 님이 재게시함"
-
 #: src/view/com/posts/FeedItem.tsx:216
 msgid "Reposted by <0><1/></0>"
-msgstr ""
+msgstr "<0/> 님이 재게시함"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "reposted your post"
@@ -3794,15 +3790,11 @@ msgstr "이 사용자의 <0>{displayTag}</0> 게시물 보기"
 #: src/view/com/notifications/FeedItem.tsx:419
 #: src/view/com/util/UserAvatar.tsx:381
 msgid "See profile"
-msgstr ""
+msgstr "프로필 보기"
 
 #: src/view/screens/SavedFeeds.tsx:164
 msgid "See this guide"
 msgstr "이 가이드"
-
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:40
-#~ msgid "See what's next"
-#~ msgstr "See what's next"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
@@ -4154,9 +4146,9 @@ msgstr "피드에 {0} 님의 게시물을 표시합니다"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:178
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:179
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:181
-#: src/view/shell/NavSignupCard.tsx:63
-#: src/view/shell/NavSignupCard.tsx:64
-#: src/view/shell/NavSignupCard.tsx:66
+#: src/view/shell/NavSignupCard.tsx:69
+#: src/view/shell/NavSignupCard.tsx:70
+#: src/view/shell/NavSignupCard.tsx:72
 msgid "Sign in"
 msgstr "로그인"
 
@@ -4170,11 +4162,11 @@ msgstr "로그인"
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr ""
+msgstr "대화에 참여하려면 로그인하거나 계정을 만드세요!"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
-msgstr ""
+msgstr "Bluesky에 로그인하거나 새 계정 만들기"
 
 #: src/view/screens/Settings/index.tsx:118
 #: src/view/screens/Settings/index.tsx:121
@@ -4187,9 +4179,9 @@ msgstr "로그아웃"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:168
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:169
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:171
-#: src/view/shell/NavSignupCard.tsx:54
-#: src/view/shell/NavSignupCard.tsx:55
-#: src/view/shell/NavSignupCard.tsx:57
+#: src/view/shell/NavSignupCard.tsx:60
+#: src/view/shell/NavSignupCard.tsx:61
+#: src/view/shell/NavSignupCard.tsx:63
 msgid "Sign up"
 msgstr "가입하기"
 
@@ -5069,8 +5061,8 @@ msgstr "전체 스레드 보기"
 msgid "View information about these labels"
 msgstr "이 라벨에 대한 정보 보기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:264
-#: src/components/ProfileHoverCard/index.web.tsx:293
+#: src/components/ProfileHoverCard/index.web.tsx:317
+#: src/components/ProfileHoverCard/index.web.tsx:346
 #: src/view/com/posts/FeedErrorMessage.tsx:166
 msgid "View profile"
 msgstr "프로필 보기"
