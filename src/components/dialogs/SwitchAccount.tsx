@@ -25,10 +25,12 @@ export function SwitchAccountDialog({
 
   const onSelectAccount = useCallback(
     (account: SessionAccount) => {
-      if (account.did === currentAccount?.did) {
-        control.close()
+      if (account.did !== currentAccount?.did) {
+        control.close(() => {
+          onPressSwitchAccount(account, 'SwitchAccount')
+        })
       } else {
-        onPressSwitchAccount(account, 'SwitchAccount')
+        control.close()
       }
     },
     [currentAccount, control, onPressSwitchAccount],

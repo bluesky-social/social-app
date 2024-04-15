@@ -1,17 +1,15 @@
 import {useCallback} from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {useSessionApi, SessionAccount} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {useCloseAllActiveElements} from '#/state/util'
+import {isWeb} from '#/platform/detection'
+import {SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import * as Toast from '#/view/com/util/Toast'
 import {LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
   const {track} = useAnalytics()
   const {selectAccount, clearCurrentAccount} = useSessionApi()
-  const closeAllActiveElements = useCloseAllActiveElements()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
@@ -23,7 +21,6 @@ export function useAccountSwitcher() {
 
       try {
         if (account.accessJwt) {
-          closeAllActiveElements()
           if (isWeb) {
             // We're switching accounts, which remounts the entire app.
             // On mobile, this gets us Home, but on the web we also need reset the URL.
@@ -37,7 +34,6 @@ export function useAccountSwitcher() {
             Toast.show(`Signed in as @${account.handle}`)
           }, 100)
         } else {
-          closeAllActiveElements()
           requestSwitchToAccount({requestedAccount: account.did})
           Toast.show(
             `Please sign in as @${account.handle}`,
@@ -49,13 +45,7 @@ export function useAccountSwitcher() {
         clearCurrentAccount() // back user out to login
       }
     },
-    [
-      track,
-      clearCurrentAccount,
-      selectAccount,
-      closeAllActiveElements,
-      requestSwitchToAccount,
-    ],
+    [track, clearCurrentAccount, selectAccount, requestSwitchToAccount],
   )
 
   return {onPressSwitchAccount}
