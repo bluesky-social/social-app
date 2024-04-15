@@ -10,7 +10,7 @@ import {
   OAUTH_RESPONSE_TYPES,
   OAUTH_SCOPE,
 } from 'lib/oauth'
-import {RNOAuthClientFactory} from '../../../../modules/expo-bluesky-oauth-client'
+import {RNOAuthClientFactory} from '../../../../modules/expo-bluesky-oauth-client/src/react-native-oauth-client-factory.native'
 
 // Service URL here is just a placeholder, this isn't how it will actually work
 export function useLogin() {
