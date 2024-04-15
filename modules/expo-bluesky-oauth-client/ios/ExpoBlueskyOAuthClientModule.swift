@@ -5,7 +5,11 @@ public class ExpoBlueskyOAuthClientModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoBlueskyOAuthClient")
 
-    AsyncFunction("digest") { (data: Data, promise: Promise) in
+    AsyncFunction("digest") { (data: Data, algorithmName: String, promise: Promise) in
+      if algorithmName != "sha256" {
+        promise.reject("Error", "Algorithim not supported")
+        return
+      }
       promise.resolve(CryptoUtil.digest(data: data))
     }
 
