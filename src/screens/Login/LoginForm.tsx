@@ -1,12 +1,10 @@
 import React from 'react'
 import {Keyboard, View} from 'react-native'
-import * as Browser from 'expo-web-browser'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {isAndroid} from 'platform/detection'
 import {useLogin} from '#/screens/Login/hooks/useLogin'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -34,14 +32,7 @@ export const LoginForm = ({
 }) => {
   const {track} = useAnalytics()
   const {_} = useLingui()
-  const {openAuthSession} = useLogin(serviceUrl)
-
-  // This improves speed at which the browser presents itself on Android
-  React.useEffect(() => {
-    if (isAndroid) {
-      Browser.warmUpAsync()
-    }
-  }, [])
+  const {openAuthSession} = useLogin()
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()

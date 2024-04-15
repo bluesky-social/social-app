@@ -14,13 +14,10 @@ type Item = {
 
 type EncodedKey = {
   keyId: string
-  keyPair: CryptoKeyPair
+  keyPair: CryptoKey
 }
 
 function encodeKey(key: Key): EncodedKey {
-  if (!(key instanceof WebcryptoKey) || !key.kid) {
-    throw new Error('Invalid key object')
-  }
   return {
     keyId: key.kid,
     keyPair: key.cryptoKeyPair,
@@ -42,7 +39,6 @@ export type Schema = {
   }>
   session: Item<{
     dpopKey: EncodedKey
-
     tokenSet: TokenSet
   }>
 

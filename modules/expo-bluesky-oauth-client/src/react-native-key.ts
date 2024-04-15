@@ -49,7 +49,9 @@ export class ReactNativeKey extends Key {
 
     // We don't need to validate this, because the native types ensure it is correct. But this is a TODO
     // for the same reason above
-    const protectedHeader = result.protectedHeader
+    const protectedHeader = Object.fromEntries(
+      Object.entries(result.protectedHeader).filter(([_, v]) => v !== null),
+    )
 
     if (options?.audience != null) {
       const audience = Array.isArray(options.audience)
