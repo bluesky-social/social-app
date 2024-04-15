@@ -19,7 +19,12 @@ export class ReactNativeKey extends Key {
       try {
         // Note: OauthClientReactNative.generatePrivateJwk should throw if it
         // doesn't support the algorithm.
-        const jwk = await OauthClientReactNative.generateJwk(algo)
+        const res = await OauthClientReactNative.generateJwk(algo)
+        const jwk = jwkValidator.parse({
+          ...res.privateKey,
+          key_ops: ['sign', 'verify'],
+          kid,
+        })
         const use = jwk.use || 'sig'
         return new ReactNativeKey(jwkValidator.parse({...jwk, use, kid}))
       } catch {

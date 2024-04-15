@@ -19,7 +19,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
-import {RnCryptoKey} from '../../../modules/expo-bluesky-oauth-client'
+import {ReactNativeKey} from '../../../modules/expo-bluesky-oauth-client'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
 import {HomeHeader} from '../com/home/HomeHeader'
 
@@ -54,13 +54,27 @@ function HomeScreenReady({
 }) {
   React.useEffect(() => {
     ;(async () => {
-      const key = await RnCryptoKey.generate(undefined, ['ES256'], false)
-      console.log('public', key.publicJwk)
+      const key = await ReactNativeKey.generate('test', ['ES256'])
+      console.log(key.privateJwk)
+
       const jwt = await key.createJwt(
-        {alg: 'ES256', kid: key.kid},
-        {sub: 'test'},
+        {
+          alg: 'ES256',
+          kid: key.kid,
+        },
+        {
+          sub: 'test',
+        },
       )
+
       console.log(jwt)
+
+      // console.log('public', key.publicJwk)
+      // const jwt = await key.createJwt(
+      //   {alg: 'ES256', kid: key.kid},
+      //   {sub: 'test'},
+      // )
+      // console.log(jwt)
     })()
   }, [])
 

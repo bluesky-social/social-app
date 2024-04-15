@@ -1,4 +1,5 @@
 import ExpoModulesCore
+import JOSESwift
 
 struct JWK : Record {
   @Field
@@ -24,6 +25,17 @@ struct JWK : Record {
   
   func toField() -> Field<JWK> {
     return Field(wrappedValue: self)
+  }
+  
+  func toSecKey() throws -> SecKey? {
+    let jsonData = try JSONSerialization.data(withJSONObject: self.toDictionary())
+    guard let jwk = try? JSONDecoder().decode(ECPrivateKey.self, from: jsonData),
+          let key = try? jwk.converted(to: SecKey.self)
+    else {
+      print("Error creating SecKey.")
+      return nil
+    }
+    return key
   }
 }
 

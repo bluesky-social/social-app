@@ -1,5 +1,6 @@
 import CryptoKit
 import JOSESwift
+import ExpoModulesCore
 
 class CryptoUtil {
   // The equivalent of crypto.subtle.digest() with JS on web
@@ -13,8 +14,8 @@ class CryptoUtil {
     return Data(bytes)
   }
   
-  public static func generateKeyPair(kid: String?) throws -> (publicJWK: JWK, privateJWK: JWK)? {
-    let keyIdString = kid ?? UUID().uuidString
+  public static func generateKeyPair() throws -> JWKPair? {
+    let keyIdString = UUID().uuidString
     
     let privateKey = P256.Signing.PrivateKey()
     let publicKey = privateKey.publicKey
@@ -23,15 +24,41 @@ class CryptoUtil {
     let y = publicKey.x963Representation[33...].base64URLEncodedString()
     let d = privateKey.rawRepresentation.base64URLEncodedString()
     
-    let publicJWK = JWK(kty: "EC", use: "sig", crv: "P-256", kid: keyIdString, x: x, y: y, alg: "ES256")
-    let privateJWK = JWK(kty: "EC", use: "sig", crv: "P-256", kid: keyIdString, x: x, y: y, d: d, alg: "ES256")
+    let publicJWK = JWK(
+      alg: "ES256".toField(),
+      kty: "EC".toField(),
+      crv: "P-256".toNullableField(),
+      x: x.toNullableField(),
+      y: y.toNullableField(),
+      use: "sig".toNullableField(),
+      kid: keyIdString.toNullableField()
+    )
+    let privateJWK = JWK(
+      alg: "ES256".toField(),
+      kty: "EC".toField(),
+      crv: "P-256".toNullableField(),
+      x: x.toNullableField(),
+      y: y.toNullableField(),
+      d: d.toNullableField(),
+      use: "sig".toNullableField(),
+      kid: keyIdString.toNullableField()
+    )
     
-    return (publicJWK, privateJWK)
+    return JWKPair(privateKey: privateJWK.toField(), publicKey: publicJWK.toField())
   }
 }
 
 extension Data {
   func base64URLEncodedString() -> String {
     return self.base64EncodedString().replacingOccurrences(of: "+", with: "-").replacingOccurrences(of: "/", with: "_").replacingOccurrences(of: "=", with: "")
+  }
+}
+
+extension String {
+  func toField() -> Field<String> {
+    return Field(wrappedValue: self)
+  }
+  func toNullableField() -> Field<String?> {
+    return Field(wrappedValue: self)
   }
 }

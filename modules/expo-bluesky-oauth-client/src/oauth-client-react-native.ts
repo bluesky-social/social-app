@@ -1,5 +1,5 @@
 import {requireNativeModule} from 'expo-modules-core'
-import {Jwk, Jwt} from '@atproto/jwk'
+import {Jwk, Jwt, Key} from '@atproto/jwk'
 
 const NativeModule = requireNativeModule('ExpoBlueskyOAuthClient')
 
@@ -14,7 +14,7 @@ export const OauthClientReactNative = (NativeModule as null) || {
   /**
    * @throws if the algorithm is not supported ("sha256" must be supported)
    */
-  digest(_bytes: Uint8Array, _algorithm: string): Uint8Array {
+  async digest(_bytes: Uint8Array, _algorithm: string): Promise<Uint8Array> {
     throw new Error(LINKING_ERROR)
   },
 
@@ -24,21 +24,25 @@ export const OauthClientReactNative = (NativeModule as null) || {
    *
    * @throws if the algorithm is not supported ("ES256" must be supported)
    */
-  generateJwk(_algo: string): Jwk {
+  async generateJwk(_algo: string): Promise<{publicKey: Key; privateKey: Key}> {
     throw new Error(LINKING_ERROR)
   },
 
-  createJwt(_header: unknown, _payload: unknown, _jwk: unknown): Jwt {
+  async createJwt(
+    _header: unknown,
+    _payload: unknown,
+    _jwk: unknown,
+  ): Promise<Jwt> {
     throw new Error(LINKING_ERROR)
   },
 
-  verifyJwt(
+  async verifyJwt(
     _token: Jwt,
     _jwk: Jwk,
-  ): {
+  ): Promise<{
     payload: Record<string, unknown>
     protectedHeader: Record<string, unknown>
-  } {
+  }> {
     throw new Error(LINKING_ERROR)
   },
 }

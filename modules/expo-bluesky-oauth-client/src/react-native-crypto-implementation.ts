@@ -1,13 +1,13 @@
-import {CryptoImplementaton, DigestAlgorithm, Key} from '@atproto/oauth-client'
+import {CryptoImplementation, DigestAlgorithm, Key} from '@atproto/oauth-client'
 
 import {OauthClientReactNative} from './oauth-client-react-native'
 import {ReactNativeKey} from './react-native-key'
 
-export class ReactNativeCryptoImplementation implements CryptoImplementaton {
+export class ReactNativeCryptoImplementation implements CryptoImplementation {
   async createKey(algs: string[]): Promise<Key> {
     const bytes = await this.getRandomValues(12)
     const kid = Array.from(bytes, byteToHex).join('')
-    return ReactNativeKey.generate(kid, algs)
+    return await ReactNativeKey.generate(kid, algs)
   }
 
   async getRandomValues(length: number): Promise<Uint8Array> {

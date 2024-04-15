@@ -1,12 +1,11 @@
 import ExpoModulesCore
+import JOSESwift
 
 struct JWTHeader : Record {
   @Field
   var alg: String = "ES256"
   @Field
   var jku: String?
-  @Field
-  var jwk: JWK
   @Field
   var kid: String?
   @Field
@@ -21,6 +20,14 @@ struct JWTHeader : Record {
   var cty: String?
   @Field
   var crit: String?
+  
+  func toField() -> Field<JWTHeader> {
+    return Field(wrappedValue: self)
+  }
+  
+  func toJWSHeader() throws -> JWSHeader? {
+    return JWSHeader(try JSONSerialization.data(withJSONObject: self.toDictionary()))
+  }
 }
 
 struct JWTPayload : Record {
@@ -106,6 +113,14 @@ struct JWTPayload : Record {
   var address: JWTPayloadAddress?
   @Field
   var authorization_details: JWTPayloadAuthorizationDetails?
+  
+  func toField() -> Field<JWTPayload> {
+    return Field(wrappedValue: self)
+  }
+  
+  func toPayload() throws -> Payload {
+    return Payload(try JSONSerialization.data(withJSONObject: self.toDictionary()))
+  }
 }
 
 struct JWTPayloadCNF : Record {
@@ -121,6 +136,10 @@ struct JWTPayloadCNF : Record {
   var jkt: String?
   @Field
   var osc: String?
+  
+  func toField() -> Field<JWTPayloadCNF> {
+    return Field(wrappedValue: self)
+  }
 }
 
 struct JWTPayloadAddress : Record {
@@ -136,6 +155,10 @@ struct JWTPayloadAddress : Record {
   var postal_code: String?
   @Field
   var country: String?
+  
+  func toField() -> Field<JWTPayloadAddress> {
+    return Field(wrappedValue: self)
+  }
 }
 
 struct JWTPayloadAuthorizationDetails : Record {
@@ -151,4 +174,8 @@ struct JWTPayloadAuthorizationDetails : Record {
   var identifier: String?
   @Field
   var privileges: [String]?
+  
+  func toField() -> Field<JWTPayloadAuthorizationDetails> {
+    return Field(wrappedValue: self)
+  }
 }

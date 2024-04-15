@@ -1,21 +1,6 @@
 import JOSESwift
 
 class JWTUtil {
-  static func jsonToPrivateKey(_ jwkString: String) throws -> SecKey? {
-    guard let jsonData = jwkString.data(using: .utf8),
-          let jwk = try? JSONDecoder().decode(ECPrivateKey.self, from: jsonData),
-          let key = try? jwk.converted(to: SecKey.self)
-    else {
-      let jsonData = jwkString.data(using: .utf8)!
-      let jwk = try! JSONDecoder().decode(ECPrivateKey.self, from: jsonData)
-//      let key = try! jwk.converted(to: SecKey.self)
-      print("Error creating JWK from JWK string \(jwkString).")
-      return nil
-    }
-    
-    return key
-  }
-  
   static func jsonToPublicKey(_ jwkString: String) throws -> SecKey? {
     guard let jsonData = jwkString.data(using: .utf8),
           let jwk = try? JSONDecoder().decode(ECPublicKey.self, from: jsonData),
@@ -46,12 +31,12 @@ class JWTUtil {
     return JWSHeader(headerData)
   }
   
-  public static func createJwt(_ jwkString: String, header headerString: String, payload payloadString: String) -> String? {
-    guard let key = try? jsonToPrivateKey(jwkString),
-          let payload = payloadStringToPayload(payloadString),
-          let header = headerStringToPayload(headerString)
-    else
-    {
+  public static func createJwt(header: JWTHeader, payload: JWTPayload, jwk: JWK) -> String? {
+    guard let header = try? header.toJWSHeader(),
+          let payload = try? payload.toPayload(),
+          let key = try? jwk.toSecKey()
+    else {
+      print("didn't have one")
       return nil
     }
     

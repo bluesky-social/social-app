@@ -20,6 +20,6 @@ export class ReactNativeStore<V extends Value>
   }
 
   async del(key: string): Promise<void> {
-    await Storage.delete(key)
+    await Storage.removeItem(key)
   }
 }

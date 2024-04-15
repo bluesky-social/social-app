@@ -1,8 +1,8 @@
 import {GenericStore, Value} from '@atproto/caching'
 import {Jwk} from '@atproto/jwk'
 
-import {ReactNativeKey} from './react-native-key.js'
-import {ReactNativeStore} from './react-native-store.js'
+import {ReactNativeKey} from './react-native-key'
+import {ReactNativeStore} from './react-native-store'
 
 type ExposedValue = Value & {dpopKey: ReactNativeKey}
 type StoredValue<V extends ExposedValue> = Omit<V, 'dpopKey'> & {
