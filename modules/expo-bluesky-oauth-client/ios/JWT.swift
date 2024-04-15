@@ -100,7 +100,7 @@ struct JWTPayload : Record {
   @Field
   var email: String?
   @Field
-  var email_verified: String?
+  var email_verified: Bool?
   @Field
   var phone_number: String?
   @Field

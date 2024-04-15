@@ -52,6 +52,7 @@ class CryptoUtil {
         crv = privateJwk.curve.toString(),
         x = privateJwk.x.toString(),
         y = privateJwk.y.toString(),
+        d = privateJwk.d.toString(),
         use = privateJwk.keyUse.toString(),
         kid = privateJwk.keyID
       ),
