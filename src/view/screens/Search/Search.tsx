@@ -32,7 +32,10 @@ import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
+import {
+  useGetSuggestedFollowersByActor,
+  useSuggestedFollowsQuery,
+} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
@@ -118,8 +121,10 @@ function EmptyState({message, error}: {message: string; error?: string}) {
   )
 }
 
-function SearchScreenSuggestedFollows() {
-  const pal = usePalette('default')
+function useSuggestedFollowsV1(): [
+  AppBskyActorDefs.ProfileViewBasic[],
+  () => void,
+] {
   const {currentAccount} = useSession()
   const [suggestions, setSuggestions] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
@@ -162,6 +167,56 @@ function SearchScreenSuggestedFollows() {
     }
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
 
+  return [suggestions, () => {}]
+}
+
+function useSuggestedFollowsV2(): [
+  AppBskyActorDefs.ProfileViewBasic[],
+  () => void,
+] {
+  const {
+    data: suggestions,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    fetchNextPage,
+  } = useSuggestedFollowsQuery()
+
+  const onEndReached = React.useCallback(async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more suggested follows', {message: err})
+    }
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+
+  const items: AppBskyActorDefs.ProfileViewBasic[] = []
+  if (suggestions) {
+    // Currently the responses contain duplicate items.
+    // Needs to be fixed on backend, but let's dedupe to be safe.
+    let seen = new Set()
+    for (const page of suggestions.pages) {
+      for (const actor of page.actors) {
+        if (!seen.has(actor.did)) {
+          seen.add(actor.did)
+          items.push(actor)
+        }
+      }
+    }
+  }
+  return [items, onEndReached]
+}
+
+function SearchScreenSuggestedFollows() {
+  const pal = usePalette('default')
+  const useSuggestedFollows = useGate('use_new_suggestions_endpoint')
+    ? // Conditional hook call here is *only* OK because useGate()
+      // result won't change until a remount.
+      useSuggestedFollowsV2
+    : useSuggestedFollowsV1
+  const [suggestions, onEndReached] = useSuggestedFollows()
+
   return suggestions.length ? (
     <List
       data={suggestions}
@@ -169,9 +224,11 @@ function SearchScreenSuggestedFollows() {
       keyExtractor={item => item.did}
       // @ts-ignore web only -prf
       desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 1200}}
+      contentContainerStyle={{paddingBottom: 200}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
+      onEndReached={onEndReached}
+      onEndReachedThreshold={2}
     />
   ) : (
     <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>

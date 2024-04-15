@@ -7,7 +7,8 @@ import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, LinkProps} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {Text, TextProps} from '#/components/Typography'
 
@@ -22,6 +23,7 @@ export function RichText({
   selectable,
   enableTags = false,
   authorHandle,
+  onLinkPress,
 }: TextStyleProp &
   Pick<TextProps, 'selectable'> & {
     value: RichTextAPI | string
@@ -30,6 +32,7 @@ export function RichText({
     disableLinks?: boolean
     enableTags?: boolean
     authorHandle?: string
+    onLinkPress?: LinkProps['onPress']
   }) {
   const richText = React.useMemo(
     () =>
@@ -84,15 +87,17 @@ export function RichText({
       !disableLinks
     ) {
       els.push(
-        <InlineLinkText
-          selectable={selectable}
-          key={key}
-          to={`/profile/${mention.did}`}
-          style={[...styles, {pointerEvents: 'auto'}]}
-          // @ts-ignore TODO
-          dataSet={WORD_WRAP}>
-          {segment.text}
-        </InlineLinkText>,
+        <ProfileHoverCard key={key} inline did={mention.did}>
+          <InlineLinkText
+            selectable={selectable}
+            to={`/profile/${mention.did}`}
+            style={[...styles, {pointerEvents: 'auto'}]}
+            // @ts-ignore TODO
+            dataSet={WORD_WRAP}
+            onPress={onLinkPress}>
+            {segment.text}
+          </InlineLinkText>
+        </ProfileHoverCard>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       if (disableLinks) {
@@ -106,7 +111,8 @@ export function RichText({
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
-            shareOnLongPress>
+            shareOnLongPress
+            onPress={onLinkPress}>
             {toShortUrl(segment.text)}
           </InlineLinkText>,
         )

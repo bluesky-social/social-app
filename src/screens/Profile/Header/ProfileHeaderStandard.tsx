@@ -220,7 +220,6 @@ let ProfileHeaderStandard = ({
                     ? _(msg`Unfollow ${profile.handle}`)
                     : _(msg`Follow ${profile.handle}`)
                 }
-                disabled={!hasSession}
                 onPress={
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }

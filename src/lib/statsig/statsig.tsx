@@ -9,10 +9,19 @@ import {
 } from 'statsig-react-native-expo'
 
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 import {Gate} from './gates'
+
+let refSrc: string | undefined
+let refUrl: string | undefined
+if (isWeb && typeof window !== 'undefined') {
+  const params = new URLSearchParams(window.location.search)
+  refSrc = params.get('ref_src') ?? undefined
+  refUrl = params.get('ref_url') ?? undefined
+}
 
 export type {LogEvents}
 
@@ -82,7 +91,10 @@ export function useGate(gateName: Gate): boolean {
     // This should not happen because of waitForInitialization={true}.
     console.error('Did not expected isLoading to ever be true.')
   }
-  return value
+  // This shouldn't technically be necessary but let's get a strong
+  // guarantee that a gate value can never change while mounted.
+  const [initialValue] = React.useState(value)
+  return initialValue
 }
 
 function toStatsigUser(did: string | undefined) {
@@ -94,6 +106,8 @@ function toStatsigUser(did: string | undefined) {
     userID,
     platform: Platform.OS,
     custom: {
+      refSrc,
+      refUrl,
       // Need to specify here too for gating.
       platform: Platform.OS,
     },

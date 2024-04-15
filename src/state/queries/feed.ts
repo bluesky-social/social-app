@@ -19,7 +19,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {getAgent} from '#/state/session'
+import {getAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 
 export type FeedSourceFeedInfo = {
@@ -201,9 +201,28 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
+const DISCOVER_FEED_STUB: FeedSourceInfo = {
+  type: 'feed',
+  displayName: 'Discover',
+  uri: '',
+  route: {
+    href: '/',
+    name: 'Home',
+    params: {},
+  },
+  cid: '',
+  avatar: '',
+  description: new RichText({text: ''}),
+  creatorDid: '',
+  creatorHandle: '',
+  likeCount: 0,
+  likeUri: '',
+}
+
 const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
 export function usePinnedFeedsInfos() {
+  const {hasSession} = useSession()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedUris = preferences?.feeds?.pinned ?? []
   const {_} = useLingui()
@@ -229,7 +248,10 @@ export function usePinnedFeedsInfos() {
   return useQuery({
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
-    queryKey: [pinnedFeedInfosQueryKeyRoot, pinnedUris.join(',')],
+    queryKey: [
+      pinnedFeedInfosQueryKeyRoot,
+      (hasSession ? 'authed:' : 'unauthed:') + pinnedUris.join(','),
+    ],
     queryFn: async () => {
       let resolved = new Map()
 
@@ -267,7 +289,7 @@ export function usePinnedFeedsInfos() {
       )
 
       // The returned result will have the original order.
-      const result = [FOLLOWING_FEED_STUB]
+      const result = [hasSession ? FOLLOWING_FEED_STUB : DISCOVER_FEED_STUB]
       await Promise.allSettled([feedsPromise, ...listsPromises])
       for (let pinnedUri of pinnedUris) {
         if (resolved.has(pinnedUri)) {
