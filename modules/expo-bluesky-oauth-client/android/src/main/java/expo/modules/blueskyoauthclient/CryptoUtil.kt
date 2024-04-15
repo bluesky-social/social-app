@@ -11,7 +11,8 @@ import com.nimbusds.jose.jwk.KeyUse
 import java.util.UUID
 
 class CryptoUtil {
-  fun digest(data: ByteArray): ByteArray {
+  fun digest(data: ByteArray, algorithmName: String): ByteArray {
+    if(algorithmName != "sha256") throw Exception("Unsupported algorithm")
     val digest = MessageDigest.getInstance("sha256")
     return digest.digest(data)
   }
