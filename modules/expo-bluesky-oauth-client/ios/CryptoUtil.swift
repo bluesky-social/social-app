@@ -14,7 +14,7 @@ class CryptoUtil {
     return Data(bytes)
   }
   
-  public static func generateKeyPair() throws -> JWKPair? {
+  public static func generateKeyPair() throws -> [String:String] {
     let keyIdString = UUID().uuidString
     
     let privateKey = P256.Signing.PrivateKey()
@@ -23,28 +23,14 @@ class CryptoUtil {
     let x = publicKey.x963Representation[1..<33].base64URLEncodedString()
     let y = publicKey.x963Representation[33...].base64URLEncodedString()
     let d = privateKey.rawRepresentation.base64URLEncodedString()
+        
+    let publicJWK = JWK(kty: "EC", use: "sig", crv: "P-256", kid: keyIdString, x: x, y: y, alg: "ES256")
+    let privateJWK = JWK(kty: "EC", use: "sig", crv: "P-256", kid: keyIdString, x: x, y: y, d: d, alg: "ES256")
     
-    let publicJWK = JWK(
-      alg: "ES256".toField(),
-      kty: "EC".toField(),
-      crv: "P-256".toNullableField(),
-      x: x.toNullableField(),
-      y: y.toNullableField(),
-      use: "sig".toNullableField(),
-      kid: keyIdString.toNullableField()
-    )
-    let privateJWK = JWK(
-      alg: "ES256".toField(),
-      kty: "EC".toField(),
-      crv: "P-256".toNullableField(),
-      x: x.toNullableField(),
-      y: y.toNullableField(),
-      d: d.toNullableField(),
-      use: "sig".toNullableField(),
-      kid: keyIdString.toNullableField()
-    )
-    
-    return JWKPair(privateKey: privateJWK.toField(), publicKey: publicJWK.toField())
+    return [
+      "privateKey": privateJWK.toJson(),
+      "publicKey": publicJWK.toJson()
+    ]
   }
 }
 

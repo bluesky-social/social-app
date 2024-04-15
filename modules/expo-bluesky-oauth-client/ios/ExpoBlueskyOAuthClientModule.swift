@@ -34,7 +34,7 @@ public class ExpoBlueskyOAuthClientModule: Module {
       promise.resolve(keypair)
     }
 
-    AsyncFunction("createJwt") { (header: JWTHeader, payload: JWTPayload, jwk: JWK, promise: Promise) in
+    AsyncFunction("createJwt") { (header: String, payload: String, jwk: String, promise: Promise) in
       guard let jwt = JWTUtil.createJwt(header: header, payload: payload, jwk: jwk) else {
         promise.reject("JWTError", "Error creating JWT.")
         return
@@ -42,7 +42,7 @@ public class ExpoBlueskyOAuthClientModule: Module {
       promise.resolve(jwt)
     }
 
-    AsyncFunction("verifyJwt") { (token: String, jwk: JWK, promise: Promise) in
+    AsyncFunction("verifyJwt") { (token: String, jwk: String, promise: Promise) in
       promise.resolve(JWTUtil.verifyJwt(token: token, jwk: jwk))
     }
   }

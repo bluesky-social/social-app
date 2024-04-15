@@ -19,7 +19,7 @@ export class ReactNativeKey extends Key {
         // Note: OauthClientReactNative.generatePrivateJwk should throw if it
         // doesn't support the algorithm.
         const res = await OauthClientReactNative.generateJwk(algo)
-        const jwk = res.privateKey
+        const jwk = JSON.parse(res.privateKey) as Record<string, unknown>
         const use = jwk.use || 'sig'
         return new ReactNativeKey(jwkValidator.parse({...jwk, use, kid}))
       } catch {
@@ -31,7 +31,11 @@ export class ReactNativeKey extends Key {
   }
 
   async createJwt(header: JwtHeader, payload: JwtPayload): Promise<Jwt> {
-    return OauthClientReactNative.createJwt(header, payload, this.jwk)
+    return await OauthClientReactNative.createJwt(
+      JSON.stringify(header),
+      JSON.stringify(payload),
+      JSON.stringify(this.jwk),
+    )
   }
 
   async verifyJwt<
@@ -40,16 +44,11 @@ export class ReactNativeKey extends Key {
   >(token: Jwt, options?: VerifyOptions<C>): Promise<VerifyResult<P, C>> {
     const result = await OauthClientReactNative.verifyJwt(token, this.jwk)
 
-    // TODO see if we can make these `undefined` or maybe update zod to allow `nullable()`
     let payloadParsed = JSON.parse(result.payload)
-    payloadParsed = Object.fromEntries(
-      Object.entries(payloadParsed as object).filter(([_, v]) => v !== null),
-    )
     const payload = jwtPayloadSchema.parse(payloadParsed)
 
-    // We don't need to validate this, because the native types ensure it is correct. But this is a TODO
-    // for the same reason above
-    const protectedHeader = result.protectedHeader
+    let protectedHeaderParsed = JSON.parse(result.protectedHeader)
+    const protectedHeader = jwtPayloadSchema.parse(protectedHeaderParsed)
 
     if (options?.audience != null) {
       const audience = Array.isArray(options.audience)

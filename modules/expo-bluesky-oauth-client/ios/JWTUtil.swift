@@ -2,6 +2,18 @@ import ExpoModulesCore
 import JOSESwift
 
 class JWTUtil {
+  static func jsonToPrivateKey(_ jwkString: String) throws -> SecKey? {
+    guard let jsonData = jwkString.data(using: .utf8),
+          let jwk = try? JSONDecoder().decode(ECPrivateKey.self, from: jsonData),
+          let key = try? jwk.converted(to: SecKey.self)
+    else {
+      print("Error creating JWK from JWK string.")
+      return nil
+    }
+    
+    return key
+  }
+  
   static func jsonToPublicKey(_ jwkString: String) throws -> SecKey? {
     guard let jsonData = jwkString.data(using: .utf8),
           let jwk = try? JSONDecoder().decode(ECPublicKey.self, from: jsonData),
@@ -32,12 +44,11 @@ class JWTUtil {
     return JWSHeader(headerData)
   }
   
-  public static func createJwt(header: JWTHeader, payload: JWTPayload, jwk: JWK) -> String? {
-    guard let header = try? header.toJWSHeader(),
-          let payload = try? payload.toPayload(),
-          let key = try? jwk.toPrivateSecKey()
+  public static func createJwt(header: String, payload: String, jwk: String) -> String? {
+    guard let header = headerStringToPayload(header),
+          let payload = payloadStringToPayload(payload),
+          let key = try? jsonToPrivateKey(jwk)
     else {
-      print("didn't have one")
       return nil
     }
     
@@ -53,8 +64,8 @@ class JWTUtil {
     return jws.compactSerializedString
   }
   
-  public static func verifyJwt(token: String, jwk: JWK) -> JWTVerifyResponse? {
-    guard let key = try? jwk.toPublicSecKey(),
+  public static func verifyJwt(token: String, jwk: String) -> [String: Any]? {
+    guard let key = try? jsonToPublicKey(jwk),
           let jws = try? JWS(compactSerialization: token),
           let verifier = Verifier(verifyingAlgorithm: .ES256, key: key),
           let validation = try? jws.validate(using: verifier)
@@ -63,24 +74,33 @@ class JWTUtil {
     }
     
     let header = validation.header
-    let serializedHeader = JWTHeader(
-      alg: "ES256",
-      jku: Field(wrappedValue: header.jku?.absoluteString),
-      kid: Field(wrappedValue:header.kid),
-      typ: Field(wrappedValue: header.typ),
-      cty: Field(wrappedValue: header.cty),
-      crit: Field(wrappedValue: header.cty)
-    )
-    
     let payload = String(data: validation.payload.data(), encoding: .utf8)
     
     guard let payload = payload else {
       return nil
     }
     
-    return JWTVerifyResponse(
-      protectedHeader: serializedHeader.toField(),
-      payload: payload.toField()
-    )
+    var protectedHeader: [String:Any] = [:]
+    protectedHeader["alg"] = "ES256"
+    if header.jku != nil {
+      protectedHeader["jku"] = header.jku?.absoluteString
+    }
+    if header.kid != nil {
+      protectedHeader["kid"] = header.kid
+    }
+    if header.typ != nil {
+      protectedHeader["typ"] = header.typ
+    }
+    if header.cty != nil {
+      protectedHeader["cty"] = header.cty
+    }
+    if header.crit != nil {
+      protectedHeader["crit"] = header.crit
+    }
+    
+    return [
+      "payload": payload,
+      "protectedHeader": protectedHeader
+    ]
   }
 }

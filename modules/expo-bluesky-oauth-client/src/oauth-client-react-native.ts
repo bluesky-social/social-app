@@ -1,5 +1,5 @@
 import {requireNativeModule} from 'expo-modules-core'
-import {Jwk, Jwt, Key} from '@atproto/jwk'
+import {Jwk, Jwt} from '@atproto/jwk'
 
 const NativeModule = requireNativeModule('ExpoBlueskyOAuthClient')
 
@@ -24,7 +24,9 @@ export const OauthClientReactNative = (NativeModule as null) || {
    *
    * @throws if the algorithm is not supported ("ES256" must be supported)
    */
-  async generateJwk(_algo: string): Promise<{publicKey: Key; privateKey: Key}> {
+  async generateJwk(
+    _algo: string,
+  ): Promise<{publicKey: string; privateKey: string}> {
     throw new Error(LINKING_ERROR)
   },
 
@@ -40,8 +42,8 @@ export const OauthClientReactNative = (NativeModule as null) || {
     _token: Jwt,
     _jwk: Jwk,
   ): Promise<{
-    payload: string // this is a JSON response to make Swift a bit easier to work with
-    protectedHeader: Record<string, unknown>
+    payload: string
+    protectedHeader: string
   }> {
     throw new Error(LINKING_ERROR)
   },
