@@ -69,6 +69,8 @@ function HomeScreenReady({
       )
 
       const verified = await key.verifyJwt(jwt)
+
+      console.log(verified)
     })()
   }, [])
 
