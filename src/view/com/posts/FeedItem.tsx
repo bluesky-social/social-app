@@ -38,6 +38,7 @@ import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {UserInfoText} from '../util/UserInfoText'
+import {AviFollowButton} from './AviFollowButton'
 
 export function FeedItem({
   post,
@@ -238,14 +239,16 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={52}
-            did={post.author.did}
-            handle={post.author.handle}
-            avatar={post.author.avatar}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-          />
+          <AviFollowButton author={post.author}>
+            <PreviewableUserAvatar
+              size={52}
+              did={post.author.did}
+              handle={post.author.handle}
+              avatar={post.author.avatar}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+            />
+          </AviFollowButton>
           {isThreadParent && (
             <View
               style={[
