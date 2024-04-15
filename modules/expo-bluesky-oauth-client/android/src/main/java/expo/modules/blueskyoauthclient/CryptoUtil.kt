@@ -22,7 +22,7 @@ class CryptoUtil {
     return random
   }
 
-  fun generateKeyPair(): Any {
+  fun generateKeyPair(): Map<String, String> {
     val keyIdString = UUID.randomUUID().toString()
 
     val keyPairGen = KeyPairGenerator.getInstance("EC")
@@ -44,27 +44,9 @@ class CryptoUtil {
       .algorithm(Algorithm.parse("ES256"))
       .build()
 
-
-    return JWKPair(
-      JWK(
-        alg = privateJwk.algorithm.toString(),
-        kty = privateJwk.keyType.toString(),
-        crv = privateJwk.curve.toString(),
-        x = privateJwk.x.toString(),
-        y = privateJwk.y.toString(),
-        d = privateJwk.d.toString(),
-        use = privateJwk.keyUse.toString(),
-        kid = privateJwk.keyID
-      ),
-      JWK(
-        alg = publicJwk.algorithm.toString(),
-        kty = publicJwk.keyType.toString(),
-        crv = publicJwk.curve.toString(),
-        x = publicJwk.x.toString(),
-        y = publicJwk.y.toString(),
-        use = publicJwk.keyUse.toString(),
-        kid = publicJwk.keyID
-      )
+    return mapOf(
+      "privateKey" to privateJwk.toJSONString(),
+      "publicKey" to publicJwk.toJSONString()
     )
   }
 }

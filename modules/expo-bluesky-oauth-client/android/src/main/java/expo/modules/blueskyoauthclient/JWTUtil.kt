@@ -8,10 +8,10 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 
 class JWTUtil {
-  fun createJwt(header: JWTHeader, payload: JWTPayload, jwk: JWK): String {
-    val parsedKey = ECKey.parse(jwk.toJson())
-    val parsedHeader = JWSHeader.parse(header.toJson())
-    val parsedPayload = JWTClaimsSet.parse(payload.toJson())
+  fun createJwt(header: String, payload: String, jwk: String): String {
+    val parsedKey = ECKey.parse(jwk)
+    val parsedHeader = JWSHeader.parse(header)
+    val parsedPayload = JWTClaimsSet.parse(payload)
 
     val signer = ECDSASigner(parsedKey)
     val jwt = SignedJWT(parsedHeader, parsedPayload)
@@ -20,9 +20,9 @@ class JWTUtil {
     return jwt.serialize()
   }
 
-  fun verifyJwt(token: String, jwk: JWK): JWTVerifyResponse {
+  fun verifyJwt(token: String, jwk: String): Map<String, String> {
     try {
-      val parsedKey = ECKey.parse(jwk.toJson())
+      val parsedKey = ECKey.parse(jwk)
       val jwt = SignedJWT.parse(token)
       val verifier = ECDSAVerifier(parsedKey)
 
@@ -32,36 +32,10 @@ class JWTUtil {
 
       val header = jwt.header
       val payload = jwt.payload
-      val ecKey = header.jwk?.toECKey()
-      val serializedJwk = if (ecKey != null) {
-        JWK(
-          alg = ecKey.algorithm.toString(),
-          kty = ecKey.keyType.toString(),
-          crv = ecKey.curve.toString(),
-          x = ecKey.x.toString(),
-          y = ecKey.y.toString(),
-          d = ecKey.d.toString(),
-          use = ecKey.keyUse.toString(),
-          kid = ecKey.keyID
-        )
-      } else {
-        null
-      }
 
-      val serializedHeader = JWTHeader(
-        alg = header.algorithm.toString(),
-        jku = header.jwkurl?.toString(),
-        jwk = serializedJwk,
-        kid = header.keyID,
-        typ = header.type?.toString(),
-        cty = header.contentType,
-        crit = header.criticalParams?.joinToString()
-      )
-      val serializedPayload = payload.toString()
-
-      return JWTVerifyResponse(
-        protectedHeader = serializedHeader,
-        payload = serializedPayload,
+      return mapOf(
+        "payload" to payload.toString(),
+        "protectedHeader" to header.toString()
       )
     } catch(e: Exception) {
       throw e
