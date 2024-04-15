@@ -27,9 +27,20 @@ struct JWK : Record {
     return Field(wrappedValue: self)
   }
   
-  func toSecKey() throws -> SecKey? {
+  func toPrivateSecKey() throws -> SecKey? {
     let jsonData = try JSONSerialization.data(withJSONObject: self.toDictionary())
     guard let jwk = try? JSONDecoder().decode(ECPrivateKey.self, from: jsonData),
+          let key = try? jwk.converted(to: SecKey.self)
+    else {
+      print("Error creating SecKey.")
+      return nil
+    }
+    return key
+  }
+  
+  func toPublicSecKey() throws -> SecKey? {
+    let jsonData = try JSONSerialization.data(withJSONObject: self.toDictionary())
+    guard let jwk = try? JSONDecoder().decode(ECPublicKey.self, from: jsonData),
           let key = try? jwk.converted(to: SecKey.self)
     else {
       print("Error creating SecKey.")

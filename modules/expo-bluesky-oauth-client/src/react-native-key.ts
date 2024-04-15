@@ -2,7 +2,6 @@ import {
   jwkValidator,
   Jwt,
   JwtHeader,
-  jwtHeaderSchema,
   JwtPayload,
   jwtPayloadSchema,
   Key,
@@ -45,8 +44,13 @@ export class ReactNativeKey extends Key {
   >(token: Jwt, options?: VerifyOptions<C>): Promise<VerifyResult<P, C>> {
     const result = await OauthClientReactNative.verifyJwt(token, this.jwk)
 
-    const payload = jwtPayloadSchema.parse(result.payload)
-    const protectedHeader = jwtHeaderSchema.parse(result.protectedHeader)
+    let payloadParsed = JSON.parse(result.payload)
+    payloadParsed = Object.fromEntries(
+      Object.entries(payloadParsed as object).filter(([_, v]) => v !== null),
+    )
+
+    const payload = jwtPayloadSchema.parse(payloadParsed)
+    const protectedHeader = result.protectedHeader
 
     if (options?.audience != null) {
       const audience = Array.isArray(options.audience)
@@ -84,6 +88,8 @@ export class ReactNativeKey extends Key {
         }
       }
     }
+
+    console.log(payload)
 
     if (payload.iat == null) {
       throw new Error('Missing issued at')

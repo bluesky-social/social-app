@@ -64,17 +64,11 @@ function HomeScreenReady({
         },
         {
           sub: 'test',
+          iat: Math.floor(Date.now() / 1000),
         },
       )
 
-      console.log(jwt)
-
-      // console.log('public', key.publicJwk)
-      // const jwt = await key.createJwt(
-      //   {alg: 'ES256', kid: key.kid},
-      //   {sub: 'test'},
-      // )
-      // console.log(jwt)
+      const verified = await key.verifyJwt(jwt)
     })()
   }, [])
 

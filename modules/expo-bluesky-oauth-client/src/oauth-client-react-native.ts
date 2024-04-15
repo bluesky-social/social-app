@@ -40,7 +40,7 @@ export const OauthClientReactNative = (NativeModule as null) || {
     _token: Jwt,
     _jwk: Jwk,
   ): Promise<{
-    payload: Record<string, unknown>
+    payload: string // this is a JSON response to make Swift a bit easier to work with
     protectedHeader: Record<string, unknown>
   }> {
     throw new Error(LINKING_ERROR)

@@ -38,8 +38,8 @@ public class ExpoBlueskyOAuthClientModule: Module {
       promise.resolve(jwt)
     }
 
-    AsyncFunction("verifyJwt") { (jwk: String, token: String, options: String?, promise: Promise) in
-      promise.resolve(JWTUtil.verifyJwt(jwk, token: token, options: options))
+    AsyncFunction("verifyJwt") { (token: String, jwk: JWK, promise: Promise) in
+      promise.resolve(JWTUtil.verifyJwt(token: token, jwk: jwk))
     }
   }
 }

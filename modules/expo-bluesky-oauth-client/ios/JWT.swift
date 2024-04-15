@@ -7,13 +7,9 @@ struct JWTHeader : Record {
   @Field
   var jku: String?
   @Field
+  var jwk: JWK
+  @Field
   var kid: String?
-  @Field
-  var x5u: String?
-  @Field
-  var x5c: String?
-  @Field
-  var x5t: String?
   @Field
   var typ: String?
   @Field
@@ -178,4 +174,11 @@ struct JWTPayloadAuthorizationDetails : Record {
   func toField() -> Field<JWTPayloadAuthorizationDetails> {
     return Field(wrappedValue: self)
   }
+}
+
+struct JWTVerifyResponse : Record {
+  @Field
+  var protectedHeader: JWTHeader
+  @Field
+  var payload: String
 }
