@@ -126,6 +126,7 @@
     "expo-media-library": "~15.9.1",
     "expo-navigation-bar": "~2.8.1",
     "expo-notifications": "~0.27.6",
+    "expo-screen-orientation": "^6.4.1",
     "expo-sharing": "^11.10.0",
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",

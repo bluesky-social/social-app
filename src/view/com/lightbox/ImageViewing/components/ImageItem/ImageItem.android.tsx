@@ -1,30 +1,29 @@
-import React, {useState} from 'react'
-
-import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import React, {useMemo, useState} from 'react'
+import {ActivityIndicator, StyleSheet, useWindowDimensions} from 'react-native'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
-  useAnimatedReaction,
   useSharedValue,
   withDecay,
   withSpring,
 } from 'react-native-reanimated'
-import {GestureDetector, Gesture} from 'react-native-gesture-handler'
+import {Image} from 'expo-image'
+
+import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import useImageDimensions from '../../hooks/useImageDimensions'
 import {
-  createTransform,
-  readTransform,
   applyRounding,
+  createTransform,
   prependPan,
   prependPinch,
   prependTransform,
+  readTransform,
   TransformMatrix,
 } from '../../transforms'
-import type {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 
-const SCREEN = Dimensions.get('window')
 const MIN_DOUBLE_TAP_SCALE = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 
@@ -56,6 +55,7 @@ const ImageItem = ({
   const pinchTranslation = useSharedValue({x: 0, y: 0})
   const dismissSwipeTranslateY = useSharedValue(0)
   const containerRef = useAnimatedRef()
+  const screen = useWindowDimensions()
 
   // Keep track of when we're entering or leaving scaled rendering.
   // Note: DO NOT move any logic reading animated values outside this function.
@@ -96,7 +96,7 @@ const ImageItem = ({
 
     const dismissDistance = dismissSwipeTranslateY.value
     const dismissProgress = Math.min(
-      Math.abs(dismissDistance) / (SCREEN.height / 2),
+      Math.abs(dismissDistance) / (screen.height / 2),
       1,
     )
     return {
@@ -120,16 +120,21 @@ const ImageItem = ({
     }
     const [nextTranslateX, nextTranslateY, nextScale] =
       readTransform(candidateTransform)
-    const scaledDimensions = getScaledDimensions(imageDimensions, nextScale)
+    const scaledDimensions = getScaledDimensions(
+      imageDimensions,
+      nextScale,
+      screen.width,
+      screen.height,
+    )
     const clampedTranslateX = clampTranslation(
       nextTranslateX,
       scaledDimensions.width,
-      SCREEN.width,
+      screen.width,
     )
     const clampedTranslateY = clampTranslation(
       nextTranslateY,
       scaledDimensions.height,
-      SCREEN.height,
+      screen.height,
     )
     const dx = clampedTranslateX - nextTranslateX
     const dy = clampedTranslateY - nextTranslateY
@@ -139,8 +144,8 @@ const ImageItem = ({
   const pinch = Gesture.Pinch()
     .onStart(e => {
       pinchOrigin.value = {
-        x: e.focalX - SCREEN.width / 2,
-        y: e.focalY - SCREEN.height / 2,
+        x: e.focalX - screen.width / 2,
+        y: e.focalY - screen.height / 2,
       }
     })
     .onChange(e => {
@@ -151,7 +156,7 @@ const ImageItem = ({
       // Also, like in stock Android apps, don't let the user zoom out further than 1:1.
       const [, , committedScale] = readTransform(committedTransform.value)
       const maxCommittedScale =
-        (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+        (imageDimensions.width / screen.width) * MAX_ORIGINAL_IMAGE_ZOOM
       const minPinchScale = 1 / committedScale
       const maxPinchScale = maxCommittedScale / committedScale
       const nextPinchScale = Math.min(
@@ -250,7 +255,7 @@ const ImageItem = ({
 
       // Try to zoom in so that we get rid of the black bars (whatever the orientation was).
       const imageAspect = imageDimensions.width / imageDimensions.height
-      const screenAspect = SCREEN.width / SCREEN.height
+      const screenAspect = screen.width / screen.height
       const candidateScale = Math.max(
         imageAspect / screenAspect,
         screenAspect / imageAspect,
@@ -258,15 +263,15 @@ const ImageItem = ({
       )
       // But don't zoom in so close that the picture gets blurry.
       const maxScale =
-        (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
+        (imageDimensions.width / screen.width) * MAX_ORIGINAL_IMAGE_ZOOM
       const scale = Math.min(candidateScale, maxScale)
 
       // Calculate where we would be if the user pinched into the double tapped point.
       // We won't use this transform directly because it may go out of bounds.
       const candidateTransform = createTransform()
       const origin = {
-        x: e.absoluteX - SCREEN.width / 2,
-        y: e.absoluteY - SCREEN.height / 2,
+        x: e.absoluteX - screen.width / 2,
+        y: e.absoluteY - screen.height / 2,
       }
       prependPinch(candidateTransform, scale, origin, {x: 0, y: 0})
 
@@ -308,8 +313,14 @@ const ImageItem = ({
       )
 
   const isLoading = !isLoaded || !imageDimensions
+
+  const screenSize = useMemo(
+    () => ({width: screen.width, height: screen.height}),
+    [screen.width, screen.height],
+  )
+
   return (
-    <Animated.View ref={containerRef} style={styles.container}>
+    <Animated.View ref={containerRef} style={[styles.container, screenSize]}>
       {isLoading && (
         <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
       )}
@@ -330,8 +341,6 @@ const ImageItem = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: SCREEN.width,
-    height: SCREEN.height,
     overflow: 'hidden',
   },
   image: {
@@ -349,20 +358,22 @@ const styles = StyleSheet.create({
 function getScaledDimensions(
   imageDimensions: ImageDimensions,
   scale: number,
+  screenWidth: number,
+  screenHeight: number,
 ): ImageDimensions {
   'worklet'
   const imageAspect = imageDimensions.width / imageDimensions.height
-  const screenAspect = SCREEN.width / SCREEN.height
+  const screenAspect = screenWidth / screenHeight
   const isLandscape = imageAspect > screenAspect
   if (isLandscape) {
     return {
-      width: scale * SCREEN.width,
-      height: (scale * SCREEN.width) / imageAspect,
+      width: scale * screenWidth,
+      height: (scale * screenWidth) / imageAspect,
     }
   } else {
     return {
-      width: scale * SCREEN.height * imageAspect,
-      height: scale * SCREEN.height,
+      width: scale * screenHeight * imageAspect,
+      height: scale * screenHeight,
     }
   }
 }
