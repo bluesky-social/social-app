@@ -8,7 +8,8 @@ class ExpoBlueskyOAuthClientModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoBlueskyOAuthClient")
 
-    AsyncFunction("digest") { value: ByteArray ->
+    AsyncFunction("digest") { value: ByteArray, algorithmName: String ->
+      if(algorithmName != "sha256") throw Exception("Unsupported algorithm")
       return@AsyncFunction CryptoUtil().digest(value)
     }
 

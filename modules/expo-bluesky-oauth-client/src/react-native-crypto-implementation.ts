@@ -18,7 +18,6 @@ export class ReactNativeCryptoImplementation implements CryptoImplementation {
     bytes: Uint8Array,
     algorithm: DigestAlgorithm,
   ): Promise<Uint8Array> {
-    console.log(algorithm)
     return OauthClientReactNative.digest(bytes, algorithm.name)
   }
 }
