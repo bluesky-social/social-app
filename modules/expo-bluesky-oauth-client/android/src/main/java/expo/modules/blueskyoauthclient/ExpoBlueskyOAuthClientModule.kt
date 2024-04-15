@@ -1,5 +1,6 @@
 package expo.modules.blueskyoauthclient
 
+import android.util.Log
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -15,21 +16,19 @@ class ExpoBlueskyOAuthClientModule : Module() {
       return@Function CryptoUtil().getRandomValues(byteLength)
     }
 
-    AsyncFunction("generateKeyPair") { keyId: String? ->
-      val res = CryptoUtil().generateKeyPair(keyId)
-
-      return@AsyncFunction mapOf(
-        "publicKey" to res.first,
-        "privateKey" to res.second
-      )
+    AsyncFunction("generateJwk") { algorithim: String ->
+      if (algorithim != "ES256") {
+        throw Exception("Unsupported algorithm")
+      }
+      return@AsyncFunction CryptoUtil().generateKeyPair()
     }
 
-    AsyncFunction("createJwt") { jwkString: String, headerString: String, payloadString: String ->
-      return@AsyncFunction JWTUtil().createJwt(jwkString, headerString, payloadString)
+    AsyncFunction("createJwt") { header: JWTHeader, payload: JWTPayload, jwk: JWK ->
+      return@AsyncFunction JWTUtil().createJwt(header, payload, jwk)
     }
 
-    AsyncFunction("verifyJwt") { jwkString: String, tokenString: String, options: String? ->
-      return@AsyncFunction JWTUtil().verifyJwt(jwkString, tokenString, options)
+    AsyncFunction("verifyJwt") { token: String, jwk: JWK ->
+      return@AsyncFunction JWTUtil().verifyJwt(token, jwk)
     }
   }
 }

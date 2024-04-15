@@ -14,30 +14,32 @@ public class ExpoBlueskyOAuthClientModule: Module {
       return CryptoUtil.getRandomValues(byteLength: byteLength)
     }
 
-    AsyncFunction ("generateKeyPair") { (kid: String?, promise: Promise) in
-      let keypair = try? CryptoUtil.generateKeyPair(kid: kid)
+    AsyncFunction ("generateJwk") { (algo: String?, promise: Promise) in
+      if algo != "ES256" {
+        promise.reject("GenerateKeyError", "Algorithim not supported.")
+        return
+      }
+      
+      let keypair = try? CryptoUtil.generateKeyPair()
 
-      guard let keypair = keypair else {
+      guard keypair != nil else {
         promise.reject("GenerateKeyError", "Error generating JWK.")
         return
       }
 
-      promise.resolve([
-        "publicKey": keypair.publicJWK.toJson(),
-        "privateKey": keypair.privateJWK.toJson()
-      ])
+      promise.resolve(keypair)
     }
 
-    AsyncFunction("createJwt") { (jwk: String, header: String, payload: String, promise: Promise) in
-      guard let jwt = JWTUtil.createJwt(jwk, header: header, payload: payload) else {
+    AsyncFunction("createJwt") { (header: JWTHeader, payload: JWTPayload, jwk: JWK, promise: Promise) in
+      guard let jwt = JWTUtil.createJwt(header: header, payload: payload, jwk: jwk) else {
         promise.reject("JWTError", "Error creating JWT.")
         return
       }
       promise.resolve(jwt)
     }
 
-    AsyncFunction("verifyJwt") { (jwk: String, token: String, options: String?, promise: Promise) in
-      promise.resolve(JWTUtil.verifyJwt(jwk, token: token, options: options))
+    AsyncFunction("verifyJwt") { (token: String, jwk: JWK, promise: Promise) in
+      promise.resolve(JWTUtil.verifyJwt(token: token, jwk: jwk))
     }
   }
 }
