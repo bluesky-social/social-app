@@ -69,7 +69,7 @@ export function AppLanguageDropdown() {
           padding: 0,
         }}>
         {APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => (
-          <option key={l.code2} value={l.code2}>
+          <option style = {{color : "black"}} key={l.code2} value={l.code2}>
             {l.name}
           </option>
         ))}
