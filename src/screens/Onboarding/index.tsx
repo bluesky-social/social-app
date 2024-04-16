@@ -2,6 +2,7 @@ import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
 import {
   Context,
@@ -22,7 +23,7 @@ import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const isV2Enabled = false // TODO replace with feature flag
+  const isV2Enabled = useGate('reduced_onboarding_and_home_algo')
   const [state, dispatch] = React.useReducer(
     isV2Enabled ? reducerV2 : reducer,
     isV2Enabled ? {...initialStateV2} : {...initialState},

@@ -8,3 +8,4 @@ export type Gate =
   | 'start_session_with_following_v2'
   | 'test_gate_1'
   | 'test_gate_2'
+  | 'reduced_onboarding_and_home_algo'
