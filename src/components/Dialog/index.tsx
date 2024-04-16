@@ -4,6 +4,8 @@ import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
   BottomSheetBackdropProps,
+  BottomSheetFlatList,
+  BottomSheetFlatListMethods,
   BottomSheetScrollView,
   BottomSheetScrollViewMethods,
   BottomSheetTextInput,
@@ -11,6 +13,7 @@ import BottomSheet, {
   useBottomSheet,
   WINDOW_HEIGHT,
 } from '@discord/bottom-sheet/src'
+import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bottomSheetScrollable/types'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -243,6 +246,35 @@ export const ScrollableInner = React.forwardRef<
       {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
+  )
+})
+
+export const InnerFlatList = React.forwardRef<
+  BottomSheetFlatListMethods,
+  BottomSheetFlatListProps<any>
+>(function InnerFlatList({style, ...props}, ref) {
+  const insets = useSafeAreaInsets()
+  return (
+    <BottomSheetFlatList
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={isNative ? a.pb_4xl : undefined}
+      ListFooterComponent={
+        <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+      }
+      ref={ref}
+      {...props}
+      style={[
+        a.flex_1, // main diff is this
+        a.p_xl,
+        a.h_full,
+        {
+          paddingTop: 40,
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+        },
+        flatten(style),
+      ]}
+    />
   )
 })
 

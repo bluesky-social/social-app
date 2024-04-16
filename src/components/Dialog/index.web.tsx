@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {TouchableWithoutFeedback, View} from 'react-native'
+import {FlatList, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -191,6 +191,8 @@ export function Inner({
 }
 
 export const ScrollableInner = Inner
+
+export const InnerFlatList = FlatList
 
 export function Handle() {
   return null
