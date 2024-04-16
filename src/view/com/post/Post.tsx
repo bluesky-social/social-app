@@ -23,6 +23,7 @@ import {countLines} from 'lib/strings/helpers'
 import {colors, s} from 'lib/styles'
 import {RQKEY as RQKEY_URI} from 'state/queries/resolve-uri'
 import {atoms as a} from '#/alf'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -176,12 +177,14 @@ function PostInner({
                 numberOfLines={1}>
                 <Trans context="description">
                   Reply to{' '}
-                  <UserInfoText
-                    type="sm"
-                    did={replyAuthorDid}
-                    attr="displayName"
-                    style={[pal.textLight]}
-                  />
+                  <ProfileHoverCard inline did={replyAuthorDid}>
+                    <UserInfoText
+                      type="sm"
+                      did={replyAuthorDid}
+                      attr="displayName"
+                      style={[pal.textLight]}
+                    />
+                  </ProfileHoverCard>
                 </Trans>
               </Text>
             </View>
