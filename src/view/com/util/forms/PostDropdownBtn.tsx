@@ -172,7 +172,7 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
-  const shouldShowLoggedOutWarning = React.useMemo(() => {
+  const hideInPWI = React.useMemo(() => {
     return !!postAuthor.labels?.find(
       label => label.val === '!no-unauthenticated',
     )
@@ -183,7 +183,7 @@ let PostDropdownBtn = ({
     shareUrl(url)
   }, [href])
 
-  const canEmbed = isWeb && gtMobile && !shouldShowLoggedOutWarning
+  const canEmbed = isWeb && gtMobile && !hideInPWI
 
   return (
     <EventStopper onKeyDown={false}>
@@ -215,7 +215,7 @@ let PostDropdownBtn = ({
 
         <Menu.Outer>
           <Menu.Group>
-            {hasSession && (
+            {!hideInPWI && (
               <>
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
@@ -239,7 +239,7 @@ let PostDropdownBtn = ({
               testID="postDropdownShareBtn"
               label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               onPress={() => {
-                if (shouldShowLoggedOutWarning) {
+                if (hideInPWI) {
                   loggedOutWarningPromptControl.open()
                 } else {
                   onSharePost()
