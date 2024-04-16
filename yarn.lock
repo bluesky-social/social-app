@@ -46,6 +46,18 @@
     multiformats "^9.9.0"
     tlds "^1.234.0"
 
+"@atproto/api@^0.12.3":
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.3.tgz#5b7b1c7d4210ee9315961504900c8409395cbb17"
+  integrity sha512-y/kGpIEo+mKGQ7VOphpqCAigTI0LZRmDThNChTfSzDKm9TzEobwiw0zUID0Yw6ot1iLLFx3nKURmuZAYlEuobw==
+  dependencies:
+    "@atproto/common-web" "^0.3.0"
+    "@atproto/lexicon" "^0.4.0"
+    "@atproto/syntax" "^0.3.0"
+    "@atproto/xrpc" "^0.5.0"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+
 "@atproto/aws@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.2.0.tgz#17f3faf744824457cabd62f87be8bf08cacf8029"
