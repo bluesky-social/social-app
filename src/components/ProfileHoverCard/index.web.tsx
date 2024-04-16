@@ -188,7 +188,6 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   React.useEffect(() => {
     if (currentState.effect) {
       const effect = currentState.effect
-      delete currentState.effect // Mark as completed
       return effect()
     }
   }, [currentState])
