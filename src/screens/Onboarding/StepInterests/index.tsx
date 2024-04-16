@@ -31,8 +31,8 @@ import {Text} from '#/components/Typography'
 export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
-  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
+  const {track} = useAnalytics()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
@@ -143,7 +143,9 @@ export function StepInterests() {
   )
 
   return (
-    <View style={[a.align_start]} testID="onboardingInterests">
+    <View
+      style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}
+      testID="onboardingInterests">
       <IconCircle
         icon={isError ? EmojiSad : Hashtag}
         style={[

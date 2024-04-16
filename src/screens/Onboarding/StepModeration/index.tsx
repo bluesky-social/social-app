@@ -4,6 +4,7 @@ import {LABELS} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {atoms as a, useBreakpoints} from '#/alf'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -16,7 +17,6 @@ import {
 import {Context} from '#/screens/Onboarding/state'
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
-import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -25,6 +25,7 @@ import {Loader} from '#/components/Loader'
 
 export function StepModeration() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
@@ -53,7 +54,7 @@ export function StepModeration() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
       <TitleText>

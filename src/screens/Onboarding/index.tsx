@@ -13,6 +13,7 @@ import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
 import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepModeration} from '#/screens/Onboarding/StepModeration'
+import {StepProfile} from '#/screens/Onboarding/StepProfile'
 
 export function Onboarding() {
   const {_} = useLingui()
@@ -62,6 +63,7 @@ export function Onboarding() {
             {state.activeStep === 'algoFeeds' && <StepAlgoFeeds />}
             {state.activeStep === 'topicalFeeds' && <StepTopicalFeeds />}
             {state.activeStep === 'moderation' && <StepModeration />}
+            {state.activeStep === 'profile' && <StepProfile />}
             {state.activeStep === 'finished' && <StepFinished />}
           </Layout>
         </Context.Provider>

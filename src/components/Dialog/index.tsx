@@ -207,7 +207,8 @@ export function Inner({children, style}: DialogInnerProps) {
   return (
     <BottomSheetView
       style={[
-        a.p_xl,
+        a.py_xl,
+        a.px_xl,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,
