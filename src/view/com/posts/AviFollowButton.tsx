@@ -1,5 +1,5 @@
-import React from 'react'
-import {Pressable, View} from 'react-native'
+import React, {useCallback} from 'react'
+import {Alert, Pressable, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -26,11 +26,24 @@ export function AviFollowButton({
     logContext: 'AvatarButton',
   })
 
+  const name = profileShadow.displayName || profileShadow.handle
+
+  const onPress = useCallback(() => {
+    Alert.alert(_(msg`Follow ${name}`), undefined, [
+      {
+        text: _(msg`Cancel`),
+        style: 'cancel',
+      },
+      {
+        text: _(msg`Follow`),
+        onPress: follow,
+      },
+    ])
+  }, [follow, name, _])
+
   if (profileShadow.viewer?.following) {
     return children
   }
-
-  const name = profileShadow.displayName || profileShadow.handle
 
   return (
     <View style={a.relative}>
@@ -41,7 +54,7 @@ export function AviFollowButton({
           <Pressable
             accessibilityLabel={_(msg`Follow ${name}`)}
             accessibilityHint=""
-            onPress={follow}
+            onPress={onPress}
             hitSlop={createHitslop(3)}
             style={[
               a.rounded_full,
