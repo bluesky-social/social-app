@@ -20,16 +20,19 @@ export const ExternalEmbed = ({
 }) => {
   const t = useTheme()
   const {_} = useLingui()
-  if (!link) {
-    return <View />
-  }
 
-  const linkInfo = {
-    title: link.meta?.title ?? link.uri,
-    uri: link.uri,
-    description: link.meta?.description ?? '',
-    thumb: link.localThumb?.path,
-  }
+  const linkInfo = React.useMemo(
+    () =>
+      link && {
+        title: link.meta?.title ?? link.uri,
+        uri: link.uri,
+        description: link.meta?.description ?? '',
+        thumb: link.localThumb?.path,
+      },
+    [link],
+  )
+
+  if (!link) return null
 
   return (
     <View
@@ -47,13 +50,13 @@ export const ExternalEmbed = ({
             a.align_center,
             a.justify_center,
             a.py_5xl,
-            t.atoms.bg_contrast_50,
+            t.atoms.bg_contrast_25,
           ]}>
           <Loader size="xl" />
         </View>
       ) : link.meta?.error ? (
         <View
-          style={[a.justify_center, a.p_md, a.gap_xs, t.atoms.bg_contrast_50]}>
+          style={[a.justify_center, a.p_md, a.gap_xs, t.atoms.bg_contrast_25]}>
           <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
             {link.uri}
           </Text>
@@ -61,11 +64,11 @@ export const ExternalEmbed = ({
             {link.meta.error}
           </Text>
         </View>
-      ) : (
+      ) : linkInfo ? (
         <View style={{pointerEvents: 'none'}}>
           <ExternalLinkEmbed link={linkInfo} />
         </View>
-      )}
+      ) : null}
       <TouchableOpacity
         style={{
           position: 'absolute',
