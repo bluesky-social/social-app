@@ -3,12 +3,17 @@ import {Modal} from 'react-native'
 import {observer} from 'mobx-react-lite'
 
 import {useComposerState} from 'state/shell/composer'
-import {ComposePost} from '../com/composer/Composer'
+import {
+  Outlet as PortalOutlet,
+  Provider as PortalProvider,
+} from '#/components/Portal'
+import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 export const Composer = observer(function ComposerImpl({}: {
   winHeight: number
 }) {
   const state = useComposerState()
+  const ref = useComposerCancelRef()
 
   return (
     <Modal
@@ -16,15 +21,20 @@ export const Composer = observer(function ComposerImpl({}: {
       accessibilityViewIsModal
       visible={!!state}
       presentationStyle="formSheet"
-      animationType="slide">
-      <ComposePost
-        replyTo={state?.replyTo}
-        onPost={state?.onPost}
-        quote={state?.quote}
-        mention={state?.mention}
-        text={state?.text}
-        imageUris={state?.imageUris}
-      />
+      animationType="slide"
+      onRequestClose={() => ref.current?.onPressCancel()}>
+      <PortalProvider>
+        <ComposePost
+          cancelRef={ref}
+          replyTo={state?.replyTo}
+          onPost={state?.onPost}
+          quote={state?.quote}
+          mention={state?.mention}
+          text={state?.text}
+          imageUris={state?.imageUris}
+        />
+        <PortalOutlet />
+      </PortalProvider>
     </Modal>
   )
 })

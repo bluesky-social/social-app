@@ -1,7 +1,13 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
-  BackHandler,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -79,6 +85,10 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 
+type CancelRef = {
+  onPressCancel: () => void
+}
+
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
   replyTo,
@@ -88,7 +98,10 @@ export const ComposePost = observer(function ComposePost({
   openPicker,
   text: initText,
   imageUris: initImageUris,
-}: Props) {
+  cancelRef,
+}: Props & {
+  cancelRef: React.RefObject<CancelRef>
+}) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -167,23 +180,8 @@ export const ComposePost = observer(function ComposePost({
     discardPromptControl,
     onClose,
   ])
-  // android back button
-  useEffect(() => {
-    if (!isAndroid) {
-      return
-    }
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        onPressCancel()
-        return true
-      },
-    )
 
-    return () => {
-      backHandler.remove()
-    }
-  }, [onPressCancel])
+  useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
@@ -582,6 +580,10 @@ export const ComposePost = observer(function ComposePost({
     </>
   )
 })
+
+export function useComposerCancelRef() {
+  return useRef<CancelRef>(null)
+}
 
 const styles = StyleSheet.create({
   outer: {
