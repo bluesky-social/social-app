@@ -169,11 +169,11 @@ msgstr "添加链接卡片:"
 
 #: src/components/dialogs/MutedWords.tsx:157
 msgid "Add mute word for configured settings"
-msgstr "为配置的设置添加隐藏词"
+msgstr "为配置的设置添加隐藏词汇"
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Add muted words and tags"
-msgstr "添加隐藏词和话题标签"
+msgstr "添加隐藏词和标签"
 
 #: src/view/com/modals/ChangeHandle.tsx:416
 msgid "Add the following DNS record to your domain:"
@@ -1928,11 +1928,11 @@ msgstr "骚扰、恶作剧或其他无法容忍的行为"
 
 #: src/Navigation.tsx:282
 msgid "Hashtag"
-msgstr "话题标签"
+msgstr "标签"
 
 #: src/components/RichText.tsx:197
 msgid "Hashtag: #{tag}"
-msgstr "话题标签：#{tag}"
+msgstr "标签：#{tag}"
 
 #: src/screens/Signup/index.tsx:221
 msgid "Having trouble?"
@@ -2434,7 +2434,7 @@ msgstr "请确认目标页面地址是否正确！"
 
 #: src/components/dialogs/MutedWords.tsx:82
 msgid "Manage your muted words and tags"
-msgstr "管理你的隐藏词和话题标签"
+msgstr "管理你的隐藏词和标签"
 
 #: src/view/com/auth/create/Step2.tsx:118
 #~ msgid "May not be longer than 253 characters"
@@ -2574,11 +2574,11 @@ msgstr "隐藏所有 {displayTag} 的帖子"
 
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
-msgstr "仅隐藏话题标签"
+msgstr "仅隐藏标签"
 
 #: src/components/dialogs/MutedWords.tsx:133
 msgid "Mute in text & tags"
-msgstr "隐藏文本和话题标签"
+msgstr "隐藏词汇和标签"
 
 #: src/view/screens/ProfileList.tsx:463
 #: src/view/screens/ProfileList.tsx:626
@@ -2591,11 +2591,11 @@ msgstr "隐藏这些账户？"
 
 #: src/components/dialogs/MutedWords.tsx:126
 msgid "Mute this word in post text and tags"
-msgstr "在帖子文本和话题标签中隐藏该词"
+msgstr "在帖子文本和标签中隐藏该词"
 
 #: src/components/dialogs/MutedWords.tsx:141
 msgid "Mute this word in tags only"
-msgstr "仅在话题标签中隐藏该词"
+msgstr "仅在标签中隐藏该词"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:269
 #: src/view/com/util/forms/PostDropdownBtn.tsx:275
@@ -2605,7 +2605,7 @@ msgstr "隐藏讨论串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:285
 #: src/view/com/util/forms/PostDropdownBtn.tsx:287
 msgid "Mute words & tags"
-msgstr "隐藏词和话题标签"
+msgstr "隐藏词和标签"
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
@@ -2630,7 +2630,7 @@ msgstr "被 \"{0}\" 隐藏"
 
 #: src/screens/Moderation/index.tsx:231
 msgid "Muted words & tags"
-msgstr "已隐藏词和话题标签"
+msgstr "隐藏词汇和标签"
 
 #: src/view/screens/ProfileList.tsx:623
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2970,7 +2970,7 @@ msgstr "在内置浏览器中打开链接"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
-msgstr "开启隐藏词和标签设置"
+msgstr "开启隐藏词汇和标签设置"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:52
 msgid "Open navigation"
@@ -3234,7 +3234,7 @@ msgstr "请输入此应用专用密码的唯一名称，或使用我们提供的
 
 #: src/components/dialogs/MutedWords.tsx:67
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "请输入一个有效的词、话题标签或短语"
+msgstr "请输入一个有效的词、标签或短语"
 
 #: src/screens/Signup/state.ts:220
 msgid "Please enter your email."
@@ -3300,7 +3300,7 @@ msgstr "已隐藏帖子"
 #: src/components/moderation/ModerationDetailsDialog.tsx:97
 #: src/lib/moderation/useModerationCauseDescription.ts:99
 msgid "Post Hidden by Muted Word"
-msgstr "帖子被隐藏词所隐藏"
+msgstr "帖子被隐藏词汇所隐藏"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:100
 #: src/lib/moderation/useModerationCauseDescription.ts:108
@@ -3331,7 +3331,7 @@ msgstr "帖子"
 
 #: src/components/dialogs/MutedWords.tsx:89
 msgid "Posts can be muted based on their text, their tags, or both."
-msgstr "帖子可以根据其文本、话题标签或两者来隐藏。"
+msgstr "帖子可以根据其文本、标签或两者来隐藏。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -3505,7 +3505,7 @@ msgstr "删除图片预览"
 
 #: src/components/dialogs/MutedWords.tsx:329
 msgid "Remove mute word from your list"
-msgstr "从你的隐藏词列表中删除"
+msgstr "从你的隐藏词汇列表中删除"
 
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
@@ -4447,11 +4447,11 @@ msgstr "系统日志"
 
 #: src/components/dialogs/MutedWords.tsx:323
 msgid "tag"
-msgstr "话题标签"
+msgstr "标签"
 
 #: src/components/TagMenu/index.tsx:78
 msgid "Tag menu: {displayTag}"
-msgstr "话题标签菜单：{displayTag}"
+msgstr "标签菜单：{displayTag}"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:113
 msgid "Tall"
@@ -4782,7 +4782,7 @@ msgstr "此警告仅适用于附带媒体的帖子。"
 
 #: src/components/dialogs/MutedWords.tsx:283
 msgid "This will delete {0} from your muted words. You can always add it back later."
-msgstr "这将从你的隐藏词中删除 {0}。你随时可以重新添加。"
+msgstr "这将从你的隐藏词汇中删除 {0}。你随时可以重新添加。"
 
 #: src/view/screens/Settings/index.tsx:525
 msgid "Thread preferences"
@@ -4807,7 +4807,7 @@ msgstr "你想将举报提交给谁？"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Toggle between muted word options."
-msgstr "在隐藏词选项之间切换。"
+msgstr "在隐藏词汇选项之间切换。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:246
 msgid "Toggle dropdown"
@@ -5218,7 +5218,7 @@ msgstr "警告内容并从信息流中过滤"
 
 #: src/screens/Hashtag.tsx:133
 msgid "We couldn't find any results for that hashtag."
-msgstr "找不到任何与该话题标签相关的结果。"
+msgstr "找不到任何与该标签相关的结果。"
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -5234,7 +5234,7 @@ msgstr "我们已经看完了你关注的帖子。这是来自 <0/> 的最新消
 
 #: src/components/dialogs/MutedWords.tsx:203
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "不建议你使用会出现在许多帖子中的常见词汇，这可能导致你的时间线上没有帖子可显示。"
+msgstr "不建议你添加会出现在许多帖子中的常见词汇，这可能导致你的时间线上没有帖子可显示。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
 msgid "We recommend our \"Discover\" feed:"
@@ -5270,7 +5270,7 @@ msgstr "很抱歉，我们无法解析此列表。如果问题持续发生，请
 
 #: src/components/dialogs/MutedWords.tsx:229
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "很抱歉，我们无法加载你的隐藏词列表。请重试。"
+msgstr "很抱歉，我们无法加载你的隐藏词汇列表。请重试。"
 
 #: src/view/screens/Search/Search.tsx:322
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -5458,7 +5458,7 @@ msgstr "你还没有隐藏任何账户。要隐藏账户，请转到其个人资
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
-msgstr "你还没有隐藏任何词或话题标签"
+msgstr "你还没有隐藏任何词或标签"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
@@ -5505,7 +5505,7 @@ msgstr "你已设置完成！"
 #: src/components/moderation/ModerationDetailsDialog.tsx:98
 #: src/lib/moderation/useModerationCauseDescription.ts:101
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "你选择隐藏了此帖子中的一个词或标签。"
+msgstr "你选择隐藏了此帖子中的词汇或标签。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -5563,7 +5563,7 @@ msgstr "你的完整用户识别符将修改为 <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:220
 msgid "Your muted words"
-msgstr "你的隐藏词"
+msgstr "你的隐藏词汇"
 
 #: src/view/com/modals/ChangePassword.tsx:157
 msgid "Your password has been changed successfully!"
