@@ -1,7 +1,9 @@
 import React from 'react'
 import {Modal} from 'react-native'
+import {StatusBar} from 'expo-status-bar'
 import {observer} from 'mobx-react-lite'
 
+import {isIOS} from '#/platform/detection'
 import {useComposerState} from 'state/shell/composer'
 import {
   Outlet as PortalOutlet,
@@ -34,6 +36,7 @@ export const Composer = observer(function ComposerImpl({}: {
           imageUris={state?.imageUris}
         />
         <PortalOutlet />
+        {isIOS && <StatusBar style="light" />}
       </PortalProvider>
     </Modal>
   )
