@@ -215,7 +215,7 @@ let PostDropdownBtn = ({
 
         <Menu.Outer>
           <Menu.Group>
-            {(hasSession || !hideInPWI) && (
+            {(!hideInPWI || hasSession) && (
               <>
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
