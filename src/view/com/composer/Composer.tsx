@@ -5,7 +5,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -48,6 +47,9 @@ import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import {atoms as a} from '#/alf'
+import {Button} from '#/components/Button'
+import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
 import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
@@ -58,6 +60,7 @@ import {ExternalEmbed} from './ExternalEmbed'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {Gallery} from './photos/Gallery'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {SelectGifBtn} from './photos/SelectGifBtn'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {SuggestedLanguage} from './select-language/SuggestedLanguage'
@@ -458,25 +461,27 @@ export const ComposePost = observer(function ComposePost({
         </ScrollView>
         <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
-          {canSelectImages ? (
-            <>
-              <SelectPhotoBtn gallery={gallery} />
-              <OpenCameraBtn gallery={gallery} />
-            </>
-          ) : null}
-          {!isMobile ? (
-            <Pressable
-              onPress={onEmojiButtonPress}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Open emoji picker`)}
-              accessibilityHint={_(msg`Open emoji picker`)}>
-              <FontAwesomeIcon
-                icon={['far', 'face-smile']}
-                color={pal.colors.link}
-                size={22}
-              />
-            </Pressable>
-          ) : null}
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            {canSelectImages ? (
+              <>
+                <SelectPhotoBtn gallery={gallery} />
+                <OpenCameraBtn gallery={gallery} />
+                <SelectGifBtn gallery={gallery} />
+              </>
+            ) : null}
+            {!isMobile ? (
+              <Button
+                onPress={onEmojiButtonPress}
+                style={a.p_sm}
+                label={_(msg`Open emoji picker`)}
+                accessibilityHint={_(msg`Open emoji picker`)}
+                variant="ghost"
+                shape="round"
+                color="primary">
+                <EmojiSmile size="lg" />
+              </Button>
+            ) : null}
+          </View>
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
@@ -571,7 +576,7 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    paddingVertical: 4,
     paddingLeft: 15,
     paddingRight: 20,
     alignItems: 'center',
