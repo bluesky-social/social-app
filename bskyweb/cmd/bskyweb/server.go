@@ -170,6 +170,9 @@ func serve(cctx *cli.Context) error {
 	// home
 	e.GET("/", server.WebHome)
 
+	// download
+	e.GET("/download", server.Download)
+
 	// generic routes
 	e.GET("/hashtag/:tag", server.WebGeneric)
 	e.GET("/search", server.WebGeneric)
@@ -269,6 +272,20 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 		"statusCode": code,
 	}
 	c.Render(code, "error.html", data)
+}
+
+// Handler for redirecting to the download page.
+func (srv *Server) Download(c echo.Context) error {
+	ua := c.Request().UserAgent()
+	if strings.Contains(ua, "Android") {
+		return c.Redirect(http.StatusFound, "https://play.google.com/store/apps/details?id=xyz.blueskyweb.app")
+	}
+
+	if strings.Contains(ua, "iPhone") || strings.Contains(ua, "iPad") || strings.Contains(ua, "iPod") {
+		return c.Redirect(http.StatusFound, "https://apps.apple.com/tr/app/bluesky-social/id6444370199")
+	}
+
+	return c.Redirect(http.StatusFound, "/")
 }
 
 // handler for endpoint that have no specific server-side handling
