@@ -42,7 +42,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {toShortUrl} from 'lib/strings/url-helpers'
 import {colors, gradients, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
@@ -119,7 +118,6 @@ export const ComposePost = observer(function ComposePost({
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
-  const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
@@ -189,11 +187,12 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [onEscape, isModalActive])
 
-  const onPressAddLinkCard = useCallback(
+  const onNewLink = useCallback(
     (uri: string) => {
+      if (extLink != null) return
       setExtLink({uri, isLoading: true})
     },
-    [setExtLink],
+    [extLink, setExtLink],
   )
 
   const onPhotoPasted = useCallback(
@@ -430,12 +429,11 @@ export const ComposePost = observer(function ComposePost({
               ref={textInput}
               richtext={richtext}
               placeholder={selectTextInputPlaceholder}
-              suggestedLinks={suggestedLinks}
               autoFocus={true}
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}
               onPressPublish={onPressPublish}
-              onSuggestedLinksChanged={setSuggestedLinks}
+              onNewLink={onNewLink}
               onError={setError}
               accessible={true}
               accessibilityLabel={_(msg`Write post`)}
@@ -458,29 +456,6 @@ export const ComposePost = observer(function ComposePost({
             </View>
           ) : undefined}
         </ScrollView>
-        {!extLink && suggestedLinks.size > 0 ? (
-          <View style={s.mb5}>
-            {Array.from(suggestedLinks)
-              .slice(0, 3)
-              .map(url => (
-                <TouchableOpacity
-                  key={`suggested-${url}`}
-                  testID="addLinkCardBtn"
-                  style={[pal.borderDark, styles.addExtLinkBtn]}
-                  onPress={() => onPressAddLinkCard(url)}
-                  accessibilityRole="button"
-                  accessibilityLabel={_(msg`Add link card`)}
-                  accessibilityHint={_(
-                    msg`Creates a card with a thumbnail. The card links to ${url}`,
-                  )}>
-                  <Text style={pal.text}>
-                    <Trans>Add link card:</Trans>{' '}
-                    <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
-                  </Text>
-                </TouchableOpacity>
-              ))}
-          </View>
-        ) : null}
         <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
