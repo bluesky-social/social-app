@@ -50,15 +50,24 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
   return isTouchDevice ? props.children : <ProfileHoverCardInner {...props} />
 }
 
-type State = {
-  stage: 'hidden' | 'might-show' | 'showing' | 'might-hide' | 'hiding'
-  effect?: () => () => any
-}
+type State =
+  | {
+      stage: 'hidden' | 'might-hide' | 'hiding'
+      effect?: () => () => any
+    }
+  | {
+      stage: 'might-show' | 'showing'
+      effect?: () => () => any
+      reason: 'hovered-target' | 'hovered-card'
+    }
 
 type Action =
   | 'pressed'
-  | 'hovered'
-  | 'unhovered'
+  | 'scrolled-while-showing'
+  | 'hovered-target'
+  | 'unhovered-target'
+  | 'hovered-card'
+  | 'unhovered-card'
   | 'hovered-long-enough'
   | 'unhovered-long-enough'
   | 'finished-animating-hide'
@@ -87,19 +96,27 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       function hidden(): State {
         return {stage: 'hidden'}
       }
-
-      // The user can kick things off by hovering a target.
       if (state.stage === 'hidden') {
-        if (action === 'hovered') {
-          return mightShow(SHOW_DELAY)
+        // The user can kick things off by hovering a target.
+        if (action === 'hovered-target') {
+          return mightShow({
+            reason: action,
+          })
         }
       }
 
       // --- Might Show ---
       // The card is not visible yet but we're considering showing it.
-      function mightShow(waitMs: number): State {
+      function mightShow({
+        waitMs = SHOW_DELAY,
+        reason,
+      }: {
+        waitMs?: number
+        reason: 'hovered-target' | 'hovered-card'
+      }): State {
         return {
           stage: 'might-show',
+          reason,
           effect() {
             const id = setTimeout(() => dispatch('hovered-long-enough'), waitMs)
             return () => {
@@ -108,33 +125,55 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           },
         }
       }
-
-      // We'll make a decision at the end of a grace period timeout.
       if (state.stage === 'might-show') {
-        if (action === 'unhovered') {
+        // We'll make a decision at the end of a grace period timeout.
+        if (action === 'unhovered-target' || action === 'unhovered-card') {
           return hidden()
         }
         if (action === 'hovered-long-enough') {
-          return showing()
+          return showing({
+            reason: state.reason,
+          })
         }
       }
 
       // --- Showing ---
       // The card is beginning to show up and then will remain visible.
-      function showing(): State {
-        return {stage: 'showing'}
+      function showing({
+        reason,
+      }: {
+        reason: 'hovered-target' | 'hovered-card'
+      }): State {
+        return {
+          stage: 'showing',
+          reason,
+          effect() {
+            function onScroll() {
+              dispatch('scrolled-while-showing')
+            }
+            window.addEventListener('scroll', onScroll)
+            return () => window.removeEventListener('scroll', onScroll)
+          },
+        }
       }
-
-      // If the user moves the pointer away, we'll begin to consider hiding it.
       if (state.stage === 'showing') {
-        if (action === 'unhovered') {
-          return mightHide(HIDE_DELAY)
+        // If the user moves the pointer away, we'll begin to consider hiding it.
+        if (action === 'unhovered-target' || action === 'unhovered-card') {
+          return mightHide()
+        }
+        // Scrolling away if the hover is on the target instantly hides without a delay.
+        // If the hover is already on the card, we won't this.
+        if (
+          state.reason === 'hovered-target' &&
+          action === 'scrolled-while-showing'
+        ) {
+          return hiding()
         }
       }
 
       // --- Might Hide ---
       // The user has moved hover away from a visible card.
-      function mightHide(waitMs: number): State {
+      function mightHide({waitMs = HIDE_DELAY}: {waitMs?: number} = {}): State {
         return {
           stage: 'might-hide',
           effect() {
@@ -146,20 +185,25 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           },
         }
       }
-
-      // We'll make a decision based on whether it received hover again in time.
       if (state.stage === 'might-hide') {
-        if (action === 'hovered') {
-          return showing()
+        // We'll make a decision based on whether it received hover again in time.
+        if (action === 'hovered-target' || action === 'hovered-card') {
+          return showing({
+            reason: action,
+          })
         }
         if (action === 'unhovered-long-enough') {
-          return hiding(HIDE_DURATION)
+          return hiding()
         }
       }
 
       // --- Hiding ---
       // The user waited enough outside that we're hiding the card.
-      function hiding(animationDurationMs: number): State {
+      function hiding({
+        animationDurationMs = HIDE_DURATION,
+      }: {
+        animationDurationMs?: number
+      } = {}): State {
         return {
           stage: 'hiding',
           effect() {
@@ -171,10 +215,9 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           },
         }
       }
-
-      // While hiding, we don't want to be interrupted by anything else.
-      // When the animation finishes, we loop back to the initial hidden state.
       if (state.stage === 'hiding') {
+        // While hiding, we don't want to be interrupted by anything else.
+        // When the animation finishes, we loop back to the initial hidden state.
         if (action === 'finished-animating-hide') {
           return hidden()
         }
@@ -188,7 +231,6 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   React.useEffect(() => {
     if (currentState.effect) {
       const effect = currentState.effect
-      delete currentState.effect // Mark as completed
       return effect()
     }
   }, [currentState])
@@ -204,19 +246,19 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
   const onPointerEnterTarget = React.useCallback(() => {
     prefetchIfNeeded()
-    dispatch('hovered')
+    dispatch('hovered-target')
   }, [prefetchIfNeeded])
 
   const onPointerLeaveTarget = React.useCallback(() => {
-    dispatch('unhovered')
+    dispatch('unhovered-target')
   }, [])
 
   const onPointerEnterCard = React.useCallback(() => {
-    dispatch('hovered')
+    dispatch('hovered-card')
   }, [])
 
   const onPointerLeaveCard = React.useCallback(() => {
-    dispatch('unhovered')
+    dispatch('unhovered-card')
   }, [])
 
   const onPress = React.useCallback(() => {
