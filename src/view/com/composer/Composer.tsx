@@ -55,7 +55,7 @@ import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {colors, gradients, s} from 'lib/styles'
-import {isNative, isWeb} from 'platform/detection'
+import {isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
@@ -155,7 +155,7 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingBottom: isNative ? insets.bottom + 80 : 0,
+      paddingBottom: isNative ? insets.bottom + (isIOS ? 80 : 0) : 0,
       paddingTop: isMobile && isWeb ? 15 : 0,
     }),
     [insets, isMobile],
