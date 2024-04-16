@@ -2586,7 +2586,7 @@ msgstr "被\"{0}\"靜音"
 
 #: src/screens/Moderation/index.tsx:231
 msgid "Muted words & tags"
-msgstr "已靜音詞彙和標籤"
+msgstr "靜音詞彙和標籤"
 
 #: src/view/screens/ProfileList.tsx:623
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
