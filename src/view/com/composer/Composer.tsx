@@ -309,6 +309,10 @@ export const ComposePost = observer(function ComposePost({
     openPicker?.(textInput.current?.getCursorPosition())
   }, [openPicker])
 
+  const focusTextInput = useCallback(() => {
+    textInput.current?.focus()
+  }, [])
+
   return (
     <KeyboardAvoidingView
       testID="composePostView"
@@ -466,7 +470,7 @@ export const ComposePost = observer(function ComposePost({
               <>
                 <SelectPhotoBtn gallery={gallery} />
                 <OpenCameraBtn gallery={gallery} />
-                <SelectGifBtn gallery={gallery} />
+                <SelectGifBtn gallery={gallery} onClose={focusTextInput} />
               </>
             ) : null}
             {!isMobile ? (

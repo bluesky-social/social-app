@@ -13,9 +13,10 @@ import {GifSquare_Stroke2_Corner0_Rounded as Gif} from '#/components/icons/Gif'
 
 type Props = {
   gallery: GalleryModel
+  onClose: () => void
 }
 
-export function SelectGifBtn({}: Props) {
+export function SelectGifBtn({onClose}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const control = useDialogControl()
@@ -41,7 +42,7 @@ export function SelectGifBtn({}: Props) {
         <Gif size="lg" />
       </Button>
 
-      <GifSelectDialog control={control} />
+      <GifSelectDialog control={control} onClose={onClose} />
     </>
   )
 }
