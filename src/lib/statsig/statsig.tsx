@@ -15,8 +15,8 @@ import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
-let refSrc: string
-let refUrl: string
+let refSrc: string = ''
+let refUrl: string = ''
 if (isWeb && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
   refSrc = params.get('ref_src') ?? ''
