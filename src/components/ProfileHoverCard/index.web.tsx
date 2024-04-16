@@ -72,10 +72,10 @@ type Action =
   | 'unhovered-long-enough'
   | 'finished-animating-hide'
 
-const SHOW_DELAY = 350
+const SHOW_DELAY = 400
 const SHOW_DURATION = 300
-const HIDE_DELAY = 200
-const HIDE_DURATION = 200
+const HIDE_DELAY = 150
+const HIDE_DURATION = 150
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const {refs, floatingStyles} = useFloating({
