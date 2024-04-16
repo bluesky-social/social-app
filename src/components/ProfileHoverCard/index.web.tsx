@@ -57,6 +57,7 @@ type State = {
 
 type Action =
   | 'pressed'
+  | 'scrolled-while-showing'
   | 'hovered-target'
   | 'unhovered-target'
   | 'hovered-card'
@@ -122,12 +123,25 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       // --- Showing ---
       // The card is beginning to show up and then will remain visible.
       function showing(): State {
-        return {stage: 'showing'}
+        return {
+          stage: 'showing',
+          effect() {
+            function onScroll() {
+              dispatch('scrolled-while-showing')
+            }
+            window.addEventListener('scroll', onScroll)
+            return () => window.removeEventListener('scroll', onScroll)
+          },
+        }
       }
       if (state.stage === 'showing') {
         // If the user moves the pointer away, we'll begin to consider hiding it.
         if (action === 'unhovered-target' || action === 'unhovered-card') {
           return mightHide(HIDE_DELAY)
+        }
+        // Scrolling away instantly hides without a delay.
+        if (action === 'scrolled-while-showing') {
+          return hiding(HIDE_DURATION)
         }
       }
 
