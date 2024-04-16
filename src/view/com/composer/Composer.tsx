@@ -100,7 +100,7 @@ export const ComposePost = observer(function ComposePost({
   imageUris: initImageUris,
   cancelRef,
 }: Props & {
-  cancelRef: React.RefObject<CancelRef>
+  cancelRef?: React.RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
   const agent = useAgent()
