@@ -2,14 +2,14 @@ export function addLinkCardIfNecessary({
   uri,
   newText,
   cursorLocation,
-  wasPaste,
+  mayBePaste,
   onNewLink,
   prevAddedLinks,
 }: {
   uri: string
   newText: string
   cursorLocation: number
-  wasPaste: boolean
+  mayBePaste: boolean
   onNewLink: (uri: string) => void
   prevAddedLinks: Set<string>
 }) {
@@ -21,7 +21,7 @@ export function addLinkCardIfNecessary({
   // the same position _or_ one position ahead. That is because iOS will add a space after a paste if https://haileyok.com/posts/3kq3gcdyfss23
   // pasting into the middle of a sentence!
   const cursorLocationIsOkay =
-    cursorLocation === lastCharacterPosition + 1 || wasPaste
+    cursorLocation === lastCharacterPosition + 1 || mayBePaste
 
   // Checking previouslyAddedLinks keeps a card from getting added over and over i.e.
   // Link card added -> Remove link card -> Press back space -> Press space -> Link card added -> and so on

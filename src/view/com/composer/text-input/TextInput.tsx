@@ -96,7 +96,7 @@ export const TextInput = forwardRef(function TextInputImpl(
        * @see https://github.com/bluesky-social/social-app/issues/929
        */
       setTimeout(async () => {
-        const wasPaste = newText.length > prevLength.current + 1
+        const mayBePaste = newText.length > prevLength.current + 1
 
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
@@ -136,7 +136,7 @@ export const TextInput = forwardRef(function TextInputImpl(
                     uri: feature.uri,
                     newText,
                     cursorLocation,
-                    wasPaste,
+                    mayBePaste,
                     onNewLink,
                     prevAddedLinks: prevAddedLinks.current,
                   })

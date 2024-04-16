@@ -186,7 +186,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
         const newText = editorJsonToText(json).trimEnd()
-        const wasPaste = newText.length > prevLength.current + 1
+        const mayBePaste = newText.length > prevLength.current + 1
 
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
@@ -205,7 +205,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
                   uri: feature.uri,
                   newText,
                   cursorLocation,
-                  wasPaste,
+                  mayBePaste,
                   onNewLink,
                   prevAddedLinks: prevAddedLinks.current,
                 })
