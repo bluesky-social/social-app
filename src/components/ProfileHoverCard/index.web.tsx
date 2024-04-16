@@ -93,13 +93,15 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       if (state.stage === 'hidden') {
         // The user can kick things off by hovering a target.
         if (action === 'hovered-target' || action === 'hovered-card') {
-          return mightShow(SHOW_DELAY)
+          return mightShow({
+            waitMs: SHOW_DELAY,
+          })
         }
       }
 
       // --- Might Show ---
       // The card is not visible yet but we're considering showing it.
-      function mightShow(waitMs: number): State {
+      function mightShow({waitMs = SHOW_DELAY}: {waitMs: number}): State {
         return {
           stage: 'might-show',
           effect() {
@@ -137,17 +139,17 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       if (state.stage === 'showing') {
         // If the user moves the pointer away, we'll begin to consider hiding it.
         if (action === 'unhovered-target' || action === 'unhovered-card') {
-          return mightHide(HIDE_DELAY)
+          return mightHide({waitMs: HIDE_DELAY})
         }
         // Scrolling away instantly hides without a delay.
         if (action === 'scrolled-while-showing') {
-          return hiding(HIDE_DURATION)
+          return hiding({animationDurationMs: HIDE_DURATION})
         }
       }
 
       // --- Might Hide ---
       // The user has moved hover away from a visible card.
-      function mightHide(waitMs: number): State {
+      function mightHide({waitMs}: {waitMs: number}): State {
         return {
           stage: 'might-hide',
           effect() {
@@ -165,13 +167,17 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           return showing()
         }
         if (action === 'unhovered-long-enough') {
-          return hiding(HIDE_DURATION)
+          return hiding({animationDurationMs: HIDE_DURATION})
         }
       }
 
       // --- Hiding ---
       // The user waited enough outside that we're hiding the card.
-      function hiding(animationDurationMs: number): State {
+      function hiding({
+        animationDurationMs,
+      }: {
+        animationDurationMs: number
+      }): State {
         return {
           stage: 'hiding',
           effect() {
