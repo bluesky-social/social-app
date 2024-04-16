@@ -284,12 +284,14 @@ let FeedItemInner = ({
                 numberOfLines={1}>
                 <Trans context="description">
                   Reply to{' '}
-                  <UserInfoText
-                    type="md"
-                    did={replyAuthorDid}
-                    attr="displayName"
-                    style={[pal.textLight]}
-                  />
+                  <ProfileHoverCard inline did={replyAuthorDid}>
+                    <UserInfoText
+                      type="md"
+                      did={replyAuthorDid}
+                      attr="displayName"
+                      style={[pal.textLight]}
+                    />
+                  </ProfileHoverCard>
                 </Trans>
               </Text>
             </View>
