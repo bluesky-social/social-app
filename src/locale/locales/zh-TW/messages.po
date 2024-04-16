@@ -213,7 +213,7 @@ msgstr "成人內容"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "成人內容已停用"
+msgstr "成人內容已停用。"
 
 #: src/screens/Moderation/index.tsx:375
 #: src/view/screens/Settings/index.tsx:635
@@ -517,7 +517,7 @@ msgstr "來自 <0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:74
 msgid "By creating an account you agree to the {els}."
-msgstr ""
+msgstr "建立帳戶即表示你同意 {els}。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "by you"
@@ -815,7 +815,7 @@ msgstr "為 {name} 分類配置內容過濾設定"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
-msgstr "在<0>限制設定</0>中進行配置"
+msgstr "已在<0>限制設定</0>中設定。"
 
 #: src/components/Prompt.tsx:153
 #: src/components/Prompt.tsx:156
@@ -898,7 +898,7 @@ msgstr "內容警告"
 
 #: src/components/Menu/index.web.tsx:84
 msgid "Context menu backdrop, click to close the menu."
-msgstr "上下文菜單背景，點擊以關閉菜單"
+msgstr "彈出式選單背景，點擊以關閉選單。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:161
 #: src/screens/Onboarding/StepFollowingFeed.tsx:154
@@ -2001,7 +2001,7 @@ msgstr "唔，看起來我們在載入這些資料時遇到了問題，詳情請
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
-msgstr "唔，我們無法載入該限制服務"
+msgstr "唔，我們無法載入該限制服務。"
 
 #: src/Navigation.tsx:446
 #: src/view/shell/bottom-bar/BottomBar.tsx:148
@@ -2231,7 +2231,7 @@ msgstr "瞭解有關 Bluesky 上公開內容的更多資訊。"
 
 #: src/components/moderation/ContentHider.tsx:152
 msgid "Learn more."
-msgstr "瞭解詳情"
+msgstr "瞭解詳情。"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -5324,7 +5324,7 @@ msgstr "你已隱藏這個帳號。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:86
 msgid "You have muted this user"
-msgstr "你已隱藏這個使用者。"
+msgstr "你已靜音這個使用者"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
