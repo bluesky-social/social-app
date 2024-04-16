@@ -145,7 +145,7 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isAndroid ? insets.top : isMobile ? 15 : 0,
+      paddingTop: isAndroid ? insets.top : isMobile && isWeb ? 15 : 0,
     }),
     [insets, isKeyboardVisible, isMobile],
   )
