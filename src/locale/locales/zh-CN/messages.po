@@ -495,10 +495,6 @@ msgstr "模糊化图片并从信息流中过滤"
 msgid "Books"
 msgstr "书籍"
 
-#: src/view/screens/Settings/index.tsx:893
-#~ msgid "Build version {0} {1}"
-#~ msgstr "构建版本号 {0} {1}"
-
 #: src/view/com/auth/SplashScreen.web.tsx:146
 msgid "Business"
 msgstr "商务"
@@ -1259,10 +1255,6 @@ msgstr "完成"
 msgid "Done{extraText}"
 msgstr "完成{extraText}"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:46
-#~ msgid "Double tap to sign in"
-#~ msgstr "双击以登录"
-
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
 msgid "Download CAR file"
@@ -1441,10 +1433,6 @@ msgstr "在你的信息流中启用成人内容"
 #: src/components/dialogs/EmbedConsent.tsx:89
 msgid "Enable external media"
 msgstr "启用外部媒体"
-
-#: src/view/com/modals/EmbedConsent.tsx:97
-#~ msgid "Enable External Media"
-#~ msgstr "启用外部媒体"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:75
 msgid "Enable media players for"
@@ -1820,14 +1808,6 @@ msgstr "出于安全原因，我们需要向你的电子邮箱发送验证码。
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "出于安全原因，你将无法再次查看此内容。如果你丢失了该密码，则需要生成一个新的密码。"
 
-#: src/view/com/auth/login/LoginForm.tsx:244
-#~ msgid "Forgot"
-#~ msgstr "忘记"
-
-#: src/view/com/auth/login/LoginForm.tsx:241
-#~ msgid "Forgot password"
-#~ msgstr "忘记密码"
-
 #: src/screens/Login/index.tsx:129
 #: src/screens/Login/index.tsx:144
 msgid "Forgot Password"
@@ -2106,14 +2086,6 @@ msgstr "输入发送到你电子邮箱的验证码以重置密码"
 msgid "Input confirmation code for account deletion"
 msgstr "输入删除用户的验证码"
 
-#: src/view/com/auth/create/Step1.tsx:177
-#~ msgid "Input email for Bluesky account"
-#~ msgstr "输入 Bluesky 账户的电子邮箱"
-
-#: src/view/com/auth/create/Step1.tsx:151
-#~ msgid "Input invite code to proceed"
-#~ msgstr "输入邀请码以继续"
-
 #: src/view/com/modals/AddAppPasswords.tsx:181
 msgid "Input name for app password"
 msgstr "输入应用专用密码名称"
@@ -2234,10 +2206,6 @@ msgstr "语言设置"
 #: src/view/screens/Settings/index.tsx:574
 msgid "Languages"
 msgstr "语言"
-
-#: src/view/com/auth/create/StepHeader.tsx:20
-#~ msgid "Last step!"
-#~ msgstr "最后一步！"
 
 #: src/view/screens/Search/Search.tsx:437
 msgid "Latest"
@@ -2436,14 +2404,6 @@ msgstr "请确认目标页面地址是否正确！"
 msgid "Manage your muted words and tags"
 msgstr "管理你的隐藏词和标签"
 
-#: src/view/com/auth/create/Step2.tsx:118
-#~ msgid "May not be longer than 253 characters"
-#~ msgstr "不能长于 253 个字符"
-
-#: src/view/com/auth/create/Step2.tsx:109
-#~ msgid "May only contain letters and numbers"
-#~ msgstr "只能包含字母和数字"
-
 #: src/view/screens/Profile.tsx:197
 msgid "Media"
 msgstr "媒体"
@@ -2546,10 +2506,6 @@ msgstr "更多选项"
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
 msgstr "优先显示最多喜欢"
-
-#: src/view/com/auth/create/Step2.tsx:122
-#~ msgid "Must be at least 3 characters"
-#~ msgstr "需要至少 3 个字符"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
@@ -2689,11 +2645,6 @@ msgstr "转到个人资料"
 #: src/components/ReportDialog/SelectReportOptionView.tsx:123
 msgid "Need to report a copyright violation?"
 msgstr "需要举报侵犯版权行为吗？"
-
-#: src/view/com/modals/EmbedConsent.tsx:107
-#: src/view/com/modals/EmbedConsent.tsx:123
-#~ msgid "Never load embeds from {0}"
-#~ msgstr "请勿加载来自 {0} 的嵌入内容"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
@@ -2891,10 +2842,6 @@ msgstr "裸露"
 #: src/lib/moderation/useReportOptions.ts:71
 msgid "Nudity or adult content not labeled as such"
 msgstr "未标记的裸露或成人内容"
-
-#: src/lib/moderation/useReportOptions.ts:71
-#~ msgid "Nudity or pornography not labeled as such"
-#~ msgstr "未标记的裸露或色情内容"
 
 #: src/screens/Signup/index.tsx:143
 msgid "of"
@@ -3264,10 +3211,6 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情内容"
 
-#: src/lib/moderation/useGlobalLabelStrings.ts:34
-#~ msgid "Pornography"
-#~ msgstr "色情"
-
 #: src/view/com/composer/Composer.tsx:367
 #: src/view/com/composer/Composer.tsx:375
 msgctxt "action"
@@ -3623,10 +3566,6 @@ msgstr "转发"
 msgid "Reposted by {0}"
 msgstr "由 {0} 转发"
 
-#: src/view/com/posts/FeedItem.tsx:214
-#~ msgid "Reposted by <0/>"
-#~ msgstr "由 <0/> 转发"
-
 #: src/view/com/posts/FeedItem.tsx:216
 msgid "Reposted by <0><1/></0>"
 msgstr "由 <0><1/></0> 转发"
@@ -3857,10 +3796,6 @@ msgstr "查看个人资料"
 msgid "See this guide"
 msgstr "查看指南"
 
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:40
-#~ msgid "See what's next"
-#~ msgstr "查看下一步"
-
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
 msgstr "选择 {item}"
@@ -3884,11 +3819,6 @@ msgstr "选择限制者"
 #: src/view/com/util/Selector.tsx:107
 msgid "Select option {i} of {numItems}"
 msgstr "选择 {numItems} 项中的第 {i} 项"
-
-#: src/view/com/auth/create/Step1.tsx:96
-#: src/view/com/auth/login/LoginForm.tsx:153
-#~ msgid "Select service"
-#~ msgstr "选择服务"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 msgid "Select some accounts below to follow"
@@ -3982,10 +3912,6 @@ msgstr "设置生日"
 msgid "Set new password"
 msgstr "设置新密码"
 
-#: src/view/com/auth/create/Step1.tsx:202
-#~ msgid "Set password"
-#~ msgstr "设置密码"
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr "停用此设置项以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
@@ -4038,10 +3964,6 @@ msgstr "设置深色模式至暗淡"
 msgid "Sets email for password reset"
 msgstr "设置用于重置密码的电子邮箱"
 
-#: src/view/com/auth/login/ForgotPasswordForm.tsx:122
-#~ msgid "Sets hosting provider for password reset"
-#~ msgstr "设置用于密码重置的托管提供商信息"
-
 #: src/view/com/modals/crop-image/CropImage.web.tsx:124
 msgid "Sets image aspect ratio to square"
 msgstr "将图片纵横比设置为正方形"
@@ -4053,11 +3975,6 @@ msgstr "将图片纵横比设置为高"
 #: src/view/com/modals/crop-image/CropImage.web.tsx:104
 msgid "Sets image aspect ratio to wide"
 msgstr "将图片纵横比设置为宽"
-
-#: src/view/com/auth/create/Step1.tsx:97
-#: src/view/com/auth/login/LoginForm.tsx:154
-#~ msgid "Sets server for the Bluesky client"
-#~ msgstr "设置 Bluesky 客户端的服务器"
 
 #: src/Navigation.tsx:139
 #: src/view/screens/Settings/index.tsx:316
@@ -4134,10 +4051,6 @@ msgstr "显示徽章"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
 msgstr "显示徽章并从信息流中过滤"
-
-#: src/view/com/modals/EmbedConsent.tsx:87
-#~ msgid "Show embeds from {0}"
-#~ msgstr "显示来自 {0} 的嵌入内容"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
 msgid "Show follows similar to {0}"
@@ -4239,12 +4152,6 @@ msgstr "在你的信息流中显示来自 {0} 的帖子"
 msgid "Sign in"
 msgstr "登录"
 
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:82
-#: src/view/com/auth/SplashScreen.tsx:86
-#: src/view/com/auth/SplashScreen.web.tsx:91
-#~ msgid "Sign In"
-#~ msgstr "登录"
-
 #: src/components/AccountList.tsx:109
 msgid "Sign in as {0}"
 msgstr "以 {0} 登录"
@@ -4256,10 +4163,6 @@ msgstr "登录为..."
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
 msgstr "登录或创建你的帐户以加入对话！"
-
-#: src/view/com/auth/login/LoginForm.tsx:140
-#~ msgid "Sign into"
-#~ msgstr "登录到"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
@@ -4298,10 +4201,6 @@ msgstr "登录身份"
 #: src/screens/Login/ChooseAccountForm.tsx:48
 msgid "Signed in as @{0}"
 msgstr "以 @{0} 身份登录"
-
-#: src/view/com/modals/SwitchAccount.tsx:70
-#~ msgid "Signs {0} out of Bluesky"
-#~ msgstr "从 {0} 登出 Bluesky"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
@@ -4362,10 +4261,6 @@ msgstr "状态页"
 #: src/screens/Signup/index.tsx:143
 msgid "Step"
 msgstr "Step"
-
-#: src/view/com/auth/create/StepHeader.tsx:22
-#~ msgid "Step {0} of {numSteps}"
-#~ msgstr "第 {0} 步，共 {numSteps} 步"
 
 #: src/view/screens/Settings/index.tsx:295
 msgid "Storage cleared, you need to restart the app now."
@@ -4906,10 +4801,6 @@ msgstr "取消关注 {0}"
 msgid "Unfollow Account"
 msgstr "取消关注账户"
 
-#: src/view/com/auth/create/state.ts:262
-#~ msgid "Unfortunately, you do not meet the requirements to create an account."
-#~ msgstr "很遗憾，你不符合创建账户的要求。"
-
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:197
 msgid "Unlike"
 msgstr "取消喜欢"
@@ -5060,10 +4951,6 @@ msgstr "用户屏蔽了你"
 msgid "User Blocks You"
 msgstr "用户屏蔽了你"
 
-#: src/view/com/auth/create/Step2.tsx:79
-#~ msgid "User handle"
-#~ msgstr "用户识别符"
-
 #: src/view/com/lists/ListCard.tsx:85
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
 msgid "User list by {0}"
@@ -5211,10 +5098,6 @@ msgstr "警告内容"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:46
 msgid "Warn content and filter from feeds"
 msgstr "警告内容并从信息流中过滤"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
-#~ msgid "We also think you'll like \"For You\" by Skygaze:"
-#~ msgstr "我们认为还你会喜欢 Skygaze 所维护的 \"For You\":"
 
 #: src/screens/Hashtag.tsx:133
 msgid "We couldn't find any results for that hashtag."
