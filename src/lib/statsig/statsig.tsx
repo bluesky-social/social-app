@@ -15,8 +15,21 @@ import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
-let refSrc: string
-let refUrl: string
+type StatsigUser = {
+  userID: string | undefined
+  // TODO: Remove when enough users have custom.platform:
+  platform: 'ios' | 'android' | 'web'
+  custom: {
+    // This is the place where we can add our own stuff.
+    // Fields here have to be non-optional to be visible in the UI.
+    platform: 'ios' | 'android' | 'web'
+    refSrc: string
+    refUrl: string
+  }
+}
+
+let refSrc = ''
+let refUrl = ''
 if (isWeb && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
   refSrc = params.get('ref_src') ?? ''
@@ -97,19 +110,18 @@ export function useGate(gateName: Gate): boolean {
   return initialValue
 }
 
-function toStatsigUser(did: string | undefined) {
+function toStatsigUser(did: string | undefined): StatsigUser {
   let userID: string | undefined
   if (did) {
     userID = sha256(did)
   }
   return {
     userID,
-    platform: Platform.OS,
+    platform: Platform.OS as 'ios' | 'android' | 'web',
     custom: {
       refSrc,
       refUrl,
-      // Need to specify here too for gating.
-      platform: Platform.OS,
+      platform: Platform.OS as 'ios' | 'android' | 'web',
     },
   }
 }
