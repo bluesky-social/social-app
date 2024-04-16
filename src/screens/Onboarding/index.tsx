@@ -1,23 +1,32 @@
 import React from 'react'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {Portal} from '#/components/Portal'
-
-import {Context, initialState, reducer} from '#/screens/Onboarding/state'
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
-import {StepInterests} from '#/screens/Onboarding/StepInterests'
-import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
-import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
+import {
+  Context,
+  initialState,
+  initialStateV2,
+  reducer,
+  reducerV2,
+} from '#/screens/Onboarding/state'
 import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
-import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
+import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
+import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepModeration} from '#/screens/Onboarding/StepModeration'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
+import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
+import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
+import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, {...initialState})
+  const isV2Enabled = false // TODO replace with feature flag
+  const [state, dispatch] = React.useReducer(
+    isV2Enabled ? reducerV2 : reducer,
+    isV2Enabled ? {...initialStateV2} : {...initialState},
+  )
 
   const interestsDisplayNames = React.useMemo(() => {
     return {
@@ -43,6 +52,7 @@ export function Onboarding() {
       gaming: _(msg`Video Games`),
       food: _(msg`Food`),
       cooking: _(msg`Cooking`),
+      photography: _(msg`Photography`),
     }
   }, [_])
 
