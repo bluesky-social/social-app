@@ -161,8 +161,12 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
         if (action === 'unhovered-target' || action === 'unhovered-card') {
           return mightHide()
         }
-        // Scrolling away instantly hides without a delay.
-        if (action === 'scrolled-while-showing') {
+        // Scrolling away if the hover is on the target instantly hides without a delay.
+        // If the hover is already on the card, we won't this.
+        if (
+          state.reason === 'hovered-target' &&
+          action === 'scrolled-while-showing'
+        ) {
           return hiding()
         }
       }
