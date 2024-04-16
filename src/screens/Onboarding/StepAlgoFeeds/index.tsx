@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   DescriptionText,
@@ -12,7 +13,7 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
-import {atoms as a, tokens, useTheme, useBreakpoints} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
@@ -31,7 +32,7 @@ export type FeedConfig = {
 export const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: IS_PROD, // these feeds are only available in prod
-    uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
+    uri: DISCOVER_FEED_URI,
     gradient: tokens.gradients.midnight,
   },
 ]

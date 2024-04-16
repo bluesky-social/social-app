@@ -97,3 +97,6 @@ export const GIF_SEARCH = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/search?${params}`
 export const GIF_FEATURED = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/featured?${params}`
+
+export const DISCOVER_FEED_URI =
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'

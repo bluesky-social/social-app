@@ -4,24 +4,26 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
+import {useGate} from '#/lib/statsig/statsig'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {uploadBlob} from 'lib/api'
 import {
   DescriptionText,
   OnboardingControls,
   TitleText,
 } from '#/screens/Onboarding/Layout'
-import {uploadBlob} from 'lib/api'
 import {Context} from '#/screens/Onboarding/state'
 import {
   bulkWriteFollows,
   sortPrimaryAlgorithmFeeds,
 } from '#/screens/Onboarding/util'
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -40,6 +42,7 @@ export function StepFinished() {
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
   const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
+  const isV2Enabled = useGate('reduced_onboarding_and_home_algo')
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -90,6 +93,13 @@ export function StepFinished() {
 
         return existing
       })
+
+      if (isV2Enabled) {
+        await getAgent().setHomeAlgoPref({
+          enabled: true,
+          uri: DISCOVER_FEED_URI,
+        })
+      }
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
@@ -102,7 +112,15 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
+  }, [
+    state,
+    dispatch,
+    onboardDispatch,
+    setSaving,
+    saveFeeds,
+    track,
+    isV2Enabled,
+  ])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')
