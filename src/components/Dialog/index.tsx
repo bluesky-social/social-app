@@ -200,10 +200,7 @@ export function Outer({
   )
 }
 
-export function Inner({
-  children,
-  style,
-}: DialogInnerProps) {
+export function Inner({children, style}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetView
