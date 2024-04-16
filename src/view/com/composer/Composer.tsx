@@ -49,14 +49,13 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {colors, gradients, s} from 'lib/styles'
-import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
@@ -72,6 +71,7 @@ import {UserAvatar} from '../util/UserAvatar'
 import {CharProgress} from './char-progress/CharProgress'
 import {ExternalEmbed} from './ExternalEmbed'
 import {GifAltText} from './GifAltText'
+import {KeyboardAccessory} from './KeyboardAccessory'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {Gallery} from './photos/Gallery'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
@@ -118,7 +118,6 @@ export const ComposePost = observer(function ComposePost({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
 
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -156,11 +155,10 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingBottom:
-        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
+      paddingBottom: isNative ? insets.bottom + 80 : 0,
       paddingTop: isMobile && isWeb ? 15 : 0,
     }),
-    [insets, isKeyboardVisible, isMobile],
+    [insets, isMobile],
   )
 
   const onPressCancel = useCallback(() => {
@@ -658,13 +656,5 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginHorizontal: 10,
     marginBottom: 4,
-  },
-  bottomBar: {
-    flexDirection: 'row',
-    paddingVertical: 4,
-    paddingLeft: 15,
-    paddingRight: 20,
-    alignItems: 'center',
-    borderTopWidth: 1,
   },
 })
