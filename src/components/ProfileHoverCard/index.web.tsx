@@ -59,9 +59,9 @@ type Action =
   | 'pressed'
   | 'hovered'
   | 'unhovered'
-  | 'show-timer-elapsed'
-  | 'hide-timer-elapsed'
-  | 'hide-animation-completed'
+  | 'hovered-long-enough'
+  | 'unhovered-long-enough'
+  | 'finished-animating-hide'
 
 const SHOW_DELAY = 350
 const SHOW_DURATION = 300
@@ -76,90 +76,110 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const [currentState, dispatch] = React.useReducer(
     // Tip: console.log(state, action) when debugging.
     (state: State, action: Action): State => {
-      // Regardless of which stage we're in, pressing always hides the card.
+      // Pressing within a card should always hide it.
+      // No matter which stage we're in.
       if (action === 'pressed') {
+        return hidden()
+      }
+
+      // --- Hidden ---
+      // In the beginning, the card is not displayed.
+      function hidden(): State {
         return {stage: 'hidden'}
       }
 
+      // The user can kick things off by hovering a target.
       if (state.stage === 'hidden') {
-        // Our story starts when the card is hidden.
-        // If the user hovers, we kick off a grace period before showing the card.
         if (action === 'hovered') {
-          return {
-            stage: 'might-show',
-            effect() {
-              const id = setTimeout(
-                () => dispatch('show-timer-elapsed'),
-                SHOW_DELAY,
-              )
-              return () => {
-                clearTimeout(id)
-              }
-            },
-          }
+          return mightShow(SHOW_DELAY)
         }
       }
 
+      // --- Might Show ---
+      // The card is not visible yet but we're considering showing it.
+      function mightShow(waitMs: number): State {
+        return {
+          stage: 'might-show',
+          effect() {
+            const id = setTimeout(() => dispatch('hovered-long-enough'), waitMs)
+            return () => {
+              clearTimeout(id)
+            }
+          },
+        }
+      }
+
+      // We'll make a decision at the end of a grace period timeout.
       if (state.stage === 'might-show') {
-        // We're in the grace period when we decide whether to show the card.
-        // At this point, two things can happen. Either the user unhovers, and
-        // we go back to hidden--or they linger enough that we'll show the card.
         if (action === 'unhovered') {
-          return {stage: 'hidden'}
+          return hidden()
         }
-        if (action === 'show-timer-elapsed') {
-          return {stage: 'showing'}
+        if (action === 'hovered-long-enough') {
+          return showing()
         }
       }
 
+      // --- Showing ---
+      // The card is beginning to show up and then will remain visible.
+      function showing(): State {
+        return {stage: 'showing'}
+      }
+
+      // If the user moves the pointer away, we'll begin to consider hiding it.
       if (state.stage === 'showing') {
-        // We're showing the card now.
-        // If the user unhovers, we'll start a grace period before hiding the card.
         if (action === 'unhovered') {
-          return {
-            stage: 'might-hide',
-            effect() {
-              const id = setTimeout(
-                () => dispatch('hide-timer-elapsed'),
-                HIDE_DELAY,
-              )
-              return () => clearTimeout(id)
-            },
-          }
+          return mightHide(HIDE_DELAY)
         }
       }
 
+      // --- Might Hide ---
+      // The user has moved hover away from a visible card.
+      function mightHide(waitMs: number): State {
+        return {
+          stage: 'might-hide',
+          effect() {
+            const id = setTimeout(
+              () => dispatch('unhovered-long-enough'),
+              waitMs,
+            )
+            return () => clearTimeout(id)
+          },
+        }
+      }
+
+      // We'll make a decision based on whether it received hover again in time.
       if (state.stage === 'might-hide') {
-        // We're in the grace period when we decide whether to hide the card.
-        // At this point, two things can happen. Either the user hovers, and
-        // we go back to showing it--or they linger enough that we'll start hiding the card.
         if (action === 'hovered') {
-          return {stage: 'showing'}
+          return showing()
         }
-        if (action === 'hide-timer-elapsed') {
-          return {
-            stage: 'hiding',
-            effect() {
-              const id = setTimeout(
-                () => dispatch('hide-animation-completed'),
-                HIDE_DURATION,
-              )
-              return () => clearTimeout(id)
-            },
-          }
+        if (action === 'unhovered-long-enough') {
+          return hiding(HIDE_DURATION)
         }
       }
 
+      // --- Hiding ---
+      // The user waited enough outside that we're hiding the card.
+      function hiding(animationDurationMs: number): State {
+        return {
+          stage: 'hiding',
+          effect() {
+            const id = setTimeout(
+              () => dispatch('finished-animating-hide'),
+              animationDurationMs,
+            )
+            return () => clearTimeout(id)
+          },
+        }
+      }
+
+      // While hiding, we don't want to be interrupted by anything else.
+      // When the animation finishes, we loop back to the initial hidden state.
       if (state.stage === 'hiding') {
-        // We're currently playing the hiding animation.
-        // We'll ignore all inputs now and wait for the animation to finish.
-        // At that point, we'll hide the entire thing, going back to square one.
-        if (action === 'hide-animation-completed') {
-          return {stage: 'hidden'}
+        if (action === 'finished-animating-hide') {
+          return hidden()
         }
       }
 
-      // Something else happened. Keep calm and carry on.
       return state
     },
     {stage: 'hidden'},
