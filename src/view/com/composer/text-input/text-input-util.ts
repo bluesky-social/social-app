@@ -18,7 +18,7 @@ export function addLinkCardIfNecessary({
 
   // If the text being added is not from a paste, then we should only check if the cursor is one
   // position ahead of the last character. However, if it is a paste we need to check both if it's
-  // the same position _or_ one position ahead. That is because iOS will add a space after a paste if https://haileyok.com/posts/3kq3gcdyfss23
+  // the same position _or_ one position ahead. That is because iOS will add a space after a paste if
   // pasting into the middle of a sentence!
   const cursorLocationIsOkay =
     cursorLocation === lastCharacterPosition + 1 || mayBePaste
