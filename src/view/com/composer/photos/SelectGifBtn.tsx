@@ -1,5 +1,5 @@
-/* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
 import React, {useCallback} from 'react'
+import {Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,7 +9,7 @@ import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {GifSelectDialog} from '#/components/dialogs/GifSelect'
-import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
+import {GifSquare_Stroke2_Corner0_Rounded as Gif} from '#/components/icons/Gif'
 
 type Props = {
   gallery: GalleryModel
@@ -23,6 +23,7 @@ export function SelectGifBtn({}: Props) {
   const onPressSelectGif = useCallback(async () => {
     track('Composer:GifSelectOpened')
 
+    Keyboard.dismiss()
     control.open()
   }, [track, control])
 
@@ -37,7 +38,7 @@ export function SelectGifBtn({}: Props) {
         variant="ghost"
         shape="round"
         color="primary">
-        <Image size="lg" />
+        <Gif size="lg" />
       </Button>
 
       <GifSelectDialog control={control} />

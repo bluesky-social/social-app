@@ -252,25 +252,27 @@ export const ScrollableInner = React.forwardRef<
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,
   BottomSheetFlatListProps<any>
->(function InnerFlatList({style, ...props}, ref) {
+>(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetFlatList
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={isNative ? a.pb_4xl : undefined}
+      contentContainerStyle={[
+        isNative ? a.pb_4xl : undefined,
+        flatten(contentContainerStyle),
+      ]}
       ListFooterComponent={
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
       }
       ref={ref}
       {...props}
       style={[
-        a.flex_1, // main diff is this
+        a.flex_1,
         a.p_xl,
+        a.pt_0,
         a.h_full,
         {
-          paddingTop: 40,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
+          marginTop: 40,
         },
         flatten(style),
       ]}
