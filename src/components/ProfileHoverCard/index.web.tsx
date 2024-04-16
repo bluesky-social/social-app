@@ -89,9 +89,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       function hidden(): State {
         return {stage: 'hidden'}
       }
-
-      // The user can kick things off by hovering a target.
       if (state.stage === 'hidden') {
+        // The user can kick things off by hovering a target.
         if (action === 'hovered-target' || action === 'hovered-card') {
           return mightShow(SHOW_DELAY)
         }
@@ -110,9 +109,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           },
         }
       }
-
-      // We'll make a decision at the end of a grace period timeout.
       if (state.stage === 'might-show') {
+        // We'll make a decision at the end of a grace period timeout.
         if (action === 'unhovered-target' || action === 'unhovered-card') {
           return hidden()
         }
@@ -126,9 +124,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       function showing(): State {
         return {stage: 'showing'}
       }
-
-      // If the user moves the pointer away, we'll begin to consider hiding it.
       if (state.stage === 'showing') {
+        // If the user moves the pointer away, we'll begin to consider hiding it.
         if (action === 'unhovered-target' || action === 'unhovered-card') {
           return mightHide(HIDE_DELAY)
         }
@@ -148,9 +145,8 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           },
         }
       }
-
-      // We'll make a decision based on whether it received hover again in time.
       if (state.stage === 'might-hide') {
+        // We'll make a decision based on whether it received hover again in time.
         if (action === 'hovered-target' || action === 'hovered-card') {
           return showing()
         }
@@ -173,10 +169,9 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           },
         }
       }
-
-      // While hiding, we don't want to be interrupted by anything else.
-      // When the animation finishes, we loop back to the initial hidden state.
       if (state.stage === 'hiding') {
+        // While hiding, we don't want to be interrupted by anything else.
+        // When the animation finishes, we loop back to the initial hidden state.
         if (action === 'finished-animating-hide') {
           return hidden()
         }
