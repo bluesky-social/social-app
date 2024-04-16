@@ -52,8 +52,8 @@ module.exports = function (config) {
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
   const SENTRY_DIST = `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER ?? ''}${
-    IS_TESTFLIGHT ? '-tf' : ''
-  }${IS_DEV ? '-dev' : ''}`
+    IS_TESTFLIGHT ? '.tf' : ''
+  }${IS_DEV ? '.dev' : ''}`
 
   return {
     expo: {

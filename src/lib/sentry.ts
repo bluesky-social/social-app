@@ -26,8 +26,8 @@ const release = nativeApplicationVersion ?? 'dev'
  * - `android.1.57.0.46`
  */
 const dist = `${Platform.OS}.${release}.${nativeBuildVersion ?? ''}${
-  IS_TESTFLIGHT ? '-tf' : ''
-}${IS_DEV ? '-dev' : ''}`
+  IS_TESTFLIGHT ? '.tf' : ''
+}${IS_DEV ? '.dev' : ''}`
 
 init({
   autoSessionTracking: false,
