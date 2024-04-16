@@ -2402,7 +2402,7 @@ msgstr "請確認這是你想要去的的地方！"
 
 #: src/components/dialogs/MutedWords.tsx:82
 msgid "Manage your muted words and tags"
-msgstr "管理你靜音的文字和標籤"
+msgstr "管理你靜音的詞彙和標籤"
 
 #: src/view/screens/Profile.tsx:197
 msgid "Media"
@@ -2530,11 +2530,11 @@ msgstr "將所有 {displayTag} 貼文靜音"
 
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
-msgstr "僅在標籤中靜音"
+msgstr "僅靜音標籤"
 
 #: src/components/dialogs/MutedWords.tsx:133
 msgid "Mute in text & tags"
-msgstr "在文字和標籤中靜音"
+msgstr "靜音詞彙和標籤"
 
 #: src/view/screens/ProfileList.tsx:463
 #: src/view/screens/ProfileList.tsx:626
@@ -2561,7 +2561,7 @@ msgstr "靜音對話串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:285
 #: src/view/com/util/forms/PostDropdownBtn.tsx:287
 msgid "Mute words & tags"
-msgstr "靜音文字和標籤"
+msgstr "靜音詞彙和標籤"
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
@@ -2586,7 +2586,7 @@ msgstr "被\"{0}\"靜音"
 
 #: src/screens/Moderation/index.tsx:231
 msgid "Muted words & tags"
-msgstr "已靜音文字和標籤"
+msgstr "已靜音詞彙和標籤"
 
 #: src/view/screens/ProfileList.tsx:623
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2917,7 +2917,7 @@ msgstr "在內建瀏覽器中開啟連結"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
-msgstr "開啟靜音文字和標籤設定"
+msgstr "開啟靜音詞彙和標籤設定"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:52
 msgid "Open navigation"
@@ -3181,7 +3181,7 @@ msgstr "請輸入此應用程式專用密碼的唯一名稱，或使用我們提
 
 #: src/components/dialogs/MutedWords.tsx:67
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "請輸入有效的詞語或標籤進行靜音"
+msgstr "請輸入有效的詞彙或標籤進行靜音"
 
 #: src/screens/Signup/state.ts:220
 msgid "Please enter your email."
@@ -3274,7 +3274,7 @@ msgstr "貼文"
 
 #: src/components/dialogs/MutedWords.tsx:89
 msgid "Posts can be muted based on their text, their tags, or both."
-msgstr "貼文可以根据所包含的文字和標籤来设定静音。"
+msgstr "貼文可以根据所包含的詞彙和標籤来设定静音。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -4384,7 +4384,7 @@ msgstr "服務條款"
 #: src/lib/moderation/useReportOptions.ts:79
 #: src/lib/moderation/useReportOptions.ts:87
 msgid "Terms used violate community standards"
-msgstr "所使用的文字違反了社群標準"
+msgstr "所使用的詞彙違反了社群標準"
 
 #: src/components/dialogs/MutedWords.tsx:323
 msgid "text"
@@ -5125,7 +5125,7 @@ msgstr "你已看完了你跟隨的貼文。這是 <0/> 的最新貼文。"
 
 #: src/components/dialogs/MutedWords.tsx:203
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "我們建議避免使用出現在許多貼文中的常用詞語，因為這可能導致沒有貼文可顯示。"
+msgstr "我們建議避免新增在許多貼文中常用的詞彙，因為這可能導致沒有貼文可顯示。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
 msgid "We recommend our \"Discover\" feed:"
@@ -5349,7 +5349,7 @@ msgstr "你還沒有靜音任何帳號。要靜音帳號，請轉到其個人資
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
-msgstr "你还没有隐藏任何词或话题标签"
+msgstr "你還沒有隱藏任何詞彙或標籤"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
