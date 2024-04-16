@@ -57,8 +57,10 @@ type State = {
 
 type Action =
   | 'pressed'
-  | 'hovered'
-  | 'unhovered'
+  | 'hovered-target'
+  | 'unhovered-target'
+  | 'hovered-card'
+  | 'unhovered-card'
   | 'hovered-long-enough'
   | 'unhovered-long-enough'
   | 'finished-animating-hide'
@@ -90,7 +92,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
       // The user can kick things off by hovering a target.
       if (state.stage === 'hidden') {
-        if (action === 'hovered') {
+        if (action === 'hovered-target' || action === 'hovered-card') {
           return mightShow(SHOW_DELAY)
         }
       }
@@ -111,7 +113,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
       // We'll make a decision at the end of a grace period timeout.
       if (state.stage === 'might-show') {
-        if (action === 'unhovered') {
+        if (action === 'unhovered-target' || action === 'unhovered-card') {
           return hidden()
         }
         if (action === 'hovered-long-enough') {
@@ -127,7 +129,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
       // If the user moves the pointer away, we'll begin to consider hiding it.
       if (state.stage === 'showing') {
-        if (action === 'unhovered') {
+        if (action === 'unhovered-target' || action === 'unhovered-card') {
           return mightHide(HIDE_DELAY)
         }
       }
@@ -149,7 +151,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
       // We'll make a decision based on whether it received hover again in time.
       if (state.stage === 'might-hide') {
-        if (action === 'hovered') {
+        if (action === 'hovered-target' || action === 'hovered-card') {
           return showing()
         }
         if (action === 'unhovered-long-enough') {
@@ -203,19 +205,19 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
   const onPointerEnterTarget = React.useCallback(() => {
     prefetchIfNeeded()
-    dispatch('hovered')
+    dispatch('hovered-target')
   }, [prefetchIfNeeded])
 
   const onPointerLeaveTarget = React.useCallback(() => {
-    dispatch('unhovered')
+    dispatch('unhovered-target')
   }, [])
 
   const onPointerEnterCard = React.useCallback(() => {
-    dispatch('hovered')
+    dispatch('hovered-card')
   }, [])
 
   const onPointerLeaveCard = React.useCallback(() => {
-    dispatch('unhovered')
+    dispatch('unhovered-card')
   }, [])
 
   const onPress = React.useCallback(() => {
