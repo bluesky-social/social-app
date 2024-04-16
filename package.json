@@ -191,7 +191,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.4",
+    "@atproto/dev-env": "^0.3.5",
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
