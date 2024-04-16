@@ -4,7 +4,9 @@ import {StatusBar} from 'expo-status-bar'
 import {observer} from 'mobx-react-lite'
 
 import {isIOS} from '#/platform/detection'
+import {Provider as LegacyModalProvider} from '#/state/modals'
 import {useComposerState} from 'state/shell/composer'
+import {ModalsContainer as LegacyModalsContainer} from '#/view/com/modals/Modal'
 import {
   Outlet as PortalOutlet,
   Provider as PortalProvider,
@@ -25,19 +27,22 @@ export const Composer = observer(function ComposerImpl({}: {
       presentationStyle="formSheet"
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}>
-      <PortalProvider>
-        <ComposePost
-          cancelRef={ref}
-          replyTo={state?.replyTo}
-          onPost={state?.onPost}
-          quote={state?.quote}
-          mention={state?.mention}
-          text={state?.text}
-          imageUris={state?.imageUris}
-        />
-        <PortalOutlet />
-        {isIOS && <StatusBar style="light" />}
-      </PortalProvider>
+      <LegacyModalProvider>
+        <PortalProvider>
+          <ComposePost
+            cancelRef={ref}
+            replyTo={state?.replyTo}
+            onPost={state?.onPost}
+            quote={state?.quote}
+            mention={state?.mention}
+            text={state?.text}
+            imageUris={state?.imageUris}
+          />
+          <LegacyModalsContainer />
+          <PortalOutlet />
+        </PortalProvider>
+      </LegacyModalProvider>
+      {isIOS && <StatusBar style="light" />}
     </Modal>
   )
 })
