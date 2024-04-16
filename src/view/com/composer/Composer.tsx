@@ -133,9 +133,9 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isAndroid ? insets.top : isMobile ? 15 : 0,
+      paddingTop: isAndroid ? insets.top : 0,
     }),
-    [insets, isKeyboardVisible, isMobile],
+    [insets, isKeyboardVisible],
   )
 
   const onPressCancel = useCallback(() => {

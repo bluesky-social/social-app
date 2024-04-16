@@ -1,77 +1,19 @@
-import React, {useEffect} from 'react'
+import {useEffect} from 'react'
+import {useNavigation} from '@react-navigation/native'
 import {observer} from 'mobx-react-lite'
-import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
-import {ComposePost} from '../com/composer/Composer'
-import {useComposerState} from 'state/shell/composer'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {usePalette} from 'lib/hooks/usePalette'
 
-export const Composer = observer(function ComposerImpl({
-  winHeight,
-}: {
-  winHeight: number
-}) {
+import {NavigationProp} from '#/lib/routes/types'
+import {useComposerState} from 'state/shell/composer'
+
+export const Composer = observer(function ComposerImpl() {
   const state = useComposerState()
-  const pal = usePalette('default')
-  const initInterp = useAnimatedValue(0)
+  const navigation = useNavigation<NavigationProp>()
 
   useEffect(() => {
     if (state) {
-      Animated.timing(initInterp, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.out(Easing.exp),
-        useNativeDriver: true,
-      }).start()
-    } else {
-      initInterp.setValue(0)
+      navigation.navigate('Composer')
     }
-  }, [initInterp, state])
-  const wrapperAnimStyle = {
-    transform: [
-      {
-        translateY: initInterp.interpolate({
-          inputRange: [0, 1],
-          outputRange: [winHeight, 0],
-        }),
-      },
-    ],
-  }
+  }, [state, navigation])
 
-  // rendering
-  // =
-
-  if (!state) {
-    return <View />
-  }
-
-  return (
-    <Animated.View
-      style={[styles.wrapper, pal.view, wrapperAnimStyle]}
-      aria-modal
-      accessibilityViewIsModal>
-      <ComposePost
-        replyTo={state.replyTo}
-        onPost={state.onPost}
-        quote={state.quote}
-        mention={state.mention}
-        text={state.text}
-        imageUris={state.imageUris}
-      />
-    </Animated.View>
-  )
-})
-
-const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: '100%',
-    ...Platform.select({
-      ios: {
-        paddingTop: 24,
-      },
-    }),
-  },
+  return null
 })

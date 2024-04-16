@@ -54,6 +54,7 @@ import {
   shouldRequestEmailConfirmation,
 } from './state/shell/reminders'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
+import {ComposerScreen} from './view/screens/Composer'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {DebugModScreen} from './view/screens/DebugMod'
 import {FeedsScreen} from './view/screens/Feeds'
@@ -103,6 +104,16 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
 
   return (
     <>
+      <Stack.Screen
+        name="Composer"
+        getComponent={() => ComposerScreen}
+        options={{
+          title: title(msg`Compose`),
+          requireAuth: true,
+          presentation: 'formSheet',
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="NotFound"
         getComponent={() => NotFoundScreen}

@@ -4,6 +4,7 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack'
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
+  Composer: undefined
   NotFound: undefined
   Lists: undefined
   Moderation: undefined
