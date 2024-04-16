@@ -51,6 +51,10 @@ module.exports = function (config) {
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
+  const SENTRY_DIST = `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER ?? ''}${
+    IS_TESTFLIGHT ? '-tf' : ''
+  }${IS_DEV ? '-dev' : ''}`
+
   return {
     expo: {
       version: VERSION,
@@ -217,7 +221,7 @@ module.exports = function (config) {
               organization: 'blueskyweb',
               project: 'react-native',
               release: VERSION,
-              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
+              dist: SENTRY_DIST,
             },
           },
         ],
