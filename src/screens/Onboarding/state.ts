@@ -13,6 +13,7 @@ export type OnboardingState = {
     | 'algoFeeds'
     | 'topicalFeeds'
     | 'moderation'
+    | 'profile'
     | 'finished'
   activeStepIndex: number
 
@@ -80,7 +81,7 @@ export type ApiResponseMap = {
 
 export const initialState: OnboardingState = {
   hasPrev: false,
-  totalSteps: 7,
+  totalSteps: 8,
   activeStep: 'interests',
   activeStepIndex: 1,
 
@@ -168,8 +169,11 @@ export function reducer(
         next.activeStep = 'moderation'
         next.activeStepIndex = 6
       } else if (s.activeStep === 'moderation') {
-        next.activeStep = 'finished'
+        next.activeStep = 'profile'
         next.activeStepIndex = 7
+      } else if (s.activeStep === 'profile') {
+        next.activeStep = 'finished'
+        next.activeStepIndex = 8
       }
       break
     }
@@ -189,9 +193,12 @@ export function reducer(
       } else if (s.activeStep === 'moderation') {
         next.activeStep = 'topicalFeeds'
         next.activeStepIndex = 5
-      } else if (s.activeStep === 'finished') {
+      } else if (s.activeStep === 'profile') {
         next.activeStep = 'moderation'
         next.activeStepIndex = 6
+      } else if (s.activeStep === 'finished') {
+        next.activeStep = 'profile'
+        next.activeStepIndex = 7
       }
       break
     }
@@ -226,6 +233,13 @@ export function reducer(
       }
       break
     }
+    case 'setProfileStepResults': {
+      next.profileStepResults = {
+        imageUri: a.imageUri,
+        imageMime: a.imageMime,
+      }
+      break
+    }
   }
 
   const state = {
@@ -243,6 +257,7 @@ export function reducer(
     suggestedAccountsStepResults: state.suggestedAccountsStepResults,
     algoFeedsStepResults: state.algoFeedsStepResults,
     topicalFeedsStepResults: state.topicalFeedsStepResults,
+    profileStepResults: state.profileStepResults,
   })
 
   if (s.activeStep !== state.activeStep) {

@@ -69,9 +69,9 @@ export function Inner({
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
-  const {gtMobile} = useBreakpoints()
   const suggestedDids = React.useMemo(() => {
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
@@ -133,7 +133,7 @@ export function StepSuggestedAccounts() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={At} style={[a.mb_2xl]} />
 
       <TitleText>

@@ -12,6 +12,7 @@ import {logger} from '#/logger'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {uploadBlob} from 'lib/api'
 import {
   DescriptionText,
   OnboardingControls,
@@ -22,7 +23,7 @@ import {
   bulkWriteFollows,
   sortPrimaryAlgorithmFeeds,
 } from '#/screens/Onboarding/util'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -35,6 +36,7 @@ import {Text} from '#/components/Typography'
 export function StepFinished() {
   const {_} = useLingui()
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
@@ -46,11 +48,13 @@ export function StepFinished() {
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
+    // TODO uncomment
     const {
       interestsStepResults,
       suggestedAccountsStepResults,
       algoFeedsStepResults,
       topicalFeedsStepResults,
+      profileStepResults,
     } = state
     const {selectedInterests} = interestsStepResults
     const selectedFeeds = [
@@ -110,6 +114,24 @@ export function StepFinished() {
           }
         })(),
       ])
+
+      await getAgent().upsertProfile(async existing => {
+        existing = existing ?? {}
+
+        if (profileStepResults.imageUri && profileStepResults.imageMime) {
+          const res = await uploadBlob(
+            getAgent(),
+            profileStepResults.imageUri,
+            profileStepResults.imageMime,
+          )
+
+          if (res.data.blob) {
+            existing.avatar = res.data.blob
+          }
+        }
+
+        return existing
+      })
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
@@ -138,7 +160,7 @@ export function StepFinished() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
 
       <TitleText>
