@@ -470,7 +470,10 @@ export const ComposePost = observer(function ComposePost({
               <>
                 <SelectPhotoBtn gallery={gallery} />
                 <OpenCameraBtn gallery={gallery} />
-                <SelectGifBtn gallery={gallery} onClose={focusTextInput} />
+                <SelectGifBtn
+                  onClose={focusTextInput}
+                  onSelectGif={onPressAddLinkCard}
+                />
               </>
             ) : null}
             {!isMobile ? (

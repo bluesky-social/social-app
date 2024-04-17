@@ -4,7 +4,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {GalleryModel} from '#/state/models/media/gallery'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -12,11 +11,11 @@ import {GifSelectDialog} from '#/components/dialogs/GifSelect'
 import {GifSquare_Stroke2_Corner0_Rounded as Gif} from '#/components/icons/Gif'
 
 type Props = {
-  gallery: GalleryModel
   onClose: () => void
+  onSelectGif: (url: string) => void
 }
 
-export function SelectGifBtn({onClose}: Props) {
+export function SelectGifBtn({onClose, onSelectGif}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const control = useDialogControl()
@@ -42,7 +41,11 @@ export function SelectGifBtn({onClose}: Props) {
         <Gif size="lg" />
       </Button>
 
-      <GifSelectDialog control={control} onClose={onClose} />
+      <GifSelectDialog
+        control={control}
+        onClose={onClose}
+        onSelectGif={onSelectGif}
+      />
     </>
   )
 }
