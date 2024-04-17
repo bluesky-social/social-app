@@ -17,7 +17,6 @@ import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bot
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {isNative} from 'platform/detection'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -241,7 +240,7 @@ export const ScrollableInner = React.forwardRef<
         },
         flatten(style),
       ]}
-      contentContainerStyle={isNative ? a.pb_4xl : undefined}
+      contentContainerStyle={a.pb_4xl}
       ref={ref}>
       {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
@@ -257,10 +256,7 @@ export const InnerFlatList = React.forwardRef<
   return (
     <BottomSheetFlatList
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={[
-        isNative ? a.pb_4xl : undefined,
-        flatten(contentContainerStyle),
-      ]}
+      contentContainerStyle={[a.pb_4xl, flatten(contentContainerStyle)]}
       ListFooterComponent={
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
       }

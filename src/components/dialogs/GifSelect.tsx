@@ -5,12 +5,14 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
+import {isWeb} from '#/platform/detection'
 import {Gif, useGifphySearch, useGiphyTrending} from '#/state/queries/giphy'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {Button} from '../Button'
+import {Button, ButtonIcon} from '../Button'
 import {ListFooter} from '../Lists'
 
 export function GifSelectDialog({
@@ -24,6 +26,8 @@ export function GifSelectDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
+
   const [search, setSearch] = useState('')
 
   const isSearching = search.length > 0
@@ -55,7 +59,7 @@ export function GifSelectDialog({
 
   const listHeader = useMemo(
     () => (
-      <View style={[a.relative, a.mb_lg]}>
+      <View style={[a.relative, a.mb_lg, a.flex_row, a.align_center, a.gap_md]}>
         {/* cover top corners */}
         <View
           style={[
@@ -64,6 +68,19 @@ export function GifSelectDialog({
             t.atoms.bg,
           ]}
         />
+
+        {!gtMobile && isWeb && (
+          <Button
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            onPress={() => control.close()}
+            label={_(msg`Close GIF dialog`)}>
+            <ButtonIcon icon={Arrow} size="md" />
+          </Button>
+        )}
+
         <TextField.Root>
           <TextField.Icon icon={Search} />
           <TextField.Input
@@ -75,7 +92,7 @@ export function GifSelectDialog({
         </TextField.Root>
       </View>
     ),
-    [search, _, t.atoms.bg],
+    [search, _, t.atoms.bg, gtMobile, control],
   )
 
   const onSelectGif = useCallback(
@@ -96,19 +113,22 @@ export function GifSelectDialog({
     <Dialog.Outer
       control={control}
       nativeOptions={{sheet: {snapPoints: ['100%']}}}
-      webOptions={{style: {maxHeight: '100vh', height: '800px'}}}
       onClose={onClose}>
       <Dialog.Handle />
+      {gtMobile && <Dialog.Close />}
       <Dialog.InnerFlatList
+        key={gtMobile ? '3 cols' : '2 cols'}
         data={flattenedData}
         renderItem={renderItem}
-        numColumns={2}
+        numColumns={gtMobile ? 3 : 2}
         columnWrapperStyle={a.gap_sm}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
         keyExtractor={(item: Gif) => item.id}
+        // @ts-expect-error web only
+        style={isWeb && {minHeight: '100vh'}}
         ListFooterComponent={
           <ListFooter
             isFetchingNextPage={isFetchingNextPage}
@@ -129,7 +149,9 @@ function GifPreview({
   gif: Gif
   onSelectGif: (url: string) => void
 }) {
+  const {gtTablet} = useBreakpoints()
   const {_} = useLingui()
+  const t = useTheme()
 
   const onPress = useCallback(() => {
     onSelectGif(gif.url)
@@ -138,7 +160,7 @@ function GifPreview({
   return (
     <Button
       label={_(msg`Select GIF "${gif.title}"`)}
-      style={a.flex_1}
+      style={[a.flex_1, gtTablet ? {maxWidth: '33%'} : {maxWidth: '50%'}]}
       onPress={onPress}>
       {({pressed}) => (
         <Image
@@ -147,6 +169,7 @@ function GifPreview({
             a.mb_sm,
             a.rounded_sm,
             {aspectRatio: 1, opacity: pressed ? 0.8 : 1},
+            t.atoms.bg_contrast_25,
           ]}
           source={{uri: gif.images.preview_gif.url}}
           autoplay

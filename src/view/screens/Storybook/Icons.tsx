@@ -2,11 +2,11 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a, useTheme} from '#/alf'
-import {H1} from '#/components/Typography'
-import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
-import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/ArrowTopRight'
+import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/Arrow'
 import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
+import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Loader} from '#/components/Loader'
+import {H1} from '#/components/Typography'
 
 export function Icons() {
   const t = useTheme()
