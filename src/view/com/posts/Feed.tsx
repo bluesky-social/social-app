@@ -35,6 +35,7 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
+import {useFeedFeedback} from '#/state/feed-feedback'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -88,6 +89,7 @@ let Feed = ({
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
+  const {onItemSeen} = useFeedFeedback()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
@@ -264,20 +266,6 @@ let Feed = ({
   const onPressRetryLoadMore = React.useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
-
-  const set = React.useRef(new Set())
-  const onItemSeen = React.useCallback(
-    item => {
-      if (!item.items?.[0]) {
-        return
-      }
-      if (!set.current.has(item.items[0].post.record.text)) {
-        console.log(item.items[0].post.record.text, item)
-        set.current.add(item.items[0].post.record.text)
-      }
-    },
-    [set],
-  )
 
   // rendering
   // =

@@ -26,6 +26,7 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import * as FeedFeedback from '#/state/feed-feedback'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useHaptics} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -490,17 +491,19 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     return (
       <View>
-        <Feed
-          enabled={isFocused}
-          feed={feed}
-          pollInterval={60e3}
-          disablePoll={hasNew}
-          scrollElRef={scrollElRef}
-          onHasNew={setHasNew}
-          onScrolledDownChange={setIsScrolledDown}
-          renderEmptyState={renderPostsEmpty}
-          headerOffset={headerHeight}
-        />
+        <FeedFeedback.Provider feed={feed}>
+          <Feed
+            enabled={isFocused}
+            feed={feed}
+            pollInterval={60e3}
+            disablePoll={hasNew}
+            scrollElRef={scrollElRef}
+            onHasNew={setHasNew}
+            onScrolledDownChange={setIsScrolledDown}
+            renderEmptyState={renderPostsEmpty}
+            headerOffset={headerHeight}
+          />
+        </FeedFeedback.Provider>
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}

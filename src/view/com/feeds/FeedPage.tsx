@@ -9,6 +9,7 @@ import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import * as FeedFeedback from '#/state/feed-feedback'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -117,20 +118,22 @@ export function FeedPage({
   return (
     <View testID={testID} style={s.h100pct}>
       <MainScrollProvider>
-        <Feed
-          testID={testID ? `${testID}-feed` : undefined}
-          enabled={isPageFocused}
-          feed={feed}
-          feedParams={feedParams}
-          pollInterval={feedPollInterval}
-          disablePoll={hasNew}
-          scrollElRef={scrollElRef}
-          onScrolledDownChange={setIsScrolledDown}
-          onHasNew={setHasNew}
-          renderEmptyState={renderEmptyState}
-          renderEndOfFeed={renderEndOfFeed}
-          headerOffset={headerOffset}
-        />
+        <FeedFeedback.Provider feed={feed}>
+          <Feed
+            testID={testID ? `${testID}-feed` : undefined}
+            enabled={isPageFocused}
+            feed={feed}
+            feedParams={feedParams}
+            pollInterval={feedPollInterval}
+            disablePoll={hasNew}
+            scrollElRef={scrollElRef}
+            onScrolledDownChange={setIsScrolledDown}
+            onHasNew={setHasNew}
+            renderEmptyState={renderEmptyState}
+            renderEndOfFeed={renderEndOfFeed}
+            headerOffset={headerOffset}
+          />
+        </FeedFeedback.Provider>
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

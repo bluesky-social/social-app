@@ -36,6 +36,7 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {atoms as a} from '#/alf'
+import {useFeedFeedback} from '#/state/feed-feedback'
 
 export function FeedItem({
   post,
