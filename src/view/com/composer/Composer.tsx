@@ -313,6 +313,11 @@ export const ComposePost = observer(function ComposePost({
     textInput.current?.focus()
   }, [])
 
+  const onSelectGif = useCallback(
+    (uri: string) => setExtLink({uri, isLoading: true}),
+    [setExtLink],
+  )
+
   return (
     <KeyboardAvoidingView
       testID="composePostView"
@@ -472,7 +477,7 @@ export const ComposePost = observer(function ComposePost({
                 <OpenCameraBtn gallery={gallery} />
                 <SelectGifBtn
                   onClose={focusTextInput}
-                  onSelectGif={onPressAddLinkCard}
+                  onSelectGif={onSelectGif}
                 />
               </>
             ) : null}

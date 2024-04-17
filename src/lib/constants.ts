@@ -96,3 +96,5 @@ export const GIPHY_API_KEY = Platform.select({
   android: 'Vwj3Ib7857dj3EcIg24Hiz1LbRVdGeYF',
   default: 'vyL3hQQ8AipwcmIB8kFvg0NDs9faWg7G',
 })
+export const GIPHY_PRIVACY_POLICY =
+  'https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy'
