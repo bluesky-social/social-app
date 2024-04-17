@@ -294,7 +294,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
             style={floatingStyles}
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
-            <div style={animationStyle}>
+            <div style={{willChange: 'transform', ...animationStyle}}>
               <Card did={props.did} hide={onPress} />
             </div>
           </div>
