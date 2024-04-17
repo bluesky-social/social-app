@@ -1,28 +1,22 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
+import {AppBskyFeedDefs} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {FeedDescriptor, isFeedPostSlice} from '#/state/queries/post-feed'
 
-// TODO replace with atproto api
-interface Interaction {
-  uri: string
-  event: string
-  feedContext: string
-}
-
 type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
-  sendInteraction: (interaction: Interaction) => void
+  sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
   flushAndReset: () => void
 }
 
 const stateContext = React.createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
-  sendInteraction: (_interaction: Interaction) => {},
+  sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   flushAndReset: () => {},
 })
 
@@ -73,7 +67,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
           const str = toString({
             uri: postItem.uri,
             event: 'app.bsky.feed.defs#interactionSeen',
-            feedContext: 'TODO',
+            feedContext: postItem.feedContext,
           })
           if (!history.current.has(str)) {
             queue.current.add(str)
@@ -84,7 +78,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
 
       // call on various events
       // queues the event to be sent with the debounced sendToFeed call
-      sendInteraction: (interaction: Interaction) => {
+      sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => {
         if (!enabled) {
           return
         }
@@ -123,11 +117,13 @@ function isDiscoverFeed(feed: FeedDescriptor) {
   return feed === `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`
 }
 
-function toString(interaction: Interaction): string {
-  return `${interaction.uri}|${interaction.event}|${interaction.feedContext}`
+function toString(interaction: AppBskyFeedDefs.Interaction): string {
+  return `${interaction.uri}|${interaction.event}|${
+    interaction.feedContext || ''
+  }`
 }
 
-function toInteraction(str: string): Interaction {
+function toInteraction(str: string): AppBskyFeedDefs.Interaction {
   const [uri, event, feedContext] = str.split('|')
   return {uri, event, feedContext}
 }

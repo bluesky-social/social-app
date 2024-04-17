@@ -43,6 +43,7 @@ export function FeedItem({
   post,
   record,
   reason,
+  feedContext,
   moderation,
   isThreadChild,
   isThreadLastChild,
@@ -51,6 +52,7 @@ export function FeedItem({
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  feedContext: string | undefined
   moderation: ModerationDecision
   isThreadChild?: boolean
   isThreadLastChild?: boolean
@@ -76,6 +78,7 @@ export function FeedItem({
         post={postShadowed}
         record={record}
         reason={reason}
+        feedContext={feedContext}
         richText={richText}
         moderation={moderation}
         isThreadChild={isThreadChild}
@@ -91,6 +94,7 @@ let FeedItemInner = ({
   post,
   record,
   reason,
+  feedContext,
   richText,
   moderation,
   isThreadChild,
@@ -100,6 +104,7 @@ let FeedItemInner = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  feedContext: string | undefined
   richText: RichTextAPI
   moderation: ModerationDecision
   isThreadChild?: boolean
@@ -127,7 +132,7 @@ let FeedItemInner = ({
     sendInteraction({
       uri: post.uri,
       event: 'app.bsky.feed.defs#interactionReply',
-      feedContext: 'TODO',
+      feedContext,
     })
     openComposer({
       replyTo: {
@@ -139,39 +144,39 @@ let FeedItemInner = ({
         moderation,
       },
     })
-  }, [post, record, openComposer, moderation, sendInteraction])
+  }, [post, record, openComposer, moderation, sendInteraction, feedContext])
 
   const onOpenPost = React.useCallback(() => {
     sendInteraction({
       uri: post.uri,
       event: 'app.bsky.feed.defs#clickthroughItem',
-      feedContext: 'TODO',
+      feedContext,
     })
-  }, [sendInteraction, post])
+  }, [sendInteraction, post, feedContext])
 
   const onOpenAuthor = React.useCallback(() => {
     sendInteraction({
       uri: post.uri,
       event: 'app.bsky.feed.defs#clickthroughAuthor',
-      feedContext: 'TODO',
+      feedContext,
     })
-  }, [sendInteraction, post])
+  }, [sendInteraction, post, feedContext])
 
   const onOpenReposter = React.useCallback(() => {
     sendInteraction({
       uri: post.uri,
       event: 'app.bsky.feed.defs#clickthroughReposter',
-      feedContext: 'TODO',
+      feedContext,
     })
-  }, [sendInteraction, post])
+  }, [sendInteraction, post, feedContext])
 
   const onOpenEmbed = React.useCallback(() => {
     sendInteraction({
       uri: post.uri,
       event: 'app.bsky.feed.defs#clickthroughEmbed',
-      feedContext: 'TODO',
+      feedContext,
     })
-  }, [sendInteraction, post])
+  }, [sendInteraction, post, feedContext])
 
   const outerStyles = [
     styles.outer,

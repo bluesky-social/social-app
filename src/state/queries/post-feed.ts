@@ -69,6 +69,7 @@ export interface FeedPostSliceItem {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
+  feedContext: string | undefined
   moderation: ModerationDecision
 }
 
@@ -294,6 +295,7 @@ export function usePostFeedQuery(
                               i === 0 && slice.source
                                 ? slice.source
                                 : item.reason,
+                            feedContext: item.feedContext,
                             moderation: moderations[i],
                           }
                         }

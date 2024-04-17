@@ -45,6 +45,7 @@ let PostCtrls = ({
   post,
   record,
   richText,
+  feedContext,
   style,
   onPressReply,
   logContext,
@@ -53,6 +54,7 @@ let PostCtrls = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
+  feedContext: string | undefined
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
@@ -91,7 +93,7 @@ let PostCtrls = ({
         sendInteraction({
           uri: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
-          feedContext: 'TODO',
+          feedContext,
         })
         await queueLike()
       } else {
@@ -109,6 +111,7 @@ let PostCtrls = ({
     queueLike,
     queueUnlike,
     sendInteraction,
+    feedContext,
   ])
 
   const onRepost = useCallback(async () => {
@@ -119,7 +122,7 @@ let PostCtrls = ({
         sendInteraction({
           uri: post.uri,
           event: 'app.bsky.feed.defs#interactionRepost',
-          feedContext: 'TODO',
+          feedContext,
         })
         await queueRepost()
       } else {
@@ -138,6 +141,7 @@ let PostCtrls = ({
     queueRepost,
     queueUnrepost,
     sendInteraction,
+    feedContext,
   ])
 
   const onQuote = useCallback(() => {
@@ -145,7 +149,7 @@ let PostCtrls = ({
     sendInteraction({
       uri: post.uri,
       event: 'app.bsky.feed.defs#interactionQuote',
-      feedContext: 'TODO',
+      feedContext,
     })
     openComposer({
       quote: {
@@ -167,6 +171,7 @@ let PostCtrls = ({
     record.text,
     playHaptic,
     sendInteraction,
+    feedContext,
   ])
 
   const onShare = useCallback(() => {
@@ -177,9 +182,9 @@ let PostCtrls = ({
     sendInteraction({
       uri: post.uri,
       event: 'app.bsky.feed.defs#interactionShare',
-      feedContext: 'TODO',
+      feedContext,
     })
-  }, [post.uri, post.author, sendInteraction])
+  }, [post.uri, post.author, sendInteraction, feedContext])
 
   return (
     <View style={[styles.ctrls, style]}>

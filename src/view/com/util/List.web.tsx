@@ -250,9 +250,9 @@ let Row = function RowImpl<ItemT>({
     | undefined
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
-  onItemSeen?: (item: ItemT) => void
+  onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
-  const tailRef = React.useRef(null)
+  const rowRef = React.useRef(null)
   const isIntersecting = React.useRef(false)
 
   const handleIntersection = useNonReactiveCallback(
@@ -278,10 +278,10 @@ let Row = function RowImpl<ItemT>({
       return
     }
     const observer = new IntersectionObserver(handleIntersection)
-    const tail: Element | null = tailRef.current!
-    observer.observe(tail)
+    const row: Element | null = rowRef.current!
+    observer.observe(row)
     return () => {
-      observer.unobserve(tail)
+      observer.unobserve(row)
     }
   }, [handleIntersection, onItemSeen])
 
@@ -290,7 +290,7 @@ let Row = function RowImpl<ItemT>({
   }
 
   return (
-    <View style={styles.row} ref={tailRef}>
+    <View style={styles.row} ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
   )
