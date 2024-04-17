@@ -172,7 +172,7 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
-  const shouldShowLoggedOutWarning = React.useMemo(() => {
+  const hideInPWI = React.useMemo(() => {
     return !!postAuthor.labels?.find(
       label => label.val === '!no-unauthenticated',
     )
@@ -183,7 +183,7 @@ let PostDropdownBtn = ({
     shareUrl(url)
   }, [href])
 
-  const canEmbed = isWeb && gtMobile && !shouldShowLoggedOutWarning
+  const canEmbed = isWeb && gtMobile && !hideInPWI
 
   return (
     <EventStopper onKeyDown={false}>
@@ -215,27 +215,31 @@ let PostDropdownBtn = ({
 
         <Menu.Outer>
           <Menu.Group>
-            <Menu.Item
-              testID="postDropdownTranslateBtn"
-              label={_(msg`Translate`)}
-              onPress={onOpenTranslate}>
-              <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={Translate} position="right" />
-            </Menu.Item>
+            {(!hideInPWI || hasSession) && (
+              <>
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Translate`)}
+                  onPress={onOpenTranslate}>
+                  <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
 
-            <Menu.Item
-              testID="postDropdownCopyTextBtn"
-              label={_(msg`Copy post text`)}
-              onPress={onCopyPostText}>
-              <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-            </Menu.Item>
+                <Menu.Item
+                  testID="postDropdownCopyTextBtn"
+                  label={_(msg`Copy post text`)}
+                  onPress={onCopyPostText}>
+                  <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                </Menu.Item>
+              </>
+            )}
 
             <Menu.Item
               testID="postDropdownShareBtn"
               label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               onPress={() => {
-                if (shouldShowLoggedOutWarning) {
+                if (hideInPWI) {
                   loggedOutWarningPromptControl.open()
                 } else {
                   onSharePost()

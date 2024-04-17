@@ -1,28 +1,32 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {RichText, AppBskyRichtextFacet} from '@atproto/api'
-import EventEmitter from 'eventemitter3'
-import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {Trans} from '@lingui/macro'
 import {Document} from '@tiptap/extension-document'
-import History from '@tiptap/extension-history'
 import Hardbreak from '@tiptap/extension-hard-break'
+import History from '@tiptap/extension-history'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
-import isEqual from 'lodash.isequal'
-import {createSuggestion} from './web/Autocomplete'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {isUriImage, blobToDataUri} from 'lib/media/util'
-import {Emoji} from './web/EmojiPicker.web'
-import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import EventEmitter from 'eventemitter3'
+
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {blobToDataUri, isUriImage} from 'lib/media/util'
+import {
+  addLinkCardIfNecessary,
+  findIndexInText,
+} from 'view/com/composer/text-input/text-input-util'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
-import {Trans} from '@lingui/macro'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {createSuggestion} from './web/Autocomplete'
+import {Emoji} from './web/EmojiPicker.web'
+import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
 export interface TextInputRef {
@@ -38,7 +42,7 @@ interface TextInputProps {
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
-  onSuggestedLinksChanged: (uris: Set<string>) => void
+  onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
 
@@ -48,16 +52,17 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
-    suggestedLinks,
     setRichText,
     onPhotoPasted,
     onPressPublish,
-    onSuggestedLinksChanged,
+    onNewLink,
   }: // onError, TODO
   TextInputProps,
   ref,
 ) {
   const autocomplete = useActorAutocompleteFn()
+  const prevLength = React.useRef(0)
+  const prevAddedLinks = useRef(new Set<string>())
 
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
@@ -180,26 +185,42 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
+        const newText = editorJsonToText(json).trimEnd()
+        const mayBePaste = newText.length > prevLength.current + 1
 
-        const newRt = new RichText({text: editorJsonToText(json).trimEnd()})
+        const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
-
-        const set: Set<string> = new Set()
 
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
-                set.add(feature.uri)
+                // The TipTap editor shows the position as being one character ahead, as if the start index is 1.
+                // Subtracting 1 from the pos gives us the same behavior as the native impl.
+                let cursorLocation = editor?.state.selection.$anchor.pos ?? 1
+                cursorLocation -= 1
+
+                addLinkCardIfNecessary({
+                  uri: feature.uri,
+                  newText,
+                  cursorLocation,
+                  mayBePaste,
+                  onNewLink,
+                  prevAddedLinks: prevAddedLinks.current,
+                })
               }
             }
           }
         }
 
-        if (!isEqual(set, suggestedLinks)) {
-          onSuggestedLinksChanged(set)
+        for (const uri of prevAddedLinks.current.keys()) {
+          if (findIndexInText(uri, newText) === -1) {
+            prevAddedLinks.current.delete(uri)
+          }
         }
+
+        prevLength.current = newText.length
       },
     },
     [modeClass],
