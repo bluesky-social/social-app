@@ -122,9 +122,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
       if (isNative) {
         try {
-          console.log('attempting to delete', path)
           deleteAsync(path)
-          console.log('deleted', path)
         } catch (e) {}
       }
 
@@ -185,9 +183,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
           try {
             if (isNative) {
-              console.log('attempting to delete', opts.extLink.localThumb.path)
               deleteAsync(opts.extLink.localThumb.path)
-              console.log('deleted', opts.extLink.localThumb.path)
             }
           } catch (e) {}
         }
