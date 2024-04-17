@@ -123,7 +123,9 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       if (isNative) {
         try {
           deleteAsync(path)
-        } catch (e) {}
+        } catch (e) {
+          console.error(e)
+        }
       }
 
       images.push({
@@ -185,7 +187,9 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
             if (isNative) {
               deleteAsync(opts.extLink.localThumb.path)
             }
-          } catch (e) {}
+          } catch (e) {
+            console.error(e)
+          }
         }
       }
 
