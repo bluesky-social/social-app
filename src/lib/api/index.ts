@@ -122,7 +122,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
       if (isNative) {
         try {
-          await deleteAsync(path)
+          deleteAsync(path)
         } catch (e) {}
       }
 
@@ -183,7 +183,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
           try {
             if (isNative) {
-              await deleteAsync(opts.extLink.localThumb.path)
+              deleteAsync(opts.extLink.localThumb.path)
             }
           } catch (e) {}
         }
