@@ -124,6 +124,11 @@ let FeedItemInner = ({
   }, [record?.reply])
 
   const onPressReply = React.useCallback(() => {
+    sendInteraction({
+      uri: post.uri,
+      event: 'app.bsky.feed.defs#interactionReply',
+      feedContext: 'TODO',
+    })
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -134,7 +139,7 @@ let FeedItemInner = ({
         moderation,
       },
     })
-  }, [post, record, openComposer, moderation])
+  }, [post, record, openComposer, moderation, sendInteraction])
 
   const onOpenPost = React.useCallback(() => {
     sendInteraction({

@@ -24,6 +24,7 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
 import {Shadow} from '#/state/cache/types'
+import {useFeedFeedback} from '#/state/feed-feedback'
 import {useModalControls} from '#/state/modals'
 import {
   usePostLikeMutationQueue,
@@ -67,6 +68,7 @@ let PostCtrls = ({
   )
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
+  const {sendInteraction} = useFeedFeedback()
   const playHaptic = useHaptics()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
@@ -86,6 +88,11 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.like) {
         playHaptic()
+        sendInteraction({
+          uri: post.uri,
+          event: 'app.bsky.feed.defs#interactionLike',
+          feedContext: 'TODO',
+        })
         await queueLike()
       } else {
         await queueUnlike()
@@ -95,13 +102,25 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [playHaptic, post.viewer?.like, queueLike, queueUnlike])
+  }, [
+    playHaptic,
+    post.uri,
+    post.viewer?.like,
+    queueLike,
+    queueUnlike,
+    sendInteraction,
+  ])
 
   const onRepost = useCallback(async () => {
     closeModal()
     try {
       if (!post.viewer?.repost) {
         playHaptic()
+        sendInteraction({
+          uri: post.uri,
+          event: 'app.bsky.feed.defs#interactionRepost',
+          feedContext: 'TODO',
+        })
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -111,10 +130,23 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [closeModal, post.viewer?.repost, playHaptic, queueRepost, queueUnrepost])
+  }, [
+    closeModal,
+    post.uri,
+    post.viewer?.repost,
+    playHaptic,
+    queueRepost,
+    queueUnrepost,
+    sendInteraction,
+  ])
 
   const onQuote = useCallback(() => {
     closeModal()
+    sendInteraction({
+      uri: post.uri,
+      event: 'app.bsky.feed.defs#interactionQuote',
+      feedContext: 'TODO',
+    })
     openComposer({
       quote: {
         uri: post.uri,
@@ -134,6 +166,7 @@ let PostCtrls = ({
     post.indexedAt,
     record.text,
     playHaptic,
+    sendInteraction,
   ])
 
   const onShare = useCallback(() => {
@@ -141,7 +174,12 @@ let PostCtrls = ({
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
     shareUrl(url)
-  }, [post.uri, post.author])
+    sendInteraction({
+      uri: post.uri,
+      event: 'app.bsky.feed.defs#interactionShare',
+      feedContext: 'TODO',
+    })
+  }, [post.uri, post.author, sendInteraction])
 
   return (
     <View style={[styles.ctrls, style]}>
