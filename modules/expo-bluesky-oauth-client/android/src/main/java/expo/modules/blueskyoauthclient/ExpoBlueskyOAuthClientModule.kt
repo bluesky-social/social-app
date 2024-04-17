@@ -28,7 +28,7 @@ class ExpoBlueskyOAuthClientModule : Module() {
       return@AsyncFunction JWTUtil().createJwt(header, payload, jwk)
     }
 
-    AsyncFunction("verifyJwt") { token: String, jwk: JWK ->
+    AsyncFunction("verifyJwt") { token: String, jwk: String ->
       return@AsyncFunction JWTUtil().verifyJwt(token, jwk)
     }
   }

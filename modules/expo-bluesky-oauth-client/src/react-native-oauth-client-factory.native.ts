@@ -20,6 +20,8 @@ export type RNOAuthClientOptions = {
   clientMetadata: OAuthClientMetadata
   fetch?: Fetch
   crypto?: any
+  plcDirectoryUrl?: string
+  atprotoLexiconUrl?: string
 }
 
 export class RNOAuthClientFactory extends OAuthClientFactory {
@@ -30,6 +32,8 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
     // "fragment" is safer as it is not sent to the server
     responseMode = 'fragment',
     fetch = globalThis.fetch,
+    plcDirectoryUrl,
+    atprotoLexiconUrl,
   }: RNOAuthClientOptions) {
     const database = new RNOAuthDatabase()
 
@@ -46,6 +50,8 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
       }),
       identityResolver: UniversalIdentityResolver.from({
         fetch,
+        plcDirectoryUrl,
+        atprotoLexiconUrl,
         didCache: database.getDidCache(),
         handleCache: database.getHandleCache(),
       }),
@@ -80,64 +86,64 @@ export class RNOAuthClientFactory extends OAuthClientFactory {
   // }
 
   async signIn(input: string, options?: OAuthAuthorizeOptions) {
+    console.log(options)
     return await this.authorize(input, options)
   }
 
-  // async signInCallback() {
-  //   const redirectUri = new URL(this.clientMetadata.redirect_uris[0])
-  //   if (location.pathname !== redirectUri.pathname) return null
-  //
-  //   const params =
-  //     this.responseMode === 'query'
-  //       ? new URLSearchParams(location.search)
-  //       : new URLSearchParams(location.hash.slice(1))
-  //
-  //   // Only if the query string contains oauth callback params
-  //   if (
-  //     !params.has('iss') ||
-  //     !params.has('state') ||
-  //     !(params.has('code') || params.has('error'))
-  //   ) {
-  //     return null
-  //   }
-  //
-  //   // Replace the current history entry without the query string (this will
-  //   // prevent this 'if' branch to run again if the user refreshes the page)
-  //   history.replaceState(null, '', location.pathname)
-  //
-  //   return this.callback(params)
-  //     .then(async result => {
-  //       if (result.state?.startsWith(POPUP_KEY_PREFIX)) {
-  //         const stateKey = result.state.slice(POPUP_KEY_PREFIX.length)
-  //
-  //         await this.popupStore.set(stateKey, {
-  //           status: 'fulfilled',
-  //           value: result.client.sessionId,
-  //         })
-  //
-  //         window.close() // continued in signInPopup
-  //         throw new Error('Login complete, please close the popup window.')
-  //       }
-  //
-  //       return result
-  //     })
-  //     .catch(async err => {
-  //       // TODO: Throw a proper error from parent class to actually detect
-  //       // oauth authorization errors
-  //       const state = typeof (err as any)?.state
-  //       if (typeof state === 'string' && state?.startsWith(POPUP_KEY_PREFIX)) {
-  //         const stateKey = state.slice(POPUP_KEY_PREFIX.length)
-  //
-  //         await this.popupStore.set(stateKey, {
-  //           status: 'rejected',
-  //           reason: err,
-  //         })
-  //
-  //         window.close() // continued in signInPopup
-  //         throw new Error('Login complete, please close the popup window.')
-  //       }
-  //
-  //       throw err
-  //     })
-  // }
+  async signInCallback(callback: string) {
+    //   const redirectUri = new URL(this.clientMetadata.redirect_uris[0])
+    //   if (location.pathname !== redirectUri.pathname) return null
+    //
+    const params = new URL(callback).searchParams
+    // Only if the query string contains oauth callback params
+    if (
+      !params.has('iss') ||
+      !params.has('state') ||
+      !(params.has('code') || params.has('error'))
+    ) {
+      console.log('no')
+      return null
+    } else {
+      console.log('has!')
+    }
+    //
+    //   // Replace the current history entry without the query string (this will
+    //   // prevent this 'if' branch to run again if the user refreshes the page)
+    //   history.replaceState(null, '', location.pathname)
+    //
+    //   return this.callback(params)
+    //     .then(async result => {
+    //       if (result.state?.startsWith(POPUP_KEY_PREFIX)) {
+    //         const stateKey = result.state.slice(POPUP_KEY_PREFIX.length)
+    //
+    //         await this.popupStore.set(stateKey, {
+    //           status: 'fulfilled',
+    //           value: result.client.sessionId,
+    //         })
+    //
+    //         window.close() // continued in signInPopup
+    //         throw new Error('Login complete, please close the popup window.')
+    //       }
+    //
+    //       return result
+    //     })
+    //     .catch(async err => {
+    //       // TODO: Throw a proper error from parent class to actually detect
+    //       // oauth authorization errors
+    //       const state = typeof (err as any)?.state
+    //       if (typeof state === 'string' && state?.startsWith(POPUP_KEY_PREFIX)) {
+    //         const stateKey = state.slice(POPUP_KEY_PREFIX.length)
+    //
+    //         await this.popupStore.set(stateKey, {
+    //           status: 'rejected',
+    //           reason: err,
+    //         })
+    //
+    //         window.close() // continued in signInPopup
+    //         throw new Error('Login complete, please close the popup window.')
+    //       }
+    //
+    //       throw err
+    //     })
+  }
 }
