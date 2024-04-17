@@ -2,7 +2,7 @@ import {Image as RNImage, Share as RNShare} from 'react-native'
 import * as RNFS from 'react-native-fs'
 import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
-import {deleteAsync} from 'expo-file-system'
+import {copyAsync, deleteAsync} from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
@@ -213,12 +213,17 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
     `${filename}${ext}`,
   )
 
+  await copyAsync({
+    from: path,
+    to: destinationPath,
+  })
+
   try {
-    await RNFS.moveFile(path, destinationPath)
+    deleteAsync(path)
   } catch (e) {
-    console.error('Failed to move file', e)
-    await RNFS.copyFile(path, destinationPath)
+    console.error('Failed to delete file', e)
   }
+
   return normalizePath(destinationPath)
 }
 
