@@ -265,7 +265,12 @@ export function usePinnedFeedsInfos() {
     'reduced_onboarding_and_home_algo',
   )
   const pinnedUris = (preferences?.feeds?.pinned ?? []).filter(f => {
-    if (isHomeAlgoExperimentEnabled && hasSession && preferences?.homeAlgo) {
+    if (
+      isHomeAlgoExperimentEnabled &&
+      hasSession &&
+      preferences?.homeAlgo &&
+      preferences?.homeAlgo?.enabled
+    ) {
       // remove duplicate feed
       return f !== preferences?.homeAlgo.uri
     }
@@ -332,6 +337,7 @@ export function usePinnedFeedsInfos() {
           result.push(resolved.get(pinnedUri))
         }
       }
+      console.log(result)
       return result
     },
   })
