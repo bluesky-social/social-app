@@ -1,8 +1,8 @@
-import {
-  UsePreferencesQueryResponse,
-  ThreadViewPreferences,
-} from '#/state/queries/preferences/types'
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
+import {
+  ThreadViewPreferences,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences/types'
 
 export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
   {
@@ -45,4 +45,5 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
+  homeAlgo: {enabled: undefined},
 }

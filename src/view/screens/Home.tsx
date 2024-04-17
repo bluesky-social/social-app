@@ -53,19 +53,34 @@ function HomeScreenReady({
   pinnedFeedInfos: FeedSourceInfo[]
 }) {
   useOTAUpdates()
+  const isHomeAlgoExperimentEnabled = useGate(
+    'reduced_onboarding_and_home_algo',
+  )
 
   const allFeeds = React.useMemo(() => {
     const feeds: FeedDescriptor[] = []
-    feeds.push('home')
     for (const {uri} of pinnedFeedInfos) {
       if (uri.includes('app.bsky.feed.generator')) {
         feeds.push(`feedgen|${uri}`)
       } else if (uri.includes('app.bsky.graph.list')) {
         feeds.push(`list|${uri}`)
+      } else if (uri === 'home-algo') {
+        // TODO can I ever end up here without a feed?
+        if (
+          isHomeAlgoExperimentEnabled &&
+          preferences.homeAlgo.enabled &&
+          preferences.homeAlgo.uri
+        ) {
+          feeds.push(`feedgen|${preferences.homeAlgo.uri}`)
+        }
+      } else if (uri === 'home') {
+        feeds.push('home')
+      } else if (uri === 'following') {
+        feeds.push('following')
       }
     }
     return feeds
-  }, [pinnedFeedInfos])
+  }, [pinnedFeedInfos, isHomeAlgoExperimentEnabled, preferences.homeAlgo])
 
   const rawSelectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
@@ -186,7 +201,6 @@ function HomeScreenReady({
     return <CustomFeedEmptyState />
   }, [])
 
-  const [homeFeed, ...customFeeds] = allFeeds
   const homeFeedParams = React.useMemo<FeedParams>(() => {
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
@@ -206,16 +220,21 @@ function HomeScreenReady({
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
-      <FeedPage
-        key={homeFeed}
-        testID="followingFeedPage"
-        isPageFocused={selectedFeed === homeFeed}
-        feed={homeFeed}
-        feedParams={homeFeedParams}
-        renderEmptyState={renderFollowingEmptyState}
-        renderEndOfFeed={FollowingEndOfFeed}
-      />
-      {customFeeds.map(feed => {
+      {allFeeds.map(feed => {
+        if (feed === 'home') {
+          return (
+            <FeedPage
+              key={'home'}
+              testID="followingFeedPage"
+              isPageFocused={selectedFeed === 'home'}
+              feed={'home'}
+              feedParams={homeFeedParams}
+              renderEmptyState={renderFollowingEmptyState}
+              renderEndOfFeed={FollowingEndOfFeed}
+            />
+          )
+        }
+
         return (
           <FeedPage
             key={feed}

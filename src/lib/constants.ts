@@ -89,3 +89,6 @@ export const BSKY_FEED_OWNER_DIDS = [
   'did:plc:vpkhqolt662uhesyj6nxm7ys',
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
+
+export const DISCOVER_FEED_URI =
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'

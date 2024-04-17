@@ -8,5 +8,5 @@ export type Gate =
   | 'new_search'
   | 'receive_updates'
   | 'show_follow_back_label'
-  | 'start_session_with_following'
   | 'use_new_suggestions_endpoint'
+  | 'reduced_onboarding_and_home_algo'

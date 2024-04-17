@@ -1,16 +1,17 @@
 import React from 'react'
-import {View, StyleSheet} from 'react-native'
-import {useNavigationState, useNavigation} from '@react-navigation/native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {TextLink} from 'view/com/util/Link'
-import {getCurrentRoute} from 'lib/routes/helpers'
-import {useLingui} from '@lingui/react'
+import {StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
-import {usePinnedFeedsInfos} from '#/state/queries/feed'
-import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {FeedDescriptor} from '#/state/queries/post-feed'
-import {NavigationProp} from 'lib/routes/types'
+import {useLingui} from '@lingui/react'
+import {useNavigation, useNavigationState} from '@react-navigation/native'
+
 import {emitSoftReset} from '#/state/events'
+import {usePinnedFeedsInfos} from '#/state/queries/feed'
+import {FeedDescriptor} from '#/state/queries/post-feed'
+import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {usePalette} from 'lib/hooks/usePalette'
+import {getCurrentRoute} from 'lib/routes/helpers'
+import {NavigationProp} from 'lib/routes/types'
+import {TextLink} from 'view/com/util/Link'
 
 export function DesktopFeeds() {
   const pal = usePalette('default')
@@ -33,8 +34,10 @@ export function DesktopFeeds() {
       {pinnedFeedInfos.map(feedInfo => {
         const uri = feedInfo.uri
         let feed: FeedDescriptor
-        if (!uri) {
+        if (uri === 'home') {
           feed = 'home'
+        } else if (uri === 'home-algo') {
+          feed = 'home-algo'
         } else if (uri.includes('app.bsky.feed.generator')) {
           feed = `feedgen|${uri}`
         } else if (uri.includes('app.bsky.graph.list')) {

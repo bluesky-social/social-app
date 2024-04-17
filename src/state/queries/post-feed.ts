@@ -44,6 +44,7 @@ type AuthorFilter =
 type FeedUri = string
 type ListUri = string
 export type FeedDescriptor =
+  | 'home-algo'
   | 'home'
   | 'following'
   | `author|${ActorDid}|${AuthorFilter}`

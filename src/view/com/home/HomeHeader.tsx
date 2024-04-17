@@ -1,12 +1,13 @@
 import React from 'react'
-import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {HomeHeaderLayout} from './HomeHeaderLayout'
-import {FeedSourceInfo} from '#/state/queries/feed'
 import {useNavigation} from '@react-navigation/native'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {FeedSourceInfo} from '#/state/queries/feed'
 import {NavigationProp} from 'lib/routes/types'
 import {isWeb} from 'platform/detection'
+import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from '../pager/TabBar'
-import {usePalette} from '#/lib/hooks/usePalette'
+import {HomeHeaderLayout} from './HomeHeaderLayout'
 
 export function HomeHeader(
   props: RenderTabBarFnProps & {
@@ -20,7 +21,9 @@ export function HomeHeader(
   const pal = usePalette('default')
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
-    return feeds.some(tab => tab.uri !== '')
+    return feeds.some(
+      tab => !['home', 'home-algo', 'following'].includes(tab.uri),
+    )
   }, [feeds])
 
   const items = React.useMemo(() => {

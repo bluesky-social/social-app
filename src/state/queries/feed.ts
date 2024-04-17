@@ -13,6 +13,8 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
+import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
@@ -199,10 +201,13 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const FOLLOWING_FEED_STUB: FeedSourceInfo = {
+/**
+ * The following feed, with fallbacks to Discover
+ */
+const HOME_FEED_STUB: FeedSourceInfo = {
   type: 'feed',
   displayName: 'Following',
-  uri: '',
+  uri: 'home',
   route: {
     href: '/',
     name: 'Home',
@@ -219,7 +224,24 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
 const DISCOVER_FEED_STUB: FeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
-  uri: '',
+  uri: DISCOVER_FEED_URI, // TODO may not want this
+  route: {
+    href: '/',
+    name: 'Home',
+    params: {},
+  },
+  cid: '',
+  avatar: '',
+  description: new RichText({text: ''}),
+  creatorDid: '',
+  creatorHandle: '',
+  likeCount: 0,
+  likeUri: '',
+}
+const HOME_ALGO_FEED_STUB: FeedSourceInfo = {
+  type: 'feed',
+  displayName: 'Home',
+  uri: 'home-algo',
   route: {
     href: '/',
     name: 'Home',
@@ -239,7 +261,17 @@ const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const pinnedUris = preferences?.feeds?.pinned ?? []
+  const isHomeAlgoExperimentEnabled = useGate(
+    'reduced_onboarding_and_home_algo',
+  )
+  const homeAlgo = preferences?.homeAlgo
+  const pinnedUris = (preferences?.feeds?.pinned ?? []).filter(f => {
+    if (isHomeAlgoExperimentEnabled && hasSession && homeAlgo) {
+      // remove duplicate feed
+      return f !== homeAlgo.uri
+    }
+    return true
+  })
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -285,7 +317,15 @@ export function usePinnedFeedsInfos() {
       )
 
       // The returned result will have the original order.
-      const result = [hasSession ? FOLLOWING_FEED_STUB : DISCOVER_FEED_STUB]
+      let result = [hasSession ? HOME_FEED_STUB : DISCOVER_FEED_STUB]
+
+      if (isHomeAlgoExperimentEnabled && hasSession && preferences?.homeAlgo) {
+        const {enabled, uri} = preferences.homeAlgo
+        if (enabled && uri) {
+          result = [HOME_ALGO_FEED_STUB, HOME_FEED_STUB]
+        }
+      }
+
       await Promise.allSettled([feedsPromise, ...listsPromises])
       for (let pinnedUri of pinnedUris) {
         if (resolved.has(pinnedUri)) {
