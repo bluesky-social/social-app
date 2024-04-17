@@ -53,6 +53,7 @@ export function FeedPage({
   const headerOffset = useHeaderOffset()
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
+  const gate = useGate()
 
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -105,9 +106,10 @@ export function FeedPage({
 
   let feedPollInterval
   if (
-    useGate('disable_poll_on_discover') &&
     feed === // Discover
-      'feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+      'feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot' &&
+    // TODO: This gate check is still too early. Move it to where the polling happens.
+    gate('disable_poll_on_discover')
   ) {
     feedPollInterval = undefined
   } else {

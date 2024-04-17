@@ -111,21 +111,20 @@ function HomeScreenReady({
     }),
   )
 
-  const disableMinShellOnForegrounding = useGate(
-    'disable_min_shell_on_foregrounding',
-  )
+  const gate = useGate()
   React.useEffect(() => {
-    if (disableMinShellOnForegrounding) {
-      const listener = AppState.addEventListener('change', nextAppState => {
-        if (nextAppState === 'active') {
+    const listener = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'active') {
+        // TODO: Check if minimal shell is on before logging an exposure.
+        if (gate('disable_min_shell_on_foregrounding')) {
           setMinimalShellMode(false)
         }
-      })
-      return () => {
-        listener.remove()
       }
+    })
+    return () => {
+      listener.remove()
     }
-  }, [setMinimalShellMode, disableMinShellOnForegrounding])
+  }, [setMinimalShellMode, gate])
 
   const onPageSelected = React.useCallback(
     (index: number) => {

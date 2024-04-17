@@ -2,11 +2,7 @@ import React from 'react'
 import {Platform} from 'react-native'
 import {AppState, AppStateStatus} from 'react-native'
 import {sha256} from 'js-sha256'
-import {
-  Statsig,
-  StatsigProvider,
-  useGate as useStatsigGate,
-} from 'statsig-react-native-expo'
+import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -98,16 +94,24 @@ export function logEvent<E extends keyof LogEvents>(
   }
 }
 
-export function useGate(gateName: Gate): boolean {
-  const {isLoading, value} = useStatsigGate(gateName)
-  if (isLoading) {
-    // This should not happen because of waitForInitialization={true}.
-    console.error('Did not expected isLoading to ever be true.')
+export function useGate(): (gateName: Gate) => boolean {
+  const cache = React.useRef<Map<Gate, boolean>>()
+  if (cache.current === undefined) {
+    cache.current = new Map()
   }
-  // This shouldn't technically be necessary but let's get a strong
-  // guarantee that a gate value can never change while mounted.
-  const [initialValue] = React.useState(value)
-  return initialValue
+  const gate = React.useCallback((gateName: Gate): boolean => {
+    // TODO: Replace local cache with a proper session one.
+    const cachedValue = cache.current!.get(gateName)
+    if (cachedValue !== undefined) {
+      return cachedValue
+    }
+    const value = Statsig.initializeCalled()
+      ? Statsig.checkGate(gateName)
+      : false
+    cache.current!.set(gateName, value)
+    return value
+  }, [])
+  return gate
 }
 
 function toStatsigUser(did: string | undefined): StatsigUser {

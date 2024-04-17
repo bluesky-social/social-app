@@ -31,8 +31,8 @@ async function setExtraParams() {
 }
 
 export function useOTAUpdates() {
-  const shouldReceiveUpdates =
-    useGate('receive_updates') && isEnabled && !__DEV__
+  const gate = useGate()
+  const shouldReceiveUpdates = isEnabled && !__DEV__ && gate('receive_updates')
 
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)

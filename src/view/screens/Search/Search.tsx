@@ -210,7 +210,8 @@ function useSuggestedFollowsV2(): [
 
 function SearchScreenSuggestedFollows() {
   const pal = usePalette('default')
-  const useSuggestedFollows = useGate('use_new_suggestions_endpoint')
+  const gate = useGate()
+  const useSuggestedFollows = gate('use_new_suggestions_endpoint')
     ? // Conditional hook call here is *only* OK because useGate()
       // result won't change until a remount.
       useSuggestedFollowsV2
@@ -406,8 +407,7 @@ export function SearchScreenInner({
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
   const {_} = useLingui()
-
-  const isNewSearch = useGate('new_search')
+  const gate = useGate()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -420,7 +420,7 @@ export function SearchScreenInner({
 
   const sections = React.useMemo(() => {
     if (!query) return []
-    if (isNewSearch) {
+    if (gate('new_search')) {
       if (hasSession) {
         return [
           {
@@ -487,7 +487,7 @@ export function SearchScreenInner({
         ]
       }
     }
-  }, [hasSession, isNewSearch, _, query, activeTab])
+  }, [hasSession, gate, _, query, activeTab])
 
   if (hasSession) {
     return query ? (
