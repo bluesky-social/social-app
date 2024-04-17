@@ -87,7 +87,10 @@ export type ApiContext = {
   ) => Promise<void>
   updateCurrentAccount: (
     account: Partial<
-      Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
+      Pick<
+        SessionAccount,
+        'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
+      >
     >,
   ) => void
 }
@@ -533,6 +536,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             account.emailConfirmed !== undefined
               ? account.emailConfirmed
               : currentAccount.emailConfirmed,
+          emailAuthFactor:
+            account.emailAuthFactor !== undefined
+              ? account.emailAuthFactor
+              : currentAccount.emailAuthFactor,
         }
 
         return {

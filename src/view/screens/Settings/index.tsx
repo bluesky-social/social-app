@@ -72,6 +72,7 @@ import {ScrollView} from 'view/com/util/Views'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
+import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
@@ -702,6 +703,13 @@ export function SettingsScreen({}: Props) {
             />
           </View>
         )}
+        <View style={styles.spacer20} />
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Two-factor authentication</Trans>
+        </Text>
+        <View style={[pal.view, styles.toggleCard]}>
+          <Email2FAToggle />
+        </View>
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Account</Trans>

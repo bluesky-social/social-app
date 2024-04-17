@@ -11,6 +11,7 @@ const accountSchema = z.object({
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),
+  emailAuthFactor: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
   deactivated: z.boolean().optional(),
