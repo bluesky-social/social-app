@@ -2,10 +2,11 @@ import React from 'react'
 import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {DISCOVER_FEED_URI, PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {emitSoftReset} from '#/state/events'
 import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -65,13 +66,19 @@ function HomeScreenReady({
       } else if (uri.includes('app.bsky.graph.list')) {
         feeds.push(`list|${uri}`)
       } else if (uri === 'home-algo') {
-        // TODO can I ever end up here without a feed?
         if (
           isHomeAlgoExperimentEnabled &&
           preferences.homeAlgo.enabled &&
           preferences.homeAlgo.uri
         ) {
           feeds.push(`feedgen|${preferences.homeAlgo.uri}`)
+        } else {
+          // should never happen - esb
+          logger.error(`home-algo feed expected, but no URI found`, {
+            isHomeAlgoExperimentEnabled,
+            homeAlgo: preferences.homeAlgo,
+          })
+          feeds.push(`feedgen|${DISCOVER_FEED_URI}`)
         }
       } else if (uri === 'home') {
         feeds.push('home')

@@ -320,6 +320,7 @@ export function usePinnedFeedsInfos() {
 
       if (isHomeAlgoExperimentEnabled && hasSession && preferences?.homeAlgo) {
         const {enabled, uri} = preferences.homeAlgo
+        // ONLY add the home algo if we have a URI set
         if (enabled && uri) {
           result = [HOME_ALGO_FEED_STUB, HOME_FEED_STUB]
         }
