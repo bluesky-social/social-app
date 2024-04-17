@@ -116,6 +116,7 @@
     "expo-constants": "~15.4.5",
     "expo-dev-client": "~3.3.8",
     "expo-device": "~5.9.3",
+    "expo-file-system": "^16.0.9",
     "expo-haptics": "^12.8.1",
     "expo-image": "~1.10.6",
     "expo-image-manipulator": "^11.8.0",
