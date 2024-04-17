@@ -66,7 +66,6 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 displayName,
                 opts.moderation?.ui('displayName'),
               )}
-              &nbsp;
             </>
           }
           href={profileLink}
@@ -75,7 +74,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         <TextLinkOnWebOnly
           type="md"
           disableMismatchWarning
-          style={[pal.textLight, {flexShrink: 1}]}
+          style={[pal.textLight, {flexShrink: 4, paddingLeft: 5}]}
           text={sanitizeHandle(handle, '@')}
           href={profileLink}
           onPointerEnter={onPointerEnter}
