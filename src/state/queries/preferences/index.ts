@@ -3,6 +3,7 @@ import {
   AppBskyActorDefs,
   BSKY_LABELER_DID,
   BskyFeedViewPreference,
+  BskyHomeAlgoPreference,
   LabelPreference,
   ModerationOpts,
 } from '@atproto/api'
@@ -338,6 +339,20 @@ export function useRemoveMutedWordMutation() {
   return useMutation({
     mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
       await getAgent().removeMutedWord(mutedWord)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetHomeAlgoMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (pref: BskyHomeAlgoPreference) => {
+      await getAgent().setHomeAlgoPref(pref)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

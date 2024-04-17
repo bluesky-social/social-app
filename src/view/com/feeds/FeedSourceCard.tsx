@@ -25,6 +25,7 @@ import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {HomeAlgoNoticeDialog} from '#/components/HomeAlgoNoticeDialog'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -312,16 +313,7 @@ export function FeedSourceCardLoaded({
         confirmButtonColor="negative"
       />
 
-      <Prompt.Outer control={homeAlgoDialogControl}>
-        <Prompt.TitleText>Your home algorithm</Prompt.TitleText>
-        <Prompt.DescriptionText>
-          This feed is set as your home algorithm, which is used as your home
-          screen when you open the app.
-        </Prompt.DescriptionText>
-        <Prompt.Actions>
-          <Prompt.Cancel cta={_(msg`Cool, cool cool cool`)} />
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <HomeAlgoNoticeDialog control={homeAlgoDialogControl} />
     </>
   )
 }

@@ -7,6 +7,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -20,6 +21,7 @@ import {
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
   useSaveFeedMutation,
+  useSetHomeAlgoMutation,
   useUnpinFeedMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
@@ -52,14 +54,18 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
-import {Button as NewButton, ButtonText} from '#/components/Button'
+import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
+import {HomeAlgoNoticeDialog} from '#/components/HomeAlgoNoticeDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartOutline,
 } from '#/components/icons/Heart2'
+import {Home_Stroke2_Corner0_Rounded as Home} from '#/components/icons/Home'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {InlineLinkText} from '#/components/Link'
@@ -162,6 +168,10 @@ export function ProfileFeedScreenInner({
   const playHaptic = useHaptics()
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
+  const isHomeAlgoExperimentEnabled = useGate(
+    'reduced_onboarding_and_home_algo',
+  )
+  const homeAlgoDialogControl = useDialogControl()
 
   const {
     mutateAsync: saveFeed,
@@ -187,6 +197,11 @@ export function ProfileFeedScreenInner({
     reset: resetUnpinFeed,
     isPending: isUnpinPending,
   } = useUnpinFeedMutation()
+  const {
+    mutateAsync: setHomeAlgo,
+    variables: homeAlgoVariables,
+    isPending: isSetHomeAlgoPending,
+  } = useSetHomeAlgoMutation()
 
   const isSaved =
     !removedFeed &&
@@ -194,6 +209,11 @@ export function ProfileFeedScreenInner({
   const isPinned =
     !unpinnedFeed &&
     (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
+  const isHomeAlgo =
+    (preferences.homeAlgo?.enabled &&
+      preferences.homeAlgo?.uri &&
+      preferences.homeAlgo.uri === feedInfo.uri) ||
+    (homeAlgoVariables?.enabled && homeAlgoVariables.uri === feedInfo.uri)
 
   useSetTitle(feedInfo?.displayName)
 
@@ -258,6 +278,16 @@ export function ProfileFeedScreenInner({
     _,
   ])
 
+  const onSetHomeAlgo = React.useCallback(async () => {
+    try {
+      playHaptic()
+      await setHomeAlgo({enabled: true, uri: feedInfo.uri})
+    } catch (e: any) {
+      Toast.show(_(msg`There was an issue contacting the server`))
+      logger.error('ProfileFeed: failed to set home algo', {message: e.message})
+    }
+  }, [setHomeAlgo, feedInfo, _, playHaptic])
+
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
     shareUrl(url)
@@ -293,20 +323,38 @@ export function ProfileFeedScreenInner({
           }
           avatarType="algo">
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            {feedInfo && hasSession && (
-              <NewButton
-                testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-                disabled={isPinPending || isUnpinPending}
-                size="small"
-                variant="solid"
-                color={isPinned ? 'secondary' : 'primary'}
-                label={isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)}
-                onPress={onTogglePinned}>
-                <ButtonText>
-                  {isPinned ? _(msg`Unpin`) : _(msg`Pin to Home`)}
-                </ButtonText>
-              </NewButton>
-            )}
+            {feedInfo &&
+              hasSession &&
+              (isHomeAlgoExperimentEnabled && isHomeAlgo ? (
+                <NewButton
+                  variant="solid"
+                  color="secondary"
+                  size="small"
+                  label={_(
+                    msg`This feed is already set as your home algorithm.`,
+                  )}
+                  onPress={() => {
+                    homeAlgoDialogControl.open()
+                  }}>
+                  <ButtonIcon icon={Check} position="left" />
+                  <ButtonText>Home Algo</ButtonText>
+                </NewButton>
+              ) : (
+                <NewButton
+                  testID={isPinned ? 'unpinBtn' : 'pinBtn'}
+                  disabled={isPinPending || isUnpinPending}
+                  size="small"
+                  variant="solid"
+                  color={isPinned ? 'secondary' : 'primary'}
+                  label={
+                    isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)
+                  }
+                  onPress={onTogglePinned}>
+                  <ButtonText>
+                    {isPinned ? _(msg`Unpin`) : _(msg`Pin to Home`)}
+                  </ButtonText>
+                </NewButton>
+              ))}
             <Menu.Root>
               <Menu.Trigger label={_(msg`Open feed options menu`)}>
                 {({props, state}) => {
@@ -338,25 +386,40 @@ export function ProfileFeedScreenInner({
                 <Menu.Group>
                   {hasSession && (
                     <>
-                      <Menu.Item
-                        disabled={isSavePending || isRemovePending}
-                        testID="feedHeaderDropdownToggleSavedBtn"
-                        label={
-                          isSaved
-                            ? _(msg`Remove from my feeds`)
-                            : _(msg`Save to my feeds`)
-                        }
-                        onPress={onToggleSaved}>
-                        <Menu.ItemText>
-                          {isSaved
-                            ? _(msg`Remove from my feeds`)
-                            : _(msg`Save to my feeds`)}
-                        </Menu.ItemText>
-                        <Menu.ItemIcon
-                          icon={isSaved ? Trash : Plus}
-                          position="right"
-                        />
-                      </Menu.Item>
+                      {!isHomeAlgo && (
+                        <>
+                          <Menu.Item
+                            disabled={isSavePending || isRemovePending}
+                            testID="feedHeaderDropdownToggleSavedBtn"
+                            label={
+                              isSaved
+                                ? _(msg`Remove from my feeds`)
+                                : _(msg`Save to my feeds`)
+                            }
+                            onPress={onToggleSaved}>
+                            <Menu.ItemText>
+                              {isSaved
+                                ? _(msg`Remove from my feeds`)
+                                : _(msg`Save to my feeds`)}
+                            </Menu.ItemText>
+                            <Menu.ItemIcon
+                              icon={isSaved ? Trash : Plus}
+                              position="right"
+                            />
+                          </Menu.Item>
+
+                          <Menu.Item
+                            disabled={isSetHomeAlgoPending}
+                            testID="feedHeaderDropdownSetHomeAlgoBtn"
+                            label={_(msg`Set as home algorithm`)}
+                            onPress={onSetHomeAlgo}>
+                            <Menu.ItemText>
+                              {_(msg`Set as home algorithm`)}
+                            </Menu.ItemText>
+                            <Menu.ItemIcon icon={Home} position="right" />
+                          </Menu.Item>
+                        </>
+                      )}
 
                       <Menu.Item
                         testID="feedHeaderDropdownReportBtn"
@@ -385,6 +448,8 @@ export function ProfileFeedScreenInner({
           feedRkey={feedInfo.route.params.rkey}
           feedInfo={feedInfo}
         />
+
+        <HomeAlgoNoticeDialog control={homeAlgoDialogControl} />
       </>
     )
   }, [
@@ -403,6 +468,11 @@ export function ProfileFeedScreenInner({
     onPressReport,
     onPressShare,
     t,
+    isHomeAlgoExperimentEnabled,
+    isHomeAlgo,
+    homeAlgoDialogControl,
+    onSetHomeAlgo,
+    isSetHomeAlgoPending,
   ])
 
   return (
