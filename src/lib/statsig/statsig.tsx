@@ -94,23 +94,30 @@ export function logEvent<E extends keyof LogEvents>(
   }
 }
 
+// We roll our own cache in front of Statsig because it is a singleton
+// and it's been difficult to get it to behave in a predictable way.
+// Our own cache ensures consistent evaluation within a single session.
+const GateCache = React.createContext<Map<string, boolean> | null>(null)
+
 export function useGate(): (gateName: Gate) => boolean {
-  const cache = React.useRef<Map<Gate, boolean>>()
-  if (cache.current === undefined) {
-    cache.current = new Map()
+  const cache = React.useContext(GateCache)
+  if (!cache) {
+    throw Error('useGate() cannot be called outside StatsigProvider.')
   }
-  const gate = React.useCallback((gateName: Gate): boolean => {
-    // TODO: Replace local cache with a proper session one.
-    const cachedValue = cache.current!.get(gateName)
-    if (cachedValue !== undefined) {
-      return cachedValue
-    }
-    const value = Statsig.initializeCalled()
-      ? Statsig.checkGate(gateName)
-      : false
-    cache.current!.set(gateName, value)
-    return value
-  }, [])
+  const gate = React.useCallback(
+    (gateName: Gate): boolean => {
+      const cachedValue = cache.get(gateName)
+      if (cachedValue !== undefined) {
+        return cachedValue
+      }
+      const value = Statsig.initializeCalled()
+        ? Statsig.checkGate(gateName)
+        : false
+      cache.set(gateName, value)
+      return value
+    },
+    [cache],
+  )
   return gate
 }
 
@@ -154,16 +161,19 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
 
 export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount} = useSession()
-  const currentStatsigUser = React.useMemo(
-    () => toStatsigUser(currentAccount?.did),
-    [currentAccount?.did],
-  )
+  const did = currentAccount?.did
+  const currentStatsigUser = React.useMemo(() => toStatsigUser(did), [did])
+  const [gateCache, setGateCache] = React.useState(() => new Map())
+  const [prevDid, setPrevDid] = React.useState(did)
+  if (did !== prevDid) {
+    setPrevDid(did)
+    setGateCache(new Map())
+  }
 
   React.useEffect(() => {
     function refresh() {
-      // Intentionally refetching the config using the JS SDK rather than React SDK
-      // so that the new config is stored in cache but isn't used during this session.
-      // It will kick in for the next reload.
+      // This will not affect the current session.
+      // Statsig will put the results into local storage and we'll pick it up on next load.
       Statsig.updateUser(currentStatsigUser)
     }
     const id = setInterval(refresh, 3 * 60e3 /* 3 min */)
@@ -171,15 +181,18 @@ export function Provider({children}: {children: React.ReactNode}) {
   }, [currentStatsigUser])
 
   return (
-    <StatsigProvider
-      sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
-      mountKey={currentStatsigUser.userID}
-      user={currentStatsigUser}
-      // This isn't really blocking due to short initTimeoutMs above.
-      // However, it ensures `isLoading` is always `false`.
-      waitForInitialization={true}
-      options={statsigOptions}>
-      {children}
-    </StatsigProvider>
+    <GateCache.Provider value={gateCache}>
+      <StatsigProvider
+        key={did}
+        sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
+        mountKey={currentStatsigUser.userID}
+        user={currentStatsigUser}
+        // This isn't really blocking due to short initTimeoutMs above.
+        // However, it ensures `isLoading` is always `false`.
+        waitForInitialization={true}
+        options={statsigOptions}>
+        {children}
+      </StatsigProvider>
+    </GateCache.Provider>
   )
 }
