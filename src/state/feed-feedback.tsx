@@ -16,25 +16,28 @@ type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: Interaction) => void
+  flushAndReset: () => void
 }
 
 const stateContext = React.createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: Interaction) => {},
+  flushAndReset: () => {},
 })
 
-export function Provider({
-  feed,
-  children,
-}: React.PropsWithChildren<{feed: FeedDescriptor}>) {
+export function useFeedFeedback(feed: FeedDescriptor) {
   const enabled = isDiscoverFeed(feed)
   const queue = React.useRef<Set<string>>(new Set())
+  const history = React.useRef<Set<string>>(new Set())
 
   const sendToFeed = React.useRef(
     debounce(
       () => {
         console.log(Array.from(queue.current).map(toInteraction))
+        for (const v of queue.current) {
+          history.current.add(v)
+        }
         queue.current.clear()
       },
       15e3,
@@ -54,9 +57,11 @@ export function Provider({
     return () => sub.remove()
   }, [enabled, sendToFeed])
 
-  const state = React.useMemo(() => {
+  return React.useMemo(() => {
     return {
       enabled,
+
+      // pass this method to the <List> onItemSeen
       onItemSeen: (slice: any) => {
         if (!enabled) {
           return
@@ -70,23 +75,42 @@ export function Provider({
             event: 'app.bsky.feed.defs#interactionSeen',
             feedContext: 'TODO',
           })
-          if (!queue.current.has(str)) {
+          if (!history.current.has(str)) {
             queue.current.add(str)
             sendToFeed.current()
           }
         }
       },
+
+      // call on various events
+      // queues the event to be sent with the debounced sendToFeed call
       sendInteraction: (interaction: Interaction) => {
-        queue.current.add(toString(interaction))
-        sendToFeed.current()
+        if (!enabled) {
+          return
+        }
+        const str = toString(interaction)
+        if (!history.current.has(str)) {
+          queue.current.add(str)
+          sendToFeed.current()
+        }
+      },
+
+      // call on feed refresh
+      // immediately sends all queued events and clears the history tracker
+      flushAndReset: () => {
+        if (!enabled) {
+          return
+        }
+        sendToFeed.current.flush()
+        history.current.clear()
       },
     }
   }, [enabled, queue, sendToFeed])
-
-  return <stateContext.Provider value={state}>{children}</stateContext.Provider>
 }
 
-export function useFeedFeedback() {
+export const FeedFeedbackProvider = stateContext.Provider
+
+export function useFeedFeedbackContext() {
   return React.useContext(stateContext)
 }
 

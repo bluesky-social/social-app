@@ -9,7 +9,7 @@ import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import * as FeedFeedback from '#/state/feed-feedback'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -52,6 +52,7 @@ export function FeedPage({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
+  const feedFeedback = useFeedFeedback(feed)
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
 
@@ -68,6 +69,7 @@ export function FeedPage({
       getTabState(getRootNavigation(navigation).getState(), 'Home') ===
       TabState.InsideAtRoot
     if (isScreenFocused && isPageFocused) {
+      feedFeedback.flushAndReset()
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
@@ -77,7 +79,15 @@ export function FeedPage({
         reason: 'soft-reset',
       })
     }
-  }, [navigation, isPageFocused, scrollToTop, queryClient, feed, setHasNew])
+  }, [
+    navigation,
+    isPageFocused,
+    scrollToTop,
+    queryClient,
+    feed,
+    setHasNew,
+    feedFeedback,
+  ])
 
   // fires when page within screen is activated/deactivated
   React.useEffect(() => {
@@ -94,6 +104,7 @@ export function FeedPage({
   }, [openComposer, track])
 
   const onPressLoadLatest = React.useCallback(() => {
+    feedFeedback.flushAndReset()
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
@@ -102,7 +113,7 @@ export function FeedPage({
       feedUrl: feed,
       reason: 'load-latest',
     })
-  }, [scrollToTop, feed, queryClient, setHasNew])
+  }, [scrollToTop, feed, queryClient, setHasNew, feedFeedback])
 
   let feedPollInterval
   if (
@@ -118,7 +129,7 @@ export function FeedPage({
   return (
     <View testID={testID} style={s.h100pct}>
       <MainScrollProvider>
-        <FeedFeedback.Provider feed={feed}>
+        <FeedFeedbackProvider value={feedFeedback}>
           <Feed
             testID={testID ? `${testID}-feed` : undefined}
             enabled={isPageFocused}
@@ -133,7 +144,7 @@ export function FeedPage({
             renderEndOfFeed={renderEndOfFeed}
             headerOffset={headerOffset}
           />
-        </FeedFeedback.Provider>
+        </FeedFeedbackProvider>
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

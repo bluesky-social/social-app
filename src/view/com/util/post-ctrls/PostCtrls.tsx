@@ -24,7 +24,7 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
 import {Shadow} from '#/state/cache/types'
-import {useFeedFeedback} from '#/state/feed-feedback'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useModalControls} from '#/state/modals'
 import {
   usePostLikeMutationQueue,
@@ -68,7 +68,7 @@ let PostCtrls = ({
   )
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
-  const {sendInteraction} = useFeedFeedback()
+  const {sendInteraction} = useFeedFeedbackContext()
   const playHaptic = useHaptics()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {

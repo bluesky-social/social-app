@@ -10,6 +10,7 @@ import {HITSLOP_20} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
@@ -26,7 +27,6 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import * as FeedFeedback from '#/state/feed-feedback'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useHaptics} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -464,15 +464,17 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
     const isScreenFocused = useIsFocused()
+    const feedFeedback = useFeedFeedback(feed)
 
     const onScrollToTop = useCallback(() => {
+      feedFeedback.flushAndReset()
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,
       })
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
-    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew, feedFeedback])
 
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
@@ -491,7 +493,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     return (
       <View>
-        <FeedFeedback.Provider feed={feed}>
+        <FeedFeedbackProvider value={feedFeedback}>
           <Feed
             enabled={isFocused}
             feed={feed}
@@ -503,7 +505,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
             renderEmptyState={renderPostsEmpty}
             headerOffset={headerHeight}
           />
-        </FeedFeedback.Provider>
+        </FeedFeedbackProvider>
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}

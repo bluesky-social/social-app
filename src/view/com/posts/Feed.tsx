@@ -17,6 +17,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {STALE} from '#/state/queries'
 import {
   FeedDescriptor,
@@ -35,7 +36,6 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
-import {useFeedFeedback} from '#/state/feed-feedback'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -89,7 +89,7 @@ let Feed = ({
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
-  const {onItemSeen} = useFeedFeedback()
+  const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
@@ -226,12 +226,13 @@ let Feed = ({
     setIsPTRing(true)
     try {
       await refetch()
+      feedFeedback.flushAndReset()
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, track, setIsPTRing, onHasNew, feed, feedType])
+  }, [refetch, track, setIsPTRing, onHasNew, feed, feedType, feedFeedback])
 
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -355,7 +356,7 @@ let Feed = ({
         }
         initialNumToRender={initialNumToRender}
         windowSize={11}
-        onItemSeen={onItemSeen}
+        onItemSeen={feedFeedback.onItemSeen}
       />
     </View>
   )

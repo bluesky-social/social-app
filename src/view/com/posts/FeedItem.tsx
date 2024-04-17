@@ -15,7 +15,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
-import {useFeedFeedback} from '#/state/feed-feedback'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useComposerControls} from '#/state/shell/composer'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -113,7 +113,7 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const {sendInteraction} = useFeedFeedback()
+  const {sendInteraction} = useFeedFeedbackContext()
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
