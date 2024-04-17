@@ -264,11 +264,10 @@ export function usePinnedFeedsInfos() {
   const isHomeAlgoExperimentEnabled = useGate(
     'reduced_onboarding_and_home_algo',
   )
-  const homeAlgo = preferences?.homeAlgo
   const pinnedUris = (preferences?.feeds?.pinned ?? []).filter(f => {
-    if (isHomeAlgoExperimentEnabled && hasSession && homeAlgo) {
+    if (isHomeAlgoExperimentEnabled && hasSession && preferences?.homeAlgo) {
       // remove duplicate feed
-      return f !== homeAlgo.uri
+      return f !== preferences?.homeAlgo.uri
     }
     return true
   })
