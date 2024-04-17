@@ -245,6 +245,8 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
     control.close()
   }, [control, setExternalEmbedPref])
 
+  const gtMobileWeb = gtMobile && isWeb
+
   return (
     <Dialog.ScrollableInner label={_(msg`Permission to use GIPHY`)}>
       <View style={a.gap_sm}>
@@ -271,14 +273,13 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
           </Text>
         </View>
       </View>
-      <View style={a.gap_md}>
+      <View style={(a.gap_md, gtMobileWeb && a.flex_row_reverse)}>
         <Button
-          style={gtMobile && a.flex_1}
           label={_(msg`Enable GIPHY`)}
           onPress={onShowPress}
           onAccessibilityEscape={control.close}
           color="primary"
-          size="medium"
+          size={gtMobileWeb ? 'small' : 'medium'}
           variant="solid">
           <ButtonText>
             <Trans>Enable GIPHY</Trans>
@@ -289,7 +290,7 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
           onAccessibilityEscape={control.close}
           onPress={onHidePress}
           color="secondary"
-          size="medium"
+          size={gtMobileWeb ? 'small' : 'medium'}
           variant="ghost">
           <ButtonText>
             <Trans>No thanks</Trans>
@@ -309,11 +310,13 @@ function GiphyConsentNotGiven({control}: {control: Dialog.DialogControlProps}) {
     setExternalEmbedPref('giphy', undefined)
   }, [setExternalEmbedPref])
 
+  const gtMobileWeb = gtMobile && isWeb
+
   return (
     <Dialog.ScrollableInner label={_(msg`Permission to use GIPHY`)}>
       <View style={a.gap_sm}>
         <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>You've opted out of GIPHY.</Trans>
+          <Trans>You've opted out of GIPHY</Trans>
         </Text>
 
         <Text style={[a.mt_sm, a.mb_2xl]}>
@@ -323,14 +326,13 @@ function GiphyConsentNotGiven({control}: {control: Dialog.DialogControlProps}) {
           </Trans>
         </Text>
       </View>
-      <View style={a.gap_md}>
+      <View style={(a.gap_md, gtMobileWeb && a.flex_row_reverse)}>
         <Button
-          style={gtMobile && a.flex_1}
           label={_(msg`I changed my mind`)}
           onPress={onRedecidePress}
           onAccessibilityEscape={control.close}
           color="secondary"
-          size="medium"
+          size={gtMobileWeb ? 'small' : 'medium'}
           variant="solid">
           <ButtonText>
             <Trans>I changed my mind</Trans>
@@ -341,7 +343,7 @@ function GiphyConsentNotGiven({control}: {control: Dialog.DialogControlProps}) {
           onAccessibilityEscape={control.close}
           onPress={() => control.close()}
           color="secondary"
-          size="medium"
+          size={gtMobileWeb ? 'small' : 'medium'}
           variant="ghost">
           <ButtonText>
             <Trans>Back</Trans>
