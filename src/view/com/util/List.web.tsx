@@ -1,11 +1,5 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
-import {
-  FlatListProps,
-  StyleSheet,
-  View,
-  ViewProps,
-  ViewToken,
-} from 'react-native'
+import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -25,6 +19,7 @@ export type ListProps<ItemT> = Omit<
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
+  onItemSeen?: (item: ItemT) => void
   desktopFixedHeight: any // TODO: Better types.
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
@@ -44,7 +39,7 @@ function ListImpl<ItemT>(
     onRefresh: _unsupportedOnRefresh,
     onScrolledDownChange,
     onContentSizeChange,
-    onViewableItemsChanged,
+    onItemSeen,
     renderItem,
     extraData,
     style,
@@ -195,12 +190,11 @@ function ListImpl<ItemT>(
           return (
             <Row<ItemT>
               key={key}
-              itemKey={key}
               item={item}
               index={index}
               renderItem={renderItem}
               extraData={extraData}
-              onViewableItemsChanged={onViewableItemsChanged}
+              onItemSeen={onItemSeen}
             />
           )
         })}
@@ -243,14 +237,12 @@ function useResizeObserver(
 }
 
 let Row = function RowImpl<ItemT>({
-  itemKey,
   item,
   index,
   renderItem,
   extraData: _unused,
-  onViewableItemsChanged,
+  onItemSeen,
 }: {
-  itemKey: string
   item: ItemT
   index: number
   renderItem:
@@ -258,65 +250,7 @@ let Row = function RowImpl<ItemT>({
     | undefined
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
-  onViewableItemsChanged: FlatListProps<ItemT>['onViewableItemsChanged']
-}): React.ReactNode {
-  if (!renderItem) {
-    return null
-  }
-  return (
-    <View style={styles.row}>
-      <RowVisibility
-        itemKey={itemKey}
-        item={item}
-        index={index}
-        onViewableItemsChanged={onViewableItemsChanged}>
-        {renderItem({item, index, separators: null as any})}
-      </RowVisibility>
-    </View>
-  )
-}
-Row = React.memo(Row)
-
-let RowVisibility = function <ItemT>({
-  itemKey,
-  item,
-  index,
-  onViewableItemsChanged,
-  children,
-}: {
-  itemKey: string
-  item: ItemT
-  index: number
-  onViewableItemsChanged: FlatListProps<ItemT>['onViewableItemsChanged']
-  children: React.ReactNode
-}): React.ReactNode {
-  if (!onViewableItemsChanged) {
-    return children
-  }
-  return (
-    <RowVisibilityInner
-      itemKey={itemKey}
-      item={item}
-      index={index}
-      onViewableItemsChanged={onViewableItemsChanged}>
-      {children}
-    </RowVisibilityInner>
-  )
-}
-RowVisibility = React.memo(RowVisibility)
-
-let RowVisibilityInner = function <ItemT>({
-  itemKey,
-  item,
-  index,
-  onViewableItemsChanged,
-  children,
-}: {
-  itemKey: string
-  item: ItemT
-  index: number
-  onViewableItemsChanged: FlatListProps<ItemT>['onViewableItemsChanged']
-  children: React.ReactNode
+  onItemSeen?: (item: ItemT) => void
 }): React.ReactNode {
   const tailRef = React.useRef(null)
   const isIntersecting = React.useRef(false)
@@ -324,19 +258,15 @@ let RowVisibilityInner = function <ItemT>({
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
       batchedUpdates(() => {
+        if (!onItemSeen) {
+          return
+        }
         entries.forEach(entry => {
           if (entry.isIntersecting !== isIntersecting.current) {
             isIntersecting.current = entry.isIntersecting
-            const itemInfo: ViewToken = {
-              index,
-              item,
-              key: itemKey,
-              isViewable: entry.isIntersecting,
+            if (entry.isIntersecting) {
+              onItemSeen!(item)
             }
-            onViewableItemsChanged!({
-              viewableItems: [itemInfo],
-              changed: [itemInfo],
-            })
           }
         })
       })
@@ -344,17 +274,28 @@ let RowVisibilityInner = function <ItemT>({
   )
 
   React.useEffect(() => {
+    if (!onItemSeen) {
+      return
+    }
     const observer = new IntersectionObserver(handleIntersection)
     const tail: Element | null = tailRef.current!
     observer.observe(tail)
     return () => {
       observer.unobserve(tail)
     }
-  }, [handleIntersection])
+  }, [handleIntersection, onItemSeen])
 
-  return <View ref={tailRef}>{children}</View>
+  if (!renderItem) {
+    return null
+  }
+
+  return (
+    <View style={styles.row} ref={tailRef}>
+      {renderItem({item, index, separators: null as any})}
+    </View>
+  )
 }
-RowVisibilityInner = React.memo(RowVisibilityInner)
+Row = React.memo(Row)
 
 let Visibility = ({
   topMargin = '0px',

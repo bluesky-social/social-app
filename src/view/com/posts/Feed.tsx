@@ -45,11 +45,6 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
-const VIEWABILITY_CFG = {
-  itemVisiblePercentThreshold: 100,
-  minimumViewTime: 2000,
-}
-
 let Feed = ({
   feed,
   feedParams,
@@ -270,9 +265,19 @@ let Feed = ({
     fetchNextPage()
   }, [fetchNextPage])
 
-  const onViewableItemsChanged = React.useCallback(info => {
-    console.log(info)
-  }, [])
+  const set = React.useRef(new Set())
+  const onItemSeen = React.useCallback(
+    item => {
+      if (!item.items?.[0]) {
+        return
+      }
+      if (!set.current.has(item.items[0].post.record.text)) {
+        console.log(item.items[0].post.record.text, item)
+        set.current.add(item.items[0].post.record.text)
+      }
+    },
+    [set],
+  )
 
   // rendering
   // =
@@ -362,8 +367,7 @@ let Feed = ({
         }
         initialNumToRender={initialNumToRender}
         windowSize={11}
-        viewabilityConfig={VIEWABILITY_CFG}
-        onViewableItemsChanged={onViewableItemsChanged}
+        onItemSeen={onItemSeen}
       />
     </View>
   )
