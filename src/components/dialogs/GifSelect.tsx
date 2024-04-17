@@ -18,7 +18,7 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {Link} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {ListFooter} from '../Lists'
 import {Text} from '../Typography'
@@ -265,15 +265,17 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
             <Trans>
               GIPHY may collect information about you and your device. You can
               find out more in their{' '}
-              <Link to={GIPHY_PRIVACY_POLICY}>
-                <Text>privacy policy</Text>
-              </Link>
+              <InlineLinkText
+                to={GIPHY_PRIVACY_POLICY}
+                onPress={() => control.close()}>
+                privacy policy
+              </InlineLinkText>
               .
             </Trans>
           </Text>
         </View>
       </View>
-      <View style={(a.gap_md, gtMobileWeb && a.flex_row_reverse)}>
+      <View style={[a.gap_md, gtMobileWeb && a.flex_row_reverse]}>
         <Button
           label={_(msg`Enable GIPHY`)}
           onPress={onShowPress}
@@ -326,7 +328,7 @@ function GiphyConsentNotGiven({control}: {control: Dialog.DialogControlProps}) {
           </Trans>
         </Text>
       </View>
-      <View style={(a.gap_md, gtMobileWeb && a.flex_row_reverse)}>
+      <View style={[a.gap_md, gtMobileWeb && a.flex_row_reverse]}>
         <Button
           label={_(msg`I changed my mind`)}
           onPress={onRedecidePress}
