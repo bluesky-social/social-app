@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {FeedSourceInfo} from '#/state/queries/feed'
+import {useSession} from '#/state/session'
 import {NavigationProp} from 'lib/routes/types'
 import {isWeb} from 'platform/detection'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -17,14 +18,16 @@ export function HomeHeader(
   },
 ) {
   const {feeds} = props
+  const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const pal = usePalette('default')
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
+    if (!hasSession) return false
     return feeds.some(
       tab => !['home', 'home-algo', 'following'].includes(tab.uri),
     )
-  }, [feeds])
+  }, [feeds, hasSession])
 
   const items = React.useMemo(() => {
     const pinnedNames = feeds.map(f => f.displayName)

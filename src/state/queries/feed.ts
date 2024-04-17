@@ -224,7 +224,7 @@ const HOME_FEED_STUB: FeedSourceInfo = {
 const DISCOVER_FEED_STUB: FeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
-  uri: DISCOVER_FEED_URI, // TODO may not want this
+  uri: DISCOVER_FEED_URI,
   route: {
     href: '/',
     name: 'Home',
