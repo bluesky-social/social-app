@@ -69,7 +69,7 @@ msgstr "<0>{0}</0> seguint"
 
 #: src/components/ProfileHoverCard/index.web.tsx:314
 msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-msgstr ""
+msgstr "<0>{followers} </0><1>{pluralizedFollowers}</1>"
 
 #: src/components/ProfileHoverCard/index.web.tsx:326
 #: src/screens/Profile/Header/Metrics.tsx:45
@@ -1098,7 +1098,7 @@ msgstr "Copiat en memòria"
 
 #: src/components/dialogs/Embed.tsx:134
 msgid "Copied!"
-msgstr ""
+msgstr "Copiat"
 
 #: src/view/com/modals/AddAppPasswords.tsx:190
 msgid "Copies app password"
@@ -1115,7 +1115,7 @@ msgstr "Copia {0}"
 #: src/components/dialogs/Embed.tsx:120
 #: src/components/dialogs/Embed.tsx:139
 msgid "Copy code"
-msgstr ""
+msgstr "Copia el codi"
 
 #: src/view/screens/ProfileList.tsx:390
 msgid "Copy link to list"
@@ -1168,7 +1168,7 @@ msgstr "Crea un compte"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr ""
+msgstr "Crea un compte"
 
 #: src/view/com/modals/AddAppPasswords.tsx:227
 msgid "Create App Password"
@@ -1334,11 +1334,11 @@ msgstr "Tènue"
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Disable haptics"
-msgstr ""
+msgstr "Deshabilita l'hàptic"
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Disable vibrations"
-msgstr ""
+msgstr "Desabilita les vibracions"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1597,17 +1597,17 @@ msgstr "Correu:"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed HTML code"
-msgstr ""
+msgstr "Incrusta el codi HTML"
 
 #: src/components/dialogs/Embed.tsx:97
 #: src/view/com/util/forms/PostDropdownBtn.tsx:253
 #: src/view/com/util/forms/PostDropdownBtn.tsx:255
 msgid "Embed post"
-msgstr ""
+msgstr "Incrusta la publicació"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr ""
+msgstr "Incrusta aquesta publicació al teu lloc web. Copia el fragment següent i enganxa'l al codi HTML del teu lloc web."
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
@@ -2516,7 +2516,7 @@ msgstr "Idiomes"
 
 #: src/view/screens/Search/Search.tsx:437
 msgid "Latest"
-msgstr ""
+msgstr "El més recent"
 
 #: src/view/com/util/moderation/ContentHider.tsx:103
 #~ msgid "Learn more"
@@ -3524,7 +3524,7 @@ msgstr "Contrasenya actualitzada!"
 #: src/view/screens/Search/Search.tsx:447
 #: src/view/screens/Search/Search.tsx:456
 msgid "People"
-msgstr ""
+msgstr "Gent"
 
 #: src/Navigation.tsx:164
 msgid "People followed by @{0}"
@@ -4055,7 +4055,7 @@ msgstr "Republicat per {0}"
 
 #: src/view/com/posts/FeedItem.tsx:216
 msgid "Reposted by <0><1/></0>"
-msgstr ""
+msgstr "Republicat per <0><1/></0>"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "reposted your post"
@@ -4313,7 +4313,7 @@ msgstr "Mostra les publicacions amb <0>{displayTag}</0> d'aquest usuari"
 #: src/view/com/notifications/FeedItem.tsx:419
 #: src/view/com/util/UserAvatar.tsx:381
 msgid "See profile"
-msgstr ""
+msgstr "Mostra el perfil"
 
 #: src/view/screens/SavedFeeds.tsx:164
 msgid "See this guide"
@@ -4775,7 +4775,7 @@ msgstr "Inicia sessió com a …"
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr ""
+msgstr "Inicia sessió o crea el teu compte per unir-te a la conversa"
 
 #: src/view/com/auth/login/LoginForm.tsx:140
 #~ msgid "Sign into"
@@ -4783,7 +4783,7 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
-msgstr ""
+msgstr "Inicia sessió o crea el teu compte per unir-te a la conversa"
 
 #: src/view/screens/Settings/index.tsx:118
 #: src/view/screens/Settings/index.tsx:121
@@ -5402,7 +5402,7 @@ msgstr "Communta per a habilitar o deshabilitar el contingut per adults"
 
 #: src/view/screens/Search/Search.tsx:427
 msgid "Top"
-msgstr ""
+msgstr "Superior"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
