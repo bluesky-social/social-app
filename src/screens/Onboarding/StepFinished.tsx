@@ -76,25 +76,25 @@ export function StepFinished() {
         })(),
       ])
 
-      await getAgent().upsertProfile(async existing => {
-        existing = existing ?? {}
-
-        if (profileStepResults.imageUri && profileStepResults.imageMime) {
-          const res = await uploadBlob(
-            getAgent(),
-            profileStepResults.imageUri,
-            profileStepResults.imageMime,
-          )
-
-          if (res.data.blob) {
-            existing.avatar = res.data.blob
-          }
-        }
-
-        return existing
-      })
-
       if (isV2Enabled) {
+        await getAgent().upsertProfile(async existing => {
+          existing = existing ?? {}
+
+          if (profileStepResults.imageUri && profileStepResults.imageMime) {
+            const res = await uploadBlob(
+              getAgent(),
+              profileStepResults.imageUri,
+              profileStepResults.imageMime,
+            )
+
+            if (res.data.blob) {
+              existing.avatar = res.data.blob
+            }
+          }
+
+          return existing
+        })
+
         await getAgent().setHomeAlgoPref({
           enabled: true,
           uri: DISCOVER_FEED_URI,

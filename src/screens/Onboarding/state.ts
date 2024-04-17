@@ -80,7 +80,7 @@ export type ApiResponseMap = {
 
 export const initialState: OnboardingState = {
   hasPrev: false,
-  totalSteps: 8,
+  totalSteps: 7,
   activeStep: 'interests',
   activeStepIndex: 1,
 
@@ -198,11 +198,8 @@ export function reducer(
         next.activeStep = 'moderation'
         next.activeStepIndex = 6
       } else if (s.activeStep === 'moderation') {
-        next.activeStep = 'profile'
-        next.activeStepIndex = 7
-      } else if (s.activeStep === 'profile') {
         next.activeStep = 'finished'
-        next.activeStepIndex = 8
+        next.activeStepIndex = 7
       }
       break
     }
@@ -222,12 +219,9 @@ export function reducer(
       } else if (s.activeStep === 'moderation') {
         next.activeStep = 'topicalFeeds'
         next.activeStepIndex = 5
-      } else if (s.activeStep === 'profile') {
+      } else if (s.activeStep === 'finished') {
         next.activeStep = 'moderation'
         next.activeStepIndex = 6
-      } else if (s.activeStep === 'finished') {
-        next.activeStep = 'profile'
-        next.activeStepIndex = 7
       }
       break
     }
