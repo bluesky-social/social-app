@@ -1,30 +1,35 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {RichText} from '#/components/RichText'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {UserAvatar} from '../util/UserAvatar'
-import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
-import * as Toast from 'view/com/util/Toast'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {useGate} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
+import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
   usePinFeedMutation,
-  UsePreferencesQueryResponse,
   usePreferencesQuery,
-  useSaveFeedMutation,
+  UsePreferencesQueryResponse,
   useRemoveFeedMutation,
+  useSaveFeedMutation,
 } from '#/state/queries/preferences'
-import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {useTheme} from '#/alf'
-import * as Prompt from '#/components/Prompt'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
+import {usePalette} from 'lib/hooks/usePalette'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {pluralize} from 'lib/strings/helpers'
+import {s} from 'lib/styles'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import * as Toast from 'view/com/util/Toast'
+import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 
 export function FeedSourceCard({
   feedUri,
@@ -87,6 +92,10 @@ export function FeedSourceCardLoaded({
   const {_} = useLingui()
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
+  const isHomeAlgoExperimentEnabled = useGate(
+    'reduced_onboarding_and_home_algo',
+  )
+  const homeAlgoDialogControl = Prompt.usePromptControl()
 
   const {isPending: isSavePending, mutateAsync: saveFeed} =
     useSaveFeedMutation()
@@ -185,6 +194,12 @@ export function FeedSourceCardLoaded({
       </View>
     )
 
+  const showFeedSaveButton = showSaveBtn && feed.type === 'feed'
+  const isHomeAlgo =
+    preferences.homeAlgo?.enabled &&
+    preferences.homeAlgo?.uri &&
+    preferences.homeAlgo.uri === feed.uri
+
   return (
     <>
       <Pressable
@@ -205,7 +220,7 @@ export function FeedSourceCardLoaded({
           }
         }}
         key={feed.uri}>
-        <View style={[styles.headerContainer]}>
+        <View style={[styles.headerContainer, a.align_start]}>
           <View style={[s.mr10]}>
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
@@ -222,37 +237,50 @@ export function FeedSourceCardLoaded({
             </Text>
           </View>
 
-          {showSaveBtn && feed.type === 'feed' && (
-            <View style={[s.justifyCenter]}>
-              <Pressable
-                testID={`feed-${feed.displayName}-toggleSave`}
-                disabled={isSavePending || isPinPending || isRemovePending}
-                accessibilityRole="button"
-                accessibilityLabel={
-                  isSaved
-                    ? _(msg`Remove from my feeds`)
-                    : _(msg`Add to my feeds`)
-                }
-                accessibilityHint=""
-                onPress={onToggleSaved}
-                hitSlop={15}
-                style={styles.btn}>
-                {isSaved ? (
-                  <FontAwesomeIcon
-                    icon={['far', 'trash-can']}
-                    size={19}
-                    color={pal.colors.icon}
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon="plus"
-                    size={18}
-                    color={pal.colors.link}
-                  />
-                )}
-              </Pressable>
-            </View>
-          )}
+          {showFeedSaveButton &&
+            (isHomeAlgoExperimentEnabled && isHomeAlgo ? (
+              <Button
+                variant="solid"
+                color="secondary"
+                size="small"
+                label={_(msg`This feed is already set as your home algorithm.`)}
+                onPress={() => {
+                  homeAlgoDialogControl.open()
+                }}>
+                <ButtonIcon icon={Check} position="left" />
+                <ButtonText>Home Algo</ButtonText>
+              </Button>
+            ) : (
+              <View style={[s.justifyCenter]}>
+                <Pressable
+                  testID={`feed-${feed.displayName}-toggleSave`}
+                  disabled={isSavePending || isPinPending || isRemovePending}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    isSaved
+                      ? _(msg`Remove from my feeds`)
+                      : _(msg`Add to my feeds`)
+                  }
+                  accessibilityHint=""
+                  onPress={onToggleSaved}
+                  hitSlop={15}
+                  style={styles.btn}>
+                  {isSaved ? (
+                    <FontAwesomeIcon
+                      icon={['far', 'trash-can']}
+                      size={19}
+                      color={pal.colors.icon}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon="plus"
+                      size={18}
+                      color={pal.colors.link}
+                    />
+                  )}
+                </Pressable>
+              </View>
+            ))}
         </View>
 
         {showDescription && feed.description ? (
@@ -283,6 +311,17 @@ export function FeedSourceCardLoaded({
         confirmButtonCta={_(msg`Remove`)}
         confirmButtonColor="negative"
       />
+
+      <Prompt.Outer control={homeAlgoDialogControl}>
+        <Prompt.TitleText>Your home algorithm</Prompt.TitleText>
+        <Prompt.DescriptionText>
+          This feed is set as your home algorithm, which is used as your home
+          screen when you open the app.
+        </Prompt.DescriptionText>
+        <Prompt.Actions>
+          <Prompt.Cancel cta={_(msg`Cool, cool cool cool`)} />
+        </Prompt.Actions>
+      </Prompt.Outer>
     </>
   )
 }
