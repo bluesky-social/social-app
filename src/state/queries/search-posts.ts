@@ -34,18 +34,13 @@ export function useSearchPostsQuery({
   >({
     queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      // waiting on new APIs
-      switch (sort) {
-        // case 'top':
-        // case 'latest':
-        default:
-          const res = await getAgent().app.bsky.feed.searchPosts({
-            q: query,
-            limit: 25,
-            cursor: pageParam,
-          })
-          return res.data
-      }
+      const res = await getAgent().app.bsky.feed.searchPosts({
+        q: query,
+        limit: 25,
+        cursor: pageParam,
+        sort,
+      })
+      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,

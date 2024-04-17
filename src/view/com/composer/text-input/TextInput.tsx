@@ -1,10 +1,10 @@
 import React, {
+  ComponentProps,
   forwardRef,
   useCallback,
-  useRef,
   useMemo,
+  useRef,
   useState,
-  ComponentProps,
 } from 'react'
 import {
   NativeSyntheticEvent,
@@ -13,22 +13,26 @@ import {
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
-import isEqual from 'lodash.isequal'
-import {Autocomplete} from './mobile/Autocomplete'
-import {Text} from 'view/com/util/text/Text'
+
+import {POST_IMG_MAX} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {downloadAndResize} from 'lib/media/manip'
+import {isUriImage} from 'lib/media/util'
 import {cleanError} from 'lib/strings/errors'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {isUriImage} from 'lib/media/util'
-import {downloadAndResize} from 'lib/media/manip'
-import {POST_IMG_MAX} from 'lib/constants'
 import {isIOS} from 'platform/detection'
+import {
+  addLinkCardIfNecessary,
+  findIndexInText,
+} from 'view/com/composer/text-input/text-input-util'
+import {Text} from 'view/com/util/text/Text'
+import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
   focus: () => void
@@ -39,11 +43,10 @@ export interface TextInputRef {
 interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
-  suggestedLinks: Set<string>
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
-  onSuggestedLinksChanged: (uris: Set<string>) => void
+  onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
 
@@ -56,10 +59,9 @@ export const TextInput = forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
-    suggestedLinks,
     setRichText,
     onPhotoPasted,
-    onSuggestedLinksChanged,
+    onNewLink,
     onError,
     ...props
   }: TextInputProps,
@@ -70,6 +72,8 @@ export const TextInput = forwardRef(function TextInputImpl(
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
+  const prevLength = React.useRef(richtext.length)
+  const prevAddedLinks = useRef(new Set<string>())
 
   React.useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
@@ -92,6 +96,8 @@ export const TextInput = forwardRef(function TextInputImpl(
        * @see https://github.com/bluesky-social/social-app/issues/929
        */
       setTimeout(async () => {
+        const mayBePaste = newText.length > prevLength.current + 1
+
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
@@ -105,8 +111,6 @@ export const TextInput = forwardRef(function TextInputImpl(
         } else if (autocompletePrefix) {
           setAutocompletePrefix('')
         }
-
-        const set: Set<string> = new Set()
 
         if (newRt.facets) {
           for (const facet of newRt.facets) {
@@ -126,26 +130,32 @@ export const TextInput = forwardRef(function TextInputImpl(
                     onPhotoPasted(res.path)
                   }
                 } else {
-                  set.add(feature.uri)
+                  const cursorLocation = textInputSelection.current.end
+
+                  addLinkCardIfNecessary({
+                    uri: feature.uri,
+                    newText,
+                    cursorLocation,
+                    mayBePaste,
+                    onNewLink,
+                    prevAddedLinks: prevAddedLinks.current,
+                  })
                 }
               }
             }
           }
         }
 
-        if (!isEqual(set, suggestedLinks)) {
-          onSuggestedLinksChanged(set)
+        for (const uri of prevAddedLinks.current.keys()) {
+          if (findIndexInText(uri, newText) === -1) {
+            prevAddedLinks.current.delete(uri)
+          }
         }
+
+        prevLength.current = newText.length
       }, 1)
     },
-    [
-      setRichText,
-      autocompletePrefix,
-      setAutocompletePrefix,
-      suggestedLinks,
-      onSuggestedLinksChanged,
-      onPhotoPasted,
-    ],
+    [setRichText, autocompletePrefix, onPhotoPasted, prevAddedLinks, onNewLink],
   )
 
   const onPaste = useCallback(

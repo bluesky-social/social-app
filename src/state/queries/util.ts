@@ -54,9 +54,8 @@ export function embedViewRecordToPostView(
     indexedAt: v.indexedAt,
     labels: v.labels,
     embed: v.embeds?.[0],
-    // TODO we can remove the `as` once we update @atproto/api
-    likeCount: v.likeCount as number | undefined,
-    replyCount: v.replyCount as number | undefined,
-    repostCount: v.repostCount as number | undefined,
+    likeCount: v.likeCount,
+    replyCount: v.replyCount,
+    repostCount: v.repostCount,
   }
 }

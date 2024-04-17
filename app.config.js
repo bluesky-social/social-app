@@ -35,11 +35,6 @@ module.exports = function (config) {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
-  const DIST_BUILD_NUMBER =
-    PLATFORM === 'android'
-      ? process.env.BSKY_ANDROID_VERSION_CODE
-      : process.env.BSKY_IOS_BUILD_NUMBER
-
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
@@ -50,6 +45,10 @@ module.exports = function (config) {
     ? 'production'
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
+
+  const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
+    IS_DEV ? 'dev' : ''
+  }`
 
   return {
     expo: {
@@ -217,7 +216,7 @@ module.exports = function (config) {
               organization: 'blueskyweb',
               project: 'react-native',
               release: VERSION,
-              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
+              dist: SENTRY_DIST,
             },
           },
         ],

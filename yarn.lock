@@ -34,10 +34,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.12.2":
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.2.tgz#5df6d4f60dea0395c84fdebd9e81a7e853edf130"
-  integrity sha512-UVzCiDZH2j0wrr/O8nb1edD5cYLVqB5iujueXUCbHS3rAwIxgmyLtA3Hzm2QYsGPo/+xsIg1fNvpq9rNT6KWUA==
+"@atproto/api@^0.12.3":
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.3.tgz#5b7b1c7d4210ee9315961504900c8409395cbb17"
+  integrity sha512-y/kGpIEo+mKGQ7VOphpqCAigTI0LZRmDThNChTfSzDKm9TzEobwiw0zUID0Yw6ot1iLLFx3nKURmuZAYlEuobw==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.0"
@@ -63,12 +63,12 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
-"@atproto/bsky@^0.0.44":
-  version "0.0.44"
-  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.44.tgz#990d6061d557cdf891d43656543ebb611f57bd82"
-  integrity sha512-SVOnvdUlDf9sKI1Tto+IY1tVS4/9VRoTTiI08ezvK9sew9sQVUVurwYI5E3EtAbEi3ukBPZ9+Cuoh3Me65iyjQ==
+"@atproto/bsky@^0.0.45":
+  version "0.0.45"
+  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.45.tgz#c3083d8038fe8c5ff921d9bcb0b5a043cc840827"
+  integrity sha512-osWeigdYzQH2vZki+eszCR8ta9zdUB4om79aFmnE+zvxw7HFduwAAbcHf6kmmiLCfaOWvCsYb1wS2i3IC66TAg==
   dependencies:
-    "@atproto/api" "^0.12.2"
+    "@atproto/api" "^0.12.3"
     "@atproto/common" "^0.4.0"
     "@atproto/crypto" "^0.4.0"
     "@atproto/identity" "^0.4.0"
@@ -177,20 +177,20 @@
     "@noble/hashes" "^1.3.1"
     uint8arrays "3.0.0"
 
-"@atproto/dev-env@^0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.4.tgz#153b7be8268b2dcfc8d0ba4abc5fd60ad7a6e241"
-  integrity sha512-ix33GBQ1hjesoieTQKx38VGxZWNKeXCnaMdalr0/SAFwaDPCqMOrvUTPCx8VWClgAd0qYMcBM98+0lBTohW1qQ==
+"@atproto/dev-env@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.5.tgz#cd13313dbc52131731d039a1d22808ee8193505d"
+  integrity sha512-dqRNihzX1xIHbWPHmfYsliUUXyZn5FFhCeButrGie5soQmHA4okQJTB1XWDly3mdHLjUM90g+5zjRSAKoui77Q==
   dependencies:
-    "@atproto/api" "^0.12.2"
-    "@atproto/bsky" "^0.0.44"
+    "@atproto/api" "^0.12.3"
+    "@atproto/bsky" "^0.0.45"
     "@atproto/bsync" "^0.0.3"
     "@atproto/common-web" "^0.3.0"
     "@atproto/crypto" "^0.4.0"
     "@atproto/identity" "^0.4.0"
     "@atproto/lexicon" "^0.4.0"
-    "@atproto/ozone" "^0.1.6"
-    "@atproto/pds" "^0.4.13"
+    "@atproto/ozone" "^0.1.7"
+    "@atproto/pds" "^0.4.14"
     "@atproto/syntax" "^0.3.0"
     "@atproto/xrpc-server" "^0.5.1"
     "@did-plc/lib" "^0.0.1"
@@ -222,12 +222,12 @@
     multiformats "^9.9.0"
     zod "^3.21.4"
 
-"@atproto/ozone@^0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.6.tgz#b54c68360af19bfe6914d74b58759df0729461de"
-  integrity sha512-uAXhXdO75vU/VVGGrsifZfaq6h7cMbEdS3bH8GCJfgwtxOlCU0elV2YM88GHBfVGJ0ghYKNki+Dhvpe8i+Fe1Q==
+"@atproto/ozone@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.7.tgz#248d88e1acfe56936651754975472d03d047d689"
+  integrity sha512-vvaV0MFynOzZJcL8m8mEW21o1FFIkP+wHTXEC9LJrL3h03+PMaby8Ujmif6WX5eikhfxvr9xsU/Jxbi/iValuQ==
   dependencies:
-    "@atproto/api" "^0.12.2"
+    "@atproto/api" "^0.12.3"
     "@atproto/common" "^0.4.0"
     "@atproto/crypto" "^0.4.0"
     "@atproto/identity" "^0.4.0"
@@ -249,12 +249,12 @@
     typed-emitter "^2.1.0"
     uint8arrays "3.0.0"
 
-"@atproto/pds@^0.4.13":
-  version "0.4.13"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.13.tgz#9235d2c748d142a06d78da143ff1ad7e150b2d97"
-  integrity sha512-86fmaSFBP1HML0U85bsYkd06oO6XFFA/+VpRMeABy7cUShvvlkVq8anxp301Qaf89t+AM/tvjICqQ2syW8bgfA==
+"@atproto/pds@^0.4.14":
+  version "0.4.14"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.14.tgz#5b55ef307323bda712f2ddaba5c1fff7740ed91b"
+  integrity sha512-rqVcvtw5oMuuJIpWZbSSTSx19+JaZyUcg9OEjdlUmyEpToRN88zTEQySEksymrrLQkW/LPRyWGd7WthbGEuEfQ==
   dependencies:
-    "@atproto/api" "^0.12.2"
+    "@atproto/api" "^0.12.3"
     "@atproto/aws" "^0.2.0"
     "@atproto/common" "^0.4.0"
     "@atproto/crypto" "^0.4.0"
