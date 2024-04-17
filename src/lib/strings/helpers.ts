@@ -58,7 +58,7 @@ export function countLines(str: string | undefined): number {
 // Transforms search queries
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/
 
-export function transformSearchQuery(query: string, {did}: {did?: string}) {
+export function transformSearchQuery(query: string) {
   // https://github.com/bluesky-social/indigo/blob/421e4da5307f4fcba51f25b5c5982c8b9841f7f6/search/parse_query.go#L15-L21
   let quoted = false
   const parts = fieldsfunc(query, rune => {
@@ -108,9 +108,6 @@ export function transformSearchQuery(query: string, {did}: {did?: string}) {
       }
 
       parts[i] = `${operator}:${date.toISOString()}`
-    } else if (did !== undefined && operator === 'from' && value === 'me') {
-      // Remove this logic once backend gets around to it
-      parts[i] = did
     }
   }
 

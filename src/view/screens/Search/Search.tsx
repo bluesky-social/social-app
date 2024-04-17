@@ -259,12 +259,11 @@ function SearchScreenPostResults({
   active: boolean
 }) {
   const {_} = useLingui()
-  const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
 
   const augmentedQuery = React.useMemo(() => {
-    return transformSearchQuery(query || '', {did: currentAccount?.did})
-  }, [query, currentAccount])
+    return transformSearchQuery(query || '')
+  }, [query])
 
   const {
     isFetched,
