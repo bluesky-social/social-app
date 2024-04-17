@@ -1,8 +1,7 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
-import * as RNFS from 'react-native-fs'
 import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
-import {copyAsync, deleteAsync} from 'expo-file-system'
+import {cacheDirectory, copyAsync, deleteAsync} from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
@@ -200,7 +199,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   )
 }
 
-async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
+async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
@@ -208,10 +207,7 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
   */
   const filename = uuid.v4()
 
-  const destinationPath = joinPath(
-    RNFS.TemporaryDirectoryPath,
-    `${filename}${ext}`,
-  )
+  const destinationPath = joinPath(cacheDirectory ?? '', `${filename}.${ext}`)
 
   await copyAsync({
     from: path,
