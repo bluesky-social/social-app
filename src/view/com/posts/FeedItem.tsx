@@ -11,32 +11,33 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {ReasonFeedSource, isReasonFeedSource} from 'lib/api/feed/types'
-import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {UserInfoText} from '../util/UserInfoText'
-import {PostMeta} from '../util/PostMeta'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '../util/post-embeds'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {RichText} from '#/components/RichText'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useFeedFeedback} from '#/state/feed-feedback'
+import {useComposerControls} from '#/state/shell/composer'
+import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
+import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
-import {useComposerControls} from '#/state/shell/composer'
-import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
-import {FeedNameText} from '../util/FeedInfoText'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {s} from 'lib/styles'
 import {atoms as a} from '#/alf'
-import {useFeedFeedback} from '#/state/feed-feedback'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {RichText} from '#/components/RichText'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {FeedNameText} from '../util/FeedInfoText'
+import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostMeta} from '../util/PostMeta'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {UserInfoText} from '../util/UserInfoText'
 
 export function FeedItem({
   post,
@@ -112,6 +113,7 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
+  const {sendInteraction} = useFeedFeedback()
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -134,6 +136,38 @@ let FeedItemInner = ({
     })
   }, [post, record, openComposer, moderation])
 
+  const onOpenPost = React.useCallback(() => {
+    sendInteraction({
+      uri: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughItem',
+      feedContext: 'TODO',
+    })
+  }, [sendInteraction, post])
+
+  const onOpenAuthor = React.useCallback(() => {
+    sendInteraction({
+      uri: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughAuthor',
+      feedContext: 'TODO',
+    })
+  }, [sendInteraction, post])
+
+  const onOpenReposter = React.useCallback(() => {
+    sendInteraction({
+      uri: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughReposter',
+      feedContext: 'TODO',
+    })
+  }, [sendInteraction, post])
+
+  const onOpenEmbed = React.useCallback(() => {
+    sendInteraction({
+      uri: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughEmbed',
+      feedContext: 'TODO',
+    })
+  }, [sendInteraction, post])
+
   const outerStyles = [
     styles.outer,
     {
@@ -152,7 +186,8 @@ let FeedItemInner = ({
       style={outerStyles}
       href={href}
       noFeedback
-      accessible={false}>
+      accessible={false}
+      onBeforePress={onOpenPost}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
@@ -198,7 +233,8 @@ let FeedItemInner = ({
                 msg`Reposted by ${sanitizeDisplayName(
                   reason.by.displayName || reason.by.handle,
                 )}`,
-              )}>
+              )}
+              onBeforePress={onOpenReposter}>
               <FontAwesomeIcon
                 icon="retweet"
                 style={{
@@ -224,6 +260,7 @@ let FeedItemInner = ({
                       moderation.ui('displayName'),
                     )}
                     href={makeProfileLink(reason.by)}
+                    onBeforePress={onOpenReposter}
                   />
                 </Trans>
               </Text>
@@ -241,6 +278,7 @@ let FeedItemInner = ({
             avatar={post.author.avatar}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
+            onBeforePress={onOpenAuthor}
           />
           {isThreadParent && (
             <View
@@ -262,6 +300,7 @@ let FeedItemInner = ({
             authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}
+            onOpenAuthor={onOpenAuthor}
           />
           {!isThreadChild && replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -296,6 +335,7 @@ let FeedItemInner = ({
             richText={richText}
             postEmbed={post.embed}
             postAuthor={post.author}
+            onOpenEmbed={onOpenEmbed}
           />
           <PostCtrls
             post={post}
@@ -316,11 +356,13 @@ let PostContent = ({
   richText,
   postEmbed,
   postAuthor,
+  onOpenEmbed,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
+  onOpenEmbed: () => void
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -361,7 +403,11 @@ let PostContent = ({
       ) : undefined}
       {postEmbed ? (
         <View style={[a.pb_sm]}>
-          <PostEmbeds embed={postEmbed} moderation={moderation} />
+          <PostEmbeds
+            embed={postEmbed}
+            moderation={moderation}
+            onOpen={onOpenEmbed}
+          />
         </View>
       ) : null}
     </ContentHider>

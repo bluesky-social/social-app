@@ -1,34 +1,35 @@
 import React, {useCallback} from 'react'
 import {
-  StyleSheet,
+  InteractionManager,
   StyleProp,
+  StyleSheet,
+  Text,
   View,
   ViewStyle,
-  Text,
-  InteractionManager,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
-  AppBskyEmbedImages,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   ModerationDecision,
 } from '@atproto/api'
-import {Link} from '../Link'
-import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
+
+import {shareUrl} from '#/lib/sharing'
+import {isNative} from '#/platform/detection'
+import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {MaybeQuoteEmbed} from './QuoteEmbed'
-import {AutoSizedImage} from '../images/AutoSizedImage'
-import {ListEmbed} from './ListEmbed'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {isNative} from '#/platform/detection'
-import {shareUrl} from '#/lib/sharing'
+import {AutoSizedImage} from '../images/AutoSizedImage'
+import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
+import {Link} from '../Link'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
+import {ListEmbed} from './ListEmbed'
+import {MaybeQuoteEmbed} from './QuoteEmbed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -40,10 +41,12 @@ type Embed =
 export function PostEmbeds({
   embed,
   moderation,
+  onOpen,
   style,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -64,8 +67,12 @@ export function PostEmbeds({
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     return (
       <View style={style}>
-        <PostEmbeds embed={embed.media} moderation={moderation} />
-        <MaybeQuoteEmbed embed={embed.record} />
+        <PostEmbeds
+          embed={embed.media}
+          moderation={moderation}
+          onOpen={onOpen}
+        />
+        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
       </View>
     )
   }
@@ -92,7 +99,7 @@ export function PostEmbeds({
 
     // quote post
     // =
-    return <MaybeQuoteEmbed embed={embed} style={style} />
+    return <MaybeQuoteEmbed embed={embed} style={style} onOpen={onOpen} />
   }
 
   // image embed
@@ -170,7 +177,8 @@ export function PostEmbeds({
           href={link.uri}
           style={[styles.extOuter, pal.view, pal.borderDark, style]}
           hoverStyle={{borderColor: pal.colors.borderLinkHover}}
-          onLongPress={onShareExternal}>
+          onLongPress={onShareExternal}
+          onBeforePress={onOpen}>
           <ExternalLinkEmbed link={link} />
         </Link>
       </ContentHider>

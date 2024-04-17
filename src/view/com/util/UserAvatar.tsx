@@ -1,30 +1,30 @@
 import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
-import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {ModerationUI} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {HighPriorityImage} from 'view/com/util/images/Image'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
+import {usePalette} from 'lib/hooks/usePalette'
 import {
-  usePhotoLibraryPermission,
   useCameraPermission,
+  usePhotoLibraryPermission,
 } from 'lib/hooks/usePermissions'
 import {colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid, isNative} from 'platform/detection'
-import {UserPreviewLink} from './UserPreviewLink'
-import * as Menu from '#/components/Menu'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {HighPriorityImage} from 'view/com/util/images/Image'
+import {tokens, useTheme} from '#/alf'
 import {
-  Camera_Stroke2_Corner0_Rounded as Camera,
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+  Camera_Stroke2_Corner0_Rounded as Camera,
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {useTheme, tokens} from '#/alf'
+import * as Menu from '#/components/Menu'
+import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
+import {UserPreviewLink} from './UserPreviewLink'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -47,6 +47,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   did: string
   handle: string
+  onBeforePress?: () => void
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -373,7 +374,10 @@ let PreviewableUserAvatar = (
   props: PreviewableUserAvatarProps,
 ): React.ReactNode => {
   return (
-    <UserPreviewLink did={props.did} handle={props.handle}>
+    <UserPreviewLink
+      did={props.did}
+      handle={props.handle}
+      onBeforePress={props.onBeforePress}>
       <UserAvatar {...props} />
     </UserPreviewLink>
   )

@@ -15,13 +15,13 @@ interface Interaction {
 type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
-  send: (interaction: Interaction) => void
+  sendInteraction: (interaction: Interaction) => void
 }
 
 const stateContext = React.createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
-  send: (_interaction: Interaction) => {},
+  sendInteraction: (_interaction: Interaction) => {},
 })
 
 export function Provider({
@@ -76,8 +76,9 @@ export function Provider({
           }
         }
       },
-      send: (interaction: Interaction) => {
+      sendInteraction: (interaction: Interaction) => {
         queue.current.add(toString(interaction))
+        sendToFeed.current()
       },
     }
   }, [enabled, queue, sendToFeed])

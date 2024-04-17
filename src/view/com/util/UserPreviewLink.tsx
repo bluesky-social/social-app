@@ -1,13 +1,15 @@
 import React from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
-import {Link} from './Link'
-import {isWeb} from 'platform/detection'
-import {makeProfileLink} from 'lib/routes/links'
+
 import {usePrefetchProfileQuery} from '#/state/queries/profile'
+import {makeProfileLink} from 'lib/routes/links'
+import {isWeb} from 'platform/detection'
+import {Link} from './Link'
 
 interface UserPreviewLinkProps {
   did: string
   handle: string
+  onBeforePress?: () => void
   style?: StyleProp<ViewStyle>
 }
 export function UserPreviewLink(
@@ -24,6 +26,7 @@ export function UserPreviewLink(
       href={makeProfileLink(props)}
       title={props.handle}
       asAnchor
+      onBeforePress={props.onBeforePress}
       style={props.style}>
       {props.children}
     </Link>

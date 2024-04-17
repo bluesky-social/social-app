@@ -1,37 +1,40 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyEmbedRecord,
-  AppBskyFeedPost,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
   AppBskyEmbedExternal,
-  RichText as RichTextAPI,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
   moderatePost,
   ModerationDecision,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {PostMeta} from '../PostMeta'
-import {Link} from '../Link'
-import {Text} from '../text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/shell/composer'
-import {PostEmbeds} from '.'
-import {PostAlerts} from '../../../../components/moderation/PostAlerts'
-import {makeProfileLink} from 'lib/routes/links'
-import {InfoCircleIcon} from 'lib/icons'
 import {Trans} from '@lingui/macro'
+
 import {useModerationOpts} from '#/state/queries/preferences'
-import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {RichText} from '#/components/RichText'
+import {usePalette} from 'lib/hooks/usePalette'
+import {InfoCircleIcon} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
+import {PostAlerts} from '../../../../components/moderation/PostAlerts'
+import {Link} from '../Link'
+import {PostMeta} from '../PostMeta'
+import {Text} from '../text/Text'
+import {PostEmbeds} from '.'
 
 export function MaybeQuoteEmbed({
   embed,
+  onOpen,
   style,
 }: {
   embed: AppBskyEmbedRecord.View
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -44,6 +47,7 @@ export function MaybeQuoteEmbed({
       <QuoteEmbedModerated
         viewRecord={embed.record}
         postRecord={embed.record.value}
+        onOpen={onOpen}
         style={style}
       />
     )
@@ -72,10 +76,12 @@ export function MaybeQuoteEmbed({
 function QuoteEmbedModerated({
   viewRecord,
   postRecord,
+  onOpen,
   style,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
@@ -95,16 +101,25 @@ function QuoteEmbedModerated({
     embeds: viewRecord.embeds,
   }
 
-  return <QuoteEmbed quote={quote} moderation={moderation} style={style} />
+  return (
+    <QuoteEmbed
+      quote={quote}
+      moderation={moderation}
+      onOpen={onOpen}
+      style={style}
+    />
+  )
 }
 
 export function QuoteEmbed({
   quote,
   moderation,
+  onOpen,
   style,
 }: {
   quote: ComposerOptsQuote
   moderation?: ModerationDecision
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -140,7 +155,8 @@ export function QuoteEmbed({
         style={[styles.container, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
-        title={itemTitle}>
+        title={itemTitle}
+        onBeforePress={onOpen}>
         <View pointerEvents="none">
           <PostMeta
             author={quote.author}
