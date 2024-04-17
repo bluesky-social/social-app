@@ -24,7 +24,10 @@ export async function compressIfNeeded(
     mode: 'stretch',
     maxSize,
   })
-  const finalImageMovedPath = await moveToPermanentPath(resizedImage.path)
+  const finalImageMovedPath = await moveToPermanentPath(
+    resizedImage.path,
+    '.jpg',
+  )
   const finalImg = {
     ...resizedImage,
     path: finalImageMovedPath,
