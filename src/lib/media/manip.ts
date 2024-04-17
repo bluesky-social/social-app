@@ -113,7 +113,12 @@ export async function shareImageModal({uri}: {uri: string}) {
       UTI: 'image/png',
     })
   }
-  RNFS.unlink(imagePath)
+
+  try {
+    deleteAsync(imagePath)
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
@@ -131,7 +136,11 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // save
   await MediaLibrary.createAssetAsync(imagePath)
 
-  // TODO we should add a `deleteAsync()` here as well -hailey
+  try {
+    deleteAsync(imagePath)
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
