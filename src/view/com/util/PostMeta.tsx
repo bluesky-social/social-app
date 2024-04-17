@@ -74,7 +74,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         <TextLinkOnWebOnly
           type="md"
           disableMismatchWarning
-          style={[pal.textLight, {flexShrink: 4, paddingLeft: 5}]}
+          style={[pal.textLight, {flexShrink: 4, paddingLeft: 4}]}
           text={sanitizeHandle(handle, '@')}
           href={profileLink}
           onPointerEnter={onPointerEnter}
