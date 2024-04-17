@@ -78,6 +78,10 @@ const HIDE_DELAY = 150
 const HIDE_DURATION = 150
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
+  const {refs, floatingStyles} = useFloating({
+    middleware: floatingMiddlewares,
+  })
+
   const [currentState, dispatch] = React.useReducer(
     // Tip: console.log(state, action) when debugging.
     (state: State, action: Action): State => {
@@ -266,11 +270,6 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     currentState.stage === 'might-hide' ||
     currentState.stage === 'hiding'
 
-  const {refs, floatingStyles, isPositioned} = useFloating({
-    middleware: floatingMiddlewares,
-    open: isVisible,
-  })
-
   const animationStyle = {
     animation:
       currentState.stage === 'hiding'
@@ -290,15 +289,14 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       {props.children}
       {isVisible && (
         <Portal>
-          <div ref={refs.setFloating} style={floatingStyles}>
-            {isPositioned && (
-              <div
-                style={animationStyle}
-                onPointerEnter={onPointerEnterCard}
-                onPointerLeave={onPointerLeaveCard}>
-                <Card did={props.did} hide={onPress} />
-              </div>
-            )}
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            onPointerEnter={onPointerEnterCard}
+            onPointerLeave={onPointerLeaveCard}>
+            <div style={animationStyle}>
+              <Card did={props.did} hide={onPress} />
+            </div>
           </div>
         </Portal>
       )}
