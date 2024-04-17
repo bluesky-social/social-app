@@ -55,11 +55,7 @@ export function AppLanguageDropdown() {
         <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
           {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
         </Text>
-        <ChevronDown
-          fill={t.atoms.text.color}
-          size="xs"
-          style={a.flex_shrink}
-        />
+        <ChevronDown fill={t.atoms.text.color} size="xs" style={a.flex_0} />
       </View>
 
       <select
