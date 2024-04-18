@@ -7,6 +7,7 @@ export interface VideoPlayerLoadEvent {
 }
 
 export interface VideoPlayerViewProps extends ViewProps {
-  source: string | null
-  onLoad: (event: VideoPlayerLoadEvent) => void
+  autoplay?: boolean
+  source?: string
+  onLoad?: (event: VideoPlayerLoadEvent) => void
 }

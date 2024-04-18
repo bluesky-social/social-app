@@ -1,44 +1,58 @@
+import Foundation
 import AVKit
+import CryptoKit
 
 class PlayerItemManager {
   static let shared = PlayerItemManager()
   
-  private var items: [(String, AVPlayerItem)] = []
-  private let max = 30
+  private var prefetchQueue: [String] = []
   
-  private func addItem(source: String) -> AVPlayerItem? {
-    guard let url = URL(string: source) else {
-      return nil
+  func getItem(source: String) -> (AVPlayerItem, Bool)? {
+    let path = createPath(source)
+
+    if FileManager.default.fileExists(atPath: path.path) {
+      return (AVPlayerItem(url: path), true)
+    } else if let url = URL(string: source) {
+      return (AVPlayerItem(url: url), false)
     }
-    
-    if items.count >= self.max {
-      let first = self.items.removeFirst()
-      self.removeItem(source: first.0)
-    }
-    
-    let item = AVPlayerItem(url: url)
-    self.items.append((source, item))
-    
-    return item
+    return nil
   }
   
-  func getOrAddItem(source: String) -> AVPlayerItem? {
-    if let index = items.firstIndex(where: { $0.0 == source }) {
-      let item = self.items[index]
-      self.items.move(fromOffsets: IndexSet(integer: index), toOffset: self.items.count - 1)
-      return item.1
-    }
-    
-    return self.addItem(source: source)
-  }
-  
-  func removeItem(source: String?) {
-    guard let source = source else {
+  func saveToCache(source: String) {
+    guard let sourceUrl = URL(string: source) else {
       return
     }
     
-    if let controller = PlayerControllerManager.shared.findBySource(source: source) {
-      controller.release()
+    let path = createPath(sourceUrl.absoluteString)
+    let downloadTask = URLSession.shared.downloadTask(with:sourceUrl) { tempLocalURL, response, error in
+      if let tempLocalURL = tempLocalURL, error == nil {
+        try? FileManager.default.moveItem(at: tempLocalURL, to: path)
+      }
     }
+    downloadTask.resume()
+  }
+  
+  private func getHash(_ source: String) -> String {
+    let data = Data(source.utf8)
+    let hash = Insecure.SHA1.hash(data: data)
+    return hash.map { String(format: "%02hhx", $0)}.joined()
+  }
+  
+  private func getGifsDirectory() -> URL {
+    let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+    var cacheDir = paths[0]
+    cacheDir = cacheDir.appendingPathComponent("gifs", isDirectory: true)
+    
+    if !FileManager.default.fileExists(atPath: cacheDir.path) {
+      try? FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: false)
+    }
+    
+    return cacheDir
+  }
+  
+  private func createPath(_ source: String) -> URL {
+    let hash = getHash(source)
+    var gifsDir = getGifsDirectory()
+    return gifsDir.appendingPathComponent("\(hash).mp4", isDirectory: false)
   }
 }

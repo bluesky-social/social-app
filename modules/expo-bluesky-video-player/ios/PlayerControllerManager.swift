@@ -4,29 +4,37 @@ class PlayerControllerManager {
   static let shared = PlayerControllerManager()
   
   private var controllers: [PlayerController] = []
-  private let max = 10
   
-  func getPlayer() -> PlayerController? {
+  func getController() -> PlayerController {
     if let controller = self.controllers.first(where: { $0.isInUse == false }) {
       return controller
-    } else if controllers.count < self.max {
+    } else {
       let controller = PlayerController()
-      controllers.append(controller)
+      self.controllers.append(controller)
       return controller
     }
-    return nil
   }
   
-  func releasePlayer(controller: PlayerController) {
-    if let controller = controllers.first(where: { $0 === controller }) {
+  func releaseController(controller: PlayerController) {
+    if let controller = self.controllers.first(where: { $0 === controller }) {
       controller.release()
     }
   }
   
-  func findBySource(source: String) -> PlayerController? {
-    if let controller = controllers.first(where: { $0.source == source}) {
+  func findByItem(_ item: AVPlayerItem) -> PlayerController? {
+    if let controller = self.controllers.first(where: { $0.playerItem === item}) {
       return controller
     }
     return nil
+  }
+  
+  func cleanupExcessiveControllers() {
+    if self.controllers.count <= 15 {
+      return
+    }
+    
+    self.controllers.removeAll { c in
+      return !c.isInUse
+    }
   }
 }
