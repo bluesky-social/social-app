@@ -181,6 +181,11 @@ function GifList({
             clearButtonMode="while-editing"
             inputRef={ref}
             maxLength={50}
+            onKeyPress={({nativeEvent}) => {
+              if (nativeEvent.key === 'Escape') {
+                control.close()
+              }
+            }}
           />
         </TextField.Root>
       </View>
