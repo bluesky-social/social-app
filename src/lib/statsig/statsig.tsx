@@ -2,11 +2,7 @@ import React from 'react'
 import {Platform} from 'react-native'
 import {AppState, AppStateStatus} from 'react-native'
 import {sha256} from 'js-sha256'
-import {
-  Statsig,
-  StatsigProvider,
-  useGate as useStatsigGate,
-} from 'statsig-react-native-expo'
+import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -15,12 +11,25 @@ import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
-let refSrc: string | undefined
-let refUrl: string | undefined
+type StatsigUser = {
+  userID: string | undefined
+  // TODO: Remove when enough users have custom.platform:
+  platform: 'ios' | 'android' | 'web'
+  custom: {
+    // This is the place where we can add our own stuff.
+    // Fields here have to be non-optional to be visible in the UI.
+    platform: 'ios' | 'android' | 'web'
+    refSrc: string
+    refUrl: string
+  }
+}
+
+let refSrc = ''
+let refUrl = ''
 if (isWeb && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
-  refSrc = params.get('ref_src') ?? undefined
-  refUrl = params.get('ref_url') ?? undefined
+  refSrc = params.get('ref_src') ?? ''
+  refUrl = decodeURIComponent(params.get('ref_url') ?? '')
 }
 
 export type {LogEvents}
@@ -85,31 +94,38 @@ export function logEvent<E extends keyof LogEvents>(
   }
 }
 
-export function useGate(gateName: Gate): boolean {
-  const {isLoading, value} = useStatsigGate(gateName)
-  if (isLoading) {
-    // This should not happen because of waitForInitialization={true}.
-    console.error('Did not expected isLoading to ever be true.')
+export function useGate(): (gateName: Gate) => boolean {
+  const cache = React.useRef<Map<Gate, boolean>>()
+  if (cache.current === undefined) {
+    cache.current = new Map()
   }
-  // This shouldn't technically be necessary but let's get a strong
-  // guarantee that a gate value can never change while mounted.
-  const [initialValue] = React.useState(value)
-  return initialValue
+  const gate = React.useCallback((gateName: Gate): boolean => {
+    // TODO: Replace local cache with a proper session one.
+    const cachedValue = cache.current!.get(gateName)
+    if (cachedValue !== undefined) {
+      return cachedValue
+    }
+    const value = Statsig.initializeCalled()
+      ? Statsig.checkGate(gateName)
+      : false
+    cache.current!.set(gateName, value)
+    return value
+  }, [])
+  return gate
 }
 
-function toStatsigUser(did: string | undefined) {
+function toStatsigUser(did: string | undefined): StatsigUser {
   let userID: string | undefined
   if (did) {
     userID = sha256(did)
   }
   return {
     userID,
-    platform: Platform.OS,
+    platform: Platform.OS as 'ios' | 'android' | 'web',
     custom: {
       refSrc,
       refUrl,
-      // Need to specify here too for gating.
-      platform: Platform.OS,
+      platform: Platform.OS as 'ios' | 'android' | 'web',
     },
   }
 }
