@@ -8,6 +8,7 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
+import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
 import {LogEvents} from './events'
 import {Gate} from './gates'
@@ -163,6 +164,31 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
     })
   }
 })
+
+export async function tryFetchGates(
+  did: string,
+  strategy: 'prefer-low-latency' | 'prefer-fresh-gates',
+) {
+  try {
+    let timeoutMs = 250 // Don't block the UI if we can't do this fast.
+    if (strategy === 'prefer-fresh-gates') {
+      // Use this for less common operations where the user would be OK with a delay.
+      timeoutMs = 1500
+    }
+    // Note: This condition is currently false the very first render because
+    // Statsig has not initialized yet. In the future, we can fix this by
+    // doing the initialization ourselves instead of relying on the provider.
+    if (Statsig.initializeCalled()) {
+      await Promise.race([
+        timeout(timeoutMs),
+        Statsig.prefetchUsers([toStatsigUser(did)]),
+      ])
+    }
+  } catch (e) {
+    // Don't leak errors to the calling code, this is meant to be always safe.
+    console.error(e)
+  }
+}
 
 export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount, accounts} = useSession()
