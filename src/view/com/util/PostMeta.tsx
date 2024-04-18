@@ -35,6 +35,11 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const handle = opts.author.handle
   const prefetchProfileQuery = usePrefetchProfileQuery()
 
+  const profileLink = makeProfileLink(opts.author)
+  const onPointerEnter = isWeb
+    ? () => prefetchProfileQuery(opts.author.did)
+    : undefined
+
   return (
     <View style={[styles.container, opts.style]}>
       {opts.showAvatar && (
@@ -49,11 +54,10 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         </View>
       )}
-      <View style={styles.maxWidth}>
+      <Text numberOfLines={1} style={[styles.maxWidth, pal.textLight]}>
         <TextLinkOnWebOnly
           type={opts.displayNameType || 'lg-bold'}
           style={[pal.text, opts.displayNameStyle]}
-          numberOfLines={1}
           lineHeight={1.2}
           disableMismatchWarning
           text={
@@ -62,22 +66,21 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 displayName,
                 opts.moderation?.ui('displayName'),
               )}
-              &nbsp;
-              <Text
-                type="md"
-                numberOfLines={1}
-                lineHeight={1.2}
-                style={pal.textLight}>
-                {sanitizeHandle(handle, '@')}
-              </Text>
             </>
           }
-          href={makeProfileLink(opts.author)}
-          onPointerEnter={
-            isWeb ? () => prefetchProfileQuery(opts.author.did) : undefined
-          }
+          href={profileLink}
+          onPointerEnter={onPointerEnter}
         />
-      </View>
+        <TextLinkOnWebOnly
+          type="md"
+          disableMismatchWarning
+          style={[pal.textLight, {flexShrink: 4}]}
+          text={'\xa0' + sanitizeHandle(handle, '@')}
+          href={profileLink}
+          onPointerEnter={onPointerEnter}
+          anchorNoUnderline
+        />
+      </Text>
       {!isAndroid && (
         <Text
           type="md"
@@ -110,7 +113,7 @@ export {PostMeta}
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     paddingBottom: 2,
     gap: 4,
     zIndex: 1,
