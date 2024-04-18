@@ -304,7 +304,7 @@ export const ComposePost = observer(function ComposePost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
+  const canSelectImages = gallery.size < 4 && !extLink
   const hasMedia = gallery.size > 0 || Boolean(extLink)
 
   const onEmojiButtonPress = useCallback(() => {
@@ -489,7 +489,7 @@ export const ComposePost = observer(function ComposePost({
             <SelectGifBtn
               onClose={focusTextInput}
               onSelectGif={onSelectGif}
-              disabled={gallery.size > 0}
+              disabled={hasMedia}
             />
             {!isMobile ? (
               <Button
