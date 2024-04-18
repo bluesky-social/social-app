@@ -1,9 +1,7 @@
 import React from 'react'
 import {Modal} from 'react-native'
-import {StatusBar} from 'expo-status-bar'
 import {observer} from 'mobx-react-lite'
 
-import {isIOS} from '#/platform/detection'
 import {Provider as LegacyModalProvider} from '#/state/modals'
 import {useComposerState} from 'state/shell/composer'
 import {ModalsContainer as LegacyModalsContainer} from '#/view/com/modals/Modal'
@@ -24,7 +22,7 @@ export const Composer = observer(function ComposerImpl({}: {
       aria-modal
       accessibilityViewIsModal
       visible={!!state}
-      presentationStyle="formSheet"
+      presentationStyle="fullScreen"
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}>
       <LegacyModalProvider>
@@ -42,7 +40,6 @@ export const Composer = observer(function ComposerImpl({}: {
           <PortalOutlet />
         </PortalProvider>
       </LegacyModalProvider>
-      {isIOS && <StatusBar style="light" />}
     </Modal>
   )
 })
