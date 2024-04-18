@@ -23,6 +23,7 @@ import {getAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 
 export type FeedSourceFeedInfo = {
+  isPrimaryAlgorithm: boolean
   type: 'feed'
   uri: string
   route: {
@@ -41,6 +42,7 @@ export type FeedSourceFeedInfo = {
 }
 
 export type FeedSourceListInfo = {
+  isPrimaryAlgorithm: boolean
   type: 'list'
   uri: string
   route: {
@@ -71,6 +73,7 @@ const feedSourceNSIDs = {
 
 export function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
+  options?: Pick<FeedSourceFeedInfo, 'isPrimaryAlgorithm'>,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
@@ -79,6 +82,7 @@ export function hydrateFeedGenerator(
   const route = router.matchPath(href)
 
   return {
+    isPrimaryAlgorithm: options?.isPrimaryAlgorithm ?? false,
     type: 'feed',
     uri: view.uri,
     cid: view.cid,
@@ -110,6 +114,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const route = router.matchPath(href)
 
   return {
+    isPrimaryAlgorithm: false,
     type: 'list',
     uri: view.uri,
     route: {
@@ -205,6 +210,7 @@ export function useSearchPopularFeedsMutation() {
  * The following feed, with fallbacks to Discover
  */
 const HOME_FEED_STUB: FeedSourceInfo = {
+  isPrimaryAlgorithm: false,
   type: 'feed',
   displayName: 'Following',
   uri: 'home',
@@ -221,7 +227,8 @@ const HOME_FEED_STUB: FeedSourceInfo = {
   likeCount: 0,
   likeUri: '',
 }
-const DISCOVER_FEED_STUB: FeedSourceInfo = {
+const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
+  isPrimaryAlgorithm: true,
   type: 'feed',
   displayName: 'Discover',
   uri: DISCOVER_FEED_URI,
@@ -273,7 +280,7 @@ export function usePinnedFeedsInfos() {
       (hasSession ? 'authed:' : 'unauthed:') + allUris.join(','),
     ],
     queryFn: async () => {
-      let resolved = new Map()
+      let resolved = new Map<string, FeedSourceInfo>()
 
       // Get all feeds. We can do this in a batch.
       let feedsPromise = Promise.resolve()
@@ -302,14 +309,16 @@ export function usePinnedFeedsInfos() {
           }),
       )
 
-      let result = [hasSession ? HOME_FEED_STUB : DISCOVER_FEED_STUB]
+      let result = [hasSession ? HOME_FEED_STUB : PWI_DISCOVER_FEED_STUB]
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
       // if primary algo is enabled and was fetched, add it to the front of the list
       if (primaryAlgo?.enabled && primaryAlgo?.uri) {
-        if (resolved.has(primaryAlgo.uri)) {
-          result = [resolved.get(primaryAlgo.uri), ...result]
+        const feedInfo = resolved.get(primaryAlgo.uri)
+        if (feedInfo) {
+          feedInfo.isPrimaryAlgorithm = true
+          result = [feedInfo, ...result]
         }
       }
 
@@ -322,10 +331,12 @@ export function usePinnedFeedsInfos() {
 
       // order the feeds/lists in the order they were pinned
       for (let pinnedUri of pinnedUrisSansPrimary) {
-        if (resolved.has(pinnedUri)) {
-          result.push(resolved.get(pinnedUri))
+        const feedInfo = resolved.get(pinnedUri)
+        if (feedInfo) {
+          result.push(feedInfo)
         }
       }
+      console.log(result)
 
       return result
     },
