@@ -309,7 +309,7 @@ export function usePinnedFeedsInfos() {
           }),
       )
 
-      let result = [hasSession ? HOME_FEED_STUB : PWI_DISCOVER_FEED_STUB]
+      const result = [hasSession ? HOME_FEED_STUB : PWI_DISCOVER_FEED_STUB]
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
@@ -318,7 +318,7 @@ export function usePinnedFeedsInfos() {
         const feedInfo = resolved.get(primaryAlgo.uri)
         if (feedInfo) {
           feedInfo.isPrimaryAlgorithm = true
-          result = [feedInfo, ...result]
+          result.unshift(feedInfo)
         }
       }
 
@@ -336,7 +336,6 @@ export function usePinnedFeedsInfos() {
           result.push(feedInfo)
         }
       }
-      console.log(result)
 
       return result
     },
