@@ -264,7 +264,6 @@ function GifPreview({
             t.atoms.bg_contrast_25,
           ]}
           source={{uri: gif.images.preview_gif.url}}
-          autoplay
           contentFit="cover"
           accessibilityLabel={gif.title}
           accessibilityHint=""
