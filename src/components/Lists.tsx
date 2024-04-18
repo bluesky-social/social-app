@@ -134,6 +134,7 @@ export function ListMaybePlaceholder({
   emptyType = 'page',
   onRetry,
   onGoBack,
+  sideBorders,
 }: {
   isLoading: boolean
   noEmpty?: boolean
@@ -145,6 +146,7 @@ export function ListMaybePlaceholder({
   emptyType?: 'page' | 'results'
   onRetry?: () => Promise<unknown>
   onGoBack?: () => void
+  sideBorders?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -160,7 +162,7 @@ export function ListMaybePlaceholder({
           t.atoms.border_contrast_low,
           {paddingTop: 175, paddingBottom: 110},
         ]}
-        sideBorders={gtMobile}
+        sideBorders={sideBorders ?? gtMobile}
         topBorder={!gtTablet}>
         <View style={[a.w_full, a.align_center, {top: 100}]}>
           <Loader size="xl" />
@@ -176,6 +178,7 @@ export function ListMaybePlaceholder({
         message={errorMessage ?? _(`Something went wrong!`)}
         onRetry={onRetry}
         onGoBack={onGoBack}
+        sideBorders={sideBorders}
       />
     )
   }
@@ -195,6 +198,7 @@ export function ListMaybePlaceholder({
         }
         onRetry={onRetry}
         onGoBack={onGoBack}
+        sideBorders={sideBorders}
       />
     )
   }

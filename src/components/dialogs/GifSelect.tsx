@@ -176,6 +176,7 @@ function GifList({
             onRetry={refetch}
             onGoBack={onGoBack}
             emptyType="results"
+            sideBorders={false}
             errorTitle={_(msg`Failed to load GIFs`)}
             errorMessage={_(msg`There was an issue connecting to GIPHY.`)}
             emptyMessage={

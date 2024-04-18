@@ -17,11 +17,13 @@ export function Error({
   message,
   onRetry,
   onGoBack: onGoBackProp,
+  sideBorders = true,
 }: {
   title?: string
   message?: string
   onRetry?: () => unknown
   onGoBack?: () => unknown
+  sideBorders?: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -59,7 +61,7 @@ export function Error({
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
       ]}
-      sideBorders>
+      sideBorders={sideBorders}>
       <View style={[a.w_full, a.align_center, a.gap_lg]}>
         <Text style={[a.font_bold, a.text_3xl]}>{title}</Text>
         <Text
