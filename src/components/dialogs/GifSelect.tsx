@@ -4,8 +4,8 @@ import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {GIPHY_PRIVACY_POLICY} from '#/lib/constants'
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {isWeb} from '#/platform/detection'
 import {
@@ -241,14 +241,13 @@ function GifPreview({
   onSelectGif: (gif: Gif) => void
 }) {
   const {gtTablet} = useBreakpoints()
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
 
   const onPress = useCallback(() => {
-    track('Composer:GifSelected')
+    logEvent('componser:gif:select', {})
     onSelectGif(gif)
-  }, [onSelectGif, gif, track])
+  }, [onSelectGif, gif])
 
   return (
     <Button

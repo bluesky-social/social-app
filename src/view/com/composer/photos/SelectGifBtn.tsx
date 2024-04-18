@@ -3,7 +3,7 @@ import {Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {Gif} from '#/state/queries/giphy'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -18,17 +18,16 @@ type Props = {
 }
 
 export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
-  const {track} = useAnalytics()
   const {_} = useLingui()
   const control = useDialogControl()
   const t = useTheme()
 
   const onPressSelectGif = useCallback(async () => {
-    track('Composer:GifSelectOpened')
+    logEvent('componser:gif:open', {})
 
     Keyboard.dismiss()
     control.open()
-  }, [track, control])
+  }, [control])
 
   return (
     <>

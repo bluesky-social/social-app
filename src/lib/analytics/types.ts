@@ -11,8 +11,6 @@ export type TrackPropertiesMap = {
   'Composer:CameraOpened': {}
   'Composer:GalleryOpened': {}
   'Composer:ThreadgateOpened': {}
-  'Composer:GifSelectOpened': {}
-  'Composer:GifSelected': {}
   'HomeScreen:PressCompose': {}
   'ProfileScreen:PressCompose': {}
   // EDIT PROFILE events
