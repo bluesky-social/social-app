@@ -8,6 +8,7 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
+import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
@@ -167,13 +168,14 @@ export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount, accounts} = useSession()
   const did = currentAccount?.did
   const currentStatsigUser = React.useMemo(() => toStatsigUser(did), [did])
+
+  const otherDidsConcatenated = accounts
+    .map(account => account.did)
+    .filter(accountDid => accountDid !== did)
+    .join(' ') // We're only interested in DID changes.
   const otherStatsigUsers = React.useMemo(
-    () =>
-      accounts
-        .map(account => account.did)
-        .filter(accountDid => accountDid !== did)
-        .map(toStatsigUser),
-    [accounts, did],
+    () => otherDidsConcatenated.split(' ').map(toStatsigUser),
+    [otherDidsConcatenated],
   )
   const statsigOptions = React.useMemo(
     () => createStatsigOptions(otherStatsigUsers),
@@ -192,15 +194,16 @@ export function Provider({children}: {children: React.ReactNode}) {
   // Periodically poll Statsig to get the current rule evaluations for all stored accounts.
   // These changes are prefetched and stored, but don't get applied until the active DID changes.
   // This ensures that when you switch an account, it already has fresh results by then.
+  const handleIntervalTick = useNonReactiveCallback(() => {
+    if (Statsig.initializeCalled()) {
+      // Note: Only first five will be taken into account by Statsig.
+      Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers])
+    }
+  })
   React.useEffect(() => {
-    const id = setInterval(() => {
-      if (Statsig.initializeCalled()) {
-        // Note: Only first five will be taken into account by Statsig.
-        Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers])
-      }
-    }, 3 * 60e3 /* 3 min */)
+    const id = setInterval(handleIntervalTick, 3 * 60e3 /* 3 min */)
     return () => clearInterval(id)
-  }, [currentStatsigUser, otherStatsigUsers])
+  }, [handleIntervalTick])
 
   return (
     <GateCache.Provider value={gateCache}>
