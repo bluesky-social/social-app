@@ -4,15 +4,16 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {Gif} from '#/state/queries/giphy'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {GifSelectDialog} from '#/components/dialogs/GifSelect'
-import {GifSquare_Stroke2_Corner0_Rounded as Gif} from '#/components/icons/Gif'
+import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
 
 type Props = {
   onClose: () => void
-  onSelectGif: (url: string) => void
+  onSelectGif: (gif: Gif) => void
   disabled?: boolean
 }
 
@@ -41,7 +42,7 @@ export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
         shape="round"
         color="primary"
         disabled={disabled}>
-        <Gif size="lg" style={disabled && t.atoms.text_contrast_low} />
+        <GifIcon size="lg" style={disabled && t.atoms.text_contrast_low} />
       </Button>
 
       <GifSelectDialog

@@ -30,12 +30,12 @@ export function GifSelectDialog({
 }: {
   control: Dialog.DialogControlProps
   onClose: () => void
-  onSelectGif: (url: string) => void
+  onSelectGif: (gif: Gif) => void
 }) {
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const onSelectGif = useCallback(
-    (url: string) => {
-      control.close(() => onSelectGifProp(url))
+    (gif: Gif) => {
+      control.close(() => onSelectGifProp(gif))
     },
     [control, onSelectGifProp],
   )
@@ -71,7 +71,7 @@ function GifList({
   onSelectGif,
 }: {
   control: Dialog.DialogControlProps
-  onSelectGif: (url: string) => void
+  onSelectGif: (gif: Gif) => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -238,7 +238,7 @@ function GifPreview({
   onSelectGif,
 }: {
   gif: Gif
-  onSelectGif: (url: string) => void
+  onSelectGif: (gif: Gif) => void
 }) {
   const {gtTablet} = useBreakpoints()
   const {track} = useAnalytics()
@@ -247,7 +247,7 @@ function GifPreview({
 
   const onPress = useCallback(() => {
     track('Composer:GifSelected')
-    onSelectGif(gif.url)
+    onSelectGif(gif)
   }, [onSelectGif, gif, track])
 
   return (

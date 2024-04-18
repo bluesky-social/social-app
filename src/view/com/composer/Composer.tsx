@@ -18,6 +18,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
@@ -28,6 +29,7 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {Gif} from '#/state/queries/giphy'
 import {useProfileQuery} from '#/state/queries/profile'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {getAgent, useSession} from '#/state/session'
@@ -314,7 +316,18 @@ export const ComposePost = observer(function ComposePost({
   }, [])
 
   const onSelectGif = useCallback(
-    (uri: string) => setExtLink({uri, isLoading: true}),
+    (gif: Gif) =>
+      setExtLink({
+        uri: gif.url,
+        isLoading: true,
+        meta: {
+          description: `Discover & share this ${gif.title} with everyone you know. GIPHY is how you search, share, discover, and create GIFs.`,
+          image: gif.images.original_still.url,
+          likelyType: LikelyType.HTML,
+          title: `${gif.title} - Find & Share on GIPHY`,
+          url: gif.url,
+        },
+      }),
     [setExtLink],
   )
 
