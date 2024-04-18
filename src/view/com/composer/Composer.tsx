@@ -471,16 +471,13 @@ export const ComposePost = observer(function ComposePost({
         <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            {canSelectImages ? (
-              <>
-                <SelectPhotoBtn gallery={gallery} />
-                <OpenCameraBtn gallery={gallery} />
-                <SelectGifBtn
-                  onClose={focusTextInput}
-                  onSelectGif={onSelectGif}
-                />
-              </>
-            ) : null}
+            <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+            <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+            <SelectGifBtn
+              onClose={focusTextInput}
+              onSelectGif={onSelectGif}
+              disabled={gallery.size > 0}
+            />
             {!isMobile ? (
               <Button
                 onPress={onEmojiButtonPress}

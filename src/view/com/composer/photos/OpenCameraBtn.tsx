@@ -10,20 +10,22 @@ import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
 import {isMobileWeb, isNative} from '#/platform/detection'
 import {GalleryModel} from '#/state/models/media/gallery'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 
 type Props = {
   gallery: GalleryModel
+  disabled?: boolean
 }
 
-export function OpenCameraBtn({gallery}: Props) {
+export function OpenCameraBtn({gallery, disabled}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const [mediaPermissionRes, requestMediaPermission] =
     MediaLibrary.usePermissions()
+  const t = useTheme()
 
   const onPressTakePicture = useCallback(async () => {
     track('Composer:CameraOpened')
@@ -73,8 +75,9 @@ export function OpenCameraBtn({gallery}: Props) {
       style={a.p_sm}
       variant="ghost"
       shape="round"
-      color="primary">
-      <Camera size="lg" />
+      color="primary"
+      disabled={disabled}>
+      <Camera size="lg" style={disabled && t.atoms.text_contrast_low} />
     </Button>
   )
 }
