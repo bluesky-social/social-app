@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   BackHandler,
@@ -124,12 +131,9 @@ export const ComposePost = observer(function ComposePost({
     [initImageUris],
   )
 
-  const prevNumberOfImages = useRef<number>(gallery.size)
-
-  if (isIOS && prevNumberOfImages.current !== gallery.size) {
-    prevNumberOfImages.current = gallery.size
+  useLayoutEffect(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-  }
+  }, [gallery.size])
 
   const onClose = useCallback(() => {
     closeComposer()
