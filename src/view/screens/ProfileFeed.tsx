@@ -173,6 +173,7 @@ export function ProfileFeedScreenInner({
     'reduced_onboarding_and_home_algo',
   )
   const primaryAlgoDialogControl = useDialogControl()
+  const primaryAlgo = preferences.primaryAlgorithm
 
   const {
     mutateAsync: saveFeed,
@@ -211,9 +212,9 @@ export function ProfileFeedScreenInner({
     !unpinnedFeed &&
     (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
   const isPrimaryAlgo =
-    (preferences.primaryAlgorithm?.enabled &&
-      preferences.primaryAlgorithm?.uri &&
-      preferences.primaryAlgorithm.uri === feedInfo.uri) ||
+    (primaryAlgo?.enabled &&
+      primaryAlgo?.uri &&
+      primaryAlgo.uri === feedInfo.uri) ||
     (primaryAlgoVariables?.enabled && primaryAlgoVariables.uri === feedInfo.uri)
 
   useSetTitle(feedInfo?.displayName)
@@ -326,38 +327,40 @@ export function ProfileFeedScreenInner({
           }
           avatarType="algo">
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            {feedInfo &&
-              hasSession &&
-              (isPrimaryAlgoExperimentEnabled && isPrimaryAlgo ? (
-                <NewButton
-                  variant="solid"
-                  color="secondary"
-                  size="small"
-                  label={_(
-                    msg`This feed is already set as your primary algorithm.`,
-                  )}
-                  onPress={() => {
-                    primaryAlgoDialogControl.open()
-                  }}>
-                  <ButtonIcon icon={Check} position="left" />
-                  <ButtonText>Primary Algorithm</ButtonText>
-                </NewButton>
-              ) : (
-                <NewButton
-                  testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-                  disabled={isPinPending || isUnpinPending}
-                  size="small"
-                  variant="solid"
-                  color={isPinned ? 'secondary' : 'primary'}
-                  label={
-                    isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)
-                  }
-                  onPress={onTogglePinned}>
-                  <ButtonText>
-                    {isPinned ? _(msg`Unpin`) : _(msg`Pin to Home`)}
-                  </ButtonText>
-                </NewButton>
-              ))}
+            {feedInfo && hasSession && (
+              <>
+                {isPrimaryAlgoExperimentEnabled && isPrimaryAlgo ? (
+                  <NewButton
+                    variant="solid"
+                    color="secondary"
+                    size="small"
+                    label={_(
+                      msg`This feed is already set as your primary algorithm.`,
+                    )}
+                    onPress={() => {
+                      primaryAlgoDialogControl.open()
+                    }}>
+                    <ButtonIcon icon={Check} position="left" />
+                    <ButtonText>Primary Algorithm</ButtonText>
+                  </NewButton>
+                ) : (
+                  <NewButton
+                    testID={isPinned ? 'unpinBtn' : 'pinBtn'}
+                    disabled={isPinPending || isUnpinPending}
+                    size="small"
+                    variant="solid"
+                    color={isPinned ? 'secondary' : 'primary'}
+                    label={
+                      isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)
+                    }
+                    onPress={onTogglePinned}>
+                    <ButtonText>
+                      {isPinned ? _(msg`Unpin`) : _(msg`Pin to Home`)}
+                    </ButtonText>
+                  </NewButton>
+                )}
+              </>
+            )}
             <Menu.Root>
               <Menu.Trigger label={_(msg`Open feed options menu`)}>
                 {({props, state}) => {
