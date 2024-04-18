@@ -35,6 +35,7 @@ if (isWeb && typeof window !== 'undefined') {
 export type {LogEvents}
 
 const statsigOptions = {
+  eventLoggingApi: 'https://api.events.bsky.app/v2',
   environment: {
     tier:
       process.env.NODE_ENV === 'development'
