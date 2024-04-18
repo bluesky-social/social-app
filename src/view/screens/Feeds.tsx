@@ -13,6 +13,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {isNative, isWeb} from '#/platform/detection'
 import {
   getAvatarTypeFromUri,
@@ -150,6 +151,7 @@ export function FeedsScreen(_props: Props) {
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
   const searchInputRef = React.useRef<SearchInputRef>(null)
+  const gate = useGate()
 
   /**
    * A search query is present. We may not have search results yet.
@@ -236,6 +238,23 @@ export function FeedsScreen(_props: Props) {
             // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
           })
         } else {
+          const isPrimaryAlgoExperimentEnabled = gate(
+            'reduced_onboarding_and_home_algo',
+          )
+          const primaryAlgo = preferences.primaryAlgorithm
+
+          if (
+            isPrimaryAlgoExperimentEnabled &&
+            primaryAlgo?.enabled &&
+            primaryAlgo?.uri
+          ) {
+            slices = slices.concat({
+              key: `savedFeed:${primaryAlgo?.uri}`,
+              type: 'savedFeed',
+              feedUri: primaryAlgo?.uri,
+            })
+          }
+
           if (preferences?.feeds?.saved.length !== 0) {
             const {saved, pinned} = preferences.feeds
 
@@ -323,7 +342,17 @@ export function FeedsScreen(_props: Props) {
                     ) {
                       return false
                     }
-                    return !preferences?.feeds?.saved.includes(feed.uri)
+                    const isPrimaryAlgoExperimentEnabled = gate(
+                      'reduced_onboarding_and_home_algo',
+                    )
+                    const isPrimaryAlgo =
+                      isPrimaryAlgoExperimentEnabled &&
+                      preferences?.primaryAlgorithm?.enabled &&
+                      preferences?.primaryAlgorithm?.uri === feed.uri
+                    return (
+                      !preferences?.feeds?.saved.includes(feed.uri) &&
+                      !isPrimaryAlgo
+                    )
                   })
                   .map(feed => ({
                     key: `popularFeed:${feed.uri}`,
@@ -358,6 +387,7 @@ export function FeedsScreen(_props: Props) {
     isSearchPending,
     searchError,
     isUserSearching,
+    gate,
   ])
 
   const renderHeaderBtn = React.useCallback(() => {
@@ -479,7 +509,18 @@ export function FeedsScreen(_props: Props) {
           </View>
         )
       } else if (item.type === 'savedFeed') {
-        return <SavedFeed feedUri={item.feedUri} />
+        const isPrimaryAlgoExperimentEnabled = gate(
+          'reduced_onboarding_and_home_algo',
+        )
+        const primaryAlgo = preferences?.primaryAlgorithm
+        const isPrimaryAlgo =
+          isPrimaryAlgoExperimentEnabled &&
+          primaryAlgo?.enabled &&
+          primaryAlgo?.uri === item.feedUri
+
+        return (
+          <SavedFeed feedUri={item.feedUri} isPrimaryAlgo={isPrimaryAlgo} />
+        )
       } else if (item.type === 'popularFeedsHeader') {
         return (
           <>
@@ -532,6 +573,7 @@ export function FeedsScreen(_props: Props) {
       pal.icon,
       pal.textLight,
       _,
+      preferences?.primaryAlgorithm,
       preferences?.feeds?.saved?.length,
       query,
       onChangeQuery,
@@ -539,6 +581,7 @@ export function FeedsScreen(_props: Props) {
       onSubmitQuery,
       onChangeSearchFocus,
       hasSession,
+      gate,
     ],
   )
 
@@ -585,7 +628,13 @@ export function FeedsScreen(_props: Props) {
   )
 }
 
-function SavedFeed({feedUri}: {feedUri: string}) {
+function SavedFeed({
+  feedUri,
+  isPrimaryAlgo,
+}: {
+  feedUri: string
+  isPrimaryAlgo?: boolean
+}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const {data: info, error} = useFeedSourceInfoQuery({uri: feedUri})
@@ -632,6 +681,12 @@ function SavedFeed({feedUri}: {feedUri: string}) {
           </View>
         ) : null}
       </View>
+
+      {isPrimaryAlgo && (
+        <Text type="xs" style={[pal.textLight, s.semiBold]}>
+          <Trans>Primary Algorithm</Trans>
+        </Text>
+      )}
       {isMobile && (
         <FontAwesomeIcon
           icon="chevron-right"
