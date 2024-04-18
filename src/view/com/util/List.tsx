@@ -40,8 +40,8 @@ function ListImpl<ItemT>(
   const isScrolledDown = useSharedValue(false)
   const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
-  const showsVerticalScrollIndicator =
-    !useGate('hide_vertical_scroll_indicators') || isWeb
+  const gate = useGate()
+
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
   }
@@ -97,7 +97,9 @@ function ListImpl<ItemT>(
       scrollEventThrottle={1}
       style={style}
       ref={ref}
-      showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+      showsVerticalScrollIndicator={
+        isWeb || !gate('hide_vertical_scroll_indicators')
+      }
     />
   )
 }
