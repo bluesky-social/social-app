@@ -160,9 +160,20 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
 })
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const {currentAccount} = useSession()
+  const {currentAccount, accounts} = useSession()
   const did = currentAccount?.did
   const currentStatsigUser = React.useMemo(() => toStatsigUser(did), [did])
+  const otherStatsigUsers = React.useMemo(
+    () =>
+      accounts
+        .map(account => account.did)
+        .filter(accountDid => accountDid !== did)
+        .map(toStatsigUser),
+    [accounts, did],
+  )
+
+  // Have our own cache in front of Statsig.
+  // This ensures the results remain stable until the active DID changes.
   const [gateCache, setGateCache] = React.useState(() => new Map())
   const [prevDid, setPrevDid] = React.useState(did)
   if (did !== prevDid) {
@@ -170,15 +181,17 @@ export function Provider({children}: {children: React.ReactNode}) {
     setGateCache(new Map())
   }
 
+  // Periodically poll Statsig to get the current rule evaluations for all stored accounts.
+  // These changes are prefetched and stored, but don't get applied until the active DID changes.
+  // This ensures that when you switch an account, it already has fresh results by then.
   React.useEffect(() => {
-    function refresh() {
-      // This will not affect the current session.
-      // Statsig will put the results into local storage and we'll pick it up on next load.
-      Statsig.updateUser(currentStatsigUser)
-    }
-    const id = setInterval(refresh, 3 * 60e3 /* 3 min */)
+    const id = setInterval(
+      // Note: Only first five will be taken into account by Statsig.
+      () => Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers]),
+      3 * 60e3 /* 3 min */,
+    )
     return () => clearInterval(id)
-  }, [currentStatsigUser])
+  }, [currentStatsigUser, otherStatsigUsers])
 
   return (
     <GateCache.Provider value={gateCache}>
