@@ -413,16 +413,18 @@ export function ProfileFeedScreenInner({
                             />
                           </Menu.Item>
 
-                          <Menu.Item
-                            disabled={isSetPrimaryAlgoPending}
-                            testID="feedHeaderDropdownSetPrimaryAlgoBtn"
-                            label={_(msg`Set as primary algorithm`)}
-                            onPress={onSetPrimaryAlgo}>
-                            <Menu.ItemText>
-                              {_(msg`Set as primary algorithm`)}
-                            </Menu.ItemText>
-                            <Menu.ItemIcon icon={Home} position="right" />
-                          </Menu.Item>
+                          {gate('reduced_onboarding_and_home_algo') && (
+                            <Menu.Item
+                              disabled={isSetPrimaryAlgoPending}
+                              testID="feedHeaderDropdownSetPrimaryAlgoBtn"
+                              label={_(msg`Set as primary algorithm`)}
+                              onPress={onSetPrimaryAlgo}>
+                              <Menu.ItemText>
+                                {_(msg`Set as primary algorithm`)}
+                              </Menu.ItemText>
+                              <Menu.ItemIcon icon={Home} position="right" />
+                            </Menu.Item>
+                          )}
                         </>
                       )}
 
