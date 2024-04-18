@@ -41,7 +41,7 @@ export function DisableEmail2FADialog({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestEmailConfirmation()
+      await getAgent().com.atproto.server.requestEmailUpdate()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -54,12 +54,15 @@ export function DisableEmail2FADialog({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.updateEmail({
-        token: confirmationCode.trim(),
-        emailAuthFactor: false,
-      })
-      updateCurrentAccount({emailAuthFactor: false})
-      Toast.show(_(msg`Email 2FA disabled`))
+      if (currentAccount?.email) {
+        await getAgent().com.atproto.server.updateEmail({
+          email: currentAccount!.email,
+          token: confirmationCode.trim(),
+          emailAuthFactor: false,
+        })
+        updateCurrentAccount({emailAuthFactor: false})
+        Toast.show(_(msg`Email 2FA disabled`))
+      }
       control.close()
     } catch (e) {
       setError(cleanError(String(e)))
@@ -97,6 +100,8 @@ export function DisableEmail2FADialog({
               </Trans>
             )}
           </P>
+
+          {error ? <ErrorMessage message={error} /> : undefined}
 
           {stage === Stages.Email ? (
             <View style={gtMobile && [a.flex_row, a.justify_end, a.gap_md]}>
@@ -149,6 +154,18 @@ export function DisableEmail2FADialog({
               </View>
               <View style={gtMobile && [a.flex_row, a.justify_end]}>
                 <Button
+                  testID="resendCodeBtn"
+                  variant="ghost"
+                  color="primary"
+                  size={gtMobile ? 'small' : 'large'}
+                  onPress={onSendEmail}
+                  label={_(msg`Resend email`)}
+                  disabled={isProcessing}>
+                  <ButtonText>
+                    <Trans>Resend email</Trans>
+                  </ButtonText>
+                </Button>
+                <Button
                   testID="confirmBtn"
                   variant="solid"
                   color="primary"
@@ -164,8 +181,6 @@ export function DisableEmail2FADialog({
               </View>
             </View>
           ) : undefined}
-
-          {error ? <ErrorMessage message={error} /> : undefined}
 
           {!gtMobile && isNative && <View style={{height: 40}} />}
         </View>

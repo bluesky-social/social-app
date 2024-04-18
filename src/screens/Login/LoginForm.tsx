@@ -6,7 +6,10 @@ import {
   TextInput,
   View,
 } from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {
+  ComAtprotoServerCreateSession,
+  ComAtprotoServerDescribeServer,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -104,6 +107,7 @@ export const LoginForm = ({
           service: serviceUrl,
           identifier: fullIdent,
           password,
+          authFactorToken,
         },
         'LoginForm',
       )
@@ -111,7 +115,9 @@ export const LoginForm = ({
       const errMsg = e.toString()
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
-      if (false /* TODO*/) {
+      if (
+        e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
+      ) {
         setIsAuthFactorTokenNeeded(true)
       } else if (errMsg.includes('Authentication Required')) {
         logger.debug('Failed to login due to invalid credentials', {
