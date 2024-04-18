@@ -2,11 +2,10 @@ import React from 'react'
 import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {DISCOVER_FEED_URI, PROD_DEFAULT_FEED} from '#/lib/constants'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
 import {emitSoftReset} from '#/state/events'
 import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -63,24 +62,6 @@ function HomeScreenReady({
         feeds.push(`feedgen|${uri}`)
       } else if (uri.includes('app.bsky.graph.list')) {
         feeds.push(`list|${uri}`)
-      } else if (uri === 'primary-algo') {
-        const isPrimaryAlgoExperimentEnabled = gate(
-          'reduced_onboarding_and_home_algo',
-        )
-        if (
-          isPrimaryAlgoExperimentEnabled &&
-          preferences.primaryAlgorithm.enabled &&
-          preferences.primaryAlgorithm.uri
-        ) {
-          feeds.push(`feedgen|${preferences.primaryAlgorithm.uri}`)
-        } else {
-          // should never happen - esb
-          logger.error(`primary-algo feed expected, but no URI found`, {
-            isPrimaryAlgoExperimentEnabled,
-            primaryAlgorithm: preferences.primaryAlgorithm,
-          })
-          feeds.push(`feedgen|${DISCOVER_FEED_URI}`)
-        }
       } else if (uri === 'home') {
         feeds.push('home')
       } else if (uri === 'following') {
@@ -88,7 +69,7 @@ function HomeScreenReady({
       }
     }
     return feeds
-  }, [pinnedFeedInfos, gate, preferences.primaryAlgorithm])
+  }, [pinnedFeedInfos])
 
   const rawSelectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
