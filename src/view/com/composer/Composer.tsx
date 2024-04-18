@@ -4,6 +4,7 @@ import {
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
+  LayoutAnimation,
   Platform,
   Pressable,
   ScrollView,
@@ -122,6 +123,14 @@ export const ComposePost = observer(function ComposePost({
     () => new GalleryModel(initImageUris),
     [initImageUris],
   )
+
+  const prevNumberOfImages = useRef<number>(gallery.size)
+
+  if (prevNumberOfImages.current !== gallery.size) {
+    prevNumberOfImages.current = gallery.size
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+  }
+
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
