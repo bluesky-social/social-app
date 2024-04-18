@@ -126,7 +126,7 @@ export const ComposePost = observer(function ComposePost({
 
   const prevNumberOfImages = useRef<number>(gallery.size)
 
-  if (prevNumberOfImages.current !== gallery.size) {
+  if (isIOS && prevNumberOfImages.current !== gallery.size) {
     prevNumberOfImages.current = gallery.size
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
   }
