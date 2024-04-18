@@ -132,7 +132,9 @@ export const ComposePost = observer(function ComposePost({
   )
 
   useLayoutEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    if (isIOS) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    }
   }, [gallery.size])
 
   const onClose = useCallback(() => {
