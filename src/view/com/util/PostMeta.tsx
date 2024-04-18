@@ -54,7 +54,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         </View>
       )}
-      <Text numberOfLines={1} style={[styles.maxWidth]}>
+      <Text numberOfLines={1} style={[styles.maxWidth, pal.textLight]}>
         <TextLinkOnWebOnly
           type={opts.displayNameType || 'lg-bold'}
           style={[pal.text, opts.displayNameStyle]}
