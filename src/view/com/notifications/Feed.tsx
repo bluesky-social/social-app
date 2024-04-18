@@ -1,25 +1,36 @@
 import React from 'react'
-import {CenteredView} from '../util/Views'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {FeedItem} from './FeedItem'
-import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {EmptyState} from '../util/EmptyState'
-import {s} from 'lib/styles'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
-import {logger} from '#/logger'
-import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {s} from 'lib/styles'
+import {TabBar} from '../pager/TabBar'
+import {EmptyState} from '../util/EmptyState'
+import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
-import {usePalette} from '#/lib/hooks/usePalette'
+import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {CenteredView} from '../util/Views'
+import {FeedItem} from './FeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
+
+const notificationTypes = [
+  {type: 'All', label: 'All'},
+  {type: 'post-like', label: 'Likes'},
+  {type: 'follow', label: 'Follows'},
+  {type: 'reply', label: 'Replies'},
+  {type: 'quote', label: 'Quotes'},
+  {type: 'repost', label: 'Reposts'},
+]
 
 export function Feed({
   scrollElRef,
@@ -33,6 +44,7 @@ export function Feed({
   ListHeaderComponent?: () => JSX.Element
 }) {
   const [isPTRing, setIsPTRing] = React.useState(false)
+  const [filterType, setFilterType] = React.useState('All')
   const pal = usePalette('default')
 
   const {_} = useLingui()
@@ -48,26 +60,27 @@ export function Feed({
     isFetchingNextPage,
     fetchNextPage,
   } = useNotificationFeedQuery({enabled: !!moderationOpts})
-  const isEmpty = !isFetching && !data?.pages[0]?.items.length
+
+  const handleTabSelect = (index: number) => {
+    setFilterType(notificationTypes[index].type)
+  }
 
   const items = React.useMemo(() => {
-    let arr: any[] = []
-    if (isFetched) {
-      if (isEmpty) {
-        arr = arr.concat([EMPTY_FEED_ITEM])
-      } else if (data) {
-        for (const page of data?.pages) {
-          arr = arr.concat(page.items)
-        }
-      }
-      if (isError && !isEmpty) {
-        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
-      }
-    } else {
-      arr.push(LOADING_ITEM)
+    let arr = []
+    if (isFetched && data) {
+      data.pages.forEach(page => {
+        page.items.forEach(item => {
+          if (filterType === 'All' || item.type === filterType) {
+            arr.push(item)
+          }
+        })
+      })
     }
+    if (isError && arr.length === 0) arr.push(LOAD_MORE_ERROR_ITEM)
+    if (!isFetched && arr.length === 0) arr.push(LOADING_ITEM)
+    if (isFetched && arr.length === 0) arr.push(EMPTY_FEED_ITEM)
     return arr
-  }, [isFetched, isError, isEmpty, data])
+  }, [isFetched, isError, data, filterType])
 
   const onRefresh = React.useCallback(async () => {
     try {
@@ -145,6 +158,15 @@ export function Feed({
 
   return (
     <View style={s.hContentRegion}>
+      <CenteredView>
+        <TabBar
+          selectedPage={notificationTypes.findIndex(
+            nt => nt.type === filterType,
+          )}
+          items={notificationTypes.map(nt => nt.label)}
+          onSelect={handleTabSelect}
+        />
+      </CenteredView>
       {error && (
         <CenteredView>
           <ErrorMessage
@@ -177,4 +199,9 @@ export function Feed({
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 10,
+  },
 })
