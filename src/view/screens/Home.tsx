@@ -209,13 +209,13 @@ function HomeScreenReady({
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
       {allFeeds.map(feed => {
-        if (feed === 'home') {
+        if (feed === 'home' || feed === 'following') {
           return (
             <FeedPage
-              key={'home'}
+              key={feed}
               testID="followingFeedPage"
-              isPageFocused={selectedFeed === 'home'}
-              feed={'home'}
+              isPageFocused={selectedFeed === feed}
+              feed={feed}
               feedParams={homeFeedParams}
               renderEmptyState={renderFollowingEmptyState}
               renderEndOfFeed={FollowingEndOfFeed}
