@@ -93,9 +93,7 @@ export function FeedSourceCardLoaded({
   const {_} = useLingui()
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
-  const isPrimaryAlgoExperimentEnabled = useGate(
-    'reduced_onboarding_and_home_algo',
-  )
+  const gate = useGate()
   const primaryAlgoDialogControl = Prompt.usePromptControl()
 
   const {isPending: isSavePending, mutateAsync: saveFeed} =
@@ -239,7 +237,7 @@ export function FeedSourceCardLoaded({
           </View>
 
           {showFeedSaveButton &&
-            (isPrimaryAlgoExperimentEnabled && isPrimaryAlgo ? (
+            (gate('reduced_onboarding_and_home_algo') && isPrimaryAlgo ? (
               <Button
                 variant="solid"
                 color="secondary"

@@ -168,7 +168,8 @@ export function ProfileFeedScreenInner({
   const playHaptic = useHaptics()
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
-  const isPrimaryAlgoExperimentEnabled = useGate(
+  const gate = useGate()
+  const isPrimaryAlgoExperimentEnabled = gate(
     'reduced_onboarding_and_home_algo',
   )
   const primaryAlgoDialogControl = useDialogControl()

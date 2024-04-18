@@ -244,7 +244,8 @@ const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const isPrimaryAlgoExperimentEnabled = useGate(
+  const gate = useGate()
+  const isPrimaryAlgoExperimentEnabled = gate(
     'reduced_onboarding_and_home_algo',
   )
   const primaryAlgo = preferences?.primaryAlgorithm

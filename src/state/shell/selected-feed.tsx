@@ -12,28 +12,40 @@ const stateContext = React.createContext<StateContext>('home')
 const setContext = React.createContext<SetContext>((_: string) => {})
 
 function getInitialFeed(gate: (gateName: Gate) => boolean) {
+  const isPrimaryAlgoExperimentEnabled = gate(
+    'reduced_onboarding_and_home_algo',
+  )
+  let feed = isPrimaryAlgoExperimentEnabled ? 'primary-algo' : 'home'
+
   if (isWeb) {
     if (window.location.pathname === '/') {
       const params = new URLSearchParams(window.location.search)
       const feedFromUrl = params.get('feed')
       if (feedFromUrl) {
-        // If explicitly booted from a link like /?feed=..., prefer that.
+        // basically a link to a specific tab, use that every time if present
         return feedFromUrl
       }
     }
     const feedFromSession = sessionStorage.getItem('lastSelectedHomeFeed')
     if (feedFromSession) {
       // Fall back to a previously chosen feed for this browser tab.
-      return feedFromSession
+      feed = feedFromSession
     }
   }
-  if (!gate('start_session_with_following')) {
-    const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
-    if (feedFromPersisted) {
-      // Fall back to the last chosen one across all tabs.
-      return feedFromPersisted
-    }
+
+  const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
+  if (feedFromPersisted) {
+    // Fall back to the last chosen one across all tabs.
+    feed = feedFromPersisted
   }
+
+  if (isPrimaryAlgoExperimentEnabled) {
+    if (feed === 'home') {
+      return 'home'
+    }
+    return 'primary-algo'
+  }
+
   return 'home'
 }
 

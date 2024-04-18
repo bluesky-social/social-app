@@ -54,9 +54,7 @@ function HomeScreenReady({
   pinnedFeedInfos: FeedSourceInfo[]
 }) {
   useOTAUpdates()
-  const isPrimaryAlgoExperimentEnabled = useGate(
-    'reduced_onboarding_and_home_algo',
-  )
+  const gate = useGate()
 
   const allFeeds = React.useMemo(() => {
     const feeds: FeedDescriptor[] = []
@@ -66,6 +64,9 @@ function HomeScreenReady({
       } else if (uri.includes('app.bsky.graph.list')) {
         feeds.push(`list|${uri}`)
       } else if (uri === 'primary-algo') {
+        const isPrimaryAlgoExperimentEnabled = gate(
+          'reduced_onboarding_and_home_algo',
+        )
         if (
           isPrimaryAlgoExperimentEnabled &&
           preferences.primaryAlgorithm.enabled &&
@@ -87,11 +88,7 @@ function HomeScreenReady({
       }
     }
     return feeds
-  }, [
-    pinnedFeedInfos,
-    isPrimaryAlgoExperimentEnabled,
-    preferences.primaryAlgorithm,
-  ])
+  }, [pinnedFeedInfos, gate, preferences.primaryAlgorithm])
 
   const rawSelectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
@@ -137,7 +134,6 @@ function HomeScreenReady({
     }),
   )
 
-  const gate = useGate()
   React.useEffect(() => {
     const listener = AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'active') {
