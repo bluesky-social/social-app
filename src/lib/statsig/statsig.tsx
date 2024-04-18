@@ -34,19 +34,21 @@ if (isWeb && typeof window !== 'undefined') {
 
 export type {LogEvents}
 
-const statsigOptions = {
-  environment: {
-    tier:
-      process.env.NODE_ENV === 'development'
-        ? 'development'
-        : IS_TESTFLIGHT
-        ? 'staging'
-        : 'production',
-  },
-  // Don't block on waiting for network. The fetched config will kick in on next load.
-  // This ensures the UI is always consistent and doesn't update mid-session.
-  // Note this makes cold load (no local storage) and private mode return `false` for all gates.
-  initTimeoutMs: 1,
+function createStatsigOptions() {
+  return {
+    environment: {
+      tier:
+        process.env.NODE_ENV === 'development'
+          ? 'development'
+          : IS_TESTFLIGHT
+          ? 'staging'
+          : 'production',
+    },
+    // Don't block on waiting for network. The fetched config will kick in on next load.
+    // This ensures the UI is always consistent and doesn't update mid-session.
+    // Note this makes cold load (no local storage) and private mode return `false` for all gates.
+    initTimeoutMs: 1,
+  }
 }
 
 type FlatJSONRecord = Record<
@@ -171,6 +173,7 @@ export function Provider({children}: {children: React.ReactNode}) {
         .map(toStatsigUser),
     [accounts, did],
   )
+  const statsigOptions = React.useMemo(() => createStatsigOptions(), [])
 
   // Have our own cache in front of Statsig.
   // This ensures the results remain stable until the active DID changes.
