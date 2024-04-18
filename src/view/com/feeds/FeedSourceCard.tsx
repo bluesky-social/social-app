@@ -193,11 +193,9 @@ export function FeedSourceCardLoaded({
       </View>
     )
 
-  const showFeedSaveButton = showSaveBtn && feed.type === 'feed'
+  const primaryAlgo = preferences?.primaryAlgorithm
   const isPrimaryAlgo =
-    preferences.primaryAlgorithm?.enabled &&
-    preferences.primaryAlgorithm?.uri &&
-    preferences.primaryAlgorithm.uri === feed.uri
+    primaryAlgo?.enabled && primaryAlgo?.uri && primaryAlgo.uri === feed.uri
 
   return (
     <>
@@ -236,52 +234,57 @@ export function FeedSourceCardLoaded({
             </Text>
           </View>
 
-          {showFeedSaveButton &&
-            (gate('reduced_onboarding_and_home_algo') && isPrimaryAlgo ? (
-              <Button
-                variant="solid"
-                color="secondary"
-                size="small"
-                label={_(
-                  msg`This feed is already set as your primary algorithm.`,
-                )}
-                onPress={() => {
-                  primaryAlgoDialogControl.open()
-                }}>
-                <ButtonIcon icon={Check} position="left" />
-                <ButtonText>Primary Algorithm</ButtonText>
-              </Button>
-            ) : (
-              <View style={[s.justifyCenter]}>
-                <Pressable
-                  testID={`feed-${feed.displayName}-toggleSave`}
-                  disabled={isSavePending || isPinPending || isRemovePending}
-                  accessibilityRole="button"
-                  accessibilityLabel={
-                    isSaved
-                      ? _(msg`Remove from my feeds`)
-                      : _(msg`Add to my feeds`)
-                  }
-                  accessibilityHint=""
-                  onPress={onToggleSaved}
-                  hitSlop={15}
-                  style={styles.btn}>
-                  {isSaved ? (
-                    <FontAwesomeIcon
-                      icon={['far', 'trash-can']}
-                      size={19}
-                      color={pal.colors.icon}
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      icon="plus"
-                      size={18}
-                      color={pal.colors.link}
-                    />
+          {showSaveBtn && feed.type === 'feed' && (
+            <>
+              {gate('reduced_onboarding_and_home_algo') && isPrimaryAlgo ? (
+                <Button
+                  variant="solid"
+                  color="secondary"
+                  size="small"
+                  label={_(
+                    msg`This feed is already set as your primary algorithm.`,
                   )}
-                </Pressable>
-              </View>
-            ))}
+                  onPress={() => {
+                    primaryAlgoDialogControl.open()
+                  }}>
+                  <ButtonIcon icon={Check} position="left" />
+                  <ButtonText>
+                    <Trans>Primary Algorithm</Trans>
+                  </ButtonText>
+                </Button>
+              ) : (
+                <View style={[s.justifyCenter]}>
+                  <Pressable
+                    testID={`feed-${feed.displayName}-toggleSave`}
+                    disabled={isSavePending || isPinPending || isRemovePending}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      isSaved
+                        ? _(msg`Remove from my feeds`)
+                        : _(msg`Add to my feeds`)
+                    }
+                    accessibilityHint=""
+                    onPress={onToggleSaved}
+                    hitSlop={15}
+                    style={styles.btn}>
+                    {isSaved ? (
+                      <FontAwesomeIcon
+                        icon={['far', 'trash-can']}
+                        size={19}
+                        color={pal.colors.icon}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon="plus"
+                        size={18}
+                        color={pal.colors.link}
+                      />
+                    )}
+                  </Pressable>
+                </View>
+              )}
+            </>
+          )}
         </View>
 
         {showDescription && feed.description ? (

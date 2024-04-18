@@ -341,7 +341,9 @@ export function ProfileFeedScreenInner({
                       primaryAlgoDialogControl.open()
                     }}>
                     <ButtonIcon icon={Check} position="left" />
-                    <ButtonText>Primary Algorithm</ButtonText>
+                    <ButtonText>
+                      <Trans>Primary Algorithm</Trans>
+                    </ButtonText>
                   </NewButton>
                 ) : (
                   <NewButton

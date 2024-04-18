@@ -7,6 +7,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {track} from '#/lib/analytics/analytics'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {
   usePinFeedMutation,
@@ -14,6 +15,7 @@ import {
   useSetSaveFeedsMutation,
   useUnpinFeedMutation,
 } from '#/state/queries/preferences'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useHaptics} from 'lib/haptics'
@@ -112,6 +114,7 @@ export function SavedFeeds({}: Props) {
                 setSavedFeeds={setSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                preferences={preferences}
               />
             ))
           )
@@ -145,6 +148,7 @@ export function SavedFeeds({}: Props) {
                 setSavedFeeds={setSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                preferences={preferences}
               />
             ))
           )
@@ -179,6 +183,7 @@ function ListItem({
   currentFeeds,
   setSavedFeeds,
   resetSaveFeedsMutationState,
+  preferences,
 }: {
   feedUri: string // uri
   isPinned: boolean
@@ -187,6 +192,7 @@ function ListItem({
   resetSaveFeedsMutationState: ReturnType<
     typeof useSetSaveFeedsMutation
   >['reset']
+  preferences: UsePreferencesQueryResponse
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -195,6 +201,13 @@ function ListItem({
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
   const isPending = isPinPending || isUnpinPending
+  const gate = useGate()
+  const primaryAlgo = preferences.primaryAlgorithm
+  const isPrimaryAlgoExperimentEnabled = gate(
+    'reduced_onboarding_and_home_algo',
+  )
+  const isPrimaryAlgo = primaryAlgo?.enabled && primaryAlgo?.uri === feedUri
+  const showPinButton = !(isPrimaryAlgoExperimentEnabled && isPrimaryAlgo)
 
   const onTogglePinned = React.useCallback(async () => {
     playHaptic()
@@ -303,20 +316,24 @@ function ListItem({
         showSaveBtn
         showMinimalPlaceholder
       />
-      <Pressable
-        disabled={isPending}
-        accessibilityRole="button"
-        hitSlop={10}
-        onPress={onTogglePinned}
-        style={state => ({
-          opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
-        })}>
-        <FontAwesomeIcon
-          icon="thumb-tack"
-          size={20}
-          color={isPinned ? colors.blue3 : pal.colors.icon}
-        />
-      </Pressable>
+      {showPinButton && (
+        <View style={{paddingRight: 16}}>
+          <Pressable
+            disabled={isPending}
+            accessibilityRole="button"
+            hitSlop={10}
+            onPress={onTogglePinned}
+            style={state => ({
+              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
+            })}>
+            <FontAwesomeIcon
+              icon="thumb-tack"
+              size={20}
+              color={isPinned ? colors.blue3 : pal.colors.icon}
+            />
+          </Pressable>
+        </View>
+      )}
     </Pressable>
   )
 }
@@ -345,7 +362,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    paddingRight: 16,
   },
   webArrowButtonsContainer: {
     paddingLeft: 16,
