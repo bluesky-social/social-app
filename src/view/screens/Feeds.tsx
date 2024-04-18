@@ -259,11 +259,20 @@ export function FeedsScreen(_props: Props) {
             const {saved, pinned} = preferences.feeds
 
             slices = slices.concat(
-              pinned.map(uri => ({
-                key: `savedFeed:${uri}`,
-                type: 'savedFeed',
-                feedUri: uri,
-              })),
+              pinned
+                .filter(uri => {
+                  return !(
+                    isPrimaryAlgoExperimentEnabled &&
+                    primaryAlgo?.enabled &&
+                    primaryAlgo?.uri &&
+                    uri === primaryAlgo?.uri
+                  )
+                })
+                .map(uri => ({
+                  key: `savedFeed:${uri}`,
+                  type: 'savedFeed',
+                  feedUri: uri,
+                })),
             )
 
             slices = slices.concat(
