@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -123,7 +123,7 @@ export function ListHeaderDesktop({
   )
 }
 
-export function ListMaybePlaceholder({
+let ListMaybePlaceholder = ({
   isLoading,
   noEmpty,
   isError,
@@ -147,7 +147,7 @@ export function ListMaybePlaceholder({
   onRetry?: () => Promise<unknown>
   onGoBack?: () => void
   sideBorders?: boolean
-}) {
+}): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
@@ -205,3 +205,5 @@ export function ListMaybePlaceholder({
 
   return null
 }
+ListMaybePlaceholder = memo(ListMaybePlaceholder)
+export {ListMaybePlaceholder}

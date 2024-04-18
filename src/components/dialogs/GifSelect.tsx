@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useDeferredValue, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
@@ -76,7 +76,8 @@ function GifList({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const [search, setSearch] = useState('')
+  const [undeferredSearch, setSearch] = useState('')
+  const search = useDeferredValue(undeferredSearch)
 
   const isSearching = search.length > 0
 
@@ -129,80 +130,49 @@ function GifList({
 
   const listHeader = useMemo(() => {
     return (
-      <>
+      <View
+        style={[
+          a.relative,
+          a.mb_lg,
+          a.flex_row,
+          a.align_center,
+          !gtMobile && isWeb && a.gap_md,
+        ]}>
+        {/* cover top corners */}
         <View
           style={[
-            a.relative,
-            a.mb_lg,
-            a.flex_row,
-            a.align_center,
-            !gtMobile && isWeb && a.gap_md,
-          ]}>
-          {/* cover top corners */}
-          <View
-            style={[
-              a.absolute,
-              {top: 0, left: 0, right: 0, height: '50%'},
-              t.atoms.bg,
-            ]}
-          />
+            a.absolute,
+            {top: 0, left: 0, right: 0, height: '50%'},
+            t.atoms.bg,
+          ]}
+        />
 
-          {!gtMobile && isWeb && (
-            <Button
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="round"
-              onPress={() => control.close()}
-              label={_(msg`Close GIF dialog`)}>
-              <ButtonIcon icon={Arrow} size="md" />
-            </Button>
-          )}
-
-          <TextField.Root>
-            <TextField.Icon icon={Search} />
-            <TextField.Input
-              label={_(msg`Search GIFs`)}
-              placeholder={_(msg`Powered by GIPHY`)}
-              value={search}
-              onChangeText={setSearch}
-            />
-          </TextField.Root>
-        </View>
-        {!hasData && (
-          <ListMaybePlaceholder
-            isLoading={isLoading}
-            isError={isError}
-            onRetry={refetch}
-            onGoBack={onGoBack}
-            emptyType="results"
-            sideBorders={false}
-            errorTitle={_(msg`Failed to load GIFs`)}
-            errorMessage={_(msg`There was an issue connecting to GIPHY.`)}
-            emptyMessage={
-              isSearching
-                ? _(msg`No search results found for "${search}"`)
-                : _(
-                    msg`No trending GIFs found. There may be an issue with GIPHY.`,
-                  )
-            }
-          />
+        {!gtMobile && isWeb && (
+          <Button
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            onPress={() => control.close()}
+            label={_(msg`Close GIF dialog`)}>
+            <ButtonIcon icon={Arrow} size="md" />
+          </Button>
         )}
-      </>
+
+        <TextField.Root>
+          <TextField.Icon icon={Search} />
+          <TextField.Input
+            label={_(msg`Search GIFs`)}
+            placeholder={_(msg`Powered by GIPHY`)}
+            value={undeferredSearch}
+            onChangeText={setSearch}
+            returnKeyType="search"
+            clearButtonMode="while-editing"
+          />
+        </TextField.Root>
+      </View>
     )
-  }, [
-    gtMobile,
-    t.atoms.bg,
-    _,
-    search,
-    hasData,
-    isLoading,
-    isError,
-    refetch,
-    onGoBack,
-    isSearching,
-    control,
-  ])
+  }, [gtMobile, t.atoms.bg, _, undeferredSearch, control])
 
   return (
     <>
@@ -213,7 +183,30 @@ function GifList({
         renderItem={renderItem}
         numColumns={gtMobile ? 3 : 2}
         columnWrapperStyle={a.gap_sm}
-        ListHeaderComponent={listHeader}
+        ListHeaderComponent={
+          <>
+            {listHeader}
+            {!hasData && (
+              <ListMaybePlaceholder
+                isLoading={isLoading}
+                isError={isError}
+                onRetry={refetch}
+                onGoBack={onGoBack}
+                emptyType="results"
+                sideBorders={false}
+                errorTitle={_(msg`Failed to load GIFs`)}
+                errorMessage={_(msg`There was an issue connecting to GIPHY.`)}
+                emptyMessage={
+                  isSearching
+                    ? _(msg`No search results found for that term`)
+                    : _(
+                        msg`No trending GIFs found. There may be an issue with GIPHY.`,
+                      )
+                }
+              />
+            )}
+          </>
+        }
         stickyHeaderIndices={[0]}
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
