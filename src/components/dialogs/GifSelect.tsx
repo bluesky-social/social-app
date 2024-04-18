@@ -125,7 +125,6 @@ function GifList({
 
   const onEndReached = React.useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
-    console.log('fetching next page')
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
