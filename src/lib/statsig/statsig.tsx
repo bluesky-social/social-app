@@ -193,11 +193,12 @@ export function Provider({children}: {children: React.ReactNode}) {
   // These changes are prefetched and stored, but don't get applied until the active DID changes.
   // This ensures that when you switch an account, it already has fresh results by then.
   React.useEffect(() => {
-    const id = setInterval(
-      // Note: Only first five will be taken into account by Statsig.
-      () => Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers]),
-      3 * 60e3 /* 3 min */,
-    )
+    const id = setInterval(() => {
+      if (Statsig.initializeCalled()) {
+        // Note: Only first five will be taken into account by Statsig.
+        Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers])
+      }
+    }, 3 * 60e3 /* 3 min */)
     return () => clearInterval(id)
   }, [currentStatsigUser, otherStatsigUsers])
 
