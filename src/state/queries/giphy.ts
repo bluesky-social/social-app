@@ -35,7 +35,8 @@ export function useGiphyTrending() {
     queryKey: RQKEY_TRENDING,
     queryFn: ({pageParam}) => getTrendingGifs({offset: pageParam}),
     initialPageParam: 0,
-    getNextPageParam: lastPage => lastPage.pagination.offset,
+    getNextPageParam: lastPage =>
+      lastPage.pagination.offset + lastPage.pagination.count,
   })
 }
 
@@ -44,7 +45,8 @@ export function useGifphySearch(query: string) {
     queryKey: RQKEY_SEARCH(query),
     queryFn: ({pageParam}) => searchGifs({q: query, offset: pageParam}),
     initialPageParam: 0,
-    getNextPageParam: lastPage => lastPage.pagination.offset,
+    getNextPageParam: lastPage =>
+      lastPage.pagination.offset + lastPage.pagination.count,
     enabled: !!query,
     placeholderData: keepPreviousData,
   })
