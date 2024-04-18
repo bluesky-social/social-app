@@ -169,9 +169,6 @@ export function ProfileFeedScreenInner({
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
   const gate = useGate()
-  const isPrimaryAlgoExperimentEnabled = gate(
-    'reduced_onboarding_and_home_algo',
-  )
   const primaryAlgoDialogControl = useDialogControl()
   const primaryAlgo = preferences.primaryAlgorithm
 
@@ -329,7 +326,7 @@ export function ProfileFeedScreenInner({
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             {feedInfo && hasSession && (
               <>
-                {isPrimaryAlgoExperimentEnabled && isPrimaryAlgo ? (
+                {gate('reduced_onboarding_and_home_algo') && isPrimaryAlgo ? (
                   <NewButton
                     variant="solid"
                     color="secondary"
@@ -476,7 +473,7 @@ export function ProfileFeedScreenInner({
     onPressReport,
     onPressShare,
     t,
-    isPrimaryAlgoExperimentEnabled,
+    gate,
     isPrimaryAlgo,
     primaryAlgoDialogControl,
     onSetPrimaryAlgo,
