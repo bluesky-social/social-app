@@ -238,23 +238,6 @@ const DISCOVER_FEED_STUB: FeedSourceInfo = {
   likeCount: 0,
   likeUri: '',
 }
-const PRIMARY_ALGO_STUB: FeedSourceInfo = {
-  type: 'feed',
-  displayName: 'For You',
-  uri: 'primary-algo',
-  route: {
-    href: '/',
-    name: 'For You',
-    params: {},
-  },
-  cid: '',
-  avatar: '',
-  description: new RichText({text: ''}),
-  creatorDid: '',
-  creatorHandle: '',
-  likeCount: 0,
-  likeUri: '',
-}
 
 const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
@@ -283,6 +266,11 @@ export function usePinnedFeedsInfos() {
     queryKey: [
       pinnedFeedInfosQueryKeyRoot,
       (hasSession ? 'authed:' : 'unauthed:') + pinnedUris.join(','),
+      `primary:${
+        preferences?.primaryAlgorithm.uri
+          ? preferences?.primaryAlgorithm.uri
+          : 'none'
+      }`,
     ],
     queryFn: async () => {
       let resolved = new Map()
@@ -323,6 +311,7 @@ export function usePinnedFeedsInfos() {
       // The returned result will have the original order.
       let result = [hasSession ? HOME_FEED_STUB : DISCOVER_FEED_STUB]
 
+      let primaryAlgoPromise = Promise.resolve()
       if (
         isPrimaryAlgoExperimentEnabled &&
         hasSession &&
@@ -331,17 +320,27 @@ export function usePinnedFeedsInfos() {
         const {enabled, uri} = preferences.primaryAlgorithm
         // ONLY add the primary algo if we have a URI set
         if (enabled && uri) {
-          result = [PRIMARY_ALGO_STUB, HOME_FEED_STUB]
+          primaryAlgoPromise = getAgent()
+            .app.bsky.feed.getFeedGenerator({
+              feed: uri,
+            })
+            .then(res => {
+              result.unshift(hydrateFeedGenerator(res.data.view))
+            })
         }
       }
 
-      await Promise.allSettled([feedsPromise, ...listsPromises])
+      await Promise.allSettled([
+        feedsPromise,
+        primaryAlgoPromise,
+        ...listsPromises,
+      ])
       for (let pinnedUri of pinnedUris) {
         if (resolved.has(pinnedUri)) {
           result.push(resolved.get(pinnedUri))
         }
       }
-      console.log(result)
+
       return result
     },
   })
