@@ -21,7 +21,7 @@ import {
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
   useSaveFeedMutation,
-  useSetHomeAlgoMutation,
+  useSetPrimaryAlgorithmMutation,
   useUnpinFeedMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
@@ -56,7 +56,6 @@ import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {HomeAlgoNoticeDialog} from '#/components/HomeAlgoNoticeDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -70,6 +69,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {InlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
+import {PrimaryAlgoNoticeDialog} from '#/components/PrimaryAlgoNoticeDialog'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 
@@ -168,10 +168,10 @@ export function ProfileFeedScreenInner({
   const playHaptic = useHaptics()
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
-  const isHomeAlgoExperimentEnabled = useGate(
+  const isPrimaryAlgoExperimentEnabled = useGate(
     'reduced_onboarding_and_home_algo',
   )
-  const homeAlgoDialogControl = useDialogControl()
+  const primaryAlgoDialogControl = useDialogControl()
 
   const {
     mutateAsync: saveFeed,
@@ -198,10 +198,10 @@ export function ProfileFeedScreenInner({
     isPending: isUnpinPending,
   } = useUnpinFeedMutation()
   const {
-    mutateAsync: setHomeAlgo,
-    variables: homeAlgoVariables,
-    isPending: isSetHomeAlgoPending,
-  } = useSetHomeAlgoMutation()
+    mutateAsync: setPrimaryAlgo,
+    variables: primaryAlgoVariables,
+    isPending: isSetPrimaryAlgoPending,
+  } = useSetPrimaryAlgorithmMutation()
 
   const isSaved =
     !removedFeed &&
@@ -209,11 +209,11 @@ export function ProfileFeedScreenInner({
   const isPinned =
     !unpinnedFeed &&
     (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
-  const isHomeAlgo =
-    (preferences.homeAlgo?.enabled &&
-      preferences.homeAlgo?.uri &&
-      preferences.homeAlgo.uri === feedInfo.uri) ||
-    (homeAlgoVariables?.enabled && homeAlgoVariables.uri === feedInfo.uri)
+  const isPrimaryAlgo =
+    (preferences.primaryAlgorithm?.enabled &&
+      preferences.primaryAlgorithm?.uri &&
+      preferences.primaryAlgorithm.uri === feedInfo.uri) ||
+    (primaryAlgoVariables?.enabled && primaryAlgoVariables.uri === feedInfo.uri)
 
   useSetTitle(feedInfo?.displayName)
 
@@ -278,15 +278,17 @@ export function ProfileFeedScreenInner({
     _,
   ])
 
-  const onSetHomeAlgo = React.useCallback(async () => {
+  const onSetPrimaryAlgo = React.useCallback(async () => {
     try {
       playHaptic()
-      await setHomeAlgo({enabled: true, uri: feedInfo.uri})
+      await setPrimaryAlgo({enabled: true, uri: feedInfo.uri})
     } catch (e: any) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('ProfileFeed: failed to set home algo', {message: e.message})
+      logger.error('ProfileFeed: failed to set primary algo', {
+        message: e.message,
+      })
     }
-  }, [setHomeAlgo, feedInfo, _, playHaptic])
+  }, [setPrimaryAlgo, feedInfo, _, playHaptic])
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
@@ -325,19 +327,19 @@ export function ProfileFeedScreenInner({
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             {feedInfo &&
               hasSession &&
-              (isHomeAlgoExperimentEnabled && isHomeAlgo ? (
+              (isPrimaryAlgoExperimentEnabled && isPrimaryAlgo ? (
                 <NewButton
                   variant="solid"
                   color="secondary"
                   size="small"
                   label={_(
-                    msg`This feed is already set as your home algorithm.`,
+                    msg`This feed is already set as your primary algorithm.`,
                   )}
                   onPress={() => {
-                    homeAlgoDialogControl.open()
+                    primaryAlgoDialogControl.open()
                   }}>
                   <ButtonIcon icon={Check} position="left" />
-                  <ButtonText>Home Algo</ButtonText>
+                  <ButtonText>Primary Algorithm</ButtonText>
                 </NewButton>
               ) : (
                 <NewButton
@@ -386,7 +388,7 @@ export function ProfileFeedScreenInner({
                 <Menu.Group>
                   {hasSession && (
                     <>
-                      {!isHomeAlgo && (
+                      {!isPrimaryAlgo && (
                         <>
                           <Menu.Item
                             disabled={isSavePending || isRemovePending}
@@ -409,12 +411,12 @@ export function ProfileFeedScreenInner({
                           </Menu.Item>
 
                           <Menu.Item
-                            disabled={isSetHomeAlgoPending}
-                            testID="feedHeaderDropdownSetHomeAlgoBtn"
-                            label={_(msg`Set as home algorithm`)}
-                            onPress={onSetHomeAlgo}>
+                            disabled={isSetPrimaryAlgoPending}
+                            testID="feedHeaderDropdownSetPrimaryAlgoBtn"
+                            label={_(msg`Set as primary algorithm`)}
+                            onPress={onSetPrimaryAlgo}>
                             <Menu.ItemText>
-                              {_(msg`Set as home algorithm`)}
+                              {_(msg`Set as primary algorithm`)}
                             </Menu.ItemText>
                             <Menu.ItemIcon icon={Home} position="right" />
                           </Menu.Item>
@@ -449,7 +451,7 @@ export function ProfileFeedScreenInner({
           feedInfo={feedInfo}
         />
 
-        <HomeAlgoNoticeDialog control={homeAlgoDialogControl} />
+        <PrimaryAlgoNoticeDialog control={primaryAlgoDialogControl} />
       </>
     )
   }, [
@@ -468,11 +470,11 @@ export function ProfileFeedScreenInner({
     onPressReport,
     onPressShare,
     t,
-    isHomeAlgoExperimentEnabled,
-    isHomeAlgo,
-    homeAlgoDialogControl,
-    onSetHomeAlgo,
-    isSetHomeAlgoPending,
+    isPrimaryAlgoExperimentEnabled,
+    isPrimaryAlgo,
+    primaryAlgoDialogControl,
+    onSetPrimaryAlgo,
+    isSetPrimaryAlgoPending,
   ])
 
   return (

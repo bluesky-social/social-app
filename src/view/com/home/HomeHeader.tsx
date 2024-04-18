@@ -25,7 +25,7 @@ export function HomeHeader(
   const hasPinnedCustom = React.useMemo<boolean>(() => {
     if (!hasSession) return false
     return feeds.some(
-      tab => !['home', 'home-algo', 'following'].includes(tab.uri),
+      tab => !['home', 'primary-algo', 'following'].includes(tab.uri),
     )
   }, [feeds, hasSession])
 

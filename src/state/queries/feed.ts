@@ -238,13 +238,13 @@ const DISCOVER_FEED_STUB: FeedSourceInfo = {
   likeCount: 0,
   likeUri: '',
 }
-const HOME_ALGO_FEED_STUB: FeedSourceInfo = {
+const PRIMARY_ALGO_STUB: FeedSourceInfo = {
   type: 'feed',
-  displayName: 'Home',
-  uri: 'home-algo',
+  displayName: 'For You',
+  uri: 'primary-algo',
   route: {
     href: '/',
-    name: 'Home',
+    name: 'For You',
     params: {},
   },
   cid: '',
@@ -261,18 +261,18 @@ const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const isHomeAlgoExperimentEnabled = useGate(
+  const isPrimaryAlgoExperimentEnabled = useGate(
     'reduced_onboarding_and_home_algo',
   )
   const pinnedUris = (preferences?.feeds?.pinned ?? []).filter(f => {
     if (
-      isHomeAlgoExperimentEnabled &&
+      isPrimaryAlgoExperimentEnabled &&
       hasSession &&
-      preferences?.homeAlgo &&
-      preferences?.homeAlgo?.enabled
+      preferences?.primaryAlgorithm &&
+      preferences?.primaryAlgorithm?.enabled
     ) {
       // remove duplicate feed
-      return f !== preferences?.homeAlgo.uri
+      return f !== preferences?.primaryAlgorithm.uri
     }
     return true
   })
@@ -323,11 +323,15 @@ export function usePinnedFeedsInfos() {
       // The returned result will have the original order.
       let result = [hasSession ? HOME_FEED_STUB : DISCOVER_FEED_STUB]
 
-      if (isHomeAlgoExperimentEnabled && hasSession && preferences?.homeAlgo) {
-        const {enabled, uri} = preferences.homeAlgo
-        // ONLY add the home algo if we have a URI set
+      if (
+        isPrimaryAlgoExperimentEnabled &&
+        hasSession &&
+        preferences?.primaryAlgorithm
+      ) {
+        const {enabled, uri} = preferences.primaryAlgorithm
+        // ONLY add the primary algo if we have a URI set
         if (enabled && uri) {
-          result = [HOME_ALGO_FEED_STUB, HOME_FEED_STUB]
+          result = [PRIMARY_ALGO_STUB, HOME_FEED_STUB]
         }
       }
 

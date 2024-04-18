@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 
-export function HomeAlgoNoticeDialog({
+export function PrimaryAlgoNoticeDialog({
   control,
 }: {
   control: DialogOuterProps['control']
@@ -13,9 +13,9 @@ export function HomeAlgoNoticeDialog({
   const {_} = useLingui()
   return (
     <Prompt.Outer control={control}>
-      <Prompt.TitleText>Your home algorithm</Prompt.TitleText>
+      <Prompt.TitleText>Your primary algorithm</Prompt.TitleText>
       <Prompt.DescriptionText>
-        This feed is set as your home algorithm, which is used as your home
+        This feed is set as your primary algorithm, which is used as your home
         screen when you open the app.
       </Prompt.DescriptionText>
       <Prompt.Actions>

@@ -25,8 +25,8 @@ import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {HomeAlgoNoticeDialog} from '#/components/HomeAlgoNoticeDialog'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {PrimaryAlgoNoticeDialog} from '#/components/PrimaryAlgoNoticeDialog'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
@@ -93,10 +93,10 @@ export function FeedSourceCardLoaded({
   const {_} = useLingui()
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
-  const isHomeAlgoExperimentEnabled = useGate(
+  const isPrimaryAlgoExperimentEnabled = useGate(
     'reduced_onboarding_and_home_algo',
   )
-  const homeAlgoDialogControl = Prompt.usePromptControl()
+  const primaryAlgoDialogControl = Prompt.usePromptControl()
 
   const {isPending: isSavePending, mutateAsync: saveFeed} =
     useSaveFeedMutation()
@@ -196,10 +196,10 @@ export function FeedSourceCardLoaded({
     )
 
   const showFeedSaveButton = showSaveBtn && feed.type === 'feed'
-  const isHomeAlgo =
-    preferences.homeAlgo?.enabled &&
-    preferences.homeAlgo?.uri &&
-    preferences.homeAlgo.uri === feed.uri
+  const isPrimaryAlgo =
+    preferences.primaryAlgorithm?.enabled &&
+    preferences.primaryAlgorithm?.uri &&
+    preferences.primaryAlgorithm.uri === feed.uri
 
   return (
     <>
@@ -239,17 +239,19 @@ export function FeedSourceCardLoaded({
           </View>
 
           {showFeedSaveButton &&
-            (isHomeAlgoExperimentEnabled && isHomeAlgo ? (
+            (isPrimaryAlgoExperimentEnabled && isPrimaryAlgo ? (
               <Button
                 variant="solid"
                 color="secondary"
                 size="small"
-                label={_(msg`This feed is already set as your home algorithm.`)}
+                label={_(
+                  msg`This feed is already set as your primary algorithm.`,
+                )}
                 onPress={() => {
-                  homeAlgoDialogControl.open()
+                  primaryAlgoDialogControl.open()
                 }}>
                 <ButtonIcon icon={Check} position="left" />
-                <ButtonText>Home Algo</ButtonText>
+                <ButtonText>Primary Algorithm</ButtonText>
               </Button>
             ) : (
               <View style={[s.justifyCenter]}>
@@ -313,7 +315,7 @@ export function FeedSourceCardLoaded({
         confirmButtonColor="negative"
       />
 
-      <HomeAlgoNoticeDialog control={homeAlgoDialogControl} />
+      <PrimaryAlgoNoticeDialog control={primaryAlgoDialogControl} />
     </>
   )
 }

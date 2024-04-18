@@ -54,7 +54,7 @@ function HomeScreenReady({
   pinnedFeedInfos: FeedSourceInfo[]
 }) {
   useOTAUpdates()
-  const isHomeAlgoExperimentEnabled = useGate(
+  const isPrimaryAlgoExperimentEnabled = useGate(
     'reduced_onboarding_and_home_algo',
   )
 
@@ -65,18 +65,18 @@ function HomeScreenReady({
         feeds.push(`feedgen|${uri}`)
       } else if (uri.includes('app.bsky.graph.list')) {
         feeds.push(`list|${uri}`)
-      } else if (uri === 'home-algo') {
+      } else if (uri === 'primary-algo') {
         if (
-          isHomeAlgoExperimentEnabled &&
-          preferences.homeAlgo.enabled &&
-          preferences.homeAlgo.uri
+          isPrimaryAlgoExperimentEnabled &&
+          preferences.primaryAlgorithm.enabled &&
+          preferences.primaryAlgorithm.uri
         ) {
-          feeds.push(`feedgen|${preferences.homeAlgo.uri}`)
+          feeds.push(`feedgen|${preferences.primaryAlgorithm.uri}`)
         } else {
           // should never happen - esb
-          logger.error(`home-algo feed expected, but no URI found`, {
-            isHomeAlgoExperimentEnabled,
-            homeAlgo: preferences.homeAlgo,
+          logger.error(`primary-algo feed expected, but no URI found`, {
+            isPrimaryAlgoExperimentEnabled,
+            primaryAlgorithm: preferences.primaryAlgorithm,
           })
           feeds.push(`feedgen|${DISCOVER_FEED_URI}`)
         }
@@ -87,7 +87,11 @@ function HomeScreenReady({
       }
     }
     return feeds
-  }, [pinnedFeedInfos, isHomeAlgoExperimentEnabled, preferences.homeAlgo])
+  }, [
+    pinnedFeedInfos,
+    isPrimaryAlgoExperimentEnabled,
+    preferences.primaryAlgorithm,
+  ])
 
   const rawSelectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
