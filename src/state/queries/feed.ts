@@ -247,38 +247,34 @@ export function usePinnedFeedsInfos() {
   const isPrimaryAlgoExperimentEnabled = useGate(
     'reduced_onboarding_and_home_algo',
   )
-  const pinnedUris = (preferences?.feeds?.pinned ?? []).filter(f => {
-    if (
-      isPrimaryAlgoExperimentEnabled &&
-      hasSession &&
-      preferences?.primaryAlgorithm &&
-      preferences?.primaryAlgorithm?.enabled
-    ) {
-      // remove duplicate feed
-      return f !== preferences?.primaryAlgorithm.uri
-    }
-    return true
-  })
+  const primaryAlgo = preferences?.primaryAlgorithm
+  const pinnedUris = preferences?.feeds?.pinned ?? []
+  const feedUris = pinnedUris.filter(uri => getFeedTypeFromUri(uri) === 'feed')
+  const listUris = pinnedUris.filter(uri => getFeedTypeFromUri(uri) === 'list')
+
+  if (
+    isPrimaryAlgoExperimentEnabled &&
+    hasSession &&
+    primaryAlgo?.enabled &&
+    primaryAlgo?.uri
+  ) {
+    feedUris.unshift(primaryAlgo.uri)
+  }
+
+  // used for query key
+  const allUris = feedUris.concat(listUris)
 
   return useQuery({
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     queryKey: [
       pinnedFeedInfosQueryKeyRoot,
-      (hasSession ? 'authed:' : 'unauthed:') + pinnedUris.join(','),
-      `primary:${
-        preferences?.primaryAlgorithm.uri
-          ? preferences?.primaryAlgorithm.uri
-          : 'none'
-      }`,
+      (hasSession ? 'authed:' : 'unauthed:') + allUris.join(','),
     ],
     queryFn: async () => {
       let resolved = new Map()
 
       // Get all feeds. We can do this in a batch.
-      const feedUris = pinnedUris.filter(
-        uri => getFeedTypeFromUri(uri) === 'feed',
-      )
       let feedsPromise = Promise.resolve()
       if (feedUris.length > 0) {
         feedsPromise = getAgent()
@@ -293,9 +289,6 @@ export function usePinnedFeedsInfos() {
       }
 
       // Get all lists. This currently has to be done individually.
-      const listUris = pinnedUris.filter(
-        uri => getFeedTypeFromUri(uri) === 'list',
-      )
       const listsPromises = listUris.map(listUri =>
         getAgent()
           .app.bsky.graph.getList({
@@ -308,34 +301,26 @@ export function usePinnedFeedsInfos() {
           }),
       )
 
-      // The returned result will have the original order.
       let result = [hasSession ? HOME_FEED_STUB : DISCOVER_FEED_STUB]
 
-      let primaryAlgoPromise = Promise.resolve()
-      if (
-        isPrimaryAlgoExperimentEnabled &&
-        hasSession &&
-        preferences?.primaryAlgorithm
-      ) {
-        const {enabled, uri} = preferences.primaryAlgorithm
-        // ONLY add the primary algo if we have a URI set
-        if (enabled && uri) {
-          primaryAlgoPromise = getAgent()
-            .app.bsky.feed.getFeedGenerator({
-              feed: uri,
-            })
-            .then(res => {
-              result.unshift(hydrateFeedGenerator(res.data.view))
-            })
+      await Promise.allSettled([feedsPromise, ...listsPromises])
+
+      // if primary algo is enabled and was fetched, add it to the front of the list
+      if (primaryAlgo?.enabled && primaryAlgo?.uri) {
+        if (resolved.has(primaryAlgo.uri)) {
+          result = [resolved.get(primaryAlgo.uri), ...result]
         }
       }
 
-      await Promise.allSettled([
-        feedsPromise,
-        primaryAlgoPromise,
-        ...listsPromises,
-      ])
-      for (let pinnedUri of pinnedUris) {
+      const pinnedUrisSansPrimary = pinnedUris.filter(uri => {
+        if (primaryAlgo?.enabled) {
+          return uri !== primaryAlgo?.uri
+        }
+        return true
+      })
+
+      // order the feeds/lists in the order they were pinned
+      for (let pinnedUri of pinnedUrisSansPrimary) {
         if (resolved.has(pinnedUri)) {
           result.push(resolved.get(pinnedUri))
         }
