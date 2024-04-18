@@ -156,7 +156,7 @@ export const ComposePost = observer(function ComposePost({
   const viewStyles = useMemo(
     () => ({
       paddingBottom: isNative ? insets.bottom + (isIOS ? 80 : 0) : 0,
-      paddingTop: isMobile && isWeb ? 15 : 0,
+      paddingTop: isIOS ? insets.top - 12 : isMobile && isWeb ? 15 : 0,
     }),
     [insets, isMobile],
   )
