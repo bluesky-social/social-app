@@ -25,7 +25,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<Set<string>>(new Set())
 
-  const sendToFeed = React.useRef(
+  const [sendToFeed] = React.useState(() =>
     debounce(
       () => {
         console.log(Array.from(queue.current).map(toInteraction))
@@ -45,7 +45,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
     }
     const sub = AppState.addEventListener('change', (state: AppStateStatus) => {
       if (state === 'background') {
-        sendToFeed.current.flush()
+        sendToFeed.flush()
       }
     })
     return () => sub.remove()
@@ -71,7 +71,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
           })
           if (!history.current.has(str)) {
             queue.current.add(str)
-            sendToFeed.current()
+            sendToFeed()
           }
         }
       },
@@ -85,7 +85,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
         const str = toString(interaction)
         if (!history.current.has(str)) {
           queue.current.add(str)
-          sendToFeed.current()
+          sendToFeed()
         }
       },
 
@@ -95,7 +95,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
         if (!enabled) {
           return
         }
-        sendToFeed.current.flush()
+        sendToFeed.flush()
         history.current.clear()
       },
     }
