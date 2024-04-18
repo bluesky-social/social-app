@@ -29,6 +29,7 @@ import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useTheme} from 'lib/ThemeContext'
+import {FeedSuggestedFollows} from '#/components/FeedSuggestedFollows'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -40,6 +41,7 @@ const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const SUGGESTED_FOLLOWS_ITEM = {_reactKey: '__suggested_follows__'}
 
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
@@ -198,6 +200,7 @@ let Feed = ({
       } else if (isEmpty) {
         arr = arr.concat([EMPTY_FEED_ITEM])
       } else if (data) {
+        arr = arr.concat(SUGGESTED_FOLLOWS_ITEM)
         for (const page of data?.pages) {
           arr = arr.concat(page.slices)
         }
@@ -297,6 +300,8 @@ let Feed = ({
         // see home.ts (feed api) for more info
         // -prf
         return <DiscoverFallbackHeader />
+      } else if (item === SUGGESTED_FOLLOWS_ITEM) {
+        return <FeedSuggestedFollows />
       }
       return <FeedSlice slice={item} />
     },
