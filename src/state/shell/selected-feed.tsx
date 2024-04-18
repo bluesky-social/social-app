@@ -4,6 +4,7 @@ import {Gate} from '#/lib/statsig/gates'
 import {useGate} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
+import {DEFAULT_FEED_DESCRIPTOR} from '#/state/queries/post-feed'
 
 type StateContext = string
 type SetContext = (v: string) => void
@@ -15,7 +16,7 @@ function getInitialFeed(gate: (gateName: Gate) => boolean) {
   const isPrimaryAlgoExperimentEnabled = gate(
     'reduced_onboarding_and_home_algo',
   )
-  let feed = isPrimaryAlgoExperimentEnabled ? 'primary-algo' : 'home'
+  let feed = DEFAULT_FEED_DESCRIPTOR
 
   if (isWeb) {
     if (window.location.pathname === '/') {
@@ -40,13 +41,15 @@ function getInitialFeed(gate: (gateName: Gate) => boolean) {
   }
 
   if (isPrimaryAlgoExperimentEnabled) {
+    // following feed
     if (feed === 'home') {
       return 'home'
     }
-    return 'primary-algo'
+    // or left-most tab
+    return DEFAULT_FEED_DESCRIPTOR
   }
 
-  return 'home'
+  return DEFAULT_FEED_DESCRIPTOR
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {

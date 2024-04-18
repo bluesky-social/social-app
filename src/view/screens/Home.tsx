@@ -74,6 +74,10 @@ function HomeScreenReady({
   const rawSelectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed as FeedDescriptor)
+  /*
+   * N.B. if DEFAULT_FEED_DESCRIPTOR, maybeFoundIndex will be -1 and we'll fall
+   * back to 0
+   */
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
 
