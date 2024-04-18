@@ -133,6 +133,7 @@ export function ListMaybePlaceholder({
   errorMessage,
   emptyType = 'page',
   onRetry,
+  onGoBack,
 }: {
   isLoading: boolean
   noEmpty?: boolean
@@ -143,6 +144,7 @@ export function ListMaybePlaceholder({
   errorMessage?: string
   emptyType?: 'page' | 'results'
   onRetry?: () => Promise<unknown>
+  onGoBack?: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -173,6 +175,7 @@ export function ListMaybePlaceholder({
         title={errorTitle ?? _(msg`Oops!`)}
         message={errorMessage ?? _(`Something went wrong!`)}
         onRetry={onRetry}
+        onGoBack={onGoBack}
       />
     )
   }
@@ -191,6 +194,7 @@ export function ListMaybePlaceholder({
           _(msg`We're sorry! We can't find the page you were looking for.`)
         }
         onRetry={onRetry}
+        onGoBack={onGoBack}
       />
     )
   }

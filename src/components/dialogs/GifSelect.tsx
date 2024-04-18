@@ -20,7 +20,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arr
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {InlineLinkText} from '#/components/Link'
 import {Button, ButtonIcon, ButtonText} from '../Button'
-import {ListFooter} from '../Lists'
+import {ListFooter, ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
 
 export function GifSelectDialog({
@@ -83,8 +83,16 @@ function GifList({
   const trendingQuery = useGiphyTrending()
   const searchQuery = useGifphySearch(search)
 
-  const {data, fetchNextPage, isFetchingNextPage, hasNextPage, error} =
-    isSearching ? searchQuery : trendingQuery
+  const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    error,
+    isLoading,
+    isError,
+    refetch,
+  } = isSearching ? searchQuery : trendingQuery
 
   const flattenedData = useMemo(() => {
     const uniquenessSet = new Set<string>()
@@ -112,50 +120,88 @@ function GifList({
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
-  const listHeader = useMemo(
-    () => (
-      <View
-        style={[
-          a.relative,
-          a.mb_lg,
-          a.flex_row,
-          a.align_center,
-          !gtMobile && isWeb && a.gap_md,
-        ]}>
-        {/* cover top corners */}
+  const hasData = flattenedData.length > 0
+
+  const onGoBack = useCallback(
+    () => (isSearching ? setSearch('') : control.close()),
+    [control, isSearching],
+  )
+
+  const listHeader = useMemo(() => {
+    return (
+      <>
         <View
           style={[
-            a.absolute,
-            {top: 0, left: 0, right: 0, height: '50%'},
-            t.atoms.bg,
-          ]}
-        />
-
-        {!gtMobile && isWeb && (
-          <Button
-            size="small"
-            variant="ghost"
-            color="secondary"
-            shape="round"
-            onPress={() => control.close()}
-            label={_(msg`Close GIF dialog`)}>
-            <ButtonIcon icon={Arrow} size="md" />
-          </Button>
-        )}
-
-        <TextField.Root>
-          <TextField.Icon icon={Search} />
-          <TextField.Input
-            label={_(msg`Search GIFs`)}
-            placeholder={_(msg`Powered by GIPHY`)}
-            value={search}
-            onChangeText={setSearch}
+            a.relative,
+            a.mb_lg,
+            a.flex_row,
+            a.align_center,
+            !gtMobile && isWeb && a.gap_md,
+          ]}>
+          {/* cover top corners */}
+          <View
+            style={[
+              a.absolute,
+              {top: 0, left: 0, right: 0, height: '50%'},
+              t.atoms.bg,
+            ]}
           />
-        </TextField.Root>
-      </View>
-    ),
-    [search, _, t.atoms.bg, gtMobile, control],
-  )
+
+          {!gtMobile && isWeb && (
+            <Button
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="round"
+              onPress={() => control.close()}
+              label={_(msg`Close GIF dialog`)}>
+              <ButtonIcon icon={Arrow} size="md" />
+            </Button>
+          )}
+
+          <TextField.Root>
+            <TextField.Icon icon={Search} />
+            <TextField.Input
+              label={_(msg`Search GIFs`)}
+              placeholder={_(msg`Powered by GIPHY`)}
+              value={search}
+              onChangeText={setSearch}
+            />
+          </TextField.Root>
+        </View>
+        {!hasData && (
+          <ListMaybePlaceholder
+            isLoading={isLoading}
+            isError={isError}
+            onRetry={refetch}
+            onGoBack={onGoBack}
+            emptyType="results"
+            errorTitle={_(msg`Failed to load GIFs`)}
+            errorMessage={_(msg`There was an issue connecting to GIPHY.`)}
+            emptyMessage={
+              isSearching
+                ? _(msg`No search results found for "${search}"`)
+                : _(
+                    msg`No trending GIFs found. There may be an issue with GIPHY.`,
+                  )
+            }
+          />
+        )}
+      </>
+    )
+  }, [
+    gtMobile,
+    t.atoms.bg,
+    _,
+    search,
+    hasData,
+    isLoading,
+    isError,
+    refetch,
+    onGoBack,
+    isSearching,
+    control,
+  ])
 
   return (
     <>
