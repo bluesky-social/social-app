@@ -201,7 +201,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     }
   })
   React.useEffect(() => {
-    const id = setInterval(handleIntervalTick, 3 * 60e3 /* 3 min */)
+    const id = setInterval(handleIntervalTick, 60e3 /* 1 min */)
     return () => clearInterval(id)
   }, [handleIntervalTick])
 
