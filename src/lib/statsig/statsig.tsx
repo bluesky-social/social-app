@@ -8,6 +8,8 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
+import {timeout} from '../async/timeout'
+import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
@@ -34,19 +36,23 @@ if (isWeb && typeof window !== 'undefined') {
 
 export type {LogEvents}
 
-const statsigOptions = {
-  environment: {
-    tier:
-      process.env.NODE_ENV === 'development'
-        ? 'development'
-        : IS_TESTFLIGHT
-        ? 'staging'
-        : 'production',
-  },
-  // Don't block on waiting for network. The fetched config will kick in on next load.
-  // This ensures the UI is always consistent and doesn't update mid-session.
-  // Note this makes cold load (no local storage) and private mode return `false` for all gates.
-  initTimeoutMs: 1,
+function createStatsigOptions(prefetchUsers: StatsigUser[]) {
+  return {
+    environment: {
+      tier:
+        process.env.NODE_ENV === 'development'
+          ? 'development'
+          : IS_TESTFLIGHT
+          ? 'staging'
+          : 'production',
+    },
+    // Don't block on waiting for network. The fetched config will kick in on next load.
+    // This ensures the UI is always consistent and doesn't update mid-session.
+    // Note this makes cold load (no local storage) and private mode return `false` for all gates.
+    initTimeoutMs: 1,
+    // Get fresh flags for other accounts as well, if any.
+    prefetchUsers,
+  }
 }
 
 type FlatJSONRecord = Record<
@@ -159,10 +165,51 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
   }
 })
 
+export async function tryFetchGates(
+  did: string,
+  strategy: 'prefer-low-latency' | 'prefer-fresh-gates',
+) {
+  try {
+    let timeoutMs = 250 // Don't block the UI if we can't do this fast.
+    if (strategy === 'prefer-fresh-gates') {
+      // Use this for less common operations where the user would be OK with a delay.
+      timeoutMs = 1500
+    }
+    // Note: This condition is currently false the very first render because
+    // Statsig has not initialized yet. In the future, we can fix this by
+    // doing the initialization ourselves instead of relying on the provider.
+    if (Statsig.initializeCalled()) {
+      await Promise.race([
+        timeout(timeoutMs),
+        Statsig.prefetchUsers([toStatsigUser(did)]),
+      ])
+    }
+  } catch (e) {
+    // Don't leak errors to the calling code, this is meant to be always safe.
+    console.error(e)
+  }
+}
+
 export function Provider({children}: {children: React.ReactNode}) {
-  const {currentAccount} = useSession()
+  const {currentAccount, accounts} = useSession()
   const did = currentAccount?.did
   const currentStatsigUser = React.useMemo(() => toStatsigUser(did), [did])
+
+  const otherDidsConcatenated = accounts
+    .map(account => account.did)
+    .filter(accountDid => accountDid !== did)
+    .join(' ') // We're only interested in DID changes.
+  const otherStatsigUsers = React.useMemo(
+    () => otherDidsConcatenated.split(' ').map(toStatsigUser),
+    [otherDidsConcatenated],
+  )
+  const statsigOptions = React.useMemo(
+    () => createStatsigOptions(otherStatsigUsers),
+    [otherStatsigUsers],
+  )
+
+  // Have our own cache in front of Statsig.
+  // This ensures the results remain stable until the active DID changes.
   const [gateCache, setGateCache] = React.useState(() => new Map())
   const [prevDid, setPrevDid] = React.useState(did)
   if (did !== prevDid) {
@@ -170,15 +217,19 @@ export function Provider({children}: {children: React.ReactNode}) {
     setGateCache(new Map())
   }
 
-  React.useEffect(() => {
-    function refresh() {
-      // This will not affect the current session.
-      // Statsig will put the results into local storage and we'll pick it up on next load.
-      Statsig.updateUser(currentStatsigUser)
+  // Periodically poll Statsig to get the current rule evaluations for all stored accounts.
+  // These changes are prefetched and stored, but don't get applied until the active DID changes.
+  // This ensures that when you switch an account, it already has fresh results by then.
+  const handleIntervalTick = useNonReactiveCallback(() => {
+    if (Statsig.initializeCalled()) {
+      // Note: Only first five will be taken into account by Statsig.
+      Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers])
     }
-    const id = setInterval(refresh, 3 * 60e3 /* 3 min */)
+  })
+  React.useEffect(() => {
+    const id = setInterval(handleIntervalTick, 60e3 /* 1 min */)
     return () => clearInterval(id)
-  }, [currentStatsigUser])
+  }, [handleIntervalTick])
 
   return (
     <GateCache.Provider value={gateCache}>

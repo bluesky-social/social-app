@@ -9,7 +9,7 @@ import {jwtDecode} from 'jwt-decode'
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
 import {IS_TEST_USER} from '#/lib/constants'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, tryFetchGates} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -243,6 +243,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (!agent.session) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
+      const fetchingGates = tryFetchGates(
+        agent.session.did,
+        'prefer-fresh-gates',
+      )
 
       const deactivated = isSessionDeactivated(agent.session.accessJwt)
       if (!deactivated) {
@@ -283,6 +287,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
+      await fetchingGates
       upsertAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
@@ -303,6 +308,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (!agent.session) {
         throw new Error(`session: login failed to establish a session`)
       }
+      const fetchingGates = tryFetchGates(
+        agent.session.did,
+        'prefer-fresh-gates',
+      )
 
       const account: SessionAccount = {
         service: agent.service.toString(),
@@ -330,6 +339,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       __globalAgent = agent
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
+      await fetchingGates
       upsertAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
@@ -362,6 +372,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
+      const fetchingGates = tryFetchGates(account.did, 'prefer-low-latency')
 
       const agent = new BskyAgent({
         service: account.service,
@@ -406,6 +417,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         agent.session = prevSession
         __globalAgent = agent
+        await fetchingGates
         upsertAccount(account)
 
         if (prevSession.deactivated) {
@@ -442,6 +454,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
           __globalAgent = agent
+          await fetchingGates
           upsertAccount(freshAccount)
         } catch (e) {
           /*
