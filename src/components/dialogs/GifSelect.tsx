@@ -1,5 +1,11 @@
-import React, {useCallback, useDeferredValue, useMemo, useState} from 'react'
-import {View} from 'react-native'
+import React, {
+  useCallback,
+  useDeferredValue,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -76,6 +82,7 @@ function GifList({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const ref = useRef<TextInput>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useDeferredValue(undeferredSearch)
 
@@ -118,15 +125,21 @@ function GifList({
 
   const onEndReached = React.useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
+    console.log('fetching next page')
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   const hasData = flattenedData.length > 0
 
-  const onGoBack = useCallback(
-    () => (isSearching ? setSearch('') : control.close()),
-    [control, isSearching],
-  )
+  const onGoBack = useCallback(() => {
+    if (isSearching) {
+      // clear the input and reset the state
+      ref.current?.clear()
+      setSearch('')
+    } else {
+      control.close()
+    }
+  }, [control, isSearching])
 
   const listHeader = useMemo(() => {
     return (
@@ -164,15 +177,16 @@ function GifList({
           <TextField.Input
             label={_(msg`Search GIFs`)}
             placeholder={_(msg`Powered by GIPHY`)}
-            value={undeferredSearch}
             onChangeText={setSearch}
             returnKeyType="search"
             clearButtonMode="while-editing"
+            inputRef={ref}
+            maxLength={50}
           />
         </TextField.Root>
       </View>
     )
-  }, [gtMobile, t.atoms.bg, _, undeferredSearch, control])
+  }, [gtMobile, t.atoms.bg, _, control])
 
   return (
     <>
@@ -198,7 +212,7 @@ function GifList({
                 errorMessage={_(msg`There was an issue connecting to GIPHY.`)}
                 emptyMessage={
                   isSearching
-                    ? _(msg`No search results found for that term`)
+                    ? _(msg`No search results found for "${search}".`)
                     : _(
                         msg`No trending GIFs found. There may be an issue with GIPHY.`,
                       )
@@ -214,12 +228,14 @@ function GifList({
         // @ts-expect-error web only
         style={isWeb && {minHeight: '100vh'}}
         ListFooterComponent={
-          <ListFooter
-            isFetchingNextPage={isFetchingNextPage}
-            error={cleanError(error)}
-            onRetry={fetchNextPage}
-            style={{borderTopWidth: 0}}
-          />
+          hasData ? (
+            <ListFooter
+              isFetchingNextPage={isFetchingNextPage}
+              error={cleanError(error)}
+              onRetry={fetchNextPage}
+              style={{borderTopWidth: 0}}
+            />
+          ) : null
         }
       />
     </>
