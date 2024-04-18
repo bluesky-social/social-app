@@ -159,14 +159,6 @@ msgstr "ALTテキストを追加"
 msgid "Add App Password"
 msgstr "アプリパスワードを追加"
 
-#: src/view/com/composer/Composer.tsx:467
-msgid "Add link card"
-msgstr "リンクカードを追加"
-
-#: src/view/com/composer/Composer.tsx:472
-msgid "Add link card:"
-msgstr "リンクカードを追加："
-
 #: src/components/dialogs/MutedWords.tsx:157
 msgid "Add mute word for configured settings"
 msgstr "ミュートするワードを設定に追加"
@@ -1033,10 +1025,6 @@ msgstr "{0}の報告を作成"
 #: src/view/screens/AppPasswords.tsx:246
 msgid "Created {0}"
 msgstr "{0}に作成"
-
-#: src/view/com/composer/Composer.tsx:469
-msgid "Creates a card with a thumbnail. The card links to {url}"
-msgstr "サムネイル付きのカードを作成します。そのカードは次のアドレスへリンクします：{url}"
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
@@ -3495,8 +3483,8 @@ msgstr "返信のフィルター"
 #: src/view/com/post/Post.tsx:177
 #: src/view/com/posts/FeedItem.tsx:285
 msgctxt "description"
-msgid "Reply to <0/>"
-msgstr "<0/>に返信"
+msgid "Reply to <0><1/></0>"
+msgstr "<0><1/></0>に返信"
 
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
