@@ -213,7 +213,7 @@ const HOME_FEED_STUB: FeedSourceInfo = {
   isPrimaryAlgorithm: false,
   type: 'feed',
   displayName: 'Following',
-  uri: 'home',
+  uri: 'following',
   route: {
     href: '/',
     name: 'Home',
