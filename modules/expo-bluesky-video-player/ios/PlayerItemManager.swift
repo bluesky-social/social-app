@@ -6,14 +6,29 @@ class PlayerItemManager {
   static let shared = PlayerItemManager()
   
   private var prefetchQueue: [String] = []
+  private var assets = NSMapTable<NSString, AVURLAsset>(keyOptions: .strongMemory, valueOptions: .weakMemory)
   
-  func getItem(source: String) -> (AVPlayerItem, Bool)? {
+  func getAsset(source: String) -> AVURLAsset? {
+    
+    
     let path = createPath(source)
+    
+    if let asset = assets.object(forKey: NSString(string: source)) {
+      return asset
+    }
 
     if FileManager.default.fileExists(atPath: path.path) {
-      return (AVPlayerItem(url: path), true)
+      guard let asset = AVAsset(url: path) as? AVURLAsset else {
+        return nil
+      }
+      self.assets.setObject(asset, forKey: NSString(string: source))
+      return asset
     } else if let url = URL(string: source) {
-      return (AVPlayerItem(url: url), false)
+      guard let asset = AVAsset(url: url) as? AVURLAsset else {
+        return nil
+      }
+      self.assets.setObject(asset, forKey: NSString(string: source))
+      return asset
     }
     return nil
   }
@@ -52,7 +67,7 @@ class PlayerItemManager {
   
   private func createPath(_ source: String) -> URL {
     let hash = getHash(source)
-    var gifsDir = getGifsDirectory()
+    let gifsDir = getGifsDirectory()
     return gifsDir.appendingPathComponent("\(hash).mp4", isDirectory: false)
   }
 }

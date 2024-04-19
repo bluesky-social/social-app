@@ -1,24 +1,11 @@
 import AVKit
 
 class PlayerController: AVPlayerViewController, AVPlayerViewControllerDelegate {
+  private var _superview: ExpoBlueskyVideoPlayerView? = nil
+  private var isVisible = false
+  private var playerItem: AVPlayerItem?
+
   var source: String? = nil
-  var _superview: ExpoBlueskyVideoPlayerView? = nil
-  var needsCaching = true
-  
-  var isInUse = false
-  var playerItem:  AVPlayerItem?  {
-    get {
-      return self.player?.currentItem
-    }
-    set {
-      self.player?.replaceCurrentItem(with: newValue)
-    }
-  }
-  var itemStatus: AVPlayerItem.Status? {
-    get {
-      return self.playerItem?.status
-    }
-  }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -56,55 +43,82 @@ class PlayerController: AVPlayerViewController, AVPlayerViewControllerDelegate {
     if let playerItem = notification.object as? AVPlayerItem {
       playerItem.seek(to: CMTime.zero, completionHandler: nil)
       
-      if self.needsCaching, let asset = self.playerItem?.asset as? AVURLAsset {
+      if let asset = self.playerItem?.asset as? AVURLAsset {
         PlayerItemManager.shared.saveToCache(source: asset.url.absoluteString)
-        self.needsCaching = false
       }
     }
   }
   
+  // Because iOS will pause any active videos on background, we need to
+  // begin playing again on foreground
+  @objc func willEnterForeground(notification: Notification) {
+    if self.isVisible, self._superview?.isPlaying == true {
+      self.play()
+    }
+  }
+  
   public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-    if keyPath == "status", let playerItem = object as? AVPlayerItem {
-      if playerItem.status == .readyToPlay, let player = self.player {
+    if keyPath == "status" {
+      if self.playerItem?.status == .readyToPlay, let player = self.player {
         if _superview?.autoplay == true, _superview?.isPlaying == true {
+          self._superview?.isLoaded = true
           player.play()
         }
       }
     }
   }
   
-  func initForView(_ source: String, view: ExpoBlueskyVideoPlayerView) {
-    if let playerItemAndInfo = PlayerItemManager.shared.getItem(source: source) {
-      let playerItem = playerItemAndInfo.0
-      self.needsCaching = !playerItemAndInfo.1
-      
-      playerItem.addObserver(self, forKeyPath: "status", options: [.old, .new], context: nil)
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(playerItemDidReachEnd(notification:)),
-        name: AVPlayerItem.didPlayToEndTimeNotification,
-       object: playerItem
-      )
-      
-      self.isInUse = true
+  func prepare(_ source: String, view: ExpoBlueskyVideoPlayerView) {
+    if self._superview == nil {
       self.source = source
-      self.playerItem = playerItem
       self._superview = view
+    }
+    
+    if let asset = PlayerItemManager.shared.getAsset(source: source) {
+      let playerItem = AVPlayerItem(asset: asset)
+      playerItem.addObserver(self, forKeyPath: "status", options: [.old, .new], context: nil)
+      self.player?.replaceCurrentItem(with: playerItem)
+      self.playerItem = playerItem
+    }
+    
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(playerItemDidReachEnd(notification:)),
+      name: AVPlayerItem.didPlayToEndTimeNotification,
+      object: nil
+    )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(willEnterForeground(notification:)),
+      name: UIApplication.willEnterForegroundNotification,
+      object: nil
+    )
+    
+    self.isVisible = true
+    
+    if self._superview?.isPlaying == true, self.player?.status == .readyToPlay {
+      self.play()
     }
   }
   
   func release() {
+    // We always want to remove these observers for perf reasons. We don't need them unless the player is visible to the user.
     NotificationCenter.default.removeObserver(
       self,
       name: AVPlayerItem.didPlayToEndTimeNotification,
-      object: self.playerItem
+      object: nil
     )
     
-    self.needsCaching = true
-    self.isInUse = false
+    NotificationCenter.default.removeObserver(
+      self,
+      name: UIApplication.willEnterForegroundNotification,
+      object: nil
+    )
+    
     self.pause()
-    self.playerItem = nil
-    self.removeFromParent()
+    self.player?.replaceCurrentItem(with: nil)
+    self.isVisible = false
+    self._superview?.isLoaded = false
   }
   
   func play() {

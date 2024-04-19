@@ -1,4 +1,4 @@
-import React, {createRef} from 'react'
+import React from 'react'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
 import {VideoPlayerViewProps} from './VideoPlayer.types'
@@ -9,11 +9,11 @@ const NativeView: React.ComponentType<
 > = requireNativeViewManager('ExpoBlueskyVideoPlayer')
 
 export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
-  nativeRef: React.RefObject<any>
+  // TODO native types, should all be the same as those in this class
+  private nativeRef: React.RefObject<any> = React.createRef()
 
   constructor(props: VideoPlayerViewProps | Readonly<VideoPlayerViewProps>) {
     super(props)
-    this.nativeRef = createRef()
   }
 
   static async prefetchAsync(source: string): Promise<void> {

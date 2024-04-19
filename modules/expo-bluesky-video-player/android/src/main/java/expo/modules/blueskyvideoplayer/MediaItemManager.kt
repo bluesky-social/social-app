@@ -1,6 +1,7 @@
 package expo.modules.blueskyvideoplayer
 
 import android.net.Uri
+import android.util.Log
 import androidx.media3.common.MediaItem
 import expo.modules.kotlin.AppContext
 import okhttp3.OkHttpClient
@@ -8,20 +9,32 @@ import okhttp3.Request
 import okio.IOException
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.ref.WeakReference
 import java.security.MessageDigest
+import java.util.WeakHashMap
 
 class MediaItemManager(private val appContext: AppContext) {
   companion object {
     private val client = OkHttpClient()
+    private val mediaItems = WeakHashMap<String, WeakReference<MediaItem>>()
   }
 
   fun getItem(source: String): MediaItem {
     val path = createPath(source)
+
+    val cachedMediaItem = mediaItems[source]?.get()
+    if (cachedMediaItem != null) {
+      return cachedMediaItem
+    }
+
     return if (File(path).exists()) {
-      MediaItem.fromUri(Uri.parse(path))
+      val mediaItem = MediaItem.fromUri(Uri.parse(path))
+      mediaItems[source] = WeakReference(mediaItem)
+      mediaItem
     } else {
-      saveToCache(source)
-      MediaItem.fromUri(Uri.parse(source))
+      val mediaItem = MediaItem.fromUri(Uri.parse(source))
+      mediaItems[source] = WeakReference(mediaItem)
+      mediaItem
     }
   }
 

@@ -1,11 +1,11 @@
 import * as React from 'react'
-import {Pressable} from 'react-native'
 
 import {VideoPlayerViewProps} from './VideoPlayer.types'
 
 export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
   private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
     React.createRef()
+  private isLoaded: boolean = false
 
   constructor(props: VideoPlayerViewProps | Readonly<VideoPlayerViewProps>) {
     super(props)
@@ -15,22 +15,37 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
     console.warn('prefetchAsync is not supported on web')
   }
 
-  private firePlayerStateChangeEvent = (isPlaying: boolean) => {
+  private firePlayerStateChangeEvent = (e: {
+    isPlaying: boolean
+    isLoaded: boolean
+  }) => {
     this.props.onPlayerStateChange?.({
-      nativeEvent: {
-        isPlaying,
-      },
+      nativeEvent: e,
+    })
+  }
+
+  private onLoad = () => {
+    this.isLoaded = true
+    this.firePlayerStateChangeEvent({
+      isLoaded: true,
+      isPlaying: this.videoPlayerRef.current.paused,
     })
   }
 
   async playAsync(): Promise<void> {
-    await this.videoPlayerRef.current.play()
-    this.firePlayerStateChangeEvent(true)
+    this.videoPlayerRef.current.play()
+    this.firePlayerStateChangeEvent({
+      isLoaded: this.isLoaded,
+      isPlaying: true,
+    })
   }
 
   async pauseAsync(): Promise<void> {
-    await this.videoPlayerRef.current.pause()
-    this.firePlayerStateChangeEvent(false)
+    this.videoPlayerRef.current.pause()
+    this.firePlayerStateChangeEvent({
+      isLoaded: this.isLoaded,
+      isPlaying: true,
+    })
   }
 
   async toggleAsync(): Promise<void> {
@@ -43,17 +58,17 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
 
   render() {
     return (
-      <Pressable accessibilityRole="button">
-        <video
-          src={this.props.source}
-          autoPlay={this.props.autoplay ? 'autoplay' : undefined}
-          style={this.props.style}
-          preload={this.props.autoplay ? 'auto' : undefined}
-          loop="loop"
-          muted="muted"
-          ref={this.videoPlayerRef}
-        />
-      </Pressable>
+      <video
+        src={this.props.source}
+        autoPlay={this.props.autoplay ? 'autoplay' : undefined}
+        style={this.props.style}
+        preload={this.props.autoplay ? 'auto' : undefined}
+        onCanPlay={this.onLoad}
+        loop="loop"
+        muted="muted"
+        ref={this.videoPlayerRef}
+        playsInline={true}
+      />
     )
   }
 }

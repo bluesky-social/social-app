@@ -1,29 +1,33 @@
 import ExpoModulesCore
 
 public class ExpoBlueskyVideoPlayerView: ExpoView, AVPlayerViewControllerDelegate {
-  public var source: String? = nil {
+  let onPlayerStateChange = EventDispatcher()
+  
+  private var controller: PlayerController
+  
+  var source: String? = nil
+  var autoplay = true
+  var isPlaying: Bool
+  var isLoaded: Bool = false {
     didSet {
-      if self.controller != nil, let source = source {
-        self.controller?.initForView(source, view: self)
-      }
+      self.firePlayerStateChange()
     }
   }
-  public var isPlaying = true
-  public var autoplay = true
-  
-  private var controller: PlayerController? = nil
   
   public override var bounds: CGRect {
     didSet {
-      if let controller = controller {
-        controller.setFrame(rect: bounds)
-      }
+      controller.setFrame(rect: bounds)
     }
   }
   
   public required init(appContext: AppContext? = nil) {
+    self.isPlaying = self.autoplay
+    self.controller = PlayerController()
     super.init(appContext: appContext)
     self.clipsToBounds = true
+    
+    self.controller.setFrame(rect: bounds)
+    self.addSubview(self.controller.view)
   }
   
   public override func willMove(toWindow newWindow: UIWindow?) {
@@ -31,25 +35,29 @@ public class ExpoBlueskyVideoPlayerView: ExpoView, AVPlayerViewControllerDelegat
       guard let source = self.source else {
         return
       }
-      
-      let controller = PlayerControllerManager.shared.getController()
-      controller.setFrame(rect: bounds)
-      controller.initForView(source, view: self)
-      self.addSubview(controller.view)
-      self.controller = controller
+      self.controller.prepare(source, view: self)
     } else {
-      self.controller?.release()
+      self.controller.release()
     }
+  }
+  
+  func firePlayerStateChange() {
+    onPlayerStateChange([
+      "isPlaying": isPlaying,
+      "isLoaded": isLoaded,
+    ])
   }
   
   func play() {
     self.isPlaying = true
-    self.controller?.play()
+    self.controller.play()
+    self.firePlayerStateChange()
   }
   
   func pause() {
     self.isPlaying = false
-    self.controller?.pause()
+    self.controller.pause()
+    self.firePlayerStateChange()
   }
   
   func toggle() {

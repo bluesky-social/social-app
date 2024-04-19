@@ -1,5 +1,12 @@
 import React, {useCallback} from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  Dimensions,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -13,7 +20,7 @@ import {
   parseEmbedPlayerFromUrl,
 } from 'lib/strings/embed-player'
 import {toNiceDomain} from 'lib/strings/url-helpers'
-import {isNative} from 'platform/detection'
+import {isIOS, isNative} from 'platform/detection'
 import {useExternalEmbedsPrefs} from 'state/preferences'
 import {Link} from 'view/com/util/Link'
 import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
@@ -48,7 +55,7 @@ export const ExternalLinkEmbed = ({
     gate('new_gif_player')
 
   if (isCompatibleGiphy) {
-    return <VideoEmbed params={embedPlayerParams} />
+    return <VideoEmbed params={embedPlayerParams} thumb={link.thumb} />
   }
 
   return (
@@ -125,16 +132,28 @@ function LinkWrapper({
   )
 }
 
-function VideoEmbed({params}: {params: EmbedPlayerParams}) {
+function VideoEmbed({
+  params,
+  thumb,
+}: {
+  params: EmbedPlayerParams
+  thumb?: string
+}) {
   const t = useTheme()
   const playerRef = React.useRef<VideoPlayer>(null)
 
   // TODO this should always start as the user's autoplay preference
-  const [isPlaying, setIsPlaying] = React.useState(true)
+  const [playerState, setPlayerState] = React.useState<{
+    isLoaded: boolean
+    isPlaying: boolean
+  }>({
+    isLoaded: false,
+    isPlaying: true,
+  })
 
   const onPlayerStateChange = React.useCallback(
     (e: VideoPlayerStateChangeEvent) => {
-      setIsPlaying(e.nativeEvent.isPlaying)
+      setPlayerState(e.nativeEvent)
     },
     [],
   )
@@ -143,8 +162,14 @@ function VideoEmbed({params}: {params: EmbedPlayerParams}) {
     playerRef.current?.toggleAsync()
   }, [])
 
+  const dimensions = React.useMemo(
+    // This won't be undefined
+    () => calculateAspectRatio(params.dimensions ?? {width: 16, height: 9}),
+    [params.dimensions],
+  )
+
   return (
-    <View style={styles.video}>
+    <View style={[styles.video, isNative && [dimensions, styles.videoNative]]}>
       <Pressable
         accessibilityRole="button"
         style={[
@@ -157,11 +182,13 @@ function VideoEmbed({params}: {params: EmbedPlayerParams}) {
             top: 0,
             bottom: 0,
             zIndex: 1,
-            backgroundColor: !isPlaying ? 'rgba(0, 0, 0, 0.3)' : undefined,
+            backgroundColor: !playerState.isPlaying
+              ? 'rgba(0, 0, 0, 0.3)'
+              : undefined,
           },
         ]}
         onPress={onPress}>
-        {!isPlaying && (
+        {!playerState.isPlaying && (
           <View
             style={[
               a.rounded_full,
@@ -181,10 +208,18 @@ function VideoEmbed({params}: {params: EmbedPlayerParams}) {
             />
           </View>
         )}
+        {!playerState.isLoaded && (
+          <Image
+            source={thumb}
+            style={{height: '100%', width: '100%'}}
+            accessibilityIgnoresInvertColors={true}
+          />
+        )}
       </Pressable>
       <VideoPlayer
         // Need to flatten for web
         source={params.playerUri}
+        style={isNative ? dimensions : undefined}
         // TODO -hailey
         autoplay={true}
         onPlayerStateChange={onPlayerStateChange}
@@ -194,14 +229,47 @@ function VideoEmbed({params}: {params: EmbedPlayerParams}) {
   )
 }
 
+function calculateAspectRatio(dimensions: {width: number; height: number}) {
+  const maxHeight = Dimensions.get('window').width * 0.585
+  // TODO ugh, we need to do this with onLayout tomorrow :( Let's see if we can do it on the native side, not sure
+  // we can without a custom yoga function though. Will see :crossing_fingers:
+  const maxWidth = Dimensions.get('window').width * (isIOS ? 0.75 : 0.7)
+
+  if (dimensions.height > maxHeight) {
+    let newDims = {
+      width: (dimensions.width / dimensions.height) * maxHeight,
+      height: maxHeight,
+    }
+
+    if (newDims.width > maxWidth) {
+      newDims = {
+        width: maxWidth,
+        height: (dimensions.height / dimensions.width) * maxWidth,
+      }
+    }
+
+    return newDims
+  } else if (dimensions.width > maxWidth) {
+    return {
+      width: maxWidth,
+      height: (dimensions.height / dimensions.width) * maxWidth,
+    }
+  }
+
+  return dimensions
+}
+
 const styles = StyleSheet.create({
   video: {
     borderRadius: 6,
     overflow: 'hidden',
     marginTop: 8,
   },
-  videoWeb: {},
-  videoNative: {},
+  videoNative: {
+    maxHeight: Dimensions.get('window').width * 0.5625,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
 
   container: {
     flexDirection: 'column',

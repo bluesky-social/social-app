@@ -10,7 +10,9 @@ public class ExpoBlueskyVideoPlayerModule: Module {
     }
 
     View(ExpoBlueskyVideoPlayerView.self) {
-      Events(["onLoad"])
+      Events(
+        "onPlayerStateChange"
+      )
       
       Prop("source") { (view: ExpoBlueskyVideoPlayerView, prop: String) in
         view.source = prop
@@ -20,23 +22,16 @@ public class ExpoBlueskyVideoPlayerModule: Module {
         view.autoplay = prop
       }
       
-      AsyncFunction("getIsPlayingAsync") { (view: ExpoBlueskyVideoPlayerView, promise: Promise) in
-        promise.resolve(view.isPlaying)
-      }
-      
-      AsyncFunction("toggleAsync") { (view: ExpoBlueskyVideoPlayerView, promise: Promise) in
+      AsyncFunction("toggleAsync") { (view: ExpoBlueskyVideoPlayerView) in
         view.toggle()
-        promise.resolve()
       }
       
-      AsyncFunction("playAsync") { (view: ExpoBlueskyVideoPlayerView, promise: Promise) in
+      AsyncFunction("playAsync") { (view: ExpoBlueskyVideoPlayerView) in
         view.play()
-        promise.resolve()
       }
       
-      AsyncFunction("pauseAsync") { (view: ExpoBlueskyVideoPlayerView, promise: Promise) in
+      AsyncFunction("pauseAsync") { (view: ExpoBlueskyVideoPlayerView) in
         view.pause()
-        promise.resolve()
       }
     }
   }

@@ -1,9 +1,11 @@
 package expo.modules.blueskyvideoplayer
 
+import androidx.media3.common.util.UnstableApi
 import expo.modules.kotlin.Promise
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
+@UnstableApi
 class ExpoBlueskyVideoPlayerModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoBlueskyVideoPlayer")
@@ -16,16 +18,16 @@ class ExpoBlueskyVideoPlayerModule : Module() {
     }
 
     View(ExpoBlueskyVideoPlayerView::class) {
+      Events(
+        "onPlayerStateChange"
+      )
+
       Prop("source") { view: ExpoBlueskyVideoPlayerView, source: String ->
           view.source = source
       }
 
       Prop("autoplay") { view: ExpoBlueskyVideoPlayerView, autoplay: Boolean ->
         view.autoplay = autoplay
-      }
-
-      Prop("getIsPlayingAsync") { view, promise: Promise ->
-        promise.resolve(view.isPlaying)
       }
 
       AsyncFunction("playAsync") { view: ExpoBlueskyVideoPlayerView ->
@@ -38,13 +40,6 @@ class ExpoBlueskyVideoPlayerModule : Module() {
 
       AsyncFunction("toggleAsync") { view: ExpoBlueskyVideoPlayerView ->
         view.toggle()
-      }
-
-      OnViewDidUpdateProps {
-        val source = it.source
-        if (source != null) {
-          it.updateSource(source)
-        }
       }
     }
   }

@@ -3,6 +3,7 @@ import {ViewProps} from 'react-native'
 export interface VideoPlayerStateChangeEvent {
   nativeEvent: {
     isPlaying: boolean
+    isLoaded: boolean
   }
 }
 

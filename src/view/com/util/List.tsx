@@ -87,8 +87,6 @@ function ListImpl<ItemT>(
     contentOffset = {x: 0, y: headerOffset * -1}
   }
 
-  console.log(props.removeClippedSubviews)
-
   return (
     <FlatList_INTERNAL
       {...props}
