@@ -435,6 +435,8 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://giphy.com/gif/some-random-gif-name-gifId',
     'https://giphy.com/gifs/',
 
+    'https://giphy.com/gifs/39248209509382934029?hh=100&ww=100',
+
     'https://media.giphy.com/media/gifId/giphy.webp',
     'https://media0.giphy.com/media/gifId/giphy.webp',
     'https://media1.giphy.com/media/gifId/giphy.gif',
@@ -626,6 +628,19 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     undefined,
     undefined,
+
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/39248209509382934029',
+      playerUri: 'https://i.giphy.com/media/39248209509382934029/200.mp4',
+      dimensions: {
+        width: 100,
+        height: 100,
+      },
+    },
 
     {
       type: 'giphy_gif',
