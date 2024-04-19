@@ -25,11 +25,7 @@ const LOADING_ITEM = {_reactKey: '__loading__'}
 
 const notificationTypes = [
   {type: 'All', label: 'All'},
-  {type: 'post-like', label: 'Likes'},
-  {type: 'follow', label: 'Follows'},
-  {type: 'reply', label: 'Replies'},
-  {type: 'quote', label: 'Quotes'},
-  {type: 'repost', label: 'Reposts'},
+  {type: 'Mentions', label: 'Mentions'},
 ]
 
 export function Feed({
@@ -70,7 +66,11 @@ export function Feed({
     if (isFetched && data) {
       data.pages.forEach(page => {
         page.items.forEach(item => {
-          if (filterType === 'All' || item.type === filterType) {
+          if (
+            filterType === 'All' ||
+            (filterType === 'Mentions' &&
+              (item.type === 'reply' || item.type === 'quote'))
+          ) {
             arr.push(item)
           }
         })
