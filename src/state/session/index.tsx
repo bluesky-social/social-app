@@ -410,13 +410,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           isSessionDeactivated(account.accessJwt) || account.deactivated,
       }
 
+      if (account.pdsUrl) {
+        agent.api.xrpc.uri = agent.pdsUrl = new URL(account.pdsUrl)
+      }
+
       if (canReusePrevSession) {
         logger.debug(`session: attempting to reuse previous session`)
 
         agent.session = prevSession
-        if (account.pdsUrl) {
-          agent.api.xrpc.uri = agent.pdsUrl = new URL(account.pdsUrl)
-        }
 
         __globalAgent = agent
         upsertAccount(account)
