@@ -478,7 +478,7 @@ let PostThreadItemLoaded = ({
                   avatarSize={28}
                   displayNameType="md-bold"
                   displayNameStyle={isThreadedChild && s.ml2}
-                  style={isThreadedChild && s.mb2}
+                  style={isThreadedChild && {alignItems: 'center'}}
                 />
                 <LabelsOnMyPost post={post} />
                 <PostAlerts
