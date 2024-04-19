@@ -336,11 +336,11 @@ export const ComposePost = observer(function ComposePost({
         uri: gif.url,
         isLoading: true,
         meta: {
-          url: gif.url,
+          url: `${gif.url}?fw=${gif.images.fixed_width.width}-${gif.images.fixed_width.height}&fh=${gif.images.fixed_height.width}-${gif.images.fixed_height.height}`,
           image: gif.images.original_still.url,
           likelyType: LikelyType.HTML,
           title: `${gif.title} - Find & Share on GIPHY`,
-          description: `ALT: ${gif.alt_text}`,
+          description: `ALT: ${gif}`,
         },
       }),
     [setExtLink],
