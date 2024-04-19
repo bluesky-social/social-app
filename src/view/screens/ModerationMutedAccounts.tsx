@@ -38,8 +38,8 @@ export function ModerationMutedAccounts({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen} = useAnalytics()
-  const showsVerticalScrollIndicator =
-    !useGate('hide_vertical_scroll_indicators') || isWeb
+  const gate = useGate()
+
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data,
@@ -167,7 +167,9 @@ export function ModerationMutedAccounts({}: Props) {
           )}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
-          showsVerticalScrollIndicator={showsVerticalScrollIndicator}
+          showsVerticalScrollIndicator={
+            isWeb || !gate('hide_vertical_scroll_indicators')
+          }
         />
       )}
     </CenteredView>

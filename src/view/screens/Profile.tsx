@@ -143,7 +143,7 @@ function ProfileScreenLoaded({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
-  const shouldUseScrollableHeader = useGate('new_profile_scroll_component')
+  const gate = useGate()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -317,7 +317,7 @@ function ProfileScreenLoaded({
   // =
 
   const renderHeader = React.useCallback(() => {
-    if (shouldUseScrollableHeader) {
+    if (gate('new_profile_scroll_component')) {
       return (
         <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
           <ProfileHeader
@@ -343,7 +343,7 @@ function ProfileScreenLoaded({
       )
     }
   }, [
-    shouldUseScrollableHeader,
+    gate,
     scrollViewTag,
     profile,
     labelerInfo,

@@ -60,6 +60,8 @@ export type LogEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'composer:gif:open': {}
+  'composer:gif:select': {}
 
   // Data events
   'account:create:begin': {}
