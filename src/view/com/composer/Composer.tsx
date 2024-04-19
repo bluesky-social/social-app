@@ -333,10 +333,10 @@ export const ComposePost = observer(function ComposePost({
   const onSelectGif = useCallback(
     (gif: Gif) =>
       setExtLink({
-        uri: gif.url,
+        uri: `${gif.url}?fw=${gif.images.fixed_width.width}-${gif.images.fixed_width.height}&fh=${gif.images.fixed_height.width}-${gif.images.fixed_height.height}`,
         isLoading: true,
         meta: {
-          url: `${gif.url}?fw=${gif.images.fixed_width.width}-${gif.images.fixed_width.height}&fh=${gif.images.fixed_height.width}-${gif.images.fixed_height.height}`,
+          url: gif.url,
           image: gif.images.original_still.url,
           likelyType: LikelyType.HTML,
           title: `${gif.title} - Find & Share on GIPHY`,
