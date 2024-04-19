@@ -369,7 +369,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
 
-      const agent = new BskyAgent({service: account.pdsUrl || account.service})
+      const agent = new BskyAgent({service: account.service})
+
+      // restore the correct PDS URL if available
+      if (account.pdsUrl) {
+        agent.pdsUrl = agent.api.xrpc.uri = new URL(account.pdsUrl)
+      }
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
