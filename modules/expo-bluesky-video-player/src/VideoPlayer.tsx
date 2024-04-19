@@ -1,10 +1,12 @@
 import React, {createRef} from 'react'
-import {requireNativeModule} from 'expo-modules-core'
+import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
-import NativeVideoPlayer from './NativeVideoPlayer'
 import {VideoPlayerViewProps} from './VideoPlayer.types'
 
 const VideoModule = requireNativeModule('ExpoBlueskyVideoPlayer')
+const NativeView: React.ComponentType<
+  VideoPlayerViewProps & {ref: React.RefObject<any>}
+> = requireNativeViewManager('ExpoBlueskyVideoPlayer')
 
 export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
   nativeRef: React.RefObject<any>
@@ -31,6 +33,6 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
   }
 
   render() {
-    return <NativeVideoPlayer {...this.props} ref={this.nativeRef} />
+    return <NativeView {...this.props} ref={this.nativeRef} />
   }
 }
