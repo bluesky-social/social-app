@@ -38,7 +38,7 @@ export const ExternalLinkEmbed = ({
           accessibilityIgnoresInvertColors
         />
       ) : undefined}
-      {embedPlayerParams?.isGif && embedPlayerParams.dimensions ? (
+      {embedPlayerParams?.source === 'giphy' && embedPlayerParams.dimensions ? (
         <View />
       ) : embedPlayerParams?.isGif ? (
         <ExternalGifEmbed link={link} params={embedPlayerParams} />
