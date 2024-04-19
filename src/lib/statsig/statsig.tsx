@@ -6,6 +6,7 @@ import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import * as persisted from '#/state/persisted'
 import {IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
@@ -23,6 +24,8 @@ type StatsigUser = {
     platform: 'ios' | 'android' | 'web'
     refSrc: string
     refUrl: string
+    appLanguage: string
+    contentLanguages: string[]
   }
 }
 
@@ -132,6 +135,7 @@ function toStatsigUser(did: string | undefined): StatsigUser {
   if (did) {
     userID = sha256(did)
   }
+  const languagePrefs = persisted.get('languagePrefs')
   return {
     userID,
     platform: Platform.OS as 'ios' | 'android' | 'web',
@@ -139,6 +143,8 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
+      appLanguage: languagePrefs.appLanguage,
+      contentLanguages: languagePrefs.contentLanguages,
     },
   }
 }

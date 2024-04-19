@@ -20,14 +20,10 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isIOS, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {clearLegacyStorage} from '#/state/persisted/legacy'
 import {clear as clearStorage} from '#/state/persisted/store'
-import {
-  useRequireAltTextEnabled,
-  useSetRequireAltTextEnabled,
-} from '#/state/preferences'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
@@ -56,10 +52,6 @@ import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
-import {
-  useHapticsDisabled,
-  useSetHapticsDisabled,
-} from 'state/preferences/disable-haptics'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
@@ -162,12 +154,8 @@ export function SettingsScreen({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const requireAltTextEnabled = useRequireAltTextEnabled()
-  const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
-  const isHapticsDisabled = useHapticsDisabled()
-  const setHapticsDisabled = useSetHapticsDisabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -282,6 +270,10 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('SavedFeeds')
   }, [navigation])
 
+  const onPressAccessibilitySettings = React.useCallback(() => {
+    navigation.navigate('AccessibilitySettings')
+  }, [navigation])
+
   const onPressStatusPage = React.useCallback(() => {
     Linking.openURL(STATUS_PAGE_URL)
   }, [])
@@ -318,7 +310,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={[s.hContentRegion]}
+        style={s.hContentRegion}
         contentContainerStyle={isMobile && pal.viewLight}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
@@ -418,21 +410,6 @@ export function SettingsScreen({}: Props) {
         <View style={styles.spacer20} />
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Accessibility</Trans>
-        </Text>
-        <View style={[pal.view, styles.toggleCard]}>
-          <ToggleButton
-            type="default-light"
-            label={_(msg`Require alt text before posting`)}
-            labelType="lg"
-            isSelected={requireAltTextEnabled}
-            onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
-          />
-        </View>
-
-        <View style={styles.spacer20} />
-
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Appearance</Trans>
         </Text>
         <View>
@@ -492,6 +469,29 @@ export function SettingsScreen({}: Props) {
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Basics</Trans>
         </Text>
+        <TouchableOpacity
+          testID="accessibilitySettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts ? undefined : onPressAccessibilitySettings
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Accessibility settings`)}
+          accessibilityHint={_(msg`Opens accessibility settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="universal-access"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Accessibility</Trans>
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           testID="preferencesHomeFeedButton"
           style={[
@@ -686,19 +686,6 @@ export function SettingsScreen({}: Props) {
               labelType="lg"
               isSelected={inAppBrowserPref ?? false}
               onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
-            />
-          </View>
-        )}
-        {isNative && (
-          <View style={[pal.view, styles.toggleCard]}>
-            <ToggleButton
-              type="default-light"
-              label={
-                isIOS ? _(msg`Disable haptics`) : _(msg`Disable vibrations`)
-              }
-              labelType="lg"
-              isSelected={isHapticsDisabled}
-              onPress={() => setHapticsDisabled(!isHapticsDisabled)}
             />
           </View>
         )}
