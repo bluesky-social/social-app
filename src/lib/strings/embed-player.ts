@@ -1,4 +1,4 @@
-import {Dimensions, Platform} from 'react-native'
+import {Dimensions} from 'react-native'
 
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
@@ -255,12 +255,13 @@ export function parseEmbedPlayerFromUrl(
   if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
     const [_, gifs, nameAndId] = urlp.pathname.split('/')
 
-    const fh = urlp.searchParams.get('fh')?.split('-')
-    const fw = urlp.searchParams.get('fw')?.split('-')
+    const h = urlp.searchParams.get('hh')
+    const w = urlp.searchParams.get('ww')
     let dimensions
-    if (fh && fw) {
+    if (h && w) {
       dimensions = {
-        width: Platform.OS === 'web' ? Number(fw[0]) : Number(fw[1]),
+        height: Number(h),
+        width: Number(w),
       }
     }
 
@@ -281,6 +282,7 @@ export function parseEmbedPlayerFromUrl(
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${gifId}`,
           playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
+          dimensions,
         }
       }
     }
