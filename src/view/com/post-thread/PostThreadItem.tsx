@@ -27,6 +27,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines, pluralize} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
@@ -479,7 +480,10 @@ let PostThreadItemLoaded = ({
                   displayNameType="md-bold"
                   displayNameStyle={isThreadedChild && s.ml2}
                   style={
-                    isThreadedChild && {alignItems: 'center', paddingBottom: 5}
+                    isThreadedChild && {
+                      alignItems: 'center',
+                      paddingBottom: isWeb ? 5 : 2,
+                    }
                   }
                 />
                 <LabelsOnMyPost post={post} />
