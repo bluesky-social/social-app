@@ -29,11 +29,13 @@ import {colors, s} from 'lib/styles'
 import {TextLink} from 'view/com/util/Link'
 import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {Text} from 'view/com/util/text/Text'
 import {Feed} from '../com/notifications/Feed'
 import {Pager, PagerRef} from '../com/pager/Pager'
 import {TabBar} from '../com/pager/TabBar'
 import {FAB} from '../com/util/fab/FAB'
 import {MainScrollProvider} from '../com/util/MainScrollProvider'
+import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
 import {CenteredView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<
@@ -56,6 +58,7 @@ export function NotificationsScreen({}: Props) {
   const isScreenFocused = useIsFocused()
   const {openComposer} = useComposerControls()
   const pagerRef = React.useRef<PagerRef>(null)
+  const {isMobile} = useWebMediaQueries()
 
   const handleTabChange = React.useCallback(
     (index: number) => {
@@ -160,6 +163,19 @@ export function NotificationsScreen({}: Props) {
 
   return (
     <View testID="notificationsScreen" style={s.hContentRegion}>
+      <SimpleViewHeader
+        showBackButton={isMobile}
+        style={[
+          pal.border,
+          {borderBottomWidth: 1},
+          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
+        ]}>
+        <View style={{flex: 1}}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            <Trans>Notifications</Trans>
+          </Text>
+        </View>
+      </SimpleViewHeader>
       <Pager
         onPageSelected={handleTabChange}
         ref={pagerRef}
