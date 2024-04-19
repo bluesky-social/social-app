@@ -1,11 +1,12 @@
 import React from 'react'
-import {ListRenderItemInfo, Pressable} from 'react-native'
+import {ListRenderItemInfo, Pressable, StyleSheet, View} from 'react-native'
 import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {HITSLOP_10} from 'lib/constants'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -13,9 +14,12 @@ import {shareUrl} from 'lib/sharing'
 import {cleanError} from 'lib/strings/errors'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {enforceLen} from 'lib/strings/helpers'
-import {isNative} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {useSearchPostsQuery} from 'state/queries/search-posts'
-import {useSetMinimalShellMode} from 'state/shell'
+import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from 'state/shell'
+import {Pager} from '#/view/com/pager/Pager'
+import {TabBar} from '#/view/com/pager/TabBar'
+import {CenteredView} from '#/view/com/util/Views'
 import {Post} from 'view/com/post/Post'
 import {List} from 'view/com/util/List'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -38,8 +42,8 @@ export default function HashtagScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
-  const setMinimalShellMode = useSetMinimalShellMode()
   const {_} = useLingui()
+  const pal = usePalette('default')
 
   const fullTag = React.useMemo(() => {
     return `#${decodeURIComponent(tag)}`
@@ -63,46 +67,102 @@ export default function HashtagScreen({
     shareUrl(url.toString())
   }, [tag, author])
 
+  const [activeTab, setActiveTab] = React.useState(0)
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const listHeader = (
-    <ListHeaderDesktop
-      title={headerTitle}
-      subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
-    />
+  const onPageSelected = React.useCallback(
+    (index: number) => {
+      setMinimalShellMode(false)
+      setDrawerSwipeDisabled(index > 0)
+      setActiveTab(index)
+    },
+    [setDrawerSwipeDisabled, setMinimalShellMode],
   )
+
+  const listHeader = React.useMemo(
+    () => (
+      <ListHeaderDesktop
+        title={headerTitle}
+        subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
+      />
+    ),
+    [_, headerTitle, author, sanitizedAuthor],
+  )
+
+  const sections = React.useMemo(() => {
+    return [
+      {
+        title: _(msg`Top`),
+        component: (
+          <HashtagScreenTab
+            fullTag={fullTag}
+            author={author}
+            listHeader={listHeader}
+            sort="top"
+            active={activeTab === 0}
+          />
+        ),
+      },
+      {
+        title: _(msg`Latest`),
+        component: (
+          <HashtagScreenTab
+            fullTag={fullTag}
+            author={author}
+            listHeader={listHeader}
+            sort="latest"
+            active={activeTab === 1}
+          />
+        ),
+      },
+    ]
+  }, [_, fullTag, author, listHeader, activeTab])
 
   return (
     <>
-      <ViewHeader
-        title={headerTitle}
-        subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
-        canGoBack
-        renderButton={
-          isNative
-            ? () => (
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={onShare}
-                  hitSlop={HITSLOP_10}>
-                  <ArrowOutOfBox_Stroke2_Corner0_Rounded
-                    size="lg"
+      <CenteredView sideBorders style={[pal.border, pal.view]}>
+        <ViewHeader
+          title={headerTitle}
+          subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
+          canGoBack
+          renderButton={
+            isNative
+              ? () => (
+                  <Pressable
+                    accessibilityRole="button"
                     onPress={onShare}
-                  />
-                </Pressable>
-              )
-            : undefined
-        }
-      />
-      <HashtagScreenTab
-        fullTag={fullTag}
-        author={author}
-        listHeader={listHeader}
-      />
+                    hitSlop={HITSLOP_10}>
+                    <ArrowOutOfBox_Stroke2_Corner0_Rounded
+                      size="lg"
+                      onPress={onShare}
+                    />
+                  </Pressable>
+                )
+              : undefined
+          }
+        />
+      </CenteredView>
+      <Pager
+        onPageSelected={onPageSelected}
+        renderTabBar={props => (
+          <CenteredView
+            sideBorders
+            style={[pal.border, pal.view, styles.tabBarContainer]}>
+            <TabBar items={sections.map(section => section.title)} {...props} />
+          </CenteredView>
+        )}
+        initialPage={0}>
+        {sections.map((section, i) => (
+          <View key={i}>{section.component}</View>
+        ))}
+      </Pager>
     </>
   )
 }
@@ -111,10 +171,14 @@ function HashtagScreenTab({
   fullTag,
   author,
   listHeader,
+  sort,
+  active,
 }: {
   fullTag: string
   author: string | undefined
   listHeader: React.ReactElement
+  sort: 'top' | 'latest'
+  active: boolean
 }) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
@@ -134,7 +198,7 @@ function HashtagScreenTab({
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: queryParam})
+  } = useSearchPostsQuery({query: queryParam, sort, enabled: active})
 
   const posts = React.useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
@@ -187,3 +251,12 @@ function HashtagScreenTab({
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  tabBarContainer: {
+    // @ts-ignore web only
+    position: isWeb ? 'sticky' : '',
+    top: 0,
+    zIndex: 1,
+  },
+})
