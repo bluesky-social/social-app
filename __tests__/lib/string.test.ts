@@ -1,17 +1,18 @@
 import {RichText} from '@atproto/api'
+
+import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {cleanError} from '../../src/lib/strings/errors'
+import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
+import {enforceLen, pluralize} from '../../src/lib/strings/helpers'
+import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
+import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
+import {ago} from '../../src/lib/strings/time'
 import {
   makeRecordUri,
   toNiceDomain,
-  toShortUrl,
   toShareUrl,
+  toShortUrl,
 } from '../../src/lib/strings/url-helpers'
-import {pluralize, enforceLen} from '../../src/lib/strings/helpers'
-import {ago} from '../../src/lib/strings/time'
-import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
-import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
-import {makeValidHandle, createFullHandle} from '../../src/lib/strings/handles'
-import {cleanError} from '../../src/lib/strings/errors'
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 
 describe('detectLinkables', () => {
   const inputs = [
@@ -434,6 +435,8 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://giphy.com/gif/some-random-gif-name-gifId',
     'https://giphy.com/gifs/',
 
+    'https://giphy.com/gifs/39248209509382934029?hh=100&ww=100',
+
     'https://media.giphy.com/media/gifId/giphy.webp',
     'https://media0.giphy.com/media/gifId/giphy.webp',
     'https://media1.giphy.com/media/gifId/giphy.gif',
@@ -621,7 +624,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     undefined,
     undefined,
@@ -631,8 +634,21 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'giphy',
       isGif: true,
       hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/39248209509382934029',
+      playerUri: 'https://i.giphy.com/media/39248209509382934029/200.mp4',
+      dimensions: {
+        width: 100,
+        height: 100,
+      },
+    },
+
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -640,7 +656,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -648,7 +664,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -656,7 +672,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -664,7 +680,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -672,7 +688,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     undefined,
     undefined,
@@ -684,7 +700,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
 
     {
@@ -693,7 +709,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -701,7 +717,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -709,7 +725,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
     {
       type: 'giphy_gif',
@@ -717,7 +733,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/gifId',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+      playerUri: 'https://i.giphy.com/media/gifId/200.webp',
     },
 
     {

@@ -305,7 +305,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
-          playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${trackingOrId}/200.webp`,
         }
       } else if (filename && gifFilenameRegex.test(filename)) {
         return {
@@ -314,7 +314,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
-          playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${idOrFilename}/200.webp`,
         }
       }
     }
@@ -333,7 +333,7 @@ export function parseEmbedPlayerFromUrl(
         isGif: true,
         hideDetails: true,
         metaUri: `https://giphy.com/gifs/${gifId}`,
-        playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
+        playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
       }
     } else if (mediaOrFilename) {
       const gifId = mediaOrFilename.split('.')[0]
@@ -345,7 +345,7 @@ export function parseEmbedPlayerFromUrl(
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${
           mediaOrFilename.split('.')[0]
-        }/giphy.webp`,
+        }/200.webp`,
       }
     }
   }
