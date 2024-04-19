@@ -3,28 +3,55 @@ import {Pressable} from 'react-native'
 
 import {VideoPlayerViewProps} from './VideoPlayer.types'
 
-export function VideoPlayer({source, autoplay, style}: VideoPlayerViewProps) {
-  const videoPlayerRef = React.useRef<HTMLMediaElement>(null)
+export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
+  videoPlayerRef: React.RefObject<HTMLMediaElement>
 
-  const onPress = React.useCallback(() => {
-    if (videoPlayerRef.current?.paused) {
-      videoPlayerRef.current?.play()
+  constructor(props: VideoPlayerViewProps | Readonly<VideoPlayerViewProps>) {
+    super(props)
+    this.videoPlayerRef = React.createRef()
+  }
+
+  static async prefetchAsync(_: string): Promise<void> {
+    console.warn('prefetchAsync is not supported on web')
+  }
+
+  async playAsync(): Promise<void> {
+    await this.videoPlayerRef.current?.play()
+  }
+
+  async pauseAsync(): Promise<void> {
+    await this.videoPlayerRef.current?.pause()
+  }
+
+  async toggleAsync(): Promise<void> {
+    if (this.videoPlayerRef.current?.paused) {
+      await this.videoPlayerRef.current?.play()
     } else {
-      videoPlayerRef.current?.pause()
+      await this.videoPlayerRef.current?.pause()
     }
-  }, [])
+  }
 
-  return (
-    <Pressable accessibilityRole="button" onPress={onPress}>
-      <video
-        src={source}
-        autoPlay={autoplay ? 'autoplay' : undefined}
-        style={style}
-        preload={autoplay ? 'auto' : undefined}
-        loop="loop"
-        muted="muted"
-        ref={videoPlayerRef}
-      />
-    </Pressable>
-  )
+  onPress = () => {
+    if (this.videoPlayerRef.current?.paused) {
+      this.videoPlayerRef.current?.play()
+    } else {
+      this.videoPlayerRef.current?.pause()
+    }
+  }
+
+  render() {
+    return (
+      <Pressable accessibilityRole="button" onPress={this.onPress}>
+        <video
+          src={this.props.source}
+          autoPlay={this.props.autoplay ? 'autoplay' : undefined}
+          style={this.props.style}
+          preload={this.props.autoplay ? 'auto' : undefined}
+          loop="loop"
+          muted="muted"
+          ref={this.videoPlayerRef}
+        />
+      </Pressable>
+    )
+  }
 }
