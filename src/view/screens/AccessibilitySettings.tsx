@@ -50,9 +50,7 @@ export function AccessibilitySettingsScreen({}: Props) {
   )
 
   return (
-    <View
-      style={[s.hContentRegion, pal.viewLight]}
-      testID="accessibilitySettingsScreen">
+    <View style={s.hContentRegion} testID="accessibilitySettingsScreen">
       <SimpleViewHeader
         showBackButton={isMobile}
         style={[
@@ -69,7 +67,12 @@ export function AccessibilitySettingsScreen({}: Props) {
       <ScrollView
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}
-        contentContainerStyle={[{paddingBottom: 200}]}>
+        style={s.flex1}
+        contentContainerStyle={[
+          s.flex1,
+          {paddingBottom: 200},
+          isMobile && pal.viewLight,
+        ]}>
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Alt text</Trans>
         </Text>
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   heading: {
     paddingHorizontal: 18,
     paddingTop: 14,
-    paddingBottom: 14,
+    paddingBottom: 6,
   },
   toggleCard: {
     paddingVertical: 8,

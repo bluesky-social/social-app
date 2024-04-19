@@ -292,9 +292,7 @@ export function SettingsScreen({}: Props) {
   }, [_])
 
   return (
-    <View
-      style={[s.hContentRegion, isMobile && pal.viewLight]}
-      testID="settingsScreen">
+    <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
 
@@ -313,6 +311,7 @@ export function SettingsScreen({}: Props) {
       </SimpleViewHeader>
       <ScrollView
         style={s.hContentRegion}
+        contentContainerStyle={isMobile && pal.viewLight}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
