@@ -113,6 +113,7 @@ const ApiContext = React.createContext<ApiContext>({
 })
 
 function createPersistSessionHandler(
+  agent: BskyAgent,
   account: SessionAccount,
   persistSessionCallback: (props: {
     expired: boolean
@@ -140,6 +141,7 @@ function createPersistSessionHandler(
       email: session?.email || account.email,
       emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
       deactivated: isSessionDeactivated(session?.accessJwt),
+      pdsUrl: agent.pdsUrl?.toString(),
 
       /*
        * Tokens are undefined if the session expires, or if creation fails for
@@ -268,12 +270,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
         deactivated,
+        pdsUrl: agent.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -320,6 +324,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -364,16 +369,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
 
-      const agent = new BskyAgent({
-        service: account.service,
-        persistSession: createPersistSessionHandler(
+      const agent = new BskyAgent({service: account.service})
+
+      agent.setPersistSessionHandler(
+        createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
-      })
+      )
+
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
       await configureModeration(agent, account)
