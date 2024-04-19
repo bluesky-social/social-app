@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {
   ActivityIndicator,
   GestureResponderEvent,
@@ -18,6 +18,17 @@ import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
+import {VideoPlayer} from '../../../../../modules/expo-bluesky-video-player'
+
+const GIF_LIST = [
+  'https://media1.giphy.com/media/duexIlfr9yYwYE23UA/200w.mp4',
+  'https://media2.giphy.com/media/p9FB3WC9Xju4o/200w.mp4',
+  'https://media2.giphy.com/media/iGAXf0OlUUMYo/200w.mp4',
+  'https://media4.giphy.com/media/cFeXVeTKDB0fm/200w.mp4',
+  'https://media3.giphy.com/media/qs6ev2pm8g9dS/200w.mp4',
+  'https://media2.giphy.com/media/6R2mLi910HL4VXFwOG/200w.mp4',
+  'https://media4.giphy.com/media/rOGuft1jgiq66zpQI2/200w.mp4',
+]
 
 export function ExternalGifEmbed({
   link,
@@ -102,55 +113,79 @@ export function ExternalGifEmbed({
     viewWidth.current = e.nativeEvent.layout.width
   }, [])
 
+  const onDidLoad = React.useCallback(() => {}, [])
+
+  const rand = React.useMemo(
+    () => GIF_LIST[Math.floor(Math.random() * GIF_LIST.length)],
+    [],
+  )
+
+  const playerRef = useRef()
+
   return (
     <>
-      <EmbedConsentDialog
-        control={consentDialogControl}
-        source={params.source}
-        onAccept={load}
-      />
+      {/*<EmbedConsentDialog*/}
+      {/*  control={consentDialogControl}*/}
+      {/*  source={params.source}*/}
+      {/*  onAccept={load}*/}
+      {/*/>*/}
 
       <Pressable
-        style={[
-          {height: imageDims.height},
-          styles.topRadius,
-          styles.gifContainer,
-        ]}
-        onPress={onPlayPress}
-        onLayout={onLayout}
         accessibilityRole="button"
-        accessibilityHint={_(msg`Plays the GIF`)}
-        accessibilityLabel={_(msg`Play ${link.title}`)}>
-        {(!isPrefetched || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
-          <View style={[styles.layer, styles.overlayLayer]}>
-            <View style={[styles.overlayContainer, styles.topRadius]}>
-              {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
-                <FontAwesomeIcon icon="play" size={42} color="white" />
-              ) : (
-                // Activity indicator while gif loads
-                <ActivityIndicator size="large" color="white" />
-              )}
-            </View>
-          </View>
-        )}
-        <Image
-          source={{
-            uri:
-              !isPrefetched || (isWeb && !isAnimating)
-                ? link.thumb
-                : params.playerUri,
-          }} // Web uses the thumb to control playback
-          style={{flex: 1}}
-          ref={imageRef}
-          onLoad={onLoad}
-          autoplay={isAnimating}
-          contentFit="contain"
-          accessibilityIgnoresInvertColors
-          accessibilityLabel={link.title}
-          accessibilityHint={link.title}
-          cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+        onPress={() => {
+          playerRef.current.toggleAsync()
+        }}>
+        <VideoPlayer
+          // source="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXJ0ZXk0cmk0b2hmNXhzaGxmbGw4dGE2b2JxNzc4NW13b3Y4MGJrYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1BXa2alBjrCXC/giphy.mp4"
+          // source="https://media1.giphy.com/media/duexIlfr9yYwYE23UA/200h.mp4"
+          // source="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+          source={rand}
+          style={{height: 200, width: '100%'}}
+          ref={playerRef}
         />
       </Pressable>
+
+      {/*<Pressable*/}
+      {/*  style={[*/}
+      {/*    {height: imageDims.height},*/}
+      {/*    styles.topRadius,*/}
+      {/*    styles.gifContainer,*/}
+      {/*  ]}*/}
+      {/*  onPress={onPlayPress}*/}
+      {/*  onLayout={onLayout}*/}
+      {/*  accessibilityRole="button"*/}
+      {/*  accessibilityHint={_(msg`Plays the GIF`)}*/}
+      {/*  accessibilityLabel={_(msg`Play ${link.title}`)}>*/}
+      {/*  {(!isPrefetched || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay*/}
+      {/*    <View style={[styles.layer, styles.overlayLayer]}>*/}
+      {/*      <View style={[styles.overlayContainer, styles.topRadius]}>*/}
+      {/*        {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active*/}
+      {/*          <FontAwesomeIcon icon="play" size={42} color="white" />*/}
+      {/*        ) : (*/}
+      {/*          // Activity indicator while gif loads*/}
+      {/*          <ActivityIndicator size="large" color="white" />*/}
+      {/*        )}*/}
+      {/*      </View>*/}
+      {/*    </View>*/}
+      {/*  )}*/}
+      {/*  <Image*/}
+      {/*    source={{*/}
+      {/*      uri:*/}
+      {/*        !isPrefetched || (isWeb && !isAnimating)*/}
+      {/*          ? link.thumb*/}
+      {/*          : params.playerUri,*/}
+      {/*    }} // Web uses the thumb to control playback*/}
+      {/*    style={{flex: 1}}*/}
+      {/*    ref={imageRef}*/}
+      {/*    onLoad={onLoad}*/}
+      {/*    autoplay={isAnimating}*/}
+      {/*    contentFit="contain"*/}
+      {/*    accessibilityIgnoresInvertColors*/}
+      {/*    accessibilityLabel={link.title}*/}
+      {/*    accessibilityHint={link.title}*/}
+      {/*    cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios*/}
+      {/*  />*/}
+      {/*</Pressable>*/}
     </>
   )
 }
