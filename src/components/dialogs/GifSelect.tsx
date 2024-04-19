@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useDeferredValue,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
@@ -22,6 +16,7 @@ import {Gif, useGifphySearch, useGiphyTrending} from '#/state/queries/giphy'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {InlineLinkText} from '#/components/Link'
@@ -82,7 +77,7 @@ function GifList({
   const {gtMobile} = useBreakpoints()
   const ref = useRef<TextInput>(null)
   const [undeferredSearch, setSearch] = useState('')
-  const search = useDeferredValue(undeferredSearch)
+  const search = useThrottledValue(undeferredSearch, 500)
 
   const isSearching = search.length > 0
 
