@@ -24,11 +24,7 @@ import {Post} from 'view/com/post/Post'
 import {List} from 'view/com/util/List'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -86,16 +82,6 @@ export default function HashtagScreen({
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
-  const listHeader = React.useMemo(
-    () => (
-      <ListHeaderDesktop
-        title={headerTitle}
-        subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
-      />
-    ),
-    [_, headerTitle, author, sanitizedAuthor],
-  )
-
   const sections = React.useMemo(() => {
     return [
       {
@@ -104,7 +90,6 @@ export default function HashtagScreen({
           <HashtagScreenTab
             fullTag={fullTag}
             author={author}
-            listHeader={listHeader}
             sort="top"
             active={activeTab === 0}
           />
@@ -116,19 +101,19 @@ export default function HashtagScreen({
           <HashtagScreenTab
             fullTag={fullTag}
             author={author}
-            listHeader={listHeader}
             sort="latest"
             active={activeTab === 1}
           />
         ),
       },
     ]
-  }, [_, fullTag, author, listHeader, activeTab])
+  }, [_, fullTag, author, activeTab])
 
   return (
     <>
       <CenteredView sideBorders style={[pal.border, pal.view]}>
         <ViewHeader
+          showOnDesktop
           title={headerTitle}
           subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
           canGoBack
@@ -170,13 +155,11 @@ export default function HashtagScreen({
 function HashtagScreenTab({
   fullTag,
   author,
-  listHeader,
   sort,
   active,
 }: {
   fullTag: string
   author: string | undefined
-  listHeader: React.ReactElement
   sort: 'top' | 'latest'
   active: boolean
 }) {
@@ -191,6 +174,7 @@ function HashtagScreenTab({
 
   const {
     data,
+    isFetched,
     isFetchingNextPage,
     isLoading,
     isError,
@@ -219,7 +203,7 @@ function HashtagScreenTab({
     <>
       {posts.length < 1 ? (
         <ListMaybePlaceholder
-          isLoading={isLoading}
+          isLoading={isLoading || !isFetched}
           isError={isError}
           onRetry={refetch}
           emptyType="results"
@@ -236,7 +220,6 @@ function HashtagScreenTab({
           onEndReachedThreshold={4}
           // @ts-ignore web only -prf
           desktopFixedHeight
-          ListHeaderComponent={listHeader}
           ListFooterComponent={
             <ListFooter
               isFetchingNextPage={isFetchingNextPage}
