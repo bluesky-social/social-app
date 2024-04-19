@@ -1,9 +1,17 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
+  LayoutAnimation,
   Platform,
   Pressable,
   ScrollView,
@@ -122,6 +130,13 @@ export const ComposePost = observer(function ComposePost({
     () => new GalleryModel(initImageUris),
     [initImageUris],
   )
+
+  useLayoutEffect(() => {
+    if (isIOS) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    }
+  }, [gallery.size])
+
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])

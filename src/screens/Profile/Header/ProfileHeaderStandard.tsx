@@ -80,9 +80,7 @@ let ProfileHeaderStandard = ({
     })
   }, [track, openModal, profile])
 
-  const autoExpandSuggestionsOnProfileFollow = useGate(
-    'autoexpand_suggestions_on_profile_follow',
-  )
+  const gate = useGate()
   const onPressFollow = () => {
     requireAuth(async () => {
       try {
@@ -96,7 +94,7 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
-        if (isWeb && autoExpandSuggestionsOnProfileFollow) {
+        if (isWeb && gate('autoexpand_suggestions_on_profile_follow')) {
           setShowSuggestedFollows(true)
         }
       } catch (e: any) {

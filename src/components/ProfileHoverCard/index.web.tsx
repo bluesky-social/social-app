@@ -289,12 +289,12 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       {props.children}
       {isVisible && (
         <Portal>
-          <div style={animationStyle}>
-            <div
-              ref={refs.setFloating}
-              style={floatingStyles}
-              onPointerEnter={onPointerEnterCard}
-              onPointerLeave={onPointerLeaveCard}>
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            onPointerEnter={onPointerEnterCard}
+            onPointerLeave={onPointerLeaveCard}>
+            <div style={{willChange: 'transform', ...animationStyle}}>
               <Card did={props.did} hide={onPress} />
             </div>
           </div>

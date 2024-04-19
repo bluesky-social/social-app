@@ -25,6 +25,7 @@ exports.create = function create(context) {
             "Use useGate() from '#/lib/statsig/statsig' instead of the one on npm.",
         })
       }
+      // TODO: Verify gate() call results aren't stored in variables.
     },
   }
 }

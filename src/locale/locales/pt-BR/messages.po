@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-10 18:15\n"
+"PO-Revision-Date: 2024-04-18 15:23\n"
 "Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -36,7 +36,7 @@ msgstr "<0>{0}</0> seguindo"
 
 #: src/components/ProfileHoverCard/index.web.tsx:314
 msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-msgstr ""
+msgstr "<0>{followers} </0><1>{pluralizedFollowers}</1>"
 
 #: src/components/ProfileHoverCard/index.web.tsx:326
 #: src/screens/Profile/Header/Metrics.tsx:45
@@ -953,7 +953,7 @@ msgstr "Copiado"
 
 #: src/components/dialogs/Embed.tsx:134
 msgid "Copied!"
-msgstr ""
+msgstr "Copiado!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:190
 msgid "Copies app password"
@@ -970,7 +970,7 @@ msgstr "Copiar {0}"
 #: src/components/dialogs/Embed.tsx:120
 #: src/components/dialogs/Embed.tsx:139
 msgid "Copy code"
-msgstr ""
+msgstr "Copiar código"
 
 #: src/view/screens/ProfileList.tsx:390
 msgid "Copy link to list"
@@ -1015,7 +1015,7 @@ msgstr "Criar Conta"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr ""
+msgstr "Criar conta"
 
 #: src/view/com/modals/AddAppPasswords.tsx:227
 msgid "Create App Password"
@@ -1157,11 +1157,11 @@ msgstr "Menos escuro"
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Disable haptics"
-msgstr ""
+msgstr "Desabilitar feedback tátil"
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Disable vibrations"
-msgstr ""
+msgstr "Desabilitar vibrações"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1400,17 +1400,17 @@ msgstr "E-mail:"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed HTML code"
-msgstr ""
+msgstr "Código HTML para incorporação"
 
 #: src/components/dialogs/Embed.tsx:97
 #: src/view/com/util/forms/PostDropdownBtn.tsx:253
 #: src/view/com/util/forms/PostDropdownBtn.tsx:255
 msgid "Embed post"
-msgstr ""
+msgstr "Incorporar post"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr ""
+msgstr "Incorpore este post no seu site. Basta copiar o trecho abaixo e colar no código HTML do seu site."
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
@@ -2209,7 +2209,7 @@ msgstr "Idiomas"
 
 #: src/view/screens/Search/Search.tsx:437
 msgid "Latest"
-msgstr ""
+msgstr "Mais recentes"
 
 #: src/components/moderation/ScreenHider.tsx:136
 msgid "Learn More"
@@ -3103,7 +3103,7 @@ msgstr "Senha atualizada!"
 #: src/view/screens/Search/Search.tsx:447
 #: src/view/screens/Search/Search.tsx:456
 msgid "People"
-msgstr ""
+msgstr "Pessoas"
 
 #: src/Navigation.tsx:164
 msgid "People followed by @{0}"
@@ -3572,7 +3572,7 @@ msgstr "Repostado por {0}"
 
 #: src/view/com/posts/FeedItem.tsx:216
 msgid "Reposted by <0><1/></0>"
-msgstr ""
+msgstr "Repostado por <0><1/></0>"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "reposted your post"
@@ -3794,7 +3794,7 @@ msgstr "Ver posts com <0>{displayTag}</0> deste usuário"
 #: src/view/com/notifications/FeedItem.tsx:419
 #: src/view/com/util/UserAvatar.tsx:381
 msgid "See profile"
-msgstr ""
+msgstr "Ver perfil"
 
 #: src/view/screens/SavedFeeds.tsx:164
 msgid "See this guide"
@@ -4170,11 +4170,11 @@ msgstr "Fazer login como..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr ""
+msgstr "Faça login ou crie sua conta para entrar na conversa!"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
-msgstr ""
+msgstr "Faça login no Bluesky ou crie uma nova conta"
 
 #: src/view/screens/Settings/index.tsx:118
 #: src/view/screens/Settings/index.tsx:121
@@ -4722,7 +4722,7 @@ msgstr "Ligar ou desligar conteúdo adulto"
 
 #: src/view/screens/Search/Search.tsx:427
 msgid "Top"
-msgstr ""
+msgstr "Principais"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
