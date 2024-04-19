@@ -313,6 +313,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
         deactivated: isSessionDeactivated(agent.session.accessJwt),
+        pdsUrl: agent.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
@@ -405,6 +406,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.debug(`session: attempting to reuse previous session`)
 
         agent.session = prevSession
+        if (account.pdsUrl) {
+          agent.api.xrpc.uri = agent.pdsUrl = new URL(account.pdsUrl)
+        }
+
         __globalAgent = agent
         upsertAccount(account)
 
@@ -479,6 +484,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           refreshJwt: agent.session.refreshJwt,
           accessJwt: agent.session.accessJwt,
           deactivated: isSessionDeactivated(agent.session.accessJwt),
+          pdsUrl: agent.pdsUrl?.toString(),
         }
       }
     },
