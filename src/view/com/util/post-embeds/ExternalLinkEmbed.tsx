@@ -5,6 +5,7 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useGate} from 'lib/statsig/statsig'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useExternalEmbedsPrefs} from 'state/preferences'
@@ -20,6 +21,7 @@ export const ExternalLinkEmbed = ({
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
+  const gate = useGate()
 
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
@@ -28,6 +30,10 @@ export const ExternalLinkEmbed = ({
       return params
     }
   }, [link.uri, externalEmbedPrefs])
+  const isCompatibleGiphy =
+    embedPlayerParams?.source === 'giphy' &&
+    embedPlayerParams.dimensions &&
+    gate('new_gif_player')
 
   return (
     <View style={styles.container}>
@@ -38,7 +44,7 @@ export const ExternalLinkEmbed = ({
           accessibilityIgnoresInvertColors
         />
       ) : undefined}
-      {embedPlayerParams?.source === 'giphy' && embedPlayerParams.dimensions ? (
+      {isCompatibleGiphy ? (
         <View />
       ) : embedPlayerParams?.isGif ? (
         <ExternalGifEmbed link={link} params={embedPlayerParams} />
@@ -46,13 +52,16 @@ export const ExternalLinkEmbed = ({
         <ExternalPlayer link={link} params={embedPlayerParams} />
       ) : undefined}
       <View style={[styles.info, {paddingHorizontal: isMobile ? 10 : 14}]}>
-        <Text
-          type="sm"
-          numberOfLines={1}
-          style={[pal.textLight, styles.extUri]}>
-          {toNiceDomain(link.uri)}
-        </Text>
-        {!embedPlayerParams?.isGif && (
+        {!isCompatibleGiphy && (
+          <Text
+            type="sm"
+            numberOfLines={1}
+            style={[pal.textLight, styles.extUri]}>
+            {toNiceDomain(link.uri)}
+          </Text>
+        )}
+
+        {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
           <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
             {link.title || link.uri}
           </Text>
