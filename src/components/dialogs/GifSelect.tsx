@@ -54,8 +54,6 @@ export function GifSelectDialog({
       snapPoints = ['100%']
       break
     case 'hide':
-      content = <GiphyConsentNotGiven control={control} />
-      break
     default:
       content = <GiphyConsentPrompt control={control} />
       break
@@ -354,59 +352,6 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
           variant="ghost">
           <ButtonText>
             <Trans>No thanks</Trans>
-          </ButtonText>
-        </Button>
-      </View>
-    </Dialog.ScrollableInner>
-  )
-}
-
-function GiphyConsentNotGiven({control}: {control: Dialog.DialogControlProps}) {
-  const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
-  const setExternalEmbedPref = useSetExternalEmbedPref()
-
-  const onRedecidePress = useCallback(() => {
-    setExternalEmbedPref('giphy', undefined)
-  }, [setExternalEmbedPref])
-
-  const gtMobileWeb = gtMobile && isWeb
-
-  return (
-    <Dialog.ScrollableInner label={_(msg`Permission to use GIPHY`)}>
-      <View style={a.gap_sm}>
-        <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>You've opted out of GIPHY</Trans>
-        </Text>
-
-        <Text style={[a.mt_sm, a.mb_2xl]}>
-          <Trans>
-            Bluesky uses GIPHY to provide the GIF selector feature. You can opt
-            back in at any time.
-          </Trans>
-        </Text>
-      </View>
-      <View style={[a.gap_md, gtMobileWeb && a.flex_row_reverse]}>
-        <Button
-          label={_(msg`I changed my mind`)}
-          onPress={onRedecidePress}
-          onAccessibilityEscape={control.close}
-          color="secondary"
-          size={gtMobileWeb ? 'small' : 'medium'}
-          variant="solid">
-          <ButtonText>
-            <Trans>I changed my mind</Trans>
-          </ButtonText>
-        </Button>
-        <Button
-          label={_(msg`No thanks`)}
-          onAccessibilityEscape={control.close}
-          onPress={() => control.close()}
-          color="secondary"
-          size={gtMobileWeb ? 'small' : 'medium'}
-          variant="ghost">
-          <ButtonText>
-            <Trans>Back</Trans>
           </ButtonText>
         </Button>
       </View>
