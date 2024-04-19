@@ -60,7 +60,10 @@ export function Feed({
         let filteredItems = page.items
         if (filterType === 'Mentions') {
           let mentions = page.items.filter(
-            item => item.type === 'reply' || item.type === 'quote',
+            item =>
+              item.type === 'reply' ||
+              item.type === 'quote' ||
+              item.type === 'mention',
           )
           filteredItems = mentions
         }
