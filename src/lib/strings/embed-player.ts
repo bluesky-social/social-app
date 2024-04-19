@@ -1,4 +1,5 @@
 import {Dimensions} from 'react-native'
+
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -60,6 +61,10 @@ export interface EmbedPlayerParams {
   source: EmbedPlayerSource
   metaUri?: string
   hideDetails?: boolean
+  dimensions?: {
+    height: number
+    width: number
+  }
 }
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
