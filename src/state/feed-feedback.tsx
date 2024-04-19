@@ -20,8 +20,8 @@ const stateContext = React.createContext<StateContext>({
   flushAndReset: () => {},
 })
 
-export function useFeedFeedback(feed: FeedDescriptor) {
-  const enabled = isDiscoverFeed(feed)
+export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
+  const enabled = isDiscoverFeed(feed) && hasSession
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<Set<string>>(new Set())
 

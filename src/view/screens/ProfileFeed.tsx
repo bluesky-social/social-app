@@ -464,7 +464,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
     const isScreenFocused = useIsFocused()
-    const feedFeedback = useFeedFeedback(feed)
+    const {hasSession} = useSession()
+    const feedFeedback = useFeedFeedback(feed, hasSession)
 
     const onScrollToTop = useCallback(() => {
       feedFeedback.flushAndReset()

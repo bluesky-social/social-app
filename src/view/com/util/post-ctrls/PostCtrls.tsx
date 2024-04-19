@@ -303,6 +303,7 @@ let PostCtrls = ({
           postAuthor={post.author}
           postCid={post.cid}
           postUri={post.uri}
+          postFeedContext={feedContext}
           record={record}
           richText={richText}
           style={styles.btnPad}
