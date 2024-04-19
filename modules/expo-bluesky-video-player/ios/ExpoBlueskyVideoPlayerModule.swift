@@ -20,6 +20,10 @@ public class ExpoBlueskyVideoPlayerModule: Module {
       
       Prop("autoplay") { (view: ExpoBlueskyVideoPlayerView, prop: Bool) in
         view.autoplay = prop
+        
+        // Done on purpose. We want to change this value whenever the prop
+        // changes
+        view.isPlaying = prop
       }
       
       AsyncFunction("toggleAsync") { (view: ExpoBlueskyVideoPlayerView) in

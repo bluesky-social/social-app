@@ -7,7 +7,7 @@ public class ExpoBlueskyVideoPlayerView: ExpoView, AVPlayerViewControllerDelegat
   
   var source: String? = nil
   var autoplay = true
-  var isPlaying: Bool
+  var isPlaying = true
   var isLoaded: Bool = false {
     didSet {
       self.firePlayerStateChange()
@@ -21,7 +21,6 @@ public class ExpoBlueskyVideoPlayerView: ExpoView, AVPlayerViewControllerDelegat
   }
   
   public required init(appContext: AppContext? = nil) {
-    self.isPlaying = self.autoplay
     self.controller = PlayerController()
     super.init(appContext: appContext)
     self.clipsToBounds = true

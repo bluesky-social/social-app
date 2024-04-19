@@ -28,6 +28,10 @@ class ExpoBlueskyVideoPlayerModule : Module() {
 
       Prop("autoplay") { view: ExpoBlueskyVideoPlayerView, autoplay: Boolean ->
         view.autoplay = autoplay
+
+        // This is done on purpose. When we change the autoplay prop, we also want this value
+        // to change!
+        view.isPlaying = autoplay
       }
 
       AsyncFunction("playAsync") { view: ExpoBlueskyVideoPlayerView ->

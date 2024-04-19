@@ -21,11 +21,9 @@ class ExpoBlueskyVideoPlayerView(context: Context, appContext: AppContext) : Exp
 
   var source: String? = null
   var autoplay: Boolean = true
-  var isPlaying: Boolean
+  var isPlaying: Boolean = true
 
   init {
-    this.isPlaying = this.autoplay
-
     this.playerView = PlayerView(context)
       .apply {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -34,7 +32,6 @@ class ExpoBlueskyVideoPlayerView(context: Context, appContext: AppContext) : Exp
 
     this.setBackgroundColor(Color.TRANSPARENT)
     this.playerView.setBackgroundColor(Color.TRANSPARENT)
-
     this.addView(this.playerView)
   }
 

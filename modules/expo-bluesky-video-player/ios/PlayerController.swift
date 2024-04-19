@@ -60,8 +60,8 @@ class PlayerController: AVPlayerViewController, AVPlayerViewControllerDelegate {
   public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
     if keyPath == "status" {
       if self.playerItem?.status == .readyToPlay, let player = self.player {
+        self._superview?.isLoaded = true
         if _superview?.autoplay == true, _superview?.isPlaying == true {
-          self._superview?.isLoaded = true
           player.play()
         }
       }

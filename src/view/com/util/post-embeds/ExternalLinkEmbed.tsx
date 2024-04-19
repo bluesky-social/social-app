@@ -21,7 +21,7 @@ import {
 } from 'lib/strings/embed-player'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {isIOS, isNative} from 'platform/detection'
-import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useAutoplayDisabled, useExternalEmbedsPrefs} from 'state/preferences'
 import {Link} from 'view/com/util/Link'
 import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
@@ -140,6 +140,8 @@ function VideoEmbed({
   thumb?: string
 }) {
   const t = useTheme()
+  const autoplayDisabled = useAutoplayDisabled()
+
   const playerRef = React.useRef<VideoPlayer>(null)
 
   // TODO this should always start as the user's autoplay preference
@@ -148,7 +150,7 @@ function VideoEmbed({
     isPlaying: boolean
   }>({
     isLoaded: false,
-    isPlaying: true,
+    isPlaying: !autoplayDisabled,
   })
 
   const onPlayerStateChange = React.useCallback(
@@ -181,7 +183,7 @@ function VideoEmbed({
             right: 0,
             top: 0,
             bottom: 0,
-            zIndex: 1,
+            zIndex: 2,
             backgroundColor: !playerState.isPlaying
               ? 'rgba(0, 0, 0, 0.3)'
               : undefined,
@@ -211,7 +213,12 @@ function VideoEmbed({
         {!playerState.isLoaded && (
           <Image
             source={thumb}
-            style={{height: '100%', width: '100%'}}
+            style={{
+              height: '100%',
+              width: '100%',
+              zIndex: 1,
+              position: 'absolute',
+            }}
             accessibilityIgnoresInvertColors={true}
           />
         )}
@@ -221,7 +228,7 @@ function VideoEmbed({
         source={params.playerUri}
         style={isNative ? dimensions : undefined}
         // TODO -hailey
-        autoplay={true}
+        autoplay={!autoplayDisabled}
         onPlayerStateChange={onPlayerStateChange}
         ref={playerRef}
       />
