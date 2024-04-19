@@ -407,7 +407,6 @@ export function SearchScreenInner({
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
   const {_} = useLingui()
-  const gate = useGate()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -420,74 +419,46 @@ export function SearchScreenInner({
 
   const sections = React.useMemo(() => {
     if (!query) return []
-    if (gate('new_search')) {
-      if (hasSession) {
-        return [
-          {
-            title: _(msg`Top`),
-            component: (
-              <SearchScreenPostResults
-                query={query}
-                sort="top"
-                active={activeTab === 0}
-              />
-            ),
-          },
-          {
-            title: _(msg`Latest`),
-            component: (
-              <SearchScreenPostResults
-                query={query}
-                sort="latest"
-                active={activeTab === 1}
-              />
-            ),
-          },
-          {
-            title: _(msg`People`),
-            component: (
-              <SearchScreenUserResults query={query} active={activeTab === 2} />
-            ),
-          },
-        ]
-      } else {
-        return [
-          {
-            title: _(msg`People`),
-            component: (
-              <SearchScreenUserResults query={query} active={activeTab === 0} />
-            ),
-          },
-        ]
-      }
+    if (hasSession) {
+      return [
+        {
+          title: _(msg`Top`),
+          component: (
+            <SearchScreenPostResults
+              query={query}
+              sort="top"
+              active={activeTab === 0}
+            />
+          ),
+        },
+        {
+          title: _(msg`Latest`),
+          component: (
+            <SearchScreenPostResults
+              query={query}
+              sort="latest"
+              active={activeTab === 1}
+            />
+          ),
+        },
+        {
+          title: _(msg`People`),
+          component: (
+            <SearchScreenUserResults query={query} active={activeTab === 2} />
+          ),
+        },
+      ]
     } else {
-      if (hasSession) {
-        return [
-          {
-            title: _(msg`Posts`),
-            component: (
-              <SearchScreenPostResults query={query} active={activeTab === 0} />
-            ),
-          },
-          {
-            title: _(msg`Users`),
-            component: (
-              <SearchScreenUserResults query={query} active={activeTab === 1} />
-            ),
-          },
-        ]
-      } else {
-        return [
-          {
-            title: _(msg`Users`),
-            component: (
-              <SearchScreenUserResults query={query} active={activeTab === 0} />
-            ),
-          },
-        ]
-      }
+      return [
+        {
+          title: _(msg`People`),
+          component: (
+            <SearchScreenUserResults query={query} active={activeTab === 0} />
+          ),
+        },
+      ]
     }
-  }, [hasSession, gate, _, query, activeTab])
+  }, [hasSession, _, query, activeTab])
 
   if (hasSession) {
     return query ? (
