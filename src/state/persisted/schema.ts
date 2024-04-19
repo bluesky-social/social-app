@@ -60,6 +60,7 @@ export const schema = z.object({
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),
+  disableAutoplay: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -96,4 +97,5 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
+  disableAutoplay: false,
 }
