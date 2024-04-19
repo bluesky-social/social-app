@@ -1,7 +1,9 @@
 import {ViewProps} from 'react-native'
 
 export interface VideoPlayerStateChangeEvent {
-  isPlaying: boolean
+  nativeEvent: {
+    isPlaying: boolean
+  }
 }
 
 export interface VideoPlayerViewProps extends ViewProps {

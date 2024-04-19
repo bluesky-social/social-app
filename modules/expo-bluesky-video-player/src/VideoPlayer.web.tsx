@@ -4,48 +4,46 @@ import {Pressable} from 'react-native'
 import {VideoPlayerViewProps} from './VideoPlayer.types'
 
 export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
-  videoPlayerRef: React.RefObject<HTMLMediaElement>
+  private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
+    React.createRef()
 
   constructor(props: VideoPlayerViewProps | Readonly<VideoPlayerViewProps>) {
     super(props)
-    this.videoPlayerRef = React.createRef()
   }
 
   static async prefetchAsync(_: string): Promise<void> {
     console.warn('prefetchAsync is not supported on web')
   }
 
+  private firePlayerStateChangeEvent = (isPlaying: boolean) => {
+    this.props.onPlayerStateChange?.({
+      nativeEvent: {
+        isPlaying,
+      },
+    })
+  }
+
   async playAsync(): Promise<void> {
     await this.videoPlayerRef.current.play()
+    this.firePlayerStateChangeEvent(true)
   }
 
   async pauseAsync(): Promise<void> {
     await this.videoPlayerRef.current.pause()
+    this.firePlayerStateChangeEvent(false)
   }
 
   async toggleAsync(): Promise<void> {
     if (this.videoPlayerRef.current.paused) {
-      await this.videoPlayerRef.current.play()
+      await this.playAsync()
     } else {
-      await this.videoPlayerRef.current.pause()
+      await this.pauseAsync()
     }
-  }
-
-  onPress = () => {
-    if (this.videoPlayerRef.current.paused) {
-      this.videoPlayerRef.current.play()
-    } else {
-      this.videoPlayerRef.current.pause()
-    }
-
-    this.props.onPlayerStateChange?.({
-      isPlaying: !this.videoPlayerRef.current?.paused,
-    })
   }
 
   render() {
     return (
-      <Pressable accessibilityRole="button" onPress={this.onPress}>
+      <Pressable accessibilityRole="button">
         <video
           src={this.props.source}
           autoPlay={this.props.autoplay ? 'autoplay' : undefined}
