@@ -23,8 +23,7 @@ export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
   const t = useTheme()
 
   const onPressSelectGif = useCallback(async () => {
-    logEvent('componser:gif:open', {})
-
+    logEvent('composer:gif:open', {})
     Keyboard.dismiss()
     control.open()
   }, [control])

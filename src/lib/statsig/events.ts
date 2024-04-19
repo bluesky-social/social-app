@@ -60,6 +60,8 @@ export type LogEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'composer:gif:open': {}
+  'composer:gif:select': {}
 
   // Data events
   'account:create:begin': {}
@@ -72,8 +74,6 @@ export type LogEvents = {
     langs: string
     logContext: 'Composer'
   }
-  'componser:gif:open': {}
-  'componser:gif:select': {}
   'post:like': {
     doesLikerFollowPoster: boolean | undefined
     doesPosterFollowLiker: boolean | undefined

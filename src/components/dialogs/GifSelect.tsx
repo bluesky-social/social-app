@@ -258,7 +258,7 @@ function GifPreview({
   const t = useTheme()
 
   const onPress = useCallback(() => {
-    logEvent('componser:gif:select', {})
+    logEvent('composer:gif:select', {})
     onSelectGif(gif)
   }, [onSelectGif, gif])
 
