@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native'
+import {Dimensions, Platform} from 'react-native'
 
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
@@ -254,6 +254,15 @@ export function parseEmbedPlayerFromUrl(
 
   if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
     const [_, gifs, nameAndId] = urlp.pathname.split('/')
+
+    const fh = urlp.searchParams.get('fh')?.split('-')
+    const fw = urlp.searchParams.get('fw')?.split('-')
+    let dimensions
+    if (fh && fw) {
+      dimensions = {
+        width: Platform.OS === 'web' ? Number(fw[0]) : Number(fw[1]),
+      }
+    }
 
     /*
      * nameAndId is a string that consists of the name (dash separated) and the id of the gif (the last part of the name)
