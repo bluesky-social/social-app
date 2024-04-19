@@ -59,6 +59,7 @@ import {
 } from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+import {useLayoutAnimation} from '#/components/hooks/useLayoutAnimation'
 
 function Loader() {
   const pal = usePalette('default')
@@ -775,6 +776,10 @@ export function SearchScreen(
     )
   }
 
+  const showCancel = query.length > 0 || inputIsFocused
+
+  useLayoutAnimation({}, [showCancel])
+
   return (
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
@@ -855,7 +860,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {query || inputIsFocused ? (
+        {showCancel ? (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}

@@ -1,17 +1,9 @@
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
-  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
@@ -59,6 +51,7 @@ import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
+import {useLayoutAnimation} from '#/components/hooks/useLayoutAnimation'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
 import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
@@ -136,11 +129,8 @@ export const ComposePost = observer(function ComposePost({
     [initImageUris],
   )
 
-  useLayoutEffect(() => {
-    if (isIOS) {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    }
-  }, [gallery.size])
+  // trigger layout animation when the number of images changes
+  useLayoutAnimation({android: false}, [gallery.size])
 
   const onClose = useCallback(() => {
     closeComposer()
