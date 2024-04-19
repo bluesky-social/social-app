@@ -470,6 +470,29 @@ export function SettingsScreen({}: Props) {
           <Trans>Basics</Trans>
         </Text>
         <TouchableOpacity
+          testID="accessibilitySettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts ? undefined : onPressAccessibilitySettings
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Accessibility settings`)}
+          accessibilityHint={_(msg`Opens accessibility settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="universal-access"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Accessibility</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           testID="preferencesHomeFeedButton"
           style={[
             styles.linkCard,
@@ -571,29 +594,6 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>Moderation</Trans>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          testID="accessibilitySettingsBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={
-            isSwitchingAccounts ? undefined : onPressAccessibilitySettings
-          }
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Accessibility settings`)}
-          accessibilityHint={_(msg`Opens accessibility settings`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="universal-access"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Accessibility</Trans>
           </Text>
         </TouchableOpacity>
 
