@@ -10,7 +10,6 @@ import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {s} from 'lib/styles'
-import {TabBar} from '../pager/TabBar'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
@@ -23,24 +22,20 @@ const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 
-const notificationTypes = [
-  {type: 'All', label: 'All'},
-  {type: 'Mentions', label: 'Mentions'},
-]
-
 export function Feed({
   scrollElRef,
   onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
+  filterType,
 }: {
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
+  filterType: string
 }) {
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const [filterType, setFilterType] = React.useState('All')
   const pal = usePalette('default')
 
   const {_} = useLingui()
@@ -56,31 +51,31 @@ export function Feed({
     isFetchingNextPage,
     fetchNextPage,
   } = useNotificationFeedQuery({enabled: !!moderationOpts})
-
-  const handleTabSelect = (index: number) => {
-    setFilterType(notificationTypes[index].type)
-  }
+  const isEmpty = !isFetching && !data?.pages[0]?.items.length
 
   const items = React.useMemo(() => {
-    let arr = []
-    if (isFetched && data) {
-      data.pages.forEach(page => {
-        page.items.forEach(item => {
-          if (
-            filterType === 'All' ||
-            (filterType === 'Mentions' &&
-              (item.type === 'reply' || item.type === 'quote'))
-          ) {
-            arr.push(item)
-          }
-        })
+    let arr: any[] = []
+    if (isFetched && !isEmpty) {
+      data?.pages.forEach(page => {
+        let filteredItems = page.items
+        if (filterType === 'Mentions') {
+          let mentions = page.items.filter(
+            item => item.type === 'reply' || item.type === 'quote',
+          )
+          filteredItems = mentions
+        }
+
+        arr = arr.concat(filteredItems)
       })
+    } else if (isEmpty) {
+      arr.push(EMPTY_FEED_ITEM)
+    } else if (isError) {
+      arr.push(LOAD_MORE_ERROR_ITEM)
+    } else {
+      arr.push(LOADING_ITEM)
     }
-    if (isError && arr.length === 0) arr.push(LOAD_MORE_ERROR_ITEM)
-    if (!isFetched && arr.length === 0) arr.push(LOADING_ITEM)
-    if (isFetched && arr.length === 0) arr.push(EMPTY_FEED_ITEM)
     return arr
-  }, [isFetched, isError, data, filterType])
+  }, [isFetched, isError, isEmpty, data, filterType])
 
   const onRefresh = React.useCallback(async () => {
     try {
@@ -158,15 +153,6 @@ export function Feed({
 
   return (
     <View style={s.hContentRegion}>
-      <CenteredView>
-        <TabBar
-          selectedPage={notificationTypes.findIndex(
-            nt => nt.type === filterType,
-          )}
-          items={notificationTypes.map(nt => nt.label)}
-          onSelect={handleTabSelect}
-        />
-      </CenteredView>
       {error && (
         <CenteredView>
           <ErrorMessage
@@ -199,9 +185,4 @@ export function Feed({
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
   emptyState: {paddingVertical: 40},
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: 10,
-  },
 })
