@@ -13,7 +13,6 @@ import {
   KeyboardAvoidingView,
   LayoutAnimation,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -27,6 +26,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
@@ -37,6 +37,7 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {Gif} from '#/state/queries/giphy'
 import {useProfileQuery} from '#/state/queries/profile'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {getAgent, useSession} from '#/state/session'
@@ -56,6 +57,9 @@ import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import {atoms as a} from '#/alf'
+import {Button} from '#/components/Button'
+import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
 import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
@@ -66,6 +70,7 @@ import {ExternalEmbed} from './ExternalEmbed'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {Gallery} from './photos/Gallery'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {SelectGifBtn} from './photos/SelectGifBtn'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {SuggestedLanguage} from './select-language/SuggestedLanguage'
@@ -314,12 +319,32 @@ export const ComposePost = observer(function ComposePost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
+  const canSelectImages = gallery.size < 4 && !extLink
   const hasMedia = gallery.size > 0 || Boolean(extLink)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
   }, [openPicker])
+
+  const focusTextInput = useCallback(() => {
+    textInput.current?.focus()
+  }, [])
+
+  const onSelectGif = useCallback(
+    (gif: Gif) =>
+      setExtLink({
+        uri: gif.url,
+        isLoading: true,
+        meta: {
+          url: gif.url,
+          image: gif.images.original_still.url,
+          likelyType: LikelyType.HTML,
+          title: `${gif.title} - Find & Share on GIPHY`,
+          description: `ALT: ${gif.alt_text}`,
+        },
+      }),
+    [setExtLink],
+  )
 
   return (
     <KeyboardAvoidingView
@@ -473,25 +498,27 @@ export const ComposePost = observer(function ComposePost({
         </ScrollView>
         <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
-          {canSelectImages ? (
-            <>
-              <SelectPhotoBtn gallery={gallery} />
-              <OpenCameraBtn gallery={gallery} />
-            </>
-          ) : null}
-          {!isMobile ? (
-            <Pressable
-              onPress={onEmojiButtonPress}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Open emoji picker`)}
-              accessibilityHint={_(msg`Open emoji picker`)}>
-              <FontAwesomeIcon
-                icon={['far', 'face-smile']}
-                color={pal.colors.link}
-                size={22}
-              />
-            </Pressable>
-          ) : null}
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+            <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+            <SelectGifBtn
+              onClose={focusTextInput}
+              onSelectGif={onSelectGif}
+              disabled={hasMedia}
+            />
+            {!isMobile ? (
+              <Button
+                onPress={onEmojiButtonPress}
+                style={a.p_sm}
+                label={_(msg`Open emoji picker`)}
+                accessibilityHint={_(msg`Open emoji picker`)}
+                variant="ghost"
+                shape="round"
+                color="primary">
+                <EmojiSmile size="lg" />
+              </Button>
+            ) : null}
+          </View>
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
@@ -586,7 +613,7 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    paddingVertical: 4,
     paddingLeft: 15,
     paddingRight: 20,
     alignItems: 'center',

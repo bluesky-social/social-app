@@ -89,3 +89,12 @@ export const BSKY_FEED_OWNER_DIDS = [
   'did:plc:vpkhqolt662uhesyj6nxm7ys',
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
+
+export const GIPHY_API_URL = 'https://api.giphy.com'
+export const GIPHY_API_KEY = Platform.select({
+  ios: 'ydVxhrQkwlcUjkVKx15mF6vyaNJbMeez',
+  android: 'Vwj3Ib7857dj3EcIg24Hiz1LbRVdGeYF',
+  default: 'vyL3hQQ8AipwcmIB8kFvg0NDs9faWg7G',
+})
+export const GIPHY_PRIVACY_POLICY =
+  'https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy'
