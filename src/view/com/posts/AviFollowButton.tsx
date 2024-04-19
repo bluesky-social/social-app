@@ -62,12 +62,12 @@ export function AviFollowButton({
               a.absolute,
               {
                 bottom: -4,
-                right: -4,
+                right: -2,
                 borderWidth: 2,
                 borderColor: t.atoms.bg.backgroundColor,
               },
             ]}>
-            <Plus size="md" fill={t.atoms.bg.backgroundColor} />
+            <Plus size="sm" fill={t.atoms.bg.backgroundColor} />
           </Pressable>
         )}
       </Button>
