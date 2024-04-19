@@ -54,10 +54,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         </View>
       )}
-      <Text numberOfLines={1} style={[styles.maxWidth, pal.textLight]}>
+      <Text
+        numberOfLines={1}
+        style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
         <TextLinkOnWebOnly
           type={opts.displayNameType || 'lg-bold'}
-          style={[pal.text, opts.displayNameStyle]}
+          style={[pal.text]}
           lineHeight={1.2}
           disableMismatchWarning
           text={
