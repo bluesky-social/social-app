@@ -5,7 +5,6 @@ export type Gate =
   | 'disable_poll_on_discover_v2'
   | 'hide_vertical_scroll_indicators'
   | 'new_profile_scroll_component'
-  | 'new_search'
   | 'receive_updates'
   | 'show_follow_back_label_v2'
   | 'start_session_with_following_v2'
