@@ -17,7 +17,7 @@ import {CommonNavigatorParams} from '#/lib/routes/types'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -269,10 +269,10 @@ let PostDropdownBtn = ({
           {hasSession && (
             <>
               <Menu.Group>
+                {!isNative && <Menu.Divider />}
+
                 {feedFeedback.enabled && (
                   <>
-                    <Menu.Divider />
-
                     <Menu.Item
                       testID="postDropdownShowMoreBtn"
                       label={_(msg`Show more like this`)}
@@ -292,10 +292,10 @@ let PostDropdownBtn = ({
                       </Menu.ItemText>
                       <Menu.ItemIcon icon={EmojiSad} position="right" />
                     </Menu.Item>
+
+                    <Menu.Divider />
                   </>
                 )}
-
-                <Menu.Divider />
 
                 <Menu.Item
                   testID="postDropdownMuteThreadBtn"
