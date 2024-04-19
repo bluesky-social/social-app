@@ -16,27 +16,31 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
   }
 
   async playAsync(): Promise<void> {
-    await this.videoPlayerRef.current?.play()
+    await this.videoPlayerRef.current.play()
   }
 
   async pauseAsync(): Promise<void> {
-    await this.videoPlayerRef.current?.pause()
+    await this.videoPlayerRef.current.pause()
   }
 
   async toggleAsync(): Promise<void> {
-    if (this.videoPlayerRef.current?.paused) {
-      await this.videoPlayerRef.current?.play()
+    if (this.videoPlayerRef.current.paused) {
+      await this.videoPlayerRef.current.play()
     } else {
-      await this.videoPlayerRef.current?.pause()
+      await this.videoPlayerRef.current.pause()
     }
   }
 
   onPress = () => {
-    if (this.videoPlayerRef.current?.paused) {
-      this.videoPlayerRef.current?.play()
+    if (this.videoPlayerRef.current.paused) {
+      this.videoPlayerRef.current.play()
     } else {
-      this.videoPlayerRef.current?.pause()
+      this.videoPlayerRef.current.pause()
     }
+
+    this.props.onPlayerStateChange?.({
+      isPlaying: !this.videoPlayerRef.current?.paused,
+    })
   }
 
   render() {

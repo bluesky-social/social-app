@@ -41,50 +41,58 @@ export const ExternalLinkEmbed = ({
     embedPlayerParams.dimensions &&
     gate('new_gif_player')
 
+  if (isCompatibleGiphy) {
+    return (
+      <VideoPlayer
+        // Need to flatten for web
+        style={StyleSheet.flatten([styles.video])}
+        source={embedPlayerParams.playerUri}
+        // TODO -hailey
+        autoplay={true}
+      />
+    )
+  }
+
   return (
     <View style={styles.container}>
-      {isCompatibleGiphy ? (
-        <VideoPlayer style={{}} source={embedPlayerParams.playerUri} />
-      ) : (
-        <LinkWrapper link={link} style={style}>
-          {link.thumb && !embedPlayerParams ? (
-            <Image
-              style={{aspectRatio: 1.91}}
-              source={{uri: link.thumb}}
-              accessibilityIgnoresInvertColors
-            />
-          ) : undefined}
-          {embedPlayerParams?.isGif ? (
-            <ExternalGifEmbed link={link} params={embedPlayerParams} />
-          ) : embedPlayerParams ? (
-            <ExternalPlayer link={link} params={embedPlayerParams} />
-          ) : undefined}
-          <View style={[styles.info, {paddingHorizontal: isMobile ? 10 : 14}]}>
-            {!isCompatibleGiphy && (
-              <Text
-                type="sm"
-                numberOfLines={1}
-                style={[pal.textLight, styles.extUri]}>
-                {toNiceDomain(link.uri)}
-              </Text>
-            )}
+      <LinkWrapper link={link} style={style}>
+        {link.thumb && !embedPlayerParams ? (
+          <Image
+            style={{aspectRatio: 1.91}}
+            source={{uri: link.thumb}}
+            accessibilityIgnoresInvertColors
+          />
+        ) : undefined}
+        {embedPlayerParams?.isGif ? (
+          <ExternalGifEmbed link={link} params={embedPlayerParams} />
+        ) : embedPlayerParams ? (
+          <ExternalPlayer link={link} params={embedPlayerParams} />
+        ) : undefined}
+        <View style={[styles.info, {paddingHorizontal: isMobile ? 10 : 14}]}>
+          {!isCompatibleGiphy && (
+            <Text
+              type="sm"
+              numberOfLines={1}
+              style={[pal.textLight, styles.extUri]}>
+              {toNiceDomain(link.uri)}
+            </Text>
+          )}
 
-            {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
-              <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
-                {link.title || link.uri}
-              </Text>
-            )}
-            {link.description && !embedPlayerParams?.hideDetails ? (
-              <Text
-                type="md"
-                numberOfLines={link.thumb ? 2 : 4}
-                style={[pal.text, styles.extDescription]}>
-                {link.description}
-              </Text>
-            ) : undefined}
-          </View>
-        </LinkWrapper>
-      )}
+          {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
+            <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
+              {link.title || link.uri}
+            </Text>
+          )}
+          {link.description && !embedPlayerParams?.hideDetails ? (
+            <Text
+              type="md"
+              numberOfLines={link.thumb ? 2 : 4}
+              style={[pal.text, styles.extDescription]}>
+              {link.description}
+            </Text>
+          ) : undefined}
+        </View>
+      </LinkWrapper>
     </View>
   )
 }
@@ -120,6 +128,14 @@ function LinkWrapper({
 }
 
 const styles = StyleSheet.create({
+  video: {
+    borderRadius: 6,
+    overflow: 'hidden',
+    marginTop: 8,
+  },
+  videoWeb: {},
+  videoNative: {},
+
   container: {
     flexDirection: 'column',
     borderRadius: 6,

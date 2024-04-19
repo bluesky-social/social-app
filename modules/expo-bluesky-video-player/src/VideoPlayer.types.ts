@@ -1,13 +1,11 @@
 import {ViewProps} from 'react-native'
 
-export interface VideoPlayerLoadEvent {
-  height: number
-  width: number
-  duration: number
+export interface VideoPlayerStateChangeEvent {
+  isPlaying: boolean
 }
 
 export interface VideoPlayerViewProps extends ViewProps {
   autoplay?: boolean
   source?: string
-  onLoad?: (event: VideoPlayerLoadEvent) => void
+  onPlayerStateChange?: (event: VideoPlayerStateChangeEvent) => void
 }
