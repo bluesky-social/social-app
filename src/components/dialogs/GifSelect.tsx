@@ -147,7 +147,11 @@ function GifList({
         <View
           style={[
             a.absolute,
-            {top: 0, left: 0, right: 0, height: '50%'},
+            a.inset_0,
+            {
+              borderBottomLeftRadius: 8,
+              borderBottomRightRadius: 8,
+            },
             t.atoms.bg,
           ]}
         />
