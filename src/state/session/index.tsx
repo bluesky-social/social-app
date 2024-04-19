@@ -369,7 +369,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
 
-      const agent = new BskyAgent({service: account.service})
+      const agent = new BskyAgent({service: account.pdsUrl || account.service})
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
@@ -408,10 +408,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         handle: account.handle,
         deactivated:
           isSessionDeactivated(account.accessJwt) || account.deactivated,
-      }
-
-      if (account.pdsUrl) {
-        agent.api.xrpc.uri = agent.pdsUrl = new URL(account.pdsUrl)
       }
 
       if (canReusePrevSession) {
