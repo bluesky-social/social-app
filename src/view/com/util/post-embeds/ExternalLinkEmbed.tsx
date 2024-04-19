@@ -11,6 +11,7 @@ import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useExternalEmbedsPrefs} from 'state/preferences'
 import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {VideoPlayer} from '../../../../../modules/expo-bluesky-video-player'
 import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
@@ -45,7 +46,10 @@ export const ExternalLinkEmbed = ({
         />
       ) : undefined}
       {isCompatibleGiphy ? (
-        <View />
+        <VideoPlayer
+          style={{aspectRatio: 1.91}}
+          source={embedPlayerParams.playerUri}
+        />
       ) : embedPlayerParams?.isGif ? (
         <ExternalGifEmbed link={link} params={embedPlayerParams} />
       ) : embedPlayerParams ? (

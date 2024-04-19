@@ -1,13 +1,7 @@
 import * as React from 'react'
 
-import {ExpoBlueskyVideoPlayerViewProps} from './ExpoBlueskyVideoPlayer.types'
+import {VideoPlayerViewProps} from './VideoPlayer.types'
 
-export default function ExpoBlueskyVideoPlayerView(
-  props: ExpoBlueskyVideoPlayerViewProps,
-) {
-  return (
-    <div>
-      <span>{props.name}</span>
-    </div>
-  )
+export function VideoPlayer({source, autoplay, style}: VideoPlayerViewProps) {
+  return <video src={source} autoPlay={autoplay} style={style} />
 }
