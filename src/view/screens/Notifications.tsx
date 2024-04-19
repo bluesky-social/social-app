@@ -8,7 +8,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {emitSoftReset, listenSoftReset} from '#/state/events'
+import {listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {
   useUnreadNotifications,
@@ -25,8 +25,7 @@ import {
   NativeStackScreenProps,
   NotificationsTabNavigatorParams,
 } from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {TextLink} from 'view/com/util/Link'
+import {s} from 'lib/styles'
 import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {Text} from 'view/com/util/text/Text'
@@ -50,7 +49,6 @@ export function NotificationsScreen({}: Props) {
   const scrollElRef = React.useRef<ListMethods>(null)
   const {screen} = useAnalytics()
   const pal = usePalette('default')
-  const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
   const unreadNotifs = useUnreadNotifications()
   const unreadApi = useUnreadNotificationsApi()
@@ -119,48 +117,6 @@ export function NotificationsScreen({}: Props) {
     return listenSoftReset(onPressLoadLatest)
   }, [onPressLoadLatest, isScreenFocused])
 
-  const ListHeaderComponent = React.useCallback(() => {
-    if (isDesktop) {
-      return (
-        <View
-          style={[
-            pal.view,
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 18,
-              paddingVertical: 12,
-            },
-          ]}>
-          <TextLink
-            type="title-lg"
-            href="/notifications"
-            style={[pal.text, {fontWeight: 'bold'}]}
-            text={
-              <>
-                <Trans>Notifications</Trans>{' '}
-                {hasNew && (
-                  <View
-                    style={{
-                      top: -8,
-                      backgroundColor: colors.blue3,
-                      width: 8,
-                      height: 8,
-                      borderRadius: 4,
-                    }}
-                  />
-                )}
-              </>
-            }
-            onPress={emitSoftReset}
-          />
-        </View>
-      )
-    }
-    return <></>
-  }, [isDesktop, pal, hasNew])
-
   return (
     <View testID="notificationsScreen" style={s.hContentRegion}>
       <SimpleViewHeader
@@ -194,7 +150,6 @@ export function NotificationsScreen({}: Props) {
             filterType="All"
             onScrolledDownChange={setIsScrolledDown}
             scrollElRef={scrollElRef}
-            ListHeaderComponent={ListHeaderComponent}
           />
         </MainScrollProvider>
         <MainScrollProvider>
@@ -202,7 +157,6 @@ export function NotificationsScreen({}: Props) {
             filterType="Mentions"
             onScrolledDownChange={setIsScrolledDown}
             scrollElRef={scrollElRef}
-            ListHeaderComponent={ListHeaderComponent}
           />
         </MainScrollProvider>
       </Pager>
