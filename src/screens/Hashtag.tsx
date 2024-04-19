@@ -40,17 +40,10 @@ export default function HashtagScreen({
   const {tag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
   const {_} = useLingui()
-  const initialNumToRender = useInitialNumToRender()
-  const [isPTR, setIsPTR] = React.useState(false)
 
   const fullTag = React.useMemo(() => {
     return `#${decodeURIComponent(tag)}`
   }, [tag])
-
-  const queryParam = React.useMemo(() => {
-    if (!author) return fullTag
-    return `${fullTag} from:${sanitizeHandle(author)}`
-  }, [fullTag, author])
 
   const headerTitle = React.useMemo(() => {
     return enforceLen(fullTag.toLowerCase(), 24, true, 'middle')
@@ -61,27 +54,6 @@ export default function HashtagScreen({
     return sanitizeHandle(author)
   }, [author])
 
-  const {
-    data,
-    isFetchingNextPage,
-    isLoading,
-    isError,
-    error,
-    refetch,
-    fetchNextPage,
-    hasNextPage,
-  } = useSearchPostsQuery({query: queryParam})
-
-  const posts = React.useMemo(() => {
-    return data?.pages.flatMap(page => page.posts) || []
-  }, [data])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
-
   const onShare = React.useCallback(() => {
     const url = new URL('https://bsky.app')
     url.pathname = `/hashtag/${decodeURIComponent(tag)}`
@@ -91,16 +63,18 @@ export default function HashtagScreen({
     shareUrl(url.toString())
   }, [tag, author])
 
-  const onRefresh = React.useCallback(async () => {
-    setIsPTR(true)
-    await refetch()
-    setIsPTR(false)
-  }, [refetch])
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
 
-  const onEndReached = React.useCallback(() => {
-    if (isFetchingNextPage || !hasNextPage || error) return
-    fetchNextPage()
-  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
+  const listHeader = (
+    <ListHeaderDesktop
+      title={headerTitle}
+      subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
+    />
+  )
 
   return (
     <>
@@ -124,6 +98,61 @@ export default function HashtagScreen({
             : undefined
         }
       />
+      <HashtagScreenTab
+        fullTag={fullTag}
+        author={author}
+        listHeader={listHeader}
+      />
+    </>
+  )
+}
+
+function HashtagScreenTab({
+  fullTag,
+  author,
+  listHeader,
+}: {
+  fullTag: string
+  author: string | undefined
+  listHeader: React.ReactElement
+}) {
+  const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
+  const [isPTR, setIsPTR] = React.useState(false)
+
+  const queryParam = React.useMemo(() => {
+    if (!author) return fullTag
+    return `${fullTag} from:${sanitizeHandle(author)}`
+  }, [fullTag, author])
+
+  const {
+    data,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+  } = useSearchPostsQuery({query: queryParam})
+
+  const posts = React.useMemo(() => {
+    return data?.pages.flatMap(page => page.posts) || []
+  }, [data])
+
+  const onRefresh = React.useCallback(async () => {
+    setIsPTR(true)
+    await refetch()
+    setIsPTR(false)
+  }, [refetch])
+
+  const onEndReached = React.useCallback(() => {
+    if (isFetchingNextPage || !hasNextPage || error) return
+    fetchNextPage()
+  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
+
+  return (
+    <>
       {posts.length < 1 ? (
         <ListMaybePlaceholder
           isLoading={isLoading}
@@ -143,12 +172,7 @@ export default function HashtagScreen({
           onEndReachedThreshold={4}
           // @ts-ignore web only -prf
           desktopFixedHeight
-          ListHeaderComponent={
-            <ListHeaderDesktop
-              title={headerTitle}
-              subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
-            />
-          }
+          ListHeaderComponent={listHeader}
           ListFooterComponent={
             <ListFooter
               isFetchingNextPage={isFetchingNextPage}
