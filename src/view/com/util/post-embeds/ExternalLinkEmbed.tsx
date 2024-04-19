@@ -1,15 +1,17 @@
 import React from 'react'
-import {Image} from 'expo-image'
-import {Text} from '../text/Text'
 import {StyleSheet, View} from 'react-native'
+import {Image} from 'expo-image'
+import {AppBskyEmbedExternal} from '@atproto/api'
+
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {AppBskyEmbedExternal} from '@atproto/api'
-import {toNiceDomain} from 'lib/strings/url-helpers'
+import {useGate} from 'lib/statsig/statsig'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
-import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
-import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
+import {toNiceDomain} from 'lib/strings/url-helpers'
 import {useExternalEmbedsPrefs} from 'state/preferences'
+import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
+import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -19,6 +21,7 @@ export const ExternalLinkEmbed = ({
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
+  const gate = useGate()
 
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
@@ -27,6 +30,10 @@ export const ExternalLinkEmbed = ({
       return params
     }
   }, [link.uri, externalEmbedPrefs])
+  const isCompatibleGiphy =
+    embedPlayerParams?.source === 'giphy' &&
+    embedPlayerParams.dimensions &&
+    gate('new_gif_player')
 
   return (
     <View style={styles.container}>
@@ -37,20 +44,24 @@ export const ExternalLinkEmbed = ({
           accessibilityIgnoresInvertColors
         />
       ) : undefined}
-      {(embedPlayerParams?.isGif && (
+      {isCompatibleGiphy ? (
+        <View />
+      ) : embedPlayerParams?.isGif ? (
         <ExternalGifEmbed link={link} params={embedPlayerParams} />
-      )) ||
-        (embedPlayerParams && (
-          <ExternalPlayer link={link} params={embedPlayerParams} />
-        ))}
+      ) : embedPlayerParams ? (
+        <ExternalPlayer link={link} params={embedPlayerParams} />
+      ) : undefined}
       <View style={[styles.info, {paddingHorizontal: isMobile ? 10 : 14}]}>
-        <Text
-          type="sm"
-          numberOfLines={1}
-          style={[pal.textLight, styles.extUri]}>
-          {toNiceDomain(link.uri)}
-        </Text>
-        {!embedPlayerParams?.isGif && (
+        {!isCompatibleGiphy && (
+          <Text
+            type="sm"
+            numberOfLines={1}
+            style={[pal.textLight, styles.extUri]}>
+            {toNiceDomain(link.uri)}
+          </Text>
+        )}
+
+        {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
           <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
             {link.title || link.uri}
           </Text>
