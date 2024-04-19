@@ -34,7 +34,6 @@ import {Pager, PagerRef} from '../com/pager/Pager'
 import {TabBar} from '../com/pager/TabBar'
 import {FAB} from '../com/util/fab/FAB'
 import {MainScrollProvider} from '../com/util/MainScrollProvider'
-import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<
@@ -161,7 +160,6 @@ export function NotificationsScreen({}: Props) {
 
   return (
     <View testID="notificationsScreen" style={s.hContentRegion}>
-      <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
       <Pager
         onPageSelected={handleTabChange}
         ref={pagerRef}
