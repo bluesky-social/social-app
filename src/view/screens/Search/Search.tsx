@@ -393,13 +393,7 @@ function SearchScreenUserResults({
   )
 }
 
-export function SearchScreenInner({
-  query,
-  primarySearch,
-}: {
-  query?: string
-  primarySearch?: boolean
-}) {
+export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -419,86 +413,35 @@ export function SearchScreenInner({
 
   const sections = React.useMemo(() => {
     if (!query) return []
-    if (hasSession) {
-      return [
-        {
-          title: _(msg`Top`),
-          component: (
-            <SearchScreenPostResults
-              query={query}
-              sort="top"
-              active={activeTab === 0}
-            />
-          ),
-        },
-        {
-          title: _(msg`Latest`),
-          component: (
-            <SearchScreenPostResults
-              query={query}
-              sort="latest"
-              active={activeTab === 1}
-            />
-          ),
-        },
-        {
-          title: _(msg`People`),
-          component: (
-            <SearchScreenUserResults query={query} active={activeTab === 2} />
-          ),
-        },
-      ]
-    } else {
-      return [
-        {
-          title: _(msg`People`),
-          component: (
-            <SearchScreenUserResults query={query} active={activeTab === 0} />
-          ),
-        },
-      ]
-    }
-  }, [hasSession, _, query, activeTab])
-
-  if (hasSession) {
-    return query ? (
-      <Pager
-        onPageSelected={onPageSelected}
-        renderTabBar={props => (
-          <CenteredView
-            sideBorders
-            style={[pal.border, pal.view, styles.tabBarContainer]}>
-            <TabBar items={sections.map(section => section.title)} {...props} />
-          </CenteredView>
-        )}
-        initialPage={0}>
-        {sections.map((section, i) => (
-          <View key={i}>{section.component}</View>
-        ))}
-      </Pager>
-    ) : (
-      <View>
-        <CenteredView sideBorders style={pal.border}>
-          <Text
-            type="title"
-            style={[
-              pal.text,
-              pal.border,
-              {
-                display: 'flex',
-                paddingVertical: 12,
-                paddingHorizontal: 18,
-                fontWeight: 'bold',
-              },
-            ]}>
-            <Trans>Suggested Follows</Trans>
-          </Text>
-        </CenteredView>
-
-        <SearchScreenSuggestedFollows />
-      </View>
-    )
-  }
+    return [
+      {
+        title: _(msg`Top`),
+        component: (
+          <SearchScreenPostResults
+            query={query}
+            sort="top"
+            active={activeTab === 0}
+          />
+        ),
+      },
+      {
+        title: _(msg`Latest`),
+        component: (
+          <SearchScreenPostResults
+            query={query}
+            sort="latest"
+            active={activeTab === 1}
+          />
+        ),
+      },
+      {
+        title: _(msg`People`),
+        component: (
+          <SearchScreenUserResults query={query} active={activeTab === 2} />
+        ),
+      },
+    ]
+  }, [_, query, activeTab])
 
   return query ? (
     <Pager
@@ -515,6 +458,27 @@ export function SearchScreenInner({
         <View key={i}>{section.component}</View>
       ))}
     </Pager>
+  ) : hasSession ? (
+    <View>
+      <CenteredView sideBorders style={pal.border}>
+        <Text
+          type="title"
+          style={[
+            pal.text,
+            pal.border,
+            {
+              display: 'flex',
+              paddingVertical: 12,
+              paddingHorizontal: 18,
+              fontWeight: 'bold',
+            },
+          ]}>
+          <Trans>Suggested Follows</Trans>
+        </Text>
+      </CenteredView>
+
+      <SearchScreenSuggestedFollows />
+    </View>
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View
@@ -554,11 +518,7 @@ export function SearchScreenInner({
             style={pal.textLight}
           />
           <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
-            {isDesktop && !primarySearch ? (
-              <Trans>Find users with the search tool on the right</Trans>
-            ) : (
-              <Trans>Find users on Bluesky</Trans>
-            )}
+            <Trans>Find posts and users on Bluesky</Trans>
           </Text>
         </View>
       </View>
