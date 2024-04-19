@@ -6,9 +6,21 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
   private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
     React.createRef()
   private isLoaded: boolean = false
+  private isPlaying: boolean
 
   constructor(props: VideoPlayerViewProps | Readonly<VideoPlayerViewProps>) {
     super(props)
+    this.isPlaying = props.autoplay ?? false
+  }
+
+  componentDidUpdate(prevProps: Readonly<VideoPlayerViewProps>) {
+    if (prevProps.autoplay !== this.props.autoplay) {
+      if (this.props.autoplay) {
+        this.playAsync()
+      } else {
+        this.pauseAsync()
+      }
+    }
   }
 
   static async prefetchAsync(_: string): Promise<void> {
@@ -25,15 +37,21 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
   }
 
   private onLoad = () => {
+    // Prevent multiple calls to onLoad because onCanPlay will fire after each loop
+    if (this.isLoaded) {
+      return
+    }
+
     this.isLoaded = true
     this.firePlayerStateChangeEvent({
       isLoaded: true,
-      isPlaying: this.videoPlayerRef.current.paused,
+      isPlaying: this.isPlaying,
     })
   }
 
   async playAsync(): Promise<void> {
     this.videoPlayerRef.current.play()
+    this.isPlaying = true
     this.firePlayerStateChangeEvent({
       isLoaded: this.isLoaded,
       isPlaying: true,
@@ -42,9 +60,10 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
 
   async pauseAsync(): Promise<void> {
     this.videoPlayerRef.current.pause()
+    this.isPlaying = true
     this.firePlayerStateChangeEvent({
       isLoaded: this.isLoaded,
-      isPlaying: true,
+      isPlaying: false,
     })
   }
 
