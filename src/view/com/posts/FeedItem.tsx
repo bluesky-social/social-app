@@ -130,7 +130,7 @@ let FeedItemInner = ({
 
   const onPressReply = React.useCallback(() => {
     sendInteraction({
-      uri: post.uri,
+      item: post.uri,
       event: 'app.bsky.feed.defs#interactionReply',
       feedContext,
     })
@@ -148,7 +148,7 @@ let FeedItemInner = ({
 
   const onOpenPost = React.useCallback(() => {
     sendInteraction({
-      uri: post.uri,
+      item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughItem',
       feedContext,
     })
@@ -156,7 +156,7 @@ let FeedItemInner = ({
 
   const onOpenAuthor = React.useCallback(() => {
     sendInteraction({
-      uri: post.uri,
+      item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughAuthor',
       feedContext,
     })
@@ -164,7 +164,7 @@ let FeedItemInner = ({
 
   const onOpenReposter = React.useCallback(() => {
     sendInteraction({
-      uri: post.uri,
+      item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughReposter',
       feedContext,
     })
@@ -172,7 +172,7 @@ let FeedItemInner = ({
 
   const onOpenEmbed = React.useCallback(() => {
     sendInteraction({
-      uri: post.uri,
+      item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughEmbed',
       feedContext,
     })

@@ -65,7 +65,7 @@ export function useFeedFeedback(feed: FeedDescriptor) {
         }
         for (const postItem of slice.items) {
           const str = toString({
-            uri: postItem.uri,
+            item: postItem.uri,
             event: 'app.bsky.feed.defs#interactionSeen',
             feedContext: postItem.feedContext,
           })
@@ -118,7 +118,7 @@ function isDiscoverFeed(feed: FeedDescriptor) {
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
-  return `${interaction.uri}|${interaction.event}|${
+  return `${interaction.item}|${interaction.event}|${
     interaction.feedContext || ''
   }`
 }

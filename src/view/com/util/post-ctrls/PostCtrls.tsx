@@ -91,7 +91,7 @@ let PostCtrls = ({
       if (!post.viewer?.like) {
         playHaptic()
         sendInteraction({
-          uri: post.uri,
+          item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
           feedContext,
         })
@@ -120,7 +120,7 @@ let PostCtrls = ({
       if (!post.viewer?.repost) {
         playHaptic()
         sendInteraction({
-          uri: post.uri,
+          item: post.uri,
           event: 'app.bsky.feed.defs#interactionRepost',
           feedContext,
         })
@@ -147,7 +147,7 @@ let PostCtrls = ({
   const onQuote = useCallback(() => {
     closeModal()
     sendInteraction({
-      uri: post.uri,
+      item: post.uri,
       event: 'app.bsky.feed.defs#interactionQuote',
       feedContext,
     })
@@ -180,7 +180,7 @@ let PostCtrls = ({
     const url = toShareUrl(href)
     shareUrl(url)
     sendInteraction({
-      uri: post.uri,
+      item: post.uri,
       event: 'app.bsky.feed.defs#interactionShare',
       feedContext,
     })
