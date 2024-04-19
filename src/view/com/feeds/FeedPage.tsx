@@ -104,17 +104,11 @@ export function FeedPage({
     })
   }, [scrollToTop, feed, queryClient, setHasNew])
 
-  let feedPollInterval
-  if (
-    feed === // Discover
-      'feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot' &&
-    // TODO: This gate check is still too early. Move it to where the polling happens.
-    gate('disable_poll_on_discover')
-  ) {
-    feedPollInterval = undefined
-  } else {
-    feedPollInterval = POLL_FREQ
-  }
+  const isDiscoverFeed =
+    feed ===
+    'feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+  const adjustedHasNew =
+    hasNew && !(isDiscoverFeed && gate('disable_poll_on_discover_v2'))
 
   return (
     <View testID={testID} style={s.h100pct}>
@@ -124,7 +118,7 @@ export function FeedPage({
           enabled={isPageFocused}
           feed={feed}
           feedParams={feedParams}
-          pollInterval={feedPollInterval}
+          pollInterval={POLL_FREQ}
           disablePoll={hasNew}
           scrollElRef={scrollElRef}
           onScrolledDownChange={setIsScrolledDown}
@@ -134,11 +128,11 @@ export function FeedPage({
           headerOffset={headerOffset}
         />
       </MainScrollProvider>
-      {(isScrolledDown || hasNew) && (
+      {(isScrolledDown || adjustedHasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
           label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
+          showIndicator={adjustedHasNew}
         />
       )}
 

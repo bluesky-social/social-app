@@ -140,7 +140,7 @@ function PostThreadFollowBtnLoaded({
             style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
             numberOfLines={1}>
             {!isFollowing ? (
-              isFollowedBy && gate('show_follow_back_label') ? (
+              isFollowedBy && gate('show_follow_back_label_v2') ? (
                 <Trans>Follow Back</Trans>
               ) : (
                 <Trans>Follow</Trans>
