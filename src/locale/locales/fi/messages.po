@@ -111,7 +111,7 @@ msgstr "Käyttäjätili"
 
 #: src/view/com/profile/ProfileMenu.tsx:139
 msgid "Account blocked"
-msgstr "Käyttäjtili on estetty"
+msgstr "Käyttäjätili estetty"
 
 #: src/view/com/profile/ProfileMenu.tsx:153
 msgid "Account followed"
@@ -1663,7 +1663,7 @@ msgstr "Anna verkkotunnus, jota haluat käyttää"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:119
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Anna sähköpostiosoite, jotaa käytit tilin luomiseen. Lähetämme sinulle \"nollauskoodin\", jotta voit määritellä uuden salasanan."
+msgstr "Anna sähköpostiosoite, jota käytit tilin luomiseen. Lähetämme sinulle \"nollauskoodin\", jotta voit määritellä uuden salasanan."
 
 #: src/components/dialogs/BirthDateSettings.tsx:108
 msgid "Enter your birth date"
