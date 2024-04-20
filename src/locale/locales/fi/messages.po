@@ -3868,7 +3868,7 @@ msgstr "Poista hiljennetty sana listaltasi"
 
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
-msgstr "Poista uudelleenjako"
+msgstr "Poista uudelleenjulkaisu"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:175
 #~ msgid "Remove this feed from my feeds?"
@@ -3975,24 +3975,24 @@ msgstr "Ilmianna tämä käyttäjä"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgctxt "action"
 msgid "Repost"
-msgstr "Uudelleenjaa"
+msgstr "Uudelleenjulkaise"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
-msgstr "Uudelleenjaa"
+msgstr "Uudelleenjulkaise"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
 msgid "Repost or quote post"
-msgstr "Uudelleenjaa tai lainaa viestiä"
+msgstr "Uudelleenjulkaise tai lainaa viestiä"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr "Uudelleenjakanut"
+msgstr "Uudelleenjulkaissut"
 
 #: src/view/com/posts/FeedItem.tsx:199
 msgid "Reposted by {0}"
-msgstr "Uudelleenjakanut {0}"
+msgstr "{0} uudelleenjulkaisi"
 
 #: src/view/com/posts/FeedItem.tsx:214
 #~ msgid "Reposted by <0/>"
@@ -4000,11 +4000,11 @@ msgstr "Uudelleenjakanut {0}"
 
 #: src/view/com/posts/FeedItem.tsx:216
 msgid "Reposted by <0><1/></0>"
-msgstr ""
+msgstr "Uudelleenjulkaissut <0><1/></0>"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "reposted your post"
-msgstr "uudelleenjakoi viestisi"
+msgstr "uudelleenjulkaisi viestisi"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:187
 msgid "Reposts of this post"
