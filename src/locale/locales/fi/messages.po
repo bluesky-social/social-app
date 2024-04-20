@@ -1153,7 +1153,7 @@ msgstr "Luo käyttäjätili"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr "Luo köyttäjätili"
+msgstr "Luo käyttäjätili"
 
 #: src/view/com/modals/AddAppPasswords.tsx:227
 msgid "Create App Password"
@@ -1841,7 +1841,7 @@ msgstr "Syötteet"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 #~ msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
-#~ msgstr "Syötteer ivat käyttäjien ja organisaatioden luomia. Ne tarjoavat sinulle monipuolisia kokemuksia ja ehdottavat algoritmien avulla sisältöä, josta saatat pitää."
+#~ msgstr "Syötteet ovat käyttäjien ja organisaatioden luomia. Ne tarjoavat sinulle monipuolisia kokemuksia ja ehdottavat algoritmien avulla sisältöä, josta saatat pitää."
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
@@ -5986,7 +5986,7 @@ msgstr "Olet piilottanut tämän viestin."
 #: src/components/moderation/ModerationDetailsDialog.tsx:94
 #: src/lib/moderation/useModerationCauseDescription.ts:92
 msgid "You have muted this account."
-msgstr "Olet huljentänyt tämän käyttäjätilin."
+msgstr "Olet hiljentänyt tämän käyttäjätilin."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:86
 msgid "You have muted this user"
@@ -6031,7 +6031,7 @@ msgstr "Et ole vielä hiljentänyt yhtään sanaa tai aihetunnistetta"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "Voit valittaa näistä merkinnöistä, jos ne ovat mielestäsi virheeölisiä."
+msgstr "Voit valittaa näistä merkinnöistä, jos ne ovat mielestäsi virheellisiä."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
