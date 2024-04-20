@@ -1,6 +1,7 @@
 import {Dimensions} from 'react-native'
 
 import {isWeb} from 'platform/detection'
+
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 const IFRAME_HOST = isWeb
@@ -22,6 +23,7 @@ export const embedPlayerSources = [
   'vimeo',
   'giphy',
   'tenor',
+  'nicovideo',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -41,7 +43,7 @@ export type EmbedPlayerType =
   | 'vimeo_video'
   | 'giphy_gif'
   | 'tenor_gif'
-
+  | 'nicovideo_video'
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
   youtubeShorts: 'YouTube Shorts',
@@ -52,6 +54,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   spotify: 'Spotify',
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
+  nicovideo: 'NicoVideo',
 }
 
 export interface EmbedPlayerParams {
@@ -368,6 +371,24 @@ export function parseEmbedPlayerFromUrl(
       }
     }
   }
+
+  if (urlp.hostname === 'nico.ms' || urlp.hostname === 'www.nicovideo.jp') {
+    const [_, watchOrId, videoId] = urlp.pathname.split('/')
+    const seek = encodeURIComponent(urlp.searchParams.get('from') ?? 0)
+    if (videoId) {
+      return {
+        type: 'nicovideo_video',
+        source: 'nicovideo',
+        playerUri: `https://embed.nicovideo.jp/watch/${videoId}?autoplay=1&from=${seek}&persistence=1&oldScript=1&referer=&allowProgrammaticFullScreen=1`,
+      }
+    } else if (watchOrId) {
+      return {
+        type: 'nicovideo_video',
+        source: 'nicovideo',
+        playerUri: `https://embed.nicovideo.jp/watch/${watchOrId}?autoplay=1&from=${seek}&persistence=1&oldScript=1&referer=&allowProgrammaticFullScreen=1`,
+      }
+    }
+  }
 }
 
 export function getPlayerAspect({
@@ -384,6 +405,7 @@ export function getPlayerAspect({
   switch (type) {
     case 'youtube_video':
     case 'twitch_video':
+    case 'nicovideo_video':
     case 'vimeo_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
