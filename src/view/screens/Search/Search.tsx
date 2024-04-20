@@ -747,7 +747,7 @@ export function SearchScreen(
             ref={textInput}
             placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus
+            
             returnKeyType="search"
             value={query}
             style={[pal.text, styles.headerSearchInput]}
@@ -757,7 +757,7 @@ export function SearchScreen(
               // HACK
               // give 100ms to not stop click handlers in the search history
               // -prf
-              setTimeout(() => setInputIsFocused(false), 100)
+              setTimeout(() => setInputIsFocused(false), 250)
             }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
