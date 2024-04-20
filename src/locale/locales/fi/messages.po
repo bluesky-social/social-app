@@ -5398,7 +5398,7 @@ msgstr "Poista esto?"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:60
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Undo repost"
-msgstr "Kumoa uudelleenjako"
+msgstr "Kumoa uudelleenjulkaisu"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:141
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:248
