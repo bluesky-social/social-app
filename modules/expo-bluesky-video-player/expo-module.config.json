@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "tvos", "android", "web"],
-  "ios": {
-    "modules": ["ExpoBlueskyVideoPlayerModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.blueskyvideoplayer.ExpoBlueskyVideoPlayerModule"]
-  }
-}

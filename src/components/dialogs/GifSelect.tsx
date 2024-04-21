@@ -45,12 +45,12 @@ export function GifSelectDialog({
   let snapPoints
   switch (externalEmbedsPrefs?.giphy) {
     case 'show':
-      content = <GifList control={control} onSelectGif={onSelectGif} />
+      content = <GifList onSelectGif={onSelectGif} />
       snapPoints = ['100%']
       break
     case 'hide':
     default:
-      content = <GiphyConsentPrompt control={control} />
+      content = <GiphyConsentPrompt />
       break
   }
 
@@ -65,19 +65,14 @@ export function GifSelectDialog({
   )
 }
 
-function GifList({
-  control,
-  onSelectGif,
-}: {
-  control: Dialog.DialogControlProps
-  onSelectGif: (gif: Gif) => void
-}) {
+function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const ref = useRef<TextInput>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
+  const {close} = Dialog.useDialogContext()
 
   const isSearching = search.length > 0
 
@@ -129,9 +124,9 @@ function GifList({
       ref.current?.clear()
       setSearch('')
     } else {
-      control.close()
+      close()
     }
-  }, [control, isSearching])
+  }, [close, isSearching])
 
   const listHeader = useMemo(() => {
     return (
@@ -162,7 +157,7 @@ function GifList({
             variant="ghost"
             color="secondary"
             shape="round"
-            onPress={() => control.close()}
+            onPress={() => close()}
             label={_(msg`Close GIF dialog`)}>
             <ButtonIcon icon={Arrow} size="md" />
           </Button>
@@ -180,14 +175,14 @@ function GifList({
             maxLength={50}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
-                control.close()
+                close()
               }
             }}
           />
         </TextField.Root>
       </View>
     )
-  }, [gtMobile, t.atoms.bg, _, control])
+  }, [gtMobile, t.atoms.bg, _, close])
 
   return (
     <>
@@ -285,20 +280,22 @@ function GifPreview({
   )
 }
 
-function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
+export function GiphyConsentPrompt() {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const setExternalEmbedPref = useSetExternalEmbedPref()
+  const {close} = Dialog.useDialogContext()
 
   const onShowPress = useCallback(() => {
     setExternalEmbedPref('giphy', 'show')
   }, [setExternalEmbedPref])
 
   const onHidePress = useCallback(() => {
-    setExternalEmbedPref('giphy', 'hide')
-    control.close()
-  }, [control, setExternalEmbedPref])
+    close(() => {
+      setExternalEmbedPref('giphy', 'hide')
+    })
+  }, [close, setExternalEmbedPref])
 
   const gtMobileWeb = gtMobile && isWeb
 
@@ -311,18 +308,14 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
 
         <View style={[a.mt_sm, a.mb_2xl, a.gap_lg]}>
           <Text>
-            <Trans>
-              Bluesky uses GIPHY to provide the GIF selector feature.
-            </Trans>
+            <Trans>Bluesky uses GIPHY for GIF features within the app.</Trans>
           </Text>
 
           <Text style={t.atoms.text_contrast_medium}>
             <Trans>
               GIPHY may collect information about you and your device. You can
               find out more in their{' '}
-              <InlineLinkText
-                to={GIPHY_PRIVACY_POLICY}
-                onPress={() => control.close()}>
+              <InlineLinkText to={GIPHY_PRIVACY_POLICY} onPress={() => close()}>
                 privacy policy
               </InlineLinkText>
               .
@@ -334,7 +327,7 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
         <Button
           label={_(msg`Enable GIPHY`)}
           onPress={onShowPress}
-          onAccessibilityEscape={control.close}
+          onAccessibilityEscape={close}
           color="primary"
           size={gtMobileWeb ? 'small' : 'medium'}
           variant="solid">
@@ -344,7 +337,7 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
         </Button>
         <Button
           label={_(msg`No thanks`)}
-          onAccessibilityEscape={control.close}
+          onAccessibilityEscape={close}
           onPress={onHidePress}
           color="secondary"
           size={gtMobileWeb ? 'small' : 'medium'}

@@ -1,5 +1,5 @@
 import React from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -35,35 +35,20 @@ export const ExternalEmbed = ({
   if (!link) return null
 
   return (
-    <View
-      style={[
-        a.border,
-        a.rounded_sm,
-        a.mt_2xl,
-        a.mb_xl,
-        a.overflow_hidden,
-        t.atoms.border_contrast_medium,
-      ]}>
+    <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {link.isLoading ? (
-        <View
-          style={[
-            a.align_center,
-            a.justify_center,
-            a.py_5xl,
-            t.atoms.bg_contrast_25,
-          ]}>
+        <Container>
           <Loader size="xl" />
-        </View>
+        </Container>
       ) : link.meta?.error ? (
-        <View
-          style={[a.justify_center, a.p_md, a.gap_xs, t.atoms.bg_contrast_25]}>
+        <Container style={[a.align_start, a.p_md, a.gap_xs]}>
           <Text numberOfLines={1} style={t.atoms.text_contrast_high}>
             {link.uri}
           </Text>
           <Text numberOfLines={2} style={[{color: t.palette.negative_400}]}>
-            {link.meta.error}
+            {link.meta?.error}
           </Text>
-        </View>
+        </Container>
       ) : linkInfo ? (
         <View style={{pointerEvents: 'none'}}>
           <ExternalLinkEmbed link={linkInfo} />
@@ -72,7 +57,7 @@ export const ExternalEmbed = ({
       <TouchableOpacity
         style={{
           position: 'absolute',
-          top: 10,
+          top: 16,
           right: 10,
           height: 36,
           width: 36,
@@ -88,6 +73,32 @@ export const ExternalEmbed = ({
         onAccessibilityEscape={onRemove}>
         <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
       </TouchableOpacity>
+    </View>
+  )
+}
+
+function Container({
+  style,
+  children,
+}: {
+  style?: StyleProp<ViewStyle>
+  children: React.ReactNode
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.mt_sm,
+        a.rounded_sm,
+        a.border,
+        a.align_center,
+        a.justify_center,
+        a.py_5xl,
+        t.atoms.bg_contrast_25,
+        t.atoms.border_contrast_medium,
+        style,
+      ]}>
+      {children}
     </View>
   )
 }

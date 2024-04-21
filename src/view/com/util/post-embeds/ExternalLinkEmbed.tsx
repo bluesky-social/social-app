@@ -1,33 +1,20 @@
 import React, {useCallback} from 'react'
-import {
-  Dimensions,
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {shareUrl} from 'lib/sharing'
-import {useGate} from 'lib/statsig/statsig'
-import {
-  EmbedPlayerParams,
-  parseEmbedPlayerFromUrl,
-} from 'lib/strings/embed-player'
+import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {toNiceDomain} from 'lib/strings/url-helpers'
-import {isIOS, isNative} from 'platform/detection'
-import {useAutoplayDisabled, useExternalEmbedsPrefs} from 'state/preferences'
+import {isNative} from 'platform/detection'
+import {useExternalEmbedsPrefs} from 'state/preferences'
 import {Link} from 'view/com/util/Link'
 import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {GifEmbed} from 'view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
-import {VideoPlayer} from '../../../../../modules/expo-bluesky-video-player'
-import {VideoPlayerStateChangeEvent} from '../../../../../modules/expo-bluesky-video-player/src/VideoPlayer.types'
 import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
@@ -40,7 +27,6 @@ export const ExternalLinkEmbed = ({
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
-  const gate = useGate()
 
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
@@ -50,20 +36,22 @@ export const ExternalLinkEmbed = ({
     }
   }, [link.uri, externalEmbedPrefs])
   const isCompatibleGiphy =
-    embedPlayerParams?.source === 'giphy' &&
-    embedPlayerParams.dimensions &&
-    gate('new_gif_player')
+    embedPlayerParams?.source === 'giphy' && embedPlayerParams.dimensions
 
   if (isCompatibleGiphy) {
-    return <VideoEmbed params={embedPlayerParams} thumb={link.thumb} />
+    return <GifEmbed params={embedPlayerParams} thumb={link.thumb} />
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[a.flex_col, a.rounded_sm, a.overflow_hidden, a.mt_sm]}>
       <LinkWrapper link={link} style={style}>
         {link.thumb && !embedPlayerParams ? (
           <Image
-            style={{aspectRatio: 1.91}}
+            style={{
+              aspectRatio: 1.91,
+              borderTopRightRadius: 6,
+              borderTopLeftRadius: 6,
+            }}
             source={{uri: link.thumb}}
             accessibilityIgnoresInvertColors
           />
@@ -73,12 +61,19 @@ export const ExternalLinkEmbed = ({
         ) : embedPlayerParams ? (
           <ExternalPlayer link={link} params={embedPlayerParams} />
         ) : undefined}
-        <View style={[styles.info, {paddingHorizontal: isMobile ? 10 : 14}]}>
+        <View
+          style={[
+            a.flex_1,
+            a.py_sm,
+            {
+              paddingHorizontal: isMobile ? 10 : 14,
+            },
+          ]}>
           {!isCompatibleGiphy && (
             <Text
               type="sm"
               numberOfLines={1}
-              style={[pal.textLight, styles.extUri]}>
+              style={[pal.textLight, {marginVertical: 2}]}>
               {toNiceDomain(link.uri)}
             </Text>
           )}
@@ -88,11 +83,14 @@ export const ExternalLinkEmbed = ({
               {link.title || link.uri}
             </Text>
           )}
-          {link.description && !embedPlayerParams?.hideDetails ? (
+          {link.description &&
+          !embedPlayerParams?.hideDetails &&
+          // TODO remove this when we have a proper way to add alt to external embeds -hailey
+          !link.description.startsWith('ALT:') ? (
             <Text
               type="md"
               numberOfLines={link.thumb ? 2 : 4}
-              style={[pal.text, styles.extDescription]}>
+              style={[pal.text, a.mt_xs]}>
               {link.description}
             </Text>
           ) : undefined}
@@ -111,7 +109,7 @@ function LinkWrapper({
   style?: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
 
   const onShareExternal = useCallback(() => {
     if (link.uri && isNative) {
@@ -124,180 +122,16 @@ function LinkWrapper({
       asAnchor
       anchorNoUnderline
       href={link.uri}
-      style={[styles.extOuter, pal.view, pal.borderDark, style]}
-      hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+      style={[
+        a.flex_1,
+        a.border,
+        a.rounded_sm,
+        t.atoms.border_contrast_medium,
+        style,
+      ]}
+      hoverStyle={t.atoms.border_contrast_high}
       onLongPress={onShareExternal}>
       {children}
     </Link>
   )
 }
-
-function VideoEmbed({
-  params,
-  thumb,
-}: {
-  params: EmbedPlayerParams
-  thumb?: string
-}) {
-  const t = useTheme()
-  const autoplayDisabled = useAutoplayDisabled()
-
-  const playerRef = React.useRef<VideoPlayer>(null)
-
-  // TODO this should always start as the user's autoplay preference
-  const [playerState, setPlayerState] = React.useState<{
-    isLoaded: boolean
-    isPlaying: boolean
-  }>({
-    isLoaded: false,
-    isPlaying: !autoplayDisabled,
-  })
-
-  const onPlayerStateChange = React.useCallback(
-    (e: VideoPlayerStateChangeEvent) => {
-      setPlayerState(e.nativeEvent)
-    },
-    [],
-  )
-
-  const onPress = React.useCallback(() => {
-    playerRef.current?.toggleAsync()
-  }, [])
-
-  const dimensions = React.useMemo(
-    // This won't be undefined
-    () => calculateAspectRatio(params.dimensions ?? {width: 16, height: 9}),
-    [params.dimensions],
-  )
-
-  return (
-    <View style={[styles.video, isNative && [dimensions, styles.videoNative]]}>
-      <Pressable
-        accessibilityRole="button"
-        style={[
-          a.absolute,
-          a.align_center,
-          a.justify_center,
-          {
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            zIndex: 2,
-            backgroundColor: !playerState.isPlaying
-              ? 'rgba(0, 0, 0, 0.3)'
-              : undefined,
-          },
-        ]}
-        onPress={onPress}>
-        {!playerState.isPlaying && (
-          <View
-            style={[
-              a.rounded_full,
-              a.align_center,
-              a.justify_center,
-              {
-                backgroundColor: t.palette.primary_500,
-                width: 60,
-                height: 60,
-              },
-            ]}>
-            <FontAwesomeIcon
-              icon="play"
-              size={42}
-              color="white"
-              style={{marginLeft: 8}}
-            />
-          </View>
-        )}
-        {!playerState.isLoaded && (
-          <Image
-            source={thumb}
-            style={{
-              height: '100%',
-              width: '100%',
-              zIndex: 1,
-              position: 'absolute',
-            }}
-            accessibilityIgnoresInvertColors={true}
-          />
-        )}
-      </Pressable>
-      <VideoPlayer
-        // Need to flatten for web
-        source={params.playerUri}
-        style={isNative ? dimensions : undefined}
-        // TODO -hailey
-        autoplay={!autoplayDisabled}
-        onPlayerStateChange={onPlayerStateChange}
-        ref={playerRef}
-      />
-    </View>
-  )
-}
-
-function calculateAspectRatio(dimensions: {width: number; height: number}) {
-  const maxHeight = Dimensions.get('window').width * 0.585
-  // TODO ugh, we need to do this with onLayout tomorrow :( Let's see if we can do it on the native side, not sure
-  // we can without a custom yoga function though. Will see :crossing_fingers:
-  const maxWidth = Dimensions.get('window').width * (isIOS ? 0.75 : 0.7)
-
-  if (dimensions.height > maxHeight) {
-    let newDims = {
-      width: (dimensions.width / dimensions.height) * maxHeight,
-      height: maxHeight,
-    }
-
-    if (newDims.width > maxWidth) {
-      newDims = {
-        width: maxWidth,
-        height: (dimensions.height / dimensions.width) * maxWidth,
-      }
-    }
-
-    return newDims
-  } else if (dimensions.width > maxWidth) {
-    return {
-      width: maxWidth,
-      height: (dimensions.height / dimensions.width) * maxWidth,
-    }
-  }
-
-  return dimensions
-}
-
-const styles = StyleSheet.create({
-  video: {
-    borderRadius: 6,
-    overflow: 'hidden',
-    marginTop: 8,
-  },
-  videoNative: {
-    maxHeight: Dimensions.get('window').width * 0.5625,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
-
-  container: {
-    flexDirection: 'column',
-    borderRadius: 6,
-    overflow: 'hidden',
-  },
-  info: {
-    width: '100%',
-    bottom: 0,
-    paddingTop: 8,
-    paddingBottom: 10,
-  },
-  extUri: {
-    marginTop: 2,
-  },
-  extDescription: {
-    marginTop: 4,
-  },
-  extOuter: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 4,
-  },
-})

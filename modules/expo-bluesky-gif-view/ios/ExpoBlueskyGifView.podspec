@@ -1,15 +1,17 @@
 Pod::Spec.new do |s|
-  s.name           = 'ExpoBlueskyVideoPlayer'
+  s.name           = 'ExpoBlueskyGifView'
   s.version        = '1.0.0'
-  s.summary        = 'A sample project summary'
-  s.description    = 'A sample project description'
+  s.summary        = 'A simple GIF player for Bluesky'
+  s.description    = 'A simple GIF player for Bluesky'
   s.author         = ''
-  s.homepage       = 'https://docs.expo.dev/modules/'
+  s.homepage       = 'https://github.com/bluesky-social/social-app'
   s.platforms      = { :ios => '13.4', :tvos => '13.4' }
   s.source         = { git: '' }
   s.static_framework = true
 
   s.dependency 'ExpoModulesCore'
+  s.dependency 'SDWebImage', '~> 5.17.0'
+  s.dependency 'SDWebImageWebPCoder', '~> 0.13.0'
 
   # Swift/Objective-C compatibility
   s.pod_target_xcconfig = {

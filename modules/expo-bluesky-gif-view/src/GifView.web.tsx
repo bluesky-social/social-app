@@ -1,19 +1,20 @@
 import * as React from 'react'
+import {StyleSheet} from 'react-native'
 
-import {VideoPlayerViewProps} from './VideoPlayer.types'
+import {GifViewProps} from './GifView.types'
 
-export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
+export class GifView extends React.PureComponent<GifViewProps> {
   private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
     React.createRef()
   private isLoaded: boolean = false
   private isPlaying: boolean
 
-  constructor(props: VideoPlayerViewProps | Readonly<VideoPlayerViewProps>) {
+  constructor(props: GifViewProps | Readonly<GifViewProps>) {
     super(props)
     this.isPlaying = props.autoplay ?? false
   }
 
-  componentDidUpdate(prevProps: Readonly<VideoPlayerViewProps>) {
+  componentDidUpdate(prevProps: Readonly<GifViewProps>) {
     if (prevProps.autoplay !== this.props.autoplay) {
       if (this.props.autoplay) {
         this.playAsync()
@@ -23,7 +24,7 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
     }
   }
 
-  static async prefetchAsync(_: string): Promise<void> {
+  static async prefetchAsync(_: string[]): Promise<void> {
     console.warn('prefetchAsync is not supported on web')
   }
 
@@ -60,7 +61,7 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
 
   async pauseAsync(): Promise<void> {
     this.videoPlayerRef.current.pause()
-    this.isPlaying = true
+    this.isPlaying = false
     this.firePlayerStateChangeEvent({
       isLoaded: this.isLoaded,
       isPlaying: false,
@@ -68,19 +69,19 @@ export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
   }
 
   async toggleAsync(): Promise<void> {
-    if (this.videoPlayerRef.current.paused) {
-      await this.playAsync()
-    } else {
+    if (this.isPlaying) {
       await this.pauseAsync()
+    } else {
+      await this.playAsync()
     }
   }
 
   render() {
     return (
       <video
-        src={this.props.source}
+        src={this.props.webpSource}
         autoPlay={this.props.autoplay ? 'autoplay' : undefined}
-        style={this.props.style}
+        style={StyleSheet.flatten(this.props.style)}
         preload={this.props.autoplay ? 'auto' : undefined}
         onCanPlay={this.onLoad}
         loop="loop"

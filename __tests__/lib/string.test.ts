@@ -635,7 +635,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       metaUri: 'https://giphy.com/gifs/39248209509382934029',
-      playerUri: 'https://i.giphy.com/media/39248209509382934029/200.mp4',
+      playerUri: 'https://i.giphy.com/media/39248209509382934029/200.webp',
       dimensions: {
         width: 100,
         height: 100,

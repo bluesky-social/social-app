@@ -1,23 +1,24 @@
 import React from 'react'
-import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
+import {requireNativeModule} from 'expo'
+import {requireNativeViewManager} from 'expo-modules-core'
 
-import {VideoPlayerViewProps} from './VideoPlayer.types'
+import {GifViewProps} from './GifView.types'
 
-const VideoModule = requireNativeModule('ExpoBlueskyVideoPlayer')
+const NativeModule = requireNativeModule('ExpoBlueskyGifView')
 const NativeView: React.ComponentType<
-  VideoPlayerViewProps & {ref: React.RefObject<any>}
-> = requireNativeViewManager('ExpoBlueskyVideoPlayer')
+  GifViewProps & {ref: React.RefObject<any>}
+> = requireNativeViewManager('ExpoBlueskyGifView')
 
-export class VideoPlayer extends React.PureComponent<VideoPlayerViewProps> {
+export class GifView extends React.PureComponent<GifViewProps> {
   // TODO native types, should all be the same as those in this class
   private nativeRef: React.RefObject<any> = React.createRef()
 
-  constructor(props: VideoPlayerViewProps | Readonly<VideoPlayerViewProps>) {
+  constructor(props: GifViewProps | Readonly<GifViewProps>) {
     super(props)
   }
 
-  static async prefetchAsync(source: string): Promise<void> {
-    await VideoModule.prefetchAsync(source)
+  static async prefetchAsync(sources: string[]): Promise<void> {
+    return await NativeModule.prefetchAsync(sources)
   }
 
   async playAsync(): Promise<void> {
