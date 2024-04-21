@@ -28,10 +28,7 @@ export class GifView extends React.PureComponent<GifViewProps> {
     console.warn('prefetchAsync is not supported on web')
   }
 
-  private firePlayerStateChangeEvent = (e: {
-    isPlaying: boolean
-    isLoaded: boolean
-  }) => {
+  private firePlayerStateChangeEvent = (e: {isPlaying: boolean}) => {
     this.props.onPlayerStateChange?.({
       nativeEvent: e,
     })
@@ -45,7 +42,6 @@ export class GifView extends React.PureComponent<GifViewProps> {
 
     this.isLoaded = true
     this.firePlayerStateChangeEvent({
-      isLoaded: true,
       isPlaying: this.isPlaying,
     })
   }
@@ -54,7 +50,6 @@ export class GifView extends React.PureComponent<GifViewProps> {
     this.videoPlayerRef.current.play()
     this.isPlaying = true
     this.firePlayerStateChangeEvent({
-      isLoaded: this.isLoaded,
       isPlaying: true,
     })
   }
@@ -63,7 +58,6 @@ export class GifView extends React.PureComponent<GifViewProps> {
     this.videoPlayerRef.current.pause()
     this.isPlaying = false
     this.firePlayerStateChangeEvent({
-      isLoaded: this.isLoaded,
       isPlaying: false,
     })
   }
