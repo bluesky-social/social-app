@@ -8,6 +8,7 @@ on:
         type: choice
         description: Build profile to use
         options:
+          - testflight-android
           - production
 
 jobs:
@@ -59,7 +60,58 @@ jobs:
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
-        run: yarn use-build-number eas build -p android --profile production --local --output build.aab --non-interactive
+        run: yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
 
-      - name: 🚀 Deploy
-        run: eas submit -p android --non-interactive --path build.aab
+      - name: ✍️ Rename Testflight bundle
+        if: ${{ inputs.profile != 'production' }}
+        run: mv build.aab build.apk
+
+      - name: ⏰ Get a timestamp
+        id: timestamp
+        uses: nanzm/get-time-action@master
+        with:
+          format: 'MM-DD-HH-mm-ss'
+
+      - name: 🚀 Upload Production Artifact
+        id: upload-artifact-production
+        if: ${{ inputs.profile == 'production' }}
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 30
+          compression-level: 6
+          name: build-${{ steps.timestamp.outputs.time }}.aab
+          path: build.aab
+
+      - name: 🚀 Upload Testflight Artifact
+        id: upload-artifact-testflight
+        if: ${{ inputs.profile != 'production' }}
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 30
+          compression-level: 6
+          name: build-${{ steps.timestamp.outputs.time }}.apk
+          path: build.apk
+
+      - name: 🔔 Notify Slack of Production Build
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android build is ready for submission. This is a production build! Download the artifact here: ${{ steps.upload-artifact-production.outputs.artifact-url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: 🔔 Notify Slack of Testflight Build
+        if: ${{ inputs.profile != 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

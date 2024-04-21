@@ -35,6 +35,7 @@ export type CommonNavigatorParams = {
   PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
+  AccessibilitySettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
 }

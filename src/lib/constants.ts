@@ -7,6 +7,8 @@ export const BSKY_SERVICE = 'https://bsky.social'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
+export const EMBED_SERVICE = 'https://embed.bsky.app'
+export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -80,8 +82,19 @@ export const HITSLOP_30 = createHitslop(30)
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
 
+export const BSKY_APP_ACCOUNT_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur'
+
 export const BSKY_FEED_OWNER_DIDS = [
-  'did:plc:z72i7hdynmk6r22z27h6tvur',
+  BSKY_APP_ACCOUNT_DID,
   'did:plc:vpkhqolt662uhesyj6nxm7ys',
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
+
+export const GIPHY_API_URL = 'https://api.giphy.com'
+export const GIPHY_API_KEY = Platform.select({
+  ios: 'ydVxhrQkwlcUjkVKx15mF6vyaNJbMeez',
+  android: 'Vwj3Ib7857dj3EcIg24Hiz1LbRVdGeYF',
+  default: 'vyL3hQQ8AipwcmIB8kFvg0NDs9faWg7G',
+})
+export const GIPHY_PRIVACY_POLICY =
+  'https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy'

@@ -107,21 +107,15 @@ async function whenFollowsIndexed(
 }
 
 /**
- * Kinda hacky, but we want For Your or Discover to appear as the first pinned
+ * Kinda hacky, but we want Discover to appear as the first pinned
  * feed after Following
  */
 export function sortPrimaryAlgorithmFeeds(uris: string[]) {
   return uris.sort((a, b) => {
-    if (a === PRIMARY_FEEDS[0].uri) {
+    if (a === PRIMARY_FEEDS[0]?.uri) {
       return -1
     }
-    if (b === PRIMARY_FEEDS[0].uri) {
-      return 1
-    }
-    if (a === PRIMARY_FEEDS[1].uri) {
-      return -1
-    }
-    if (b === PRIMARY_FEEDS[1].uri) {
+    if (b === PRIMARY_FEEDS[0]?.uri) {
       return 1
     }
     return a.localeCompare(b)

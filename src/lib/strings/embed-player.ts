@@ -1,4 +1,5 @@
 import {Dimensions} from 'react-native'
+
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -60,6 +61,10 @@ export interface EmbedPlayerParams {
   source: EmbedPlayerSource
   metaUri?: string
   hideDetails?: boolean
+  dimensions?: {
+    height: number
+    width: number
+  }
 }
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
@@ -250,6 +255,16 @@ export function parseEmbedPlayerFromUrl(
   if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
     const [_, gifs, nameAndId] = urlp.pathname.split('/')
 
+    const h = urlp.searchParams.get('hh')
+    const w = urlp.searchParams.get('ww')
+    let dimensions
+    if (h && w) {
+      dimensions = {
+        height: Number(h),
+        width: Number(w),
+      }
+    }
+
     /*
      * nameAndId is a string that consists of the name (dash separated) and the id of the gif (the last part of the name)
      * We want to get the id of the gif, then direct to media.giphy.com/media/{id}/giphy.webp so we can
@@ -266,7 +281,10 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${gifId}`,
-          playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${gifId}/${
+            dimensions ? '200.mp4' : '200.webp'
+          }`,
+          dimensions,
         }
       }
     }
@@ -287,7 +305,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
-          playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${trackingOrId}/200.webp`,
         }
       } else if (filename && gifFilenameRegex.test(filename)) {
         return {
@@ -296,7 +314,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
-          playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${idOrFilename}/200.webp`,
         }
       }
     }
@@ -315,7 +333,7 @@ export function parseEmbedPlayerFromUrl(
         isGif: true,
         hideDetails: true,
         metaUri: `https://giphy.com/gifs/${gifId}`,
-        playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
+        playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
       }
     } else if (mediaOrFilename) {
       const gifId = mediaOrFilename.split('.')[0]
@@ -327,7 +345,7 @@ export function parseEmbedPlayerFromUrl(
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${
           mediaOrFilename.split('.')[0]
-        }/giphy.webp`,
+        }/200.webp`,
       }
     }
   }

@@ -1,6 +1,7 @@
+import {deleteAsync} from 'expo-file-system'
 import {
-  AppBskyEmbedImages,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedThreadgate,
@@ -11,13 +12,14 @@ import {
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {isNetworkError} from 'lib/strings/errors'
-import {LinkMeta} from '../link-meta/link-meta'
-import {isWeb} from 'platform/detection'
-import {ImageModel} from 'state/models/media/image'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
+
 import {logger} from '#/logger'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {isNetworkError} from 'lib/strings/errors'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {isNative, isWeb} from 'platform/detection'
+import {ImageModel} from 'state/models/media/image'
+import {LinkMeta} from '../link-meta/link-meta'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -117,6 +119,15 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       const {width, height} = image.compressed || image
       logger.debug(`Uploading image`)
       const res = await uploadBlob(agent, path, 'image/jpeg')
+
+      if (isNative) {
+        try {
+          deleteAsync(path)
+        } catch (e) {
+          console.error(e)
+        }
+      }
+
       images.push({
         image: res.data.blob,
         alt: image.altText ?? '',
@@ -171,6 +182,14 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
             encoding,
           )
           thumb = thumbUploadRes.data.blob
+
+          try {
+            if (isNative) {
+              deleteAsync(opts.extLink.localThumb.path)
+            }
+          } catch (e) {
+            console.error(e)
+          }
         }
       }
 

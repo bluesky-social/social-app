@@ -1,4 +1,5 @@
 import {z} from 'zod'
+
 import {deviceLocales} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const
@@ -58,6 +59,8 @@ export const schema = z.object({
   useInAppBrowser: z.boolean().optional(),
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
+  disableHaptics: z.boolean().optional(),
+  disableAutoplay: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -93,4 +96,6 @@ export const defaults: Schema = {
   useInAppBrowser: undefined,
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
+  disableHaptics: false,
+  disableAutoplay: false,
 }

@@ -29,6 +29,7 @@ export const router = new Router({
   PreferencesFollowingFeed: '/settings/following-feed',
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',
+  AccessibilitySettings: '/settings/accessibility',
   SavedFeeds: '/settings/saved-feeds',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',

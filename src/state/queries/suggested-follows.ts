@@ -6,21 +6,24 @@ import {
   moderateProfile,
 } from '@atproto/api'
 import {
-  useInfiniteQuery,
-  useQueryClient,
-  useQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
-import {useSession, getAgent} from '#/state/session'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {getAgent, useSession} from '#/state/session'
 
-const suggestedFollowsQueryKey = ['suggested-follows']
+const suggestedFollowsQueryKeyRoot = 'suggested-follows'
+const suggestedFollowsQueryKey = [suggestedFollowsQueryKeyRoot]
+
+const suggestedFollowsByActorQueryKeyRoot = 'suggested-follows-by-actor'
 const suggestedFollowsByActorQueryKey = (did: string) => [
-  'suggested-follows-by-actor',
+  suggestedFollowsByActorQueryKeyRoot,
   did,
 ]
 
@@ -125,7 +128,7 @@ function* findAllProfilesInSuggestedFollowsQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyActorGetSuggestions.OutputSchema>
   >({
-    queryKey: ['suggested-follows'],
+    queryKey: [suggestedFollowsQueryKeyRoot],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
@@ -148,7 +151,7 @@ function* findAllProfilesInSuggestedFollowsByActorQueryData(
   const queryDatas =
     queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema>(
       {
-        queryKey: ['suggested-follows-by-actor'],
+        queryKey: [suggestedFollowsByActorQueryKeyRoot],
       },
     )
   for (const [_queryKey, queryData] of queryDatas) {

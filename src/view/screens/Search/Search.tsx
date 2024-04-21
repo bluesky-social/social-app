@@ -22,6 +22,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {NavigationProp} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
@@ -31,7 +32,10 @@ import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
+import {
+  useGetSuggestedFollowersByActor,
+  useSuggestedFollowsQuery,
+} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
@@ -117,8 +121,10 @@ function EmptyState({message, error}: {message: string; error?: string}) {
   )
 }
 
-function SearchScreenSuggestedFollows() {
-  const pal = usePalette('default')
+function useSuggestedFollowsV1(): [
+  AppBskyActorDefs.ProfileViewBasic[],
+  () => void,
+] {
   const {currentAccount} = useSession()
   const [suggestions, setSuggestions] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
@@ -161,6 +167,57 @@ function SearchScreenSuggestedFollows() {
     }
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
 
+  return [suggestions, () => {}]
+}
+
+function useSuggestedFollowsV2(): [
+  AppBskyActorDefs.ProfileViewBasic[],
+  () => void,
+] {
+  const {
+    data: suggestions,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    fetchNextPage,
+  } = useSuggestedFollowsQuery()
+
+  const onEndReached = React.useCallback(async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more suggested follows', {message: err})
+    }
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+
+  const items: AppBskyActorDefs.ProfileViewBasic[] = []
+  if (suggestions) {
+    // Currently the responses contain duplicate items.
+    // Needs to be fixed on backend, but let's dedupe to be safe.
+    let seen = new Set()
+    for (const page of suggestions.pages) {
+      for (const actor of page.actors) {
+        if (!seen.has(actor.did)) {
+          seen.add(actor.did)
+          items.push(actor)
+        }
+      }
+    }
+  }
+  return [items, onEndReached]
+}
+
+function SearchScreenSuggestedFollows() {
+  const pal = usePalette('default')
+  const gate = useGate()
+  const useSuggestedFollows = gate('use_new_suggestions_endpoint')
+    ? // Conditional hook call here is *only* OK because useGate()
+      // result won't change until a remount.
+      useSuggestedFollowsV2
+    : useSuggestedFollowsV1
+  const [suggestions, onEndReached] = useSuggestedFollows()
+
   return suggestions.length ? (
     <List
       data={suggestions}
@@ -168,9 +225,11 @@ function SearchScreenSuggestedFollows() {
       keyExtractor={item => item.did}
       // @ts-ignore web only -prf
       desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 1200}}
+      contentContainerStyle={{paddingBottom: 200}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
+      onEndReached={onEndReached}
+      onEndReachedThreshold={2}
     />
   ) : (
     <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
@@ -191,7 +250,15 @@ type SearchResultSlice =
       key: string
     }
 
-function SearchScreenPostResults({query}: {query: string}) {
+function SearchScreenPostResults({
+  query,
+  sort,
+  active,
+}: {
+  query: string
+  sort?: 'top' | 'latest'
+  active: boolean
+}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
@@ -209,7 +276,7 @@ function SearchScreenPostResults({query}: {query: string}) {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery})
+  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -290,9 +357,19 @@ function SearchScreenPostResults({query}: {query: string}) {
   )
 }
 
-function SearchScreenUserResults({query}: {query: string}) {
+function SearchScreenUserResults({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}) {
   const {_} = useLingui()
-  const {data: results, isFetched} = useActorSearch(query)
+
+  const {data: results, isFetched} = useActorSearch({
+    query,
+    enabled: active,
+  })
 
   return isFetched && results ? (
     <>
@@ -316,71 +393,55 @@ function SearchScreenUserResults({query}: {query: string}) {
   )
 }
 
-const SECTIONS_LOGGEDOUT = ['Users']
-const SECTIONS_LOGGEDIN = ['Posts', 'Users']
-export function SearchScreenInner({
-  query,
-  primarySearch,
-}: {
-  query?: string
-  primarySearch?: boolean
-}) {
+export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
+  const [activeTab, setActiveTab] = React.useState(0)
+  const {_} = useLingui()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
+      setActiveTab(index)
     },
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
-  if (hasSession) {
-    return query ? (
-      <Pager
-        onPageSelected={onPageSelected}
-        renderTabBar={props => (
-          <CenteredView
-            sideBorders
-            style={[pal.border, pal.view, styles.tabBarContainer]}>
-            <TabBar items={SECTIONS_LOGGEDIN} {...props} />
-          </CenteredView>
-        )}
-        initialPage={0}>
-        <View>
-          <SearchScreenPostResults query={query} />
-        </View>
-        <View>
-          <SearchScreenUserResults query={query} />
-        </View>
-      </Pager>
-    ) : (
-      <View>
-        <CenteredView sideBorders style={pal.border}>
-          <Text
-            type="title"
-            style={[
-              pal.text,
-              pal.border,
-              {
-                display: 'flex',
-                paddingVertical: 12,
-                paddingHorizontal: 18,
-                fontWeight: 'bold',
-              },
-            ]}>
-            <Trans>Suggested Follows</Trans>
-          </Text>
-        </CenteredView>
-
-        <SearchScreenSuggestedFollows />
-      </View>
-    )
-  }
+  const sections = React.useMemo(() => {
+    if (!query) return []
+    return [
+      {
+        title: _(msg`Top`),
+        component: (
+          <SearchScreenPostResults
+            query={query}
+            sort="top"
+            active={activeTab === 0}
+          />
+        ),
+      },
+      {
+        title: _(msg`Latest`),
+        component: (
+          <SearchScreenPostResults
+            query={query}
+            sort="latest"
+            active={activeTab === 1}
+          />
+        ),
+      },
+      {
+        title: _(msg`People`),
+        component: (
+          <SearchScreenUserResults query={query} active={activeTab === 2} />
+        ),
+      },
+    ]
+  }, [_, query, activeTab])
 
   return query ? (
     <Pager
@@ -389,14 +450,35 @@ export function SearchScreenInner({
         <CenteredView
           sideBorders
           style={[pal.border, pal.view, styles.tabBarContainer]}>
-          <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
+          <TabBar items={sections.map(section => section.title)} {...props} />
         </CenteredView>
       )}
       initialPage={0}>
-      <View>
-        <SearchScreenUserResults query={query} />
-      </View>
+      {sections.map((section, i) => (
+        <View key={i}>{section.component}</View>
+      ))}
     </Pager>
+  ) : hasSession ? (
+    <View>
+      <CenteredView sideBorders style={pal.border}>
+        <Text
+          type="title"
+          style={[
+            pal.text,
+            pal.border,
+            {
+              display: 'flex',
+              paddingVertical: 12,
+              paddingHorizontal: 18,
+              fontWeight: 'bold',
+            },
+          ]}>
+          <Trans>Suggested Follows</Trans>
+        </Text>
+      </CenteredView>
+
+      <SearchScreenSuggestedFollows />
+    </View>
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View
@@ -436,11 +518,7 @@ export function SearchScreenInner({
             style={pal.textLight}
           />
           <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
-            {isDesktop && !primarySearch ? (
-              <Trans>Find users with the search tool on the right</Trans>
-            ) : (
-              <Trans>Find users on Bluesky</Trans>
-            )}
+            <Trans>Find posts and users on Bluesky</Trans>
           </Text>
         </View>
       </View>

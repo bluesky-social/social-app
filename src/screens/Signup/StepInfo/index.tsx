@@ -36,9 +36,9 @@ export function StepInfo() {
       <View style={[a.gap_md]}>
         <FormError error={state.error} />
         <View>
-          <TextField.Label>
+          <TextField.LabelText>
             <Trans>Hosting provider</Trans>
-          </TextField.Label>
+          </TextField.LabelText>
           <HostingProvider
             serviceUrl={state.serviceUrl}
             onSelectServiceUrl={v =>
@@ -54,9 +54,9 @@ export function StepInfo() {
           <>
             {state.serviceDescription.inviteCodeRequired && (
               <View>
-                <TextField.Label>
+                <TextField.LabelText>
                   <Trans>Invite code</Trans>
-                </TextField.Label>
+                </TextField.LabelText>
                 <TextField.Root>
                   <TextField.Icon icon={Ticket} />
                   <TextField.Input
@@ -76,12 +76,13 @@ export function StepInfo() {
               </View>
             )}
             <View>
-              <TextField.Label>
+              <TextField.LabelText>
                 <Trans>Email</Trans>
-              </TextField.Label>
+              </TextField.LabelText>
               <TextField.Root>
                 <TextField.Icon icon={Envelope} />
                 <TextField.Input
+                  testID="emailInput"
                   onChangeText={value => {
                     dispatch({
                       type: 'setEmail',
@@ -97,12 +98,13 @@ export function StepInfo() {
               </TextField.Root>
             </View>
             <View>
-              <TextField.Label>
+              <TextField.LabelText>
                 <Trans>Password</Trans>
-              </TextField.Label>
+              </TextField.LabelText>
               <TextField.Root>
                 <TextField.Icon icon={Lock} />
                 <TextField.Input
+                  testID="passwordInput"
                   onChangeText={value => {
                     dispatch({
                       type: 'setPassword',
@@ -117,9 +119,9 @@ export function StepInfo() {
               </TextField.Root>
             </View>
             <View>
-              <DateField.Label>
+              <DateField.LabelText>
                 <Trans>Your birth date</Trans>
-              </DateField.Label>
+              </DateField.LabelText>
               <DateField.DateField
                 testID="date"
                 value={DateField.utils.toSimpleDateString(state.dateOfBirth)}

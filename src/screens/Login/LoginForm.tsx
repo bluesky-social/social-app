@@ -128,11 +128,11 @@ export const LoginForm = ({
 
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
-    <FormContainer testID="loginForm" title={<Trans>Sign in</Trans>}>
+    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
-        <TextField.Label>
+        <TextField.LabelText>
           <Trans>Hosting provider</Trans>
-        </TextField.Label>
+        </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
           onSelectServiceUrl={setServiceUrl}
@@ -140,9 +140,9 @@ export const LoginForm = ({
         />
       </View>
       <View>
-        <TextField.Label>
+        <TextField.LabelText>
           <Trans>Account</Trans>
-        </TextField.Label>
+        </TextField.LabelText>
         <View style={[a.gap_sm]}>
           <TextField.Root>
             <TextField.Icon icon={At} />
@@ -237,7 +237,9 @@ export const LoginForm = ({
             color="secondary"
             size="medium"
             onPress={onPressRetryConnect}>
-            {_(msg`Retry`)}
+            <ButtonText>
+              <Trans>Retry</Trans>
+            </ButtonText>
           </Button>
         ) : !serviceDescription ? (
           <>
@@ -248,6 +250,7 @@ export const LoginForm = ({
           </>
         ) : isReady ? (
           <Button
+            testID="loginNextButton"
             label={_(msg`Next`)}
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"

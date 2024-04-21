@@ -3,11 +3,10 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonColor, ButtonText} from '#/components/Button'
-
 import * as Dialog from '#/components/Dialog'
+import {Text} from '#/components/Typography'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
@@ -52,7 +51,7 @@ export function Outer({
   )
 }
 
-export function Title({children}: React.PropsWithChildren<{}>) {
+export function TitleText({children}: React.PropsWithChildren<{}>) {
   const {titleId} = React.useContext(Context)
   return (
     <Text nativeID={titleId} style={[a.text_2xl, a.font_bold, a.pb_sm]}>
@@ -61,7 +60,7 @@ export function Title({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function Description({children}: React.PropsWithChildren<{}>) {
+export function DescriptionText({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
@@ -80,7 +79,7 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
     <View
       style={[
         a.w_full,
-        a.gap_sm,
+        a.gap_md,
         a.justify_end,
         gtMobile
           ? [a.flex_row, a.flex_row_reverse, a.justify_start]
@@ -92,15 +91,13 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
 }
 
 export function Cancel({
-  children,
   cta,
-}: React.PropsWithChildren<{
+}: {
   /**
-   * Optional i18n string, used in lieu of `children` for simple buttons. If
-   * undefined (and `children` is undefined), it will default to "Cancel".
+   * Optional i18n string. If undefined, it will default to "Cancel".
    */
   cta?: string
-}>) {
+}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
@@ -115,33 +112,37 @@ export function Cancel({
       size={gtMobile ? 'small' : 'medium'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
-      {children ? children : <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>}
+      <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
     </Button>
   )
 }
 
 export function Action({
-  children,
   onPress,
   color = 'primary',
   cta,
   testID,
-}: React.PropsWithChildren<{
+}: {
+  /**
+   * Callback to run when the action is pressed. The method is called _after_
+   * the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onPress: () => void
   color?: ButtonColor
   /**
-   * Optional i18n string, used in lieu of `children` for simple buttons. If
-   * undefined (and `children` is undefined), it will default to "Confirm".
+   * Optional i18n string. If undefined, it will default to "Confirm".
    */
   cta?: string
   testID?: string
-}>) {
+}) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
-    close()
-    onPress()
+    close(onPress)
   }, [close, onPress])
 
   return (
@@ -152,7 +153,7 @@ export function Action({
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>
-      {children ? children : <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>}
+      <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>
     </Button>
   )
 }
@@ -171,13 +172,20 @@ export function Basic({
   description: string
   cancelButtonCta?: string
   confirmButtonCta?: string
+  /**
+   * Callback to run when the Confirm button is pressed. The method is called
+   * _after_ the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onConfirm: () => void
   confirmButtonColor?: ButtonColor
 }>) {
   return (
     <Outer control={control} testID="confirmModal">
-      <Title>{title}</Title>
-      <Description>{description}</Description>
+      <TitleText>{title}</TitleText>
+      <DescriptionText>{description}</DescriptionText>
       <Actions>
         <Action
           cta={confirmButtonCta}

@@ -1,20 +1,30 @@
 import {AppBskyFeedDefs, AppBskyFeedSearchPosts} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
-  QueryKey,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
-const searchPostsQueryKey = ({query}: {query: string}) => [
-  'search-posts',
+const searchPostsQueryKeyRoot = 'search-posts'
+const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
+  searchPostsQueryKeyRoot,
   query,
+  sort,
 ]
 
-export function useSearchPostsQuery({query}: {query: string}) {
+export function useSearchPostsQuery({
+  query,
+  sort,
+  enabled,
+}: {
+  query: string
+  sort?: 'top' | 'latest'
+  enabled?: boolean
+}) {
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,
@@ -22,17 +32,19 @@ export function useSearchPostsQuery({query}: {query: string}) {
     QueryKey,
     string | undefined
   >({
-    queryKey: searchPostsQueryKey({query}),
+    queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
       const res = await getAgent().app.bsky.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,
+        sort,
       })
       return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    enabled,
   })
 }
 
@@ -43,7 +55,7 @@ export function* findAllPostsInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
   >({
-    queryKey: ['search-posts'],
+    queryKey: [searchPostsQueryKeyRoot],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

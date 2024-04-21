@@ -12,19 +12,15 @@ import {
 import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
 import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import * as notifications from 'lib/notifications/notifications'
-import {
-  asyncStoragePersister,
-  dehydrateOptions,
-  queryClient,
-} from 'lib/react-query'
+import {useNotificationsListener} from 'lib/notifications/notifications'
+import {QueryProvider} from 'lib/react-query'
 import {s} from 'lib/styles'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {Provider as DialogStateProvider} from 'state/dialogs'
@@ -59,11 +55,11 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
+
   useIntentHandler()
 
   // init
   useEffect(() => {
-    notifications.init(queryClient)
     listenSessionDropped(() => {
       Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
     })
@@ -79,30 +75,40 @@ function InnerApp() {
           <React.Fragment
             // Resets the entire tree below when it changes:
             key={currentAccount?.did}>
-            <StatsigProvider>
-              <LabelDefsProvider>
-                <LoggedOutViewProvider>
-                  <SelectedFeedProvider>
-                    <UnreadNotifsProvider>
-                      <ThemeProvider theme={theme}>
-                        {/* All components should be within this provider */}
-                        <RootSiblingParent>
-                          <GestureHandlerRootView style={s.h100pct}>
-                            <TestCtrls />
-                            <Shell />
-                          </GestureHandlerRootView>
-                        </RootSiblingParent>
-                      </ThemeProvider>
-                    </UnreadNotifsProvider>
-                  </SelectedFeedProvider>
-                </LoggedOutViewProvider>
-              </LabelDefsProvider>
-            </StatsigProvider>
+            <QueryProvider currentDid={currentAccount?.did}>
+              <PushNotificationsListener>
+                <StatsigProvider>
+                  <LabelDefsProvider>
+                    <LoggedOutViewProvider>
+                      <SelectedFeedProvider>
+                        <UnreadNotifsProvider>
+                          <ThemeProvider theme={theme}>
+                            {/* All components should be within this provider */}
+                            <RootSiblingParent>
+                              <GestureHandlerRootView style={s.h100pct}>
+                                <TestCtrls />
+                                <Shell />
+                              </GestureHandlerRootView>
+                            </RootSiblingParent>
+                          </ThemeProvider>
+                        </UnreadNotifsProvider>
+                      </SelectedFeedProvider>
+                    </LoggedOutViewProvider>
+                  </LabelDefsProvider>
+                </StatsigProvider>
+              </PushNotificationsListener>
+            </QueryProvider>
           </React.Fragment>
         </Splash>
       </Alf>
     </SafeAreaProvider>
   )
+}
+
+function PushNotificationsListener({children}: {children: React.ReactNode}) {
+  const queryClient = useQueryClient()
+  useNotificationsListener(queryClient)
+  return children
 }
 
 function App() {
@@ -121,31 +127,27 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
-      <SessionProvider>
-        <ShellStateProvider>
-          <PrefsStateProvider>
-            <MutedThreadsProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <PortalProvider>
-                          <InnerApp />
-                        </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </MutedThreadsProvider>
-          </PrefsStateProvider>
-        </ShellStateProvider>
-      </SessionProvider>
-    </PersistQueryClientProvider>
+    <SessionProvider>
+      <ShellStateProvider>
+        <PrefsStateProvider>
+          <MutedThreadsProvider>
+            <InvitesStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <PortalProvider>
+                        <InnerApp />
+                      </PortalProvider>
+                    </I18nProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
+            </InvitesStateProvider>
+          </MutedThreadsProvider>
+        </PrefsStateProvider>
+      </ShellStateProvider>
+    </SessionProvider>
   )
 }
 

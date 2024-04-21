@@ -53,6 +53,7 @@ import {
   setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
 } from './state/shell/reminders'
+import {AccessibilitySettingsScreen} from './view/screens/AccessibilitySettings'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {DebugModScreen} from './view/screens/DebugMod'
@@ -193,7 +194,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
-        options={{title: title(msg`Feed`), requireAuth: true}}
+        options={{title: title(msg`Feed`)}}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
@@ -277,6 +278,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="AccessibilitySettings"
+        getComponent={() => AccessibilitySettingsScreen}
+        options={{
+          title: title(msg`Accessibility Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="Hashtag"
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
@@ -331,11 +340,7 @@ function HomeTabNavigator() {
         animationDuration: 250,
         contentStyle: pal.view,
       }}>
-      <HomeTab.Screen
-        name="Home"
-        getComponent={() => HomeScreen}
-        options={{requireAuth: true}}
-      />
+      <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -371,11 +376,7 @@ function FeedsTabNavigator() {
         animationDuration: 250,
         contentStyle: pal.view,
       }}>
-      <FeedsTab.Screen
-        name="Feeds"
-        getComponent={() => FeedsScreen}
-        options={{requireAuth: true}}
-      />
+      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
       {commonScreens(FeedsTab as typeof HomeTab)}
     </FeedsTab.Navigator>
   )
@@ -451,7 +452,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: title(msg`Home`), requireAuth: true}}
+        options={{title: title(msg`Home`)}}
       />
       <Flat.Screen
         name="Search"
@@ -461,7 +462,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`), requireAuth: true}}
+        options={{title: title(msg`Feeds`)}}
       />
       <Flat.Screen
         name="Notifications"
@@ -539,8 +540,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
+  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
 
   function onReady() {
+    prevLoggedRouteName.current = getCurrentRouteName()
     initAnalytics(currentAccount)
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
@@ -555,7 +558,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate', {})
+        logEvent('router:navigate', {
+          from: prevLoggedRouteName.current,
+        })
+        prevLoggedRouteName.current = getCurrentRouteName()
       }}
       onReady={() => {
         attachRouteToLogEvents(getCurrentRouteName)

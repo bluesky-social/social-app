@@ -4,20 +4,19 @@ import {
   BSKY_LABELER_DID,
   BskyAgent,
 } from '@atproto/api'
-import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
 import {IS_TEST_USER} from '#/lib/constants'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, tryFetchGates} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
@@ -178,7 +177,6 @@ function createPersistSessionHandler(
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const queryClient = useQueryClient()
   const isDirty = React.useRef(false)
   const [state, setState] = React.useState<SessionState>({
     isInitialLoad: true,
@@ -211,12 +209,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
-    queryClient.clear()
     setStateAndPersist(s => ({
       ...s,
       currentAccount: undefined,
     }))
-  }, [setStateAndPersist, queryClient])
+  }, [setStateAndPersist])
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({
@@ -246,6 +243,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (!agent.session) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
+      const fetchingGates = tryFetchGates(
+        agent.session.did,
+        'prefer-fresh-gates',
+      )
 
       const deactivated = isSessionDeactivated(agent.session.accessJwt)
       if (!deactivated) {
@@ -286,14 +287,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
-      queryClient.clear()
+      await fetchingGates
       upsertAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [upsertAccount, queryClient, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -307,6 +308,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (!agent.session) {
         throw new Error(`session: login failed to establish a session`)
       }
+      const fetchingGates = tryFetchGates(
+        agent.session.did,
+        'prefer-fresh-gates',
+      )
 
       const account: SessionAccount = {
         service: agent.service.toString(),
@@ -334,7 +339,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       __globalAgent = agent
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
-      queryClient.clear()
+      await fetchingGates
       upsertAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
@@ -342,7 +347,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [upsertAccount, queryClient, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const logout = React.useCallback<ApiContext['logout']>(
@@ -367,6 +372,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
+      const fetchingGates = tryFetchGates(account.did, 'prefer-low-latency')
 
       const agent = new BskyAgent({
         service: account.service,
@@ -411,7 +417,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         agent.session = prevSession
         __globalAgent = agent
-        queryClient.clear()
+        await fetchingGates
         upsertAccount(account)
 
         if (prevSession.deactivated) {
@@ -448,7 +454,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
           __globalAgent = agent
-          queryClient.clear()
+          await fetchingGates
           upsertAccount(freshAccount)
         } catch (e) {
           /*
@@ -489,7 +495,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     },
-    [upsertAccount, queryClient, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
@@ -709,8 +715,8 @@ export function useSessionApi() {
 
 export function useRequireAuth() {
   const {hasSession} = useSession()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAll = useCloseAllActiveElements()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   return React.useCallback(
     (fn: () => void) => {
@@ -718,10 +724,10 @@ export function useRequireAuth() {
         fn()
       } else {
         closeAll()
-        setShowLoggedOut(true)
+        signinDialogControl.open()
       }
     },
-    [hasSession, setShowLoggedOut, closeAll],
+    [hasSession, signinDialogControl, closeAll],
   )
 }
 

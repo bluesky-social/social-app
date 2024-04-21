@@ -41,6 +41,7 @@ export function HostingProvider({
         onSelect={onSelectServiceUrl}
       />
       <Button
+        testID="selectServiceButton"
         label={toNiceDomain(serviceUrl)}
         accessibilityHint={_(msg`Press to change hosting provider`)}
         variant="solid"
