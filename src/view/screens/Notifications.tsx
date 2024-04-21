@@ -30,12 +30,11 @@ import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {Text} from 'view/com/util/text/Text'
 import {Feed} from '../com/notifications/Feed'
-import {Pager, PagerRef} from '../com/pager/Pager'
-import {TabBar} from '../com/pager/TabBar'
+import {PagerRef} from '../com/pager/Pager'
+import {PagerWithHeader} from '../com/pager/PagerWithHeader'
 import {FAB} from '../com/util/fab/FAB'
 import {MainScrollProvider} from '../com/util/MainScrollProvider'
 import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
-import {CenteredView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -67,6 +66,22 @@ export function NotificationsScreen({}: Props) {
     },
     [filterType],
   )
+
+  const renderHeader = () => {
+    return (
+      <SimpleViewHeader
+        showBackButton={isMobile}
+        style={[pal.border, {borderBottomWidth: 1}]}>
+        <View style={{flex: 1}}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            <Trans>Notifications</Trans>
+          </Text>
+        </View>
+      </SimpleViewHeader>
+    )
+  }
+
+  const sectionTitles = [_('All'), _('Mentions')]
 
   // event handlers
   // =
@@ -119,47 +134,32 @@ export function NotificationsScreen({}: Props) {
 
   return (
     <View testID="notificationsScreen" style={s.hContentRegion}>
-      <SimpleViewHeader
-        showBackButton={isMobile}
-        style={[
-          pal.border,
-          {borderBottomWidth: 1},
-          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
-        ]}>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-            <Trans>Notifications</Trans>
-          </Text>
-        </View>
-      </SimpleViewHeader>
-      <Pager
+      <PagerWithHeader
         onPageSelected={handleTabChange}
         ref={pagerRef}
         initialPage={0}
-        renderTabBar={props => (
-          <CenteredView sideBorders>
-            <TabBar
-              items={['All', 'Mentions']}
-              {...props}
-              selectedPage={props.selectedPage}
+        renderHeader={renderHeader}
+        items={sectionTitles}
+        isHeaderReady={true}>
+        {({scrollElRef}) => (
+          <MainScrollProvider>
+            <Feed
+              filterType="All"
+              onScrolledDownChange={setIsScrolledDown}
+              scrollElRef={scrollElRef}
             />
-          </CenteredView>
-        )}>
-        <MainScrollProvider>
-          <Feed
-            filterType="All"
-            onScrolledDownChange={setIsScrolledDown}
-            scrollElRef={scrollElRef}
-          />
-        </MainScrollProvider>
-        <MainScrollProvider>
-          <Feed
-            filterType="Mentions"
-            onScrolledDownChange={setIsScrolledDown}
-            scrollElRef={scrollElRef}
-          />
-        </MainScrollProvider>
-      </Pager>
+          </MainScrollProvider>
+        )}
+        {({scrollElRef}) => (
+          <MainScrollProvider>
+            <Feed
+              filterType="Mentions"
+              onScrolledDownChange={setIsScrolledDown}
+              scrollElRef={scrollElRef}
+            />
+          </MainScrollProvider>
+        )}
+      </PagerWithHeader>
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}

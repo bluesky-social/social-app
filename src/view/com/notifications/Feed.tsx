@@ -1,5 +1,11 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,7 +18,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {s} from 'lib/styles'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {List, ListRef} from '../util/List'
+import {List} from '../util/List'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {CenteredView} from '../util/Views'
@@ -23,13 +29,12 @@ const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 
 export function Feed({
-  scrollElRef,
   onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
   filterType,
 }: {
-  scrollElRef?: ListRef
+  scrollElRef?: React.RefObject<FlatList<any> | ScrollView | null>
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
@@ -166,7 +171,6 @@ export function Feed({
       )}
       <List
         testID="notifsFeed"
-        ref={scrollElRef}
         data={items}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
