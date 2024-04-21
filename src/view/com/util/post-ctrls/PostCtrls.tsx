@@ -12,11 +12,10 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
-import {Haptics} from '#/lib/haptics'
 import {CommentBottomArrow, HeartIcon, HeartIconSolid} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -31,6 +30,7 @@ import {
 } from '#/state/queries/post'
 import {useRequireAuth} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {useHaptics} from 'lib/haptics'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import * as Prompt from '#/components/Prompt'
@@ -66,6 +66,7 @@ let PostCtrls = ({
   )
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
+  const playHaptic = useHaptics()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return !!post.author.labels?.find(
@@ -83,7 +84,7 @@ let PostCtrls = ({
   const onPressToggleLike = React.useCallback(async () => {
     try {
       if (!post.viewer?.like) {
-        Haptics.default()
+        playHaptic()
         await queueLike()
       } else {
         await queueUnlike()
@@ -93,13 +94,13 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [post.viewer?.like, queueLike, queueUnlike])
+  }, [playHaptic, post.viewer?.like, queueLike, queueUnlike])
 
   const onRepost = useCallback(async () => {
     closeModal()
     try {
       if (!post.viewer?.repost) {
-        Haptics.default()
+        playHaptic()
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -109,7 +110,7 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [post.viewer?.repost, queueRepost, queueUnrepost, closeModal])
+  }, [closeModal, post.viewer?.repost, playHaptic, queueRepost, queueUnrepost])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -122,15 +123,16 @@ let PostCtrls = ({
         indexedAt: post.indexedAt,
       },
     })
-    Haptics.default()
+    playHaptic()
   }, [
+    closeModal,
+    openComposer,
     post.uri,
     post.cid,
     post.author,
     post.indexedAt,
     record.text,
-    openComposer,
-    closeModal,
+    playHaptic,
   ])
 
   const onShare = useCallback(() => {
@@ -270,6 +272,7 @@ let PostCtrls = ({
           richText={richText}
           style={styles.btnPad}
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}
+          timestamp={post.indexedAt}
         />
       </View>
     </View>

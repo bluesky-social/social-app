@@ -1,31 +1,34 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyEmbedRecord,
-  AppBskyFeedPost,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
   AppBskyEmbedExternal,
-  RichText as RichTextAPI,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
   moderatePost,
   ModerationDecision,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {PostMeta} from '../PostMeta'
-import {Link} from '../Link'
-import {Text} from '../text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/shell/composer'
-import {PostEmbeds} from '.'
-import {PostAlerts} from '../../../../components/moderation/PostAlerts'
-import {makeProfileLink} from 'lib/routes/links'
-import {InfoCircleIcon} from 'lib/icons'
 import {Trans} from '@lingui/macro'
+import {useQueryClient} from '@tanstack/react-query'
+
 import {useModerationOpts} from '#/state/queries/preferences'
-import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {RichText} from '#/components/RichText'
+import {RQKEY as RQKEY_URI} from '#/state/queries/resolve-uri'
+import {usePalette} from 'lib/hooks/usePalette'
+import {InfoCircleIcon} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
+import {PostAlerts} from '../../../../components/moderation/PostAlerts'
+import {Link} from '../Link'
+import {PostMeta} from '../PostMeta'
+import {Text} from '../text/Text'
+import {PostEmbeds} from '.'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -107,6 +110,7 @@ export function QuoteEmbed({
   moderation?: ModerationDecision
   style?: StyleProp<ViewStyle>
 }) {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
@@ -134,13 +138,18 @@ export function QuoteEmbed({
     }
   }, [quote.embeds])
 
+  const onBeforePress = React.useCallback(() => {
+    queryClient.setQueryData(RQKEY_URI(quote.author.handle), quote.author.did)
+  }, [queryClient, quote.author.did, quote.author.handle])
+
   return (
     <ContentHider modui={moderation?.ui('contentList')}>
       <Link
         style={[styles.container, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
-        title={itemTitle}>
+        title={itemTitle}
+        onBeforePress={onBeforePress}>
         <View pointerEvents="none">
           <PostMeta
             author={quote.author}

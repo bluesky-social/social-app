@@ -8,10 +8,11 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {getAgent} from '#/state/session'
+import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
 import {precacheThreadPostProfiles} from './profile'
-import {getEmbeddedPost} from './util'
+import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
@@ -260,6 +261,9 @@ export function* findAllPostsInQueryData(
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
+  for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
+    yield postViewToPlaceholderThread(post)
+  }
 }
 
 function* traverseThread(node: ThreadNode): Generator<ThreadNode, void> {
@@ -332,14 +336,7 @@ function embedViewRecordToPlaceholderThread(
     type: 'post',
     _reactKey: record.uri,
     uri: record.uri,
-    post: {
-      uri: record.uri,
-      cid: record.cid,
-      author: record.author,
-      record: record.value,
-      indexedAt: record.indexedAt,
-      labels: record.labels,
-    },
+    post: embedViewRecordToPostView(record),
     record: record.value as AppBskyFeedPost.Record, // validated in getEmbeddedPost
     parent: undefined,
     replies: undefined,

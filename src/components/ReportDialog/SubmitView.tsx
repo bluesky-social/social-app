@@ -1,25 +1,23 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyLabelerDefs} from '@atproto/api'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
-
-import {atoms as a, useTheme, native} from '#/alf'
-import {Text} from '#/components/Typography'
-import * as Dialog from '#/components/Dialog'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import * as Toggle from '#/components/forms/Toggle'
-import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
-import {Loader} from '#/components/Loader'
-import * as Toast from '#/view/com/util/Toast'
-
-import {ReportDialogProps} from './types'
 import {getAgent} from '#/state/session'
+import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, native, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import * as Toggle from '#/components/forms/Toggle'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+import {ReportDialogProps} from './types'
 
 export function SubmitView({
   params,
@@ -208,6 +206,7 @@ export function SubmitView({
           ))}
 
         <Button
+          testID="sendReportBtn"
           size="large"
           variant="solid"
           color="negative"

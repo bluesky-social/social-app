@@ -74,7 +74,6 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.it: {
       i18n.loadAndActivate({locale, messages: messagesIt})
       await import('@formatjs/intl-pluralrules/locale-data/it')
-
       break
     }
     case AppLanguage.ja: {

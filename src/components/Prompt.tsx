@@ -123,6 +123,13 @@ export function Action({
   cta,
   testID,
 }: {
+  /**
+   * Callback to run when the action is pressed. The method is called _after_
+   * the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onPress: () => void
   color?: ButtonColor
   /**
@@ -135,8 +142,7 @@ export function Action({
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
-    close()
-    onPress()
+    close(onPress)
   }, [close, onPress])
 
   return (
@@ -166,6 +172,13 @@ export function Basic({
   description: string
   cancelButtonCta?: string
   confirmButtonCta?: string
+  /**
+   * Callback to run when the Confirm button is pressed. The method is called
+   * _after_ the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onConfirm: () => void
   confirmButtonColor?: ButtonColor
 }>) {

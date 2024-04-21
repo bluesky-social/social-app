@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.76.0",
+  "version": "1.79.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -20,6 +20,7 @@
     "build-ios": "yarn use-build-number-with-bump eas build -p ios",
     "build-android": "yarn use-build-number-with-bump eas build -p android",
     "build": "yarn use-build-number-with-bump eas build",
+    "build-embed": "cd bskyembed && yarn build && yarn build-snippet && cd .. && node ./scripts/post-embed-build.js",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
     "clean-cache": "rm -rf node_modules/.cache/babel-loader/*",
@@ -35,7 +36,7 @@
     "e2e:run": "NODE_ENV=test detox test --configuration ios.sim.debug --take-screenshots all",
     "perf:test": "NODE_ENV=test maestro test",
     "perf:test:run": "NODE_ENV=test maestro test __e2e__/maestro/scroll.yaml",
-    "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json",
+    "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand \"yarn perf:test\" --duration 150000 --resultsFilePath .perf/results.json",
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
     "intl:build": "yarn intl:extract && yarn intl:compile",
@@ -49,13 +50,15 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.2",
+    "@atproto/api": "^0.12.3",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "https://github.com/bluesky-social/react-native-bottom-sheet.git#discord-fork-4.6.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.4.2",
     "@expo/webpack-config": "^19.0.0",
+    "@floating-ui/dom": "^1.6.3",
+    "@floating-ui/react-dom": "^2.0.8",
     "@formatjs/intl-locale": "^3.4.3",
     "@formatjs/intl-pluralrules": "^5.2.10",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -66,7 +69,7 @@
     "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.3.1",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
-    "@react-native-async-storage/async-storage": "1.21.0",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-masked-view/masked-view": "0.3.0",
     "@react-native-menu/menu": "^0.8.0",
     "@react-native-picker/picker": "2.6.1",
@@ -115,6 +118,7 @@
     "expo-constants": "~15.4.5",
     "expo-dev-client": "~3.3.8",
     "expo-device": "~5.9.3",
+    "expo-file-system": "^16.0.9",
     "expo-haptics": "^12.8.1",
     "expo-image": "~1.10.6",
     "expo-image-manipulator": "^11.8.0",
@@ -123,6 +127,7 @@
     "expo-linking": "^6.2.2",
     "expo-localization": "~14.8.3",
     "expo-media-library": "~15.9.1",
+    "expo-navigation-bar": "~2.8.1",
     "expo-notifications": "~0.27.6",
     "expo-sharing": "^11.10.0",
     "expo-splash-screen": "~0.26.4",
@@ -189,7 +194,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.2.28",
+    "@atproto/dev-env": "^0.3.5",
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
