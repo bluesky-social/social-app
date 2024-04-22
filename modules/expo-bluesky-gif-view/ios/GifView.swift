@@ -14,6 +14,8 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
     cache: SDImageCache.shared,
     loader: SDImageLoadersManager.shared
   )
+  private var isPlaying = true
+  private var isLoaded = false
   
   // Requests
   private var placeholderOperation: SDWebImageCombinedOperation?
@@ -31,7 +33,6 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
       }
     }
   }
-  var isPlaying = true
 
   // MARK: - Lifecycle
 
@@ -104,8 +105,11 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
       self.imageView.image = image
     }
 
-    if image.sd_isAnimated, isPlaying {
-      self.imageView.startAnimating()
+    if image.sd_isAnimated {
+      self.firePlayerStateChange()
+      if isPlaying {
+        self.imageView.startAnimating()
+      }
     }
   }
 
@@ -142,7 +146,9 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
     {
       self.placeholderOperation?.cancel()
       self.isPlaying = self.autoplay
+      self.isLoaded = true
       self.setImage(animatedImage)
+      self.firePlayerStateChange()
     }
   }
 
@@ -173,6 +179,7 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
   private func firePlayerStateChange() {
     onPlayerStateChange([
       "isPlaying": self.isPlaying,
+      "isLoaded": self.isLoaded
     ])
   }
 }

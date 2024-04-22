@@ -36,10 +36,6 @@ public class ExpoBlueskyGifViewModule: Module {
       
       Prop("autoplay") { (view: GifView, prop: Bool) in
         view.autoplay = prop
-        
-        // Done on purpose. We want to change this value whenever the prop
-        // changes
-        view.isPlaying = prop
       }
       
       AsyncFunction("toggleAsync") { (view: GifView) in

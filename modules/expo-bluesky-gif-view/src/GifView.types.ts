@@ -3,6 +3,7 @@ import {ViewProps} from 'react-native'
 export interface GifViewStateChangeEvent {
   nativeEvent: {
     isPlaying: boolean
+    isLoaded: boolean
   }
 }
 
