@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
@@ -13,6 +13,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 import {atoms} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
 import {Link as Link2} from '#/components/Link'
@@ -38,25 +39,9 @@ export function HomeHeaderLayoutMobile({
         headerHeight.value = e.nativeEvent.layout.height
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <View style={[pal.view, {width: 100}]}>
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            onPress={undefined /*TODO*/}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Open navigation`)}
-            accessibilityHint={_(
-              msg`Access profile and other navigation links`,
-            )}
-            hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
+        <View style={[atoms.flex_row, atoms.align_end, atoms.gap_md]}>
           <Logo width={30} />
+          <Logotype width={80} />
         </View>
         <View
           style={[
@@ -67,7 +52,7 @@ export function HomeHeaderLayoutMobile({
             pal.view,
             {width: 100},
           ]}>
-          {IS_DEV && (
+          {IS_DEV && false && (
             <Link2 to="/sys/debug">
               <ColorPalette size="md" />
             </Link2>
@@ -75,7 +60,7 @@ export function HomeHeaderLayoutMobile({
           {hasSession && (
             <Link
               testID="viewHeaderHomeFeedPrefsBtn"
-              href="/settings/following-feed"
+              href="/settings"
               hitSlop={HITSLOP_10}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Following Feed Preferences`)}

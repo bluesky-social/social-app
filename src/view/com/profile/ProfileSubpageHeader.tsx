@@ -48,7 +48,6 @@ export function ProfileSubpageHeader({
   const {isMobile} = useWebMediaQueries()
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
-  const canGoBack = navigation.canGoBack()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -83,25 +82,17 @@ export function ProfileSubpageHeader({
           ]}>
           <Pressable
             testID="headerDrawerBtn"
-            onPress={canGoBack ? onPressBack : undefined /*TODO*/}
+            onPress={onPressBack}
             hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
+            style={styles.backBtn}
             accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+            accessibilityLabel={'Back'}
             accessibilityHint="">
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : (
-              <FontAwesomeIcon
-                size={18}
-                icon="bars"
-                style={[styles.backIcon, pal.textLight]}
-              />
-            )}
+            <FontAwesomeIcon
+              size={18}
+              icon="angle-left"
+              style={[styles.backIcon, pal.text]}
+            />
           </Pressable>
           <View style={{flex: 1}} />
           {children}
@@ -183,11 +174,6 @@ const styles = StyleSheet.create({
   backBtn: {
     width: 20,
     height: 30,
-  },
-  backBtnWide: {
-    width: 20,
-    height: 30,
-    paddingHorizontal: 6,
   },
   backIcon: {
     marginTop: 6,

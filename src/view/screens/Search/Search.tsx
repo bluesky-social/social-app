@@ -17,7 +17,6 @@ import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
@@ -531,11 +530,10 @@ export function SearchScreen(
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {track} = useAnalytics()
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
+  const {isTabletOrDesktop} = useWebMediaQueries()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
@@ -585,10 +583,6 @@ export function SearchScreen(
 
     loadSearchHistory()
   }, [])
-
-  const onPressMenu = React.useCallback(() => {
-    track('ViewHeader:MenuButtonClicked')
-  }, [track])
 
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
@@ -711,23 +705,6 @@ export function SearchScreen(
           isTabletOrDesktop && {paddingTop: 10},
         ]}
         sideBorders={isTabletOrDesktop}>
-        {isTabletOrMobile && (
-          <Pressable
-            testID="viewHeaderBackOrMenuBtn"
-            onPress={onPressMenu}
-            hitSlop={HITSLOP_10}
-            style={styles.headerMenuBtn}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Menu`)}
-            accessibilityHint={_(msg`Access navigation links and settings`)}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
-          </Pressable>
-        )}
-
         <View
           style={[
             {backgroundColor: pal.colors.backgroundLight},
@@ -908,15 +885,6 @@ const styles = StyleSheet.create({
     position: isWeb ? 'sticky' : '',
     top: 0,
     zIndex: 1,
-  },
-  headerMenuBtn: {
-    width: 30,
-    height: 30,
-    borderRadius: 30,
-    marginRight: 6,
-    paddingBottom: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   headerSearchContainer: {
     flex: 1,

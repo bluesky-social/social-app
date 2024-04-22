@@ -10,7 +10,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 
 import {isWeb} from '#/platform/detection'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
@@ -28,7 +27,6 @@ export function SimpleViewHeader({
 }>) {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
-  const {track} = useAnalytics()
   const {isMobile} = useWebMediaQueries()
   const canGoBack = navigation.canGoBack()
 
@@ -40,11 +38,6 @@ export function SimpleViewHeader({
     }
   }, [navigation])
 
-  const onPressMenu = React.useCallback(() => {
-    track('ViewHeader:MenuButtonClicked')
-    // TODO
-  }, [track])
-
   const Container = isMobile ? View : CenteredView
   return (
     <Container
@@ -55,28 +48,20 @@ export function SimpleViewHeader({
         pal.view,
         style,
       ]}>
-      {showBackButton ? (
+      {showBackButton && canGoBack ? (
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
-          onPress={canGoBack ? onPressBack : onPressMenu}
+          onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
           style={canGoBack ? styles.backBtn : styles.backBtnWide}
           accessibilityRole="button"
-          accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+          accessibilityLabel={'Back'}
           accessibilityHint="">
-          {canGoBack ? (
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              style={[styles.backIcon, pal.text]}
-            />
-          ) : (
-            <FontAwesomeIcon
-              size={18}
-              icon="bars"
-              style={[styles.backIcon, pal.textLight]}
-            />
-          )}
+          <FontAwesomeIcon
+            size={18}
+            icon="angle-left"
+            style={[styles.backIcon, pal.text]}
+          />
         </TouchableOpacity>
       ) : null}
       {children}
