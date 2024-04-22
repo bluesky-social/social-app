@@ -208,24 +208,6 @@ export function useSearchPopularFeedsMutation() {
 /**
  * The following feed, with fallbacks to Discover
  */
-const HOME_FEED_STUB: FeedSourceInfo = {
-  isPrimaryAlgorithm: false,
-  type: 'feed',
-  displayName: 'Following',
-  uri: 'home',
-  route: {
-    href: '/',
-    name: 'Home',
-    params: {},
-  },
-  cid: '',
-  avatar: '',
-  description: new RichText({text: ''}),
-  creatorDid: '',
-  creatorHandle: '',
-  likeCount: 0,
-  likeUri: '',
-}
 const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
   isPrimaryAlgorithm: true,
   type: 'feed',
@@ -296,7 +278,7 @@ export function usePinnedFeedsInfos() {
           }),
       )
 
-      const result = [hasSession ? HOME_FEED_STUB : PWI_DISCOVER_FEED_STUB]
+      const result = hasSession ? [] : [PWI_DISCOVER_FEED_STUB]
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
@@ -305,6 +287,25 @@ export function usePinnedFeedsInfos() {
         const feedInfo = resolved.get(pinnedFeed.value)
         if (feedInfo) {
           result.push(feedInfo)
+        } else if (pinnedFeed.type === 'timeline') {
+          result.push({
+            isPrimaryAlgorithm: false,
+            type: 'feed',
+            displayName: 'Following',
+            uri: pinnedFeed.value,
+            route: {
+              href: '/',
+              name: 'Home',
+              params: {},
+            },
+            cid: '',
+            avatar: '',
+            description: new RichText({text: ''}),
+            creatorDid: '',
+            creatorHandle: '',
+            likeCount: 0,
+            likeUri: '',
+          })
         }
       }
 
