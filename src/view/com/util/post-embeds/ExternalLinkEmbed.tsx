@@ -35,10 +35,8 @@ export const ExternalLinkEmbed = ({
       return params
     }
   }, [link.uri, externalEmbedPrefs])
-  const isCompatibleGiphy =
-    embedPlayerParams?.source === 'giphy' && embedPlayerParams.dimensions
 
-  if (isCompatibleGiphy) {
+  if (embedPlayerParams?.source === 'tenor') {
     return <GifEmbed params={embedPlayerParams} thumb={link.thumb} />
   }
 
@@ -69,14 +67,12 @@ export const ExternalLinkEmbed = ({
               paddingHorizontal: isMobile ? 10 : 14,
             },
           ]}>
-          {!isCompatibleGiphy && (
-            <Text
-              type="sm"
-              numberOfLines={1}
-              style={[pal.textLight, {marginVertical: 2}]}>
-              {toNiceDomain(link.uri)}
-            </Text>
-          )}
+          <Text
+            type="sm"
+            numberOfLines={1}
+            style={[pal.textLight, {marginVertical: 2}]}>
+            {toNiceDomain(link.uri)}
+          </Text>
 
           {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
             <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
