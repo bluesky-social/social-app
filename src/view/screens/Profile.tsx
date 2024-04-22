@@ -25,7 +25,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {useGate} from 'lib/statsig/statsig'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
@@ -143,7 +142,6 @@ function ProfileScreenLoaded({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
-  const gate = useGate()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -317,21 +315,8 @@ function ProfileScreenLoaded({
   // =
 
   const renderHeader = React.useCallback(() => {
-    if (gate('new_profile_scroll_component')) {
-      return (
-        <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
-          <ProfileHeader
-            profile={profile}
-            labeler={labelerInfo}
-            descriptionRT={hasDescription ? descriptionRT : null}
-            moderationOpts={moderationOpts}
-            hideBackButton={hideBackButton}
-            isPlaceholderProfile={showPlaceholder}
-          />
-        </ExpoScrollForwarderView>
-      )
-    } else {
-      return (
+    return (
+      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
           profile={profile}
           labeler={labelerInfo}
@@ -340,10 +325,9 @@ function ProfileScreenLoaded({
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
         />
-      )
-    }
+      </ExpoScrollForwarderView>
+    )
   }, [
-    gate,
     scrollViewTag,
     profile,
     labelerInfo,
