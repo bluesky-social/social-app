@@ -8,13 +8,14 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {CogIcon} from '#/lib/icons'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
+import {atoms} from '#/alf'
 import {Link} from '../util/Link'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
@@ -47,8 +48,12 @@ function HomeHeaderLayoutDesktopAndTablet({
     <>
       {hasSession && (
         <View style={[pal.view, pal.border, styles.bar, styles.topBar]}>
+          <View style={[atoms.flex_row, atoms.align_end, atoms.gap_md]}>
+            <Logo width={28} />
+            <Logotype width={84} style={{position: 'relative', top: 2}} />
+          </View>
           <Link
-            href="/settings/following-feed"
+            href="/settings"
             hitSlop={10}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Following Feed Preferences`)}
@@ -57,15 +62,6 @@ function HomeHeaderLayoutDesktopAndTablet({
               icon="sliders"
               style={pal.textLight as FontAwesomeIconStyle}
             />
-          </Link>
-          <Logo width={28} />
-          <Link
-            href="/settings/saved-feeds"
-            hitSlop={10}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Edit Saved Feeds`)}
-            accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-            <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
           </Link>
         </View>
       )}
@@ -101,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 18,
     paddingTop: 16,
-    paddingBottom: 8,
+    paddingBottom: 4,
   },
   tabBar: {
     // @ts-ignore Web only
