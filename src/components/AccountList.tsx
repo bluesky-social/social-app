@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {View} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,10 +16,14 @@ export function AccountList({
   onSelectAccount,
   onSelectOther,
   otherLabel,
+  excludeCurrent,
+  style,
 }: {
   onSelectAccount: (account: SessionAccount) => void
   onSelectOther: () => void
   otherLabel?: string
+  excludeCurrent?: boolean
+  style?: StyleProp<ViewStyle>
 }) {
   const {isSwitchingAccounts, currentAccount, accounts} = useSession()
   const t = useTheme()
@@ -29,6 +33,10 @@ export function AccountList({
     onSelectOther()
   }, [onSelectOther])
 
+  const filteredAccounts = excludeCurrent
+    ? accounts.filter(account => account.did !== currentAccount?.did)
+    : accounts
+
   return (
     <View
       style={[
@@ -36,8 +44,9 @@ export function AccountList({
         a.overflow_hidden,
         a.border,
         t.atoms.border_contrast_low,
+        style,
       ]}>
-      {accounts.map(account => (
+      {filteredAccounts.map(account => (
         <React.Fragment key={account.did}>
           <AccountItem
             account={account}

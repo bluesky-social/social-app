@@ -50,7 +50,6 @@ function HomeHeaderLayoutDesktopAndTablet({
         <View style={[pal.view, pal.border, styles.bar, styles.topBar]}>
           <View style={[atoms.flex_row, atoms.align_end, atoms.gap_md]}>
             <Logo width={28} />
-            <Logotype width={84} style={{position: 'relative', top: 2}} />
           </View>
           <Link
             href="/settings"

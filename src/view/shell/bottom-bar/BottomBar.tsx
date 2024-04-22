@@ -8,7 +8,6 @@ import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
@@ -38,8 +37,8 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
-import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {styles} from './BottomBarStyles'
+import {ProfileMenuDialog} from '../profile-menu'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -58,8 +57,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
-  const accountSwitchControl = useDialogControl()
-  const playHaptic = useHaptics()
+  const profileMenuControl = useDialogControl()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -101,17 +99,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     [onPressTab],
   )
   const onPressProfile = React.useCallback(() => {
-    onPressTab('MyProfile')
-  }, [onPressTab])
-
-  const onLongPressProfile = React.useCallback(() => {
-    playHaptic()
-    accountSwitchControl.open()
-  }, [accountSwitchControl, playHaptic])
+    profileMenuControl.open()
+  }, [profileMenuControl])
 
   return (
     <>
-      <SwitchAccountDialog control={accountSwitchControl} />
+      <ProfileMenuDialog control={profileMenuControl} onPressTab={onPressTab} />
 
       <Animated.View
         style={[
@@ -256,7 +249,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </View>
               }
               onPress={onPressProfile}
-              onLongPress={onLongPressProfile}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Profile`)}
               accessibilityHint=""

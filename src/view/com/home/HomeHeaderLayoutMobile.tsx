@@ -1,24 +1,13 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
-import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
 import {atoms} from '#/alf'
-import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
-import {Link as Link2} from '#/components/Link'
-import {IS_DEV} from '#/env'
-import {Link} from '../util/Link'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -27,10 +16,8 @@ export function HomeHeaderLayoutMobile({
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
-  const {hasSession} = useSession()
 
   return (
     <Animated.View
@@ -41,36 +28,6 @@ export function HomeHeaderLayoutMobile({
       <View style={[pal.view, styles.topBar]}>
         <View style={[atoms.flex_row, atoms.align_end, atoms.gap_md]}>
           <Logo width={30} />
-          <Logotype width={80} />
-        </View>
-        <View
-          style={[
-            atoms.flex_row,
-            atoms.justify_end,
-            atoms.align_center,
-            atoms.gap_md,
-            pal.view,
-            {width: 100},
-          ]}>
-          {IS_DEV && false && (
-            <Link2 to="/sys/debug">
-              <ColorPalette size="md" />
-            </Link2>
-          )}
-          {hasSession && (
-            <Link
-              testID="viewHeaderHomeFeedPrefsBtn"
-              href="/settings"
-              hitSlop={HITSLOP_10}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Following Feed Preferences`)}
-              accessibilityHint="">
-              <FontAwesomeIcon
-                icon="sliders"
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </Link>
-          )}
         </View>
       </View>
       {children}
@@ -90,7 +47,7 @@ const styles = StyleSheet.create({
   },
   topBar: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: 18,
     paddingVertical: 8,

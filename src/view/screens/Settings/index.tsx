@@ -42,12 +42,12 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as AppInfo from 'lib/app-info'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL, STATUS_PAGE_URL} from 'lib/constants'
+import {STATUS_PAGE_URL} from 'lib/constants'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {HandIcon, HashtagIcon, ListIcon} from 'lib/icons'
+import {HandIcon, HashtagIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
@@ -61,7 +61,6 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
-import {atoms as a, useThemeName} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
@@ -271,10 +270,6 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('SavedFeeds')
   }, [navigation])
 
-  const onPressLists = React.useCallback(() => {
-    navigation.navigate('Lists')
-  }, [navigation])
-
   const onPressAccessibilitySettings = React.useCallback(() => {
     navigation.navigate('AccessibilitySettings')
   }, [navigation])
@@ -320,66 +315,6 @@ export function SettingsScreen({}: Props) {
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
-        <FeedbackAndHelp />
-        <TouchableOpacity
-          testID="moderationBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={
-            isSwitchingAccounts
-              ? undefined
-              : () => navigation.navigate('Moderation')
-          }
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Moderation settings`)}
-          accessibilityHint={_(msg`Opens moderation settings`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <HandIcon style={pal.text} size={18} strokeWidth={6} />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Moderation</Trans>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          testID="savedFeedsBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={onPressSavedFeeds}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`My saved feeds`)}
-          accessibilityHint={_(msg`Opens screen with all saved feeds`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>My Saved Feeds</Trans>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          testID="listsBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={onPressLists}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`My lists`)}
-          accessibilityHint={_(msg`Opens screen with all my lists`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <ListIcon strokeWidth={3} style={pal.text} size={18} />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>My Lists</Trans>
-          </Text>
-        </TouchableOpacity>
-
         <View style={styles.spacer20} />
 
         {currentAccount ? (
@@ -622,6 +557,46 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>Languages</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="moderationBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('Moderation')
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Moderation settings`)}
+          accessibilityHint={_(msg`Opens moderation settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <HandIcon style={pal.text} size={18} strokeWidth={6} />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Moderation</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="savedFeedsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={onPressSavedFeeds}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`My saved feeds`)}
+          accessibilityHint={_(msg`Opens screen with all saved feeds`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>My Saved Feeds</Trans>
           </Text>
         </TouchableOpacity>
 
@@ -960,88 +935,6 @@ function EmailConfirmationNotice() {
           <Trans>Protect your account by verifying your email.</Trans>
         </Text>
       </View>
-    </View>
-  )
-}
-
-function FeedbackAndHelp() {
-  const themeName = useThemeName()
-  const pal = usePalette('default')
-  const {_} = useLingui()
-  const {track} = useAnalytics()
-  const {currentAccount} = useSession()
-
-  const onPressFeedback = React.useCallback(() => {
-    track('Menu:FeedbackClicked')
-    Linking.openURL(
-      FEEDBACK_FORM_URL({
-        email: currentAccount?.email,
-        handle: currentAccount?.handle,
-      }),
-    )
-  }, [track, currentAccount])
-
-  const onPressHelp = React.useCallback(() => {
-    track('Menu:HelpClicked')
-    Linking.openURL(HELP_DESK_URL)
-  }, [track])
-
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.flex_wrap,
-        a.gap_md,
-        a.px_lg,
-        a.py_sm,
-        pal.view,
-        {marginBottom: 1},
-      ]}>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
-        onPress={onPressFeedback}
-        style={[
-          a.flex_1,
-          a.flex_row,
-          a.align_center,
-          a.justify_center,
-          a.p_md,
-          a.rounded_md,
-          themeName === 'light'
-            ? {backgroundColor: '#DDEFFF'}
-            : {backgroundColor: colors.blue6},
-        ]}>
-        <FontAwesomeIcon
-          style={pal.link as FontAwesomeIconStyle}
-          size={18}
-          icon={['far', 'message']}
-        />
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
-          <Trans>Feedback</Trans>
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
-        onPress={onPressHelp}
-        style={[
-          a.flex_1,
-          a.flex_row,
-          a.align_center,
-          a.justify_center,
-          a.p_md,
-          a.rounded_md,
-          themeName === 'light'
-            ? {backgroundColor: '#DDEFFF'}
-            : {backgroundColor: colors.blue6},
-        ]}>
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
-          <Trans>Help</Trans>
-        </Text>
-      </TouchableOpacity>
     </View>
   )
 }
