@@ -325,7 +325,7 @@ export const ComposePost = observer(function ComposePost({
           url: gif.media_formats.gif.url,
           image: gif.media_formats.preview.url,
           likelyType: LikelyType.HTML,
-          title: `${gif.title} - Find & Share on GIPHY`,
+          title: gif.content_description,
           description: `ALT: ${gif.content_description}`,
         },
       })
