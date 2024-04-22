@@ -125,7 +125,6 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
     _ finished: Bool,
     _ imageUrl: URL?
   ) {
-    print(error)
     guard finished else {
       return
     }
