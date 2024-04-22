@@ -317,7 +317,6 @@ export const ComposePost = observer(function ComposePost({
 
   const onSelectGif = useCallback(
     (gif: Gif) => {
-      console.log('gif', JSON.stringify(gif, null, 2))
       setExtLink({
         uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[0]}&ww=${gif.media_formats.gif.dims[1]}`,
         isLoading: true,
