@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {isNative, isWeb} from '#/platform/detection'
 import {
   getAvatarTypeFromUri,
@@ -151,7 +150,6 @@ export function FeedsScreen(_props: Props) {
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
   const searchInputRef = React.useRef<SearchInputRef>(null)
-  const gate = useGate()
 
   /**
    * A search query is present. We may not have search results yet.
@@ -231,57 +229,34 @@ export function FeedsScreen(_props: Props) {
           error: cleanError(preferencesError.toString()),
         })
       } else {
-        if (isPreferencesLoading || !preferences?.feeds?.saved) {
+        if (isPreferencesLoading || !preferences?.savedFeeds?.length) {
           slices.push({
             key: 'savedFeedsLoading',
             type: 'savedFeedsLoading',
             // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
           })
         } else {
-          const isPrimaryAlgoExperimentEnabled = gate(
-            'reduced_onboarding_and_home_algo',
-          )
-          const primaryAlgo = preferences.primaryAlgorithm
-
-          if (
-            isPrimaryAlgoExperimentEnabled &&
-            primaryAlgo?.enabled &&
-            primaryAlgo?.uri
-          ) {
-            slices = slices.concat({
-              key: `savedFeed:${primaryAlgo?.uri}`,
-              type: 'savedFeed',
-              feedUri: primaryAlgo?.uri,
-            })
-          }
-
-          if (preferences?.feeds?.saved.length !== 0) {
-            const {saved, pinned} = preferences.feeds
-
+          if (preferences.savedFeeds?.length) {
             slices = slices.concat(
-              pinned
-                .filter(uri => {
-                  return !(
-                    isPrimaryAlgoExperimentEnabled &&
-                    primaryAlgo?.enabled &&
-                    primaryAlgo?.uri &&
-                    uri === primaryAlgo?.uri
-                  )
+              preferences.savedFeeds
+                .filter(f => {
+                  return f.pinned
                 })
-                .map(uri => ({
-                  key: `savedFeed:${uri}`,
+                .map(feed => ({
+                  key: `savedFeed:${feed.value}`,
                   type: 'savedFeed',
-                  feedUri: uri,
+                  feedUri: feed.value,
                 })),
             )
-
             slices = slices.concat(
-              saved
-                .filter(uri => !pinned.includes(uri))
-                .map(uri => ({
-                  key: `savedFeed:${uri}`,
+              preferences.savedFeeds
+                .filter(f => {
+                  return !f.pinned
+                })
+                .map(feed => ({
+                  key: `savedFeed:${feed.value}`,
                   type: 'savedFeed',
-                  feedUri: uri,
+                  feedUri: feed.value,
                 })),
             )
           }
@@ -351,17 +326,12 @@ export function FeedsScreen(_props: Props) {
                     ) {
                       return false
                     }
-                    const isPrimaryAlgoExperimentEnabled = gate(
-                      'reduced_onboarding_and_home_algo',
+                    const alreadySaved = Boolean(
+                      preferences?.savedFeeds?.find(f => {
+                        return f.value === feed.uri
+                      }),
                     )
-                    const isPrimaryAlgo =
-                      isPrimaryAlgoExperimentEnabled &&
-                      preferences?.primaryAlgorithm?.enabled &&
-                      preferences?.primaryAlgorithm?.uri === feed.uri
-                    return (
-                      !preferences?.feeds?.saved.includes(feed.uri) &&
-                      !isPrimaryAlgo
-                    )
+                    return !alreadySaved
                   })
                   .map(feed => ({
                     key: `popularFeed:${feed.uri}`,
@@ -396,7 +366,6 @@ export function FeedsScreen(_props: Props) {
     isSearchPending,
     searchError,
     isUserSearching,
-    gate,
   ])
 
   const renderHeaderBtn = React.useCallback(() => {
@@ -502,7 +471,7 @@ export function FeedsScreen(_props: Props) {
                 </View>
               </View>
             )}
-            {preferences?.feeds?.saved?.length !== 0 && <FeedsSavedHeader />}
+            {preferences?.savedFeeds?.length !== 0 && <FeedsSavedHeader />}
           </>
         )
       } else if (item.type === 'savedFeedNoResults') {
@@ -518,18 +487,7 @@ export function FeedsScreen(_props: Props) {
           </View>
         )
       } else if (item.type === 'savedFeed') {
-        const isPrimaryAlgoExperimentEnabled = gate(
-          'reduced_onboarding_and_home_algo',
-        )
-        const primaryAlgo = preferences?.primaryAlgorithm
-        const isPrimaryAlgo =
-          isPrimaryAlgoExperimentEnabled &&
-          primaryAlgo?.enabled &&
-          primaryAlgo?.uri === item.feedUri
-
-        return (
-          <SavedFeed feedUri={item.feedUri} isPrimaryAlgo={isPrimaryAlgo} />
-        )
+        return <SavedFeed feedUri={item.feedUri} />
       } else if (item.type === 'popularFeedsHeader') {
         return (
           <>
@@ -582,15 +540,13 @@ export function FeedsScreen(_props: Props) {
       pal.icon,
       pal.textLight,
       _,
-      preferences?.primaryAlgorithm,
-      preferences?.feeds?.saved?.length,
+      preferences?.savedFeeds?.length,
       query,
       onChangeQuery,
       onPressCancelSearch,
       onSubmitQuery,
       onChangeSearchFocus,
       hasSession,
-      gate,
     ],
   )
 
