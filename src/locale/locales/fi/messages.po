@@ -3705,7 +3705,7 @@ msgstr "Tallennetut syötteet"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll."
-msgstr "Tallennettu kameraasi"
+msgstr "Tallennettu kuvagalleriaasi."
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
