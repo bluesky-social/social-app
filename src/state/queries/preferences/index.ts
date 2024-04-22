@@ -229,13 +229,9 @@ export function useSetThreadViewPreferencesMutation() {
 export function useSetSaveFeedsMutation() {
   const queryClient = useQueryClient()
 
-  return useMutation<
-    void,
-    unknown,
-    Pick<UsePreferencesQueryResponse['feeds'], 'saved' | 'pinned'>
-  >({
-    mutationFn: async ({saved, pinned}) => {
-      await getAgent().setSavedFeeds(saved, pinned)
+  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+    mutationFn: async savedFeeds => {
+      await getAgent().setSavedFeedsV2(savedFeeds)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -244,16 +240,16 @@ export function useSetSaveFeedsMutation() {
   })
 }
 
-export function useSaveFeedMutation() {
+export function useAddSavedFeedMutation() {
   const queryClient = useQueryClient()
 
-  return useMutation<void, unknown, {uri: string}>({
-    mutationFn: async ({uri}) => {
-      await getAgent().addSavedFeedV2({
-        type: 'feed',
-        value: uri,
-        pinned: false,
-      })
+  return useMutation<
+    void,
+    unknown,
+    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>
+  >({
+    mutationFn: async savedFeed => {
+      await getAgent().addSavedFeedV2(savedFeed)
       track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -278,35 +274,13 @@ export function useRemoveFeedMutation() {
   })
 }
 
-export function usePinFeedMutation() {
-  const queryClient = useQueryClient()
-
-  return useMutation<void, unknown, {uri: string}>({
-    mutationFn: async ({uri}) => {
-      await getAgent().addSavedFeedV2({
-        type: 'feed',
-        value: uri,
-        pinned: true,
-      })
-      track('CustomFeed:Pin', {uri})
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function useUnpinFeedMutation() {
+export function useUpdateSavedFeedMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, AppBskyActorDefs.SavedFeed>({
     mutationFn: async feed => {
-      await getAgent().updateSavedFeed({
-        ...feed,
-        pinned: false,
-      })
-      track('CustomFeed:Unpin', {uri: feed.value})
+      await getAgent().updateSavedFeed(feed)
+      track('CustomFeed:Update', {uri: feed.value})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -349,20 +323,6 @@ export function useRemoveMutedWordMutation() {
   return useMutation({
     mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
       await getAgent().removeMutedWord(mutedWord)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function useSetPrimaryAlgorithmMutation() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async (pref: AppBskyActorDefs.PrimaryAlgoPref) => {
-      await getAgent().setPrimaryAlgorithm(pref)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
