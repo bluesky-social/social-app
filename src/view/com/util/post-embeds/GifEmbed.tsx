@@ -147,7 +147,7 @@ export function GifEmbed({
           </>
         ) : (
           <GifView
-            webpSource={params.playerUri}
+            source={params.playerUri}
             placeholderSource={thumb}
             style={[a.flex_1, a.rounded_sm]}
             autoplay={!autoplayDisabled}
