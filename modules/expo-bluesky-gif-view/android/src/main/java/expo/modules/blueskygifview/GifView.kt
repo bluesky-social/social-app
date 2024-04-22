@@ -23,7 +23,7 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
   private val activity = appContext.currentActivity ?: throw Exceptions.MissingActivity()
   private val glide = Glide.with(activity)
   val imageView = AppCompatImageViewExtended(context, this)
-  private var isPlaying = true
+  var isPlaying = true
   private var isLoaded = false
 
   // Requests

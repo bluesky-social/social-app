@@ -3,12 +3,10 @@ package expo.modules.blueskygifview
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Animatable
-import android.util.Log
 import androidx.appcompat.widget.AppCompatImageView
 
 class AppCompatImageViewExtended(context: Context, val parent: GifView): AppCompatImageView(context) {
   override fun onDraw(canvas: Canvas) {
-    Log.d("AppCompatImageViewExtended", "onDraw")
     super.onDraw(canvas)
     if (!parent.isPlaying) {
       this.pause()
