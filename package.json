@@ -72,7 +72,6 @@
     "@react-native-menu/menu": "^0.8.0",
     "@react-native-picker/picker": "2.6.1",
     "@react-navigation/bottom-tabs": "^6.5.7",
-    "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@segment/analytics-next": "^1.51.3",

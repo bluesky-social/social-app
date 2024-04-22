@@ -8,13 +8,13 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
-import {CenteredView} from './Views'
+
+import {isWeb} from '#/platform/detection'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {useSetDrawerOpen} from '#/state/shell'
-import {isWeb} from '#/platform/detection'
+import {CenteredView} from './Views'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -27,7 +27,6 @@ export function SimpleViewHeader({
   style?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
-  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isMobile} = useWebMediaQueries()
@@ -43,8 +42,8 @@ export function SimpleViewHeader({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    setDrawerOpen(true)
-  }, [track, setDrawerOpen])
+    // TODO
+  }, [track])
 
   const Container = isMobile ? View : CenteredView
   return (

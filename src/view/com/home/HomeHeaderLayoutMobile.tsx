@@ -7,7 +7,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
-import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
@@ -28,14 +27,9 @@ export function HomeHeaderLayoutMobile({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const setDrawerOpen = useSetDrawerOpen()
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {hasSession} = useSession()
-
-  const onPressAvi = React.useCallback(() => {
-    setDrawerOpen(true)
-  }, [setDrawerOpen])
 
   return (
     <Animated.View
@@ -47,7 +41,7 @@ export function HomeHeaderLayoutMobile({
         <View style={[pal.view, {width: 100}]}>
           <TouchableOpacity
             testID="viewHeaderDrawerBtn"
-            onPress={onPressAvi}
+            onPress={undefined /*TODO*/}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Open navigation`)}
             accessibilityHint={_(

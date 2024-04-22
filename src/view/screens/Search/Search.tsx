@@ -37,8 +37,7 @@ import {
   useSuggestedFollowsQuery,
 } from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
-import {useSetDrawerOpen} from '#/state/shell'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   NativeStackScreenProps,
@@ -396,7 +395,6 @@ function SearchScreenUserResults({
 export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
@@ -405,10 +403,9 @@ export function SearchScreenInner({query}: {query?: string}) {
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(index > 0)
       setActiveTab(index)
     },
-    [setDrawerSwipeDisabled, setMinimalShellMode],
+    [setMinimalShellMode],
   )
 
   const sections = React.useMemo(() => {
@@ -535,7 +532,6 @@ export function SearchScreen(
   const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const setDrawerOpen = useSetDrawerOpen()
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -592,8 +588,7 @@ export function SearchScreen(
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    setDrawerOpen(true)
-  }, [track, setDrawerOpen])
+  }, [track])
 
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()

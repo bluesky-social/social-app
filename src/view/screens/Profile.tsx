@@ -19,7 +19,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {getAgent, useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -154,7 +154,6 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -278,15 +277,6 @@ function ProfileScreenLoaded({
         scrollSectionToTop(currentPage)
       })
     }, [setMinimalShellMode, screen, currentPage, scrollSectionToTop]),
-  )
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setDrawerSwipeDisabled(currentPage > 0)
-      return () => {
-        setDrawerSwipeDisabled(false)
-      }
-    }, [setDrawerSwipeDisabled, currentPage]),
   )
 
   // events

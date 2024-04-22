@@ -6,23 +6,15 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import {Drawer} from 'react-native-drawer-layout'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
-import {useNavigationState} from '@react-navigation/native'
 
 import {useSession} from '#/state/session'
-import {
-  useIsDrawerOpen,
-  useIsDrawerSwipeDisabled,
-  useSetDrawerOpen,
-} from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
 import {usePalette} from 'lib/hooks/usePalette'
 import * as notifications from 'lib/notifications/notifications'
-import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {isAndroid} from 'platform/detection'
 import {useDialogStateContext} from 'state/dialogs'
@@ -34,29 +26,15 @@ import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {Composer} from './Composer'
-import {DrawerContent} from './Drawer'
 
 function ShellInner() {
-  const isDrawerOpen = useIsDrawerOpen()
-  const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
-  const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
   const containerPadding = React.useMemo(
     () => ({height: '100%' as DimensionValue, paddingTop: safeAreaInsets.top}),
     [safeAreaInsets],
   )
-  const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
-  const onOpenDrawer = React.useCallback(
-    () => setIsDrawerOpen(true),
-    [setIsDrawerOpen],
-  )
-  const onCloseDrawer = React.useCallback(
-    () => setIsDrawerOpen(false),
-    [setIsDrawerOpen],
-  )
-  const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
-  const {hasSession, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
   const {importantForAccessibility} = useDialogStateContext()
   // start undefined
@@ -90,15 +68,7 @@ function ShellInner() {
         style={containerPadding}
         importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
-          <Drawer
-            renderDrawerContent={renderDrawerContent}
-            open={isDrawerOpen}
-            onOpen={onOpenDrawer}
-            onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
-            <TabsNavigator />
-          </Drawer>
+          <TabsNavigator />
         </ErrorBoundary>
       </Animated.View>
       <Composer winHeight={winDim.height} />

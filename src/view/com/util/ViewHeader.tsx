@@ -6,7 +6,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -39,7 +38,6 @@ export function ViewHeader({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isDesktop, isTablet} = useWebMediaQueries()
@@ -55,8 +53,8 @@ export function ViewHeader({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    setDrawerOpen(true)
-  }, [track, setDrawerOpen])
+    // TODO
+  }, [track])
 
   if (isDesktop) {
     if (showOnDesktop) {

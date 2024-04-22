@@ -13,11 +13,7 @@ import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {
-  useMinimalShellMode,
-  useSetDrawerSwipeDisabled,
-  useSetMinimalShellMode,
-} from '#/state/shell'
+import {useMinimalShellMode, useSetMinimalShellMode} from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
@@ -94,15 +90,10 @@ function HomeScreenReady({
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(selectedIndex > 0)
-      return () => {
-        setDrawerSwipeDisabled(false)
-      }
-    }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
+    }, [setMinimalShellMode]),
   )
 
   useFocusEffect(
@@ -139,12 +130,11 @@ function HomeScreenReady({
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(index > 0)
       const feed = allFeeds[index]
       setSelectedFeed(feed)
       lastPagerReportedIndexRef.current = index
     },
-    [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
+    [setSelectedFeed, setMinimalShellMode, allFeeds],
   )
 
   const onPageSelecting = React.useCallback(
