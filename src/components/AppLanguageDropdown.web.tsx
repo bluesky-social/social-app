@@ -71,6 +71,7 @@ export function AppLanguageDropdown() {
           color: t.atoms.text.color,
           background: t.atoms.bg.backgroundColor,
           padding: 4,
+          maxWidth: '100%',
         }}>
         {APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => (
           <option key={l.code2} value={l.code2}>

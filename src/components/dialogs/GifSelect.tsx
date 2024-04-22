@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {TextInput, View} from 'react-native'
+import {Keyboard, TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
+import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,6 +14,8 @@ import {
   useSetExternalEmbedPref,
 } from '#/state/preferences'
 import {Gif, useGifphySearch, useGiphyTrending} from '#/state/queries/giphy'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -54,13 +57,18 @@ export function GifSelectDialog({
       break
   }
 
+  const renderErrorBoundary = useCallback(
+    (error: any) => <DialogError details={String(error)} />,
+    [],
+  )
+
   return (
     <Dialog.Outer
       control={control}
       nativeOptions={{sheet: {snapPoints}}}
       onClose={onClose}>
       <Dialog.Handle />
-      {content}
+      <ErrorBoundary renderError={renderErrorBoundary}>{content}</ErrorBoundary>
     </Dialog.Outer>
   )
 }
@@ -69,7 +77,8 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const ref = useRef<TextInput>(null)
+  const textInputRef = useRef<TextInput>(null)
+  const listRef = useRef<BottomSheetFlatListMethods>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
   const {close} = Dialog.useDialogContext()
@@ -121,7 +130,7 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
   const onGoBack = useCallback(() => {
     if (isSearching) {
       // clear the input and reset the state
-      ref.current?.clear()
+      textInputRef.current?.clear()
       setSearch('')
     } else {
       close()
@@ -168,10 +177,13 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
           <TextField.Input
             label={_(msg`Search GIFs`)}
             placeholder={_(msg`Powered by GIPHY`)}
-            onChangeText={setSearch}
+            onChangeText={text => {
+              setSearch(text)
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
             returnKeyType="search"
             clearButtonMode="while-editing"
-            inputRef={ref}
+            inputRef={textInputRef}
             maxLength={50}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
@@ -188,6 +200,7 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
     <>
       {gtMobile && <Dialog.Close />}
       <Dialog.InnerFlatList
+        ref={listRef}
         key={gtMobile ? '3 cols' : '2 cols'}
         data={flattenedData}
         renderItem={renderItem}
@@ -223,6 +236,7 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
         keyExtractor={(item: Gif) => item.id}
         // @ts-expect-error web only
         style={isWeb && {minHeight: '100vh'}}
+        onScrollBeginDrag={() => Keyboard.dismiss()}
         ListFooterComponent={
           hasData ? (
             <ListFooter
@@ -347,6 +361,34 @@ export function GiphyConsentPrompt() {
           </ButtonText>
         </Button>
       </View>
+    </Dialog.ScrollableInner>
+  )
+}
+
+function DialogError({details}: {details?: string}) {
+  const {_} = useLingui()
+  const control = Dialog.useDialogContext()
+
+  return (
+    <Dialog.ScrollableInner style={a.gap_md} label={_(msg`An error occured`)}>
+      <Dialog.Close />
+      <ErrorScreen
+        title={_(msg`Oh no!`)}
+        message={_(
+          msg`There was an unexpected issue in the application. Please let us know if this happened to you!`,
+        )}
+        details={details}
+      />
+      <Button
+        label={_(msg`Close dialog`)}
+        onPress={() => control.close()}
+        color="primary"
+        size="medium"
+        variant="solid">
+        <ButtonText>
+          <Trans>Close</Trans>
+        </ButtonText>
+      </Button>
     </Dialog.ScrollableInner>
   )
 }

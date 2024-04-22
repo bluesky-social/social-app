@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-15 17:11+0900\n"
+"PO-Revision-Date: 2024-04-21 12:39+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -72,6 +72,15 @@ msgstr "プロフィールと他のナビゲーションリンクにアクセス
 #: src/view/screens/Settings/index.tsx:421
 msgid "Accessibility"
 msgstr "アクセシビリティ"
+
+#: src/view/screens/Settings/index.tsx:483
+msgid "Accessibility settings"
+msgstr "アクセシビリティの設定"
+
+#: src/Navigation.tsx:284
+#: src/view/screens/AccessibilitySettings.tsx:63
+msgid "Accessibility Settings"
+msgstr "アクセシビリティの設定"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 msgid "account"
@@ -471,6 +480,10 @@ msgstr "Blueskyは開かれています。"
 msgid "Bluesky is public."
 msgstr "Blueskyはパブリックです。"
 
+#: src/components/dialogs/GifSelect.tsx:314
+msgid "Bluesky uses GIPHY to provide the GIF selector feature."
+msgstr "BlueskyはGIFの選択機能のためにGIPHYを使用しています。"
+
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Blueskyはログアウトしたユーザーにあなたのプロフィールや投稿を表示しません。他のアプリはこのリクエストに応じない場合があります。この設定はあなたのアカウントを非公開にするものではありません。"
@@ -730,6 +743,10 @@ msgstr "アラートを閉じる"
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
 msgstr "一番下の引き出しを閉じる"
+
+#: src/components/dialogs/GifSelect.tsx:166
+msgid "Close GIF dialog"
+msgstr "GIFのダイアログを閉じる"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
@@ -1143,13 +1160,13 @@ msgstr "なにか言いたいことはあった？"
 msgid "Dim"
 msgstr "グレー"
 
-#: src/view/screens/Settings/index.tsx:697
-msgid "Disable haptics"
-msgstr "触覚フィードバックを無効化"
+#: src/view/screens/AccessibilitySettings.tsx:94
+msgid "Disable autoplay for GIFs"
+msgstr "GIFを自動再生しない"
 
-#: src/view/screens/Settings/index.tsx:697
-msgid "Disable vibrations"
-msgstr "バイブレーションを無効化"
+#: src/view/screens/AccessibilitySettings.tsx:108
+msgid "Disable haptic feedback"
+msgstr "触覚フィードバックを無効化"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1422,6 +1439,11 @@ msgstr "フィードで成人向けコンテンツを有効にする"
 msgid "Enable external media"
 msgstr "外部メディアを有効にする"
 
+#: src/components/dialogs/GifSelect.tsx:335
+#: src/components/dialogs/GifSelect.tsx:342
+msgid "Enable GIPHY"
+msgstr "GIPHYを有効にする"
+
 #: src/view/screens/PreferencesExternalEmbeds.tsx:75
 msgid "Enable media players for"
 msgstr "有効にするメディアプレイヤー"
@@ -1588,6 +1610,10 @@ msgstr "リストの作成に失敗しました。インターネットへの接
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
 
+#: src/components/dialogs/GifSelect.tsx:212
+msgid "Failed to load GIFs"
+msgstr "GIFの読み込みに失敗しました"
+
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
 msgid "Failed to load recommended feeds"
@@ -1655,13 +1681,9 @@ msgstr "最後に"
 msgid "Find accounts to follow"
 msgstr "フォローするアカウントを探す"
 
-#: src/view/screens/Search/Search.tsx:589
-msgid "Find users on Bluesky"
-msgstr "Blueskyでユーザーを検索"
-
-#: src/view/screens/Search/Search.tsx:587
-msgid "Find users with the search tool on the right"
-msgstr "右側の検索ツールでユーザーを検索"
+#: src/view/screens/Search/Search.tsx:521
+msgid "Find posts and users on Bluesky"
+msgstr "投稿やユーザーをBlueskyで検索"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
 msgid "Finding similar accounts..."
@@ -1832,6 +1854,10 @@ msgstr "ギャラリー"
 msgid "Get Started"
 msgstr "開始"
 
+#: src/components/dialogs/GifSelect.tsx:320
+msgid "GIPHY may collect information about you and your device. You can find out more in their <0>privacy policy</0>."
+msgstr "GIPHYはあなたやあなたのデバイスについての情報を収集するかもしれません。GIPHYの<0>プライバシー・ポリシー</0>で詳細を確認できます。"
+
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Glaring violations of law or terms of service"
 msgstr "法律または利用規約への明らかな違反"
@@ -1889,6 +1915,10 @@ msgstr "生々しいメディア"
 #: src/view/com/modals/ChangeHandle.tsx:266
 msgid "Handle"
 msgstr "ハンドル"
+
+#: src/view/screens/AccessibilitySettings.tsx:103
+msgid "Haptics"
+msgstr "触覚フィードバック"
 
 #: src/lib/moderation/useReportOptions.ts:32
 msgid "Harassment, trolling, or intolerance"
@@ -2771,10 +2801,18 @@ msgstr "「{query}」の検索結果はありません"
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
 
+#: src/components/dialogs/GifSelect.tsx:216
+msgid "No search results found for \"{search}\"."
+msgstr "「{search}」の検索結果はありません"
+
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
 msgid "No thanks"
 msgstr "結構です"
+
+#: src/components/dialogs/GifSelect.tsx:218
+msgid "No trending GIFs found. There may be an issue with GIPHY."
+msgstr "GIFのトレンドが見つかりませんでした。GIPHYで問題が発生しているのかもしれません。"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -2928,6 +2966,10 @@ msgstr "システムのログを開く"
 msgid "Opens {numItems} options"
 msgstr "{numItems}個のオプションを開く"
 
+#: src/view/screens/Settings/index.tsx:484
+msgid "Opens accessibility settings"
+msgstr "アクセシビリティの設定を開く"
+
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
 msgstr "デバッグエントリーの追加詳細を開く"
@@ -2965,6 +3007,10 @@ msgstr "新しいBlueskyのアカウントを作成するフローを開く"
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Opens flow to sign into your existing Bluesky account"
 msgstr "既存のBlueskyアカウントにサインインするフローを開く"
+
+#: src/view/com/composer/photos/SelectGifBtn.tsx:37
+msgid "Opens GIF select dialog"
+msgstr "GIFの選択のダイアログを開く"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -3108,6 +3154,11 @@ msgstr "カメラへのアクセス権限が必要です。"
 #: src/view/com/lightbox/Lightbox.tsx:72
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "カメラへのアクセスが拒否されました。システムの設定で有効にしてください。"
+
+#: src/components/dialogs/GifSelect.tsx:306
+#: src/components/dialogs/GifSelect.tsx:309
+msgid "Permission to use GIPHY"
+msgstr "GIPHYの使用を許可"
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
@@ -3271,6 +3322,10 @@ msgstr "非表示の投稿"
 #: src/view/com/modals/LinkWarning.tsx:60
 msgid "Potentially Misleading Link"
 msgstr "誤解を招く可能性のあるリンク"
+
+#: src/components/dialogs/GifSelect.tsx:175
+msgid "Powered by GIPHY"
+msgstr "Powered by GIPHY"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
@@ -3755,6 +3810,10 @@ msgstr "{displayTag}のすべての投稿を検索（すべてのユーザー）
 msgid "Search for users"
 msgstr "ユーザーを検索"
 
+#: src/components/dialogs/GifSelect.tsx:174
+msgid "Search GIFs"
+msgstr "GIFを検索"
+
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
 msgstr "必要なセキュリティの手順"
@@ -3795,6 +3854,14 @@ msgstr "アカウントを選択"
 #: src/screens/Login/index.tsx:120
 msgid "Select from an existing account"
 msgstr "既存のアカウントから選択"
+
+#: src/view/com/composer/photos/SelectGifBtn.tsx:36
+msgid "Select GIF"
+msgstr "GIFを選ぶ"
+
+#: src/components/dialogs/GifSelect.tsx:264
+msgid "Select GIF \"{0}\""
+msgstr "GIF「{0}」を選ぶ"
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
@@ -4448,6 +4515,10 @@ msgstr "フィードの削除中に問題が発生しました。インターネ
 #: src/view/screens/ProfileFeed.tsx:219
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "フィードの更新中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
+
+#: src/components/dialogs/GifSelect.tsx:213
+msgid "There was an issue connecting to GIPHY."
+msgstr "GIFPHYへの接続中に問題が発生しました。"
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
