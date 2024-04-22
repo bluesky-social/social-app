@@ -72,7 +72,13 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
     self.webpOperation?.cancel()
     self.placeholderOperation?.cancel()
 
-    if let url = URL(string: placeholderSource) {
+    // We only need to start an operation for the placeholder if it doesn't exist
+    // in the cache already. Cache key is by default the absolute URL of the image.
+    // See:
+    // https://github.com/SDWebImage/SDWebImage/blob/master/Docs/HowToUse.md#using-asynchronous-image-caching-independently
+    if !SDImageCache.shared.diskImageDataExists(withKey: webpSource),
+       let url = URL(string: placeholderSource)
+    {
       self.placeholderOperation = imageManager.loadImage(
         with: url,
         options: [.retryFailed],
