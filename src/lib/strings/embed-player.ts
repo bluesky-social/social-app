@@ -350,7 +350,7 @@ export function parseEmbedPlayerFromUrl(
       }
     }
 
-    if (dimensions && id.includes('AAAAC')) {
+    if (id && filename && dimensions && id.includes('AAAAC')) {
       if (Platform.OS === 'web') {
         id = id.replace('AAAAC', 'AAAP3')
         filename = filename.replace('.gif', '.webm')
