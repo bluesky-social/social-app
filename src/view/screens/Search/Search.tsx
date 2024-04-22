@@ -21,9 +21,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -31,10 +29,6 @@ import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {
-  useGetSuggestedFollowersByActor,
-  useSuggestedFollowsQuery,
-} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -55,8 +49,8 @@ import {
   SearchLinkCard,
   SearchProfileCard,
 } from '#/view/shell/desktop/Search'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+import {Suggestions} from './Suggestions'
 
 function Loader() {
   const pal = usePalette('default')
@@ -115,124 +109,6 @@ function EmptyState({message, error}: {message: string; error?: string}) {
           </>
         )}
       </View>
-    </CenteredView>
-  )
-}
-
-function useSuggestedFollowsV1(): [
-  AppBskyActorDefs.ProfileViewBasic[],
-  () => void,
-] {
-  const {currentAccount} = useSession()
-  const [suggestions, setSuggestions] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
-  const getSuggestedFollowsByActor = useGetSuggestedFollowersByActor()
-
-  React.useEffect(() => {
-    async function getSuggestions() {
-      const friends = await getSuggestedFollowsByActor(
-        currentAccount!.did,
-      ).then(friendsRes => friendsRes.suggestions)
-
-      if (!friends) return // :(
-
-      const friendsOfFriends = new Map<
-        string,
-        AppBskyActorDefs.ProfileViewBasic
-      >()
-
-      await Promise.all(
-        friends.slice(0, 4).map(friend =>
-          getSuggestedFollowsByActor(friend.did).then(foafsRes => {
-            for (const user of foafsRes.suggestions) {
-              if (user.associated?.labeler) continue
-              friendsOfFriends.set(user.did, user)
-            }
-          }),
-        ),
-      )
-
-      setSuggestions(Array.from(friendsOfFriends.values()))
-    }
-
-    try {
-      getSuggestions()
-    } catch (e) {
-      logger.error(`SearchScreenSuggestedFollows: failed to get suggestions`, {
-        message: e,
-      })
-    }
-  }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
-
-  return [suggestions, () => {}]
-}
-
-function useSuggestedFollowsV2(): [
-  AppBskyActorDefs.ProfileViewBasic[],
-  () => void,
-] {
-  const {
-    data: suggestions,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    fetchNextPage,
-  } = useSuggestedFollowsQuery()
-
-  const onEndReached = React.useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
-    try {
-      await fetchNextPage()
-    } catch (err) {
-      logger.error('Failed to load more suggested follows', {message: err})
-    }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
-
-  const items: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (suggestions) {
-    // Currently the responses contain duplicate items.
-    // Needs to be fixed on backend, but let's dedupe to be safe.
-    let seen = new Set()
-    for (const page of suggestions.pages) {
-      for (const actor of page.actors) {
-        if (!seen.has(actor.did)) {
-          seen.add(actor.did)
-          items.push(actor)
-        }
-      }
-    }
-  }
-  return [items, onEndReached]
-}
-
-function SearchScreenSuggestedFollows() {
-  const pal = usePalette('default')
-  const gate = useGate()
-  const useSuggestedFollows = gate('use_new_suggestions_endpoint')
-    ? // Conditional hook call here is *only* OK because useGate()
-      // result won't change until a remount.
-      useSuggestedFollowsV2
-    : useSuggestedFollowsV1
-  const [suggestions, onEndReached] = useSuggestedFollows()
-
-  return suggestions.length ? (
-    <List
-      data={suggestions}
-      renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
-      keyExtractor={item => item.did}
-      // @ts-ignore web only -prf
-      desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 200}}
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      onEndReached={onEndReached}
-      onEndReachedThreshold={2}
-    />
-  ) : (
-    <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
-      <ProfileCardFeedLoadingPlaceholder />
-      <ProfileCardFeedLoadingPlaceholder />
     </CenteredView>
   )
 }
@@ -456,24 +332,7 @@ export function SearchScreenInner({query}: {query?: string}) {
     </Pager>
   ) : hasSession ? (
     <View>
-      <CenteredView sideBorders style={pal.border}>
-        <Text
-          type="title"
-          style={[
-            pal.text,
-            pal.border,
-            {
-              display: 'flex',
-              paddingVertical: 12,
-              paddingHorizontal: 18,
-              fontWeight: 'bold',
-            },
-          ]}>
-          <Trans>Suggested Follows</Trans>
-        </Text>
-      </CenteredView>
-
-      <SearchScreenSuggestedFollows />
+      <Suggestions />
     </View>
   ) : (
     <CenteredView sideBorders style={pal.border}>

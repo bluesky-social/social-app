@@ -176,7 +176,7 @@ export function useGetPopularFeedsQuery() {
     queryKey: useGetPopularFeedsQueryKey,
     queryFn: async ({pageParam}) => {
       const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 10,
+        limit: 30,
         cursor: pageParam,
       })
       return res.data
