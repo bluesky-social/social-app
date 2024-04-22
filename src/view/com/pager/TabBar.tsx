@@ -1,11 +1,16 @@
-import React, {useRef, useMemo, useEffect, useState, useCallback} from 'react'
-import {StyleSheet, View, ScrollView, LayoutChangeEvent} from 'react-native'
-import {Text} from '../util/text/Text'
-import {PressableWithHover} from '../util/PressableWithHover'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+
+import {isNative} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useDialogControl} from '#/components/Dialog'
+import {MyFeedsDialog} from '#/components/dialogs/MyFeeds'
+// import {ArrowTriangleBottom_Stroke2_Corner1_Rounded as ArrowTriangleBottom} from '#/components/icons/ArrowTriangle'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ArrowTriangleBottom} from '#/components/icons/Chevron'
+import {PressableWithHover} from '../util/PressableWithHover'
+import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
-import {isNative} from '#/platform/detection'
 
 export interface TabBarProps {
   testID?: string
@@ -36,6 +41,7 @@ export function TabBar({
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
+  const myFeedsControl = useDialogControl()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
@@ -147,6 +153,14 @@ export function TabBar({
           )
         })}
       </DraggableScrollView>
+      <PressableWithHover
+        testID="feedsDropdownBtn"
+        style={styles.dropdownBtn}
+        hoverStyle={pal.viewLight}
+        onPress={() => myFeedsControl.open()}>
+        <ArrowTriangleBottom fill={pal.textLight.color} size="sm" />
+      </PressableWithHover>
+      <MyFeedsDialog control={myFeedsControl} />
       <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
   )
@@ -178,6 +192,10 @@ const desktopStyles = StyleSheet.create({
     bottom: -1,
     borderBottomWidth: 1,
   },
+  dropdownBtn: {
+    paddingTop: 14,
+    paddingHorizontal: 14,
+  },
 })
 
 const mobileStyles = StyleSheet.create({
@@ -204,5 +222,9 @@ const mobileStyles = StyleSheet.create({
     right: 0,
     bottom: -1,
     borderBottomWidth: 1,
+  },
+  dropdownBtn: {
+    paddingTop: 12,
+    paddingHorizontal: 14,
   },
 })

@@ -93,7 +93,7 @@ export function ProfileMenuDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
 
-      <Dialog.ScrollableInner label={_(msg`Switch Account`)}>
+      <Dialog.ScrollableInner label={_(msg`App Menu`)}>
         <View style={[a.gap_sm]}>
           <ProfileCard onPress={onPressProfile} />
 
