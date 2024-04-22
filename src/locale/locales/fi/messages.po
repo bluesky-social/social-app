@@ -17,28 +17,10 @@ msgstr ""
 msgid "(no email)"
 msgstr "(ei sähköpostiosoitetta)"
 
-#: src/view/shell/desktop/RightNav.tsx:168
-#~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-#~ msgstr ""
-
 #: src/components/ProfileHoverCard/index.web.tsx:323
 #: src/screens/Profile/Header/Metrics.tsx:44
 msgid "{following} following"
 msgstr "{following} seurattua"
-
-#: src/view/shell/desktop/RightNav.tsx:151
-#~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-#~ msgstr ""
-
-#: src/view/screens/Settings.tsx:435
-#: src/view/shell/Drawer.tsx:664
-#~ msgid "{invitesAvailable} invite code available"
-#~ msgstr ""
-
-#: src/view/screens/Settings.tsx:437
-#: src/view/shell/Drawer.tsx:666
-#~ msgid "{invitesAvailable} invite codes available"
-#~ msgstr ""
 
 #: src/view/shell/Drawer.tsx:449
 msgid "{numUnreadNotifications} unread"
@@ -77,14 +59,6 @@ msgstr "<0>Tervetuloa</0><1>Blueskyhin</1>"
 msgid "⚠Invalid Handle"
 msgstr "⚠Virheellinen käyttäjätunnus"
 
-#: src/view/com/util/moderation/LabelInfo.tsx:45
-#~ msgid "A content warning has been applied to this {0}."
-#~ msgstr "Tämä {0} sisältää sisältövaroituksen."
-
-#: src/lib/hooks/useOTAUpdate.ts:16
-#~ msgid "A new version of the app is available. Please update to continue using the app."
-#~ msgstr "Sovelluksen uusi versio on saatavilla. Päivitä jatkaaksesi sovelluksen käyttöä."
-
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:796
 msgid "Access navigation links and settings"
@@ -111,7 +85,7 @@ msgstr "Käyttäjätili"
 
 #: src/view/com/profile/ProfileMenu.tsx:139
 msgid "Account blocked"
-msgstr "Käyttäjtili on estetty"
+msgstr "Käyttäjätili estetty"
 
 #: src/view/com/profile/ProfileMenu.tsx:153
 msgid "Account followed"
@@ -185,15 +159,6 @@ msgstr "Lisää ALT-teksti"
 msgid "Add App Password"
 msgstr "Lisää sovelluksen salasana"
 
-#: src/view/com/modals/report/InputIssueDetails.tsx:41
-#: src/view/com/modals/report/Modal.tsx:191
-#~ msgid "Add details"
-#~ msgstr "Lisää tiedot"
-
-#: src/view/com/modals/report/Modal.tsx:194
-#~ msgid "Add details to report"
-#~ msgstr "Lisää tiedot raporttiin"
-
 #: src/view/com/composer/Composer.tsx:467
 msgid "Add link card"
 msgstr "Lisää linkkikortti"
@@ -245,14 +210,6 @@ msgstr "Säädä, kuinka monta tykkäystä vastauksen on saatava näkyäkseen sy
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
 msgstr "Aikuissisältöä"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:141
-#~ msgid "Adult content can only be enabled via the Web at <0/>."
-#~ msgstr "Aikuissisältö voidaan ottaa käyttöön vain verkon kautta osoitteessa <0/>."
-
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
-#~ msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-#~ msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -342,10 +299,6 @@ msgstr "Sovelluksen salasanojen nimien on oltava vähintään 4 merkkiä pitkiä
 msgid "App password settings"
 msgstr "Sovelluksen salasanan asetukset"
 
-#: src/view/screens/Settings.tsx:650
-#~ msgid "App passwords"
-#~ msgstr ""
-
 #: src/Navigation.tsx:251
 #: src/view/screens/AppPasswords.tsx:189
 #: src/view/screens/Settings/index.tsx:655
@@ -361,25 +314,9 @@ msgstr "Valita"
 msgid "Appeal \"{0}\" label"
 msgstr "Valita \"{0}\" -merkinnästä"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:295
-#~ msgid "Appeal content warning"
-#~ msgstr "Valita sisältövaroituksesta"
-
-#: src/view/com/modals/AppealLabel.tsx:65
-#~ msgid "Appeal Content Warning"
-#~ msgstr "Valita sisältövaroituksesta"
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:192
 msgid "Appeal submitted."
 msgstr "Valitus jätetty."
-
-#: src/view/com/util/moderation/LabelInfo.tsx:52
-#~ msgid "Appeal this decision"
-#~ msgstr "Valita tästä päätöksestä"
-
-#: src/view/com/util/moderation/LabelInfo.tsx:56
-#~ msgid "Appeal this decision."
-#~ msgstr "Valita tästä päätöksestä."
 
 #: src/view/screens/Settings/index.tsx:436
 msgid "Appearance"
@@ -401,10 +338,6 @@ msgstr "Haluatko varmasti hylätä tämän luonnoksen?"
 msgid "Are you sure?"
 msgstr "Oletko varma?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:278
-#~ msgid "Are you sure? This cannot be undone."
-#~ msgstr "Oletko varma? Tätä ei voi perua."
-
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
 msgstr "Onko viestisi kieli <0>{0}</0>?"
@@ -419,7 +352,7 @@ msgstr "Taiteellinen tai ei-eroottinen alastomuus."
 
 #: src/screens/Signup/StepHandle.tsx:119
 msgid "At least 3 characters"
-msgstr ""
+msgstr "Vähintään kolme merkkiä"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:246
 #: src/components/moderation/LabelsOnMeDialog.tsx:247
@@ -436,11 +369,6 @@ msgstr ""
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "Takaisin"
-
-#: src/view/com/post-thread/PostThread.tsx:480
-#~ msgctxt "action"
-#~ msgid "Back"
-#~ msgstr "Takaisin"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:144
 msgid "Based on your interest in {interestsText}"
@@ -479,15 +407,11 @@ msgstr "Estä käyttäjätilit"
 #: src/view/screens/ProfileList.tsx:480
 #: src/view/screens/ProfileList.tsx:636
 msgid "Block list"
-msgstr "Estettyjen lista"
+msgstr "Estä lista"
 
 #: src/view/screens/ProfileList.tsx:631
 msgid "Block these accounts?"
 msgstr "Estetäänkö nämä käyttäjät?"
-
-#: src/view/screens/ProfileList.tsx:320
-#~ msgid "Block this List"
-#~ msgstr "Estä tämä lista"
 
 #: src/view/com/lists/ListCard.tsx:110
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:58
@@ -555,17 +479,9 @@ msgstr "Bluesky on avoin."
 msgid "Bluesky is public."
 msgstr "Bluesky on julkinen."
 
-#: src/view/com/modals/Waitlist.tsx:70
-#~ msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-#~ msgstr "Bluesky käyttää kutsuja rakentaakseen terveellisemmän yhteisön. Jos et tunne ketään, jolla on kutsu, voit ilmoittautua odotuslistalle, niin lähetämme sinulle pian yhden."
-
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky ei näytä profiiliasi ja viestejäsi kirjautumattomille käyttäjille. Toiset sovellukset eivät ehkä noudata tätä asetusta. Tämä ei tee käyttäjätilistäsi yksityistä."
-
-#: src/view/com/modals/ServerInput.tsx:78
-#~ msgid "Bluesky.Social"
-#~ msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -579,17 +495,9 @@ msgstr "Sumenna kuvat ja suodata syötteistä"
 msgid "Books"
 msgstr "Kirjat"
 
-#: src/view/screens/Settings/index.tsx:893
-#~ msgid "Build version {0} {1}"
-#~ msgstr "Versio {0} {1}"
-
 #: src/view/com/auth/SplashScreen.web.tsx:146
 msgid "Business"
 msgstr "Yritys"
-
-#: src/view/com/modals/ServerInput.tsx:115
-#~ msgid "Button disabled. Input custom domain to proceed."
-#~ msgstr "Painike poistettu käytöstä. Anna mukautettu verkkotunnus jatkaaksesi."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
@@ -683,10 +591,6 @@ msgstr "Peruuta uudelleenpostaus"
 msgid "Cancel search"
 msgstr "Peruuta haku"
 
-#: src/view/com/modals/Waitlist.tsx:136
-#~ msgid "Cancel waitlist signup"
-#~ msgstr "Peruuta odotuslistalle liittyminen"
-
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
 msgstr "Peruuttaa linkitetyn verkkosivuston avaamisen"
@@ -726,10 +630,6 @@ msgstr "Vaihda salasana"
 msgid "Change post language to {0}"
 msgstr "Vaihda julkaisun kieleksi {0}"
 
-#: src/view/screens/Settings/index.tsx:733
-#~ msgid "Change your Bluesky password"
-#~ msgstr "Vaihda Bluesky-salasanasi"
-
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
 msgstr "Vaihda sähköpostiosoitteesi"
@@ -755,10 +655,6 @@ msgstr "Tarkista sähköpostisi ja syötä saamasi vahvistuskoodi alle:"
 msgid "Choose \"Everybody\" or \"Nobody\""
 msgstr "Valitse \"Kaikki\" tai \"Ei kukaan\""
 
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Choose a new Bluesky username or create"
-#~ msgstr "Valitse uusi Bluesky-käyttäjätunnus tai luo"
-
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Choose Service"
 msgstr "Valitse palvelu"
@@ -771,10 +667,6 @@ msgstr "Valitse algoritmit, jotka ohjaavat mukautettuja syötteitäsi."
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "Valitse algoritmit, jotka ohjaavat kokemustasi mukautettujen syötteiden kanssa."
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
-#~ msgid "Choose your algorithmic feeds"
-#~ msgstr "Valitse algoritmiperustaiset syötteet"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 msgid "Choose your main feeds"
@@ -935,12 +827,6 @@ msgstr ""
 msgid "Confirm"
 msgstr "Vahvista"
 
-#: src/view/com/modals/Confirm.tsx:75
-#: src/view/com/modals/Confirm.tsx:78
-#~ msgctxt "action"
-#~ msgid "Confirm"
-#~ msgstr "Vahvista"
-
 #: src/view/com/modals/ChangeEmail.tsx:193
 #: src/view/com/modals/ChangeEmail.tsx:195
 msgid "Confirm Change"
@@ -953,10 +839,6 @@ msgstr "Vahvista sisällön kieliasetukset"
 #: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Confirm delete account"
 msgstr "Vahvista käyttäjätilin poisto"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:156
-#~ msgid "Confirm your age to enable adult content."
-#~ msgstr "Vahvista ikäsi nähdäksesi ikärajarajoitettua sisältöä"
 
 #: src/screens/Moderation/index.tsx:301
 msgid "Confirm your age:"
@@ -973,10 +855,6 @@ msgstr "Vahvista syntymäaikasi"
 msgid "Confirmation code"
 msgstr "Vahvistuskoodi"
 
-#: src/view/com/modals/Waitlist.tsx:120
-#~ msgid "Confirms signing up {email} to the waitlist"
-#~ msgstr "Vahvistaa sähköpostiosoitteen {email} - rekisteröinnin odotuslistalle"
-
 #: src/screens/Login/LoginForm.tsx:248
 msgid "Connecting..."
 msgstr "Yhdistetään..."
@@ -992,14 +870,6 @@ msgstr "sisältö"
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
 msgstr "Sisältö estetty"
-
-#: src/view/screens/Moderation.tsx:83
-#~ msgid "Content filtering"
-#~ msgstr "Sisällönsuodatus"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:44
-#~ msgid "Content Filtering"
-#~ msgstr "Sisällönsuodatus"
 
 #: src/screens/Moderation/index.tsx:285
 msgid "Content filters"
@@ -1043,7 +913,7 @@ msgstr "Jatka"
 
 #: src/components/AccountList.tsx:108
 msgid "Continue as {0} (currently signed in)"
-msgstr ""
+msgstr "Jatka käyttäjänä {0} (kirjautunut)"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:151
 #: src/screens/Onboarding/StepInterests/index.tsx:249
@@ -1083,7 +953,7 @@ msgstr "Kopioitu leikepöydälle"
 
 #: src/components/dialogs/Embed.tsx:134
 msgid "Copied!"
-msgstr ""
+msgstr "Kopioitu!"
 
 #: src/view/com/modals/AddAppPasswords.tsx:190
 msgid "Copies app password"
@@ -1100,7 +970,7 @@ msgstr "Kopioi {0}"
 #: src/components/dialogs/Embed.tsx:120
 #: src/components/dialogs/Embed.tsx:139
 msgid "Copy code"
-msgstr ""
+msgstr "Kopioi koodi"
 
 #: src/view/screens/ProfileList.tsx:390
 msgid "Copy link to list"
@@ -1110,10 +980,6 @@ msgstr "Kopioi listan linkki"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:245
 msgid "Copy link to post"
 msgstr "Kopioi julkaisun linkki"
-
-#: src/view/com/profile/ProfileHeader.tsx:295
-#~ msgid "Copy link to profile"
-#~ msgstr "Kopioi linkki profiiliin"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:230
@@ -1133,10 +999,6 @@ msgstr "Syötettä ei voitu ladata"
 msgid "Could not load list"
 msgstr "Listaa ei voitu ladata"
 
-#: src/view/com/auth/create/Step2.tsx:91
-#~ msgid "Country"
-#~ msgstr "Maa"
-
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:101
 msgid "Create a new account"
@@ -1153,7 +1015,7 @@ msgstr "Luo käyttäjätili"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr ""
+msgstr "Luo käyttäjätili"
 
 #: src/view/com/modals/AddAppPasswords.tsx:227
 msgid "Create App Password"
@@ -1171,14 +1033,6 @@ msgstr "Luo raportti: {0}"
 #: src/view/screens/AppPasswords.tsx:246
 msgid "Created {0}"
 msgstr "{0} luotu"
-
-#: src/view/screens/ProfileFeed.tsx:616
-#~ msgid "Created by <0/>"
-#~ msgstr "Luonut <0/>"
-
-#: src/view/screens/ProfileFeed.tsx:614
-#~ msgid "Created by you"
-#~ msgstr "Luomasi sisältö"
 
 #: src/view/com/composer/Composer.tsx:469
 msgid "Creates a card with a thumbnail. The card links to {url}"
@@ -1206,10 +1060,6 @@ msgstr "Yhteisön rakentamat mukautetut syötteet tuovat sinulle uusia kokemuksi
 msgid "Customize media from external sites."
 msgstr "Muokkaa ulkoisten sivustojen mediasisältöjen asetuksia"
 
-#: src/view/screens/Settings.tsx:687
-#~ msgid "Danger Zone"
-#~ msgstr ""
-
 #: src/view/screens/Settings/index.tsx:455
 #: src/view/screens/Settings/index.tsx:481
 msgid "Dark"
@@ -1225,7 +1075,7 @@ msgstr "Tumma teema"
 
 #: src/screens/Signup/StepInfo/index.tsx:134
 msgid "Date of birth"
-msgstr ""
+msgstr "Syntymäaika"
 
 #: src/view/screens/Settings/index.tsx:805
 msgid "Debug Moderation"
@@ -1265,10 +1115,6 @@ msgstr "Poista lista"
 msgid "Delete my account"
 msgstr "Poista käyttäjätilini"
 
-#: src/view/screens/Settings.tsx:706
-#~ msgid "Delete my account…"
-#~ msgstr ""
-
 #: src/view/screens/Settings/index.tsx:772
 msgid "Delete My Account…"
 msgstr "Poista käyttäjätilini…"
@@ -1301,10 +1147,6 @@ msgstr "Poistettu viesti."
 msgid "Description"
 msgstr "Kuvaus"
 
-#: src/view/screens/Settings.tsx:760
-#~ msgid "Developer Tools"
-#~ msgstr "Kehittäjätyökalut"
-
 #: src/view/com/composer/Composer.tsx:218
 msgid "Did you want to say anything?"
 msgstr "Haluatko sanoa jotain?"
@@ -1315,11 +1157,11 @@ msgstr "Himmeä"
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Disable haptics"
-msgstr ""
+msgstr "Poista haptiset palautteet käytöstä"
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Disable vibrations"
-msgstr ""
+msgstr "Poista värinät käytöstä"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1331,10 +1173,6 @@ msgstr "Poistettu käytöstä"
 #: src/view/com/composer/Composer.tsx:511
 msgid "Discard"
 msgstr "Hylkää"
-
-#: src/view/com/composer/Composer.tsx:145
-#~ msgid "Discard draft"
-#~ msgstr "Hylkää luonnos"
 
 #: src/view/com/composer/Composer.tsx:508
 msgid "Discard draft?"
@@ -1349,10 +1187,6 @@ msgstr "Estä sovelluksia näyttämästä tiliäni kirjautumattomille käyttäji
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
 msgstr "Löydä uusia mukautettuja syötteitä"
-
-#: src/view/screens/Feeds.tsx:473
-#~ msgid "Discover new feeds"
-#~ msgstr ""
 
 #: src/view/screens/Feeds.tsx:714
 msgid "Discover New Feeds"
@@ -1376,7 +1210,7 @@ msgstr "Ei sisällä alastomuutta."
 
 #: src/screens/Signup/StepHandle.tsx:105
 msgid "Doesn't begin or end with a hyphen"
-msgstr ""
+msgstr "Ei ala eikä lopu väliviivaan"
 
 #: src/view/com/modals/ChangeHandle.tsx:481
 msgid "Domain Value"
@@ -1385,10 +1219,6 @@ msgstr ""
 #: src/view/com/modals/ChangeHandle.tsx:488
 msgid "Domain verified!"
 msgstr "Verkkotunnus vahvistettu!"
-
-#: src/view/com/auth/create/Step1.tsx:170
-#~ msgid "Don't have an invite code?"
-#~ msgstr "Eikö sinulla ole kutsukoodia?"
 
 #: src/components/dialogs/BirthDateSettings.tsx:119
 #: src/components/dialogs/BirthDateSettings.tsx:125
@@ -1424,14 +1254,6 @@ msgstr "Valmis"
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:43
 msgid "Done{extraText}"
 msgstr "Valmis{extraText}"
-
-#: src/view/com/auth/login/ChooseAccountForm.tsx:46
-#~ msgid "Double tap to sign in"
-#~ msgstr "Kaksoisnapauta kirjautuaksesi sisään"
-
-#: src/view/screens/Settings/index.tsx:755
-#~ msgid "Download Bluesky account data (repository)"
-#~ msgstr "Lataa Bluesky-tilin tiedot (repository)"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
@@ -1578,17 +1400,17 @@ msgstr "Sähköpostiosoite:"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed HTML code"
-msgstr ""
+msgstr "Upotuksen HTML-koodi"
 
 #: src/components/dialogs/Embed.tsx:97
 #: src/view/com/util/forms/PostDropdownBtn.tsx:253
 #: src/view/com/util/forms/PostDropdownBtn.tsx:255
 msgid "Embed post"
-msgstr ""
+msgstr "Upota viesti"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr ""
+msgstr "Upota tämä julkaisu verkkosivustollesi. Kopioi vain seuraava koodinpätkä ja liitä se verkkosivustosi HTML-koodiin."
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
@@ -1610,11 +1432,7 @@ msgstr "Näytä aikuissisältöä syötteissäsi"
 #: src/components/dialogs/EmbedConsent.tsx:82
 #: src/components/dialogs/EmbedConsent.tsx:89
 msgid "Enable external media"
-msgstr ""
-
-#: src/view/com/modals/EmbedConsent.tsx:97
-#~ msgid "Enable External Media"
-#~ msgstr "Ota ulkoinen media käyttöön"
+msgstr "Ota käyttöön ulkoinen media"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:75
 msgid "Enable media players for"
@@ -1642,7 +1460,7 @@ msgstr "Anna sovellusalasanalle nimi"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:139
 msgid "Enter a password"
-msgstr ""
+msgstr "Anna salasana"
 
 #: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
@@ -1663,15 +1481,11 @@ msgstr "Anna verkkotunnus, jota haluat käyttää"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:119
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Anna sähköpostiosoite, jotaa käytit tilin luomiseen. Lähetämme sinulle \"nollauskoodin\", jotta voit määritellä uuden salasanan."
+msgstr "Anna sähköpostiosoite, jota käytit tilin luomiseen. Lähetämme sinulle \"nollauskoodin\", jotta voit määritellä uuden salasanan."
 
 #: src/components/dialogs/BirthDateSettings.tsx:108
 msgid "Enter your birth date"
 msgstr "Syötä syntymäaikasi"
-
-#: src/view/com/modals/Waitlist.tsx:78
-#~ msgid "Enter your email"
-#~ msgstr "Syötä sähköpostiosoitteesi"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:105
 #: src/screens/Signup/StepInfo/index.tsx:92
@@ -1685,10 +1499,6 @@ msgstr "Syötä uusi sähköpostiosoitteesi yläpuolelle"
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
 msgstr "Syötä uusi sähköpostiosoitteesi alle"
-
-#: src/view/com/auth/create/Step2.tsx:188
-#~ msgid "Enter your phone number"
-#~ msgstr "Syötä puhelinnumerosi"
 
 #: src/screens/Login/index.tsx:101
 msgid "Enter your username and password"
@@ -1730,10 +1540,6 @@ msgstr "Poistuu kuvan katselutilasta"
 #: src/view/shell/desktop/Search.tsx:236
 msgid "Exits inputting search query"
 msgstr "Poistuu hakukyselyn kirjoittamisesta"
-
-#: src/view/com/modals/Waitlist.tsx:138
-#~ msgid "Exits signing up for waitlist with {email}"
-#~ msgstr "Poistuu odotuslistalle liittymisestä sähköpostilla {email}"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:183
 msgid "Expand alt text"
@@ -1815,10 +1621,6 @@ msgstr "Syöte käyttäjältä {0}"
 msgid "Feed offline"
 msgstr "Syöte ei ole käytettävissä"
 
-#: src/view/com/feeds/FeedPage.tsx:143
-#~ msgid "Feed Preferences"
-#~ msgstr "Syötteen asetukset"
-
 #: src/view/shell/desktop/RightNav.tsx:61
 #: src/view/shell/Drawer.tsx:320
 msgid "Feedback"
@@ -1834,14 +1636,6 @@ msgstr "Palaute"
 #: src/view/shell/Drawer.tsx:486
 msgid "Feeds"
 msgstr "Syötteet"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-#~ msgid "Feeds are created by users and can give you entirely new experiences."
-#~ msgstr ""
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-#~ msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
-#~ msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
@@ -1889,10 +1683,6 @@ msgstr "Etsitään samankaltaisia käyttäjätilejä"
 msgid "Fine-tune the content you see on your Following feed."
 msgstr "Hienosäädä näkemääsi sisältöä Seuratut-syötteessäsi."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:111
-#~ msgid "Fine-tune the content you see on your home screen."
-#~ msgstr "Hienosäädä näkemääsi sisältöä pääsivulla."
-
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
 msgstr "Hienosäädä keskusteluketjuja."
@@ -1936,7 +1726,7 @@ msgstr "Seuraa {0}"
 #: src/view/com/profile/ProfileMenu.tsx:242
 #: src/view/com/profile/ProfileMenu.tsx:253
 msgid "Follow Account"
-msgstr ""
+msgstr "Seuraa käyttäjää"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
 msgid "Follow All"
@@ -1944,7 +1734,7 @@ msgstr "Seuraa kaikkia"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
-msgstr ""
+msgstr "Seuraa takaisin"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
@@ -2018,14 +1808,6 @@ msgstr "Turvallisuussyistä meidän on lähetettävä vahvistuskoodi sähköpost
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "Turvallisuussyistä et näe tätä uudelleen. Jos unohdat tämän salasanan, sinun on luotava uusi."
 
-#: src/view/com/auth/login/LoginForm.tsx:244
-#~ msgid "Forgot"
-#~ msgstr "Unohtui"
-
-#: src/view/com/auth/login/LoginForm.tsx:241
-#~ msgid "Forgot password"
-#~ msgstr "Unohtunut salasana"
-
 #: src/screens/Login/index.tsx:129
 #: src/screens/Login/index.tsx:144
 msgid "Forgot Password"
@@ -2033,11 +1815,11 @@ msgstr "Unohtunut salasana"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Forgot password?"
-msgstr ""
+msgstr "Unohtuiko salasana?"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Forgot?"
-msgstr ""
+msgstr "Unohditko?"
 
 #: src/lib/moderation/useReportOptions.ts:52
 msgid "Frequently Posts Unwanted Content"
@@ -2128,10 +1910,6 @@ msgstr "Häirintä, trollaus tai suvaitsemattomuus"
 msgid "Hashtag"
 msgstr "Aihetunniste"
 
-#: src/components/RichText.tsx:188
-#~ msgid "Hashtag: {tag}"
-#~ msgstr "Aihetunniste: {tag}"
-
 #: src/components/RichText.tsx:197
 msgid "Hashtag: #{tag}"
 msgstr "Aihetunniste #{tag}"
@@ -2197,10 +1975,6 @@ msgstr "Piilota tämä viesti?"
 msgid "Hide user list"
 msgstr "Piilota käyttäjäluettelo"
 
-#: src/view/com/profile/ProfileHeader.tsx:487
-#~ msgid "Hides posts from {0} in your feed"
-#~ msgstr "Piilottaa viestit käyttäjältä {0} syötteessäsi"
-
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr "Hmm, jokin ongelma ilmeni ottaessa yhteyttä syötteen palvelimeen. Ilmoita asiasta syötteen omistajalle."
@@ -2236,13 +2010,6 @@ msgstr "Hmm, emme pystyneet avaamaan kyseistä moderaatiopalvelua."
 #: src/view/shell/Drawer.tsx:408
 msgid "Home"
 msgstr "Koti"
-
-#: src/Navigation.tsx:247
-#: src/view/com/pager/FeedsTabBarMobile.tsx:123
-#: src/view/screens/PreferencesHomeFeed.tsx:104
-#: src/view/screens/Settings/index.tsx:543
-#~ msgid "Home Feed Preferences"
-#~ msgstr "Aloitussivun syötteiden asetukset"
 
 #: src/view/com/modals/ChangeHandle.tsx:420
 msgid "Host:"
@@ -2285,11 +2052,11 @@ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:612
 msgid "If you delete this list, you won't be able to recover it."
-msgstr ""
+msgstr "Jos poistat tämän listan, et voi palauttaa sitä."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:338
 msgid "If you remove this post, you won't be able to recover it."
-msgstr ""
+msgstr "Jos poistat tämän julkaisun, et voi palauttaa sitä."
 
 #: src/view/com/modals/ChangePassword.tsx:148
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -2307,11 +2074,6 @@ msgstr "Kuva"
 msgid "Image alt text"
 msgstr "Kuvan ALT-teksti"
 
-#: src/view/com/util/UserAvatar.tsx:311
-#: src/view/com/util/UserBanner.tsx:118
-#~ msgid "Image options"
-#~ msgstr "Kuva-asetukset"
-
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr "Henkilöllisyyden tai yhteyksien vääristely tai vääriä väitteitä niistä"
@@ -2323,14 +2085,6 @@ msgstr "Syötä sähköpostiisi lähetetty koodi salasanan nollaamista varten"
 #: src/view/com/modals/DeleteAccount.tsx:183
 msgid "Input confirmation code for account deletion"
 msgstr "Syötä vahvistuskoodi käyttäjätilin poistoa varten"
-
-#: src/view/com/auth/create/Step1.tsx:177
-#~ msgid "Input email for Bluesky account"
-#~ msgstr "Syötä sähköposti Bluesky-tiliä varten"
-
-#: src/view/com/auth/create/Step1.tsx:151
-#~ msgid "Input invite code to proceed"
-#~ msgstr "Syötä kutsukoodi jatkaaksesi"
 
 #: src/view/com/modals/AddAppPasswords.tsx:181
 msgid "Input name for app password"
@@ -2344,10 +2098,6 @@ msgstr "Syötä uusi salasana"
 msgid "Input password for account deletion"
 msgstr "Syötä salasana käyttäjätilin poistoa varten"
 
-#: src/view/com/auth/create/Step2.tsx:196
-#~ msgid "Input phone number for SMS verification"
-#~ msgstr "Syötä puhelinnumero SMS-varmennusta varten"
-
 #: src/screens/Login/LoginForm.tsx:195
 msgid "Input the password tied to {identifier}"
 msgstr "Syötä salasana, joka liittyy kohteeseen {identifier}"
@@ -2355,14 +2105,6 @@ msgstr "Syötä salasana, joka liittyy kohteeseen {identifier}"
 #: src/screens/Login/LoginForm.tsx:168
 msgid "Input the username or email address you used at signup"
 msgstr "Syötä käyttäjätunnus tai sähköpostiosoite, jonka käytit rekisteröityessäsi"
-
-#: src/view/com/auth/create/Step2.tsx:271
-#~ msgid "Input the verification code we have texted to you"
-#~ msgstr "Syötä sinulle tekstattu varmennuskoodi"
-
-#: src/view/com/modals/Waitlist.tsx:90
-#~ msgid "Input your email to get on the Bluesky waitlist"
-#~ msgstr "Syötä sähköpostiosoitteesi päästäksesi Bluesky-jonoon"
 
 #: src/screens/Login/LoginForm.tsx:194
 msgid "Input your password"
@@ -2384,10 +2126,6 @@ msgstr "Virheellinen tai ei tuettu tietue"
 msgid "Invalid username or password"
 msgstr "Virheellinen käyttäjätunnus tai salasana"
 
-#: src/view/screens/Settings.tsx:411
-#~ msgid "Invite"
-#~ msgstr "Kutsu"
-
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
 msgstr "Kutsu ystävä"
@@ -2404,10 +2142,6 @@ msgstr "Kutsukoodia ei hyväksytty. Tarkista, että syötit sen oikein ja yritä
 msgid "Invite codes: {0} available"
 msgstr "Kutsukoodit: {0} saatavilla"
 
-#: src/view/shell/Drawer.tsx:645
-#~ msgid "Invite codes: {invitesAvailable} available"
-#~ msgstr ""
-
 #: src/view/com/modals/InviteCodes.tsx:170
 msgid "Invite codes: 1 available"
 msgstr "Kutsukoodit: 1 saatavilla"
@@ -2420,19 +2154,6 @@ msgstr "Se näyttää viestejä seuraamiltasi ihmisiltä reaaliajassa."
 msgid "Jobs"
 msgstr "Työpaikat"
 
-#: src/view/com/modals/Waitlist.tsx:67
-#~ msgid "Join the waitlist"
-#~ msgstr "Liity odotuslistalle"
-
-#: src/view/com/auth/create/Step1.tsx:174
-#: src/view/com/auth/create/Step1.tsx:178
-#~ msgid "Join the waitlist."
-#~ msgstr "Liity odotuslistalle."
-
-#: src/view/com/modals/Waitlist.tsx:128
-#~ msgid "Join Waitlist"
-#~ msgstr "Liity odotuslistalle"
-
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
 msgstr "Journalismi"
@@ -2443,7 +2164,7 @@ msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:144
 msgid "Labeled by {0}."
-msgstr ""
+msgstr "Merkinnnyt {0}."
 
 #: src/components/moderation/ContentHider.tsx:142
 msgid "Labeled by the author."
@@ -2486,17 +2207,9 @@ msgstr "Kielen asetukset"
 msgid "Languages"
 msgstr "Kielet"
 
-#: src/view/com/auth/create/StepHeader.tsx:20
-#~ msgid "Last step!"
-#~ msgstr "Viimeinen vaihe!"
-
 #: src/view/screens/Search/Search.tsx:437
 msgid "Latest"
-msgstr ""
-
-#: src/view/com/util/moderation/ContentHider.tsx:103
-#~ msgid "Learn more"
-#~ msgstr "Lue lisää"
+msgstr "Uusimmat"
 
 #: src/components/moderation/ScreenHider.tsx:136
 msgid "Learn More"
@@ -2544,11 +2257,6 @@ msgstr "Aloitetaan salasanasi nollaus!"
 #: src/screens/Onboarding/StepFinished.tsx:155
 msgid "Let's go!"
 msgstr "Aloitetaan!"
-
-#: src/view/com/util/UserAvatar.tsx:248
-#: src/view/com/util/UserBanner.tsx:62
-#~ msgid "Library"
-#~ msgstr "Kirjasto"
 
 #: src/view/screens/Settings/index.tsx:449
 msgid "Light"
@@ -2650,11 +2358,6 @@ msgstr "Listaa hiljennyksestä poistetut"
 msgid "Lists"
 msgstr "Listat"
 
-#: src/view/com/post-thread/PostThread.tsx:333
-#: src/view/com/post-thread/PostThread.tsx:341
-#~ msgid "Load more posts"
-#~ msgstr "Lataa lisää viestejä"
-
 #: src/view/screens/Notifications.tsx:159
 msgid "Load new notifications"
 msgstr "Lataa uusia ilmoituksia"
@@ -2669,10 +2372,6 @@ msgstr "Lataa uusia viestejä"
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:99
 msgid "Loading..."
 msgstr "Ladataan..."
-
-#: src/view/com/modals/ServerInput.tsx:50
-#~ msgid "Local dev server"
-#~ msgstr ""
 
 #: src/Navigation.tsx:221
 msgid "Log"
@@ -2704,14 +2403,6 @@ msgstr "Varmista, että olet menossa oikeaan paikkaan!"
 #: src/components/dialogs/MutedWords.tsx:82
 msgid "Manage your muted words and tags"
 msgstr "Hallinnoi hiljennettyjä sanoja ja aihetunnisteita"
-
-#: src/view/com/auth/create/Step2.tsx:118
-#~ msgid "May not be longer than 253 characters"
-#~ msgstr "Ei saa olla pidempi kuin 253 merkkiä"
-
-#: src/view/com/auth/create/Step2.tsx:109
-#~ msgid "May only contain letters and numbers"
-#~ msgstr "Ei saa olla pidempi kuin 253 merkkiä"
 
 #: src/view/screens/Profile.tsx:197
 msgid "Media"
@@ -2812,17 +2503,9 @@ msgstr "Lisää syötteitä"
 msgid "More options"
 msgstr "Lisää asetuksia"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:315
-#~ msgid "More post options"
-#~ msgstr "Lisää viestiasetuksia"
-
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
 msgstr "Eniten tykätyt vastaukset ensin"
-
-#: src/view/com/auth/create/Step2.tsx:122
-#~ msgid "Must be at least 3 characters"
-#~ msgstr "Täytyy olla vähintään 3 merkkiä"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
@@ -2845,10 +2528,6 @@ msgstr "Hiljennä käyttäjät"
 msgid "Mute all {displayTag} posts"
 msgstr "Hiljennä kaikki {displayTag} viestit"
 
-#: src/components/TagMenu/index.tsx:211
-#~ msgid "Mute all {tag} posts"
-#~ msgstr "Hiljennä kaikki {tag}-viestit"
-
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
 msgstr "Hiljennä vain aihetunnisteissa"
@@ -2865,10 +2544,6 @@ msgstr "Hiljennä lista"
 #: src/view/screens/ProfileList.tsx:621
 msgid "Mute these accounts?"
 msgstr "Hiljennä nämä käyttäjät?"
-
-#: src/view/screens/ProfileList.tsx:279
-#~ msgid "Mute this List"
-#~ msgstr "Hiljennä tämä lista"
 
 #: src/components/dialogs/MutedWords.tsx:126
 msgid "Mute this word in post text and tags"
@@ -2938,10 +2613,6 @@ msgstr "Tallennetut syötteeni"
 msgid "My Saved Feeds"
 msgstr "Tallennetut syötteeni"
 
-#: src/view/com/auth/server-input/index.tsx:118
-#~ msgid "my-server.com"
-#~ msgstr "oma-palvelimeni.com"
-
 #: src/view/com/modals/AddAppPasswords.tsx:180
 #: src/view/com/modals/CreateOrEditList.tsx:291
 msgid "Name"
@@ -2975,11 +2646,6 @@ msgstr "Siirtyy profiiliisi"
 msgid "Need to report a copyright violation?"
 msgstr "Tarvitseeko ilmoittaa tekijänoikeusrikkomuksesta?"
 
-#: src/view/com/modals/EmbedConsent.tsx:107
-#: src/view/com/modals/EmbedConsent.tsx:123
-#~ msgid "Never load embeds from {0}"
-#~ msgstr "Älä koskaan lataa upotuksia taholta {0}"
-
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
 msgid "Never lose access to your followers and data."
@@ -2988,10 +2654,6 @@ msgstr "Älä koskaan menetä pääsyä seuraajiisi ja tietoihisi."
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "Never lose access to your followers or data."
 msgstr "Älä koskaan menetä pääsyä seuraajiisi tai tietoihisi."
-
-#: src/components/dialogs/MutedWords.tsx:244
-#~ msgid "Nevermind"
-#~ msgstr "Ei väliä"
 
 #: src/view/com/modals/ChangeHandle.tsx:519
 msgid "Nevermind, create a handle for me"
@@ -3096,7 +2758,7 @@ msgstr "Et enää seuraa käyttäjää {0}"
 
 #: src/screens/Signup/StepHandle.tsx:115
 msgid "No longer than 253 characters"
-msgstr ""
+msgstr "Ei pidempi kuin 253 merkkiä."
 
 #: src/view/com/notifications/Feed.tsx:109
 msgid "No notifications yet!"
@@ -3181,17 +2843,13 @@ msgstr "Alastomuus"
 msgid "Nudity or adult content not labeled as such"
 msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:71
-#~ msgid "Nudity or pornography not labeled as such"
-#~ msgstr ""
-
 #: src/screens/Signup/index.tsx:143
 msgid "of"
 msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
-msgstr ""
+msgstr "Pois"
 
 #: src/view/com/util/ErrorBoundary.tsx:49
 msgid "Oh no!"
@@ -3228,11 +2886,11 @@ msgstr "Vain {0} voi vastata."
 
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
-msgstr ""
+msgstr "Sisältää vain kirjaimia, numeroita ja väliviivoja"
 
 #: src/components/Lists.tsx:75
 msgid "Oops, something went wrong!"
-msgstr ""
+msgstr "Hups, nyt meni jotain väärin!"
 
 #: src/components/Lists.tsx:170
 #: src/view/screens/AppPasswords.tsx:67
@@ -3243,10 +2901,6 @@ msgstr "Hups!"
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Open"
 msgstr "Avaa"
-
-#: src/view/screens/Moderation.tsx:75
-#~ msgid "Open content filtering settings"
-#~ msgstr "Avaa sisällönsuodatusasetukset"
 
 #: src/view/com/composer/Composer.tsx:491
 #: src/view/com/composer/Composer.tsx:492
@@ -3264,10 +2918,6 @@ msgstr "Avaa linkit sovelluksen sisäisellä selaimella"
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
 msgstr "Avaa hiljennettyjen sanojen ja aihetunnisteiden asetukset"
-
-#: src/view/screens/Moderation.tsx:92
-#~ msgid "Open muted words settings"
-#~ msgstr "Avaa hiljennettyjen sanojen asetukset"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:52
 msgid "Open navigation"
@@ -3314,10 +2964,6 @@ msgstr "Avaa mukautettavat kielen asetukset"
 msgid "Opens device photo gallery"
 msgstr "Avaa laitteen valokuvat"
 
-#: src/view/com/profile/ProfileHeader.tsx:420
-#~ msgid "Opens editor for profile display name, avatar, background image, and description"
-#~ msgstr "Avaa editorin profiilin näyttönimeä, avataria, taustakuvaa ja kuvausta varten"
-
 #: src/view/screens/Settings/index.tsx:620
 msgid "Opens external embeds settings"
 msgstr "Avaa ulkoiset upotusasetukset"
@@ -3332,18 +2978,6 @@ msgstr ""
 msgid "Opens flow to sign into your existing Bluesky account"
 msgstr ""
 
-#: src/view/com/profile/ProfileHeader.tsx:575
-#~ msgid "Opens followers list"
-#~ msgstr "Avaa seuraajalistan"
-
-#: src/view/com/profile/ProfileHeader.tsx:594
-#~ msgid "Opens following list"
-#~ msgstr "Avaa seurattavien listan"
-
-#: src/view/screens/Settings.tsx:412
-#~ msgid "Opens invite code list"
-#~ msgstr ""
-
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
 msgstr "Avaa kutsukoodien luettelon"
@@ -3351,10 +2985,6 @@ msgstr "Avaa kutsukoodien luettelon"
 #: src/view/screens/Settings/index.tsx:762
 msgid "Opens modal for account deletion confirmation. Requires email code"
 msgstr ""
-
-#: src/view/screens/Settings/index.tsx:774
-#~ msgid "Opens modal for account deletion confirmation. Requires email code."
-#~ msgstr "Avaa tilin poistovahvistuksen. Vaatii sähköpostikoodin."
 
 #: src/view/screens/Settings/index.tsx:720
 msgid "Opens modal for changing your Bluesky password"
@@ -3397,17 +3027,9 @@ msgstr "Avaa näkymän kaikkiin tallennettuihin syötteisiin"
 msgid "Opens the app password settings"
 msgstr "Avaa sovelluksen salasanojen asetukset"
 
-#: src/view/screens/Settings/index.tsx:676
-#~ msgid "Opens the app password settings page"
-#~ msgstr "Avaa sovellussalasanojen asetukset"
-
 #: src/view/screens/Settings/index.tsx:505
 msgid "Opens the Following feed preferences"
 msgstr "Avaa Seuratut-syötteen asetukset"
-
-#: src/view/screens/Settings/index.tsx:535
-#~ msgid "Opens the home feed preferences"
-#~ msgstr "Avaa aloitussivun asetukset"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -3446,10 +3068,6 @@ msgstr "Joku toinen"
 msgid "Other account"
 msgstr "Toinen tili"
 
-#: src/view/com/modals/ServerInput.tsx:88
-#~ msgid "Other service"
-#~ msgstr ""
-
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:91
 msgid "Other..."
 msgstr "Muu..."
@@ -3485,7 +3103,7 @@ msgstr "Salasana päivitetty!"
 #: src/view/screens/Search/Search.tsx:447
 #: src/view/screens/Search/Search.tsx:456
 msgid "People"
-msgstr ""
+msgstr "Henkilöt"
 
 #: src/Navigation.tsx:164
 msgid "People followed by @{0}"
@@ -3506,10 +3124,6 @@ msgstr "Lupa valokuviin evättiin. Anna lupa järjestelmäasetuksissa."
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
 msgstr "Lemmikit"
-
-#: src/view/com/auth/create/Step2.tsx:183
-#~ msgid "Phone number"
-#~ msgstr "Puhelinnumero"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
@@ -3561,10 +3175,6 @@ msgstr "Vahvista sähköpostiosoitteesi ennen sen vaihtamista. Tämä on väliai
 msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "Anna nimi sovellussalasanalle. Kaikki välilyönnit eivät ole sallittuja."
 
-#: src/view/com/auth/create/Step2.tsx:206
-#~ msgid "Please enter a phone number that can receive SMS text messages."
-#~ msgstr "Anna puhelinnumero, joka voi vastaanottaa tekstiviestejä."
-
 #: src/view/com/modals/AddAppPasswords.tsx:146
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "Anna uniikki nimi tälle sovellussalasanalle tai käytä satunnaisesti luotua."
@@ -3572,14 +3182,6 @@ msgstr "Anna uniikki nimi tälle sovellussalasanalle tai käytä satunnaisesti l
 #: src/components/dialogs/MutedWords.tsx:67
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "Ole hyvä ja syötä oikea sana, aihetunniste tai lause hiljennettäväksi."
-
-#: src/view/com/auth/create/state.ts:170
-#~ msgid "Please enter the code you received by SMS."
-#~ msgstr "Anna tekstiviestitse saamasi koodi."
-
-#: src/view/com/auth/create/Step2.tsx:282
-#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-#~ msgstr "Anna numeroon {phoneNumberFormatted} vastaanottamasi vahvistuskoodi."
 
 #: src/screens/Signup/state.ts:220
 msgid "Please enter your email."
@@ -3592,16 +3194,6 @@ msgstr "Anna myös salasanasi:"
 #: src/components/moderation/LabelsOnMeDialog.tsx:221
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr ""
-
-#: src/view/com/modals/AppealLabel.tsx:72
-#: src/view/com/modals/AppealLabel.tsx:75
-#~ msgid "Please tell us why you think this content warning was incorrectly applied!"
-#~ msgstr "Kerro meille, miksi luulet, että tämä sisältövaroitus on sovellettu virheellisesti!"
-
-#: src/view/com/modals/AppealLabel.tsx:72
-#: src/view/com/modals/AppealLabel.tsx:75
-#~ msgid "Please tell us why you think this decision was incorrect."
-#~ msgstr "Kerro meille, miksi uskot tämän päätöksen olleen virheellinen."
 
 #: src/view/com/modals/VerifyEmail.tsx:101
 msgid "Please Verify Your Email"
@@ -3618,10 +3210,6 @@ msgstr "Politiikka"
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
 msgstr "Porno"
-
-#: src/lib/moderation/useGlobalLabelStrings.ts:34
-#~ msgid "Pornography"
-#~ msgstr "Pornografia"
 
 #: src/view/com/composer/Composer.tsx:367
 #: src/view/com/composer/Composer.tsx:375
@@ -3819,10 +3407,6 @@ msgstr "Suositellut käyttäjät"
 msgid "Remove"
 msgstr "Poista"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:108
-#~ msgid "Remove {0} from my feeds?"
-#~ msgstr "Poistetaanko {0} syötteistäni?"
-
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
 msgstr "Poista käyttäjätili"
@@ -3868,19 +3452,11 @@ msgstr "Poista hiljennetty sana listaltasi"
 
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
-msgstr "Poista uudelleenjako"
-
-#: src/view/com/feeds/FeedSourceCard.tsx:175
-#~ msgid "Remove this feed from my feeds?"
-#~ msgstr "Poista tämä syöte omista syötteistäni?"
+msgstr "Poista uudelleenjulkaisu"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:202
 msgid "Remove this feed from your saved feeds"
 msgstr "Poista tämä syöte seurannasta"
-
-#: src/view/com/posts/FeedErrorMessage.tsx:132
-#~ msgid "Remove this feed from your saved feeds?"
-#~ msgstr "Poistetaanko tämä syöte tallennetuista syötteistäsi?"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
@@ -3921,10 +3497,6 @@ msgstr "Vastaussuodattimet"
 msgctxt "description"
 msgid "Reply to <0/>"
 msgstr "Vastaa käyttäjälle <0/>"
-
-#: src/view/com/modals/report/Modal.tsx:166
-#~ msgid "Report {collectionName}"
-#~ msgstr "Ilmianna {collectionName}"
 
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
@@ -3975,36 +3547,32 @@ msgstr "Ilmianna tämä käyttäjä"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgctxt "action"
 msgid "Repost"
-msgstr "Uudelleenjaa"
+msgstr "Uudelleenjulkaise"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
-msgstr "Uudelleenjaa"
+msgstr "Uudelleenjulkaise"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
 msgid "Repost or quote post"
-msgstr "Uudelleenjaa tai lainaa viestiä"
+msgstr "Uudelleenjulkaise tai lainaa viestiä"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr "Uudelleenjakanut"
+msgstr "Uudelleenjulkaissut"
 
 #: src/view/com/posts/FeedItem.tsx:199
 msgid "Reposted by {0}"
-msgstr "Uudelleenjakanut {0}"
-
-#: src/view/com/posts/FeedItem.tsx:214
-#~ msgid "Reposted by <0/>"
-#~ msgstr "Uudelleenjakanut <0/>"
+msgstr "{0} uudelleenjulkaisi"
 
 #: src/view/com/posts/FeedItem.tsx:216
 msgid "Reposted by <0><1/></0>"
-msgstr ""
+msgstr "Uudelleenjulkaissut <0><1/></0>"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "reposted your post"
-msgstr "uudelleenjakoi viestisi"
+msgstr "uudelleenjulkaisi viestisi"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:187
 msgid "Reposts of this post"
@@ -4014,10 +3582,6 @@ msgstr "Tämän viestin uudelleenjulkaisut"
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
 msgstr "Pyydä muutosta"
-
-#: src/view/com/auth/create/Step2.tsx:219
-#~ msgid "Request code"
-#~ msgstr "Pyydä koodia"
 
 #: src/view/com/modals/ChangePassword.tsx:241
 #: src/view/com/modals/ChangePassword.tsx:243
@@ -4040,10 +3604,6 @@ msgstr "Nollauskoodi"
 msgid "Reset Code"
 msgstr "Nollauskoodi"
 
-#: src/view/screens/Settings/index.tsx:824
-#~ msgid "Reset onboarding"
-#~ msgstr "Nollaa käyttöönotto"
-
 #: src/view/screens/Settings/index.tsx:822
 #: src/view/screens/Settings/index.tsx:825
 msgid "Reset onboarding state"
@@ -4052,10 +3612,6 @@ msgstr "Nollaa käyttöönoton tila"
 #: src/screens/Login/ForgotPasswordForm.tsx:86
 msgid "Reset password"
 msgstr "Nollaa salasana"
-
-#: src/view/screens/Settings/index.tsx:814
-#~ msgid "Reset preferences"
-#~ msgstr "Nollaa asetukset"
 
 #: src/view/screens/Settings/index.tsx:812
 #: src/view/screens/Settings/index.tsx:815
@@ -4091,10 +3647,6 @@ msgstr "Yrittää uudelleen viimeisintä toimintoa, joka epäonnistui"
 msgid "Retry"
 msgstr "Yritä uudelleen"
 
-#: src/view/com/auth/create/Step2.tsx:247
-#~ msgid "Retry."
-#~ msgstr "Yritä uudelleen."
-
 #: src/components/Error.tsx:86
 #: src/view/screens/ProfileList.tsx:919
 msgid "Return to previous page"
@@ -4108,10 +3660,6 @@ msgstr "Palaa etusivulle"
 #: src/view/screens/ProfileFeed.tsx:113
 msgid "Returns to previous page"
 msgstr "Palaa edelliselle sivulle"
-
-#: src/view/shell/desktop/RightNav.tsx:55
-#~ msgid "SANDBOX. Posts and accounts are not permanent."
-#~ msgstr "HIEKKALAATIKKO. Viestit ja tilit eivät ole pysyviä."
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/modals/ChangeHandle.tsx:174
@@ -4157,7 +3705,7 @@ msgstr "Tallennetut syötteet"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll."
-msgstr "Tallennettu kameraasi"
+msgstr "Tallennettu kuvagalleriaasi."
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
@@ -4209,17 +3757,9 @@ msgstr "Haku hakusanalla \"{query}\""
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
 msgstr "Hae kaikki @{authorHandle}:n julkaisut, joissa on aihetunniste {displayTag}."
 
-#: src/components/TagMenu/index.tsx:145
-#~ msgid "Search for all posts by @{authorHandle} with tag {tag}"
-#~ msgstr "Etsi kaikki viestit käyttäjältä @{authorHandle} aihetunnisteella {tag}"
-
 #: src/components/TagMenu/index.tsx:94
 msgid "Search for all posts with tag {displayTag}"
 msgstr "Etsi kaikki viestit aihetunnisteella {displayTag}."
-
-#: src/components/TagMenu/index.tsx:90
-#~ msgid "Search for all posts with tag {tag}"
-#~ msgstr "Etsi kaikki viestit aihetunnisteella {tag}"
 
 #: src/view/com/auth/LoggedOut.tsx:105
 #: src/view/com/auth/LoggedOut.tsx:106
@@ -4247,26 +3787,14 @@ msgstr "Näytä <0>{displayTag}</0> viestit"
 msgid "See <0>{displayTag}</0> posts by this user"
 msgstr "Näytä tämän käyttäjän <0>{displayTag}</0> viestit"
 
-#: src/components/TagMenu/index.tsx:128
-#~ msgid "See <0>{tag}</0> posts"
-#~ msgstr "Näytä <0>{tag}</0>-viestit"
-
-#: src/components/TagMenu/index.tsx:189
-#~ msgid "See <0>{tag}</0> posts by this user"
-#~ msgstr "Näytä tämän käyttäjän <0>{tag}</0>-viestit"
-
 #: src/view/com/notifications/FeedItem.tsx:419
 #: src/view/com/util/UserAvatar.tsx:381
 msgid "See profile"
-msgstr ""
+msgstr "Katso profiilia"
 
 #: src/view/screens/SavedFeeds.tsx:164
 msgid "See this guide"
 msgstr "Katso tämä opas"
-
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:40
-#~ msgid "See what's next"
-#~ msgstr "Katso, mitä seuraavaksi tapahtuu"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
@@ -4275,10 +3803,6 @@ msgstr "Valitse {item}"
 #: src/screens/Login/ChooseAccountForm.tsx:61
 msgid "Select account"
 msgstr ""
-
-#: src/view/com/modals/ServerInput.tsx:75
-#~ msgid "Select Bluesky Social"
-#~ msgstr "Valitse Bluesky Social"
 
 #: src/screens/Login/index.tsx:120
 msgid "Select from an existing account"
@@ -4296,11 +3820,6 @@ msgstr "Valitse moderaattori"
 msgid "Select option {i} of {numItems}"
 msgstr "Valitse vaihtoehto {i} / {numItems}"
 
-#: src/view/com/auth/create/Step1.tsx:96
-#: src/view/com/auth/login/LoginForm.tsx:153
-#~ msgid "Select service"
-#~ msgstr "Valitse palvelu"
-
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 msgid "Select some accounts below to follow"
 msgstr "Valitse alla olevista tileistä jotain seurattavaksi"
@@ -4312,10 +3831,6 @@ msgstr ""
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
 msgstr "Valitse palvelu, joka hostaa tietojasi."
-
-#: src/screens/Onboarding/StepModeration/index.tsx:49
-#~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-#~ msgstr ""
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:100
 msgid "Select topical feeds to follow from the list below"
@@ -4330,24 +3845,16 @@ msgid "Select which languages you want your subscribed feeds to include. If none
 msgstr "Valitse, mitä kieliä haluat tilattujen syötteidesi sisältävän. Jos mitään ei ole valittu, kaikki kielet näytetään."
 
 #: src/view/screens/LanguageSettings.tsx:98
-#~ msgid "Select your app language for the default text to display in the app"
-#~ msgstr "Valitse sovelluksen oletuskieli, joka näytetään sovelluksessa"
-
-#: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app."
 msgstr "Valitse sovelluksen käyttöliittymän kieli."
 
 #: src/screens/Signup/StepInfo/index.tsx:135
 msgid "Select your date of birth"
-msgstr ""
+msgstr "Aseta syntymäaikasi"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:200
 msgid "Select your interests from the options below"
 msgstr "Valitse kiinnostuksen kohteesi alla olevista vaihtoehdoista"
-
-#: src/view/com/auth/create/Step2.tsx:155
-#~ msgid "Select your phone's country"
-#~ msgstr "Valitse puhelinnumerosi maa"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -4385,10 +3892,6 @@ msgstr "Lähetä palautetta"
 msgid "Send report"
 msgstr "Lähetä raportti"
 
-#: src/view/com/modals/report/SendReportButton.tsx:45
-#~ msgid "Send Report"
-#~ msgstr "Lähetä raportti"
-
 #: src/components/ReportDialog/SelectLabelerView.tsx:44
 msgid "Send report to {0}"
 msgstr ""
@@ -4401,47 +3904,13 @@ msgstr "Lähettää sähköpostin tilin poistamiseen tarvittavan vahvistuskoodin
 msgid "Server address"
 msgstr "Palvelimen osoite"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:311
-#~ msgid "Set {value} for {labelGroup} content moderation policy"
-#~ msgstr "Aseta {value} {labelGroup} sisällön moderointisäännöksi"
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:160
-#: src/view/com/modals/ContentFilteringSettings.tsx:179
-#~ msgctxt "action"
-#~ msgid "Set Age"
-#~ msgstr "Aseta ikä"
-
 #: src/screens/Moderation/index.tsx:304
 msgid "Set birthdate"
 msgstr "Aseta syntymäaika"
 
-#: src/view/screens/Settings/index.tsx:488
-#~ msgid "Set color theme to dark"
-#~ msgstr "Aseta väriteema tummaksi"
-
-#: src/view/screens/Settings/index.tsx:481
-#~ msgid "Set color theme to light"
-#~ msgstr "Aseta väriteema vaaleaksi"
-
-#: src/view/screens/Settings/index.tsx:475
-#~ msgid "Set color theme to system setting"
-#~ msgstr "Aseta väriteema järjestelmäasetuksiin"
-
-#: src/view/screens/Settings/index.tsx:514
-#~ msgid "Set dark theme to the dark theme"
-#~ msgstr "Aseta tumma teema tummaksi"
-
-#: src/view/screens/Settings/index.tsx:507
-#~ msgid "Set dark theme to the dim theme"
-#~ msgstr "Aseta tumma teema hämäräksi"
-
 #: src/screens/Login/SetNewPasswordForm.tsx:102
 msgid "Set new password"
 msgstr "Aseta uusi salasana"
-
-#: src/view/com/auth/create/Step1.tsx:202
-#~ msgid "Set password"
-#~ msgstr "Aseta salasana"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
@@ -4458,10 +3927,6 @@ msgstr "Aseta tämä asetus \"Ei\"-tilaan piilottaaksesi kaikki uudelleenjulkais
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Aseta tämä asetus \"Kyllä\" tilaan näyttääksesi vastaukset ketjumaisessa näkymässä. Tämä on kokeellinen ominaisuus."
-
-#: src/view/screens/PreferencesHomeFeed.tsx:261
-#~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-#~ msgstr "Aseta tämä asetus \"Kyllä\"-tilaan nähdäksesi esimerkkejä tallennetuista syötteistäsi seuraamissasi syötteessäsi. Tämä on kokeellinen ominaisuus."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
@@ -4499,10 +3964,6 @@ msgstr "Asettaa tumman teeman himmeäksi teemaksi"
 msgid "Sets email for password reset"
 msgstr "Asettaa sähköpostin salasanan palautusta varten"
 
-#: src/view/com/auth/login/ForgotPasswordForm.tsx:122
-#~ msgid "Sets hosting provider for password reset"
-#~ msgstr "Asettaa palveluntarjoajan salasanan palautusta varten"
-
 #: src/view/com/modals/crop-image/CropImage.web.tsx:124
 msgid "Sets image aspect ratio to square"
 msgstr "Asettaa kuvan kuvasuhteen neliöksi"
@@ -4514,11 +3975,6 @@ msgstr "Asettaa kuvan kuvasuhteen korkeaksi"
 #: src/view/com/modals/crop-image/CropImage.web.tsx:104
 msgid "Sets image aspect ratio to wide"
 msgstr "Asettaa kuvan kuvasuhteen leveäksi"
-
-#: src/view/com/auth/create/Step1.tsx:97
-#: src/view/com/auth/login/LoginForm.tsx:154
-#~ msgid "Sets server for the Bluesky client"
-#~ msgstr "Asettaa palvelimen Bluesky-ohjelmalle"
 
 #: src/Navigation.tsx:139
 #: src/view/screens/Settings/index.tsx:316
@@ -4564,11 +4020,11 @@ msgstr "Jaa syöte"
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
 msgid "Share Link"
-msgstr ""
+msgstr "Jaa linkki"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
-msgstr ""
+msgstr "Jakaa linkitetyn verkkosivun"
 
 #: src/components/moderation/ContentHider.tsx:115
 #: src/components/moderation/LabelPreference.tsx:136
@@ -4595,10 +4051,6 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
 msgstr ""
-
-#: src/view/com/modals/EmbedConsent.tsx:87
-#~ msgid "Show embeds from {0}"
-#~ msgstr "Näytä upotukset taholta {0}"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
 msgid "Show follows similar to {0}"
@@ -4675,10 +4127,6 @@ msgstr "Näytä varoitus"
 msgid "Show warning and filter from feeds"
 msgstr "Näytä varoitus ja suodata syötteistä"
 
-#: src/view/com/profile/ProfileHeader.tsx:462
-#~ msgid "Shows a list of users similar to this user."
-#~ msgstr "Näyttää luettelon käyttäjistä, jotka ovat samankaltaisia kuin tämä käyttäjä."
-
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
 msgid "Shows posts from {0} in your feed"
 msgstr "Näyttää viestit käyttäjältä {0} syötteessäsi"
@@ -4704,12 +4152,6 @@ msgstr "Näyttää viestit käyttäjältä {0} syötteessäsi"
 msgid "Sign in"
 msgstr "Kirjaudu sisään"
 
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:82
-#: src/view/com/auth/SplashScreen.tsx:86
-#: src/view/com/auth/SplashScreen.web.tsx:91
-#~ msgid "Sign In"
-#~ msgstr "Kirjaudu sisään"
-
 #: src/components/AccountList.tsx:109
 msgid "Sign in as {0}"
 msgstr "Kirjaudu sisään nimellä {0}"
@@ -4722,13 +4164,9 @@ msgstr "Kirjaudu sisään nimellä..."
 msgid "Sign in or create your account to join the conversation!"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:140
-#~ msgid "Sign into"
-#~ msgstr "Kirjaudu sisään"
-
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
-msgstr ""
+msgstr "Kirjaudu Blueskyhin tai luo uusi käyttäjätili"
 
 #: src/view/screens/Settings/index.tsx:118
 #: src/view/screens/Settings/index.tsx:121
@@ -4764,10 +4202,6 @@ msgstr "Kirjautunut sisään nimellä"
 msgid "Signed in as @{0}"
 msgstr "Kirjautunut sisään käyttäjätunnuksella @{0}"
 
-#: src/view/com/modals/SwitchAccount.tsx:70
-#~ msgid "Signs {0} out of Bluesky"
-#~ msgstr "{0} kirjautuu ulos Blueskysta"
-
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:35
@@ -4778,27 +4212,15 @@ msgstr "Ohita"
 msgid "Skip this flow"
 msgstr "Ohita tämä vaihe"
 
-#: src/view/com/auth/create/Step2.tsx:82
-#~ msgid "SMS verification"
-#~ msgstr "SMS-varmennus"
-
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
 msgstr "Ohjelmistokehitys"
-
-#: src/view/com/modals/ProfilePreview.tsx:62
-#~ msgid "Something went wrong and we're not sure what."
-#~ msgstr "Jotain meni pieleen, emmekä ole varmoja mitä."
 
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:114
 #: src/screens/Profile/Sections/Labels.tsx:87
 msgid "Something went wrong, please try again."
 msgstr "Jotain meni pieleen, yritä uudelleen"
-
-#: src/view/com/modals/Waitlist.tsx:51
-#~ msgid "Something went wrong. Check your email and try again."
-#~ msgstr "Jotain meni pieleen. Tarkista sähköpostisi ja yritä uudelleen."
 
 #: src/App.native.tsx:64
 msgid "Sorry! Your session expired. Please log in again."
@@ -4832,21 +4254,13 @@ msgstr "Urheilu"
 msgid "Square"
 msgstr "Neliö"
 
-#: src/view/com/modals/ServerInput.tsx:62
-#~ msgid "Staging"
-#~ msgstr ""
-
 #: src/view/screens/Settings/index.tsx:867
 msgid "Status page"
 msgstr "Tilasivu"
 
 #: src/screens/Signup/index.tsx:143
 msgid "Step"
-msgstr ""
-
-#: src/view/com/auth/create/StepHeader.tsx:22
-#~ msgid "Step {0} of {numSteps}"
-#~ msgstr "Vaihe {0}/{numSteps}"
+msgstr "Askel"
 
 #: src/view/screens/Settings/index.tsx:295
 msgid "Storage cleared, you need to restart the app now."
@@ -4905,10 +4319,6 @@ msgstr "Viittaava"
 msgid "Support"
 msgstr "Tuki"
 
-#: src/view/com/modals/ProfilePreview.tsx:110
-#~ msgid "Swipe up to see more"
-#~ msgstr "Pyyhkäise ylöspäin nähdäksesi lisää"
-
 #: src/components/dialogs/SwitchAccount.tsx:46
 #: src/components/dialogs/SwitchAccount.tsx:49
 msgid "Switch Account"
@@ -4937,10 +4347,6 @@ msgstr "aihetunniste"
 #: src/components/TagMenu/index.tsx:78
 msgid "Tag menu: {displayTag}"
 msgstr "Aihetunnistevalikko: {displayTag}"
-
-#: src/components/TagMenu/index.tsx:74
-#~ msgid "Tag menu: {tag}"
-#~ msgstr "Aihetunnistevalikko: {tag}"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:113
 msgid "Tall"
@@ -5128,10 +4534,6 @@ msgstr "Sovelluksessa ilmeni odottamaton ongelma. Kerro meille, jos tämä tapah
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Blueskyyn on tullut paljon uusia käyttäjiä! Aktivoimme tilisi niin pian kuin mahdollista."
 
-#: src/view/com/auth/create/Step2.tsx:55
-#~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-#~ msgstr "Tässä numerossa on jotain vikaa. Valitse maasi ja syötä koko puhelinnumerosi!"
-
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
 msgid "These are popular accounts you might like:"
 msgstr "Nämä ovat suosittuja tilejä, joista saatat pitää:"
@@ -5170,10 +4572,6 @@ msgid "This content is not viewable without a Bluesky account."
 msgstr "Tätä sisältöä ei voi katsoa ilman Bluesky-tiliä."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
-#~ msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-#~ msgstr "Tämä ominaisuus on betavaiheessa. Voit lukea lisää pakettivarastojen vientitoiminnosta <0>tässä blogikirjoituksessa.</0>"
-
-#: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
@@ -5201,7 +4599,7 @@ msgstr "Tämä on tärkeää, jos sinun tarvitsee vaihtaa sähköpostiosoitteesi
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:124
 msgid "This label was applied by {0}."
-msgstr ""
+msgstr "Merkinnän lisäsi {0}."
 
 #: src/screens/Profile/Sections/Labels.tsx:178
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5261,14 +4659,6 @@ msgstr "Tämä käyttäjä on estänyt sinut. Et voi nähdä hänen sisältöä.
 msgid "This user has requested that their content only be shown to signed-in users."
 msgstr "Tämä käyttäjä on pyytänyt, että hänen sisältö näkyy vain kirjautuneille"
 
-#: src/view/com/modals/ModerationDetails.tsx:42
-#~ msgid "This user is included in the <0/> list which you have blocked."
-#~ msgstr "Tämä käyttäjä on <0/>-listassa, jonka olet estänyt."
-
-#: src/view/com/modals/ModerationDetails.tsx:74
-#~ msgid "This user is included in the <0/> list which you have muted."
-#~ msgstr "Tämä käyttäjä on <0/>-listassa, jonka olet hiljentänyt."
-
 #: src/components/moderation/ModerationDetailsDialog.tsx:55
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
 msgstr "Tämä käyttäjä on <0>{0}</0>-listassa, jonka olet estänyt."
@@ -5276,10 +4666,6 @@ msgstr "Tämä käyttäjä on <0>{0}</0>-listassa, jonka olet estänyt."
 #: src/components/moderation/ModerationDetailsDialog.tsx:84
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr "Tämä käyttäjä on <0>{0}</0>-listassa, jonka olet hiljentänyt."
-
-#: src/view/com/modals/ModerationDetails.tsx:74
-#~ msgid "This user is included the <0/> list which you have muted."
-#~ msgstr ""
 
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
@@ -5292,10 +4678,6 @@ msgstr "Tämä varoitus on saatavilla vain viesteille, joihin on liitetty mediat
 #: src/components/dialogs/MutedWords.tsx:283
 msgid "This will delete {0} from your muted words. You can always add it back later."
 msgstr "Tämä poistaa {0}:n hiljennetyistä sanoistasi. Voit lisätä sen takaisin myöhemmin."
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:237
-#~ msgid "This will hide this post from your feeds."
-#~ msgstr "Tämä piilottaa tämän viestin syötteistäsi."
 
 #: src/view/screens/Settings/index.tsx:525
 msgid "Thread preferences"
@@ -5352,7 +4734,7 @@ msgstr "Yritä uudelleen"
 
 #: src/view/com/modals/ChangeHandle.tsx:428
 msgid "Type:"
-msgstr ""
+msgstr "Tyyppi:"
 
 #: src/view/screens/ProfileList.tsx:480
 msgid "Un-block list"
@@ -5398,7 +4780,7 @@ msgstr "Poista esto?"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:60
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Undo repost"
-msgstr "Kumoa uudelleenjako"
+msgstr "Kumoa uudelleenjulkaisu"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:141
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:248
@@ -5418,10 +4800,6 @@ msgstr "Lopeta seuraaminen {0}"
 #: src/view/com/profile/ProfileMenu.tsx:251
 msgid "Unfollow Account"
 msgstr "Lopeta käyttäjätilin seuraaminen"
-
-#: src/view/com/auth/create/state.ts:262
-#~ msgid "Unfortunately, you do not meet the requirements to create an account."
-#~ msgstr "Valitettavasti et täytä tilin luomisen vaatimuksia."
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:197
 msgid "Unlike"
@@ -5449,10 +4827,6 @@ msgstr "Poista käyttäjätilin hiljennys"
 msgid "Unmute all {displayTag} posts"
 msgstr "Poista hiljennys kaikista {displayTag}-julkaisuista"
 
-#: src/components/TagMenu/index.tsx:210
-#~ msgid "Unmute all {tag} posts"
-#~ msgstr "Poista hiljennys kaikista {tag}-viesteistä"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:269
 #: src/view/com/util/forms/PostDropdownBtn.tsx:274
 msgid "Unmute thread"
@@ -5471,10 +4845,6 @@ msgstr "Poista kiinnitys etusivulta"
 msgid "Unpin moderation list"
 msgstr "Poista moderointilistan kiinnitys"
 
-#: src/view/screens/ProfileFeed.tsx:346
-#~ msgid "Unsave"
-#~ msgstr "Poista tallennus"
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:225
 msgid "Unsubscribe"
 msgstr "Peruuta tilaus"
@@ -5490,10 +4860,6 @@ msgstr "Ei-toivottu seksuaalinen sisältö"
 #: src/view/com/modals/UserAddRemoveLists.tsx:70
 msgid "Update {displayName} in Lists"
 msgstr "Päivitä {displayName} listoissa"
-
-#: src/lib/hooks/useOTAUpdate.ts:15
-#~ msgid "Update Available"
-#~ msgstr "Päivitys saatavilla"
 
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Update to {handle}"
@@ -5560,10 +4926,6 @@ msgstr ""
 msgid "Use this to sign into the other app along with your handle."
 msgstr "Käytä tätä kirjautuaksesi toiseen sovellukseen käyttäjätunnuksellasi."
 
-#: src/view/com/modals/ServerInput.tsx:105
-#~ msgid "Use your domain as your Bluesky client service provider"
-#~ msgstr ""
-
 #: src/view/com/modals/InviteCodes.tsx:201
 msgid "Used by:"
 msgstr "Käyttänyt:"
@@ -5588,10 +4950,6 @@ msgstr "Käyttäjä on estänyt sinut"
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 msgid "User Blocks You"
 msgstr "Käyttäjä on estänyt sinut"
-
-#: src/view/com/auth/create/Step2.tsx:79
-#~ msgid "User handle"
-#~ msgstr "Käyttäjätunnus"
 
 #: src/view/com/lists/ListCard.tsx:85
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
@@ -5644,11 +5002,7 @@ msgstr "Käyttäjät, jotka ovat pitäneet tästä sisällöstä tai profiilista
 
 #: src/view/com/modals/ChangeHandle.tsx:436
 msgid "Value:"
-msgstr ""
-
-#: src/view/com/auth/create/Step2.tsx:243
-#~ msgid "Verification code"
-#~ msgstr "Varmistuskoodi"
+msgstr "Arvo:"
 
 #: src/view/com/modals/ChangeHandle.tsx:509
 msgid "Verify {0}"
@@ -5677,7 +5031,7 @@ msgstr "Vahvista sähköpostisi"
 
 #: src/view/screens/Settings/index.tsx:857
 msgid "Version {0}"
-msgstr ""
+msgstr "Versio {0}"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
@@ -5723,7 +5077,7 @@ msgstr ""
 
 #: src/view/screens/ProfileFeed.tsx:597
 msgid "View users who like this feed"
-msgstr ""
+msgstr "Katso, kuka tykkää tästä syötteestä"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -5745,10 +5099,6 @@ msgstr ""
 msgid "Warn content and filter from feeds"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
-#~ msgid "We also think you'll like \"For You\" by Skygaze:"
-#~ msgstr "Uskomme myös, että pitäisit Skygazen \"For You\" -syötteestä:"
-
 #: src/screens/Hashtag.tsx:133
 msgid "We couldn't find any results for that hashtag."
 msgstr "Emme löytäneet tuloksia tuolla aihetunnisteella."
@@ -5764,10 +5114,6 @@ msgstr "Toivomme sinulle ihania hetkiä. Muista, että Bluesky on:"
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "Emme enää löytäneet viestejä seurattavilta. Tässä on uusin tekijältä <0/>."
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
-#~ msgid "We recommend \"For You\" by Skygaze:"
-#~ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:203
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -5792,10 +5138,6 @@ msgstr "Yhteyden muodostaminen ei onnistunut. Yritä uudelleen jatkaaksesi tilis
 #: src/screens/Deactivated.tsx:137
 msgid "We will let you know when your account is ready."
 msgstr "Ilmoitamme sinulle, kun käyttäjätilisi on valmis."
-
-#: src/view/com/modals/AppealLabel.tsx:48
-#~ msgid "We'll look into your appeal promptly."
-#~ msgstr "Käsittelemme vetoomuksesi pikaisesti."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:142
 msgid "We'll use this to help customize your experience."
@@ -5833,10 +5175,6 @@ msgstr "Tervetuloa <0>Bluesky</0>:iin"
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "What are your interests?"
 msgstr "Mitkä ovat kiinnostuksenkohteesi?"
-
-#: src/view/com/modals/report/Modal.tsx:169
-#~ msgid "What is the issue with this {collectionName}?"
-#~ msgstr "Mikä on ongelma tämän {collectionName} kanssa?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:81
@@ -5894,10 +5232,6 @@ msgstr "Kirjoita vastauksesi"
 msgid "Writers"
 msgstr "Kirjoittajat"
 
-#: src/view/com/auth/create/Step2.tsx:263
-#~ msgid "XXXXXX"
-#~ msgstr "XXXXXX"
-
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesFollowingFeed.tsx:129
 #: src/view/screens/PreferencesFollowingFeed.tsx:201
@@ -5908,26 +5242,18 @@ msgstr "Kirjoittajat"
 msgid "Yes"
 msgstr "Kyllä"
 
-#: src/screens/Onboarding/StepModeration/index.tsx:46
-#~ msgid "You are in control"
-#~ msgstr ""
-
 #: src/screens/Deactivated.tsx:130
 msgid "You are in line."
 msgstr "Olet jonossa."
 
 #: src/view/com/profile/ProfileFollows.tsx:86
 msgid "You are not following anyone."
-msgstr ""
+msgstr "Et seuraa ketään."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "Voit myös selata uusia mukautettuja syötteitä seurattavaksi."
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
-#~ msgid "You can also try our \"Discover\" algorithm:"
-#~ msgstr ""
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:143
 msgid "You can change these settings later."
@@ -5977,24 +5303,20 @@ msgstr "Olet syöttänyt virheellisen koodin. Sen tulisi näyttää muodoltaan X
 
 #: src/lib/moderation/useModerationCauseDescription.ts:109
 msgid "You have hidden this post"
-msgstr ""
+msgstr "Olet piilottanut tämän viestin"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:101
 msgid "You have hidden this post."
-msgstr ""
+msgstr "Olet piilottanut tämän viestin."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:94
 #: src/lib/moderation/useModerationCauseDescription.ts:92
 msgid "You have muted this account."
-msgstr ""
+msgstr "Olet hiljentänyt tämän käyttäjätilin."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:86
 msgid "You have muted this user"
-msgstr ""
-
-#: src/view/com/modals/ModerationDetails.tsx:87
-#~ msgid "You have muted this user."
-#~ msgstr "Olet hiljentänyt tämän käyttäjän."
+msgstr "Olet hiljentänyt tämän käyttäjän"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
@@ -6007,11 +5329,7 @@ msgstr "Sinulla ei ole listoja."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:138
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
-msgstr ""
-
-#: src/view/screens/ModerationBlockedAccounts.tsx:132
-#~ msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-#~ msgstr "Et ole vielä estänyt yhtään käyttäjää. Estääksesi käyttäjän, siirry heidän profiiliinsa ja valitse \"Estä käyttäjä\"-vaihtoehto heidän tilinsä valikosta."
+msgstr "Et ole vielä estänyt yhtään käyttäjää. Estääksesi käyttäjän, siirry heidän profiiliinsa ja valitse \"Estä käyttäjä\"-vaihtoehto valikosta."
 
 #: src/view/screens/AppPasswords.tsx:89
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
@@ -6019,11 +5337,7 @@ msgstr "Et ole vielä luonut yhtään sovelluksen salasanaa. Voit luoda sellaise
 
 #: src/view/screens/ModerationMutedAccounts.tsx:136
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
-msgstr ""
-
-#: src/view/screens/ModerationMutedAccounts.tsx:131
-#~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-#~ msgstr "Et ole vielä hiljentänyt yhtään käyttäjää. Hiljentääksesi käyttäjän, siirry heidän profiiliinsa ja valitse \"Hiljennä käyttäjä\"-vaihtoehto heidän tilinsä valikosta."
+msgstr "Et ole hiljentänyt vielä yhtään käyttäjää. Hiljentääksesi käyttäjän, mene hänen profiiliin ja valitse \"Hiljennä käyttäjä\" valikosta."
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
@@ -6031,15 +5345,11 @@ msgstr "Et ole vielä hiljentänyt yhtään sanaa tai aihetunnistetta"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr ""
+msgstr "Voit valittaa näistä merkinnöistä, jos ne ovat mielestäsi virheellisiä."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
 msgstr ""
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:175
-#~ msgid "You must be 18 or older to enable adult content."
-#~ msgstr "Sinun on oltava vähintään 18-vuotias katsoaksesi aikuissisältöä."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:110
 msgid "You must be 18 years or older to enable adult content"
@@ -6078,7 +5388,7 @@ msgstr "Olet valmis aloittamaan!"
 #: src/components/moderation/ModerationDetailsDialog.tsx:98
 #: src/lib/moderation/useModerationCauseDescription.ts:101
 msgid "You've chosen to hide a word or tag within this post."
-msgstr ""
+msgstr "Olet halunnut piilottaa sanan tai aihetunnisteen tässä viestissä"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -6114,10 +5424,6 @@ msgstr "Oletussyötteesi on \"Following\""
 msgid "Your email appears to be invalid."
 msgstr "Sähköpostiosoitteesi näyttää olevan virheellinen."
 
-#: src/view/com/modals/Waitlist.tsx:109
-#~ msgid "Your email has been saved! We'll be in touch soon."
-#~ msgstr "Sähköpostiosoitteesi on tallennettu! Olemme pian yhteydessä."
-
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "Sähköpostiosoitteesi on päivitetty, mutta sitä ei ole vielä vahvistettu. Seuraavana vaiheena vahvista uusi sähköpostiosoitteesi."
@@ -6137,12 +5443,6 @@ msgstr "Käyttäjätunnuksesi tulee olemaan"
 #: src/view/com/modals/ChangeHandle.tsx:271
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Käyttäjätunnuksesi tulee olemaan <0>@{0}</0>"
-
-#: src/view/screens/Settings.tsx:430
-#: src/view/shell/desktop/RightNav.tsx:137
-#: src/view/shell/Drawer.tsx:660
-#~ msgid "Your invite codes are hidden when logged in using an App Password"
-#~ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:220
 msgid "Your muted words"
