@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {Keyboard, TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
@@ -82,10 +82,6 @@ function GifList({
   const search = useThrottledValue(undeferredSearch, 500)
 
   const isSearching = search.length > 0
-
-  useEffect(() => {
-    listRef.current?.scrollToOffset({offset: 0, animated: false})
-  }, [search])
 
   const trendingQuery = useGiphyTrending()
   const searchQuery = useGifphySearch(search)
@@ -179,7 +175,10 @@ function GifList({
           <TextField.Input
             label={_(msg`Search GIFs`)}
             placeholder={_(msg`Powered by GIPHY`)}
-            onChangeText={setSearch}
+            onChangeText={text => {
+              setSearch(text)
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
             returnKeyType="search"
             clearButtonMode="while-editing"
             inputRef={textInputRef}
