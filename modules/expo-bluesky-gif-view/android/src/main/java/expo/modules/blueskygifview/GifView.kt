@@ -24,7 +24,7 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
   private val glide = Glide.with(activity)
   val imageView = AppCompatImageViewExtended(context, this)
   var isPlaying = true
-  private var isLoaded = false
+  var isLoaded = false
 
   // Requests
   private var placeholderRequest: Target<Drawable>? = null
@@ -93,11 +93,6 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
           if (placeholderRequest != null) {
             glide.clear(placeholderRequest)
           }
-          isLoaded = true
-
-          // On don't want to call this in `onDraw()` because `onDraw()` will get called after
-          // an app background -> foreground, resulting in a useless event being fired
-          firePlayerStateChange()
           return false
         }
 
@@ -174,7 +169,7 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
 
   //<editor-fold desc="Util">
 
-  private fun firePlayerStateChange() {
+  fun firePlayerStateChange() {
     onPlayerStateChange(mapOf(
       "isPlaying" to this.isPlaying,
       "isLoaded" to this.isLoaded,
