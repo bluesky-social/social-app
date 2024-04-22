@@ -1856,7 +1856,7 @@ msgstr "開始"
 
 #: src/components/dialogs/GifSelect.tsx:320
 msgid "GIPHY may collect information about you and your device. You can find out more in their <0>privacy policy</0>."
-msgstr "GIPHYはあなたやあなたのデバイスについての情報を収集するかもしれません。GIPHYの<0>プライバシー・ポリシー</0>を見ることができます。"
+msgstr "GIPHYはあなたやあなたのデバイスについての情報を収集するかもしれません。GIPHYの<0>プライバシー・ポリシー</0>で詳細を確認できます。"
 
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Glaring violations of law or terms of service"
