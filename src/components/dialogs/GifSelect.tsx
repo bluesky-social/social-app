@@ -1,6 +1,7 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
+import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -75,11 +76,16 @@ function GifList({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const ref = useRef<TextInput>(null)
+  const textInputRef = useRef<TextInput>(null)
+  const listRef = useRef<BottomSheetFlatListMethods>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
 
   const isSearching = search.length > 0
+
+  useEffect(() => {
+    listRef.current?.scrollToOffset({offset: 0, animated: false})
+  }, [search])
 
   const trendingQuery = useGiphyTrending()
   const searchQuery = useGifphySearch(search)
@@ -126,7 +132,7 @@ function GifList({
   const onGoBack = useCallback(() => {
     if (isSearching) {
       // clear the input and reset the state
-      ref.current?.clear()
+      textInputRef.current?.clear()
       setSearch('')
     } else {
       control.close()
@@ -176,7 +182,7 @@ function GifList({
             onChangeText={setSearch}
             returnKeyType="search"
             clearButtonMode="while-editing"
-            inputRef={ref}
+            inputRef={textInputRef}
             maxLength={50}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
@@ -193,6 +199,7 @@ function GifList({
     <>
       {gtMobile && <Dialog.Close />}
       <Dialog.InnerFlatList
+        ref={listRef}
         key={gtMobile ? '3 cols' : '2 cols'}
         data={flattenedData}
         renderItem={renderItem}
