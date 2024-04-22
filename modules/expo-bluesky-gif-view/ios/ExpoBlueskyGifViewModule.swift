@@ -7,14 +7,7 @@ public class ExpoBlueskyGifViewModule: Module {
     Name("ExpoBlueskyGifView")
     
     OnCreate {
-      // See expo-image. SDImageAWebPCoder is preferred (and uses Apple's own WebP coder)
-      // but only is available on 14.0+. We probably don't have many users on iOS 13 but
-      // for now let's keep it there until RN targets change.
-      if #available(iOS 14.0, tvOS 14.0, *) {
-        SDImageCodersManager.shared.addCoder(SDImageAWebPCoder.shared)
-      } else {
-        SDImageCodersManager.shared.addCoder(SDImageWebPCoder.shared)
-      }
+      SDImageCodersManager.shared.addCoder(SDImageGIFCoder.shared)
     }
     
     AsyncFunction("prefetchAsync") { (sources: [URL]) in
