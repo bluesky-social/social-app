@@ -8,11 +8,10 @@ import {useLingui} from '@lingui/react'
 import {logger} from '#/logger'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
-  usePinFeedMutation,
+  useAddSavedFeedMutation,
   usePreferencesQuery,
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
-  useSaveFeedMutation,
 } from '#/state/queries/preferences'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -90,11 +89,10 @@ export function FeedSourceCardLoaded({
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
 
-  const {isPending: isSavePending, mutateAsync: saveFeed} =
-    useSaveFeedMutation()
+  const {isPending: isAddSavedFeedPending, mutateAsync: addSavedFeed} =
+    useAddSavedFeedMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
-  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
 
   const savedFeedConfig = preferences?.savedFeeds?.find(
     f => f.value === feed?.uri,
@@ -105,17 +103,17 @@ export function FeedSourceCardLoaded({
     if (!feed) return
 
     try {
-      if (pinOnSave) {
-        await pinFeed({uri: feed.uri})
-      } else {
-        await saveFeed({uri: feed.uri})
-      }
+      await addSavedFeed({
+        type: 'feed',
+        value: feed.uri,
+        pinned: pinOnSave,
+      })
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to save feed', {message: e})
     }
-  }, [_, feed, pinFeed, pinOnSave, saveFeed])
+  }, [_, feed, pinOnSave, addSavedFeed])
 
   const onUnsave = React.useCallback(async () => {
     if (!savedFeedConfig) return
@@ -231,7 +229,7 @@ export function FeedSourceCardLoaded({
             <View style={[s.justifyCenter]}>
               <Pressable
                 testID={`feed-${feed.displayName}-toggleSave`}
-                disabled={isSavePending || isPinPending || isRemovePending}
+                disabled={isAddSavedFeedPending || isRemovePending}
                 accessibilityRole="button"
                 accessibilityLabel={
                   isSaved
