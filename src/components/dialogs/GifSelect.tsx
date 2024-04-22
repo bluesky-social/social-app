@@ -5,7 +5,6 @@ import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {GIPHY_PRIVACY_POLICY} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {isWeb} from '#/platform/detection'
@@ -13,7 +12,11 @@ import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from '#/state/preferences'
-import {Gif, useGifphySearch, useGiphyTrending} from '#/state/queries/giphy'
+import {
+  Gif,
+  useFeaturedGifsQuery,
+  useGifSearchQuery,
+} from '#/state/queries/tenor'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -22,7 +25,6 @@ import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {InlineLinkText} from '#/components/Link'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {ListFooter, ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
@@ -46,14 +48,14 @@ export function GifSelectDialog({
 
   let content = null
   let snapPoints
-  switch (externalEmbedsPrefs?.giphy) {
+  switch (externalEmbedsPrefs?.tenor) {
     case 'show':
-      content = <GifList onSelectGif={onSelectGif} />
+      content = <GifList control={control} onSelectGif={onSelectGif} />
       snapPoints = ['100%']
       break
     case 'hide':
     default:
-      content = <GiphyConsentPrompt />
+      content = <TenorConsentPrompt control={control} />
       break
   }
 
@@ -73,7 +75,13 @@ export function GifSelectDialog({
   )
 }
 
-function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
+function GifList({
+  control,
+  onSelectGif,
+}: {
+  control: Dialog.DialogControlProps
+  onSelectGif: (gif: Gif) => void
+}) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -81,12 +89,11 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
-  const {close} = Dialog.useDialogContext()
 
   const isSearching = search.length > 0
 
-  const trendingQuery = useGiphyTrending()
-  const searchQuery = useGifphySearch(search)
+  const trendingQuery = useFeaturedGifsQuery()
+  const searchQuery = useGifSearchQuery(search)
 
   const {
     data,
@@ -100,17 +107,7 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
   } = isSearching ? searchQuery : trendingQuery
 
   const flattenedData = useMemo(() => {
-    const uniquenessSet = new Set<string>()
-
-    function filter(gif: Gif) {
-      if (!gif) return false
-      if (uniquenessSet.has(gif.id)) {
-        return false
-      }
-      uniquenessSet.add(gif.id)
-      return true
-    }
-    return data?.pages.flatMap(page => page.data.filter(filter)) || []
+    return data?.pages.flatMap(page => page.results) || []
   }, [data])
 
   const renderItem = useCallback(
@@ -133,9 +130,9 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
       textInputRef.current?.clear()
       setSearch('')
     } else {
-      close()
+      control.close()
     }
-  }, [close, isSearching])
+  }, [control, isSearching])
 
   const listHeader = useMemo(() => {
     return (
@@ -166,7 +163,7 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
             variant="ghost"
             color="secondary"
             shape="round"
-            onPress={() => close()}
+            onPress={() => control.close()}
             label={_(msg`Close GIF dialog`)}>
             <ButtonIcon icon={Arrow} size="md" />
           </Button>
@@ -176,7 +173,7 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
           <TextField.Icon icon={Search} />
           <TextField.Input
             label={_(msg`Search GIFs`)}
-            placeholder={_(msg`Powered by GIPHY`)}
+            placeholder={_(msg`Search Tenor`)}
             onChangeText={text => {
               setSearch(text)
               listRef.current?.scrollToOffset({offset: 0, animated: false})
@@ -187,14 +184,14 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
             maxLength={50}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
-                close()
+                control.close()
               }
             }}
           />
         </TextField.Root>
       </View>
     )
-  }, [gtMobile, t.atoms.bg, _, close])
+  }, [gtMobile, t.atoms.bg, _, control])
 
   return (
     <>
@@ -218,12 +215,12 @@ function GifList({onSelectGif}: {onSelectGif: (gif: Gif) => void}) {
                 emptyType="results"
                 sideBorders={false}
                 errorTitle={_(msg`Failed to load GIFs`)}
-                errorMessage={_(msg`There was an issue connecting to GIPHY.`)}
+                errorMessage={_(msg`There was an issue connecting to Tenor.`)}
                 emptyMessage={
                   isSearching
                     ? _(msg`No search results found for "${search}".`)
                     : _(
-                        msg`No trending GIFs found. There may be an issue with GIPHY.`,
+                        msg`No featured GIFs found. There may be an issue with Tenor.`,
                       )
                 }
               />
@@ -282,7 +279,9 @@ function GifPreview({
             {aspectRatio: 1, opacity: pressed ? 0.8 : 1},
             t.atoms.bg_contrast_25,
           ]}
-          source={{uri: gif.images.preview_gif.url}}
+          source={{
+            uri: gif.media_formats.tinygif.url,
+          }}
           contentFit="cover"
           accessibilityLabel={gif.title}
           accessibilityHint=""
@@ -294,64 +293,61 @@ function GifPreview({
   )
 }
 
-export function GiphyConsentPrompt() {
+function TenorConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const setExternalEmbedPref = useSetExternalEmbedPref()
-  const {close} = Dialog.useDialogContext()
 
   const onShowPress = useCallback(() => {
-    close(() => setExternalEmbedPref('giphy', 'show'))
-  }, [close, setExternalEmbedPref])
+    setExternalEmbedPref('tenor', 'show')
+  }, [setExternalEmbedPref])
 
   const onHidePress = useCallback(() => {
-    close(() => {
-      setExternalEmbedPref('giphy', 'hide')
-    })
-  }, [close, setExternalEmbedPref])
+    setExternalEmbedPref('tenor', 'hide')
+    control.close()
+  }, [control, setExternalEmbedPref])
 
   const gtMobileWeb = gtMobile && isWeb
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Permission to use GIPHY`)}>
+    <Dialog.ScrollableInner label={_(msg`Permission to use Tenor`)}>
       <View style={a.gap_sm}>
         <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Permission to use GIPHY</Trans>
+          <Trans>Permission to use Tenor</Trans>
         </Text>
 
         <View style={[a.mt_sm, a.mb_2xl, a.gap_lg]}>
           <Text>
-            <Trans>Bluesky uses GIPHY for GIF features within the app.</Trans>
+            <Trans>
+              Bluesky uses Tenor to provide the GIF selector feature.
+            </Trans>
           </Text>
 
           <Text style={t.atoms.text_contrast_medium}>
             <Trans>
-              GIPHY may collect information about you and your device. You can
-              find out more in their{' '}
-              <InlineLinkText to={GIPHY_PRIVACY_POLICY} onPress={() => close()}>
-                privacy policy
-              </InlineLinkText>
-              .
+              Tenor is a third-party service that provides GIFs for use in
+              Bluesky. By enabling Tenor, requests will be made to Tenor's
+              servers to retrieve the GIFs.
             </Trans>
           </Text>
         </View>
       </View>
       <View style={[a.gap_md, gtMobileWeb && a.flex_row_reverse]}>
         <Button
-          label={_(msg`Enable GIPHY`)}
+          label={_(msg`Enable Tenor`)}
           onPress={onShowPress}
-          onAccessibilityEscape={close}
+          onAccessibilityEscape={control.close}
           color="primary"
           size={gtMobileWeb ? 'small' : 'medium'}
           variant="solid">
           <ButtonText>
-            <Trans>Enable GIPHY</Trans>
+            <Trans>Enable Tenor</Trans>
           </ButtonText>
         </Button>
         <Button
           label={_(msg`No thanks`)}
-          onAccessibilityEscape={close}
+          onAccessibilityEscape={control.close}
           onPress={onHidePress}
           color="secondary"
           size={gtMobileWeb ? 'small' : 'medium'}

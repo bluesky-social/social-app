@@ -29,8 +29,8 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {Gif} from '#/state/queries/giphy'
 import {useProfileQuery} from '#/state/queries/profile'
+import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {getAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -316,18 +316,19 @@ export const ComposePost = observer(function ComposePost({
   }, [])
 
   const onSelectGif = useCallback(
-    (gif: Gif) =>
+    (gif: Gif) => {
       setExtLink({
-        uri: `${gif.url}?hh=${gif.images.original.height}&ww=${gif.images.original.width}`,
+        uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[0]}&ww=${gif.media_formats.gif.dims[1]}`,
         isLoading: true,
         meta: {
-          url: gif.url,
-          image: gif.images.original_still.url,
+          url: gif.media_formats.gif.url,
+          image: gif.media_formats.preview.url,
           likelyType: LikelyType.HTML,
-          title: `${gif.title} - Find & Share on GIPHY`,
-          description: `ALT: ${gif.alt_text}`,
+          title: gif.content_description,
+          description: `ALT: ${gif.content_description}`,
         },
-      }),
+      })
+    },
     [setExtLink],
   )
 
