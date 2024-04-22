@@ -129,15 +129,12 @@ export function FeedSourceCardLoaded({
   }, [_, removeFeed, savedFeedConfig])
 
   const onToggleSaved = React.useCallback(async () => {
-    // Only feeds can be un/saved, lists are handled elsewhere
-    if (feed?.type !== 'feed') return
-
     if (isSaved) {
       removePromptControl.open()
     } else {
       await onSave()
     }
-  }, [feed?.type, isSaved, removePromptControl, onSave])
+  }, [isSaved, removePromptControl, onSave])
 
   /*
    * LOAD STATE
@@ -225,7 +222,7 @@ export function FeedSourceCardLoaded({
             </Text>
           </View>
 
-          {showSaveBtn && feed.type === 'feed' && (
+          {showSaveBtn && (
             <View style={[s.justifyCenter]}>
               <Pressable
                 testID={`feed-${feed.displayName}-toggleSave`}
