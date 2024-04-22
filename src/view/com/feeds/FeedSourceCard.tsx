@@ -5,7 +5,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
@@ -24,9 +23,6 @@ import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PrimaryAlgoNoticeDialog} from '#/components/PrimaryAlgoNoticeDialog'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
@@ -93,8 +89,6 @@ export function FeedSourceCardLoaded({
   const {_} = useLingui()
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
-  const gate = useGate()
-  const primaryAlgoDialogControl = Prompt.usePromptControl()
 
   const {isPending: isSavePending, mutateAsync: saveFeed} =
     useSaveFeedMutation()
@@ -102,7 +96,10 @@ export function FeedSourceCardLoaded({
     useRemoveFeedMutation()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
 
-  const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed?.uri || ''))
+  const savedFeedConfig = preferences?.savedFeeds?.find(
+    f => f.value === feed?.uri,
+  )
+  const isSaved = Boolean(savedFeedConfig)
 
   const onSave = React.useCallback(async () => {
     if (!feed) return
@@ -121,17 +118,17 @@ export function FeedSourceCardLoaded({
   }, [_, feed, pinFeed, pinOnSave, saveFeed])
 
   const onUnsave = React.useCallback(async () => {
-    if (!feed) return
+    if (!savedFeedConfig) return
 
     try {
-      await removeFeed({uri: feed.uri})
+      await removeFeed(savedFeedConfig)
       // await item.unsave()
       Toast.show(_(msg`Removed from my feeds`))
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to unsave feed', {message: e})
     }
-  }, [_, feed, removeFeed])
+  }, [_, removeFeed, savedFeedConfig])
 
   const onToggleSaved = React.useCallback(async () => {
     // Only feeds can be un/saved, lists are handled elsewhere
@@ -193,10 +190,6 @@ export function FeedSourceCardLoaded({
       </View>
     )
 
-  const primaryAlgo = preferences?.primaryAlgorithm
-  const isPrimaryAlgo =
-    primaryAlgo?.enabled && primaryAlgo?.uri && primaryAlgo.uri === feed.uri
-
   return (
     <>
       <Pressable
@@ -235,55 +228,35 @@ export function FeedSourceCardLoaded({
           </View>
 
           {showSaveBtn && feed.type === 'feed' && (
-            <>
-              {gate('reduced_onboarding_and_home_algo') && isPrimaryAlgo ? (
-                <Button
-                  variant="solid"
-                  color="secondary"
-                  size="small"
-                  label={_(
-                    msg`This feed is already set as your primary algorithm.`,
-                  )}
-                  onPress={() => {
-                    primaryAlgoDialogControl.open()
-                  }}>
-                  <ButtonIcon icon={Check} position="left" />
-                  <ButtonText>
-                    <Trans>Primary Algorithm</Trans>
-                  </ButtonText>
-                </Button>
-              ) : (
-                <View style={[s.justifyCenter]}>
-                  <Pressable
-                    testID={`feed-${feed.displayName}-toggleSave`}
-                    disabled={isSavePending || isPinPending || isRemovePending}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      isSaved
-                        ? _(msg`Remove from my feeds`)
-                        : _(msg`Add to my feeds`)
-                    }
-                    accessibilityHint=""
-                    onPress={onToggleSaved}
-                    hitSlop={15}
-                    style={styles.btn}>
-                    {isSaved ? (
-                      <FontAwesomeIcon
-                        icon={['far', 'trash-can']}
-                        size={19}
-                        color={pal.colors.icon}
-                      />
-                    ) : (
-                      <FontAwesomeIcon
-                        icon="plus"
-                        size={18}
-                        color={pal.colors.link}
-                      />
-                    )}
-                  </Pressable>
-                </View>
-              )}
-            </>
+            <View style={[s.justifyCenter]}>
+              <Pressable
+                testID={`feed-${feed.displayName}-toggleSave`}
+                disabled={isSavePending || isPinPending || isRemovePending}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  isSaved
+                    ? _(msg`Remove from my feeds`)
+                    : _(msg`Add to my feeds`)
+                }
+                accessibilityHint=""
+                onPress={onToggleSaved}
+                hitSlop={15}
+                style={styles.btn}>
+                {isSaved ? (
+                  <FontAwesomeIcon
+                    icon={['far', 'trash-can']}
+                    size={19}
+                    color={pal.colors.icon}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon="plus"
+                    size={18}
+                    color={pal.colors.link}
+                  />
+                )}
+              </Pressable>
+            </View>
           )}
         </View>
 
@@ -315,8 +288,6 @@ export function FeedSourceCardLoaded({
         confirmButtonCta={_(msg`Remove`)}
         confirmButtonColor="negative"
       />
-
-      <PrimaryAlgoNoticeDialog control={primaryAlgoDialogControl} />
     </>
   )
 }
