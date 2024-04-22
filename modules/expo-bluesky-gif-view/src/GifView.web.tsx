@@ -6,8 +6,8 @@ import {GifViewProps} from './GifView.types'
 export class GifView extends React.PureComponent<GifViewProps> {
   private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
     React.createRef()
-  private isLoaded: boolean = false
   private isPlaying: boolean
+  private isLoaded = false
 
   constructor(props: GifViewProps | Readonly<GifViewProps>) {
     super(props)
@@ -28,9 +28,12 @@ export class GifView extends React.PureComponent<GifViewProps> {
     console.warn('prefetchAsync is not supported on web')
   }
 
-  private firePlayerStateChangeEvent = (e: {isPlaying: boolean}) => {
+  private firePlayerStateChangeEvent = () => {
     this.props.onPlayerStateChange?.({
-      nativeEvent: e,
+      nativeEvent: {
+        isPlaying: this.isPlaying,
+        isLoaded: this.isLoaded,
+      },
     })
   }
 
@@ -41,25 +44,19 @@ export class GifView extends React.PureComponent<GifViewProps> {
     }
 
     this.isLoaded = true
-    this.firePlayerStateChangeEvent({
-      isPlaying: this.isPlaying,
-    })
+    this.firePlayerStateChangeEvent()
   }
 
   async playAsync(): Promise<void> {
     this.videoPlayerRef.current.play()
     this.isPlaying = true
-    this.firePlayerStateChangeEvent({
-      isPlaying: true,
-    })
+    this.firePlayerStateChangeEvent()
   }
 
   async pauseAsync(): Promise<void> {
     this.videoPlayerRef.current.pause()
     this.isPlaying = false
-    this.firePlayerStateChangeEvent({
-      isPlaying: false,
-    })
+    this.firePlayerStateChangeEvent()
   }
 
   async toggleAsync(): Promise<void> {
