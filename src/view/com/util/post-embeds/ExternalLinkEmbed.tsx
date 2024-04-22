@@ -37,7 +37,6 @@ export const ExternalLinkEmbed = ({
   }, [link.uri, externalEmbedPrefs])
 
   if (embedPlayerParams?.source === 'tenor') {
-    console.log(link.thumb)
     return <GifEmbed params={embedPlayerParams} thumb={link.thumb} />
   }
 
