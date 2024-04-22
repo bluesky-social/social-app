@@ -122,7 +122,6 @@ export function GifEmbed({
           </>
         ) : (
           <GifView
-            // Need to flatten for web
             webpSource={params.playerUri}
             placeholderSource={thumb}
             style={[a.flex_1, a.rounded_sm]}
