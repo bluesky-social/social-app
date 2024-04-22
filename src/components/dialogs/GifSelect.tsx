@@ -13,6 +13,8 @@ import {
   useSetExternalEmbedPref,
 } from '#/state/preferences'
 import {Gif, useGifphySearch, useGiphyTrending} from '#/state/queries/giphy'
+import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -54,13 +56,18 @@ export function GifSelectDialog({
       break
   }
 
+  const renderErrorBoundary = useCallback(
+    (error: any) => <DialogError details={String(error)} />,
+    [],
+  )
+
   return (
     <Dialog.Outer
       control={control}
       nativeOptions={{sheet: {snapPoints}}}
       onClose={onClose}>
       <Dialog.Handle />
-      {content}
+      <ErrorBoundary renderError={renderErrorBoundary}>{content}</ErrorBoundary>
     </Dialog.Outer>
   )
 }
@@ -354,6 +361,34 @@ function GiphyConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
           </ButtonText>
         </Button>
       </View>
+    </Dialog.ScrollableInner>
+  )
+}
+
+function DialogError({details}: {details?: string}) {
+  const {_} = useLingui()
+  const control = Dialog.useDialogContext()
+
+  return (
+    <Dialog.ScrollableInner style={a.gap_md} label={_(msg`An error occured`)}>
+      <Dialog.Close />
+      <ErrorScreen
+        title={_(msg`Oh no!`)}
+        message={_(
+          msg`There was an unexpected issue in the application. Please let us know if this happened to you!`,
+        )}
+        details={details}
+      />
+      <Button
+        label={_(msg`Close dialog`)}
+        onPress={() => control.close()}
+        color="primary"
+        size="medium"
+        variant="solid">
+        <ButtonText>
+          <Trans>Close</Trans>
+        </ButtonText>
+      </Button>
     </Dialog.ScrollableInner>
   )
 }
