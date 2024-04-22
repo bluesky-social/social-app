@@ -14,7 +14,6 @@ import {
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
-import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
@@ -251,33 +250,21 @@ const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const gate = useGate()
-  const isPrimaryAlgoExperimentEnabled = gate(
-    'reduced_onboarding_and_home_algo',
-  )
-  const primaryAlgo = preferences?.primaryAlgorithm
-  const pinnedUris = preferences?.feeds?.pinned ?? []
-  const feedUris = pinnedUris.filter(uri => getFeedTypeFromUri(uri) === 'feed')
-  const listUris = pinnedUris.filter(uri => getFeedTypeFromUri(uri) === 'list')
-
-  if (
-    isPrimaryAlgoExperimentEnabled &&
-    hasSession &&
-    primaryAlgo?.enabled &&
-    primaryAlgo?.uri
-  ) {
-    feedUris.unshift(primaryAlgo.uri)
-  }
-
-  // used for query key
-  const allUris = feedUris.concat(listUris)
+  const pinnedFeeds = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
+  const feedUris = pinnedFeeds
+    .filter(feed => feed.type === 'feed')
+    .map(f => f.value)
+  const listUris = pinnedFeeds
+    .filter(feed => feed.type === 'list')
+    .map(f => f.value)
 
   return useQuery({
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     queryKey: [
       pinnedFeedInfosQueryKeyRoot,
-      (hasSession ? 'authed:' : 'unauthed:') + allUris.join(','),
+      (hasSession ? 'authed:' : 'unauthed:') +
+        pinnedFeeds.map(f => f.value).join(','),
     ],
     queryFn: async () => {
       let resolved = new Map<string, FeedSourceInfo>()
@@ -313,25 +300,9 @@ export function usePinnedFeedsInfos() {
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
-      // if primary algo is enabled and was fetched, add it to the front of the list
-      if (primaryAlgo?.enabled && primaryAlgo?.uri) {
-        const feedInfo = resolved.get(primaryAlgo.uri)
-        if (feedInfo) {
-          feedInfo.isPrimaryAlgorithm = true
-          result.unshift(feedInfo)
-        }
-      }
-
-      const pinnedUrisSansPrimary = pinnedUris.filter(uri => {
-        if (primaryAlgo?.enabled) {
-          return uri !== primaryAlgo?.uri
-        }
-        return true
-      })
-
       // order the feeds/lists in the order they were pinned
-      for (let pinnedUri of pinnedUrisSansPrimary) {
-        const feedInfo = resolved.get(pinnedUri)
+      for (let pinnedFeed of pinnedFeeds) {
+        const feedInfo = resolved.get(pinnedFeed.value)
         if (feedInfo) {
           result.push(feedInfo)
         }
