@@ -7,31 +7,8 @@ import expo.modules.kotlin.modules.ModuleDefinition
 import java.lang.ref.WeakReference
 
 class ExpoBlueskyGifViewModule : Module() {
-  companion object {
-    val visibleViews = mutableSetOf<WeakReference<GifView>>()
-  }
-
   override fun definition() = ModuleDefinition {
     Name("ExpoBlueskyGifView")
-
-    OnActivityEntersForeground {
-      // Activities will start again after entering the foreground, so we want to pause them
-      // if they are not playing.
-      visibleViews.forEach {
-        val view = it.get() ?: return@forEach
-        if (!view.isPlaying) {
-          view.setIsAnimating(false)
-        }
-      }
-
-      val activity = appContext.currentActivity ?: return@OnActivityEntersForeground
-      Glide.with(activity).resumeRequests()
-    }
-
-    OnActivityEntersBackground {
-      val activity = appContext.currentActivity ?: return@OnActivityEntersBackground
-      Glide.with(activity).pauseRequests()
-    }
 
     AsyncFunction("prefetchAsync") { sources: List<String> ->
       val activity = appContext.currentActivity ?: return@AsyncFunction

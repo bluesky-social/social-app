@@ -2,6 +2,7 @@ package expo.modules.blueskygifview
 
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
@@ -25,7 +26,7 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
   // Glide
   private val activity = appContext.currentActivity ?: throw Exceptions.MissingActivity()
   private val glide: RequestManager = Glide.with(activity)
-  private val imageView = AppCompatImageView(context)
+  val imageView = AppCompatImageViewExtended(context, this)
 
   // Requests
   private var placeholderRequest: Target<Drawable>? = null
@@ -62,15 +63,13 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
     if (this.imageView.drawable == null || this.imageView.drawable !is Animatable) {
       this.load()
     } else if (this.isPlaying) {
-      this.setIsAnimating(true)
+      this.imageView.play()
     }
-    ExpoBlueskyGifViewModule.visibleViews.add(WeakReference(this))
     super.onAttachedToWindow()
   }
 
   override fun onDetachedFromWindow() {
-    this.setIsAnimating(false)
-    ExpoBlueskyGifViewModule.visibleViews.remove(WeakReference(this))
+    this.imageView.pause()
     super.onDetachedFromWindow()
   }
 
@@ -96,11 +95,6 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
         ): Boolean {
           if (placeholderRequest != null) {
             glide.clear(placeholderRequest)
-          }
-
-          // Glide always autoplays the animations, so if we have autoplay disabled let's stop it
-          if (resource is Animatable && !autoplay) {
-            resource.stop()
           }
           return false
         }
@@ -154,26 +148,14 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
 
   //<editor-fold desc="Controls">
 
-  fun setIsAnimating(isAnimating: Boolean) {
-    val drawable = this.imageView.drawable
-
-    if (drawable is Animatable) {
-      if (isAnimating) {
-        drawable.start()
-      } else {
-        drawable.stop()
-      }
-    }
-  }
-
   fun play() {
-    this.setIsAnimating(true)
+    this.imageView.play()
     this.isPlaying = true
     this.firePlayerStateChange()
   }
 
   fun pause() {
-    this.setIsAnimating(false)
+    this.imageView.pause()
     this.isPlaying = false
     this.firePlayerStateChange()
   }
