@@ -327,8 +327,8 @@ function TenorConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
           <Text style={t.atoms.text_contrast_medium}>
             <Trans>
               Tenor is a third-party service that provides GIFs for use in
-              Bluesky. By enabling Tenor, requests will be made directly to
-              Tenor's servers to access the GIFs.
+              Bluesky. By enabling Tenor, requests will be made to Tenor's
+              servers to retrieve the GIFs.
             </Trans>
           </Text>
         </View>
