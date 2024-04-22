@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -46,6 +47,7 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {atoms as a, useTheme} from '#/alf'
 import {IconCircle} from '#/components/IconCircle'
+import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 
@@ -74,6 +76,7 @@ type FlatlistSlice =
       type: 'savedFeed'
       key: string
       feedUri: string
+      savedFeedConfig: AppBskyActorDefs.SavedFeed
     }
   | {
       type: 'savedFeedsLoadMore'
@@ -246,6 +249,7 @@ export function FeedsScreen(_props: Props) {
                   key: `savedFeed:${feed.value}`,
                   type: 'savedFeed',
                   feedUri: feed.value,
+                  savedFeedConfig: feed,
                 })),
             )
             slices = slices.concat(
@@ -257,6 +261,7 @@ export function FeedsScreen(_props: Props) {
                   key: `savedFeed:${feed.value}`,
                   type: 'savedFeed',
                   feedUri: feed.value,
+                  savedFeedConfig: feed,
                 })),
             )
           }
@@ -487,7 +492,7 @@ export function FeedsScreen(_props: Props) {
           </View>
         )
       } else if (item.type === 'savedFeed') {
-        return <SavedFeed feedUri={item.feedUri} />
+        return <FeedOrFollowing savedFeedConfig={item.savedFeedConfig} />
       } else if (item.type === 'popularFeedsHeader') {
         return (
           <>
@@ -593,22 +598,75 @@ export function FeedsScreen(_props: Props) {
   )
 }
 
-function SavedFeed({
-  feedUri,
-  isPrimaryAlgo,
+function FeedOrFollowing({
+  savedFeedConfig: feed,
 }: {
-  feedUri: string
-  isPrimaryAlgo?: boolean
+  savedFeedConfig: AppBskyActorDefs.SavedFeed
+}) {
+  return feed.type === 'timeline' ? (
+    <FollowingFeed />
+  ) : (
+    <SavedFeed savedFeedConfig={feed} />
+  )
+}
+
+function FollowingFeed() {
+  const pal = usePalette('default')
+  const t = useTheme()
+  const {isMobile} = useWebMediaQueries()
+  return (
+    <View
+      testID={`saved-feed-timeline`}
+      style={[
+        pal.border,
+        styles.savedFeed,
+        isMobile && styles.savedFeedMobile,
+      ]}>
+      <View
+        style={[
+          a.align_center,
+          a.justify_center,
+          {
+            width: 28,
+            height: 28,
+            borderRadius: 3,
+            backgroundColor: t.palette.primary_500,
+          },
+        ]}>
+        <FilterTimeline
+          style={[
+            {
+              width: 18,
+              height: 18,
+            },
+          ]}
+          fill={t.palette.white}
+        />
+      </View>
+      <View
+        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+        <Text type="lg-medium" style={pal.text} numberOfLines={1}>
+          Following
+        </Text>
+      </View>
+    </View>
+  )
+}
+
+function SavedFeed({
+  savedFeedConfig: feed,
+}: {
+  savedFeedConfig: AppBskyActorDefs.SavedFeed
 }) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
-  const {data: info, error} = useFeedSourceInfoQuery({uri: feedUri})
-  const typeAvatar = getAvatarTypeFromUri(feedUri)
+  const {data: info, error} = useFeedSourceInfoQuery({uri: feed.value})
+  const typeAvatar = getAvatarTypeFromUri(feed.value)
 
   if (!info)
     return (
       <SavedFeedLoadingPlaceholder
-        key={`savedFeedLoadingPlaceholder:${feedUri}`}
+        key={`savedFeedLoadingPlaceholder:${feed.value}`}
       />
     )
 
@@ -647,11 +705,6 @@ function SavedFeed({
         ) : null}
       </View>
 
-      {isPrimaryAlgo && (
-        <Text type="xs" style={[pal.textLight, s.semiBold]}>
-          <Trans>Primary Algorithm</Trans>
-        </Text>
-      )}
       {isMobile && (
         <FontAwesomeIcon
           icon="chevron-right"
