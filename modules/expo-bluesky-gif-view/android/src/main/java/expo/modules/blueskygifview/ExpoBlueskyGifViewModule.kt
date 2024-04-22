@@ -4,7 +4,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.lang.ref.WeakReference
 
 class ExpoBlueskyGifViewModule : Module() {
   override fun definition() = ModuleDefinition {
@@ -37,10 +36,6 @@ class ExpoBlueskyGifViewModule : Module() {
 
       Prop("autoplay") { view: GifView, autoplay: Boolean ->
         view.autoplay = autoplay
-
-        // This is done on purpose. When we change the autoplay prop, we also want this value
-        // to change!
-        view.isPlaying = autoplay
       }
 
       AsyncFunction("playAsync") { view: GifView ->
