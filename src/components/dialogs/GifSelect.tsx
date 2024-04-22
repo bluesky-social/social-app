@@ -9,10 +9,6 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {isWeb} from '#/platform/detection'
 import {
-  useExternalEmbedsPrefs,
-  useSetExternalEmbedPref,
-} from '#/state/preferences'
-import {
   Gif,
   useFeaturedGifsQuery,
   useGifSearchQuery,
@@ -27,7 +23,6 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arr
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {ListFooter, ListMaybePlaceholder} from '../Lists'
-import {Text} from '../Typography'
 
 export function GifSelectDialog({
   control,
@@ -38,26 +33,12 @@ export function GifSelectDialog({
   onClose: () => void
   onSelectGif: (gif: Gif) => void
 }) {
-  const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const onSelectGif = useCallback(
     (gif: Gif) => {
       control.close(() => onSelectGifProp(gif))
     },
     [control, onSelectGifProp],
   )
-
-  let content = null
-  let snapPoints
-  switch (externalEmbedsPrefs?.tenor) {
-    case 'show':
-      content = <GifList control={control} onSelectGif={onSelectGif} />
-      snapPoints = ['100%']
-      break
-    case 'hide':
-    default:
-      content = <TenorConsentPrompt control={control} />
-      break
-  }
 
   const renderErrorBoundary = useCallback(
     (error: any) => <DialogError details={String(error)} />,
@@ -67,10 +48,12 @@ export function GifSelectDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{sheet: {snapPoints}}}
+      nativeOptions={{sheet: {snapPoints: ['100%']}}}
       onClose={onClose}>
       <Dialog.Handle />
-      <ErrorBoundary renderError={renderErrorBoundary}>{content}</ErrorBoundary>
+      <ErrorBoundary renderError={renderErrorBoundary}>
+        <GifList control={control} onSelectGif={onSelectGif} />
+      </ErrorBoundary>
     </Dialog.Outer>
   )
 }
@@ -290,74 +273,6 @@ function GifPreview({
         />
       )}
     </Button>
-  )
-}
-
-function TenorConsentPrompt({control}: {control: Dialog.DialogControlProps}) {
-  const {_} = useLingui()
-  const t = useTheme()
-  const {gtMobile} = useBreakpoints()
-  const setExternalEmbedPref = useSetExternalEmbedPref()
-
-  const onShowPress = useCallback(() => {
-    setExternalEmbedPref('tenor', 'show')
-  }, [setExternalEmbedPref])
-
-  const onHidePress = useCallback(() => {
-    setExternalEmbedPref('tenor', 'hide')
-    control.close()
-  }, [control, setExternalEmbedPref])
-
-  const gtMobileWeb = gtMobile && isWeb
-
-  return (
-    <Dialog.ScrollableInner label={_(msg`Permission to use Tenor`)}>
-      <View style={a.gap_sm}>
-        <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Permission to use Tenor</Trans>
-        </Text>
-
-        <View style={[a.mt_sm, a.mb_2xl, a.gap_lg]}>
-          <Text>
-            <Trans>
-              Bluesky uses Tenor to provide the GIF selector feature.
-            </Trans>
-          </Text>
-
-          <Text style={t.atoms.text_contrast_medium}>
-            <Trans>
-              Tenor is a third-party service that provides GIFs for use in
-              Bluesky. By enabling Tenor, requests will be made to Tenor's
-              servers to retrieve the GIFs.
-            </Trans>
-          </Text>
-        </View>
-      </View>
-      <View style={[a.gap_md, gtMobileWeb && a.flex_row_reverse]}>
-        <Button
-          label={_(msg`Enable Tenor`)}
-          onPress={onShowPress}
-          onAccessibilityEscape={control.close}
-          color="primary"
-          size={gtMobileWeb ? 'small' : 'medium'}
-          variant="solid">
-          <ButtonText>
-            <Trans>Enable Tenor</Trans>
-          </ButtonText>
-        </Button>
-        <Button
-          label={_(msg`No thanks`)}
-          onAccessibilityEscape={control.close}
-          onPress={onHidePress}
-          color="secondary"
-          size={gtMobileWeb ? 'small' : 'medium'}
-          variant="ghost">
-          <ButtonText>
-            <Trans>No thanks</Trans>
-          </ButtonText>
-        </Button>
-      </View>
-    </Dialog.ScrollableInner>
   )
 }
 

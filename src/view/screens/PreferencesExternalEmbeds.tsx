@@ -1,25 +1,26 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
+import {Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {Text} from '../com/util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+
 import {
   EmbedPlayerSource,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans} from '@lingui/macro'
-import {ScrollView} from '../com/util/Views'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {s} from 'lib/styles'
 import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from 'state/preferences'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
+import {Text} from '../com/util/text/Text'
+import {ScrollView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -74,13 +75,16 @@ export function PreferencesExternalEmbeds({}: Props) {
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Enable media players for</Trans>
         </Text>
-        {Object.entries(externalEmbedLabels).map(([key, label]) => (
-          <PrefSelector
-            source={key as EmbedPlayerSource}
-            label={label}
-            key={key}
-          />
-        ))}
+        {Object.entries(externalEmbedLabels)
+          // TODO: Remove special case when we disable the old integration.
+          .filter(([key]) => key !== 'tenor')
+          .map(([key, label]) => (
+            <PrefSelector
+              source={key as EmbedPlayerSource}
+              label={label}
+              key={key}
+            />
+          ))}
       </ScrollView>
     </View>
   )
