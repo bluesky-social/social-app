@@ -9,15 +9,18 @@ import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
 import {GiphyConsentPrompt} from '#/components/dialogs/GifSelect'
+import {Loader} from '#/components/Loader'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
 
 function PlaybackControls({
   onPress,
   isPlaying,
+  isLoaded,
 }: {
   onPress: () => void
   isPlaying: boolean
+  isLoaded: boolean
 }) {
   const t = useTheme()
 
@@ -28,17 +31,29 @@ function PlaybackControls({
         a.absolute,
         a.align_center,
         a.justify_center,
+        !isLoaded && a.border,
+        t.atoms.border_contrast_medium,
         {
           left: 0,
           right: 0,
           top: 0,
           bottom: 0,
           zIndex: 2,
-          backgroundColor: !isPlaying ? 'rgba(0, 0, 0, 0.3)' : undefined,
+          backgroundColor: !isLoaded
+            ? t.atoms.bg_contrast_25.backgroundColor
+            : !isPlaying
+            ? 'rgba(0, 0, 0, 0.3)'
+            : undefined,
         },
       ]}
       onPress={onPress}>
-      {!isPlaying && (
+      {!isLoaded ? (
+        <View>
+          <View style={[a.align_center, a.justify_center]}>
+            <Loader size="xl" />
+          </View>
+        </View>
+      ) : !isPlaying ? (
         <View
           style={[
             a.rounded_full,
@@ -57,7 +72,7 @@ function PlaybackControls({
             style={{marginLeft: 8}}
           />
         </View>
-      )}
+      ) : undefined}
     </Pressable>
   )
 }
@@ -78,8 +93,10 @@ export function GifEmbed({
 
   const [playerState, setPlayerState] = React.useState<{
     isPlaying: boolean
+    isLoaded: boolean
   }>({
     isPlaying: !autoplayDisabled && !needsPermissions,
+    isLoaded: false,
   })
 
   const onPlayerStateChange = React.useCallback(
@@ -107,7 +124,11 @@ export function GifEmbed({
             aspectRatio: params.dimensions!.width / params.dimensions!.height,
           },
         ]}>
-        <PlaybackControls onPress={onPress} isPlaying={playerState.isPlaying} />
+        <PlaybackControls
+          onPress={onPress}
+          isPlaying={playerState.isPlaying}
+          isLoaded={!needsPermissions && playerState.isLoaded}
+        />
         {needsPermissions ? (
           <>
             <Image
