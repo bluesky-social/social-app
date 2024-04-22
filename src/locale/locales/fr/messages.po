@@ -255,7 +255,7 @@ msgstr "Un e-mail a été envoyé à votre ancienne adresse, {0}. Il comprend un
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
-msgstr "Un problème qui n’est pas inclus dans ces options"
+msgstr "Un problème qui ne fait pas partie de ces options"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
@@ -699,11 +699,11 @@ msgstr "Effacer la recherche"
 
 #: src/view/screens/Settings/index.tsx:833
 msgid "Clears all legacy storage data"
-msgstr "Vous effacez toutes les données de stockage existantes"
+msgstr "Efface toutes les données de stockage existantes"
 
 #: src/view/screens/Settings/index.tsx:845
 msgid "Clears all storage data"
-msgstr "Vous effacez toutes les données de stockage"
+msgstr "Efface toutes les données de stockage"
 
 #: src/view/screens/Support.tsx:40
 msgid "click here"
@@ -811,7 +811,7 @@ msgstr "Configurer les paramètres de filtrage de contenu pour la catégorie : 
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr "Configurer les paramètres de filtrage de contenu pour la catégorie : {name}"
+msgstr "Configure les paramètres de filtrage de contenu pour la catégorie : {name}"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
@@ -846,7 +846,7 @@ msgstr "Confirmez votre âge :"
 
 #: src/screens/Moderation/index.tsx:292
 msgid "Confirm your birthdate"
-msgstr "Confirmez votre date de naissance"
+msgstr "Confirme votre date de naissance"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:175
@@ -1176,7 +1176,7 @@ msgstr "Ignorer"
 
 #: src/view/com/composer/Composer.tsx:508
 msgid "Discard draft?"
-msgstr "Ignorer le brouillon ?"
+msgstr "Abandonner le brouillon ?"
 
 #: src/screens/Moderation/index.tsx:518
 #: src/screens/Moderation/index.tsx:522
@@ -1400,17 +1400,17 @@ msgstr "E-mail :"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed HTML code"
-msgstr "Intégrer un code HTML"
+msgstr "Code HTML à intégrer"
 
 #: src/components/dialogs/Embed.tsx:97
 #: src/view/com/util/forms/PostDropdownBtn.tsx:253
 #: src/view/com/util/forms/PostDropdownBtn.tsx:255
 msgid "Embed post"
-msgstr "Intégrer ce post"
+msgstr "Intégrer le post"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr "Intégrez cet article à votre site web. Il suffit de copier l’extrait suivant et de le coller dans le code HTML de votre site web."
+msgstr "Intégrez ce post à votre site web. Il suffit de copier l’extrait suivant et de le coller dans le code HTML de votre site web."
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
@@ -1444,7 +1444,7 @@ msgstr "Activez ce paramètre pour ne voir que les réponses des personnes que v
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
-msgstr "Activation de cette source uniquement"
+msgstr "Active cette source uniquement"
 
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
@@ -1518,7 +1518,7 @@ msgstr "Tout le monde"
 
 #: src/lib/moderation/useReportOptions.ts:66
 msgid "Excessive mentions or replies"
-msgstr "Les mentions ou réponses excessives"
+msgstr "Mentions ou réponses excessives"
 
 #: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Exits account deletion process"
@@ -1778,7 +1778,7 @@ msgstr "Suit {0}"
 
 #: src/view/screens/Settings/index.tsx:504
 msgid "Following feed preferences"
-msgstr "Préférences en matière de fil d’actu « Following »"
+msgstr "Préférences du fil d’actu « Following »"
 
 #: src/Navigation.tsx:262
 #: src/view/com/home/HomeHeaderLayout.web.tsx:54
@@ -2394,7 +2394,7 @@ msgstr "Se connecter à un compte qui n’est pas listé"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
-msgstr "On dirait XXXXX-XXXXX"
+msgstr "De la forme XXXXX-XXXXX"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2626,7 +2626,7 @@ msgstr "Le nom est requis"
 #: src/lib/moderation/useReportOptions.ts:78
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Name or Description Violates Community Standards"
-msgstr "Le nom ou la description viole les normes communautaires"
+msgstr "Nom ou description qui viole les normes communautaires"
 
 #: src/screens/Onboarding/index.tsx:25
 msgid "Nature"
@@ -2795,7 +2795,7 @@ msgstr "Personne"
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr "Personne n’a encore liké. Peut-être devriez-vous être le premier !"
+msgstr "Personne n’a encore liké. Peut-être devriez-vous ouvrir la voie !"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -2845,7 +2845,7 @@ msgstr "Nudité ou contenu adulte non identifié comme tel"
 
 #: src/screens/Signup/index.tsx:143
 msgid "of"
-msgstr "de"
+msgstr "sur"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -2862,7 +2862,7 @@ msgstr "Oh non ! Il y a eu un problème."
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:126
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:333
 msgid "OK"
-msgstr "D’accord"
+msgstr "OK"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:44
 msgid "Okay"
@@ -3054,7 +3054,7 @@ msgstr "Option {0} sur {numItems}"
 
 #: src/components/ReportDialog/SubmitView.tsx:160
 msgid "Optionally provide additional information below:"
-msgstr "Si vous le souhaitez, vous pouvez fournir des informations supplémentaires ci-dessous :"
+msgstr "Ajoutez des informations supplémentaires ci-dessous (optionnel) :"
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
@@ -3286,13 +3286,13 @@ msgstr "Lien potentiellement trompeur"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
-msgstr "Appuyez sur pour changer d’hébergeur"
+msgstr "Appuyer pour changer d’hébergeur"
 
 #: src/components/Error.tsx:74
 #: src/components/Lists.tsx:80
 #: src/screens/Signup/index.tsx:187
 msgid "Press to retry"
-msgstr "Appuyer sur pour réessayer"
+msgstr "Appuyer pour réessayer"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -3505,7 +3505,7 @@ msgstr "Signaler le compte"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
-msgstr "Dialogue pour signaler"
+msgstr "Fenêtre de dialogue de signalement"
 
 #: src/view/screens/ProfileFeed.tsx:363
 #: src/view/screens/ProfileFeed.tsx:365
@@ -3697,7 +3697,7 @@ msgstr "Enregistrer le recadrage de l’image"
 #: src/view/screens/ProfileFeed.tsx:347
 #: src/view/screens/ProfileFeed.tsx:353
 msgid "Save to my feeds"
-msgstr "Enregistrer à mes fils d’actu"
+msgstr "Enregistrer dans mes fils d’actu"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Saved Feeds"
@@ -3705,7 +3705,7 @@ msgstr "Fils d’actu enregistrés"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll."
-msgstr "Enregistré dans votre rouleau d’appareil photo."
+msgstr "Enregistré dans votre photothèque"
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
@@ -3814,7 +3814,7 @@ msgstr "Sélectionner les langues"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:30
 msgid "Select moderator"
-msgstr "Sélectionner le modérateur"
+msgstr "Sélectionner une modération"
 
 #: src/view/com/util/Selector.tsx:107
 msgid "Select option {i} of {numItems}"
@@ -3826,7 +3826,7 @@ msgstr "Sélectionnez quelques comptes à suivre ci-dessous"
 
 #: src/components/ReportDialog/SubmitView.tsx:133
 msgid "Select the moderation service(s) to report to"
-msgstr "Sélectionnez le(s) service(s) de modération auquel(s) vous devez vous adresser"
+msgstr "Sélectionnez le(s) service(s) de modération destinataires du signalement"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
@@ -3846,7 +3846,7 @@ msgstr "Sélectionnez les langues que vous souhaitez voir figurer dans les fils 
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app."
-msgstr "Sélectionnez la langue de votre application à afficher par défaut."
+msgstr "Sélectionnez votre langue par défaut pour les textes de l’application."
 
 #: src/screens/Signup/StepInfo/index.tsx:135
 msgid "Select your date of birth"
@@ -3954,11 +3954,11 @@ msgstr "Change le thème de couleur en fonction du paramètre système"
 
 #: src/view/screens/Settings/index.tsx:484
 msgid "Sets dark theme to the dark theme"
-msgstr "Choisir le thème le plus sombre comme thème sombre"
+msgstr "Change le thème sombre comme étant le plus sombre"
 
 #: src/view/screens/Settings/index.tsx:477
 msgid "Sets dark theme to the dim theme"
-msgstr "Choisir le thème atténué comme thème sombre"
+msgstr "Change le thème sombre comme étant le thème atténué"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Sets email for password reset"
@@ -3970,11 +3970,11 @@ msgstr "Définit le rapport d’aspect de l’image comme étant carré"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:114
 msgid "Sets image aspect ratio to tall"
-msgstr "Définit le rapport hauteur/largeur de l’image"
+msgstr "Définit le rapport d’aspect de l’image comme portrait"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:104
 msgid "Sets image aspect ratio to wide"
-msgstr "Définit le rapport d’aspect de l’image sur large"
+msgstr "Définit le rapport d’aspect de l’image comme paysage"
 
 #: src/Navigation.tsx:139
 #: src/view/screens/Settings/index.tsx:316
@@ -4376,7 +4376,7 @@ msgstr "Conditions d’utilisation"
 #: src/lib/moderation/useReportOptions.ts:79
 #: src/lib/moderation/useReportOptions.ts:87
 msgid "Terms used violate community standards"
-msgstr "Les termes utilisés violent les normes de la communauté"
+msgstr "Termes utilisés qui violent les normes de la communauté"
 
 #: src/components/dialogs/MutedWords.tsx:323
 msgid "text"
@@ -4552,11 +4552,11 @@ msgstr "Cet appel sera envoyé à <0>{0}</0>."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
-msgstr "Ce contenu a été masqué par les modérateurs."
+msgstr "Ce contenu a été masqué par la modération."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:24
 msgid "This content has received a general warning from moderators."
-msgstr "Ce contenu a reçu un avertissement général de la part des modérateurs."
+msgstr "Ce contenu a reçu un avertissement général de la part de la modération."
 
 #: src/components/dialogs/EmbedConsent.tsx:64
 msgid "This content is hosted by {0}. Do you want to enable external media?"
@@ -4714,7 +4714,7 @@ msgstr "Activer ou désactiver le contenu pour adultes"
 
 #: src/view/screens/Search/Search.tsx:427
 msgid "Top"
-msgstr "Élevé"
+msgstr "Meilleur"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
@@ -4847,11 +4847,11 @@ msgstr "Supprimer la liste de modération"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:225
 msgid "Unsubscribe"
-msgstr "Désabonner"
+msgstr "Se désabonner"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:190
 msgid "Unsubscribe from this labeler"
-msgstr "Désabonner de cet étiqueteur"
+msgstr "Se désabonner de cet étiqueteur"
 
 #: src/lib/moderation/useReportOptions.ts:70
 msgid "Unwanted Sexual Content"
@@ -4863,7 +4863,7 @@ msgstr "Mise à jour de {displayName} dans les listes"
 
 #: src/view/com/modals/ChangeHandle.tsx:508
 msgid "Update to {handle}"
-msgstr "Mise à jour à {handle}"
+msgstr "Mettre à jour pour {handle}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:186
 msgid "Updating..."
@@ -4878,19 +4878,19 @@ msgstr "Envoyer un fichier texte vers :"
 #: src/view/com/util/UserBanner.tsx:116
 #: src/view/com/util/UserBanner.tsx:119
 msgid "Upload from Camera"
-msgstr "Téléchargement à partir de l’appareil photo"
+msgstr "Envoyer à partir de l’appareil photo"
 
 #: src/view/com/util/UserAvatar.tsx:345
 #: src/view/com/util/UserBanner.tsx:133
 msgid "Upload from Files"
-msgstr "Téléchargement à partir de fichiers"
+msgstr "Envoyer à partir de fichiers"
 
 #: src/view/com/util/UserAvatar.tsx:339
 #: src/view/com/util/UserAvatar.tsx:343
 #: src/view/com/util/UserBanner.tsx:127
 #: src/view/com/util/UserBanner.tsx:131
 msgid "Upload from Library"
-msgstr "Téléchargement à partir de la bibliothèque"
+msgstr "Envoyer à partir de la photothèque"
 
 #: src/view/com/modals/ChangeHandle.tsx:408
 msgid "Use a file on your server"
@@ -4945,7 +4945,7 @@ msgstr "Compte bloqué par liste"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:66
 msgid "User Blocking You"
-msgstr "Le compte vous bloque"
+msgstr "Compte qui vous bloque"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 msgid "User Blocks You"
@@ -5059,7 +5059,7 @@ msgstr "Voir le fil de discussion entier"
 
 #: src/components/moderation/LabelsOnMe.tsx:51
 msgid "View information about these labels"
-msgstr "Voir les informations sur ces labels"
+msgstr "Voir les informations sur ces étiquettes"
 
 #: src/components/ProfileHoverCard/index.web.tsx:264
 #: src/components/ProfileHoverCard/index.web.tsx:293
@@ -5129,7 +5129,7 @@ msgstr "Nous n’avons pas pu charger vos préférences en matière de date de n
 
 #: src/screens/Moderation/index.tsx:385
 msgid "We were unable to load your configured labelers at this time."
-msgstr "Nous n’avons pas pu charger les étiqueteuses configurées pour le moment."
+msgstr "Nous n’avons pas pu charger vos étiqueteurs configurés pour le moment."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:137
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
