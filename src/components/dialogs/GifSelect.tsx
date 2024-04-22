@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {TextInput, View} from 'react-native'
+import {Keyboard, TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
+import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -82,7 +83,8 @@ function GifList({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const ref = useRef<TextInput>(null)
+  const textInputRef = useRef<TextInput>(null)
+  const listRef = useRef<BottomSheetFlatListMethods>(null)
   const [undeferredSearch, setSearch] = useState('')
   const search = useThrottledValue(undeferredSearch, 500)
 
@@ -133,7 +135,7 @@ function GifList({
   const onGoBack = useCallback(() => {
     if (isSearching) {
       // clear the input and reset the state
-      ref.current?.clear()
+      textInputRef.current?.clear()
       setSearch('')
     } else {
       control.close()
@@ -180,10 +182,13 @@ function GifList({
           <TextField.Input
             label={_(msg`Search GIFs`)}
             placeholder={_(msg`Powered by GIPHY`)}
-            onChangeText={setSearch}
+            onChangeText={text => {
+              setSearch(text)
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
             returnKeyType="search"
             clearButtonMode="while-editing"
-            inputRef={ref}
+            inputRef={textInputRef}
             maxLength={50}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
@@ -200,6 +205,7 @@ function GifList({
     <>
       {gtMobile && <Dialog.Close />}
       <Dialog.InnerFlatList
+        ref={listRef}
         key={gtMobile ? '3 cols' : '2 cols'}
         data={flattenedData}
         renderItem={renderItem}
@@ -235,6 +241,7 @@ function GifList({
         keyExtractor={(item: Gif) => item.id}
         // @ts-expect-error web only
         style={isWeb && {minHeight: '100vh'}}
+        onScrollBeginDrag={() => Keyboard.dismiss()}
         ListFooterComponent={
           hasData ? (
             <ListFooter
