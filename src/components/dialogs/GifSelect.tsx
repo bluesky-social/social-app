@@ -370,9 +370,7 @@ function DialogError({details}: {details?: string}) {
   const control = Dialog.useDialogContext()
 
   return (
-    <Dialog.ScrollableInner
-      style={[a.flex_1, a.gap_md]}
-      label={_(msg`An error occured`)}>
+    <Dialog.ScrollableInner style={a.gap_md} label={_(msg`An error occured`)}>
       <Dialog.Close />
       <ErrorScreen
         title={_(msg`Oh no!`)}
