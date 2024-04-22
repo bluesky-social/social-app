@@ -32,7 +32,7 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
 
   // Props
   var placeholderSource: String? = null
-  var webpSource: String? = null
+  var source: String? = null
   var autoplay: Boolean = true
     set(value) {
       field = value
@@ -75,11 +75,11 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
   //<editor-fold desc="Loading">
 
   private fun load() {
-    if (placeholderSource == null || webpSource == null) {
+    if (placeholderSource == null || source == null) {
       return
     }
 
-    this.webpRequest = glide.load(webpSource)
+    this.webpRequest = glide.load(source)
       .diskCacheStrategy(DiskCacheStrategy.DATA)
       .skipMemoryCache(false)
       .listener(object: RequestListener<Drawable> {

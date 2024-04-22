@@ -9,7 +9,7 @@ export interface GifViewStateChangeEvent {
 
 export interface GifViewProps extends ViewProps {
   autoplay?: boolean
-  webpSource?: string
+  source?: string
   placeholderSource?: string
   onPlayerStateChange?: (event: GifViewStateChangeEvent) => void
 }

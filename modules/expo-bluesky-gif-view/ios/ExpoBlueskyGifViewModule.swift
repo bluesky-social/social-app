@@ -26,8 +26,8 @@ public class ExpoBlueskyGifViewModule: Module {
         "onPlayerStateChange"
       )
       
-      Prop("webpSource") { (view: GifView, prop: String) in
-        view.webpSource = prop
+      Prop("source") { (view: GifView, prop: String) in
+        view.source = prop
       }
       
       Prop("placeholderSource") { (view: GifView, prop: String) in

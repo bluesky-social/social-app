@@ -70,7 +70,7 @@ export class GifView extends React.PureComponent<GifViewProps> {
   render() {
     return (
       <video
-        src={this.props.webpSource}
+        src={this.props.source}
         autoPlay={this.props.autoplay ? 'autoplay' : undefined}
         style={StyleSheet.flatten(this.props.style)}
         preload={this.props.autoplay ? 'auto' : undefined}

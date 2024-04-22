@@ -18,12 +18,12 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
   private var isLoaded = false
   
   // Requests
-  private var placeholderOperation: SDWebImageCombinedOperation?
   private var webpOperation: SDWebImageCombinedOperation?
+  private var placeholderOperation: SDWebImageCombinedOperation?
 
   // Props
+  var source: String? = nil
   var placeholderSource: String? = nil
-  var webpSource: String? = nil
   var autoplay = true {
     didSet {
       if !autoplay {
@@ -66,7 +66,7 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
   // MARK: - Loading
 
   private func load() {
-    guard let webpSource = self.webpSource, let placeholderSource = self.placeholderSource else {
+    guard let source = self.source, let placeholderSource = self.placeholderSource else {
       return
     }
 
@@ -77,7 +77,7 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
     // in the cache already. Cache key is by default the absolute URL of the image.
     // See:
     // https://github.com/SDWebImage/SDWebImage/blob/master/Docs/HowToUse.md#using-asynchronous-image-caching-independently
-    if !SDImageCache.shared.diskImageDataExists(withKey: webpSource),
+    if !SDImageCache.shared.diskImageDataExists(withKey: source),
        let url = URL(string: placeholderSource)
     {
       self.placeholderOperation = imageManager.loadImage(
@@ -89,7 +89,7 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
       )
     }
 
-    if let url = URL(string: webpSource) {
+    if let url = URL(string: source) {
       self.webpOperation = imageManager.loadImage(
         with: url,
         options: [.retryFailed],
@@ -138,8 +138,8 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
       return
     }
 
-    if let webpSource = self.webpSource,
-       imageUrl?.absoluteString == webpSource,
+    if let source = self.source,
+       imageUrl?.absoluteString == source,
        // UIImage perf suckssss if the image is animated
        let data = data,
        let animatedImage = SDAnimatedImage(data: data)
