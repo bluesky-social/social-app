@@ -65,10 +65,6 @@ function createTenorApi<Input extends object>(
 
     if (locale) {
       params.set('locale', locale.languageTag.replace('-', '_'))
-
-      if (locale.regionCode) {
-        params.set('country', locale.regionCode)
-      }
     }
 
     for (const [key, value] of Object.entries(input)) {
