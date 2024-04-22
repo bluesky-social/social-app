@@ -6,7 +6,6 @@ export type Gate =
   | 'hide_vertical_scroll_indicators'
   | 'new_gif_player'
   | 'new_profile_scroll_component'
-  | 'receive_updates'
   | 'show_follow_back_label_v2'
   | 'start_session_with_following_v2'
   | 'use_new_suggestions_endpoint'
