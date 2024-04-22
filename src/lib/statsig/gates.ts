@@ -3,7 +3,6 @@ export type Gate =
   | 'autoexpand_suggestions_on_profile_follow_v2'
   | 'disable_min_shell_on_foregrounding_v2'
   | 'disable_poll_on_discover_v2'
-  | 'hide_vertical_scroll_indicators'
   | 'new_gif_player'
   | 'new_profile_scroll_component'
   | 'receive_updates'

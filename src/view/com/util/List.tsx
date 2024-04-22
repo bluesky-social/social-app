@@ -5,7 +5,6 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {useGate} from 'lib/statsig/statsig'
 import {addStyle} from 'lib/styles'
 import {isWeb} from 'platform/detection'
 import {FlatList_INTERNAL} from './Views'
@@ -40,7 +39,6 @@ function ListImpl<ItemT>(
   const isScrolledDown = useSharedValue(false)
   const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
-  const gate = useGate()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
@@ -97,9 +95,7 @@ function ListImpl<ItemT>(
       scrollEventThrottle={1}
       style={style}
       ref={ref}
-      showsVerticalScrollIndicator={
-        isWeb || !gate('hide_vertical_scroll_indicators')
-      }
+      showsVerticalScrollIndicator={isWeb}
     />
   )
 }
