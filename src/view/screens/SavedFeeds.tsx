@@ -1,5 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,13 +8,11 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {track} from '#/lib/analytics/analytics'
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {
-  usePinFeedMutation,
   usePreferencesQuery,
   useSetSaveFeedsMutation,
-  useUnpinFeedMutation,
+  useUpdateSavedFeedMutation,
 } from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -65,10 +64,9 @@ export function SavedFeeds({}: Props) {
   const currentFeeds =
     optimisticSavedFeedsResponse && !setSavedFeedsError
       ? optimisticSavedFeedsResponse
-      : preferences?.feeds || {saved: [], pinned: []}
-  const unpinned = currentFeeds.saved.filter(f => {
-    return !currentFeeds.pinned?.includes(f)
-  })
+      : preferences?.savedFeeds || []
+  const pinnedFeeds = currentFeeds.filter(f => f.pinned)
+  const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -93,7 +91,7 @@ export function SavedFeeds({}: Props) {
         </View>
 
         {preferences?.feeds ? (
-          !currentFeeds.pinned.length ? (
+          !pinnedFeeds.length ? (
             <View
               style={[
                 pal.border,
@@ -106,10 +104,10 @@ export function SavedFeeds({}: Props) {
               </Text>
             </View>
           ) : (
-            currentFeeds.pinned.map(uri => (
+            pinnedFeeds.map(f => (
               <ListItem
-                key={uri}
-                feedUri={uri}
+                key={f.id}
+                feed={f}
                 isPinned
                 setSavedFeeds={setSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
@@ -127,7 +125,7 @@ export function SavedFeeds({}: Props) {
           </Text>
         </View>
         {preferences?.feeds ? (
-          !unpinned.length ? (
+          !unpinnedFeeds.length ? (
             <View
               style={[
                 pal.border,
@@ -140,10 +138,10 @@ export function SavedFeeds({}: Props) {
               </Text>
             </View>
           ) : (
-            unpinned.map(uri => (
+            unpinnedFeeds.map(f => (
               <ListItem
-                key={uri}
-                feedUri={uri}
+                key={f.id}
+                feed={f}
                 isPinned={false}
                 setSavedFeeds={setSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
@@ -178,16 +176,15 @@ export function SavedFeeds({}: Props) {
 }
 
 function ListItem({
-  feedUri,
+  feed,
   isPinned,
   currentFeeds,
   setSavedFeeds,
   resetSaveFeedsMutationState,
-  preferences,
 }: {
-  feedUri: string // uri
+  feed: AppBskyActorDefs.SavedFeed
   isPinned: boolean
-  currentFeeds: {saved: string[]; pinned: string[]}
+  currentFeeds: AppBskyActorDefs.SavedFeed[]
   setSavedFeeds: ReturnType<typeof useSetSaveFeedsMutation>['mutateAsync']
   resetSaveFeedsMutationState: ReturnType<
     typeof useSetSaveFeedsMutation
@@ -197,17 +194,9 @@ function ListItem({
   const pal = usePalette('default')
   const {_} = useLingui()
   const playHaptic = useHaptics()
-  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
-  const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
-    useUnpinFeedMutation()
-  const isPending = isPinPending || isUnpinPending
-  const gate = useGate()
-  const primaryAlgo = preferences.primaryAlgorithm
-  const isPrimaryAlgoExperimentEnabled = gate(
-    'reduced_onboarding_and_home_algo',
-  )
-  const isPrimaryAlgo = primaryAlgo?.enabled && primaryAlgo?.uri === feedUri
-  const showPinButton = !(isPrimaryAlgoExperimentEnabled && isPrimaryAlgo)
+  const {isPending: isUpdatePending, mutateAsync: updateFeed} =
+    useUpdateSavedFeedMutation()
+  const feedUri = feed.value
 
   const onTogglePinned = React.useCallback(async () => {
     playHaptic()
@@ -215,67 +204,74 @@ function ListItem({
     try {
       resetSaveFeedsMutationState()
 
-      if (isPinned) {
-        await unpinFeed({uri: feedUri})
+      if (feed.pinned) {
+        await updateFeed({
+          ...feed,
+          pinned: false,
+        })
       } else {
-        await pinFeed({uri: feedUri})
+        await updateFeed({
+          ...feed,
+          pinned: true,
+        })
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [
-    playHaptic,
-    resetSaveFeedsMutationState,
-    isPinned,
-    unpinFeed,
-    feedUri,
-    pinFeed,
-    _,
-  ])
+  }, [_, playHaptic, feed, updateFeed, resetSaveFeedsMutationState])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
 
-    // create new array, do not mutate
-    const pinned = [...currentFeeds.pinned]
-    const index = pinned.indexOf(feedUri)
+    const nextFeeds = currentFeeds.slice()
+    const ids = currentFeeds.map(f => f.id)
+    const index = ids.indexOf(feed.id)
+    const nextIndex = index - 1
 
     if (index === -1 || index === 0) return
-    ;[pinned[index], pinned[index - 1]] = [pinned[index - 1], pinned[index]]
+    ;[nextFeeds[index], nextFeeds[nextIndex]] = [
+      nextFeeds[nextIndex],
+      nextFeeds[index],
+    ]
 
     try {
-      await setSavedFeeds({saved: currentFeeds.saved, pinned})
+      await setSavedFeeds(nextFeeds)
       track('CustomFeed:Reorder', {
-        uri: feedUri,
-        index: pinned.indexOf(feedUri),
+        uri: feed.value,
+        index: nextIndex,
       })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, setSavedFeeds, currentFeeds, _])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
 
-    const pinned = [...currentFeeds.pinned]
-    const index = pinned.indexOf(feedUri)
+    const nextFeeds = currentFeeds.slice()
+    const ids = currentFeeds.map(f => f.id)
+    const index = ids.indexOf(feed.id)
+    const nextIndex = index + 1
 
-    if (index === -1 || index >= pinned.length - 1) return
-    ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
+    if (index === -1 || index >= nextFeeds.length - 1) return
+    ;[nextFeeds[index], nextFeeds[nextIndex]] = [
+      nextFeeds[nextIndex],
+      nextFeeds[index],
+    ]
 
     try {
-      await setSavedFeeds({saved: currentFeeds.saved, pinned})
+      await setSavedFeeds(nextFeeds)
       track('CustomFeed:Reorder', {
-        uri: feedUri,
-        index: pinned.indexOf(feedUri),
+        uri: feed.value,
+        index: nextIndex,
       })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, setSavedFeeds, currentFeeds, _])
 
   return (
     <Pressable
@@ -284,12 +280,13 @@ function ListItem({
       {isPinned ? (
         <View style={styles.webArrowButtonsContainer}>
           <Pressable
-            disabled={isPending}
+            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressUp}
             hitSlop={HITSLOP_TOP}
             style={state => ({
-              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
+              opacity:
+                state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
             })}>
             <FontAwesomeIcon
               icon="arrow-up"
@@ -298,12 +295,13 @@ function ListItem({
             />
           </Pressable>
           <Pressable
-            disabled={isPending}
+            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}
             style={state => ({
-              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
+              opacity:
+                state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
             })}>
             <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
           </Pressable>
@@ -316,24 +314,23 @@ function ListItem({
         showSaveBtn
         showMinimalPlaceholder
       />
-      {showPinButton && (
-        <View style={{paddingRight: 16}}>
-          <Pressable
-            disabled={isPending}
-            accessibilityRole="button"
-            hitSlop={10}
-            onPress={onTogglePinned}
-            style={state => ({
-              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
-            })}>
-            <FontAwesomeIcon
-              icon="thumb-tack"
-              size={20}
-              color={isPinned ? colors.blue3 : pal.colors.icon}
-            />
-          </Pressable>
-        </View>
-      )}
+      <View style={{paddingRight: 16}}>
+        <Pressable
+          disabled={isUpdatePending}
+          accessibilityRole="button"
+          hitSlop={10}
+          onPress={onTogglePinned}
+          style={state => ({
+            opacity:
+              state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
+          })}>
+          <FontAwesomeIcon
+            icon="thumb-tack"
+            size={20}
+            color={isPinned ? colors.blue3 : pal.colors.icon}
+          />
+        </Pressable>
+      </View>
     </Pressable>
   )
 }
