@@ -17,10 +17,12 @@ function PlaybackControls({
   onPress,
   isPlaying,
   isLoaded,
+  needsPermissions,
 }: {
   onPress: () => void
   isPlaying: boolean
   isLoaded: boolean
+  needsPermissions: boolean
 }) {
   const t = useTheme()
 
@@ -39,15 +41,16 @@ function PlaybackControls({
           top: 0,
           bottom: 0,
           zIndex: 2,
-          backgroundColor: !isLoaded
-            ? t.atoms.bg_contrast_25.backgroundColor
-            : !isPlaying
-            ? 'rgba(0, 0, 0, 0.3)'
-            : undefined,
+          backgroundColor:
+            !needsPermissions && !isLoaded
+              ? t.atoms.bg_contrast_25.backgroundColor
+              : !isPlaying
+              ? 'rgba(0, 0, 0, 0.3)'
+              : undefined,
         },
       ]}
       onPress={onPress}>
-      {!isLoaded ? (
+      {!needsPermissions && !isLoaded ? (
         <View>
           <View style={[a.align_center, a.justify_center]}>
             <Loader size="xl" />
@@ -127,7 +130,8 @@ export function GifEmbed({
         <PlaybackControls
           onPress={onPress}
           isPlaying={playerState.isPlaying}
-          isLoaded={!needsPermissions && playerState.isLoaded}
+          isLoaded={playerState.isLoaded}
+          needsPermissions={needsPermissions}
         />
         {needsPermissions ? (
           <>

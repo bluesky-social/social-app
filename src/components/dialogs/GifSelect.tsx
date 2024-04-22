@@ -288,8 +288,8 @@ export function GiphyConsentPrompt() {
   const {close} = Dialog.useDialogContext()
 
   const onShowPress = useCallback(() => {
-    setExternalEmbedPref('giphy', 'show')
-  }, [setExternalEmbedPref])
+    close(() => setExternalEmbedPref('giphy', 'show'))
+  }, [close, setExternalEmbedPref])
 
   const onHidePress = useCallback(() => {
     close(() => {
