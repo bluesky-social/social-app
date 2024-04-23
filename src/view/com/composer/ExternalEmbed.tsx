@@ -37,20 +37,18 @@ export const ExternalEmbed = ({
 
   if (!link) return null
 
+  const loadingStyle: ViewStyle | undefined = gif
+    ? {
+        aspectRatio:
+          gif.media_formats.gif.dims[0] / gif.media_formats.gif.dims[1],
+        width: '100%',
+      }
+    : undefined
+
   return (
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {link.isLoading ? (
-        <Container
-          style={
-            gif
-              ? {
-                  aspectRatio:
-                    gif.media_formats.gif.dims[0] /
-                    gif.media_formats.gif.dims[1],
-                  width: '100%',
-                }
-              : undefined
-          }>
+        <Container style={loadingStyle}>
           <Loader size="xl" />
         </Container>
       ) : link.meta?.error ? (
