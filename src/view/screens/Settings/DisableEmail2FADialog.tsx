@@ -65,7 +65,12 @@ export function DisableEmail2FADialog({
       }
       control.close()
     } catch (e) {
-      setError(cleanError(String(e)))
+      const errMsg = String(e)
+      if (errMsg.includes('Token is invalid')) {
+        setError(_(msg`Invalid 2FA confirmation code.`))
+      } else {
+        setError(cleanError(errMsg))
+      }
     } finally {
       setIsProcessing(false)
     }
