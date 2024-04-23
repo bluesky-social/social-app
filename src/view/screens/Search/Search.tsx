@@ -541,15 +541,11 @@ export function SearchScreen(
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
-  const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
-    undefined,
-  )
-
   // Query terms
   const q = props.route?.params?.q ?? ''
   const [query, setQuery] = React.useState<string>(q)
-  const [searchInput, setSearchInput] = React.useState<string>(q)
-  const throttledInput = useThrottledValue(searchInput, 300)
+  const [searchText, setSearchText] = React.useState<string>(q)
+  const throttledInput = useThrottledValue(searchText, 300)
 
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
     useActorAutocompleteQuery(throttledInput)
@@ -584,8 +580,6 @@ export function SearchScreen(
     textInput.current?.blur()
     setQuery('')
     setShowAutocompleteResults(false)
-    if (searchDebounceTimeout.current)
-      clearTimeout(searchDebounceTimeout.current)
   }, [textInput])
 
   const onPressClearQuery = React.useCallback(() => {
@@ -596,7 +590,7 @@ export function SearchScreen(
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
-    setSearchInput(text)
+    setSearchText(text)
 
     const showAutoComplete = text.length > 0
     setShowAutocompleteResults(showAutoComplete)
@@ -709,7 +703,7 @@ export function SearchScreen(
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus={isNative}
             returnKeyType="search"
-            value={searchInput}
+            value={searchText}
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
@@ -773,7 +767,7 @@ export function SearchScreen(
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag">
               <SearchLinkCard
-                label={_(msg`Search for "${searchInput}"`)}
+                label={_(msg`Search for "${searchText}"`)}
                 onPress={isNative ? onSubmit : undefined}
                 to={
                   isNative
