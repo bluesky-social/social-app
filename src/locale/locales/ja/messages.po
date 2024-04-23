@@ -2129,7 +2129,7 @@ msgstr "アカウント削除のためにパスワードを入力"
 
 #: src/screens/Login/LoginForm.tsx:257
 msgid "Input the code which has been emailed to you"
-msgstr "メールで送ったコードを入力"
+msgstr "メールで送られたコードを入力"
 
 #: src/screens/Login/LoginForm.tsx:195
 msgid "Input the password tied to {identifier}"
@@ -2154,7 +2154,7 @@ msgstr "あなたのユーザーハンドルを入力"
 #: src/screens/Login/LoginForm.tsx:126
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr "無効な２要素認証確認コードです。"
+msgstr "無効な２要素認証の確認コードです。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:221
 msgid "Invalid or unsupported post record"
