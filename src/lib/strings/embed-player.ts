@@ -271,7 +271,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${gifId}`,
-          playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
         }
       }
     }
