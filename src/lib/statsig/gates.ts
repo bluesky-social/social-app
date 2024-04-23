@@ -4,7 +4,6 @@ export type Gate =
   | 'disable_min_shell_on_foregrounding_v2'
   | 'disable_poll_on_discover_v2'
   | 'hide_vertical_scroll_indicators'
-  | 'new_gif_player'
   | 'show_follow_back_label_v2'
   | 'start_session_with_following_v2'
   | 'use_new_suggestions_endpoint'
