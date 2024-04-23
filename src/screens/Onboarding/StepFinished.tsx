@@ -1,6 +1,5 @@
 import React from 'react'
 import {View} from 'react-native'
-import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,7 +7,7 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
@@ -38,7 +37,7 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
+  const {mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -63,9 +62,8 @@ export function StepFinished() {
         // these must be serial
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
-          await saveFeeds(
+          await addSavedFeeds(
             selectedFeeds.map(f => ({
-              id: TID.nextStr(),
               type: 'feed',
               value: f,
               pinned: true,
@@ -85,7 +83,7 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
+  }, [state, dispatch, onboardDispatch, setSaving, addSavedFeeds, track])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')

@@ -8,7 +8,7 @@ import {useLingui} from '@lingui/react'
 import {logger} from '#/logger'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
-  useAddSavedFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
@@ -89,8 +89,8 @@ export function FeedSourceCardLoaded({
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
 
-  const {isPending: isAddSavedFeedPending, mutateAsync: addSavedFeed} =
-    useAddSavedFeedMutation()
+  const {isPending: isAddSavedFeedPending, mutateAsync: addSavedFeeds} =
+    useAddSavedFeedsMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
 
@@ -103,17 +103,19 @@ export function FeedSourceCardLoaded({
     if (!feed) return
 
     try {
-      await addSavedFeed({
-        type: 'feed',
-        value: feed.uri,
-        pinned: pinOnSave,
-      })
+      await addSavedFeeds([
+        {
+          type: 'feed',
+          value: feed.uri,
+          pinned: pinOnSave,
+        },
+      ])
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to save feed', {message: e})
     }
-  }, [_, feed, pinOnSave, addSavedFeed])
+  }, [_, feed, pinOnSave, addSavedFeeds])
 
   const onUnsave = React.useCallback(async () => {
     if (!savedFeedConfig) return

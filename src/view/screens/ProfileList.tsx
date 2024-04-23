@@ -23,7 +23,7 @@ import {
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
-  useAddSavedFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
@@ -251,8 +251,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {track} = useAnalytics()
   const playHaptic = useHaptics()
 
-  const {mutateAsync: addSavedFeed, isPending: isAddSavedFeedPending} =
-    useAddSavedFeedMutation()
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
   const {mutateAsync: removeSavedFeed, isPending: isRemovePending} =
     useRemoveFeedMutation()
 
@@ -276,18 +276,20 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         await removeSavedFeed(savedFeedConfig)
         Toast.show(_(msg`Removed from your feeds`))
       } else {
-        await addSavedFeed({
-          type: 'list',
-          value: list.uri,
-          pinned: true,
-        })
+        await addSavedFeeds([
+          {
+            type: 'list',
+            value: list.uri,
+            pinned: true,
+          },
+        ])
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, addSavedFeed, removeSavedFeed, list.uri, _, savedFeedConfig])
+  }, [playHaptic, addSavedFeeds, removeSavedFeed, list.uri, _, savedFeedConfig])
 
   const onSubscribeMute = useCallback(async () => {
     try {

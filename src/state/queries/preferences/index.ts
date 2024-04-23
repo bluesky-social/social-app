@@ -232,16 +232,16 @@ export function useSetSaveFeedsMutation() {
   })
 }
 
-export function useAddSavedFeedMutation() {
+export function useAddSavedFeedsMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<
     void,
     unknown,
-    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>
+    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
   >({
-    mutationFn: async savedFeed => {
-      await getAgent().addSavedFeedV2(savedFeed)
+    mutationFn: async savedFeeds => {
+      await getAgent().addSavedFeeds(savedFeeds)
       track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -255,8 +255,8 @@ export function useRemoveFeedMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
-    mutationFn: async ({id}) => {
-      await getAgent().removeSavedFeedV2(id)
+    mutationFn: async savedFeed => {
+      await getAgent().removeSavedFeeds([savedFeed.id])
       track('CustomFeed:Unsave')
       // triggers a refetch
       await queryClient.invalidateQueries({

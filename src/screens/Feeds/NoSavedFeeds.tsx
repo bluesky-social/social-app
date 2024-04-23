@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -13,11 +13,11 @@ import {Text} from '#/components/Typography'
 export function NoSavedFeeds() {
   const t = useTheme()
   const {_} = useLingui()
-  const {isPending, mutateAsync: setSavedFeeds} = useSetSaveFeedsMutation()
+  const {isPending, mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
 
   const addRecommendedFeeds = React.useCallback(async () => {
-    await setSavedFeeds(RECOMMENDED_SAVED_FEEDS)
-  }, [setSavedFeeds])
+    await addSavedFeeds(RECOMMENDED_SAVED_FEEDS)
+  }, [addSavedFeeds])
 
   return (
     <View

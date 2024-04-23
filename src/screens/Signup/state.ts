@@ -15,7 +15,7 @@ import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {
   DEFAULT_PROD_FEED,
-  useAddSavedFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
 import {useSessionApi} from '#/state/session'
@@ -208,7 +208,7 @@ export function useSubmitSignup({
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
   const {mutateAsync: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutate: addSavedFeed} = useAddSavedFeedMutation()
+  const {mutate: addSavedFeeds} = useAddSavedFeedsMutation()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
@@ -266,7 +266,7 @@ export function useSubmitSignup({
         })
         await setBirthDate({birthDate: state.dateOfBirth})
         if (IS_PROD_SERVICE(state.serviceUrl)) {
-          addSavedFeed(DEFAULT_PROD_FEED)
+          addSavedFeeds([DEFAULT_PROD_FEED])
         }
       } catch (e: any) {
         onboardingDispatch({type: 'skip'}) // undo starting the onboard
@@ -314,7 +314,7 @@ export function useSubmitSignup({
       onboardingDispatch,
       createAccount,
       setBirthDate,
-      addSavedFeed,
+      addSavedFeeds,
     ],
   )
 }

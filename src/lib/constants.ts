@@ -1,6 +1,5 @@
 import {Insets, Platform} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {TID} from '@atproto/common-web'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -95,15 +94,16 @@ export const BSKY_FEED_OWNER_DIDS = [
 export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
 
-export const RECOMMENDED_SAVED_FEEDS: AppBskyActorDefs.SavedFeed[] = [
+export const RECOMMENDED_SAVED_FEEDS: Pick<
+  AppBskyActorDefs.SavedFeed,
+  'type' | 'value' | 'pinned'
+>[] = [
   {
-    id: TID.nextStr(),
     type: 'feed',
     value: DISCOVER_FEED_URI,
     pinned: true,
   },
   {
-    id: TID.nextStr(),
     type: 'timeline',
     value: 'home',
     pinned: true,

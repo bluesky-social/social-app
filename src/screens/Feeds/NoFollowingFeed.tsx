@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAddSavedFeedMutation} from '#/state/queries/preferences'
+import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -11,22 +11,24 @@ import {Text} from '#/components/Typography'
 export function NoFollowingFeed() {
   const t = useTheme()
   const {_} = useLingui()
-  const {mutateAsync: addSavedFeed} = useAddSavedFeedMutation()
+  const {mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
 
   const addRecommendedFeeds = React.useCallback(
     (e: any) => {
       e.preventDefault()
 
-      addSavedFeed({
-        type: 'timeline',
-        value: 'home',
-        pinned: true,
-      })
+      addSavedFeeds([
+        {
+          type: 'timeline',
+          value: 'home',
+          pinned: true,
+        },
+      ])
 
       // prevent navigation
       return false
     },
-    [addSavedFeed],
+    [addSavedFeeds],
   )
 
   return (

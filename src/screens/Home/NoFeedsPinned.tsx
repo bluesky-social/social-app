@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
@@ -30,11 +30,11 @@ export function useHeaderOffset() {
 export function NoFeedsPinned() {
   const {_} = useLingui()
   const headerOffset = useHeaderOffset()
-  const {isPending, mutateAsync: setSavedFeeds} = useSetSaveFeedsMutation()
+  const {isPending, mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
 
   const addRecommendedFeeds = React.useCallback(async () => {
-    await setSavedFeeds(RECOMMENDED_SAVED_FEEDS)
-  }, [setSavedFeeds])
+    await addSavedFeeds(RECOMMENDED_SAVED_FEEDS)
+  }, [addSavedFeeds])
 
   return (
     <CenteredView sideBorders style={[a.h_full_vh]}>

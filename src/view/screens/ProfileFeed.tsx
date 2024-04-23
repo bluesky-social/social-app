@@ -15,7 +15,7 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
-  useAddSavedFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
@@ -162,8 +162,8 @@ export function ProfileFeedScreenInner({
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
-  const {mutateAsync: addSavedFeed, isPending: isAddSavedFeedPending} =
-    useAddSavedFeedMutation()
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
   const {mutateAsync: removeFeed, isPending: isRemovePending} =
     useRemoveFeedMutation()
   const {mutateAsync: updateFeed, isPending: isUpdateFeedPending} =
@@ -193,11 +193,13 @@ export function ProfileFeedScreenInner({
           Toast.show(_(msg`Removed from your feeds`))
         }
       } else {
-        await addSavedFeed({
-          type: 'feed',
-          value: feedInfo.uri,
-          pinned: false,
-        })
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: false,
+          },
+        ])
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (err) {
@@ -208,7 +210,7 @@ export function ProfileFeedScreenInner({
       )
       logger.error('Failed up update feeds', {message: err})
     }
-  }, [_, playHaptic, feedInfo, removeFeed, addSavedFeed, savedFeedConfig])
+  }, [_, playHaptic, feedInfo, removeFeed, addSavedFeeds, savedFeedConfig])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
@@ -227,17 +229,19 @@ export function ProfileFeedScreenInner({
           })
         }
       } else {
-        await addSavedFeed({
-          type: 'feed',
-          value: feedInfo.uri,
-          pinned: true,
-        })
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: true,
+          },
+        ])
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, feedInfo, _, savedFeedConfig, updateFeed, addSavedFeed])
+  }, [playHaptic, feedInfo, _, savedFeedConfig, updateFeed, addSavedFeeds])
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
