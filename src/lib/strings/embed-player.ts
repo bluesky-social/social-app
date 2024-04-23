@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native'
+import {Dimensions, Platform} from 'react-native'
 
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
@@ -255,16 +255,6 @@ export function parseEmbedPlayerFromUrl(
   if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
     const [_, gifs, nameAndId] = urlp.pathname.split('/')
 
-    const h = urlp.searchParams.get('hh')
-    const w = urlp.searchParams.get('ww')
-    let dimensions
-    if (h && w) {
-      dimensions = {
-        height: Number(h),
-        width: Number(w),
-      }
-    }
-
     /*
      * nameAndId is a string that consists of the name (dash separated) and the id of the gif (the last part of the name)
      * We want to get the id of the gif, then direct to media.giphy.com/media/{id}/giphy.webp so we can
@@ -281,10 +271,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${gifId}`,
-          playerUri: `https://i.giphy.com/media/${gifId}/${
-            dimensions ? '200.mp4' : '200.webp'
-          }`,
-          dimensions,
+          playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
         }
       }
     }
@@ -350,21 +337,34 @@ export function parseEmbedPlayerFromUrl(
     }
   }
 
-  if (urlp.hostname === 'tenor.com' || urlp.hostname === 'www.tenor.com') {
-    const [_, pathOrIntl, pathOrFilename, intlFilename] =
-      urlp.pathname.split('/')
-    const isIntl = pathOrFilename === 'view'
-    const filename = isIntl ? intlFilename : pathOrFilename
+  if (urlp.hostname === 'media.tenor.com') {
+    let [_, id, filename] = urlp.pathname.split('/')
 
-    if ((pathOrIntl === 'view' || pathOrFilename === 'view') && filename) {
-      const includesExt = filename.split('.').pop() === 'gif'
+    const h = urlp.searchParams.get('hh')
+    const w = urlp.searchParams.get('ww')
+    let dimensions
+    if (h && w) {
+      dimensions = {
+        height: Number(h),
+        width: Number(w),
+      }
+    }
+
+    if (id && filename && dimensions && id.includes('AAAAC')) {
+      if (Platform.OS === 'web') {
+        id = id.replace('AAAAC', 'AAAP3')
+        filename = filename.replace('.gif', '.webm')
+      } else {
+        id = id.replace('AAAAC', 'AAAAM')
+      }
 
       return {
         type: 'tenor_gif',
         source: 'tenor',
         isGif: true,
         hideDetails: true,
-        playerUri: `${url}${!includesExt ? '.gif' : ''}`,
+        playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
+        dimensions,
       }
     }
   }

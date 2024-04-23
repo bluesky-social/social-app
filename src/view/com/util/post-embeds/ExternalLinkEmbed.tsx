@@ -1,27 +1,32 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import React, {useCallback} from 'react'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
 
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useGate} from 'lib/statsig/statsig'
+import {shareUrl} from 'lib/sharing'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {toNiceDomain} from 'lib/strings/url-helpers'
+import {isNative} from 'platform/detection'
 import {useExternalEmbedsPrefs} from 'state/preferences'
+import {Link} from 'view/com/util/Link'
 import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {GifEmbed} from 'view/com/util/post-embeds/GifEmbed'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
   link,
+  style,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
+  style?: StyleProp<ViewStyle>
 }) => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
-  const gate = useGate()
 
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
@@ -30,71 +35,96 @@ export const ExternalLinkEmbed = ({
       return params
     }
   }, [link.uri, externalEmbedPrefs])
-  const isCompatibleGiphy =
-    embedPlayerParams?.source === 'giphy' &&
-    embedPlayerParams.dimensions &&
-    gate('new_gif_player')
+
+  if (embedPlayerParams?.source === 'tenor') {
+    return <GifEmbed params={embedPlayerParams} link={link} />
+  }
 
   return (
-    <View style={styles.container}>
-      {link.thumb && !embedPlayerParams ? (
-        <Image
-          style={{aspectRatio: 1.91}}
-          source={{uri: link.thumb}}
-          accessibilityIgnoresInvertColors
-        />
-      ) : undefined}
-      {isCompatibleGiphy ? (
-        <View />
-      ) : embedPlayerParams?.isGif ? (
-        <ExternalGifEmbed link={link} params={embedPlayerParams} />
-      ) : embedPlayerParams ? (
-        <ExternalPlayer link={link} params={embedPlayerParams} />
-      ) : undefined}
-      <View style={[styles.info, {paddingHorizontal: isMobile ? 10 : 14}]}>
-        {!isCompatibleGiphy && (
+    <View style={[a.flex_col, a.rounded_sm, a.overflow_hidden, a.mt_sm]}>
+      <LinkWrapper link={link} style={style}>
+        {link.thumb && !embedPlayerParams ? (
+          <Image
+            style={{
+              aspectRatio: 1.91,
+              borderTopRightRadius: 6,
+              borderTopLeftRadius: 6,
+            }}
+            source={{uri: link.thumb}}
+            accessibilityIgnoresInvertColors
+          />
+        ) : undefined}
+        {embedPlayerParams?.isGif ? (
+          <ExternalGifEmbed link={link} params={embedPlayerParams} />
+        ) : embedPlayerParams ? (
+          <ExternalPlayer link={link} params={embedPlayerParams} />
+        ) : undefined}
+        <View
+          style={[
+            a.flex_1,
+            a.py_sm,
+            {
+              paddingHorizontal: isMobile ? 10 : 14,
+            },
+          ]}>
           <Text
             type="sm"
             numberOfLines={1}
-            style={[pal.textLight, styles.extUri]}>
+            style={[pal.textLight, {marginVertical: 2}]}>
             {toNiceDomain(link.uri)}
           </Text>
-        )}
 
-        {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
-          <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
-            {link.title || link.uri}
-          </Text>
-        )}
-        {link.description && !embedPlayerParams?.hideDetails ? (
-          <Text
-            type="md"
-            numberOfLines={link.thumb ? 2 : 4}
-            style={[pal.text, styles.extDescription]}>
-            {link.description}
-          </Text>
-        ) : undefined}
-      </View>
+          {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
+            <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
+              {link.title || link.uri}
+            </Text>
+          )}
+          {link.description ? (
+            <Text
+              type="md"
+              numberOfLines={link.thumb ? 2 : 4}
+              style={[pal.text, a.mt_xs]}>
+              {link.description}
+            </Text>
+          ) : undefined}
+        </View>
+      </LinkWrapper>
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    borderRadius: 6,
-    overflow: 'hidden',
-  },
-  info: {
-    width: '100%',
-    bottom: 0,
-    paddingTop: 8,
-    paddingBottom: 10,
-  },
-  extUri: {
-    marginTop: 2,
-  },
-  extDescription: {
-    marginTop: 4,
-  },
-})
+function LinkWrapper({
+  link,
+  style,
+  children,
+}: {
+  link: AppBskyEmbedExternal.ViewExternal
+  style?: StyleProp<ViewStyle>
+  children: React.ReactNode
+}) {
+  const t = useTheme()
+
+  const onShareExternal = useCallback(() => {
+    if (link.uri && isNative) {
+      shareUrl(link.uri)
+    }
+  }, [link.uri])
+
+  return (
+    <Link
+      asAnchor
+      anchorNoUnderline
+      href={link.uri}
+      style={[
+        a.flex_1,
+        a.border,
+        a.rounded_sm,
+        t.atoms.border_contrast_medium,
+        style,
+      ]}
+      hoverStyle={t.atoms.border_contrast_high}
+      onLongPress={onShareExternal}>
+      {children}
+    </Link>
+  )
+}

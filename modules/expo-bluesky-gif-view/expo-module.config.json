@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android", "web"],
+  "ios": {
+    "modules": ["ExpoBlueskyGifViewModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.blueskygifview.ExpoBlueskyGifViewModule"]
+  }
+}
