@@ -29,11 +29,10 @@ function PlaybackControls({
         a.justify_center,
         !isLoaded && a.border,
         t.atoms.border_contrast_medium,
+        a.inset_0,
+        a.w_full,
+        a.h_full,
         {
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
           zIndex: 2,
           backgroundColor: !isLoaded
             ? t.atoms.bg_contrast_25.backgroundColor
