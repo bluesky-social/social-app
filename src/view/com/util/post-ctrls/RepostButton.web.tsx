@@ -125,6 +125,7 @@ const RepostInner = ({
           color,
           size === 'lg' ? a.text_md : {fontSize: 15},
           isReposted && [a.font_bold],
+          a.user_select_none,
         ]}>
         {repostCount}
       </Text>
