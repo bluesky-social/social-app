@@ -7,8 +7,10 @@ import {useLingui} from '@lingui/react'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
+  fillThreadModerationCache,
   sortThread,
   ThreadBlocked,
+  ThreadModerationCache,
   ThreadNode,
   ThreadNotFound,
   ThreadPost,
@@ -135,16 +137,30 @@ export function PostThread({
   // On the web this is not necessary because we can synchronously adjust the scroll in onContentSizeChange instead.
   const [deferParents, setDeferParents] = React.useState(isNative)
 
+  const threadModerationCache = React.useMemo(() => {
+    const cache: ThreadModerationCache = new WeakMap()
+    if (thread && moderationOpts) {
+      fillThreadModerationCache(cache, thread, moderationOpts)
+    }
+    return cache
+  }, [thread, moderationOpts])
+
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
 
     return createThreadSkeleton(
-      sortThread(thread, threadViewPrefs),
+      sortThread(thread, threadViewPrefs, threadModerationCache),
       hasSession,
       treeView,
     )
-  }, [thread, preferences?.threadViewPrefs, hasSession, treeView])
+  }, [
+    thread,
+    preferences?.threadViewPrefs,
+    hasSession,
+    treeView,
+    threadModerationCache,
+  ])
 
   const error = React.useMemo(() => {
     if (AppBskyFeedDefs.isNotFoundPost(thread)) {
@@ -332,6 +348,7 @@ export function PostThread({
             <PostThreadItem
               post={item.post}
               record={item.record}
+              moderation={threadModerationCache.get(item)}
               treeView={treeView}
               depth={item.ctx.depth}
               prevPost={prev}
@@ -365,6 +382,7 @@ export function PostThread({
       deferParents,
       treeView,
       refetch,
+      threadModerationCache,
     ],
   )
 

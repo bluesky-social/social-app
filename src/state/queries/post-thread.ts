@@ -3,9 +3,12 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
+  ModerationDecision,
+  ModerationOpts,
 } from '@atproto/api'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {getAgent} from '#/state/session'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
@@ -64,6 +67,8 @@ export type ThreadNode =
   | ThreadBlocked
   | ThreadUnknown
 
+export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
+
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
   return useQuery<ThreadNode, Error>({
@@ -94,9 +99,28 @@ export function usePostThreadQuery(uri: string | undefined) {
   })
 }
 
+export function fillThreadModerationCache(
+  cache: ThreadModerationCache,
+  node: ThreadNode,
+  moderationOpts: ModerationOpts,
+) {
+  if (node.type === 'post') {
+    cache.set(node, moderatePost(node.post, moderationOpts))
+    if (node.parent) {
+      fillThreadModerationCache(cache, node.parent, moderationOpts)
+    }
+    if (node.replies) {
+      for (const reply of node.replies) {
+        fillThreadModerationCache(cache, reply, moderationOpts)
+      }
+    }
+  }
+}
+
 export function sortThread(
   node: ThreadNode,
   opts: UsePreferencesQueryResponse['threadViewPrefs'],
+  modCache: ThreadModerationCache,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -119,6 +143,18 @@ export function sortThread(
       } else if (bIsByOp) {
         return 1 // op's own reply
       }
+
+      const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
+      const bBlur = Boolean(modCache.get(b)?.ui('contentList').blur)
+      if (aBlur !== bBlur) {
+        if (aBlur) {
+          return 1
+        }
+        if (bBlur) {
+          return -1
+        }
+      }
+
       if (opts.prioritizeFollowedUsers) {
         const af = a.post.author.viewer?.following
         const bf = b.post.author.viewer?.following
@@ -128,6 +164,7 @@ export function sortThread(
           return 1
         }
       }
+
       if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
       } else if (opts.sort === 'newest') {
@@ -143,7 +180,7 @@ export function sortThread(
       }
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
-    node.replies.forEach(reply => sortThread(reply, opts))
+    node.replies.forEach(reply => sortThread(reply, opts, modCache))
   }
   return node
 }

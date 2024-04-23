@@ -810,6 +810,7 @@ function MockPostFeedItem({
 
 function MockPostThreadItem({
   post,
+  moderation,
   reply,
 }: {
   post: AppBskyFeedDefs.PostView
@@ -821,6 +822,7 @@ function MockPostThreadItem({
       // @ts-ignore
       post={post}
       record={post.record as AppBskyFeedPost.Record}
+      moderation={moderation}
       depth={reply ? 1 : 0}
       isHighlightedPost={!reply}
       treeView={false}

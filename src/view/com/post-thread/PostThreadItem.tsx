@@ -11,12 +11,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -50,6 +48,7 @@ import {PreviewableUserAvatar} from '../util/UserAvatar'
 export function PostThreadItem({
   post,
   record,
+  moderation,
   treeView,
   depth,
   prevPost,
@@ -63,6 +62,7 @@ export function PostThreadItem({
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
+  moderation: ModerationDecision | undefined
   treeView: boolean
   depth: number
   prevPost: ThreadPost | undefined
@@ -74,7 +74,6 @@ export function PostThreadItem({
   hasPrecedingItem: boolean
   onPostReply: () => void
 }) {
-  const moderationOpts = useModerationOpts()
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -83,11 +82,6 @@ export function PostThreadItem({
         facets: record.facets,
       }),
     [record],
-  )
-  const moderation = useMemo(
-    () =>
-      post && moderationOpts ? moderatePost(post, moderationOpts) : undefined,
-    [post, moderationOpts],
   )
   if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted />
