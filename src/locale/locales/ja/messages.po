@@ -662,7 +662,7 @@ msgstr "おすすめのユーザーを確認してください。フォローす
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr "メールを確認してログインコードを調べ、ここに入力してください。"
+msgstr "確認コードが記載されたメールを確認し、ここに入力してください。"
 
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -1400,7 +1400,7 @@ msgstr "メールアドレス"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr "メール２要素認証を無効にしました"
+msgstr "メールでの２要素認証を無効にしました"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
