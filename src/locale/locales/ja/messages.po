@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-23 10:26+0900\n"
+"PO-Revision-Date: 2024-04-23 13:29+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -58,6 +58,10 @@ msgstr "<1>Bluesky</1><0>へようこそ</0>"
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
 msgstr "⚠無効なハンドル"
+
+#: src/screens/Login/LoginForm.tsx:238
+msgid "2FA Confirmation"
+msgstr "２要素認証確認"
 
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:796
@@ -656,6 +660,10 @@ msgstr "おすすめのフィードを確認してください。「＋」をタ
 msgid "Check out some recommended users. Follow them to see similar users."
 msgstr "おすすめのユーザーを確認してください。フォローすることであなたに合ったユーザーが見つかるかもしれません。"
 
+#: src/screens/Login/LoginForm.tsx:262
+msgid "Check your email for a login code and enter it here."
+msgstr "メールを確認してログインコードを調べ、ここに入力してください。"
+
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
@@ -1168,6 +1176,10 @@ msgstr "グレー"
 msgid "Disable autoplay for GIFs"
 msgstr "GIFを自動再生しない"
 
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
+msgid "Disable Email 2FA"
+msgstr "メールでの２要素認証を無効化"
+
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
 msgstr "触覚フィードバックを無効化"
@@ -1385,6 +1397,10 @@ msgstr "教育"
 #: src/view/com/modals/ChangeEmail.tsx:141
 msgid "Email"
 msgstr "メールアドレス"
+
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
+msgid "Email 2FA disabled"
+msgstr "メール２要素認証を無効にしました"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
@@ -2111,6 +2127,10 @@ msgstr "新しいパスワードを入力"
 msgid "Input password for account deletion"
 msgstr "アカウント削除のためにパスワードを入力"
 
+#: src/screens/Login/LoginForm.tsx:257
+msgid "Input the code which has been emailed to you"
+msgstr "メールで送ったコードを入力"
+
 #: src/screens/Login/LoginForm.tsx:195
 msgid "Input the password tied to {identifier}"
 msgstr "{identifier}に紐づくパスワードを入力"
@@ -2130,6 +2150,11 @@ msgstr "ご希望のホスティングプロバイダーを入力"
 #: src/screens/Signup/StepHandle.tsx:63
 msgid "Input your user handle"
 msgstr "あなたのユーザーハンドルを入力"
+
+#: src/screens/Login/LoginForm.tsx:126
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
+msgid "Invalid 2FA confirmation code."
+msgstr "無効な２要素認証確認コードです。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:221
 msgid "Invalid or unsupported post record"
@@ -3637,9 +3662,18 @@ msgstr "コードをリクエスト"
 msgid "Require alt text before posting"
 msgstr "画像投稿時にALTテキストを必須とする"
 
+#: src/view/screens/Settings/Email2FAToggle.tsx:53
+msgid "Require email code to log into your account"
+msgstr "アカウントにログインする時にメールのコードを必須とする"
+
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
 msgstr "このプロバイダーに必要"
+
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
+msgid "Resend email"
+msgstr "メールを再送"
 
 #: src/view/com/modals/ChangePassword.tsx:185
 msgid "Reset code"
@@ -3956,6 +3990,11 @@ msgstr "報告を送信"
 #: src/components/ReportDialog/SelectLabelerView.tsx:44
 msgid "Send report to {0}"
 msgstr "{0}に報告を送信"
+
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
+msgid "Send verification email"
+msgstr "確認メールを送信"
 
 #: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
@@ -4753,6 +4792,10 @@ msgstr "スレッドの設定"
 msgid "Thread Preferences"
 msgstr "スレッドの設定"
 
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
+msgid "To disable the email 2FA method, please verify your access to the email address."
+msgstr "メールでの２要素認証を無効にするには、メールアドレスにアクセスできるか確認してください。"
+
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "スレッドモード"
@@ -4796,6 +4839,10 @@ msgstr "翻訳"
 msgctxt "action"
 msgid "Try again"
 msgstr "再試行"
+
+#: src/view/screens/Settings/index.tsx:695
+msgid "Two-factor authentication"
+msgstr "２要素認証"
 
 #: src/view/com/modals/ChangeHandle.tsx:428
 msgid "Type:"
