@@ -28,7 +28,7 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
@@ -59,6 +59,7 @@ import {
 } from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 
 function Loader() {
   const pal = usePalette('default')
@@ -537,7 +538,6 @@ export function SearchScreen(
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const moderationOpts = useModerationOpts()
-  const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
@@ -545,35 +545,19 @@ export function SearchScreen(
     undefined,
   )
   const [isFetching, setIsFetching] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>(props.route?.params?.q || '')
-  const [searchResults, setSearchResults] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
+
+  // Query terms
+  const q = props.route?.params?.q ?? ''
+  const [query, setQuery] = React.useState<string>(q)
+  const [searchInput, setSearchInput] = React.useState<string>(q)
+  const throttledInput = useThrottledValue(searchInput, 300)
+
+  const autocompleteResults = useActorAutocompleteQuery(throttledInput)
+
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [showAutocompleteResults, setShowAutocompleteResults] =
     React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
-
-  /**
-   * The Search screen's `q` param
-   */
-  const queryParam = props.route?.params?.q
-
-  /**
-   * If `true`, this means we received new instructions from the router. This
-   * is handled in a effect, and used to update the value of `query` locally
-   * within this screen.
-   */
-  const routeParamsMismatch = queryParam && queryParam !== query
-
-  React.useEffect(() => {
-    if (queryParam && routeParamsMismatch) {
-      // reset immediately and let local state take over
-      navigation.setParams({q: ''})
-      // update query for next search
-      setQuery(queryParam)
-    }
-  }, [queryParam, routeParamsMismatch, navigation])
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
@@ -610,39 +594,14 @@ export function SearchScreen(
     setShowAutocompleteResults(false)
   }, [setQuery])
 
-  const onChangeText = React.useCallback(
-    async (text: string) => {
-      scrollToTopWeb()
+  const onChangeText = React.useCallback(async (text: string) => {
+    scrollToTopWeb()
+    setSearchInput(text)
 
-      setQuery(text)
-
-      if (text.length > 0) {
-        setIsFetching(true)
-        setShowAutocompleteResults(true)
-
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-
-        searchDebounceTimeout.current = setTimeout(async () => {
-          const results = await search({query: text, limit: 30})
-
-          if (results) {
-            setSearchResults(results)
-            setIsFetching(false)
-          }
-        }, 300)
-      } else {
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-        setSearchResults([])
-        setIsFetching(false)
-        setShowAutocompleteResults(false)
-      }
-    },
-    [setQuery, search, setSearchResults],
-  )
+    const showAutoComplete = text.length > 0
+    setIsFetching(showAutoComplete)
+    setShowAutocompleteResults(showAutoComplete)
+  }, [])
 
   const updateSearchHistory = React.useCallback(
     async (newQuery: string) => {
@@ -672,7 +631,8 @@ export function SearchScreen(
     scrollToTopWeb()
     setShowAutocompleteResults(false)
     updateSearchHistory(query)
-  }, [query, setShowAutocompleteResults, updateSearchHistory])
+    navigation.push('Search', {q: query})
+  }, [navigation, query, updateSearchHistory])
 
   const onSoftReset = React.useCallback(() => {
     scrollToTopWeb()
@@ -684,6 +644,7 @@ export function SearchScreen(
     return match && match[1]
   }, [query])
 
+  // TODO ???
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
@@ -829,7 +790,7 @@ export function SearchScreen(
                 />
               ) : null}
 
-              {searchResults.map(item => (
+              {autocompleteResults.data?.map(item => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
@@ -885,8 +846,6 @@ export function SearchScreen(
             )}
           </View>
         </CenteredView>
-      ) : routeParamsMismatch ? (
-        <ActivityIndicator />
       ) : (
         <SearchScreenInner query={query} />
       )}
