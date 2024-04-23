@@ -53,7 +53,7 @@ import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
-import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
+import {QuoteEmbed, QuoteX} from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -483,8 +483,13 @@ export const ComposePost = observer(function ComposePost({
             />
           )}
           {quote ? (
-            <View style={[s.mt5, isWeb && s.mb10, {pointerEvents: 'none'}]}>
-              <QuoteEmbed quote={quote} />
+            <View style={[s.mt5, isWeb && s.mb10]}>
+              <View style={{pointerEvents: 'none'}}>
+                <QuoteEmbed quote={quote} />
+              </View>
+              {quote.uri !== initQuote?.uri && (
+                <QuoteX onRemove={() => setQuote(undefined)} />
+              )}
             </View>
           ) : undefined}
         </ScrollView>
