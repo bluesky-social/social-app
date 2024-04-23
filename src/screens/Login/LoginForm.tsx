@@ -107,7 +107,7 @@ export const LoginForm = ({
           service: serviceUrl,
           identifier: fullIdent,
           password,
-          authFactorToken,
+          authFactorToken: authFactorToken.trim(),
         },
         'LoginForm',
       )
