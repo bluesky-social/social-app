@@ -47,6 +47,9 @@ function isValidUrlAndDomain(value: string) {
   )
 }
 
+// https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
+// question credit https://stackoverflow.com/users/169992/lance
+// answer credit bobince https://stackoverflow.com/users/18936/bobince
 function escapeRegex(literal: string) {
   return literal.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&')
 }
