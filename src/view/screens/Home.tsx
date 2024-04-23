@@ -197,7 +197,7 @@ function HomeScreenReady({
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
       mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
-        ? preferences.feeds.saved
+        ? preferences.savedFeeds.map(f => f.value)
         : [],
     }
   }, [preferences])
@@ -226,6 +226,9 @@ function HomeScreenReady({
             />
           )
         }
+        const savedFeedConfig = preferences.savedFeeds.find(f => {
+          return feed.includes(f.value)
+        })
 
         return (
           <FeedPage
@@ -234,6 +237,7 @@ function HomeScreenReady({
             isPageFocused={selectedFeed === feed}
             feed={feed}
             renderEmptyState={renderCustomFeedEmptyState}
+            savedFeedConfig={savedFeedConfig}
           />
         )
       })}

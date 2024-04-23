@@ -14,9 +14,9 @@ import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {
-  DEFAULT_PROD_FEEDS,
+  DEFAULT_PROD_FEED,
+  useAddSavedFeedMutation,
   usePreferencesSetBirthDateMutation,
-  useSetSaveFeedsMutation,
 } from '#/state/queries/preferences'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
@@ -208,7 +208,7 @@ export function useSubmitSignup({
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
   const {mutateAsync: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
+  const {mutate: addSavedFeed} = useAddSavedFeedMutation()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
@@ -266,7 +266,7 @@ export function useSubmitSignup({
         })
         await setBirthDate({birthDate: state.dateOfBirth})
         if (IS_PROD_SERVICE(state.serviceUrl)) {
-          setSavedFeeds(DEFAULT_PROD_FEEDS)
+          addSavedFeed(DEFAULT_PROD_FEED)
         }
       } catch (e: any) {
         onboardingDispatch({type: 'skip'}) // undo starting the onboard
@@ -314,7 +314,7 @@ export function useSubmitSignup({
       onboardingDispatch,
       createAccount,
       setBirthDate,
-      setSavedFeeds,
+      addSavedFeed,
     ],
   )
 }

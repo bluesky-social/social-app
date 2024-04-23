@@ -1,5 +1,6 @@
 import React from 'react'
 import {useWindowDimensions, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -34,6 +35,7 @@ export function FeedPage({
   feedParams,
   renderEmptyState,
   renderEndOfFeed,
+  savedFeedConfig,
 }: {
   testID?: string
   feed: FeedDescriptor
@@ -41,6 +43,7 @@ export function FeedPage({
   isPageFocused: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
+  savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
@@ -132,6 +135,7 @@ export function FeedPage({
           renderEmptyState={renderEmptyState}
           renderEndOfFeed={renderEndOfFeed}
           headerOffset={headerOffset}
+          savedFeedConfig={savedFeedConfig}
         />
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (

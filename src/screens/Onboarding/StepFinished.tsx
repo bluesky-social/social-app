@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -62,10 +63,14 @@ export function StepFinished() {
         // these must be serial
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
-          await saveFeeds({
-            saved: selectedFeeds,
-            pinned: selectedFeeds,
-          })
+          await saveFeeds(
+            selectedFeeds.map(f => ({
+              id: TID.nextStr(),
+              type: 'feed',
+              value: f,
+              pinned: true,
+            })),
+          )
         })(),
       ])
     } catch (e: any) {

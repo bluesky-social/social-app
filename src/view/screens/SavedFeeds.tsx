@@ -92,7 +92,7 @@ export function SavedFeeds({}: Props) {
           </Text>
         </View>
 
-        {preferences?.feeds ? (
+        {preferences?.savedFeeds.length ? (
           !pinnedFeeds.length ? (
             <View
               style={[
@@ -126,7 +126,7 @@ export function SavedFeeds({}: Props) {
             <Trans>Saved Feeds</Trans>
           </Text>
         </View>
-        {preferences?.feeds ? (
+        {preferences?.savedFeeds.length ? (
           !unpinnedFeeds.length ? (
             <View
               style={[

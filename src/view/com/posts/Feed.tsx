@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -63,6 +64,7 @@ let Feed = ({
   desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
+  savedFeedConfig,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -81,6 +83,7 @@ let Feed = ({
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
+  savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -278,6 +281,7 @@ let Feed = ({
             feedDesc={feed}
             error={error ?? undefined}
             onPressTryAgain={onPressTryAgain}
+            savedFeedConfig={savedFeedConfig}
           />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
@@ -300,7 +304,15 @@ let Feed = ({
       }
       return <FeedSlice slice={item} />
     },
-    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState, _],
+    [
+      feed,
+      error,
+      onPressTryAgain,
+      onPressRetryLoadMore,
+      renderEmptyState,
+      _,
+      savedFeedConfig,
+    ],
   )
 
   const shouldRenderEndOfFeed =

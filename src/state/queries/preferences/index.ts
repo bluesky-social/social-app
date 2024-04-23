@@ -54,14 +54,6 @@ export function usePreferencesQuery() {
 
         const preferences: UsePreferencesQueryResponse = {
           ...res,
-          feeds: {
-            saved: res.feeds?.saved || [],
-            pinned: res.feeds?.pinned || [],
-            unpinned:
-              res.feeds.saved?.filter(f => {
-                return !res.feeds.pinned?.includes(f)
-              }) || [],
-          },
           feedViewPrefs: {
             ...DEFAULT_HOME_FEED_PREFS,
             ...(res.feedViewPrefs.home || {}),

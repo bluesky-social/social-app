@@ -22,18 +22,14 @@ export const DEFAULT_THREAD_VIEW_PREFS: ThreadViewPreferences = {
 
 const DEFAULT_PROD_FEED_PREFIX = (rkey: string) =>
   `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
-export const DEFAULT_PROD_FEEDS = {
-  pinned: [DEFAULT_PROD_FEED_PREFIX('whats-hot')],
-  saved: [DEFAULT_PROD_FEED_PREFIX('whats-hot')],
+export const DEFAULT_PROD_FEED = {
+  type: 'feed',
+  value: DEFAULT_PROD_FEED_PREFIX('whats-hot'),
+  pinned: true,
 }
 
 export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   birthDate: new Date('2022-11-17'), // TODO(pwi)
-  feeds: {
-    saved: [],
-    pinned: [],
-    unpinned: [],
-  },
   moderationPrefs: {
     adultContentEnabled: false,
     labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
@@ -45,5 +41,5 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
-  savedFeeds: [], // TODO could put stub ehre
+  savedFeeds: [],
 }
