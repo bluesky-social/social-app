@@ -252,11 +252,11 @@ type SearchResultSlice =
     }
 
 function SearchScreenPostResults({
-  query,
+  queryTerm,
   sort,
   active,
 }: {
-  query: string
+  queryTerm: string
   sort?: 'top' | 'latest'
   active: boolean
 }) {
@@ -265,8 +265,8 @@ function SearchScreenPostResults({
   const [isPTR, setIsPTR] = React.useState(false)
 
   const augmentedQuery = React.useMemo(() => {
-    return augmentSearchQuery(query || '', {did: currentAccount?.did})
-  }, [query, currentAccount])
+    return augmentSearchQuery(queryTerm || '', {did: currentAccount?.did})
+  }, [queryTerm, currentAccount])
 
   const {
     isFetched,
@@ -348,7 +348,7 @@ function SearchScreenPostResults({
               contentContainerStyle={{paddingBottom: 100}}
             />
           ) : (
-            <EmptyState message={_(msg`No results found for ${query}`)} />
+            <EmptyState message={_(msg`No results found for ${queryTerm}`)} />
           )}
         </>
       ) : (
@@ -359,16 +359,16 @@ function SearchScreenPostResults({
 }
 
 function SearchScreenUserResults({
-  query,
+  queryTerm,
   active,
 }: {
-  query: string
+  queryTerm: string
   active: boolean
 }) {
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
-    query,
+    query: queryTerm,
     enabled: active,
   })
 
@@ -386,7 +386,7 @@ function SearchScreenUserResults({
           contentContainerStyle={{paddingBottom: 100}}
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <EmptyState message={_(msg`No results found for ${queryTerm}`)} />
       )}
     </>
   ) : (
@@ -394,7 +394,7 @@ function SearchScreenUserResults({
   )
 }
 
-export function SearchScreenInner({query}: {query?: string}) {
+export function SearchScreenInner({queryTerm}: {queryTerm?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -413,13 +413,13 @@ export function SearchScreenInner({query}: {query?: string}) {
   )
 
   const sections = React.useMemo(() => {
-    if (!query) return []
+    if (!queryTerm) return []
     return [
       {
         title: _(msg`Top`),
         component: (
           <SearchScreenPostResults
-            query={query}
+            queryTerm={queryTerm}
             sort="top"
             active={activeTab === 0}
           />
@@ -429,7 +429,7 @@ export function SearchScreenInner({query}: {query?: string}) {
         title: _(msg`Latest`),
         component: (
           <SearchScreenPostResults
-            query={query}
+            queryTerm={queryTerm}
             sort="latest"
             active={activeTab === 1}
           />
@@ -438,13 +438,16 @@ export function SearchScreenInner({query}: {query?: string}) {
       {
         title: _(msg`People`),
         component: (
-          <SearchScreenUserResults query={query} active={activeTab === 2} />
+          <SearchScreenUserResults
+            queryTerm={queryTerm}
+            active={activeTab === 2}
+          />
         ),
       },
     ]
-  }, [_, query, activeTab])
+  }, [_, queryTerm, activeTab])
 
-  return query ? (
+  return queryTerm ? (
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
@@ -543,7 +546,7 @@ export function SearchScreen(
 
   // Query terms
   const q = props.route?.params?.q ?? ''
-  const [query, setQuery] = React.useState<string>(q)
+  const [queryTerm, setQueryTerm] = React.useState<string>(q)
   const [searchText, setSearchText] = React.useState<string>(q)
   const throttledInput = useThrottledValue(searchText, 300)
 
@@ -554,6 +557,11 @@ export function SearchScreen(
   const [showAutocompleteResults, setShowAutocompleteResults] =
     React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
+
+  if (q !== queryTerm) {
+    setQueryTerm(q)
+    setSearchText(q)
+  }
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
@@ -575,18 +583,19 @@ export function SearchScreen(
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
 
+  const onPressClearQuery = React.useCallback(() => {
+    scrollToTopWeb()
+    setSearchText('')
+    setShowAutocompleteResults(false)
+    textInput.current?.focus()
+  }, [])
+
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
     textInput.current?.blur()
-    setQuery('')
     setShowAutocompleteResults(false)
-  }, [textInput])
-
-  const onPressClearQuery = React.useCallback(() => {
-    scrollToTopWeb()
-    setQuery('')
-    setShowAutocompleteResults(false)
-  }, [setQuery])
+    navigation.setParams({q: ''})
+  }, [navigation])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -623,9 +632,15 @@ export function SearchScreen(
   const onSubmit = React.useCallback(() => {
     scrollToTopWeb()
     setShowAutocompleteResults(false)
-    updateSearchHistory(query)
-    navigation.push('Search', {q: query})
-  }, [navigation, query, updateSearchHistory])
+    updateSearchHistory(searchText)
+    setQueryTerm(searchText)
+
+    if (isWeb) {
+      navigation.push('Search', {q: searchText})
+    } else {
+      navigation.setParams({q: searchText})
+    }
+  }, [navigation, searchText, updateSearchHistory])
 
   const onSoftReset = React.useCallback(() => {
     scrollToTopWeb()
@@ -633,9 +648,9 @@ export function SearchScreen(
   }, [onPressCancelSearch])
 
   const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(query)
+    const match = MATCH_HANDLE.exec(queryTerm)
     return match && match[1]
-  }, [query])
+  }, [queryTerm])
 
   // TODO ???
   useFocusEffect(
@@ -646,7 +661,7 @@ export function SearchScreen(
   )
 
   const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
-    setQuery(item)
+    setQueryTerm(item)
     onSubmit()
   }
 
@@ -708,10 +723,9 @@ export function SearchScreen(
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
             onBlur={() => {
-              // HACK
-              // give 100ms to not stop click handlers in the search history
-              // -prf
-              setTimeout(() => setInputIsFocused(false), 100)
+              setTimeout(() => {
+                setInputIsFocused(Boolean(textInput.current?.isFocused()))
+              }, 100)
             }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
@@ -723,7 +737,7 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          {query ? (
+          {inputIsFocused ? (
             <Pressable
               testID="searchTextInputClearBtn"
               onPress={onPressClearQuery}
@@ -740,7 +754,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {query || inputIsFocused ? (
+        {(queryTerm || inputIsFocused) && (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}
@@ -751,7 +765,7 @@ export function SearchScreen(
               </Text>
             </Pressable>
           </View>
-        ) : undefined}
+        )}
       </CenteredView>
 
       {showAutocompleteResults ? (
@@ -772,7 +786,7 @@ export function SearchScreen(
                 to={
                   isNative
                     ? undefined
-                    : `/search?q=${encodeURIComponent(query)}`
+                    : `/search?q=${encodeURIComponent(queryTerm)}`
                 }
                 style={{borderBottomWidth: 1}}
               />
@@ -796,7 +810,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !query && inputIsFocused ? (
+      ) : !queryTerm && inputIsFocused ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
@@ -841,7 +855,7 @@ export function SearchScreen(
           </View>
         </CenteredView>
       ) : (
-        <SearchScreenInner query={query} />
+        <SearchScreenInner queryTerm={queryTerm} />
       )}
     </View>
   )
