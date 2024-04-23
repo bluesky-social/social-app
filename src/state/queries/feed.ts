@@ -22,7 +22,6 @@ import {getAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 
 export type FeedSourceFeedInfo = {
-  isPrimaryAlgorithm: boolean
   type: 'feed'
   uri: string
   route: {
@@ -41,7 +40,6 @@ export type FeedSourceFeedInfo = {
 }
 
 export type FeedSourceListInfo = {
-  isPrimaryAlgorithm: boolean
   type: 'list'
   uri: string
   route: {
@@ -72,7 +70,6 @@ const feedSourceNSIDs = {
 
 export function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
-  options?: Pick<FeedSourceFeedInfo, 'isPrimaryAlgorithm'>,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
@@ -81,7 +78,6 @@ export function hydrateFeedGenerator(
   const route = router.matchPath(href)
 
   return {
-    isPrimaryAlgorithm: options?.isPrimaryAlgorithm ?? false,
     type: 'feed',
     uri: view.uri,
     cid: view.cid,
@@ -113,7 +109,6 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const route = router.matchPath(href)
 
   return {
-    isPrimaryAlgorithm: false,
     type: 'list',
     uri: view.uri,
     route: {
@@ -209,7 +204,6 @@ export function useSearchPopularFeedsMutation() {
  * The following feed, with fallbacks to Discover
  */
 const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
-  isPrimaryAlgorithm: true,
   type: 'feed',
   displayName: 'Discover',
   uri: DISCOVER_FEED_URI,
@@ -289,7 +283,6 @@ export function usePinnedFeedsInfos() {
           result.push(feedInfo)
         } else if (pinnedFeed.type === 'timeline') {
           result.push({
-            isPrimaryAlgorithm: false,
             type: 'feed',
             displayName: 'Following',
             uri: pinnedFeed.value,

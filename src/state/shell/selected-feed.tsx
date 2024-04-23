@@ -4,7 +4,6 @@ import {Gate} from '#/lib/statsig/gates'
 import {useGate} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {DEFAULT_FEED_DESCRIPTOR} from '#/state/queries/post-feed'
 
 type StateContext = string
 type SetContext = (v: string) => void
@@ -13,43 +12,29 @@ const stateContext = React.createContext<StateContext>('home')
 const setContext = React.createContext<SetContext>((_: string) => {})
 
 function getInitialFeed(gate: (gateName: Gate) => boolean) {
-  const isPrimaryAlgoExperimentEnabled = gate(
-    'reduced_onboarding_and_home_algo',
-  )
-  let feed = DEFAULT_FEED_DESCRIPTOR
-
   if (isWeb) {
     if (window.location.pathname === '/') {
       const params = new URLSearchParams(window.location.search)
       const feedFromUrl = params.get('feed')
       if (feedFromUrl) {
-        // basically a link to a specific tab, use that every time if present
+        // If explicitly booted from a link like /?feed=..., prefer that.
         return feedFromUrl
       }
     }
     const feedFromSession = sessionStorage.getItem('lastSelectedHomeFeed')
     if (feedFromSession) {
       // Fall back to a previously chosen feed for this browser tab.
-      feed = feedFromSession
+      return feedFromSession
     }
   }
-
-  const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
-  if (feedFromPersisted) {
-    // Fall back to the last chosen one across all tabs.
-    feed = feedFromPersisted
-  }
-
-  if (isPrimaryAlgoExperimentEnabled) {
-    // following feed
-    if (feed === 'home') {
-      return 'home'
+  if (!gate('start_session_with_following_v2')) {
+    const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
+    if (feedFromPersisted) {
+      // Fall back to the last chosen one across all tabs.
+      return feedFromPersisted
     }
-    // or left-most tab
-    return DEFAULT_FEED_DESCRIPTOR
   }
-
-  return DEFAULT_FEED_DESCRIPTOR
+  return 'home'
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
