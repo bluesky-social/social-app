@@ -119,6 +119,11 @@ export const LoginForm = ({
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
       ) {
         setIsAuthFactorTokenNeeded(true)
+      } else if (errMsg.includes('Token is invalid')) {
+        logger.debug('Failed to login due to invalid 2fa token', {
+          error: errMsg,
+        })
+        setError(_(msg`Invalid 2FA confirmation code.`))
       } else if (errMsg.includes('Authentication Required')) {
         logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
