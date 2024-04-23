@@ -40,7 +40,17 @@ export const ExternalEmbed = ({
   return (
     <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
       {link.isLoading ? (
-        <Container>
+        <Container
+          style={
+            gif
+              ? {
+                  aspectRatio:
+                    gif.media_formats.gif.dims[0] /
+                    gif.media_formats.gif.dims[1],
+                  width: '100%',
+                }
+              : undefined
+          }>
           <Loader size="xl" />
         </Container>
       ) : link.meta?.error ? (
