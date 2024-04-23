@@ -79,6 +79,7 @@ export class GifView extends React.PureComponent<GifViewProps> {
         muted="muted"
         ref={this.videoPlayerRef}
         playsInline={true}
+        aria-label={this.props.accessibilityLabel}
       />
     )
   }

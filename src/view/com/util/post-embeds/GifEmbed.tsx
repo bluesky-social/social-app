@@ -1,5 +1,6 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
+import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
@@ -74,10 +75,10 @@ function PlaybackControls({
 
 export function GifEmbed({
   params,
-  thumb,
+  link,
 }: {
   params: EmbedPlayerParams
-  thumb?: string
+  link: AppBskyEmbedExternal.ViewExternal
 }) {
   const autoplayDisabled = useAutoplayDisabled()
 
@@ -119,11 +120,13 @@ export function GifEmbed({
         />
         <GifView
           source={params.playerUri}
-          placeholderSource={thumb}
+          placeholderSource={link.thumb}
           style={[a.flex_1, a.rounded_sm]}
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
+          accessibilityHint="Animated GIF"
+          accessibilityLabel={link.description.replace('ALT: ', '')}
         />
       </View>
     </View>
