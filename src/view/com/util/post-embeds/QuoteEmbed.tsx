@@ -23,6 +23,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {HITSLOP_20} from '#/lib/constants'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {RQKEY as RQKEY_URI} from '#/state/queries/resolve-uri'
@@ -206,7 +207,8 @@ export function QuoteX({onRemove}: {onRemove: () => void}) {
       accessibilityRole="button"
       accessibilityLabel={_(msg`Remove quote`)}
       accessibilityHint={_(msg`Removes quoted post`)}
-      onAccessibilityEscape={onRemove}>
+      onAccessibilityEscape={onRemove}
+      hitSlop={HITSLOP_20}>
       <FontAwesomeIcon size={12} icon="xmark" style={s.white} />
     </TouchableOpacity>
   )
