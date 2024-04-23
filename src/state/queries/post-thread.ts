@@ -25,8 +25,6 @@ export interface ThreadCtx {
   depth: number
   isHighlightedPost?: boolean
   hasMore?: boolean
-  showChildReplyLine?: boolean
-  showParentReplyLine?: boolean
   isParentLoading?: boolean
   isChildLoading?: boolean
 }
@@ -227,12 +225,6 @@ function responseToThreadNodes(
         isHighlightedPost: depth === 0,
         hasMore:
           direction === 'down' && !node.replies?.length && !!node.replyCount,
-        showChildReplyLine:
-          direction === 'up' ||
-          (direction === 'down' && !!node.replies?.length),
-        showParentReplyLine:
-          (direction === 'up' && !!node.parent) ||
-          (direction === 'down' && depth !== 1),
       },
     }
   } else if (AppBskyFeedDefs.isBlockedPost(node)) {
@@ -335,8 +327,6 @@ function threadNodeToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!node.record.reply,
       isChildLoading: !!node.post.replyCount,
     },
@@ -358,8 +348,6 @@ function postViewToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // assume yes (show the spinner) just in case
     },
@@ -381,8 +369,6 @@ function embedViewRecordToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!(record.value as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // not available, so assume yes (to show the spinner)
     },

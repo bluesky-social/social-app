@@ -386,6 +386,7 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
+            enabled={depth < 0}
             style={[pal.view]}
             modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 26 : 38}

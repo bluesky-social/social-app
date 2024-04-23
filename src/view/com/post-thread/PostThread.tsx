@@ -33,6 +33,7 @@ import {List, ListMethods} from '../util/List'
 import {Text} from '../util/text/Text'
 import {ViewHeader} from '../util/ViewHeader'
 import {PostThreadItem} from './PostThreadItem'
+import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
 
 // FlatList maintainVisibleContentPosition breaks if too many items
 // are prepended. This seems to be an optimal number based on *shrug*.
@@ -47,8 +48,13 @@ const MAINTAIN_VISIBLE_CONTENT_POSITION = {
 const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
+const SHOW_HIDDEN_REPLIES = {_reactKey: '__show_hidden_replies__'}
 
-type YieldedItem = ThreadPost | ThreadBlocked | ThreadNotFound
+type YieldedItem =
+  | ThreadPost
+  | ThreadBlocked
+  | ThreadNotFound
+  | typeof SHOW_HIDDEN_REPLIES
 type RowItem =
   | YieldedItem
   // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
@@ -81,6 +87,7 @@ export function PostThread({
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
+  const [showHiddenReplies, setShowHiddenReplies] = React.useState(false)
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -153,6 +160,8 @@ export function PostThread({
       sortThread(thread, threadViewPrefs, threadModerationCache),
       hasSession,
       treeView,
+      threadModerationCache,
+      showHiddenReplies,
     )
   }, [
     thread,
@@ -160,6 +169,7 @@ export function PostThread({
     hasSession,
     treeView,
     threadModerationCache,
+    showHiddenReplies,
   ])
 
   const error = React.useMemo(() => {
@@ -314,6 +324,12 @@ export function PostThread({
             {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
           </View>
         )
+      } else if (item === SHOW_HIDDEN_REPLIES) {
+        return (
+          <PostThreadShowHiddenReplies
+            onPress={() => setShowHiddenReplies(true)}
+          />
+        )
       } else if (isThreadNotFound(item)) {
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
@@ -334,9 +350,12 @@ export function PostThread({
         const prev = isThreadPost(posts[index - 1])
           ? (posts[index - 1] as ThreadPost)
           : undefined
-        const next = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
+        const next = isThreadPost(posts[index + 1])
+          ? (posts[index + 1] as ThreadPost)
           : undefined
+        const showChildReplyLine = (next?.ctx.depth || 0) > item.ctx.depth
+        const showParentReplyLine =
+          (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
         const hasUnrevealedParents =
           index === 0 &&
           skeleton?.parents &&
@@ -355,11 +374,9 @@ export function PostThread({
               nextPost={next}
               isHighlightedPost={item.ctx.isHighlightedPost}
               hasMore={item.ctx.hasMore}
-              showChildReplyLine={item.ctx.showChildReplyLine}
-              showParentReplyLine={item.ctx.showParentReplyLine}
-              hasPrecedingItem={
-                !!prev?.ctx.showChildReplyLine || !!hasUnrevealedParents
-              }
+              showChildReplyLine={showChildReplyLine}
+              showParentReplyLine={showParentReplyLine}
+              hasPrecedingItem={showParentReplyLine || !!hasUnrevealedParents}
               onPostReply={refetch}
             />
           </View>
@@ -383,6 +400,7 @@ export function PostThread({
       treeView,
       refetch,
       threadModerationCache,
+      setShowHiddenReplies,
     ],
   )
 
@@ -451,13 +469,23 @@ function createThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
+  modCache: ThreadModerationCache,
+  showHiddenReplies: boolean,
 ): ThreadSkeletonParts | null {
   if (!node) return null
 
   return {
     parents: Array.from(flattenThreadParents(node, hasSession)),
     highlightedPost: node,
-    replies: Array.from(flattenThreadReplies(node, hasSession, treeView)),
+    replies: Array.from(
+      flattenThreadReplies(
+        node,
+        hasSession,
+        treeView,
+        modCache,
+        showHiddenReplies,
+      ),
+    ),
   }
 }
 
@@ -483,20 +511,45 @@ function* flattenThreadReplies(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
-): Generator<YieldedItem, void> {
+  modCache: ThreadModerationCache,
+  showHiddenReplies: boolean,
+): Generator<YieldedItem, boolean> {
   if (node.type === 'post') {
+    // dont show pwi-opted-out posts to logged out users
     if (!hasSession && hasPwiOptOut(node)) {
-      return
+      return false
     }
+
+    // handle blurred items
+    if (modCache.get(node)?.ui('contentList').blur) {
+      if (!showHiddenReplies || node.ctx.depth > 1) {
+        return true
+      }
+    }
+
     if (!node.ctx.isHighlightedPost) {
       yield node
     }
+
     if (node.replies?.length) {
+      let didHideAny = false
       for (const reply of node.replies) {
-        yield* flattenThreadReplies(reply, hasSession, treeView)
+        let didHideReply = yield* flattenThreadReplies(
+          reply,
+          hasSession,
+          treeView,
+          modCache,
+          showHiddenReplies,
+        )
+        didHideAny = didHideAny || didHideReply
         if (!treeView && !node.ctx.isHighlightedPost) {
           break
         }
+      }
+
+      // show control to enable hidden replies
+      if (didHideAny && node.ctx.depth === 0) {
+        yield SHOW_HIDDEN_REPLIES
       }
     }
   } else if (node.type === 'not-found') {
@@ -504,6 +557,7 @@ function* flattenThreadReplies(
   } else if (node.type === 'blocked') {
     yield node
   }
+  return false
 }
 
 function hasPwiOptOut(node: ThreadPost) {
