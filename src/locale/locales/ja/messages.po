@@ -280,6 +280,10 @@ msgstr "および"
 msgid "Animals"
 msgstr "動物"
 
+#: src/view/com/util/post-embeds/GifEmbed.tsx:134
+msgid "Animated GIF"
+msgstr "アニメーションGIF"
+
 #: src/lib/moderation/useReportOptions.ts:31
 msgid "Anti-Social Behavior"
 msgstr "反社会的な行動"
@@ -717,10 +721,6 @@ msgstr "こちらをクリック"
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
 msgstr "{tag}のタグメニューをクリックして表示"
-
-#: src/components/RichText.tsx:198
-msgid "Click here to open tag menu for #{tag}"
-msgstr "#{tag}のタグメニューをクリックして表示"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -3133,6 +3133,10 @@ msgstr "パスワードが更新されました"
 msgid "Password updated!"
 msgstr "パスワードが更新されました！"
 
+#: src/view/com/util/post-embeds/GifEmbed.tsx:31
+msgid "Pause"
+msgstr "一時停止"
+
 #: src/view/screens/Search/Search.tsx:447
 #: src/view/screens/Search/Search.tsx:456
 msgid "People"
@@ -3175,9 +3179,17 @@ msgstr "ホームにピン留め"
 msgid "Pinned Feeds"
 msgstr "ピン留めされたフィード"
 
+#: src/view/com/util/post-embeds/GifEmbed.tsx:31
+msgid "Play"
+msgstr "再生"
+
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
 msgstr "{0}を再生"
+
+#: src/view/com/util/post-embeds/GifEmbed.tsx:30
+msgid "Play or pause the GIF"
+msgstr "GIFの再生や一時停止"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
