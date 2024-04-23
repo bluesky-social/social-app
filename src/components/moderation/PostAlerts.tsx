@@ -1,12 +1,11 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationUI, ModerationCause} from '@atproto/api'
+import {ModerationCause, ModerationUI} from '@atproto/api'
 
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {getModerationCauseKey} from '#/lib/moderation'
-
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {atoms as a} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
@@ -20,17 +19,19 @@ export function PostAlerts({
   includeMute?: boolean
   style?: StyleProp<ViewStyle>
 }) {
-  if (!modui.alert && !modui.inform) {
+  const alerts = modui.alerts.filter(shouldShow)
+  const informs = modui.informs.filter(shouldShow)
+  if (!alerts.length && !informs.length) {
     return null
   }
 
   return (
     <View style={[a.flex_col, a.gap_xs, style]}>
       <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
-        {modui.alerts.map(cause => (
+        {alerts.map(cause => (
           <PostLabel key={getModerationCauseKey(cause)} cause={cause} />
         ))}
-        {modui.informs.map(cause => (
+        {informs.map(cause => (
           <PostLabel key={getModerationCauseKey(cause)} cause={cause} />
         ))}
       </View>
@@ -63,4 +64,12 @@ function PostLabel({cause}: {cause: ModerationCause}) {
       <ModerationDetailsDialog control={control} modcause={cause} />
     </>
   )
+}
+
+function shouldShow(cause: ModerationCause): boolean {
+  if (cause.type === 'label') {
+    // only show labels on the content itself
+    return cause.target === 'content'
+  }
+  return true
 }
