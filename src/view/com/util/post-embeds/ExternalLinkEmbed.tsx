@@ -79,10 +79,7 @@ export const ExternalLinkEmbed = ({
               {link.title || link.uri}
             </Text>
           )}
-          {link.description &&
-          !embedPlayerParams?.hideDetails &&
-          // TODO remove this when we have a proper way to add alt to external embeds -hailey
-          !link.description.startsWith('ALT:') ? (
+          {link.description ? (
             <Text
               type="md"
               numberOfLines={link.thumb ? 2 : 4}
