@@ -61,7 +61,7 @@ msgstr "⚠無効なハンドル"
 
 #: src/screens/Login/LoginForm.tsx:238
 msgid "2FA Confirmation"
-msgstr "２要素認証確認"
+msgstr "２要素認証の確認"
 
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:796
