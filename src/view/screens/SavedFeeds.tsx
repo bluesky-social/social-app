@@ -28,6 +28,7 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
+import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeeds} from '#/screens/Feeds/NoSavedFeeds'
 import {atoms as a, useTheme} from '#/alf'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
@@ -71,6 +72,8 @@ export function SavedFeeds({}: Props) {
   const pinnedFeeds = currentFeeds.filter(f => f.pinned)
   const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
   const noSavedFeeds = pinnedFeeds.length + unpinnedFeeds.length === 0
+  const noFollowingFeed =
+    currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeeds
 
   useFocusEffect(
     React.useCallback(() => {
@@ -129,6 +132,13 @@ export function SavedFeeds({}: Props) {
         ) : (
           <ActivityIndicator style={{marginTop: 20}} />
         )}
+
+        {noFollowingFeed && (
+          <View style={[pal.border, {borderBottomWidth: 1}]}>
+            <NoFollowingFeed />
+          </View>
+        )}
+
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
             <Trans>Saved Feeds</Trans>

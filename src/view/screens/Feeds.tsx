@@ -45,6 +45,7 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeeds} from '#/screens/Feeds/NoSavedFeeds'
 import {atoms as a, useTheme} from '#/alf'
 import {IconCircle} from '#/components/IconCircle'
@@ -102,6 +103,10 @@ type FlatlistSlice =
     }
   | {
       type: 'popularFeedsLoadingMore'
+      key: string
+    }
+  | {
+      type: 'noFollowingFeed'
       key: string
     }
 
@@ -241,6 +246,10 @@ export function FeedsScreen(_props: Props) {
           })
         } else {
           if (preferences.savedFeeds?.length) {
+            const noFollowingFeed = preferences.savedFeeds.every(
+              f => f.type !== 'timeline',
+            )
+
             slices = slices.concat(
               preferences.savedFeeds
                 .filter(f => {
@@ -265,6 +274,13 @@ export function FeedsScreen(_props: Props) {
                   savedFeedConfig: feed,
                 })),
             )
+
+            if (noFollowingFeed) {
+              slices.push({
+                key: 'noFollowingFeed',
+                type: 'noFollowingFeed',
+              })
+            }
           } else {
             slices.push({
               key: 'savedFeedNoResults',
@@ -538,6 +554,18 @@ export function FeedsScreen(_props: Props) {
             <Text type="lg" style={pal.textLight}>
               <Trans>No results found for "{query}"</Trans>
             </Text>
+          </View>
+        )
+      } else if (item.type === 'noFollowingFeed') {
+        return (
+          <View
+            style={[
+              pal.border,
+              {
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <NoFollowingFeed />
           </View>
         )
       }
