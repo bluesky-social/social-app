@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
@@ -84,20 +85,23 @@ export const RepostButton = ({
       </Menu.Root>
     </EventStopper>
   ) : (
-    <Pressable
-      accessibilityRole="button"
+    <Button
       onPress={() => {
         requireAuth(() => {})
       }}
-      accessibilityLabel={_(msg`Repost or quote post`)}
-      accessibilityHint="">
+      label={_(msg`Repost or quote post`)}
+      style={{padding: 0}}
+      hoverStyle={t.atoms.bg_contrast_25}
+      shape="round"
+      variant="ghost"
+      color="secondary">
       <RepostInner
         isReposted={isReposted}
         color={color}
         repostCount={repostCount}
         size={size}
       />
-    </Pressable>
+    </Button>
   )
 }
 
