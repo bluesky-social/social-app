@@ -599,7 +599,7 @@ export function SearchScreen(
       setSearchText(queryTerm)
       setInputIsFocused(false)
     } else {
-      if (isWeb) {
+      if (isWeb && queryTerm) {
         navigation.goBack()
       } else {
         navigation.setParams({q: ''})
@@ -662,7 +662,6 @@ export function SearchScreen(
     return match && match[1]
   }, [queryTerm])
 
-  // TODO ???
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
