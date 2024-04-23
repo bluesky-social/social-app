@@ -544,7 +544,6 @@ export function SearchScreen(
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
   )
-  const [isFetching, setIsFetching] = React.useState<boolean>(false)
 
   // Query terms
   const q = props.route?.params?.q ?? ''
@@ -552,7 +551,8 @@ export function SearchScreen(
   const [searchInput, setSearchInput] = React.useState<string>(q)
   const throttledInput = useThrottledValue(searchInput, 300)
 
-  const autocompleteResults = useActorAutocompleteQuery(throttledInput)
+  const {data: autocompleteData, isFetching: isAutocompleteFetching} =
+    useActorAutocompleteQuery(throttledInput)
 
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [showAutocompleteResults, setShowAutocompleteResults] =
@@ -599,7 +599,6 @@ export function SearchScreen(
     setSearchInput(text)
 
     const showAutoComplete = text.length > 0
-    setIsFetching(showAutoComplete)
     setShowAutocompleteResults(showAutoComplete)
   }, [])
 
@@ -710,7 +709,7 @@ export function SearchScreen(
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus={isNative}
             returnKeyType="search"
-            value={query}
+            value={searchInput}
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
@@ -763,7 +762,8 @@ export function SearchScreen(
 
       {showAutocompleteResults ? (
         <>
-          {isFetching || !moderationOpts ? (
+          {/* TODO avoid showing spinner if we have any previous results -hailey */}
+          {(isAutocompleteFetching && !autocompleteData) || !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
@@ -773,7 +773,7 @@ export function SearchScreen(
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag">
               <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
+                label={_(msg`Search for "${searchInput}"`)}
                 onPress={isNative ? onSubmit : undefined}
                 to={
                   isNative
@@ -790,7 +790,7 @@ export function SearchScreen(
                 />
               ) : null}
 
-              {autocompleteResults.data?.map(item => (
+              {autocompleteData?.map(item => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
