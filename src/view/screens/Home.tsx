@@ -21,6 +21,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
+import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -110,12 +111,14 @@ function HomeScreenReady({
 
   useFocusEffect(
     useNonReactiveCallback(() => {
-      logEvent('home:feedDisplayed', {
-        index: selectedIndex,
-        feedType: selectedFeed.split('|')[0],
-        feedUrl: selectedFeed,
-        reason: 'focus',
-      })
+      if (selectedFeed) {
+        logEvent('home:feedDisplayed', {
+          index: selectedIndex,
+          feedType: selectedFeed.split('|')[0],
+          feedUrl: selectedFeed,
+          reason: 'focus',
+        })
+      }
     }),
   )
 
@@ -147,12 +150,15 @@ function HomeScreenReady({
   const onPageSelecting = React.useCallback(
     (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
       const feed = allFeeds[index]
-      logEvent('home:feedDisplayed', {
-        index,
-        feedType: feed.split('|')[0],
-        feedUrl: feed,
-        reason,
-      })
+
+      if (feed) {
+        logEvent('home:feedDisplayed', {
+          index,
+          feedType: feed.split('|')[0],
+          feedUrl: feed,
+          reason,
+        })
+      }
     },
     [allFeeds],
   )
@@ -212,35 +218,39 @@ function HomeScreenReady({
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
-      {allFeeds.map(feed => {
-        if (feed === 'home' || feed === 'following') {
+      {allFeeds.length ? (
+        allFeeds.map(feed => {
+          if (feed === 'home' || feed === 'following') {
+            return (
+              <FeedPage
+                key={feed}
+                testID="followingFeedPage"
+                isPageFocused={selectedFeed === feed}
+                feed={feed}
+                feedParams={homeFeedParams}
+                renderEmptyState={renderFollowingEmptyState}
+                renderEndOfFeed={FollowingEndOfFeed}
+              />
+            )
+          }
+          const savedFeedConfig = preferences.savedFeeds.find(f => {
+            return feed.includes(f.value)
+          })
+
           return (
             <FeedPage
               key={feed}
-              testID="followingFeedPage"
+              testID="customFeedPage"
               isPageFocused={selectedFeed === feed}
               feed={feed}
-              feedParams={homeFeedParams}
-              renderEmptyState={renderFollowingEmptyState}
-              renderEndOfFeed={FollowingEndOfFeed}
+              renderEmptyState={renderCustomFeedEmptyState}
+              savedFeedConfig={savedFeedConfig}
             />
           )
-        }
-        const savedFeedConfig = preferences.savedFeeds.find(f => {
-          return feed.includes(f.value)
         })
-
-        return (
-          <FeedPage
-            key={feed}
-            testID="customFeedPage"
-            isPageFocused={selectedFeed === feed}
-            feed={feed}
-            renderEmptyState={renderCustomFeedEmptyState}
-            savedFeedConfig={savedFeedConfig}
-          />
-        )
-      })}
+      ) : (
+        <NoFeedsPinned />
+      )}
     </Pager>
   ) : (
     <Pager
