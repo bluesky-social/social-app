@@ -109,3 +109,10 @@ export const RECOMMENDED_SAVED_FEEDS: Pick<
     pinned: true,
   },
 ]
+
+export const GIF_SERVICE = 'https://gifs.bsky.app'
+
+export const GIF_SEARCH = (params: string) =>
+  `${GIF_SERVICE}/tenor/v2/search?${params}`
+export const GIF_FEATURED = (params: string) =>
+  `${GIF_SERVICE}/tenor/v2/featured?${params}`

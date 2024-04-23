@@ -5,6 +5,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
@@ -12,7 +13,11 @@ import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {
+  useMinimalShellMode,
+  useSetDrawerSwipeDisabled,
+  useSetMinimalShellMode,
+} from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
@@ -54,8 +59,6 @@ function HomeScreenReady({
   pinnedFeedInfos: FeedSourceInfo[]
 }) {
   useOTAUpdates()
-  const gate = useGate()
-
   const allFeeds = React.useMemo(() => {
     const feeds: FeedDescriptor[] = []
     for (const {uri} of pinnedFeedInfos) {
@@ -122,11 +125,17 @@ function HomeScreenReady({
     }),
   )
 
+  const gate = useGate()
+  const mode = useMinimalShellMode()
+  const {isMobile} = useWebMediaQueries()
   React.useEffect(() => {
     const listener = AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'active') {
-        // TODO: Check if minimal shell is on before logging an exposure.
-        if (gate('disable_min_shell_on_foregrounding')) {
+        if (
+          isMobile &&
+          mode.value === 1 &&
+          gate('disable_min_shell_on_foregrounding_v2')
+        ) {
           setMinimalShellMode(false)
         }
       }
@@ -134,7 +143,7 @@ function HomeScreenReady({
     return () => {
       listener.remove()
     }
-  }, [setMinimalShellMode, gate])
+  }, [setMinimalShellMode, mode, isMobile, gate])
 
   const onPageSelected = React.useCallback(
     (index: number) => {

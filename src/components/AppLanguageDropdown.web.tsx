@@ -42,31 +42,36 @@ export function AppLanguageDropdown() {
         // We don't have hitSlop here to increase the tap region,
         // alternative is negative margins.
         {height: 32, marginVertical: -((32 - 14) / 2)},
-        a.flex_row,
-        a.gap_sm,
-        a.align_center,
-        a.flex_shrink,
       ]}>
-      <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
-        {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
-      </Text>
-      <ChevronDown fill={t.atoms.text.color} size="xs" style={a.flex_shrink} />
+      <View
+        style={[
+          a.flex_row,
+          a.gap_sm,
+          a.align_center,
+          a.flex_shrink,
+          a.h_full,
+          t.atoms.bg,
+        ]}>
+        <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
+          {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
+        </Text>
+        <ChevronDown fill={t.atoms.text.color} size="xs" style={a.flex_0} />
+      </View>
 
       <select
         value={sanitizedLang}
         onChange={onChangeAppLanguage}
         style={{
+          fontSize: a.text_sm.fontSize,
+          letterSpacing: a.text_sm.letterSpacing,
           cursor: 'pointer',
-          MozAppearance: 'none',
-          WebkitAppearance: 'none',
-          appearance: 'none',
           position: 'absolute',
           inset: 0,
-          width: '100%',
-          color: 'transparent',
-          background: 'transparent',
-          border: 0,
-          padding: 0,
+          opacity: 0,
+          color: t.atoms.text.color,
+          background: t.atoms.bg.backgroundColor,
+          padding: 4,
+          maxWidth: '100%',
         }}>
         {APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => (
           <option key={l.code2} value={l.code2}>

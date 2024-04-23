@@ -1,8 +1,9 @@
 /* eslint-env detox/detox */
 
-import {describe, beforeAll, it} from '@jest/globals'
+import {beforeAll, describe, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, createServer, sleep} from '../util'
+
+import {createServer, loginAsAlice, openApp, sleep} from '../util'
 
 describe('Composer', () => {
   beforeAll(async () => {
@@ -41,7 +42,6 @@ describe('Composer', () => {
     await element(by.id('composerTextInput')).typeText(
       'Post with a https://example.com link card',
     )
-    await element(by.id('addLinkCardBtn')).tap()
     await element(by.id('composerPublishBtn')).tap()
     await expect(element(by.id('composeFAB'))).toBeVisible()
   })
@@ -72,7 +72,6 @@ describe('Composer', () => {
     await element(by.id('composerTextInput')).typeText(
       'Reply with a https://example.com link card',
     )
-    await element(by.id('addLinkCardBtn')).tap()
     await element(by.id('composerPublishBtn')).tap()
     await expect(element(by.id('composeFAB'))).toBeVisible()
   })
@@ -104,7 +103,6 @@ describe('Composer', () => {
     await element(by.id('composerTextInput')).typeText(
       'QP with a https://example.com link card',
     )
-    await element(by.id('addLinkCardBtn')).tap()
     await element(by.id('composerPublishBtn')).tap()
     await expect(element(by.id('composeFAB'))).toBeVisible()
   })

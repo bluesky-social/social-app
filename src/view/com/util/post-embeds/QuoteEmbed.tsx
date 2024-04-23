@@ -1,5 +1,11 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
@@ -12,9 +18,13 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {HITSLOP_20} from '#/lib/constants'
+import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {RQKEY as RQKEY_URI} from '#/state/queries/resolve-uri'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -174,6 +184,33 @@ export function QuoteEmbed({
         {embed && <PostEmbeds embed={embed} moderation={moderation} />}
       </Link>
     </ContentHider>
+  )
+}
+
+export function QuoteX({onRemove}: {onRemove: () => void}) {
+  const {_} = useLingui()
+  return (
+    <TouchableOpacity
+      style={[
+        a.absolute,
+        a.p_xs,
+        a.rounded_full,
+        a.align_center,
+        a.justify_center,
+        {
+          top: 16,
+          right: 10,
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        },
+      ]}
+      onPress={onRemove}
+      accessibilityRole="button"
+      accessibilityLabel={_(msg`Remove quote`)}
+      accessibilityHint={_(msg`Removes quoted post`)}
+      onAccessibilityEscape={onRemove}
+      hitSlop={HITSLOP_20}>
+      <FontAwesomeIcon size={12} icon="xmark" style={s.white} />
+    </TouchableOpacity>
   )
 }
 

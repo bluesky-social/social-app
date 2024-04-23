@@ -2,7 +2,9 @@ import React from 'react'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {NavigationProp} from '#/lib/routes/types'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
@@ -178,8 +180,15 @@ function RichTextTag({
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+  const navigation = useNavigation<NavigationProp>()
 
-  const open = React.useCallback(() => {
+  const navigateToPage = React.useCallback(() => {
+    navigation.push('Hashtag', {
+      tag: encodeURIComponent(tag),
+    })
+  }, [navigation, tag])
+
+  const openDialog = React.useCallback(() => {
     control.open()
   }, [control])
 
@@ -195,9 +204,10 @@ function RichTextTag({
           selectable={selectable}
           {...native({
             accessibilityLabel: _(msg`Hashtag: #${tag}`),
-            accessibilityHint: _(msg`Click here to open tag menu for #${tag}`),
+            accessibilityHint: _(msg`Long press to open tag menu for #${tag}`),
             accessibilityRole: isNative ? 'button' : undefined,
-            onPress: open,
+            onPress: navigateToPage,
+            onLongPress: openDialog,
             onPressIn: onPressIn,
             onPressOut: onPressOut,
           })}
