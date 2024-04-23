@@ -19,7 +19,7 @@ export const ExternalEmbed = ({
 }: {
   link?: ExternalEmbedDraft
   onRemove: () => void
-  gif: Gif
+  gif?: Gif
 }) => {
   const t = useTheme()
   const {_} = useLingui()
