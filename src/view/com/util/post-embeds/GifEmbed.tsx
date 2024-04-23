@@ -2,6 +2,8 @@ import React from 'react'
 import {Pressable, View} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
@@ -19,11 +21,14 @@ function PlaybackControls({
   isPlaying: boolean
   isLoaded: boolean
 }) {
+  const {_} = useLingui()
   const t = useTheme()
 
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityHint={_(msg`Play or pause the GIF`)}
+      accessibilityLabel={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
       style={[
         a.absolute,
         a.align_center,
@@ -80,6 +85,7 @@ export function GifEmbed({
   params: EmbedPlayerParams
   link: AppBskyEmbedExternal.ViewExternal
 }) {
+  const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
   const playerRef = React.useRef<GifView>(null)
@@ -125,7 +131,7 @@ export function GifEmbed({
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
-          accessibilityHint="Animated GIF"
+          accessibilityHint={_(msg`Animated GIF`)}
           accessibilityLabel={link.description.replace('ALT: ', '')}
         />
       </View>
