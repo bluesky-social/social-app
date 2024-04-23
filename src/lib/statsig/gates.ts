@@ -6,4 +6,6 @@ export type Gate =
   | 'hide_vertical_scroll_indicators'
   | 'show_follow_back_label_v2'
   | 'start_session_with_following_v2'
+  | 'test_gate_1'
+  | 'test_gate_2'
   | 'use_new_suggestions_endpoint'
