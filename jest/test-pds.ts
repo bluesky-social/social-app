@@ -1,4 +1,4 @@
-import {AtUri, BskyAgent} from '@atproto/api'
+import {AtUri, BskyAgent, SessionDispatcher} from '@atproto/api'
 import {TestBsky, TestNetwork} from '@atproto/dev-env'
 import fs from 'fs'
 import net from 'net'
@@ -157,7 +157,8 @@ class Mocker {
   }
 
   async createUser(name: string) {
-    const agent = new BskyAgent({service: this.agent.service})
+    const dispatcher = new SessionDispatcher({service: this.service})
+    const agent = new BskyAgent(dispatcher)
 
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1},
@@ -168,7 +169,7 @@ class Mocker {
     )
 
     const email = `fake${Object.keys(this.users).length + 1}@fake.com`
-    const res = await agent.createAccount({
+    const res = await dispatcher.createAccount({
       inviteCode: inviteRes.data.code,
       email,
       handle: name + '.test',
@@ -333,7 +334,7 @@ class Mocker {
   }
 
   async createInvite(forAccount: string) {
-    const agent = new BskyAgent({service: this.agent.service})
+    const agent = new BskyAgent({service: this.service})
     await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1, forAccount},
       {

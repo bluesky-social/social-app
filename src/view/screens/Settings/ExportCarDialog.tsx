@@ -3,11 +3,12 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgent, useSession} from '#/state/session'
+import {isWeb} from '#/platform/detection'
+import {useAgent} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {InlineLinkText, Link} from '#/components/Link'
+import {InlineLinkText} from '#/components/Link'
 import {P, Text} from '#/components/Typography'
 
 export function ExportCarDialog({
@@ -18,20 +19,27 @@ export function ExportCarDialog({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {currentAccount} = useSession()
   const {getAgent} = useAgent()
 
-  const downloadUrl = React.useMemo(() => {
+  const download = React.useCallback(async () => {
     const agent = getAgent()
-    if (!currentAccount || !agent.session) {
-      return '' // shouldnt ever happen
+    const repo = await agent.getDid()
+    const res = await agent.com.atproto.sync.getRepo({did: repo})
+
+    if (isWeb) {
+      const blob = new Blob([res.data], {type: res.headers['content-type']})
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = 'repo.car'
+      anchor.click()
+      // Firefox requires a small delay
+      setTimeout(() => URL.revokeObjectURL(url), 100)
+    } else {
+      // TODO: Save blob on device
+      throw new Error('Not implemented')
     }
-    // eg: https://bsky.social/xrpc/com.atproto.sync.getRepo?did=did:plc:ewvi7nxzyoun6zhxrhs64oiz
-    const url = new URL(agent.pdsUrl || agent.service)
-    url.pathname = '/xrpc/com.atproto.sync.getRepo'
-    url.searchParams.set('did', agent.session.did)
-    return url.toString()
-  }, [currentAccount, getAgent])
+  }, [getAgent])
 
   return (
     <Dialog.Outer control={control}>
@@ -53,17 +61,16 @@ export function ExportCarDialog({
             </Trans>
           </P>
 
-          <Link
+          <Button
             variant="solid"
             color="primary"
             size="large"
             label={_(msg`Download CAR file`)}
-            to={downloadUrl}
-            download="repo.car">
+            onPress={download}>
             <ButtonText>
               <Trans>Download CAR file</Trans>
             </ButtonText>
-          </Link>
+          </Button>
 
           <P
             style={[

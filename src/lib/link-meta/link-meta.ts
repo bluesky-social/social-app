@@ -1,8 +1,9 @@
 import {BskyAgent} from '@atproto/api'
-import {isBskyAppUrl} from '../strings/url-helpers'
-import {extractBskyMeta} from './bsky'
+
 import {LINK_META_PROXY} from 'lib/constants'
 import {getGiphyMetaUri} from 'lib/strings/embed-player'
+import {isBskyAppUrl} from '../strings/url-helpers'
+import {extractBskyMeta} from './bsky'
 
 export enum LikelyType {
   HTML,
@@ -62,8 +63,9 @@ export async function getLinkMeta(
     const controller = new AbortController()
     const to = setTimeout(() => controller.abort(), timeout || 5e3)
 
+    const serciceUrl = await agent.getServiceUrl()
     const response = await fetch(
-      `${LINK_META_PROXY(agent.service.toString() || '')}${encodeURIComponent(
+      `${LINK_META_PROXY(serciceUrl.toString() || '')}${encodeURIComponent(
         url,
       )}`,
       {signal: controller.signal},

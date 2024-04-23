@@ -42,14 +42,16 @@ export function usePreferencesQuery() {
     queryFn: async () => {
       const agent = getAgent()
 
-      if (agent.session?.did === undefined) {
+      const did = await agent.getDid().catch(() => null)
+
+      if (!did) {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
         saveLabelers(
-          agent.session.did,
+          did,
           res.moderationPrefs.labelers.map(l => l.did),
         )
 

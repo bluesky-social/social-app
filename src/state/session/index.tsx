@@ -3,6 +3,7 @@ import {
   AtpPersistSessionHandler,
   BSKY_LABELER_DID,
   BskyAgent,
+  SessionDispatcher,
 } from '@atproto/api'
 import {jwtDecode} from 'jwt-decode'
 
@@ -115,7 +116,7 @@ const ApiContext = React.createContext<ApiContext>({
 })
 
 function createPersistSessionHandler(
-  agent: BskyAgent,
+  dispatcher: SessionDispatcher,
   account: SessionAccount,
   persistSessionCallback: (props: {
     expired: boolean
@@ -143,7 +144,7 @@ function createPersistSessionHandler(
       email: session?.email || account.email,
       emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
       deactivated: isSessionDeactivated(session?.accessJwt),
-      pdsUrl: agent.pdsUrl?.toString(),
+      pdsUrl: dispatcher.pdsUrl?.toString(),
 
       /*
        * Tokens are undefined if the session expires, or if creation fails for
@@ -233,9 +234,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Try Create Account')
       logEvent('account:create:begin', {})
 
-      const agent = new BskyAgent({service})
+      const dispatcher = new SessionDispatcher({service})
+      const agent = new BskyAgent(dispatcher)
 
-      await agent.createAccount({
+      await dispatcher.createAccount({
         handle,
         password,
         email,
@@ -244,15 +246,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         verificationCode,
       })
 
-      if (!agent.session) {
+      if (!dispatcher.session) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
       const fetchingGates = tryFetchGates(
-        agent.session.did,
+        dispatcher.session.did,
         'prefer-fresh-gates',
       )
 
-      const deactivated = isSessionDeactivated(agent.session.accessJwt)
+      const deactivated = isSessionDeactivated(dispatcher.session.accessJwt)
       if (!deactivated) {
         /*dont await*/ agent.upsertProfile(_existing => {
           return {
@@ -268,22 +270,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       const account: SessionAccount = {
-        service: agent.service.toString(),
-        did: agent.session.did,
-        handle: agent.session.handle,
-        email: agent.session.email!, // TODO this is always defined?
+        service: dispatcher.serviceUrl.href,
+        did: dispatcher.session.did,
+        handle: dispatcher.session.handle,
+        email: dispatcher.session.email!, // TODO this is always defined?
         emailConfirmed: false,
-        refreshJwt: agent.session.refreshJwt,
-        accessJwt: agent.session.accessJwt,
+        refreshJwt: dispatcher.session.refreshJwt,
+        accessJwt: dispatcher.session.accessJwt,
         deactivated,
-        pdsUrl: agent.pdsUrl?.toString(),
+        pdsUrl: dispatcher.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
 
-      agent.setPersistSessionHandler(
+      dispatcher.setPersistSessionHandler(
         createPersistSessionHandler(
-          agent,
+          dispatcher,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -307,36 +309,37 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async ({service, identifier, password, authFactorToken}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
-      const agent = new BskyAgent({service})
+      const dispatcher = new SessionDispatcher({service})
+      const agent = new BskyAgent(dispatcher)
 
-      await agent.login({identifier, password, authFactorToken})
+      await dispatcher.login({identifier, password, authFactorToken})
 
-      if (!agent.session) {
+      if (!dispatcher.session) {
         throw new Error(`session: login failed to establish a session`)
       }
       const fetchingGates = tryFetchGates(
-        agent.session.did,
+        dispatcher.session.did,
         'prefer-fresh-gates',
       )
 
       const account: SessionAccount = {
-        service: agent.service.toString(),
-        did: agent.session.did,
-        handle: agent.session.handle,
-        email: agent.session.email,
-        emailConfirmed: agent.session.emailConfirmed || false,
-        emailAuthFactor: agent.session.emailAuthFactor,
-        refreshJwt: agent.session.refreshJwt,
-        accessJwt: agent.session.accessJwt,
-        deactivated: isSessionDeactivated(agent.session.accessJwt),
-        pdsUrl: agent.pdsUrl?.toString(),
+        service: dispatcher.serviceUrl.href,
+        did: dispatcher.session.did,
+        handle: dispatcher.session.handle,
+        email: dispatcher.session.email,
+        emailConfirmed: dispatcher.session.emailConfirmed || false,
+        emailAuthFactor: dispatcher.session.emailAuthFactor,
+        refreshJwt: dispatcher.session.refreshJwt,
+        accessJwt: dispatcher.session.accessJwt,
+        deactivated: isSessionDeactivated(dispatcher.session.accessJwt),
+        pdsUrl: dispatcher.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
 
-      agent.setPersistSessionHandler(
+      dispatcher.setPersistSessionHandler(
         createPersistSessionHandler(
-          agent,
+          dispatcher,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -383,16 +386,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
       const fetchingGates = tryFetchGates(account.did, 'prefer-low-latency')
 
-      const agent = new BskyAgent({service: account.service})
+      const dispatcher = new SessionDispatcher({service: account.service})
+      const agent = new BskyAgent(dispatcher)
 
       // restore the correct PDS URL if available
       if (account.pdsUrl) {
-        agent.pdsUrl = agent.api.xrpc.uri = new URL(account.pdsUrl)
+        dispatcher.pdsUrl = new URL(account.pdsUrl)
       }
 
-      agent.setPersistSessionHandler(
+      dispatcher.setPersistSessionHandler(
         createPersistSessionHandler(
-          agent,
+          dispatcher,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -432,7 +436,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (canReusePrevSession) {
         logger.debug(`session: attempting to reuse previous session`)
 
-        agent.session = prevSession
+        dispatcher.session = prevSession
 
         __globalAgent = agent
         await fetchingGates
@@ -490,28 +494,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
         logger.debug(`session: resumeSessionWithFreshAccount`)
 
-        await networkRetry(1, () => agent.resumeSession(prevSession))
+        await networkRetry(1, () => dispatcher.resumeSession(prevSession))
 
         /*
          * If `agent.resumeSession` fails above, it'll throw. This is just to
          * make TypeScript happy.
          */
-        if (!agent.session) {
+        if (!dispatcher.session) {
           throw new Error(`session: initSession failed to establish a session`)
         }
 
         // ensure changes in handle/email etc are captured on reload
         return {
-          service: agent.service.toString(),
-          did: agent.session.did,
-          handle: agent.session.handle,
-          email: agent.session.email,
-          emailConfirmed: agent.session.emailConfirmed || false,
-          emailAuthFactor: agent.session.emailAuthFactor || false,
-          refreshJwt: agent.session.refreshJwt,
-          accessJwt: agent.session.accessJwt,
-          deactivated: isSessionDeactivated(agent.session.accessJwt),
-          pdsUrl: agent.pdsUrl?.toString(),
+          service: dispatcher.serviceUrl.href,
+          did: dispatcher.session.did,
+          handle: dispatcher.session.handle,
+          email: dispatcher.session.email,
+          emailConfirmed: dispatcher.session.emailConfirmed || false,
+          emailAuthFactor: dispatcher.session.emailAuthFactor || false,
+          refreshJwt: dispatcher.session.refreshJwt,
+          accessJwt: dispatcher.session.accessJwt,
+          deactivated: isSessionDeactivated(dispatcher.session.accessJwt),
+          pdsUrl: dispatcher.pdsUrl?.toString(),
         }
       }
     },
