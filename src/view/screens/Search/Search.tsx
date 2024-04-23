@@ -796,7 +796,7 @@ export function SearchScreen(
                 to={
                   isNative
                     ? undefined
-                    : `/search?q=${encodeURIComponent(queryTerm)}`
+                    : `/search?q=${encodeURIComponent(searchText)}`
                 }
                 style={{borderBottomWidth: 1}}
               />
