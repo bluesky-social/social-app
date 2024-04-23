@@ -272,7 +272,6 @@ export function useUpdateSavedFeedMutation() {
   return useMutation<void, unknown, AppBskyActorDefs.SavedFeed>({
     mutationFn: async feed => {
       await getAgent().updateSavedFeed(feed)
-      track('CustomFeed:Update', {uri: feed.value})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

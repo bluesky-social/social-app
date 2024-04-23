@@ -110,7 +110,6 @@ export type TrackPropertiesMap = {
     index: number
   }
   'CustomFeed:LoadMore': {}
-  'CustomFeed:Update': {}
   'MultiFeed:onEndReached': {}
   'MultiFeed:onRefresh': {}
   // MODERATION events
