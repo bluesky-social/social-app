@@ -47,13 +47,17 @@ function isValidUrlAndDomain(value: string) {
   )
 }
 
+function escapeRegex(literal: string) {
+  return literal.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&')
+}
+
 export function findIndexInText(term: string, text: string) {
   // This should find patterns like:
   // HELLO SENTENCE http://google.com/ HELLO
   // HELLO SENTENCE http://google.com HELLO
   // http://google.com/ HELLO.
   // http://google.com/.
-  const pattern = new RegExp(`\\b(${term})(?![/w])`, 'i')
+  const pattern = new RegExp(`\\b(${escapeRegex(term)})(?!w)`, 'i')
   const match = pattern.exec(text)
   return match ? match.index : -1
 }
