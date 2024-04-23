@@ -732,9 +732,10 @@ export function SearchScreen(
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
             onBlur={() => {
-              setTimeout(() => {
-                setInputIsFocused(Boolean(textInput.current?.isFocused()))
-              }, 100)
+              // HACK
+              // give 100ms to not stop click handlers in the search history
+              // -prf
+              setTimeout(() => setInputIsFocused(false), 100)
             }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
