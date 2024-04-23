@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {ExternalEmbedDraft} from 'lib/api/index'
 import {s} from 'lib/styles'
+import {Gif} from 'state/queries/tenor'
 import {ExternalLinkEmbed} from 'view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -14,9 +15,11 @@ import {Text} from '#/components/Typography'
 export const ExternalEmbed = ({
   link,
   onRemove,
+  gif,
 }: {
   link?: ExternalEmbedDraft
   onRemove: () => void
+  gif: Gif
 }) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -50,7 +53,7 @@ export const ExternalEmbed = ({
           </Text>
         </Container>
       ) : linkInfo ? (
-        <View style={{pointerEvents: 'none'}}>
+        <View style={{pointerEvents: !gif ? 'none' : 'auto'}}>
           <ExternalLinkEmbed link={linkInfo} />
         </View>
       ) : null}

@@ -121,6 +121,7 @@ export const ComposePost = observer(function ComposePost({
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
+  const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const gallery = useMemo(
@@ -328,6 +329,7 @@ export const ComposePost = observer(function ComposePost({
           description: `ALT: ${gif.content_description}`,
         },
       })
+      setExtGif(gif)
     },
     [setExtLink],
   )
@@ -473,7 +475,11 @@ export const ComposePost = observer(function ComposePost({
           {gallery.isEmpty && extLink && (
             <ExternalEmbed
               link={extLink}
-              onRemove={() => setExtLink(undefined)}
+              gif={extGif}
+              onRemove={() => {
+                setExtLink(undefined)
+                setExtGif(undefined)
+              }}
             />
           )}
           {quote ? (
