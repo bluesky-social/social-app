@@ -13,6 +13,7 @@ import * as Toast from '#/view/com/util/Toast'
  * clipboard.
  */
 export async function shareUrl(url: string) {
+  const {_} = useLingui()
   if (isAndroid) {
     await Share.share({message: url})
   } else if (isIOS) {
