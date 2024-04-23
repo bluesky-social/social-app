@@ -18,7 +18,7 @@ interface Props {
   repostCount?: number
   onRepost: () => void
   onQuote: () => void
-  size?: 'lg' | 'md' | 'sm'
+  big?: boolean
 }
 
 export const RepostButton = ({
@@ -26,7 +26,7 @@ export const RepostButton = ({
   repostCount,
   onRepost,
   onQuote,
-  size,
+  big,
 }: Props) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -58,7 +58,7 @@ export const RepostButton = ({
                   isReposted={isReposted}
                   color={color}
                   repostCount={repostCount}
-                  size={size}
+                  big={big}
                 />
               </Pressable>
             )
@@ -99,7 +99,7 @@ export const RepostButton = ({
         isReposted={isReposted}
         color={color}
         repostCount={repostCount}
-        size={size}
+        big={big}
       />
     </Button>
   )
@@ -109,21 +109,21 @@ const RepostInner = ({
   isReposted,
   color,
   repostCount,
-  size,
+  big,
 }: {
   isReposted: boolean
   color: {color: string}
   repostCount?: number
-  size?: 'lg' | 'md' | 'sm'
+  big?: boolean
 }) => (
   <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
-    <Repost style={color} size={size} />
+    <Repost style={color} width={big ? 22 : 18} />
     {typeof repostCount !== 'undefined' && repostCount > 0 ? (
       <Text
         testID="repostCount"
         style={[
           color,
-          size === 'lg' ? a.text_md : {fontSize: 15},
+          big ? a.text_md : {fontSize: 15},
           isReposted && [a.font_bold],
           a.user_select_none,
         ]}>

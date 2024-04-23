@@ -225,7 +225,7 @@ let PostCtrls = ({
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           <Bubble
             style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-            height={big ? 22 : 18}
+            width={big ? 22 : 18}
           />
           {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
             <Text
@@ -265,11 +265,11 @@ let PostCtrls = ({
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           {post.viewer?.like ? (
-            <HeartIconFilled style={s.likeColor} height={big ? 22 : 18} />
+            <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
           ) : (
             <HeartIconOutline
               style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-              height={big ? 22 : 18}
+              width={big ? 22 : 18}
             />
           )}
           {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
@@ -307,7 +307,7 @@ let PostCtrls = ({
               hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
               <ArrowOutOfBox
                 style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-                height={22}
+                width={22}
               />
             </Pressable>
           </View>

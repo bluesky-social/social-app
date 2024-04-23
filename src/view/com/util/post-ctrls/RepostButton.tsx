@@ -55,7 +55,7 @@ let RepostButton = ({
         shape="round"
         variant="ghost"
         color="secondary">
-        <Repost style={color} height={big ? 22 : 18} />
+        <Repost style={color} width={big ? 22 : 18} />
         {typeof repostCount !== 'undefined' && repostCount > 0 ? (
           <Text
             testID="repostCount"
