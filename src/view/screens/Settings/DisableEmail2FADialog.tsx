@@ -144,7 +144,7 @@ export function DisableEmail2FADialog({
                 </TextField.LabelText>
                 <TextField.Root>
                   <TextField.Icon icon={Lock} />
-                  <TextField.Input
+                  <Dialog.Input
                     testID="confirmationCode"
                     label={_(msg`Confirmation code`)}
                     autoCapitalize="none"
@@ -153,6 +153,7 @@ export function DisableEmail2FADialog({
                     autoComplete="off"
                     value={confirmationCode}
                     onChangeText={setConfirmationCode}
+                    onSubmitEditing={onConfirmDisable}
                     editable={!isProcessing}
                   />
                 </TextField.Root>
