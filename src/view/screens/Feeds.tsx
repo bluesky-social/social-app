@@ -45,6 +45,7 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {NoSavedFeeds} from '#/screens/Feeds/NoSavedFeeds'
 import {atoms as a, useTheme} from '#/alf'
 import {IconCircle} from '#/components/IconCircle'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
@@ -232,7 +233,7 @@ export function FeedsScreen(_props: Props) {
           error: cleanError(preferencesError.toString()),
         })
       } else {
-        if (isPreferencesLoading || !preferences?.savedFeeds?.length) {
+        if (isPreferencesLoading || !preferences?.savedFeeds) {
           slices.push({
             key: 'savedFeedsLoading',
             type: 'savedFeedsLoading',
@@ -264,6 +265,11 @@ export function FeedsScreen(_props: Props) {
                   savedFeedConfig: feed,
                 })),
             )
+          } else {
+            slices.push({
+              key: 'savedFeedNoResults',
+              type: 'savedFeedNoResults',
+            })
           }
         }
       }
@@ -476,19 +482,19 @@ export function FeedsScreen(_props: Props) {
                 </View>
               </View>
             )}
-            {preferences?.savedFeeds?.length !== 0 && <FeedsSavedHeader />}
+            <FeedsSavedHeader />
           </>
         )
       } else if (item.type === 'savedFeedNoResults') {
         return (
           <View
-            style={{
-              paddingHorizontal: 16,
-              paddingTop: 10,
-            }}>
-            <Text type="lg" style={pal.textLight}>
-              <Trans>You don't have any saved feeds!</Trans>
-            </Text>
+            style={[
+              pal.border,
+              {
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <NoSavedFeeds />
           </View>
         )
       } else if (item.type === 'savedFeed') {
@@ -545,7 +551,6 @@ export function FeedsScreen(_props: Props) {
       pal.icon,
       pal.textLight,
       _,
-      preferences?.savedFeeds?.length,
       query,
       onChangeQuery,
       onPressCancelSearch,
