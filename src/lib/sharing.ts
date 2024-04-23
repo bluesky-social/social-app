@@ -2,6 +2,7 @@ import {Share} from 'react-native'
 // import * as Sharing from 'expo-sharing'
 import {setStringAsync} from 'expo-clipboard'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {isAndroid, isIOS} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
