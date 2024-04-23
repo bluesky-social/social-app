@@ -6,12 +6,10 @@ import {GifViewProps} from './GifView.types'
 export class GifView extends React.PureComponent<GifViewProps> {
   private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
     React.createRef()
-  private isPlaying: boolean
   private isLoaded = false
 
   constructor(props: GifViewProps | Readonly<GifViewProps>) {
     super(props)
-    this.isPlaying = props.autoplay ?? false
   }
 
   componentDidUpdate(prevProps: Readonly<GifViewProps>) {
@@ -31,7 +29,7 @@ export class GifView extends React.PureComponent<GifViewProps> {
   private firePlayerStateChangeEvent = () => {
     this.props.onPlayerStateChange?.({
       nativeEvent: {
-        isPlaying: this.isPlaying,
+        isPlaying: !this.videoPlayerRef.current?.paused,
         isLoaded: this.isLoaded,
       },
     })
@@ -48,22 +46,18 @@ export class GifView extends React.PureComponent<GifViewProps> {
   }
 
   async playAsync(): Promise<void> {
-    this.videoPlayerRef.current.play()
-    this.isPlaying = true
-    this.firePlayerStateChangeEvent()
+    this.videoPlayerRef.current?.play()
   }
 
   async pauseAsync(): Promise<void> {
-    this.videoPlayerRef.current.pause()
-    this.isPlaying = false
-    this.firePlayerStateChangeEvent()
+    this.videoPlayerRef.current?.pause()
   }
 
   async toggleAsync(): Promise<void> {
-    if (this.isPlaying) {
-      await this.pauseAsync()
-    } else {
+    if (this.videoPlayerRef.current?.paused) {
       await this.playAsync()
+    } else {
+      await this.pauseAsync()
     }
   }
 
@@ -72,14 +66,16 @@ export class GifView extends React.PureComponent<GifViewProps> {
       <video
         src={this.props.source}
         autoPlay={this.props.autoplay ? 'autoplay' : undefined}
-        style={StyleSheet.flatten(this.props.style)}
         preload={this.props.autoplay ? 'auto' : undefined}
-        onCanPlay={this.onLoad}
+        playsInline={true}
         loop="loop"
         muted="muted"
-        ref={this.videoPlayerRef}
-        playsInline={true}
+        style={StyleSheet.flatten(this.props.style)}
+        onCanPlay={this.onLoad}
+        onPlay={this.firePlayerStateChangeEvent}
+        onPause={this.firePlayerStateChangeEvent}
         aria-label={this.props.accessibilityLabel}
+        ref={this.videoPlayerRef}
       />
     )
   }
