@@ -28,6 +28,7 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
+import {NoSavedFeeds} from '#/screens/Feeds/NoSavedFeeds'
 import {atoms as a, useTheme} from '#/alf'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 
@@ -69,6 +70,7 @@ export function SavedFeeds({}: Props) {
       : preferences?.savedFeeds || []
   const pinnedFeeds = currentFeeds.filter(f => f.pinned)
   const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
+  const noSavedFeeds = pinnedFeeds.length + unpinnedFeeds.length === 0
 
   useFocusEffect(
     React.useCallback(() => {
@@ -86,13 +88,19 @@ export function SavedFeeds({}: Props) {
       ]}>
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
+        {noSavedFeeds && (
+          <View style={[pal.border, {borderBottomWidth: 1}]}>
+            <NoSavedFeeds />
+          </View>
+        )}
+
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
             <Trans>Pinned Feeds</Trans>
           </Text>
         </View>
 
-        {preferences?.savedFeeds.length ? (
+        {preferences ? (
           !pinnedFeeds.length ? (
             <View
               style={[
@@ -126,7 +134,7 @@ export function SavedFeeds({}: Props) {
             <Trans>Saved Feeds</Trans>
           </Text>
         </View>
-        {preferences?.savedFeeds.length ? (
+        {preferences ? (
           !unpinnedFeeds.length ? (
             <View
               style={[
