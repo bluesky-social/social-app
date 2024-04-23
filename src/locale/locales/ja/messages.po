@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-21 12:39+0900\n"
+"PO-Revision-Date: 2024-04-23 10:26+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -254,6 +254,10 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
+#: src/components/dialogs/GifSelect.tsx:284
+msgid "An error occured"
+msgstr "エラーが発生しました"
+
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
 msgstr "ほかの選択肢にはあてはまらない問題"
@@ -479,10 +483,6 @@ msgstr "Blueskyは開かれています。"
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:58
 msgid "Bluesky is public."
 msgstr "Blueskyはパブリックです。"
-
-#: src/components/dialogs/GifSelect.tsx:314
-msgid "Bluesky uses GIPHY to provide the GIF selector feature."
-msgstr "BlueskyはGIFの選択機能のためにGIPHYを使用しています。"
 
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -743,6 +743,10 @@ msgstr "アラートを閉じる"
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
 msgstr "一番下の引き出しを閉じる"
+
+#: src/components/dialogs/GifSelect.tsx:294
+msgid "Close dialog"
+msgstr "ダイアログを閉じる"
 
 #: src/components/dialogs/GifSelect.tsx:166
 msgid "Close GIF dialog"
@@ -1439,11 +1443,6 @@ msgstr "フィードで成人向けコンテンツを有効にする"
 msgid "Enable external media"
 msgstr "外部メディアを有効にする"
 
-#: src/components/dialogs/GifSelect.tsx:335
-#: src/components/dialogs/GifSelect.tsx:342
-msgid "Enable GIPHY"
-msgstr "GIPHYを有効にする"
-
 #: src/view/screens/PreferencesExternalEmbeds.tsx:75
 msgid "Enable media players for"
 msgstr "有効にするメディアプレイヤー"
@@ -1853,10 +1852,6 @@ msgstr "ギャラリー"
 #: src/view/com/modals/VerifyEmail.tsx:191
 msgid "Get Started"
 msgstr "開始"
-
-#: src/components/dialogs/GifSelect.tsx:320
-msgid "GIPHY may collect information about you and your device. You can find out more in their <0>privacy policy</0>."
-msgstr "GIPHYはあなたやあなたのデバイスについての情報を収集するかもしれません。GIPHYの<0>プライバシー・ポリシー</0>で詳細を確認できます。"
 
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Glaring violations of law or terms of service"
@@ -2410,6 +2405,10 @@ msgstr "ログアウトしたユーザーからの可視性"
 msgid "Login to account that is not listed"
 msgstr "リストにないアカウントにログイン"
 
+#: src/components/RichText.tsx:207
+msgid "Long press to open tag menu for #{tag}"
+msgstr "長押しで #{tag} のタグメニューを開く"
+
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
 msgstr "XXXXX-XXXXXみたいなもの"
@@ -2770,6 +2769,10 @@ msgstr "説明はありません"
 msgid "No DNS Panel"
 msgstr "DNSパネルがない場合"
 
+#: src/components/dialogs/GifSelect.tsx:206
+msgid "No featured GIFs found. There may be an issue with Tenor."
+msgstr "おすすめのGIFが見つかりません。Tenorに問題があるかもしれません。"
+
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:118
 msgid "No longer following {0}"
 msgstr "{0}のフォローを解除しました"
@@ -2809,10 +2812,6 @@ msgstr "「{search}」の検索結果はありません"
 #: src/components/dialogs/EmbedConsent.tsx:112
 msgid "No thanks"
 msgstr "結構です"
-
-#: src/components/dialogs/GifSelect.tsx:218
-msgid "No trending GIFs found. There may be an issue with GIPHY."
-msgstr "GIFのトレンドが見つかりませんでした。GIPHYで問題が発生しているのかもしれません。"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -3155,11 +3154,6 @@ msgstr "カメラへのアクセス権限が必要です。"
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "カメラへのアクセスが拒否されました。システムの設定で有効にしてください。"
 
-#: src/components/dialogs/GifSelect.tsx:306
-#: src/components/dialogs/GifSelect.tsx:309
-msgid "Permission to use GIPHY"
-msgstr "GIPHYの使用を許可"
-
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
 msgstr "ペット"
@@ -3322,10 +3316,6 @@ msgstr "非表示の投稿"
 #: src/view/com/modals/LinkWarning.tsx:60
 msgid "Potentially Misleading Link"
 msgstr "誤解を招く可能性のあるリンク"
-
-#: src/components/dialogs/GifSelect.tsx:175
-msgid "Powered by GIPHY"
-msgstr "Powered by GIPHY"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
@@ -3813,6 +3803,10 @@ msgstr "ユーザーを検索"
 #: src/components/dialogs/GifSelect.tsx:174
 msgid "Search GIFs"
 msgstr "GIFを検索"
+
+#: src/components/dialogs/GifSelect.tsx:159
+msgid "Search Tenor"
+msgstr "Tenorを検索"
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -4517,8 +4511,8 @@ msgid "There was an an issue updating your feeds, please check your internet con
 msgstr "フィードの更新中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
 
 #: src/components/dialogs/GifSelect.tsx:213
-msgid "There was an issue connecting to GIPHY."
-msgstr "GIFPHYへの接続中に問題が発生しました。"
+msgid "There was an issue connecting to Tenor."
+msgstr "Tenorへの接続中に問題が発生しました。"
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
