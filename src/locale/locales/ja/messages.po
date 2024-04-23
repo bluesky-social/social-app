@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-21 12:39+0900\n"
+"PO-Revision-Date: 2024-04-23 13:29+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -58,6 +58,10 @@ msgstr "<1>Bluesky</1><0>へようこそ</0>"
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
 msgstr "⚠無効なハンドル"
+
+#: src/screens/Login/LoginForm.tsx:238
+msgid "2FA Confirmation"
+msgstr "２要素認証の確認"
 
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:796
@@ -254,6 +258,10 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
+#: src/components/dialogs/GifSelect.tsx:284
+msgid "An error occured"
+msgstr "エラーが発生しました"
+
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
 msgstr "ほかの選択肢にはあてはまらない問題"
@@ -275,6 +283,10 @@ msgstr "および"
 #: src/screens/Onboarding/index.tsx:32
 msgid "Animals"
 msgstr "動物"
+
+#: src/view/com/util/post-embeds/GifEmbed.tsx:134
+msgid "Animated GIF"
+msgstr "アニメーションGIF"
 
 #: src/lib/moderation/useReportOptions.ts:31
 msgid "Anti-Social Behavior"
@@ -480,10 +492,6 @@ msgstr "Blueskyは開かれています。"
 msgid "Bluesky is public."
 msgstr "Blueskyはパブリックです。"
 
-#: src/components/dialogs/GifSelect.tsx:314
-msgid "Bluesky uses GIPHY to provide the GIF selector feature."
-msgstr "BlueskyはGIFの選択機能のためにGIPHYを使用しています。"
-
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Blueskyはログアウトしたユーザーにあなたのプロフィールや投稿を表示しません。他のアプリはこのリクエストに応じない場合があります。この設定はあなたのアカウントを非公開にするものではありません。"
@@ -652,6 +660,10 @@ msgstr "おすすめのフィードを確認してください。「＋」をタ
 msgid "Check out some recommended users. Follow them to see similar users."
 msgstr "おすすめのユーザーを確認してください。フォローすることであなたに合ったユーザーが見つかるかもしれません。"
 
+#: src/screens/Login/LoginForm.tsx:262
+msgid "Check your email for a login code and enter it here."
+msgstr "確認コードが記載されたメールを確認し、ここに入力してください。"
+
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
@@ -718,10 +730,6 @@ msgstr "こちらをクリック"
 msgid "Click here to open tag menu for {tag}"
 msgstr "{tag}のタグメニューをクリックして表示"
 
-#: src/components/RichText.tsx:198
-msgid "Click here to open tag menu for #{tag}"
-msgstr "#{tag}のタグメニューをクリックして表示"
-
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
 msgstr "気象"
@@ -743,6 +751,10 @@ msgstr "アラートを閉じる"
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
 msgid "Close bottom drawer"
 msgstr "一番下の引き出しを閉じる"
+
+#: src/components/dialogs/GifSelect.tsx:294
+msgid "Close dialog"
+msgstr "ダイアログを閉じる"
 
 #: src/components/dialogs/GifSelect.tsx:166
 msgid "Close GIF dialog"
@@ -1164,6 +1176,10 @@ msgstr "グレー"
 msgid "Disable autoplay for GIFs"
 msgstr "GIFを自動再生しない"
 
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
+msgid "Disable Email 2FA"
+msgstr "メールでの２要素認証を無効化"
+
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
 msgstr "触覚フィードバックを無効化"
@@ -1382,6 +1398,10 @@ msgstr "教育"
 msgid "Email"
 msgstr "メールアドレス"
 
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
+msgid "Email 2FA disabled"
+msgstr "メールでの２要素認証を無効にしました"
+
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
 msgstr "メールアドレス"
@@ -1438,11 +1458,6 @@ msgstr "フィードで成人向けコンテンツを有効にする"
 #: src/components/dialogs/EmbedConsent.tsx:89
 msgid "Enable external media"
 msgstr "外部メディアを有効にする"
-
-#: src/components/dialogs/GifSelect.tsx:335
-#: src/components/dialogs/GifSelect.tsx:342
-msgid "Enable GIPHY"
-msgstr "GIPHYを有効にする"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:75
 msgid "Enable media players for"
@@ -1854,10 +1869,6 @@ msgstr "ギャラリー"
 msgid "Get Started"
 msgstr "開始"
 
-#: src/components/dialogs/GifSelect.tsx:320
-msgid "GIPHY may collect information about you and your device. You can find out more in their <0>privacy policy</0>."
-msgstr "GIPHYはあなたやあなたのデバイスについての情報を収集するかもしれません。GIPHYの<0>プライバシー・ポリシー</0>で詳細を確認できます。"
-
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Glaring violations of law or terms of service"
 msgstr "法律または利用規約への明らかな違反"
@@ -2116,6 +2127,10 @@ msgstr "新しいパスワードを入力"
 msgid "Input password for account deletion"
 msgstr "アカウント削除のためにパスワードを入力"
 
+#: src/screens/Login/LoginForm.tsx:257
+msgid "Input the code which has been emailed to you"
+msgstr "メールで送られたコードを入力"
+
 #: src/screens/Login/LoginForm.tsx:195
 msgid "Input the password tied to {identifier}"
 msgstr "{identifier}に紐づくパスワードを入力"
@@ -2135,6 +2150,11 @@ msgstr "ご希望のホスティングプロバイダーを入力"
 #: src/screens/Signup/StepHandle.tsx:63
 msgid "Input your user handle"
 msgstr "あなたのユーザーハンドルを入力"
+
+#: src/screens/Login/LoginForm.tsx:126
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
+msgid "Invalid 2FA confirmation code."
+msgstr "無効な２要素認証の確認コードです。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:221
 msgid "Invalid or unsupported post record"
@@ -2409,6 +2429,10 @@ msgstr "ログアウトしたユーザーからの可視性"
 #: src/components/AccountList.tsx:54
 msgid "Login to account that is not listed"
 msgstr "リストにないアカウントにログイン"
+
+#: src/components/RichText.tsx:207
+msgid "Long press to open tag menu for #{tag}"
+msgstr "長押しで #{tag} のタグメニューを開く"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
@@ -2770,6 +2794,10 @@ msgstr "説明はありません"
 msgid "No DNS Panel"
 msgstr "DNSパネルがない場合"
 
+#: src/components/dialogs/GifSelect.tsx:206
+msgid "No featured GIFs found. There may be an issue with Tenor."
+msgstr "おすすめのGIFが見つかりません。Tenorに問題があるかもしれません。"
+
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:118
 msgid "No longer following {0}"
 msgstr "{0}のフォローを解除しました"
@@ -2809,10 +2837,6 @@ msgstr "「{search}」の検索結果はありません"
 #: src/components/dialogs/EmbedConsent.tsx:112
 msgid "No thanks"
 msgstr "結構です"
-
-#: src/components/dialogs/GifSelect.tsx:218
-msgid "No trending GIFs found. There may be an issue with GIPHY."
-msgstr "GIFのトレンドが見つかりませんでした。GIPHYで問題が発生しているのかもしれません。"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -3134,6 +3158,10 @@ msgstr "パスワードが更新されました"
 msgid "Password updated!"
 msgstr "パスワードが更新されました！"
 
+#: src/view/com/util/post-embeds/GifEmbed.tsx:31
+msgid "Pause"
+msgstr "一時停止"
+
 #: src/view/screens/Search/Search.tsx:447
 #: src/view/screens/Search/Search.tsx:456
 msgid "People"
@@ -3154,11 +3182,6 @@ msgstr "カメラへのアクセス権限が必要です。"
 #: src/view/com/lightbox/Lightbox.tsx:72
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "カメラへのアクセスが拒否されました。システムの設定で有効にしてください。"
-
-#: src/components/dialogs/GifSelect.tsx:306
-#: src/components/dialogs/GifSelect.tsx:309
-msgid "Permission to use GIPHY"
-msgstr "GIPHYの使用を許可"
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
@@ -3181,9 +3204,17 @@ msgstr "ホームにピン留め"
 msgid "Pinned Feeds"
 msgstr "ピン留めされたフィード"
 
+#: src/view/com/util/post-embeds/GifEmbed.tsx:31
+msgid "Play"
+msgstr "再生"
+
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
 msgstr "{0}を再生"
+
+#: src/view/com/util/post-embeds/GifEmbed.tsx:30
+msgid "Play or pause the GIF"
+msgstr "GIFの再生や一時停止"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
@@ -3322,10 +3353,6 @@ msgstr "非表示の投稿"
 #: src/view/com/modals/LinkWarning.tsx:60
 msgid "Potentially Misleading Link"
 msgstr "誤解を招く可能性のあるリンク"
-
-#: src/components/dialogs/GifSelect.tsx:175
-msgid "Powered by GIPHY"
-msgstr "Powered by GIPHY"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
@@ -3635,9 +3662,18 @@ msgstr "コードをリクエスト"
 msgid "Require alt text before posting"
 msgstr "画像投稿時にALTテキストを必須とする"
 
+#: src/view/screens/Settings/Email2FAToggle.tsx:53
+msgid "Require email code to log into your account"
+msgstr "アカウントにログインする時にメールのコードを必須とする"
+
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
 msgstr "このプロバイダーに必要"
+
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
+msgid "Resend email"
+msgstr "メールを再送"
 
 #: src/view/com/modals/ChangePassword.tsx:185
 msgid "Reset code"
@@ -3814,6 +3850,10 @@ msgstr "ユーザーを検索"
 msgid "Search GIFs"
 msgstr "GIFを検索"
 
+#: src/components/dialogs/GifSelect.tsx:159
+msgid "Search Tenor"
+msgstr "Tenorを検索"
+
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
 msgstr "必要なセキュリティの手順"
@@ -3950,6 +3990,11 @@ msgstr "報告を送信"
 #: src/components/ReportDialog/SelectLabelerView.tsx:44
 msgid "Send report to {0}"
 msgstr "{0}に報告を送信"
+
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
+msgid "Send verification email"
+msgstr "確認メールを送信"
 
 #: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
@@ -4517,8 +4562,8 @@ msgid "There was an an issue updating your feeds, please check your internet con
 msgstr "フィードの更新中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
 
 #: src/components/dialogs/GifSelect.tsx:213
-msgid "There was an issue connecting to GIPHY."
-msgstr "GIFPHYへの接続中に問題が発生しました。"
+msgid "There was an issue connecting to Tenor."
+msgstr "Tenorへの接続中に問題が発生しました。"
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
@@ -4747,6 +4792,10 @@ msgstr "スレッドの設定"
 msgid "Thread Preferences"
 msgstr "スレッドの設定"
 
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
+msgid "To disable the email 2FA method, please verify your access to the email address."
+msgstr "メールでの２要素認証を無効にするには、メールアドレスにアクセスできるか確認してください。"
+
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "スレッドモード"
@@ -4790,6 +4839,10 @@ msgstr "翻訳"
 msgctxt "action"
 msgid "Try again"
 msgstr "再試行"
+
+#: src/view/screens/Settings/index.tsx:695
+msgid "Two-factor authentication"
+msgstr "２要素認証"
 
 #: src/view/com/modals/ChangeHandle.tsx:428
 msgid "Type:"
