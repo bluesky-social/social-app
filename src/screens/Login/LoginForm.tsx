@@ -251,6 +251,7 @@ export const LoginForm = ({
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               value={authFactorToken}
               onChangeText={setAuthFactorToken}
+              onSubmitEditing={onPressNext}
               editable={!isProcessing}
               accessibilityHint={_(
                 msg`Input the code which has been emailed to you`,
