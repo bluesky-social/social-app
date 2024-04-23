@@ -352,8 +352,8 @@ export function parseEmbedPlayerFromUrl(
 
     if (id && filename && dimensions && id.includes('AAAAC')) {
       if (Platform.OS === 'web') {
-        id = id.replace('AAAAC', 'AAAP3')
-        filename = filename.replace('.gif', '.webm')
+        id = id.replace('AAAAC', 'AAAPo')
+        filename = filename.replace('.gif', '.mp4')
       } else {
         id = id.replace('AAAAC', 'AAAAM')
       }
