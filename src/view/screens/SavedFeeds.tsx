@@ -28,6 +28,8 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
+import {atoms as a, useTheme} from '#/alf'
+import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 
 const HITSLOP_TOP = {
   top: 20,
@@ -274,9 +276,7 @@ function ListItem({
   }, [feed, isPinned, setSavedFeeds, currentFeeds, _])
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      style={[styles.itemContainer, pal.border]}>
+    <View style={[styles.itemContainer, pal.border]}>
       {isPinned ? (
         <View style={styles.webArrowButtonsContainer}>
           <Pressable
@@ -307,13 +307,17 @@ function ListItem({
           </Pressable>
         </View>
       ) : null}
-      <FeedSourceCard
-        key={feedUri}
-        feedUri={feedUri}
-        style={styles.noTopBorder}
-        showSaveBtn
-        showMinimalPlaceholder
-      />
+      {feed.type === 'timeline' ? (
+        <FollowingFeedCard />
+      ) : (
+        <FeedSourceCard
+          key={feedUri}
+          feedUri={feedUri}
+          style={styles.noTopBorder}
+          showSaveBtn
+          showMinimalPlaceholder
+        />
+      )}
       <View style={{paddingRight: 16}}>
         <Pressable
           disabled={isUpdatePending}
@@ -331,7 +335,52 @@ function ListItem({
           />
         </Pressable>
       </View>
-    </Pressable>
+    </View>
+  )
+}
+
+function FollowingFeedCard() {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.flex_1,
+        {
+          paddingHorizontal: 18,
+          paddingVertical: 20,
+        },
+      ]}>
+      <View
+        style={[
+          a.align_center,
+          a.justify_center,
+          a.rounded_sm,
+          {
+            width: 36,
+            height: 36,
+            backgroundColor: t.palette.primary_500,
+            marginRight: 10,
+          },
+        ]}>
+        <FilterTimeline
+          style={[
+            {
+              width: 22,
+              height: 22,
+            },
+          ]}
+          fill={t.palette.white}
+        />
+      </View>
+      <View
+        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+        <Text type="lg-medium" style={[t.atoms.text]} numberOfLines={1}>
+          Following
+        </Text>
+      </View>
+    </View>
   )
 }
 
