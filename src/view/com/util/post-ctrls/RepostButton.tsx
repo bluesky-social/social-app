@@ -16,7 +16,7 @@ interface Props {
   repostCount?: number
   onRepost: () => void
   onQuote: () => void
-  size?: 'lg' | 'md' | 'sm'
+  big?: boolean
 }
 
 let RepostButton = ({
@@ -24,7 +24,7 @@ let RepostButton = ({
   repostCount,
   onRepost,
   onQuote,
-  size,
+  big,
 }: Props): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -46,6 +46,7 @@ let RepostButton = ({
           requireAuth(() => dialogControl.open())
         }}
         style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}
+        hoverStyle={t.atoms.bg_contrast_25}
         label={`${
           isReposted
             ? _(msg`Undo repost`)
@@ -54,13 +55,13 @@ let RepostButton = ({
         shape="round"
         variant="ghost"
         color="secondary">
-        <Repost style={color} size={size} />
+        <Repost style={color} height={big ? 22 : 18} />
         {typeof repostCount !== 'undefined' && repostCount > 0 ? (
           <Text
             testID="repostCount"
             style={[
               color,
-              size === 'lg' ? a.text_md : {fontSize: 15},
+              big ? a.text_md : {fontSize: 15},
               isReposted && a.font_bold,
             ]}>
             {repostCount}
@@ -73,7 +74,7 @@ let RepostButton = ({
           <View style={a.gap_xl}>
             <View style={a.gap_xs}>
               <Button
-                style={[a.justify_start, a.px_sm]}
+                style={[a.justify_start, a.px_md]}
                 label={
                   isReposted
                     ? _(msg`Remove repost`)
@@ -84,7 +85,8 @@ let RepostButton = ({
                   onRepost()
                 }}
                 size="large"
-                variant="outline">
+                variant="ghost"
+                color="primary">
                 <Repost size="lg" fill={t.palette.primary_500} />
                 <Text style={[a.font_bold, a.text_xl]}>
                   {isReposted
@@ -93,14 +95,15 @@ let RepostButton = ({
                 </Text>
               </Button>
               <Button
-                style={[a.justify_start, a.px_sm]}
+                style={[a.justify_start, a.px_md]}
                 label={_(msg`Quote post`)}
                 onPress={() => {
                   dialogControl.close()
                   onQuote()
                 }}
                 size="large"
-                variant="outline">
+                variant="ghost"
+                color="primary">
                 <Quote size="lg" fill={t.palette.primary_500} />
                 <Text style={[a.font_bold, a.text_xl]}>
                   {_(msg`Quote post`)}

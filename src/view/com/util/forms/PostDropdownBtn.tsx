@@ -245,7 +245,7 @@ let PostDropdownBtn = ({
                   style,
                   a.rounded_full,
                   (state.hovered || state.pressed) && [
-                    alf.atoms.bg_contrast_50,
+                    alf.atoms.bg_contrast_25,
                   ],
                 ]}>
                 <DotsHorizontal

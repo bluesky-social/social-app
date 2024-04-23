@@ -50,7 +50,7 @@ export const RepostButton = ({
                 style={[
                   a.rounded_full,
                   (state.hovered || state.pressed) && {
-                    backgroundColor: t.palette.contrast_50,
+                    backgroundColor: t.palette.contrast_25,
                   },
                 ]}>
                 <RepostInner

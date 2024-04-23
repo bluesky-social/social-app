@@ -197,9 +197,9 @@ let PostCtrls = ({
       a.align_center,
       a.justify_center,
       {padding: 5},
-      (pressed || hovered) && t.atoms.bg_contrast_50,
+      (pressed || hovered) && t.atoms.bg_contrast_25,
     ],
-    [t.atoms.bg_contrast_50],
+    [t.atoms.bg_contrast_25],
   )
 
   return (
@@ -223,7 +223,10 @@ let PostCtrls = ({
           })}
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-          <Bubble style={defaultCtrlColor} size={big ? 'lg' : 'md'} />
+          <Bubble
+            style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+            height={big ? 22 : 18}
+          />
           {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
             <Text style={[defaultCtrlColor, big ? a.text_md : {fontSize: 15}]}>
               {post.replyCount}
@@ -237,7 +240,7 @@ let PostCtrls = ({
           repostCount={post.repostCount}
           onRepost={onRepost}
           onQuote={onQuote}
-          size={big ? 'lg' : 'md'}
+          big={big}
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
@@ -257,11 +260,11 @@ let PostCtrls = ({
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           {post.viewer?.like ? (
-            <HeartIconFilled style={s.likeColor} size={big ? 'lg' : 'md'} />
+            <HeartIconFilled style={s.likeColor} height={big ? 22 : 18} />
           ) : (
             <HeartIconOutline
-              style={defaultCtrlColor}
-              size={big ? 'lg' : 'md'}
+              style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+              height={big ? 22 : 18}
             />
           )}
           {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
@@ -296,7 +299,10 @@ let PostCtrls = ({
               accessibilityLabel={_(msg`Share`)}
               accessibilityHint=""
               hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-              <ArrowOutOfBox style={defaultCtrlColor} size="lg" />
+              <ArrowOutOfBox
+                style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+                height={22}
+              />
             </Pressable>
           </View>
           <Prompt.Basic
