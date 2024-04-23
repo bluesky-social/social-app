@@ -47,7 +47,7 @@ export function DesktopFeeds() {
         }
         return (
           <FeedItem
-            key={feed}
+            key={feedInfo.id}
             href={'/?' + new URLSearchParams([['feed', feed]])}
             title={feedInfo.displayName}
             current={route.name === 'Home' && feed === selectedFeed}

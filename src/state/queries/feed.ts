@@ -22,6 +22,7 @@ import {getAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 
 export type FeedSourceFeedInfo = {
+  id: string
   type: 'feed'
   uri: string
   route: {
@@ -40,6 +41,7 @@ export type FeedSourceFeedInfo = {
 }
 
 export type FeedSourceListInfo = {
+  id: string
   type: 'list'
   uri: string
   route: {
@@ -70,6 +72,7 @@ const feedSourceNSIDs = {
 
 export function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
+  extra?: {id: string},
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
@@ -78,6 +81,7 @@ export function hydrateFeedGenerator(
   const route = router.matchPath(href)
 
   return {
+    id: extra?.id || '',
     type: 'feed',
     uri: view.uri,
     cid: view.cid,
@@ -101,7 +105,10 @@ export function hydrateFeedGenerator(
   }
 }
 
-export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+export function hydrateList(
+  view: AppBskyGraphDefs.ListView,
+  extra?: {id: string},
+): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
     urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
@@ -109,6 +116,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   const route = router.matchPath(href)
 
   return {
+    id: extra?.id || '',
     type: 'list',
     uri: view.uri,
     route: {
@@ -204,6 +212,7 @@ export function useSearchPopularFeedsMutation() {
  * The following feed, with fallbacks to Discover
  */
 const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
+  id: 'pwi',
   type: 'feed',
   displayName: 'Discover',
   uri: DISCOVER_FEED_URI,
@@ -226,13 +235,9 @@ const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const pinnedFeeds = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
-  const feedUris = pinnedFeeds
-    .filter(feed => feed.type === 'feed')
-    .map(f => f.value)
-  const listUris = pinnedFeeds
-    .filter(feed => feed.type === 'list')
-    .map(f => f.value)
+  const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
+  const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
+  const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -240,35 +245,45 @@ export function usePinnedFeedsInfos() {
     queryKey: [
       pinnedFeedInfosQueryKeyRoot,
       (hasSession ? 'authed:' : 'unauthed:') +
-        pinnedFeeds.map(f => f.value).join(','),
+        pinnedItems.map(f => f.value).join(','),
     ],
     queryFn: async () => {
       let resolved = new Map<string, FeedSourceInfo>()
+      let pinnedFeedsIds = pinnedFeeds.map(f => f.id)
 
       // Get all feeds. We can do this in a batch.
       let feedsPromise = Promise.resolve()
-      if (feedUris.length > 0) {
+      if (pinnedFeeds.length > 0) {
         feedsPromise = getAgent()
           .app.bsky.feed.getFeedGenerators({
-            feeds: feedUris,
+            feeds: pinnedFeeds.map(f => f.value),
           })
           .then(res => {
-            for (let feedView of res.data.feeds) {
-              resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
+            for (let i = 0; i < res.data.feeds.length; i++) {
+              const feedView = res.data.feeds[i]
+              resolved.set(
+                feedView.uri + pinnedFeedsIds[i],
+                hydrateFeedGenerator(feedView, {
+                  id: pinnedFeedsIds[i],
+                }),
+              )
             }
           })
       }
 
       // Get all lists. This currently has to be done individually.
-      const listsPromises = listUris.map(listUri =>
+      const listsPromises = pinnedLists.map(list =>
         getAgent()
           .app.bsky.graph.getList({
-            list: listUri,
+            list: list.value,
             limit: 1,
           })
           .then(res => {
             const listView = res.data.list
-            resolved.set(listView.uri, hydrateList(listView))
+            resolved.set(
+              listView.uri + list.id,
+              hydrateList(listView, {id: list.id}),
+            )
           }),
       )
 
@@ -277,15 +292,16 @@ export function usePinnedFeedsInfos() {
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
       // order the feeds/lists in the order they were pinned
-      for (let pinnedFeed of pinnedFeeds) {
-        const feedInfo = resolved.get(pinnedFeed.value)
+      for (let pinnedItem of pinnedItems) {
+        const feedInfo = resolved.get(pinnedItem.value + pinnedItem.id)
         if (feedInfo) {
           result.push(feedInfo)
-        } else if (pinnedFeed.type === 'timeline') {
+        } else if (pinnedItem.type === 'timeline') {
           result.push({
+            id: pinnedItem.id,
             type: 'feed',
             displayName: 'Following',
-            uri: pinnedFeed.value,
+            uri: pinnedItem.value,
             route: {
               href: '/',
               name: 'Home',

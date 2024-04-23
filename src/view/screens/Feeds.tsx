@@ -256,7 +256,7 @@ export function FeedsScreen(_props: Props) {
                   return f.pinned
                 })
                 .map(feed => ({
-                  key: `savedFeed:${feed.value}`,
+                  key: `savedFeed:${feed.value}:${feed.id}`,
                   type: 'savedFeed',
                   feedUri: feed.value,
                   savedFeedConfig: feed,
@@ -268,7 +268,7 @@ export function FeedsScreen(_props: Props) {
                   return !f.pinned
                 })
                 .map(feed => ({
-                  key: `savedFeed:${feed.value}`,
+                  key: `savedFeed:${feed.value}:${feed.id}`,
                   type: 'savedFeed',
                   feedUri: feed.value,
                   savedFeedConfig: feed,
