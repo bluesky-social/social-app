@@ -594,8 +594,18 @@ export function SearchScreen(
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocompleteResults(false)
-    navigation.setParams({q: ''})
-  }, [navigation])
+
+    if (inputIsFocused) {
+      setSearchText(queryTerm)
+      setInputIsFocused(false)
+    } else {
+      if (isWeb) {
+        navigation.goBack()
+      } else {
+        navigation.setParams({q: ''})
+      }
+    }
+  }, [inputIsFocused, navigation, queryTerm])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
