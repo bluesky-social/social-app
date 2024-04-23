@@ -38,6 +38,7 @@ function PlaybackControls({
         a.inset_0,
         a.w_full,
         a.h_full,
+        a.rounded_sm,
         {
           zIndex: 2,
           backgroundColor: !isLoaded
