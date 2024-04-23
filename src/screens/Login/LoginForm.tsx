@@ -6,7 +6,10 @@ import {
   TextInput,
   View,
 } from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {
+  ComAtprotoServerCreateSession,
+  ComAtprotoServerDescribeServer,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,6 +26,7 @@ import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
+import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
@@ -53,8 +57,11 @@ export const LoginForm = ({
   const {track} = useAnalytics()
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
+    useState<boolean>(false)
   const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
+  const [authFactorToken, setAuthFactorToken] = useState<string>('')
   const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
   const {login} = useSessionApi()
@@ -100,6 +107,7 @@ export const LoginForm = ({
           service: serviceUrl,
           identifier: fullIdent,
           password,
+          authFactorToken: authFactorToken.trim(),
         },
         'LoginForm',
       )
@@ -107,7 +115,16 @@ export const LoginForm = ({
       const errMsg = e.toString()
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
-      if (errMsg.includes('Authentication Required')) {
+      if (
+        e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
+      ) {
+        setIsAuthFactorTokenNeeded(true)
+      } else if (errMsg.includes('Token is invalid')) {
+        logger.debug('Failed to login due to invalid 2fa token', {
+          error: errMsg,
+        })
+        setError(_(msg`Invalid 2FA confirmation code.`))
+      } else if (errMsg.includes('Authentication Required')) {
         logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
         })
@@ -215,6 +232,37 @@ export const LoginForm = ({
           </TextField.Root>
         </View>
       </View>
+      {isAuthFactorTokenNeeded && (
+        <View>
+          <TextField.LabelText>
+            <Trans>2FA Confirmation</Trans>
+          </TextField.LabelText>
+          <TextField.Root>
+            <TextField.Icon icon={Ticket} />
+            <TextField.Input
+              testID="loginAuthFactorTokenInput"
+              label={_(msg`Confirmation code`)}
+              autoCapitalize="none"
+              autoFocus
+              autoCorrect={false}
+              autoComplete="off"
+              returnKeyType="done"
+              textContentType="username"
+              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+              value={authFactorToken}
+              onChangeText={setAuthFactorToken}
+              onSubmitEditing={onPressNext}
+              editable={!isProcessing}
+              accessibilityHint={_(
+                msg`Input the code which has been emailed to you`,
+              )}
+            />
+          </TextField.Root>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.mt_sm]}>
+            <Trans>Check your email for a login code and enter it here.</Trans>
+          </Text>
+        </View>
+      )}
       <FormError error={error} />
       <View style={[a.flex_row, a.align_center, a.pt_md]}>
         <Button
