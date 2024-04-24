@@ -31,7 +31,11 @@ import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
-import {useModerationOpts} from './preferences'
+import {
+  useModerationOpts,
+  usePreferencesQuery,
+  UsePreferencesQueryResponse,
+} from './preferences'
 import {precacheFeedPostProfiles} from './profile'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
@@ -104,7 +108,9 @@ export function usePostFeedQuery(
   const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
-  const enabled = opts?.enabled !== false && Boolean(moderationOpts)
+  const {data: preferences} = usePreferencesQuery()
+  const enabled =
+    opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -139,7 +145,12 @@ export function usePostFeedQuery(
       const {api, cursor} = pageParam
         ? pageParam
         : {
-            api: createApi(feedDesc, params || {}, feedTuners),
+            api: createApi({
+              feedDesc,
+              feedParams: params || {},
+              feedTuners,
+              preferences,
+            }),
             cursor: undefined,
           }
 
@@ -365,16 +376,23 @@ export async function pollLatest(page: FeedPage | undefined) {
   return false
 }
 
-function createApi(
-  feedDesc: FeedDescriptor,
-  params: FeedParams,
-  feedTuners: FeedTunerFn[],
-) {
+function createApi({
+  feedDesc,
+  feedParams,
+  feedTuners,
+  preferences,
+}: {
+  feedDesc: FeedDescriptor
+  feedParams: FeedParams
+  feedTuners: FeedTunerFn[]
+  preferences: UsePreferencesQueryResponse
+}) {
   if (feedDesc === 'home') {
-    if (params.mergeFeedEnabled) {
-      return new MergeFeedAPI(params, feedTuners)
+    if (feedParams.mergeFeedEnabled) {
+      console.log('MERGE')
+      return new MergeFeedAPI(feedParams, feedTuners, preferences)
     } else {
-      return new HomeFeedAPI()
+      return new HomeFeedAPI({preferences})
     }
   } else if (feedDesc === 'following') {
     return new FollowingFeedAPI()
@@ -386,7 +404,7 @@ function createApi(
     return new LikesFeedAPI({actor})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
-    return new CustomFeedAPI({feed})
+    return new CustomFeedAPI({feed}, preferences)
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
     return new ListFeedAPI({list})

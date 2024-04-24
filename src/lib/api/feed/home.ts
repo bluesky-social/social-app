@@ -1,8 +1,10 @@
 import {AppBskyFeedDefs} from '@atproto/api'
-import {FeedAPI, FeedAPIResponse} from './types'
-import {FollowingFeedAPI} from './following'
-import {CustomFeedAPI} from './custom'
+
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {CustomFeedAPI} from './custom'
+import {FollowingFeedAPI} from './following'
+import {FeedAPI, FeedAPIResponse} from './types'
 
 // HACK
 // the feed API does not include any facilities for passing down
@@ -30,15 +32,23 @@ export class HomeFeedAPI implements FeedAPI {
   discover: CustomFeedAPI
   usingDiscover = false
   itemCursor = 0
+  preferences?: UsePreferencesQueryResponse
 
-  constructor() {
+  constructor({preferences}: {preferences?: UsePreferencesQueryResponse}) {
+    this.preferences = preferences
     this.following = new FollowingFeedAPI()
-    this.discover = new CustomFeedAPI({feed: PROD_DEFAULT_FEED('whats-hot')})
+    this.discover = new CustomFeedAPI(
+      {feed: PROD_DEFAULT_FEED('whats-hot')},
+      preferences,
+    )
   }
 
   reset() {
     this.following = new FollowingFeedAPI()
-    this.discover = new CustomFeedAPI({feed: PROD_DEFAULT_FEED('whats-hot')})
+    this.discover = new CustomFeedAPI(
+      {feed: PROD_DEFAULT_FEED('whats-hot')},
+      this.preferences,
+    )
     this.usingDiscover = false
     this.itemCursor = 0
   }

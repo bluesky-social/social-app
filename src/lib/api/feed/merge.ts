@@ -1,14 +1,17 @@
 import {AppBskyFeedDefs, AppBskyFeedGetTimeline} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
-import {timeout} from 'lib/async/timeout'
+
+import {getContentLanguages} from '#/state/preferences/languages'
+import {FeedParams} from '#/state/queries/post-feed'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {getAgent} from '#/state/session'
 import {bundleAsync} from 'lib/async/bundle'
+import {timeout} from 'lib/async/timeout'
 import {feedUriToHref} from 'lib/strings/url-helpers'
 import {FeedTuner} from '../feed-manip'
-import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
-import {FeedParams} from '#/state/queries/post-feed'
 import {FeedTunerFn} from '../feed-manip'
-import {getAgent} from '#/state/session'
-import {getContentLanguages} from '#/state/preferences/languages'
+import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
+import {aggregateUserInterests, isBlueskyOwnedFeed} from './utils'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
@@ -20,7 +23,11 @@ export class MergeFeedAPI implements FeedAPI {
   itemCursor = 0
   sampleCursor = 0
 
-  constructor(public params: FeedParams, public feedTuners: FeedTunerFn[]) {
+  constructor(
+    public params: FeedParams,
+    public feedTuners: FeedTunerFn[],
+    public preferences: UsePreferencesQueryResponse,
+  ) {
     this.following = new MergeFeedSource_Following(this.feedTuners)
   }
 
@@ -217,7 +224,11 @@ class MergeFeedSource_Following extends MergeFeedSource {
 class MergeFeedSource_Custom extends MergeFeedSource {
   minDate: Date
 
-  constructor(public feedUri: string, public feedTuners: FeedTunerFn[]) {
+  constructor(
+    public feedUri: string,
+    public feedTuners: FeedTunerFn[],
+    public preferences?: UsePreferencesQueryResponse,
+  ) {
     super(feedTuners)
     this.sourceInfo = {
       $type: 'reasonFeedSource',
@@ -233,13 +244,20 @@ class MergeFeedSource_Custom extends MergeFeedSource {
   ): Promise<AppBskyFeedGetTimeline.Response> {
     try {
       const contentLangs = getContentLanguages().join(',')
+      const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri)
+      const interests = aggregateUserInterests(this.preferences)
       const res = await getAgent().app.bsky.feed.getFeed(
         {
           cursor,
           limit,
           feed: this.feedUri,
         },
-        {headers: {'Accept-Language': contentLangs}},
+        {
+          headers: {
+            'X-Bsky-Topics': isBlueskyOwned ? interests : '',
+            'Accept-Language': contentLangs,
+          },
+        },
       )
       // NOTE
       // some custom feeds fail to enforce the pagination limit
