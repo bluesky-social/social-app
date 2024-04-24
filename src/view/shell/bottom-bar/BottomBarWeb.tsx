@@ -1,37 +1,39 @@
 import React from 'react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useNavigationState} from '@react-navigation/native'
+import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
-import {styles} from './BottomBarStyles'
-import {clamp} from 'lib/numbers'
+import {useNavigationState} from '@react-navigation/native'
+
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
 import {
   BellIcon,
   BellIconSolid,
+  HashtagIcon,
   HomeIcon,
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  HashtagIcon,
-  UserIcon,
-  UserIconSolid,
 } from 'lib/icons'
-import {Link} from 'view/com/util/Link'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {clamp} from 'lib/numbers'
+import {getCurrentRoute, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
+import {s} from 'lib/styles'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
-import {s} from 'lib/styles'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {Link} from 'view/com/util/Link'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
@@ -69,11 +71,9 @@ export function BottomBarWeb() {
             {({isActive}) => {
               const Icon = isActive ? HomeIconSolid : HomeIcon
               return (
-                <Icon
-                  strokeWidth={4}
-                  size={24}
-                  style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-                />
+                <View style={[styles.ctrlIcon, pal.text, styles.homeIcon]}>
+                  <Icon strokeWidth={4} size={24} />
+                </View>
               )
             }}
           </NavItem>
@@ -83,63 +83,44 @@ export function BottomBarWeb() {
                 ? MagnifyingGlassIcon2Solid
                 : MagnifyingGlassIcon2
               return (
-                <Icon
-                  size={25}
-                  style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  strokeWidth={1.8}
-                />
+                <View style={[styles.ctrlIcon, pal.text, styles.searchIcon]}>
+                  <Icon size={25} strokeWidth={1.8} />
+                </View>
               )
             }}
           </NavItem>
 
-          {hasSession && (
-            <>
-              <NavItem routeName="Feeds" href="/feeds">
-                {({isActive}) => {
-                  return (
-                    <HashtagIcon
-                      size={22}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                      strokeWidth={isActive ? 4 : 2.5}
-                    />
-                  )
-                }}
-              </NavItem>
-              <NavItem routeName="Notifications" href="/notifications">
-                {({isActive}) => {
-                  const Icon = isActive ? BellIconSolid : BellIcon
-                  return (
-                    <Icon
-                      size={24}
-                      strokeWidth={1.9}
-                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                    />
-                  )
-                }}
-              </NavItem>
-              <NavItem
-                routeName="Profile"
-                href={
-                  currentAccount
-                    ? makeProfileLink({
-                        did: currentAccount.did,
-                        handle: currentAccount.handle,
-                      })
-                    : '/'
-                }>
-                {({isActive}) => {
-                  const Icon = isActive ? UserIconSolid : UserIcon
-                  return (
-                    <Icon
-                      size={28}
-                      strokeWidth={1.5}
-                      style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
-                    />
-                  )
-                }}
-              </NavItem>
-            </>
-          )}
+          <NavItem routeName="Feeds" href="/feeds">
+            {({isActive}) => {
+              return (
+                <View style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}>
+                  <HashtagIcon size={22} strokeWidth={isActive ? 4 : 2.5} />
+                </View>
+              )
+            }}
+          </NavItem>
+          <NavItem routeName="Notifications" href="/notifications">
+            {({isActive}) => {
+              const Icon = isActive ? BellIconSolid : BellIcon
+              return (
+                <View style={[styles.ctrlIcon, pal.text, styles.bellIcon]}>
+                  <Icon size={24} strokeWidth={1.9} />
+                </View>
+              )
+            }}
+          </NavItem>
+          <NavItem
+            routeName="Profile"
+            href={
+              currentAccount
+                ? makeProfileLink({
+                    did: currentAccount.did,
+                    handle: currentAccount.handle,
+                  })
+                : '/'
+            }>
+            {({isActive}) => <ProfileIcon isActive={isActive} />}
+          </NavItem>
         </>
       ) : (
         <>
@@ -186,6 +167,47 @@ export function BottomBarWeb() {
         </>
       )}
     </Animated.View>
+  )
+}
+
+function ProfileIcon({isActive}: {isActive: boolean}) {
+  const pal = usePalette('default')
+  return (
+    <View style={styles.ctrlIconSizingWrapper}>
+      {isActive ? (
+        <View
+          style={[
+            styles.ctrlIcon,
+            styles.profileIcon,
+            {borderColor: pal.text.color},
+          ]}>
+          <ProfileIconInner size={28} />
+        </View>
+      ) : (
+        <View style={[styles.ctrlIcon, styles.profileIcon]}>
+          <ProfileIconInner size={28} />
+        </View>
+      )}
+    </View>
+  )
+}
+
+function ProfileIconInner({size}: {size: number}) {
+  const {currentAccount} = useSession()
+  const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
+
+  return !isLoading && profile ? (
+    <UserAvatar
+      avatar={profile?.avatar}
+      size={size}
+      type={profile?.associated?.labeler ? 'labeler' : 'user'}
+    />
+  ) : (
+    <LoadingPlaceholder
+      width={size}
+      height={size}
+      style={{borderRadius: size}}
+    />
   )
 }
 

@@ -230,12 +230,11 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                         styles.ctrlIcon,
                         pal.text,
                         styles.profileIcon,
-                        styles.onProfile,
                         {borderColor: pal.text.color},
                       ]}>
                       <UserAvatar
                         avatar={profile?.avatar}
-                        size={27}
+                        size={28}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
