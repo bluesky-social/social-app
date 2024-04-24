@@ -829,6 +829,7 @@ function MockPostThreadItem({
       prevPost={undefined}
       nextPost={undefined}
       hasPrecedingItem={false}
+      overrideBlur={false}
       onPostReply={() => {}}
     />
   )
