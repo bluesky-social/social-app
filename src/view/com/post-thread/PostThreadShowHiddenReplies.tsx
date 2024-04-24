@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -8,12 +8,20 @@ import {Button} from '#/components/Button'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Text} from '#/components/Typography'
 
-export function PostThreadShowHiddenReplies({onPress}: {onPress: () => void}) {
+export function PostThreadShowHiddenReplies({
+  type,
+  onPress,
+}: {
+  type: 'hidden' | 'muted'
+  onPress: () => void
+}) {
   const {_} = useLingui()
   const t = useTheme()
+  const label =
+    type === 'muted' ? _(msg`Show muted replies`) : _(msg`Show hidden replies`)
 
   return (
-    <Button onPress={onPress} label={_(msg`Show hidden replies`)}>
+    <Button onPress={onPress} label={label}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -44,7 +52,7 @@ export function PostThreadShowHiddenReplies({onPress}: {onPress: () => void}) {
           <Text
             style={[t.atoms.text_contrast_medium, a.flex_1]}
             numberOfLines={1}>
-            <Trans>Show hidden replies</Trans>
+            {label}
           </Text>
         </View>
       )}

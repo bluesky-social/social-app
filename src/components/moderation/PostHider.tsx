@@ -16,7 +16,7 @@ import {
 import {Text} from '#/components/Typography'
 
 interface Props extends ComponentProps<typeof Link> {
-  enabled: boolean
+  disabled: boolean
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
@@ -25,7 +25,7 @@ interface Props extends ComponentProps<typeof Link> {
 export function PostHider({
   testID,
   href,
-  enabled,
+  disabled,
   modui,
   style,
   children,
@@ -40,7 +40,7 @@ export function PostHider({
   const blur = modui.blurs[0]
   const desc = useModerationCauseDescription(blur)
 
-  if (!blur || !enabled) {
+  if (!blur || (disabled && !modui.noOverride)) {
     return (
       <Link
         testID={testID}

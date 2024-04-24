@@ -58,6 +58,7 @@ export function PostThreadItem({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: AppBskyFeedDefs.PostView
@@ -72,6 +73,7 @@ export function PostThreadItem({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }) {
   const postShadowed = usePostShadow(post)
@@ -104,6 +106,7 @@ export function PostThreadItem({
         showChildReplyLine={showChildReplyLine}
         showParentReplyLine={showParentReplyLine}
         hasPrecedingItem={hasPrecedingItem}
+        overrideBlur={overrideBlur}
         onPostReply={onPostReply}
       />
     )
@@ -137,6 +140,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -152,6 +156,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }): React.ReactNode => {
   const pal = usePalette('default')
@@ -386,7 +391,7 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
-            enabled={depth < 0}
+            disabled={overrideBlur}
             style={[pal.view]}
             modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 26 : 38}

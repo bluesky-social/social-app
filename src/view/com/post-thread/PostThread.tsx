@@ -49,12 +49,20 @@ const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
 const SHOW_HIDDEN_REPLIES = {_reactKey: '__show_hidden_replies__'}
+const SHOW_MUTED_REPLIES = {_reactKey: '__show_muted_replies__'}
+
+enum HiddenRepliesState {
+  Hide,
+  Show,
+  ShowAndOverridePostHider,
+}
 
 type YieldedItem =
   | ThreadPost
   | ThreadBlocked
   | ThreadNotFound
   | typeof SHOW_HIDDEN_REPLIES
+  | typeof SHOW_MUTED_REPLIES
 type RowItem =
   | YieldedItem
   // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
@@ -87,7 +95,9 @@ export function PostThread({
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
-  const [showHiddenReplies, setShowHiddenReplies] = React.useState(false)
+  const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
+    HiddenRepliesState.Hide,
+  )
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -161,7 +171,7 @@ export function PostThread({
       hasSession,
       treeView,
       threadModerationCache,
-      showHiddenReplies,
+      hiddenRepliesState !== HiddenRepliesState.Hide,
     )
   }, [
     thread,
@@ -169,7 +179,7 @@ export function PostThread({
     hasSession,
     treeView,
     threadModerationCache,
-    showHiddenReplies,
+    hiddenRepliesState,
   ])
 
   const error = React.useMemo(() => {
@@ -327,7 +337,17 @@ export function PostThread({
       } else if (item === SHOW_HIDDEN_REPLIES) {
         return (
           <PostThreadShowHiddenReplies
-            onPress={() => setShowHiddenReplies(true)}
+            type="hidden"
+            onPress={() => setHiddenRepliesState(HiddenRepliesState.Show)}
+          />
+        )
+      } else if (item === SHOW_MUTED_REPLIES) {
+        return (
+          <PostThreadShowHiddenReplies
+            type="muted"
+            onPress={() =>
+              setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
+            }
           />
         )
       } else if (isThreadNotFound(item)) {
@@ -377,6 +397,11 @@ export function PostThread({
               showChildReplyLine={showChildReplyLine}
               showParentReplyLine={showParentReplyLine}
               hasPrecedingItem={showParentReplyLine || !!hasUnrevealedParents}
+              overrideBlur={
+                hiddenRepliesState ===
+                  HiddenRepliesState.ShowAndOverridePostHider &&
+                item.ctx.depth > 0
+              }
               onPostReply={refetch}
             />
           </View>
@@ -400,7 +425,8 @@ export function PostThread({
       treeView,
       refetch,
       threadModerationCache,
-      setShowHiddenReplies,
+      hiddenRepliesState,
+      setHiddenRepliesState,
     ],
   )
 
@@ -507,23 +533,34 @@ function* flattenThreadParents(
   }
 }
 
+// The enum is ordered to make them easy to merge
+enum HiddenReplyType {
+  None = 0,
+  Muted = 1,
+  Hidden = 2,
+}
+
 function* flattenThreadReplies(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
-): Generator<YieldedItem, boolean> {
+): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
     // dont show pwi-opted-out posts to logged out users
     if (!hasSession && hasPwiOptOut(node)) {
-      return false
+      return HiddenReplyType.None
     }
 
     // handle blurred items
-    if (modCache.get(node)?.ui('contentList').blur) {
+    const modui = modCache.get(node)?.ui('contentList')
+    if (modui?.blur) {
       if (!showHiddenReplies || node.ctx.depth > 1) {
-        return true
+        if (modui.blurs[0].type === 'muted') {
+          return HiddenReplyType.Muted
+        }
+        return HiddenReplyType.Hidden
       }
     }
 
@@ -532,24 +569,30 @@ function* flattenThreadReplies(
     }
 
     if (node.replies?.length) {
-      let didHideAny = false
+      let hiddenReplies = HiddenReplyType.None
       for (const reply of node.replies) {
-        let didHideReply = yield* flattenThreadReplies(
+        let hiddenReply = yield* flattenThreadReplies(
           reply,
           hasSession,
           treeView,
           modCache,
           showHiddenReplies,
         )
-        didHideAny = didHideAny || didHideReply
+        if (hiddenReply > hiddenReplies) {
+          hiddenReplies = hiddenReply
+        }
         if (!treeView && !node.ctx.isHighlightedPost) {
           break
         }
       }
 
       // show control to enable hidden replies
-      if (didHideAny && node.ctx.depth === 0) {
-        yield SHOW_HIDDEN_REPLIES
+      if (node.ctx.depth === 0) {
+        if (hiddenReplies === HiddenReplyType.Muted) {
+          yield SHOW_MUTED_REPLIES
+        } else if (hiddenReplies === HiddenReplyType.Hidden) {
+          yield SHOW_HIDDEN_REPLIES
+        }
       }
     }
   } else if (node.type === 'not-found') {
@@ -557,7 +600,7 @@ function* flattenThreadReplies(
   } else if (node.type === 'blocked') {
     yield node
   }
-  return false
+  return HiddenReplyType.None
 }
 
 function hasPwiOptOut(node: ThreadPost) {
