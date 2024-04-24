@@ -72,11 +72,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
       return
     }
 
-    let localUri = downloadRes.path()
-    if (!localUri.startsWith('file://')) {
-      localUri = `file://${localUri}`
-    }
-
+    const localUri = normalizePath(downloadRes.path(), true)
     return await doResize(localUri, opts)
   } finally {
     // TODO Whenever we remove `rn-fetch-blob`, we will need to replace this `flush()` with a `deleteAsync()` -hailey
@@ -201,8 +197,8 @@ async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
   // native so we assert as a string.
   const destinationPath = joinPath(cacheDirectory as string, filename + ext)
   await copyAsync({
-    from: path,
-    to: destinationPath,
+    from: normalizePath(path),
+    to: normalizePath(destinationPath),
   })
   safeDeleteAsync(path)
   return normalizePath(destinationPath)
