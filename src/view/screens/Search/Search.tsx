@@ -28,7 +28,7 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
@@ -550,8 +550,10 @@ export function SearchScreen(
   const [searchText, setSearchText] = React.useState<string>(q)
   const throttledInput = useThrottledValue(searchText, 300)
 
-  const {data: autocompleteData, isFetching: isAutocompleteFetching} =
-    useActorAutocompleteQuery(throttledInput)
+  // Autocomplete
+  const search = useActorAutocompleteFn()
+  const [autocompleteData, setAutocompleteData] =
+    React.useState<AppBskyActorDefs.ProfileViewBasic[]>()
 
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [showAutocompleteResults, setShowAutocompleteResults] =
@@ -577,6 +579,16 @@ export function SearchScreen(
 
     loadSearchHistory()
   }, [])
+
+  React.useEffect(() => {
+    if (!throttledInput) {
+      setAutocompleteData(undefined)
+    } else {
+      search({query: throttledInput}).then(res => {
+        setAutocompleteData(res)
+      })
+    }
+  }, [search, throttledInput])
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
@@ -786,7 +798,7 @@ export function SearchScreen(
       {showAutocompleteResults ? (
         <>
           {/* TODO avoid showing spinner if we have any previous results -hailey */}
-          {(isAutocompleteFetching && !autocompleteData) || !moderationOpts ? (
+          {(searchText && !autocompleteData) || !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
