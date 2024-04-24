@@ -672,7 +672,7 @@ msgstr "來看看一些推薦的使用者吧。跟隨人來查看類似的使用
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr "查看寄送至你電子郵件地址的登入代碼並在此輸入。"
+msgstr "查看寄送至你電子郵件地址的驗證碼並在此輸入。"
 
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
