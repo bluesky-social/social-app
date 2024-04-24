@@ -1,32 +1,24 @@
 export function addLinkCardIfNecessary({
   uri,
-  newText,
-  cursorLocation,
+  textBeforeCursor,
   mayBePaste,
   onNewLink,
   prevAddedLinks,
   endIndex,
 }: {
   uri: string
-  newText: string
-  cursorLocation: number
+  textBeforeCursor: string
   mayBePaste: boolean
   onNewLink: (uri: string) => void
   prevAddedLinks: Set<string>
   endIndex: number
 }) {
-  newText = newText + ' '
+  const isLeavingLink =
+    endIndex === textBeforeCursor.length - 2 ||
+    (endIndex === textBeforeCursor.length - 1 &&
+      /[^.,;!?]\s$/m.test(textBeforeCursor))
 
-  let toAdd = 2
-
-  const backOne = newText.charAt(cursorLocation - 1)
-  const backTwo = newText.charAt(cursorLocation - 2)
-
-  if (backOne === ' ' && /[^.!?]/.test(backTwo)) {
-    toAdd = 1
-  }
-
-  if (!mayBePaste && endIndex + toAdd !== cursorLocation) {
+  if (!mayBePaste && !isLeavingLink) {
     return
   }
 

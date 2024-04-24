@@ -134,8 +134,7 @@ export const TextInput = forwardRef(function TextInputImpl(
 
                   addLinkCardIfNecessary({
                     uri: feature.uri,
-                    newText,
-                    cursorLocation,
+                    textBeforeCursor: newText.slice(0, cursorLocation),
                     mayBePaste,
                     onNewLink,
                     prevAddedLinks: prevAddedLinks.current,
