@@ -186,7 +186,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
         const newText = editorJsonToText(json)
-        const mayBePaste = newText.length > prevLength.current + 1
+        const mayBePaste = window.event?.type === 'paste'
 
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
