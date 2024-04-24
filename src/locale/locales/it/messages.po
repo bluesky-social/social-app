@@ -61,8 +61,8 @@ msgid "⚠Invalid Handle"
 msgstr "⚠Nome utente non valido"
 
 #: src/screens/Login/LoginForm.tsx:238
-msgid "2FA Confirmation"
-msgstr "Confermazione 2FA"
+msgid "2FA Confirmati on"
+msgstr "Conferma 2FA"
 
 #: src/view/com/util/ViewHeader.tsx:91 src/view/screens/Search/Search.tsx:727
 msgid "Access navigation links and settings"
