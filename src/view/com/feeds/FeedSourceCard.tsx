@@ -100,7 +100,7 @@ export function FeedSourceCardLoaded({
   const isSaved = Boolean(savedFeedConfig)
 
   const onSave = React.useCallback(async () => {
-    if (!feed) return
+    if (!feed || isSaved) return
 
     try {
       await addSavedFeeds([
@@ -115,7 +115,7 @@ export function FeedSourceCardLoaded({
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to save feed', {message: e})
     }
-  }, [_, feed, pinOnSave, addSavedFeeds])
+  }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
 
   const onUnsave = React.useCallback(async () => {
     if (!savedFeedConfig) return
