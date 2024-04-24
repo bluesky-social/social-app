@@ -192,6 +192,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
 
+        console.log({
+          utf8Length: newRt.length,
+          utf16Length: newText.length,
+        })
+
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {

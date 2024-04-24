@@ -15,6 +15,10 @@ export function addLinkCardIfNecessary({
   prevAddedLinks: Set<string>
   byteEnd: number
 }) {
+  console.log({
+    byteIndex: byteEnd,
+  })
+
   const utf16Index = utf8IndexToUtf16Index(newText, byteEnd)
   // Because we always trim the whitespace at the end of the text
   newText = newText + ' '
@@ -27,6 +31,11 @@ export function addLinkCardIfNecessary({
   if (backOne === ' ' && !/[.!?]/.test(backTwo)) {
     toAdd = 1
   }
+
+  console.log({
+    utf8Index: byteEnd,
+    utf16Index: utf16Index,
+  })
 
   if (!mayBePaste && utf16Index + toAdd !== cursorLocation) {
     return
