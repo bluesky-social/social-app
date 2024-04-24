@@ -208,6 +208,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
                   mayBePaste,
                   onNewLink,
                   prevAddedLinks: prevAddedLinks.current,
+                  byteEnd: facet.index.byteEnd,
                 })
               }
             }

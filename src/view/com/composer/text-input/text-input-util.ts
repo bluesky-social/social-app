@@ -5,6 +5,7 @@ export function addLinkCardIfNecessary({
   mayBePaste,
   onNewLink,
   prevAddedLinks,
+  byteEnd,
 }: {
   uri: string
   newText: string
@@ -12,16 +13,24 @@ export function addLinkCardIfNecessary({
   mayBePaste: boolean
   onNewLink: (uri: string) => void
   prevAddedLinks: Set<string>
+  byteEnd: number
 }) {
-  // It would be cool if we could just use facet.index.byteEnd, but you know... *upside down smiley*
-  const lastCharacterPosition = findIndexInText(uri, newText) + uri.length
+  const utf16Index = utf8IndexToUtf16Index(newText, byteEnd)
+  // Because we always trim the whitespace at the end of the text
+  newText = newText + ' '
 
-  // If the text being added is not from a paste, then we should only check if the cursor is one
-  // position ahead of the last character. However, if it is a paste we need to check both if it's
-  // the same position _or_ one position ahead. That is because iOS will add a space after a paste if
-  // pasting into the middle of a sentence!
-  const cursorLocationIsOkay =
-    cursorLocation === lastCharacterPosition + 1 || mayBePaste
+  let toAdd = 2
+
+  const backOne = newText.charAt(cursorLocation - 1)
+  const backTwo = newText.charAt(cursorLocation - 2)
+
+  if (backOne === ' ' && !/[.!?]/.test(backTwo)) {
+    toAdd = 1
+  }
+
+  if (!mayBePaste && utf16Index + toAdd !== cursorLocation) {
+    return
+  }
 
   // Checking previouslyAddedLinks keeps a card from getting added over and over i.e.
   // Link card added -> Remove link card -> Press back space -> Press space -> Link card added -> and so on
@@ -29,8 +38,7 @@ export function addLinkCardIfNecessary({
   // We use the isValidUrl regex below because we don't want to add embeds only if the url is valid, i.e.
   // http://facebook is a valid url, but that doesn't mean we want to embed it. We should only embed if
   // the url is a valid url _and_ domain. new URL() won't work for this check.
-  const shouldCheck =
-    cursorLocationIsOkay && !prevAddedLinks.has(uri) && isValidUrlAndDomain(uri)
+  const shouldCheck = !prevAddedLinks.has(uri) && isValidUrlAndDomain(uri)
 
   if (shouldCheck) {
     onNewLink(uri)
@@ -63,4 +71,37 @@ export function findIndexInText(term: string, text: string) {
   const pattern = new RegExp(`\\b(${escapeRegex(term)})(?![/\\w])`, 'i')
   const match = pattern.exec(text)
   return match ? match.index : -1
+}
+
+function utf8IndexToUtf16Index(inStr: string, utf8Index: number) {
+  let utf16Index = 0
+  let bytesCounted = 0
+
+  for (let i = 0; i < inStr.length; i++) {
+    // Check the current Unicode code point size in UTF-8
+    const codePoint = inStr.codePointAt(i)
+
+    if (!codePoint) return -1
+
+    // Add the UTF-8 byte length of this code point
+    if (codePoint <= 0x7f) {
+      bytesCounted += 1 // 1 byte in UTF-8
+    } else if (codePoint <= 0x7ff) {
+      bytesCounted += 2 // 2 bytes in UTF-8
+    } else if (codePoint <= 0xffff) {
+      bytesCounted += 3 // 3 bytes in UTF-8
+    } else {
+      bytesCounted += 4 // 4 bytes in UTF-8
+      i++ // Move past the high surrogate
+    }
+
+    // Update UTF-16 index and break when the UTF-8 index is reached or exceeded
+    if (bytesCounted > utf8Index) {
+      break
+    }
+
+    utf16Index = i + 1
+  }
+
+  return utf16Index
 }
