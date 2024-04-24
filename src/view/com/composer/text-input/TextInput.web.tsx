@@ -61,7 +61,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   ref,
 ) {
   const autocomplete = useActorAutocompleteFn()
-  const prevLength = React.useRef(0)
   const prevAddedLinks = useRef(new Set<string>())
 
   const pal = usePalette('default')
@@ -185,8 +184,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
-        const newText = editorJsonToText(json).trimEnd()
-        const mayBePaste = newText.length > prevLength.current + 1
+        const newText = editorJsonToText(json)
+        const mayBePaste = window.event?.type === 'paste'
 
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
@@ -219,8 +218,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             prevAddedLinks.current.delete(uri)
           }
         }
-
-        prevLength.current = newText.length
       },
     },
     [modeClass],
@@ -277,15 +274,29 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 })
 
-function editorJsonToText(json: JSONContent): string {
+function editorJsonToText(
+  json: JSONContent,
+  isLastDocumentChild: boolean = false,
+): string {
   let text = ''
-  if (json.type === 'doc' || json.type === 'paragraph') {
+  if (json.type === 'doc') {
     if (json.content?.length) {
-      for (const node of json.content) {
+      for (let i = 0; i < json.content.length; i++) {
+        const node = json.content[i]
+        const isLastNode = i === json.content.length - 1
+        text += editorJsonToText(node, isLastNode)
+      }
+    }
+  } else if (json.type === 'paragraph') {
+    if (json.content?.length) {
+      for (let i = 0; i < json.content.length; i++) {
+        const node = json.content[i]
         text += editorJsonToText(node)
       }
     }
-    text += '\n'
+    if (!isLastDocumentChild) {
+      text += '\n'
+    }
   } else if (json.type === 'hardBreak') {
     text += '\n'
   } else if (json.type === 'text') {
