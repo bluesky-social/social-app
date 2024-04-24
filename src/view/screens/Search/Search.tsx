@@ -789,7 +789,6 @@ export function SearchScreen(
 
       {inputIsFocused && searchText.length > 0 ? (
         <>
-          {/* TODO avoid showing spinner if we have any previous results -hailey */}
           {(searchText && !autocompleteData) || !moderationOpts ? (
             <Loader />
           ) : (
