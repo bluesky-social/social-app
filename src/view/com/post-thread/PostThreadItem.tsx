@@ -675,7 +675,6 @@ const styles = StyleSheet.create({
   },
   layoutContentThreaded: {
     flex: 1,
-    paddingRight: 10,
   },
   meta: {
     flexDirection: 'row',

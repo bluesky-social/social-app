@@ -94,7 +94,7 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
-        if (isWeb && gate('autoexpand_suggestions_on_profile_follow')) {
+        if (isWeb && gate('autoexpand_suggestions_on_profile_follow_v2')) {
           setShowSuggestedFollows(true)
         }
       } catch (e: any) {

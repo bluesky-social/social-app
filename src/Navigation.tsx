@@ -53,6 +53,7 @@ import {
   setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
 } from './state/shell/reminders'
+import {AccessibilitySettingsScreen} from './view/screens/AccessibilitySettings'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {DebugModScreen} from './view/screens/DebugMod'
@@ -273,6 +274,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => PreferencesExternalEmbeds}
         options={{
           title: title(msg`External Media Preferences`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AccessibilitySettings"
+        getComponent={() => AccessibilitySettingsScreen}
+        options={{
+          title: title(msg`Accessibility Settings`),
           requireAuth: true,
         }}
       />

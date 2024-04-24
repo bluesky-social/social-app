@@ -1,4 +1,5 @@
-import {Dimensions} from 'react-native'
+import {Dimensions, Platform} from 'react-native'
+
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -60,6 +61,10 @@ export interface EmbedPlayerParams {
   source: EmbedPlayerSource
   metaUri?: string
   hideDetails?: boolean
+  dimensions?: {
+    height: number
+    width: number
+  }
 }
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
@@ -266,7 +271,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${gifId}`,
-          playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
         }
       }
     }
@@ -287,7 +292,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
-          playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${trackingOrId}/200.webp`,
         }
       } else if (filename && gifFilenameRegex.test(filename)) {
         return {
@@ -296,7 +301,7 @@ export function parseEmbedPlayerFromUrl(
           isGif: true,
           hideDetails: true,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
-          playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${idOrFilename}/200.webp`,
         }
       }
     }
@@ -315,7 +320,7 @@ export function parseEmbedPlayerFromUrl(
         isGif: true,
         hideDetails: true,
         metaUri: `https://giphy.com/gifs/${gifId}`,
-        playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
+        playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
       }
     } else if (mediaOrFilename) {
       const gifId = mediaOrFilename.split('.')[0]
@@ -327,26 +332,48 @@ export function parseEmbedPlayerFromUrl(
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${
           mediaOrFilename.split('.')[0]
-        }/giphy.webp`,
+        }/200.webp`,
       }
     }
   }
 
-  if (urlp.hostname === 'tenor.com' || urlp.hostname === 'www.tenor.com') {
-    const [_, pathOrIntl, pathOrFilename, intlFilename] =
-      urlp.pathname.split('/')
-    const isIntl = pathOrFilename === 'view'
-    const filename = isIntl ? intlFilename : pathOrFilename
+  if (urlp.hostname === 'media.tenor.com') {
+    let [_, id, filename] = urlp.pathname.split('/')
 
-    if ((pathOrIntl === 'view' || pathOrFilename === 'view') && filename) {
-      const includesExt = filename.split('.').pop() === 'gif'
+    const h = urlp.searchParams.get('hh')
+    const w = urlp.searchParams.get('ww')
+    let dimensions
+    if (h && w) {
+      dimensions = {
+        height: Number(h),
+        width: Number(w),
+      }
+    }
+
+    if (id && filename && dimensions && id.includes('AAAAC')) {
+      if (Platform.OS === 'web') {
+        const isSafari = /^((?!chrome|android).)*safari/i.test(
+          navigator.userAgent,
+        )
+
+        if (isSafari) {
+          id = id.replace('AAAAC', 'AAAP1')
+          filename = filename.replace('.gif', '.mp4')
+        } else {
+          id = id.replace('AAAAC', 'AAAP3')
+          filename = filename.replace('.gif', '.webm')
+        }
+      } else {
+        id = id.replace('AAAAC', 'AAAAM')
+      }
 
       return {
         type: 'tenor_gif',
         source: 'tenor',
         isGif: true,
         hideDetails: true,
-        playerUri: `${url}${!includesExt ? '.gif' : ''}`,
+        playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
+        dimensions,
       }
     }
   }

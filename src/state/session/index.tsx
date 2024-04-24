@@ -59,6 +59,7 @@ export type ApiContext = {
       service: string
       identifier: string
       password: string
+      authFactorToken?: string | undefined
     },
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
@@ -87,7 +88,10 @@ export type ApiContext = {
   ) => Promise<void>
   updateCurrentAccount: (
     account: Partial<
-      Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
+      Pick<
+        SessionAccount,
+        'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
+      >
     >,
   ) => void
 }
@@ -298,12 +302,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const login = React.useCallback<ApiContext['login']>(
-    async ({service, identifier, password}, logContext) => {
+    async ({service, identifier, password, authFactorToken}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({service})
 
-      await agent.login({identifier, password})
+      await agent.login({identifier, password, authFactorToken})
 
       if (!agent.session) {
         throw new Error(`session: login failed to establish a session`)
@@ -319,6 +323,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         handle: agent.session.handle,
         email: agent.session.email,
         emailConfirmed: agent.session.emailConfirmed || false,
+        emailAuthFactor: agent.session.emailAuthFactor,
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
         deactivated: isSessionDeactivated(agent.session.accessJwt),
@@ -489,6 +494,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           handle: agent.session.handle,
           email: agent.session.email,
           emailConfirmed: agent.session.emailConfirmed || false,
+          emailAuthFactor: agent.session.emailAuthFactor || false,
           refreshJwt: agent.session.refreshJwt,
           accessJwt: agent.session.accessJwt,
           deactivated: isSessionDeactivated(agent.session.accessJwt),
@@ -546,6 +552,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             account.emailConfirmed !== undefined
               ? account.emailConfirmed
               : currentAccount.emailConfirmed,
+          emailAuthFactor:
+            account.emailAuthFactor !== undefined
+              ? account.emailAuthFactor
+              : currentAccount.emailAuthFactor,
         }
 
         return {

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -11,6 +11,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
@@ -25,7 +26,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {useGate} from 'lib/statsig/statsig'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
@@ -143,7 +143,6 @@ function ProfileScreenLoaded({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
-  const gate = useGate()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -317,21 +316,8 @@ function ProfileScreenLoaded({
   // =
 
   const renderHeader = React.useCallback(() => {
-    if (gate('new_profile_scroll_component')) {
-      return (
-        <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
-          <ProfileHeader
-            profile={profile}
-            labeler={labelerInfo}
-            descriptionRT={hasDescription ? descriptionRT : null}
-            moderationOpts={moderationOpts}
-            hideBackButton={hideBackButton}
-            isPlaceholderProfile={showPlaceholder}
-          />
-        </ExpoScrollForwarderView>
-      )
-    } else {
-      return (
+    return (
+      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
           profile={profile}
           labeler={labelerInfo}
@@ -340,10 +326,9 @@ function ProfileScreenLoaded({
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
         />
-      )
-    }
+      </ExpoScrollForwarderView>
+    )
   }, [
-    gate,
     scrollViewTag,
     profile,
     labelerInfo,
@@ -481,6 +466,7 @@ function ProfileScreenLoaded({
           accessibilityHint=""
         />
       )}
+      <TestGates />
     </ScreenHider>
   )
 }
@@ -538,3 +524,77 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
+
+const shouldExposeToGate2 = Math.random() < 0.2
+
+// --- Temporary: we're testing our Statsig setup ---
+let TestGates = React.memo(function TestGates() {
+  const gate = useGate()
+
+  useEffect(() => {
+    logEvent('test:all:always', {})
+    if (Math.random() < 0.2) {
+      logEvent('test:all:sometimes', {})
+    }
+    if (Math.random() < 0.1) {
+      logEvent('test:all:boosted_by_gate1', {
+        reason: 'base',
+      })
+    }
+    if (Math.random() < 0.1) {
+      logEvent('test:all:boosted_by_gate2', {
+        reason: 'base',
+      })
+    }
+    if (Math.random() < 0.1) {
+      logEvent('test:all:boosted_by_both', {
+        reason: 'base',
+      })
+    }
+  }, [])
+
+  return [
+    gate('test_gate_1') ? <TestGate1 /> : null,
+    shouldExposeToGate2 && gate('test_gate_2') ? <TestGate2 /> : null,
+  ]
+})
+
+function TestGate1() {
+  useEffect(() => {
+    logEvent('test:gate1:always', {})
+    if (Math.random() < 0.2) {
+      logEvent('test:gate1:sometimes', {})
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_gate1', {
+        reason: 'gate1',
+      })
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_both', {
+        reason: 'gate1',
+      })
+    }
+  }, [])
+  return null
+}
+
+function TestGate2() {
+  useEffect(() => {
+    logEvent('test:gate2:always', {})
+    if (Math.random() < 0.2) {
+      logEvent('test:gate2:sometimes', {})
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_gate2', {
+        reason: 'gate2',
+      })
+    }
+    if (Math.random() < 0.5) {
+      logEvent('test:all:boosted_by_both', {
+        reason: 'gate2',
+      })
+    }
+  }, [])
+  return null
+}

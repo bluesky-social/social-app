@@ -1,6 +1,6 @@
 import {z} from 'zod'
 
-import {deviceLocales} from '#/platform/detection'
+import {deviceLocales, prefersReducedMotion} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
@@ -11,6 +11,7 @@ const accountSchema = z.object({
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),
+  emailAuthFactor: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
   deactivated: z.boolean().optional(),
@@ -60,6 +61,7 @@ export const schema = z.object({
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),
+  disableAutoplay: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -96,4 +98,5 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
+  disableAutoplay: prefersReducedMotion,
 }
