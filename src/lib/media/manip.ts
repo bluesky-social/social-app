@@ -210,7 +210,12 @@ async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
   */
   const filename = uuid.v4()
 
-  const destinationPath = joinPath(cacheDirectory ?? '', `${filename}.${ext}`)
+  // cacheDirectory will not ever be null on native, but it could be on web. This function only ever gets called on
+  // native so we assert as a string.
+  const destinationPath = joinPath(
+    cacheDirectory as string,
+    `${filename}.${ext}`,
+  )
 
   await copyAsync({
     from: path,
