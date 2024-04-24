@@ -26,6 +26,7 @@ import {
   useAddSavedFeedsMutation,
   usePreferencesQuery,
   useRemoveFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -255,8 +256,11 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     useAddSavedFeedsMutation()
   const {mutateAsync: removeSavedFeed, isPending: isRemovePending} =
     useRemoveFeedMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdatingSavedFeeds} =
+    useUpdateSavedFeedsMutation()
 
-  const isPending = isAddSavedFeedPending || isRemovePending
+  const isPending =
+    isAddSavedFeedPending || isRemovePending || isUpdatingSavedFeeds
 
   const deleteListPromptControl = useDialogControl()
   const subscribeMutePromptControl = useDialogControl()
@@ -272,9 +276,15 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
 
     try {
       if (savedFeedConfig) {
+        const pinned = !savedFeedConfig.pinned
         // only allow removal of non-pinned feeds from this view
-        await removeSavedFeed(savedFeedConfig)
-        Toast.show(_(msg`Removed from your feeds`))
+        await updateSavedFeeds([
+          {
+            ...savedFeedConfig,
+            pinned,
+          },
+        ])
+        Toast.show(_(msg`${pinned ? 'Pinned to' : 'Unpinned from'} your feeds`))
       } else {
         await addSavedFeeds([
           {
@@ -289,7 +299,26 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, addSavedFeeds, removeSavedFeed, list.uri, _, savedFeedConfig])
+  }, [
+    playHaptic,
+    addSavedFeeds,
+    updateSavedFeeds,
+    list.uri,
+    _,
+    savedFeedConfig,
+  ])
+
+  const onRemoveFromSavedFeeds = React.useCallback(async () => {
+    playHaptic()
+    if (!savedFeedConfig) return
+    try {
+      await removeSavedFeed(savedFeedConfig)
+      Toast.show(_(msg`Removed from your feeds`))
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`))
+      logger.error('Failed to remove pinned list', {message: e})
+    }
+  }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
 
   const onSubscribeMute = useCallback(async () => {
     try {
@@ -403,6 +432,22 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       },
     ]
+
+    if (savedFeedConfig && !savedFeedConfig.pinned) {
+      items.push({
+        testID: 'listHeaderDropdownRemoveFromFeedsBtn',
+        label: _(msg`Remove from my feeds`),
+        onPress: onRemoveFromSavedFeeds,
+        icon: {
+          ios: {
+            name: 'trash',
+          },
+          android: '',
+          web: ['far', 'trash-can'],
+        },
+      })
+    }
+
     if (isOwner) {
       items.push({label: 'separator'})
       items.push({
@@ -519,6 +564,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     subscribeBlockPromptControl.open,
     removeSavedFeed,
     savedFeedConfig,
+    onRemoveFromSavedFeeds,
   ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
