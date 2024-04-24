@@ -204,7 +204,7 @@ async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
   return normalizePath(destinationPath)
 }
 
-async function safeDeleteAsync(path: string) {
+export async function safeDeleteAsync(path: string) {
   try {
     // Normalize is necessary for Android, otherwise it doesn't delete.
     await deleteAsync(normalizePath(path))
