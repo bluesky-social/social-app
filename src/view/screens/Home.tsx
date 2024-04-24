@@ -66,8 +66,6 @@ function HomeScreenReady({
         feeds.push(`feedgen|${uri}`)
       } else if (uri.includes('app.bsky.graph.list')) {
         feeds.push(`list|${uri}`)
-      } else if (uri === 'home') {
-        feeds.push('home')
       } else if (uri === 'following') {
         feeds.push('following')
       }
@@ -229,7 +227,7 @@ function HomeScreenReady({
       renderTabBar={renderTabBar}>
       {allFeeds.length ? (
         allFeeds.map(feed => {
-          if (feed === 'home' || feed === 'following') {
+          if (feed === 'following') {
             return (
               <FeedPage
                 key={feed}

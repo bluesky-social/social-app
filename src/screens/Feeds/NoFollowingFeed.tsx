@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
@@ -19,8 +20,7 @@ export function NoFollowingFeed() {
 
       addSavedFeeds([
         {
-          type: 'timeline',
-          value: 'home',
+          ...TIMELINE_SAVED_FEED,
           pinned: true,
         },
       ])

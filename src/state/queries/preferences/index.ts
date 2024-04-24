@@ -55,6 +55,10 @@ export function usePreferencesQuery() {
         const preferences: UsePreferencesQueryResponse = {
           ...res,
           savedFeeds: res.savedFeeds.filter(f => f.type !== 'unknown'),
+          /**
+           * Special preference, only used for following feed, previously
+           * called `home`
+           */
           feedViewPrefs: {
             ...DEFAULT_HOME_FEED_PREFS,
             ...(res.feedViewPrefs.home || {}),
@@ -196,6 +200,10 @@ export function useSetFeedViewPreferencesMutation() {
 
   return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
+      /*
+       * special handling here, merged into `feedViewPrefs` above, since
+       * following was previously called `home`
+       */
       await getAgent().setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({

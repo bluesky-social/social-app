@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {FeedSourceInfo} from '#/state/queries/feed'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
 import {NavigationProp} from 'lib/routes/types'
 import {isWeb} from 'platform/detection'
@@ -25,7 +26,7 @@ export function HomeHeader(
   const hasPinnedCustom = React.useMemo<boolean>(() => {
     if (!hasSession) return false
     return feeds.some(tab => {
-      const isFollowing = ['home', 'following'].includes(tab.uri)
+      const isFollowing = ('following' satisfies FeedDescriptor) === tab.uri
       return !isFollowing
     })
   }, [feeds, hasSession])

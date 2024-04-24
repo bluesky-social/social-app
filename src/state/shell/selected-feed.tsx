@@ -4,44 +4,48 @@ import {Gate} from '#/lib/statsig/gates'
 import {useGate} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
+import {
+  DEFAULT_FEED_DESCRIPTOR,
+  FeedDescriptor,
+} from '#/state/queries/post-feed'
 
-type StateContext = string
-type SetContext = (v: string) => void
+type StateContext = FeedDescriptor
+type SetContext = (v: FeedDescriptor) => void
 
-const stateContext = React.createContext<StateContext>('home')
+const stateContext = React.createContext<StateContext>(DEFAULT_FEED_DESCRIPTOR)
 const setContext = React.createContext<SetContext>((_: string) => {})
 
-function getInitialFeed(gate: (gateName: Gate) => boolean) {
+function getInitialFeed(gate: (gateName: Gate) => boolean): FeedDescriptor {
   if (isWeb) {
     if (window.location.pathname === '/') {
       const params = new URLSearchParams(window.location.search)
       const feedFromUrl = params.get('feed')
       if (feedFromUrl) {
         // If explicitly booted from a link like /?feed=..., prefer that.
-        return feedFromUrl
+        return feedFromUrl as FeedDescriptor
       }
     }
     const feedFromSession = sessionStorage.getItem('lastSelectedHomeFeed')
     if (feedFromSession) {
       // Fall back to a previously chosen feed for this browser tab.
-      return feedFromSession
+      return feedFromSession as FeedDescriptor
     }
   }
   if (!gate('start_session_with_following_v2')) {
     const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
     if (feedFromPersisted) {
       // Fall back to the last chosen one across all tabs.
-      return feedFromPersisted
+      return feedFromPersisted as FeedDescriptor
     }
   }
-  return 'home'
+  return DEFAULT_FEED_DESCRIPTOR
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const gate = useGate()
   const [state, setState] = React.useState(() => getInitialFeed(gate))
 
-  const saveState = React.useCallback((feed: string) => {
+  const saveState = React.useCallback((feed: FeedDescriptor) => {
     setState(feed)
     if (isWeb) {
       try {

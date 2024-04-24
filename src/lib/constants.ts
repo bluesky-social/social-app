@@ -1,6 +1,8 @@
 import {Insets, Platform} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 
+import {FeedDescriptor} from '#/state/queries/post-feed'
+
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
@@ -100,7 +102,7 @@ export const DISCOVER_SAVED_FEED = {
 }
 export const TIMELINE_SAVED_FEED = {
   type: 'timeline',
-  value: 'home',
+  value: 'following' satisfies FeedDescriptor,
   pinned: true,
 }
 

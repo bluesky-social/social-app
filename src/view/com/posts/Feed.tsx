@@ -141,7 +141,6 @@ let Feed = ({
     if (
       data?.pages.length === 1 &&
       (feed === 'following' ||
-        feed === 'home' ||
         feed === `author|${myDid}|posts_and_author_threads`)
     ) {
       queryClient.invalidateQueries({queryKey: RQKEY(feed)})

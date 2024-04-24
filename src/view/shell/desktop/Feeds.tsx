@@ -34,9 +34,7 @@ export function DesktopFeeds() {
       {pinnedFeedInfos.map(feedInfo => {
         const uri = feedInfo.uri
         let feed: FeedDescriptor
-        if (uri === 'home') {
-          feed = 'home'
-        } else if (uri === 'following') {
+        if (uri === 'following') {
           feed = 'following'
         } else if (uri.includes('app.bsky.feed.generator')) {
           feed = `feedgen|${uri}`

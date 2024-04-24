@@ -49,7 +49,7 @@ type ListUri = string
  */
 export const DEFAULT_FEED_DESCRIPTOR = '__default__'
 export type FeedDescriptor =
-  | 'home'
+  | '__default__'
   | 'following'
   | `author|${ActorDid}|${AuthorFilter}`
   | `feedgen|${FeedUri}`
@@ -375,14 +375,12 @@ function createApi(
   params: FeedParams,
   feedTuners: FeedTunerFn[],
 ) {
-  if (feedDesc === 'home') {
+  if (feedDesc === 'following') {
     if (params.mergeFeedEnabled) {
       return new MergeFeedAPI(params, feedTuners)
     } else {
       return new HomeFeedAPI()
     }
-  } else if (feedDesc === 'following') {
-    return new FollowingFeedAPI()
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
     return new AuthorFeedAPI({actor, filter})
