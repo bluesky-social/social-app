@@ -1,13 +1,14 @@
-import RNFetchBlob from 'rn-fetch-blob'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Image as RNImage, Share as RNShare} from 'react-native'
-import {Image} from 'react-native-image-crop-picker'
 import * as RNFS from 'react-native-fs'
+import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
-import * as Sharing from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
-import {Dimensions} from './types'
+import * as Sharing from 'expo-sharing'
+import ImageResizer from '@bam.tech/react-native-image-resizer'
+import RNFetchBlob from 'rn-fetch-blob'
+
 import {isAndroid, isIOS} from 'platform/detection'
+import {Dimensions} from './types'
 
 export async function compressIfNeeded(
   img: Image,
@@ -62,6 +63,11 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
     const to1 = setTimeout(() => downloadResPromise.cancel(), opts.timeout)
     downloadRes = await downloadResPromise
     clearTimeout(to1)
+
+    const status = downloadRes.info().status
+    if (status !== 200) {
+      return
+    }
 
     let localUri = downloadRes.path()
     if (!localUri.startsWith('file://')) {
