@@ -115,3 +115,5 @@ src/locale/locales/**/*.js
 *.apk
 *.aab
 *.ipa
+
+Gemfile.lock
