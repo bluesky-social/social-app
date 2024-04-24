@@ -1,13 +1,15 @@
 import React from 'react'
 import {View} from 'react-native'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
+import {TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
+import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
@@ -37,7 +39,7 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
+  const {mutateAsync: overwriteSavedFeeds} = useOverwriteSavedFeedsMutation()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -62,13 +64,19 @@ export function StepFinished() {
         // these must be serial
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
-          await addSavedFeeds(
-            selectedFeeds.map(f => ({
+          await overwriteSavedFeeds([
+            {
+              ...TIMELINE_SAVED_FEED,
+              pinned: true,
+              id: TID.nextStr(),
+            },
+            ...selectedFeeds.map(f => ({
               type: 'feed',
               value: f,
               pinned: true,
+              id: TID.nextStr(),
             })),
-          )
+          ])
         })(),
       ])
     } catch (e: any) {
@@ -83,7 +91,7 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, addSavedFeeds, track])
+  }, [state, dispatch, onboardDispatch, setSaving, overwriteSavedFeeds, track])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')
