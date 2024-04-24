@@ -139,6 +139,8 @@ export const TextInput = forwardRef(function TextInputImpl(
                     mayBePaste,
                     onNewLink,
                     prevAddedLinks: prevAddedLinks.current,
+                    endIndex: newRt.unicodeText.slice(0, facet.index.byteEnd)
+                      .length,
                   })
                 }
               }
