@@ -55,26 +55,86 @@ export function countLines(str: string | undefined): number {
   return str.match(/\n/g)?.length ?? 0
 }
 
-// Augments search query with additional syntax like `from:me`
-export function augmentSearchQuery(query: string, {did}: {did?: string}) {
-  // Don't do anything if there's no DID
-  if (!did) {
-    return query
-  }
+// Transforms search queries
+const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/
 
-  // We don't want to replace substrings that are being "quoted" because those
-  // are exact string matches, so what we'll do here is to split them apart
+export function transformSearchQuery(query: string) {
+  // https://github.com/bluesky-social/indigo/blob/421e4da5307f4fcba51f25b5c5982c8b9841f7f6/search/parse_query.go#L15-L21
+  let quoted = false
+  const parts = fieldsfunc(query, rune => {
+    if (rune === 34) {
+      quoted = !quoted
+    }
 
-  // Even-indexed strings are unquoted, odd-indexed strings are quoted
-  const splits = query.split(/("(?:[^"\\]|\\.)*")/g)
+    return rune === 32 && !quoted
+  })
 
-  return splits
-    .map((str, idx) => {
-      if (idx % 2 === 0) {
-        return str.replaceAll(/(^|\s)from:me(\s|$)/g, `$1${did}$2`)
+  for (let i = 0, il = parts.length; i < il; i++) {
+    const part = parts[i]
+
+    if (part.charCodeAt(0) === 34) {
+      continue
+    }
+
+    const colon_index = part.indexOf(':')
+    if (colon_index === -1) {
+      continue
+    }
+
+    const operator = part.slice(0, colon_index)
+    const value = part.slice(colon_index + 1)
+
+    if (operator === 'since' || operator === 'until') {
+      const match = DATE_RE.exec(value)
+      if (match === null) {
+        continue
       }
 
-      return str
-    })
-    .join('')
+      const s = operator === 'since'
+
+      const [, year, month, day] = match
+      const date = new Date(
+        +year,
+        +month - 1,
+        +day,
+        s ? 0 : 23,
+        s ? 0 : 59,
+        s ? 0 : 59,
+        s ? 0 : 999,
+      )
+
+      if (Number.isNaN(date.getTime())) {
+        continue
+      }
+
+      parts[i] = `${operator}:${date.toISOString()}`
+    }
+  }
+
+  return parts.join(' ')
+}
+
+// https://github.com/golang/go/blob/519f6a00e4dabb871eadaefc8ac295c09fd9b56f/src/strings/strings.go#L377-L425
+function fieldsfunc(str: string, fn: (rune: number) => boolean): string[] {
+  const slices: string[] = []
+
+  let start = -1
+  for (let pos = 0, len = str.length; pos < len; pos++) {
+    if (fn(str.charCodeAt(pos))) {
+      if (start !== -1) {
+        slices.push(str.slice(start, pos))
+        start = -1
+      }
+    } else {
+      if (start === -1) {
+        start = pos
+      }
+    }
+  }
+
+  if (start !== -1) {
+    slices.push(str.slice(start))
+  }
+
+  return slices
 }
