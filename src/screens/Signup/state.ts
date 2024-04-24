@@ -8,13 +8,17 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
+import {
+  DEFAULT_SERVICE,
+  DISCOVER_SAVED_FEED,
+  IS_TEST_USER,
+  TIMELINE_SAVED_FEED,
+} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {
-  DEFAULT_PROD_FEED,
   useAddSavedFeedsMutation,
   usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
@@ -265,8 +269,12 @@ export function useSubmitSignup({
           verificationCode: verificationCode,
         })
         await setBirthDate({birthDate: state.dateOfBirth})
-        if (IS_PROD_SERVICE(state.serviceUrl)) {
-          addSavedFeeds([DEFAULT_PROD_FEED])
+        if (IS_TEST_USER(state.handle)) {
+          // local dev
+          addSavedFeeds([TIMELINE_SAVED_FEED])
+        } else {
+          // match existing handling
+          addSavedFeeds([TIMELINE_SAVED_FEED, DISCOVER_SAVED_FEED])
         }
       } catch (e: any) {
         onboardingDispatch({type: 'skip'}) // undo starting the onboard
