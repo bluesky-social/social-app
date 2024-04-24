@@ -39,6 +39,7 @@ import {
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useNonReactiveCallback} from 'lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   NativeStackScreenProps,
@@ -543,7 +544,6 @@ export function SearchScreen(
 
   // Query terms
   const q = props.route?.params?.q ?? ''
-  const [query, setQuery] = React.useState<string>(q)
   const [searchText, setSearchText] = React.useState<string>(q)
   const throttledInput = useThrottledValue(searchText, 300)
 
@@ -555,10 +555,11 @@ export function SearchScreen(
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
-  if (q !== query) {
-    setQuery(q)
-    setSearchText(q)
-  }
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      setSearchText(q)
+    }),
+  )
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
@@ -600,16 +601,16 @@ export function SearchScreen(
     scrollToTopWeb()
 
     if (inputIsFocused) {
-      setSearchText(query)
+      setSearchText(q)
       textInput.current?.blur()
     } else {
-      if (isWeb && query) {
+      if (isWeb && q) {
         navigation.goBack()
       } else {
         navigation.setParams({q: ''})
       }
     }
-  }, [inputIsFocused, navigation, query])
+  }, [inputIsFocused, navigation, q])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -643,7 +644,6 @@ export function SearchScreen(
   const onSubmit = React.useCallback(() => {
     scrollToTopWeb()
     updateSearchHistory(searchText)
-    setQuery(searchText)
 
     if (isWeb) {
       navigation.push('Search', {q: searchText})
@@ -658,9 +658,9 @@ export function SearchScreen(
   }, [onPressCancelSearch])
 
   const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(query)
+    const match = MATCH_HANDLE.exec(q)
     return match && match[1]
-  }, [query])
+  }, [q])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -669,9 +669,8 @@ export function SearchScreen(
     }, [onSoftReset, setMinimalShellMode]),
   )
 
-  const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
-    setQuery(item)
-    onSubmit()
+  const handleHistoryItemClick = (item: string) => {
+    navigation.setParams({q: item})
   }
 
   const handleRemoveHistoryItem = (itemToRemove: string) => {
@@ -768,7 +767,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {(query || inputIsFocused) && (
+        {(q || inputIsFocused) && (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}
@@ -827,7 +826,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !query && inputIsFocused ? (
+      ) : !q && inputIsFocused ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
@@ -872,7 +871,7 @@ export function SearchScreen(
           </View>
         </CenteredView>
       ) : (
-        <SearchScreenInner query={query} />
+        <SearchScreenInner query={q} />
       )}
     </View>
   )
