@@ -586,18 +586,17 @@ export function SearchScreen(
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
     setSearchText('')
-    setShowAutocompleteResults(false)
     textInput.current?.focus()
   }, [])
 
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
-    textInput.current?.blur()
     setShowAutocompleteResults(false)
 
     if (inputIsFocused) {
       setSearchText(queryTerm)
-      setInputIsFocused(false)
+      // setInputIsFocused(false)
+      textInput.current?.blur()
     } else {
       if (isWeb && queryTerm) {
         navigation.goBack()
@@ -610,9 +609,7 @@ export function SearchScreen(
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
     setSearchText(text)
-
-    const showAutoComplete = text.length > 0
-    setShowAutocompleteResults(showAutoComplete)
+    setShowAutocompleteResults(text.length > 0)
   }, [])
 
   const updateSearchHistory = React.useCallback(
@@ -735,7 +732,11 @@ export function SearchScreen(
               // HACK
               // give 100ms to not stop click handlers in the search history
               // -prf
-              setTimeout(() => setInputIsFocused(false), 100)
+              setTimeout(
+                () =>
+                  setInputIsFocused(Boolean(textInput.current?.isFocused())),
+                100,
+              )
             }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
@@ -771,7 +772,11 @@ export function SearchScreen(
               accessibilityRole="button"
               hitSlop={HITSLOP_10}>
               <Text style={[pal.text]}>
-                <Trans>Cancel</Trans>
+                {isWeb && !inputIsFocused && q ? (
+                  <Trans>Back</Trans>
+                ) : (
+                  <Trans>Cancel</Trans>
+                )}
               </Text>
             </Pressable>
           </View>
