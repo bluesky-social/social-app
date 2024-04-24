@@ -53,8 +53,8 @@ export function suggestLinkCardUri(
       continue
     }
     if (
-      /^[.,;!?](\s|$)/m.test(prevTextAfterUri) &&
-      /^[.,;!?]\s/m.test(nextTextAfterUri)
+      /^[)]?[.,:;!?)](\s|$)/m.test(prevTextAfterUri) &&
+      /^[)]?[.,:;!?)]\s/m.test(nextTextAfterUri)
     ) {
       // The link was *already* being followed by punctuation,
       // and now it's followed both by punctuation and a space.
