@@ -15,10 +15,6 @@ export function addLinkCardIfNecessary({
   prevAddedLinks: Set<string>
   byteEnd: number
 }) {
-  console.log({
-    byteIndex: byteEnd,
-  })
-
   const utf16Index = utf8IndexToUtf16Index(newText, byteEnd)
   // Because we always trim the whitespace at the end of the text
   newText = newText + ' '
