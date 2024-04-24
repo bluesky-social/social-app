@@ -11,10 +11,19 @@ import {FeedAPI, FeedAPIResponse} from './types'
 import {aggregateUserInterests, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
-  constructor(
-    public params: GetCustomFeed.QueryParams,
-    public preferences?: UsePreferencesQueryResponse,
-  ) {}
+  params: GetCustomFeed.QueryParams
+  preferences?: UsePreferencesQueryResponse
+
+  constructor({
+    feedParams,
+    preferences,
+  }: {
+    feedParams: GetCustomFeed.QueryParams
+    preferences?: UsePreferencesQueryResponse
+  }) {
+    this.params = feedParams
+    this.preferences = preferences
+  }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')

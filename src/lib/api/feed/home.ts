@@ -37,18 +37,18 @@ export class HomeFeedAPI implements FeedAPI {
   constructor({preferences}: {preferences?: UsePreferencesQueryResponse}) {
     this.preferences = preferences
     this.following = new FollowingFeedAPI()
-    this.discover = new CustomFeedAPI(
-      {feed: PROD_DEFAULT_FEED('whats-hot')},
+    this.discover = new CustomFeedAPI({
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
       preferences,
-    )
+    })
   }
 
   reset() {
     this.following = new FollowingFeedAPI()
-    this.discover = new CustomFeedAPI(
-      {feed: PROD_DEFAULT_FEED('whats-hot')},
-      this.preferences,
-    )
+    this.discover = new CustomFeedAPI({
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      preferences: this.preferences,
+    })
     this.usingDiscover = false
     this.itemCursor = 0
   }

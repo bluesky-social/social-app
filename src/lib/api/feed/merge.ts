@@ -17,17 +17,27 @@ const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
+  params: FeedParams
+  feedTuners: FeedTunerFn[]
+  preferences?: UsePreferencesQueryResponse
   following: MergeFeedSource_Following
   customFeeds: MergeFeedSource_Custom[] = []
   feedCursor = 0
   itemCursor = 0
   sampleCursor = 0
 
-  constructor(
-    public params: FeedParams,
-    public feedTuners: FeedTunerFn[],
-    public preferences: UsePreferencesQueryResponse,
-  ) {
+  constructor({
+    feedParams,
+    feedTuners,
+    preferences,
+  }: {
+    feedParams: FeedParams
+    feedTuners: FeedTunerFn[]
+    preferences?: UsePreferencesQueryResponse
+  }) {
+    this.params = feedParams
+    this.feedTuners = feedTuners
+    this.preferences = preferences
     this.following = new MergeFeedSource_Following(this.feedTuners)
   }
 
@@ -40,7 +50,12 @@ export class MergeFeedAPI implements FeedAPI {
     if (this.params.mergeFeedSources) {
       this.customFeeds = shuffle(
         this.params.mergeFeedSources.map(
-          feedUri => new MergeFeedSource_Custom(feedUri, this.feedTuners),
+          feedUri =>
+            new MergeFeedSource_Custom({
+              feedUri,
+              feedTuners: this.feedTuners,
+              preferences: this.preferences,
+            }),
         ),
       )
     } else {
@@ -223,13 +238,21 @@ class MergeFeedSource_Following extends MergeFeedSource {
 
 class MergeFeedSource_Custom extends MergeFeedSource {
   minDate: Date
+  feedUri: string
+  preferences?: UsePreferencesQueryResponse
 
-  constructor(
-    public feedUri: string,
-    public feedTuners: FeedTunerFn[],
-    public preferences?: UsePreferencesQueryResponse,
-  ) {
+  constructor({
+    feedUri,
+    feedTuners,
+    preferences,
+  }: {
+    feedUri: string
+    feedTuners: FeedTunerFn[]
+    preferences?: UsePreferencesQueryResponse
+  }) {
     super(feedTuners)
+    this.feedUri = feedUri
+    this.preferences = preferences
     this.sourceInfo = {
       $type: 'reasonFeedSource',
       uri: feedUri,

@@ -385,12 +385,15 @@ function createApi({
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
-  preferences: UsePreferencesQueryResponse
+  preferences?: UsePreferencesQueryResponse
 }) {
   if (feedDesc === 'home') {
     if (feedParams.mergeFeedEnabled) {
-      console.log('MERGE')
-      return new MergeFeedAPI(feedParams, feedTuners, preferences)
+      return new MergeFeedAPI({
+        feedParams,
+        feedTuners,
+        preferences,
+      })
     } else {
       return new HomeFeedAPI({preferences})
     }
@@ -404,7 +407,10 @@ function createApi({
     return new LikesFeedAPI({actor})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
-    return new CustomFeedAPI({feed}, preferences)
+    return new CustomFeedAPI({
+      feedParams: {feed},
+      preferences,
+    })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
     return new ListFeedAPI({list})
