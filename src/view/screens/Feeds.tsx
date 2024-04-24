@@ -679,7 +679,7 @@ function FollowingFeed() {
       <View
         style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
         <Text type="lg-medium" style={pal.text} numberOfLines={1}>
-          Following
+          <Trans>Following</Trans>
         </Text>
       </View>
     </View>
