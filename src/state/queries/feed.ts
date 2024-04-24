@@ -22,7 +22,10 @@ import {getAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 
 export type FeedSourceFeedInfo = {
-  id: string
+  /**
+   * Unique identifier. The URI + `savedFeed.id` if available.
+   */
+  __key__: string
   type: 'feed'
   uri: string
   route: {
@@ -41,7 +44,10 @@ export type FeedSourceFeedInfo = {
 }
 
 export type FeedSourceListInfo = {
-  id: string
+  /**
+   * Unique identifier. The URI + `savedFeed.id` if available.
+   */
+  __key__: string
   type: 'list'
   uri: string
   route: {
@@ -72,7 +78,7 @@ const feedSourceNSIDs = {
 
 export function hydrateFeedGenerator(
   view: AppBskyFeedDefs.GeneratorView,
-  extra?: {id: string},
+  extra?: {__key__: string},
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
@@ -81,7 +87,7 @@ export function hydrateFeedGenerator(
   const route = router.matchPath(href)
 
   return {
-    id: extra?.id || '',
+    __key__: `feed|${view.uri}|${extra?.__key__ || ''}`,
     type: 'feed',
     uri: view.uri,
     cid: view.cid,
@@ -107,7 +113,7 @@ export function hydrateFeedGenerator(
 
 export function hydrateList(
   view: AppBskyGraphDefs.ListView,
-  extra?: {id: string},
+  extra?: {__key__: string},
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
@@ -116,7 +122,7 @@ export function hydrateList(
   const route = router.matchPath(href)
 
   return {
-    id: extra?.id || '',
+    __key__: `list|${view.uri}|${extra?.__key__ || ''}`,
     type: 'list',
     uri: view.uri,
     route: {
@@ -212,7 +218,7 @@ export function useSearchPopularFeedsMutation() {
  * The following feed, with fallbacks to Discover
  */
 const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
-  id: 'pwi',
+  __key__: 'pwi',
   type: 'feed',
   displayName: 'Discover',
   uri: DISCOVER_FEED_URI,
@@ -264,7 +270,7 @@ export function usePinnedFeedsInfos() {
               resolved.set(
                 feedView.uri + pinnedFeedsIds[i],
                 hydrateFeedGenerator(feedView, {
-                  id: pinnedFeedsIds[i],
+                  __key__: pinnedFeedsIds[i],
                 }),
               )
             }
@@ -282,7 +288,7 @@ export function usePinnedFeedsInfos() {
             const listView = res.data.list
             resolved.set(
               listView.uri + list.id,
-              hydrateList(listView, {id: list.id}),
+              hydrateList(listView, {__key__: list.id}),
             )
           }),
       )
@@ -298,7 +304,7 @@ export function usePinnedFeedsInfos() {
           result.push(feedInfo)
         } else if (pinnedItem.type === 'timeline') {
           result.push({
-            id: pinnedItem.id,
+            __key__: `feed|${pinnedItem.value}|${pinnedItem.id}`,
             type: 'feed',
             displayName: 'Following',
             uri: pinnedItem.value,
