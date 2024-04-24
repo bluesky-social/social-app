@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-04-12 11:00+0800\n"
+"POT-Creation-Date: 2024-04-24 09:30+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -61,7 +61,7 @@ msgstr "⚠無效的帳號代碼"
 
 #: src/screens/Login/LoginForm.tsx:238
 msgid "2FA Confirmation"
-msgstr ""
+msgstr "雙重驗證"
 
 #: src/view/com/util/ViewHeader.tsx:91
 #: src/view/screens/Search/Search.tsx:727
@@ -79,12 +79,12 @@ msgstr "協助工具"
 
 #: src/view/screens/Settings/index.tsx:484
 msgid "Accessibility settings"
-msgstr ""
+msgstr "協助工具設定"
 
 #: src/Navigation.tsx:284
 #: src/view/screens/AccessibilitySettings.tsx:63
 msgid "Accessibility Settings"
-msgstr ""
+msgstr "協助工具設定"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 msgid "account"
@@ -270,7 +270,7 @@ msgstr "一封電子郵件已發送至先前填寫的電子郵件地址 {0}。�
 
 #: src/components/dialogs/GifSelect.tsx:284
 msgid "An error occured"
-msgstr ""
+msgstr "發生錯誤"
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
@@ -296,7 +296,7 @@ msgstr "動物"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:134
 msgid "Animated GIF"
-msgstr ""
+msgstr "GIF 動畫"
 
 #: src/lib/moderation/useReportOptions.ts:31
 msgid "Anti-Social Behavior"
@@ -672,7 +672,7 @@ msgstr "來看看一些推薦的使用者吧。跟隨人來查看類似的使用
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr ""
+msgstr "查看寄送至你電子郵件地址的登入代碼並在此輸入。"
 
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -769,11 +769,11 @@ msgstr "關閉底部抽屜"
 
 #: src/components/dialogs/GifSelect.tsx:294
 msgid "Close dialog"
-msgstr ""
+msgstr "關閉對話框"
 
 #: src/components/dialogs/GifSelect.tsx:150
 msgid "Close GIF dialog"
-msgstr ""
+msgstr "關閉 GIF 對話框"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
@@ -1198,15 +1198,15 @@ msgstr "暗淡"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
-msgstr ""
+msgstr "關閉 GIF 自動播放"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
-msgstr ""
+msgstr "關閉電子郵件雙重驗證"
 
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
-msgstr ""
+msgstr "關閉觸覺回饋"
 
 #: src/view/screens/Settings/index.tsx:697
 #~ msgid "Disable haptics"
@@ -1432,7 +1432,7 @@ msgstr "電子郵件"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "電子郵件雙重驗證已關閉"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
@@ -1659,7 +1659,7 @@ msgstr "無法刪除貼文，請重試"
 
 #: src/components/dialogs/GifSelect.tsx:200
 msgid "Failed to load GIFs"
-msgstr ""
+msgstr "無法載入 GIF"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
@@ -1730,7 +1730,7 @@ msgstr "尋找一些要跟隨的帳號"
 
 #: src/view/screens/Search/Search.tsx:521
 msgid "Find posts and users on Bluesky"
-msgstr ""
+msgstr "在 Bluesky 上尋找貼文和使用者"
 
 #: src/view/screens/Search/Search.tsx:589
 #~ msgid "Find users on Bluesky"
@@ -1968,7 +1968,7 @@ msgstr "帳號代碼"
 
 #: src/view/screens/AccessibilitySettings.tsx:103
 msgid "Haptics"
-msgstr ""
+msgstr "觸覺"
 
 #: src/lib/moderation/useReportOptions.ts:32
 msgid "Harassment, trolling, or intolerance"
@@ -2170,7 +2170,7 @@ msgstr "輸入密碼以刪除帳號"
 
 #: src/screens/Login/LoginForm.tsx:257
 msgid "Input the code which has been emailed to you"
-msgstr ""
+msgstr "輸入寄送至你電子郵件地址的代碼"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Input the password tied to {identifier}"
@@ -2195,7 +2195,7 @@ msgstr "輸入你的帳號代碼"
 #: src/screens/Login/LoginForm.tsx:126
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr ""
+msgstr "無效的雙重驗證代碼"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Invalid or unsupported post record"
@@ -2474,7 +2474,7 @@ msgstr "登入未列出的帳號"
 
 #: src/components/RichText.tsx:207
 msgid "Long press to open tag menu for #{tag}"
-msgstr ""
+msgstr "長按開啟 #{tag} 的標籤選單"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
@@ -2839,7 +2839,7 @@ msgstr "無 DNS 控制台"
 
 #: src/components/dialogs/GifSelect.tsx:206
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr ""
+msgstr "未找到精選 GIF，Tenor 可能發生問題。"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -2874,7 +2874,7 @@ msgstr "未找到 {query} 的結果"
 
 #: src/components/dialogs/GifSelect.tsx:204
 msgid "No search results found for \"{search}\"."
-msgstr ""
+msgstr "未找到「{search}」的搜尋結果。"
 
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
@@ -3036,7 +3036,7 @@ msgstr "開啟 {numItems} 個選項"
 
 #: src/view/screens/Settings/index.tsx:485
 msgid "Opens accessibility settings"
-msgstr ""
+msgstr "開啟協助工具設定"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
@@ -3078,7 +3078,7 @@ msgstr "開啟流程以登入你現有的 Bluesky 帳戶"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:37
 msgid "Opens GIF select dialog"
-msgstr ""
+msgstr "開啟 GIF 選擇對話框"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -3204,7 +3204,7 @@ msgstr "密碼已更新！"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Pause"
-msgstr ""
+msgstr "暫停"
 
 #: src/view/screens/Search/Search.tsx:438
 msgid "People"
@@ -3249,7 +3249,7 @@ msgstr "固定訊息流列表"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Play"
-msgstr ""
+msgstr "播放"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
@@ -3257,7 +3257,7 @@ msgstr "播放 {0}"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:30
 msgid "Play or pause the GIF"
-msgstr ""
+msgstr "播放或暫停 GIF"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
@@ -3614,7 +3614,7 @@ msgstr "回覆過濾器"
 #: src/view/com/posts/FeedItem.tsx:285
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr ""
+msgstr "回覆 <0><1/></0>"
 
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
@@ -3712,7 +3712,7 @@ msgstr "要求發佈前提供替代文字"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:53
 msgid "Require email code to log into your account"
-msgstr ""
+msgstr "需要電子郵件驗證碼才能登入你的帳戶"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
@@ -3721,7 +3721,7 @@ msgstr "提供商要求必填"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
 msgid "Resend email"
-msgstr ""
+msgstr "重發電子郵件"
 
 #: src/view/com/modals/ChangePassword.tsx:185
 msgid "Reset code"
@@ -3896,11 +3896,11 @@ msgstr "搜尋使用者"
 
 #: src/components/dialogs/GifSelect.tsx:158
 msgid "Search GIFs"
-msgstr ""
+msgstr "搜尋 GIFs"
 
 #: src/components/dialogs/GifSelect.tsx:159
 msgid "Search Tenor"
-msgstr ""
+msgstr "搜尋 Tenor"
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -3945,11 +3945,11 @@ msgstr "從現有帳號中選擇"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Select GIF"
-msgstr ""
+msgstr "選擇 GIF"
 
 #: src/components/dialogs/GifSelect.tsx:253
 msgid "Select GIF \"{0}\""
-msgstr ""
+msgstr "選擇 GIF「{0}」"
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
@@ -4042,7 +4042,7 @@ msgstr "將檢舉提交至 {0}"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
 msgid "Send verification email"
-msgstr ""
+msgstr "發送驗證電子郵件"
 
 #: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
@@ -4611,7 +4611,7 @@ msgstr "更新訊息流時出現問題，請檢查你的網路連線並重試。
 
 #: src/components/dialogs/GifSelect.tsx:201
 msgid "There was an issue connecting to Tenor."
-msgstr ""
+msgstr "連線 Tenor 時出現問題。"
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
@@ -4851,7 +4851,7 @@ msgstr "對話串偏好"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr ""
+msgstr "若要關閉電子郵件雙重驗證，請驗證您對電子郵件地址的存取權限。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -4892,7 +4892,7 @@ msgstr "重試"
 
 #: src/view/screens/Settings/index.tsx:695
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "雙重驗證"
 
 #: src/view/com/modals/ChangeHandle.tsx:428
 msgid "Type:"
