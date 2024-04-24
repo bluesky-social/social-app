@@ -187,11 +187,8 @@ export function ProfileFeedScreenInner({
       playHaptic()
 
       if (savedFeedConfig) {
-        // only allow removal of non-pinned feeds from this view
-        if (!savedFeedConfig.pinned) {
-          await removeFeed(savedFeedConfig)
-          Toast.show(_(msg`Removed from your feeds`))
-        }
+        await removeFeed(savedFeedConfig)
+        Toast.show(_(msg`Removed from your feeds`))
       } else {
         await addSavedFeeds([
           {
@@ -323,7 +320,7 @@ export function ProfileFeedScreenInner({
 
               <Menu.Outer>
                 <Menu.Group>
-                  {hasSession && !isPinned && (
+                  {hasSession && (
                     <>
                       <Menu.Item
                         disabled={isPending}

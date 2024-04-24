@@ -433,7 +433,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       },
     ]
 
-    if (savedFeedConfig && !savedFeedConfig.pinned) {
+    if (savedFeedConfig) {
       items.push({
         testID: 'listHeaderDropdownRemoveFromFeedsBtn',
         label: _(msg`Remove from my feeds`),
