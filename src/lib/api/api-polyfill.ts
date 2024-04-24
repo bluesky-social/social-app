@@ -1,5 +1,5 @@
-import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
 import RNFS from 'react-native-fs'
+import {BskyAgent, jsonToLex, stringifyLex} from '@atproto/api'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
@@ -34,8 +34,13 @@ async function fetchHandler(
       // see https://github.com/facebook/react-native/issues/27099
       // -prf
       const newPath = reqBody.replace(/\.jpe?g$/, '.bin')
-      await RNFS.moveFile(reqBody, newPath)
-      reqBody = newPath
+      try {
+        await RNFS.moveFile(reqBody, newPath)
+        reqBody = newPath
+      } catch (e: any) {
+        await RNFS.copyFile(reqBody, newPath)
+        reqBody = newPath
+      }
     }
     // NOTE
     // React native treats bodies with {uri: string} as file uploads to pull from cache
