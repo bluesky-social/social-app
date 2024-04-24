@@ -601,7 +601,6 @@ export function SearchScreen(
 
     if (inputIsFocused) {
       setSearchText(query)
-      // setInputIsFocused(false)
       textInput.current?.blur()
     } else {
       if (isWeb && query) {
