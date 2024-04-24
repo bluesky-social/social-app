@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {createHitslop} from '#/lib/constants'
 import {useGate} from '#/lib/statsig/statsig'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useFollowMethods} from '#/components/hooks/useFollowMethods'
@@ -27,6 +28,7 @@ export function AviFollowButton({
     logContext: 'AvatarButton',
   })
   const gate = useGate()
+  const self = useSession()
 
   const name = profileShadow.displayName || profileShadow.handle
 
@@ -47,7 +49,10 @@ export function AviFollowButton({
     return children
   }
 
-  if (profileShadow.viewer?.following) {
+  if (
+    profileShadow.viewer?.following ||
+    profileShadow.did === self.currentAccount?.did
+  ) {
     return children
   }
 
