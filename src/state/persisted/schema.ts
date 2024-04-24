@@ -1,6 +1,6 @@
 import {z} from 'zod'
 
-import {deviceLocales} from '#/platform/detection'
+import {deviceLocales, prefersReducedMotion} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
@@ -98,5 +98,5 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
-  disableAutoplay: false,
+  disableAutoplay: prefersReducedMotion,
 }
