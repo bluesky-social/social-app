@@ -5,8 +5,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
-import {TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {BSKY_APP_ACCOUNT_DID, IS_PROD_SERVICE} from '#/lib/constants'
+import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
@@ -64,18 +64,38 @@ export function StepFinished() {
         // these must be serial
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
+          // any selected feeds
+          const otherFeeds = selectedFeeds.length
+            ? selectedFeeds.map(f => ({
+                type: 'feed',
+                value: f,
+                pinned: true,
+                id: TID.nextStr(),
+              }))
+            : []
+
+          /*
+           * If no selected feeds and we're in prod, add the discover feed
+           * (mimics old behavior)
+           */
+          if (
+            IS_PROD_SERVICE(getAgent().service.toString()) &&
+            !otherFeeds.length
+          ) {
+            otherFeeds.push({
+              ...DISCOVER_SAVED_FEED,
+              pinned: true,
+              id: TID.nextStr(),
+            })
+          }
+
           await overwriteSavedFeeds([
             {
               ...TIMELINE_SAVED_FEED,
               pinned: true,
               id: TID.nextStr(),
             },
-            ...selectedFeeds.map(f => ({
-              type: 'feed',
-              value: f,
-              pinned: true,
-              id: TID.nextStr(),
-            })),
+            ...otherFeeds,
           ])
         })(),
       ])

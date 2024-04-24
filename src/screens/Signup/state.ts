@@ -11,8 +11,7 @@ import * as EmailValidator from 'email-validator'
 import {
   DEFAULT_SERVICE,
   DISCOVER_SAVED_FEED,
-  IS_TEST_USER,
-  TIMELINE_SAVED_FEED,
+  IS_PROD_SERVICE,
 } from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
@@ -268,13 +267,12 @@ export function useSubmitSignup({
           inviteCode: state.inviteCode.trim(),
           verificationCode: verificationCode,
         })
+        // this initial set triggers v1->v2 feeds migration
         await setBirthDate({birthDate: state.dateOfBirth})
-        if (IS_TEST_USER(state.handle)) {
-          // local dev
-          addSavedFeeds([TIMELINE_SAVED_FEED])
-        } else {
+        // add in default feed after migration has taken place
+        if (IS_PROD_SERVICE(state.serviceUrl)) {
           // match existing handling
-          addSavedFeeds([TIMELINE_SAVED_FEED, DISCOVER_SAVED_FEED])
+          addSavedFeeds([DISCOVER_SAVED_FEED])
         }
       } catch (e: any) {
         onboardingDispatch({type: 'skip'}) // undo starting the onboard

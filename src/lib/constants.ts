@@ -45,7 +45,7 @@ export function IS_TEST_USER(handle?: string) {
 }
 
 export function IS_PROD_SERVICE(url?: string) {
-  return url && url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
+  return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
 }
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
