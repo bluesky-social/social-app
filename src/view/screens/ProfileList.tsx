@@ -277,7 +277,6 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     try {
       if (savedFeedConfig) {
         const pinned = !savedFeedConfig.pinned
-        // only allow removal of non-pinned feeds from this view
         await updateSavedFeeds([
           {
             ...savedFeedConfig,
