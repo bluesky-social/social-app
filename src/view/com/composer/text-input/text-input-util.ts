@@ -5,7 +5,7 @@ export function addLinkCardIfNecessary({
   mayBePaste,
   onNewLink,
   prevAddedLinks,
-  byteEnd,
+  endIndex,
 }: {
   uri: string
   newText: string
@@ -13,10 +13,8 @@ export function addLinkCardIfNecessary({
   mayBePaste: boolean
   onNewLink: (uri: string) => void
   prevAddedLinks: Set<string>
-  byteEnd: number
+  endIndex: number
 }) {
-  const utf16Index = utf8IndexToUtf16Index(newText, byteEnd)
-  // Because we always trim the whitespace at the end of the text
   newText = newText + ' '
 
   let toAdd = 2
@@ -24,16 +22,11 @@ export function addLinkCardIfNecessary({
   const backOne = newText.charAt(cursorLocation - 1)
   const backTwo = newText.charAt(cursorLocation - 2)
 
-  if (backOne === ' ' && !/[.!?]/.test(backTwo)) {
+  if (backOne === ' ' && /[^.!?]/.test(backTwo)) {
     toAdd = 1
   }
 
-  console.log({
-    utf8Index: byteEnd,
-    utf16Index: utf16Index,
-  })
-
-  if (!mayBePaste && utf16Index + toAdd !== cursorLocation) {
+  if (!mayBePaste && endIndex + toAdd !== cursorLocation) {
     return
   }
 
@@ -76,37 +69,4 @@ export function findIndexInText(term: string, text: string) {
   const pattern = new RegExp(`\\b(${escapeRegex(term)})(?![/\\w])`, 'i')
   const match = pattern.exec(text)
   return match ? match.index : -1
-}
-
-function utf8IndexToUtf16Index(inStr: string, utf8Index: number) {
-  let utf16Index = 0
-  let bytesCounted = 0
-
-  for (let i = 0; i < inStr.length; i++) {
-    // Check the current Unicode code point size in UTF-8
-    const codePoint = inStr.codePointAt(i)
-
-    if (!codePoint) return -1
-
-    // Add the UTF-8 byte length of this code point
-    if (codePoint <= 0x7f) {
-      bytesCounted += 1 // 1 byte in UTF-8
-    } else if (codePoint <= 0x7ff) {
-      bytesCounted += 2 // 2 bytes in UTF-8
-    } else if (codePoint <= 0xffff) {
-      bytesCounted += 3 // 3 bytes in UTF-8
-    } else {
-      bytesCounted += 4 // 4 bytes in UTF-8
-      i++ // Move past the high surrogate
-    }
-
-    // Update UTF-16 index and break when the UTF-8 index is reached or exceeded
-    if (bytesCounted > utf8Index) {
-      break
-    }
-
-    utf16Index = i + 1
-  }
-
-  return utf16Index
 }
