@@ -252,11 +252,11 @@ type SearchResultSlice =
     }
 
 function SearchScreenPostResults({
-  queryTerm,
+  query,
   sort,
   active,
 }: {
-  queryTerm: string
+  query: string
   sort?: 'top' | 'latest'
   active: boolean
 }) {
@@ -265,8 +265,8 @@ function SearchScreenPostResults({
   const [isPTR, setIsPTR] = React.useState(false)
 
   const augmentedQuery = React.useMemo(() => {
-    return augmentSearchQuery(queryTerm || '', {did: currentAccount?.did})
-  }, [queryTerm, currentAccount])
+    return augmentSearchQuery(query || '', {did: currentAccount?.did})
+  }, [query, currentAccount])
 
   const {
     isFetched,
@@ -348,7 +348,7 @@ function SearchScreenPostResults({
               contentContainerStyle={{paddingBottom: 100}}
             />
           ) : (
-            <EmptyState message={_(msg`No results found for ${queryTerm}`)} />
+            <EmptyState message={_(msg`No results found for ${query}`)} />
           )}
         </>
       ) : (
@@ -359,16 +359,16 @@ function SearchScreenPostResults({
 }
 
 function SearchScreenUserResults({
-  queryTerm,
+  query,
   active,
 }: {
-  queryTerm: string
+  query: string
   active: boolean
 }) {
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
-    query: queryTerm,
+    query: query,
     enabled: active,
   })
 
@@ -386,7 +386,7 @@ function SearchScreenUserResults({
           contentContainerStyle={{paddingBottom: 100}}
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${queryTerm}`)} />
+        <EmptyState message={_(msg`No results found for ${query}`)} />
       )}
     </>
   ) : (
@@ -394,7 +394,7 @@ function SearchScreenUserResults({
   )
 }
 
-export function SearchScreenInner({queryTerm}: {queryTerm?: string}) {
+export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -413,13 +413,13 @@ export function SearchScreenInner({queryTerm}: {queryTerm?: string}) {
   )
 
   const sections = React.useMemo(() => {
-    if (!queryTerm) return []
+    if (!query) return []
     return [
       {
         title: _(msg`Top`),
         component: (
           <SearchScreenPostResults
-            queryTerm={queryTerm}
+            query={query}
             sort="top"
             active={activeTab === 0}
           />
@@ -429,7 +429,7 @@ export function SearchScreenInner({queryTerm}: {queryTerm?: string}) {
         title: _(msg`Latest`),
         component: (
           <SearchScreenPostResults
-            queryTerm={queryTerm}
+            query={query}
             sort="latest"
             active={activeTab === 1}
           />
@@ -438,16 +438,13 @@ export function SearchScreenInner({queryTerm}: {queryTerm?: string}) {
       {
         title: _(msg`People`),
         component: (
-          <SearchScreenUserResults
-            queryTerm={queryTerm}
-            active={activeTab === 2}
-          />
+          <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
     ]
-  }, [_, queryTerm, activeTab])
+  }, [_, query, activeTab])
 
-  return queryTerm ? (
+  return query ? (
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
@@ -546,7 +543,7 @@ export function SearchScreen(
 
   // Query terms
   const q = props.route?.params?.q ?? ''
-  const [queryTerm, setQueryTerm] = React.useState<string>(q)
+  const [query, setQuery] = React.useState<string>(q)
   const [searchText, setSearchText] = React.useState<string>(q)
   const throttledInput = useThrottledValue(searchText, 300)
 
@@ -558,8 +555,8 @@ export function SearchScreen(
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
-  if (q !== queryTerm) {
-    setQueryTerm(q)
+  if (q !== query) {
+    setQuery(q)
     setSearchText(q)
   }
 
@@ -603,17 +600,17 @@ export function SearchScreen(
     scrollToTopWeb()
 
     if (inputIsFocused) {
-      setSearchText(queryTerm)
+      setSearchText(query)
       // setInputIsFocused(false)
       textInput.current?.blur()
     } else {
-      if (isWeb && queryTerm) {
+      if (isWeb && query) {
         navigation.goBack()
       } else {
         navigation.setParams({q: ''})
       }
     }
-  }, [inputIsFocused, navigation, queryTerm])
+  }, [inputIsFocused, navigation, query])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -647,7 +644,7 @@ export function SearchScreen(
   const onSubmit = React.useCallback(() => {
     scrollToTopWeb()
     updateSearchHistory(searchText)
-    setQueryTerm(searchText)
+    setQuery(searchText)
 
     if (isWeb) {
       navigation.push('Search', {q: searchText})
@@ -662,9 +659,9 @@ export function SearchScreen(
   }, [onPressCancelSearch])
 
   const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(queryTerm)
+    const match = MATCH_HANDLE.exec(query)
     return match && match[1]
-  }, [queryTerm])
+  }, [query])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -674,7 +671,7 @@ export function SearchScreen(
   )
 
   const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
-    setQueryTerm(item)
+    setQuery(item)
     onSubmit()
   }
 
@@ -772,7 +769,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {(queryTerm || inputIsFocused) && (
+        {(query || inputIsFocused) && (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}
@@ -832,7 +829,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !queryTerm && inputIsFocused ? (
+      ) : !query && inputIsFocused ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
@@ -877,7 +874,7 @@ export function SearchScreen(
           </View>
         </CenteredView>
       ) : (
-        <SearchScreenInner queryTerm={queryTerm} />
+        <SearchScreenInner query={query} />
       )}
     </View>
   )
