@@ -1,5 +1,5 @@
 import React from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,28 +7,14 @@ import {useLingui} from '@lingui/react'
 import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-
-// duplicated from FeedsPage
-export function useHeaderOffset() {
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const {fontScale} = useWindowDimensions()
-  if (isDesktop || isTablet) {
-    return 0
-  }
-  const navBarHeight = 42
-  const tabBarPad = 10 + 10 + 3 // padding + border
-  const normalLineHeight = 1.2
-  const tabBarText = 16 * normalLineHeight * fontScale
-  return navBarHeight + tabBarPad + tabBarText
-}
 
 export function NoFeedsPinned({
   preferences,

@@ -1,5 +1,5 @@
 import React from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,9 +17,9 @@ import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from 'lib/icons'
 import {s} from 'lib/styles'
+import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {Feed} from '../posts/Feed'
 import {FAB} from '../util/fab/FAB'
 import {ListMethods} from '../util/List'
@@ -152,17 +152,4 @@ export function FeedPage({
       )}
     </View>
   )
-}
-
-function useHeaderOffset() {
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const {fontScale} = useWindowDimensions()
-  if (isDesktop || isTablet) {
-    return 0
-  }
-  const navBarHeight = 42
-  const tabBarPad = 10 + 10 + 3 // padding + border
-  const normalLineHeight = 1.2
-  const tabBarText = 16 * normalLineHeight * fontScale
-  return navBarHeight + tabBarPad + tabBarText
 }
