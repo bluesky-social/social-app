@@ -12,8 +12,8 @@ export function KeyboardAccessory({children}: {children: React.ReactNode}) {
 
   const style = [
     a.flex_row,
-    {paddingVertical: 10},
-    a.pl_lg,
+    a.py_xs,
+    a.pl_sm,
     a.pr_xl,
     a.align_center,
     a.border_t,
