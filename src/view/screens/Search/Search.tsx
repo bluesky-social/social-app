@@ -556,8 +556,6 @@ export function SearchScreen(
     React.useState<AppBskyActorDefs.ProfileViewBasic[]>()
 
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
-  const [showAutocompleteResults, setShowAutocompleteResults] =
-    React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
   if (q !== queryTerm) {
@@ -603,7 +601,6 @@ export function SearchScreen(
 
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
-    setShowAutocompleteResults(false)
 
     if (inputIsFocused) {
       setSearchText(queryTerm)
@@ -621,7 +618,6 @@ export function SearchScreen(
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
     setSearchText(text)
-    setShowAutocompleteResults(text.length > 0)
   }, [])
 
   const updateSearchHistory = React.useCallback(
@@ -650,7 +646,6 @@ export function SearchScreen(
 
   const onSubmit = React.useCallback(() => {
     scrollToTopWeb()
-    setShowAutocompleteResults(false)
     updateSearchHistory(searchText)
     setQueryTerm(searchText)
 
@@ -795,7 +790,7 @@ export function SearchScreen(
         )}
       </CenteredView>
 
-      {showAutocompleteResults ? (
+      {inputIsFocused && searchText.length > 0 ? (
         <>
           {/* TODO avoid showing spinner if we have any previous results -hailey */}
           {(searchText && !autocompleteData) || !moderationOpts ? (
