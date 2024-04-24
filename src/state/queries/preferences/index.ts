@@ -54,6 +54,7 @@ export function usePreferencesQuery() {
 
         const preferences: UsePreferencesQueryResponse = {
           ...res,
+          savedFeeds: res.savedFeeds.filter(f => f.type !== 'unknown'),
           feedViewPrefs: {
             ...DEFAULT_HOME_FEED_PREFS,
             ...(res.feedViewPrefs.home || {}),
