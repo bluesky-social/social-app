@@ -258,7 +258,7 @@ function HomeScreenReady({
           )
         })
       ) : (
-        <NoFeedsPinned />
+        <NoFeedsPinned preferences={preferences} />
       )}
     </Pager>
   ) : (

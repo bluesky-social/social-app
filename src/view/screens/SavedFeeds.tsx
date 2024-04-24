@@ -10,9 +10,9 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {track} from '#/lib/analytics/analytics'
 import {logger} from '#/logger'
 import {
+  useOverwriteSavedFeedsMutation,
   usePreferencesQuery,
-  useSetSaveFeedsMutation,
-  useUpdateSavedFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -29,7 +29,7 @@ import * as Toast from 'view/com/util/Toast'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
-import {NoSavedFeeds} from '#/screens/Feeds/NoSavedFeeds'
+import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 
@@ -55,25 +55,25 @@ export function SavedFeeds({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {data: preferences} = usePreferencesQuery()
   const {
-    mutateAsync: setSavedFeeds,
+    mutateAsync: overwriteSavedFeeds,
     variables: optimisticSavedFeedsResponse,
     reset: resetSaveFeedsMutationState,
-    error: setSavedFeedsError,
-  } = useSetSaveFeedsMutation()
+    error: savedFeedsError,
+  } = useOverwriteSavedFeedsMutation()
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
    * data
    */
   const currentFeeds =
-    optimisticSavedFeedsResponse && !setSavedFeedsError
+    optimisticSavedFeedsResponse && !savedFeedsError
       ? optimisticSavedFeedsResponse
       : preferences?.savedFeeds || []
   const pinnedFeeds = currentFeeds.filter(f => f.pinned)
   const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
-  const noSavedFeeds = pinnedFeeds.length + unpinnedFeeds.length === 0
+  const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
   const noFollowingFeed =
-    currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeeds
+    currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
 
   useFocusEffect(
     React.useCallback(() => {
@@ -91,9 +91,9 @@ export function SavedFeeds({}: Props) {
       ]}>
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
-        {noSavedFeeds && (
+        {noSavedFeedsOfAnyType && (
           <View style={[pal.border, {borderBottomWidth: 1}]}>
-            <NoSavedFeeds />
+            <NoSavedFeedsOfAnyType />
           </View>
         )}
 
@@ -122,7 +122,7 @@ export function SavedFeeds({}: Props) {
                 key={f.id}
                 feed={f}
                 isPinned
-                setSavedFeeds={setSavedFeeds}
+                overwriteSavedFeeds={overwriteSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
                 preferences={preferences}
@@ -163,7 +163,7 @@ export function SavedFeeds({}: Props) {
                 key={f.id}
                 feed={f}
                 isPinned={false}
-                setSavedFeeds={setSavedFeeds}
+                overwriteSavedFeeds={overwriteSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
                 preferences={preferences}
@@ -199,23 +199,25 @@ function ListItem({
   feed,
   isPinned,
   currentFeeds,
-  setSavedFeeds,
+  overwriteSavedFeeds,
   resetSaveFeedsMutationState,
 }: {
   feed: AppBskyActorDefs.SavedFeed
   isPinned: boolean
   currentFeeds: AppBskyActorDefs.SavedFeed[]
-  setSavedFeeds: ReturnType<typeof useSetSaveFeedsMutation>['mutateAsync']
+  overwriteSavedFeeds: ReturnType<
+    typeof useOverwriteSavedFeedsMutation
+  >['mutateAsync']
   resetSaveFeedsMutationState: ReturnType<
-    typeof useSetSaveFeedsMutation
+    typeof useOverwriteSavedFeedsMutation
   >['reset']
   preferences: UsePreferencesQueryResponse
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const playHaptic = useHaptics()
-  const {isPending: isUpdatePending, mutateAsync: updateFeed} =
-    useUpdateSavedFeedMutation()
+  const {isPending: isUpdatePending, mutateAsync: updateSavedFeeds} =
+    useUpdateSavedFeedsMutation()
   const feedUri = feed.value
 
   const onTogglePinned = React.useCallback(async () => {
@@ -224,22 +226,17 @@ function ListItem({
     try {
       resetSaveFeedsMutationState()
 
-      if (feed.pinned) {
-        await updateFeed({
+      await updateSavedFeeds([
+        {
           ...feed,
-          pinned: false,
-        })
-      } else {
-        await updateFeed({
-          ...feed,
-          pinned: true,
-        })
-      }
+          pinned: !feed.pinned,
+        },
+      ])
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [_, playHaptic, feed, updateFeed, resetSaveFeedsMutationState])
+  }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
@@ -256,7 +253,7 @@ function ListItem({
     ]
 
     try {
-      await setSavedFeeds(nextFeeds)
+      await overwriteSavedFeeds(nextFeeds)
       track('CustomFeed:Reorder', {
         uri: feed.value,
         index: nextIndex,
@@ -265,7 +262,7 @@ function ListItem({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feed, isPinned, setSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
@@ -282,7 +279,7 @@ function ListItem({
     ]
 
     try {
-      await setSavedFeeds(nextFeeds)
+      await overwriteSavedFeeds(nextFeeds)
       track('CustomFeed:Reorder', {
         uri: feed.value,
         index: nextIndex,
@@ -291,7 +288,7 @@ function ListItem({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feed, isPinned, setSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
 
   return (
     <View style={[styles.itemContainer, pal.border]}>

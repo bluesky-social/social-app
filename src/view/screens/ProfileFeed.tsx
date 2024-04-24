@@ -19,7 +19,7 @@ import {
   usePreferencesQuery,
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
-  useUpdateSavedFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -166,8 +166,8 @@ export function ProfileFeedScreenInner({
     useAddSavedFeedsMutation()
   const {mutateAsync: removeFeed, isPending: isRemovePending} =
     useRemoveFeedMutation()
-  const {mutateAsync: updateFeed, isPending: isUpdateFeedPending} =
-    useUpdateSavedFeedMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
+    useUpdateSavedFeedsMutation()
 
   const isPending =
     isAddSavedFeedPending || isRemovePending || isUpdateFeedPending
@@ -217,17 +217,12 @@ export function ProfileFeedScreenInner({
       playHaptic()
 
       if (savedFeedConfig) {
-        if (savedFeedConfig.pinned) {
-          await updateFeed({
+        await updateSavedFeeds([
+          {
             ...savedFeedConfig,
-            pinned: false,
-          })
-        } else {
-          await updateFeed({
-            ...savedFeedConfig,
-            pinned: true,
-          })
-        }
+            pinned: !savedFeedConfig.pinned,
+          },
+        ])
       } else {
         await addSavedFeeds([
           {
@@ -241,7 +236,14 @@ export function ProfileFeedScreenInner({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, feedInfo, _, savedFeedConfig, updateFeed, addSavedFeeds])
+  }, [
+    playHaptic,
+    feedInfo,
+    _,
+    savedFeedConfig,
+    updateSavedFeeds,
+    addSavedFeeds,
+  ])
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)

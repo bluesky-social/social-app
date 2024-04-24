@@ -93,22 +93,21 @@ export const BSKY_FEED_OWNER_DIDS = [
 
 export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+export const DISCOVER_SAVED_FEED = {
+  type: 'feed',
+  value: DISCOVER_FEED_URI,
+  pinned: true,
+}
+export const TIMELINE_SAVED_FEED = {
+  type: 'timeline',
+  value: 'home',
+  pinned: true,
+}
 
 export const RECOMMENDED_SAVED_FEEDS: Pick<
   AppBskyActorDefs.SavedFeed,
   'type' | 'value' | 'pinned'
->[] = [
-  {
-    type: 'feed',
-    value: DISCOVER_FEED_URI,
-    pinned: true,
-  },
-  {
-    type: 'timeline',
-    value: 'home',
-    pinned: true,
-  },
-]
+>[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
 

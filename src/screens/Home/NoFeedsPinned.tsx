@@ -1,10 +1,12 @@
 import React from 'react'
 import {useWindowDimensions, View} from 'react-native'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
-import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
+import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
@@ -14,6 +16,7 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
+// duplicated from FeedsPage
 export function useHeaderOffset() {
   const {isDesktop, isTablet} = useWebMediaQueries()
   const {fontScale} = useWindowDimensions()
@@ -27,14 +30,51 @@ export function useHeaderOffset() {
   return navBarHeight + tabBarPad + tabBarText
 }
 
-export function NoFeedsPinned() {
+export function NoFeedsPinned({
+  preferences,
+}: {
+  preferences: UsePreferencesQueryResponse
+}) {
   const {_} = useLingui()
   const headerOffset = useHeaderOffset()
-  const {isPending, mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
+  const {isPending, mutateAsync: overwriteSavedFeeds} =
+    useOverwriteSavedFeedsMutation()
 
   const addRecommendedFeeds = React.useCallback(async () => {
-    await addSavedFeeds(RECOMMENDED_SAVED_FEEDS)
-  }, [addSavedFeeds])
+    let skippedTimeline = false
+    let skippedDiscover = false
+    let remainingSavedFeeds = []
+
+    // remove first instance of both timeline and discover, since we're going to overwrite them
+    for (const savedFeed of preferences.savedFeeds) {
+      if (savedFeed.type === 'timeline' && !skippedTimeline) {
+        skippedTimeline = true
+      } else if (
+        savedFeed.value === DISCOVER_SAVED_FEED.value &&
+        !skippedDiscover
+      ) {
+        skippedDiscover = true
+      } else {
+        remainingSavedFeeds.push(savedFeed)
+      }
+    }
+
+    const toSave = [
+      {
+        ...DISCOVER_SAVED_FEED,
+        pinned: true,
+        id: TID.nextStr(),
+      },
+      {
+        ...TIMELINE_SAVED_FEED,
+        pinned: true,
+        id: TID.nextStr(),
+      },
+      ...remainingSavedFeeds,
+    ]
+
+    await overwriteSavedFeeds(toSave)
+  }, [overwriteSavedFeeds, preferences.savedFeeds])
 
   return (
     <CenteredView sideBorders style={[a.h_full_vh]}>

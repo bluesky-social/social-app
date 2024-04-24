@@ -46,7 +46,7 @@ import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
-import {NoSavedFeeds} from '#/screens/Feeds/NoSavedFeeds'
+import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {IconCircle} from '#/components/IconCircle'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
@@ -510,7 +510,7 @@ export function FeedsScreen(_props: Props) {
                 borderBottomWidth: 1,
               },
             ]}>
-            <NoSavedFeeds />
+            <NoSavedFeedsOfAnyType />
           </View>
         )
       } else if (item.type === 'savedFeed') {

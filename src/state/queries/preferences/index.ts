@@ -218,12 +218,12 @@ export function useSetThreadViewPreferencesMutation() {
   })
 }
 
-export function useSetSaveFeedsMutation() {
+export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
     mutationFn: async savedFeeds => {
-      await getAgent().setSavedFeedsV2(savedFeeds)
+      await getAgent().overwriteSavedFeeds(savedFeeds)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -266,12 +266,12 @@ export function useRemoveFeedMutation() {
   })
 }
 
-export function useUpdateSavedFeedMutation() {
+export function useUpdateSavedFeedsMutation() {
   const queryClient = useQueryClient()
 
-  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed>({
-    mutationFn: async feed => {
-      await getAgent().updateSavedFeed(feed)
+  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+    mutationFn: async feeds => {
+      await getAgent().updateSavedFeeds(feeds)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
