@@ -692,7 +692,7 @@ export function SettingsScreen({}: Props) {
         )}
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Two-factor authentication</Trans>
+          <Trans>Two-factor authentication (2FA)</Trans>
         </Text>
         <View style={[pal.view, styles.toggleCard]}>
           <Email2FAToggle />
