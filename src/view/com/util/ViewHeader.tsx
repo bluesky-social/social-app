@@ -12,7 +12,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
 
@@ -195,17 +195,19 @@ function Container({
   hideOnScroll: boolean
   showBorder?: boolean
 }) {
-  const pal = usePalette('default')
   const {headerMinimalShellTransform} = useMinimalShellMode()
+  const {gtMobile} = useBreakpoints()
+  const t = useTheme()
 
   if (!hideOnScroll) {
     return (
       <View
         style={[
           styles.header,
-          pal.view,
-          pal.border,
-          showBorder && styles.border,
+          gtMobile && styles.tabletHeader,
+          t.atoms.bg,
+          t.atoms.border_contrast_medium,
+          showBorder && a.border_b,
         ]}>
         {children}
       </View>
@@ -216,10 +218,11 @@ function Container({
       style={[
         styles.header,
         styles.headerFloating,
-        pal.view,
-        pal.border,
+        gtMobile && styles.tabletHeader,
+        t.atoms.bg,
+        t.atoms.border_contrast_medium,
         headerMinimalShellTransform,
-        showBorder && styles.border,
+        showBorder && a.border_b,
       ]}>
       {children}
     </Animated.View>
@@ -244,8 +247,13 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  border: {
-    borderBottomWidth: 1,
+  tabletHeader: {
+    width: '100%',
+    maxWidth: 600,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
   titleContainer: {
     marginLeft: 'auto',
