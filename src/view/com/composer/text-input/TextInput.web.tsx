@@ -185,7 +185,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
-        const newText = editorJsonToText(json)
+        const newText = editorJsonToText(json).trimEnd() // Otherwise we have \n\n at the end
         const mayBePaste = window.event?.type === 'paste'
 
         const newRt = new RichText({text: newText})
