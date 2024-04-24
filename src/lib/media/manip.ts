@@ -205,9 +205,16 @@ async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
 }
 
 export async function safeDeleteAsync(path: string) {
+  // Normalize is necessary for Android, otherwise it doesn't delete.
+  const normalizedPath = normalizePath(path)
   try {
-    // Normalize is necessary for Android, otherwise it doesn't delete.
-    await deleteAsync(normalizePath(path))
+    await Promise.allSettled([
+      deleteAsync(normalizedPath, {idempotent: true}),
+      // HACK: Try this one too. Might exist due to api-polyfill hack.
+      deleteAsync(normalizedPath.replace(/\.jpe?g$/, '.bin'), {
+        idempotent: true,
+      }),
+    ])
   } catch (e) {
     console.error('Failed to delete file', e)
   }
