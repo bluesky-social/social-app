@@ -116,11 +116,7 @@ export async function shareImageModal({uri}: {uri: string}) {
     })
   }
 
-  try {
-    deleteAsync(imagePath)
-  } catch (e) {
-    console.error(e)
-  }
+  safeDeleteAsync(imagePath)
 }
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
@@ -137,12 +133,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
 
   // save
   await MediaLibrary.createAssetAsync(imagePath)
-
-  try {
-    deleteAsync(imagePath)
-  } catch (e) {
-    console.error(e)
-  }
+  safeDeleteAsync(imagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
@@ -190,11 +181,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
         height: resizeRes.height,
       }
     } else {
-      try {
-        deleteAsync(resizeRes.path)
-      } catch (e) {
-        console.error(e)
-      }
+      safeDeleteAsync(resizeRes.path)
     }
   }
   throw new Error(
@@ -213,19 +200,21 @@ async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
   // cacheDirectory will not ever be null on native, but it could be on web. This function only ever gets called on
   // native so we assert as a string.
   const destinationPath = joinPath(cacheDirectory as string, filename + ext)
-
   await copyAsync({
     from: path,
     to: destinationPath,
   })
+  safeDeleteAsync(path)
+  return normalizePath(destinationPath)
+}
 
+async function safeDeleteAsync(path: string) {
   try {
-    deleteAsync(path)
+    // Normalize is necessary for Android, otherwise it doesn't delete.
+    await deleteAsync(normalizePath(path))
   } catch (e) {
     console.error('Failed to delete file', e)
   }
-
-  return normalizePath(destinationPath)
 }
 
 function joinPath(a: string, b: string) {
