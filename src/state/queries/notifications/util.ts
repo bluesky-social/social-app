@@ -1,18 +1,19 @@
 import {
-  AppBskyNotificationListNotifications,
-  ModerationOpts,
-  moderateNotification,
+  AppBskyEmbedRecord,
   AppBskyFeedDefs,
+  AppBskyFeedLike,
   AppBskyFeedPost,
   AppBskyFeedRepost,
-  AppBskyFeedLike,
-  AppBskyEmbedRecord,
+  AppBskyNotificationListNotifications,
+  BskyAgent,
+  moderateNotification,
+  ModerationOpts,
 } from '@atproto/api'
-import chunk from 'lodash.chunk'
 import {QueryClient} from '@tanstack/react-query'
-import {getAgent} from '../../session'
+import chunk from 'lodash.chunk'
+
 import {precacheProfile} from '../profile'
-import {NotificationType, FeedNotification, FeedPage} from './types'
+import {FeedNotification, FeedPage, NotificationType} from './types'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const MS_1HR = 1e3 * 60 * 60
@@ -22,6 +23,7 @@ const MS_2DAY = MS_1HR * 48
 // =
 
 export async function fetchPage({
+  agent,
   cursor,
   limit,
   queryClient,
@@ -29,6 +31,7 @@ export async function fetchPage({
   threadMutes,
   fetchAdditionalData,
 }: {
+  agent: BskyAgent
   cursor: string | undefined
   limit: number
   queryClient: QueryClient
@@ -36,7 +39,7 @@ export async function fetchPage({
   threadMutes: string[]
   fetchAdditionalData: boolean
 }): Promise<{page: FeedPage; indexedAt: string | undefined}> {
-  const res = await getAgent().listNotifications({
+  const res = await agent.listNotifications({
     limit,
     cursor,
   })
@@ -53,7 +56,7 @@ export async function fetchPage({
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
   if (fetchAdditionalData) {
-    const subjects = await fetchSubjects(notifsGrouped)
+    const subjects = await fetchSubjects(agent, notifsGrouped)
     for (const notif of notifsGrouped) {
       if (notif.subjectUri) {
         notif.subject = subjects.get(notif.subjectUri)
@@ -137,6 +140,7 @@ export function groupNotifications(
 }
 
 async function fetchSubjects(
+  agent: BskyAgent,
   groupedNotifs: FeedNotification[],
 ): Promise<Map<string, AppBskyFeedDefs.PostView>> {
   const uris = new Set<string>()
@@ -148,9 +152,7 @@ async function fetchSubjects(
   const uriChunks = chunk(Array.from(uris), 25)
   const postsChunks = await Promise.all(
     uriChunks.map(uris =>
-      getAgent()
-        .app.bsky.feed.getPosts({uris})
-        .then(res => res.data.posts),
+      agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
     ),
   )
   const map = new Map<string, AppBskyFeedDefs.PostView>()
