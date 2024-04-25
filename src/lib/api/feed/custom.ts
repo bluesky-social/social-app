@@ -2,18 +2,30 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetFeed as GetCustomFeed,
   AtpAgent,
+  BskyAgent,
 } from '@atproto/api'
 
 import {getContentLanguages} from '#/state/preferences/languages'
-import {getAgent} from '#/state/session'
 import {FeedAPI, FeedAPIResponse} from './types'
 
 export class CustomFeedAPI implements FeedAPI {
-  constructor(public params: GetCustomFeed.QueryParams) {}
+  agent: BskyAgent
+  params: GetCustomFeed.QueryParams
+
+  constructor({
+    agent,
+    feedParams,
+  }: {
+    agent: BskyAgent
+    feedParams: GetCustomFeed.QueryParams
+  }) {
+    this.agent = agent
+    this.params = feedParams
+  }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await getAgent().app.bsky.feed.getFeed(
+    const res = await this.agent.app.bsky.feed.getFeed(
       {
         ...this.params,
         limit: 1,
@@ -31,15 +43,19 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-    const agent = getAgent()
-    const res = agent.session
-      ? await getAgent().app.bsky.feed.getFeed(
+
+    const res = this.agent.session
+      ? await this.agent.app.bsky.feed.getFeed(
           {
             ...this.params,
             cursor,
             limit,
           },
-          {headers: {'Accept-Language': contentLangs}},
+          {
+            headers: {
+              'Accept-Language': contentLangs,
+            },
+          },
         )
       : await loggedOutFetch({...this.params, cursor, limit})
     if (res.success) {

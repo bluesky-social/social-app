@@ -379,7 +379,7 @@ function createApi({
   feedParams,
   feedTuners,
 }: {
-  agent?: BskyAgent
+  agent: BskyAgent
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
@@ -398,10 +398,10 @@ function createApi({
     return new FollowingFeedAPI({agent})
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({agent, actor, filter})
+    return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
     const [_, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({agent, actor})
+    return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
@@ -410,7 +410,7 @@ function createApi({
     })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
-    return new ListFeedAPI({agent, list})
+    return new ListFeedAPI({agent, feedParams: {list}})
   } else {
     // shouldnt happen
     return new FollowingFeedAPI({agent})

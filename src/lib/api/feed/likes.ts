@@ -1,15 +1,28 @@
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetActorLikes as GetActorLikes,
+  BskyAgent,
 } from '@atproto/api'
+
 import {FeedAPI, FeedAPIResponse} from './types'
-import {getAgent} from '#/state/session'
 
 export class LikesFeedAPI implements FeedAPI {
-  constructor(public params: GetActorLikes.QueryParams) {}
+  agent: BskyAgent
+  params: GetActorLikes.QueryParams
+
+  constructor({
+    agent,
+    feedParams,
+  }: {
+    agent: BskyAgent
+    feedParams: GetActorLikes.QueryParams
+  }) {
+    this.agent = agent
+    this.params = feedParams
+  }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await getAgent().getActorLikes({
+    const res = await this.agent.getActorLikes({
       ...this.params,
       limit: 1,
     })
@@ -23,7 +36,7 @@ export class LikesFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await getAgent().getActorLikes({
+    const res = await this.agent.getActorLikes({
       ...this.params,
       cursor,
       limit,
