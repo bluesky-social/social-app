@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-23 13:29+0900\n"
+"PO-Revision-Date: 2024-04-25 10:31+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3440,6 +3440,10 @@ msgstr "イメージプレビューを削除"
 msgid "Remove mute word from your list"
 msgstr "リストからミュートワードを削除"
 
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:208
+msgid "Remove quote"
+msgstr "引用を削除"
+
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
 msgstr "リポストを削除"
@@ -3464,6 +3468,10 @@ msgstr "あなたのフィードから削除しました"
 #: src/view/com/composer/ExternalEmbed.tsx:83
 msgid "Removes default thumbnail from {0}"
 msgstr "{0}からデフォルトのサムネイルを削除"
+
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:209
+msgid "Removes quoted post"
+msgstr "引用を削除する"
 
 #: src/view/screens/Profile.tsx:195
 msgid "Replies"
