@@ -135,11 +135,14 @@ export function usePostFeedQuery(
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-
       const {api, cursor} = pageParam
         ? pageParam
         : {
-            api: createApi(feedDesc, params || {}, feedTuners),
+            api: createApi({
+              feedDesc,
+              feedParams: params || {},
+              feedTuners,
+            }),
             cursor: undefined,
           }
 
@@ -365,34 +368,45 @@ export async function pollLatest(page: FeedPage | undefined) {
   return false
 }
 
-function createApi(
-  feedDesc: FeedDescriptor,
-  params: FeedParams,
-  feedTuners: FeedTunerFn[],
-) {
+function createApi({
+  feedDesc,
+  feedParams,
+  feedTuners,
+}: {
+  feedDesc: FeedDescriptor
+  feedParams: FeedParams
+  feedTuners: FeedTunerFn[]
+}) {
   if (feedDesc === 'home') {
-    if (params.mergeFeedEnabled) {
-      return new MergeFeedAPI(params, feedTuners)
+    if (feedParams.mergeFeedEnabled) {
+      return new MergeFeedAPI({
+        getAgent,
+        feedParams,
+        feedTuners,
+      })
     } else {
-      return new HomeFeedAPI()
+      return new HomeFeedAPI({getAgent})
     }
   } else if (feedDesc === 'following') {
-    return new FollowingFeedAPI()
+    return new FollowingFeedAPI({getAgent})
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({actor, filter})
+    return new AuthorFeedAPI({getAgent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
     const [_, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({actor})
+    return new LikesFeedAPI({getAgent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
-    return new CustomFeedAPI({feed})
+    return new CustomFeedAPI({
+      getAgent,
+      feedParams: {feed},
+    })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
-    return new ListFeedAPI({list})
+    return new ListFeedAPI({getAgent, feedParams: {list}})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI()
+    return new FollowingFeedAPI({getAgent})
   }
 }
 
