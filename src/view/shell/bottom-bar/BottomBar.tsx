@@ -39,9 +39,16 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {styles} from './BottomBarStyles'
 
-type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
+type TabOptions =
+  | 'Home'
+  | 'Search'
+  | 'Notifications'
+  | 'MyProfile'
+  | 'Feeds'
+  | 'Messages'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
@@ -50,8 +57,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {footerHeight} = useShellLayout()
-  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
-    useNavigationTabState()
+  const {
+    isAtHome,
+    isAtSearch,
+    isAtFeeds,
+    isAtNotifications,
+    isAtMyProfile,
+    isAtMessages,
+  } = useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -102,6 +115,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
+  }, [onPressTab])
+
+  const onPressMessages = React.useCallback(() => {
+    onPressTab('Messages')
   }, [onPressTab])
 
   const onLongPressProfile = React.useCallback(() => {
@@ -219,6 +236,26 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   ? ''
                   : `${numUnreadNotifications} unread`
               }
+            />
+            <Btn
+              testID="bottomBarMessagesBtn"
+              icon={
+                isAtMessages ? (
+                  <Envelope
+                    size="lg"
+                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  />
+                ) : (
+                  <Envelope
+                    size="lg"
+                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  />
+                )
+              }
+              onPress={onPressMessages}
+              accessibilityRole="tab"
+              accessibilityLabel={_(msg`Messages`)}
+              accessibilityHint=""
             />
             <Btn
               testID="bottomBarProfileBtn"
