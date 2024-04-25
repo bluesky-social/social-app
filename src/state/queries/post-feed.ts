@@ -4,6 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  BskyAgent,
   ModerationDecision,
 } from '@atproto/api'
 import {
@@ -19,7 +20,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
@@ -104,6 +105,7 @@ export function usePostFeedQuery(
   const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
+  const {getAgent} = useAgent()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
@@ -142,6 +144,7 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
+              getAgent,
             }),
             cursor: undefined,
           }
@@ -372,10 +375,12 @@ function createApi({
   feedDesc,
   feedParams,
   feedTuners,
+  getAgent,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
+  getAgent: () => BskyAgent
 }) {
   if (feedDesc === 'home') {
     if (feedParams.mergeFeedEnabled) {

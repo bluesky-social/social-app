@@ -6,7 +6,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
@@ -25,6 +25,7 @@ export function useSearchPostsQuery({
   sort?: 'top' | 'latest'
   enabled?: boolean
 }) {
+  const {getAgent} = useAgent()
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,
