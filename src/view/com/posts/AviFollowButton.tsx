@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {Alert, Pressable, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -29,6 +29,7 @@ export function AviFollowButton({
   })
   const gate = useGate()
   const self = useSession()
+  const [followed, setFollowed] = useState<string | null>(null)
 
   const name = profileShadow.displayName || profileShadow.handle
 
@@ -40,10 +41,13 @@ export function AviFollowButton({
       },
       {
         text: _(msg`Follow`),
-        onPress: follow,
+        onPress: () => {
+          follow()
+          setFollowed(profileShadow.did)
+        },
       },
     ])
-  }, [follow, name, _])
+  }, [follow, name, _, profileShadow.did])
 
   if (!gate('show_avi_follow_button')) {
     return children
@@ -51,6 +55,7 @@ export function AviFollowButton({
 
   if (
     profileShadow.viewer?.following ||
+    profileShadow.did === followed ||
     profileShadow.did === self.currentAccount?.did
   ) {
     return children
