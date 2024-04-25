@@ -97,9 +97,9 @@ function ListImpl<ItemT>(
       scrollEventThrottle={1}
       style={style}
       ref={ref}
-      showsVerticalScrollIndicator={
-        isWeb || !gate('hide_vertical_scroll_indicators')
-      }
+      // showsVerticalScrollIndicator={
+      //   isWeb || !gate('hide_vertical_scroll_indicators')
+      // }
     />
   )
 }

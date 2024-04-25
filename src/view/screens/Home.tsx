@@ -1,5 +1,11 @@
 import React from 'react'
-import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  AppState,
+  Button,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -26,28 +32,71 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
+import {CenteredView} from 'view/com/util/Views'
+import {ClipClopList} from '#/components/ClipClopTest/ClipClopList'
+import {
+  ClipClop,
+  placeholderClops,
+} from '#/components/ClipClopTest/RandomClipClops'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
+
+/**
+ * Notes:
+ *
+ * - If we are scrolled to the bottom of the page, then the items get added correctly. The screen stays at the bottom
+ *   as we'd expect
+ *
+ */
+
 export function HomeScreen(props: Props) {
-  const {data: preferences} = usePreferencesQuery()
-  const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
-    usePinnedFeedsInfos()
-  if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
-    return (
-      <HomeScreenReady
-        {...props}
-        preferences={preferences}
-        pinnedFeedInfos={pinnedFeedInfos}
-      />
-    )
-  } else {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
+  const lastMessageId = React.useRef(0)
+  const [clipClops, setClipClops] = React.useState<ClipClop[]>([])
+
+  const addMessage = () => {
+    lastMessageId.current += 1
+
+    setClipClops(prev => {
+      return [
+        ...prev,
+
+        {
+          id: lastMessageId.current.toString(),
+          text: `${
+            placeholderClops[lastMessageId.current % placeholderClops.length]
+          }`,
+        },
+      ]
+    })
   }
+
+  const addMessages = (count: number) => {
+    for (let i = 0; i < count; i++) {
+      addMessage()
+    }
+  }
+
+  return (
+    <CenteredView style={{flex: 1, marginBottom: 100}}>
+      <View style={{flexDirection: 'row'}}>
+        <Button
+          title="Add One"
+          onPress={() => {
+            addMessages(1)
+          }}
+        />
+        <Button
+          title="Add Five"
+          onPress={() => {
+            addMessages(5)
+          }}
+        />
+        <Button title="Reset" onPress={() => setClipClops([])} />
+      </View>
+      <ClipClopList clipClops={clipClops} />
+    </CenteredView>
+  )
 }
 
 function HomeScreenReady({
