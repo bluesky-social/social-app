@@ -6,6 +6,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {ClopsList} from '#/screens/Messages/Conversation/ClopsList'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -21,6 +22,7 @@ export function MessagesConversationScreen({route}: Props) {
         showOnDesktop
         showBorder
       />
+      <ClopsList />
     </View>
   )
 }
