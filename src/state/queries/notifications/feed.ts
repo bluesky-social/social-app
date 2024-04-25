@@ -72,7 +72,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       if (!page) {
         page = (
           await fetchPage({
-            agent: getAgent(),
+            getAgent,
             limit: PAGE_SIZE,
             cursor: pageParam,
             queryClient,
