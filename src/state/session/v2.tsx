@@ -28,6 +28,7 @@ import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 
 export type {CurrentAccount, SessionAccount} from '#/state/session/types'
+export {isSessionDeactivated} from '#/state/session/util'
 
 /**
  * Only used for the initial agent values in state and context. Replaced
