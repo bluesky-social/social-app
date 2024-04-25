@@ -51,7 +51,11 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
  */
 
 export function HomeScreen(props: Props) {
-  return <ClipClopList />
+  return (
+    <CenteredView style={{flex: 1}}>
+      <ClipClopList />
+    </CenteredView>
+  )
 }
 
 function HomeScreenReady({
