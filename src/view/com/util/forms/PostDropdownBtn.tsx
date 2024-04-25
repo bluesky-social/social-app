@@ -22,8 +22,9 @@ import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 import {usePostDeleteMutation} from '#/state/queries/post'
-import {useSession} from '#/state/session'
+import {getAgent, useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -178,6 +179,50 @@ let PostDropdownBtn = ({
     )
   }, [postAuthor])
 
+  const {data: mutedAccountsData} = useMyMutedAccountsQuery()
+
+  const isAuthorMuted = mutedAccountsData?.pages.some(page =>
+    page.mutes.some(mute => mute.did === postAuthor.did),
+  )
+
+  const onMuteAccount = async () => {
+    try {
+      const agent = getAgent()
+      if (isAuthorMuted) {
+        await agent.unmute(postAuthor.did)
+        Toast.show(`${postAuthor.handle} has been unmuted`)
+      } else {
+        await agent.mute(postAuthor.did)
+        hidePost({uri: postUri})
+        Toast.show(`${postAuthor.handle} has been muted`)
+      }
+    } catch (e) {
+      logger.error('Error toggling mute state for account:', {error: e})
+      Toast.show('Error toggling mute state for account')
+    }
+  }
+
+  const onBlockAccount = React.useCallback(async () => {
+    try {
+      const agent = getAgent()
+      await agent.app.bsky.graph.block.create(
+        {repo: currentAccount?.did},
+        {subject: postAuthor.did, createdAt: new Date().toISOString()},
+      )
+      hidePost({uri: postUri})
+      Toast.show(`${postAuthor.handle} has been blocked`)
+    } catch (e) {
+      logger.error('Error blocking account:', {error: e})
+      Toast.show('Error blocking account')
+    }
+  }, [
+    postAuthor.handle,
+    postAuthor.did,
+    currentAccount?.did,
+    postUri,
+    hidePost,
+  ])
+
   const onSharePost = React.useCallback(() => {
     const url = toShareUrl(href)
     shareUrl(url)
@@ -300,6 +345,44 @@ let PostDropdownBtn = ({
                     <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
+                )}
+              </Menu.Group>
+            </>
+          )}
+
+          {hasSession && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                {!isAuthor && (
+                  <>
+                    <Menu.Item
+                      testID="postDropdownMuteAccountBtn"
+                      label={
+                        isAuthorMuted
+                          ? _(msg`Unmute account`)
+                          : _(msg`Mute account`)
+                      }
+                      onPress={onMuteAccount}>
+                      <Menu.ItemText>
+                        {isAuthorMuted
+                          ? _(msg`Unmute account`)
+                          : _(msg`Mute account`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={isAuthorMuted ? Unmute : Mute}
+                        position="right"
+                      />
+                    </Menu.Item>
+
+                    <Menu.Item
+                      testID="postDropdownBlockAccountBtn"
+                      label={_(msg`Block account`)}
+                      onPress={onBlockAccount}>
+                      <Menu.ItemText>{_(msg`Block account`)}</Menu.ItemText>
+                      <Menu.ItemIcon icon={Warning} position="right" />
+                    </Menu.Item>
+                  </>
                 )}
               </Menu.Group>
             </>
