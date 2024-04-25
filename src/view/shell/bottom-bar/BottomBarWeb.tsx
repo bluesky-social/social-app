@@ -1,37 +1,39 @@
 import React from 'react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useNavigationState} from '@react-navigation/native'
+import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
-import {styles} from './BottomBarStyles'
-import {clamp} from 'lib/numbers'
+import {useNavigationState} from '@react-navigation/native'
+
+import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
 import {
   BellIcon,
   BellIconSolid,
+  HashtagIcon,
   HomeIcon,
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  HashtagIcon,
   UserIcon,
   UserIconSolid,
 } from 'lib/icons'
-import {Link} from 'view/com/util/Link'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {clamp} from 'lib/numbers'
+import {getCurrentRoute, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
+import {s} from 'lib/styles'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
-import {s} from 'lib/styles'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {Link} from 'view/com/util/Link'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
@@ -113,6 +115,16 @@ export function BottomBarWeb() {
                       size={24}
                       strokeWidth={1.9}
                       style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    />
+                  )
+                }}
+              </NavItem>
+              <NavItem routeName="Messages" href="/messages">
+                {() => {
+                  return (
+                    <Envelope
+                      size="lg"
+                      style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
                     />
                   )
                 }}

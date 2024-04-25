@@ -46,6 +46,7 @@ import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {router} from '../../../routes'
 
 function ProfileCard() {
@@ -345,6 +346,14 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Notifications`)}
+          />
+          <NavItem
+            href="/messages"
+            icon={<Envelope style={pal.text} width={isDesktop ? 26 : 30} />}
+            iconFilled={
+              <Envelope style={pal.text} width={isDesktop ? 26 : 30} />
+            }
+            label={_(msg`Messages`)}
           />
           <NavItem
             href="/feeds"
