@@ -5,24 +5,23 @@ import {
 } from '@atproto/api'
 
 import {getContentLanguages} from '#/state/preferences/languages'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 import {FeedAPI, FeedAPIResponse} from './types'
-import {aggregateUserInterests, isBlueskyOwnedFeed} from './utils'
+import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
   params: GetCustomFeed.QueryParams
-  preferences?: UsePreferencesQueryResponse
+  userInterests?: string
 
   constructor({
     feedParams,
-    preferences,
+    userInterests,
   }: {
     feedParams: GetCustomFeed.QueryParams
-    preferences?: UsePreferencesQueryResponse
+    userInterests?: string
   }) {
     this.params = feedParams
-    this.preferences = preferences
+    this.userInterests = userInterests
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
@@ -47,7 +46,6 @@ export class CustomFeedAPI implements FeedAPI {
     const contentLangs = getContentLanguages().join(',')
     const agent = getAgent()
     const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
-    const interests = aggregateUserInterests(this.preferences)
 
     const res = agent.session
       ? await getAgent().app.bsky.feed.getFeed(
@@ -58,7 +56,9 @@ export class CustomFeedAPI implements FeedAPI {
           },
           {
             headers: {
-              'X-Bsky-Topics': isBlueskyOwned ? interests : '',
+              ...(isBlueskyOwned
+                ? createBskyTopicsHeader(this.userInterests)
+                : {}),
               'Accept-Language': contentLangs,
             },
           },

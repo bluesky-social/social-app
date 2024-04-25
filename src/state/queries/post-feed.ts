@@ -15,6 +15,7 @@ import {
 } from '@tanstack/react-query'
 
 import {HomeFeedAPI} from '#/lib/api/feed/home'
+import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
@@ -387,15 +388,17 @@ function createApi({
   feedTuners: FeedTunerFn[]
   preferences?: UsePreferencesQueryResponse
 }) {
+  const userInterests = aggregateUserInterests(preferences)
+
   if (feedDesc === 'home') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
         feedParams,
         feedTuners,
-        preferences,
+        userInterests,
       })
     } else {
-      return new HomeFeedAPI({preferences})
+      return new HomeFeedAPI({userInterests})
     }
   } else if (feedDesc === 'following') {
     return new FollowingFeedAPI()
@@ -409,7 +412,7 @@ function createApi({
     const [_, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
       feedParams: {feed},
-      preferences,
+      userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')

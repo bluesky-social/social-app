@@ -3,7 +3,6 @@ import shuffle from 'lodash.shuffle'
 
 import {getContentLanguages} from '#/state/preferences/languages'
 import {FeedParams} from '#/state/queries/post-feed'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 import {bundleAsync} from 'lib/async/bundle'
 import {timeout} from 'lib/async/timeout'
@@ -11,7 +10,7 @@ import {feedUriToHref} from 'lib/strings/url-helpers'
 import {FeedTuner} from '../feed-manip'
 import {FeedTunerFn} from '../feed-manip'
 import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
-import {aggregateUserInterests, isBlueskyOwnedFeed} from './utils'
+import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
@@ -19,7 +18,7 @@ const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 export class MergeFeedAPI implements FeedAPI {
   params: FeedParams
   feedTuners: FeedTunerFn[]
-  preferences?: UsePreferencesQueryResponse
+  userInterests?: string
   following: MergeFeedSource_Following
   customFeeds: MergeFeedSource_Custom[] = []
   feedCursor = 0
@@ -29,15 +28,15 @@ export class MergeFeedAPI implements FeedAPI {
   constructor({
     feedParams,
     feedTuners,
-    preferences,
+    userInterests,
   }: {
     feedParams: FeedParams
     feedTuners: FeedTunerFn[]
-    preferences?: UsePreferencesQueryResponse
+    userInterests?: string
   }) {
     this.params = feedParams
     this.feedTuners = feedTuners
-    this.preferences = preferences
+    this.userInterests = userInterests
     this.following = new MergeFeedSource_Following(this.feedTuners)
   }
 
@@ -54,7 +53,7 @@ export class MergeFeedAPI implements FeedAPI {
             new MergeFeedSource_Custom({
               feedUri,
               feedTuners: this.feedTuners,
-              preferences: this.preferences,
+              userInterests: this.userInterests,
             }),
         ),
       )
@@ -239,20 +238,20 @@ class MergeFeedSource_Following extends MergeFeedSource {
 class MergeFeedSource_Custom extends MergeFeedSource {
   minDate: Date
   feedUri: string
-  preferences?: UsePreferencesQueryResponse
+  userInterests?: string
 
   constructor({
     feedUri,
     feedTuners,
-    preferences,
+    userInterests,
   }: {
     feedUri: string
     feedTuners: FeedTunerFn[]
-    preferences?: UsePreferencesQueryResponse
+    userInterests?: string
   }) {
     super(feedTuners)
     this.feedUri = feedUri
-    this.preferences = preferences
+    this.userInterests = userInterests
     this.sourceInfo = {
       $type: 'reasonFeedSource',
       uri: feedUri,
@@ -268,7 +267,6 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     try {
       const contentLangs = getContentLanguages().join(',')
       const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri)
-      const interests = aggregateUserInterests(this.preferences)
       const res = await getAgent().app.bsky.feed.getFeed(
         {
           cursor,
@@ -277,7 +275,9 @@ class MergeFeedSource_Custom extends MergeFeedSource {
         },
         {
           headers: {
-            'X-Bsky-Topics': isBlueskyOwned ? interests : '',
+            ...(isBlueskyOwned
+              ? createBskyTopicsHeader(this.userInterests)
+              : {}),
             'Accept-Language': contentLangs,
           },
         },

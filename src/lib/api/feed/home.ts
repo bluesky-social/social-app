@@ -1,7 +1,6 @@
 import {AppBskyFeedDefs} from '@atproto/api'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {CustomFeedAPI} from './custom'
 import {FollowingFeedAPI} from './following'
 import {FeedAPI, FeedAPIResponse} from './types'
@@ -32,14 +31,14 @@ export class HomeFeedAPI implements FeedAPI {
   discover: CustomFeedAPI
   usingDiscover = false
   itemCursor = 0
-  preferences?: UsePreferencesQueryResponse
+  userInterests?: string
 
-  constructor({preferences}: {preferences?: UsePreferencesQueryResponse}) {
-    this.preferences = preferences
+  constructor({userInterests}: {userInterests?: string}) {
+    this.userInterests = userInterests
     this.following = new FollowingFeedAPI()
     this.discover = new CustomFeedAPI({
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
-      preferences,
+      userInterests,
     })
   }
 
@@ -47,7 +46,7 @@ export class HomeFeedAPI implements FeedAPI {
     this.following = new FollowingFeedAPI()
     this.discover = new CustomFeedAPI({
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
-      preferences: this.preferences,
+      userInterests: this.userInterests,
     })
     this.usingDiscover = false
     this.itemCursor = 0
