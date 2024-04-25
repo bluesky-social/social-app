@@ -57,6 +57,7 @@ export function StepFinished() {
     try {
       await Promise.all([
         bulkWriteFollows(
+          getAgent,
           suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
         ),
         // these must be serial
