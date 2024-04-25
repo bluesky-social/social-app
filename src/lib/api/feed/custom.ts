@@ -9,23 +9,23 @@ import {getContentLanguages} from '#/state/preferences/languages'
 import {FeedAPI, FeedAPIResponse} from './types'
 
 export class CustomFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  getAgent: () => BskyAgent
   params: GetCustomFeed.QueryParams
 
   constructor({
-    agent,
+    getAgent,
     feedParams,
   }: {
-    agent: BskyAgent
+    getAgent: () => BskyAgent
     feedParams: GetCustomFeed.QueryParams
   }) {
-    this.agent = agent
+    this.getAgent = getAgent
     this.params = feedParams
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await this.agent.app.bsky.feed.getFeed(
+    const res = await this.getAgent().app.bsky.feed.getFeed(
       {
         ...this.params,
         limit: 1,
@@ -43,9 +43,9 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-
-    const res = this.agent.session
-      ? await this.agent.app.bsky.feed.getFeed(
+    const agent = this.getAgent()
+    const res = agent.session
+      ? await this.getAgent().app.bsky.feed.getFeed(
           {
             ...this.params,
             cursor,

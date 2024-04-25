@@ -27,25 +27,25 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 }
 
 export class HomeFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  getAgent: () => BskyAgent
   following: FollowingFeedAPI
   discover: CustomFeedAPI
   usingDiscover = false
   itemCursor = 0
 
-  constructor({agent}: {agent: BskyAgent}) {
-    this.agent = agent
-    this.following = new FollowingFeedAPI({agent})
+  constructor({getAgent}: {getAgent: () => BskyAgent}) {
+    this.getAgent = getAgent
+    this.following = new FollowingFeedAPI({getAgent})
     this.discover = new CustomFeedAPI({
-      agent,
+      getAgent,
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
     })
   }
 
   reset() {
-    this.following = new FollowingFeedAPI({agent: this.agent})
+    this.following = new FollowingFeedAPI({getAgent: this.getAgent})
     this.discover = new CustomFeedAPI({
-      agent: this.agent,
+      getAgent: this.getAgent,
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
     })
     this.usingDiscover = false
