@@ -43,18 +43,6 @@ msgstr "<0>{followers} </0><1>팔로워</1>"
 msgid "<0>{following} </0><1>following</1>"
 msgstr "<0>{following} </0><1>팔로우 중</1>"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:31
-#~ msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-#~ msgstr "<1>추천 피드</1><0>선택하기</0>"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:38
-#~ msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-#~ msgstr "<1>추천 사용자</1><0>팔로우하기</0>"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
-#~ msgid "<0>Welcome to</0><1>Bluesky</1>"
-#~ msgstr "<1>Bluesky</1><0>에 오신 것을 환영합니다</0>"
-
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
 msgstr "⚠잘못된 핸들"
@@ -191,10 +179,6 @@ msgstr "리스트에 추가"
 #: src/view/com/feeds/FeedSourceCard.tsx:234
 msgid "Add to my feeds"
 msgstr "내 피드에 추가"
-
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
-#~ msgid "Added"
-#~ msgstr "추가됨"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
@@ -478,25 +462,6 @@ msgstr "Bluesky"
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
 msgstr "Bluesky는 호스팅 제공자를 선택할 수 있는 개방형 네트워크입니다. 개발자를 위한 사용자 지정 호스팅이 베타 버전으로 제공됩니다."
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
-#~ msgid "Bluesky is flexible."
-#~ msgstr "Bluesky는 유연합니다."
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:69
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:71
-#~ msgid "Bluesky is open."
-#~ msgstr "Bluesky는 열려 있습니다."
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:56
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:58
-#~ msgid "Bluesky is public."
-#~ msgstr "Bluesky는 공개적입니다."
-
-#: src/components/dialogs/GifSelect.tsx:314
-#~ msgid "Bluesky uses GIPHY to provide the GIF selector feature."
-#~ msgstr "Bluesky는 GIPHY를 사용하여 GIF를 선택할 수 있는 기능을 제공합니다."
-
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "로그아웃한 사용자에게 내 프로필과 게시물을 표시하지 않습니다. 다른 앱에서는 이 설정을 따르지 않을 수 있습니다. 내 계정을 비공개로 전환하지는 않습니다."
@@ -520,10 +485,6 @@ msgstr "비즈니스"
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
 msgstr "— 님이 만듦"
-
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
-#~ msgid "by {0}"
-#~ msgstr "{0} 님이 만듦"
 
 #: src/components/LabelingServiceCard/index.tsx:57
 msgid "By {0}"
@@ -677,11 +638,6 @@ msgstr "서비스 선택"
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
-#~ msgid "Choose the algorithms that power your experience with custom feeds."
-#~ msgstr "맞춤 피드를 통해 사용자 경험을 강화하는 알고리즘을 선택하세요."
-
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 msgid "Choose your main feeds"
 msgstr "기본 피드 선택"
@@ -726,10 +682,6 @@ msgstr "이곳을 클릭"
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
 msgstr "이곳을 클릭하여 {tag}의 태그 메뉴 열기"
-
-#: src/components/RichText.tsx:198
-#~ msgid "Click here to open tag menu for #{tag}"
-#~ msgstr "이곳을 클릭하여 #{tag}의 태그 메뉴 열기"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -1462,11 +1414,6 @@ msgstr "피드에서 성인 콘텐츠 사용"
 msgid "Enable external media"
 msgstr "외부 미디어 사용"
 
-#: src/components/dialogs/GifSelect.tsx:335
-#: src/components/dialogs/GifSelect.tsx:342
-#~ msgid "Enable GIPHY"
-#~ msgstr "GIPHY 사용"
-
 #: src/view/screens/PreferencesExternalEmbeds.tsx:76
 msgid "Enable media players for"
 msgstr "미디어 플레이어를 사용할 외부 사이트"
@@ -1637,11 +1584,6 @@ msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 msgid "Failed to load GIFs"
 msgstr "GIF 불러오기 실패"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
-#~ msgid "Failed to load recommended feeds"
-#~ msgstr "추천 피드를 불러오지 못했습니다"
-
 #: src/view/com/lightbox/Lightbox.tsx:83
 msgid "Failed to save image: {0}"
 msgstr "이미지를 저장하지 못함: {0}"
@@ -1674,10 +1616,6 @@ msgstr "피드백"
 msgid "Feeds"
 msgstr "피드"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
-#~ msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-#~ msgstr "피드는 콘텐츠를 큐레이션하기 위해 사용자에 의해 만들어집니다. 관심 있는 피드를 선택하세요."
-
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "피드는 사용자가 약간의 코딩 전문 지식만으로 구축할 수 있는 맞춤 알고리즘입니다. <0/>에서 자세한 내용을 확인하세요."
@@ -1707,10 +1645,6 @@ msgstr "팔로우할 계정 찾아보기"
 #: src/view/screens/Search/Search.tsx:462
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
-
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
-#~ msgid "Finding similar accounts..."
-#~ msgstr "유사한 계정을 찾는 중…"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:111
 msgid "Fine-tune the content you see on your Following feed."
@@ -1771,10 +1705,6 @@ msgstr "맞팔로우"
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
 msgstr "선택한 계정을 팔로우하고 다음 단계를 계속 진행합니다"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
-#~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-#~ msgstr "시작하려면 사용자 몇 명을 팔로우해 보세요. 누구에게 관심이 있는지를 기반으로 더 많은 사용자를 추천해 드릴 수 있습니다."
 
 #: src/view/com/profile/ProfileCard.tsx:231
 msgid "Followed by {0}"
@@ -1874,10 +1804,6 @@ msgstr "갤러리"
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
 msgstr "시작하기"
-
-#: src/components/dialogs/GifSelect.tsx:320
-#~ msgid "GIPHY may collect information about you and your device. You can find out more in their <0>privacy policy</0>."
-#~ msgstr "GIPHY는 나와 내 기기에 대한 정보를 수집할 수 있습니다. 자세한 내용은 <0>개인정보 처리방침</0>에서 확인할 수 있습니다."
 
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Glaring violations of law or terms of service"
@@ -2699,11 +2625,6 @@ msgstr "내 프로필로 이동합니다"
 msgid "Need to report a copyright violation?"
 msgstr "저작권 위반을 신고해야 하나요?"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
-#~ msgid "Never lose access to your followers and data."
-#~ msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 마세요."
-
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "Never lose access to your followers or data."
 msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 마세요."
@@ -2777,11 +2698,6 @@ msgstr "뉴스"
 msgid "Next"
 msgstr "다음"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-#~ msgctxt "action"
-#~ msgid "Next"
-#~ msgstr "다음"
-
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
 msgstr "다음 이미지"
@@ -2847,10 +2763,6 @@ msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 #: src/components/dialogs/EmbedConsent.tsx:112
 msgid "No thanks"
 msgstr "사용하지 않음"
-
-#: src/components/dialogs/GifSelect.tsx:218
-#~ msgid "No trending GIFs found. There may be an issue with GIPHY."
-#~ msgstr "인기 GIF를 찾을 수 없습니다. GIPHY에 문제가 발생했을 수 있습니다."
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -3197,11 +3109,6 @@ msgstr "앨범에 접근할 수 있는 권한이 필요합니다."
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "앨범에 접근할 수 있는 권한이 거부되었습니다. 시스템 설정에서 활성화하세요."
 
-#: src/components/dialogs/GifSelect.tsx:306
-#: src/components/dialogs/GifSelect.tsx:309
-#~ msgid "Permission to use GIPHY"
-#~ msgstr "GIPHY 사용 허가"
-
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
 msgstr "반려동물"
@@ -3372,10 +3279,6 @@ msgstr "게시물 숨겨짐"
 msgid "Potentially Misleading Link"
 msgstr "오해의 소지가 있는 링크"
 
-#: src/components/dialogs/GifSelect.tsx:175
-#~ msgid "Powered by GIPHY"
-#~ msgstr "GIPHY 제공"
-
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
 msgstr "호스팅 제공자를 변경하려면 누릅니다"
@@ -3481,14 +3384,6 @@ msgstr "비율"
 #: src/view/screens/Search/Search.tsx:796
 msgid "Recent Searches"
 msgstr "최근 검색"
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:117
-#~ msgid "Recommended Feeds"
-#~ msgstr "추천 피드"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:181
-#~ msgid "Recommended Users"
-#~ msgstr "추천 사용자"
 
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:283
@@ -5305,10 +5200,6 @@ msgstr "죄송합니다. 페이지를 찾을 수 없습니다."
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "죄송합니다. 라벨러는 10개까지만 구독할 수 있으며 10개에 도달했습니다."
-
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
-#~ msgid "Welcome to <0>Bluesky</0>"
-#~ msgstr "<0>Bluesky</0>에 오신 것을 환영합니다"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "What are your interests?"
