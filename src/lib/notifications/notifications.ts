@@ -1,12 +1,13 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
+import {BskyAgent} from '@atproto/api'
 import {QueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {getAgent, SessionAccount} from '#/state/session'
+import {SessionAccount} from '#/state/session'
 import {track} from 'lib/analytics/analytics'
 import {devicePlatform, isIOS} from 'platform/detection'
 import {resetToTab} from '../../Navigation'
@@ -18,6 +19,7 @@ const SERVICE_DID = (serviceUrl?: string) =>
     : 'did:web:api.bsky.app'
 
 export async function requestPermissionsAndRegisterToken(
+  agent: BskyAgent,
   account: SessionAccount,
 ) {
   // request notifications permission once the user has logged in
@@ -29,7 +31,7 @@ export async function requestPermissionsAndRegisterToken(
   // register the push token with the server
   const token = await Notifications.getDevicePushTokenAsync()
   try {
-    await getAgent().api.app.bsky.notification.registerPush({
+    await agent.api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
       platform: devicePlatform,
       token: token.data,
@@ -49,6 +51,7 @@ export async function requestPermissionsAndRegisterToken(
 }
 
 export function registerTokenChangeHandler(
+  agent: BskyAgent,
   account: SessionAccount,
 ): () => void {
   // listens for new changes to the push token
@@ -60,7 +63,7 @@ export function registerTokenChangeHandler(
       logger.DebugContext.notifications,
     )
     try {
-      await getAgent().api.app.bsky.notification.registerPush({
+      await agent.api.app.bsky.notification.registerPush({
         serviceDid: SERVICE_DID(account.service),
         platform: devicePlatform,
         token: newToken.data,
