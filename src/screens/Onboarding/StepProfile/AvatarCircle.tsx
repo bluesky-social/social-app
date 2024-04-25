@@ -21,6 +21,7 @@ export function AvatarCircle({
   const {_} = useLingui()
   const t = useTheme()
   const {avatar} = useAvatar()
+  console.log(avatar)
 
   const styles = React.useMemo(
     () => ({

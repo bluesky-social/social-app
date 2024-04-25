@@ -1,6 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
+import {
+  ImagePickerOptions,
+  launchImageLibraryAsync,
+  MediaTypeOptions,
+} from 'expo-image-picker'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,7 +13,7 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {compressIfNeeded} from 'lib/media/manip'
 import {openCropper} from 'lib/media/picker'
-import {openPicker} from 'lib/media/picker.shared'
+import {getDataUriSize} from 'lib/media/util'
 import {isNative, isWeb} from 'platform/detection'
 import {
   DescriptionText,
@@ -28,7 +33,9 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
+import {Text} from '#/components/Typography'
 import {AvatarColor, avatarColors, Emoji, emojiItems} from './types'
 
 export interface Avatar {
@@ -62,6 +69,7 @@ export function StepProfile() {
   const {track} = useAnalytics()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const creatorControl = Dialog.useDialogControl()
+  const [error, setError] = React.useState('')
 
   const {dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
@@ -75,6 +83,40 @@ export function StepProfile() {
   React.useEffect(() => {
     track('OnboardingV2:StepProfile:Start')
   }, [track])
+
+  const openPicker = React.useCallback(
+    async (opts?: ImagePickerOptions) => {
+      const response = await launchImageLibraryAsync({
+        exif: false,
+        mediaTypes: MediaTypeOptions.Images,
+        quality: 1,
+        ...opts,
+      })
+
+      return (response.assets ?? [])
+        .slice(0, 1)
+        .filter(asset => {
+          if (
+            !asset.mimeType?.startsWith('image/') ||
+            (!asset.mimeType?.endsWith('jpeg') &&
+              !asset.mimeType?.endsWith('jpg') &&
+              !asset.mimeType?.endsWith('png'))
+          ) {
+            setError(_(msg`Only .jpg and .png files are supported`))
+            return false
+          }
+          return true
+        })
+        .map(image => ({
+          mime: 'image/jpeg',
+          height: image.height,
+          width: image.width,
+          path: image.uri,
+          size: getDataUriSize(image.uri),
+        }))
+    },
+    [_, setError],
+  )
 
   const onContinue = React.useCallback(async () => {
     let imageUri = avatar?.image?.path
@@ -113,13 +155,14 @@ export function StepProfile() {
       return
     }
 
+    setError('')
+
     const items = await openPicker({
       aspect: [1, 1],
     })
     let image = items[0]
     if (!image) return
 
-    // TODO we need an alf modal for the cropper
     if (!isWeb) {
       image = await openCropper({
         mediaType: 'photo',
@@ -142,7 +185,7 @@ export function StepProfile() {
       image,
       useCreatedAvatar: false,
     }))
-  }, [requestPhotoAccessIfNeeded, setAvatar])
+  }, [requestPhotoAccessIfNeeded, setAvatar, openPicker, setError])
 
   const onSecondaryPress = React.useCallback(() => {
     if (avatar.useCreatedAvatar) {
@@ -179,6 +222,25 @@ export function StepProfile() {
             openLibrary={openLibrary}
             openCreator={creatorControl.open}
           />
+
+          {error && (
+            <View
+              style={[
+                a.flex_row,
+                a.gap_sm,
+                a.align_center,
+                a.mt_xl,
+                a.py_md,
+                a.px_lg,
+                a.border,
+                a.rounded_md,
+                t.atoms.bg_contrast_25,
+                t.atoms.border_contrast_low,
+              ]}>
+              <CircleInfo_Stroke2_Corner0_Rounded size="sm" />
+              <Text style={[a.leading_snug]}>{error}</Text>
+            </View>
+          )}
         </View>
 
         <OnboardingControls.Portal>
