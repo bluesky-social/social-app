@@ -24,11 +24,14 @@ import {readLabelers} from './agent-config'
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
 export function useAgent() {
-  return {
-    getAgent() {
-      return __globalAgent
-    },
-  }
+  return React.useMemo(
+    () => ({
+      getAgent() {
+        return __globalAgent
+      },
+    }),
+    [],
+  )
 }
 
 export type SessionAccount = persisted.PersistedAccount
