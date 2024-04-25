@@ -13,7 +13,7 @@ import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useSession} from '#/state/session'
+import {getAgent, useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
   useIsDrawerSwipeDisabled,
@@ -78,8 +78,11 @@ function ShellInner() {
     // only runs when did changes
     if (currentAccount && currentAccountDid.current !== currentAccount.did) {
       currentAccountDid.current = currentAccount.did
-      notifications.requestPermissionsAndRegisterToken(currentAccount)
-      const unsub = notifications.registerTokenChangeHandler(currentAccount)
+      notifications.requestPermissionsAndRegisterToken(getAgent, currentAccount)
+      const unsub = notifications.registerTokenChangeHandler(
+        getAgent,
+        currentAccount,
+      )
       return unsub
     }
   }, [currentAccount])
