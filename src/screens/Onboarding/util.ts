@@ -1,7 +1,10 @@
-import {AppBskyGraphFollow, AppBskyGraphGetFollows} from '@atproto/api'
+import {
+  AppBskyGraphFollow,
+  AppBskyGraphGetFollows,
+  BskyAgent,
+} from '@atproto/api'
 
 import {until} from '#/lib/async/until'
-import {getAgent} from '#/state/session'
 import {PRIMARY_FEEDS} from './StepAlgoFeeds'
 
 function shuffle(array: any) {
@@ -63,8 +66,8 @@ export function aggregateInterestItems(
   return Array.from(new Set(results)).slice(0, 20)
 }
 
-export async function bulkWriteFollows(dids: string[]) {
-  const session = getAgent().session
+export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
+  const session = agent.session
 
   if (!session) {
     throw new Error(`bulkWriteFollows failed: no session`)
@@ -83,14 +86,15 @@ export async function bulkWriteFollows(dids: string[]) {
     value: r,
   }))
 
-  await getAgent().com.atproto.repo.applyWrites({
+  await agent.com.atproto.repo.applyWrites({
     repo: session.did,
     writes: followWrites,
   })
-  await whenFollowsIndexed(session.did, res => !!res.data.follows.length)
+  await whenFollowsIndexed(agent, session.did, res => !!res.data.follows.length)
 }
 
 async function whenFollowsIndexed(
+  agent: BskyAgent,
   actor: string,
   fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {
@@ -99,7 +103,7 @@ async function whenFollowsIndexed(
     1e3, // 1s delay between tries
     fn,
     () =>
-      getAgent().app.bsky.graph.getFollows({
+      agent.app.bsky.graph.getFollows({
         actor,
         limit: 1,
       }),
