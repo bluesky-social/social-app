@@ -16,6 +16,7 @@ import {
   aggregateUserInterests,
   createBskyTopicsHeader,
 } from '#/lib/api/feed/utils'
+import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {
   useModerationOpts,
@@ -48,13 +49,17 @@ export function useSuggestedFollowsQuery() {
     staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFollowsQueryKey,
     queryFn: async ({pageParam}) => {
+      const contentLangs = getContentLanguages().join(',')
       const res = await getAgent().app.bsky.actor.getSuggestions(
         {
           limit: 25,
           cursor: pageParam,
         },
         {
-          headers: createBskyTopicsHeader(aggregateUserInterests(preferences)),
+          headers: {
+            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            'Accept-Language': contentLangs,
+          },
         },
       )
 
