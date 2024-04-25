@@ -155,7 +155,7 @@ export function useProfileUpdateMutation() {
         return existing
       })
       await whenAppViewReady(
-        getAgent(),
+        getAgent,
         profile.did,
         checkCommitted ||
           (res => {
@@ -518,7 +518,7 @@ export function precacheThreadPostProfiles(
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  getAgent: () => BskyAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {
@@ -526,7 +526,7 @@ async function whenAppViewReady(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.actor.getProfile({actor}),
+    () => getAgent().app.bsky.actor.getProfile({actor}),
   )
 }
 

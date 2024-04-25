@@ -87,7 +87,7 @@ export function useListCreateMutation() {
 
         // wait for the appview to update
         await whenAppViewReady(
-          getAgent(),
+          getAgent,
           res.uri,
           (v: AppBskyGraphGetList.Response) => {
             return typeof v?.data?.list.uri === 'string'
@@ -156,7 +156,7 @@ export function useListMetadataMutation() {
 
       // wait for the appview to update
       await whenAppViewReady(
-        getAgent(),
+        getAgent,
         res.uri,
         (v: AppBskyGraphGetList.Response) => {
           const list = v.data.list
@@ -230,7 +230,7 @@ export function useListDeleteMutation() {
 
       // wait for the appview to update
       await whenAppViewReady(
-        getAgent(),
+        getAgent,
         uri,
         (v: AppBskyGraphGetList.Response) => {
           return !v?.success
@@ -258,7 +258,7 @@ export function useListMuteMutation() {
       }
 
       await whenAppViewReady(
-        getAgent(),
+        getAgent,
         uri,
         (v: AppBskyGraphGetList.Response) => {
           return Boolean(v?.data.list.viewer?.muted) === mute
@@ -284,7 +284,7 @@ export function useListBlockMutation() {
       }
 
       await whenAppViewReady(
-        getAgent(),
+        getAgent,
         uri,
         (v: AppBskyGraphGetList.Response) => {
           return block
@@ -302,7 +302,7 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  getAgent: () => BskyAgent,
   uri: string,
   fn: (res: AppBskyGraphGetList.Response) => boolean,
 ) {
@@ -311,7 +311,7 @@ async function whenAppViewReady(
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.graph.getList({
+      getAgent().app.bsky.graph.getList({
         list: uri,
         limit: 1,
       }),
