@@ -78,12 +78,9 @@ function ShellInner() {
     // only runs when did changes
     if (currentAccount && currentAccountDid.current !== currentAccount.did) {
       currentAccountDid.current = currentAccount.did
-      notifications.requestPermissionsAndRegisterToken(
-        getAgent(),
-        currentAccount,
-      )
+      notifications.requestPermissionsAndRegisterToken(getAgent, currentAccount)
       const unsub = notifications.registerTokenChangeHandler(
-        getAgent(),
+        getAgent,
         currentAccount,
       )
       return unsub

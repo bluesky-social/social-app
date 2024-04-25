@@ -19,7 +19,7 @@ const SERVICE_DID = (serviceUrl?: string) =>
     : 'did:web:api.bsky.app'
 
 export async function requestPermissionsAndRegisterToken(
-  agent: BskyAgent,
+  getAgent: () => BskyAgent,
   account: SessionAccount,
 ) {
   // request notifications permission once the user has logged in
@@ -31,7 +31,7 @@ export async function requestPermissionsAndRegisterToken(
   // register the push token with the server
   const token = await Notifications.getDevicePushTokenAsync()
   try {
-    await agent.api.app.bsky.notification.registerPush({
+    await getAgent().api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
       platform: devicePlatform,
       token: token.data,
@@ -51,7 +51,7 @@ export async function requestPermissionsAndRegisterToken(
 }
 
 export function registerTokenChangeHandler(
-  agent: BskyAgent,
+  getAgent: () => BskyAgent,
   account: SessionAccount,
 ): () => void {
   // listens for new changes to the push token
@@ -63,7 +63,7 @@ export function registerTokenChangeHandler(
       logger.DebugContext.notifications,
     )
     try {
-      await agent.api.app.bsky.notification.registerPush({
+      await getAgent().api.app.bsky.notification.registerPush({
         serviceDid: SERVICE_DID(account.service),
         platform: devicePlatform,
         token: newToken.data,
