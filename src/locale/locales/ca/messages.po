@@ -3625,7 +3625,7 @@ msgstr "Contrasenya actualitzada!"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Pause"
-msgstr "Pausa"
+msgstr "Posa en pausa"
 
 #: src/view/screens/Search/Search.tsx:438
 msgid "People"
