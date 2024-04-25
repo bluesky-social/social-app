@@ -4085,7 +4085,7 @@ msgstr "Filtres de resposta"
 #: src/view/com/posts/FeedItem.tsx:285
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr "Resposta a  <0><1/></0>"
+msgstr "Resposta a <0><1/></0>"
 
 #: src/view/com/modals/report/Modal.tsx:166
 #~ msgid "Report {collectionName}"
