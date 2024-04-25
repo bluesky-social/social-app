@@ -10,3 +10,6 @@ export const Provider = isV2 ? V2.Provider : V1.Provider
 export const useSession = isV2 ? V2.useSession : V1.useSession
 export const useSessionApi = isV2 ? V2.useSessionApi : V1.useSessionApi
 export const useRequireAuth = isV2 ? V2.useRequireAuth : V1.useRequireAuth
+export const isSessionDeactivated = isV2
+  ? V2.isSessionDeactivated
+  : V1.isSessionDeactivated
