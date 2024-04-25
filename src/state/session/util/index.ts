@@ -37,6 +37,7 @@ export function agentToSessionAccount(
     deactivated: isSessionDeactivated(agent.session.accessJwt),
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
+    pdsUrl: agent.pdsUrl?.toString(),
   }
 }
 

@@ -263,6 +263,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         service: account.service,
       })
 
+      // restore the correct PDS URL if available
+      if (account.pdsUrl) {
+        newAgent.pdsUrl = newAgent.api.xrpc.uri = new URL(account.pdsUrl)
+      }
+
       const prevSession = {
         ...account,
         accessJwt: account.accessJwt || '',
