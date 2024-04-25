@@ -144,6 +144,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // count
           const {page, indexedAt: lastIndexed} = await fetchPage({
+            getAgent,
             cursor: undefined,
             limit: 40,
             queryClient,
