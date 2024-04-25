@@ -1,35 +1,35 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
 import {Image as ExpoImage} from 'expo-image'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
-import {Context} from '#/screens/Onboarding/state'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
+import {compressIfNeeded} from 'lib/media/manip'
+import {openCropper} from 'lib/media/picker'
+import {openPicker} from 'lib/media/picker.shared'
+import {isNative, isWeb} from 'platform/detection'
 import {
-  TitleText,
   DescriptionText,
   OnboardingControls,
+  TitleText,
 } from '#/screens/Onboarding/Layout'
-import {Emoji, emojiItems, AvatarColor, avatarColors} from './types'
+import {Context} from '#/screens/Onboarding/state'
+import {AvatarCircle} from '#/screens/Onboarding/StepProfile/AvatarCircle'
+import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
+import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
 import {
   PlaceholderCanvas,
   PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {IconCircle} from '#/components/IconCircle'
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {AvatarCircle} from '#/screens/Onboarding/StepProfile/AvatarCircle'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
-import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
-import {openPicker} from 'lib/media/picker.shared'
-import {isNative, isWeb} from 'platform/detection'
-import {openCropper} from 'lib/media/picker'
-import {compressIfNeeded} from 'lib/media/manip'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
+import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
+import {AvatarColor, avatarColors, Emoji, emojiItems} from './types'
 
 export interface Avatar {
   image?: {
@@ -163,18 +163,16 @@ export function StepProfile() {
   return (
     <AvatarContext.Provider value={value}>
       <View style={[a.align_start, t.atoms.bg, a.justify_between]}>
-        <View style={[gtMobile ? a.px_5xl : a.px_xl]}>
-          <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
-          <TitleText>
-            <Trans>Give your profile a face</Trans>
-          </TitleText>
-          <DescriptionText>
-            <Trans>
-              Help people know you're not a bot by uploading a picture or
-              creating an avatar.
-            </Trans>
-          </DescriptionText>
-        </View>
+        <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
+        <TitleText>
+          <Trans>Give your profile a face</Trans>
+        </TitleText>
+        <DescriptionText>
+          <Trans>
+            Help people know you're not a bot by uploading a picture or creating
+            an avatar.
+          </Trans>
+        </DescriptionText>
         <View style={[a.w_full, a.align_center, {paddingTop: 80}]}>
           <AvatarCircle
             openLibrary={openLibrary}

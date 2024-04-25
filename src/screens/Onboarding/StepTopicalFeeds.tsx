@@ -16,7 +16,7 @@ import {
 import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
@@ -26,7 +26,6 @@ import {Loader} from '#/components/Loader'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {currentAccount} = useSession()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
@@ -74,7 +73,7 @@ export function StepTopicalFeeds() {
   }, [track])
 
   return (
-    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={ListMagnifyingGlass} style={[a.mb_2xl]} />
 
       <TitleText>

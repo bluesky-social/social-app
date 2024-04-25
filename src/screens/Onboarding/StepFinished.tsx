@@ -23,7 +23,7 @@ import {
   bulkWriteFollows,
   sortPrimaryAlgorithmFeeds,
 } from '#/screens/Onboarding/util'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -36,7 +36,6 @@ import {Text} from '#/components/Typography'
 export function StepFinished() {
   const {_} = useLingui()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
@@ -127,7 +126,7 @@ export function StepFinished() {
   }, [track])
 
   return (
-    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
 
       <TitleText>

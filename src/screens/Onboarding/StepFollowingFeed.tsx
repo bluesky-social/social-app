@@ -15,7 +15,7 @@ import {
   TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -26,7 +26,6 @@ import {Text} from '#/components/Typography'
 
 export function StepFollowingFeed() {
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {dispatch} = React.useContext(Context)
 
@@ -56,7 +55,7 @@ export function StepFollowingFeed() {
 
   return (
     // Hack for now to move the image container up
-    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
 
       <TitleText>

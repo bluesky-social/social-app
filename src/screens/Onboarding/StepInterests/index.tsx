@@ -143,9 +143,7 @@ export function StepInterests() {
   )
 
   return (
-    <View
-      style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}
-      testID="onboardingInterests">
+    <View style={[a.align_start]} testID="onboardingInterests">
       <IconCircle
         icon={isError ? EmojiSad : Hashtag}
         style={[
