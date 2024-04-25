@@ -8,6 +8,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AtUri,
+  BskyAgent,
 } from '@atproto/api'
 import {
   QueryClient,
@@ -154,6 +155,7 @@ export function useProfileUpdateMutation() {
         return existing
       })
       await whenAppViewReady(
+        getAgent,
         profile.did,
         checkCommitted ||
           (res => {
@@ -516,6 +518,7 @@ export function precacheThreadPostProfiles(
 }
 
 async function whenAppViewReady(
+  getAgent: () => BskyAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {
