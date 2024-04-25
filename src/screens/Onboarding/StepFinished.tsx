@@ -41,7 +41,7 @@ export function StepFinished() {
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
   const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
-  const isV2Enabled = useGate('reduced_onboarding_and_home_algo')
+  const gate = useGate()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -75,7 +75,7 @@ export function StepFinished() {
         })(),
       ])
 
-      if (isV2Enabled) {
+      if (gate('reduced_onboarding_and_home_algo')) {
         await getAgent().upsertProfile(async existing => {
           existing = existing ?? {}
 
@@ -94,9 +94,10 @@ export function StepFinished() {
           return existing
         })
 
-        await getAgent().setHomeAlgoPref({
-          enabled: true,
-          uri: DISCOVER_FEED_URI,
+        // TODO
+        await saveFeeds({
+          saved: [DISCOVER_FEED_URI],
+          pinned: [DISCOVER_FEED_URI],
         })
       }
     } catch (e: any) {
@@ -111,15 +112,7 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [
-    state,
-    dispatch,
-    onboardDispatch,
-    setSaving,
-    saveFeeds,
-    track,
-    isV2Enabled,
-  ])
+  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track, gate])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')
