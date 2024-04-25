@@ -40,6 +40,7 @@ import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
@@ -380,7 +381,7 @@ let PostDropdownBtn = ({
                       label={_(msg`Block account`)}
                       onPress={onBlockAccount}>
                       <Menu.ItemText>{_(msg`Block account`)}</Menu.ItemText>
-                      <Menu.ItemIcon icon={Warning} position="right" />
+                      <Menu.ItemIcon icon={PersonX} position="right" />
                     </Menu.Item>
                   </>
                 )}
