@@ -12,7 +12,7 @@ import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useMutedThreads} from '#/state/muted-threads'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useModerationOpts} from '../preferences'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -46,6 +46,7 @@ const apiContext = React.createContext<ApiContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
@@ -197,7 +198,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, threadMutes])
+  }, [setNumUnread, queryClient, moderationOpts, threadMutes, getAgent])
   checkUnreadRef.current = api.checkUnread
 
   return (

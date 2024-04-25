@@ -5,7 +5,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {isJustAMute} from '#/lib/moderation'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 
 const DEFAULT_MOD_OPTS = {
@@ -18,6 +18,7 @@ export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
 export function useActorAutocompleteQuery(prefix: string) {
   const moderationOpts = useModerationOpts()
+  const {getAgent} = useAgent()
 
   prefix = prefix.toLowerCase()
 
@@ -46,6 +47,7 @@ export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>
 export function useActorAutocompleteFn() {
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
+  const {getAgent} = useAgent()
 
   return React.useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
@@ -74,7 +76,7 @@ export function useActorAutocompleteFn() {
         moderationOpts || DEFAULT_MOD_OPTS,
       )
     },
-    [queryClient, moderationOpts],
+    [queryClient, moderationOpts, getAgent],
   )
 }
 

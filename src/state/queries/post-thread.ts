@@ -7,7 +7,7 @@ import {
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
@@ -66,6 +66,7 @@ export type ThreadNode =
 
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useQuery<ThreadNode, Error>({
     gcTime: 0,
     queryKey: RQKEY(uri || ''),

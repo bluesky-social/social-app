@@ -13,7 +13,7 @@ import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {useNavigationState} from '@react-navigation/native'
 
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
   useIsDrawerSwipeDisabled,
@@ -57,6 +57,7 @@ function ShellInner() {
   )
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession, currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const closeAnyActiveElement = useCloseAnyActiveElement()
   const {importantForAccessibility} = useDialogStateContext()
   // start undefined
@@ -85,7 +86,7 @@ function ShellInner() {
       )
       return unsub
     }
-  }, [currentAccount])
+  }, [currentAccount, getAgent])
 
   return (
     <>

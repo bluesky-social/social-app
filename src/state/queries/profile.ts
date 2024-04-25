@@ -26,7 +26,7 @@ import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {updateProfileShadow} from '../cache/profile-shadow'
-import {getAgent, useSession} from '../session'
+import {useAgent, useSession} from '../session'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {ThreadNode} from './post-thread'
@@ -54,6 +54,7 @@ export function useProfileQuery({
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -78,6 +79,7 @@ export function useProfileQuery({
 }
 
 export function useProfilesQuery({handles}: {handles: string[]}) {
+  const {getAgent} = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: profilesQueryKey(handles),
@@ -89,6 +91,7 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
 }
 
 export function usePrefetchProfileQuery() {
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
@@ -100,7 +103,7 @@ export function usePrefetchProfileQuery() {
         },
       })
     },
-    [queryClient],
+    [queryClient, getAgent],
   )
   return prefetchProfileQuery
 }
@@ -116,6 +119,7 @@ interface ProfileUpdateParams {
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -257,6 +261,7 @@ function useProfileFollowMutation(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -283,6 +288,7 @@ function useProfileFollowMutation(
 function useProfileUnfollowMutation(
   logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       logEvent('profile:unfollow', {logContext})
@@ -343,6 +349,7 @@ export function useProfileMuteMutationQueue(
 
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await getAgent().mute(did)
@@ -355,6 +362,7 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await getAgent().unmute(did)
@@ -421,6 +429,7 @@ export function useProfileBlockMutationQueue(
 
 function useProfileBlockMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -441,6 +450,7 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {
