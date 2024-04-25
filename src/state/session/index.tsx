@@ -59,6 +59,7 @@ export type ApiContext = {
       service: string
       identifier: string
       password: string
+      authFactorToken?: string | undefined
     },
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
@@ -87,7 +88,10 @@ export type ApiContext = {
   ) => Promise<void>
   updateCurrentAccount: (
     account: Partial<
-      Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
+      Pick<
+        SessionAccount,
+        'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
+      >
     >,
   ) => void
 }
@@ -113,6 +117,7 @@ const ApiContext = React.createContext<ApiContext>({
 })
 
 function createPersistSessionHandler(
+  agent: BskyAgent,
   account: SessionAccount,
   persistSessionCallback: (props: {
     expired: boolean
@@ -140,6 +145,7 @@ function createPersistSessionHandler(
       email: session?.email || account.email,
       emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
       deactivated: isSessionDeactivated(session?.accessJwt),
+      pdsUrl: agent.pdsUrl?.toString(),
 
       /*
        * Tokens are undefined if the session expires, or if creation fails for
@@ -272,12 +278,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
         deactivated,
+        pdsUrl: agent.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -298,12 +306,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const login = React.useCallback<ApiContext['login']>(
-    async ({service, identifier, password}, logContext) => {
+    async ({service, identifier, password, authFactorToken}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({service})
 
-      await agent.login({identifier, password})
+      await agent.login({identifier, password, authFactorToken})
 
       if (!agent.session) {
         throw new Error(`session: login failed to establish a session`)
@@ -319,15 +327,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         handle: agent.session.handle,
         email: agent.session.email,
         emailConfirmed: agent.session.emailConfirmed || false,
+        emailAuthFactor: agent.session.emailAuthFactor,
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
         deactivated: isSessionDeactivated(agent.session.accessJwt),
+        pdsUrl: agent.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -374,16 +385,24 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
       const fetchingGates = tryFetchGates(account.did, 'prefer-low-latency')
 
-      const agent = new BskyAgent({
-        service: account.service,
-        persistSession: createPersistSessionHandler(
+      const agent = new BskyAgent({service: account.service})
+
+      // restore the correct PDS URL if available
+      if (account.pdsUrl) {
+        agent.pdsUrl = agent.api.xrpc.uri = new URL(account.pdsUrl)
+      }
+
+      agent.setPersistSessionHandler(
+        createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
-      })
+      )
+
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
       await configureModeration(agent, account)
@@ -416,6 +435,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.debug(`session: attempting to reuse previous session`)
 
         agent.session = prevSession
+
         __globalAgent = agent
         await fetchingGates
         upsertAccount(account)
@@ -489,9 +509,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           handle: agent.session.handle,
           email: agent.session.email,
           emailConfirmed: agent.session.emailConfirmed || false,
+          emailAuthFactor: agent.session.emailAuthFactor || false,
           refreshJwt: agent.session.refreshJwt,
           accessJwt: agent.session.accessJwt,
           deactivated: isSessionDeactivated(agent.session.accessJwt),
+          pdsUrl: agent.pdsUrl?.toString(),
         }
       }
     },
@@ -546,6 +568,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             account.emailConfirmed !== undefined
               ? account.emailConfirmed
               : currentAccount.emailConfirmed,
+          emailAuthFactor:
+            account.emailAuthFactor !== undefined
+              ? account.emailAuthFactor
+              : currentAccount.emailAuthFactor,
         }
 
         return {

@@ -4,7 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
-import {Gif} from '#/state/queries/giphy'
+import {Gif} from '#/state/queries/tenor'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
