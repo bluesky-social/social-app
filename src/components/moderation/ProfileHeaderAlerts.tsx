@@ -2,15 +2,15 @@ import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {ModerationCause, ModerationDecision} from '@atproto/api'
 
-import {getModerationCauseKey} from 'lib/moderation'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-
-import {atoms as a} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
+import {getModerationCauseKey} from 'lib/moderation'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
+import {Text} from '#/components/Typography'
 
 export function ProfileHeaderAlerts({
   moderation,
@@ -39,6 +39,7 @@ export function ProfileHeaderAlerts({
 }
 
 function ProfileLabel({cause}: {cause: ModerationCause}) {
+  const t = useTheme()
   const control = useModerationDetailsDialogControl()
   const desc = useModerationCauseDescription(cause)
 
@@ -46,18 +47,35 @@ function ProfileLabel({cause}: {cause: ModerationCause}) {
     <>
       <Button
         label={desc.name}
-        variant="solid"
-        color="secondary"
-        size="small"
-        shape="default"
         onPress={() => {
           control.open()
-        }}
-        style={[a.px_sm, a.py_xs, a.gap_xs]}>
-        <ButtonIcon icon={desc.icon} position="left" />
-        <ButtonText style={[a.text_left, a.leading_snug]}>
-          {desc.name}
-        </ButtonText>
+        }}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              {paddingLeft: 6, paddingRight: 8, paddingVertical: 4},
+              a.gap_xs,
+              a.rounded_md,
+              hovered || pressed
+                ? t.atoms.bg_contrast_50
+                : t.atoms.bg_contrast_25,
+            ]}>
+            <desc.icon size="sm" fill={t.atoms.text_contrast_medium.color} />
+            <Text
+              style={[
+                a.text_left,
+                a.leading_snug,
+                a.text_sm,
+                t.atoms.text_contrast_medium,
+                a.font_semibold,
+              ]}>
+              {desc.name}
+              {desc.source ? ` – ${desc.source}` : ''}
+            </Text>
+          </View>
+        )}
       </Button>
 
       <ModerationDetailsDialog control={control} modcause={cause} />
