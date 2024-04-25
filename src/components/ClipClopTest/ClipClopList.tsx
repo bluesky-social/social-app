@@ -7,6 +7,7 @@ import {
   ClipClop,
   placeholderClops,
 } from '#/components/ClipClopTest/RandomClipClops'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 function ClipClopItem({item}: {item: ClipClop}) {
@@ -24,6 +25,20 @@ function ClipClopItem({item}: {item: ClipClop}) {
         },
       ]}>
       <Text style={{lineHeight: 1.2}}>{item.text}</Text>
+    </View>
+  )
+}
+
+function MaybeLoader({isLoading}: {isLoading: boolean}) {
+  return (
+    <View
+      style={{
+        height: 50,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      {isLoading && <Loader size="xl" />}
     </View>
   )
 }
@@ -49,6 +64,8 @@ export const ClipClopList = () => {
   // Because the viewableItemsChanged callback won't have access to the updated state, we use a ref to store the
   // total number of clops
   const totalClops = React.useRef(10)
+
+  const [showSpinner, setShowSpinner] = React.useState(false)
 
   const [clops, setClops] = React.useState(
     Array.from(Array(10).keys()).map(n => ({
@@ -91,12 +108,6 @@ export const ClipClopList = () => {
         const firstVisibleIndex = info.viewableItems[0]?.index
 
         isAtBottom.current = Number(firstVisibleIndex) < 2
-
-        console.log({
-          firstVisibleIndex,
-          totalClops: totalClops.current,
-          isAtBottom: isAtBottom.current,
-        })
       },
       {
         itemVisiblePercentThreshold: 100,
@@ -112,6 +123,7 @@ export const ClipClopList = () => {
       }
 
       isFetching.current = false
+      setShowSpinner(false)
     },
     [clops],
   )
@@ -119,6 +131,7 @@ export const ClipClopList = () => {
   const onEndReached = () => {
     if (isFetching.current) return
     isFetching.current = true
+    setShowSpinner(true)
 
     // We wouldn't actually use a timeout, but there would be a delay while loading
     setTimeout(() => {
@@ -147,6 +160,7 @@ export const ClipClopList = () => {
         maxToRenderPerBatch={20}
         inverted
         onEndReached={onEndReached}
+        ListFooterComponent={<MaybeLoader isLoading={showSpinner} />}
       />
       <Button title="Add New Clip" onPress={addNewClip} />
     </View>
