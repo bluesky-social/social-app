@@ -351,40 +351,38 @@ let PostDropdownBtn = ({
             </>
           )}
 
-          {hasSession && (
+          {!isAuthor && hasSession && (
             <>
               <Menu.Divider />
               <Menu.Group>
-                {!isAuthor && (
-                  <>
-                    <Menu.Item
-                      testID="postDropdownMuteAccountBtn"
-                      label={
-                        isAuthorMuted
-                          ? _(msg`Unmute account`)
-                          : _(msg`Mute account`)
-                      }
-                      onPress={onMuteAccount}>
-                      <Menu.ItemText>
-                        {isAuthorMuted
-                          ? _(msg`Unmute account`)
-                          : _(msg`Mute account`)}
-                      </Menu.ItemText>
-                      <Menu.ItemIcon
-                        icon={isAuthorMuted ? Unmute : Mute}
-                        position="right"
-                      />
-                    </Menu.Item>
+                <>
+                  <Menu.Item
+                    testID="postDropdownMuteAccountBtn"
+                    label={
+                      isAuthorMuted
+                        ? _(msg`Unmute account`)
+                        : _(msg`Mute account`)
+                    }
+                    onPress={onMuteAccount}>
+                    <Menu.ItemText>
+                      {isAuthorMuted
+                        ? _(msg`Unmute account`)
+                        : _(msg`Mute account`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={isAuthorMuted ? Unmute : Mute}
+                      position="right"
+                    />
+                  </Menu.Item>
 
-                    <Menu.Item
-                      testID="postDropdownBlockAccountBtn"
-                      label={_(msg`Block account`)}
-                      onPress={onBlockAccount}>
-                      <Menu.ItemText>{_(msg`Block account`)}</Menu.ItemText>
-                      <Menu.ItemIcon icon={PersonX} position="right" />
-                    </Menu.Item>
-                  </>
-                )}
+                  <Menu.Item
+                    testID="postDropdownBlockAccountBtn"
+                    label={_(msg`Block account`)}
+                    onPress={onBlockAccount}>
+                    <Menu.ItemText>{_(msg`Block account`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={PersonX} position="right" />
+                  </Menu.Item>
+                </>
               </Menu.Group>
             </>
           )}
