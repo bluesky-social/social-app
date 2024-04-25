@@ -51,52 +51,7 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
  */
 
 export function HomeScreen(props: Props) {
-  const lastMessageId = React.useRef(0)
-  const [clipClops, setClipClops] = React.useState<ClipClop[]>([])
-
-  const addMessage = () => {
-    lastMessageId.current += 1
-
-    setClipClops(prev => {
-      return [
-        ...prev,
-
-        {
-          id: lastMessageId.current.toString(),
-          text: `${
-            placeholderClops[lastMessageId.current % placeholderClops.length]
-          }`,
-        },
-      ]
-    })
-  }
-
-  const addMessages = (count: number) => {
-    for (let i = 0; i < count; i++) {
-      addMessage()
-    }
-  }
-
-  return (
-    <CenteredView style={{flex: 1, marginBottom: 100}}>
-      <View style={{flexDirection: 'row'}}>
-        <Button
-          title="Add One"
-          onPress={() => {
-            addMessages(1)
-          }}
-        />
-        <Button
-          title="Add Five"
-          onPress={() => {
-            addMessages(5)
-          }}
-        />
-        <Button title="Reset" onPress={() => setClipClops([])} />
-      </View>
-      <ClipClopList clipClops={clipClops} />
-    </CenteredView>
-  )
+  return <ClipClopList />
 }
 
 function HomeScreenReady({
