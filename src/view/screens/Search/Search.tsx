@@ -787,7 +787,7 @@ export function SearchScreen(
 
       {inputIsFocused && searchText.length > 0 ? (
         <>
-          {(searchText && !autocompleteData) || !moderationOpts ? (
+          {!autocompleteData || !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
