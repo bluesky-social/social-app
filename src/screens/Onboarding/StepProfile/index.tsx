@@ -63,7 +63,7 @@ export function StepProfile() {
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const creatorControl = Dialog.useDialogControl()
 
-  const {state, dispatch} = React.useContext(Context)
+  const {dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
     placeholder: emojiItems.at,
     backgroundColor: randomColor,
@@ -173,18 +173,17 @@ export function StepProfile() {
             an avatar.
           </Trans>
         </DescriptionText>
-        <View style={[a.w_full, a.align_center, {paddingTop: 80}]}>
+        <View
+          style={[a.w_full, a.align_center, {paddingTop: gtMobile ? 80 : 40}]}>
           <AvatarCircle
             openLibrary={openLibrary}
             openCreator={creatorControl.open}
           />
         </View>
-        <View style={[a.w_full, a.px_2xl, a.pt_5xl]} />
 
         <OnboardingControls.Portal>
           <View style={[a.gap_md, gtMobile && {flexDirection: 'row-reverse'}]}>
             <Button
-              key={state.activeStep} // remove focus state on nav
               variant="gradient"
               color="gradient_sky"
               size="large"
@@ -196,7 +195,6 @@ export function StepProfile() {
               <ButtonIcon icon={ChevronRight} position="right" />
             </Button>
             <Button
-              key={state.activeStep} // remove focus state on nav
               variant="ghost"
               color="primary"
               size="large"
@@ -216,18 +214,19 @@ export function StepProfile() {
 
       <Dialog.Outer control={creatorControl}>
         <Dialog.Handle />
-        <Dialog.Inner label="Avatar creator">
+        <Dialog.Inner
+          label="Avatar creator"
+          style={[
+            {
+              width: 'auto',
+              maxWidth: 410,
+            },
+          ]}>
           <View style={[a.align_center, {paddingTop: 20}]}>
             <AvatarCreatorCircle avatar={avatar} />
           </View>
 
-          <View
-            style={[
-              a.pt_2xl,
-              a.align_center,
-              a.justify_center,
-              gtMobile && a.flex_row,
-            ]}>
+          <View style={[a.pt_3xl, a.gap_lg]}>
             <AvatarCreatorItems
               type="emojis"
               avatar={avatar}
@@ -239,9 +238,8 @@ export function StepProfile() {
               setAvatar={setAvatar}
             />
           </View>
-          <View style={[a.px_xl, a.pt_4xl]}>
+          <View style={[a.pt_4xl]}>
             <Button
-              key={state.activeStep} // remove focus state on nav
               variant="solid"
               color="primary"
               size="large"
@@ -254,6 +252,7 @@ export function StepProfile() {
           </View>
         </Dialog.Inner>
       </Dialog.Outer>
+
       <PlaceholderCanvas ref={canvasRef} />
     </AvatarContext.Provider>
   )
