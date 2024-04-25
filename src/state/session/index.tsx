@@ -1,7 +1,7 @@
 import * as V1 from '#/state/session/v1'
 import * as V2 from '#/state/session/v2'
 
-export type {SessionAccount} from '#/state/session/v1'
+export type {CurrentAccount, SessionAccount} from '#/state/session/types'
 
 const isV2 = false
 
