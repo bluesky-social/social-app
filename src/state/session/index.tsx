@@ -23,14 +23,12 @@ import {readLabelers} from './agent-config'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
-/**
- * NOTE
- * Never hold on to the object returned by this function.
- * Call `getAgent()` at the time of invocation to ensure
- * that you never have a stale agent.
- */
-export function getAgent() {
-  return __globalAgent
+export function useAgent() {
+  return {
+    getAgent() {
+      return __globalAgent
+    },
+  }
 }
 
 export type SessionAccount = persisted.PersistedAccount

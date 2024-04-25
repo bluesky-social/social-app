@@ -13,7 +13,7 @@ import chunk from 'lodash.chunk'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
-import {getAgent, useSession} from '../session'
+import {useAgent, useSession} from '../session'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
@@ -21,6 +21,7 @@ const RQKEY_ROOT = 'list'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListQuery(uri?: string) {
+  const {getAgent} = useAgent()
   return useQuery<AppBskyGraphDefs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
@@ -48,6 +49,7 @@ export interface ListCreateMutateParams {
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<{uri: string; cid: string}, Error, ListCreateMutateParams>(
     {
       async mutationFn({
@@ -114,6 +116,7 @@ export interface ListMetadataMutateParams {
 }
 export function useListMetadataMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -181,6 +184,7 @@ export function useListMetadataMutation() {
 
 export function useListDeleteMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
@@ -249,6 +253,7 @@ export function useListDeleteMutation() {
 
 export function useListMuteMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {uri: string; mute: boolean}>({
     mutationFn: async ({uri, mute}) => {
       if (mute) {
@@ -275,6 +280,7 @@ export function useListMuteMutation() {
 
 export function useListBlockMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {uri: string; block: boolean}>({
     mutationFn: async ({uri, block}) => {
       if (block) {
