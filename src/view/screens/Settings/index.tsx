@@ -494,6 +494,49 @@ export function SettingsScreen({}: Props) {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          testID="languageSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressLanguageSettings}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Language settings`)}
+          accessibilityHint={_(msg`Opens configurable language settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="language"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Languages</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="moderationBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('Moderation')
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Moderation settings`)}
+          accessibilityHint={_(msg`Opens moderation settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <HandIcon style={pal.text} size={18} strokeWidth={6} />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Moderation</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           testID="preferencesHomeFeedButton"
           style={[
             styles.linkCard,
@@ -552,49 +595,6 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>My Saved Feeds</Trans>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          testID="languageSettingsBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={isSwitchingAccounts ? undefined : onPressLanguageSettings}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Language settings`)}
-          accessibilityHint={_(msg`Opens configurable language settings`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="language"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Languages</Trans>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          testID="moderationBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={
-            isSwitchingAccounts
-              ? undefined
-              : () => navigation.navigate('Moderation')
-          }
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Moderation settings`)}
-          accessibilityHint={_(msg`Opens moderation settings`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <HandIcon style={pal.text} size={18} strokeWidth={6} />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Moderation</Trans>
           </Text>
         </TouchableOpacity>
 

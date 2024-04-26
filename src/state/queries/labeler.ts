@@ -5,7 +5,7 @@ import {z} from 'zod'
 import {labelersDetailedInfoQueryKeyRoot} from '#/lib/react-query'
 import {STALE} from '#/state/queries'
 import {preferencesQueryKey} from '#/state/queries/preferences'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
 export const labelerInfoQueryKey = (did: string) => [
@@ -31,6 +31,7 @@ export function useLabelerInfoQuery({
   did?: string
   enabled?: boolean
 }) {
+  const {getAgent} = useAgent()
   return useQuery({
     enabled: !!did && enabled !== false,
     queryKey: labelerInfoQueryKey(did as string),
@@ -45,6 +46,7 @@ export function useLabelerInfoQuery({
 }
 
 export function useLabelersInfoQuery({dids}: {dids: string[]}) {
+  const {getAgent} = useAgent()
   return useQuery({
     enabled: !!dids.length,
     queryKey: labelersInfoQueryKey(dids),
@@ -56,6 +58,7 @@ export function useLabelersInfoQuery({dids}: {dids: string[]}) {
 }
 
 export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
+  const {getAgent} = useAgent()
   return useQuery({
     enabled: !!dids.length,
     queryKey: labelersDetailedInfoQueryKey(dids),
@@ -73,6 +76,7 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
 
 export function useLabelerSubscriptionMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
 
   return useMutation({
     async mutationFn({did, subscribe}: {did: string; subscribe: boolean}) {

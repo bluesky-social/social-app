@@ -1,7 +1,10 @@
-import {AppBskyGraphFollow, AppBskyGraphGetFollows} from '@atproto/api'
+import {
+  AppBskyGraphFollow,
+  AppBskyGraphGetFollows,
+  BskyAgent,
+} from '@atproto/api'
 
 import {until} from '#/lib/async/until'
-import {getAgent} from '#/state/session'
 import {PRIMARY_FEEDS} from './StepAlgoFeeds'
 
 function shuffle(array: any) {
@@ -63,7 +66,10 @@ export function aggregateInterestItems(
   return Array.from(new Set(results)).slice(0, 20)
 }
 
-export async function bulkWriteFollows(dids: string[]) {
+export async function bulkWriteFollows(
+  getAgent: () => BskyAgent,
+  dids: string[],
+) {
   const session = getAgent().session
 
   if (!session) {
@@ -87,10 +93,15 @@ export async function bulkWriteFollows(dids: string[]) {
     repo: session.did,
     writes: followWrites,
   })
-  await whenFollowsIndexed(session.did, res => !!res.data.follows.length)
+  await whenFollowsIndexed(
+    getAgent,
+    session.did,
+    res => !!res.data.follows.length,
+  )
 }
 
 async function whenFollowsIndexed(
+  getAgent: () => BskyAgent,
   actor: string,
   fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {

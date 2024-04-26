@@ -6,13 +6,14 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const RQKEY_ROOT = 'my-muted-accounts'
 export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyMutedAccountsQuery() {
+  const {getAgent} = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetMutes.OutputSchema,
     Error,
