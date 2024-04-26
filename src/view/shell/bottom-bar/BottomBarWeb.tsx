@@ -6,11 +6,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {usePalette} from 'lib/hooks/usePalette'
+import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   BellIcon,
   BellIconSolid,
@@ -21,12 +18,16 @@ import {
   MagnifyingGlassIcon2Solid,
   UserIcon,
   UserIconSolid,
-} from 'lib/icons'
-import {clamp} from 'lib/numbers'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
-import {makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {s} from 'lib/styles'
+} from '#/lib/icons'
+import {clamp} from '#/lib/numbers'
+import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
+import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
+import {s} from '#/lib/styles'
+import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
@@ -43,6 +44,7 @@ export function BottomBarWeb() {
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const gate = useGate()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -119,16 +121,18 @@ export function BottomBarWeb() {
                   )
                 }}
               </NavItem>
-              <NavItem routeName="Messages" href="/messages">
-                {() => {
-                  return (
-                    <Envelope
-                      size="lg"
-                      style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
-                    />
-                  )
-                }}
-              </NavItem>
+              {gate('dms') && (
+                <NavItem routeName="Messages" href="/messages">
+                  {() => {
+                    return (
+                      <Envelope
+                        size="lg"
+                        style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
+                      />
+                    )
+                  }}
+                </NavItem>
+              )}
               <NavItem
                 routeName="Profile"
                 href={

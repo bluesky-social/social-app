@@ -7,6 +7,7 @@ import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {getAgent} from '#/state/session'
@@ -19,6 +20,7 @@ import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {ClipClopGate} from '../gate'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'MessagesList'>
 export function MessagesListScreen({}: Props) {
@@ -76,6 +78,9 @@ export function MessagesListScreen({}: Props) {
       logger.error('Failed to load more conversations', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+
+  const gate = useGate()
+  if (!gate('dms')) return <ClipClopGate />
 
   if (conversations.length < 1) {
     return (
