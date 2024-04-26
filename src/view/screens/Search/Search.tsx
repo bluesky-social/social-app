@@ -518,12 +518,18 @@ export function SearchScreen(
   }, [])
 
   React.useEffect(() => {
+    let ignore = false
     if (!throttledInput) {
       setAutocompleteData(undefined)
     } else {
       search({query: throttledInput}).then(res => {
-        setAutocompleteData(res)
+        if (!ignore) {
+          setAutocompleteData(res)
+        }
       })
+    }
+    return () => {
+      ignore = true
     }
   }, [search, throttledInput])
 
