@@ -372,26 +372,28 @@ let EditableUserAvatar = ({
 EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
 
-let PreviewableUserAvatar = (
-  props: PreviewableUserAvatarProps,
-): React.ReactNode => {
+let PreviewableUserAvatar = ({
+  moderation,
+  profile,
+  ...rest
+}: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
 
   const onPress = React.useCallback(() => {
-    precacheProfile(queryClient, props.profile)
-  }, [props.profile, queryClient])
+    precacheProfile(queryClient, profile)
+  }, [profile, queryClient])
 
   return (
-    <ProfileHoverCard did={props.profile.did}>
+    <ProfileHoverCard did={profile.did}>
       <Link
         label={_(msg`See profile`)}
         to={makeProfileLink({
-          did: props.profile.did,
-          handle: props.profile.handle,
+          did: profile.did,
+          handle: profile.handle,
         })}
         onPress={onPress}>
-        <UserAvatar {...props} />
+        <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
       </Link>
     </ProfileHoverCard>
   )
