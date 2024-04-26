@@ -172,14 +172,6 @@ msgstr "新增替代文字"
 msgid "Add App Password"
 msgstr "新增應用程式專用密碼"
 
-#: src/view/com/composer/Composer.tsx:467
-#~ msgid "Add link card"
-#~ msgstr "新增連結卡片"
-
-#: src/view/com/composer/Composer.tsx:472
-#~ msgid "Add link card:"
-#~ msgstr "新增連結卡片："
-
 #: src/components/dialogs/MutedWords.tsx:157
 msgid "Add mute word for configured settings"
 msgstr "在設定中新增靜音字詞"
@@ -740,10 +732,6 @@ msgstr "點擊這裡"
 msgid "Click here to open tag menu for {tag}"
 msgstr "點擊這裡開啟 {tag} 的標籤選單"
 
-#: src/components/RichText.tsx:198
-#~ msgid "Click here to open tag menu for #{tag}"
-#~ msgstr "點擊這裡開啟 #{tag} 的標籤選單"
-
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
 msgstr "氣象"
@@ -1075,10 +1063,6 @@ msgstr "建立 {0} 的檢舉"
 msgid "Created {0}"
 msgstr "{0} 已建立"
 
-#: src/view/com/composer/Composer.tsx:469
-#~ msgid "Creates a card with a thumbnail. The card links to {url}"
-#~ msgstr "建立帶有縮圖的卡片。該卡片連結到 {url}"
-
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
 msgstr "文化"
@@ -1207,14 +1191,6 @@ msgstr "關閉電子郵件雙重驗證"
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
 msgstr "關閉觸覺回饋"
-
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable haptics"
-#~ msgstr "關閉震動"
-
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable vibrations"
-#~ msgstr "關閉震動"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1731,14 +1707,6 @@ msgstr "尋找一些要跟隨的帳號"
 #: src/view/screens/Search/Search.tsx:521
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 上尋找貼文和用戶"
-
-#: src/view/screens/Search/Search.tsx:589
-#~ msgid "Find users on Bluesky"
-#~ msgstr "在 Bluesky 上尋找用戶"
-
-#: src/view/screens/Search/Search.tsx:587
-#~ msgid "Find users with the search tool on the right"
-#~ msgstr "使用右側的搜尋工具尋找用戶"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
 msgid "Finding similar accounts..."
@@ -3603,12 +3571,6 @@ msgstr "回覆"
 #: src/view/screens/PreferencesFollowingFeed.tsx:144
 msgid "Reply Filters"
 msgstr "回覆過濾器"
-
-#: src/view/com/post/Post.tsx:177
-#: src/view/com/posts/FeedItem.tsx:285
-#~ msgctxt "description"
-#~ msgid "Reply to <0/>"
-#~ msgstr "回覆 <0/>"
 
 #: src/view/com/post/Post.tsx:178
 #: src/view/com/posts/FeedItem.tsx:285
