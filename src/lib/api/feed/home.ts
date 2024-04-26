@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {CustomFeedAPI} from './custom'
@@ -27,24 +27,33 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 }
 
 export class HomeFeedAPI implements FeedAPI {
+  getAgent: () => BskyAgent
   following: FollowingFeedAPI
   discover: CustomFeedAPI
   usingDiscover = false
   itemCursor = 0
   userInterests?: string
 
-  constructor({userInterests}: {userInterests?: string}) {
-    this.userInterests = userInterests
-    this.following = new FollowingFeedAPI()
+  constructor({
+    userInterests,
+    getAgent,
+  }: {
+    userInterests?: string
+    getAgent: () => BskyAgent
+  }) {
+    this.getAgent = getAgent
+    this.following = new FollowingFeedAPI({getAgent})
     this.discover = new CustomFeedAPI({
+      getAgent,
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
-      userInterests,
     })
+    this.userInterests = userInterests
   }
 
   reset() {
-    this.following = new FollowingFeedAPI()
+    this.following = new FollowingFeedAPI({getAgent: this.getAgent})
     this.discover = new CustomFeedAPI({
+      getAgent: this.getAgent,
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
       userInterests: this.userInterests,
     })

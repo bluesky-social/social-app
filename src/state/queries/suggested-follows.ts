@@ -22,7 +22,7 @@ import {
   useModerationOpts,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 const suggestedFollowsQueryKey = [suggestedFollowsQueryKeyRoot]
@@ -35,6 +35,7 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
 
 export function useSuggestedFollowsQuery() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
 
@@ -95,6 +96,7 @@ export function useSuggestedFollowsQuery() {
 }
 
 export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
+  const {getAgent} = useAgent()
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {

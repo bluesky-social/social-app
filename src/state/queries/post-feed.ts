@@ -4,6 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  BskyAgent,
   ModerationDecision,
 } from '@atproto/api'
 import {
@@ -20,7 +21,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
@@ -112,6 +113,7 @@ export function usePostFeedQuery(
   const {data: preferences} = usePreferencesQuery()
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
+  const {getAgent} = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -142,7 +144,6 @@ export function usePostFeedQuery(
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-
       const {api, cursor} = pageParam
         ? pageParam
         : {
@@ -151,6 +152,7 @@ export function usePostFeedQuery(
               feedParams: params || {},
               feedTuners,
               preferences,
+              getAgent,
             }),
             cursor: undefined,
           }
@@ -382,44 +384,48 @@ function createApi({
   feedParams,
   feedTuners,
   preferences,
+  getAgent,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   preferences?: UsePreferencesQueryResponse
+  getAgent: () => BskyAgent
 }) {
   const userInterests = aggregateUserInterests(preferences)
 
   if (feedDesc === 'home') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
+        getAgent,
         feedParams,
         feedTuners,
         userInterests,
       })
     } else {
-      return new HomeFeedAPI({userInterests})
+      return new HomeFeedAPI({getAgent, userInterests})
     }
   } else if (feedDesc === 'following') {
-    return new FollowingFeedAPI()
+    return new FollowingFeedAPI({getAgent})
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({actor, filter})
+    return new AuthorFeedAPI({getAgent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
     const [_, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({actor})
+    return new LikesFeedAPI({getAgent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
+      getAgent,
       feedParams: {feed},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
-    return new ListFeedAPI({list})
+    return new ListFeedAPI({getAgent, feedParams: {list}})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI()
+    return new FollowingFeedAPI({getAgent})
   }
 }
 

@@ -1,9 +1,8 @@
-import {AppBskyFeedDefs, AppBskyFeedGetTimeline} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedGetTimeline, BskyAgent} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 
 import {getContentLanguages} from '#/state/preferences/languages'
 import {FeedParams} from '#/state/queries/post-feed'
-import {getAgent} from '#/state/session'
 import {bundleAsync} from 'lib/async/bundle'
 import {timeout} from 'lib/async/timeout'
 import {feedUriToHref} from 'lib/strings/url-helpers'
@@ -16,9 +15,10 @@ const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
+  userInterests?: string
+  getAgent: () => BskyAgent
   params: FeedParams
   feedTuners: FeedTunerFn[]
-  userInterests?: string
   following: MergeFeedSource_Following
   customFeeds: MergeFeedSource_Custom[] = []
   feedCursor = 0
@@ -26,22 +26,31 @@ export class MergeFeedAPI implements FeedAPI {
   sampleCursor = 0
 
   constructor({
+    getAgent,
     feedParams,
     feedTuners,
     userInterests,
   }: {
+    getAgent: () => BskyAgent
     feedParams: FeedParams
     feedTuners: FeedTunerFn[]
     userInterests?: string
   }) {
+    this.getAgent = getAgent
     this.params = feedParams
     this.feedTuners = feedTuners
     this.userInterests = userInterests
-    this.following = new MergeFeedSource_Following(this.feedTuners)
+    this.following = new MergeFeedSource_Following({
+      getAgent: this.getAgent,
+      feedTuners: this.feedTuners,
+    })
   }
 
   reset() {
-    this.following = new MergeFeedSource_Following(this.feedTuners)
+    this.following = new MergeFeedSource_Following({
+      getAgent: this.getAgent,
+      feedTuners: this.feedTuners,
+    })
     this.customFeeds = []
     this.feedCursor = 0
     this.itemCursor = 0
@@ -51,6 +60,7 @@ export class MergeFeedAPI implements FeedAPI {
         this.params.mergeFeedSources.map(
           feedUri =>
             new MergeFeedSource_Custom({
+              getAgent: this.getAgent,
               feedUri,
               feedTuners: this.feedTuners,
               userInterests: this.userInterests,
@@ -63,7 +73,7 @@ export class MergeFeedAPI implements FeedAPI {
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await getAgent().getTimeline({
+    const res = await this.getAgent().getTimeline({
       limit: 1,
     })
     return res.data.feed[0]
@@ -157,12 +167,23 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
+  getAgent: () => BskyAgent
+  feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
   queue: AppBskyFeedDefs.FeedViewPost[] = []
   hasMore = true
 
-  constructor(public feedTuners: FeedTunerFn[]) {}
+  constructor({
+    getAgent,
+    feedTuners,
+  }: {
+    getAgent: () => BskyAgent
+    feedTuners: FeedTunerFn[]
+  }) {
+    this.getAgent = getAgent
+    this.feedTuners = feedTuners
+  }
 
   get numReady() {
     return this.queue.length
@@ -224,7 +245,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
-    const res = await getAgent().getTimeline({cursor, limit})
+    const res = await this.getAgent().getTimeline({cursor, limit})
     // run the tuner pre-emptively to ensure better mixing
     const slices = this.tuner.tune(res.data.feed, {
       dryRun: false,
@@ -236,20 +257,27 @@ class MergeFeedSource_Following extends MergeFeedSource {
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
+  getAgent: () => BskyAgent
   minDate: Date
   feedUri: string
   userInterests?: string
 
   constructor({
+    getAgent,
     feedUri,
     feedTuners,
     userInterests,
   }: {
+    getAgent: () => BskyAgent
     feedUri: string
     feedTuners: FeedTunerFn[]
     userInterests?: string
   }) {
-    super(feedTuners)
+    super({
+      getAgent,
+      feedTuners,
+    })
+    this.getAgent = getAgent
     this.feedUri = feedUri
     this.userInterests = userInterests
     this.sourceInfo = {
@@ -258,6 +286,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
       href: feedUriToHref(feedUri),
     }
     this.minDate = new Date(Date.now() - POST_AGE_CUTOFF)
+    this.userInterests = userInterests
   }
 
   protected async _getFeed(
@@ -267,7 +296,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     try {
       const contentLangs = getContentLanguages().join(',')
       const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri)
-      const res = await getAgent().app.bsky.feed.getFeed(
+      const res = await this.getAgent().app.bsky.feed.getFeed(
         {
           cursor,
           limit,
