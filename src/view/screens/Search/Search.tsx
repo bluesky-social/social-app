@@ -533,8 +533,9 @@ export function SearchScreen(
     scrollToTopWeb()
 
     if (inputIsFocused) {
-      setSearchText(queryParam)
       textInput.current?.blur()
+      setInputIsFocused(false)
+      setSearchText(queryParam)
     } else {
       navigation.setParams({q: ''})
     }
@@ -658,16 +659,6 @@ export function SearchScreen(
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
-            onBlur={() => {
-              // HACK
-              // give 100ms to not stop click handlers in the search history
-              // -prf
-              setTimeout(
-                () =>
-                  setInputIsFocused(Boolean(textInput.current?.isFocused())),
-                100,
-              )
-            }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             autoFocus={false}
