@@ -381,6 +381,18 @@ let PreviewableUserAvatar = (
   const {_} = useLingui()
   const queryClient = useQueryClient()
 
+  const onPress = React.useCallback(() => {
+    const profile: AppBskyActorDefs.ProfileViewBasic = {
+      handle: props.handle,
+      displayName: props.displayName,
+      did: props.did,
+      avatar: props.avatar ?? undefined,
+    }
+
+    queryClient.setQueryData(RQKEY_URI(profile.handle), profile.did)
+    queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
+  }, [props.avatar, props.did, props.displayName, props.handle, queryClient])
+
   return (
     <ProfileHoverCard did={props.did}>
       <Link
@@ -389,17 +401,7 @@ let PreviewableUserAvatar = (
           did: props.did,
           handle: props.handle,
         })}
-        onPress={() => {
-          const profile: AppBskyActorDefs.ProfileViewBasic = {
-            handle: props.handle,
-            displayName: props.displayName,
-            did: props.did,
-            avatar: props.avatar ?? undefined,
-          }
-
-          queryClient.setQueryData(RQKEY_URI(profile.handle), profile.did)
-          queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
-        }}>
+        onPress={onPress}>
         <UserAvatar {...props} />
       </Link>
     </ProfileHoverCard>
