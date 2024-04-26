@@ -1,5 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import {StyleSheet, TouchableOpacity} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -10,8 +10,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {clamp} from 'lib/numbers'
 import {gradients} from 'lib/styles'
 
-export interface FABProps
-  extends ComponentProps<typeof TouchableWithoutFeedback> {
+export interface FABProps extends ComponentProps<typeof TouchableOpacity> {
   testID?: string
   icon: JSX.Element
 }
@@ -34,7 +33,7 @@ export function FABInner({testID, icon, ...props}: FABProps) {
   }, [insets.bottom, isTablet])
 
   return (
-    <TouchableWithoutFeedback testID={testID} {...props}>
+    <TouchableOpacity testID={testID} {...props}>
       <Animated.View
         style={[
           styles.outer,
@@ -50,7 +49,7 @@ export function FABInner({testID, icon, ...props}: FABProps) {
           {icon}
         </LinearGradient>
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   )
 }
 
