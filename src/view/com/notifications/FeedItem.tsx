@@ -341,6 +341,7 @@ function CondensedAuthorsList({
           size={35}
           did={authors[0].did}
           handle={authors[0].handle}
+          displayName={authors[0].displayName}
           avatar={authors[0].avatar}
           moderation={authors[0].moderation.ui('avatar')}
           type={authors[0].associated?.labeler ? 'labeler' : 'user'}
@@ -362,6 +363,7 @@ function CondensedAuthorsList({
               size={35}
               did={author.did}
               handle={author.handle}
+              displayName={author.displayName}
               avatar={author.avatar}
               moderation={author.moderation.ui('avatar')}
               type={author.associated?.labeler ? 'labeler' : 'user'}

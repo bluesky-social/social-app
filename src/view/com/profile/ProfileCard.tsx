@@ -93,6 +93,7 @@ export function ProfileCard({
             size={40}
             did={profile.did}
             handle={profile.handle}
+            displayName={profile.displayName}
             avatar={profile.avatar}
             moderation={moderation.ui('avatar')}
             type={isLabeler ? 'labeler' : 'user'}
@@ -240,6 +241,7 @@ function FollowersList({
               size={32}
               did={f.did}
               handle={f.handle}
+              displayName={f.displayName}
               avatar={f.avatar}
               moderation={mod.ui('avatar')}
               type={f.associated?.labeler ? 'labeler' : 'user'}

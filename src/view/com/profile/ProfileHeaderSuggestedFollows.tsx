@@ -222,6 +222,7 @@ function SuggestedFollow({
           size={60}
           did={profile.did}
           handle={profile.handle}
+          displayName={profile.displayName}
           avatar={profile.avatar}
           moderation={moderation.ui('avatar')}
         />

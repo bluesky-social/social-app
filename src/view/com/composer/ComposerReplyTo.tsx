@@ -88,6 +88,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         size={50}
         did={replyTo.author.did}
         handle={replyTo.author.handle}
+        displayName={replyTo.author.displayName}
         avatar={replyTo.author.avatar}
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}

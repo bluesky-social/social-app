@@ -2,10 +2,11 @@ import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {usePalette} from 'lib/hooks/usePalette'
 import {
@@ -15,6 +16,8 @@ import {
 import {makeProfileLink} from 'lib/routes/links'
 import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
+import {RQKEY as RQKEY_URI} from 'state/queries/resolve-uri'
 import {HighPriorityImage} from 'view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {
@@ -49,6 +52,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   did: string
   handle: string
+  displayName?: string
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -375,6 +379,8 @@ let PreviewableUserAvatar = (
   props: PreviewableUserAvatarProps,
 ): React.ReactNode => {
   const {_} = useLingui()
+  const queryClient = useQueryClient()
+
   return (
     <ProfileHoverCard did={props.did}>
       <Link
@@ -382,7 +388,18 @@ let PreviewableUserAvatar = (
         to={makeProfileLink({
           did: props.did,
           handle: props.handle,
-        })}>
+        })}
+        onPress={() => {
+          const profile: AppBskyActorDefs.ProfileViewBasic = {
+            handle: props.handle,
+            displayName: props.displayName,
+            did: props.did,
+            avatar: props.avatar ?? undefined,
+          }
+
+          queryClient.setQueryData(RQKEY_URI(profile.handle), profile.did)
+          queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
+        }}>
         <UserAvatar {...props} />
       </Link>
     </ProfileHoverCard>

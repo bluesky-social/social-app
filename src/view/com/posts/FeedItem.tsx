@@ -242,6 +242,7 @@ let FeedItemInner = ({
             size={52}
             did={post.author.did}
             handle={post.author.handle}
+            displayName={post.author.displayName}
             avatar={post.author.avatar}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
