@@ -608,7 +608,7 @@ msgstr "Suche abbrechen"
 
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
-msgstr "Abbruch des Öffnens der verlinkten Website"
+msgstr "Bricht das Öffnen der verlinkten Website ab"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -927,7 +927,7 @@ msgstr "Inhaltswarnungen"
 
 #: src/components/Menu/index.web.tsx:84
 msgid "Context menu backdrop, click to close the menu."
-msgstr "Hintergrund des Kontextmenüs, klicken, um das Menü zu schließen."
+msgstr "Hintergrund des Kontextmenüs; klicken, um das Menü zu schließen."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:161
 #: src/screens/Onboarding/StepFollowingFeed.tsx:154
@@ -994,12 +994,12 @@ msgstr "Kopieren"
 
 #: src/view/com/modals/ChangeHandle.tsx:480
 msgid "Copy {0}"
-msgstr "{0} kopieren"
+msgstr "Kopiere {0}"
 
 #: src/components/dialogs/Embed.tsx:120
 #: src/components/dialogs/Embed.tsx:139
 msgid "Copy code"
-msgstr "Kopieren diesen Code"
+msgstr "Kopiere den Code"
 
 #: src/view/screens/ProfileList.tsx:390
 msgid "Copy link to list"
@@ -1044,7 +1044,7 @@ msgstr "Konto erstellen"
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
 msgid "Create an account"
-msgstr "Ein Konto erstellen"
+msgstr "Erstelle ein Konto"
 
 #: src/view/com/modals/AddAppPasswords.tsx:227
 msgid "Create App Password"
@@ -1433,7 +1433,7 @@ msgstr "E-Mail:"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed HTML code"
-msgstr "HTML-Code zum Einbetten"
+msgstr "Bette HTML-Code ein"
 
 #: src/components/dialogs/Embed.tsx:97
 #: src/view/com/util/forms/PostDropdownBtn.tsx:257
