@@ -16,8 +16,7 @@ import {
 import {makeProfileLink} from 'lib/routes/links'
 import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
-import {RQKEY as RQKEY_URI} from 'state/queries/resolve-uri'
+import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {
@@ -388,9 +387,7 @@ let PreviewableUserAvatar = (
       did: props.did,
       avatar: props.avatar ?? undefined,
     }
-
-    queryClient.setQueryData(RQKEY_URI(profile.handle), profile.did)
-    queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
+    precacheProfile(queryClient, profile)
   }, [props.avatar, props.did, props.displayName, props.handle, queryClient])
 
   return (
