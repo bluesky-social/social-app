@@ -456,7 +456,7 @@ msgstr "已屏蔽帖子。"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "屏蔽不能阻止这个用户在你的账户上放置标记。"
+msgstr "屏蔽这个用户不能阻止他继续标记你的账户。"
 
 #: src/view/screens/ProfileList.tsx:633
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
