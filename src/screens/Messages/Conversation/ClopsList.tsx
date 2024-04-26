@@ -119,7 +119,7 @@ export const ClopsList = () => {
   }, [])
 
   return (
-    <View style={{flex: 1, marginBottom: 100, paddingHorizontal: 10}}>
+    <View style={{flex: 1, marginBottom: 85}}>
       <FlatList
         data={clops}
         keyExtractor={item => item.id}
@@ -127,19 +127,22 @@ export const ClopsList = () => {
           minIndexForVisible: 1,
         }}
         renderItem={renderItem}
+        contentContainerStyle={{paddingHorizontal: 10}}
+        initialNumToRender={20}
+        maxToRenderPerBatch={20}
+        inverted={true}
+        onEndReached={onEndReached}
+        onScrollToIndexFailed={onScrollToEndFailed}
         onContentSizeChange={onContentSizeChange}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        ref={flatListRef}
-        initialNumToRender={20}
-        maxToRenderPerBatch={20}
-        inverted
-        onEndReached={onEndReached}
-        onScrollToIndexFailed={onScrollToEndFailed}
         ListFooterComponent={<MaybeLoader isLoading={showSpinner} />}
         removeClippedSubviews
+        ref={flatListRef}
       />
-      <ClopInput onSendClop={addNewClop} />
+      <View style={{paddingHorizontal: 10}}>
+        <ClopInput onSendClop={addNewClop} />
+      </View>
     </View>
   )
 }
