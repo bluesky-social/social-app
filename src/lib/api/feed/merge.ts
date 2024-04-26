@@ -1,31 +1,51 @@
-import {AppBskyFeedDefs, AppBskyFeedGetTimeline} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedGetTimeline, BskyAgent} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
-import {timeout} from 'lib/async/timeout'
+
+import {getContentLanguages} from '#/state/preferences/languages'
+import {FeedParams} from '#/state/queries/post-feed'
 import {bundleAsync} from 'lib/async/bundle'
+import {timeout} from 'lib/async/timeout'
 import {feedUriToHref} from 'lib/strings/url-helpers'
 import {FeedTuner} from '../feed-manip'
-import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
-import {FeedParams} from '#/state/queries/post-feed'
 import {FeedTunerFn} from '../feed-manip'
-import {getAgent} from '#/state/session'
-import {getContentLanguages} from '#/state/preferences/languages'
+import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
+  getAgent: () => BskyAgent
+  params: FeedParams
+  feedTuners: FeedTunerFn[]
   following: MergeFeedSource_Following
   customFeeds: MergeFeedSource_Custom[] = []
   feedCursor = 0
   itemCursor = 0
   sampleCursor = 0
 
-  constructor(public params: FeedParams, public feedTuners: FeedTunerFn[]) {
-    this.following = new MergeFeedSource_Following(this.feedTuners)
+  constructor({
+    getAgent,
+    feedParams,
+    feedTuners,
+  }: {
+    getAgent: () => BskyAgent
+    feedParams: FeedParams
+    feedTuners: FeedTunerFn[]
+  }) {
+    this.getAgent = getAgent
+    this.params = feedParams
+    this.feedTuners = feedTuners
+    this.following = new MergeFeedSource_Following({
+      getAgent: this.getAgent,
+      feedTuners: this.feedTuners,
+    })
   }
 
   reset() {
-    this.following = new MergeFeedSource_Following(this.feedTuners)
+    this.following = new MergeFeedSource_Following({
+      getAgent: this.getAgent,
+      feedTuners: this.feedTuners,
+    })
     this.customFeeds = []
     this.feedCursor = 0
     this.itemCursor = 0
@@ -33,7 +53,12 @@ export class MergeFeedAPI implements FeedAPI {
     if (this.params.mergeFeedSources) {
       this.customFeeds = shuffle(
         this.params.mergeFeedSources.map(
-          feedUri => new MergeFeedSource_Custom(feedUri, this.feedTuners),
+          feedUri =>
+            new MergeFeedSource_Custom({
+              getAgent: this.getAgent,
+              feedUri,
+              feedTuners: this.feedTuners,
+            }),
         ),
       )
     } else {
@@ -42,7 +67,7 @@ export class MergeFeedAPI implements FeedAPI {
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await getAgent().getTimeline({
+    const res = await this.getAgent().getTimeline({
       limit: 1,
     })
     return res.data.feed[0]
@@ -136,12 +161,23 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
+  getAgent: () => BskyAgent
+  feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
   queue: AppBskyFeedDefs.FeedViewPost[] = []
   hasMore = true
 
-  constructor(public feedTuners: FeedTunerFn[]) {}
+  constructor({
+    getAgent,
+    feedTuners,
+  }: {
+    getAgent: () => BskyAgent
+    feedTuners: FeedTunerFn[]
+  }) {
+    this.getAgent = getAgent
+    this.feedTuners = feedTuners
+  }
 
   get numReady() {
     return this.queue.length
@@ -203,7 +239,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
-    const res = await getAgent().getTimeline({cursor, limit})
+    const res = await this.getAgent().getTimeline({cursor, limit})
     // run the tuner pre-emptively to ensure better mixing
     const slices = this.tuner.tune(res.data.feed, {
       dryRun: false,
@@ -215,10 +251,25 @@ class MergeFeedSource_Following extends MergeFeedSource {
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
+  getAgent: () => BskyAgent
   minDate: Date
+  feedUri: string
 
-  constructor(public feedUri: string, public feedTuners: FeedTunerFn[]) {
-    super(feedTuners)
+  constructor({
+    getAgent,
+    feedUri,
+    feedTuners,
+  }: {
+    getAgent: () => BskyAgent
+    feedUri: string
+    feedTuners: FeedTunerFn[]
+  }) {
+    super({
+      getAgent,
+      feedTuners,
+    })
+    this.getAgent = getAgent
+    this.feedUri = feedUri
     this.sourceInfo = {
       $type: 'reasonFeedSource',
       uri: feedUri,
@@ -233,13 +284,17 @@ class MergeFeedSource_Custom extends MergeFeedSource {
   ): Promise<AppBskyFeedGetTimeline.Response> {
     try {
       const contentLangs = getContentLanguages().join(',')
-      const res = await getAgent().app.bsky.feed.getFeed(
+      const res = await this.getAgent().app.bsky.feed.getFeed(
         {
           cursor,
           limit,
           feed: this.feedUri,
         },
-        {headers: {'Accept-Language': contentLangs}},
+        {
+          headers: {
+            'Accept-Language': contentLangs,
+          },
+        },
       )
       // NOTE
       // some custom feeds fail to enforce the pagination limit

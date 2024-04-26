@@ -28,8 +28,8 @@ import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {useTheme} from 'lib/ThemeContext'
 import {isIOS} from 'platform/detection'
 import {
-  addLinkCardIfNecessary,
-  findIndexInText,
+  LinkFacetMatch,
+  suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
 import {Text} from 'view/com/util/text/Text'
 import {Autocomplete} from './mobile/Autocomplete'
@@ -73,7 +73,6 @@ export const TextInput = forwardRef(function TextInputImpl(
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
   const prevLength = React.useRef(richtext.length)
-  const prevAddedLinks = useRef(new Set<string>())
 
   React.useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
@@ -83,6 +82,8 @@ export const TextInput = forwardRef(function TextInputImpl(
     getCursorPosition: () => undefined, // Not implemented on native
   }))
 
+  const pastSuggestedUris = useRef(new Set<string>())
+  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
   const onChangeText = useCallback(
     (newText: string) => {
       /*
@@ -112,6 +113,7 @@ export const TextInput = forwardRef(function TextInputImpl(
           setAutocompletePrefix('')
         }
 
+        const nextDetectedUris = new Map<string, LinkFacetMatch>()
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {
@@ -130,32 +132,26 @@ export const TextInput = forwardRef(function TextInputImpl(
                     onPhotoPasted(res.path)
                   }
                 } else {
-                  const cursorLocation = textInputSelection.current.end
-
-                  addLinkCardIfNecessary({
-                    uri: feature.uri,
-                    newText,
-                    cursorLocation,
-                    mayBePaste,
-                    onNewLink,
-                    prevAddedLinks: prevAddedLinks.current,
-                  })
+                  nextDetectedUris.set(feature.uri, {facet, rt: newRt})
                 }
               }
             }
           }
         }
-
-        for (const uri of prevAddedLinks.current.keys()) {
-          if (findIndexInText(uri, newText) === -1) {
-            prevAddedLinks.current.delete(uri)
-          }
+        const suggestedUri = suggestLinkCardUri(
+          mayBePaste,
+          nextDetectedUris,
+          prevDetectedUris.current,
+          pastSuggestedUris.current,
+        )
+        prevDetectedUris.current = nextDetectedUris
+        if (suggestedUri) {
+          onNewLink(suggestedUri)
         }
-
         prevLength.current = newText.length
       }, 1)
     },
-    [setRichText, autocompletePrefix, onPhotoPasted, prevAddedLinks, onNewLink],
+    [setRichText, autocompletePrefix, onPhotoPasted, onNewLink],
   )
 
   const onPaste = useCallback(

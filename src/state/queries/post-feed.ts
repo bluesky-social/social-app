@@ -4,6 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
+  BskyAgent,
   ModerationDecision,
 } from '@atproto/api'
 import {
@@ -19,7 +20,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
@@ -104,6 +105,7 @@ export function usePostFeedQuery(
   const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
+  const {getAgent} = useAgent()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
@@ -135,11 +137,15 @@ export function usePostFeedQuery(
     queryKey: RQKEY(feedDesc, params),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-
       const {api, cursor} = pageParam
         ? pageParam
         : {
-            api: createApi(feedDesc, params || {}, feedTuners),
+            api: createApi({
+              feedDesc,
+              feedParams: params || {},
+              feedTuners,
+              getAgent,
+            }),
             cursor: undefined,
           }
 
@@ -365,34 +371,47 @@ export async function pollLatest(page: FeedPage | undefined) {
   return false
 }
 
-function createApi(
-  feedDesc: FeedDescriptor,
-  params: FeedParams,
-  feedTuners: FeedTunerFn[],
-) {
+function createApi({
+  feedDesc,
+  feedParams,
+  feedTuners,
+  getAgent,
+}: {
+  feedDesc: FeedDescriptor
+  feedParams: FeedParams
+  feedTuners: FeedTunerFn[]
+  getAgent: () => BskyAgent
+}) {
   if (feedDesc === 'home') {
-    if (params.mergeFeedEnabled) {
-      return new MergeFeedAPI(params, feedTuners)
+    if (feedParams.mergeFeedEnabled) {
+      return new MergeFeedAPI({
+        getAgent,
+        feedParams,
+        feedTuners,
+      })
     } else {
-      return new HomeFeedAPI()
+      return new HomeFeedAPI({getAgent})
     }
   } else if (feedDesc === 'following') {
-    return new FollowingFeedAPI()
+    return new FollowingFeedAPI({getAgent})
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({actor, filter})
+    return new AuthorFeedAPI({getAgent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
     const [_, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({actor})
+    return new LikesFeedAPI({getAgent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
-    return new CustomFeedAPI({feed})
+    return new CustomFeedAPI({
+      getAgent,
+      feedParams: {feed},
+    })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
-    return new ListFeedAPI({list})
+    return new ListFeedAPI({getAgent, feedParams: {list}})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI()
+    return new FollowingFeedAPI({getAgent})
   }
 }
 
