@@ -551,11 +551,7 @@ export function SearchScreen(
       setSearchText(q)
       textInput.current?.blur()
     } else {
-      if (isWeb && q) {
-        navigation.goBack()
-      } else {
-        navigation.setParams({q: ''})
-      }
+      navigation.setParams({q: ''})
     }
   }, [inputIsFocused, navigation, q])
 
@@ -721,11 +717,7 @@ export function SearchScreen(
               accessibilityRole="button"
               hitSlop={HITSLOP_10}>
               <Text style={[pal.text]}>
-                {isWeb && !inputIsFocused && q ? (
-                  <Trans>Back</Trans>
-                ) : (
-                  <Trans>Cancel</Trans>
-                )}
+                <Trans>Cancel</Trans>
               </Text>
             </Pressable>
           </View>
