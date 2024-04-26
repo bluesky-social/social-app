@@ -4702,7 +4702,7 @@ msgstr "该信息流为空！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "该信息流为空！你或许需要先关注更多的用户或检查你的语言设置。"
+msgstr "信息流为空！你或许需要先关注更多的用户，或检查你的语言设置。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
