@@ -537,8 +537,14 @@ export function SearchScreen(
       setInputIsFocused(false)
       setSearchText(queryParam)
     } else {
-      // The empty object will remove `q=` from the URL
-      navigation.setParams({})
+      // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
+      // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
+      // differently.
+      if (isWeb) {
+        navigation.replace('Search', {})
+      } else {
+        navigation.setParams({q: ''})
+      }
     }
   }, [inputIsFocused, navigation, queryParam])
 
