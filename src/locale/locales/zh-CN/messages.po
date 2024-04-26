@@ -2195,7 +2195,7 @@ msgstr "邀请码：1 个可用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 msgid "It shows posts from the people you follow as they happen."
-msgstr "它将会显示你所关注的用户所发布的帖子。"
+msgstr "这将会显示你所关注的用户所发布的帖子。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Jobs"
