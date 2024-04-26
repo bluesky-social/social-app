@@ -7,12 +7,13 @@ import {Text} from '#/components/Typography'
 export function ClopInput({
   onSendClop,
   onFocus,
+  onBlur,
 }: {
   onSendClop: (clop: string) => void
   onFocus: () => void
+  onBlur: () => void
 }) {
   const t = useTheme()
-
   const [clop, setClop] = React.useState('')
 
   const inputRef = React.useRef<TextInput>(null)
@@ -44,8 +45,8 @@ export function ClopInput({
         style={[a.flex_1, a.text_sm, a.px_sm]}
         onSubmitEditing={onSubmit}
         onFocus={onFocus}
+        onBlur={onBlur}
         placeholderTextColor={t.palette.contrast_500}
-        autoFocus={true}
         ref={inputRef}
       />
       <Pressable

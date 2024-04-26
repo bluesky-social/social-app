@@ -1,7 +1,8 @@
 import React from 'react'
 import {FlatList, View, ViewToken} from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
-import {isNative} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {ClopInput} from '#/screens/Messages/Conversation/ClopInput'
 import {ClopItem} from '#/screens/Messages/Conversation/ClopItem'
 import {
@@ -125,8 +126,14 @@ export const ClopsList = () => {
     }
   }, [])
 
+  const onInputBlur = React.useCallback(() => {}, [])
+
   return (
-    <View style={{flex: 1, marginBottom: isNative ? 85 : 20}}>
+    <KeyboardAvoidingView
+      style={{flex: 1, marginBottom: isWeb ? 20 : 85}}
+      behavior="padding"
+      keyboardVerticalOffset={70}
+      contentContainerStyle={{flex: 1}}>
       <FlatList
         data={clops}
         keyExtractor={item => item.id}
@@ -146,11 +153,15 @@ export const ClopsList = () => {
         ListFooterComponent={<MaybeLoader isLoading={showSpinner} />}
         removeClippedSubviews
         ref={flatListRef}
-        keyboardDismissMode="on-drag"
+        keyboardDismissMode="none"
       />
       <View style={{paddingHorizontal: 10}}>
-        <ClopInput onSendClop={addNewClop} onFocus={onInputFocus} />
+        <ClopInput
+          onSendClop={addNewClop}
+          onFocus={onInputFocus}
+          onBlur={onInputBlur}
+        />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
