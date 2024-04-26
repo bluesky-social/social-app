@@ -49,7 +49,7 @@ msgstr "<0>選擇你的</0><1>推薦</1><2>訊息流</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:38
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-msgstr "<0>跟隨一些</0><1>推薦的</1><2>使用者</2>"
+msgstr "<0>跟隨一些</0><1>推薦的</1><2>用戶</2>"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
 msgid "<0>Welcome to</0><1>Bluesky</1>"
@@ -152,7 +152,7 @@ msgstr "新增內容警告"
 
 #: src/view/screens/ProfileList.tsx:819
 msgid "Add a user to this list"
-msgstr "將使用者新增至此列表"
+msgstr "將用戶新增至此列表"
 
 #: src/components/dialogs/SwitchAccount.tsx:56
 #: src/view/screens/Settings/index.tsx:398
@@ -257,7 +257,7 @@ msgstr "替代文字"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "替代文字為盲人和視覺受損的使用者描述圖片，並幫助所有人提供上下文。"
+msgstr "替代文字為盲人和視覺受損的用戶描述圖片，並幫助所有人提供上下文。"
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
@@ -504,7 +504,7 @@ msgstr "Bluesky 為公眾而生。"
 
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 不會向未登入的使用者顯示你的個人資料和貼文。但其他應用可能不會遵照此請求，這無法確保你的帳號隱私。"
+msgstr "Bluesky 不會向未登入的用戶顯示你的個人資料和貼文。但其他應用可能不會遵照此請求，這無法確保你的帳號隱私。"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -668,7 +668,7 @@ msgstr "來看看一些推薦的訊息流吧。點擊 + 將它們新增到你的
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:186
 msgid "Check out some recommended users. Follow them to see similar users."
-msgstr "來看看一些推薦的使用者吧。跟隨人來查看類似的使用者。"
+msgstr "來看看一些推薦的用戶吧。跟隨他們來查看類似的用戶。"
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
@@ -810,7 +810,7 @@ msgstr "關閉標題圖片檢視器"
 
 #: src/view/com/notifications/FeedItem.tsx:323
 msgid "Collapses list of users for a given notification"
-msgstr "折疊指定通知的使用者清單"
+msgstr "折疊指定通知的用戶清單"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Comedy"
@@ -1234,7 +1234,7 @@ msgstr "捨棄草稿？"
 #: src/screens/Moderation/index.tsx:518
 #: src/screens/Moderation/index.tsx:522
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "鼓勵應用程式不要向未登入使用者顯示我的帳號"
+msgstr "鼓勵應用程式不要向未登入用戶顯示我的帳號"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
@@ -1355,7 +1355,7 @@ msgstr "例如：絕對不容錯過的發文者。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:314
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "例如：張貼廣告回覆的使用者。"
+msgstr "例如：張貼廣告回覆的用戶。"
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
@@ -1411,7 +1411,7 @@ msgstr "編輯已儲存的訊息流"
 
 #: src/view/com/modals/CreateOrEditList.tsx:246
 msgid "Edit User List"
-msgstr "編輯使用者列表"
+msgstr "編輯用戶列表"
 
 #: src/view/com/modals/EditProfile.tsx:194
 msgid "Edit your display name"
@@ -1559,7 +1559,7 @@ msgstr "請在下方輸入你的新電子郵件地址。"
 
 #: src/screens/Login/index.tsx:101
 msgid "Enter your username and password"
-msgstr "輸入你的使用者名稱和密碼"
+msgstr "輸入你的用戶名稱和密碼"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:49
 msgid "Error receiving captcha response."
@@ -1700,11 +1700,11 @@ msgstr "訊息流"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr "訊息流由使用者建立並管理。選擇一些你覺得有趣的訊息流。"
+msgstr "訊息流由用戶建立並管理。選擇一些你覺得有趣的訊息流。"
 
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "訊息流是使用者用一點程式技能建立的自訂演算法。更多資訊請見 <0/>。"
+msgstr "訊息流是用戶用一點程式技能建立的自訂演算法。更多資訊請見 <0/>。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 msgid "Feeds can be topical as well!"
@@ -1730,15 +1730,15 @@ msgstr "尋找一些要跟隨的帳號"
 
 #: src/view/screens/Search/Search.tsx:521
 msgid "Find posts and users on Bluesky"
-msgstr "在 Bluesky 上尋找貼文和使用者"
+msgstr "在 Bluesky 上尋找貼文和用戶"
 
 #: src/view/screens/Search/Search.tsx:589
 #~ msgid "Find users on Bluesky"
-#~ msgstr "在 Bluesky 上尋找使用者"
+#~ msgstr "在 Bluesky 上尋找用戶"
 
 #: src/view/screens/Search/Search.tsx:587
 #~ msgid "Find users with the search tool on the right"
-#~ msgstr "使用右側的搜尋工具尋找使用者"
+#~ msgstr "使用右側的搜尋工具尋找用戶"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
 msgid "Finding similar accounts..."
@@ -1803,11 +1803,11 @@ msgstr "回追蹤"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
-msgstr "跟隨選擇的使用者並繼續下一步"
+msgstr "跟隨選擇的用戶並繼續下一步"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-msgstr "跟隨一些使用者以開始，我們可以根據你感興趣的使用者向你推薦更多相似使用者。"
+msgstr "跟隨一些用戶以開始，我們可以根據你感興趣的用戶向你推薦更多相似用戶。"
 
 #: src/view/com/profile/ProfileCard.tsx:231
 msgid "Followed by {0}"
@@ -1815,11 +1815,11 @@ msgstr "由 {0} 跟隨"
 
 #: src/view/com/modals/Threadgate.tsx:98
 msgid "Followed users"
-msgstr "已跟隨的使用者"
+msgstr "已跟隨的用戶"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:154
 msgid "Followed users only"
-msgstr "僅限已跟隨的使用者"
+msgstr "僅限已跟隨的用戶"
 
 #: src/view/com/notifications/FeedItem.tsx:172
 msgid "followed you"
@@ -2041,7 +2041,7 @@ msgstr "隱藏這則貼文？"
 
 #: src/view/com/notifications/FeedItem.tsx:321
 msgid "Hide user list"
-msgstr "隱藏使用者列表"
+msgstr "隱藏用戶列表"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -2178,7 +2178,7 @@ msgstr "輸入與 {identifier} 關聯的密碼"
 
 #: src/screens/Login/LoginForm.tsx:185
 msgid "Input the username or email address you used at signup"
-msgstr "輸入註冊時使用的使用者名稱或電子郵件地址"
+msgstr "輸入註冊時使用的用戶名稱或電子郵件地址"
 
 #: src/screens/Login/LoginForm.tsx:211
 msgid "Input your password"
@@ -2203,7 +2203,7 @@ msgstr "無效或不支援的貼文紀錄"
 
 #: src/screens/Login/LoginForm.tsx:131
 msgid "Invalid username or password"
-msgstr "使用者名稱或密碼無效"
+msgstr "用戶名稱或密碼無效"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -2255,7 +2255,7 @@ msgstr "標籤"
 
 #: src/screens/Profile/Sections/Labels.tsx:153
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "標籤是對使用者和內容的標註，可用於隱藏、警告和對網路進行分類。"
+msgstr "標籤是對用戶和內容的標註，可用於隱藏、警告和對網路進行分類。"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 msgid "labels have been placed on this {labelTarget}"
@@ -2495,11 +2495,11 @@ msgstr "媒體"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:139
 msgid "mentioned users"
-msgstr "提及的使用者"
+msgstr "提及的用戶"
 
 #: src/view/com/modals/Threadgate.tsx:93
 msgid "Mentioned users"
-msgstr "提及的使用者"
+msgstr "提及的用戶"
 
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:726
@@ -2787,7 +2787,7 @@ msgstr "新貼文"
 
 #: src/view/com/modals/CreateOrEditList.tsx:248
 msgid "New User List"
-msgstr "新的使用者列表"
+msgstr "新的用戶列表"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
@@ -2916,7 +2916,7 @@ msgstr "關於分享的注意事項"
 
 #: src/screens/Moderation/index.tsx:540
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制你在 Bluesky 應用程式和網站上的內容可見性，其他應用程式可能不尊重此設定。你的內容仍可能由其他應用程式和網站顯示給未登入的使用者。"
+msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制你在 Bluesky 應用程式和網站上的內容可見性，其他應用程式可能不尊重此設定。你的內容仍可能由其他應用程式和網站顯示給未登入的用戶。"
 
 #: src/Navigation.tsx:470
 #: src/view/screens/Notifications.tsx:124
@@ -3044,7 +3044,7 @@ msgstr "開啟除錯項目的額外詳細資訊"
 
 #: src/view/com/notifications/FeedItem.tsx:355
 msgid "Opens an expanded list of users in this notification"
-msgstr "展開此通知的使用者列表"
+msgstr "展開此通知的用戶列表"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:74
 msgid "Opens camera on device"
@@ -3208,7 +3208,7 @@ msgstr "暫停"
 
 #: src/view/screens/Search/Search.tsx:438
 msgid "People"
-msgstr "人"
+msgstr "人物"
 
 #: src/Navigation.tsx:165
 msgid "People followed by @{0}"
@@ -3508,7 +3508,7 @@ msgstr "推薦訊息流"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:181
 msgid "Recommended Users"
-msgstr "推薦的使用者"
+msgstr "推薦的用戶"
 
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:283
@@ -3657,7 +3657,7 @@ msgstr "檢舉這則貼文"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:46
 msgid "Report this user"
-msgstr "檢舉這個使用者"
+msgstr "檢舉這個用戶"
 
 #: src/view/com/modals/Repost.tsx:44
 #: src/view/com/modals/Repost.tsx:49
@@ -3892,7 +3892,7 @@ msgstr "搜尋所有具有標籤 {displayTag} 的貼文"
 #: src/view/com/auth/LoggedOut.tsx:106
 #: src/view/com/modals/ListAddRemoveUsers.tsx:70
 msgid "Search for users"
-msgstr "搜尋使用者"
+msgstr "搜尋用戶"
 
 #: src/components/dialogs/GifSelect.tsx:158
 msgid "Search GIFs"
@@ -3912,7 +3912,7 @@ msgstr "查看 {truncatedTag} 的貼文"
 
 #: src/components/TagMenu/index.web.tsx:83
 msgid "See {truncatedTag} posts by user"
-msgstr "查看使用者的 {truncatedTag} 貼文"
+msgstr "查看用戶的 {truncatedTag} 貼文"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{displayTag}</0> posts"
@@ -3920,7 +3920,7 @@ msgstr "查看 <0>{displayTag}</0> 的貼文"
 
 #: src/components/TagMenu/index.tsx:187
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "查看這個使用者的 <0>{displayTag}</0> 貼文"
+msgstr "查看這個用戶的 <0>{displayTag}</0> 貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:419
 #: src/view/com/util/UserAvatar.tsx:381
@@ -4086,7 +4086,7 @@ msgstr "設定你的帳號"
 
 #: src/view/com/modals/ChangeHandle.tsx:267
 msgid "Sets Bluesky username"
-msgstr "設定 Bluesky 使用者名稱"
+msgstr "設定 Bluesky 用戶名稱"
 
 #: src/view/screens/Settings/index.tsx:436
 msgid "Sets color theme to dark"
@@ -4265,7 +4265,7 @@ msgstr "顯示內容"
 
 #: src/view/com/notifications/FeedItem.tsx:353
 msgid "Show users"
-msgstr "顯示使用者"
+msgstr "顯示用戶"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:58
 msgid "Show warning"
@@ -4685,7 +4685,7 @@ msgstr "應用程式中發生了意外問題。請告訴我們是否發生在你
 
 #: src/screens/Deactivated.tsx:106
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Bluesky 迎來了大量新使用者！我們將儘快啟用你的帳號。"
+msgstr "Bluesky 迎來了大量新用戶！我們將儘快啟用你的帳號。"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
 msgid "These are popular accounts you might like:"
@@ -4697,7 +4697,7 @@ msgstr "{screenDescription} 已被標記："
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
-msgstr "此帳號要求使用者登入後才能查看其個人資料。"
+msgstr "此帳號要求用戶登入後才能查看其個人資料。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:204
 msgid "This appeal will be sent to <0>{0}</0>."
@@ -4718,7 +4718,7 @@ msgstr "此內容由 {0} 托管。是否要啟用外部媒體？"
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:77
 msgid "This content is not available because one of the users involved has blocked the other."
-msgstr "由於其中一個使用者封鎖了另一個使用者，無法查看此內容。"
+msgstr "由於其中一個用戶封鎖了另一個用戶，無法查看此內容。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "This content is not viewable without a Bluesky account."
@@ -4744,7 +4744,7 @@ msgstr "這個訊息流是空的！你或許需要先跟隨更多的人或檢查
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
-msgstr "此資訊不會分享給其他使用者。"
+msgstr "此資訊不會分享給其他用戶。"
 
 #: src/view/com/modals/VerifyEmail.tsx:127
 msgid "This is important in case you ever need to change your email or reset your password."
@@ -4781,7 +4781,7 @@ msgstr "這則貼文已被刪除。"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:370
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:250
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "這則貼文僅對登入使用者可見。 未登入的人將看不到它。"
+msgstr "這則貼文僅對登入用戶可見。 未登入的人將看不到它。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:352
 msgid "This post will be hidden from feeds."
@@ -4789,7 +4789,7 @@ msgstr "這則貼文將從訊息流中被隱藏。"
 
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "此個人資料僅對登入使用者可見。 未登入的人將看不到它。"
+msgstr "此個人資料僅對登入用戶可見。 未登入的人將看不到它。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -4801,12 +4801,12 @@ msgstr "這應該在以下位置創建一個域記錄："
 
 #: src/view/com/profile/ProfileFollowers.tsx:87
 msgid "This user doesn't have any followers."
-msgstr "此使用者沒有任何追隨者。"
+msgstr "此用戶沒有任何追隨者。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:72
 #: src/lib/moderation/useModerationCauseDescription.ts:68
 msgid "This user has blocked you. You cannot view their content."
-msgstr "此使用者已封鎖你，你無法查看他們的內容。"
+msgstr "此用戶已封鎖你，你無法查看他們的內容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -4814,15 +4814,15 @@ msgstr "此用戶要求僅將其內容顯示給已登錄的用戶。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:55
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
-msgstr "此使用者包含在你已封鎖的 <0>{0}</0> 列表中。"
+msgstr "此用戶包含在你已封鎖的 <0>{0}</0> 列表中。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:84
 msgid "This user is included in the <0>{0}</0> list which you have muted."
-msgstr "此使用者包含在你已靜音的 <0>{0}</0> 列表中。"
+msgstr "此用戶包含在你已靜音的 <0>{0}</0> 列表中。"
 
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
-msgstr "此使用者未跟隨任何人。"
+msgstr "此用戶未跟隨任何人。"
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -4872,7 +4872,7 @@ msgstr "切換以啟用或禁用成人內容"
 #: src/screens/Hashtag.tsx:88
 #: src/view/screens/Search/Search.tsx:418
 msgid "Top"
-msgstr "最夯"
+msgstr "熱門"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
@@ -5060,7 +5060,7 @@ msgstr "使用伺服器上的檔案"
 
 #: src/view/screens/AppPasswords.tsx:197
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "使用應用程式專用密碼登入到其他 Bluesky 使用者端，而無需提供你的帳號或密碼。"
+msgstr "使用應用程式專用密碼登入到其他 Bluesky 用戶端，而無需提供你的帳號或密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:517
 msgid "Use bsky.social as hosting provider"
@@ -5095,70 +5095,70 @@ msgstr "使用者："
 #: src/components/moderation/ModerationDetailsDialog.tsx:64
 #: src/lib/moderation/useModerationCauseDescription.ts:56
 msgid "User Blocked"
-msgstr "使用者被封鎖"
+msgstr "用戶被封鎖"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:48
 msgid "User Blocked by \"{0}\""
-msgstr "使用者被\"{0}\"封鎖"
+msgstr "用戶被\"{0}\"封鎖"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:53
 msgid "User Blocked by List"
-msgstr "使用者被列表封鎖"
+msgstr "用戶被列表封鎖"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:66
 msgid "User Blocking You"
-msgstr "使用者封鎖了你"
+msgstr "用戶封鎖了你"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 msgid "User Blocks You"
-msgstr "使用者封鎖了你"
+msgstr "用戶封鎖了你"
 
 #: src/view/com/lists/ListCard.tsx:85
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
 msgid "User list by {0}"
-msgstr "{0} 的使用者列表"
+msgstr "{0} 的用戶列表"
 
 #: src/view/screens/ProfileList.tsx:779
 msgid "User list by <0/>"
-msgstr "<0/> 的使用者列表"
+msgstr "<0/> 的用戶列表"
 
 #: src/view/com/lists/ListCard.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
 #: src/view/screens/ProfileList.tsx:777
 msgid "User list by you"
-msgstr "你的使用者列表"
+msgstr "你的用戶列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:197
 msgid "User list created"
-msgstr "使用者列表已建立"
+msgstr "用戶列表已建立"
 
 #: src/view/com/modals/CreateOrEditList.tsx:183
 msgid "User list updated"
-msgstr "使用者列表已更新"
+msgstr "用戶列表已更新"
 
 #: src/view/screens/Lists.tsx:58
 msgid "User Lists"
-msgstr "使用者列表"
+msgstr "用戶列表"
 
 #: src/screens/Login/LoginForm.tsx:168
 msgid "Username or email address"
-msgstr "使用者名稱或電子郵件地址"
+msgstr "用戶名稱或電子郵件地址"
 
 #: src/view/screens/ProfileList.tsx:813
 msgid "Users"
-msgstr "使用者"
+msgstr "用戶"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:143
 msgid "users followed by <0/>"
-msgstr "跟隨 <0/> 的使用者"
+msgstr "跟隨 <0/> 的用戶"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
-msgstr "「{0}」中的使用者"
+msgstr "「{0}」中的用戶"
 
 #: src/components/LikesDialog.tsx:85
 msgid "Users that have liked this content or profile"
-msgstr "喜歡此內容或個人資料的使用者"
+msgstr "喜歡此內容或個人資料的用戶"
 
 #: src/view/com/modals/ChangeHandle.tsx:436
 msgid "Value:"
@@ -5237,7 +5237,7 @@ msgstr "查看由 @{0} 提供的標籤服務"
 
 #: src/view/screens/ProfileFeed.tsx:597
 msgid "View users who like this feed"
-msgstr "查看喜歡此訊息流的使用者"
+msgstr "查看喜歡此訊息流的用戶"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -5373,7 +5373,7 @@ msgstr "為什麼應該審查這則貼文？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Why should this user be reviewed?"
-msgstr "為什麼應該審查這個使用者？"
+msgstr "為什麼應該審查這個用戶？"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:103
 msgid "Wide"
@@ -5452,7 +5452,7 @@ msgstr "你已封鎖該作者，或你已被該作者封鎖。"
 #: src/lib/moderation/useModerationCauseDescription.ts:50
 #: src/lib/moderation/useModerationCauseDescription.ts:58
 msgid "You have blocked this user. You cannot view their content."
-msgstr "你已封鎖了此使用者，你將無法查看他們發佈的內容。"
+msgstr "你已封鎖了此用戶，你將無法查看他們發佈的內容。"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:54
 #: src/screens/Login/SetNewPasswordForm.tsx:91
@@ -5476,7 +5476,7 @@ msgstr "你已隱藏這個帳號。"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:86
 msgid "You have muted this user"
-msgstr "你已靜音這個使用者"
+msgstr "你已靜音這個用戶"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
@@ -5594,7 +5594,7 @@ msgstr "你的電子郵件地址尚未驗證。這是一個我們建議的重要
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的跟隨訊息流是空的！跟隨更多使用者看看發生了什麼事情。"
+msgstr "你的跟隨訊息流是空的！跟隨更多用戶看看發生了什麼事情。"
 
 #: src/screens/Signup/StepHandle.tsx:73
 msgid "Your full handle will be"
