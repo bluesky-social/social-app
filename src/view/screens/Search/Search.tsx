@@ -538,7 +538,7 @@ export function SearchScreen(
       setSearchText(queryParam)
     } else {
       // The empty object will remove `q=` from the URL
-      navigation.replace('Search', {})
+      navigation.setParams({})
     }
   }, [inputIsFocused, navigation, queryParam])
 
@@ -572,14 +572,14 @@ export function SearchScreen(
   )
 
   const onSubmit = React.useCallback(() => {
-    textInput.current?.blur()
-    setInputIsFocused(false)
     scrollToTopWeb()
     updateSearchHistory(searchText)
 
     if (isWeb) {
       navigation.push('Search', {q: searchText})
     } else {
+      textInput.current?.blur()
+      setInputIsFocused(false)
       navigation.setParams({q: searchText})
     }
   }, [navigation, searchText, updateSearchHistory])
