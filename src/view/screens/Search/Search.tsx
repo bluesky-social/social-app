@@ -484,8 +484,8 @@ export function SearchScreen(
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
   // Query terms
-  const q = props.route?.params?.q ?? ''
-  const [searchText, setSearchText] = React.useState<string>(q)
+  const queryParam = props.route?.params?.q ?? ''
+  const [searchText, setSearchText] = React.useState<string>(queryParam)
   const throttledInput = useThrottledValue(searchText, 300)
 
   // Autocomplete
@@ -499,7 +499,7 @@ export function SearchScreen(
 
   useFocusEffect(
     useNonReactiveCallback(() => {
-      setSearchText(q)
+      setSearchText(queryParam)
     }),
   )
 
@@ -533,12 +533,12 @@ export function SearchScreen(
     scrollToTopWeb()
 
     if (inputIsFocused) {
-      setSearchText(q)
+      setSearchText(queryParam)
       textInput.current?.blur()
     } else {
       navigation.setParams({q: ''})
     }
-  }, [inputIsFocused, navigation, q])
+  }, [inputIsFocused, navigation, queryParam])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -586,9 +586,9 @@ export function SearchScreen(
   }, [onPressCancelSearch])
 
   const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(q)
+    const match = MATCH_HANDLE.exec(queryParam)
     return match && match[1]
-  }, [q])
+  }, [queryParam])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -695,7 +695,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {(q || inputIsFocused) && (
+        {(queryParam || inputIsFocused) && (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}
@@ -750,7 +750,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !q && inputIsFocused ? (
+      ) : !queryParam && inputIsFocused ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
@@ -795,7 +795,7 @@ export function SearchScreen(
           </View>
         </CenteredView>
       ) : (
-        <SearchScreenInner query={q} />
+        <SearchScreenInner query={queryParam} />
       )}
     </View>
   )
