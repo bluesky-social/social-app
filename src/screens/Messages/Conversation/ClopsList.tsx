@@ -1,33 +1,13 @@
 import React from 'react'
-import {Button, FlatList, View, ViewToken} from 'react-native'
+import {FlatList, View, ViewToken} from 'react-native'
 
+import {ClopInput} from '#/screens/Messages/Conversation/ClopInput'
+import {ClopItem} from '#/screens/Messages/Conversation/ClopItem'
 import {
   ClipClop,
   placeholderClops,
 } from '#/screens/Messages/Conversation/RandomClipClops'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-
-function ClipClopItem({item}: {item: ClipClop}) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.px_md,
-        a.py_md,
-        a.my_md,
-        {
-          backgroundColor: t.palette.primary_500,
-          maxWidth: '50%',
-          borderRadius: 10,
-        },
-      ]}>
-      <Text style={{lineHeight: 1.2}}>{item.text}</Text>
-    </View>
-  )
-}
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -44,12 +24,15 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
 }
 
 function renderItem({item}: {item: ClipClop}) {
-  return <ClipClopItem item={item} />
+  return <ClopItem item={item} />
 }
 
 // Generate unique key list item.
-export const generateUniqueKey = () =>
-  `_${Math.random().toString(36).substr(2, 9)}`
+const generateUniqueKey = () => `_${Math.random().toString(36).substr(2, 9)}`
+
+function onScrollToEndFailed() {
+  // Placeholder function. You have to give FlatList something or else it will error.
+}
 
 export const ClopsList = () => {
   const flatListRef = React.useRef<FlatList>(null)
@@ -76,7 +59,7 @@ export const ClopsList = () => {
 
   const addOldClops = () => {
     setClops(prev => {
-      const oldClops: ClipClop[] = Array.from(Array(5).keys()).map(n => ({
+      const oldClops: ClipClop[] = Array.from(Array(20).keys()).map(n => ({
         id: generateUniqueKey(),
         text:
           placeholderClops[n % placeholderClops.length] + generateUniqueKey(),
@@ -87,13 +70,12 @@ export const ClopsList = () => {
     })
   }
 
-  const addNewClip = () => {
+  const addNewClop = (clop: string) => {
     setClops(prev => {
       const newClops = Array.from(Array(1).keys())
-        .map(n => ({
+        .map(() => ({
           id: generateUniqueKey(),
-          text:
-            placeholderClops[n % placeholderClops.length] + generateUniqueKey(),
+          text: clop,
         }))
         .reverse()
 
@@ -137,8 +119,7 @@ export const ClopsList = () => {
   }, [])
 
   return (
-    <View style={{flex: 1, marginBottom: 100}}>
-      <Button title="Add Old Clops" onPress={addOldClops} />
+    <View style={{flex: 1, marginBottom: 100, paddingHorizontal: 10}}>
       <FlatList
         data={clops}
         keyExtractor={item => item.id}
@@ -150,16 +131,15 @@ export const ClopsList = () => {
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         ref={flatListRef}
-        onScrollToIndexFailed={info => {
-          console.log('Failed to scroll to index', info)
-        }}
         initialNumToRender={20}
         maxToRenderPerBatch={20}
         inverted
         onEndReached={onEndReached}
+        onScrollToIndexFailed={onScrollToEndFailed}
         ListFooterComponent={<MaybeLoader isLoading={showSpinner} />}
+        removeClippedSubviews
       />
-      <Button title="Add New Clip" onPress={addNewClip} />
+      <ClopInput onSendClop={addNewClop} />
     </View>
   )
 }
