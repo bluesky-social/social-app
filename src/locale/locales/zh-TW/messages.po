@@ -3858,7 +3858,7 @@ msgstr "搜尋用戶"
 
 #: src/components/dialogs/GifSelect.tsx:158
 msgid "Search GIFs"
-msgstr "搜尋 GIFs"
+msgstr "搜尋 GIF"
 
 #: src/components/dialogs/GifSelect.tsx:159
 msgid "Search Tenor"
