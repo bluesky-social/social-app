@@ -4573,7 +4573,7 @@ msgstr "更新信息流时出现问题，请检查你的互联网连接并重试
 
 #: src/components/dialogs/GifSelect.tsx:201
 msgid "There was an issue connecting to Tenor."
-msgstr "连接 Tenor 出现问题。"
+msgstr "连接 Tenor 时出现问题。"
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
