@@ -245,12 +245,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 testID="bottomBarMessagesBtn"
                 icon={
                   isAtMessages ? (
-                    <Envelope
+                    <EnvelopeFilled
                       size="lg"
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   ) : (
-                    <EnvelopeFilled
+                    <Envelope
                       size="lg"
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
