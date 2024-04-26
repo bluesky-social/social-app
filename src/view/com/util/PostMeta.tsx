@@ -46,10 +46,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         <View style={styles.avatar}>
           <PreviewableUserAvatar
             size={opts.avatarSize || 16}
-            did={opts.author.did}
-            handle={opts.author.handle}
-            displayName={opts.author.displayName}
-            avatar={opts.author.avatar}
+            profile={opts.author}
             moderation={opts.avatarModeration}
             type={opts.author.associated?.labeler ? 'labeler' : 'user'}
           />

@@ -220,9 +220,7 @@ function SuggestedFollow({
         ]}>
         <PreviewableUserAvatar
           size={60}
-          did={profile.did}
-          handle={profile.handle}
-          displayName={profile.displayName}
+          profile={profile}
           avatar={profile.avatar}
           moderation={moderation.ui('avatar')}
         />

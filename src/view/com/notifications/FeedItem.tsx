@@ -52,13 +52,9 @@ const MAX_AUTHORS = 5
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
+  profile: AppBskyActorDefs.ProfileViewBasic
   href: string
-  did: string
-  handle: string
-  displayName?: string
-  avatar?: string
   moderation: ModerationDecision
-  associated?: AppBskyActorDefs.ProfileAssociated
 }
 
 let FeedItem = ({
@@ -98,25 +94,15 @@ let FeedItem = ({
   const authors: Author[] = useMemo(() => {
     return [
       {
+        profile: item.notification.author,
         href: makeProfileLink(item.notification.author),
-        did: item.notification.author.did,
-        handle: item.notification.author.handle,
-        displayName: item.notification.author.displayName,
-        avatar: item.notification.author.avatar,
         moderation: moderateProfile(item.notification.author, moderationOpts),
-        associated: item.notification.author.associated,
       },
-      ...(item.additional?.map(({author}) => {
-        return {
-          href: makeProfileLink(author),
-          did: author.did,
-          handle: author.handle,
-          displayName: author.displayName,
-          avatar: author.avatar,
-          moderation: moderateProfile(author, moderationOpts),
-          associated: author.associated,
-        }
-      }) || []),
+      ...(item.additional?.map(({author}) => ({
+        profile: author,
+        href: makeProfileLink(author),
+        moderation: moderateProfile(author, moderationOpts),
+      })) || []),
     ]
   }, [item, moderationOpts])
 
@@ -231,7 +217,7 @@ let FeedItem = ({
               style={[pal.text, s.bold]}
               href={authors[0].href}
               text={sanitizeDisplayName(
-                authors[0].displayName || authors[0].handle,
+                authors[0].profile.displayName || authors[0].profile.handle,
               )}
               disableMismatchWarning
             />
@@ -339,12 +325,9 @@ function CondensedAuthorsList({
       <View style={styles.avis}>
         <PreviewableUserAvatar
           size={35}
-          did={authors[0].did}
-          handle={authors[0].handle}
-          displayName={authors[0].displayName}
-          avatar={authors[0].avatar}
+          profile={authors[0].profile}
           moderation={authors[0].moderation.ui('avatar')}
-          type={authors[0].associated?.labeler ? 'labeler' : 'user'}
+          type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
         />
       </View>
     )
@@ -361,12 +344,9 @@ function CondensedAuthorsList({
           <View key={author.href} style={s.mr5}>
             <PreviewableUserAvatar
               size={35}
-              did={author.did}
-              handle={author.handle}
-              displayName={author.displayName}
-              avatar={author.avatar}
+              profile={author.profile}
               moderation={author.moderation.ui('avatar')}
-              type={author.associated?.labeler ? 'labeler' : 'user'}
+              type={author.profile.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
         ))}
@@ -417,20 +397,20 @@ function ExpandedAuthorsList({
       ]}>
       {authors.map(author => (
         <NewLink
-          key={author.did}
+          key={author.profile.did}
           label={_(msg`See profile`)}
           to={makeProfileLink({
-            did: author.did,
-            handle: author.handle,
+            did: author.profile.did,
+            handle: author.profile.handle,
           })}
           style={styles.expandedAuthor}>
           <View style={styles.expandedAuthorAvi}>
-            <ProfileHoverCard did={author.did}>
+            <ProfileHoverCard did={author.profile.did}>
               <UserAvatar
                 size={35}
-                avatar={author.avatar}
+                avatar={author.profile.avatar}
                 moderation={author.moderation.ui('avatar')}
-                type={author.associated?.labeler ? 'labeler' : 'user'}
+                type={author.profile.associated?.labeler ? 'labeler' : 'user'}
               />
             </ProfileHoverCard>
           </View>
@@ -440,10 +420,12 @@ function ExpandedAuthorsList({
               numberOfLines={1}
               style={pal.text}
               lineHeight={1.2}>
-              {sanitizeDisplayName(author.displayName || author.handle)}
+              {sanitizeDisplayName(
+                author.profile.displayName || author.profile.handle,
+              )}
               &nbsp;
               <Text style={[pal.textLight]} lineHeight={1.2}>
-                {sanitizeHandle(author.handle)}
+                {sanitizeHandle(author.profile.handle)}
               </Text>
             </Text>
           </View>

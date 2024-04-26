@@ -91,10 +91,7 @@ export function ProfileCard({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={40}
-            did={profile.did}
-            handle={profile.handle}
-            displayName={profile.displayName}
-            avatar={profile.avatar}
+            profile={profile}
             moderation={moderation.ui('avatar')}
             type={isLabeler ? 'labeler' : 'user'}
           />
@@ -239,10 +236,7 @@ function FollowersList({
           <View style={[styles.followedByAvi, pal.view]}>
             <PreviewableUserAvatar
               size={32}
-              did={f.did}
-              handle={f.handle}
-              displayName={f.displayName}
-              avatar={f.avatar}
+              profile={f}
               moderation={mod.ui('avatar')}
               type={f.associated?.labeler ? 'labeler' : 'user'}
             />

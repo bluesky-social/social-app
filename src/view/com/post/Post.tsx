@@ -148,10 +148,7 @@ function PostInner({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={post.author.did}
-            handle={post.author.handle}
-            displayName={post.author.displayName}
-            avatar={post.author.avatar}
+            profile={post.author}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />

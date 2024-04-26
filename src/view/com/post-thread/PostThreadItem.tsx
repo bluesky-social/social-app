@@ -249,10 +249,7 @@ let PostThreadItemLoaded = ({
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
                 size={42}
-                did={post.author.did}
-                handle={post.author.handle}
-                displayName={post.author.displayName}
-                avatar={post.author.avatar}
+                profile={post.author}
                 moderation={moderation.ui('avatar')}
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
               />
@@ -441,10 +438,7 @@ let PostThreadItemLoaded = ({
                 <View style={styles.layoutAvi}>
                   <PreviewableUserAvatar
                     size={38}
-                    did={post.author.did}
-                    handle={post.author.handle}
-                    displayName={post.author.displayName}
-                    avatar={post.author.avatar}
+                    profile={post.author}
                     moderation={moderation.ui('avatar')}
                     type={post.author.associated?.labeler ? 'labeler' : 'user'}
                   />

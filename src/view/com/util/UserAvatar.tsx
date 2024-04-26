@@ -49,9 +49,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  did: string
-  handle: string
-  displayName?: string
+  profile: AppBskyActorDefs.ProfileViewBasic
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -381,22 +379,16 @@ let PreviewableUserAvatar = (
   const queryClient = useQueryClient()
 
   const onPress = React.useCallback(() => {
-    const profile: AppBskyActorDefs.ProfileViewBasic = {
-      handle: props.handle,
-      displayName: props.displayName,
-      did: props.did,
-      avatar: props.avatar ?? undefined,
-    }
-    precacheProfile(queryClient, profile)
-  }, [props.avatar, props.did, props.displayName, props.handle, queryClient])
+    precacheProfile(queryClient, props.profile)
+  }, [props.profile, queryClient])
 
   return (
-    <ProfileHoverCard did={props.did}>
+    <ProfileHoverCard did={props.profile.did}>
       <Link
         label={_(msg`See profile`)}
         to={makeProfileLink({
-          did: props.did,
-          handle: props.handle,
+          did: props.profile.did,
+          handle: props.profile.handle,
         })}
         onPress={onPress}>
         <UserAvatar {...props} />
