@@ -495,6 +495,7 @@ export function SearchScreen(
   )
 
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
+  const [showAutocomplete, setShowAutocomplete] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
   useFocusEffect(
@@ -552,6 +553,10 @@ export function SearchScreen(
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
     setSearchText(text)
+
+    if (text.length > 0) {
+      setShowAutocomplete(true)
+    }
   }, [])
 
   const updateSearchHistory = React.useCallback(
@@ -711,7 +716,7 @@ export function SearchScreen(
         )}
       </CenteredView>
 
-      {inputIsFocused && searchText.length > 0 ? (
+      {showAutocomplete && searchText.length > 0 ? (
         <>
           {!autocompleteData || !moderationOpts ? (
             <Loader />
@@ -745,6 +750,7 @@ export function SearchScreen(
                   key={item.did}
                   profile={item}
                   moderation={moderateProfile(item, moderationOpts)}
+                  onPress={() => setShowAutocomplete(false)}
                 />
               ))}
 

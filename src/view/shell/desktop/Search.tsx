@@ -1,33 +1,33 @@
 import React from 'react'
 import {
-  ViewStyle,
-  TextInput,
-  View,
-  StyleSheet,
-  TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
 import {
   AppBskyActorDefs,
   moderateProfile,
   ModerationDecision,
 } from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {s} from '#/lib/styles'
+import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {makeProfileLink} from '#/lib/routes/links'
-import {Link} from '#/view/com/util/Link'
+import {s} from '#/lib/styles'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useModerationOpts} from '#/state/queries/preferences'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
-import {Text} from 'view/com/util/text/Text'
+import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {Text} from 'view/com/util/text/Text'
 
 export const MATCH_HANDLE =
   /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
@@ -84,9 +84,11 @@ export function SearchLinkCard({
 export function SearchProfileCard({
   profile,
   moderation,
+  onPress,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision
+  onPress: () => void
 }) {
   const pal = usePalette('default')
 
@@ -96,7 +98,8 @@ export function SearchProfileCard({
       href={makeProfileLink(profile)}
       title={profile.handle}
       asAnchor
-      anchorNoUnderline>
+      anchorNoUnderline
+      onBeforePress={onPress}>
       <View
         style={[
           pal.border,
