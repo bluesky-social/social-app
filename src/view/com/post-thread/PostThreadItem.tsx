@@ -243,7 +243,13 @@ let PostThreadItemLoaded = ({
 
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
-          style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+          style={[
+            styles.outer,
+            rootUri === post.uri && styles.noTopBorder,
+            styles.outerHighlighted,
+            pal.border,
+            pal.view,
+          ]}
           accessible={false}>
           <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
@@ -608,6 +614,7 @@ function PostOuterWrapper({
     <View
       style={[
         styles.outer,
+        depth < 1 && styles.noTopBorder,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         styles.cursor,
