@@ -581,24 +581,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       logger.debug(`session: persisted onUpdate`, {})
 
-      const selectedAccount = session.accounts.find(
-        a => a.did === session.currentAccount?.did,
-      )
-
-      if (selectedAccount && selectedAccount.refreshJwt) {
-        if (selectedAccount.did !== state.currentAccount?.did) {
+      if (session.currentAccount && session.currentAccount.refreshJwt) {
+        if (session.currentAccount?.did !== state.currentAccount?.did) {
           logger.debug(`session: persisted onUpdate, switching accounts`, {
             from: {
               did: state.currentAccount?.did,
               handle: state.currentAccount?.handle,
             },
             to: {
-              did: selectedAccount.did,
-              handle: selectedAccount.handle,
+              did: session.currentAccount.did,
+              handle: session.currentAccount.handle,
             },
           })
 
-          initSession(selectedAccount)
+          initSession(session.currentAccount)
         } else {
           logger.debug(`session: persisted onUpdate, updating session`, {})
 
@@ -608,9 +604,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            * already persisted, and we'll get a loop between tabs.
            */
           // @ts-ignore we checked for `refreshJwt` above
-          __globalAgent.session = selectedAccount
+          __globalAgent.session = session.currentAccount
         }
-      } else if (!selectedAccount && state.currentAccount) {
+      } else if (!session.currentAccount && state.currentAccount) {
         logger.debug(
           `session: persisted onUpdate, logging out`,
           {},
@@ -629,7 +625,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(s => ({
         ...s,
         accounts: session.accounts,
-        currentAccount: selectedAccount,
+        currentAccount: session.currentAccount,
       }))
     })
   }, [state, setState, clearCurrentAccount, initSession])
