@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
-import {getAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -31,6 +31,7 @@ export function DisableEmail2FADialog({
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const {updateCurrentAccount} = useSessionApi()
+  const {getAgent} = useAgent()
 
   const [stage, setStage] = useState<Stages>(Stages.Email)
   const [confirmationCode, setConfirmationCode] = useState<string>('')
