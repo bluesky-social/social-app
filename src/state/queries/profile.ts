@@ -29,7 +29,6 @@ import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {ThreadNode} from './post-thread'
 
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
@@ -506,23 +505,6 @@ function precachePostEmbedProfile(
   } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     if (AppBskyEmbedRecord.isViewRecord(embed.record.record)) {
       precacheProfile(queryClient, embed.record.record.author)
-    }
-  }
-}
-
-export function precacheThreadPostProfiles(
-  queryClient: QueryClient,
-  node: ThreadNode,
-) {
-  if (node.type === 'post') {
-    precacheProfile(queryClient, node.post.author)
-    if (node.parent) {
-      precacheThreadPostProfiles(queryClient, node.parent)
-    }
-    if (node.replies?.length) {
-      for (const reply of node.replies) {
-        precacheThreadPostProfiles(queryClient, reply)
-      }
     }
   }
 }
