@@ -4,9 +4,6 @@ import {
   AppBskyActorDefs,
   AppBskyActorGetProfile,
   AppBskyActorProfile,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
   AtUri,
   BskyAgent,
 } from '@atproto/api'
@@ -474,39 +471,6 @@ export function precacheProfile(
 ) {
   queryClient.setQueryData(profileBasicQueryKey(profile.handle), profile)
   queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
-}
-
-export function precacheFeedPostProfiles(
-  queryClient: QueryClient,
-  posts: AppBskyFeedDefs.FeedViewPost[],
-) {
-  for (const post of posts) {
-    // Save the author of the post every time
-    precacheProfile(queryClient, post.post.author)
-    precachePostEmbedProfile(queryClient, post.post.embed)
-
-    // Cache parent author and embeds
-    const parent = post.reply?.parent
-    if (AppBskyFeedDefs.isPostView(parent)) {
-      precacheProfile(queryClient, parent.author)
-      precachePostEmbedProfile(queryClient, parent.embed)
-    }
-  }
-}
-
-function precachePostEmbedProfile(
-  queryClient: QueryClient,
-  embed: AppBskyFeedDefs.PostView['embed'],
-) {
-  if (AppBskyEmbedRecord.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
-      precacheProfile(queryClient, embed.record.author)
-    }
-  } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record.record)) {
-      precacheProfile(queryClient, embed.record.record.author)
-    }
-  }
 }
 
 async function whenAppViewReady(

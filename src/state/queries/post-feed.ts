@@ -33,7 +33,6 @@ import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from './preferences'
-import {precacheFeedPostProfiles} from './profile'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
@@ -151,7 +150,6 @@ export function usePostFeedQuery(
 
       try {
         const res = await api.fetch({cursor, limit: PAGE_SIZE})
-        precacheFeedPostProfiles(queryClient, res.feed)
 
         /*
          * If this is a public view, we need to check if posts fail moderation.
