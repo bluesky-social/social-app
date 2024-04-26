@@ -41,6 +41,7 @@ import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
 import {styles} from './BottomBarStyles'
 
 type TabOptions =
@@ -249,7 +250,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   ) : (
-                    <Envelope
+                    <EnvelopeFilled
                       size="lg"
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
