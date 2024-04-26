@@ -10,7 +10,7 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
@@ -180,6 +180,8 @@ export function MessagesListScreen({}: Props) {
 }
 
 function usePlaceholderConversations() {
+  const {getAgent} = useAgent()
+
   return useInfiniteQuery({
     queryKey: ['messages'],
     queryFn: async () => {
