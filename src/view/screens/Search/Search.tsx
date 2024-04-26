@@ -537,7 +537,8 @@ export function SearchScreen(
       setInputIsFocused(false)
       setSearchText(queryParam)
     } else {
-      navigation.setParams({q: ''})
+      // The empty object will remove `q=` from the URL
+      navigation.replace('Search', {})
     }
   }, [inputIsFocused, navigation, queryParam])
 
