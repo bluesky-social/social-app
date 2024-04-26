@@ -572,6 +572,8 @@ export function SearchScreen(
   )
 
   const onSubmit = React.useCallback(() => {
+    textInput.current?.blur()
+    setInputIsFocused(false)
     scrollToTopWeb()
     updateSearchHistory(searchText)
 
