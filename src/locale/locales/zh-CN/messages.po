@@ -226,7 +226,7 @@ msgstr "成人内容"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "成人内容显示已被禁用"
+msgstr "成人内容显示已被禁用。"
 
 #: src/screens/Moderation/index.tsx:375
 #: src/view/screens/Settings/index.tsx:636
@@ -339,7 +339,7 @@ msgstr "申诉 \"{0}\" 标记"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:192
 msgid "Appeal submitted."
-msgstr "申诉已提交"
+msgstr "申诉已提交。"
 
 #: src/view/screens/Settings/index.tsx:414
 msgid "Appearance"
@@ -464,7 +464,7 @@ msgstr "已屏蔽帖子。"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "屏蔽不能阻止这个人在你的账户上放置标记"
+msgstr "屏蔽不能阻止这个人在你的账户上放置标记。"
 
 #: src/view/screens/ProfileList.tsx:633
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -884,7 +884,7 @@ msgstr "确认你的年龄："
 
 #: src/screens/Moderation/index.tsx:292
 msgid "Confirm your birthdate"
-msgstr "确认你的出生年月："
+msgstr "确认你的出生日期"
 
 #: src/screens/Login/LoginForm.tsx:244
 #: src/view/com/modals/ChangeEmail.tsx:157
@@ -1259,7 +1259,7 @@ msgstr "DNS 面板"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr "不包含裸露内容"
+msgstr "不包含裸露内容。"
 
 #: src/screens/Signup/StepHandle.tsx:105
 msgid "Doesn't begin or end with a hyphen"
@@ -1339,7 +1339,7 @@ msgstr "例如：艺术家、爱狗人士和狂热读者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "例如：裸露艺术"
+msgstr "例如：裸露艺术。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:284
 msgid "e.g. Great Posters"
@@ -1563,7 +1563,7 @@ msgstr "输入你的用户名和密码"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:49
 msgid "Error receiving captcha response."
-msgstr "Captcha 响应错误"
+msgstr "Captcha 响应错误。"
 
 #: src/view/screens/Search/Search.tsx:115
 msgid "Error:"
@@ -2122,11 +2122,11 @@ msgstr "如果你根据你所在国家的法律定义还不是成年人，则你
 
 #: src/view/screens/ProfileList.tsx:612
 msgid "If you delete this list, you won't be able to recover it."
-msgstr "如果你删除此列表，将无法恢复"
+msgstr "如果你删除此列表，将无法恢复。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:342
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "如果你移除此列表，将无法恢复"
+msgstr "如果你移除此列表，将无法恢复。"
 
 #: src/view/com/modals/ChangePassword.tsx:148
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -3086,7 +3086,7 @@ msgstr "开启邀请码列表"
 
 #: src/view/screens/Settings/index.tsx:757
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "开启用户删除确认界面，需要电子邮箱接收验证码。"
+msgstr "开启用户删除确认界面，需要电子邮箱接收验证码"
 
 #: src/view/screens/Settings/index.tsx:715
 msgid "Opens modal for changing your Bluesky password"
@@ -3278,7 +3278,7 @@ msgstr "请设置你的密码。"
 
 #: src/screens/Signup/state.ts:251
 msgid "Please complete the verification captcha."
-msgstr "请完成 Captcha 验证"
+msgstr "请完成 Captcha 验证。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -3568,7 +3568,7 @@ msgstr "删除转发"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:202
 msgid "Remove this feed from your saved feeds"
-msgstr "将这个信息流从保存的信息流列表中删除？"
+msgstr "将这个信息流从保存的信息流列表中删除"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
@@ -3832,7 +3832,7 @@ msgstr "已保存信息流"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll."
-msgstr "已保存到相机胶卷"
+msgstr "已保存到相机胶卷。"
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
@@ -3969,7 +3969,7 @@ msgstr "选择以下一些账户进行关注"
 
 #: src/components/ReportDialog/SubmitView.tsx:133
 msgid "Select the moderation service(s) to report to"
-msgstr "你要将该条举报提交给哪位限制服务提供者？"
+msgstr "你要将该条举报提交给哪位限制服务提供者"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
@@ -4544,7 +4544,7 @@ msgstr "其中包含以下内容："
 
 #: src/screens/Signup/index.tsx:85
 msgid "That handle is already taken."
-msgstr "该用户识别符已被占用"
+msgstr "该用户识别符已被占用。"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:349
