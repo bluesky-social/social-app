@@ -65,6 +65,16 @@ export function useProfileQuery({
     queryKey: RQKEY(didOrHandle ?? ''),
     queryFn: async () => {
       const res = await getAgent().getProfile({actor: didOrHandle ?? ''})
+
+      // After removing DID resolution, we cannot cache the profile by DID anymore, since we don't know the DID ahead of
+      // time to use in the query key. However, there could be times where we navigate to a profile without knowing
+      // the DID. To maintain functionality, let's just cache as both here, just in case.
+      if (didOrHandle?.startsWith('did:')) {
+        queryClient.setQueryData(RQKEY(res.data.handle), res.data)
+      } else {
+        queryClient.setQueryData(RQKEY(res.data.did), res.data)
+      }
+
       return res.data
     },
     placeholderData: () => {
