@@ -4198,7 +4198,7 @@ msgstr "显示回复"
 
 #: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
-msgstr "在所有其他回复之前显示你关注的用户的回复。"
+msgstr "将你关注的用户的回复置于其他回复之前。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:87
 msgid "Show replies in Following"
