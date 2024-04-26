@@ -1473,7 +1473,7 @@ msgstr "启用媒体播放器"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:147
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "启用此设置以仅查看你关注的用户之间的回复。"
+msgstr "启用此设置以便仅查看你关注的用户的回复。"
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
