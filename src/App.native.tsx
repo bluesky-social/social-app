@@ -16,8 +16,8 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
-import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
+import {readLastActiveAccount} from '#/state/session/util/readLastActiveAccount'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {useNotificationsListener} from 'lib/notifications/notifications'
 import {QueryProvider} from 'lib/react-query'
@@ -64,7 +64,7 @@ function InnerApp() {
       Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
     })
 
-    const account = persisted.get('session').currentAccount
+    const account = readLastActiveAccount()
     resumeSession(account)
   }, [resumeSession, _])
 

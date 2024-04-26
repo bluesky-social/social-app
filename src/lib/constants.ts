@@ -4,6 +4,7 @@ export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const BSKY_SERVICE = 'https://bsky.social'
+export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
@@ -90,11 +91,9 @@ export const BSKY_FEED_OWNER_DIDS = [
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
 
-export const GIPHY_API_URL = 'https://api.giphy.com'
-export const GIPHY_API_KEY = Platform.select({
-  ios: 'ydVxhrQkwlcUjkVKx15mF6vyaNJbMeez',
-  android: 'Vwj3Ib7857dj3EcIg24Hiz1LbRVdGeYF',
-  default: 'vyL3hQQ8AipwcmIB8kFvg0NDs9faWg7G',
-})
-export const GIPHY_PRIVACY_POLICY =
-  'https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy'
+export const GIF_SERVICE = 'https://gifs.bsky.app'
+
+export const GIF_SEARCH = (params: string) =>
+  `${GIF_SERVICE}/tenor/v2/search?${params}`
+export const GIF_FEATURED = (params: string) =>
+  `${GIF_SERVICE}/tenor/v2/featured?${params}`
