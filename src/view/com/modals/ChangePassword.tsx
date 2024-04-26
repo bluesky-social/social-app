@@ -6,24 +6,25 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ScrollView} from './util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {TextInput} from './util'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {s, colors} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import * as EmailValidator from 'email-validator'
+
+import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
+import {useAgent, useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isAndroid, isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import {checkAndFormatResetCode} from 'lib/strings/password'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
-import {useSession, getAgent} from '#/state/session'
-import * as EmailValidator from 'email-validator'
-import {logger} from '#/logger'
+import {colors, s} from 'lib/styles'
+import {isAndroid, isWeb} from 'platform/detection'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import {ScrollView} from './util'
+import {TextInput} from './util'
 
 enum Stages {
   RequestCode,
@@ -36,6 +37,7 @@ export const snapPoints = isAndroid ? ['90%'] : ['45%']
 export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.RequestCode)
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
