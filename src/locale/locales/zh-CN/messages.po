@@ -2094,7 +2094,7 @@ msgstr "该列表删除后将无法恢复。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:342
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "如果你移除此列表，将无法恢复。"
+msgstr "该列表删除后将无法恢复。"
 
 #: src/view/com/modals/ChangePassword.tsx:148
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
