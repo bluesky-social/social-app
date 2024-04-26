@@ -12,7 +12,6 @@ import {
   QueryClient,
   QueryKey,
   useInfiniteQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
 
 import {HomeFeedAPI} from '#/lib/api/feed/home'
@@ -101,7 +100,6 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean; ignoreFilterFor?: string},
 ) {
-  const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {getAgent} = useAgent()
