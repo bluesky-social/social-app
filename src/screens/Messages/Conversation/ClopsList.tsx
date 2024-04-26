@@ -1,6 +1,7 @@
 import React from 'react'
 import {FlatList, View, ViewToken} from 'react-native'
 
+import {isNative} from 'platform/detection'
 import {ClopInput} from '#/screens/Messages/Conversation/ClopInput'
 import {ClopItem} from '#/screens/Messages/Conversation/ClopItem'
 import {
@@ -92,8 +93,8 @@ export const ClopsList = () => {
         isAtBottom.current = Number(firstVisibleIndex) < 2
       },
       {
-        itemVisiblePercentThreshold: 100,
-        minimumViewTime: 100,
+        itemVisiblePercentThreshold: 50,
+        minimumViewTime: 10,
       },
     ]
   }, [])
@@ -118,8 +119,14 @@ export const ClopsList = () => {
     }, 1000)
   }, [])
 
+  const onInputFocus = React.useCallback(() => {
+    if (!isAtBottom.current) {
+      flatListRef.current?.scrollToOffset({offset: 0, animated: true})
+    }
+  }, [])
+
   return (
-    <View style={{flex: 1, marginBottom: 85}}>
+    <View style={{flex: 1, marginBottom: isNative ? 85 : 20}}>
       <FlatList
         data={clops}
         keyExtractor={item => item.id}
@@ -139,9 +146,10 @@ export const ClopsList = () => {
         ListFooterComponent={<MaybeLoader isLoading={showSpinner} />}
         removeClippedSubviews
         ref={flatListRef}
+        keyboardDismissMode="on-drag"
       />
       <View style={{paddingHorizontal: 10}}>
-        <ClopInput onSendClop={addNewClop} />
+        <ClopInput onSendClop={addNewClop} onFocus={onInputFocus} />
       </View>
     </View>
   )

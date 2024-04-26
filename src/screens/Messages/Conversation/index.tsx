@@ -16,7 +16,7 @@ export function MessagesConversationScreen({route}: Props) {
   const chatId = route.params.conversation
   const {_} = useLingui()
   return (
-    <CenteredView style={{flex: 1}}>
+    <CenteredView style={{flex: 1}} sideBorders>
       <ViewHeader
         title={_(msg`Chat with ${chatId}`)}
         showOnDesktop
