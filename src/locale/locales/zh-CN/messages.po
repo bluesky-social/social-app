@@ -464,7 +464,7 @@ msgstr "已屏蔽帖子。"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "屏蔽不能阻止这个人在你的账户上放置标记。"
+msgstr "屏蔽不能阻止这个用户在你的账户上放置标记。"
 
 #: src/view/screens/ProfileList.tsx:633
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1497,7 +1497,7 @@ msgstr "启用媒体播放器"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:147
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "启用此设置以仅查看你关注的人之间的回复。"
+msgstr "启用此设置以仅查看你关注的用户之间的回复。"
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
@@ -2227,7 +2227,7 @@ msgstr "邀请码：1 个可用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 msgid "It shows posts from the people you follow as they happen."
-msgstr "他会显示你所关注的人发布的帖子。"
+msgstr "它将会显示你所关注的用户所发布的帖子。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Jobs"
@@ -3208,15 +3208,15 @@ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:438
 msgid "People"
-msgstr "人"
+msgstr "用户"
 
 #: src/Navigation.tsx:165
 msgid "People followed by @{0}"
-msgstr "@{0} 关注的人"
+msgstr "@{0} 关注的用户"
 
 #: src/Navigation.tsx:158
 msgid "People following @{0}"
-msgstr "关注 @{0} 的人"
+msgstr "关注 @{0} 的用户"
 
 #: src/view/com/lightbox/Lightbox.tsx:66
 msgid "Permission to access camera roll is required."
@@ -4236,7 +4236,7 @@ msgstr "显示回复"
 
 #: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
-msgstr "在所有其他回复之前显示你关注的人的回复。"
+msgstr "在所有其他回复之前显示你关注的用户的回复。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:87
 msgid "Show replies in Following"
@@ -4697,7 +4697,7 @@ msgstr "{screenDescription} 已被标记："
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
-msgstr "此账户要求用户登录后才能查看其个人资料。"
+msgstr "此账户要求登录后才能查看其个人资料。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:204
 msgid "This appeal will be sent to <0>{0}</0>."
@@ -4740,7 +4740,7 @@ msgstr "该信息流为空！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "该信息流为空！你或许需要先关注更多的人或检查你的语言设置。"
+msgstr "该信息流为空！你或许需要先关注更多的用户或检查你的语言设置。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
@@ -4872,7 +4872,7 @@ msgstr "切换以启用或禁用成人内容"
 #: src/screens/Hashtag.tsx:88
 #: src/view/screens/Search/Search.tsx:418
 msgid "Top"
-msgstr "最热门"
+msgstr "最热"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
