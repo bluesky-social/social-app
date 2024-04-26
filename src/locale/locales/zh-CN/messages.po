@@ -2090,7 +2090,7 @@ msgstr "如果你根据你所在国家的法律定义还不是成年人，则你
 
 #: src/view/screens/ProfileList.tsx:612
 msgid "If you delete this list, you won't be able to recover it."
-msgstr "如果你删除此列表，将无法恢复。"
+msgstr "该列表删除后将无法恢复。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:342
 msgid "If you remove this post, you won't be able to recover it."
