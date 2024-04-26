@@ -47,10 +47,10 @@ export const profileBasicQueryKey = (didOrHandle: string) => [
 ]
 
 export function useProfileQuery({
-  did,
+  didOrHandle,
   staleTime = STALE.SECONDS.FIFTEEN,
 }: {
-  did: string | undefined
+  didOrHandle: string | undefined
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
@@ -62,19 +62,19 @@ export function useProfileQuery({
     // -prf
     staleTime,
     refetchOnWindowFocus: true,
-    queryKey: RQKEY(did ?? ''),
+    queryKey: RQKEY(didOrHandle ?? ''),
     queryFn: async () => {
-      const res = await getAgent().getProfile({actor: did ?? ''})
+      const res = await getAgent().getProfile({actor: didOrHandle ?? ''})
       return res.data
     },
     placeholderData: () => {
-      if (!did) return
+      if (!didOrHandle) return
 
       return queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
-        profileBasicQueryKey(did),
+        profileBasicQueryKey(didOrHandle),
       )
     },
-    enabled: !!did,
+    enabled: !!didOrHandle,
   })
 }
 

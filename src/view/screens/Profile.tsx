@@ -18,7 +18,6 @@ import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
@@ -56,51 +55,37 @@ export function ProfileScreen({route}: Props) {
     route.params.name === 'me' ? currentAccount?.did : route.params.name
   const moderationOpts = useModerationOpts()
   const {
-    data: resolvedDid,
-    error: resolveError,
-    refetch: refetchDid,
-    isLoading: isLoadingDid,
-  } = useResolveDidQuery(name)
-  const {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
     isLoading: isLoadingProfile,
     isPlaceholderData: isPlaceholderProfile,
   } = useProfileQuery({
-    did: resolvedDid,
+    didOrHandle: name,
   })
-
-  const onPressTryAgain = React.useCallback(() => {
-    if (resolveError) {
-      refetchDid()
-    } else {
-      refetchProfile()
-    }
-  }, [resolveError, refetchDid, refetchProfile])
 
   // When we open the profile, we want to reset the posts query if we are blocked.
   React.useEffect(() => {
-    if (resolvedDid && profile?.viewer?.blockedBy) {
-      resetProfilePostsQueries(queryClient, resolvedDid)
+    if (name && profile?.viewer?.blockedBy) {
+      resetProfilePostsQueries(queryClient, name)
     }
-  }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
+  }, [queryClient, profile?.viewer?.blockedBy, name])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile) {
+  if (isLoadingProfile) {
     return (
       <CenteredView>
         <ProfileHeaderLoading />
       </CenteredView>
     )
   }
-  if (resolveError || profileError) {
+  if (profileError) {
     return (
       <ErrorScreen
         testID="profileErrorScreen"
         title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
-        message={cleanError(resolveError || profileError)}
-        onPressTryAgain={onPressTryAgain}
+        message={cleanError(profileError)}
+        onPressTryAgain={refetchProfile}
         showHeader
       />
     )
@@ -121,7 +106,7 @@ export function ProfileScreen({route}: Props) {
       testID="profileErrorScreen"
       title="Oops!"
       message="Something went wrong and we're not sure what."
-      onPressTryAgain={onPressTryAgain}
+      onPressTryAgain={refetchProfile}
       showHeader
     />
   )
