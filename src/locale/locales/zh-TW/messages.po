@@ -664,11 +664,11 @@ msgstr "來看看一些推薦的用戶吧。跟隨他們來查看類似的用戶
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr "查看寄送至你電子郵件地址的驗證碼並在此輸入。"
+msgstr "在此輸入寄送至你電子郵件地址的驗證碼。"
 
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "查看寄送至你電子郵件地址的確認郵件，然後在下方輸入收到的驗證碼："
+msgstr "在下方輸入寄送至你電子郵件地址的驗證碼："
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
@@ -3054,7 +3054,7 @@ msgstr "開啟邀請碼列表"
 
 #: src/view/screens/Settings/index.tsx:757
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "開啟用於帳號刪除確認的彈窗。需要電子郵件驗證碼"
+msgstr "開啟帳號刪除的確認彈窗。需要電子郵件驗證碼"
 
 #: src/view/screens/Settings/index.tsx:715
 msgid "Opens modal for changing your Bluesky password"
@@ -3585,7 +3585,7 @@ msgstr "檢舉帳號"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
-msgstr "檢舉頁"
+msgstr "檢舉對話框"
 
 #: src/view/screens/ProfileFeed.tsx:363
 #: src/view/screens/ProfileFeed.tsx:365
@@ -4813,7 +4813,7 @@ msgstr "對話串偏好"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "若要關閉電子郵件雙重驗證，請驗證您對電子郵件地址的存取權限。"
+msgstr "若要關閉電子郵件雙重驗證，請驗證你的電子郵件地址。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
