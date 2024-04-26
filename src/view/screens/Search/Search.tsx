@@ -543,6 +543,7 @@ export function SearchScreen(
       if (isWeb) {
         navigation.replace('Search', {})
       } else {
+        setSearchText('')
         navigation.setParams({q: ''})
       }
     }
@@ -668,6 +669,7 @@ export function SearchScreen(
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
+            onBlur={() => setInputIsFocused(false)}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             autoFocus={false}
