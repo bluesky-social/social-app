@@ -2195,7 +2195,7 @@ msgstr "輸入你的帳號代碼"
 #: src/screens/Login/LoginForm.tsx:126
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr "無效的雙重驗證代碼"
+msgstr "無效的雙重驗證代碼。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Invalid or unsupported post record"
@@ -3086,7 +3086,7 @@ msgstr "開啟邀請碼列表"
 
 #: src/view/screens/Settings/index.tsx:757
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "開啟用於帳號刪除確認的彈窗。需要電子郵件驗證碼。"
+msgstr "開啟用於帳號刪除確認的彈窗。需要電子郵件驗證碼"
 
 #: src/view/screens/Settings/index.tsx:715
 msgid "Opens modal for changing your Bluesky password"
