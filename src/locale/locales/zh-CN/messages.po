@@ -3536,7 +3536,7 @@ msgstr "删除转发"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:202
 msgid "Remove this feed from your saved feeds"
-msgstr "将这个信息流从保存的信息流列表中删除"
+msgstr "从保存的信息流列表中删除这个信息流"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
