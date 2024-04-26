@@ -3931,7 +3931,7 @@ msgstr "选择以下一些账户进行关注"
 
 #: src/components/ReportDialog/SubmitView.tsx:133
 msgid "Select the moderation service(s) to report to"
-msgstr "你要将该条举报提交给哪位限制服务提供者"
+msgstr "请选择你要向哪位限制服务提供者提交举报"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
