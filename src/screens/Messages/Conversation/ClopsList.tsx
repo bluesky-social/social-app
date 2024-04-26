@@ -5,11 +5,15 @@ import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {isWeb} from 'platform/detection'
 import {ClopInput} from '#/screens/Messages/Conversation/ClopInput'
 import {ClopItem} from '#/screens/Messages/Conversation/ClopItem'
+import {ClipClop} from '#/screens/Messages/Conversation/RandomClipClops'
 import {
-  ClipClop,
-  placeholderClops,
-} from '#/screens/Messages/Conversation/RandomClipClops'
+  useChat,
+  useChatLogQuery,
+  useSendMessageMutation,
+} from '#/screens/Messages/Temp/query/query'
 import {Loader} from '#/components/Loader'
+
+const CHAT_ID = '3kqzb4mytxk2v'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -50,41 +54,17 @@ export const ClopsList = () => {
   // total number of clops
   const totalClops = React.useRef(10)
 
-  const [showSpinner, setShowSpinner] = React.useState(false)
+  // @ts-ignore TODO later
+  const [_, setShowSpinner] = React.useState(false)
 
-  const [clops, setClops] = React.useState(
-    Array.from(Array(10).keys()).map(n => ({
-      id: generateUniqueKey(),
-      text: placeholderClops[n % placeholderClops.length],
-    })),
-  )
+  // Query Data
+  const {data: chat} = useChat(CHAT_ID)
+  const {mutate: sendMessage} = useSendMessageMutation(CHAT_ID)
+  useChatLogQuery()
 
-  const addOldClops = () => {
-    setClops(prev => {
-      const oldClops: ClipClop[] = Array.from(Array(20).keys()).map(n => ({
-        id: generateUniqueKey(),
-        text:
-          placeholderClops[n % placeholderClops.length] + generateUniqueKey(),
-      }))
-
-      totalClops.current += oldClops.length
-      return prev.concat(oldClops)
-    })
-  }
-
-  const addNewClop = (clop: string) => {
-    setClops(prev => {
-      const newClops = Array.from(Array(1).keys())
-        .map(() => ({
-          id: generateUniqueKey(),
-          text: clop,
-        }))
-        .reverse()
-
-      totalClops.current += newClops.length
-      return newClops.concat(prev)
-    })
-  }
+  React.useEffect(() => {
+    totalClops.current = chat?.messages.length ?? 0
+  }, [chat])
 
   const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
     return [
@@ -126,6 +106,22 @@ export const ClopsList = () => {
     }
   }, [])
 
+  const onSendClop = React.useCallback(
+    async (message: string) => {
+      if (!message) return
+
+      try {
+        sendMessage({
+          message,
+          tempId: generateUniqueKey(),
+        })
+      } catch (e: any) {
+        console.log(e)
+      }
+    },
+    [sendMessage],
+  )
+
   const onInputBlur = React.useCallback(() => {}, [])
 
   return (
@@ -135,7 +131,7 @@ export const ClopsList = () => {
       keyboardVerticalOffset={70}
       contentContainerStyle={{flex: 1}}>
       <FlatList
-        data={clops}
+        data={chat?.messages}
         keyExtractor={item => item.id}
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,
@@ -150,14 +146,14 @@ export const ClopsList = () => {
         onContentSizeChange={onContentSizeChange}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        ListFooterComponent={<MaybeLoader isLoading={showSpinner} />}
+        ListFooterComponent={<MaybeLoader isLoading={false} />}
         removeClippedSubviews
         ref={flatListRef}
         keyboardDismissMode="none"
       />
       <View style={{paddingHorizontal: 10}}>
         <ClopInput
-          onSendClop={addNewClop}
+          onSendClop={onSendClop}
           onFocus={onInputFocus}
           onBlur={onInputBlur}
         />
