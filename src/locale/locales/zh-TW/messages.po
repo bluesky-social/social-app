@@ -3354,7 +3354,7 @@ msgstr "貼文"
 
 #: src/components/dialogs/MutedWords.tsx:89
 msgid "Posts can be muted based on their text, their tags, or both."
-msgstr "貼文可以根据所包含的字詞和標籤来设定静音。"
+msgstr "貼文可以根據所包含的字詞和標籤來設定靜音。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
