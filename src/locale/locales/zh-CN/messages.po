@@ -1190,7 +1190,7 @@ msgstr "关闭电子邮件两步验证"
 
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
-msgstr "关闭触觉反馈"
+msgstr "关闭触感反馈"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
