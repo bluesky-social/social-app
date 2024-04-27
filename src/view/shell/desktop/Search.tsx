@@ -15,6 +15,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -25,6 +26,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
+import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
@@ -84,13 +86,19 @@ export function SearchLinkCard({
 export function SearchProfileCard({
   profile,
   moderation,
-  onPress,
+  onPress: onPressInner,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision
   onPress: () => void
 }) {
   const pal = usePalette('default')
+  const queryClient = useQueryClient()
+
+  const onPress = React.useCallback(() => {
+    precacheProfile(queryClient, profile)
+    onPressInner()
+  }, [queryClient, profile, onPressInner])
 
   return (
     <Link
