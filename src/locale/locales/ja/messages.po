@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-25 10:31+0900\n"
+"PO-Revision-Date: 2024-04-27 16:07+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -612,6 +612,14 @@ msgstr "投稿の言語を{0}に変更します"
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
 msgstr "メールアドレスを変更"
+
+#: src/Navigation.tsx:302
+msgid "Chat"
+msgstr "チャット"
+
+#: src/screens/Messages/Conversation/index.tsx:26
+msgid "Chat with {chatId}"
+msgstr "{chatId}とのチャット"
 
 #: src/screens/Deactivated.tsx:72
 #: src/screens/Deactivated.tsx:76
@@ -2407,6 +2415,21 @@ msgstr "メニュー"
 msgid "Message from server: {0}"
 msgstr "サーバーからのメッセージ：{0}"
 
+#: src/screens/Messages/List/index.tsx:34
+msgid "Message settings"
+msgstr "メッセージの設定"
+
+#: src/Navigation.tsx:517
+#: src/screens/Messages/List/index.tsx:103
+#: src/view/shell/bottom-bar/BottomBar.tsx:261
+#: src/view/shell/desktop/LeftNav.tsx:360
+msgid "Messages"
+msgstr "メッセージ"
+
+#: src/Navigation.tsx:307
+msgid "Messaging settings"
+msgstr "メッセージの設定"
+
 #: src/lib/moderation/useReportOptions.ts:45
 msgid "Misleading Account"
 msgstr "誤解を招くアカウント"
@@ -3022,6 +3045,10 @@ msgstr "Followingフィードの設定を開く"
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
 msgstr "リンク先のウェブサイトを開く"
+
+#: src/screens/Messages/List/index.tsx:35
+msgid "Opens the message settings page"
+msgstr "メッセージの設定のページを開く"
 
 #: src/view/screens/Settings/index.tsx:788
 #: src/view/screens/Settings/index.tsx:798
@@ -3759,6 +3786,10 @@ msgstr "検索"
 #: src/view/shell/desktop/Search.tsx:256
 msgid "Search for \"{query}\""
 msgstr "「{query}」を検索"
+
+#: src/view/screens/Search/Search.tsx:743
+msgid "Search for \"{searchText}\""
+msgstr "「{searchText}」を検索"
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
@@ -5358,6 +5389,10 @@ msgstr "フィードがありません。"
 #: src/view/com/lists/ProfileLists.tsx:148
 msgid "You have no lists."
 msgstr "リストがありません。"
+
+#: src/screens/Messages/List/index.tsx:92
+msgid "You have no messages yet. Start a conversation with someone!"
+msgstr "メッセージがありません。誰かと会話を始めましょう！"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:137
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
