@@ -1936,7 +1936,7 @@ msgstr "用户识别符"
 
 #: src/view/screens/AccessibilitySettings.tsx:103
 msgid "Haptics"
-msgstr "触觉"
+msgstr "触感"
 
 #: src/lib/moderation/useReportOptions.ts:32
 msgid "Harassment, trolling, or intolerance"
