@@ -16,7 +16,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {HITSLOP_10} from '#/lib/constants'
@@ -43,7 +42,6 @@ import {
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {useTheme} from 'lib/ThemeContext'
-import {precacheProfile} from 'state/queries/profile'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -476,7 +474,6 @@ export function SearchScreen(
 ) {
   const navigation = useNavigation<NavigationProp>()
   const theme = useTheme()
-  const queryClient = useQueryClient()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
   const pal = usePalette('default')
@@ -761,8 +758,6 @@ export function SearchScreen(
                   profile={item}
                   moderation={moderateProfile(item, moderationOpts)}
                   onPress={() => {
-                    precacheProfile(queryClient, item)
-
                     if (isWeb) {
                       setInputIsFocused(false)
                     } else {
