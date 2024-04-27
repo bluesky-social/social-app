@@ -21,7 +21,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {s} from '#/lib/styles'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
@@ -30,6 +30,7 @@ import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 
 export const MATCH_HANDLE =
   /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
@@ -149,70 +150,35 @@ export function DesktopSearch() {
   const {_} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
-  const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
-    undefined,
-  )
   const [isActive, setIsActive] = React.useState<boolean>(false)
-  const [isFetching, setIsFetching] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
-  const [searchResults, setSearchResults] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
+  const throttledInput = useThrottledValue(query, 300)
+  const {data: autocompleteData} = useActorAutocompleteQuery(
+    throttledInput,
+    true,
+  )
 
   const moderationOpts = useModerationOpts()
-  const search = useActorAutocompleteFn()
 
-  const onChangeText = React.useCallback(
-    async (text: string) => {
-      setQuery(text)
-
-      if (text.length > 0) {
-        setIsFetching(true)
-        setIsActive(true)
-
-        if (searchDebounceTimeout.current)
-          clearTimeout(searchDebounceTimeout.current)
-
-        searchDebounceTimeout.current = setTimeout(async () => {
-          const results = await search({query: text})
-
-          if (results) {
-            setSearchResults(results)
-            setIsFetching(false)
-          }
-        }, 300)
-      } else {
-        if (searchDebounceTimeout.current)
-          clearTimeout(searchDebounceTimeout.current)
-        setSearchResults([])
-        setIsFetching(false)
-        setIsActive(false)
-      }
-    },
-    [setQuery, search, setSearchResults],
-  )
+  const onChangeText = React.useCallback((text: string) => {
+    setQuery(text)
+    setIsActive(text.length > 0)
+  }, [])
 
   const onPressCancelSearch = React.useCallback(() => {
     setQuery('')
     setIsActive(false)
-    if (searchDebounceTimeout.current)
-      clearTimeout(searchDebounceTimeout.current)
   }, [setQuery])
 
   const onSubmit = React.useCallback(() => {
     setIsActive(false)
     if (!query.length) return
-    setSearchResults([])
-    if (searchDebounceTimeout.current)
-      clearTimeout(searchDebounceTimeout.current)
     navigation.dispatch(StackActions.push('Search', {q: query}))
-  }, [query, navigation, setSearchResults])
+  }, [query, navigation])
 
   const onSearchProfileCardPress = React.useCallback(() => {
     setQuery('')
     setIsActive(false)
-    setSearchResults([])
-    clearTimeout(searchDebounceTimeout.current)
   }, [])
 
   const queryMaybeHandle = React.useMemo(() => {
@@ -265,7 +231,7 @@ export function DesktopSearch() {
 
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {isFetching ? (
+          {isActive && !autocompleteData ? (
             <View style={{padding: 8}}>
               <ActivityIndicator />
             </View>
@@ -284,7 +250,7 @@ export function DesktopSearch() {
                 />
               ) : null}
 
-              {searchResults.map(item => (
+              {autocompleteData?.map(item => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
