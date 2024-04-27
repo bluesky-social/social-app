@@ -488,7 +488,7 @@ export function SearchScreen(
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
     useActorAutocompleteQuery(searchText, true)
 
-  const [inputIsFocused, setInputIsFocused] = React.useState(false)
+  const [showAutocomplete, setShowAutocomplete] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
   useFocusEffect(
@@ -528,9 +528,9 @@ export function SearchScreen(
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
 
-    if (inputIsFocused) {
+    if (showAutocomplete) {
       textInput.current?.blur()
-      setInputIsFocused(false)
+      setShowAutocomplete(false)
       setSearchText(queryParam)
     } else {
       // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
@@ -543,7 +543,7 @@ export function SearchScreen(
         navigation.setParams({q: ''})
       }
     }
-  }, [inputIsFocused, navigation, queryParam])
+  }, [showAutocomplete, navigation, queryParam])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -580,7 +580,7 @@ export function SearchScreen(
   const navigateToItem = React.useCallback(
     (item: string) => {
       scrollToTopWeb()
-      setInputIsFocused(false)
+      setShowAutocomplete(false)
       updateSearchHistory(item)
 
       if (isWeb) {
@@ -680,10 +680,10 @@ export function SearchScreen(
                 // Prevent a jump on iPad by ensuring that
                 // the initial focused render has no result list.
                 requestAnimationFrame(() => {
-                  setInputIsFocused(true)
+                  setShowAutocomplete(true)
                 })
               } else {
-                setInputIsFocused(true)
+                setShowAutocomplete(true)
               }
             }}
             onChangeText={onChangeText}
@@ -696,7 +696,7 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          {inputIsFocused ? (
+          {showAutocomplete ? (
             <Pressable
               testID="searchTextInputClearBtn"
               onPress={onPressClearQuery}
@@ -713,7 +713,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {(queryParam || inputIsFocused) && (
+        {(queryParam || showAutocomplete) && (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}
@@ -727,7 +727,7 @@ export function SearchScreen(
         )}
       </CenteredView>
 
-      {inputIsFocused && searchText.length > 0 ? (
+      {showAutocomplete && searchText.length > 0 ? (
         <>
           {(isAutocompleteFetching && !autocompleteData?.length) ||
           !moderationOpts ? (
@@ -764,7 +764,7 @@ export function SearchScreen(
                   moderation={moderateProfile(item, moderationOpts)}
                   onPress={() => {
                     if (isWeb) {
-                      setInputIsFocused(false)
+                      setShowAutocomplete(false)
                     } else {
                       textInput.current?.blur()
                     }
@@ -776,7 +776,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !queryParam && inputIsFocused ? (
+      ) : !queryParam && showAutocomplete ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
