@@ -153,10 +153,11 @@ export function DesktopSearch() {
   const [isActive, setIsActive] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
   const throttledInput = useThrottledValue(query, 300)
-  const {data: autocompleteData} = useActorAutocompleteQuery(
+  const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
     throttledInput,
     true,
   )
+  const isLoading = isFetching && !autocompleteData?.length
 
   const moderationOpts = useModerationOpts()
 
@@ -231,7 +232,7 @@ export function DesktopSearch() {
 
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {isActive && !autocompleteData ? (
+          {isLoading ? (
             <View style={{padding: 8}}>
               <ActivityIndicator />
             </View>
