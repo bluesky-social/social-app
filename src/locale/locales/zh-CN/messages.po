@@ -4834,7 +4834,7 @@ msgstr "切换以启用或禁用成人内容"
 #: src/screens/Hashtag.tsx:88
 #: src/view/screens/Search/Search.tsx:418
 msgid "Top"
-msgstr "精选"
+msgstr "热门"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
