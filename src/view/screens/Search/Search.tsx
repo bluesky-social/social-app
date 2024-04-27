@@ -749,7 +749,10 @@ export function SearchScreen(
                   key={item.did}
                   profile={item}
                   moderation={moderateProfile(item, moderationOpts)}
-                  onPress={() => setShowAutocomplete(false)}
+                  onPress={() => {
+                    setShowAutocomplete(false)
+                    textInput.current?.blur()
+                  }}
                 />
               ))}
 
