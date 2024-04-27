@@ -24,6 +24,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {FeedNotification} from '#/state/queries/notifications/feed'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
@@ -36,6 +37,7 @@ import {pluralize} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {precacheProfile} from 'state/queries/profile'
 import {Link as NewLink} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
@@ -64,6 +66,7 @@ let FeedItem = ({
   item: FeedNotification
   moderationOpts: ModerationOpts
 }): React.ReactNode => {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
@@ -90,6 +93,10 @@ let FeedItem = ({
   const onToggleAuthorsExpanded = () => {
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
+
+  const onBeforePress = React.useCallback(() => {
+    precacheProfile(queryClient, item.notification.author)
+  }, [queryClient, item.notification.author])
 
   const authors: Author[] = useMemo(() => {
     return [
@@ -187,7 +194,8 @@ let FeedItem = ({
       accessible={
         (item.type === 'post-like' && authors.length === 1) ||
         item.type === 'repost'
-      }>
+      }
+      onBeforePress={onBeforePress}>
       <View style={styles.layoutIcon}>
         {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
