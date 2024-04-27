@@ -1235,7 +1235,7 @@ msgstr "DNS 控制台"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr "不包含裸露内容。"
+msgstr "不包含裸露內容。"
 
 #: src/screens/Signup/StepHandle.tsx:105
 msgid "Doesn't begin or end with a hyphen"
@@ -1555,7 +1555,7 @@ msgstr "過多的提及或回覆"
 
 #: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Exits account deletion process"
-msgstr "離開帐户删除流程"
+msgstr "離開帳號删除流程"
 
 #: src/view/com/modals/ChangeHandle.tsx:151
 msgid "Exits handle change process"
@@ -1608,7 +1608,7 @@ msgstr "外部媒體"
 #: src/components/dialogs/EmbedConsent.tsx:71
 #: src/view/screens/PreferencesExternalEmbeds.tsx:67
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒體可能允許網站收集有關你和你裝置的信息。在你按下「播放」按鈕之前，將不會發送或請求任何外部信息。"
+msgstr "外部媒體可能允許網站收集有關你和你裝置的信息。在你按下「播放」按鈕之前，將不會發送或請求任何外部資訊。"
 
 #: src/Navigation.tsx:276
 #: src/view/screens/PreferencesExternalEmbeds.tsx:53
@@ -2017,7 +2017,7 @@ msgstr "唔，與訊息流伺服器連線時發生了某種問題。請告訴該
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "唔，訊息流伺服器似乎設置錯誤。請告訴該訊息流的擁有者這個問題。"
+msgstr "唔，訊息流伺服器似乎設定錯誤。請告訴該訊息流的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
@@ -2056,7 +2056,7 @@ msgstr "主機："
 #: src/screens/Signup/StepInfo/index.tsx:40
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "Hosting provider"
-msgstr "托管服務提供商"
+msgstr "託管服務提供商"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
@@ -2154,7 +2154,7 @@ msgstr "輸入你的密碼"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 msgid "Input your preferred hosting provider"
-msgstr "輸入你的托管服務提供商"
+msgstr "輸入你的託管服務提供商"
 
 #: src/screens/Signup/StepHandle.tsx:63
 msgid "Input your user handle"
@@ -2600,11 +2600,11 @@ msgstr "靜音這些帳號？"
 
 #: src/components/dialogs/MutedWords.tsx:126
 msgid "Mute this word in post text and tags"
-msgstr "在帖子文本和话题标签中隐藏该词"
+msgstr "在貼文內容和話題標籤中隱藏該字詞"
 
 #: src/components/dialogs/MutedWords.tsx:141
 msgid "Mute this word in tags only"
-msgstr "仅在话题标签中隐藏该词"
+msgstr "僅在話題標籤中隱藏該字詞"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:273
 #: src/view/com/util/forms/PostDropdownBtn.tsx:279
@@ -3124,7 +3124,7 @@ msgstr "{0} 選項，共 {numItems} 個"
 
 #: src/components/ReportDialog/SubmitView.tsx:160
 msgid "Optionally provide additional information below:"
-msgstr "以下是可選提供的额外信息："
+msgstr "以下是可選提供的額外資訊："
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
@@ -3951,7 +3951,7 @@ msgstr "選擇你希望訂閱訊息流中所包含的語言。未選擇任何語
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app."
-msgstr "選擇你應用程式中要顯示的默認文字的語言。"
+msgstr "選擇你應用程式中要顯示的預設文字的語言。"
 
 #: src/screens/Signup/StepInfo/index.tsx:135
 msgid "Select your date of birth"
@@ -4354,7 +4354,7 @@ msgstr "垃圾訊息"
 
 #: src/lib/moderation/useReportOptions.ts:53
 msgid "Spam; excessive mentions or replies"
-msgstr "垃圾訊息；過多的提及或回复"
+msgstr "垃圾訊息；過多的提及或回覆"
 
 #: src/screens/Onboarding/index.tsx:30
 msgid "Sports"
@@ -4675,7 +4675,7 @@ msgstr "此內容已套用限制提供者所設定的一般警告。"
 
 #: src/components/dialogs/EmbedConsent.tsx:64
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr "此內容由 {0} 托管。是否要啟用外部媒體？"
+msgstr "此內容由 {0} 託管。是否要啟用外部媒體？"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:77
@@ -5169,11 +5169,11 @@ msgstr "查看除錯項目"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:132
 msgid "View details"
-msgstr "查看詳細信息"
+msgstr "查看詳細資訊"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:127
 msgid "View details for reporting a copyright violation"
-msgstr "查看詳細信息以檢舉侵權"
+msgstr "查看詳細資訊以檢舉侵權"
 
 #: src/view/com/posts/FeedSlice.tsx:99
 msgid "View full thread"
@@ -5181,7 +5181,7 @@ msgstr "查看整個對話串"
 
 #: src/components/moderation/LabelsOnMe.tsx:51
 msgid "View information about these labels"
-msgstr "查看有關這些標籤的信息"
+msgstr "查看有關這些標籤的資訊"
 
 #: src/components/ProfileHoverCard/index.web.tsx:379
 #: src/components/ProfileHoverCard/index.web.tsx:408
