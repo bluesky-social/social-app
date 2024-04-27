@@ -37,4 +37,7 @@ export const router = new Router({
   CommunityGuidelines: '/support/community-guidelines',
   CopyrightPolicy: '/support/copyright',
   Hashtag: '/hashtag/:tag',
+  MessagesList: '/messages',
+  MessagesSettings: '/messages/settings',
+  MessagesConversation: '/messages/:conversation',
 })

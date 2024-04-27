@@ -1,18 +1,19 @@
 import {
-  AppBskyNotificationListNotifications,
-  ModerationOpts,
-  moderateNotification,
+  AppBskyEmbedRecord,
   AppBskyFeedDefs,
+  AppBskyFeedLike,
   AppBskyFeedPost,
   AppBskyFeedRepost,
-  AppBskyFeedLike,
-  AppBskyEmbedRecord,
+  AppBskyNotificationListNotifications,
+  BskyAgent,
+  moderateNotification,
+  ModerationOpts,
 } from '@atproto/api'
-import chunk from 'lodash.chunk'
 import {QueryClient} from '@tanstack/react-query'
-import {getAgent} from '../../session'
+import chunk from 'lodash.chunk'
+
 import {precacheProfile} from '../profile'
-import {NotificationType, FeedNotification, FeedPage} from './types'
+import {FeedNotification, FeedPage, NotificationType} from './types'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']
 const MS_1HR = 1e3 * 60 * 60
@@ -22,6 +23,7 @@ const MS_2DAY = MS_1HR * 48
 // =
 
 export async function fetchPage({
+  getAgent,
   cursor,
   limit,
   queryClient,
@@ -29,6 +31,7 @@ export async function fetchPage({
   threadMutes,
   fetchAdditionalData,
 }: {
+  getAgent: () => BskyAgent
   cursor: string | undefined
   limit: number
   queryClient: QueryClient
@@ -53,7 +56,7 @@ export async function fetchPage({
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
   if (fetchAdditionalData) {
-    const subjects = await fetchSubjects(notifsGrouped)
+    const subjects = await fetchSubjects(getAgent, notifsGrouped)
     for (const notif of notifsGrouped) {
       if (notif.subjectUri) {
         notif.subject = subjects.get(notif.subjectUri)
@@ -137,6 +140,7 @@ export function groupNotifications(
 }
 
 async function fetchSubjects(
+  getAgent: () => BskyAgent,
   groupedNotifs: FeedNotification[],
 ): Promise<Map<string, AppBskyFeedDefs.PostView>> {
   const uris = new Set<string>()

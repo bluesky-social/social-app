@@ -152,6 +152,12 @@ export function Outer({
     [open, close],
   )
 
+  React.useEffect(() => {
+    return () => {
+      setDialogIsOpen(control.id, false)
+    }
+  }, [control.id, setDialogIsOpen])
+
   const context = React.useMemo(() => ({close}), [close])
 
   return (
