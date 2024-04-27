@@ -12,6 +12,7 @@ import {useSession} from '#/state/session'
 import {BACK_HITSLOP} from 'lib/constants'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
+import {isIOS} from 'platform/detection'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {UserBanner} from 'view/com/util/UserBanner'
@@ -61,8 +62,8 @@ let ProfileHeaderShell = ({
   )
 
   return (
-    <View style={t.atoms.bg} pointerEvents="box-none">
-      <View pointerEvents="none">
+    <View style={t.atoms.bg} pointerEvents={isIOS ? 'auto' : 'box-none'}>
+      <View pointerEvents={isIOS ? 'auto' : 'none'}>
         {isPlaceholderProfile ? (
           <LoadingPlaceholder
             width="100%"
@@ -80,7 +81,9 @@ let ProfileHeaderShell = ({
 
       {children}
 
-      <View style={[a.px_lg, a.pb_sm]} pointerEvents="box-none">
+      <View
+        style={[a.px_lg, a.pb_sm]}
+        pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <ProfileHeaderAlerts moderation={moderation} />
         {isMe && (
           <LabelsOnMe details={{did: profile.did}} labels={profile.labels} />

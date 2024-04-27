@@ -7,8 +7,8 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
-import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
+import {readLastActiveAccount} from '#/state/session/util/readLastActiveAccount'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {QueryProvider} from 'lib/react-query'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -42,7 +42,7 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    const account = persisted.get('session').currentAccount
+    const account = readLastActiveAccount()
     resumeSession(account)
   }, [resumeSession])
 
