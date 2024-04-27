@@ -109,6 +109,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             title={niceDate(opts.timestamp)}
             accessibilityHint=""
             href={opts.postHref}
+            onPressIn={onBeforePress}
           />
         )}
       </TimeElapsed>
