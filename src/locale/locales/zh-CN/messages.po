@@ -4813,7 +4813,7 @@ msgstr "讨论串首选项"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "要关闭电子邮件两步验证，请先验证你的电子邮箱。"
+msgstr "在关闭电子邮件两步验证前，请先验证你的电子邮箱地址。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
