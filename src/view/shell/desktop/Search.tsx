@@ -30,7 +30,6 @@ import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
-import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 
 export const MATCH_HANDLE =
   /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
@@ -152,12 +151,10 @@ export function DesktopSearch() {
   const navigation = useNavigation<NavigationProp>()
   const [isActive, setIsActive] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
-  const throttledInput = useThrottledValue(query, 300)
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
-    throttledInput,
+    query,
     true,
   )
-  const isLoading = isFetching && !autocompleteData?.length
 
   const moderationOpts = useModerationOpts()
 
@@ -232,7 +229,7 @@ export function DesktopSearch() {
 
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
-          {isLoading ? (
+          {isFetching && !autocompleteData?.length ? (
             <View style={{padding: 8}}>
               <ActivityIndicator />
             </View>
