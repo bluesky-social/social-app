@@ -559,8 +559,11 @@ export function SearchScreen(
   const updateSearchHistory = React.useCallback(
     async (newQuery: string) => {
       newQuery = newQuery.trim()
-      if (newQuery && !searchHistory.includes(newQuery)) {
-        let newHistory = [newQuery, ...searchHistory]
+      if (newQuery) {
+        let newHistory = [
+          newQuery,
+          ...searchHistory.filter(q => q !== newQuery),
+        ]
 
         if (newHistory.length > 5) {
           newHistory = newHistory.slice(0, 5)
@@ -757,6 +760,8 @@ export function SearchScreen(
                   onPress={() => {
                     if (isWeb) {
                       setInputIsFocused(false)
+                    } else {
+                      textInput.current?.blur()
                     }
                   }}
                 />
