@@ -190,6 +190,7 @@ export function DesktopSearch() {
     if (searchDebounceTimeout.current)
       clearTimeout(searchDebounceTimeout.current)
   }, [setQuery])
+
   const onSubmit = React.useCallback(() => {
     setIsActive(false)
     if (!query.length) return
@@ -198,6 +199,13 @@ export function DesktopSearch() {
       clearTimeout(searchDebounceTimeout.current)
     navigation.dispatch(StackActions.push('Search', {q: query}))
   }, [query, navigation, setSearchResults])
+
+  const onSearchProfileCardPress = React.useCallback(() => {
+    setQuery('')
+    setIsActive(false)
+    setSearchResults([])
+    clearTimeout(searchDebounceTimeout.current)
+  }, [])
 
   const queryMaybeHandle = React.useMemo(() => {
     const match = MATCH_HANDLE.exec(query)
@@ -273,6 +281,7 @@ export function DesktopSearch() {
                   key={item.did}
                   profile={item}
                   moderation={moderateProfile(item, moderationOpts)}
+                  onPress={onSearchProfileCardPress}
                 />
               ))}
             </>
