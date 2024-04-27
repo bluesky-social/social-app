@@ -249,9 +249,7 @@ let PostThreadItemLoaded = ({
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
                 size={42}
-                did={post.author.did}
-                handle={post.author.handle}
-                avatar={post.author.avatar}
+                profile={post.author}
                 moderation={moderation.ui('avatar')}
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
               />
@@ -399,7 +397,8 @@ let PostThreadItemLoaded = ({
               isThreadedChild
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
-            }>
+            }
+            profile={post.author}>
             <View
               style={{
                 flexDirection: 'row',
@@ -440,9 +439,7 @@ let PostThreadItemLoaded = ({
                 <View style={styles.layoutAvi}>
                   <PreviewableUserAvatar
                     size={38}
-                    did={post.author.did}
-                    handle={post.author.handle}
-                    avatar={post.author.avatar}
+                    profile={post.author}
                     moderation={moderation.ui('avatar')}
                     type={post.author.associated?.labeler ? 'labeler' : 'user'}
                   />
