@@ -5022,7 +5022,7 @@ msgstr "使用伺服器上的檔案"
 
 #: src/view/screens/AppPasswords.tsx:197
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "使用應用程式專用密碼登入到其他 Bluesky 用戶端，而無需提供你的帳號或密碼。"
+msgstr "使用應用程式專用密碼登入到其他 Bluesky 客戶端，而無需提供你的帳號或密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:517
 msgid "Use bsky.social as hosting provider"
