@@ -5556,7 +5556,7 @@ msgstr "你的電子郵件地址尚未驗證。這是一個我們建議的重要
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的跟隨訊息流是空的！跟隨更多用戶看看發生了什麼事情。"
+msgstr "你的跟隨訊息流是空的！跟隨更多用戶來看看發生了什麼事情。"
 
 #: src/screens/Signup/StepHandle.tsx:73
 msgid "Your full handle will be"
