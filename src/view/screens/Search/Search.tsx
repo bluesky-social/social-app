@@ -499,7 +499,9 @@ export function SearchScreen(
 
   useFocusEffect(
     useNonReactiveCallback(() => {
-      setSearchText(queryParam)
+      if (isWeb) {
+        setSearchText(queryParam)
+      }
     }),
   )
 
@@ -610,6 +612,8 @@ export function SearchScreen(
 
   const handleHistoryItemClick = (item: string) => {
     setInputIsFocused(false)
+    setSearchText(item)
+    textInput.current?.blur()
     if (isWeb) {
       navigation.push('Search', {q: item})
     } else {
@@ -750,8 +754,9 @@ export function SearchScreen(
                   profile={item}
                   moderation={moderateProfile(item, moderationOpts)}
                   onPress={() => {
-                    setInputIsFocused(false)
-                    textInput.current?.blur()
+                    if (isWeb) {
+                      setInputIsFocused(false)
+                    }
                   }}
                 />
               ))}
