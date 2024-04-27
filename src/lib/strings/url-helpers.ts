@@ -150,7 +150,7 @@ export function isBskyDownloadUrl(url: string): boolean {
   if (isExternalUrl(url)) {
     return false
   }
-  return url.endsWith('/download')
+  return url === '/download' || url.startsWith('/download?')
 }
 
 export function convertBskyAppUrlIfNeeded(url: string): string {
