@@ -76,6 +76,7 @@ export type TrackPropertiesMap = {
   'MobileShell:SearchButtonPressed': {}
   'MobileShell:NotificationsButtonPressed': {}
   'MobileShell:FeedsButtonPressed': {}
+  'MobileShell:MessagesButtonPressed': {}
   // NOTIFICATIONS events
   'Notificatons:OpenApp': {}
   // LISTS events
