@@ -27,7 +27,7 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
@@ -35,6 +35,7 @@ import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useNonReactiveCallback} from 'lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   NativeStackScreenProps,
@@ -308,7 +309,7 @@ function SearchScreenUserResults({
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
-    query,
+    query: query,
     enabled: active,
   })
 
@@ -478,43 +479,25 @@ export function SearchScreen(
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const moderationOpts = useModerationOpts()
-  const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
-  const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
-    undefined,
-  )
-  const [isFetching, setIsFetching] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>(props.route?.params?.q || '')
-  const [searchResults, setSearchResults] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
-  const [inputIsFocused, setInputIsFocused] = React.useState(false)
-  const [showAutocompleteResults, setShowAutocompleteResults] =
-    React.useState(false)
+  // Query terms
+  const queryParam = props.route?.params?.q ?? ''
+  const [searchText, setSearchText] = React.useState<string>(queryParam)
+  const {data: autocompleteData, isFetching: isAutocompleteFetching} =
+    useActorAutocompleteQuery(searchText, true)
+
+  const [showAutocomplete, setShowAutocomplete] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
-  /**
-   * The Search screen's `q` param
-   */
-  const queryParam = props.route?.params?.q
-
-  /**
-   * If `true`, this means we received new instructions from the router. This
-   * is handled in a effect, and used to update the value of `query` locally
-   * within this screen.
-   */
-  const routeParamsMismatch = queryParam && queryParam !== query
-
-  React.useEffect(() => {
-    if (queryParam && routeParamsMismatch) {
-      // reset immediately and let local state take over
-      navigation.setParams({q: ''})
-      // update query for next search
-      setQuery(queryParam)
-    }
-  }, [queryParam, routeParamsMismatch, navigation])
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      if (isWeb) {
+        setSearchText(queryParam)
+      }
+    }),
+  )
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
@@ -536,60 +519,45 @@ export function SearchScreen(
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
 
-  const onPressCancelSearch = React.useCallback(() => {
-    scrollToTopWeb()
-    textInput.current?.blur()
-    setQuery('')
-    setShowAutocompleteResults(false)
-    if (searchDebounceTimeout.current)
-      clearTimeout(searchDebounceTimeout.current)
-  }, [textInput])
-
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
-    setQuery('')
-    setShowAutocompleteResults(false)
-  }, [setQuery])
+    setSearchText('')
+    textInput.current?.focus()
+  }, [])
 
-  const onChangeText = React.useCallback(
-    async (text: string) => {
-      scrollToTopWeb()
+  const onPressCancelSearch = React.useCallback(() => {
+    scrollToTopWeb()
 
-      setQuery(text)
-
-      if (text.length > 0) {
-        setIsFetching(true)
-        setShowAutocompleteResults(true)
-
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-
-        searchDebounceTimeout.current = setTimeout(async () => {
-          const results = await search({query: text, limit: 30})
-
-          if (results) {
-            setSearchResults(results)
-            setIsFetching(false)
-          }
-        }, 300)
+    if (showAutocomplete) {
+      textInput.current?.blur()
+      setShowAutocomplete(false)
+      setSearchText(queryParam)
+    } else {
+      // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
+      // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
+      // differently.
+      if (isWeb) {
+        navigation.replace('Search', {})
       } else {
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-        setSearchResults([])
-        setIsFetching(false)
-        setShowAutocompleteResults(false)
+        setSearchText('')
+        navigation.setParams({q: ''})
       }
-    },
-    [setQuery, search, setSearchResults],
-  )
+    }
+  }, [showAutocomplete, navigation, queryParam])
+
+  const onChangeText = React.useCallback(async (text: string) => {
+    scrollToTopWeb()
+    setSearchText(text)
+  }, [])
 
   const updateSearchHistory = React.useCallback(
     async (newQuery: string) => {
       newQuery = newQuery.trim()
-      if (newQuery && !searchHistory.includes(newQuery)) {
-        let newHistory = [newQuery, ...searchHistory]
+      if (newQuery) {
+        let newHistory = [
+          newQuery,
+          ...searchHistory.filter(q => q !== newQuery),
+        ]
 
         if (newHistory.length > 5) {
           newHistory = newHistory.slice(0, 5)
@@ -609,11 +577,30 @@ export function SearchScreen(
     [searchHistory, setSearchHistory],
   )
 
+  const navigateToItem = React.useCallback(
+    (item: string) => {
+      scrollToTopWeb()
+      setShowAutocomplete(false)
+      updateSearchHistory(item)
+
+      if (isWeb) {
+        navigation.push('Search', {q: item})
+      } else {
+        textInput.current?.blur()
+        navigation.setParams({q: item})
+      }
+    },
+    [updateSearchHistory, navigation],
+  )
+
   const onSubmit = React.useCallback(() => {
-    scrollToTopWeb()
-    setShowAutocompleteResults(false)
-    updateSearchHistory(query)
-  }, [query, setShowAutocompleteResults, updateSearchHistory])
+    navigateToItem(searchText)
+  }, [navigateToItem, searchText])
+
+  const handleHistoryItemClick = (item: string) => {
+    setSearchText(item)
+    navigateToItem(item)
+  }
 
   const onSoftReset = React.useCallback(() => {
     scrollToTopWeb()
@@ -621,9 +608,9 @@ export function SearchScreen(
   }, [onPressCancelSearch])
 
   const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(query)
+    const match = MATCH_HANDLE.exec(queryParam)
     return match && match[1]
-  }, [query])
+  }, [queryParam])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -631,11 +618,6 @@ export function SearchScreen(
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
   )
-
-  const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
-    setQuery(item)
-    onSubmit()
-  }
 
   const handleRemoveHistoryItem = (itemToRemove: string) => {
     const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
@@ -688,17 +670,21 @@ export function SearchScreen(
             ref={textInput}
             placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus
+            selectTextOnFocus={isNative}
             returnKeyType="search"
-            value={query}
+            value={searchText}
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
-            onFocus={() => setInputIsFocused(true)}
-            onBlur={() => {
-              // HACK
-              // give 100ms to not stop click handlers in the search history
-              // -prf
-              setTimeout(() => setInputIsFocused(false), 100)
+            onFocus={() => {
+              if (isWeb) {
+                // Prevent a jump on iPad by ensuring that
+                // the initial focused render has no result list.
+                requestAnimationFrame(() => {
+                  setShowAutocomplete(true)
+                })
+              } else {
+                setShowAutocomplete(true)
+              }
             }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
@@ -710,7 +696,7 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          {query ? (
+          {showAutocomplete ? (
             <Pressable
               testID="searchTextInputClearBtn"
               onPress={onPressClearQuery}
@@ -727,7 +713,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {query || inputIsFocused ? (
+        {(queryParam || showAutocomplete) && (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}
@@ -738,12 +724,13 @@ export function SearchScreen(
               </Text>
             </Pressable>
           </View>
-        ) : undefined}
+        )}
       </CenteredView>
 
-      {showAutocompleteResults ? (
+      {showAutocomplete && searchText.length > 0 ? (
         <>
-          {isFetching || !moderationOpts ? (
+          {(isAutocompleteFetching && !autocompleteData?.length) ||
+          !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
@@ -753,12 +740,12 @@ export function SearchScreen(
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag">
               <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
+                label={_(msg`Search for "${searchText}"`)}
                 onPress={isNative ? onSubmit : undefined}
                 to={
                   isNative
                     ? undefined
-                    : `/search?q=${encodeURIComponent(query)}`
+                    : `/search?q=${encodeURIComponent(searchText)}`
                 }
                 style={{borderBottomWidth: 1}}
               />
@@ -770,11 +757,18 @@ export function SearchScreen(
                 />
               ) : null}
 
-              {searchResults.map(item => (
+              {autocompleteData?.map(item => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
                   moderation={moderateProfile(item, moderationOpts)}
+                  onPress={() => {
+                    if (isWeb) {
+                      setShowAutocomplete(false)
+                    } else {
+                      textInput.current?.blur()
+                    }
+                  }}
                 />
               ))}
 
@@ -782,7 +776,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !query && inputIsFocused ? (
+      ) : !queryParam && showAutocomplete ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
@@ -826,10 +820,8 @@ export function SearchScreen(
             )}
           </View>
         </CenteredView>
-      ) : routeParamsMismatch ? (
-        <ActivityIndicator />
       ) : (
-        <SearchScreenInner query={query} />
+        <SearchScreenInner query={queryParam} />
       )}
     </View>
   )

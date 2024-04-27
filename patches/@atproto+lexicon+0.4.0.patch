@@ -1,0 +1,28 @@
+diff --git a/node_modules/@atproto/lexicon/dist/validators/complex.js b/node_modules/@atproto/lexicon/dist/validators/complex.js
+index 32d7798..9d688b7 100644
+--- a/node_modules/@atproto/lexicon/dist/validators/complex.js
++++ b/node_modules/@atproto/lexicon/dist/validators/complex.js
+@@ -113,7 +113,22 @@ function object(lexicons, path, def, value) {
+             if (value[key] === null && nullableProps.has(key)) {
+                 continue;
+             }
+-            const propDef = def.properties[key];
++            const propDef = def.properties[key]
++            if (typeof value[key] === 'undefined' && !requiredProps.has(key)) {
++              // Fast path for non-required undefined props.
++              if (
++                propDef.type === 'integer' ||
++                propDef.type === 'boolean' ||
++                propDef.type === 'string'
++              ) {
++                if (typeof propDef.default === 'undefined') {
++                  continue
++                }
++              } else {
++                // Other types have no defaults.
++                continue
++              }
++            }
+             const propPath = `${path}/${key}`;
+             const validated = (0, util_1.validateOneOf)(lexicons, propPath, propDef, value[key]);
+             const propValue = validated.success ? validated.value : value[key];

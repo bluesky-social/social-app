@@ -10,6 +10,7 @@ const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
+export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
