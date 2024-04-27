@@ -127,7 +127,7 @@ export function useLink({
 
           if (
             shouldOpenInNewTab ||
-            // href.startsWith('http') || // TODO REVERT ME
+            href.startsWith('http') ||
             href.startsWith('mailto')
           ) {
             openLink(href)

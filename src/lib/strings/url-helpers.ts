@@ -1,8 +1,7 @@
 import {AtUri} from '@atproto/api'
-import psl from 'psl'
-import TLDs from 'tlds'
-
 import {BSKY_SERVICE} from 'lib/constants'
+import TLDs from 'tlds'
+import psl from 'psl'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
@@ -99,11 +98,6 @@ export function isBskyRSSUrl(url: string): boolean {
 }
 
 export function isExternalUrl(url: string): boolean {
-  if (__DEV__ && url.startsWith('http://localhost:19006')) {
-    console.warn('REVERT ME')
-    return false
-  }
-
   const external = !isBskyAppUrl(url) && url.startsWith('http')
   const rss = isBskyRSSUrl(url)
   return external || rss
