@@ -580,18 +580,30 @@ export function SearchScreen(
     [searchHistory, setSearchHistory],
   )
 
-  const onSubmit = React.useCallback(() => {
-    scrollToTopWeb()
-    setInputIsFocused(false)
-    updateSearchHistory(searchText)
+  const navigateToItem = React.useCallback(
+    (item: string) => {
+      scrollToTopWeb()
+      setInputIsFocused(false)
+      updateSearchHistory(item)
 
-    if (isWeb) {
-      navigation.push('Search', {q: searchText})
-    } else {
-      textInput.current?.blur()
-      navigation.setParams({q: searchText})
-    }
-  }, [navigation, searchText, updateSearchHistory])
+      if (isWeb) {
+        navigation.push('Search', {q: item})
+      } else {
+        textInput.current?.blur()
+        navigation.setParams({q: item})
+      }
+    },
+    [updateSearchHistory, navigation],
+  )
+
+  const onSubmit = React.useCallback(() => {
+    navigateToItem(searchText)
+  }, [navigateToItem, searchText])
+
+  const handleHistoryItemClick = (item: string) => {
+    setSearchText(item)
+    navigateToItem(item)
+  }
 
   const onSoftReset = React.useCallback(() => {
     scrollToTopWeb()
@@ -609,17 +621,6 @@ export function SearchScreen(
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
   )
-
-  const handleHistoryItemClick = (item: string) => {
-    setInputIsFocused(false)
-    setSearchText(item)
-    textInput.current?.blur()
-    if (isWeb) {
-      navigation.push('Search', {q: item})
-    } else {
-      navigation.setParams({q: item})
-    }
-  }
 
   const handleRemoveHistoryItem = (itemToRemove: string) => {
     const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
