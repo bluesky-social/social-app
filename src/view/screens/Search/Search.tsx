@@ -56,7 +56,6 @@ import {
 } from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
-import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 
 function Loader() {
   const pal = usePalette('default')
@@ -486,13 +485,8 @@ export function SearchScreen(
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
   const [searchText, setSearchText] = React.useState<string>(queryParam)
-  const throttledInput = useThrottledValue(searchText, 300)
-
-  // Autocomplete
-  const {data: autocompleteData} = useActorAutocompleteQuery(
-    throttledInput,
-    true,
-  )
+  const {data: autocompleteData, isFetching: isAutocompleteFetching} =
+    useActorAutocompleteQuery(searchText, true)
 
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
@@ -725,7 +719,8 @@ export function SearchScreen(
 
       {inputIsFocused && searchText.length > 0 ? (
         <>
-          {!autocompleteData || !moderationOpts ? (
+          {(isAutocompleteFetching && !autocompleteData?.length) ||
+          !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
