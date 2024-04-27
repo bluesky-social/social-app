@@ -724,6 +724,7 @@ export function SearchScreen(
             <Loader />
           ) : (
             <ScrollView
+              // @ts-ignore web-only
               style={
                 isWeb
                   ? {
