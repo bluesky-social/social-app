@@ -5014,7 +5014,7 @@ msgstr "リストによってブロック中のユーザー"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:66
 msgid "User Blocking You"
-msgstr "あなたがブロック中のユーザー"
+msgstr "あなたをブロックしているユーザー"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 msgid "User Blocks You"
