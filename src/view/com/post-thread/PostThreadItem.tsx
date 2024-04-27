@@ -397,7 +397,8 @@ let PostThreadItemLoaded = ({
               isThreadedChild
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
-            }>
+            }
+            profile={post.author}>
             <View
               style={{
                 flexDirection: 'row',
