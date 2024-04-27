@@ -1315,7 +1315,7 @@ msgstr "例如：艺术家、爱狗人士和狂热读者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "例如：裸露艺术。"
+msgstr "例如：艺术性的裸露。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:284
 msgid "e.g. Great Posters"
