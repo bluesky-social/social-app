@@ -1,8 +1,9 @@
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {usePrefetchProfileQuery} from '#/state/queries/profile'
+import {precacheProfile, usePrefetchProfileQuery} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -40,6 +41,11 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     ? () => prefetchProfileQuery(opts.author.did)
     : undefined
 
+  const queryClient = useQueryClient()
+  const onBeforePress = useCallback(() => {
+    precacheProfile(queryClient, opts.author)
+  }, [queryClient, opts.author])
+
   return (
     <View style={[styles.container, opts.style]}>
       {opts.showAvatar && (
@@ -69,6 +75,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             </>
           }
           href={profileLink}
+          onBeforePress={onBeforePress}
           onPointerEnter={onPointerEnter}
         />
         <TextLinkOnWebOnly
@@ -77,6 +84,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           style={[pal.textLight, {flexShrink: 4}]}
           text={'\xa0' + sanitizeHandle(handle, '@')}
           href={profileLink}
+          onBeforePress={onBeforePress}
           onPointerEnter={onPointerEnter}
           anchorNoUnderline
         />
