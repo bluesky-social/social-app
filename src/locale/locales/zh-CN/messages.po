@@ -664,7 +664,7 @@ msgstr "查看一些推荐的用户。关注他们还将推荐相似的用户。
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr "查看发送至你电子邮箱的验证码，并在此处输入。"
+msgstr "在这里输入刚才发送到你电子邮箱里的验证码"
 
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
