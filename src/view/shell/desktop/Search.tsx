@@ -238,7 +238,11 @@ export function DesktopSearch() {
               <SearchLinkCard
                 label={_(msg`Search for "${query}"`)}
                 to={`/search?q=${encodeURIComponent(query)}`}
-                style={{borderBottomWidth: 1}}
+                style={
+                  queryMaybeHandle || (autocompleteData?.length ?? 0) > 0
+                    ? {borderBottomWidth: 1}
+                    : undefined
+                }
               />
 
               {queryMaybeHandle ? (
