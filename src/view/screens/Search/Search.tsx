@@ -609,7 +609,12 @@ export function SearchScreen(
   )
 
   const handleHistoryItemClick = (item: string) => {
-    navigation.setParams({q: item})
+    if (isWeb) {
+      navigation.push('Search', {q: item})
+    } else {
+      setShowAutocomplete(false)
+      navigation.setParams({q: item})
+    }
   }
 
   const handleRemoveHistoryItem = (itemToRemove: string) => {
