@@ -724,16 +724,7 @@ export function SearchScreen(
             <Loader />
           ) : (
             <ScrollView
-              style={
-                isWeb
-                  ? {
-                      height: '100%',
-                      width: '100%',
-                      paddingTop: 50,
-                      position: 'fixed',
-                    }
-                  : {height: '100%'}
-              }
+              style={{height: '100%'}}
               // @ts-ignore web only -prf
               dataSet={{stableGutters: '1'}}
               keyboardShouldPersistTaps="handled"
