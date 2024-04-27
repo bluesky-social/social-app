@@ -675,7 +675,17 @@ export function SearchScreen(
             value={searchText}
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
-            onFocus={() => setInputIsFocused(true)}
+            onFocus={() => {
+              if (isWeb) {
+                // Prevent a jump on iPad by ensuring that
+                // the initial focused render has no result list.
+                requestAnimationFrame(() => {
+                  setInputIsFocused(true)
+                })
+              } else {
+                setInputIsFocused(true)
+              }
+            }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             autoFocus={false}
