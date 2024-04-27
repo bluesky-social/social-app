@@ -3054,7 +3054,7 @@ msgstr "开启邀请码列表"
 
 #: src/view/screens/Settings/index.tsx:757
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "开启用户删除确认界面，需要电子邮箱接收验证码"
+msgstr "需要邮件验证以继续进行账户删除操作"
 
 #: src/view/screens/Settings/index.tsx:715
 msgid "Opens modal for changing your Bluesky password"
