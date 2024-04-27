@@ -580,13 +580,13 @@ export function SearchScreen(
 
   const onSubmit = React.useCallback(() => {
     scrollToTopWeb()
+    setShowAutocomplete(false)
     updateSearchHistory(searchText)
 
     if (isWeb) {
       navigation.push('Search', {q: searchText})
     } else {
       textInput.current?.blur()
-      setShowAutocomplete(false)
       navigation.setParams({q: searchText})
     }
   }, [navigation, searchText, updateSearchHistory])
@@ -609,10 +609,10 @@ export function SearchScreen(
   )
 
   const handleHistoryItemClick = (item: string) => {
+    setShowAutocomplete(false)
     if (isWeb) {
       navigation.push('Search', {q: item})
     } else {
-      setShowAutocomplete(false)
       navigation.setParams({q: item})
     }
   }
