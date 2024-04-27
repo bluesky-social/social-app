@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useComposerControls} from '#/state/shell/composer'
@@ -24,6 +25,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines} from 'lib/strings/helpers'
 import {s} from 'lib/styles'
+import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -106,6 +108,7 @@ let FeedItemInner = ({
   isThreadLastChild?: boolean
   isThreadParent?: boolean
 }): React.ReactNode => {
+  const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -135,6 +138,10 @@ let FeedItemInner = ({
     })
   }, [post, record, openComposer, moderation])
 
+  const onBeforePress = React.useCallback(() => {
+    precacheProfile(queryClient, post.author)
+  }, [queryClient, post.author])
+
   const outerStyles = [
     styles.outer,
     {
@@ -153,7 +160,8 @@ let FeedItemInner = ({
       style={outerStyles}
       href={href}
       noFeedback
-      accessible={false}>
+      accessible={false}
+      onBeforePress={onBeforePress}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
@@ -240,9 +248,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={post.author.did}
-            handle={post.author.handle}
-            avatar={post.author.avatar}
+            profile={post.author}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />

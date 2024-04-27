@@ -113,12 +113,7 @@ export function MessagesListScreen({}: Props) {
             <Link
               to={`/messages/${item.profile.handle}`}
               style={[a.flex_1, a.pl_md, a.py_sm, a.gap_md, a.pr_2xl]}>
-              <PreviewableUserAvatar
-                did={item.profile.did}
-                handle={item.profile.handle}
-                size={44}
-                avatar={item.profile.avatar}
-              />
+              <PreviewableUserAvatar profile={item.profile} size={44} />
               <View style={[a.flex_1]}>
                 <View
                   style={[
