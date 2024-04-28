@@ -64,9 +64,8 @@ function ListImpl<ItemT>(
         }
       }
     },
-    onMomentumBegin(e, ctx) {
-      contextScrollHandlers.onMomentumBegin?.(e, ctx)
-    },
+    // Note: adding onMomentumBegin here makes simulator scroll
+    // lag on Android. So either don't add it, or figure out why.
     onMomentumEnd(e, ctx) {
       contextScrollHandlers.onMomentumEnd?.(e, ctx)
     },

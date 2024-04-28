@@ -123,9 +123,6 @@ export function ProfileLabelsSectionInner({
     onScroll(e, ctx) {
       contextScrollHandlers.onScroll?.(e, ctx)
     },
-    onMomentumBegin(e, ctx) {
-      contextScrollHandlers.onMomentumBegin?.(e, ctx)
-    },
     onMomentumEnd(e, ctx) {
       contextScrollHandlers.onMomentumEnd?.(e, ctx)
     },
