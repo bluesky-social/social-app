@@ -123,6 +123,9 @@ export function ProfileLabelsSectionInner({
     onScroll(e, ctx) {
       contextScrollHandlers.onScroll?.(e, ctx)
     },
+    onMomentumEnd(e, ctx) {
+      contextScrollHandlers.onMomentumEnd?.(e, ctx)
+    },
   })
 
   const {labelValues} = labelerInfo.policies
