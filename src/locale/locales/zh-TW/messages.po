@@ -3476,7 +3476,7 @@ msgstr "推薦訊息流"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:181
 msgid "Recommended Users"
-msgstr "推薦的用戶"
+msgstr "推薦用戶"
 
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:283
