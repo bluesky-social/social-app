@@ -5,6 +5,8 @@ const ScrollContext = createContext<ScrollHandlers<any>>({
   onBeginDrag: undefined,
   onEndDrag: undefined,
   onScroll: undefined,
+  onMomentumBegin: undefined,
+  onMomentumEnd: undefined,
 })
 
 export function useScrollHandlers(): ScrollHandlers<any> {
@@ -20,14 +22,18 @@ export function ScrollProvider({
   onBeginDrag,
   onEndDrag,
   onScroll,
+  onMomentumBegin,
+  onMomentumEnd,
 }: ProviderProps) {
   const handlers = useMemo(
     () => ({
       onBeginDrag,
       onEndDrag,
       onScroll,
+      onMomentumBegin,
+      onMomentumEnd,
     }),
-    [onBeginDrag, onEndDrag, onScroll],
+    [onBeginDrag, onEndDrag, onScroll, onMomentumBegin, onMomentumEnd],
   )
   return (
     <ScrollContext.Provider value={handlers}>{children}</ScrollContext.Provider>

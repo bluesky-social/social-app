@@ -64,6 +64,12 @@ function ListImpl<ItemT>(
         }
       }
     },
+    onMomentumBegin(e, ctx) {
+      contextScrollHandlers.onMomentumBegin?.(e, ctx)
+    },
+    onMomentumEnd(e, ctx) {
+      contextScrollHandlers.onMomentumEnd?.(e, ctx)
+    },
   })
 
   let refreshControl
