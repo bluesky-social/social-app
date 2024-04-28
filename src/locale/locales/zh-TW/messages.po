@@ -1775,7 +1775,7 @@ msgstr "跟隨選擇的用戶並繼續下一步"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-msgstr "跟隨一些用戶以開始，我們可以根據你感興趣的用戶向你推薦更多相似用戶。"
+msgstr "開始跟隨一些用戶吧，我們可以根據你的興趣推薦更多相似用戶。"
 
 #: src/view/com/profile/ProfileCard.tsx:231
 msgid "Followed by {0}"
