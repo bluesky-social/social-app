@@ -1331,7 +1331,7 @@ msgstr "例如：絕對不容錯過的發文者。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:314
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "例如：張貼廣告回覆的用戶。"
+msgstr "例如：多次張貼廣告的用戶。"
 
 #: src/view/com/modals/InviteCodes.tsx:97
 msgid "Each code works once. You'll receive more invite codes periodically."
