@@ -25,7 +25,7 @@ import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -670,11 +670,11 @@ export function SearchScreen(
             ref={textInput}
             placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus={isNative}
             returnKeyType="search"
             value={searchText}
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
+            selectTextOnFocus={isNative}
             onFocus={() => {
               if (isWeb) {
                 // Prevent a jump on iPad by ensuring that
@@ -684,6 +684,12 @@ export function SearchScreen(
                 })
               } else {
                 setShowAutocomplete(true)
+                if (isIOS) {
+                  // We rely on selectTextOnFocus, but it's broken on iOS:
+                  // https://github.com/facebook/react-native/issues/41988
+                  textInput.current?.setSelection(0, searchText.length)
+                  // We still rely on selectTextOnFocus for it to be instant on Android.
+                }
               }
             }}
             onChangeText={onChangeText}
