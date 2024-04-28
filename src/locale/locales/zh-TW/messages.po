@@ -1408,7 +1408,7 @@ msgstr "電子郵件"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr "電子郵件雙重驗證已關閉"
+msgstr "已關閉電子郵件雙重驗證"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
