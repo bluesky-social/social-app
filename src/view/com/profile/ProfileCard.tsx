@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -6,22 +6,25 @@ import {
   ModerationCause,
   ModerationDecision,
 } from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {FollowButton} from './FollowButton'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
+import {Trans} from '@lingui/macro'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
-import {Trans} from '@lingui/macro'
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {usePalette} from 'lib/hooks/usePalette'
+import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
+import {makeProfileLink} from 'lib/routes/links'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {s} from 'lib/styles'
+import {precacheProfile} from 'state/queries/profile'
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {FollowButton} from './FollowButton'
 
 export function ProfileCard({
   testID,
@@ -46,10 +49,17 @@ export function ProfileCard({
   onPress?: () => void
   style?: StyleProp<ViewStyle>
 }) {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const profile = useProfileShadow(profileUnshadowed)
   const moderationOpts = useModerationOpts()
   const isLabeler = profile?.associated?.labeler
+
+  const onBeforePress = React.useCallback(() => {
+    onPress?.()
+    precacheProfile(queryClient, profile)
+  }, [onPress, profile, queryClient])
+
   if (!moderationOpts) {
     return null
   }
@@ -71,14 +81,14 @@ export function ProfileCard({
       ]}
       href={makeProfileLink(profile)}
       title={profile.handle}
-      onBeforePress={onPress}
       asAnchor
+      onBeforePress={onBeforePress}
       anchorNoUnderline>
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <UserAvatar
+          <PreviewableUserAvatar
             size={40}
-            avatar={profile.avatar}
+            profile={profile}
             moderation={moderation.ui('avatar')}
             type={isLabeler ? 'labeler' : 'user'}
           />
@@ -221,9 +231,9 @@ function FollowersList({
       {followersWithMods.slice(0, 3).map(({f, mod}) => (
         <View key={f.did} style={styles.followedByAviContainer}>
           <View style={[styles.followedByAvi, pal.view]}>
-            <UserAvatar
-              avatar={f.avatar}
+            <PreviewableUserAvatar
               size={32}
+              profile={f}
               moderation={mod.ui('avatar')}
               type={f.associated?.labeler ? 'labeler' : 'user'}
             />

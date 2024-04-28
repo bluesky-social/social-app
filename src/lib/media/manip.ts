@@ -31,7 +31,10 @@ export async function compressIfNeeded(
     mode: 'stretch',
     maxSize,
   })
-  const finalImageMovedPath = await moveToPermanentPath(resizedImage.path)
+  const finalImageMovedPath = await moveToPermanentPath(
+    resizedImage.path,
+    '.jpg',
+  )
   const finalImg = {
     ...resizedImage,
     path: finalImageMovedPath,
@@ -67,7 +70,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
     await downloadImage(opts.uri, path, opts.timeout)
     return await doResize(path, opts)
   } finally {
-    deleteAsync(path)
+    safeDeleteAsync(path)
   }
 }
 
@@ -95,7 +98,7 @@ export async function shareImageModal({uri}: {uri: string}) {
     UTI: 'image/png',
   })
 
-  deleteAsync(imagePath)
+  safeDeleteAsync(imagePath)
 }
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
@@ -113,8 +116,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
 
   // save
   await MediaLibrary.createAssetAsync(imagePath)
-
-  deleteAsync(imagePath)
+  safeDeleteAsync(imagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
@@ -187,7 +189,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
         height: resizeRes.height,
       }
     } else {
-      await deleteAsync(resizeRes.uri)
+      safeDeleteAsync(resizeRes.path)
     }
   }
   throw new Error(
@@ -195,15 +197,17 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   )
 }
 
-async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
+async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
   https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
   */
   const filename = uuid.v4()
-  const destinationPath = joinPath(cacheDirectory ?? '', `${filename}${ext}`)
 
+  // cacheDirectory will not ever be null on native, but it could be on web. This function only ever gets called on
+  // native so we assert as a string.
+  const destinationPath = joinPath(cacheDirectory as string, filename + ext)
   await copyAsync({
     from: normalizePath(path),
     to: destinationPath,
@@ -217,14 +221,26 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
     !path.includes('com.hackemist.SDImageCache') &&
     !path.includes('image_manager_disk_cache')
   ) {
-    try {
-      deleteAsync(path)
-    } catch (e) {
-      // No need to handle
-    }
+    safeDeleteAsync(path)
   }
 
   return normalizePath(destinationPath)
+}
+
+export async function safeDeleteAsync(path: string) {
+  // Normalize is necessary for Android, otherwise it doesn't delete.
+  const normalizedPath = normalizePath(path)
+  try {
+    await Promise.allSettled([
+      deleteAsync(normalizedPath, {idempotent: true}),
+      // HACK: Try this one too. Might exist due to api-polyfill hack.
+      deleteAsync(normalizedPath.replace(/\.jpe?g$/, '.bin'), {
+        idempotent: true,
+      }),
+    ])
+  } catch (e) {
+    console.error('Failed to delete file', e)
+  }
 }
 
 function joinPath(a: string, b: string) {

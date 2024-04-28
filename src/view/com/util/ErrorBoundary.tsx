@@ -1,12 +1,14 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
 import {ErrorScreen} from './error/ErrorScreen'
 import {CenteredView} from './Views'
-import {msg} from '@lingui/macro'
-import {logger} from '#/logger'
-import {useLingui} from '@lingui/react'
 
 interface Props {
   children?: ReactNode
+  renderError?: (error: any) => ReactNode
 }
 
 interface State {
@@ -30,6 +32,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      if (this.props.renderError) {
+        return this.props.renderError(this.state.error)
+      }
+
       return (
         <CenteredView style={{height: '100%', flex: 1}}>
           <TranslatedErrorScreen details={this.state.error.toString()} />

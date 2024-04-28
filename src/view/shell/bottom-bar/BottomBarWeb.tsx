@@ -1,37 +1,41 @@
 import React from 'react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useNavigationState} from '@react-navigation/native'
+import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
-import {styles} from './BottomBarStyles'
-import {clamp} from 'lib/numbers'
+import {useNavigationState} from '@react-navigation/native'
+
+import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   BellIcon,
   BellIconSolid,
+  HashtagIcon,
   HomeIcon,
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-  HashtagIcon,
   UserIcon,
   UserIconSolid,
-} from 'lib/icons'
-import {Link} from 'view/com/util/Link'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams} from 'lib/routes/types'
+} from '#/lib/icons'
+import {clamp} from '#/lib/numbers'
+import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
+import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
+import {s} from '#/lib/styles'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
-import {s} from 'lib/styles'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {Link} from 'view/com/util/Link'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
@@ -41,6 +45,7 @@ export function BottomBarWeb() {
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const gate = useGate()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -117,6 +122,19 @@ export function BottomBarWeb() {
                   )
                 }}
               </NavItem>
+              {gate('dms') && (
+                <NavItem routeName="Messages" href="/messages">
+                  {({isActive}) => {
+                    const Icon = isActive ? EnvelopeFilled : Envelope
+                    return (
+                      <Icon
+                        size="lg"
+                        style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
+                      />
+                    )
+                  }}
+                </NavItem>
+              )}
               <NavItem
                 routeName="Profile"
                 href={

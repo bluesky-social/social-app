@@ -4,10 +4,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
   DescriptionText,
@@ -37,6 +38,7 @@ export function StepFinished() {
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
   const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
+  const {getAgent} = useAgent()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -55,7 +57,10 @@ export function StepFinished() {
 
     try {
       await Promise.all([
-        bulkWriteFollows(suggestedAccountsStepResults.accountDids),
+        bulkWriteFollows(
+          getAgent,
+          suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
+        ),
         // these must be serial
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
@@ -77,7 +82,7 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
+  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track, getAgent])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')

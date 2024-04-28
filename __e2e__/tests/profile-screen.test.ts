@@ -1,8 +1,9 @@
 /* eslint-env detox/detox */
 
-import {describe, beforeAll, it} from '@jest/globals'
+import {beforeAll, describe, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, createServer, sleep} from '../util'
+
+import {createServer, loginAsAlice, openApp, sleep} from '../util'
 
 describe('Profile screen', () => {
   beforeAll(async () => {
@@ -124,16 +125,17 @@ describe('Profile screen', () => {
     await expect(element(by.id('profileHeaderAlert'))).not.toExist()
   })
 
-  it('Can report another user', async () => {
-    await element(by.id('profileHeaderDropdownBtn')).tap()
-    await element(by.text('Report Account')).tap()
-    await expect(element(by.id('reportModal'))).toBeVisible()
-    await element(
-      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
-    ).tap()
-    await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportModal'))).not.toBeVisible()
-  })
+  // TODO skipping because the test env PDS isnt setup correctly to handle the report -prf
+  // it('Can report another user', async () => {
+  //   await element(by.id('profileHeaderDropdownBtn')).tap()
+  //   await element(by.text('Report Account')).tap()
+  //   await expect(element(by.id('reportModal'))).toBeVisible()
+  //   await element(
+  //     by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
+  //   ).tap()
+  //   await element(by.id('sendReportBtn')).tap()
+  //   await expect(element(by.id('reportModal'))).not.toBeVisible()
+  // })
 
   it('Can like posts', async () => {
     await element(by.id('postsFeed-flatlist')).swipe(
@@ -179,15 +181,16 @@ describe('Profile screen', () => {
     ).not.toExist()
   })
 
-  it('Can report posts', async () => {
-    const posts = by.id('feedItem-by-bob.test')
-    await element(by.id('postDropdownBtn').withAncestor(posts)).atIndex(0).tap()
-    await element(by.text('Report post')).tap()
-    await expect(element(by.id('reportModal'))).toBeVisible()
-    await element(
-      by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
-    ).tap()
-    await element(by.id('sendReportBtn')).tap()
-    await expect(element(by.id('reportModal'))).not.toBeVisible()
-  })
+  // TODO skipping because the test env PDS isnt setup correctly to handle the report -prf
+  // it('Can report posts', async () => {
+  //   const posts = by.id('feedItem-by-bob.test')
+  //   await element(by.id('postDropdownBtn').withAncestor(posts)).atIndex(0).tap()
+  //   await element(by.text('Report post')).tap()
+  //   await expect(element(by.id('reportModal'))).toBeVisible()
+  //   await element(
+  //     by.id('reportReasonRadios-com.atproto.moderation.defs#reasonSpam'),
+  //   ).tap()
+  //   await element(by.id('sendReportBtn')).tap()
+  //   await expect(element(by.id('reportModal'))).not.toBeVisible()
+  // })
 })

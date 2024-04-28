@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {findNodeHandle, View} from 'react-native'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {
   AppBskyLabelerDefs,
@@ -32,6 +32,8 @@ interface LabelsSectionProps {
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
   headerHeight: number
+  isFocused: boolean
+  setScrollViewTag: (tag: number | null) => void
 }
 export const ProfileLabelsSection = React.forwardRef<
   SectionRef,
@@ -44,6 +46,8 @@ export const ProfileLabelsSection = React.forwardRef<
     moderationOpts,
     scrollElRef,
     headerHeight,
+    isFocused,
+    setScrollViewTag,
   },
   ref,
 ) {
@@ -62,6 +66,13 @@ export const ProfileLabelsSection = React.forwardRef<
   React.useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
   }))
+
+  React.useEffect(() => {
+    if (isFocused && scrollElRef.current) {
+      const nativeTag = findNodeHandle(scrollElRef.current)
+      setScrollViewTag(nativeTag)
+    }
+  }, [isFocused, scrollElRef, setScrollViewTag])
 
   return (
     <CenteredView style={{flex: 1, minHeight}} sideBorders>

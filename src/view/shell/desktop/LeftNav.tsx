@@ -1,52 +1,55 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   useLinkProps,
   useNavigation,
   useNavigationState,
 } from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Link} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+
+import {useGate} from '#/lib/statsig/statsig'
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {emitSoftReset} from '#/state/events'
+import {useFetchHandle} from '#/state/queries/handle'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s, colors} from 'lib/styles'
 import {
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
-  UserIconSolid,
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
-  ListIcon,
   HashtagIcon,
-  HandIcon,
+  HomeIcon,
+  HomeIconSolid,
+  ListIcon,
+  MagnifyingGlassIcon2,
+  MagnifyingGlassIcon2Solid,
+  UserIcon,
+  UserIconSolid,
 } from 'lib/icons'
-import {getCurrentRoute, isTab, isStateAtTabRoot} from 'lib/routes/helpers'
-import {NavigationProp, CommonNavigatorParams} from 'lib/routes/types'
-import {router} from '../../../routes'
+import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useComposerControls} from '#/state/shell/composer'
-import {useFetchHandle} from '#/state/queries/handle'
-import {emitSoftReset} from '#/state/events'
+import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {Link} from 'view/com/util/Link'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {PressableWithHover} from 'view/com/util/PressableWithHover'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {router} from '../../../routes'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -272,6 +275,7 @@ export function DesktopLeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
+  const gate = useGate()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -328,24 +332,6 @@ export function DesktopLeftNav() {
             label={_(msg`Search`)}
           />
           <NavItem
-            href="/feeds"
-            icon={
-              <HashtagIcon
-                strokeWidth={2.25}
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
-              />
-            }
-            iconFilled={
-              <HashtagIcon
-                strokeWidth={4}
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
-              />
-            }
-            label={_(msg`Feeds`)}
-          />
-          <NavItem
             href="/notifications"
             count={numUnread}
             icon={
@@ -364,6 +350,34 @@ export function DesktopLeftNav() {
             }
             label={_(msg`Notifications`)}
           />
+          {gate('dms') && (
+            <NavItem
+              href="/messages"
+              icon={<Envelope style={pal.text} width={isDesktop ? 26 : 30} />}
+              iconFilled={
+                <EnvelopeFilled style={pal.text} width={isDesktop ? 26 : 30} />
+              }
+              label={_(msg`Messages`)}
+            />
+          )}
+          <NavItem
+            href="/feeds"
+            icon={
+              <HashtagIcon
+                strokeWidth={2.25}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            iconFilled={
+              <HashtagIcon
+                strokeWidth={4}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            label={_(msg`Feeds`)}
+          />
           <NavItem
             href="/lists"
             icon={
@@ -381,24 +395,6 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Lists`)}
-          />
-          <NavItem
-            href="/moderation"
-            icon={
-              <HandIcon
-                style={pal.text}
-                size={isDesktop ? 24 : 27}
-                strokeWidth={5.5}
-              />
-            }
-            iconFilled={
-              <FontAwesomeIcon
-                icon="hand"
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 23 : 26}
-              />
-            }
-            label={_(msg`Moderation`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}

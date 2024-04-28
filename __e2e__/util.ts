@@ -1,5 +1,5 @@
-import {resolveConfig} from 'detox/internals'
 import {execSync} from 'child_process'
+import {resolveConfig} from 'detox/internals'
 import http from 'http'
 
 const platform = device.getPlatform()
@@ -52,7 +52,7 @@ export async function login(
   if (await isVisible('chooseAccountForm')) {
     await element(by.id('chooseNewAccountBtn')).tap()
   }
-  await element(by.id('loginSelectServiceButton')).tap()
+  await element(by.id('selectServiceButton')).tap()
   if (takeScreenshots) {
     await device.takeScreenshot('2- opened service selector')
   }

@@ -35,8 +35,11 @@ export type CommonNavigatorParams = {
   PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
+  AccessibilitySettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
+  MessagesConversation: {conversation: string}
+  MessagesSettings: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -45,6 +48,7 @@ export type BottomTabNavigatorParams = CommonNavigatorParams & {
   FeedsTab: undefined
   NotificationsTab: undefined
   MyProfileTab: undefined
+  MessagesTab: undefined
 }
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
@@ -67,12 +71,17 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
   MyProfile: undefined
 }
 
+export type MessagesTabNavigatorParams = CommonNavigatorParams & {
+  MessagesList: undefined
+}
+
 export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   Search: {q?: string}
   Feeds: undefined
   Notifications: undefined
   Hashtag: {tag: string; author?: string}
+  MessagesList: undefined
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
@@ -86,6 +95,8 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
   MyProfileTab: undefined
   Hashtag: {tag: string; author?: string}
+  MessagesTab: undefined
+  MessagesList: undefined
 }
 
 // NOTE

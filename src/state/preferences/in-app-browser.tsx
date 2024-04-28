@@ -1,15 +1,16 @@
 import React from 'react'
-import * as persisted from '#/state/persisted'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
+
 import {isNative} from '#/platform/detection'
-import {useModalControls} from '../modals'
+import * as persisted from '#/state/persisted'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
+  createBskyAppAbsoluteUrl,
   isBskyRSSUrl,
   isRelativeUrl,
-  createBskyAppAbsoluteUrl,
 } from 'lib/strings/url-helpers'
+import {useModalControls} from '../modals'
 
 type StateContext = persisted.Schema['useInAppBrowser']
 type SetContext = (v: persisted.Schema['useInAppBrowser']) => void
@@ -78,6 +79,7 @@ export function useOpenLink() {
             presentationStyle:
               WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
             toolbarColor: pal.colors.backgroundLight,
+            createTask: false,
           })
           return
         }

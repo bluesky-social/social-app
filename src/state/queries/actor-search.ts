@@ -2,22 +2,29 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const RQKEY_ROOT = 'actor-search'
-export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
+export const RQKEY = (query: string) => [RQKEY_ROOT, query]
 
-export function useActorSearch(prefix: string) {
+export function useActorSearch({
+  query,
+  enabled,
+}: {
+  query: string
+  enabled?: boolean
+}) {
+  const {getAgent} = useAgent()
   return useQuery<AppBskyActorDefs.ProfileView[]>({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(prefix || ''),
+    queryKey: RQKEY(query || ''),
     async queryFn() {
       const res = await getAgent().searchActors({
-        q: prefix,
+        q: query,
       })
       return res.data.actors
     },
-    enabled: !!prefix,
+    enabled: enabled && !!query,
   })
 }
 

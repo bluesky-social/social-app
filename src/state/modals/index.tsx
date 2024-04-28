@@ -3,7 +3,6 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {EmbedPlayerSource} from '#/lib/strings/embed-player'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {ImageModel} from '#/state/models/media/image'
 import {ThreadgateSetting} from '../queries/threadgate'
@@ -108,6 +107,7 @@ export interface PostLanguagesSettingsModal {
 export interface VerifyEmailModal {
   name: 'verify-email'
   showReminder?: boolean
+  onSuccess?: () => void
 }
 
 export interface ChangeEmailModal {
@@ -123,12 +123,6 @@ export interface LinkWarningModal {
   text: string
   href: string
   share?: boolean
-}
-
-export interface EmbedConsentModal {
-  name: 'embed-consent'
-  source: EmbedPlayerSource
-  onAccept: () => void
 }
 
 export interface InAppBrowserConsentModal {
@@ -169,7 +163,6 @@ export type Modal =
 
   // Generic
   | LinkWarningModal
-  | EmbedConsentModal
   | InAppBrowserConsentModal
 
 const ModalContext = React.createContext<{

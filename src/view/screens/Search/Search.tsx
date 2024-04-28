@@ -27,14 +27,15 @@ import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
+import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useNonReactiveCallback} from 'lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   NativeStackScreenProps,
@@ -117,49 +118,47 @@ function EmptyState({message, error}: {message: string; error?: string}) {
   )
 }
 
+function useSuggestedFollows(): [
+  AppBskyActorDefs.ProfileViewBasic[],
+  () => void,
+] {
+  const {
+    data: suggestions,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    fetchNextPage,
+  } = useSuggestedFollowsQuery()
+
+  const onEndReached = React.useCallback(async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more suggested follows', {message: err})
+    }
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+
+  const items: AppBskyActorDefs.ProfileViewBasic[] = []
+  if (suggestions) {
+    // Currently the responses contain duplicate items.
+    // Needs to be fixed on backend, but let's dedupe to be safe.
+    let seen = new Set()
+    for (const page of suggestions.pages) {
+      for (const actor of page.actors) {
+        if (!seen.has(actor.did)) {
+          seen.add(actor.did)
+          items.push(actor)
+        }
+      }
+    }
+  }
+  return [items, onEndReached]
+}
+
 function SearchScreenSuggestedFollows() {
   const pal = usePalette('default')
-  const {currentAccount} = useSession()
-  const [suggestions, setSuggestions] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
-  const getSuggestedFollowsByActor = useGetSuggestedFollowersByActor()
-
-  React.useEffect(() => {
-    async function getSuggestions() {
-      const friends = await getSuggestedFollowsByActor(
-        currentAccount!.did,
-      ).then(friendsRes => friendsRes.suggestions)
-
-      if (!friends) return // :(
-
-      const friendsOfFriends = new Map<
-        string,
-        AppBskyActorDefs.ProfileViewBasic
-      >()
-
-      await Promise.all(
-        friends.slice(0, 4).map(friend =>
-          getSuggestedFollowsByActor(friend.did).then(foafsRes => {
-            for (const user of foafsRes.suggestions) {
-              if (user.associated?.labeler) continue
-              friendsOfFriends.set(user.did, user)
-            }
-          }),
-        ),
-      )
-
-      setSuggestions(Array.from(friendsOfFriends.values()))
-    }
-
-    try {
-      getSuggestions()
-    } catch (e) {
-      logger.error(`SearchScreenSuggestedFollows: failed to get suggestions`, {
-        message: e,
-      })
-    }
-  }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
+  const [suggestions, onEndReached] = useSuggestedFollows()
 
   return suggestions.length ? (
     <List
@@ -168,9 +167,11 @@ function SearchScreenSuggestedFollows() {
       keyExtractor={item => item.did}
       // @ts-ignore web only -prf
       desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 1200}}
+      contentContainerStyle={{paddingBottom: 200}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
+      onEndReached={onEndReached}
+      onEndReachedThreshold={2}
     />
   ) : (
     <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
@@ -191,7 +192,15 @@ type SearchResultSlice =
       key: string
     }
 
-function SearchScreenPostResults({query}: {query: string}) {
+function SearchScreenPostResults({
+  query,
+  sort,
+  active,
+}: {
+  query: string
+  sort?: 'top' | 'latest'
+  active: boolean
+}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
@@ -209,7 +218,7 @@ function SearchScreenPostResults({query}: {query: string}) {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query: augmentedQuery})
+  } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -290,9 +299,19 @@ function SearchScreenPostResults({query}: {query: string}) {
   )
 }
 
-function SearchScreenUserResults({query}: {query: string}) {
+function SearchScreenUserResults({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}) {
   const {_} = useLingui()
-  const {data: results, isFetched} = useActorSearch(query)
+
+  const {data: results, isFetched} = useActorSearch({
+    query: query,
+    enabled: active,
+  })
 
   return isFetched && results ? (
     <>
@@ -316,71 +335,55 @@ function SearchScreenUserResults({query}: {query: string}) {
   )
 }
 
-const SECTIONS_LOGGEDOUT = ['Users']
-const SECTIONS_LOGGEDIN = ['Posts', 'Users']
-export function SearchScreenInner({
-  query,
-  primarySearch,
-}: {
-  query?: string
-  primarySearch?: boolean
-}) {
+export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
+  const [activeTab, setActiveTab] = React.useState(0)
+  const {_} = useLingui()
 
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
+      setActiveTab(index)
     },
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
-  if (hasSession) {
-    return query ? (
-      <Pager
-        onPageSelected={onPageSelected}
-        renderTabBar={props => (
-          <CenteredView
-            sideBorders
-            style={[pal.border, pal.view, styles.tabBarContainer]}>
-            <TabBar items={SECTIONS_LOGGEDIN} {...props} />
-          </CenteredView>
-        )}
-        initialPage={0}>
-        <View>
-          <SearchScreenPostResults query={query} />
-        </View>
-        <View>
-          <SearchScreenUserResults query={query} />
-        </View>
-      </Pager>
-    ) : (
-      <View>
-        <CenteredView sideBorders style={pal.border}>
-          <Text
-            type="title"
-            style={[
-              pal.text,
-              pal.border,
-              {
-                display: 'flex',
-                paddingVertical: 12,
-                paddingHorizontal: 18,
-                fontWeight: 'bold',
-              },
-            ]}>
-            <Trans>Suggested Follows</Trans>
-          </Text>
-        </CenteredView>
-
-        <SearchScreenSuggestedFollows />
-      </View>
-    )
-  }
+  const sections = React.useMemo(() => {
+    if (!query) return []
+    return [
+      {
+        title: _(msg`Top`),
+        component: (
+          <SearchScreenPostResults
+            query={query}
+            sort="top"
+            active={activeTab === 0}
+          />
+        ),
+      },
+      {
+        title: _(msg`Latest`),
+        component: (
+          <SearchScreenPostResults
+            query={query}
+            sort="latest"
+            active={activeTab === 1}
+          />
+        ),
+      },
+      {
+        title: _(msg`People`),
+        component: (
+          <SearchScreenUserResults query={query} active={activeTab === 2} />
+        ),
+      },
+    ]
+  }, [_, query, activeTab])
 
   return query ? (
     <Pager
@@ -389,14 +392,35 @@ export function SearchScreenInner({
         <CenteredView
           sideBorders
           style={[pal.border, pal.view, styles.tabBarContainer]}>
-          <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
+          <TabBar items={sections.map(section => section.title)} {...props} />
         </CenteredView>
       )}
       initialPage={0}>
-      <View>
-        <SearchScreenUserResults query={query} />
-      </View>
+      {sections.map((section, i) => (
+        <View key={i}>{section.component}</View>
+      ))}
     </Pager>
+  ) : hasSession ? (
+    <View>
+      <CenteredView sideBorders style={pal.border}>
+        <Text
+          type="title"
+          style={[
+            pal.text,
+            pal.border,
+            {
+              display: 'flex',
+              paddingVertical: 12,
+              paddingHorizontal: 18,
+              fontWeight: 'bold',
+            },
+          ]}>
+          <Trans>Suggested Follows</Trans>
+        </Text>
+      </CenteredView>
+
+      <SearchScreenSuggestedFollows />
+    </View>
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View
@@ -436,11 +460,7 @@ export function SearchScreenInner({
             style={pal.textLight}
           />
           <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
-            {isDesktop && !primarySearch ? (
-              <Trans>Find users with the search tool on the right</Trans>
-            ) : (
-              <Trans>Find users on Bluesky</Trans>
-            )}
+            <Trans>Find posts and users on Bluesky</Trans>
           </Text>
         </View>
       </View>
@@ -459,43 +479,25 @@ export function SearchScreen(
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const moderationOpts = useModerationOpts()
-  const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
-  const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
-    undefined,
-  )
-  const [isFetching, setIsFetching] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>(props.route?.params?.q || '')
-  const [searchResults, setSearchResults] = React.useState<
-    AppBskyActorDefs.ProfileViewBasic[]
-  >([])
-  const [inputIsFocused, setInputIsFocused] = React.useState(false)
-  const [showAutocompleteResults, setShowAutocompleteResults] =
-    React.useState(false)
+  // Query terms
+  const queryParam = props.route?.params?.q ?? ''
+  const [searchText, setSearchText] = React.useState<string>(queryParam)
+  const {data: autocompleteData, isFetching: isAutocompleteFetching} =
+    useActorAutocompleteQuery(searchText, true)
+
+  const [showAutocomplete, setShowAutocomplete] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
-  /**
-   * The Search screen's `q` param
-   */
-  const queryParam = props.route?.params?.q
-
-  /**
-   * If `true`, this means we received new instructions from the router. This
-   * is handled in a effect, and used to update the value of `query` locally
-   * within this screen.
-   */
-  const routeParamsMismatch = queryParam && queryParam !== query
-
-  React.useEffect(() => {
-    if (queryParam && routeParamsMismatch) {
-      // reset immediately and let local state take over
-      navigation.setParams({q: ''})
-      // update query for next search
-      setQuery(queryParam)
-    }
-  }, [queryParam, routeParamsMismatch, navigation])
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      if (isWeb) {
+        setSearchText(queryParam)
+      }
+    }),
+  )
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
@@ -517,60 +519,45 @@ export function SearchScreen(
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
 
-  const onPressCancelSearch = React.useCallback(() => {
-    scrollToTopWeb()
-    textInput.current?.blur()
-    setQuery('')
-    setShowAutocompleteResults(false)
-    if (searchDebounceTimeout.current)
-      clearTimeout(searchDebounceTimeout.current)
-  }, [textInput])
-
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
-    setQuery('')
-    setShowAutocompleteResults(false)
-  }, [setQuery])
+    setSearchText('')
+    textInput.current?.focus()
+  }, [])
 
-  const onChangeText = React.useCallback(
-    async (text: string) => {
-      scrollToTopWeb()
+  const onPressCancelSearch = React.useCallback(() => {
+    scrollToTopWeb()
 
-      setQuery(text)
-
-      if (text.length > 0) {
-        setIsFetching(true)
-        setShowAutocompleteResults(true)
-
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-
-        searchDebounceTimeout.current = setTimeout(async () => {
-          const results = await search({query: text, limit: 30})
-
-          if (results) {
-            setSearchResults(results)
-            setIsFetching(false)
-          }
-        }, 300)
+    if (showAutocomplete) {
+      textInput.current?.blur()
+      setShowAutocomplete(false)
+      setSearchText(queryParam)
+    } else {
+      // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
+      // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
+      // differently.
+      if (isWeb) {
+        navigation.replace('Search', {})
       } else {
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-        setSearchResults([])
-        setIsFetching(false)
-        setShowAutocompleteResults(false)
+        setSearchText('')
+        navigation.setParams({q: ''})
       }
-    },
-    [setQuery, search, setSearchResults],
-  )
+    }
+  }, [showAutocomplete, navigation, queryParam])
+
+  const onChangeText = React.useCallback(async (text: string) => {
+    scrollToTopWeb()
+    setSearchText(text)
+  }, [])
 
   const updateSearchHistory = React.useCallback(
     async (newQuery: string) => {
       newQuery = newQuery.trim()
-      if (newQuery && !searchHistory.includes(newQuery)) {
-        let newHistory = [newQuery, ...searchHistory]
+      if (newQuery) {
+        let newHistory = [
+          newQuery,
+          ...searchHistory.filter(q => q !== newQuery),
+        ]
 
         if (newHistory.length > 5) {
           newHistory = newHistory.slice(0, 5)
@@ -590,11 +577,30 @@ export function SearchScreen(
     [searchHistory, setSearchHistory],
   )
 
+  const navigateToItem = React.useCallback(
+    (item: string) => {
+      scrollToTopWeb()
+      setShowAutocomplete(false)
+      updateSearchHistory(item)
+
+      if (isWeb) {
+        navigation.push('Search', {q: item})
+      } else {
+        textInput.current?.blur()
+        navigation.setParams({q: item})
+      }
+    },
+    [updateSearchHistory, navigation],
+  )
+
   const onSubmit = React.useCallback(() => {
-    scrollToTopWeb()
-    setShowAutocompleteResults(false)
-    updateSearchHistory(query)
-  }, [query, setShowAutocompleteResults, updateSearchHistory])
+    navigateToItem(searchText)
+  }, [navigateToItem, searchText])
+
+  const handleHistoryItemClick = (item: string) => {
+    setSearchText(item)
+    navigateToItem(item)
+  }
 
   const onSoftReset = React.useCallback(() => {
     scrollToTopWeb()
@@ -602,9 +608,9 @@ export function SearchScreen(
   }, [onPressCancelSearch])
 
   const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(query)
+    const match = MATCH_HANDLE.exec(queryParam)
     return match && match[1]
-  }, [query])
+  }, [queryParam])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -612,11 +618,6 @@ export function SearchScreen(
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
   )
-
-  const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
-    setQuery(item)
-    onSubmit()
-  }
 
   const handleRemoveHistoryItem = (itemToRemove: string) => {
     const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
@@ -669,17 +670,21 @@ export function SearchScreen(
             ref={textInput}
             placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus
+            selectTextOnFocus={isNative}
             returnKeyType="search"
-            value={query}
+            value={searchText}
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
-            onFocus={() => setInputIsFocused(true)}
-            onBlur={() => {
-              // HACK
-              // give 100ms to not stop click handlers in the search history
-              // -prf
-              setTimeout(() => setInputIsFocused(false), 100)
+            onFocus={() => {
+              if (isWeb) {
+                // Prevent a jump on iPad by ensuring that
+                // the initial focused render has no result list.
+                requestAnimationFrame(() => {
+                  setShowAutocomplete(true)
+                })
+              } else {
+                setShowAutocomplete(true)
+              }
             }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
@@ -691,7 +696,7 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          {query ? (
+          {showAutocomplete ? (
             <Pressable
               testID="searchTextInputClearBtn"
               onPress={onPressClearQuery}
@@ -708,7 +713,7 @@ export function SearchScreen(
           ) : undefined}
         </View>
 
-        {query || inputIsFocused ? (
+        {(queryParam || showAutocomplete) && (
           <View style={styles.headerCancelBtn}>
             <Pressable
               onPress={onPressCancelSearch}
@@ -719,12 +724,13 @@ export function SearchScreen(
               </Text>
             </Pressable>
           </View>
-        ) : undefined}
+        )}
       </CenteredView>
 
-      {showAutocompleteResults ? (
+      {showAutocomplete && searchText.length > 0 ? (
         <>
-          {isFetching || !moderationOpts ? (
+          {(isAutocompleteFetching && !autocompleteData?.length) ||
+          !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
@@ -734,12 +740,12 @@ export function SearchScreen(
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag">
               <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
+                label={_(msg`Search for "${searchText}"`)}
                 onPress={isNative ? onSubmit : undefined}
                 to={
                   isNative
                     ? undefined
-                    : `/search?q=${encodeURIComponent(query)}`
+                    : `/search?q=${encodeURIComponent(searchText)}`
                 }
                 style={{borderBottomWidth: 1}}
               />
@@ -751,11 +757,18 @@ export function SearchScreen(
                 />
               ) : null}
 
-              {searchResults.map(item => (
+              {autocompleteData?.map(item => (
                 <SearchProfileCard
                   key={item.did}
                   profile={item}
                   moderation={moderateProfile(item, moderationOpts)}
+                  onPress={() => {
+                    if (isWeb) {
+                      setShowAutocomplete(false)
+                    } else {
+                      textInput.current?.blur()
+                    }
+                  }}
                 />
               ))}
 
@@ -763,7 +776,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !query && inputIsFocused ? (
+      ) : !queryParam && showAutocomplete ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
@@ -807,10 +820,8 @@ export function SearchScreen(
             )}
           </View>
         </CenteredView>
-      ) : routeParamsMismatch ? (
-        <ActivityIndicator />
       ) : (
-        <SearchScreenInner query={query} />
+        <SearchScreenInner query={queryParam} />
       )}
     </View>
   )

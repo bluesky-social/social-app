@@ -5,7 +5,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -19,6 +18,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
@@ -30,8 +30,9 @@ import {
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
 import {useProfileQuery} from '#/state/queries/profile'
+import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
@@ -42,15 +43,17 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {toShortUrl} from 'lib/strings/url-helpers'
 import {colors, gradients, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import {atoms as a} from '#/alf'
+import {Button} from '#/components/Button'
+import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
-import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
+import {QuoteEmbed, QuoteX} from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
@@ -59,6 +62,7 @@ import {ExternalEmbed} from './ExternalEmbed'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {Gallery} from './photos/Gallery'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {SelectGifBtn} from './photos/SelectGifBtn'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {SuggestedLanguage} from './select-language/SuggestedLanguage'
@@ -79,6 +83,7 @@ export const ComposePost = observer(function ComposePost({
   imageUris: initImageUris,
 }: Props) {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
@@ -117,9 +122,9 @@ export const ComposePost = observer(function ComposePost({
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
+  const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
-  const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
@@ -189,11 +194,12 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [onEscape, isModalActive])
 
-  const onPressAddLinkCard = useCallback(
+  const onNewLink = useCallback(
     (uri: string) => {
+      if (extLink != null) return
       setExtLink({uri, isLoading: true})
     },
-    [setExtLink],
+    [extLink, setExtLink],
   )
 
   const onPhotoPasted = useCallback(
@@ -214,7 +220,12 @@ export const ComposePost = observer(function ComposePost({
 
     setError('')
 
-    if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
+    if (
+      richtext.text.trim().length === 0 &&
+      gallery.isEmpty &&
+      !extLink &&
+      !quote
+    ) {
       setError(_(msg`Did you want to say anything?`))
       return
     }
@@ -295,12 +306,34 @@ export const ComposePost = observer(function ComposePost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
+  const canSelectImages = gallery.size < 4 && !extLink
   const hasMedia = gallery.size > 0 || Boolean(extLink)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
   }, [openPicker])
+
+  const focusTextInput = useCallback(() => {
+    textInput.current?.focus()
+  }, [])
+
+  const onSelectGif = useCallback(
+    (gif: Gif) => {
+      setExtLink({
+        uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`,
+        isLoading: true,
+        meta: {
+          url: gif.media_formats.gif.url,
+          image: gif.media_formats.preview.url,
+          likelyType: LikelyType.HTML,
+          title: gif.content_description,
+          description: `ALT: ${gif.content_description}`,
+        },
+      })
+      setExtGif(gif)
+    },
+    [setExtLink],
+  )
 
   return (
     <KeyboardAvoidingView
@@ -425,12 +458,11 @@ export const ComposePost = observer(function ComposePost({
               ref={textInput}
               richtext={richtext}
               placeholder={selectTextInputPlaceholder}
-              suggestedLinks={suggestedLinks}
               autoFocus={true}
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}
               onPressPublish={onPressPublish}
-              onSuggestedLinksChanged={setSuggestedLinks}
+              onNewLink={onNewLink}
               onError={setError}
               accessible={true}
               accessibilityLabel={_(msg`Write post`)}
@@ -444,59 +476,47 @@ export const ComposePost = observer(function ComposePost({
           {gallery.isEmpty && extLink && (
             <ExternalEmbed
               link={extLink}
-              onRemove={() => setExtLink(undefined)}
+              gif={extGif}
+              onRemove={() => {
+                setExtLink(undefined)
+                setExtGif(undefined)
+              }}
             />
           )}
           {quote ? (
-            <View style={[s.mt5, isWeb && s.mb10, {pointerEvents: 'none'}]}>
-              <QuoteEmbed quote={quote} />
+            <View style={[s.mt5, isWeb && s.mb10]}>
+              <View style={{pointerEvents: 'none'}}>
+                <QuoteEmbed quote={quote} />
+              </View>
+              {quote.uri !== initQuote?.uri && (
+                <QuoteX onRemove={() => setQuote(undefined)} />
+              )}
             </View>
           ) : undefined}
         </ScrollView>
-        {!extLink && suggestedLinks.size > 0 ? (
-          <View style={s.mb5}>
-            {Array.from(suggestedLinks)
-              .slice(0, 3)
-              .map(url => (
-                <TouchableOpacity
-                  key={`suggested-${url}`}
-                  testID="addLinkCardBtn"
-                  style={[pal.borderDark, styles.addExtLinkBtn]}
-                  onPress={() => onPressAddLinkCard(url)}
-                  accessibilityRole="button"
-                  accessibilityLabel={_(msg`Add link card`)}
-                  accessibilityHint={_(
-                    msg`Creates a card with a thumbnail. The card links to ${url}`,
-                  )}>
-                  <Text style={pal.text}>
-                    <Trans>Add link card:</Trans>{' '}
-                    <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
-                  </Text>
-                </TouchableOpacity>
-              ))}
-          </View>
-        ) : null}
         <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
-          {canSelectImages ? (
-            <>
-              <SelectPhotoBtn gallery={gallery} />
-              <OpenCameraBtn gallery={gallery} />
-            </>
-          ) : null}
-          {!isMobile ? (
-            <Pressable
-              onPress={onEmojiButtonPress}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Open emoji picker`)}
-              accessibilityHint={_(msg`Open emoji picker`)}>
-              <FontAwesomeIcon
-                icon={['far', 'face-smile']}
-                color={pal.colors.link}
-                size={22}
-              />
-            </Pressable>
-          ) : null}
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+            <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+            <SelectGifBtn
+              onClose={focusTextInput}
+              onSelectGif={onSelectGif}
+              disabled={hasMedia}
+            />
+            {!isMobile ? (
+              <Button
+                onPress={onEmojiButtonPress}
+                style={a.p_sm}
+                label={_(msg`Open emoji picker`)}
+                accessibilityHint={_(msg`Open emoji picker`)}
+                variant="ghost"
+                shape="round"
+                color="primary">
+                <EmojiSmile size="lg" />
+              </Button>
+            ) : null}
+          </View>
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
@@ -507,9 +527,7 @@ export const ComposePost = observer(function ComposePost({
         control={discardPromptControl}
         title={_(msg`Discard draft?`)}
         description={_(msg`Are you sure you'd like to discard this draft?`)}
-        onConfirm={() => {
-          discardPromptControl.close(onClose)
-        }}
+        onConfirm={onClose}
         confirmButtonCta={_(msg`Discard`)}
         confirmButtonColor="negative"
       />
@@ -593,7 +611,7 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    paddingVertical: 4,
     paddingLeft: 15,
     paddingRight: 20,
     alignItems: 'center',

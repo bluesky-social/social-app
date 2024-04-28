@@ -16,10 +16,14 @@ export function Error({
   title,
   message,
   onRetry,
+  onGoBack: onGoBackProp,
+  sideBorders = true,
 }: {
   title?: string
   message?: string
   onRetry?: () => unknown
+  onGoBack?: () => unknown
+  sideBorders?: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -28,6 +32,10 @@ export function Error({
 
   const canGoBack = navigation.canGoBack()
   const onGoBack = React.useCallback(() => {
+    if (onGoBackProp) {
+      onGoBackProp()
+      return
+    }
     if (canGoBack) {
       navigation.goBack()
     } else {
@@ -41,18 +49,19 @@ export function Error({
         navigation.dispatch(StackActions.popToTop())
       }
     }
-  }, [navigation, canGoBack])
+  }, [navigation, canGoBack, onGoBackProp])
 
   return (
     <CenteredView
       style={[
         a.flex_1,
         a.align_center,
-        !gtMobile ? a.justify_between : a.gap_5xl,
+        a.gap_5xl,
+        !gtMobile && a.justify_between,
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
       ]}
-      sideBorders>
+      sideBorders={sideBorders}>
       <View style={[a.w_full, a.align_center, a.gap_lg]}>
         <Text style={[a.font_bold, a.text_3xl]}>{title}</Text>
         <Text

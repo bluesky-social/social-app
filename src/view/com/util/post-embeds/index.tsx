@@ -1,34 +1,32 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {
-  StyleSheet,
+  InteractionManager,
   StyleProp,
+  StyleSheet,
+  Text,
   View,
   ViewStyle,
-  Text,
-  InteractionManager,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
-  AppBskyEmbedImages,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   ModerationDecision,
 } from '@atproto/api'
-import {Link} from '../Link'
-import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
+
+import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {MaybeQuoteEmbed} from './QuoteEmbed'
-import {AutoSizedImage} from '../images/AutoSizedImage'
-import {ListEmbed} from './ListEmbed'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
-import {isNative} from '#/platform/detection'
-import {shareUrl} from '#/lib/sharing'
+import {AutoSizedImage} from '../images/AutoSizedImage'
+import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
+import {ExternalLinkEmbed} from './ExternalLinkEmbed'
+import {ListEmbed} from './ListEmbed'
+import {MaybeQuoteEmbed} from './QuoteEmbed'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -48,16 +46,6 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
-
-  const externalUri = AppBskyEmbedExternal.isView(embed)
-    ? embed.external.uri
-    : null
-
-  const onShareExternal = useCallback(() => {
-    if (externalUri && isNative) {
-      shareUrl(externalUri)
-    }
-  }, [externalUri])
 
   // quote post with media
   // =
@@ -161,18 +149,9 @@ export function PostEmbeds({
   // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
-
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <Link
-          asAnchor
-          anchorNoUnderline
-          href={link.uri}
-          style={[styles.extOuter, pal.view, pal.borderDark, style]}
-          hoverStyle={{borderColor: pal.colors.borderLinkHover}}
-          onLongPress={onShareExternal}>
-          <ExternalLinkEmbed link={link} />
-        </Link>
+        <ExternalLinkEmbed link={link} style={style} />
       </ContentHider>
     )
   }
@@ -186,11 +165,6 @@ const styles = StyleSheet.create({
   },
   singleImage: {
     borderRadius: 8,
-  },
-  extOuter: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 4,
   },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
