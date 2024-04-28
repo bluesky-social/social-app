@@ -5239,7 +5239,7 @@ msgstr "你已看完了你跟隨的貼文。這是 <0/> 的最新貼文。"
 
 #: src/components/dialogs/MutedWords.tsx:203
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "我們建議避免新增在許多貼文中常用的文字，因為這可能導致沒有貼文可顯示。"
+msgstr "我們建議避免新增在許多貼文中常用的文字，因為這可能令你看不到任何貼文。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
 msgid "We recommend our \"Discover\" feed:"
