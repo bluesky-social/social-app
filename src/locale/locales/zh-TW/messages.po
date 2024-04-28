@@ -3324,7 +3324,7 @@ msgstr "貼文已隱藏"
 #: src/components/moderation/ModerationDetailsDialog.tsx:97
 #: src/lib/moderation/useModerationCauseDescription.ts:99
 msgid "Post Hidden by Muted Word"
-msgstr "貼文因靜音文字設定而被靜音"
+msgstr "貼文因靜音文字設定而被隱藏"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:100
 #: src/lib/moderation/useModerationCauseDescription.ts:108
