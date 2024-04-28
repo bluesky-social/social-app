@@ -4751,7 +4751,7 @@ msgstr "這則貼文將從訊息流中被隱藏。"
 
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "此個人資料僅對已登入用戶可見。 未登入的人將看不到它。"
+msgstr "只有登入用戶能見到此個人資料。 未登入的人將看不到它。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
