@@ -1555,7 +1555,7 @@ msgstr "過多的提及或回覆"
 
 #: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Exits account deletion process"
-msgstr "離開帳號删除流程"
+msgstr "離開删除帳號流程"
 
 #: src/view/com/modals/ChangeHandle.tsx:151
 msgid "Exits handle change process"
