@@ -3951,7 +3951,7 @@ msgstr "選擇你希望訂閱訊息流中所包含的語言。未選擇任何語
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app."
-msgstr "選擇你應用程式中要顯示的預設文字的語言。"
+msgstr "選擇你應用程式中的預設語言。"
 
 #: src/screens/Signup/StepInfo/index.tsx:135
 msgid "Select your date of birth"
