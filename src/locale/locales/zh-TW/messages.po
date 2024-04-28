@@ -75,16 +75,16 @@ msgstr "存取個人資料和其他導覽連結"
 #: src/view/com/modals/EditImage.tsx:300
 #: src/view/screens/Settings/index.tsx:493
 msgid "Accessibility"
-msgstr "協助工具"
+msgstr "無障礙"
 
 #: src/view/screens/Settings/index.tsx:484
 msgid "Accessibility settings"
-msgstr "協助工具設定"
+msgstr "無障礙設定"
 
 #: src/Navigation.tsx:284
 #: src/view/screens/AccessibilitySettings.tsx:63
 msgid "Accessibility Settings"
-msgstr "協助工具設定"
+msgstr "無障礙設定"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 msgid "account"
@@ -174,11 +174,11 @@ msgstr "新增應用程式專用密碼"
 
 #: src/components/dialogs/MutedWords.tsx:157
 msgid "Add mute word for configured settings"
-msgstr "在設定中新增靜音字詞"
+msgstr "在設定中新增靜音文字"
 
 #: src/components/dialogs/MutedWords.tsx:86
 msgid "Add muted words and tags"
-msgstr "新增靜音字詞及標籤"
+msgstr "新增靜音文字及標籤"
 
 #: src/view/com/modals/ChangeHandle.tsx:416
 msgid "Add the following DNS record to your domain:"
@@ -249,7 +249,7 @@ msgstr "替代文字"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "替代文字為盲人和視覺受損的用戶描述圖片，並幫助所有人提供上下文。"
+msgstr "替代文字為盲人和視覺受損的用戶描述圖片，並有助於為每個人提供背景資訊。"
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
@@ -477,7 +477,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:154
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky 是一個開放的網路，你可以自行挑選託管服務提供商。現在，開發者也可以參與自訂託管服務的測試版本。"
+msgstr "Bluesky 是一個開放的網路，你可以自行挑選託管服務供應商。現在，開發者也可以參與自訂託管服務的測試版本。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
@@ -496,7 +496,7 @@ msgstr "Bluesky 為公眾而生。"
 
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 不會向未登入的用戶顯示你的個人資料和貼文。但其他應用可能不會遵照此請求，這無法確保你的帳號隱私。"
+msgstr "Bluesky 不會向未登入的使用者顯示你的個人資料和貼文。但其他應用可能不會遵照此請求，這無法確保你的帳號隱私。"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1498,7 +1498,7 @@ msgstr "輸入密碼"
 #: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
 msgid "Enter a word or tag"
-msgstr "輸入字詞或標籤"
+msgstr "輸入文字或標籤"
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
@@ -1572,7 +1572,7 @@ msgstr "離開圖片檢視器"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/shell/desktop/Search.tsx:236
 msgid "Exits inputting search query"
-msgstr "離開搜尋字詞輸入"
+msgstr "離開搜尋文字輸入"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:183
 msgid "Expand alt text"
@@ -2056,7 +2056,7 @@ msgstr "主機："
 #: src/screens/Signup/StepInfo/index.tsx:40
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "Hosting provider"
-msgstr "託管服務提供商"
+msgstr "託管服務供應商"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
@@ -2138,7 +2138,7 @@ msgstr "輸入密碼以刪除帳號"
 
 #: src/screens/Login/LoginForm.tsx:257
 msgid "Input the code which has been emailed to you"
-msgstr "輸入寄送至你電子郵件地址的代碼"
+msgstr "輸入寄送至你電子郵件地址的驗證碼"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Input the password tied to {identifier}"
@@ -2154,7 +2154,7 @@ msgstr "輸入你的密碼"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 msgid "Input your preferred hosting provider"
-msgstr "輸入你的託管服務提供商"
+msgstr "輸入你的託管服務供應商"
 
 #: src/screens/Signup/StepHandle.tsx:63
 msgid "Input your user handle"
@@ -2163,7 +2163,7 @@ msgstr "輸入你的帳號代碼"
 #: src/screens/Login/LoginForm.tsx:126
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr "無效的雙重驗證代碼。"
+msgstr "無效的雙重驗證碼。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Invalid or unsupported post record"
@@ -2454,7 +2454,7 @@ msgstr "請確認這是你想要去的的地方！"
 
 #: src/components/dialogs/MutedWords.tsx:82
 msgid "Manage your muted words and tags"
-msgstr "管理你靜音的字詞和標籤"
+msgstr "管理你靜音的文字和標籤"
 
 #: src/view/screens/AccessibilitySettings.tsx:89
 #: src/view/screens/Profile.tsx:196
@@ -2587,7 +2587,7 @@ msgstr "僅靜音標籤"
 
 #: src/components/dialogs/MutedWords.tsx:133
 msgid "Mute in text & tags"
-msgstr "靜音字詞和標籤"
+msgstr "靜音文字和標籤"
 
 #: src/view/screens/ProfileList.tsx:463
 #: src/view/screens/ProfileList.tsx:626
@@ -2600,11 +2600,11 @@ msgstr "靜音這些帳號？"
 
 #: src/components/dialogs/MutedWords.tsx:126
 msgid "Mute this word in post text and tags"
-msgstr "在貼文內容和話題標籤中隱藏該字詞"
+msgstr "在貼文內容和話題標籤中隱藏該文字"
 
 #: src/components/dialogs/MutedWords.tsx:141
 msgid "Mute this word in tags only"
-msgstr "僅在話題標籤中隱藏該字詞"
+msgstr "僅在話題標籤中隱藏該文字"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:273
 #: src/view/com/util/forms/PostDropdownBtn.tsx:279
@@ -2614,7 +2614,7 @@ msgstr "靜音對話串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:289
 #: src/view/com/util/forms/PostDropdownBtn.tsx:291
 msgid "Mute words & tags"
-msgstr "靜音字詞和標籤"
+msgstr "靜音文字和標籤"
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
@@ -2639,7 +2639,7 @@ msgstr "被\"{0}\"靜音"
 
 #: src/screens/Moderation/index.tsx:231
 msgid "Muted words & tags"
-msgstr "靜音字詞和標籤"
+msgstr "靜音文字和標籤"
 
 #: src/view/screens/ProfileList.tsx:623
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2884,7 +2884,7 @@ msgstr "關於分享的注意事項"
 
 #: src/screens/Moderation/index.tsx:540
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制你在 Bluesky 應用程式和網站上的內容可見性，其他應用程式可能不尊重此設定。你的內容仍可能由其他應用程式和網站顯示給未登入的用戶。"
+msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制你在 Bluesky 應用程式和網站上的內容可見性，其他應用程式可能不尊重此設定。你的內容仍可能由其他應用程式和網站顯示給未登入的使用者。"
 
 #: src/Navigation.tsx:470
 #: src/view/screens/Notifications.tsx:124
@@ -2979,7 +2979,7 @@ msgstr "在內建瀏覽器中開啟連結"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
-msgstr "開啟靜音字詞和標籤設定"
+msgstr "開啟靜音文字和標籤設定"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:52
 msgid "Open navigation"
@@ -3004,7 +3004,7 @@ msgstr "開啟 {numItems} 個選項"
 
 #: src/view/screens/Settings/index.tsx:485
 msgid "Opens accessibility settings"
-msgstr "開啟協助工具設定"
+msgstr "開啟無障礙設定"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
@@ -3124,7 +3124,7 @@ msgstr "{0} 選項，共 {numItems} 個"
 
 #: src/components/ReportDialog/SubmitView.tsx:160
 msgid "Optionally provide additional information below:"
-msgstr "以下是可選提供的額外資訊："
+msgstr "在以下提供額外訊息（可選）："
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
@@ -3262,7 +3262,7 @@ msgstr "請輸入此應用程式專用密碼的唯一名稱，或使用我們提
 
 #: src/components/dialogs/MutedWords.tsx:67
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "請輸入有效的字詞或標籤進行靜音"
+msgstr "請輸入有效的文字或標籤進行靜音"
 
 #: src/screens/Signup/state.ts:220
 msgid "Please enter your email."
@@ -3324,7 +3324,7 @@ msgstr "貼文已隱藏"
 #: src/components/moderation/ModerationDetailsDialog.tsx:97
 #: src/lib/moderation/useModerationCauseDescription.ts:99
 msgid "Post Hidden by Muted Word"
-msgstr "貼文因靜音字詞設定而被靜音"
+msgstr "貼文因靜音文字設定而被靜音"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:100
 #: src/lib/moderation/useModerationCauseDescription.ts:108
@@ -3354,7 +3354,7 @@ msgstr "貼文"
 
 #: src/components/dialogs/MutedWords.tsx:89
 msgid "Posts can be muted based on their text, their tags, or both."
-msgstr "貼文可以根據所包含的字詞和標籤來設定靜音。"
+msgstr "貼文可以根據所包含的文字和標籤來設定靜音。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -3366,7 +3366,7 @@ msgstr "潛在誤導性連結"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
-msgstr "按下以更改主機提供商"
+msgstr "按下以更改託管服務供應商"
 
 #: src/components/Error.tsx:83
 #: src/components/Lists.tsx:83
@@ -3528,7 +3528,7 @@ msgstr "刪除圖片預覽"
 
 #: src/components/dialogs/MutedWords.tsx:329
 msgid "Remove mute word from your list"
-msgstr "從你的列表中移除靜音字詞"
+msgstr "從你的列表中移除靜音文字"
 
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
@@ -3678,12 +3678,12 @@ msgstr "需要電子郵件驗證碼才能登入你的帳戶"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
-msgstr "提供商要求必填"
+msgstr "託管服務供應商要求必填"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
 msgid "Resend email"
-msgstr "重發電子郵件"
+msgstr "重新發送"
 
 #: src/view/com/modals/ChangePassword.tsx:185
 msgid "Reset code"
@@ -4486,7 +4486,7 @@ msgstr "服務條款"
 #: src/lib/moderation/useReportOptions.ts:79
 #: src/lib/moderation/useReportOptions.ts:87
 msgid "Terms used violate community standards"
-msgstr "所使用的字詞違反了社群標準"
+msgstr "所使用的文字違反了社群標準"
 
 #: src/components/dialogs/MutedWords.tsx:323
 msgid "text"
@@ -4659,7 +4659,7 @@ msgstr "{screenDescription} 已被標記："
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
-msgstr "此帳號要求用戶登入後才能查看其個人資料。"
+msgstr "此帳號要求使用者登入後才能查看其個人資料。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:204
 msgid "This appeal will be sent to <0>{0}</0>."
@@ -4792,7 +4792,7 @@ msgstr "此警告僅適用於附帶媒體的貼文。"
 
 #: src/components/dialogs/MutedWords.tsx:283
 msgid "This will delete {0} from your muted words. You can always add it back later."
-msgstr "這將從你的靜音字詞中刪除 {0}，你隨時可以在稍後添加回來。"
+msgstr "這將從你的靜音文字中刪除 {0}，你隨時可以在稍後添加回來。"
 
 #: src/view/screens/Settings/index.tsx:526
 msgid "Thread preferences"
@@ -4821,7 +4821,7 @@ msgstr "你希望向誰提交此檢舉？"
 
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Toggle between muted word options."
-msgstr "在靜音字詞選項之間切換。"
+msgstr "在靜音文字選項之間切換。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:246
 msgid "Toggle dropdown"
@@ -5026,11 +5026,11 @@ msgstr "使用應用程式專用密碼登入到其他 Bluesky 客戶端，而無
 
 #: src/view/com/modals/ChangeHandle.tsx:517
 msgid "Use bsky.social as hosting provider"
-msgstr "使用 bsky.social 作為主機提供商"
+msgstr "使用 bsky.social 作為託管服務供應商"
 
 #: src/view/com/modals/ChangeHandle.tsx:516
 msgid "Use default provider"
-msgstr "使用預設提供商"
+msgstr "使用預設託管服務供應商"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:56
 #: src/view/com/modals/InAppBrowserConsent.tsx:58
@@ -5239,7 +5239,7 @@ msgstr "你已看完了你跟隨的貼文。這是 <0/> 的最新貼文。"
 
 #: src/components/dialogs/MutedWords.tsx:203
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "我們建議避免新增在許多貼文中常用的字詞，因為這可能導致沒有貼文可顯示。"
+msgstr "我們建議避免新增在許多貼文中常用的文字，因為這可能導致沒有貼文可顯示。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
 msgid "We recommend our \"Discover\" feed:"
@@ -5275,7 +5275,7 @@ msgstr "很抱歉，我們無法解析此列表。如果問題持續發生，請
 
 #: src/components/dialogs/MutedWords.tsx:229
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "很抱歉，我們目前無法加載你的靜音字詞。請稍後再試。"
+msgstr "很抱歉，我們目前無法加載你的靜音文字。請稍後再試。"
 
 #: src/view/screens/Search/Search.tsx:323
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -5463,7 +5463,7 @@ msgstr "你還沒有靜音任何帳號。要靜音帳號，請轉到其個人資
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
-msgstr "你還沒有隱藏任何字詞或標籤"
+msgstr "你還沒有隱藏任何文字或標籤"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
@@ -5491,7 +5491,7 @@ msgstr "你將收到這條對話串的通知"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:104
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "你將收到一封包含重設碼的電子郵件。請在此輸入該重設代碼，然後輸入你的新密碼。"
+msgstr "你將收到一封包含重設碼的電子郵件。請在此輸入該重設碼，然後輸入你的新密碼。"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:60
 msgid "You're in control"
@@ -5510,7 +5510,7 @@ msgstr "你已設定完成！"
 #: src/components/moderation/ModerationDetailsDialog.tsx:98
 #: src/lib/moderation/useModerationCauseDescription.ts:101
 msgid "You've chosen to hide a word or tag within this post."
-msgstr "您選擇在這則貼文中隱藏字詞或標籤。"
+msgstr "您選擇在這則貼文中隱藏文字或標籤。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -5568,7 +5568,7 @@ msgstr "你的完整帳號代碼將修改為 <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:220
 msgid "Your muted words"
-msgstr "你的靜音字詞"
+msgstr "你的靜音文字"
 
 #: src/view/com/modals/ChangePassword.tsx:157
 msgid "Your password has been changed successfully!"
