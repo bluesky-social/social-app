@@ -4743,7 +4743,7 @@ msgstr "這則貼文已被刪除。"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:370
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:250
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
-msgstr "這則貼文僅對登入用戶可見。 未登入的人將看不到它。"
+msgstr "只有登入用戶能見到這則貼文，未登入的人將看不到它。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:352
 msgid "This post will be hidden from feeds."
