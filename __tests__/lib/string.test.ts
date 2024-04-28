@@ -396,6 +396,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://youtube.com/watch?v=videoId&feature=share',
     'https://youtube.com/shorts/videoId',
     'https://m.youtube.com/watch?v=videoId',
+    'https://music.youtube.com/watch?v=videoId',
 
     'https://youtube.com/shorts/',
     'https://youtube.com/',
@@ -497,6 +498,11 @@ describe('parseEmbedPlayerFromUrl', () => {
       type: 'youtube_short',
       source: 'youtubeShorts',
       hideDetails: true,
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+    },
+    {
+      type: 'youtube_video',
+      source: 'youtube',
       playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {

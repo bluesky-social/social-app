@@ -1,10 +1,10 @@
-import {it, describe, expect} from '@jest/globals'
+import {describe, expect, it} from '@jest/globals'
 
 import {
-  linkRequiresWarning,
   isPossiblyAUrl,
-  splitApexDomain,
   isTrustedUrl,
+  linkRequiresWarning,
+  splitApexDomain,
 } from '../../../src/lib/strings/url-helpers'
 
 describe('linkRequiresWarning', () => {
@@ -170,6 +170,7 @@ describe('isTrustedUrl', () => {
     ['https://google.com', false],
     ['https://docs.google.com', false],
     ['https://google.com/#', false],
+    ['https://blueskywebxzendesk.com', false],
   ]
 
   it.each(cases)('given input uri %p, returns %p', (str, expected) => {
