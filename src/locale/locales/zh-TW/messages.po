@@ -249,7 +249,7 @@ msgstr "替代文字"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "替代文字為盲人和視覺受損的用戶描述圖片，並有助於為每個人提供背景資訊。"
+msgstr "替代文字為盲人和視障人士描述圖片及提供情境。"
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
@@ -660,7 +660,7 @@ msgstr "來看看一些推薦的訊息流吧。點擊 + 將它們新增到你的
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:186
 msgid "Check out some recommended users. Follow them to see similar users."
-msgstr "來看看一些推薦的用戶吧。跟隨他們來查看類似的用戶。"
+msgstr "來看看一些推薦用戶吧。跟隨他們來查看類似的用戶。"
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
