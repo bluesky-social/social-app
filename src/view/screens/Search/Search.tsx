@@ -670,7 +670,6 @@ export function SearchScreen(
             ref={textInput}
             placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus={isNative}
             returnKeyType="search"
             value={searchText}
             style={[pal.text, styles.headerSearchInput]}
@@ -684,6 +683,9 @@ export function SearchScreen(
                 })
               } else {
                 setShowAutocomplete(true)
+                // We'd use selectTextOnFocus, but it's broken:
+                // https://github.com/facebook/react-native/issues/41988
+                textInput.current?.setSelection(0, searchText.length)
               }
             }}
             onChangeText={onChangeText}
