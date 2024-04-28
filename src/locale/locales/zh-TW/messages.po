@@ -5096,7 +5096,7 @@ msgstr "已建立用戶列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:183
 msgid "User list updated"
-msgstr "用戶列表已更新"
+msgstr "已更新用戶列表"
 
 #: src/view/screens/Lists.tsx:58
 msgid "User Lists"
