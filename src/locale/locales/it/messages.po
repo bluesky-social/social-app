@@ -21,7 +21,7 @@ msgstr "(no email)"
 #: src/components/ProfileHoverCard/index.web.tsx:438
 #: src/screens/Profile/Header/Metrics.tsx:44
 msgid "{following} following"
-msgstr "{following} seguendo"
+msgstr "{following} following"
 
 #: src/view/shell/Drawer.tsx:449
 msgid "{numUnreadNotifications} unread"
@@ -46,7 +46,7 @@ msgstr "<0>{following} </0><1>following</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:31
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<0>Scegli I tuoi</0><1>feeds</1><2>consigliati</2>"
+msgstr "<0>Scegli i tuoi</0><1>feeds</1><2>consigliati</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:38
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
@@ -61,7 +61,7 @@ msgid "⚠Invalid Handle"
 msgstr "⚠Nome utente non valido"
 
 #: src/screens/Login/LoginForm.tsx:238
-msgid "2FA Confirmati on"
+msgid "2FA Confirmation"
 msgstr "Conferma 2FA"
 
 #: src/view/com/util/ViewHeader.tsx:91 src/view/screens/Search/Search.tsx:727
@@ -70,7 +70,7 @@ msgstr "Accedi alle impostazioni di navigazione"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
 msgid "Access profile and other navigation links"
-msgstr "Accedi al profilo e altre impostazioni di navigazione"
+msgstr "Accedi al profilo e ad altre impostazioni di navigazione"
 
 #: src/view/com/modals/EditImage.tsx:300
 #: src/view/screens/Settings/index.tsx:493
@@ -184,7 +184,7 @@ msgstr "Aggiungi il seguente record DNS al tuo dominio:"
 #: src/view/com/profile/ProfileMenu.tsx:263
 #: src/view/com/profile/ProfileMenu.tsx:266
 msgid "Add to Lists"
-msgstr "Aggiungi alle liste"
+msgstr "Aggiungi alle Liste"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:234
 msgid "Add to my feeds"
@@ -205,7 +205,7 @@ msgstr "Aggiunto ai miei feeds"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "Modifica il numero Mi Piace che una risposta deve avere per essere mostrata nel tuo feed."
+msgstr "Modifica il numero di "Mi piace" che una risposta deve avere per essere mostrata nel tuo feed."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:117
@@ -245,7 +245,7 @@ msgstr "Testo alternativo"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "Il testo alternativo descrive le immagini per gli utenti non vedenti e ipovedenti e aiuta a fornire un contesto a tutti."
+msgstr "Il testo alternativo descrive le immagini per gli utenti non vedenti ed ipovedenti, fornendo un contesto a tutti."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
@@ -284,7 +284,7 @@ msgstr "Animali"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:134
 msgid "Animated GIF"
-msgstr "GIF animate"
+msgstr "GIF animata"
 
 #: src/lib/moderation/useReportOptions.ts:31
 msgid "Anti-Social Behavior"
@@ -300,11 +300,11 @@ msgstr "Password dell'app eliminata"
 
 #: src/view/com/modals/AddAppPasswords.tsx:135
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "Le password per le app possono contenere solo lettere, numeri, spazi, trattini e trattini bassi."
+msgstr "Le password dell'app possono contenere solo lettere, numeri, spazi, trattini e trattini bassi."
 
 #: src/view/com/modals/AddAppPasswords.tsx:100
 msgid "App Password names must be at least 4 characters long."
-msgstr "I nomi delle password delle app devono contenere almeno 4 caratteri."
+msgstr "Le password delle app devono contenere almeno 4 caratteri."
 
 #: src/view/screens/Settings/index.tsx:647
 msgid "App password settings"
@@ -313,7 +313,7 @@ msgstr "Impostazioni della password dell'app"
 #: src/Navigation.tsx:252 src/view/screens/AppPasswords.tsx:189
 #: src/view/screens/Settings/index.tsx:656
 msgid "App Passwords"
-msgstr "Passwords dell'App"
+msgstr "Password dell'App"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:133
 #: src/components/moderation/LabelsOnMeDialog.tsx:136
@@ -334,15 +334,15 @@ msgstr "Aspetto"
 
 #: src/view/screens/AppPasswords.tsx:265
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "Conferma di voler eliminare la password dell'app \"{name}\"?"
+msgstr "Confermi di voler eliminare la password dell'app \"{name}\"?"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "Vuoi rimuovere {0} dai tuoi feed?"
+msgstr "Confermi di voler rimuovere {0} dai tuoi feed?"
 
 #: src/view/com/composer/Composer.tsx:523
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "Conferma di voler eliminare questa bozza?"
+msgstr "Confermi di voler eliminare questa bozza?"
 
 #: src/components/dialogs/MutedWords.tsx:281
 msgid "Are you sure?"
@@ -406,11 +406,11 @@ msgstr "Blocca Account"
 
 #: src/view/com/profile/ProfileMenu.tsx:344
 msgid "Block Account?"
-msgstr "Blocca Account?"
+msgstr "Bloccare Account?"
 
 #: src/view/screens/ProfileList.tsx:532
 msgid "Block accounts"
-msgstr "Blocca gli accounts"
+msgstr "Blocca gli account"
 
 #: src/view/screens/ProfileList.tsx:480 src/view/screens/ProfileList.tsx:636
 msgid "Block list"
