@@ -109,14 +109,27 @@ export function NativeDropdown({
 
   return (
     <DropdownMenuRoot open={open} onOpenChange={o => setOpen(o)}>
-      <DropdownMenu.Trigger asChild onPointerDown={e => e.preventDefault()}>
+      <DropdownMenu.Trigger asChild>
         <Pressable
           ref={buttonRef as unknown as React.Ref<View>}
           testID={testID}
           accessibilityRole="button"
           accessibilityLabel={accessibilityLabel}
           accessibilityHint={accessibilityHint}
-          onPress={() => setOpen(o => !o)}
+          onPointerDown={e => {
+            // Prevent false positive that interpret mobile scroll as a tap.
+            // This requires the custom onPress handler below to compensate.
+            // https://github.com/radix-ui/primitives/issues/1912
+            e.preventDefault()
+          }}
+          onPress={() => {
+            if (window.event instanceof KeyboardEvent) {
+              // The onPointerDown hack above is not relevant to this press, so don't do anything.
+              return
+            }
+            // Compensate for the disabled onPointerDown above by triggering it manually.
+            setOpen(o => !o)
+          }}
           hitSlop={HITSLOP_10}
           style={triggerStyle}>
           {children}
