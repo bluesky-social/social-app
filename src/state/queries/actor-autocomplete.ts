@@ -1,6 +1,6 @@
 import React from 'react'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isJustAMute} from '#/lib/moderation'
 import {logger} from '#/logger'
@@ -16,7 +16,10 @@ const DEFAULT_MOD_OPTS = {
 const RQKEY_ROOT = 'actor-autocomplete'
 export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
-export function useActorAutocompleteQuery(prefix: string) {
+export function useActorAutocompleteQuery(
+  prefix: string,
+  maintainData?: boolean,
+) {
   const moderationOpts = useModerationOpts()
   const {getAgent} = useAgent()
 
@@ -40,6 +43,7 @@ export function useActorAutocompleteQuery(prefix: string) {
       },
       [moderationOpts],
     ),
+    placeholderData: maintainData ? keepPreviousData : undefined,
   })
 }
 

@@ -12,7 +12,6 @@ import {
   QueryClient,
   QueryKey,
   useInfiniteQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
 
 import {HomeFeedAPI} from '#/lib/api/feed/home'
@@ -38,7 +37,6 @@ import {
   usePreferencesQuery,
   UsePreferencesQueryResponse,
 } from './preferences'
-import {precacheFeedPostProfiles} from './profile'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
@@ -107,7 +105,6 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean; ignoreFilterFor?: string},
 ) {
-  const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
@@ -159,7 +156,6 @@ export function usePostFeedQuery(
 
       try {
         const res = await api.fetch({cursor, limit: PAGE_SIZE})
-        precacheFeedPostProfiles(queryClient, res.feed)
 
         /*
          * If this is a public view, we need to check if posts fail moderation.

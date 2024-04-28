@@ -11,7 +11,6 @@ import {useAgent} from '#/state/session'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
-import {precacheThreadPostProfiles} from './profile'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const RQKEY_ROOT = 'post-thread'
@@ -73,9 +72,7 @@ export function usePostThreadQuery(uri: string | undefined) {
     async queryFn() {
       const res = await getAgent().getPostThread({uri: uri!})
       if (res.success) {
-        const nodes = responseToThreadNodes(res.data.thread)
-        precacheThreadPostProfiles(queryClient, nodes)
-        return nodes
+        return responseToThreadNodes(res.data.thread)
       }
       return {type: 'unknown', uri: uri!}
     },

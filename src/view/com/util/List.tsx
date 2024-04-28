@@ -64,6 +64,11 @@ function ListImpl<ItemT>(
         }
       }
     },
+    // Note: adding onMomentumBegin here makes simulator scroll
+    // lag on Android. So either don't add it, or figure out why.
+    onMomentumEnd(e, ctx) {
+      contextScrollHandlers.onMomentumEnd?.(e, ctx)
+    },
   })
 
   let refreshControl
