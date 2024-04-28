@@ -159,7 +159,7 @@ module.exports = function (config) {
           {
             ios: {
               deploymentTarget: '13.4',
-              newArchEnabled: false,
+              newArchEnabled: true,
             },
             android: {
               compileSdkVersion: 34,
