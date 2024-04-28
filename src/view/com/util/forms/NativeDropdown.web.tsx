@@ -1,12 +1,13 @@
 import React from 'react'
+import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import {Pressable, StyleSheet, View, Text, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+
+import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import {HITSLOP_10} from 'lib/constants'
 
 // Custom Dropdown Menu Components
 // ==
@@ -64,15 +65,9 @@ export function NativeDropdown({
   accessibilityHint,
   triggerStyle,
 }: React.PropsWithChildren<Props>) {
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const dropDownBackgroundColor =
-    theme.colorScheme === 'dark' ? pal.btn : pal.view
   const [open, setOpen] = React.useState(false)
   const buttonRef = React.useRef<HTMLButtonElement>(null)
   const menuRef = React.useRef<HTMLDivElement>(null)
-  const {borderColor: separatorColor} =
-    theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
   React.useEffect(() => {
     function clickHandler(e: MouseEvent) {
@@ -129,53 +124,53 @@ export function NativeDropdown({
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
-        <DropdownMenu.Content
-          ref={menuRef}
-          style={
-            StyleSheet.flatten([
-              styles.content,
-              dropDownBackgroundColor,
-            ]) as React.CSSProperties
-          }
-          loop>
-          {items.map((item, index) => {
-            if (item.label === 'separator') {
-              return (
-                <DropdownMenu.Separator
-                  key={getKey(item.label, index, item.testID)}
-                  style={
-                    StyleSheet.flatten([
-                      styles.separator,
-                      {backgroundColor: separatorColor},
-                    ]) as React.CSSProperties
-                  }
-                />
-              )
-            }
-            if (index > 1 && items[index - 1].label === 'separator') {
-              return (
-                <DropdownMenu.Group
-                  key={getKey(item.label, index, item.testID)}>
-                  <DropdownMenuItem
-                    key={getKey(item.label, index, item.testID)}
-                    onSelect={item.onPress}>
-                    <Text
-                      selectable={false}
-                      style={[pal.text, styles.itemTitle]}>
-                      {item.label}
-                    </Text>
-                    {item.icon && (
-                      <FontAwesomeIcon
-                        icon={item.icon.web}
-                        size={20}
-                        color={pal.colors.textLight}
-                      />
-                    )}
-                  </DropdownMenuItem>
-                </DropdownMenu.Group>
-              )
-            }
-            return (
+        <DropdownContent items={items} menuRef={menuRef} />
+      </DropdownMenu.Portal>
+    </DropdownMenuRoot>
+  )
+}
+
+function DropdownContent({
+  items,
+  menuRef,
+}: {
+  items: DropdownItem[]
+  menuRef: React.RefObject<HTMLDivElement>
+}) {
+  const pal = usePalette('default')
+  const theme = useTheme()
+  const dropDownBackgroundColor =
+    theme.colorScheme === 'dark' ? pal.btn : pal.view
+  const {borderColor: separatorColor} =
+    theme.colorScheme === 'dark' ? pal.borderDark : pal.border
+
+  return (
+    <DropdownMenu.Content
+      ref={menuRef}
+      style={
+        StyleSheet.flatten([
+          styles.content,
+          dropDownBackgroundColor,
+        ]) as React.CSSProperties
+      }
+      loop>
+      {items.map((item, index) => {
+        if (item.label === 'separator') {
+          return (
+            <DropdownMenu.Separator
+              key={getKey(item.label, index, item.testID)}
+              style={
+                StyleSheet.flatten([
+                  styles.separator,
+                  {backgroundColor: separatorColor},
+                ]) as React.CSSProperties
+              }
+            />
+          )
+        }
+        if (index > 1 && items[index - 1].label === 'separator') {
+          return (
+            <DropdownMenu.Group key={getKey(item.label, index, item.testID)}>
               <DropdownMenuItem
                 key={getKey(item.label, index, item.testID)}
                 onSelect={item.onPress}>
@@ -190,11 +185,27 @@ export function NativeDropdown({
                   />
                 )}
               </DropdownMenuItem>
-            )
-          })}
-        </DropdownMenu.Content>
-      </DropdownMenu.Portal>
-    </DropdownMenuRoot>
+            </DropdownMenu.Group>
+          )
+        }
+        return (
+          <DropdownMenuItem
+            key={getKey(item.label, index, item.testID)}
+            onSelect={item.onPress}>
+            <Text selectable={false} style={[pal.text, styles.itemTitle]}>
+              {item.label}
+            </Text>
+            {item.icon && (
+              <FontAwesomeIcon
+                icon={item.icon.web}
+                size={20}
+                color={pal.colors.textLight}
+              />
+            )}
+          </DropdownMenuItem>
+        )
+      })}
+    </DropdownMenu.Content>
   )
 }
 
