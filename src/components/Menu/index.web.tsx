@@ -134,12 +134,10 @@ export function Trigger({children, label}: TriggerProps) {
             },
             props: {
               ...props,
-              onPointerDown: e => {
-                // Prevent false positive that interpret mobile scroll as a tap.
-                // This requires the custom onPress handler below to compensate.
-                // https://github.com/radix-ui/primitives/issues/1912
-                e.preventDefault()
-              },
+              // No-op override to prevent false positive that interprets mobile scroll as a tap.
+              // This requires the custom onPress handler below to compensate.
+              // https://github.com/radix-ui/primitives/issues/1912
+              onPointerDown: undefined,
               onPress: () => {
                 if (window.event instanceof KeyboardEvent) {
                   // The onPointerDown hack above is not relevant to this press, so don't do anything.
