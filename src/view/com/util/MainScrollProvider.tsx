@@ -37,11 +37,18 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
+        if (startDragOffset.value === null) {
+          return
+        }
+        const didScrollDown = e.contentOffset.y > startDragOffset.value
         startDragOffset.value = null
         startMode.value = null
-        if (e.contentOffset.y < headerHeight.value / 2) {
+        if (e.contentOffset.y < headerHeight.value) {
           // If we're close to the top, show the shell.
           setMode(false)
+        } else if (didScrollDown) {
+          // Showing the bar again on scroll down feels annoying, so don't.
+          setMode(true)
         } else {
           // Snap to whichever state is the closest.
           setMode(Math.round(mode.value) === 1)
