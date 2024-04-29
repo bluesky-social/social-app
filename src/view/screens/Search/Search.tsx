@@ -781,53 +781,73 @@ export function SearchScreen(
           )}
         </>
       ) : !queryParam && showAutocomplete ? (
-        <CenteredView
-          sideBorders={isTabletOrDesktop}
-          // @ts-ignore web only -prf
-          style={{
-            height: isWeb ? '100vh' : undefined,
-          }}>
-          <View style={styles.searchHistoryContainer}>
-            {searchHistory.length > 0 && (
-              <View style={styles.searchHistoryContent}>
-                <Text style={[pal.text, styles.searchHistoryTitle]}>
-                  <Trans>Recent Searches</Trans>
-                </Text>
-                {searchHistory.map((historyItem, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      a.flex_row,
-                      a.mt_md,
-                      a.justify_center,
-                      a.justify_between,
-                    ]}>
-                    <Pressable
-                      accessibilityRole="button"
-                      onPress={() => handleHistoryItemClick(historyItem)}
-                      style={[a.flex_1, a.py_sm]}>
-                      <Text style={pal.text}>{historyItem}</Text>
-                    </Pressable>
-                    <Pressable
-                      accessibilityRole="button"
-                      onPress={() => handleRemoveHistoryItem(historyItem)}
-                      style={[a.px_md, a.py_xs, a.justify_center]}>
-                      <FontAwesomeIcon
-                        icon="xmark"
-                        size={16}
-                        style={pal.textLight as FontAwesomeIconStyle}
-                      />
-                    </Pressable>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-        </CenteredView>
+        <SearchHistory
+          searchHistory={searchHistory}
+          onItemClick={handleHistoryItemClick}
+          onRemoveItemClick={handleRemoveHistoryItem}
+        />
       ) : (
         <SearchScreenInner query={queryParam} />
       )}
     </View>
+  )
+}
+
+function SearchHistory({
+  searchHistory,
+  onItemClick,
+  onRemoveItemClick,
+}: {
+  searchHistory: string[]
+  onItemClick: (item: string) => void
+  onRemoveItemClick: (item: string) => void
+}) {
+  const {isTabletOrDesktop} = useWebMediaQueries()
+  const pal = usePalette('default')
+  return (
+    <CenteredView
+      sideBorders={isTabletOrDesktop}
+      // @ts-ignore web only -prf
+      style={{
+        height: isWeb ? '100vh' : undefined,
+      }}>
+      <View style={styles.searchHistoryContainer}>
+        {searchHistory.length > 0 && (
+          <View style={styles.searchHistoryContent}>
+            <Text style={[pal.text, styles.searchHistoryTitle]}>
+              <Trans>Recent Searches</Trans>
+            </Text>
+            {searchHistory.map((historyItem, index) => (
+              <View
+                key={index}
+                style={[
+                  a.flex_row,
+                  a.mt_md,
+                  a.justify_center,
+                  a.justify_between,
+                ]}>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => onItemClick(historyItem)}
+                  style={[a.flex_1, a.py_sm]}>
+                  <Text style={pal.text}>{historyItem}</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => onRemoveItemClick(historyItem)}
+                  style={[a.px_md, a.py_xs, a.justify_center]}>
+                  <FontAwesomeIcon
+                    icon="xmark"
+                    size={16}
+                    style={pal.textLight as FontAwesomeIconStyle}
+                  />
+                </Pressable>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+    </CenteredView>
   )
 }
 
