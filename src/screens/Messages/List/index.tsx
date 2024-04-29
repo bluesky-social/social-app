@@ -7,9 +7,10 @@ import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
@@ -19,6 +20,7 @@ import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {ClipClopGate} from '../gate'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'MessagesList'>
 export function MessagesListScreen({}: Props) {
@@ -77,6 +79,9 @@ export function MessagesListScreen({}: Props) {
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
+  const gate = useGate()
+  if (!gate('dms')) return <ClipClopGate />
+
   if (conversations.length < 1) {
     return (
       <ListMaybePlaceholder
@@ -108,12 +113,7 @@ export function MessagesListScreen({}: Props) {
             <Link
               to={`/messages/${item.profile.handle}`}
               style={[a.flex_1, a.pl_md, a.py_sm, a.gap_md, a.pr_2xl]}>
-              <PreviewableUserAvatar
-                did={item.profile.did}
-                handle={item.profile.handle}
-                size={44}
-                avatar={item.profile.avatar}
-              />
+              <PreviewableUserAvatar profile={item.profile} size={44} />
               <View style={[a.flex_1]}>
                 <View
                   style={[
@@ -175,6 +175,8 @@ export function MessagesListScreen({}: Props) {
 }
 
 function usePlaceholderConversations() {
+  const {getAgent} = useAgent()
+
   return useInfiniteQuery({
     queryKey: ['messages'],
     queryFn: async () => {

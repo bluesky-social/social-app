@@ -24,6 +24,7 @@ import {
 } from '#/lib/icons'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
+import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -40,6 +41,7 @@ import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
 import {styles} from './BottomBarStyles'
 
 type TabOptions =
@@ -73,6 +75,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
+  const gate = useGate()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -237,26 +240,28 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   : `${numUnreadNotifications} unread`
               }
             />
-            <Btn
-              testID="bottomBarMessagesBtn"
-              icon={
-                isAtMessages ? (
-                  <Envelope
-                    size="lg"
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                  />
-                ) : (
-                  <Envelope
-                    size="lg"
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                  />
-                )
-              }
-              onPress={onPressMessages}
-              accessibilityRole="tab"
-              accessibilityLabel={_(msg`Messages`)}
-              accessibilityHint=""
-            />
+            {gate('dms') && (
+              <Btn
+                testID="bottomBarMessagesBtn"
+                icon={
+                  isAtMessages ? (
+                    <EnvelopeFilled
+                      size="lg"
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  ) : (
+                    <Envelope
+                      size="lg"
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  )
+                }
+                onPress={onPressMessages}
+                accessibilityRole="tab"
+                accessibilityLabel={_(msg`Messages`)}
+                accessibilityHint=""
+              />
+            )}
             <Btn
               testID="bottomBarProfileBtn"
               icon={

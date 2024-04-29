@@ -13,7 +13,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {getAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
@@ -41,6 +41,7 @@ export function Component({
   onSuccess?: () => void
 }) {
   const pal = usePalette('default')
+  const {getAgent} = useAgent()
   const {currentAccount} = useSession()
   const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()

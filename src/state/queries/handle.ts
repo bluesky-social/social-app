@@ -2,7 +2,7 @@ import React from 'react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [
@@ -14,6 +14,7 @@ const fetchDidQueryKey = (handleOrDid: string) => [didQueryKeyRoot, handleOrDid]
 
 export function useFetchHandle() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
 
   return React.useCallback(
     async (handleOrDid: string) => {
@@ -27,12 +28,13 @@ export function useFetchHandle() {
       }
       return handleOrDid
     },
-    [queryClient],
+    [queryClient, getAgent],
   )
 }
 
 export function useUpdateHandleMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
@@ -48,6 +50,7 @@ export function useUpdateHandleMutation() {
 
 export function useFetchDid() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
 
   return React.useCallback(
     async (handleOrDid: string) => {
@@ -64,6 +67,6 @@ export function useFetchDid() {
         },
       })
     },
-    [queryClient],
+    [queryClient, getAgent],
   )
 }
