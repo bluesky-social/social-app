@@ -3,7 +3,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {useAgent} from '#/state/session'
 import * as TempDmChatDefs from '#/temp/dm/defs'
 import * as TempDmChatGetChat from '#/temp/dm/getChat'
-import * as TempDmChatGetChatFromMembers from '#/temp/dm/getChatForMembers'
+import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
 
@@ -214,7 +214,7 @@ export function useGetChatFromMembers({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: TempDmChatGetChatFromMembers.OutputSchema) => void
+  onSuccess?: (data: TempDmChatGetChatForMembers.OutputSchema) => void
   onError?: (error: Error) => void
 }) {
   const headers = useHeaders()
@@ -222,7 +222,7 @@ export function useGetChatFromMembers({
   return useMutation({
     mutationFn: async (members: string[]) => {
       const response = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.getChatFromMembers?members=${members.join(
+        `${DM_SERVICE}/xrpc/temp.dm.getChatForMembers?members=${members.join(
           ',',
         )}`,
         {headers},
@@ -230,7 +230,7 @@ export function useGetChatFromMembers({
 
       if (!response.ok) throw new Error('Failed to fetch chat')
 
-      return (await response.json()) as TempDmChatGetChatFromMembers.OutputSchema
+      return (await response.json()) as TempDmChatGetChatForMembers.OutputSchema
     },
     onSuccess,
     onError,
