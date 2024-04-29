@@ -1,7 +1,9 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {useAgent} from '#/state/session'
 import * as TempDmChatDefs from '#/temp/dm/defs'
 import * as TempDmChatGetChat from '#/temp/dm/getChat'
+import * as TempDmChatGetChatFromMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
 
@@ -11,10 +13,14 @@ import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
  */
 
 const DM_SERVICE = process.env.EXPO_PUBLIC_DM_SERVICE
-const DM_DID = process.env.EXPO_PUBLIC_DM_DID
 
-const HEADERS = {
-  Authorization: DM_DID!,
+const useHeaders = () => {
+  const {getAgent} = useAgent()
+  return {
+    get Authorization() {
+      return getAgent().session!.did
+    },
+  }
 }
 
 type Chat = {
@@ -26,6 +32,7 @@ type Chat = {
 
 export function useChat(chatId: string) {
   const queryClient = useQueryClient()
+  const headers = useHeaders()
 
   return useQuery({
     queryKey: ['chat', chatId],
@@ -38,9 +45,7 @@ export function useChat(chatId: string) {
 
       const messagesResponse = await fetch(
         `${DM_SERVICE}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
-        {
-          headers: HEADERS,
-        },
+        {headers},
       )
 
       if (!messagesResponse.ok) throw new Error('Failed to fetch messages')
@@ -50,9 +55,7 @@ export function useChat(chatId: string) {
 
       const chatResponse = await fetch(
         `${DM_SERVICE}/xrpc/temp.dm.getChat?chatId=${chatId}`,
-        {
-          headers: HEADERS,
-        },
+        {headers},
       )
 
       if (!chatResponse.ok) throw new Error('Failed to fetch chat')
@@ -85,6 +88,7 @@ export function createTempId() {
 
 export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
+  const headers = useHeaders()
 
   return useMutation<
     TempDmChatDefs.Message,
@@ -99,7 +103,7 @@ export function useSendMessageMutation(chatId: string) {
         {
           method: 'POST',
           headers: {
-            ...HEADERS,
+            ...headers,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -156,6 +160,7 @@ export function useSendMessageMutation(chatId: string) {
 
 export function useChatLogQuery() {
   const queryClient = useQueryClient()
+  const headers = useHeaders()
 
   return useQuery({
     queryKey: ['chatLog'],
@@ -170,7 +175,7 @@ export function useChatLogQuery() {
             prevLog.logs.at(-1)?.rev ?? ''
           }`,
           {
-            headers: HEADERS,
+            headers: headers,
           },
         )
 
@@ -202,5 +207,29 @@ export function useChatLogQuery() {
       }
     },
     refetchInterval: 5000,
+  })
+}
+
+export function useGetChatFromMembers({
+  onSuccess,
+}: {
+  onSuccess: (data: TempDmChatGetChatFromMembers.OutputSchema) => void
+}) {
+  const headers = useHeaders()
+
+  return useMutation({
+    mutationFn: async (members: string[]) => {
+      const response = await fetch(
+        `${DM_SERVICE}/xrpc/temp.dm.getChatFromMembers?members=${members.join(
+          ',',
+        )}`,
+        {headers},
+      )
+
+      if (!response.ok) throw new Error('Failed to fetch chat')
+
+      return (await response.json()) as TempDmChatGetChatFromMembers.OutputSchema
+    },
+    onSuccess,
   })
 }
