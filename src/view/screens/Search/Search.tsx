@@ -11,6 +11,8 @@ import Animated, {
   FadeIn,
   FadeOut,
   LinearTransition,
+  useAnimatedStyle,
+  withSpring,
 } from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
@@ -622,6 +624,14 @@ export function SearchScreen(
     )
   }
 
+  const showClearButton = showAutocomplete && searchText.length > 0
+  const clearButtonStyle = useAnimatedStyle(() => ({
+    opacity: withSpring(showClearButton ? 1 : 0, {
+      overshootClamping: true,
+      duration: 50,
+    }),
+  }))
+
   return (
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
@@ -708,23 +718,22 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          {showAutocomplete && searchText.length > 0 ? (
-            <AnimatedPressable
-              entering={isNative ? FadeIn.delay(200).duration(200) : undefined}
-              exiting={isNative ? FadeOut.duration(50) : undefined}
-              testID="searchTextInputClearBtn"
-              onPress={onPressClearQuery}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint=""
-              hitSlop={HITSLOP_10}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </AnimatedPressable>
-          ) : undefined}
+          <AnimatedPressable
+            layout={isNative ? LinearTransition.duration(200) : undefined}
+            disabled={!showClearButton}
+            style={clearButtonStyle}
+            testID="searchTextInputClearBtn"
+            onPress={onPressClearQuery}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Clear search query`)}
+            accessibilityHint=""
+            hitSlop={HITSLOP_10}>
+            <FontAwesomeIcon
+              icon="xmark"
+              size={16}
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          </AnimatedPressable>
         </AnimatedPressable>
         {showAutocomplete && (
           <View style={[styles.headerCancelBtn]}>
