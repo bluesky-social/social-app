@@ -892,12 +892,14 @@ function SearchHistory({
                 <Pressable
                   accessibilityRole="button"
                   onPress={() => onItemClick(historyItem)}
+                  hitSlop={HITSLOP_10}
                   style={[a.flex_1, a.py_sm]}>
                   <Text style={pal.text}>{historyItem}</Text>
                 </Pressable>
                 <Pressable
                   accessibilityRole="button"
                   onPress={() => onRemoveItemClick(historyItem)}
+                  hitSlop={HITSLOP_10}
                   style={[a.px_md, a.py_xs, a.justify_center]}>
                   <FontAwesomeIcon
                     icon="xmark"
