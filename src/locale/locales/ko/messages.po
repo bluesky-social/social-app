@@ -17,7 +17,7 @@ msgstr ""
 msgid "(no email)"
 msgstr "(이메일 없음)"
 
-#: src/components/ProfileHoverCard/index.web.tsx:438
+#: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/screens/Profile/Header/Metrics.tsx:44
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
@@ -34,11 +34,11 @@ msgstr "<0/>의 멤버"
 msgid "<0>{0}</0> following"
 msgstr "<0>{0}</0> 팔로우 중"
 
-#: src/components/ProfileHoverCard/index.web.tsx:429
+#: src/components/ProfileHoverCard/index.web.tsx:437
 msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
 msgstr "<0>{followers} </0><1>팔로워</1>"
 
-#: src/components/ProfileHoverCard/index.web.tsx:441
+#: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/screens/Profile/Header/Metrics.tsx:45
 msgid "<0>{following} </0><1>following</1>"
 msgstr "<0>{following} </0><1>팔로우 중</1>"
@@ -437,7 +437,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 msgid "Blocked post."
 msgstr "차단된 게시물."
 
-#: src/screens/Profile/Sections/Labels.tsx:163
+#: src/screens/Profile/Sections/Labels.tsx:166
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "차단하더라도 이 라벨러가 내 계정에 라벨을 붙이는 것을 막지는 못합니다."
 
@@ -532,7 +532,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/Repost.tsx:88
 #: src/view/com/modals/VerifyEmail.tsx:256
 #: src/view/com/modals/VerifyEmail.tsx:262
-#: src/view/screens/Search/Search.tsx:723
+#: src/view/screens/Search/Search.tsx:729
 #: src/view/shell/desktop/Search.tsx:222
 msgid "Cancel"
 msgstr "취소"
@@ -671,7 +671,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:704
+#: src/view/screens/Search/Search.tsx:710
 msgid "Clear search query"
 msgstr "검색어 지우기"
 
@@ -884,7 +884,7 @@ msgstr "콘텐츠 경고"
 msgid "Content warnings"
 msgstr "콘텐츠 경고"
 
-#: src/components/Menu/index.web.tsx:84
+#: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
 msgstr "컨텍스트 메뉴 배경을 클릭하여 메뉴를 닫습니다."
 
@@ -1616,7 +1616,7 @@ msgstr "피드백"
 #: src/Navigation.tsx:507
 #: src/view/screens/Feeds.tsx:444
 #: src/view/screens/Feeds.tsx:549
-#: src/view/screens/Profile.tsx:198
+#: src/view/screens/Profile.tsx:197
 #: src/view/shell/bottom-bar/BottomBar.tsx:212
 #: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:477
@@ -1853,7 +1853,7 @@ msgstr "홈으로 이동"
 msgid "Go Home"
 msgstr "홈으로 이동"
 
-#: src/view/screens/Search/Search.tsx:755
+#: src/view/screens/Search/Search.tsx:761
 #: src/view/shell/desktop/Search.tsx:250
 msgid "Go to @{queryMaybeHandle}"
 msgstr "@{queryMaybeHandle}(으)로 이동"
@@ -2154,11 +2154,11 @@ msgstr "{0} 님이 라벨 지정함."
 msgid "Labeled by the author."
 msgstr "작성자가 라벨 지정함."
 
-#: src/view/screens/Profile.tsx:192
+#: src/view/screens/Profile.tsx:191
 msgid "Labels"
 msgstr "라벨"
 
-#: src/screens/Profile/Sections/Labels.tsx:153
+#: src/screens/Profile/Sections/Labels.tsx:156
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "라벨은 사용자 및 콘텐츠에 대한 주석입니다. 네트워크를 숨기고, 경고하고, 분류하는 데 사용할 수 있습니다."
 
@@ -2290,7 +2290,7 @@ msgstr "님이 내 맞춤 피드를 좋아합니다"
 msgid "liked your post"
 msgstr "님이 내 게시물을 좋아합니다"
 
-#: src/view/screens/Profile.tsx:197
+#: src/view/screens/Profile.tsx:196
 msgid "Likes"
 msgstr "좋아요"
 
@@ -2335,8 +2335,8 @@ msgid "List unmuted"
 msgstr "리스트 언뮤트됨"
 
 #: src/Navigation.tsx:121
-#: src/view/screens/Profile.tsx:193
-#: src/view/screens/Profile.tsx:199
+#: src/view/screens/Profile.tsx:192
+#: src/view/screens/Profile.tsx:198
 #: src/view/shell/desktop/LeftNav.tsx:397
 #: src/view/shell/Drawer.tsx:493
 #: src/view/shell/Drawer.tsx:494
@@ -2394,7 +2394,7 @@ msgid "Manage your muted words and tags"
 msgstr "뮤트한 단어 및 태그 관리"
 
 #: src/view/screens/AccessibilitySettings.tsx:89
-#: src/view/screens/Profile.tsx:196
+#: src/view/screens/Profile.tsx:195
 msgid "Media"
 msgstr "미디어"
 
@@ -2684,7 +2684,7 @@ msgstr "새 게시물"
 
 #: src/view/screens/Feeds.tsx:580
 #: src/view/screens/Notifications.tsx:168
-#: src/view/screens/Profile.tsx:465
+#: src/view/screens/Profile.tsx:464
 #: src/view/screens/ProfileFeed.tsx:445
 #: src/view/screens/ProfileList.tsx:200
 #: src/view/screens/ProfileList.tsx:228
@@ -2805,7 +2805,7 @@ msgid "Not Applicable."
 msgstr "해당 없음."
 
 #: src/Navigation.tsx:116
-#: src/view/screens/Profile.tsx:101
+#: src/view/screens/Profile.tsx:100
 msgid "Not Found"
 msgstr "찾을 수 없음"
 
@@ -2894,7 +2894,7 @@ msgstr "이런, 뭔가 잘못되었습니다!"
 
 #: src/components/Lists.tsx:177
 #: src/view/screens/AppPasswords.tsx:67
-#: src/view/screens/Profile.tsx:101
+#: src/view/screens/Profile.tsx:100
 msgid "Oops!"
 msgstr "이런!"
 
@@ -3290,7 +3290,7 @@ msgstr "게시물을 찾을 수 없음"
 msgid "posts"
 msgstr "게시물"
 
-#: src/view/screens/Profile.tsx:194
+#: src/view/screens/Profile.tsx:193
 msgid "Posts"
 msgstr "게시물"
 
@@ -3346,7 +3346,7 @@ msgid "Processing..."
 msgstr "처리 중…"
 
 #: src/view/screens/DebugMod.tsx:888
-#: src/view/screens/Profile.tsx:346
+#: src/view/screens/Profile.tsx:345
 msgid "profile"
 msgstr "프로필"
 
@@ -3408,7 +3408,7 @@ msgstr "무작위"
 msgid "Ratios"
 msgstr "비율"
 
-#: src/view/screens/Search/Search.tsx:790
+#: src/view/screens/Search/Search.tsx:796
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -3497,7 +3497,7 @@ msgstr "{0}에서 기본 미리보기 이미지를 제거합니다"
 msgid "Removes quoted post"
 msgstr "인용된 게시물을 제거합니다"
 
-#: src/view/screens/Profile.tsx:195
+#: src/view/screens/Profile.tsx:194
 msgid "Replies"
 msgstr "답글"
 
@@ -3769,7 +3769,7 @@ msgstr "맨 위로 스크롤"
 #: src/view/com/util/forms/SearchInput.tsx:79
 #: src/view/screens/Search/Search.tsx:445
 #: src/view/screens/Search/Search.tsx:671
-#: src/view/screens/Search/Search.tsx:693
+#: src/view/screens/Search/Search.tsx:699
 #: src/view/shell/bottom-bar/BottomBar.tsx:190
 #: src/view/shell/desktop/LeftNav.tsx:332
 #: src/view/shell/desktop/Search.tsx:198
@@ -3783,7 +3783,7 @@ msgstr "검색"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:743
+#: src/view/screens/Search/Search.tsx:749
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
@@ -4335,7 +4335,7 @@ msgstr "확인"
 msgid "Subscribe"
 msgstr "구독"
 
-#: src/screens/Profile/Sections/Labels.tsx:191
+#: src/screens/Profile/Sections/Labels.tsx:194
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "이 라벨을 사용하려면 @{0} 님을 구독하세요:"
 
@@ -4659,7 +4659,7 @@ msgstr "이는 이메일을 변경하거나 비밀번호를 재설정해야 할 
 msgid "This label was applied by {0}."
 msgstr "이 라벨은 {0}이(가) 적용했습니다."
 
-#: src/screens/Profile/Sections/Labels.tsx:178
+#: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "이 라벨러는 라벨을 게시하지 않았으며 활성화되어 있지 않을 수 있습니다."
 
@@ -5125,8 +5125,8 @@ msgstr "전체 스레드 보기"
 msgid "View information about these labels"
 msgstr "이 라벨에 대한 정보 보기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:379
-#: src/components/ProfileHoverCard/index.web.tsx:408
+#: src/components/ProfileHoverCard/index.web.tsx:387
+#: src/components/ProfileHoverCard/index.web.tsx:416
 #: src/view/com/posts/FeedErrorMessage.tsx:166
 msgid "View profile"
 msgstr "프로필 보기"
