@@ -111,7 +111,7 @@ export function MessagesListScreen({}: Props) {
         renderItem={({item}) => {
           return (
             <Link
-              to={`/messages/${item.profile.handle}`}
+              to={`/messages/3kqzb4mytxk2v`}
               style={[a.flex_1, a.pl_md, a.py_sm, a.gap_md, a.pr_2xl]}>
               <PreviewableUserAvatar profile={item.profile} size={44} />
               <View style={[a.flex_1]}>

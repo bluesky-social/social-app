@@ -1,19 +1,18 @@
-import React from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {FlatList, View, ViewToken} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
 import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
-import {Message} from '#/screens/Messages/Conversation/RandomClipClops'
 import {
   useChat,
   useChatLogQuery,
   useSendMessageMutation,
 } from '#/screens/Messages/Temp/query/query'
 import {Loader} from '#/components/Loader'
-
-const CHAT_ID = '3kqzb4mytxk2v'
+import {Text} from '#/components/Typography'
+import * as TempDmChatDefs from '#/temp/dm/defs'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -29,8 +28,16 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function renderItem({item}: {item: Message}) {
-  return <MessageItem item={item} />
+function renderItem({
+  item,
+}: {
+  item: TempDmChatDefs.MessageView | TempDmChatDefs.DeletedMessage
+}) {
+  if (TempDmChatDefs.isMessageView(item)) return <MessageItem item={item} />
+
+  if (TempDmChatDefs.isDeletedMessage(item)) return <Text>Deleted message</Text>
+
+  return null
 }
 
 // Generate unique key list item.
@@ -40,33 +47,33 @@ function onScrollToEndFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
 
-export const MessagesList = () => {
-  const flatListRef = React.useRef<FlatList>(null)
+export function MessagesList({chatId}: {chatId: string}) {
+  const flatListRef = useRef<FlatList>(null)
 
   // Whenever we reach the end (visually the top), we don't want to keep calling it. We will set `isFetching` to true
   // once the request for new posts starts. Then, we will change it back to false after the content size changes.
-  const isFetching = React.useRef(false)
+  const isFetching = useRef(false)
 
   // We use this to know if we should scroll after a new clop is added to the list
-  const isAtBottom = React.useRef(false)
+  const isAtBottom = useRef(false)
 
   // Because the viewableItemsChanged callback won't have access to the updated state, we use a ref to store the
   // total number of clops
-  const totalMessages = React.useRef(10)
+  const totalMessages = useRef(10)
 
-  // @ts-ignore TODO later
-  const [_, setShowSpinner] = React.useState(false)
+  // TODO later
+  const [_, setShowSpinner] = useState(false)
 
   // Query Data
-  const {data: chat} = useChat(CHAT_ID)
-  const {mutate: sendMessage} = useSendMessageMutation(CHAT_ID)
+  const {data: chat} = useChat(chatId)
+  const {mutate: sendMessage} = useSendMessageMutation(chatId)
   useChatLogQuery()
 
-  React.useEffect(() => {
+  useEffect(() => {
     totalMessages.current = chat?.messages.length ?? 0
   }, [chat])
 
-  const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
+  const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
     return [
       (info: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
         const firstVisibleIndex = info.viewableItems[0]?.index
@@ -80,7 +87,7 @@ export const MessagesList = () => {
     ]
   }, [])
 
-  const onContentSizeChange = React.useCallback(() => {
+  const onContentSizeChange = useCallback(() => {
     if (isAtBottom.current) {
       flatListRef.current?.scrollToOffset({offset: 0, animated: true})
     }
@@ -89,7 +96,7 @@ export const MessagesList = () => {
     setShowSpinner(false)
   }, [])
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetching.current) return
     isFetching.current = true
     setShowSpinner(true)
@@ -102,13 +109,13 @@ export const MessagesList = () => {
     }, 1000)
   }, [])
 
-  const onInputFocus = React.useCallback(() => {
+  const onInputFocus = useCallback(() => {
     if (!isAtBottom.current) {
       flatListRef.current?.scrollToOffset({offset: 0, animated: true})
     }
   }, [])
 
-  const onSendMessage = React.useCallback(
+  const onSendMessage = useCallback(
     async (message: string) => {
       if (!message) return
 
@@ -124,7 +131,24 @@ export const MessagesList = () => {
     [sendMessage],
   )
 
-  const onInputBlur = React.useCallback(() => {}, [])
+  const onInputBlur = useCallback(() => {}, [])
+
+  const messages = useMemo(() => {
+    if (!chat) return []
+
+    return chat.messages.filter(
+      (
+        message,
+      ): message is
+        | TempDmChatDefs.MessageView
+        | TempDmChatDefs.DeletedMessage => {
+        return (
+          TempDmChatDefs.isMessageView(message) ||
+          TempDmChatDefs.isDeletedMessage(message)
+        )
+      },
+    )
+  }, [chat])
 
   return (
     <KeyboardAvoidingView
@@ -133,7 +157,7 @@ export const MessagesList = () => {
       keyboardVerticalOffset={70}
       contentContainerStyle={{flex: 1}}>
       <FlatList
-        data={chat?.messages}
+        data={messages}
         keyExtractor={item => item.id}
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,

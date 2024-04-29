@@ -1,6 +1,9 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {Chat, ChatLog, Message} from '#/screens/Messages/Temp/query/types'
+import * as TempDmChatDefs from '#/temp/dm/defs'
+import * as TempDmChatGetChat from '#/temp/dm/getChat'
+import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
+import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
 
 /**
  * TEMPORARY, PLEASE DO NOT JUDGE ME REACT QUERY OVERLORDS 🙏
@@ -12,6 +15,13 @@ const DM_DID = process.env.EXPO_PUBLIC_DM_DID
 
 const HEADERS = {
   Authorization: DM_DID!,
+}
+
+type Chat = {
+  chatId: string
+  messages: TempDmChatGetChatMessages.OutputSchema['messages']
+  lastCursor?: string
+  lastRev?: string
 }
 
 export function useChat(chatId: string) {
@@ -32,10 +42,11 @@ export function useChat(chatId: string) {
           headers: HEADERS,
         },
       )
-      const messagesJson = (await messagesResponse.json()) as {
-        messages: Message[]
-        cursor: string
-      }
+
+      if (!messagesResponse.ok) throw new Error('Failed to fetch messages')
+
+      const messagesJson =
+        (await messagesResponse.json()) as TempDmChatGetChatMessages.OutputSchema
 
       const chatResponse = await fetch(
         `${DM_SERVICE}/xrpc/temp.dm.getChat?chatId=${chatId}`,
@@ -43,21 +54,18 @@ export function useChat(chatId: string) {
           headers: HEADERS,
         },
       )
-      const chatJson = (await chatResponse.json()) as {
-        chat: {
-          id: string
-          rev: string
-          members: string[]
-          unreadCount: number
-        }
-      }
 
-      const newChat: Chat = {
+      if (!chatResponse.ok) throw new Error('Failed to fetch chat')
+
+      const chatJson =
+        (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
+
+      const newChat = {
         chatId,
         messages: messagesJson.messages,
         lastCursor: messagesJson.cursor,
         lastRev: chatJson.chat.rev,
-      }
+      } satisfies Chat
 
       queryClient.setQueryData(['chat', chatId], newChat)
 
@@ -78,7 +86,12 @@ export function createTempId() {
 export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
 
-  return useMutation<Message, Error, SendMessageMutationVariables, unknown>({
+  return useMutation<
+    TempDmChatDefs.Message,
+    Error,
+    SendMessageMutationVariables,
+    unknown
+  >({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: async ({message, tempId}) => {
       const response = await fetch(
@@ -97,6 +110,9 @@ export function useSendMessageMutation(chatId: string) {
           }),
         },
       )
+
+      if (!response.ok) throw new Error('Failed to send message')
+
       return response.json()
     },
     onMutate: async variables => {
@@ -144,7 +160,9 @@ export function useChatLogQuery() {
   return useQuery({
     queryKey: ['chatLog'],
     queryFn: async () => {
-      const prevLog = queryClient.getQueryData(['chatLog']) as ChatLog
+      const prevLog = queryClient.getQueryData([
+        'chatLog',
+      ]) as TempDmChatGetChatLog.OutputSchema
 
       try {
         const response = await fetch(
@@ -155,23 +173,27 @@ export function useChatLogQuery() {
             headers: HEADERS,
           },
         )
-        const json: ChatLog = await response.json()
+
+        if (!response.ok) throw new Error('Failed to fetch chat log')
+
+        const json =
+          (await response.json()) as TempDmChatGetChatLog.OutputSchema
 
         for (const log of json.logs) {
-          if (log.$type !== 'temp.dm.defs#logCreateMessage') continue
+          if (TempDmChatDefs.isLogDeleteMessage(log)) {
+            queryClient.setQueryData(['chat', log.chatId], (prev: Chat) => {
+              // What to do in this case
+              if (!prev) return
 
-          queryClient.setQueryData(['chat', log.chatId], (prev: Chat) => {
-            // What to do in this case
-            if (!prev) return
+              // HACK we don't know who the creator of a message is, so just filter by id for now
+              if (prev.messages.find(m => m.id === log.message.id)) return prev
 
-            // HACK we don't know who the creator of a message is, so just filter by id for now
-            if (prev.messages.find(m => m.id === log.message.id)) return prev
-
-            return {
-              ...prev,
-              messages: [log.message, ...prev.messages],
-            }
-          })
+              return {
+                ...prev,
+                messages: [log.message, ...prev.messages],
+              }
+            })
+          }
         }
 
         return json
