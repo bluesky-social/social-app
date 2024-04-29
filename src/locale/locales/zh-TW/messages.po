@@ -5275,7 +5275,7 @@ msgstr "很抱歉，我們無法解析此列表。如果問題持續發生，請
 
 #: src/components/dialogs/MutedWords.tsx:229
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr "很抱歉，我們目前無法加載你的靜音文字。請稍後再試。"
+msgstr "很抱歉，我們目前無法載入你的靜音文字。請稍後再試。"
 
 #: src/view/screens/Search/Search.tsx:323
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
