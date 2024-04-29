@@ -11,3 +11,23 @@ in the RN repo: https://github.com/facebook/react-native/issues/43388
 Patching `RCTRefreshControl.m` and `RCTRefreshControl.h` to add a new `forwarderBeginRefreshing` method to the class.
 This method is used by `ExpoScrollForwarder` to initiate a refresh of the underlying `UIScrollView` from inside that
 module.
+
+
+## RCTBaseTextInputView Patch - Move `selectAll` call to `reactFocus` method
+
+Patching `RCTBaseTextInputView.m` to move the `selectAll` call to the `reactFocus` method. Currently, `selectAll` is
+called in `textInputDidBeginEditing`. This would be fine, however, once `reactFocus` is later called (this happens every
+time the text field is focused), the selection is reset/removed. The previous solution was to do this:
+
+```tsx
+<TextInput
+    onFocus={() => {
+      if (Platform.OS === 'ios') {
+        textInput.current?.setSelection(0, searchText.length)
+      }
+    }}
+/>
+```
+
+This likely works, because by the time the `onFocus` event is called, `reactFocus` has also already been called. However
+this is probably unreliable.
