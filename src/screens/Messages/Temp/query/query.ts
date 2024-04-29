@@ -217,6 +217,7 @@ export function useGetChatFromMembers({
   onSuccess?: (data: TempDmChatGetChatForMembers.OutputSchema) => void
   onError?: (error: Error) => void
 }) {
+  const queryClient = useQueryClient()
   const headers = useHeaders()
 
   return useMutation({
@@ -232,7 +233,14 @@ export function useGetChatFromMembers({
 
       return (await response.json()) as TempDmChatGetChatForMembers.OutputSchema
     },
-    onSuccess,
+    onSuccess: data => {
+      queryClient.setQueryData(['chat', data.chat.id], {
+        chatId: data.chat.id,
+        messages: [],
+        lastRev: data.chat.rev,
+      })
+      onSuccess?.(data)
+    },
     onError,
   })
 }
