@@ -713,7 +713,7 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          {showAutocomplete ? (
+          {showAutocomplete && searchText.length > 0 ? (
             <Pressable
               testID="searchTextInputClearBtn"
               onPress={onPressClearQuery}
