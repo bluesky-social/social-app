@@ -49,11 +49,7 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {
-  MATCH_HANDLE,
-  SearchLinkCard,
-  SearchProfileCard,
-} from '#/view/shell/desktop/Search'
+import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
 
@@ -607,11 +603,6 @@ export function SearchScreen(
     onPressCancelSearch()
   }, [onPressCancelSearch])
 
-  const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(queryParam)
-    return match && match[1]
-  }, [queryParam])
-
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
@@ -690,7 +681,6 @@ export function SearchScreen(
           <AutocompleteResults
             isAutocompleteFetching={isAutocompleteFetching}
             autocompleteData={autocompleteData}
-            queryMaybeHandle={queryMaybeHandle}
             searchText={searchText}
             onSubmit={onSubmit}
             onResultPress={onAutocompleteResultPress}
@@ -816,14 +806,12 @@ SearchInputBox = React.memo(SearchInputBox)
 let AutocompleteResults = ({
   isAutocompleteFetching,
   autocompleteData,
-  queryMaybeHandle,
   searchText,
   onSubmit,
   onResultPress,
 }: {
   isAutocompleteFetching: boolean
   autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
-  queryMaybeHandle: string | null
   searchText: string
   onSubmit: () => void
   onResultPress: () => void
@@ -852,14 +840,6 @@ let AutocompleteResults = ({
             }
             style={{borderBottomWidth: 1}}
           />
-
-          {queryMaybeHandle ? (
-            <SearchLinkCard
-              label={_(msg`Go to @${queryMaybeHandle}`)}
-              to={`/profile/${queryMaybeHandle}`}
-            />
-          ) : null}
-
           {autocompleteData?.map(item => (
             <SearchProfileCard
               key={item.did}
@@ -868,7 +848,6 @@ let AutocompleteResults = ({
               onPress={onResultPress}
             />
           ))}
-
           <View style={{height: 200}} />
         </ScrollView>
       )}

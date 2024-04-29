@@ -31,9 +31,6 @@ import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 
-export const MATCH_HANDLE =
-  /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
-
 let SearchLinkCard = ({
   label,
   to,
@@ -183,11 +180,6 @@ export function DesktopSearch() {
     setIsActive(false)
   }, [])
 
-  const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(query)
-    return match && match[1]
-  }, [query])
-
   return (
     <View style={[styles.container, pal.view]}>
       <View
@@ -243,19 +235,11 @@ export function DesktopSearch() {
                 label={_(msg`Search for "${query}"`)}
                 to={`/search?q=${encodeURIComponent(query)}`}
                 style={
-                  queryMaybeHandle || (autocompleteData?.length ?? 0) > 0
+                  (autocompleteData?.length ?? 0) > 0
                     ? {borderBottomWidth: 1}
                     : undefined
                 }
               />
-
-              {queryMaybeHandle ? (
-                <SearchLinkCard
-                  label={_(msg`Go to @${queryMaybeHandle}`)}
-                  to={`/profile/${queryMaybeHandle}`}
-                />
-              ) : null}
-
               {autocompleteData?.map(item => (
                 <SearchProfileCard
                   key={item.did}
