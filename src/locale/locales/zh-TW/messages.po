@@ -5247,11 +5247,11 @@ msgstr "我們推薦我們的「Discover」訊息流:"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr "我們無法加載你的出生日期設定偏好，請再試一次。"
+msgstr "我們無法載入你的出生日期設定偏好，請再試一次。"
 
 #: src/screens/Moderation/index.tsx:385
 msgid "We were unable to load your configured labelers at this time."
-msgstr "我們目前無法加載你已配置的標籤者。"
+msgstr "我們目前無法載入你已設定的標籤者。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:137
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
