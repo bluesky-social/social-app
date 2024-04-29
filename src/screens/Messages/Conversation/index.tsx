@@ -6,7 +6,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
-import {ClopsList} from '#/screens/Messages/Conversation/ClopsList'
+import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -22,7 +22,7 @@ export function MessagesConversationScreen({route}: Props) {
         showOnDesktop
         showBorder
       />
-      <ClopsList />
+      <MessagesList />
     </CenteredView>
   )
 }

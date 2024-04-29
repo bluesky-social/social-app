@@ -2,6 +2,11 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {Chat, ChatLog, Message} from '#/screens/Messages/Temp/query/types'
 
+/**
+ * TEMPORARY, PLEASE DO NOT JUDGE ME REACT QUERY OVERLORDS 🙏
+ * (and do not try this at home)
+ */
+
 const DM_SERVICE = process.env.EXPO_PUBLIC_DM_SERVICE
 const DM_DID = process.env.EXPO_PUBLIC_DM_DID
 
@@ -74,6 +79,7 @@ export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
 
   return useMutation<Message, Error, SendMessageMutationVariables, unknown>({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: async ({message, tempId}) => {
       const response = await fetch(
         `${DM_SERVICE}/xrpc/temp.dm.sendMessage?chatId=${chatId}`,

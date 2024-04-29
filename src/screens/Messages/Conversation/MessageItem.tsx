@@ -5,7 +5,7 @@ import {ClipClop} from '#/screens/Messages/Conversation/RandomClipClops'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-export function ClopItem({item}: {item: ClipClop}) {
+export function MessageItem({item}: {item: ClipClop}) {
   const t = useTheme()
 
   return (

@@ -3,8 +3,8 @@ import {FlatList, View, ViewToken} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
 import {isWeb} from 'platform/detection'
-import {ClopInput} from '#/screens/Messages/Conversation/ClopInput'
-import {ClopItem} from '#/screens/Messages/Conversation/ClopItem'
+import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
+import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
 import {ClipClop} from '#/screens/Messages/Conversation/RandomClipClops'
 import {
   useChat,
@@ -30,7 +30,7 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
 }
 
 function renderItem({item}: {item: ClipClop}) {
-  return <ClopItem item={item} />
+  return <MessageItem item={item} />
 }
 
 // Generate unique key list item.
@@ -40,7 +40,7 @@ function onScrollToEndFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
 
-export const ClopsList = () => {
+export const MessagesList = () => {
   const flatListRef = React.useRef<FlatList>(null)
 
   // Whenever we reach the end (visually the top), we don't want to keep calling it. We will set `isFetching` to true
@@ -152,7 +152,7 @@ export const ClopsList = () => {
         keyboardDismissMode="none"
       />
       <View style={{paddingHorizontal: 10}}>
-        <ClopInput
+        <MessageInput
           onSendClop={onSendClop}
           onFocus={onInputFocus}
           onBlur={onInputBlur}
