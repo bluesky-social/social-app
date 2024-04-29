@@ -7,6 +7,13 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -56,6 +63,7 @@ import {
 } from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 function Loader() {
   const pal = usePalette('default')
@@ -527,23 +535,10 @@ export function SearchScreen(
 
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
-
-    if (showAutocomplete) {
-      textInput.current?.blur()
-      setShowAutocomplete(false)
-      setSearchText(queryParam)
-    } else {
-      // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
-      // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
-      // differently.
-      if (isWeb) {
-        navigation.replace('Search', {})
-      } else {
-        setSearchText('')
-        navigation.setParams({q: ''})
-      }
-    }
-  }, [showAutocomplete, navigation, queryParam])
+    textInput.current?.blur()
+    setShowAutocomplete(false)
+    setSearchText(queryParam)
+  }, [queryParam])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -629,6 +624,14 @@ export function SearchScreen(
     )
   }
 
+  const showClearButton = showAutocomplete && searchText.length > 0
+  const clearButtonStyle = useAnimatedStyle(() => ({
+    opacity: withSpring(showClearButton ? 1 : 0, {
+      overshootClamping: true,
+      duration: 50,
+    }),
+  }))
+
   return (
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
@@ -656,11 +659,24 @@ export function SearchScreen(
           </Pressable>
         )}
 
-        <View
+        <AnimatedPressable
+          // This only exists only for extra hitslop so don't expose it to the a11y tree.
+          accessible={false}
+          focusable={false}
+          // @ts-ignore web-only
+          tabIndex={-1}
+          layout={isNative ? LinearTransition.duration(200) : undefined}
           style={[
             {backgroundColor: pal.colors.backgroundLight},
             styles.headerSearchContainer,
-          ]}>
+            isWeb && {
+              // @ts-ignore web only
+              cursor: 'default',
+            },
+          ]}
+          onPress={() => {
+            textInput.current?.focus()
+          }}>
           <MagnifyingGlassIcon
             style={[pal.icon, styles.headerSearchIcon]}
             size={21}
@@ -702,33 +718,36 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          {showAutocomplete ? (
-            <Pressable
-              testID="searchTextInputClearBtn"
-              onPress={onPressClearQuery}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint=""
-              hitSlop={HITSLOP_10}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </Pressable>
-          ) : undefined}
-        </View>
-
-        {(queryParam || showAutocomplete) && (
-          <View style={styles.headerCancelBtn}>
-            <Pressable
+          <AnimatedPressable
+            layout={isNative ? LinearTransition.duration(200) : undefined}
+            disabled={!showClearButton}
+            style={clearButtonStyle}
+            testID="searchTextInputClearBtn"
+            onPress={onPressClearQuery}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Clear search query`)}
+            accessibilityHint=""
+            hitSlop={HITSLOP_10}>
+            <FontAwesomeIcon
+              icon="xmark"
+              size={16}
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          </AnimatedPressable>
+        </AnimatedPressable>
+        {showAutocomplete && (
+          <View style={[styles.headerCancelBtn]}>
+            <AnimatedPressable
+              entering={isNative ? FadeIn.duration(300) : undefined}
+              exiting={isNative ? FadeOut.duration(50) : undefined}
+              key="cancel"
               onPress={onPressCancelSearch}
               accessibilityRole="button"
               hitSlop={HITSLOP_10}>
-              <Text style={[pal.text]}>
+              <Text style={pal.text}>
                 <Trans>Cancel</Trans>
               </Text>
-            </Pressable>
+            </AnimatedPressable>
           </View>
         )}
       </CenteredView>
@@ -880,6 +899,9 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
+    alignSelf: 'center',
+    zIndex: -1,
+    elevation: -1, // For Android
   },
   tabBarContainer: {
     // @ts-ignore web only
