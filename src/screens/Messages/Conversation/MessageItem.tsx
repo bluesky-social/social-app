@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {ClipClop} from '#/screens/Messages/Conversation/RandomClipClops'
+import {Message} from '#/screens/Messages/Conversation/RandomClipClops'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-export function MessageItem({item}: {item: ClipClop}) {
+export function MessageItem({item}: {item: Message}) {
   const t = useTheme()
 
   return (
