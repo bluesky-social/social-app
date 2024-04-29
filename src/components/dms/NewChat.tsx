@@ -11,6 +11,7 @@ import {isWeb} from '#/platform/detection'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {FAB} from '#/view/com/util/fab/FAB'
+import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -31,6 +32,9 @@ export function NewChat({onNewChat}: {onNewChat: (chatId: string) => void}) {
   const {mutate: createChat} = useGetChatFromMembers({
     onSuccess: data => {
       onNewChat(data.chat.id)
+    },
+    onError: error => {
+      Toast.show(error.message)
     },
   })
 
@@ -80,7 +84,7 @@ function SearchablePeopleList({
   const isSearching = throttledSearch.length > 0
 
   const searchQuery = useActorSearch({
-    query: throttledSearch,
+    query: throttledSearch || 'temp',
   })
 
   const {data, isLoading, isError, refetch} = isSearching

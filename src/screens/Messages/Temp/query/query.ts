@@ -212,8 +212,10 @@ export function useChatLogQuery() {
 
 export function useGetChatFromMembers({
   onSuccess,
+  onError,
 }: {
-  onSuccess: (data: TempDmChatGetChatFromMembers.OutputSchema) => void
+  onSuccess?: (data: TempDmChatGetChatFromMembers.OutputSchema) => void
+  onError?: (error: Error) => void
 }) {
   const headers = useHeaders()
 
@@ -231,5 +233,6 @@ export function useGetChatFromMembers({
       return (await response.json()) as TempDmChatGetChatFromMembers.OutputSchema
     },
     onSuccess,
+    onError,
   })
 }
