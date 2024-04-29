@@ -656,11 +656,19 @@ export function SearchScreen(
           </Pressable>
         )}
 
-        <View
+        <Pressable
+          accessibilityRole="button"
           style={[
             {backgroundColor: pal.colors.backgroundLight},
             styles.headerSearchContainer,
-          ]}>
+            isWeb && {
+              // @ts-ignore web only
+              cursor: 'text',
+            },
+          ]}
+          onPress={() => {
+            textInput.current?.focus()
+          }}>
           <MagnifyingGlassIcon
             style={[pal.icon, styles.headerSearchIcon]}
             size={21}
@@ -717,7 +725,7 @@ export function SearchScreen(
               />
             </Pressable>
           ) : undefined}
-        </View>
+        </Pressable>
 
         {(queryParam || showAutocomplete) && (
           <View style={styles.headerCancelBtn}>
