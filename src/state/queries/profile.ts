@@ -4,10 +4,8 @@ import {
   AppBskyActorDefs,
   AppBskyActorGetProfile,
   AppBskyActorProfile,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
   AtUri,
+  BskyAgent,
 } from '@atproto/api'
 import {
   QueryClient,
@@ -25,10 +23,9 @@ import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {updateProfileShadow} from '../cache/profile-shadow'
-import {getAgent, useSession} from '../session'
+import {useAgent, useSession} from '../session'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {ThreadNode} from './post-thread'
 
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
@@ -53,6 +50,7 @@ export function useProfileQuery({
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -77,6 +75,7 @@ export function useProfileQuery({
 }
 
 export function useProfilesQuery({handles}: {handles: string[]}) {
+  const {getAgent} = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: profilesQueryKey(handles),
@@ -88,6 +87,7 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
 }
 
 export function usePrefetchProfileQuery() {
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
@@ -99,7 +99,7 @@ export function usePrefetchProfileQuery() {
         },
       })
     },
-    [queryClient],
+    [queryClient, getAgent],
   )
   return prefetchProfileQuery
 }
@@ -115,6 +115,7 @@ interface ProfileUpdateParams {
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -154,6 +155,7 @@ export function useProfileUpdateMutation() {
         return existing
       })
       await whenAppViewReady(
+        getAgent,
         profile.did,
         checkCommitted ||
           (res => {
@@ -255,6 +257,7 @@ function useProfileFollowMutation(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -281,6 +284,7 @@ function useProfileFollowMutation(
 function useProfileUnfollowMutation(
   logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       logEvent('profile:unfollow', {logContext})
@@ -341,6 +345,7 @@ export function useProfileMuteMutationQueue(
 
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await getAgent().mute(did)
@@ -353,6 +358,7 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await getAgent().unmute(did)
@@ -419,6 +425,7 @@ export function useProfileBlockMutationQueue(
 
 function useProfileBlockMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -439,6 +446,7 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {
@@ -465,57 +473,8 @@ export function precacheProfile(
   queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
 }
 
-export function precacheFeedPostProfiles(
-  queryClient: QueryClient,
-  posts: AppBskyFeedDefs.FeedViewPost[],
-) {
-  for (const post of posts) {
-    // Save the author of the post every time
-    precacheProfile(queryClient, post.post.author)
-    precachePostEmbedProfile(queryClient, post.post.embed)
-
-    // Cache parent author and embeds
-    const parent = post.reply?.parent
-    if (AppBskyFeedDefs.isPostView(parent)) {
-      precacheProfile(queryClient, parent.author)
-      precachePostEmbedProfile(queryClient, parent.embed)
-    }
-  }
-}
-
-function precachePostEmbedProfile(
-  queryClient: QueryClient,
-  embed: AppBskyFeedDefs.PostView['embed'],
-) {
-  if (AppBskyEmbedRecord.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
-      precacheProfile(queryClient, embed.record.author)
-    }
-  } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record.record)) {
-      precacheProfile(queryClient, embed.record.record.author)
-    }
-  }
-}
-
-export function precacheThreadPostProfiles(
-  queryClient: QueryClient,
-  node: ThreadNode,
-) {
-  if (node.type === 'post') {
-    precacheProfile(queryClient, node.post.author)
-    if (node.parent) {
-      precacheThreadPostProfiles(queryClient, node.parent)
-    }
-    if (node.replies?.length) {
-      for (const reply of node.replies) {
-        precacheThreadPostProfiles(queryClient, reply)
-      }
-    }
-  }
-}
-
 async function whenAppViewReady(
+  getAgent: () => BskyAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {

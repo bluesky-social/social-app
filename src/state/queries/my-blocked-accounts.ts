@@ -6,13 +6,14 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const RQKEY_ROOT = 'my-blocked-accounts'
 export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyBlockedAccountsQuery() {
+  const {getAgent} = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetBlocks.OutputSchema,
     Error,

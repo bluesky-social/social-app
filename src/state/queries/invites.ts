@@ -3,7 +3,7 @@ import {useQuery} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 function isInviteAvailable(invite: ComAtprotoServerDefs.InviteCode): boolean {
   return invite.available - invite.uses.length > 0 && !invite.disabled
@@ -16,6 +16,7 @@ export type InviteCodesQueryResponse = Exclude<
   undefined
 >
 export function useInviteCodesQuery() {
+  const {getAgent} = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: [inviteCodesQueryKeyRoot],

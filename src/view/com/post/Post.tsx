@@ -21,7 +21,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 import {countLines} from 'lib/strings/helpers'
 import {colors, s} from 'lib/styles'
-import {RQKEY as RQKEY_URI} from 'state/queries/resolve-uri'
+import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
@@ -135,8 +135,8 @@ function PostInner({
   }, [setLimitLines])
 
   const onBeforePress = React.useCallback(() => {
-    queryClient.setQueryData(RQKEY_URI(post.author.handle), post.author.did)
-  }, [queryClient, post.author.handle, post.author.did])
+    precacheProfile(queryClient, post.author)
+  }, [queryClient, post.author])
 
   return (
     <Link
@@ -148,9 +148,7 @@ function PostInner({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={post.author.did}
-            handle={post.author.handle}
-            avatar={post.author.avatar}
+            profile={post.author}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />

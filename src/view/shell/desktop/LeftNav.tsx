@@ -12,6 +12,7 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -46,6 +47,8 @@ import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
 import {router} from '../../../routes'
 
 function ProfileCard() {
@@ -272,6 +275,7 @@ export function DesktopLeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
+  const gate = useGate()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -328,24 +332,6 @@ export function DesktopLeftNav() {
             label={_(msg`Search`)}
           />
           <NavItem
-            href="/feeds"
-            icon={
-              <HashtagIcon
-                strokeWidth={2.25}
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
-              />
-            }
-            iconFilled={
-              <HashtagIcon
-                strokeWidth={4}
-                style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
-              />
-            }
-            label={_(msg`Feeds`)}
-          />
-          <NavItem
             href="/notifications"
             count={numUnread}
             icon={
@@ -363,6 +349,34 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Notifications`)}
+          />
+          {gate('dms') && (
+            <NavItem
+              href="/messages"
+              icon={<Envelope style={pal.text} width={isDesktop ? 26 : 30} />}
+              iconFilled={
+                <EnvelopeFilled style={pal.text} width={isDesktop ? 26 : 30} />
+              }
+              label={_(msg`Messages`)}
+            />
+          )}
+          <NavItem
+            href="/feeds"
+            icon={
+              <HashtagIcon
+                strokeWidth={2.25}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            iconFilled={
+              <HashtagIcon
+                strokeWidth={4}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            label={_(msg`Feeds`)}
           />
           <NavItem
             href="/lists"

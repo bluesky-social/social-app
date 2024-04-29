@@ -20,8 +20,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
-import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
-import {RQKEY as RQKEY_URI} from 'state/queries/resolve-uri'
+import {precacheProfile} from 'state/queries/profile'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -58,9 +57,7 @@ export function ProfileCard({
 
   const onBeforePress = React.useCallback(() => {
     onPress?.()
-
-    queryClient.setQueryData(RQKEY_URI(profile.handle), profile.did)
-    queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
+    precacheProfile(queryClient, profile)
   }, [onPress, profile, queryClient])
 
   if (!moderationOpts) {
@@ -91,9 +88,7 @@ export function ProfileCard({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={40}
-            did={profile.did}
-            handle={profile.handle}
-            avatar={profile.avatar}
+            profile={profile}
             moderation={moderation.ui('avatar')}
             type={isLabeler ? 'labeler' : 'user'}
           />
@@ -238,9 +233,7 @@ function FollowersList({
           <View style={[styles.followedByAvi, pal.view]}>
             <PreviewableUserAvatar
               size={32}
-              did={f.did}
-              handle={f.handle}
-              avatar={f.avatar}
+              profile={f}
               moderation={mod.ui('avatar')}
               type={f.associated?.labeler ? 'labeler' : 'user'}
             />

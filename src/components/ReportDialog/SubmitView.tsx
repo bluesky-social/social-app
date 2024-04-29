@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, native, useTheme} from '#/alf'
@@ -35,6 +35,7 @@ export function SubmitView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {getAgent} = useAgent()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
   const [selectedServices, setSelectedServices] = React.useState<string[]>([
@@ -90,6 +91,7 @@ export function SubmitView({
     selectedServices,
     onSubmitComplete,
     setError,
+    getAgent,
   ])
 
   return (
