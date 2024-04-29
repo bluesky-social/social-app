@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-04-06 12:55+0800\n"
+"POT-Creation-Date: 2024-04-26 10:15+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1, Mikan Harada\n"
+"Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1, Mikan Harada, IceCodeNew\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:150
@@ -61,7 +61,7 @@ msgstr "⚠无效的用户识别符"
 
 #: src/screens/Login/LoginForm.tsx:238
 msgid "2FA Confirmation"
-msgstr ""
+msgstr "两步验证"
 
 #: src/view/com/util/ViewHeader.tsx:91
 #: src/view/screens/Search/Search.tsx:727
@@ -79,12 +79,12 @@ msgstr "无障碍"
 
 #: src/view/screens/Settings/index.tsx:484
 msgid "Accessibility settings"
-msgstr ""
+msgstr "无障碍设置"
 
 #: src/Navigation.tsx:284
 #: src/view/screens/AccessibilitySettings.tsx:63
 msgid "Accessibility Settings"
-msgstr ""
+msgstr "无障碍设置"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 msgid "account"
@@ -172,14 +172,6 @@ msgstr "新增替代文字"
 msgid "Add App Password"
 msgstr "新增应用专用密码"
 
-#: src/view/com/composer/Composer.tsx:467
-#~ msgid "Add link card"
-#~ msgstr "添加链接卡片"
-
-#: src/view/com/composer/Composer.tsx:472
-#~ msgid "Add link card:"
-#~ msgstr "添加链接卡片:"
-
 #: src/components/dialogs/MutedWords.tsx:157
 msgid "Add mute word for configured settings"
 msgstr "为配置的设置添加隐藏词汇"
@@ -226,7 +218,7 @@ msgstr "成人内容"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "成人内容显示已被禁用"
+msgstr "成人内容显示已被禁用。"
 
 #: src/screens/Moderation/index.tsx:375
 #: src/view/screens/Settings/index.tsx:636
@@ -270,7 +262,7 @@ msgstr "一封电子邮件已发送至先前填写的邮箱 {0}。请查阅邮�
 
 #: src/components/dialogs/GifSelect.tsx:284
 msgid "An error occured"
-msgstr ""
+msgstr "发生错误"
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
@@ -296,7 +288,7 @@ msgstr "动物"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:134
 msgid "Animated GIF"
-msgstr ""
+msgstr "GIF 动画"
 
 #: src/lib/moderation/useReportOptions.ts:31
 msgid "Anti-Social Behavior"
@@ -339,7 +331,7 @@ msgstr "申诉 \"{0}\" 标记"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:192
 msgid "Appeal submitted."
-msgstr "申诉已提交"
+msgstr "申诉已提交。"
 
 #: src/view/screens/Settings/index.tsx:414
 msgid "Appearance"
@@ -464,7 +456,7 @@ msgstr "已屏蔽帖子。"
 
 #: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "屏蔽不能阻止这个人在你的账户上放置标记"
+msgstr "屏蔽这个用户不能阻止他继续标记你的账户。"
 
 #: src/view/screens/ProfileList.tsx:633
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -672,7 +664,7 @@ msgstr "查看一些推荐的用户。关注他们还将推荐相似的用户。
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr ""
+msgstr "在这里输入刚才发送到你电子邮箱里的验证码"
 
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -740,10 +732,6 @@ msgstr "点击这里"
 msgid "Click here to open tag menu for {tag}"
 msgstr "点击这里打开 {tag} 的标签菜单"
 
-#: src/components/RichText.tsx:198
-#~ msgid "Click here to open tag menu for #{tag}"
-#~ msgstr "点击这里打开 #{tag} 的标签菜单"
-
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
 msgstr "气象"
@@ -769,11 +757,11 @@ msgstr "关闭底部抽屉"
 
 #: src/components/dialogs/GifSelect.tsx:294
 msgid "Close dialog"
-msgstr ""
+msgstr "关闭对话框"
 
 #: src/components/dialogs/GifSelect.tsx:150
 msgid "Close GIF dialog"
-msgstr ""
+msgstr "关闭 GIF 对话框"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
@@ -884,7 +872,7 @@ msgstr "确认你的年龄："
 
 #: src/screens/Moderation/index.tsx:292
 msgid "Confirm your birthdate"
-msgstr "确认你的出生年月："
+msgstr "确认你的出生日期"
 
 #: src/screens/Login/LoginForm.tsx:244
 #: src/view/com/modals/ChangeEmail.tsx:157
@@ -1075,10 +1063,6 @@ msgstr "创建 {0} 的举报"
 msgid "Created {0}"
 msgstr "{0} 已创建"
 
-#: src/view/com/composer/Composer.tsx:469
-#~ msgid "Creates a card with a thumbnail. The card links to {url}"
-#~ msgstr "创建带有缩略图的卡片。该卡片链接到 {url}"
-
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
 msgstr "文化"
@@ -1198,23 +1182,15 @@ msgstr "暗淡"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
-msgstr ""
+msgstr "关闭 GIF 自动播放"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
-msgstr ""
+msgstr "关闭电子邮件两步验证"
 
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
-msgstr ""
-
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable haptics"
-#~ msgstr "禁用触觉反馈"
-
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable vibrations"
-#~ msgstr "禁用振动"
+msgstr "关闭触感反馈"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1259,7 +1235,7 @@ msgstr "DNS 面板"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr "不包含裸露内容"
+msgstr "不包含裸露内容。"
 
 #: src/screens/Signup/StepHandle.tsx:105
 msgid "Doesn't begin or end with a hyphen"
@@ -1339,7 +1315,7 @@ msgstr "例如：艺术家、爱狗人士和狂热读者。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
 msgid "E.g. artistic nudes."
-msgstr "例如：裸露艺术"
+msgstr "例如：艺术性的裸露。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:284
 msgid "e.g. Great Posters"
@@ -1432,7 +1408,7 @@ msgstr "电子邮箱"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "电子邮件两步验证已关闭"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
@@ -1497,7 +1473,7 @@ msgstr "启用媒体播放器"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:147
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "启用此设置以仅查看你关注的人之间的回复。"
+msgstr "启用此设置以便仅查看你关注的用户的回复。"
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
@@ -1563,7 +1539,7 @@ msgstr "输入你的用户名和密码"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:49
 msgid "Error receiving captcha response."
-msgstr "Captcha 响应错误"
+msgstr "Captcha 响应错误。"
 
 #: src/view/screens/Search/Search.tsx:115
 msgid "Error:"
@@ -1659,7 +1635,7 @@ msgstr "无法删除帖子，请重试"
 
 #: src/components/dialogs/GifSelect.tsx:200
 msgid "Failed to load GIFs"
-msgstr ""
+msgstr "无法加载 GIF"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
@@ -1730,15 +1706,7 @@ msgstr "寻找一些账户关注"
 
 #: src/view/screens/Search/Search.tsx:521
 msgid "Find posts and users on Bluesky"
-msgstr ""
-
-#: src/view/screens/Search/Search.tsx:589
-#~ msgid "Find users on Bluesky"
-#~ msgstr "寻找一些正在使用 Bluesky 的用户"
-
-#: src/view/screens/Search/Search.tsx:587
-#~ msgid "Find users with the search tool on the right"
-#~ msgstr "使用右侧的搜索工具来查找用户"
+msgstr "在 Bluesky 寻找帖子和用户"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
 msgid "Finding similar accounts..."
@@ -1968,7 +1936,7 @@ msgstr "用户识别符"
 
 #: src/view/screens/AccessibilitySettings.tsx:103
 msgid "Haptics"
-msgstr ""
+msgstr "触感"
 
 #: src/lib/moderation/useReportOptions.ts:32
 msgid "Harassment, trolling, or intolerance"
@@ -2122,11 +2090,11 @@ msgstr "如果你根据你所在国家的法律定义还不是成年人，则你
 
 #: src/view/screens/ProfileList.tsx:612
 msgid "If you delete this list, you won't be able to recover it."
-msgstr "如果你删除此列表，将无法恢复"
+msgstr "该列表删除后将无法恢复。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:342
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "如果你移除此列表，将无法恢复"
+msgstr "该列表删除后将无法恢复。"
 
 #: src/view/com/modals/ChangePassword.tsx:148
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -2170,7 +2138,7 @@ msgstr "输入密码以删除账户"
 
 #: src/screens/Login/LoginForm.tsx:257
 msgid "Input the code which has been emailed to you"
-msgstr ""
+msgstr "输入发送至你电子邮箱的验证码"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Input the password tied to {identifier}"
@@ -2195,7 +2163,7 @@ msgstr "输入你的用户识别符"
 #: src/screens/Login/LoginForm.tsx:126
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr ""
+msgstr "无效的两步验证码。"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Invalid or unsupported post record"
@@ -2227,7 +2195,7 @@ msgstr "邀请码：1 个可用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 msgid "It shows posts from the people you follow as they happen."
-msgstr "他会显示你所关注的人发布的帖子。"
+msgstr "这将会显示你所关注的用户所发布的帖子。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Jobs"
@@ -2474,7 +2442,7 @@ msgstr "登录未列出的账户"
 
 #: src/components/RichText.tsx:207
 msgid "Long press to open tag menu for #{tag}"
-msgstr ""
+msgstr "长按来打开 #{tag} 标签菜单"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
@@ -2839,7 +2807,7 @@ msgstr "没有 DNS 面板"
 
 #: src/components/dialogs/GifSelect.tsx:206
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr ""
+msgstr "未找到精选 GIF，Tensor 可能存在问题。"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -2874,7 +2842,7 @@ msgstr "未找到 {query} 的结果"
 
 #: src/components/dialogs/GifSelect.tsx:204
 msgid "No search results found for \"{search}\"."
-msgstr ""
+msgstr "未找到 \"{search}\" 的搜索结果。"
 
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
@@ -3036,7 +3004,7 @@ msgstr "开启 {numItems} 个选项"
 
 #: src/view/screens/Settings/index.tsx:485
 msgid "Opens accessibility settings"
-msgstr ""
+msgstr "开启无障碍设置"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
@@ -3078,7 +3046,7 @@ msgstr "开启流程以登录到你现有的 Bluesky 账户"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:37
 msgid "Opens GIF select dialog"
-msgstr ""
+msgstr "开启 GIF 选择对话框"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -3086,7 +3054,7 @@ msgstr "开启邀请码列表"
 
 #: src/view/screens/Settings/index.tsx:757
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "开启用户删除确认界面，需要电子邮箱接收验证码。"
+msgstr "需要邮件验证以继续进行账户删除操作"
 
 #: src/view/screens/Settings/index.tsx:715
 msgid "Opens modal for changing your Bluesky password"
@@ -3204,19 +3172,19 @@ msgstr "密码已更新！"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Pause"
-msgstr ""
+msgstr "暂停"
 
 #: src/view/screens/Search/Search.tsx:438
 msgid "People"
-msgstr "人"
+msgstr "用户"
 
 #: src/Navigation.tsx:165
 msgid "People followed by @{0}"
-msgstr "@{0} 关注的人"
+msgstr "@{0} 关注的用户"
 
 #: src/Navigation.tsx:158
 msgid "People following @{0}"
-msgstr "关注 @{0} 的人"
+msgstr "关注 @{0} 的用户"
 
 #: src/view/com/lightbox/Lightbox.tsx:66
 msgid "Permission to access camera roll is required."
@@ -3249,7 +3217,7 @@ msgstr "固定信息流列表"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Play"
-msgstr ""
+msgstr "播放"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
@@ -3257,7 +3225,7 @@ msgstr "播放 {0}"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:30
 msgid "Play or pause the GIF"
-msgstr ""
+msgstr "播放或暂停 GIF"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
@@ -3278,7 +3246,7 @@ msgstr "请设置你的密码。"
 
 #: src/screens/Signup/state.ts:251
 msgid "Please complete the verification captcha."
-msgstr "请完成 Captcha 验证"
+msgstr "请完成 Captcha 验证。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -3568,7 +3536,7 @@ msgstr "删除转发"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:202
 msgid "Remove this feed from your saved feeds"
-msgstr "将这个信息流从保存的信息流列表中删除？"
+msgstr "从保存的信息流列表中删除这个信息流"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
@@ -3604,17 +3572,11 @@ msgstr "回复"
 msgid "Reply Filters"
 msgstr "回复过滤器"
 
-#: src/view/com/post/Post.tsx:177
-#: src/view/com/posts/FeedItem.tsx:285
-#~ msgctxt "description"
-#~ msgid "Reply to <0/>"
-#~ msgstr "回复 <0/>"
-
 #: src/view/com/post/Post.tsx:178
 #: src/view/com/posts/FeedItem.tsx:285
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr ""
+msgstr "回复 <0><1/></0>"
 
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
@@ -3712,7 +3674,7 @@ msgstr "发布时检查媒体是否存在替代文本"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:53
 msgid "Require email code to log into your account"
-msgstr ""
+msgstr "需要电子邮件验证码才能登录到你的账户"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
@@ -3721,7 +3683,7 @@ msgstr "服务提供者要求"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
 msgid "Resend email"
-msgstr ""
+msgstr "重新发送电子邮件"
 
 #: src/view/com/modals/ChangePassword.tsx:185
 msgid "Reset code"
@@ -3832,7 +3794,7 @@ msgstr "已保存信息流"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll."
-msgstr "已保存到相机胶卷"
+msgstr "已保存到相机胶卷。"
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
@@ -3896,11 +3858,11 @@ msgstr "搜索用户"
 
 #: src/components/dialogs/GifSelect.tsx:158
 msgid "Search GIFs"
-msgstr ""
+msgstr "搜索 GIF"
 
 #: src/components/dialogs/GifSelect.tsx:159
 msgid "Search Tenor"
-msgstr ""
+msgstr "搜索 Tenor"
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -3945,11 +3907,11 @@ msgstr "从现有账户中选择"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Select GIF"
-msgstr ""
+msgstr "选择 GIF"
 
 #: src/components/dialogs/GifSelect.tsx:253
 msgid "Select GIF \"{0}\""
-msgstr ""
+msgstr "选择 GIF \"{0}\""
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
@@ -3969,7 +3931,7 @@ msgstr "选择以下一些账户进行关注"
 
 #: src/components/ReportDialog/SubmitView.tsx:133
 msgid "Select the moderation service(s) to report to"
-msgstr "你要将该条举报提交给哪位限制服务提供者？"
+msgstr "请选择你要向哪位限制服务提供者提交举报"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
@@ -4042,7 +4004,7 @@ msgstr "给 {0} 提交举报"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
 msgid "Send verification email"
-msgstr ""
+msgstr "发送验证电子邮件"
 
 #: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
@@ -4236,7 +4198,7 @@ msgstr "显示回复"
 
 #: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
-msgstr "在所有其他回复之前显示你关注的人的回复。"
+msgstr "将你关注的用户的回复置于其他回复之前。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:87
 msgid "Show replies in Following"
@@ -4544,7 +4506,7 @@ msgstr "其中包含以下内容："
 
 #: src/screens/Signup/index.tsx:85
 msgid "That handle is already taken."
-msgstr "该用户识别符已被占用"
+msgstr "该用户识别符已被占用。"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:280
 #: src/view/com/profile/ProfileMenu.tsx:349
@@ -4611,7 +4573,7 @@ msgstr "更新信息流时出现问题，请检查你的互联网连接并重试
 
 #: src/components/dialogs/GifSelect.tsx:201
 msgid "There was an issue connecting to Tenor."
-msgstr ""
+msgstr "连接 Tenor 时出现问题。"
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
@@ -4697,7 +4659,7 @@ msgstr "{screenDescription} 已被标记："
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
-msgstr "此账户要求用户登录后才能查看其个人资料。"
+msgstr "此账户要求登录后才能查看其个人资料。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:204
 msgid "This appeal will be sent to <0>{0}</0>."
@@ -4740,7 +4702,7 @@ msgstr "该信息流为空！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "该信息流为空！你或许需要先关注更多的人或检查你的语言设置。"
+msgstr "信息流为空！你或许需要先关注更多的用户，或检查你的语言设置。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
@@ -4851,7 +4813,7 @@ msgstr "讨论串首选项"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr ""
+msgstr "在关闭电子邮件两步验证前，请先验证你的电子邮箱地址。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -4872,7 +4834,7 @@ msgstr "切换以启用或禁用成人内容"
 #: src/screens/Hashtag.tsx:88
 #: src/view/screens/Search/Search.tsx:418
 msgid "Top"
-msgstr "最热门"
+msgstr "热门"
 
 #: src/view/com/modals/EditImage.tsx:272
 msgid "Transformations"
@@ -4892,7 +4854,7 @@ msgstr "重试"
 
 #: src/view/screens/Settings/index.tsx:695
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "两步验证"
 
 #: src/view/com/modals/ChangeHandle.tsx:428
 msgid "Type:"
