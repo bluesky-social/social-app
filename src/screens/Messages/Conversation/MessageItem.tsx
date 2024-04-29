@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {Message} from '#/screens/Messages/Conversation/RandomClipClops'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import * as TempDmChatDefs from '#/temp/dm/defs'
 
-export function MessageItem({item}: {item: Message}) {
+export function MessageItem({item}: {item: TempDmChatDefs.MessageView}) {
   const t = useTheme()
 
   return (
