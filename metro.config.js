@@ -1,49 +1,36 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-const fs = require('fs')
 const path = require('path')
 const {getDefaultConfig} = require('expo/metro-config')
 const cfg = getDefaultConfig(__dirname)
 
 if (process.env.ATPROTO_ROOT) {
-  const atprotoPackages = path.resolve(process.env.ATPROTO_ROOT, 'packages')
+  const atprotoRoot = path.resolve(process.cwd(), process.env.ATPROTO_ROOT)
 
+  // Watch folders are used as roots for the virtual file system. Any file that
+  // needs to be resolved by the metro bundler must be within one of the watch
+  // folders. Since we will be resolving dependencies from the atproto packages,
+  // we need to add the atproto root to the watch folders so that the
   cfg.watchFolders ||= []
-  cfg.watchFolders.push(
-    ...fs
-      .readdirSync(atprotoPackages)
-      .map(dir => path.join(atprotoPackages, dir))
-      .filter(dir => fs.statSync(dir).isDirectory()),
-  )
+  cfg.watchFolders.push(atprotoRoot)
 
   const resolveRequest = cfg.resolver.resolveRequest
   cfg.resolver.resolveRequest = (context, moduleName, platform) => {
-    // When resolving a module from the atproto packages, try finding it there
-    // first. If it's not found, try resolving it from the project root (here).
-    if (context.originModulePath.startsWith(atprotoPackages)) {
-      try {
-        return context.resolveRequest(context, moduleName, platform)
-      } catch (err) {
-        // If a module is not found in the atproto packages, try and resolve it
-        // from here (e.g. @babel polyfills)
-        return {
-          type: 'sourceFile',
-          filePath: require.resolve(moduleName),
-        }
-      }
+    // Alias @atproto/* modules to the corresponding package in the atproto root
+    if (moduleName.startsWith('@atproto/')) {
+      const [, packageName] = moduleName.split('/', 2)
+      const packagePath = path.join(atprotoRoot, 'packages', packageName)
+      return context.resolveRequest(context, packagePath, platform)
     }
 
-    // When resolving an @atproto/* module, replace the path prefix with
-    // <atprotoPackages>.
-    if (moduleName.startsWith('@atproto/')) {
-      const [prefix, suffix] = moduleName.split('/', 2)
-      const resolution = context.resolveRequest(context, moduleName, platform)
-      const relativePathIdx = resolution.filePath.lastIndexOf(moduleName)
-      const relativePath = resolution.filePath.slice(
-        relativePathIdx + moduleName.length + 1,
-      )
+    // Polyfills are added by the build process and are not actual dependencies
+    // of the @atproto/* packages. Resolve those from here.
+    if (
+      moduleName.startsWith('@babel/') &&
+      context.originModulePath.startsWith(atprotoRoot)
+    ) {
       return {
         type: 'sourceFile',
-        filePath: path.join(atprotoPackages, suffix, relativePath),
+        filePath: require.resolve(moduleName),
       }
     }
 

@@ -11,31 +11,35 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {ReasonFeedSource, isReasonFeedSource} from 'lib/api/feed/types'
-import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {UserInfoText} from '../util/UserInfoText'
-import {PostMeta} from '../util/PostMeta'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '../util/post-embeds'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {RichText} from '#/components/RichText'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useComposerControls} from '#/state/shell/composer'
+import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
+import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
-import {useComposerControls} from '#/state/shell/composer'
-import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
-import {FeedNameText} from '../util/FeedInfoText'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {s} from 'lib/styles'
+import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {RichText} from '#/components/RichText'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {FeedNameText} from '../util/FeedInfoText'
+import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostMeta} from '../util/PostMeta'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {UserInfoText} from '../util/UserInfoText'
 
 export function FeedItem({
   post,
@@ -104,6 +108,7 @@ let FeedItemInner = ({
   isThreadLastChild?: boolean
   isThreadParent?: boolean
 }): React.ReactNode => {
+  const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -133,6 +138,10 @@ let FeedItemInner = ({
     })
   }, [post, record, openComposer, moderation])
 
+  const onBeforePress = React.useCallback(() => {
+    precacheProfile(queryClient, post.author)
+  }, [queryClient, post.author])
+
   const outerStyles = [
     styles.outer,
     {
@@ -151,7 +160,8 @@ let FeedItemInner = ({
       style={outerStyles}
       href={href}
       noFeedback
-      accessible={false}>
+      accessible={false}
+      onBeforePress={onBeforePress}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
@@ -213,17 +223,20 @@ let FeedItemInner = ({
                 numberOfLines={1}>
                 <Trans>
                   Reposted by{' '}
-                  <TextLinkOnWebOnly
-                    type="sm-bold"
-                    style={pal.textLight}
-                    lineHeight={1.2}
-                    numberOfLines={1}
-                    text={sanitizeDisplayName(
-                      reason.by.displayName || sanitizeHandle(reason.by.handle),
-                      moderation.ui('displayName'),
-                    )}
-                    href={makeProfileLink(reason.by)}
-                  />
+                  <ProfileHoverCard inline did={reason.by.did}>
+                    <TextLinkOnWebOnly
+                      type="sm-bold"
+                      style={pal.textLight}
+                      lineHeight={1.2}
+                      numberOfLines={1}
+                      text={sanitizeDisplayName(
+                        reason.by.displayName ||
+                          sanitizeHandle(reason.by.handle),
+                        moderation.ui('displayName'),
+                      )}
+                      href={makeProfileLink(reason.by)}
+                    />
+                  </ProfileHoverCard>
                 </Trans>
               </Text>
             </Link>
@@ -235,9 +248,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={post.author.did}
-            handle={post.author.handle}
-            avatar={post.author.avatar}
+            profile={post.author}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />
@@ -279,12 +290,14 @@ let FeedItemInner = ({
                 numberOfLines={1}>
                 <Trans context="description">
                   Reply to{' '}
-                  <UserInfoText
-                    type="md"
-                    did={replyAuthorDid}
-                    attr="displayName"
-                    style={[pal.textLight]}
-                  />
+                  <ProfileHoverCard inline did={replyAuthorDid}>
+                    <UserInfoText
+                      type="md"
+                      did={replyAuthorDid}
+                      attr="displayName"
+                      style={[pal.textLight]}
+                    />
+                  </ProfileHoverCard>
                 </Trans>
               </Text>
             </View>

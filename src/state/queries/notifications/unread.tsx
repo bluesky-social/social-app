@@ -3,23 +3,27 @@
  */
 
 import React from 'react'
+import {AppState} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {useQueryClient} from '@tanstack/react-query'
+import EventEmitter from 'eventemitter3'
+
 import BroadcastChannel from '#/lib/broadcast'
-import {useSession, getAgent} from '#/state/session'
-import {useModerationOpts} from '../preferences'
-import {fetchPage} from './util'
-import {CachedFeedPage, FeedPage} from './types'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useMutedThreads} from '#/state/muted-threads'
-import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {logger} from '#/logger'
+import {useAgent, useSession} from '#/state/session'
+import {useModerationOpts} from '../preferences'
 import {truncateAndInvalidate} from '../util'
-import {AppState} from 'react-native'
+import {RQKEY as RQKEY_NOTIFS} from './feed'
+import {CachedFeedPage, FeedPage} from './types'
+import {fetchPage} from './util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
 const broadcast = new BroadcastChannel('NOTIFS_BROADCAST_CHANNEL')
+
+const emitter = new EventEmitter()
 
 type StateContext = string
 
@@ -42,6 +46,7 @@ const apiContext = React.createContext<ApiContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
@@ -55,6 +60,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     data: undefined,
     unreadCount: 0,
   })
+
+  React.useEffect(() => {
+    function markAsUnusable() {
+      if (cacheRef.current) {
+        cacheRef.current.usableInFeed = false
+      }
+    }
+    emitter.addListener('invalidate', markAsUnusable)
+    return () => {
+      emitter.removeListener('invalidate', markAsUnusable)
+    }
+  }, [])
 
   // periodic sync
   React.useEffect(() => {
@@ -128,6 +145,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // count
           const {page, indexedAt: lastIndexed} = await fetchPage({
+            getAgent,
             cursor: undefined,
             limit: 40,
             queryClient,
@@ -180,7 +198,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, threadMutes])
+  }, [setNumUnread, queryClient, moderationOpts, threadMutes, getAgent])
   checkUnreadRef.current = api.checkUnread
 
   return (
@@ -213,4 +231,8 @@ function countUnread(page: FeedPage) {
     }
   }
   return num
+}
+
+export function invalidateCachedUnreadPage() {
+  emitter.emit('invalidate')
 }

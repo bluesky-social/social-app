@@ -82,6 +82,7 @@ export function StepInfo() {
               <TextField.Root>
                 <TextField.Icon icon={Envelope} />
                 <TextField.Input
+                  testID="emailInput"
                   onChangeText={value => {
                     dispatch({
                       type: 'setEmail',
@@ -103,6 +104,7 @@ export function StepInfo() {
               <TextField.Root>
                 <TextField.Icon icon={Lock} />
                 <TextField.Input
+                  testID="passwordInput"
                   onChangeText={value => {
                     dispatch({
                       type: 'setPassword',

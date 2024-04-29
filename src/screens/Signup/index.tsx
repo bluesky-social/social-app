@@ -9,7 +9,7 @@ import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useServiceQuery} from '#/state/queries/service'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,
@@ -22,6 +22,7 @@ import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
@@ -34,6 +35,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
+  const {getAgent} = useAgent()
 
   const {
     data: serviceInfo,
@@ -112,6 +114,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     state.serviceDescription?.phoneVerificationRequired,
     state.userDomain,
     submit,
+    getAgent,
   ])
 
   const onBackPress = React.useCallback(() => {
@@ -195,6 +198,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     </Button>
                   ) : (
                     <Button
+                      testID="nextBtn"
                       label={_(msg`Continue to next step`)}
                       variant="solid"
                       color="primary"
@@ -212,10 +216,14 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
             <Divider />
 
-            <View style={[a.w_full, a.py_lg]}>
-              <Text style={[t.atoms.text_contrast_medium]}>
+            <View
+              style={[a.w_full, a.py_lg, a.flex_row, a.gap_lg, a.align_center]}>
+              <AppLanguageDropdown />
+              <Text style={[t.atoms.text, !gtMobile && a.text_md]}>
                 <Trans>Having trouble?</Trans>{' '}
-                <InlineLinkText to={FEEDBACK_FORM_URL({email: state.email})}>
+                <InlineLinkText
+                  to={FEEDBACK_FORM_URL({email: state.email})}
+                  style={[!gtMobile && a.text_md]}>
                   <Trans>Contact support</Trans>
                 </InlineLinkText>
               </Text>

@@ -27,6 +27,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useMutedThreads} from '#/state/muted-threads'
+import {useAgent} from '#/state/session'
 import {STALE} from '..'
 import {useModerationOpts} from '../preferences'
 import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
@@ -46,6 +47,7 @@ export function RQKEY() {
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
@@ -71,6 +73,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       if (!page) {
         page = (
           await fetchPage({
+            getAgent,
             limit: PAGE_SIZE,
             cursor: pageParam,
             queryClient,
