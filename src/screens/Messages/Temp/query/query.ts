@@ -1,5 +1,7 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {useSession} from 'state/session'
+import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import * as TempDmChatDefs from '#/temp/dm/defs'
 import * as TempDmChatGetChat from '#/temp/dm/getChat'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
@@ -10,11 +12,10 @@ import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
  * (and do not try this at home)
  */
 
-const DM_SERVICE = process.env.EXPO_PUBLIC_DM_SERVICE
-const DM_DID = process.env.EXPO_PUBLIC_DM_DID
-
-const HEADERS = {
-  Authorization: DM_DID!,
+function createHeaders(did: string) {
+  return {
+    Authorization: did,
+  }
 }
 
 type Chat = {
@@ -27,6 +28,10 @@ type Chat = {
 export function useChat(chatId: string) {
   const queryClient = useQueryClient()
 
+  const {value: dmService} = useDmServiceUrlStorage()
+  const {currentAccount} = useSession()
+  const did = currentAccount?.did ?? ''
+
   return useQuery({
     queryKey: ['chat', chatId],
     queryFn: async () => {
@@ -37,9 +42,9 @@ export function useChat(chatId: string) {
       }
 
       const messagesResponse = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
+        `${dmService}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
         {
-          headers: HEADERS,
+          headers: createHeaders(did),
         },
       )
 
@@ -49,9 +54,9 @@ export function useChat(chatId: string) {
         (await messagesResponse.json()) as TempDmChatGetChatMessages.OutputSchema
 
       const chatResponse = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.getChat?chatId=${chatId}`,
+        `${dmService}/xrpc/temp.dm.getChat?chatId=${chatId}`,
         {
-          headers: HEADERS,
+          headers: createHeaders(did),
         },
       )
 
@@ -86,6 +91,10 @@ export function createTempId() {
 export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
 
+  const {value: dmService} = useDmServiceUrlStorage()
+  const {currentAccount} = useSession()
+  const did = currentAccount?.did ?? ''
+
   return useMutation<
     TempDmChatDefs.Message,
     Error,
@@ -95,11 +104,11 @@ export function useSendMessageMutation(chatId: string) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: async ({message, tempId}) => {
       const response = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.sendMessage?chatId=${chatId}`,
+        `${dmService}/xrpc/temp.dm.sendMessage?chatId=${chatId}`,
         {
           method: 'POST',
           headers: {
-            ...HEADERS,
+            ...createHeaders(did),
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -157,6 +166,10 @@ export function useSendMessageMutation(chatId: string) {
 export function useChatLogQuery() {
   const queryClient = useQueryClient()
 
+  const {value: dmService} = useDmServiceUrlStorage()
+  const {currentAccount} = useSession()
+  const did = currentAccount?.did ?? ''
+
   return useQuery({
     queryKey: ['chatLog'],
     queryFn: async () => {
@@ -166,11 +179,11 @@ export function useChatLogQuery() {
 
       try {
         const response = await fetch(
-          `${DM_SERVICE}/xrpc/temp.dm.getChatLog?cursor=${
+          `${dmService}/xrpc/temp.dm.getChatLog?cursor=${
             prevLog?.cursor ?? ''
           }`,
           {
-            headers: HEADERS,
+            headers: createHeaders(did),
           },
         )
 
