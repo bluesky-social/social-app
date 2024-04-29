@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {FlatList, View, ViewToken} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
@@ -61,7 +61,7 @@ export function MessagesList({chatId}: {chatId: string}) {
   // total number of clops
   const totalMessages = useRef(10)
 
-  // @ts-ignore TODO later
+  // TODO later
   const [_, setShowSpinner] = useState(false)
 
   // Query Data
