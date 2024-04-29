@@ -94,7 +94,7 @@ msgstr "⚠Identificador invàlid"
 
 #: src/screens/Login/LoginForm.tsx:238
 msgid "2FA Confirmation"
-msgstr ""
+msgstr "Confirmació 2FA"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 #~ msgid "A content warning has been applied to this {0}."
@@ -120,12 +120,12 @@ msgstr "Accessibilitat"
 
 #: src/view/screens/Settings/index.tsx:484
 msgid "Accessibility settings"
-msgstr ""
+msgstr "Configuració d'accessibilitat"
 
 #: src/Navigation.tsx:284
 #: src/view/screens/AccessibilitySettings.tsx:63
 msgid "Accessibility Settings"
-msgstr ""
+msgstr "Configuració d'accessibilitat"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 msgid "account"
@@ -324,7 +324,7 @@ msgstr "S'ha enviat un correu a la teva adreça prèvia, {0}. Inclou un codi de 
 
 #: src/components/dialogs/GifSelect.tsx:284
 msgid "An error occured"
-msgstr ""
+msgstr "Hi ha hagut un error"
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
@@ -350,7 +350,7 @@ msgstr "Animals"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:134
 msgid "Animated GIF"
-msgstr ""
+msgstr "GIF animat"
 
 #: src/lib/moderation/useReportOptions.ts:31
 msgid "Anti-Social Behavior"
@@ -791,7 +791,7 @@ msgstr "Mira alguns usuaris recomanats. Segueix-los per a veure altres usuaris s
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr ""
+msgstr "Comprova el teu correu electrònic per obtenir un codi d'inici de sessió i introdueix-lo aquí."
 
 #: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -892,11 +892,11 @@ msgstr "Tanca el calaix inferior"
 
 #: src/components/dialogs/GifSelect.tsx:294
 msgid "Close dialog"
-msgstr ""
+msgstr "Tanca el diàleg"
 
 #: src/components/dialogs/GifSelect.tsx:150
 msgid "Close GIF dialog"
-msgstr ""
+msgstr "Tanca el diàleg de GIF"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
@@ -1375,15 +1375,15 @@ msgstr "Tènue"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
-msgstr ""
+msgstr "Desactiva la reproducció automàtica dels GIF"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
-msgstr ""
+msgstr "Desactiva el correu 2FA"
 
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
-msgstr ""
+msgstr "Desactiva la retroalimentació hàptica"
 
 #: src/view/screens/Settings/index.tsx:697
 #~ msgid "Disable haptics"
@@ -1629,7 +1629,7 @@ msgstr "Correu"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "Correu 2FA desactivat"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
@@ -1876,7 +1876,7 @@ msgstr "No s'ha pogut esborrar la publicació, torna-ho a provar"
 
 #: src/components/dialogs/GifSelect.tsx:200
 msgid "Failed to load GIFs"
-msgstr ""
+msgstr "No s'han pogut carregar els GIF"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
@@ -1951,7 +1951,7 @@ msgstr "Troba comptes per a seguir"
 
 #: src/view/screens/Search/Search.tsx:521
 msgid "Find posts and users on Bluesky"
-msgstr ""
+msgstr "Troba publicacions i usuaris a Bluesky"
 
 #: src/view/screens/Search/Search.tsx:589
 #~ msgid "Find users on Bluesky"
@@ -2205,7 +2205,7 @@ msgstr "Identificador"
 
 #: src/view/screens/AccessibilitySettings.tsx:103
 msgid "Haptics"
-msgstr ""
+msgstr "Hàptics"
 
 #: src/lib/moderation/useReportOptions.ts:32
 msgid "Harassment, trolling, or intolerance"
@@ -2444,7 +2444,7 @@ msgstr "Introdueix la contrasenya per a eliminar el compte"
 
 #: src/screens/Login/LoginForm.tsx:257
 msgid "Input the code which has been emailed to you"
-msgstr ""
+msgstr "Introdueix el codi que has rebut per correu"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Input the password tied to {identifier}"
@@ -2477,7 +2477,7 @@ msgstr "Introdueix el teu identificador d'usuari"
 #: src/screens/Login/LoginForm.tsx:126
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr ""
+msgstr "El codi de confirmació 2FA no és vàlid."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Invalid or unsupported post record"
@@ -2803,7 +2803,7 @@ msgstr "Accedeix a un compte que no està llistat"
 
 #: src/components/RichText.tsx:207
 msgid "Long press to open tag menu for #{tag}"
-msgstr ""
+msgstr "Prem llargament per obrir el menú d'etiquetes per a #{tag}"
 
 #~ msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
 #~ msgstr "Parece que este canal de noticias sólo está disponible para usuarios con una cuenta Bluesky. Por favor, ¡regístrate o inicia sesión para ver este canal!"
@@ -3216,7 +3216,7 @@ msgstr "No hi ha panell de DNS"
 
 #: src/components/dialogs/GifSelect.tsx:206
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr ""
+msgstr "No s'han trobat GIF destacats. Pot haver-hi un problema amb Tenor."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -3251,7 +3251,7 @@ msgstr "No s'han trobat resultats per {query}"
 
 #: src/components/dialogs/GifSelect.tsx:204
 msgid "No search results found for \"{search}\"."
-msgstr ""
+msgstr "No s'han trobat resultats de cerca per a \"{search}\"."
 
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
@@ -3425,7 +3425,7 @@ msgstr "Obre {numItems} opcions"
 
 #: src/view/screens/Settings/index.tsx:485
 msgid "Opens accessibility settings"
-msgstr ""
+msgstr "Obre la configuració d'accessibilitat"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
@@ -3479,7 +3479,7 @@ msgstr "Obre el procés per a iniciar sessió a un compte existent de Bluesky"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:37
 msgid "Opens GIF select dialog"
-msgstr ""
+msgstr "Obre el diàleg per triar GIF"
 
 #: src/view/screens/Settings.tsx:412
 #~ msgid "Opens invite code list"
@@ -3625,7 +3625,7 @@ msgstr "Contrasenya actualitzada!"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Pause"
-msgstr ""
+msgstr "Posa en pausa"
 
 #: src/view/screens/Search/Search.tsx:438
 msgid "People"
@@ -3674,7 +3674,7 @@ msgstr "Canals de notícies fixats"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Play"
-msgstr ""
+msgstr "Reprodueix"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
@@ -3682,7 +3682,7 @@ msgstr "Reprodueix {0}"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:30
 msgid "Play or pause the GIF"
-msgstr ""
+msgstr "Reprodueix o posa en pausa el GIF"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
@@ -4085,7 +4085,7 @@ msgstr "Filtres de resposta"
 #: src/view/com/posts/FeedItem.tsx:285
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr ""
+msgstr "Resposta a <0><1/></0>"
 
 #: src/view/com/modals/report/Modal.tsx:166
 #~ msgid "Report {collectionName}"
@@ -4203,7 +4203,7 @@ msgstr "Requereix un text alternatiu abans de publicar"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:53
 msgid "Require email code to log into your account"
-msgstr ""
+msgstr "Sol·licita el codi de correu per iniciar sessió al teu compte"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
@@ -4212,7 +4212,7 @@ msgstr "Requerit per aquest proveïdor"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
 msgid "Resend email"
-msgstr ""
+msgstr "Torna a enviar el correu"
 
 #: src/view/com/modals/ChangePassword.tsx:185
 msgid "Reset code"
@@ -4411,11 +4411,11 @@ msgstr "Cerca usuaris"
 
 #: src/components/dialogs/GifSelect.tsx:158
 msgid "Search GIFs"
-msgstr ""
+msgstr "Cerca GIF"
 
 #: src/components/dialogs/GifSelect.tsx:159
 msgid "Search Tenor"
-msgstr ""
+msgstr "Cerca Tenor"
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -4476,11 +4476,11 @@ msgstr "Selecciona d'un compte existent"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Select GIF"
-msgstr ""
+msgstr "Tria GIF"
 
 #: src/components/dialogs/GifSelect.tsx:253
 msgid "Select GIF \"{0}\""
-msgstr ""
+msgstr "Tria GIF \"{0}\""
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
@@ -4594,7 +4594,7 @@ msgstr "Envia informe a {0}"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
 msgid "Send verification email"
-msgstr ""
+msgstr "Envia un correu de verificació"
 
 #: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
@@ -5268,7 +5268,7 @@ msgstr "Hi ha hagut un problema per a actualitzar els teus canals, comprova la t
 
 #: src/components/dialogs/GifSelect.tsx:201
 msgid "There was an issue connecting to Tenor."
-msgstr ""
+msgstr "Hi ha hagut un problema per connectar amb Tenor."
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
@@ -5539,7 +5539,7 @@ msgstr "Preferències dels fils de debat"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr ""
+msgstr "Per desactivar el mètode 2FA de correu, verifica el teu accés a l'adreça de correu."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -5584,7 +5584,7 @@ msgstr "Torna-ho a provar"
 
 #: src/view/screens/Settings/index.tsx:695
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "Autenticació de dos factors"
 
 #: src/view/com/modals/ChangeHandle.tsx:428
 msgid "Type:"
