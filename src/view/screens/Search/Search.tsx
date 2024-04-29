@@ -7,13 +7,6 @@ import {
   TextInput,
   View,
 } from 'react-native'
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LinearTransition,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -63,7 +56,6 @@ import {
 } from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 function Loader() {
   const pal = usePalette('default')
@@ -624,14 +616,6 @@ export function SearchScreen(
     )
   }
 
-  const showClearButton = showAutocomplete && searchText.length > 0
-  const clearButtonStyle = useAnimatedStyle(() => ({
-    opacity: withSpring(showClearButton ? 1 : 0, {
-      overshootClamping: true,
-      duration: 50,
-    }),
-  }))
-
   return (
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
@@ -659,13 +643,12 @@ export function SearchScreen(
           </Pressable>
         )}
 
-        <AnimatedPressable
+        <Pressable
           // This only exists only for extra hitslop so don't expose it to the a11y tree.
           accessible={false}
           focusable={false}
           // @ts-ignore web-only
           tabIndex={-1}
-          layout={isNative ? LinearTransition.duration(200) : undefined}
           style={[
             {backgroundColor: pal.colors.backgroundLight},
             styles.headerSearchContainer,
@@ -718,36 +701,32 @@ export function SearchScreen(
             autoComplete="off"
             autoCapitalize="none"
           />
-          <AnimatedPressable
-            layout={isNative ? LinearTransition.duration(200) : undefined}
-            disabled={!showClearButton}
-            style={clearButtonStyle}
-            testID="searchTextInputClearBtn"
-            onPress={onPressClearQuery}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Clear search query`)}
-            accessibilityHint=""
-            hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="xmark"
-              size={16}
-              style={pal.textLight as FontAwesomeIconStyle}
-            />
-          </AnimatedPressable>
-        </AnimatedPressable>
+          {showAutocomplete && searchText.length > 0 && (
+            <Pressable
+              testID="searchTextInputClearBtn"
+              onPress={onPressClearQuery}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Clear search query`)}
+              accessibilityHint=""
+              hitSlop={HITSLOP_10}>
+              <FontAwesomeIcon
+                icon="xmark"
+                size={16}
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+            </Pressable>
+          )}
+        </Pressable>
         {showAutocomplete && (
           <View style={[styles.headerCancelBtn]}>
-            <AnimatedPressable
-              entering={isNative ? FadeIn.duration(300) : undefined}
-              exiting={isNative ? FadeOut.duration(50) : undefined}
-              key="cancel"
+            <Pressable
               onPress={onPressCancelSearch}
               accessibilityRole="button"
               hitSlop={HITSLOP_10}>
               <Text style={pal.text}>
                 <Trans>Cancel</Trans>
               </Text>
-            </AnimatedPressable>
+            </Pressable>
           </View>
         )}
       </CenteredView>
