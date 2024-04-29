@@ -532,19 +532,6 @@ export function SearchScreen(
     setSearchText(queryParam)
   }, [queryParam])
 
-  const onPressClearSearch = React.useCallback(() => {
-    scrollToTopWeb()
-    // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
-    // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
-    // differently.
-    if (isWeb) {
-      navigation.replace('Search', {})
-    } else {
-      setSearchText('')
-      navigation.setParams({q: ''})
-    }
-  }, [navigation])
-
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
     setSearchText(text)
@@ -730,29 +717,17 @@ export function SearchScreen(
           ) : undefined}
         </Pressable>
 
-        {(showAutocomplete || queryParam) && (
+        {showAutocomplete && (
           <View style={styles.headerCancelBtn}>
-            {showAutocomplete ? (
-              <Pressable
-                key="cancel"
-                onPress={onPressCancelSearch}
-                accessibilityRole="button"
-                hitSlop={HITSLOP_10}>
-                <Text style={[pal.text]}>
-                  <Trans>Cancel</Trans>
-                </Text>
-              </Pressable>
-            ) : (
-              <Pressable
-                key="clear"
-                onPress={onPressClearSearch}
-                accessibilityRole="button"
-                hitSlop={HITSLOP_10}>
-                <Text style={[pal.text]}>
-                  <Trans>Clear</Trans>
-                </Text>
-              </Pressable>
-            )}
+            <Pressable
+              key="cancel"
+              onPress={onPressCancelSearch}
+              accessibilityRole="button"
+              hitSlop={HITSLOP_10}>
+              <Text style={[pal.text]}>
+                <Trans>Cancel</Trans>
+              </Text>
+            </Pressable>
           </View>
         )}
       </CenteredView>
