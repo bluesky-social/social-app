@@ -1,6 +1,9 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {Chat, ChatLog, Message} from '#/screens/Messages/Temp/query/types'
+import * as TempDmChatDefs from '#/temp/dm/defs'
+import * as TempDmChatGetChat from '#/temp/dm/getChat'
+import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
+import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
 
 /**
  * TEMPORARY, PLEASE DO NOT JUDGE ME REACT QUERY OVERLORDS 🙏
@@ -23,7 +26,7 @@ export function useChat(chatId: string) {
       const currentChat = queryClient.getQueryData(['chat', chatId])
 
       if (currentChat) {
-        return currentChat as Chat
+        return currentChat as TempDmChatDefs.ChatView
       }
 
       const messagesResponse = await fetch(
@@ -32,10 +35,8 @@ export function useChat(chatId: string) {
           headers: HEADERS,
         },
       )
-      const messagesJson = (await messagesResponse.json()) as {
-        messages: Message[]
-        cursor: string
-      }
+      const messagesJson =
+        (await messagesResponse.json()) as TempDmChatGetChatMessages.OutputSchema
 
       const chatResponse = await fetch(
         `${DM_SERVICE}/xrpc/temp.dm.getChat?chatId=${chatId}`,
@@ -43,16 +44,10 @@ export function useChat(chatId: string) {
           headers: HEADERS,
         },
       )
-      const chatJson = (await chatResponse.json()) as {
-        chat: {
-          id: string
-          rev: string
-          members: string[]
-          unreadCount: number
-        }
-      }
+      const chatJson =
+        (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
 
-      const newChat: Chat = {
+      const newChat = {
         chatId,
         messages: messagesJson.messages,
         lastCursor: messagesJson.cursor,
@@ -78,7 +73,12 @@ export function createTempId() {
 export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
 
-  return useMutation<Message, Error, SendMessageMutationVariables, unknown>({
+  return useMutation<
+    TempDmChatDefs.Message,
+    Error,
+    SendMessageMutationVariables,
+    unknown
+  >({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: async ({message, tempId}) => {
       const response = await fetch(
@@ -100,40 +100,49 @@ export function useSendMessageMutation(chatId: string) {
       return response.json()
     },
     onMutate: async variables => {
-      queryClient.setQueryData(['chat', chatId], (prev: Chat) => {
-        return {
-          ...prev,
-          messages: [
-            {
-              id: variables.tempId,
-              text: variables.message,
-            },
-            ...prev.messages,
-          ],
-        }
-      })
+      queryClient.setQueryData(
+        ['chat', chatId],
+        (prev: TempDmChatGetChatMessages.OutputSchema) => {
+          return {
+            ...prev,
+            messages: [
+              {
+                id: variables.tempId,
+                text: variables.message,
+              },
+              ...prev.messages,
+            ],
+          }
+        },
+      )
     },
     onSuccess: (result, variables) => {
-      queryClient.setQueryData(['chat', chatId], (prev: Chat) => {
-        return {
-          ...prev,
-          messages: prev.messages.map(m =>
-            m.id === variables.tempId
-              ? {
-                  ...m,
-                  id: result.id,
-                }
-              : m,
-          ),
-        }
-      })
+      queryClient.setQueryData(
+        ['chat', chatId],
+        (prev: TempDmChatGetChatMessages.OutputSchema) => {
+          return {
+            ...prev,
+            messages: prev.messages.map(m =>
+              m.id === variables.tempId
+                ? {
+                    ...m,
+                    id: result.id,
+                  }
+                : m,
+            ),
+          }
+        },
+      )
     },
     onError: (_, variables) => {
       console.log(_)
-      queryClient.setQueryData(['chat', chatId], (prev: Chat) => ({
-        ...prev,
-        messages: prev.messages.filter(m => m.id !== variables.tempId),
-      }))
+      queryClient.setQueryData(
+        ['chat', chatId],
+        (prev: TempDmChatGetChatMessages.OutputSchema) => ({
+          ...prev,
+          messages: prev.messages.filter(m => m.id !== variables.tempId),
+        }),
+      )
     },
   })
 }
@@ -144,34 +153,41 @@ export function useChatLogQuery() {
   return useQuery({
     queryKey: ['chatLog'],
     queryFn: async () => {
-      const prevLog = queryClient.getQueryData(['chatLog']) as ChatLog
+      const prevLog = queryClient.getQueryData([
+        'chatLog',
+      ]) as TempDmChatGetChatLog.OutputSchema['logs']
 
       try {
         const response = await fetch(
           `${DM_SERVICE}/xrpc/temp.dm.getChatLog?cursor=${
-            prevLog?.cursor ?? ''
+            prevLog.at(-1)?.rev ?? ''
           }`,
           {
             headers: HEADERS,
           },
         )
-        const json: ChatLog = await response.json()
+        const json =
+          (await response.json()) as TempDmChatGetChatLog.OutputSchema
 
         for (const log of json.logs) {
-          if (log.$type !== 'temp.dm.defs#logCreateMessage') continue
+          if (TempDmChatDefs.isLogDeleteMessage(log)) {
+            queryClient.setQueryData(
+              ['chat', log.chatId],
+              (prev: TempDmChatGetChatMessages.OutputSchema) => {
+                // What to do in this case
+                if (!prev) return
 
-          queryClient.setQueryData(['chat', log.chatId], (prev: Chat) => {
-            // What to do in this case
-            if (!prev) return
+                // HACK we don't know who the creator of a message is, so just filter by id for now
+                if (prev.messages.find(m => m.id === log.message.id))
+                  return prev
 
-            // HACK we don't know who the creator of a message is, so just filter by id for now
-            if (prev.messages.find(m => m.id === log.message.id)) return prev
-
-            return {
-              ...prev,
-              messages: [log.message, ...prev.messages],
-            }
-          })
+                return {
+                  ...prev,
+                  messages: [log.message, ...prev.messages],
+                }
+              },
+            )
+          }
         }
 
         return json
