@@ -657,13 +657,16 @@ export function SearchScreen(
         )}
 
         <Pressable
-          accessibilityRole="button"
+          // This only exists only for extra hitslop so don't expose it to the a11y tree.
+          accessible={false}
+          focusable={false}
+          tabIndex={-1}
           style={[
             {backgroundColor: pal.colors.backgroundLight},
             styles.headerSearchContainer,
             isWeb && {
               // @ts-ignore web only
-              cursor: 'text',
+              cursor: 'default',
             },
           ]}
           onPress={() => {
