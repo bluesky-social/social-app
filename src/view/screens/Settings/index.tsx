@@ -174,7 +174,7 @@ export function SettingsScreen({}: Props) {
 
   // TODO: TEMP REMOVE WHEN CLOPS ARE RELEASED
   const gate = useGate()
-  const {value: dmServiceUrl, setItem: setDmServiceUrl} =
+  const {serviceUrl: dmServiceUrl, setServiceUrl: setDmServiceUrl} =
     useDmServiceUrlStorage()
 
   // const primaryBg = useCustomPalette<ViewStyle>({

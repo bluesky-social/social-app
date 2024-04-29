@@ -28,7 +28,7 @@ type Chat = {
 export function useChat(chatId: string) {
   const queryClient = useQueryClient()
 
-  const {value: dmService} = useDmServiceUrlStorage()
+  const {serviceUrl} = useDmServiceUrlStorage()
   const {currentAccount} = useSession()
   const did = currentAccount?.did ?? ''
 
@@ -42,7 +42,7 @@ export function useChat(chatId: string) {
       }
 
       const messagesResponse = await fetch(
-        `${dmService}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
+        `${serviceUrl}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
         {
           headers: createHeaders(did),
         },
@@ -54,7 +54,7 @@ export function useChat(chatId: string) {
         (await messagesResponse.json()) as TempDmChatGetChatMessages.OutputSchema
 
       const chatResponse = await fetch(
-        `${dmService}/xrpc/temp.dm.getChat?chatId=${chatId}`,
+        `${serviceUrl}/xrpc/temp.dm.getChat?chatId=${chatId}`,
         {
           headers: createHeaders(did),
         },
@@ -91,7 +91,7 @@ export function createTempId() {
 export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
 
-  const {value: dmService} = useDmServiceUrlStorage()
+  const {serviceUrl} = useDmServiceUrlStorage()
   const {currentAccount} = useSession()
   const did = currentAccount?.did ?? ''
 
@@ -104,7 +104,7 @@ export function useSendMessageMutation(chatId: string) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: async ({message, tempId}) => {
       const response = await fetch(
-        `${dmService}/xrpc/temp.dm.sendMessage?chatId=${chatId}`,
+        `${serviceUrl}/xrpc/temp.dm.sendMessage?chatId=${chatId}`,
         {
           method: 'POST',
           headers: {
@@ -166,7 +166,7 @@ export function useSendMessageMutation(chatId: string) {
 export function useChatLogQuery() {
   const queryClient = useQueryClient()
 
-  const {value: dmService} = useDmServiceUrlStorage()
+  const {serviceUrl} = useDmServiceUrlStorage()
   const {currentAccount} = useSession()
   const did = currentAccount?.did ?? ''
 
@@ -178,9 +178,9 @@ export function useChatLogQuery() {
       ]) as TempDmChatGetChatLog.OutputSchema
 
       try {
-        console.log(dmService)
+        console.log(serviceUrl)
         const response = await fetch(
-          `${dmService}/xrpc/temp.dm.getChatLog?cursor=${
+          `${serviceUrl}/xrpc/temp.dm.getChatLog?cursor=${
             prevLog?.cursor ?? ''
           }`,
           {

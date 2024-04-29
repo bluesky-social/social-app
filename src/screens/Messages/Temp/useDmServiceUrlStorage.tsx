@@ -18,17 +18,17 @@ import {useAsyncStorage} from '@react-native-async-storage/async-storage'
  */
 
 const DmServiceUrlStorageContext = React.createContext<{
-  value: string
-  setItem: (value: string) => void
+  serviceUrl: string
+  setServiceUrl: (value: string) => void
 }>({
-  value: '',
-  setItem: () => {},
+  serviceUrl: '',
+  setServiceUrl: () => {},
 })
 
 export const useDmServiceUrlStorage = () =>
   React.useContext(DmServiceUrlStorageContext)
 
-export function DmServiceUrlProvider() {
+export function DmServiceUrlProvider({children}: {children: React.ReactNode}) {
   const [serviceUrl, setServiceUrl] = React.useState<string>('')
   const {getItem, setItem: setItemInner} = useAsyncStorage('dmServiceUrl')
 
@@ -50,13 +50,15 @@ export function DmServiceUrlProvider() {
 
   const value = React.useMemo(
     () => ({
-      value,
-      setItem,
+      serviceUrl,
+      setServiceUrl: setItem,
     }),
-    [value, setItem],
+    [serviceUrl, setItem],
   )
 
   return (
-
+    <DmServiceUrlStorageContext.Provider value={value}>
+      {children}
+    </DmServiceUrlStorageContext.Provider>
   )
 }
