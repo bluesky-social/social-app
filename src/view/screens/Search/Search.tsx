@@ -478,7 +478,6 @@ export function SearchScreen(
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
-  const moderationOpts = useModerationOpts()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
@@ -732,54 +731,20 @@ export function SearchScreen(
       </CenteredView>
 
       {showAutocomplete && searchText.length > 0 ? (
-        <>
-          {(isAutocompleteFetching && !autocompleteData?.length) ||
-          !moderationOpts ? (
-            <Loader />
-          ) : (
-            <ScrollView
-              style={{height: '100%'}}
-              // @ts-ignore web only -prf
-              dataSet={{stableGutters: '1'}}
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode="on-drag">
-              <SearchLinkCard
-                label={_(msg`Search for "${searchText}"`)}
-                onPress={isNative ? onSubmit : undefined}
-                to={
-                  isNative
-                    ? undefined
-                    : `/search?q=${encodeURIComponent(searchText)}`
-                }
-                style={{borderBottomWidth: 1}}
-              />
-
-              {queryMaybeHandle ? (
-                <SearchLinkCard
-                  label={_(msg`Go to @${queryMaybeHandle}`)}
-                  to={`/profile/${queryMaybeHandle}`}
-                />
-              ) : null}
-
-              {autocompleteData?.map(item => (
-                <SearchProfileCard
-                  key={item.did}
-                  profile={item}
-                  moderation={moderateProfile(item, moderationOpts)}
-                  onPress={() => {
-                    if (isWeb) {
-                      setShowAutocomplete(false)
-                    } else {
-                      textInput.current?.blur()
-                    }
-                  }}
-                />
-              ))}
-
-              <View style={{height: 200}} />
-            </ScrollView>
-          )}
-        </>
+        <AutocompleteResults
+          isAutocompleteFetching={isAutocompleteFetching}
+          autocompleteData={autocompleteData}
+          queryMaybeHandle={queryMaybeHandle}
+          searchText={searchText}
+          onSubmit={onSubmit}
+          onResultPress={() => {
+            if (isWeb) {
+              setShowAutocomplete(false)
+            } else {
+              textInput.current?.blur()
+            }
+          }}
+        />
       ) : !queryParam && showAutocomplete ? (
         <SearchHistory
           searchHistory={searchHistory}
@@ -790,6 +755,69 @@ export function SearchScreen(
         <SearchScreenInner query={queryParam} />
       )}
     </View>
+  )
+}
+
+function AutocompleteResults({
+  isAutocompleteFetching,
+  autocompleteData,
+  queryMaybeHandle,
+  searchText,
+  onSubmit,
+  onResultPress,
+}: {
+  isAutocompleteFetching: boolean
+  autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
+  queryMaybeHandle: string | null
+  searchText: string
+  onSubmit: () => void
+  onResultPress: () => void
+}) {
+  const moderationOpts = useModerationOpts()
+  const {_} = useLingui()
+  return (
+    <>
+      {(isAutocompleteFetching && !autocompleteData?.length) ||
+      !moderationOpts ? (
+        <Loader />
+      ) : (
+        <ScrollView
+          style={{height: '100%'}}
+          // @ts-ignore web only -prf
+          dataSet={{stableGutters: '1'}}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
+          <SearchLinkCard
+            label={_(msg`Search for "${searchText}"`)}
+            onPress={isNative ? onSubmit : undefined}
+            to={
+              isNative
+                ? undefined
+                : `/search?q=${encodeURIComponent(searchText)}`
+            }
+            style={{borderBottomWidth: 1}}
+          />
+
+          {queryMaybeHandle ? (
+            <SearchLinkCard
+              label={_(msg`Go to @${queryMaybeHandle}`)}
+              to={`/profile/${queryMaybeHandle}`}
+            />
+          ) : null}
+
+          {autocompleteData?.map(item => (
+            <SearchProfileCard
+              key={item.did}
+              profile={item}
+              moderation={moderateProfile(item, moderationOpts)}
+              onPress={onResultPress}
+            />
+          ))}
+
+          <View style={{height: 200}} />
+        </ScrollView>
+      )}
+    </>
   )
 }
 
