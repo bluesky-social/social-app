@@ -20,6 +20,7 @@ import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {NewChat} from '../../../components/dms/NewChat'
 import {ClipClopGate} from '../gate'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'MessagesList'>
@@ -84,21 +85,24 @@ export function MessagesListScreen({}: Props) {
 
   if (conversations.length < 1) {
     return (
-      <ListMaybePlaceholder
-        isLoading={isLoading}
-        isError={isError}
-        emptyType="results"
-        emptyMessage={_(
-          msg`You have no messages yet. Start a conversation with someone!`,
-        )}
-        errorMessage={cleanError(error)}
-        onRetry={isError ? refetch : undefined}
-      />
+      <>
+        <ListMaybePlaceholder
+          isLoading={isLoading}
+          isError={isError}
+          emptyType="results"
+          emptyMessage={_(
+            msg`You have no messages yet. Start a conversation with someone!`,
+          )}
+          errorMessage={cleanError(error)}
+          onRetry={isError ? refetch : undefined}
+        />
+        <NewChat />
+      </>
     )
   }
 
   return (
-    <View>
+    <View style={a.flex_1}>
       <ViewHeader
         title={_(msg`Messages`)}
         showOnDesktop
@@ -106,6 +110,7 @@ export function MessagesListScreen({}: Props) {
         showBorder
         canGoBack={false}
       />
+      <NewChat />
       <List
         data={conversations}
         renderItem={({item}) => {
