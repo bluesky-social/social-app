@@ -1,8 +1,8 @@
-diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/packages/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 index b0d71dc..34cb289 100644
---- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
-+++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
-@@ -377,10 +377,6 @@ - (void)textInputDidBeginEditing
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm	(revision bb2c13af5372856cf3f4222ad6543d4698919dbc)
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm	(revision d71fb46b9477b646c203f161aa3787740e1bbcbd)
+@@ -377,10 +377,6 @@
      self.backedTextInputView.attributedText = [NSAttributedString new];
    }
 
@@ -13,7 +13,7 @@ index b0d71dc..34cb289 100644
    [_eventDispatcher sendTextEventWithType:RCTTextEventTypeFocus
                                   reactTag:self.reactTag
                                       text:[self.backedTextInputView.attributedText.string copy]
-@@ -611,6 +607,10 @@ - (UIView *)reactAccessibilityElement
+@@ -611,6 +607,10 @@
  - (void)reactFocus
  {
    [self.backedTextInputView reactFocus];
@@ -24,6 +24,36 @@ index b0d71dc..34cb289 100644
  }
 
  - (void)reactBlur
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/packages/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+index b0d71dc..34cb289 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+@@ -281,11 +281,6 @@
+     [self textInputDidChange];
+   }
+
+-  if (props.traits.selectTextOnFocus) {
+-    [_backedTextInputView selectAll:nil];
+-    [self textInputDidChangeSelection];
+-  }
+-
+   if (_eventEmitter) {
+     static_cast<const TextInputEventEmitter &>(*_eventEmitter).onFocus([self _textInputMetrics]);
+   }
+@@ -425,6 +420,13 @@
+ - (void)focus
+ {
+   [_backedTextInputView becomeFirstResponder];
++
++  const auto &props = static_cast<const TextInputProps &>(*_props);
++
++  if (props.traits.selectTextOnFocus) {
++    [_backedTextInputView selectAll:nil];
++    [self textInputDidChangeSelection];
++  }
+ }
+
+ - (void)blur
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 index e9b330f..1ecdf0a 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
