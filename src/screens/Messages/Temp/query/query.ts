@@ -42,6 +42,9 @@ export function useChat(chatId: string) {
           headers: HEADERS,
         },
       )
+
+      if (!messagesResponse.ok) throw new Error('Failed to fetch messages')
+
       const messagesJson =
         (await messagesResponse.json()) as TempDmChatGetChatMessages.OutputSchema
 
@@ -51,6 +54,9 @@ export function useChat(chatId: string) {
           headers: HEADERS,
         },
       )
+
+      if (!chatResponse.ok) throw new Error('Failed to fetch chat')
+
       const chatJson =
         (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
 
@@ -104,6 +110,9 @@ export function useSendMessageMutation(chatId: string) {
           }),
         },
       )
+
+      if (!response.ok) throw new Error('Failed to send message')
+
       return response.json()
     },
     onMutate: async variables => {
@@ -153,17 +162,20 @@ export function useChatLogQuery() {
     queryFn: async () => {
       const prevLog = queryClient.getQueryData([
         'chatLog',
-      ]) as TempDmChatGetChatLog.OutputSchema['logs']
+      ]) as TempDmChatGetChatLog.OutputSchema
 
       try {
         const response = await fetch(
           `${DM_SERVICE}/xrpc/temp.dm.getChatLog?cursor=${
-            prevLog?.at(-1)?.rev ?? ''
+            prevLog?.cursor ?? ''
           }`,
           {
             headers: HEADERS,
           },
         )
+
+        if (!response.ok) throw new Error('Failed to fetch chat log')
+
         const json =
           (await response.json()) as TempDmChatGetChatLog.OutputSchema
 
