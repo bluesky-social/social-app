@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-23 13:29+0900\n"
+"PO-Revision-Date: 2024-04-27 16:07+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -42,18 +42,6 @@ msgstr "<0>{followers} </0><1>フォロワー</1>"
 #: src/screens/Profile/Header/Metrics.tsx:45
 msgid "<0>{following} </0><1>following</1>"
 msgstr "<0>{following} </0><1>フォロー</1>"
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:31
-msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<1>おすすめの</1><2>フィード</2><0>を選択</0>"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:38
-msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-msgstr "<1>おすすめの</1><2>ユーザー</2><0>をフォロー</0>"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
-msgid "<0>Welcome to</0><1>Bluesky</1>"
-msgstr "<1>Bluesky</1><0>へようこそ</0>"
 
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
@@ -139,7 +127,6 @@ msgid "Account unmuted"
 msgstr "アカウントのミュートを解除しました"
 
 #: src/components/dialogs/MutedWords.tsx:164
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
 #: src/view/screens/ProfileList.tsx:829
@@ -192,10 +179,6 @@ msgstr "リストに追加"
 #: src/view/com/feeds/FeedSourceCard.tsx:234
 msgid "Add to my feeds"
 msgstr "マイフィードに追加"
-
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
-msgid "Added"
-msgstr "追加済み"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
@@ -479,21 +462,6 @@ msgstr "Bluesky"
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
 msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 カスタムホスティングは、開発者向けのベータ版で利用できるようになりました。"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
-msgid "Bluesky is flexible."
-msgstr "Blueskyは柔軟です。"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:69
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:71
-msgid "Bluesky is open."
-msgstr "Blueskyは開かれています。"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:56
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:58
-msgid "Bluesky is public."
-msgstr "Blueskyはパブリックです。"
-
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Blueskyはログアウトしたユーザーにあなたのプロフィールや投稿を表示しません。他のアプリはこのリクエストに応じない場合があります。この設定はあなたのアカウントを非公開にするものではありません。"
@@ -517,10 +485,6 @@ msgstr "ビジネス"
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
 msgstr "作成者：-"
-
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
-msgid "by {0}"
-msgstr "作成者：{0}"
 
 #: src/components/LabelingServiceCard/index.tsx:57
 msgid "By {0}"
@@ -649,18 +613,18 @@ msgstr "投稿の言語を{0}に変更します"
 msgid "Change Your Email"
 msgstr "メールアドレスを変更"
 
+#: src/Navigation.tsx:302
+msgid "Chat"
+msgstr "チャット"
+
+#: src/screens/Messages/Conversation/index.tsx:26
+msgid "Chat with {chatId}"
+msgstr "{chatId}とのチャット"
+
 #: src/screens/Deactivated.tsx:72
 #: src/screens/Deactivated.tsx:76
 msgid "Check my status"
 msgstr "ステータスを確認"
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:122
-msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "おすすめのフィードを確認してください。「＋」をタップするとピン留めしたフィードのリストに追加されます。"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:186
-msgid "Check out some recommended users. Follow them to see similar users."
-msgstr "おすすめのユーザーを確認してください。フォローすることであなたに合ったユーザーが見つかるかもしれません。"
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
@@ -681,11 +645,6 @@ msgstr "サービスを選択"
 #: src/screens/Onboarding/StepFinished.tsx:139
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "カスタムフィードのアルゴリズムを選択できます。"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
-msgid "Choose the algorithms that power your experience with custom feeds."
-msgstr "カスタムフィードを使用してあなたの体験を強化するアルゴリズムを選択します。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 msgid "Choose your main feeds"
@@ -934,9 +893,6 @@ msgstr "コンテキストメニューの背景をクリックし、メニュー
 #: src/screens/Onboarding/StepInterests/index.tsx:252
 #: src/screens/Onboarding/StepModeration/index.tsx:103
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:118
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:150
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:211
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:96
 msgid "Continue"
 msgstr "続行"
 
@@ -1267,7 +1223,6 @@ msgstr "ドメインを確認しました！"
 msgid "Done"
 msgstr "完了"
 
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:87
 #: src/view/com/modals/EditImage.tsx:334
 #: src/view/com/modals/ListAddRemoveUsers.tsx:144
 #: src/view/com/modals/SelfLabel.tsx:157
@@ -1637,11 +1592,6 @@ msgstr "投稿の削除に失敗しました。もう一度お試しください
 msgid "Failed to load GIFs"
 msgstr "GIFの読み込みに失敗しました"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
-msgid "Failed to load recommended feeds"
-msgstr "おすすめのフィードの読み込みに失敗しました"
-
 #: src/view/com/lightbox/Lightbox.tsx:83
 msgid "Failed to save image: {0}"
 msgstr "画像の保存に失敗しました：{0}"
@@ -1674,10 +1624,6 @@ msgstr "フィードバック"
 msgid "Feeds"
 msgstr "フィード"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
-msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr "フィードはコンテンツを整理する為にユーザーによって作成されます。興味のあるフィードをいくつか選択してください。"
-
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
@@ -1708,10 +1654,6 @@ msgstr "フォローするアカウントを探す"
 msgid "Find posts and users on Bluesky"
 msgstr "投稿やユーザーをBlueskyで検索"
 
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
-msgid "Finding similar accounts..."
-msgstr "似ているアカウントを検索中..."
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:111
 msgid "Fine-tune the content you see on your Following feed."
 msgstr "Followingフィードに表示されるコンテンツを調整します。"
@@ -1739,7 +1681,6 @@ msgstr "垂直方向に反転"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:189
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:233
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:141
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:248
 msgid "Follow"
@@ -1772,10 +1713,6 @@ msgstr "フォローバック"
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
 msgstr "選択したアカウントをフォローして次のステップへ進む"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
-msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-msgstr "何人かのユーザーをフォローして開始します。興味を持っている人に基づいて、より多くのユーザーをおすすめします。"
 
 #: src/view/com/profile/ProfileCard.tsx:231
 msgid "Followed by {0}"
@@ -2478,6 +2415,21 @@ msgstr "メニュー"
 msgid "Message from server: {0}"
 msgstr "サーバーからのメッセージ：{0}"
 
+#: src/screens/Messages/List/index.tsx:34
+msgid "Message settings"
+msgstr "メッセージの設定"
+
+#: src/Navigation.tsx:517
+#: src/screens/Messages/List/index.tsx:103
+#: src/view/shell/bottom-bar/BottomBar.tsx:261
+#: src/view/shell/desktop/LeftNav.tsx:360
+msgid "Messages"
+msgstr "メッセージ"
+
+#: src/Navigation.tsx:307
+msgid "Messaging settings"
+msgstr "メッセージの設定"
+
 #: src/lib/moderation/useReportOptions.ts:45
 msgid "Misleading Account"
 msgstr "誤解を招くアカウント"
@@ -2699,11 +2651,6 @@ msgstr "あなたのプロフィールに移動します"
 msgid "Need to report a copyright violation?"
 msgstr "著作権侵害を報告する必要がありますか？"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
-msgid "Never lose access to your followers and data."
-msgstr "フォロワーやデータへのアクセスを失うことはありません。"
-
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "Never lose access to your followers or data."
 msgstr "フォロワーやデータへのアクセスを失うことはありません。"
@@ -2772,14 +2719,8 @@ msgstr "ニュース"
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Signup/index.tsx:207
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:80
 #: src/view/com/modals/ChangePassword.tsx:253
 #: src/view/com/modals/ChangePassword.tsx:255
-msgid "Next"
-msgstr "次へ"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-msgctxt "action"
 msgid "Next"
 msgstr "次へ"
 
@@ -3104,6 +3045,10 @@ msgstr "Followingフィードの設定を開く"
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
 msgstr "リンク先のウェブサイトを開く"
+
+#: src/screens/Messages/List/index.tsx:35
+msgid "Opens the message settings page"
+msgstr "メッセージの設定のページを開く"
 
 #: src/view/screens/Settings/index.tsx:788
 #: src/view/screens/Settings/index.tsx:798
@@ -3470,14 +3415,6 @@ msgstr "比率"
 msgid "Recent Searches"
 msgstr "検索履歴"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:117
-msgid "Recommended Feeds"
-msgstr "おすすめのフィード"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:181
-msgid "Recommended Users"
-msgstr "おすすめのユーザー"
-
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:283
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
@@ -3530,6 +3467,10 @@ msgstr "イメージプレビューを削除"
 msgid "Remove mute word from your list"
 msgstr "リストからミュートワードを削除"
 
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:208
+msgid "Remove quote"
+msgstr "引用を削除"
+
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
 msgstr "リポストを削除"
@@ -3554,6 +3495,10 @@ msgstr "あなたのフィードから削除しました"
 #: src/view/com/composer/ExternalEmbed.tsx:83
 msgid "Removes default thumbnail from {0}"
 msgstr "{0}からデフォルトのサムネイルを削除"
+
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:209
+msgid "Removes quoted post"
+msgstr "引用を削除する"
 
 #: src/view/screens/Profile.tsx:195
 msgid "Replies"
@@ -3841,6 +3786,10 @@ msgstr "検索"
 #: src/view/shell/desktop/Search.tsx:256
 msgid "Search for \"{query}\""
 msgstr "「{query}」を検索"
+
+#: src/view/screens/Search/Search.tsx:743
+msgid "Search for \"{searchText}\""
+msgstr "「{searchText}」を検索"
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
@@ -4314,7 +4263,6 @@ msgstr "@{0}でサインイン"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:35
 msgid "Skip"
 msgstr "スキップ"
 
@@ -4583,8 +4531,6 @@ msgstr "Tenorへの接続中に問題が発生しました。"
 msgid "There was an issue contacting the server"
 msgstr "サーバーへの問い合わせ中に問題が発生しました"
 
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:57
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:66
 #: src/view/com/feeds/FeedSourceCard.tsx:110
 #: src/view/com/feeds/FeedSourceCard.tsx:123
 msgid "There was an issue contacting your server"
@@ -4906,13 +4852,12 @@ msgstr "アカウントのブロックを解除しますか？"
 msgid "Undo repost"
 msgstr "リポストを元に戻す"
 
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:141
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:248
+#: src/view/com/profile/FollowButton.tsx:60
+msgctxt "action"
 msgid "Unfollow"
 msgstr "フォローを解除"
 
-#: src/view/com/profile/FollowButton.tsx:60
-msgctxt "action"
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:248
 msgid "Unfollow"
 msgstr "フォローを解除"
 
@@ -5069,7 +5014,7 @@ msgstr "リストによってブロック中のユーザー"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:66
 msgid "User Blocking You"
-msgstr "あなたがブロック中のユーザー"
+msgstr "あなたをブロックしているユーザー"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:70
 msgid "User Blocks You"
@@ -5290,10 +5235,6 @@ msgstr "大変申し訳ありません！お探しのページは見つかりま
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "大変申し訳ありません！ラベラーは10までしか登録できず、すでに上限に達しています。"
 
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
-msgid "Welcome to <0>Bluesky</0>"
-msgstr "<0>Bluesky</0>へようこそ"
-
 #: src/screens/Onboarding/StepInterests/index.tsx:134
 msgid "What are your interests?"
 msgstr "なにに興味がありますか？"
@@ -5449,6 +5390,10 @@ msgstr "フィードがありません。"
 msgid "You have no lists."
 msgstr "リストがありません。"
 
+#: src/screens/Messages/List/index.tsx:92
+msgid "You have no messages yet. Start a conversation with someone!"
+msgstr "メッセージがありません。誰かと会話を始めましょう！"
+
 #: src/view/screens/ModerationBlockedAccounts.tsx:137
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr "ブロック中のアカウントはまだありません。アカウントをブロックするには、ユーザーのプロフィールに移動し、アカウントメニューから「アカウントをブロック」を選択します。"
@@ -5579,8 +5524,6 @@ msgid "Your post has been published"
 msgstr "投稿を公開しました"
 
 #: src/screens/Onboarding/StepFinished.tsx:109
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:61
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "投稿、いいね、ブロックは公開されます。ミュートは非公開です。"
 
