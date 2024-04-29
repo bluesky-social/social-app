@@ -40,7 +40,8 @@ function renderItem({
   return null
 }
 
-// Generate unique key list item.
+// TODO rm
+// TEMP: This is a temporary function to generate unique keys for mutation placeholders
 const generateUniqueKey = () => `_${Math.random().toString(36).substr(2, 9)}`
 
 function onScrollToEndFailed() {
@@ -125,7 +126,7 @@ export function MessagesList({chatId}: {chatId: string}) {
           tempId: generateUniqueKey(),
         })
       } catch (e: any) {
-        console.log(e)
+        Alert.alert(e.toString())
       }
     },
     [sendMessage],

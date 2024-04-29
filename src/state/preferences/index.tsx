@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {DmServiceUrlProvider} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
 import {Provider as DisableHapticsProvider} from './disable-haptics'
@@ -30,7 +31,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           <HiddenPostsProvider>
             <InAppBrowserProvider>
               <DisableHapticsProvider>
-                <AutoplayProvider>{children}</AutoplayProvider>
+                <AutoplayProvider>
+                  <DmServiceUrlProvider>{children}</DmServiceUrlProvider>
+                </AutoplayProvider>
               </DisableHapticsProvider>
             </InAppBrowserProvider>
           </HiddenPostsProvider>

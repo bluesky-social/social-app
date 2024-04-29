@@ -6,13 +6,12 @@ import * as TempDmChatGetChat from '#/temp/dm/getChat'
 import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
+import {useDmServiceUrlStorage} from '../useDmServiceUrlStorage'
 
 /**
  * TEMPORARY, PLEASE DO NOT JUDGE ME REACT QUERY OVERLORDS 🙏
  * (and do not try this at home)
  */
-
-const DM_SERVICE = process.env.EXPO_PUBLIC_DM_SERVICE
 
 const useHeaders = () => {
   const {getAgent} = useAgent()
@@ -33,6 +32,7 @@ type Chat = {
 export function useChat(chatId: string) {
   const queryClient = useQueryClient()
   const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
 
   return useQuery({
     queryKey: ['chat', chatId],
@@ -44,8 +44,10 @@ export function useChat(chatId: string) {
       }
 
       const messagesResponse = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
-        {headers},
+        `${serviceUrl}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
+        {
+          headers,
+        },
       )
 
       if (!messagesResponse.ok) throw new Error('Failed to fetch messages')
@@ -54,8 +56,10 @@ export function useChat(chatId: string) {
         (await messagesResponse.json()) as TempDmChatGetChatMessages.OutputSchema
 
       const chatResponse = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.getChat?chatId=${chatId}`,
-        {headers},
+        `${serviceUrl}/xrpc/temp.dm.getChat?chatId=${chatId}`,
+        {
+          headers,
+        },
       )
 
       if (!chatResponse.ok) throw new Error('Failed to fetch chat')
@@ -89,6 +93,7 @@ export function createTempId() {
 export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
   const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
 
   return useMutation<
     TempDmChatDefs.Message,
@@ -99,7 +104,7 @@ export function useSendMessageMutation(chatId: string) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     mutationFn: async ({message, tempId}) => {
       const response = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.sendMessage?chatId=${chatId}`,
+        `${serviceUrl}/xrpc/temp.dm.sendMessage?chatId=${chatId}`,
         {
           method: 'POST',
           headers: {
@@ -161,6 +166,7 @@ export function useSendMessageMutation(chatId: string) {
 export function useChatLogQuery() {
   const queryClient = useQueryClient()
   const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
 
   return useQuery({
     queryKey: ['chatLog'],
@@ -171,11 +177,11 @@ export function useChatLogQuery() {
 
       try {
         const response = await fetch(
-          `${DM_SERVICE}/xrpc/temp.dm.getChatLog?cursor=${
+          `${serviceUrl}/xrpc/temp.dm.getChatLog?cursor=${
             prevLog?.cursor ?? ''
           }`,
           {
-            headers: headers,
+            headers,
           },
         )
 
@@ -219,11 +225,12 @@ export function useGetChatFromMembers({
 }) {
   const queryClient = useQueryClient()
   const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
 
   return useMutation({
     mutationFn: async (members: string[]) => {
       const response = await fetch(
-        `${DM_SERVICE}/xrpc/temp.dm.getChatForMembers?members=${members.join(
+        `${serviceUrl}/xrpc/temp.dm.getChatForMembers?members=${members.join(
           ',',
         )}`,
         {headers},
