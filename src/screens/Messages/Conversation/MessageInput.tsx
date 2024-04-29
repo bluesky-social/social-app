@@ -5,26 +5,26 @@ import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function MessageInput({
-  onSendClop,
+  onSendMessage,
   onFocus,
   onBlur,
 }: {
-  onSendClop: (clop: string) => void
+  onSendMessage: (message: string) => void
   onFocus: () => void
   onBlur: () => void
 }) {
   const t = useTheme()
-  const [clop, setClop] = React.useState('')
+  const [message, setMessage] = React.useState('')
 
   const inputRef = React.useRef<TextInput>(null)
 
   const onSubmit = React.useCallback(() => {
-    onSendClop(clop)
-    setClop('')
+    onSendMessage(message)
+    setMessage('')
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [clop, onSendClop])
+  }, [message, onSendMessage])
 
   return (
     <View
@@ -38,10 +38,10 @@ export function MessageInput({
       ]}>
       <TextInput
         accessibilityLabel="Text input field"
-        accessibilityHint="Write a clop"
-        value={clop}
-        onChangeText={setClop}
-        placeholder="Write a clop"
+        accessibilityHint="Write a message"
+        value={message}
+        onChangeText={setMessage}
+        placeholder="Write a message"
         style={[a.flex_1, a.text_sm, a.px_sm]}
         onSubmitEditing={onSubmit}
         onFocus={onFocus}
