@@ -527,23 +527,23 @@ export function SearchScreen(
 
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
+    textInput.current?.blur()
+    setShowAutocomplete(false)
+    setSearchText(queryParam)
+  }, [queryParam])
 
-    if (showAutocomplete) {
-      textInput.current?.blur()
-      setShowAutocomplete(false)
-      setSearchText(queryParam)
+  const onPressClearSearch = React.useCallback(() => {
+    scrollToTopWeb()
+    // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
+    // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
+    // differently.
+    if (isWeb) {
+      navigation.replace('Search', {})
     } else {
-      // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
-      // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
-      // differently.
-      if (isWeb) {
-        navigation.replace('Search', {})
-      } else {
-        setSearchText('')
-        navigation.setParams({q: ''})
-      }
+      setSearchText('')
+      navigation.setParams({q: ''})
     }
-  }, [showAutocomplete, navigation, queryParam])
+  }, [navigation])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -730,16 +730,29 @@ export function SearchScreen(
           ) : undefined}
         </Pressable>
 
-        {(queryParam || showAutocomplete) && (
+        {(showAutocomplete || queryParam) && (
           <View style={styles.headerCancelBtn}>
-            <Pressable
-              onPress={onPressCancelSearch}
-              accessibilityRole="button"
-              hitSlop={HITSLOP_10}>
-              <Text style={[pal.text]}>
-                <Trans>Cancel</Trans>
-              </Text>
-            </Pressable>
+            {showAutocomplete ? (
+              <Pressable
+                key="cancel"
+                onPress={onPressCancelSearch}
+                accessibilityRole="button"
+                hitSlop={HITSLOP_10}>
+                <Text style={[pal.text]}>
+                  <Trans>Cancel</Trans>
+                </Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                key="clear"
+                onPress={onPressClearSearch}
+                accessibilityRole="button"
+                hitSlop={HITSLOP_10}>
+                <Text style={[pal.text]}>
+                  <Trans>Clear</Trans>
+                </Text>
+              </Pressable>
+            )}
           </View>
         )}
       </CenteredView>
