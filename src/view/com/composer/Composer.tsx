@@ -32,7 +32,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
@@ -83,6 +83,7 @@ export const ComposePost = observer(function ComposePost({
   imageUris: initImageUris,
 }: Props) {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()

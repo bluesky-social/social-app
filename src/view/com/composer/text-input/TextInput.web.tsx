@@ -19,8 +19,8 @@ import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from 'lib/media/util'
 import {
-  addLinkCardIfNecessary,
-  findIndexInText,
+  LinkFacetMatch,
+  suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
@@ -61,8 +61,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   ref,
 ) {
   const autocomplete = useActorAutocompleteFn()
-  const prevAddedLinks = useRef(new Set<string>())
-
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
@@ -143,6 +141,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [setIsDropping])
 
+  const pastSuggestedUris = useRef(new Set<string>())
+  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
   const editor = useEditor(
     {
       extensions,
@@ -185,38 +185,32 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
         const newText = editorJsonToText(json)
-        const mayBePaste = window.event?.type === 'paste'
+        const isPaste = window.event?.type === 'paste'
 
         const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
 
+        const nextDetectedUris = new Map<string, LinkFacetMatch>()
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
-                // The TipTap editor shows the position as being one character ahead, as if the start index is 1.
-                // Subtracting 1 from the pos gives us the same behavior as the native impl.
-                let cursorLocation = editor?.state.selection.$anchor.pos ?? 1
-                cursorLocation -= 1
-
-                addLinkCardIfNecessary({
-                  uri: feature.uri,
-                  newText,
-                  cursorLocation,
-                  mayBePaste,
-                  onNewLink,
-                  prevAddedLinks: prevAddedLinks.current,
-                })
+                nextDetectedUris.set(feature.uri, {facet, rt: newRt})
               }
             }
           }
         }
 
-        for (const uri of prevAddedLinks.current.keys()) {
-          if (findIndexInText(uri, newText) === -1) {
-            prevAddedLinks.current.delete(uri)
-          }
+        const suggestedUri = suggestLinkCardUri(
+          isPaste,
+          nextDetectedUris,
+          prevDetectedUris.current,
+          pastSuggestedUris.current,
+        )
+        prevDetectedUris.current = nextDetectedUris
+        if (suggestedUri) {
+          onNewLink(suggestedUri)
         }
       },
     },
