@@ -671,7 +671,7 @@ export function SearchScreen(
             placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
             returnKeyType="search"
-            // value={searchText}
+            value={searchText}
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
             selectTextOnFocus={isNative}
