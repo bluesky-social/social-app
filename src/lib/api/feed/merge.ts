@@ -286,7 +286,6 @@ class MergeFeedSource_Custom extends MergeFeedSource {
       href: feedUriToHref(feedUri),
     }
     this.minDate = new Date(Date.now() - POST_AGE_CUTOFF)
-    this.userInterests = userInterests
   }
 
   protected async _getFeed(
