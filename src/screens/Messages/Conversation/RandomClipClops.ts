@@ -1,6 +1,6 @@
 import {AppBskyEmbedRecord, AppBskyRichtextFacet} from '@atproto/api'
 
-export interface ClipClop {
+export interface Message {
   id: string
   text: string
   facets?: AppBskyRichtextFacet.Main[]

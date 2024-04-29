@@ -5,7 +5,7 @@ import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
-import {ClipClop} from '#/screens/Messages/Conversation/RandomClipClops'
+import {Message} from '#/screens/Messages/Conversation/RandomClipClops'
 import {
   useChat,
   useChatLogQuery,
@@ -29,7 +29,7 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function renderItem({item}: {item: ClipClop}) {
+function renderItem({item}: {item: Message}) {
   return <MessageItem item={item} />
 }
 
@@ -52,7 +52,7 @@ export const MessagesList = () => {
 
   // Because the viewableItemsChanged callback won't have access to the updated state, we use a ref to store the
   // total number of clops
-  const totalClops = React.useRef(10)
+  const totalMessages = React.useRef(10)
 
   // @ts-ignore TODO later
   const [_, setShowSpinner] = React.useState(false)
@@ -63,7 +63,7 @@ export const MessagesList = () => {
   useChatLogQuery()
 
   React.useEffect(() => {
-    totalClops.current = chat?.messages.length ?? 0
+    totalMessages.current = chat?.messages.length ?? 0
   }, [chat])
 
   const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
@@ -94,9 +94,11 @@ export const MessagesList = () => {
     isFetching.current = true
     setShowSpinner(true)
 
+    // Eventually we will add more here when we hit the top through RQuery
     // We wouldn't actually use a timeout, but there would be a delay while loading
     setTimeout(() => {
-      addOldClops()
+      // Do something
+      setShowSpinner(false)
     }, 1000)
   }, [])
 
@@ -106,7 +108,7 @@ export const MessagesList = () => {
     }
   }, [])
 
-  const onSendClop = React.useCallback(
+  const onSendMessage = React.useCallback(
     async (message: string) => {
       if (!message) return
 
@@ -153,7 +155,7 @@ export const MessagesList = () => {
       />
       <View style={{paddingHorizontal: 10}}>
         <MessageInput
-          onSendClop={onSendClop}
+          onSendMessage={onSendMessage}
           onFocus={onInputFocus}
           onBlur={onInputBlur}
         />
