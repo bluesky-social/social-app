@@ -34,7 +34,7 @@ import {Text} from 'view/com/util/text/Text'
 export const MATCH_HANDLE =
   /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
 
-export function SearchLinkCard({
+let SearchLinkCard = ({
   label,
   to,
   onPress,
@@ -44,7 +44,7 @@ export function SearchLinkCard({
   to?: string
   onPress?: () => void
   style?: ViewStyle
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
 
   const inner = (
@@ -82,8 +82,10 @@ export function SearchLinkCard({
     </Link>
   )
 }
+SearchLinkCard = React.memo(SearchLinkCard)
+export {SearchLinkCard}
 
-export function SearchProfileCard({
+let SearchProfileCard = ({
   profile,
   moderation,
   onPress: onPressInner,
@@ -91,7 +93,7 @@ export function SearchProfileCard({
   profile: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision
   onPress: () => void
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
   const queryClient = useQueryClient()
 
@@ -144,6 +146,8 @@ export function SearchProfileCard({
     </Link>
   )
 }
+SearchProfileCard = React.memo(SearchProfileCard)
+export {SearchProfileCard}
 
 export function DesktopSearch() {
   const {_} = useLingui()

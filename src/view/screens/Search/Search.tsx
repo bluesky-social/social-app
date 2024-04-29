@@ -156,7 +156,7 @@ function useSuggestedFollows(): [
   return [items, onEndReached]
 }
 
-function SearchScreenSuggestedFollows() {
+let SearchScreenSuggestedFollows = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
   const [suggestions, onEndReached] = useSuggestedFollows()
 
@@ -180,6 +180,7 @@ function SearchScreenSuggestedFollows() {
     </CenteredView>
   )
 }
+SearchScreenSuggestedFollows = React.memo(SearchScreenSuggestedFollows)
 
 type SearchResultSlice =
   | {
@@ -192,7 +193,7 @@ type SearchResultSlice =
       key: string
     }
 
-function SearchScreenPostResults({
+let SearchScreenPostResults = ({
   query,
   sort,
   active,
@@ -200,7 +201,7 @@ function SearchScreenPostResults({
   query: string
   sort?: 'top' | 'latest'
   active: boolean
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
@@ -298,14 +299,15 @@ function SearchScreenPostResults({
     </>
   )
 }
+SearchScreenPostResults = React.memo(SearchScreenPostResults)
 
-function SearchScreenUserResults({
+let SearchScreenUserResults = ({
   query,
   active,
 }: {
   query: string
   active: boolean
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
@@ -334,8 +336,9 @@ function SearchScreenUserResults({
     <Loader />
   )
 }
+SearchScreenUserResults = React.memo(SearchScreenUserResults)
 
-export function SearchScreenInner({query}: {query?: string}) {
+let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -467,6 +470,7 @@ export function SearchScreenInner({query}: {query?: string}) {
     </CenteredView>
   )
 }
+SearchScreenInner = React.memo(SearchScreenInner)
 
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
@@ -582,10 +586,21 @@ export function SearchScreen(
     navigateToItem(searchText)
   }, [navigateToItem, searchText])
 
-  const handleHistoryItemClick = (item: string) => {
-    setSearchText(item)
-    navigateToItem(item)
-  }
+  const onAutocompleteResultPress = React.useCallback(() => {
+    if (isWeb) {
+      setShowAutocomplete(false)
+    } else {
+      textInput.current?.blur()
+    }
+  }, [])
+
+  const handleHistoryItemClick = React.useCallback(
+    (item: string) => {
+      setSearchText(item)
+      navigateToItem(item)
+    },
+    [navigateToItem],
+  )
 
   const onSoftReset = React.useCallback(() => {
     scrollToTopWeb()
@@ -604,15 +619,19 @@ export function SearchScreen(
     }, [onSoftReset, setMinimalShellMode]),
   )
 
-  const handleRemoveHistoryItem = (itemToRemove: string) => {
-    const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
-    setSearchHistory(updatedHistory)
-    AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory)).catch(
-      e => {
+  const handleRemoveHistoryItem = React.useCallback(
+    (itemToRemove: string) => {
+      const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
+      setSearchHistory(updatedHistory)
+      AsyncStorage.setItem(
+        'searchHistory',
+        JSON.stringify(updatedHistory),
+      ).catch(e => {
         logger.error('Failed to update search history', {message: e})
-      },
-    )
-  }
+      })
+    },
+    [searchHistory],
+  )
 
   return (
     <View style={isWeb ? null : {flex: 1}}>
@@ -669,13 +688,7 @@ export function SearchScreen(
           queryMaybeHandle={queryMaybeHandle}
           searchText={searchText}
           onSubmit={onSubmit}
-          onResultPress={() => {
-            if (isWeb) {
-              setShowAutocomplete(false)
-            } else {
-              textInput.current?.blur()
-            }
-          }}
+          onResultPress={onAutocompleteResultPress}
         />
       ) : !queryParam && showAutocomplete ? (
         <SearchHistory
@@ -690,7 +703,7 @@ export function SearchScreen(
   )
 }
 
-function SearchInputBox({
+let SearchInputBox = ({
   textInput,
   searchText,
   showAutocomplete,
@@ -706,7 +719,7 @@ function SearchInputBox({
   onChangeText: (text: string) => void
   onSubmit: () => void
   onPressClearQuery: () => void
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
   const theme = useTheme()
@@ -787,8 +800,9 @@ function SearchInputBox({
     </Pressable>
   )
 }
+SearchInputBox = React.memo(SearchInputBox)
 
-function AutocompleteResults({
+let AutocompleteResults = ({
   isAutocompleteFetching,
   autocompleteData,
   queryMaybeHandle,
@@ -802,7 +816,7 @@ function AutocompleteResults({
   searchText: string
   onSubmit: () => void
   onResultPress: () => void
-}) {
+}): React.ReactNode => {
   const moderationOpts = useModerationOpts()
   const {_} = useLingui()
   return (
@@ -850,6 +864,7 @@ function AutocompleteResults({
     </>
   )
 }
+AutocompleteResults = React.memo(AutocompleteResults)
 
 function SearchHistory({
   searchHistory,
