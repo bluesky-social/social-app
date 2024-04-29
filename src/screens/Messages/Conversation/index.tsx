@@ -28,7 +28,7 @@ export function MessagesConversationScreen({route}: Props) {
         showOnDesktop
         showBorder
       />
-      <MessagesList />
+      <MessagesList chatId={chatId} />
     </CenteredView>
   )
 }

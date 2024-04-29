@@ -17,6 +17,13 @@ const HEADERS = {
   Authorization: DM_DID!,
 }
 
+type Chat = {
+  chatId: string
+  messages: TempDmChatGetChatMessages.OutputSchema['messages']
+  lastCursor?: string
+  lastRev?: string
+}
+
 export function useChat(chatId: string) {
   const queryClient = useQueryClient()
 
@@ -26,7 +33,7 @@ export function useChat(chatId: string) {
       const currentChat = queryClient.getQueryData(['chat', chatId])
 
       if (currentChat) {
-        return currentChat as TempDmChatDefs.ChatView
+        return currentChat as Chat
       }
 
       const messagesResponse = await fetch(
@@ -52,7 +59,7 @@ export function useChat(chatId: string) {
         messages: messagesJson.messages,
         lastCursor: messagesJson.cursor,
         lastRev: chatJson.chat.rev,
-      }
+      } satisfies Chat
 
       queryClient.setQueryData(['chat', chatId], newChat)
 
@@ -100,49 +107,40 @@ export function useSendMessageMutation(chatId: string) {
       return response.json()
     },
     onMutate: async variables => {
-      queryClient.setQueryData(
-        ['chat', chatId],
-        (prev: TempDmChatGetChatMessages.OutputSchema) => {
-          return {
-            ...prev,
-            messages: [
-              {
-                id: variables.tempId,
-                text: variables.message,
-              },
-              ...prev.messages,
-            ],
-          }
-        },
-      )
+      queryClient.setQueryData(['chat', chatId], (prev: Chat) => {
+        return {
+          ...prev,
+          messages: [
+            {
+              id: variables.tempId,
+              text: variables.message,
+            },
+            ...prev.messages,
+          ],
+        }
+      })
     },
     onSuccess: (result, variables) => {
-      queryClient.setQueryData(
-        ['chat', chatId],
-        (prev: TempDmChatGetChatMessages.OutputSchema) => {
-          return {
-            ...prev,
-            messages: prev.messages.map(m =>
-              m.id === variables.tempId
-                ? {
-                    ...m,
-                    id: result.id,
-                  }
-                : m,
-            ),
-          }
-        },
-      )
+      queryClient.setQueryData(['chat', chatId], (prev: Chat) => {
+        return {
+          ...prev,
+          messages: prev.messages.map(m =>
+            m.id === variables.tempId
+              ? {
+                  ...m,
+                  id: result.id,
+                }
+              : m,
+          ),
+        }
+      })
     },
     onError: (_, variables) => {
       console.log(_)
-      queryClient.setQueryData(
-        ['chat', chatId],
-        (prev: TempDmChatGetChatMessages.OutputSchema) => ({
-          ...prev,
-          messages: prev.messages.filter(m => m.id !== variables.tempId),
-        }),
-      )
+      queryClient.setQueryData(['chat', chatId], (prev: Chat) => ({
+        ...prev,
+        messages: prev.messages.filter(m => m.id !== variables.tempId),
+      }))
     },
   })
 }
@@ -160,7 +158,7 @@ export function useChatLogQuery() {
       try {
         const response = await fetch(
           `${DM_SERVICE}/xrpc/temp.dm.getChatLog?cursor=${
-            prevLog.at(-1)?.rev ?? ''
+            prevLog?.at(-1)?.rev ?? ''
           }`,
           {
             headers: HEADERS,
@@ -171,22 +169,18 @@ export function useChatLogQuery() {
 
         for (const log of json.logs) {
           if (TempDmChatDefs.isLogDeleteMessage(log)) {
-            queryClient.setQueryData(
-              ['chat', log.chatId],
-              (prev: TempDmChatGetChatMessages.OutputSchema) => {
-                // What to do in this case
-                if (!prev) return
+            queryClient.setQueryData(['chat', log.chatId], (prev: Chat) => {
+              // What to do in this case
+              if (!prev) return
 
-                // HACK we don't know who the creator of a message is, so just filter by id for now
-                if (prev.messages.find(m => m.id === log.message.id))
-                  return prev
+              // HACK we don't know who the creator of a message is, so just filter by id for now
+              if (prev.messages.find(m => m.id === log.message.id)) return prev
 
-                return {
-                  ...prev,
-                  messages: [log.message, ...prev.messages],
-                }
-              },
-            )
+              return {
+                ...prev,
+                messages: [log.message, ...prev.messages],
+              }
+            })
           }
         }
 

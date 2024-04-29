@@ -1,13 +1,3 @@
-import {AppBskyEmbedRecord, AppBskyRichtextFacet} from '@atproto/api'
-
-export interface Message {
-  id: string
-  text: string
-  facets?: AppBskyRichtextFacet.Main[]
-  embed?: AppBskyEmbedRecord.Main | {$type: string; [k: string]: unknown}
-  [k: string]: unknown
-}
-
 export const placeholderClops = [
   'When horses clip-clop in sync, is it considered a hoofbeat remix?',
   'Ever heard a horse go clip-clop in flip flops?',
