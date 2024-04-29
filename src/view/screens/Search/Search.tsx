@@ -7,6 +7,11 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+} from 'react-native-reanimated'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -56,6 +61,7 @@ import {
 } from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 function Loader() {
   const pal = usePalette('default')
@@ -643,11 +649,13 @@ export function SearchScreen(
           </Pressable>
         )}
 
-        <Pressable
+        <AnimatedPressable
           // This only exists only for extra hitslop so don't expose it to the a11y tree.
           accessible={false}
           focusable={false}
+          // @ts-ignore web-only
           tabIndex={-1}
+          layout={isNative ? LinearTransition.duration(200) : undefined}
           style={[
             {backgroundColor: pal.colors.backgroundLight},
             styles.headerSearchContainer,
@@ -701,7 +709,9 @@ export function SearchScreen(
             autoCapitalize="none"
           />
           {showAutocomplete && searchText.length > 0 ? (
-            <Pressable
+            <AnimatedPressable
+              entering={isNative ? FadeIn.delay(200).duration(200) : undefined}
+              exiting={isNative ? FadeOut.duration(50) : undefined}
               testID="searchTextInputClearBtn"
               onPress={onPressClearQuery}
               accessibilityRole="button"
@@ -713,21 +723,22 @@ export function SearchScreen(
                 size={16}
                 style={pal.textLight as FontAwesomeIconStyle}
               />
-            </Pressable>
+            </AnimatedPressable>
           ) : undefined}
-        </Pressable>
-
+        </AnimatedPressable>
         {showAutocomplete && (
-          <View style={styles.headerCancelBtn}>
-            <Pressable
+          <View style={[styles.headerCancelBtn]}>
+            <AnimatedPressable
+              entering={isNative ? FadeIn.duration(300) : undefined}
+              exiting={isNative ? FadeOut.duration(50) : undefined}
               key="cancel"
               onPress={onPressCancelSearch}
               accessibilityRole="button"
               hitSlop={HITSLOP_10}>
-              <Text style={[pal.text]}>
+              <Text style={pal.text}>
                 <Trans>Cancel</Trans>
               </Text>
-            </Pressable>
+            </AnimatedPressable>
           </View>
         )}
       </CenteredView>
@@ -879,6 +890,9 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
+    alignSelf: 'center',
+    zIndex: -1,
+    elevation: -1, // For Android
   },
   tabBarContainer: {
     // @ts-ignore web only
