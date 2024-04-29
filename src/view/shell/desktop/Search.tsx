@@ -180,6 +180,10 @@ export function DesktopSearch() {
     setIsActive(false)
   }, [])
 
+  const onBlur = React.useCallback(() => {
+    setIsActive(false)
+  }, [])
+
   return (
     <View style={[styles.container, pal.view]}>
       <View
@@ -197,6 +201,7 @@ export function DesktopSearch() {
             returnKeyType="search"
             value={query}
             style={[pal.textLight, styles.input]}
+            onBlur={onBlur}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
