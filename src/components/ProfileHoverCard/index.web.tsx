@@ -72,10 +72,10 @@ type Action =
   | 'unhovered-long-enough'
   | 'finished-animating-hide'
 
-const SHOW_DELAY = 400
+const SHOW_DELAY = 500
 const SHOW_DURATION = 300
 const HIDE_DELAY = 150
-const HIDE_DURATION = 150
+const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const {refs, floatingStyles} = useFloating({
@@ -244,12 +244,20 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     }
   }, [prefetchProfileQuery, props.did])
 
-  const onPointerEnterTarget = React.useCallback(() => {
+  const didFireHover = React.useRef(false)
+  const onPointerMoveTarget = React.useCallback(() => {
     prefetchIfNeeded()
-    dispatch('hovered-target')
+    // Conceptually we want something like onPointerEnter,
+    // but we want to ignore entering only due to scrolling.
+    // So instead we hover on the first onPointerMove.
+    if (!didFireHover.current) {
+      didFireHover.current = true
+      dispatch('hovered-target')
+    }
   }, [prefetchIfNeeded])
 
   const onPointerLeaveTarget = React.useCallback(() => {
+    didFireHover.current = false
     dispatch('unhovered-target')
   }, [])
 
@@ -280,7 +288,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   return (
     <div
       ref={refs.setReference}
-      onPointerEnter={onPointerEnterTarget}
+      onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
       onMouseUp={onPress}
       style={{

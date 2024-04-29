@@ -11,6 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
 import {TimeElapsed} from './TimeElapsed'
@@ -58,37 +59,39 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         </View>
       )}
-      <Text
-        numberOfLines={1}
-        style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
-        <TextLinkOnWebOnly
-          type={opts.displayNameType || 'lg-bold'}
-          style={[pal.text]}
-          lineHeight={1.2}
-          disableMismatchWarning
-          text={
-            <>
-              {sanitizeDisplayName(
-                displayName,
-                opts.moderation?.ui('displayName'),
-              )}
-            </>
-          }
-          href={profileLink}
-          onBeforePress={onBeforePress}
-          onPointerEnter={onPointerEnter}
-        />
-        <TextLinkOnWebOnly
-          type="md"
-          disableMismatchWarning
-          style={[pal.textLight, {flexShrink: 4}]}
-          text={'\xa0' + sanitizeHandle(handle, '@')}
-          href={profileLink}
-          onBeforePress={onBeforePress}
-          onPointerEnter={onPointerEnter}
-          anchorNoUnderline
-        />
-      </Text>
+      <ProfileHoverCard inline did={opts.author.did}>
+        <Text
+          numberOfLines={1}
+          style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
+          <TextLinkOnWebOnly
+            type={opts.displayNameType || 'lg-bold'}
+            style={[pal.text]}
+            lineHeight={1.2}
+            disableMismatchWarning
+            text={
+              <>
+                {sanitizeDisplayName(
+                  displayName,
+                  opts.moderation?.ui('displayName'),
+                )}
+              </>
+            }
+            href={profileLink}
+            onBeforePress={onBeforePress}
+            onPointerEnter={onPointerEnter}
+          />
+          <TextLinkOnWebOnly
+            type="md"
+            disableMismatchWarning
+            style={[pal.textLight, {flexShrink: 4}]}
+            text={'\xa0' + sanitizeHandle(handle, '@')}
+            href={profileLink}
+            onBeforePress={onBeforePress}
+            onPointerEnter={onPointerEnter}
+            anchorNoUnderline
+          />
+        </Text>
+      </ProfileHoverCard>
       {!isAndroid && (
         <Text
           type="md"

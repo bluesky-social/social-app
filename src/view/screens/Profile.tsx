@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react'
+import React, {useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -11,7 +11,6 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
@@ -466,7 +465,6 @@ function ProfileScreenLoaded({
           accessibilityHint=""
         />
       )}
-      <TestGates />
     </ScreenHider>
   )
 }
@@ -525,77 +523,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 })
-
-const shouldExposeToGate2 = Math.random() < 0.2
-
-// --- Temporary: we're testing our Statsig setup ---
-let TestGates = React.memo(function TestGates() {
-  const gate = useGate()
-
-  useEffect(() => {
-    logEvent('test:all:always', {})
-    if (Math.random() < 0.2) {
-      logEvent('test:all:sometimes', {})
-    }
-    if (Math.random() < 0.1) {
-      logEvent('test:all:boosted_by_gate1', {
-        reason: 'base',
-      })
-    }
-    if (Math.random() < 0.1) {
-      logEvent('test:all:boosted_by_gate2', {
-        reason: 'base',
-      })
-    }
-    if (Math.random() < 0.1) {
-      logEvent('test:all:boosted_by_both', {
-        reason: 'base',
-      })
-    }
-  }, [])
-
-  return [
-    gate('test_gate_1') ? <TestGate1 /> : null,
-    shouldExposeToGate2 && gate('test_gate_2') ? <TestGate2 /> : null,
-  ]
-})
-
-function TestGate1() {
-  useEffect(() => {
-    logEvent('test:gate1:always', {})
-    if (Math.random() < 0.2) {
-      logEvent('test:gate1:sometimes', {})
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_gate1', {
-        reason: 'gate1',
-      })
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_both', {
-        reason: 'gate1',
-      })
-    }
-  }, [])
-  return null
-}
-
-function TestGate2() {
-  useEffect(() => {
-    logEvent('test:gate2:always', {})
-    if (Math.random() < 0.2) {
-      logEvent('test:gate2:sometimes', {})
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_gate2', {
-        reason: 'gate2',
-      })
-    }
-    if (Math.random() < 0.5) {
-      logEvent('test:all:boosted_by_both', {
-        reason: 'gate2',
-      })
-    }
-  }, [])
-  return null
-}
