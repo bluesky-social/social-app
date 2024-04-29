@@ -16,30 +16,47 @@ import {useAsyncStorage} from '@react-native-async-storage/async-storage'
  * popular video game, but this has not been confirmed.
  *
  */
-export function useDmServiceUrlStorage() {
-  const [value, setValue] = React.useState<string>('')
+
+const DmServiceUrlStorageContext = React.createContext<{
+  value: string
+  setItem: (value: string) => void
+}>({
+  value: '',
+  setItem: () => {},
+})
+
+export const useDmServiceUrlStorage = () =>
+  React.useContext(DmServiceUrlStorageContext)
+
+export function DmServiceUrlProvider() {
+  const [serviceUrl, setServiceUrl] = React.useState<string>('')
   const {getItem, setItem: setItemInner} = useAsyncStorage('dmServiceUrl')
 
   React.useEffect(() => {
     ;(async () => {
       const v = await getItem()
-      setValue(v ?? '')
+      console.log(v)
+      setServiceUrl(v ?? '')
     })()
   }, [getItem])
 
   const setItem = React.useCallback(
     (v: string) => {
       setItemInner(v)
-      setValue(v)
+      setServiceUrl(v)
     },
     [setItemInner],
   )
 
-  return React.useMemo(
+  const value = React.useMemo(
     () => ({
       value,
       setItem,
     }),
     [value, setItem],
+  )
+
+  return (
+
   )
 }
