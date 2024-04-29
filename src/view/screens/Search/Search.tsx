@@ -681,24 +681,35 @@ export function SearchScreen(
           </View>
         )}
       </CenteredView>
-      {showAutocomplete && searchText.length > 0 ? (
-        <AutocompleteResults
-          isAutocompleteFetching={isAutocompleteFetching}
-          autocompleteData={autocompleteData}
-          queryMaybeHandle={queryMaybeHandle}
-          searchText={searchText}
-          onSubmit={onSubmit}
-          onResultPress={onAutocompleteResultPress}
-        />
-      ) : !queryParam && showAutocomplete ? (
-        <SearchHistory
-          searchHistory={searchHistory}
-          onItemClick={handleHistoryItemClick}
-          onRemoveItemClick={handleRemoveHistoryItem}
-        />
-      ) : (
+      <View
+        style={{
+          display: showAutocomplete ? 'flex' : 'none',
+          flex: 1,
+        }}>
+        {searchText.length > 0 ? (
+          <AutocompleteResults
+            isAutocompleteFetching={isAutocompleteFetching}
+            autocompleteData={autocompleteData}
+            queryMaybeHandle={queryMaybeHandle}
+            searchText={searchText}
+            onSubmit={onSubmit}
+            onResultPress={onAutocompleteResultPress}
+          />
+        ) : (
+          <SearchHistory
+            searchHistory={searchHistory}
+            onItemClick={handleHistoryItemClick}
+            onRemoveItemClick={handleRemoveHistoryItem}
+          />
+        )}
+      </View>
+      <View
+        style={{
+          display: showAutocomplete ? 'none' : 'flex',
+          flex: 1,
+        }}>
         <SearchScreenInner query={queryParam} />
-      )}
+      </View>
     </View>
   )
 }
