@@ -178,7 +178,6 @@ export function useChatLogQuery() {
       ]) as TempDmChatGetChatLog.OutputSchema
 
       try {
-        console.log(serviceUrl)
         const response = await fetch(
           `${serviceUrl}/xrpc/temp.dm.getChatLog?cursor=${
             prevLog?.cursor ?? ''
