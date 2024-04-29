@@ -3678,7 +3678,7 @@ msgstr "需要電子郵件驗證碼才能登入你的帳戶"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
-msgstr "必須填上託管服務供應商"
+msgstr "此供應商要求必填"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
