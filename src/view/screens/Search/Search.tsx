@@ -472,7 +472,6 @@ export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const navigation = useNavigation<NavigationProp>()
-  const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
   const pal = usePalette('default')
@@ -641,81 +640,15 @@ export function SearchScreen(
             />
           </Pressable>
         )}
-
-        <Pressable
-          // This only exists only for extra hitslop so don't expose it to the a11y tree.
-          accessible={false}
-          focusable={false}
-          // @ts-ignore web-only
-          tabIndex={-1}
-          style={[
-            {backgroundColor: pal.colors.backgroundLight},
-            styles.headerSearchContainer,
-            isWeb && {
-              // @ts-ignore web only
-              cursor: 'default',
-            },
-          ]}
-          onPress={() => {
-            textInput.current?.focus()
-          }}>
-          <MagnifyingGlassIcon
-            style={[pal.icon, styles.headerSearchIcon]}
-            size={21}
-          />
-          <TextInput
-            testID="searchTextInput"
-            ref={textInput}
-            placeholder={_(msg`Search`)}
-            placeholderTextColor={pal.colors.textLight}
-            returnKeyType="search"
-            value={searchText}
-            style={[pal.text, styles.headerSearchInput]}
-            keyboardAppearance={theme.colorScheme}
-            selectTextOnFocus={isNative}
-            onFocus={() => {
-              if (isWeb) {
-                // Prevent a jump on iPad by ensuring that
-                // the initial focused render has no result list.
-                requestAnimationFrame(() => {
-                  setShowAutocomplete(true)
-                })
-              } else {
-                setShowAutocomplete(true)
-                if (isIOS) {
-                  // We rely on selectTextOnFocus, but it's broken on iOS:
-                  // https://github.com/facebook/react-native/issues/41988
-                  textInput.current?.setSelection(0, searchText.length)
-                  // We still rely on selectTextOnFocus for it to be instant on Android.
-                }
-              }
-            }}
-            onChangeText={onChangeText}
-            onSubmitEditing={onSubmit}
-            autoFocus={false}
-            accessibilityRole="search"
-            accessibilityLabel={_(msg`Search`)}
-            accessibilityHint=""
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-          />
-          {showAutocomplete && searchText.length > 0 && (
-            <Pressable
-              testID="searchTextInputClearBtn"
-              onPress={onPressClearQuery}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint=""
-              hitSlop={HITSLOP_10}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </Pressable>
-          )}
-        </Pressable>
+        <SearchInputBox
+          textInput={textInput}
+          searchText={searchText}
+          showAutocomplete={showAutocomplete}
+          setShowAutocomplete={setShowAutocomplete}
+          onChangeText={onChangeText}
+          onSubmit={onSubmit}
+          onPressClearQuery={onPressClearQuery}
+        />
         {showAutocomplete && (
           <View style={[styles.headerCancelBtn]}>
             <Pressable
@@ -729,7 +662,6 @@ export function SearchScreen(
           </View>
         )}
       </CenteredView>
-
       {showAutocomplete && searchText.length > 0 ? (
         <AutocompleteResults
           isAutocompleteFetching={isAutocompleteFetching}
@@ -755,6 +687,104 @@ export function SearchScreen(
         <SearchScreenInner query={queryParam} />
       )}
     </View>
+  )
+}
+
+function SearchInputBox({
+  textInput,
+  searchText,
+  showAutocomplete,
+  setShowAutocomplete,
+  onChangeText,
+  onSubmit,
+  onPressClearQuery,
+}: {
+  textInput: React.RefObject<TextInput>
+  searchText: string
+  showAutocomplete: boolean
+  setShowAutocomplete: (show: boolean) => void
+  onChangeText: (text: string) => void
+  onSubmit: () => void
+  onPressClearQuery: () => void
+}) {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const theme = useTheme()
+  return (
+    <Pressable
+      // This only exists only for extra hitslop so don't expose it to the a11y tree.
+      accessible={false}
+      focusable={false}
+      // @ts-ignore web-only
+      tabIndex={-1}
+      style={[
+        {backgroundColor: pal.colors.backgroundLight},
+        styles.headerSearchContainer,
+        isWeb && {
+          // @ts-ignore web only
+          cursor: 'default',
+        },
+      ]}
+      onPress={() => {
+        textInput.current?.focus()
+      }}>
+      <MagnifyingGlassIcon
+        style={[pal.icon, styles.headerSearchIcon]}
+        size={21}
+      />
+      <TextInput
+        testID="searchTextInput"
+        ref={textInput}
+        placeholder={_(msg`Search`)}
+        placeholderTextColor={pal.colors.textLight}
+        returnKeyType="search"
+        value={searchText}
+        style={[pal.text, styles.headerSearchInput]}
+        keyboardAppearance={theme.colorScheme}
+        selectTextOnFocus={isNative}
+        onFocus={() => {
+          if (isWeb) {
+            // Prevent a jump on iPad by ensuring that
+            // the initial focused render has no result list.
+            requestAnimationFrame(() => {
+              setShowAutocomplete(true)
+            })
+          } else {
+            setShowAutocomplete(true)
+            if (isIOS) {
+              // We rely on selectTextOnFocus, but it's broken on iOS:
+              // https://github.com/facebook/react-native/issues/41988
+              textInput.current?.setSelection(0, searchText.length)
+              // We still rely on selectTextOnFocus for it to be instant on Android.
+            }
+          }
+        }}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmit}
+        autoFocus={false}
+        accessibilityRole="search"
+        accessibilityLabel={_(msg`Search`)}
+        accessibilityHint=""
+        autoCorrect={false}
+        autoComplete="off"
+        autoCapitalize="none"
+      />
+      {showAutocomplete && searchText.length > 0 && (
+        <Pressable
+          testID="searchTextInputClearBtn"
+          onPress={onPressClearQuery}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Clear search query`)}
+          accessibilityHint=""
+          hitSlop={HITSLOP_10}>
+          <FontAwesomeIcon
+            icon="xmark"
+            size={16}
+            style={pal.textLight as FontAwesomeIconStyle}
+          />
+        </Pressable>
+      )}
+    </Pressable>
   )
 }
 
