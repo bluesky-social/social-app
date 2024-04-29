@@ -32,11 +32,7 @@ import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
-import {
-  useModerationOpts,
-  usePreferencesQuery,
-  UsePreferencesQueryResponse,
-} from './preferences'
+import {useModerationOpts, usePreferencesQuery} from './preferences'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
@@ -110,6 +106,7 @@ export function usePostFeedQuery(
   const {data: preferences} = usePreferencesQuery()
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
+  const userInterests = aggregateUserInterests(preferences)
   const {getAgent} = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
@@ -148,7 +145,7 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              preferences,
+              userInterests, // Not in the query key because they don't change.
               getAgent,
             }),
             cursor: undefined,
@@ -379,17 +376,15 @@ function createApi({
   feedDesc,
   feedParams,
   feedTuners,
-  preferences,
+  userInterests,
   getAgent,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
-  preferences?: UsePreferencesQueryResponse
+  userInterests?: string
   getAgent: () => BskyAgent
 }) {
-  const userInterests = aggregateUserInterests(preferences)
-
   if (feedDesc === 'home') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
