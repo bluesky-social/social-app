@@ -1,7 +1,13 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
-import {cacheDirectory, copyAsync, deleteAsync} from 'expo-file-system'
+import {
+  cacheDirectory,
+  copyAsync,
+  deleteAsync,
+  EncodingType,
+  writeAsStringAsync,
+} from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
@@ -239,4 +245,27 @@ function normalizePath(str: string, allPlatforms = false): string {
     }
   }
   return str
+}
+
+export async function saveBytesToDisk(
+  filename: string,
+  bytes: Uint8Array,
+  type: string,
+) {
+  // Should never happen on native
+  if (!cacheDirectory) throw new Error('No cache directory')
+  const base64str = Buffer.from(bytes).toString('base64')
+  const filePath = joinPath(cacheDirectory, filename)
+  await writeAsStringAsync(filePath, base64str, {encoding: EncodingType.Base64})
+  const fileUri = normalizePath(filePath, true)
+
+  try {
+    if (isIOS) {
+      await RNShare.share({url: fileUri})
+    } else {
+      await Sharing.shareAsync(fileUri, {mimeType: type})
+    }
+  } finally {
+    safeDeleteAsync(fileUri)
+  }
 }

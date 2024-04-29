@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
+import {saveBytesToDisk} from '#/lib/media/manip'
 import {useAgent} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -25,20 +25,7 @@ export function ExportCarDialog({
     const agent = getAgent()
     const repo = await agent.getDid()
     const res = await agent.com.atproto.sync.getRepo({did: repo})
-
-    if (isWeb) {
-      const blob = new Blob([res.data], {type: res.headers['content-type']})
-      const url = URL.createObjectURL(blob)
-      const anchor = document.createElement('a')
-      anchor.href = url
-      anchor.download = 'repo.car'
-      anchor.click()
-      // Firefox requires a small delay
-      setTimeout(() => URL.revokeObjectURL(url), 100)
-    } else {
-      // TODO: Save blob on device
-      throw new Error('Not implemented')
-    }
+    await saveBytesToDisk('repo.car', res.data, res.headers['content-type'])
   }, [getAgent])
 
   return (
