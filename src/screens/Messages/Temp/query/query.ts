@@ -172,7 +172,7 @@ export function useChatLogQuery() {
       try {
         const response = await fetch(
           `${DM_SERVICE}/xrpc/temp.dm.getChatLog?cursor=${
-            prevLog.logs.at(-1)?.rev ?? ''
+            prevLog?.cursor ?? ''
           }`,
           {
             headers: headers,
