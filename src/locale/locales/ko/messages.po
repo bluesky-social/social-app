@@ -52,7 +52,7 @@ msgid "2FA Confirmation"
 msgstr "2단계 인증"
 
 #: src/view/com/util/ViewHeader.tsx:91
-#: src/view/screens/Search/Search.tsx:653
+#: src/view/screens/Search/Search.tsx:650
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
@@ -532,8 +532,8 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/Repost.tsx:88
 #: src/view/com/modals/VerifyEmail.tsx:256
 #: src/view/com/modals/VerifyEmail.tsx:262
-#: src/view/screens/Search/Search.tsx:748
-#: src/view/shell/desktop/Search.tsx:222
+#: src/view/screens/Search/Search.tsx:674
+#: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
 msgstr "취소"
 
@@ -566,7 +566,7 @@ msgid "Cancel quote post"
 msgstr "게시물 인용 취소"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
-#: src/view/shell/desktop/Search.tsx:218
+#: src/view/shell/desktop/Search.tsx:214
 msgid "Cancel search"
 msgstr "검색 취소"
 
@@ -671,7 +671,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:728
+#: src/view/screens/Search/Search.tsx:796
 msgid "Clear search query"
 msgstr "검색어 지우기"
 
@@ -1496,7 +1496,7 @@ msgstr "사용자 이름 및 비밀번호 입력"
 msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 
-#: src/view/screens/Search/Search.tsx:120
+#: src/view/screens/Search/Search.tsx:108
 msgid "Error:"
 msgstr "오류:"
 
@@ -1525,7 +1525,7 @@ msgid "Exits image view"
 msgstr "이미지 보기를 종료합니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/shell/desktop/Search.tsx:219
+#: src/view/shell/desktop/Search.tsx:215
 msgid "Exits inputting search query"
 msgstr "검색어 입력을 종료합니다"
 
@@ -1650,7 +1650,7 @@ msgstr "마무리 중"
 msgid "Find accounts to follow"
 msgstr "팔로우할 계정 찾아보기"
 
-#: src/view/screens/Search/Search.tsx:471
+#: src/view/screens/Search/Search.tsx:462
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
 
@@ -1855,8 +1855,8 @@ msgstr "홈으로 이동"
 
 #: src/view/screens/Search/Search.tsx:780
 #: src/view/shell/desktop/Search.tsx:250
-msgid "Go to @{queryMaybeHandle}"
-msgstr "@{queryMaybeHandle}(으)로 이동"
+#~ msgid "Go to @{queryMaybeHandle}"
+#~ msgstr "@{queryMaybeHandle}(으)로 이동"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -2192,7 +2192,7 @@ msgid "Languages"
 msgstr "언어"
 
 #: src/screens/Hashtag.tsx:99
-#: src/view/screens/Search/Search.tsx:378
+#: src/view/screens/Search/Search.tsx:369
 msgid "Latest"
 msgstr "최신"
 
@@ -2407,7 +2407,7 @@ msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
 #: src/view/com/util/ViewHeader.tsx:89
-#: src/view/screens/Search/Search.tsx:652
+#: src/view/screens/Search/Search.tsx:649
 msgid "Menu"
 msgstr "메뉴"
 
@@ -2773,8 +2773,8 @@ msgid "No results found for \"{query}\""
 msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:300
-#: src/view/screens/Search/Search.tsx:338
+#: src/view/screens/Search/Search.tsx:289
+#: src/view/screens/Search/Search.tsx:328
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
@@ -3116,7 +3116,7 @@ msgstr "비밀번호 변경됨"
 msgid "Pause"
 msgstr "일시 정지"
 
-#: src/view/screens/Search/Search.tsx:388
+#: src/view/screens/Search/Search.tsx:379
 msgid "People"
 msgstr "사람들"
 
@@ -3408,7 +3408,7 @@ msgstr "무작위"
 msgid "Ratios"
 msgstr "비율"
 
-#: src/view/screens/Search/Search.tsx:815
+#: src/view/screens/Search/Search.tsx:886
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -3767,23 +3767,23 @@ msgstr "맨 위로 스크롤"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:453
-#: src/view/screens/Search/Search.tsx:687
-#: src/view/screens/Search/Search.tsx:715
+#: src/view/screens/Search/Search.tsx:444
+#: src/view/screens/Search/Search.tsx:757
+#: src/view/screens/Search/Search.tsx:785
 #: src/view/shell/bottom-bar/BottomBar.tsx:190
 #: src/view/shell/desktop/LeftNav.tsx:332
-#: src/view/shell/desktop/Search.tsx:198
-#: src/view/shell/desktop/Search.tsx:207
+#: src/view/shell/desktop/Search.tsx:194
+#: src/view/shell/desktop/Search.tsx:203
 #: src/view/shell/Drawer.tsx:363
 #: src/view/shell/Drawer.tsx:364
 msgid "Search"
 msgstr "검색"
 
-#: src/view/shell/desktop/Search.tsx:239
+#: src/view/shell/desktop/Search.tsx:235
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:768
+#: src/view/screens/Search/Search.tsx:839
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
@@ -4356,7 +4356,7 @@ msgstr "이 라벨러 구독하기"
 msgid "Subscribe to this list"
 msgstr "이 리스트 구독하기"
 
-#: src/view/screens/Search/Search.tsx:426
+#: src/view/screens/Search/Search.tsx:417
 msgid "Suggested Follows"
 msgstr "팔로우 추천"
 
@@ -4775,7 +4775,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
 #: src/screens/Hashtag.tsx:88
-#: src/view/screens/Search/Search.tsx:368
+#: src/view/screens/Search/Search.tsx:359
 msgid "Top"
 msgstr "인기"
 
@@ -5219,7 +5219,7 @@ msgstr "죄송하지만 이 리스트를 불러올 수 없습니다. 이 문제�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/view/screens/Search/Search.tsx:273
+#: src/view/screens/Search/Search.tsx:262
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
