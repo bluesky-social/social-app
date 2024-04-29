@@ -835,7 +835,7 @@ msgstr "調整類別的內容過濾設定：{0}"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr "為 {name} 分類配置內容過濾設定"
+msgstr "為 {name} 類別設定內容過濾"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
