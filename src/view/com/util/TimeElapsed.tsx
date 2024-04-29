@@ -1,8 +1,7 @@
 import React from 'react'
-import {ago} from 'lib/strings/time'
-import {useTickEveryMinute} from '#/state/shell'
 
-// FIXME(dan): Figure out why the false positives
+import {useTickEveryMinute} from '#/state/shell'
+import {ago} from 'lib/strings/time'
 
 export function TimeElapsed({
   timestamp,
@@ -12,11 +11,13 @@ export function TimeElapsed({
   children: ({timeElapsed}: {timeElapsed: string}) => JSX.Element
 }) {
   const tick = useTickEveryMinute()
-  const [timeElapsed, setTimeAgo] = React.useState(ago(timestamp))
+  const [timeElapsed, setTimeAgo] = React.useState(() => ago(timestamp))
 
-  React.useEffect(() => {
+  const [prevTick, setPrevTick] = React.useState(tick)
+  if (prevTick !== tick) {
+    setPrevTick(tick)
     setTimeAgo(ago(timestamp))
-  }, [timestamp, setTimeAgo, tick])
+  }
 
   return children({timeElapsed})
 }

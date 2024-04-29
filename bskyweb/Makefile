@@ -14,6 +14,7 @@ help: ## Print info about all commands
 .PHONY: build
 build: ## Build all executables
 	go build ./cmd/bskyweb
+	go build ./cmd/embedr
 
 .PHONY: test
 test: ## Run all tests
@@ -43,3 +44,7 @@ check: ## Compile everything, checking syntax (does not output binaries)
 .PHONY: run-dev-bskyweb
 run-dev-bskyweb: .env ## Runs 'bskyweb' for local dev
 	GOLOG_LOG_LEVEL=info go run ./cmd/bskyweb serve
+
+.PHONY: run-dev-embedr
+run-dev-embedr: .env ## Runs 'embedr' for local dev
+	GOLOG_LOG_LEVEL=info go run ./cmd/embedr serve

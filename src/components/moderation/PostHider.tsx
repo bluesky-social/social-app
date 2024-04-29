@@ -1,25 +1,27 @@
 import React, {ComponentProps} from 'react'
-import {StyleSheet, Pressable, View, ViewStyle, StyleProp} from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {addStyle} from 'lib/styles'
-
-import {useTheme, atoms as a} from '#/alf'
+import {precacheProfile} from 'state/queries/profile'
+// import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
+import {Link} from '#/view/com/util/Link'
+import {atoms as a, useTheme} from '#/alf'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
-// import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
-import {Link} from '#/view/com/util/Link'
 
 interface Props extends ComponentProps<typeof Link> {
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
+  profile: AppBskyActorDefs.ProfileViewBasic
 }
 
 export function PostHider({
@@ -30,14 +32,20 @@ export function PostHider({
   children,
   iconSize,
   iconStyles,
+  profile,
   ...props
 }: Props) {
+  const queryClient = useQueryClient()
   const t = useTheme()
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const control = useModerationDetailsDialogControl()
   const blur = modui.blurs[0]
   const desc = useModerationCauseDescription(blur)
+
+  const onBeforePress = React.useCallback(() => {
+    precacheProfile(queryClient, profile)
+  }, [queryClient, profile])
 
   if (!blur) {
     return (
@@ -46,6 +54,7 @@ export function PostHider({
         style={style}
         href={href}
         accessible={false}
+        onBeforePress={onBeforePress}
         {...props}>
         {children}
       </Link>

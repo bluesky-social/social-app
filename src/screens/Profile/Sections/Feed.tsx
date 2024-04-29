@@ -1,18 +1,19 @@
 import React from 'react'
-import {View} from 'react-native'
+import {findNodeHandle, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {ListRef} from 'view/com/util/List'
-import {Feed} from 'view/com/posts/Feed'
-import {EmptyState} from 'view/com/util/EmptyState'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {isNative} from '#/platform/detection'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {useQueryClient} from '@tanstack/react-query'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isNative} from '#/platform/detection'
+import {Text} from '#/view/com/util/text/Text'
+import {Feed} from 'view/com/posts/Feed'
+import {EmptyState} from 'view/com/util/EmptyState'
+import {ListRef} from 'view/com/util/List'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -21,12 +22,20 @@ interface FeedSectionProps {
   isFocused: boolean
   scrollElRef: ListRef
   ignoreFilterFor?: string
+  setScrollViewTag: (tag: number | null) => void
 }
 export const ProfileFeedSection = React.forwardRef<
   SectionRef,
   FeedSectionProps
 >(function FeedSectionImpl(
-  {feed, headerHeight, isFocused, scrollElRef, ignoreFilterFor},
+  {
+    feed,
+    headerHeight,
+    isFocused,
+    scrollElRef,
+    ignoreFilterFor,
+    setScrollViewTag,
+  },
   ref,
 ) {
   const {_} = useLingui()
@@ -49,6 +58,13 @@ export const ProfileFeedSection = React.forwardRef<
   const renderPostsEmpty = React.useCallback(() => {
     return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
   }, [_])
+
+  React.useEffect(() => {
+    if (isFocused && scrollElRef.current) {
+      const nativeTag = findNodeHandle(scrollElRef.current)
+      setScrollViewTag(nativeTag)
+    }
+  }, [isFocused, scrollElRef, setScrollViewTag])
 
   return (
     <View>

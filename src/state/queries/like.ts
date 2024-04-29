@@ -1,8 +1,9 @@
 import {useMutation} from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 export function useLikeMutation() {
+  const {getAgent} = useAgent()
   return useMutation({
     mutationFn: async ({uri, cid}: {uri: string; cid: string}) => {
       const res = await getAgent().like(uri, cid)
@@ -12,6 +13,7 @@ export function useLikeMutation() {
 }
 
 export function useUnlikeMutation() {
+  const {getAgent} = useAgent()
   return useMutation({
     mutationFn: async ({uri}: {uri: string}) => {
       await getAgent().deleteLike(uri)

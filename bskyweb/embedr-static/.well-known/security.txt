@@ -1,0 +1,4 @@
+Contact: mailto:security@bsky.app
+Preferred-Languages: en
+Canonical: https://bsky.app/.well-known/security.txt
+Acknowledgements: https://github.com/bluesky-social/atproto/blob/main/CONTRIBUTORS.md

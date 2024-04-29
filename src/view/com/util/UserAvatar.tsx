@@ -1,30 +1,34 @@
 import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
-import Svg, {Circle, Rect, Path} from 'react-native-svg'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
+import Svg, {Circle, Path, Rect} from 'react-native-svg'
+import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ModerationUI} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {HighPriorityImage} from 'view/com/util/images/Image'
-import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {
-  usePhotoLibraryPermission,
-  useCameraPermission,
-} from 'lib/hooks/usePermissions'
-import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid, isNative} from 'platform/detection'
-import {UserPreviewLink} from './UserPreviewLink'
-import * as Menu from '#/components/Menu'
 import {
-  Camera_Stroke2_Corner0_Rounded as Camera,
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from 'lib/hooks/usePermissions'
+import {makeProfileLink} from 'lib/routes/links'
+import {colors} from 'lib/styles'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {precacheProfile} from 'state/queries/profile'
+import {HighPriorityImage} from 'view/com/util/images/Image'
+import {tokens, useTheme} from '#/alf'
+import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+  Camera_Stroke2_Corner0_Rounded as Camera,
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {useTheme, tokens} from '#/alf'
+import {Link} from '#/components/Link'
+import * as Menu from '#/components/Menu'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -45,8 +49,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  did: string
-  handle: string
+  profile: AppBskyActorDefs.ProfileViewBasic
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -369,13 +372,30 @@ let EditableUserAvatar = ({
 EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
 
-let PreviewableUserAvatar = (
-  props: PreviewableUserAvatarProps,
-): React.ReactNode => {
+let PreviewableUserAvatar = ({
+  moderation,
+  profile,
+  ...rest
+}: PreviewableUserAvatarProps): React.ReactNode => {
+  const {_} = useLingui()
+  const queryClient = useQueryClient()
+
+  const onPress = React.useCallback(() => {
+    precacheProfile(queryClient, profile)
+  }, [profile, queryClient])
+
   return (
-    <UserPreviewLink did={props.did} handle={props.handle}>
-      <UserAvatar {...props} />
-    </UserPreviewLink>
+    <ProfileHoverCard did={profile.did}>
+      <Link
+        label={_(msg`See profile`)}
+        to={makeProfileLink({
+          did: profile.did,
+          handle: profile.handle,
+        })}
+        onPress={onPress}>
+        <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
+      </Link>
+    </ProfileHoverCard>
   )
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)

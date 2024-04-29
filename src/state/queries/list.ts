@@ -4,6 +4,7 @@ import {
   AppBskyGraphGetList,
   AppBskyGraphList,
   AtUri,
+  BskyAgent,
   Facet,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -12,7 +13,7 @@ import chunk from 'lodash.chunk'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
-import {getAgent, useSession} from '../session'
+import {useAgent, useSession} from '../session'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
@@ -20,6 +21,7 @@ const RQKEY_ROOT = 'list'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListQuery(uri?: string) {
+  const {getAgent} = useAgent()
   return useQuery<AppBskyGraphDefs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
@@ -47,6 +49,7 @@ export interface ListCreateMutateParams {
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<{uri: string; cid: string}, Error, ListCreateMutateParams>(
     {
       async mutationFn({
@@ -85,9 +88,13 @@ export function useListCreateMutation() {
         )
 
         // wait for the appview to update
-        await whenAppViewReady(res.uri, (v: AppBskyGraphGetList.Response) => {
-          return typeof v?.data?.list.uri === 'string'
-        })
+        await whenAppViewReady(
+          getAgent,
+          res.uri,
+          (v: AppBskyGraphGetList.Response) => {
+            return typeof v?.data?.list.uri === 'string'
+          },
+        )
         return res
       },
       onSuccess() {
@@ -109,6 +116,7 @@ export interface ListMetadataMutateParams {
 }
 export function useListMetadataMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -150,12 +158,16 @@ export function useListMetadataMutation() {
       ).data
 
       // wait for the appview to update
-      await whenAppViewReady(res.uri, (v: AppBskyGraphGetList.Response) => {
-        const list = v.data.list
-        return (
-          list.name === record.name && list.description === record.description
-        )
-      })
+      await whenAppViewReady(
+        getAgent,
+        res.uri,
+        (v: AppBskyGraphGetList.Response) => {
+          const list = v.data.list
+          return (
+            list.name === record.name && list.description === record.description
+          )
+        },
+      )
       return res
     },
     onSuccess(data, variables) {
@@ -172,6 +184,7 @@ export function useListMetadataMutation() {
 
 export function useListDeleteMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
@@ -220,9 +233,13 @@ export function useListDeleteMutation() {
       }
 
       // wait for the appview to update
-      await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
-        return !v?.success
-      })
+      await whenAppViewReady(
+        getAgent,
+        uri,
+        (v: AppBskyGraphGetList.Response) => {
+          return !v?.success
+        },
+      )
     },
     onSuccess() {
       invalidateMyLists(queryClient)
@@ -236,6 +253,7 @@ export function useListDeleteMutation() {
 
 export function useListMuteMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {uri: string; mute: boolean}>({
     mutationFn: async ({uri, mute}) => {
       if (mute) {
@@ -244,9 +262,13 @@ export function useListMuteMutation() {
         await getAgent().unmuteModList(uri)
       }
 
-      await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
-        return Boolean(v?.data.list.viewer?.muted) === mute
-      })
+      await whenAppViewReady(
+        getAgent,
+        uri,
+        (v: AppBskyGraphGetList.Response) => {
+          return Boolean(v?.data.list.viewer?.muted) === mute
+        },
+      )
     },
     onSuccess(data, variables) {
       queryClient.invalidateQueries({
@@ -258,6 +280,7 @@ export function useListMuteMutation() {
 
 export function useListBlockMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {uri: string; block: boolean}>({
     mutationFn: async ({uri, block}) => {
       if (block) {
@@ -266,11 +289,15 @@ export function useListBlockMutation() {
         await getAgent().unblockModList(uri)
       }
 
-      await whenAppViewReady(uri, (v: AppBskyGraphGetList.Response) => {
-        return block
-          ? typeof v?.data.list.viewer?.blocked === 'string'
-          : !v?.data.list.viewer?.blocked
-      })
+      await whenAppViewReady(
+        getAgent,
+        uri,
+        (v: AppBskyGraphGetList.Response) => {
+          return block
+            ? typeof v?.data.list.viewer?.blocked === 'string'
+            : !v?.data.list.viewer?.blocked
+        },
+      )
     },
     onSuccess(data, variables) {
       queryClient.invalidateQueries({
@@ -281,6 +308,7 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
+  getAgent: () => BskyAgent,
   uri: string,
   fn: (res: AppBskyGraphGetList.Response) => boolean,
 ) {

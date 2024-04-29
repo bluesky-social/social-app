@@ -1,20 +1,20 @@
-import React, {memo, useMemo, useState, useEffect} from 'react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
-  TouchableOpacity,
   Pressable,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedImages,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  ModerationOpts,
-  ModerationDecision,
   moderateProfile,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyActorDefs,
+  ModerationDecision,
+  ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
@@ -22,41 +22,41 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
+
 import {FeedNotification} from '#/state/queries/notifications/feed'
-import {s, colors} from 'lib/styles'
-import {niceDate} from 'lib/strings/time'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {HeartIconSolid} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
-import {HeartIconSolid} from 'lib/icons'
-import {Text} from '../util/text/Text'
-import {UserAvatar, PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserPreviewLink} from '../util/UserPreviewLink'
-import {ImageHorzList} from '../util/images/ImageHorzList'
-import {Post} from '../post/Post'
-import {Link, TextLink} from '../util/Link'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {formatCount} from '../util/numeric/format'
-import {makeProfileLink} from 'lib/routes/links'
-import {TimeElapsed} from '../util/TimeElapsed'
+import {niceDate} from 'lib/strings/time'
+import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {precacheProfile} from 'state/queries/profile'
+import {Link as NewLink} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
+import {Post} from '../post/Post'
+import {ImageHorzList} from '../util/images/ImageHorzList'
+import {Link, TextLink} from '../util/Link'
+import {formatCount} from '../util/numeric/format'
+import {Text} from '../util/text/Text'
+import {TimeElapsed} from '../util/TimeElapsed'
+import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 const MAX_AUTHORS = 5
 
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
+  profile: AppBskyActorDefs.ProfileViewBasic
   href: string
-  did: string
-  handle: string
-  displayName?: string
-  avatar?: string
   moderation: ModerationDecision
-  associated?: AppBskyActorDefs.ProfileAssociated
 }
 
 let FeedItem = ({
@@ -66,6 +66,7 @@ let FeedItem = ({
   item: FeedNotification
   moderationOpts: ModerationOpts
 }): React.ReactNode => {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
@@ -93,28 +94,22 @@ let FeedItem = ({
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
+  const onBeforePress = React.useCallback(() => {
+    precacheProfile(queryClient, item.notification.author)
+  }, [queryClient, item.notification.author])
+
   const authors: Author[] = useMemo(() => {
     return [
       {
+        profile: item.notification.author,
         href: makeProfileLink(item.notification.author),
-        did: item.notification.author.did,
-        handle: item.notification.author.handle,
-        displayName: item.notification.author.displayName,
-        avatar: item.notification.author.avatar,
         moderation: moderateProfile(item.notification.author, moderationOpts),
-        associated: item.notification.author.associated,
       },
-      ...(item.additional?.map(({author}) => {
-        return {
-          href: makeProfileLink(author),
-          did: author.did,
-          handle: author.handle,
-          displayName: author.displayName,
-          avatar: author.avatar,
-          moderation: moderateProfile(author, moderationOpts),
-          associated: author.associated,
-        }
-      }) || []),
+      ...(item.additional?.map(({author}) => ({
+        profile: author,
+        href: makeProfileLink(author),
+        moderation: moderateProfile(author, moderationOpts),
+      })) || []),
     ]
   }, [item, moderationOpts])
 
@@ -199,7 +194,8 @@ let FeedItem = ({
       accessible={
         (item.type === 'post-like' && authors.length === 1) ||
         item.type === 'repost'
-      }>
+      }
+      onBeforePress={onBeforePress}>
       <View style={styles.layoutIcon}>
         {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
@@ -229,7 +225,7 @@ let FeedItem = ({
               style={[pal.text, s.bold]}
               href={authors[0].href}
               text={sanitizeDisplayName(
-                authors[0].displayName || authors[0].handle,
+                authors[0].profile.displayName || authors[0].profile.handle,
               )}
               disableMismatchWarning
             />
@@ -337,11 +333,9 @@ function CondensedAuthorsList({
       <View style={styles.avis}>
         <PreviewableUserAvatar
           size={35}
-          did={authors[0].did}
-          handle={authors[0].handle}
-          avatar={authors[0].avatar}
+          profile={authors[0].profile}
           moderation={authors[0].moderation.ui('avatar')}
-          type={authors[0].associated?.labeler ? 'labeler' : 'user'}
+          type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
         />
       </View>
     )
@@ -356,11 +350,11 @@ function CondensedAuthorsList({
       <View style={styles.avis}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
           <View key={author.href} style={s.mr5}>
-            <UserAvatar
+            <PreviewableUserAvatar
               size={35}
-              avatar={author.avatar}
+              profile={author.profile}
               moderation={author.moderation.ui('avatar')}
-              type={author.associated?.labeler ? 'labeler' : 'user'}
+              type={author.profile.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
         ))}
@@ -386,6 +380,7 @@ function ExpandedAuthorsList({
   visible: boolean
   authors: Author[]
 }) {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const heightInterp = useAnimatedValue(visible ? 1 : 0)
   const targetHeight =
@@ -409,18 +404,23 @@ function ExpandedAuthorsList({
         visible ? s.mb10 : undefined,
       ]}>
       {authors.map(author => (
-        <UserPreviewLink
-          key={author.did}
-          did={author.did}
-          handle={author.handle}
+        <NewLink
+          key={author.profile.did}
+          label={_(msg`See profile`)}
+          to={makeProfileLink({
+            did: author.profile.did,
+            handle: author.profile.handle,
+          })}
           style={styles.expandedAuthor}>
           <View style={styles.expandedAuthorAvi}>
-            <UserAvatar
-              size={35}
-              avatar={author.avatar}
-              moderation={author.moderation.ui('avatar')}
-              type={author.associated?.labeler ? 'labeler' : 'user'}
-            />
+            <ProfileHoverCard did={author.profile.did}>
+              <UserAvatar
+                size={35}
+                avatar={author.profile.avatar}
+                moderation={author.moderation.ui('avatar')}
+                type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+              />
+            </ProfileHoverCard>
           </View>
           <View style={s.flex1}>
             <Text
@@ -428,14 +428,16 @@ function ExpandedAuthorsList({
               numberOfLines={1}
               style={pal.text}
               lineHeight={1.2}>
-              {sanitizeDisplayName(author.displayName || author.handle)}
+              {sanitizeDisplayName(
+                author.profile.displayName || author.profile.handle,
+              )}
               &nbsp;
               <Text style={[pal.textLight]} lineHeight={1.2}>
-                {sanitizeHandle(author.handle)}
+                {sanitizeHandle(author.profile.handle)}
               </Text>
             </Text>
           </View>
-        </UserPreviewLink>
+        </NewLink>
       ))}
     </Animated.View>
   )

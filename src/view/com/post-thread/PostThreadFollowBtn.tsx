@@ -48,7 +48,7 @@ function PostThreadFollowBtnLoaded({
     'PostThreadItem',
   )
   const requireAuth = useRequireAuth()
-  const showFollowBackLabel = useGate('show_follow_back_label')
+  const gate = useGate()
 
   const isFollowing = !!profile.viewer?.following
   const isFollowedBy = !!profile.viewer?.followedBy
@@ -140,7 +140,7 @@ function PostThreadFollowBtnLoaded({
             style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
             numberOfLines={1}>
             {!isFollowing ? (
-              showFollowBackLabel && isFollowedBy ? (
+              isFollowedBy && gate('show_follow_back_label_v2') ? (
                 <Trans>Follow Back</Trans>
               ) : (
                 <Trans>Follow</Trans>

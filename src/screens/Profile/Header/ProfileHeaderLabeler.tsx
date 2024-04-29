@@ -10,7 +10,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Haptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
 import {pluralize} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
@@ -19,8 +18,10 @@ import {useModalControls} from '#/state/modals'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {useHaptics} from 'lib/haptics'
+import {isIOS} from 'platform/detection'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
@@ -64,6 +65,8 @@ let ProfileHeaderLabeler = ({
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
+  const requireAuth = useRequireAuth()
+  const playHaptic = useHaptics()
   const cantSubscribePrompt = Prompt.usePromptControl()
   const isSelf = currentAccount?.did === profile.did
 
@@ -93,7 +96,7 @@ let ProfileHeaderLabeler = ({
       return
     }
     try {
-      Haptics.default()
+      playHaptic()
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
@@ -114,7 +117,7 @@ let ProfileHeaderLabeler = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, likeUri, likeMod, unlikeMod, track, _])
+  }, [labeler, playHaptic, likeUri, unlikeMod, track, likeMod, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -124,27 +127,32 @@ let ProfileHeaderLabeler = ({
     })
   }, [track, openModal, profile])
 
-  const onPressSubscribe = React.useCallback(async () => {
-    if (!canSubscribe) {
-      cantSubscribePrompt.open()
-      return
-    }
-    try {
-      await toggleSubscription({
-        did: profile.did,
-        subscribe: !isSubscribed,
-      })
-    } catch (e: any) {
-      // setSubscriptionError(e.message)
-      logger.error(`Failed to subscribe to labeler`, {message: e.message})
-    }
-  }, [
-    toggleSubscription,
-    isSubscribed,
-    profile,
-    canSubscribe,
-    cantSubscribePrompt,
-  ])
+  const onPressSubscribe = React.useCallback(
+    () =>
+      requireAuth(async () => {
+        if (!canSubscribe) {
+          cantSubscribePrompt.open()
+          return
+        }
+        try {
+          await toggleSubscription({
+            did: profile.did,
+            subscribe: !isSubscribed,
+          })
+        } catch (e: any) {
+          // setSubscriptionError(e.message)
+          logger.error(`Failed to subscribe to labeler`, {message: e.message})
+        }
+      }),
+    [
+      requireAuth,
+      toggleSubscription,
+      isSubscribed,
+      profile,
+      canSubscribe,
+      cantSubscribePrompt,
+    ],
+  )
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -157,10 +165,12 @@ let ProfileHeaderLabeler = ({
       moderation={moderation}
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
-      <View style={[a.px_lg, a.pt_md, a.pb_sm]} pointerEvents="box-none">
+      <View
+        style={[a.px_lg, a.pt_md, a.pb_sm]}
+        pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
           style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_lg]}
-          pointerEvents="box-none">
+          pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <Button
               testID="profileHeaderEditProfileButton"
@@ -183,7 +193,6 @@ let ProfileHeaderLabeler = ({
                     ? _(msg`Unsubscribe from this labeler`)
                     : _(msg`Subscribe to this labeler`)
                 }
-                disabled={!hasSession}
                 onPress={onPressSubscribe}>
                 {state => (
                   <View

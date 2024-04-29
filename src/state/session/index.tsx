@@ -9,28 +9,26 @@ import {jwtDecode} from 'jwt-decode'
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
 import {IS_TEST_USER} from '#/lib/constants'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents, tryFetchGates} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
-/**
- * NOTE
- * Never hold on to the object returned by this function.
- * Call `getAgent()` at the time of invocation to ensure
- * that you never have a stale agent.
- */
-export function getAgent() {
+function __getAgent() {
   return __globalAgent
+}
+
+export function useAgent() {
+  return React.useMemo(() => ({getAgent: __getAgent}), [])
 }
 
 export type SessionAccount = persisted.PersistedAccount
@@ -59,6 +57,7 @@ export type ApiContext = {
       service: string
       identifier: string
       password: string
+      authFactorToken?: string | undefined
     },
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
@@ -87,7 +86,10 @@ export type ApiContext = {
   ) => Promise<void>
   updateCurrentAccount: (
     account: Partial<
-      Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
+      Pick<
+        SessionAccount,
+        'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
+      >
     >,
   ) => void
 }
@@ -113,6 +115,7 @@ const ApiContext = React.createContext<ApiContext>({
 })
 
 function createPersistSessionHandler(
+  agent: BskyAgent,
   account: SessionAccount,
   persistSessionCallback: (props: {
     expired: boolean
@@ -140,6 +143,7 @@ function createPersistSessionHandler(
       email: session?.email || account.email,
       emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
       deactivated: isSessionDeactivated(session?.accessJwt),
+      pdsUrl: agent.pdsUrl?.toString(),
 
       /*
        * Tokens are undefined if the session expires, or if creation fails for
@@ -243,6 +247,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (!agent.session) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
+      const fetchingGates = tryFetchGates(
+        agent.session.did,
+        'prefer-fresh-gates',
+      )
 
       const deactivated = isSessionDeactivated(agent.session.accessJwt)
       if (!deactivated) {
@@ -268,12 +276,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
         deactivated,
+        pdsUrl: agent.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -283,6 +293,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
+      await fetchingGates
       upsertAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
@@ -293,16 +304,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const login = React.useCallback<ApiContext['login']>(
-    async ({service, identifier, password}, logContext) => {
+    async ({service, identifier, password, authFactorToken}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({service})
 
-      await agent.login({identifier, password})
+      await agent.login({identifier, password, authFactorToken})
 
       if (!agent.session) {
         throw new Error(`session: login failed to establish a session`)
       }
+      const fetchingGates = tryFetchGates(
+        agent.session.did,
+        'prefer-fresh-gates',
+      )
 
       const account: SessionAccount = {
         service: agent.service.toString(),
@@ -310,15 +325,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         handle: agent.session.handle,
         email: agent.session.email,
         emailConfirmed: agent.session.emailConfirmed || false,
+        emailAuthFactor: agent.session.emailAuthFactor,
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
         deactivated: isSessionDeactivated(agent.session.accessJwt),
+        pdsUrl: agent.pdsUrl?.toString(),
       }
 
       await configureModeration(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
@@ -330,6 +348,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       __globalAgent = agent
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
+      await fetchingGates
       upsertAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
@@ -362,17 +381,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
+      const fetchingGates = tryFetchGates(account.did, 'prefer-low-latency')
 
-      const agent = new BskyAgent({
-        service: account.service,
-        persistSession: createPersistSessionHandler(
+      const agent = new BskyAgent({service: account.service})
+
+      // restore the correct PDS URL if available
+      if (account.pdsUrl) {
+        agent.pdsUrl = agent.api.xrpc.uri = new URL(account.pdsUrl)
+      }
+
+      agent.setPersistSessionHandler(
+        createPersistSessionHandler(
+          agent,
           account,
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
         ),
-      })
+      )
+
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
       await configureModeration(agent, account)
@@ -405,7 +433,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.debug(`session: attempting to reuse previous session`)
 
         agent.session = prevSession
+
         __globalAgent = agent
+        await fetchingGates
         upsertAccount(account)
 
         if (prevSession.deactivated) {
@@ -442,6 +472,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
           __globalAgent = agent
+          await fetchingGates
           upsertAccount(freshAccount)
         } catch (e) {
           /*
@@ -476,9 +507,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           handle: agent.session.handle,
           email: agent.session.email,
           emailConfirmed: agent.session.emailConfirmed || false,
+          emailAuthFactor: agent.session.emailAuthFactor || false,
           refreshJwt: agent.session.refreshJwt,
           accessJwt: agent.session.accessJwt,
           deactivated: isSessionDeactivated(agent.session.accessJwt),
+          pdsUrl: agent.pdsUrl?.toString(),
         }
       }
     },
@@ -533,6 +566,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             account.emailConfirmed !== undefined
               ? account.emailConfirmed
               : currentAccount.emailConfirmed,
+          emailAuthFactor:
+            account.emailAuthFactor !== undefined
+              ? account.emailAuthFactor
+              : currentAccount.emailAuthFactor,
         }
 
         return {
@@ -702,8 +739,8 @@ export function useSessionApi() {
 
 export function useRequireAuth() {
   const {hasSession} = useSession()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAll = useCloseAllActiveElements()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   return React.useCallback(
     (fn: () => void) => {
@@ -711,10 +748,10 @@ export function useRequireAuth() {
         fn()
       } else {
         closeAll()
-        setShowLoggedOut(true)
+        signinDialogControl.open()
       }
     },
-    [hasSession, setShowLoggedOut, closeAll],
+    [hasSession, signinDialogControl, closeAll],
   )
 }
 

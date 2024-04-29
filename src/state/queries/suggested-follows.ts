@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   AppBskyActorDefs,
   AppBskyActorGetSuggestions,
@@ -11,12 +10,11 @@ import {
   QueryKey,
   useInfiniteQuery,
   useQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 const suggestedFollowsQueryKey = [suggestedFollowsQueryKeyRoot]
@@ -29,6 +27,7 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
 
 export function useSuggestedFollowsQuery() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const moderationOpts = useModerationOpts()
 
   return useInfiniteQuery<
@@ -79,6 +78,7 @@ export function useSuggestedFollowsQuery() {
 }
 
 export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
+  const {getAgent} = useAgent()
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
@@ -88,29 +88,6 @@ export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
       return res.data
     },
   })
-}
-
-export function useGetSuggestedFollowersByActor() {
-  const queryClient = useQueryClient()
-
-  return React.useCallback(
-    async (actor: string) => {
-      const res = await queryClient.fetchQuery({
-        staleTime: STALE.MINUTES.ONE,
-        queryKey: suggestedFollowsByActorQueryKey(actor),
-        queryFn: async () => {
-          const res =
-            await getAgent().app.bsky.graph.getSuggestedFollowsByActor({
-              actor: actor,
-            })
-          return res.data
-        },
-      })
-
-      return res
-    },
-    [queryClient],
-  )
 }
 
 export function* findAllProfilesInQueryData(

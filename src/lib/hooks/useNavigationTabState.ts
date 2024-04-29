@@ -1,4 +1,5 @@
 import {useNavigationState} from '@react-navigation/native'
+
 import {getTabState, TabState} from 'lib/routes/helpers'
 
 export function useNavigationTabState() {
@@ -10,13 +11,15 @@ export function useNavigationTabState() {
       isAtNotifications:
         getTabState(state, 'Notifications') !== TabState.Outside,
       isAtMyProfile: getTabState(state, 'MyProfile') !== TabState.Outside,
+      isAtMessages: getTabState(state, 'MessagesList') !== TabState.Outside,
     }
     if (
       !res.isAtHome &&
       !res.isAtSearch &&
       !res.isAtFeeds &&
       !res.isAtNotifications &&
-      !res.isAtMyProfile
+      !res.isAtMyProfile &&
+      !res.isAtMessages
     ) {
       // HACK for some reason useNavigationState will give us pre-hydration results
       //      and not update after, so we force isAtHome if all came back false

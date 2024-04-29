@@ -28,12 +28,14 @@ import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
-import {atoms as a, useTheme as useAlf} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {EmbedDialog} from '#/components/dialogs/Embed'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
+import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
@@ -55,6 +57,7 @@ let PostDropdownBtn = ({
   richText,
   style,
   hitSlop,
+  timestamp,
 }: {
   testID: string
   postAuthor: AppBskyActorDefs.ProfileViewBasic
@@ -64,10 +67,12 @@ let PostDropdownBtn = ({
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   hitSlop?: PressableProps['hitSlop']
+  timestamp: string
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const alf = useAlf()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
@@ -83,6 +88,7 @@ let PostDropdownBtn = ({
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
   const loggedOutWarningPromptControl = useDialogControl()
+  const embedPostControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -166,7 +172,7 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
-  const shouldShowLoggedOutWarning = React.useMemo(() => {
+  const hideInPWI = React.useMemo(() => {
     return !!postAuthor.labels?.find(
       label => label.val === '!no-unauthenticated',
     )
@@ -176,6 +182,8 @@ let PostDropdownBtn = ({
     const url = toShareUrl(href)
     shareUrl(url)
   }, [href])
+
+  const canEmbed = isWeb && gtMobile && !hideInPWI
 
   return (
     <EventStopper onKeyDown={false}>
@@ -207,27 +215,31 @@ let PostDropdownBtn = ({
 
         <Menu.Outer>
           <Menu.Group>
-            <Menu.Item
-              testID="postDropdownTranslateBtn"
-              label={_(msg`Translate`)}
-              onPress={onOpenTranslate}>
-              <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={Translate} position="right" />
-            </Menu.Item>
+            {(!hideInPWI || hasSession) && (
+              <>
+                <Menu.Item
+                  testID="postDropdownTranslateBtn"
+                  label={_(msg`Translate`)}
+                  onPress={onOpenTranslate}>
+                  <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Translate} position="right" />
+                </Menu.Item>
 
-            <Menu.Item
-              testID="postDropdownCopyTextBtn"
-              label={_(msg`Copy post text`)}
-              onPress={onCopyPostText}>
-              <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-            </Menu.Item>
+                <Menu.Item
+                  testID="postDropdownCopyTextBtn"
+                  label={_(msg`Copy post text`)}
+                  onPress={onCopyPostText}>
+                  <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                </Menu.Item>
+              </>
+            )}
 
             <Menu.Item
               testID="postDropdownShareBtn"
               label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               onPress={() => {
-                if (shouldShowLoggedOutWarning) {
+                if (hideInPWI) {
                   loggedOutWarningPromptControl.open()
                 } else {
                   onSharePost()
@@ -238,6 +250,16 @@ let PostDropdownBtn = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
+
+            {canEmbed && (
+              <Menu.Item
+                testID="postDropdownEmbedBtn"
+                label={_(msg`Embed post`)}
+                onPress={embedPostControl.open}>
+                <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={CodeBrackets} position="right" />
+              </Menu.Item>
+            )}
           </Menu.Group>
 
           {hasSession && (
@@ -283,29 +305,33 @@ let PostDropdownBtn = ({
             </>
           )}
 
-          <Menu.Divider />
+          {hasSession && (
+            <>
+              <Menu.Divider />
 
-          <Menu.Group>
-            {!isAuthor && (
-              <Menu.Item
-                testID="postDropdownReportBtn"
-                label={_(msg`Report post`)}
-                onPress={() => reportDialogControl.open()}>
-                <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={Warning} position="right" />
-              </Menu.Item>
-            )}
+              <Menu.Group>
+                {!isAuthor && (
+                  <Menu.Item
+                    testID="postDropdownReportBtn"
+                    label={_(msg`Report post`)}
+                    onPress={() => reportDialogControl.open()}>
+                    <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Warning} position="right" />
+                  </Menu.Item>
+                )}
 
-            {isAuthor && (
-              <Menu.Item
-                testID="postDropdownDeleteBtn"
-                label={_(msg`Delete post`)}
-                onPress={deletePromptControl.open}>
-                <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={Trash} position="right" />
-              </Menu.Item>
-            )}
-          </Menu.Group>
+                {isAuthor && (
+                  <Menu.Item
+                    testID="postDropdownDeleteBtn"
+                    label={_(msg`Delete post`)}
+                    onPress={deletePromptControl.open}>
+                    <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={Trash} position="right" />
+                  </Menu.Item>
+                )}
+              </Menu.Group>
+            </>
+          )}
         </Menu.Outer>
       </Menu.Root>
 
@@ -346,6 +372,17 @@ let PostDropdownBtn = ({
         onConfirm={onSharePost}
         confirmButtonCta={_(msg`Share anyway`)}
       />
+
+      {canEmbed && (
+        <EmbedDialog
+          control={embedPostControl}
+          postCid={postCid}
+          postUri={postUri}
+          record={record}
+          postAuthor={postAuthor}
+          timestamp={timestamp}
+        />
+      )}
     </EventStopper>
   )
 }

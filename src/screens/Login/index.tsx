@@ -4,17 +4,13 @@ import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from '#/lib/analytics/analytics'
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {SessionAccount, useSession} from '#/state/session'
 import {useLoggedOutView} from '#/state/shell/logged-out'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
-import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
-import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
-import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
 import {atoms as a} from '#/alf'
 import {ChooseAccountForm} from './ChooseAccountForm'
 import {ScreenTransition} from './ScreenTransition'
@@ -22,16 +18,12 @@ import {ScreenTransition} from './ScreenTransition'
 enum Forms {
   Login,
   ChooseAccount,
-  ForgotPassword,
-  SetNewPassword,
-  PasswordUpdated,
 }
 
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {_} = useLingui()
 
   const {accounts} = useSession()
-  const {track} = useAnalytics()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const requestedAccount = accounts.find(
     acc => acc.did === requestedAccountSwitchTo,
@@ -40,9 +32,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const [error, setError] = React.useState<string>('')
   const [serviceUrl, setServiceUrl] = React.useState<string>(
     requestedAccount?.service || DEFAULT_SERVICE,
-  )
-  const [initialHandle, setInitialHandle] = React.useState<string>(
-    requestedAccount?.handle || '',
   )
   const [currentForm, setCurrentForm] = React.useState<Forms>(
     requestedAccount
@@ -62,7 +51,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     if (account?.service) {
       setServiceUrl(account.service)
     }
-    setInitialHandle(account?.handle || '')
+    // TODO set the service URL. We really need to fix this though in general
     setCurrentForm(Forms.Login)
   }
 
@@ -86,11 +75,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     }
   }, [serviceError, serviceUrl, _])
 
-  const onPressForgotPassword = () => {
-    track('Signin:PressedForgotPassword')
-    setCurrentForm(Forms.ForgotPassword)
-  }
-
   let content = null
   let title = ''
   let description = ''
@@ -104,13 +88,11 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           error={error}
           serviceUrl={serviceUrl}
           serviceDescription={serviceDescription}
-          initialHandle={initialHandle}
           setError={setError}
           setServiceUrl={setServiceUrl}
           onPressBack={() =>
             accounts.length ? gotoForm(Forms.ChooseAccount) : onPressBack()
           }
-          onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={refetchService}
         />
       )
@@ -123,41 +105,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           onSelectAccount={onSelectAccount}
           onPressBack={onPressBack}
         />
-      )
-      break
-    case Forms.ForgotPassword:
-      title = _(msg`Forgot Password`)
-      description = _(msg`Let's get your password reset!`)
-      content = (
-        <ForgotPasswordForm
-          error={error}
-          serviceUrl={serviceUrl}
-          serviceDescription={serviceDescription}
-          setError={setError}
-          setServiceUrl={setServiceUrl}
-          onPressBack={() => gotoForm(Forms.Login)}
-          onEmailSent={() => gotoForm(Forms.SetNewPassword)}
-        />
-      )
-      break
-    case Forms.SetNewPassword:
-      title = _(msg`Forgot Password`)
-      description = _(msg`Let's get your password reset!`)
-      content = (
-        <SetNewPasswordForm
-          error={error}
-          serviceUrl={serviceUrl}
-          setError={setError}
-          onPressBack={() => gotoForm(Forms.ForgotPassword)}
-          onPasswordSet={() => gotoForm(Forms.PasswordUpdated)}
-        />
-      )
-      break
-    case Forms.PasswordUpdated:
-      title = _(msg`Password updated`)
-      description = _(msg`You can now sign in with your new password.`)
-      content = (
-        <PasswordUpdatedForm onPressNext={() => gotoForm(Forms.Login)} />
       )
       break
   }

@@ -1,0 +1,78 @@
+FROM golang:1.21-bullseye AS build-env
+
+WORKDIR /usr/src/social-app
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Node
+ENV NODE_VERSION=18
+ENV NVM_DIR=/usr/share/nvm
+
+# Go
+ENV GODEBUG="netdns=go"
+ENV GOOS="linux"
+ENV GOARCH="amd64"
+ENV CGO_ENABLED=1
+ENV GOEXPERIMENT="loopvar"
+
+COPY . .
+
+#
+# Generate the JavaScript webpack. NOTE: this will change
+#
+RUN mkdir --parents $NVM_DIR && \
+  wget \
+    --output-document=/tmp/nvm-install.sh \
+    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
+  bash /tmp/nvm-install.sh
+
+RUN \. "$NVM_DIR/nvm.sh" && \
+  nvm install $NODE_VERSION && \
+  nvm use $NODE_VERSION && \
+  npm install --global yarn && \
+  yarn && \
+  cd bskyembed && yarn install --frozen-lockfile && cd .. && \
+  yarn intl:build && \
+  yarn build-embed
+
+# DEBUG
+RUN find ./bskyweb/embedr-static && find ./bskyweb/embedr-templates && find ./bskyembed/dist
+
+# hack around issue with empty directory and go:embed
+RUN touch bskyweb/static/js/empty.txt
+
+#
+# Generate the embedr Go binary.
+#
+RUN cd bskyweb/ && \
+  go mod download && \
+  go mod verify
+
+RUN cd bskyweb/ && \
+  go build \
+    -v  \
+    -trimpath \
+    -tags timetzdata \
+    -o /embedr \
+    ./cmd/embedr
+
+FROM debian:bullseye-slim
+
+ENV GODEBUG=netdns=go
+ENV TZ=Etc/UTC
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install --yes \
+  dumb-init \
+  ca-certificates
+
+ENTRYPOINT ["dumb-init", "--"]
+
+WORKDIR /embedr
+COPY --from=build-env /embedr /usr/bin/embedr
+
+CMD ["/usr/bin/embedr"]
+
+LABEL org.opencontainers.image.source=https://github.com/bluesky-social/social-app
+LABEL org.opencontainers.image.description="embed.bsky.app Web App"
+LABEL org.opencontainers.image.licenses=MIT

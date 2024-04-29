@@ -1,13 +1,11 @@
 import React from 'react'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isJustAMute} from '#/lib/moderation'
-import {isInvalidHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {useMyFollowsQuery} from '#/state/queries/my-follows'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 
 const DEFAULT_MOD_OPTS = {
@@ -18,9 +16,12 @@ const DEFAULT_MOD_OPTS = {
 const RQKEY_ROOT = 'actor-autocomplete'
 export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 
-export function useActorAutocompleteQuery(prefix: string) {
-  const {data: follows, isFetching} = useMyFollowsQuery()
+export function useActorAutocompleteQuery(
+  prefix: string,
+  maintainData?: boolean,
+) {
   const moderationOpts = useModerationOpts()
+  const {getAgent} = useAgent()
 
   prefix = prefix.toLowerCase()
 
@@ -36,26 +37,21 @@ export function useActorAutocompleteQuery(prefix: string) {
         : undefined
       return res?.data.actors || []
     },
-    enabled: !isFetching,
     select: React.useCallback(
       (data: AppBskyActorDefs.ProfileViewBasic[]) => {
-        return computeSuggestions(
-          prefix,
-          follows,
-          data,
-          moderationOpts || DEFAULT_MOD_OPTS,
-        )
+        return computeSuggestions(data, moderationOpts || DEFAULT_MOD_OPTS)
       },
-      [prefix, follows, moderationOpts],
+      [moderationOpts],
     ),
+    placeholderData: maintainData ? keepPreviousData : undefined,
   })
 }
 
 export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>
 export function useActorAutocompleteFn() {
   const queryClient = useQueryClient()
-  const {data: follows} = useMyFollowsQuery()
   const moderationOpts = useModerationOpts()
+  const {getAgent} = useAgent()
 
   return React.useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
@@ -80,26 +76,19 @@ export function useActorAutocompleteFn() {
       }
 
       return computeSuggestions(
-        query,
-        follows,
         res?.data.actors,
         moderationOpts || DEFAULT_MOD_OPTS,
       )
     },
-    [follows, queryClient, moderationOpts],
+    [queryClient, moderationOpts, getAgent],
   )
 }
 
 function computeSuggestions(
-  prefix: string,
-  follows: AppBskyActorDefs.ProfileViewBasic[] | undefined,
   searched: AppBskyActorDefs.ProfileViewBasic[] = [],
   moderationOpts: ModerationOpts,
 ) {
   let items: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (follows) {
-    items = follows.filter(follow => prefixMatch(prefix, follow)).slice(0, 8)
-  }
   for (const item of searched) {
     if (!items.find(item2 => item2.handle === item.handle)) {
       items.push(item)
@@ -109,17 +98,4 @@ function computeSuggestions(
     const modui = moderateProfile(profile, moderationOpts).ui('profileList')
     return !modui.filter || isJustAMute(modui)
   })
-}
-
-function prefixMatch(
-  prefix: string,
-  info: AppBskyActorDefs.ProfileViewBasic,
-): boolean {
-  if (!isInvalidHandle(info.handle) && info.handle.includes(prefix)) {
-    return true
-  }
-  if (info.displayName?.toLocaleLowerCase().includes(prefix)) {
-    return true
-  }
-  return false
 }

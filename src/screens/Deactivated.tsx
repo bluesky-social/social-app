@@ -1,20 +1,20 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
-import {useOnboardingDispatch} from '#/state/shell'
-import {getAgent, isSessionDeactivated, useSessionApi} from '#/state/session'
-import {logger} from '#/logger'
-import {pluralize} from '#/lib/strings/helpers'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Text, P} from '#/components/Typography'
+import {pluralize} from '#/lib/strings/helpers'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {isSessionDeactivated, useAgent, useSessionApi} from '#/state/session'
+import {useOnboardingDispatch} from '#/state/shell'
 import {ScrollView} from '#/view/com/util/Views'
-import {Loader} from '#/components/Loader'
 import {Logo} from '#/view/icons/Logo'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Loader} from '#/components/Loader'
+import {P, Text} from '#/components/Typography'
 
 const COL_WIDTH = 400
 
@@ -25,6 +25,7 @@ export function Deactivated() {
   const {gtMobile} = useBreakpoints()
   const onboardingDispatch = useOnboardingDispatch()
   const {logout} = useSessionApi()
+  const {getAgent} = useAgent()
 
   const [isProcessing, setProcessing] = React.useState(false)
   const [estimatedTime, setEstimatedTime] = React.useState<string | undefined>(
@@ -56,7 +57,13 @@ export function Deactivated() {
     } finally {
       setProcessing(false)
     }
-  }, [setProcessing, setEstimatedTime, setPlaceInQueue, onboardingDispatch])
+  }, [
+    setProcessing,
+    setEstimatedTime,
+    setPlaceInQueue,
+    onboardingDispatch,
+    getAgent,
+  ])
 
   React.useEffect(() => {
     checkStatus()
