@@ -3,8 +3,6 @@ import {
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
 } from '@atproto/api'
-import {lexicons} from '@atproto/api/src/client/lexicons'
-import {hasProp, isObj} from '@atproto/api/src/client/util'
 import {ValidationResult} from '@atproto/lexicon'
 
 export interface Message {
@@ -21,7 +19,10 @@ export function isMessage(v: unknown): v is Message {
 }
 
 export function validateMessage(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#message', v)
+  return {
+    success: true,
+    value: v,
+  }
 }
 
 export interface MessageView {
@@ -43,7 +44,10 @@ export function isMessageView(v: unknown): v is MessageView {
 }
 
 export function validateMessageView(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#messageView', v)
+  return {
+    success: true,
+    value: v,
+  }
 }
 
 export interface DeletedMessage {
@@ -61,7 +65,10 @@ export function isDeletedMessage(v: unknown): v is DeletedMessage {
 }
 
 export function validateDeletedMessage(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#deletedMessage', v)
+  return {
+    success: true,
+    value: v,
+  }
 }
 
 export interface MessageViewSender {
@@ -78,7 +85,10 @@ export function isMessageViewSender(v: unknown): v is MessageViewSender {
 }
 
 export function validateMessageViewSender(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#messageViewSender', v)
+  return {
+    success: true,
+    value: v,
+  }
 }
 
 export interface ChatView {
@@ -98,7 +108,10 @@ export function isChatView(v: unknown): v is ChatView {
 }
 
 export function validateChatView(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#chatView', v)
+  return {
+    success: true,
+    value: v,
+  }
 }
 
 export type IncomingMessageSetting =
@@ -120,7 +133,10 @@ export function isLogBeginChat(v: unknown): v is LogBeginChat {
 }
 
 export function validateLogBeginChat(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#logBeginChat', v)
+  return {
+    success: true,
+    value: v,
+  }
 }
 
 export interface LogCreateMessage {
@@ -139,7 +155,10 @@ export function isLogCreateMessage(v: unknown): v is LogCreateMessage {
 }
 
 export function validateLogCreateMessage(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#logCreateMessage', v)
+  return {
+    success: true,
+    value: v,
+  }
 }
 
 export interface LogDeleteMessage {
@@ -158,5 +177,19 @@ export function isLogDeleteMessage(v: unknown): v is LogDeleteMessage {
 }
 
 export function validateLogDeleteMessage(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.defs#logDeleteMessage', v)
+  return {
+    success: true,
+    value: v,
+  }
+}
+
+export function isObj(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null
+}
+
+export function hasProp<K extends PropertyKey>(
+  data: object,
+  prop: K,
+): data is Record<K, unknown> {
+  return prop in data
 }

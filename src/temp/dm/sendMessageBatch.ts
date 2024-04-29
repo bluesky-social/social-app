@@ -1,5 +1,3 @@
-import {lexicons} from '@atproto/api/src/client/lexicons'
-import {hasProp, isObj} from '@atproto/api/src/client/util'
 import {ValidationResult} from '@atproto/lexicon'
 import {Headers, XRPCError} from '@atproto/xrpc'
 
@@ -50,5 +48,19 @@ export function isBatchItem(v: unknown): v is BatchItem {
 }
 
 export function validateBatchItem(v: unknown): ValidationResult {
-  return lexicons.validate('temp.dm.sendMessageBatch#batchItem', v)
+  return {
+    success: true,
+    value: v,
+  }
+}
+
+export function isObj(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null
+}
+
+export function hasProp<K extends PropertyKey>(
+  data: object,
+  prop: K,
+): data is Record<K, unknown> {
+  return prop in data
 }
