@@ -599,9 +599,6 @@ export function SearchScreen(
   )
 
   const onSoftReset = React.useCallback(() => {
-    scrollToTopWeb()
-    onPressCancelSearch()
-
     if (isWeb) {
       // Empty params resets the URL to be /search rather than /search?q=
       navigation.replace('Search', {})
@@ -609,7 +606,7 @@ export function SearchScreen(
       setSearchText('')
       navigation.setParams({q: ''})
     }
-  }, [navigation, onPressCancelSearch])
+  }, [navigation])
 
   useFocusEffect(
     React.useCallback(() => {
