@@ -1,7 +1,7 @@
 diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/packages/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 index b0d71dc..34cb289 100644
---- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm	(revision bb2c13af5372856cf3f4222ad6543d4698919dbc)
-+++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm	(revision d71fb46b9477b646c203f161aa3787740e1bbcbd)
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 @@ -377,10 +377,6 @@
      self.backedTextInputView.attributedText = [NSAttributedString new];
    }
