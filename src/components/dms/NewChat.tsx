@@ -13,7 +13,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
@@ -102,6 +102,7 @@ function SearchablePeopleList({
           {({hovered, pressed}) => (
             <View
               style={[
+                a.flex_1,
                 a.px_md,
                 a.py_sm,
                 a.gap_md,
@@ -173,7 +174,14 @@ function SearchablePeopleList({
           ]}
         />
         <Dialog.Close />
-        <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_lg]}>
+        <Text
+          style={[
+            a.text_2xl,
+            a.font_bold,
+            a.leading_tight,
+            a.pb_lg,
+            web(a.pt_lg),
+          ]}>
           <Trans>Start a new chat</Trans>
         </Text>
         <TextField.Root>
