@@ -23,11 +23,17 @@ export function useActorAutocompleteQuery(
   const moderationOpts = useModerationOpts()
   const {getAgent} = useAgent()
 
-  prefix = prefix.toLowerCase()
+  const prefixTrimmed = React.useMemo(() => {
+    let trimmed = prefix.toLowerCase().trim()
+    if (trimmed.endsWith('.')) {
+      trimmed = trimmed.slice(0, -1)
+    }
+    return trimmed
+  }, [prefix])
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(prefix || ''),
+    queryKey: RQKEY(prefixTrimmed || ''),
     async queryFn() {
       const res = prefix
         ? await getAgent().searchActorsTypeahead({
