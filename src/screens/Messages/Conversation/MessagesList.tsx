@@ -3,7 +3,7 @@ import {FlatList, View, ViewToken} from 'react-native'
 import {Alert} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
-import {isWeb} from 'platform/detection'
+import {isWeb} from '#/platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
 import {
@@ -14,6 +14,11 @@ import {
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as TempDmChatDefs from '#/temp/dm/defs'
+
+type MessageWithNext = {
+  message: TempDmChatDefs.MessageView | TempDmChatDefs.DeletedMessage
+  next: TempDmChatDefs.MessageView | TempDmChatDefs.DeletedMessage | null
+}
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -29,12 +34,9 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function renderItem({
-  item,
-}: {
-  item: TempDmChatDefs.MessageView | TempDmChatDefs.DeletedMessage
-}) {
-  if (TempDmChatDefs.isMessageView(item)) return <MessageItem item={item} />
+function renderItem({item}: {item: MessageWithNext}) {
+  if (TempDmChatDefs.isMessageView(item.message))
+    return <MessageItem item={item.message} next={item.next} />
 
   if (TempDmChatDefs.isDeletedMessage(item)) return <Text>Deleted message</Text>
 
@@ -136,18 +138,24 @@ export function MessagesList({chatId}: {chatId: string}) {
   const messages = useMemo(() => {
     if (!chat) return []
 
-    const filtered = chat.messages.filter(
-      (
-        message,
-      ): message is
-        | TempDmChatDefs.MessageView
-        | TempDmChatDefs.DeletedMessage => {
-        return (
-          TempDmChatDefs.isMessageView(message) ||
-          TempDmChatDefs.isDeletedMessage(message)
-        )
-      },
-    )
+    const filtered = chat.messages
+      .filter(
+        (
+          message,
+        ): message is
+          | TempDmChatDefs.MessageView
+          | TempDmChatDefs.DeletedMessage => {
+          return (
+            TempDmChatDefs.isMessageView(message) ||
+            TempDmChatDefs.isDeletedMessage(message)
+          )
+        },
+      )
+      .reduce((acc, message) => {
+        // convert [n1, n2, n3, ...] to [{message: n1, next: n2}, {message: n2, next: n3}, {message: n3, next: n4}, ...]
+
+        return [...acc, {message, next: acc.at(-1)?.message ?? null}]
+      }, [] as MessageWithNext[])
     totalMessages.current = filtered.length
 
     return filtered
@@ -161,7 +169,7 @@ export function MessagesList({chatId}: {chatId: string}) {
       contentContainerStyle={{flex: 1}}>
       <FlatList
         data={messages}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.message.id}
         renderItem={renderItem}
         contentContainerStyle={{paddingHorizontal: 10}}
         // In the future, we might want to adjust this value. Not very concerning right now as long as we are only

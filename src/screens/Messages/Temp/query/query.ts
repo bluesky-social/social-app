@@ -140,6 +140,7 @@ export function useSendMessageMutation(chatId: string) {
               id: variables.tempId,
               text: variables.message,
               sender: {did: headers.Authorization}, // TODO a real DID get
+              sentAt: new Date().toISOString(),
             },
             ...prev.messages,
           ],
@@ -151,12 +152,7 @@ export function useSendMessageMutation(chatId: string) {
         return {
           ...prev,
           messages: prev.messages.map(m =>
-            m.id === variables.tempId
-              ? {
-                  ...m,
-                  id: result.id,
-                }
-              : m,
+            m.id === variables.tempId ? {...m, id: result.id} : m,
           ),
         }
       })
