@@ -35,7 +35,6 @@ export function DmServiceUrlProvider({children}: {children: React.ReactNode}) {
   React.useEffect(() => {
     ;(async () => {
       const v = await getItem()
-      console.log(v)
       setServiceUrl(v ?? '')
     })()
   }, [getItem])

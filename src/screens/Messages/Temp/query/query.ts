@@ -73,6 +73,8 @@ export function useChat(chatId: string) {
       const chatJson =
         (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
 
+      queryClient.setQueryData(['chatQuery', chatId], chatJson.chat)
+
       const newChat = {
         chatId,
         messages: messagesJson.messages,
@@ -273,5 +275,27 @@ export function useListChats() {
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+  })
+}
+
+export function useChatQuery(chatId: string) {
+  const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
+
+  return useQuery({
+    queryKey: ['chatQuery', chatId],
+    queryFn: async () => {
+      const chatResponse = await fetch(
+        `${serviceUrl}/xrpc/temp.dm.getChat?chatId=${chatId}`,
+        {
+          headers,
+        },
+      )
+
+      if (!chatResponse.ok) throw new Error('Failed to fetch chat')
+
+      const json = (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
+      return json.chat
+    },
   })
 }
