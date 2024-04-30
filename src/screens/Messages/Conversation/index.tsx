@@ -28,14 +28,11 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
-
   const chatId = route.params.conversation
-
   const {currentAccount} = useSession()
   const myDid = currentAccount?.did
 
   const {data: chat, isError: isError} = useChatQuery(chatId)
-
   const otherProfile = React.useMemo(() => {
     return chat?.members?.find(m => m.did !== myDid)
   }, [chat?.members, myDid])
