@@ -13,8 +13,11 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
-import {configureModeration, isSessionDeactivated} from './util'
-export {isSessionDeactivated}
+import {
+  configureModerationForAccount,
+  configureModerationForGuest,
+  isSessionDeactivated,
+} from './util'
 
 export type {SessionAccount} from '#/state/session/types'
 import {
@@ -24,7 +27,10 @@ import {
   SessionStateContext,
 } from '#/state/session/types'
 
+export {isSessionDeactivated}
+
 const PUBLIC_BSKY_AGENT = new BskyAgent({service: PUBLIC_BSKY_SERVICE})
+configureModerationForGuest()
 
 const StateContext = React.createContext<SessionStateContext>({
   isInitialLoad: true,
@@ -85,7 +91,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
-    configureModeration(PUBLIC_BSKY_AGENT)
+    configureModerationForGuest()
     setStateAndPersist(s => ({
       ...s,
       currentAccount: undefined,
@@ -225,7 +231,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         pdsUrl: agent.pdsUrl?.toString(),
       }
 
-      await configureModeration(agent, account)
+      await configureModerationForAccount(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
@@ -278,7 +284,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         pdsUrl: agent.pdsUrl?.toString(),
       }
 
-      await configureModeration(agent, account)
+      await configureModerationForAccount(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
@@ -349,7 +355,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
-      await configureModeration(agent, account)
+      await configureModerationForAccount(agent, account)
 
       let canReusePrevSession = false
       try {

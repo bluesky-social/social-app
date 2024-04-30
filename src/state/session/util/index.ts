@@ -22,31 +22,42 @@ export function readLastActiveAccount() {
   return accounts.find(a => a.did === currentAccount?.did)
 }
 
-export async function configureModeration(
+export function configureModerationForGuest() {
+  switchToBskyAppLabeler()
+}
+
+export async function configureModerationForAccount(
   agent: BskyAgent,
-  account?: SessionAccount,
+  account: SessionAccount,
 ) {
-  if (account) {
-    if (IS_TEST_USER(account.handle)) {
-      const did = (
-        await agent
-          .resolveHandle({handle: 'mod-authority.test'})
-          .catch(_ => undefined)
-      )?.data.did
-      if (did) {
-        console.warn('USING TEST ENV MODERATION')
-        BskyAgent.configure({appLabelers: [did]})
-      }
-    } else {
-      BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-      const labelerDids = await readLabelers(account.did).catch(_ => {})
-      if (labelerDids) {
-        agent.configureLabelersHeader(
-          labelerDids.filter(did => did !== BSKY_LABELER_DID),
-        )
-      }
-    }
+  switchToBskyAppLabeler()
+  if (IS_TEST_USER(account.handle)) {
+    await trySwitchToTestAppLabeler(agent)
+  }
+
+  const labelerDids = await readLabelers(account.did).catch(_ => {})
+  if (labelerDids) {
+    agent.configureLabelersHeader(
+      labelerDids.filter(did => did !== BSKY_LABELER_DID),
+    )
   } else {
-    BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+    // If there are no headers in the storage, we'll not send them on the initial requests.
+    // If we wanted to fix this, we could block on the preferences query here.
+  }
+}
+
+function switchToBskyAppLabeler() {
+  BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+}
+
+async function trySwitchToTestAppLabeler(agent: BskyAgent) {
+  const did = (
+    await agent
+      .resolveHandle({handle: 'mod-authority.test'})
+      .catch(_ => undefined)
+  )?.data.did
+  if (did) {
+    console.warn('USING TEST ENV MODERATION')
+    BskyAgent.configure({appLabelers: [did]})
   }
 }
