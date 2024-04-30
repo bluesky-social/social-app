@@ -70,6 +70,8 @@ export function useChat(chatId: string) {
 
       if (!chatResponse.ok) throw new Error('Failed to fetch chat')
 
+      queryClient.setQueryData(['chatQuery', chatId], chatResponse)
+
       const chatJson =
         (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
 
@@ -273,5 +275,27 @@ export function useListChats() {
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+  })
+}
+
+export function useChatQuery(chatId: string) {
+  const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
+
+  return useQuery({
+    queryKey: ['chatQuery', chatId],
+    queryFn: async () => {
+      const chatResponse = await fetch(
+        `${serviceUrl}/xrpc/temp.dm.getChat?chatId=${chatId}`,
+        {
+          headers,
+        },
+      )
+
+      if (!chatResponse.ok) throw new Error('Failed to fetch chat')
+
+      const chatResponseJson = await chatResponse.json()
+      return chatResponseJson as TempDmChatGetChat.OutputSchema
+    },
   })
 }
