@@ -42,7 +42,7 @@ export function MessageInput({
         value={message}
         onChangeText={setMessage}
         placeholder="Write a message"
-        style={[a.flex_1, a.text_sm, a.px_sm]}
+        style={[a.flex_1, a.text_sm, a.px_sm, t.atoms.text]}
         onSubmitEditing={onSubmit}
         onFocus={onFocus}
         onBlur={onBlur}
