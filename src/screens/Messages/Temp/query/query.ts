@@ -197,7 +197,7 @@ export function useChatLogQuery() {
               if (!prev) return
 
               // HACK we don't know who the creator of a message is, so just filter by id for now
-              if (prev.messages.find(m => m.id === log.message.id)) return prev
+              // if (prev.messages.find(m => m.id === log.message.id)) return prev
 
               return {
                 ...prev,
