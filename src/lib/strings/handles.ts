@@ -25,7 +25,7 @@ export function sanitizeHandle(handle: string, prefix = ''): string {
   return isInvalidHandle(handle) ? '⚠Invalid Handle' : `${prefix}${handle}`
 }
 
-type ValidHandleResult =
+type ValidateHandleResult =
   | 'charsError'
   | 'hyphenError'
   | 'frontLengthError'
@@ -36,7 +36,7 @@ type ValidHandleResult =
 export function validateHandle(
   str: string,
   userDomain: string,
-): ValidHandleResult {
+): ValidateHandleResult {
   const fullHandle = createFullHandle(str, userDomain)
 
   if (str.length < 3) {
