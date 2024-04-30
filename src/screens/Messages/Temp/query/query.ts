@@ -191,7 +191,7 @@ export function useChatLogQuery() {
           (await response.json()) as TempDmChatGetChatLog.OutputSchema
 
         for (const log of json.logs) {
-          if (TempDmChatDefs.isLogDeleteMessage(log)) {
+          if (TempDmChatDefs.isLogCreateMessage(log)) {
             queryClient.setQueryData(['chat', log.chatId], (prev: Chat) => {
               // What to do in this case
               if (!prev) return
