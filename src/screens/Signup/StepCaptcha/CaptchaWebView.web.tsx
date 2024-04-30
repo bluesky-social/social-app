@@ -15,6 +15,18 @@ export function CaptchaWebView({
   onSuccess: (code: string) => void
   onError: (error: object) => void
 }) {
+  React.useEffect(() => {
+    const interval = setTimeout(() => {
+      onError({
+        errorMessage: 'User did not complete the captcha within 20 seconds',
+      })
+    }, 20e3)
+
+    return () => {
+      clearTimeout(interval)
+    }
+  }, [onError])
+
   const onLoad = React.useCallback(() => {
     // @ts-ignore web
     const frame: HTMLIFrameElement = document.getElementById(
@@ -37,7 +49,7 @@ export function CaptchaWebView({
       }
       onSuccess(code)
     } catch (e) {
-      // We don't need to handle this
+      onError({errorMessage: 'Error creating captcha URL'})
     }
   }, [stateParam, onSuccess, onError])
 
@@ -47,9 +59,6 @@ export function CaptchaWebView({
       style={styles.iframe}
       id="captcha-iframe"
       onLoad={onLoad}
-      onError={e => {
-        onError(e.nativeEvent)
-      }}
     />
   )
 }
