@@ -3572,8 +3572,8 @@ msgstr "Vastaa"
 msgid "Reply Filters"
 msgstr "Vastaussuodattimet"
 
-#: src/view/com/post/Post.tsx:178
-#: src/view/com/posts/FeedItem.tsx:285
+#: src/view/com/post/Post.tsx:176
+#: src/view/com/posts/FeedItem.tsx:291
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "Vastaa käyttäjälle <0><1/></0>"
