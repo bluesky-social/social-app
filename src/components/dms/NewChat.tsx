@@ -150,14 +150,6 @@ function SearchablePeopleList({
     ],
   )
 
-  const onGoBack = useCallback(() => {
-    if (isSearching) {
-      setSearch('')
-    } else {
-      control.close()
-    }
-  }, [control, isSearching])
-
   const listHeader = useMemo(() => {
     return (
       <View style={[a.relative, a.mb_lg]}>
@@ -226,7 +218,7 @@ function SearchablePeopleList({
               isLoading={isLoading}
               isError={isError}
               onRetry={refetch}
-              onGoBack={onGoBack}
+              hideBackButton={true}
               emptyType="results"
               sideBorders={false}
               emptyMessage={
