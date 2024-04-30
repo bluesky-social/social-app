@@ -1,14 +1,19 @@
 import React from 'react'
-import {View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {BACK_HITSLOP} from 'lib/constants'
+import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {useChat, useChatQuery} from '#/screens/Messages/Temp/query/query'
@@ -68,6 +73,15 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressBack = React.useCallback(() => {
+    if (isWeb) {
+      navigation.replace('MessagesList')
+    } else {
+      navigation.pop()
+    }
+  }, [navigation])
 
   return (
     <View
@@ -82,12 +96,36 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
         a.px_lg,
         a.py_sm,
       ]}>
-      <Text style={[a.text_2xl, a.font_bold]}>
-        <Trans>Messages</Trans>
-      </Text>
+      <View>
+        <TouchableOpacity
+          testID="viewHeaderDrawerBtn"
+          onPress={onPressBack}
+          hitSlop={BACK_HITSLOP}
+          style={{
+            width: 30,
+            height: 30,
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Back`)}
+          accessibilityHint={_(msg`Access navigation links and settings`)}>
+          <FontAwesomeIcon
+            size={18}
+            icon="angle-left"
+            style={{
+              marginTop: 6,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={[a.align_center, a.gap_sm]}>
+        <UserAvatar size={32} avatar={profile.avatar} />
+        <Text style={[a.text_2xl, a.font_bold]}>
+          <Trans>{profile.displayName}</Trans>
+        </Text>
+      </View>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Button
-          label={_(msg`Message settings`)}
+          label={_(msg`Chat settings`)}
           color="secondary"
           size="large"
           variant="ghost"
@@ -95,20 +133,6 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
           onPress={() => {}}>
           <ButtonIcon icon={SettingsSlider} />
         </Button>
-        {gtTablet && (
-          <Button
-            label={_(msg`New chat`)}
-            color="primary"
-            size="large"
-            variant="solid"
-            style={[{height: 'auto', width: 'auto'}, a.px_md, a.py_sm]}
-            onPress={() => {}}>
-            <ButtonIcon icon={Envelope} position="right" />
-            <ButtonText>
-              <Trans>New chat</Trans>
-            </ButtonText>
-          </Button>
-        )}
       </View>
     </View>
   )
