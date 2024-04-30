@@ -17,7 +17,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {useBreakpoints, useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
@@ -267,28 +267,29 @@ function DesktopHeader({
         <Trans>Messages</Trans>
       </Text>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
-        {gtTablet && (
-          <Button
-            label={_(msg`New chat`)}
-            shape="round"
-            color="secondary"
-            size="large"
-            variant="ghost"
-            style={[{height: 'auto', width: 'auto'}, a.p_sm]}
-            onPress={newChatControl.open}>
-            <ButtonIcon icon={Envelope} />
-          </Button>
-        )}
         <Button
           label={_(msg`Message settings`)}
-          shape="round"
           color="secondary"
           size="large"
           variant="ghost"
-          style={[{height: 'auto', width: 'auto'}, a.p_sm]}
+          style={[{height: 'auto', width: 'auto'}, a.px_sm, a.py_sm]}
           onPress={onNavigateToSettings}>
           <ButtonIcon icon={SettingsSlider} />
         </Button>
+        {gtTablet && (
+          <Button
+            label={_(msg`New chat`)}
+            color="primary"
+            size="large"
+            variant="solid"
+            style={[{height: 'auto', width: 'auto'}, a.px_md, a.py_sm]}
+            onPress={newChatControl.open}>
+            <ButtonIcon icon={Envelope} position="right" />
+            <ButtonText>
+              <Trans>New chat</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
     </View>
   )
