@@ -1,8 +1,9 @@
 /* eslint-env detox/detox */
 
-import {describe, beforeAll, it} from '@jest/globals'
+import {beforeAll, describe, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
+
+import {createServer, loginAsAlice, loginAsBob, openApp, sleep} from '../util'
 
 describe('Curate lists', () => {
   beforeAll(async () => {
@@ -115,6 +116,7 @@ describe('Curate lists', () => {
     await element(by.text('About')).tap()
     await element(by.id('addUserBtn')).tap()
     await expect(element(by.id('listAddUserModal'))).toBeVisible()
+    await element(by.id('searchInput')).typeText('b')
     await waitFor(element(by.id('user-bob.test-addBtn')))
       .toBeVisible()
       .withTimeout(5000)

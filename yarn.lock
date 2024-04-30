@@ -2765,9 +2765,9 @@
     pino "^8.11.0"
     pino-http "^8.3.3"
 
-"@discord/bottom-sheet@https://github.com/bluesky-social/react-native-bottom-sheet.git#discord-fork-4.6.1":
+"@discord/bottom-sheet@bluesky-social/react-native-bottom-sheet":
   version "4.6.1"
-  resolved "https://github.com/bluesky-social/react-native-bottom-sheet.git#54dc2e0e318b0524a2d2d8fb817f6c48101bb0b1"
+  resolved "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/2b3f77e04a25c454e70d893a2692e8c03aced06b"
   dependencies:
     "@gorhom/portal" "1.0.14"
     invariant "^2.2.4"

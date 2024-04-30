@@ -13,7 +13,11 @@ import {FlatList_INTERNAL} from './Views'
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<
   FlatListProps<ItemT>,
+  | 'onMomentumScrollBegin' // Use ScrollContext instead.
+  | 'onMomentumScrollEnd' // Use ScrollContext instead.
   | 'onScroll' // Use ScrollContext instead.
+  | 'onScrollBeginDrag' // Use ScrollContext instead.
+  | 'onScrollEndDrag' // Use ScrollContext instead.
   | 'refreshControl' // Pass refreshing and/or onRefresh instead.
   | 'contentOffset' // Pass headerOffset instead.
 > & {

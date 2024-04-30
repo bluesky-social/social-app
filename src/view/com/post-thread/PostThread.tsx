@@ -1,10 +1,12 @@
 import React, {useEffect, useRef} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {runOnJS} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
   sortThread,
@@ -276,8 +278,11 @@ export function PostThread({
       setMaxParents(n => n + PARENTS_CHUNK_SIZE)
     }
   }, [])
-  const onMomentumScrollEnd = bumpMaxParentsIfNeeded
   const onScrollToTop = bumpMaxParentsIfNeeded
+  const onMomentumEnd = React.useCallback(() => {
+    'worklet'
+    runOnJS(bumpMaxParentsIfNeeded)()
+  }, [bumpMaxParentsIfNeeded])
 
   const onEndReached = React.useCallback(() => {
     if (isFetching || posts.length < maxReplies) return
@@ -382,38 +387,39 @@ export function PostThread({
   }
 
   return (
-    <List
-      ref={ref}
-      data={posts}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
-      onStartReached={onStartReached}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={2}
-      onMomentumScrollEnd={onMomentumScrollEnd}
-      onScrollToTop={onScrollToTop}
-      maintainVisibleContentPosition={
-        isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
-      }
-      // @ts-ignore our .web version only -prf
-      desktopFixedHeight
-      removeClippedSubviews={isAndroid ? false : undefined}
-      ListFooterComponent={
-        <ListFooter
-          // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
-          // initial render
-          isFetchingNextPage={isFetching}
-          error={cleanError(threadError)}
-          onRetry={refetch}
-          // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
-          // work without causing weird jumps on web or glitches on native
-          height={windowHeight - 200}
-        />
-      }
-      initialNumToRender={initialNumToRender}
-      windowSize={11}
-    />
+    <ScrollProvider onMomentumEnd={onMomentumEnd}>
+      <List
+        ref={ref}
+        data={posts}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+        onStartReached={onStartReached}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={2}
+        onScrollToTop={onScrollToTop}
+        maintainVisibleContentPosition={
+          isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
+        }
+        // @ts-ignore our .web version only -prf
+        desktopFixedHeight
+        removeClippedSubviews={isAndroid ? false : undefined}
+        ListFooterComponent={
+          <ListFooter
+            // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
+            // initial render
+            isFetchingNextPage={isFetching}
+            error={cleanError(threadError)}
+            onRetry={refetch}
+            // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
+            // work without causing weird jumps on web or glitches on native
+            height={windowHeight - 200}
+          />
+        }
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
+      />
+    </ScrollProvider>
   )
 }
 
