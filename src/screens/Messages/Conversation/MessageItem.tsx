@@ -26,13 +26,12 @@ export function MessageItem({
     next.sender?.did === getAgent().session?.did
 
   const isLastInGroup = useMemo(() => {
-    const followedByOther =
-      !next || isFromSelf ? !isNextFromSelf : isNextFromSelf
-
-    if (followedByOther) {
+    // if the next message is from a different sender, then it's the last in the group
+    if (isFromSelf ? !isNextFromSelf : isNextFromSelf) {
       return true
     }
 
+    // or, if there's a 10 minute gap between this message and the next
     if (TempDmChatDefs.isMessageView(next)) {
       const thisDate = new Date(item.sentAt)
       const nextDate = new Date(next.sentAt)
