@@ -7,20 +7,25 @@ import {
 
 import {getContentLanguages} from '#/state/preferences/languages'
 import {FeedAPI, FeedAPIResponse} from './types'
+import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
   getAgent: () => BskyAgent
   params: GetCustomFeed.QueryParams
+  userInterests?: string
 
   constructor({
     getAgent,
     feedParams,
+    userInterests,
   }: {
     getAgent: () => BskyAgent
     feedParams: GetCustomFeed.QueryParams
+    userInterests?: string
   }) {
     this.getAgent = getAgent
     this.params = feedParams
+    this.userInterests = userInterests
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
@@ -44,6 +49,8 @@ export class CustomFeedAPI implements FeedAPI {
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
     const agent = this.getAgent()
+    const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
+
     const res = agent.session
       ? await this.getAgent().app.bsky.feed.getFeed(
           {
@@ -53,6 +60,9 @@ export class CustomFeedAPI implements FeedAPI {
           },
           {
             headers: {
+              ...(isBlueskyOwned
+                ? createBskyTopicsHeader(this.userInterests)
+                : {}),
               'Accept-Language': contentLangs,
             },
           },

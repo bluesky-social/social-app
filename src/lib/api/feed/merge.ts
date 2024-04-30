@@ -9,11 +9,13 @@ import {feedUriToHref} from 'lib/strings/url-helpers'
 import {FeedTuner} from '../feed-manip'
 import {FeedTunerFn} from '../feed-manip'
 import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
+import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
+  userInterests?: string
   getAgent: () => BskyAgent
   params: FeedParams
   feedTuners: FeedTunerFn[]
@@ -27,14 +29,17 @@ export class MergeFeedAPI implements FeedAPI {
     getAgent,
     feedParams,
     feedTuners,
+    userInterests,
   }: {
     getAgent: () => BskyAgent
     feedParams: FeedParams
     feedTuners: FeedTunerFn[]
+    userInterests?: string
   }) {
     this.getAgent = getAgent
     this.params = feedParams
     this.feedTuners = feedTuners
+    this.userInterests = userInterests
     this.following = new MergeFeedSource_Following({
       getAgent: this.getAgent,
       feedTuners: this.feedTuners,
@@ -58,6 +63,7 @@ export class MergeFeedAPI implements FeedAPI {
               getAgent: this.getAgent,
               feedUri,
               feedTuners: this.feedTuners,
+              userInterests: this.userInterests,
             }),
         ),
       )
@@ -254,15 +260,18 @@ class MergeFeedSource_Custom extends MergeFeedSource {
   getAgent: () => BskyAgent
   minDate: Date
   feedUri: string
+  userInterests?: string
 
   constructor({
     getAgent,
     feedUri,
     feedTuners,
+    userInterests,
   }: {
     getAgent: () => BskyAgent
     feedUri: string
     feedTuners: FeedTunerFn[]
+    userInterests?: string
   }) {
     super({
       getAgent,
@@ -270,6 +279,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     })
     this.getAgent = getAgent
     this.feedUri = feedUri
+    this.userInterests = userInterests
     this.sourceInfo = {
       $type: 'reasonFeedSource',
       uri: feedUri,
@@ -284,6 +294,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
   ): Promise<AppBskyFeedGetTimeline.Response> {
     try {
       const contentLangs = getContentLanguages().join(',')
+      const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri)
       const res = await this.getAgent().app.bsky.feed.getFeed(
         {
           cursor,
@@ -292,6 +303,9 @@ class MergeFeedSource_Custom extends MergeFeedSource {
         },
         {
           headers: {
+            ...(isBlueskyOwned
+              ? createBskyTopicsHeader(this.userInterests)
+              : {}),
             'Accept-Language': contentLangs,
           },
         },

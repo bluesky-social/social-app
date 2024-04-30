@@ -64,6 +64,8 @@ module.exports = function (config) {
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
       splash: SPLASH_CONFIG,
+      // hsl(211, 99%, 53%), same as palette.default.brandText
+      primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
@@ -180,6 +182,7 @@ module.exports = function (config) {
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
