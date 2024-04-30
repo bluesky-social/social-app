@@ -74,7 +74,6 @@ export function CaptchaWebView({
       onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       onNavigationStateChange={onNavigationStateChange}
       scrollEnabled={false}
-      on
       onError={e => {
         onError(e.nativeEvent)
       }}
