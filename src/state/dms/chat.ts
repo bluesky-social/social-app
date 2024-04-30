@@ -76,7 +76,6 @@ export class Chat {
     string,
     TempDmDefs.MessageView | TempDmDefs.DeletedMessage
   > = new Map()
-  private deletedMessages: TempDmDefs.DeletedMessage[] = []
   private pendingMessages: Map<
     string,
     {id: string; message: TempDmSendMessage.InputSchema['message']}
@@ -240,7 +239,13 @@ export class Chat {
              * Update if we have this in state. If we don't, don't worry about it.
              */
             if (this.pastMessages.has(log.message.id)) {
-              this.pastMessages.set(log.message.id, log.message)
+              /*
+               * For now, we remove deleted messages from the thread, if we receive one.
+               *
+               * To support them, it'd look something like this:
+               *   this.pastMessages.set(log.message.id, log.message)
+               */
+              this.pastMessages.delete(log.message.id)
             }
           }
         }
@@ -294,8 +299,6 @@ export class Chat {
 
   /*
    * Items in reverse order, since FlatList inverts
-   *
-   * TODO remove `deletedMessages` from these lists
    */
   get items(): ChatItem[] {
     const items: ChatItem[] = []
