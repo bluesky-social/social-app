@@ -85,6 +85,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
+    configureModeration(PUBLIC_BSKY_AGENT)
     setStateAndPersist(s => ({
       ...s,
       currentAccount: undefined,

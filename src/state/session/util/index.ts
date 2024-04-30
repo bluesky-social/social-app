@@ -24,25 +24,29 @@ export function readLastActiveAccount() {
 
 export async function configureModeration(
   agent: BskyAgent,
-  account: SessionAccount,
+  account?: SessionAccount,
 ) {
-  if (IS_TEST_USER(account.handle)) {
-    const did = (
-      await agent
-        .resolveHandle({handle: 'mod-authority.test'})
-        .catch(_ => undefined)
-    )?.data.did
-    if (did) {
-      console.warn('USING TEST ENV MODERATION')
-      BskyAgent.configure({appLabelers: [did]})
+  if (account) {
+    if (IS_TEST_USER(account.handle)) {
+      const did = (
+        await agent
+          .resolveHandle({handle: 'mod-authority.test'})
+          .catch(_ => undefined)
+      )?.data.did
+      if (did) {
+        console.warn('USING TEST ENV MODERATION')
+        BskyAgent.configure({appLabelers: [did]})
+      }
+    } else {
+      BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+      const labelerDids = await readLabelers(account.did).catch(_ => {})
+      if (labelerDids) {
+        agent.configureLabelersHeader(
+          labelerDids.filter(did => did !== BSKY_LABELER_DID),
+        )
+      }
     }
   } else {
     BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-    const labelerDids = await readLabelers(account.did).catch(_ => {})
-    if (labelerDids) {
-      agent.configureLabelersHeader(
-        labelerDids.filter(did => did !== BSKY_LABELER_DID),
-      )
-    }
   }
 }
