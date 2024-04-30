@@ -33,11 +33,11 @@ export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
   if (isKawaii) {
     return (
       <Image
-        source={require('../../../assets/kawaii.png')}
+        source={require('../../../assets/kawaii_smol.png')}
         accessibilityLabel="Bluesky"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
-        style={[{height: size, aspectRatio: 1.2}]}
+        style={[{height: size, aspectRatio: 1.4}]}
       />
     )
   }
