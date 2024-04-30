@@ -198,9 +198,6 @@ export function useChatLogQuery() {
               // TODO hack filter out duplicates
               if (prev?.messages.find(m => m.id === log.message.id)) return
 
-              // What to do in this case
-              if (!prev) return
-
               return {
                 ...prev,
                 messages: [log.message, ...prev.messages],
