@@ -13,6 +13,7 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
+  agentToSessionAccount,
   configureModerationForAccount,
   configureModerationForGuest,
   isSessionDeactivated,
@@ -123,6 +124,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           return
         }
 
+        // TODO: use agentToSessionAccount for this too.
         const refreshedAccount: SessionAccount = {
           service: account.service,
           did: session?.did || account.did,
@@ -195,16 +197,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         verificationCode,
       })
 
-      if (!agent.session) {
+      const account = agentToSessionAccount(agent)
+      if (!agent.session || !account) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
+
       const fetchingGates = tryFetchGates(
         agent.session.did,
         'prefer-fresh-gates',
       )
 
-      const deactivated = isSessionDeactivated(agent.session.accessJwt)
-      if (!deactivated) {
+      if (!account.deactivated) {
         /*dont await*/ agent.upsertProfile(_existing => {
           return {
             displayName: '',
@@ -216,19 +219,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             createdAt: new Date().toISOString(),
           }
         })
-      }
-
-      const account: SessionAccount = {
-        service: agent.service.toString(),
-        did: agent.session.did,
-        handle: agent.session.handle,
-        email: agent.session.email,
-        emailConfirmed: agent.session.emailConfirmed,
-        emailAuthFactor: agent.session.emailAuthFactor,
-        refreshJwt: agent.session.refreshJwt,
-        accessJwt: agent.session.accessJwt,
-        deactivated,
-        pdsUrl: agent.pdsUrl?.toString(),
       }
 
       await configureModerationForAccount(agent, account)
@@ -260,29 +250,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({service})
-
       await agent.login({identifier, password, authFactorToken})
+      const account = agentToSessionAccount(agent)
 
-      if (!agent.session) {
+      if (!agent.session || !account) {
         throw new Error(`session: login failed to establish a session`)
       }
+
       const fetchingGates = tryFetchGates(
         agent.session.did,
         'prefer-fresh-gates',
       )
-
-      const account: SessionAccount = {
-        service: agent.service.toString(),
-        did: agent.session.did,
-        handle: agent.session.handle,
-        email: agent.session.email,
-        emailConfirmed: agent.session.emailConfirmed,
-        emailAuthFactor: agent.session.emailAuthFactor,
-        refreshJwt: agent.session.refreshJwt,
-        accessJwt: agent.session.accessJwt,
-        deactivated: isSessionDeactivated(agent.session.accessJwt),
-        pdsUrl: agent.pdsUrl?.toString(),
-      }
 
       await configureModerationForAccount(agent, account)
 
@@ -429,28 +407,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.debug(`session: resumeSessionWithFreshAccount`)
 
         await networkRetry(1, () => agent.resumeSession(prevSession))
-
+        const sessionAccount = agentToSessionAccount(agent)
         /*
          * If `agent.resumeSession` fails above, it'll throw. This is just to
          * make TypeScript happy.
          */
-        if (!agent.session) {
+        if (!sessionAccount) {
           throw new Error(`session: initSession failed to establish a session`)
         }
-
-        // ensure changes in handle/email etc are captured on reload
-        return {
-          service: agent.service.toString(),
-          did: agent.session.did,
-          handle: agent.session.handle,
-          email: agent.session.email,
-          emailConfirmed: agent.session.emailConfirmed,
-          emailAuthFactor: agent.session.emailAuthFactor,
-          refreshJwt: agent.session.refreshJwt,
-          accessJwt: agent.session.accessJwt,
-          deactivated: isSessionDeactivated(agent.session.accessJwt),
-          pdsUrl: agent.pdsUrl?.toString(),
-        }
+        return sessionAccount
       }
     },
     [upsertAccount, clearCurrentAccount, createPersistSessionHandler],

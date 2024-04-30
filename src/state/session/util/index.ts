@@ -23,6 +23,25 @@ export function readLastActiveAccount() {
   return accounts.find(a => a.did === currentAccount?.did)
 }
 
+export function agentToSessionAccount(
+  agent: BskyAgent,
+): SessionAccount | undefined {
+  if (!agent.session) return undefined
+
+  return {
+    service: agent.service.toString(),
+    did: agent.session.did,
+    handle: agent.session.handle,
+    email: agent.session.email,
+    emailConfirmed: agent.session.emailConfirmed || false,
+    emailAuthFactor: agent.session.emailAuthFactor || false,
+    refreshJwt: agent.session.refreshJwt,
+    accessJwt: agent.session.accessJwt,
+    deactivated: isSessionDeactivated(agent.session.accessJwt),
+    pdsUrl: agent.pdsUrl?.toString(),
+  }
+}
+
 export function configureModerationForGuest() {
   switchToBskyAppLabeler()
 }
