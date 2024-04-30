@@ -1,20 +1,24 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useSession} from 'state/session'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {useAgent} from '#/state/session'
 import * as TempDmChatDefs from '#/temp/dm/defs'
 import * as TempDmChatGetChat from '#/temp/dm/getChat'
+import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
+import {useDmServiceUrlStorage} from '../useDmServiceUrlStorage'
 
 /**
  * TEMPORARY, PLEASE DO NOT JUDGE ME REACT QUERY OVERLORDS 🙏
  * (and do not try this at home)
  */
 
-function createHeaders(did: string) {
+const useHeaders = () => {
+  const {getAgent} = useAgent()
   return {
-    Authorization: did,
+    get Authorization() {
+      return getAgent().session!.did
+    },
   }
 }
 
@@ -27,10 +31,8 @@ type Chat = {
 
 export function useChat(chatId: string) {
   const queryClient = useQueryClient()
-
+  const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
-  const {currentAccount} = useSession()
-  const did = currentAccount?.did ?? ''
 
   return useQuery({
     queryKey: ['chat', chatId],
@@ -44,7 +46,7 @@ export function useChat(chatId: string) {
       const messagesResponse = await fetch(
         `${serviceUrl}/xrpc/temp.dm.getChatMessages?chatId=${chatId}`,
         {
-          headers: createHeaders(did),
+          headers,
         },
       )
 
@@ -56,7 +58,7 @@ export function useChat(chatId: string) {
       const chatResponse = await fetch(
         `${serviceUrl}/xrpc/temp.dm.getChat?chatId=${chatId}`,
         {
-          headers: createHeaders(did),
+          headers,
         },
       )
 
@@ -90,10 +92,8 @@ export function createTempId() {
 
 export function useSendMessageMutation(chatId: string) {
   const queryClient = useQueryClient()
-
+  const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
-  const {currentAccount} = useSession()
-  const did = currentAccount?.did ?? ''
 
   return useMutation<
     TempDmChatDefs.Message,
@@ -108,7 +108,7 @@ export function useSendMessageMutation(chatId: string) {
         {
           method: 'POST',
           headers: {
-            ...createHeaders(did),
+            ...headers,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -130,8 +130,10 @@ export function useSendMessageMutation(chatId: string) {
           ...prev,
           messages: [
             {
+              $type: 'temp.dm.defs#messageView',
               id: variables.tempId,
               text: variables.message,
+              sender: {did: headers.Authorization}, // TODO a real DID get
             },
             ...prev.messages,
           ],
@@ -165,10 +167,8 @@ export function useSendMessageMutation(chatId: string) {
 
 export function useChatLogQuery() {
   const queryClient = useQueryClient()
-
+  const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
-  const {currentAccount} = useSession()
-  const did = currentAccount?.did ?? ''
 
   return useQuery({
     queryKey: ['chatLog'],
@@ -183,7 +183,7 @@ export function useChatLogQuery() {
             prevLog?.cursor ?? ''
           }`,
           {
-            headers: createHeaders(did),
+            headers,
           },
         )
 
@@ -193,13 +193,10 @@ export function useChatLogQuery() {
           (await response.json()) as TempDmChatGetChatLog.OutputSchema
 
         for (const log of json.logs) {
-          if (TempDmChatDefs.isLogDeleteMessage(log)) {
+          if (TempDmChatDefs.isLogCreateMessage(log)) {
             queryClient.setQueryData(['chat', log.chatId], (prev: Chat) => {
-              // What to do in this case
-              if (!prev) return
-
-              // HACK we don't know who the creator of a message is, so just filter by id for now
-              if (prev.messages.find(m => m.id === log.message.id)) return prev
+              // TODO hack filter out duplicates
+              if (prev?.messages.find(m => m.id === log.message.id)) return
 
               return {
                 ...prev,
@@ -215,5 +212,41 @@ export function useChatLogQuery() {
       }
     },
     refetchInterval: 5000,
+  })
+}
+
+export function useGetChatFromMembers({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: (data: TempDmChatGetChatForMembers.OutputSchema) => void
+  onError?: (error: Error) => void
+}) {
+  const queryClient = useQueryClient()
+  const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
+
+  return useMutation({
+    mutationFn: async (members: string[]) => {
+      const response = await fetch(
+        `${serviceUrl}/xrpc/temp.dm.getChatForMembers?members=${members.join(
+          ',',
+        )}`,
+        {headers},
+      )
+
+      if (!response.ok) throw new Error('Failed to fetch chat')
+
+      return (await response.json()) as TempDmChatGetChatForMembers.OutputSchema
+    },
+    onSuccess: data => {
+      queryClient.setQueryData(['chat', data.chat.id], {
+        chatId: data.chat.id,
+        messages: [],
+        lastRev: data.chat.rev,
+      })
+      onSuccess?.(data)
+    },
+    onError,
   })
 }

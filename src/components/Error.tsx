@@ -17,12 +17,14 @@ export function Error({
   message,
   onRetry,
   onGoBack: onGoBackProp,
+  hideBackButton,
   sideBorders = true,
 }: {
   title?: string
   message?: string
   onRetry?: () => unknown
   onGoBack?: () => unknown
+  hideBackButton?: boolean
   sideBorders?: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -89,17 +91,19 @@ export function Error({
             </ButtonText>
           </Button>
         )}
-        <Button
-          variant="solid"
-          color={onRetry ? 'secondary' : 'primary'}
-          label={_(msg`Return to previous page`)}
-          onPress={onGoBack}
-          size="large"
-          style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
-          <ButtonText>
-            <Trans>Go Back</Trans>
-          </ButtonText>
-        </Button>
+        {!hideBackButton && (
+          <Button
+            variant="solid"
+            color={onRetry ? 'secondary' : 'primary'}
+            label={_(msg`Return to previous page`)}
+            onPress={onGoBack}
+            size="large"
+            style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
+            <ButtonText>
+              <Trans>Go Back</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
     </CenteredView>
   )

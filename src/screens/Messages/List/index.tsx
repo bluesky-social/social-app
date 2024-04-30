@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,10 +20,11 @@ import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+import {NewChat} from '../../../components/dms/NewChat'
 import {ClipClopGate} from '../gate'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'MessagesList'>
-export function MessagesListScreen({}: Props) {
+export function MessagesListScreen({navigation}: Props) {
   const {_} = useLingui()
   const t = useTheme()
 
@@ -53,14 +54,14 @@ export function MessagesListScreen({}: Props) {
 
   const isError = !!error
 
-  const conversations = React.useMemo(() => {
+  const conversations = useMemo(() => {
     if (data?.pages) {
       return data.pages.flat()
     }
     return []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -70,7 +71,7 @@ export function MessagesListScreen({}: Props) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -79,26 +80,35 @@ export function MessagesListScreen({}: Props) {
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
+  const onNewChat = useCallback(
+    (conversation: string) =>
+      navigation.navigate('MessagesConversation', {conversation}),
+    [navigation],
+  )
+
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
 
   if (conversations.length < 1) {
     return (
-      <ListMaybePlaceholder
-        isLoading={isLoading}
-        isError={isError}
-        emptyType="results"
-        emptyMessage={_(
-          msg`You have no messages yet. Start a conversation with someone!`,
-        )}
-        errorMessage={cleanError(error)}
-        onRetry={isError ? refetch : undefined}
-      />
+      <>
+        <ListMaybePlaceholder
+          isLoading={isLoading}
+          isError={isError}
+          emptyType="results"
+          emptyMessage={_(
+            msg`You have no messages yet. Start a conversation with someone!`,
+          )}
+          errorMessage={cleanError(error)}
+          onRetry={isError ? refetch : undefined}
+        />
+        <NewChat onNewChat={onNewChat} />
+      </>
     )
   }
 
   return (
-    <View>
+    <View style={a.flex_1}>
       <ViewHeader
         title={_(msg`Messages`)}
         showOnDesktop
@@ -106,6 +116,7 @@ export function MessagesListScreen({}: Props) {
         showBorder
         canGoBack={false}
       />
+      <NewChat onNewChat={onNewChat} />
       <List
         data={conversations}
         renderItem={({item}) => {

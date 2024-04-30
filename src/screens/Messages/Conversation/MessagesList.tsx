@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {Alert, FlatList, View, ViewToken} from 'react-native'
+import {FlatList, View, ViewToken} from 'react-native'
+import {Alert} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
 import {isWeb} from 'platform/detection'
@@ -64,6 +65,7 @@ export function MessagesList({chatId}: {chatId: string}) {
   const totalMessages = useRef(10)
 
   // TODO later
+
   const [_, setShowSpinner] = useState(false)
 
   // Query Data
@@ -147,6 +149,8 @@ export function MessagesList({chatId}: {chatId: string}) {
       },
     )
     totalMessages.current = filtered.length
+
+    return filtered
   }, [chat])
 
   return (
@@ -162,7 +166,7 @@ export function MessagesList({chatId}: {chatId: string}) {
         contentContainerStyle={{paddingHorizontal: 10}}
         // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
         // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
-        // this...probably
+        // this...probably.
         initialNumToRender={20}
         // Same with the max to render per batch. Let's be safe for now though.
         maxToRenderPerBatch={25}
@@ -175,7 +179,6 @@ export function MessagesList({chatId}: {chatId: string}) {
         maintainVisibleContentPosition={{
           minIndexForVisible: 0,
         }}
-        // This is actually a header since we are inverted!
         ListFooterComponent={<MaybeLoader isLoading={false} />}
         removeClippedSubviews={true}
         ref={flatListRef}
