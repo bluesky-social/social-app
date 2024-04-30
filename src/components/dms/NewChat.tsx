@@ -8,15 +8,14 @@ import {useLingui} from '@lingui/react'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
-import {useActorSearch} from '#/state/queries/actor-search'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {useGetChatFromMembers} from '../../screens/Messages/Temp/query/query'
 import {Button} from '../Button'
@@ -78,18 +77,14 @@ function SearchablePeopleList({
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
 
-  const [search, setSearch] = useState('')
-  const throttledSearch = useThrottledValue(search, 300)
+  const [searchText, setSearchText] = useState('')
 
-  const isSearching = throttledSearch.length > 0
-
-  const searchQuery = useActorSearch({
-    query: throttledSearch || 'temp',
-  })
-
-  const {data, isLoading, isError, refetch} = isSearching
-    ? searchQuery
-    : searchQuery
+  const {
+    data: actorAutocompleteData,
+    isFetching,
+    isError,
+    refetch,
+  } = useActorAutocompleteQuery(searchText, true)
 
   const renderItem = useCallback(
     ({item: profile}: {item: AppBskyActorDefs.ProfileView}) => {
@@ -181,9 +176,9 @@ function SearchablePeopleList({
           <TextField.Input
             label={_(msg`Search profiles`)}
             placeholder={_(msg`Search`)}
-            value={search}
+            value={searchText}
             onChangeText={text => {
-              setSearch(text)
+              setSearchText(text)
               listRef.current?.scrollToOffset({offset: 0, animated: false})
             }}
             returnKeyType="search"
@@ -201,29 +196,27 @@ function SearchablePeopleList({
         </TextField.Root>
       </View>
     )
-  }, [t.atoms.bg, _, control, search])
-
-  const hasData = (data ?? []).length > 0
+  }, [t.atoms.bg, _, control, searchText])
 
   return (
     <Dialog.InnerFlatList
       ref={listRef}
-      data={data ?? []}
+      data={actorAutocompleteData}
       renderItem={renderItem}
       ListHeaderComponent={
         <>
           {listHeader}
-          {!hasData && (
+          {searchText.length > 0 && !actorAutocompleteData?.length && (
             <ListMaybePlaceholder
-              isLoading={isLoading}
+              isLoading={isFetching}
               isError={isError}
               onRetry={refetch}
               hideBackButton={true}
               emptyType="results"
               sideBorders={false}
               emptyMessage={
-                isSearching
-                  ? _(msg`No search results found for "${throttledSearch}".`)
+                isError
+                  ? _(msg`No search results found for "${searchText}".`)
                   : _(msg`Could not load profiles. Please try again later.`)
               }
             />

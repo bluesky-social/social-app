@@ -201,6 +201,7 @@ let ListMaybePlaceholder = ({
         }
         onRetry={onRetry}
         onGoBack={onGoBack}
+        hideBackButton={hideBackButton}
         sideBorders={sideBorders}
       />
     )
