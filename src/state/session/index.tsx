@@ -1,16 +1,10 @@
 import React from 'react'
-import {
-  AtpPersistSessionHandler,
-  BSKY_LABELER_DID,
-  BskyAgent,
-} from '@atproto/api'
+import {AtpPersistSessionHandler, BskyAgent} from '@atproto/api'
 import {jwtDecode} from 'jwt-decode'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
-import {IS_TEST_USER} from '#/lib/constants'
 import {logEvent, tryFetchGates} from '#/lib/statsig/statsig'
-import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -19,7 +13,8 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
-import {readLabelers} from './agent-config'
+import {configureModeration, isSessionDeactivated} from './util'
+export {isSessionDeactivated}
 
 export type {SessionAccount} from '#/state/session/types'
 import {
@@ -53,10 +48,6 @@ let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
 function __getAgent() {
   return __globalAgent
-}
-
-export function useAgent() {
-  return React.useMemo(() => ({getAgent: __getAgent}), [])
 }
 
 function createPersistSessionHandler(
@@ -659,28 +650,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-async function configureModeration(agent: BskyAgent, account: SessionAccount) {
-  if (IS_TEST_USER(account.handle)) {
-    const did = (
-      await agent
-        .resolveHandle({handle: 'mod-authority.test'})
-        .catch(_ => undefined)
-    )?.data.did
-    if (did) {
-      console.warn('USING TEST ENV MODERATION')
-      BskyAgent.configure({appLabelers: [did]})
-    }
-  } else {
-    BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
-    const labelerDids = await readLabelers(account.did).catch(_ => {})
-    if (labelerDids) {
-      agent.configureLabelersHeader(
-        labelerDids.filter(did => did !== BSKY_LABELER_DID),
-      )
-    }
-  }
-}
-
 export function useSession() {
   return React.useContext(StateContext)
 }
@@ -707,12 +676,6 @@ export function useRequireAuth() {
   )
 }
 
-export function isSessionDeactivated(accessJwt: string | undefined) {
-  if (accessJwt) {
-    const sessData = jwtDecode(accessJwt)
-    return (
-      hasProp(sessData, 'scope') && sessData.scope === 'com.atproto.deactivated'
-    )
-  }
-  return false
+export function useAgent() {
+  return React.useMemo(() => ({getAgent: __getAgent}), [])
 }
