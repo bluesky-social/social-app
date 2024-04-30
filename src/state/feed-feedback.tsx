@@ -1,10 +1,12 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {logger} from '#/logger'
 import {FeedDescriptor, isFeedPostSlice} from '#/state/queries/post-feed'
+import {useAgent} from './session'
 
 type StateContext = {
   enabled: boolean
@@ -21,6 +23,7 @@ const stateContext = React.createContext<StateContext>({
 })
 
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
+  const {getAgent} = useAgent()
   const enabled = isDiscoverFeed(feed) && hasSession
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<Set<string>>(new Set())
@@ -28,7 +31,20 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   const [sendToFeed] = React.useState(() =>
     debounce(
       () => {
-        console.log(Array.from(queue.current).map(toInteraction))
+        const proxyAgent = getAgent().withProxy(
+          // @ts-ignore TODO need to update withProxy() to support this key -prf
+          'bsky_fg',
+          // TODO when we start sending to other feeds, we need to grab their DID -prf
+          'did:web:discover.bsky.app',
+        ) as BskyAgent
+        proxyAgent.app.bsky.feed
+          .sendInteractions({
+            interactions: Array.from(queue.current).map(toInteraction),
+          })
+          .catch((e: any) => {
+            logger.warn('Failed to send feed interactions', {error: e})
+          })
+
         for (const v of queue.current) {
           history.current.add(v)
         }
