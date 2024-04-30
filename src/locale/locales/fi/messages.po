@@ -3000,7 +3000,7 @@ msgstr "Avaa navigointi"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:191
 msgid "Open post options menu"
-msgstr ""Avaa viestin asetusvalikko""
+msgstr "Avaa viestin asetusvalikko"
 
 #: src/view/screens/Settings/index.tsx:787
 #: src/view/screens/Settings/index.tsx:797
