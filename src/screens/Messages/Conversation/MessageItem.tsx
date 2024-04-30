@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {StyleProp, TextStyle, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,7 +25,25 @@ export function MessageItem({
     TempDmChatDefs.isMessageView(next) &&
     next.sender?.did === getAgent().session?.did
 
-  const isLastInGroup = !next || isFromSelf ? !isNextFromSelf : isNextFromSelf
+  const isLastInGroup = useMemo(() => {
+    // if the next message is from a different sender, then it's the last in the group
+    if (isFromSelf ? !isNextFromSelf : isNextFromSelf) {
+      return true
+    }
+
+    // or, if there's a 10 minute gap between this message and the next
+    if (TempDmChatDefs.isMessageView(next)) {
+      const thisDate = new Date(item.sentAt)
+      const nextDate = new Date(next.sentAt)
+
+      const diff = nextDate.getTime() - thisDate.getTime()
+
+      // 10 minutes
+      return diff > 10 * 60 * 1000
+    }
+
+    return true
+  }, [item, next, isFromSelf, isNextFromSelf])
 
   return (
     <View>
