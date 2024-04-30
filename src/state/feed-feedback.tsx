@@ -140,6 +140,6 @@ function toString(interaction: AppBskyFeedDefs.Interaction): string {
 }
 
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
-  const [uri, event, feedContext] = str.split('|')
-  return {uri, event, feedContext}
+  const [item, event, feedContext] = str.split('|')
+  return {item, event, feedContext}
 }
