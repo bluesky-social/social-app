@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
-import {createFullHandle} from '#/lib/strings/handles'
+import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
@@ -74,6 +74,39 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const onNextPress = React.useCallback(async () => {
     if (state.activeStep === SignupStep.HANDLE) {
       try {
+        const isValidHandle = validateHandle(state.handle, state.userDomain)
+
+        switch (isValidHandle) {
+          case 'charsError':
+            dispatch({
+              type: 'setError',
+              value: _(
+                msg`Handle may only contain letters, numbers, and hyphens`,
+              ),
+            })
+            return
+          case 'totalLengthError':
+            dispatch({
+              type: 'setError',
+              value: _(msg`Handle may not be longer than 253 characters`),
+            })
+            return
+          case 'frontLengthError':
+            dispatch({
+              type: 'setError',
+              value: _(msg`Handle should be at least 3 characters`),
+            })
+            return
+          case 'hyphenError':
+            dispatch({
+              type: 'setError',
+              value: _(msg`Handle may not begin or end with a hyphen`),
+            })
+            return
+          case 'valid':
+            break
+        }
+
         dispatch({type: 'setIsLoading', value: true})
 
         const res = await getAgent().resolveHandle({

@@ -10,7 +10,7 @@ import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {
@@ -175,11 +175,8 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
         isValidEmail
       break
     }
-    case SignupStep.HANDLE: {
-      next.canNext =
-        !!next.handle && validateHandle(next.handle, next.userDomain).overall
-      break
-    }
+    default:
+      next.canNext = true
   }
 
   logger.debug('signup', next)

@@ -25,28 +25,32 @@ export function sanitizeHandle(handle: string, prefix = ''): string {
   return isInvalidHandle(handle) ? '⚠Invalid Handle' : `${prefix}${handle}`
 }
 
-export interface IsValidHandle {
-  handleChars: boolean
-  hyphenStartOrEnd: boolean
-  frontLength: boolean
-  totalLength: boolean
-  overall: boolean
-}
+type ValidHandleResult =
+  | 'charsError'
+  | 'hyphenError'
+  | 'frontLengthError'
+  | 'totalLengthError'
+  | 'valid'
 
 // More checks from https://github.com/bluesky-social/atproto/blob/main/packages/pds/src/handle/index.ts#L72
-export function validateHandle(str: string, userDomain: string): IsValidHandle {
+export function validateHandle(
+  str: string,
+  userDomain: string,
+): ValidHandleResult {
   const fullHandle = createFullHandle(str, userDomain)
 
-  const results = {
-    handleChars:
-      !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
-    hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
-    frontLength: str.length >= 3,
-    totalLength: fullHandle.length <= 253,
+  if (str.length < 3) {
+    return 'frontLengthError'
+  }
+  if (fullHandle.length > 253) {
+    return 'totalLengthError'
+  }
+  if (str.startsWith('-') || str.endsWith('-')) {
+    return 'hyphenError'
+  }
+  if (!str || !VALIDATE_REGEX.test(fullHandle) || str.includes('.')) {
+    return 'charsError'
   }
 
-  return {
-    ...results,
-    overall: !Object.values(results).includes(false),
-  }
+  return 'valid'
 }
