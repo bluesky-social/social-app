@@ -4,11 +4,11 @@ import {jwtDecode} from 'jwt-decode'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
+import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {logEvent, tryFetchGates} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {PUBLIC_BSKY_AGENT} from '#/state/queries'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
@@ -23,6 +23,8 @@ import {
   SessionState,
   SessionStateContext,
 } from '#/state/session/types'
+
+const PUBLIC_BSKY_AGENT = new BskyAgent({service: PUBLIC_BSKY_SERVICE})
 
 const StateContext = React.createContext<SessionStateContext>({
   isInitialLoad: true,
