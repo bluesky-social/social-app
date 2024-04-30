@@ -1,6 +1,8 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
+import {logger} from '#/logger'
+
 // @ts-ignore web only, we will always redirect to the app on web (CORS)
 const REDIRECT_HOST = new URL(window.location.href).host
 
@@ -47,6 +49,11 @@ export function CaptchaWebView({
       style={styles.iframe}
       id="captcha-iframe"
       onLoad={onLoad}
+      onError={e => {
+        logger.warn('Signup Flow Error: CaptchaWebView', {
+          webViewError: JSON.stringify(e.nativeEvent),
+        })
+      }}
     />
   )
 }

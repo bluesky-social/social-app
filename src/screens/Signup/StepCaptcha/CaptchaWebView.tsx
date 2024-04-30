@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native'
 import {WebView, WebViewNavigation} from 'react-native-webview'
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
+import {logger} from '#/logger'
 import {SignupState} from '#/screens/Signup/state'
 
 const ALLOWED_HOSTS = [
@@ -74,6 +75,17 @@ export function CaptchaWebView({
       onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       onNavigationStateChange={onNavigationStateChange}
       scrollEnabled={false}
+      on
+      onError={e => {
+        logger.warn('Signup Flow Error: CaptchaWebView', {
+          webViewError: JSON.stringify(e.nativeEvent),
+        })
+      }}
+      onHttpError={e => {
+        logger.warn('Signup Flow Error: CaptchaWebView', {
+          webViewError: JSON.stringify(e.nativeEvent),
+        })
+      }}
     />
   )
 }
