@@ -2,16 +2,13 @@ import React from 'react'
 import {
   Dimensions,
   Keyboard,
-  LayoutChangeEvent,
   NativeSyntheticEvent,
   Pressable,
   TextInput,
   TextInputContentSizeChangeEventData,
-  useWindowDimensions,
   View,
 } from 'react-native'
-import {useKeyboardContext} from 'react-native-keyboard-controller'
-import {useSafeArea, useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
