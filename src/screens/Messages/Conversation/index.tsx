@@ -17,7 +17,10 @@ import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {useChatQuery} from '#/screens/Messages/Temp/query/query'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded} from '#/components/icons/DotGrid'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
@@ -112,26 +115,15 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
         </Text>
       </View>
       <View>
-        <TouchableOpacity
-          testID="viewHeaderDrawerBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          style={{
-            width: 30,
-            height: 30,
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint={_(msg`Access navigation links and settings`)}>
-          <DotGrid_Stroke2_Corner0_Rounded
-            style={[
-              t.atoms.text,
-              {
-                marginTop: 6,
-              },
-            ]}
-          />
-        </TouchableOpacity>
+        <Button
+          label={_(msg`Chat settings`)}
+          color="secondary"
+          size="large"
+          variant="ghost"
+          style={[{height: 'auto', width: 'auto'}, a.px_sm, a.py_sm]}
+          onPress={() => {}}>
+          <ButtonIcon icon={DotGrid_Stroke2_Corner0_Rounded} />
+        </Button>
       </View>
     </View>
   )
