@@ -122,6 +122,16 @@ export function BottomBarWeb() {
                   )
                 }}
               </NavItem>
+              <NavItem routeName="Messages" href="/messages">
+                {() => {
+                  return (
+                    <Envelope
+                      size="lg"
+                      style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
+                    />
+                  )
+                }}
+              </NavItem>
               {gate('dms') && (
                 <NavItem routeName="Messages" href="/messages">
                   {({isActive}) => {
