@@ -172,23 +172,23 @@ export function MessagesList({chatId}: {chatId: string}) {
         keyExtractor={item => item.message.id}
         renderItem={renderItem}
         contentContainerStyle={{paddingHorizontal: 10}}
+        inverted={true}
         // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
         // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
         // this...probably.
         initialNumToRender={20}
         // Same with the max to render per batch. Let's be safe for now though.
         maxToRenderPerBatch={25}
-        inverted={true}
+        removeClippedSubviews={true}
         onEndReached={onEndReached}
         onScrollToIndexFailed={onScrollToEndFailed}
         onContentSizeChange={onContentSizeChange}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         maintainVisibleContentPosition={{
-          minIndexForVisible: 0,
+          minIndexForVisible: 1,
         }}
         ListFooterComponent={<MaybeLoader isLoading={false} />}
-        removeClippedSubviews={true}
         ref={flatListRef}
         keyboardDismissMode="none"
       />
