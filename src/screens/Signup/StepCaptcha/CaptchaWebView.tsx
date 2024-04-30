@@ -26,7 +26,7 @@ export function CaptchaWebView({
   stateParam: string
   state?: SignupState
   onSuccess: (code: string) => void
-  onError: (error: object) => void
+  onError: (error: unknown) => void
 }) {
   const redirectHost = React.useMemo(() => {
     if (!state?.serviceUrl) return 'bsky.app'

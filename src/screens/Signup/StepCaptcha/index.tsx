@@ -45,7 +45,7 @@ export function StepCaptcha() {
   )
 
   const onError = React.useCallback(
-    (error?: object) => {
+    (error?: unknown) => {
       dispatch({
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),

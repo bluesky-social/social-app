@@ -13,7 +13,7 @@ export function CaptchaWebView({
   url: string
   stateParam: string
   onSuccess: (code: string) => void
-  onError: (error: object) => void
+  onError: (error: unknown) => void
 }) {
   React.useEffect(() => {
     const interval = setTimeout(() => {
@@ -48,8 +48,8 @@ export function CaptchaWebView({
         return
       }
       onSuccess(code)
-    } catch (e) {
-      onError({errorMessage: 'Error creating captcha URL'})
+    } catch (e: unknown) {
+      onError(e)
     }
   }, [stateParam, onSuccess, onError])
 
