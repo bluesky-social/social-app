@@ -90,13 +90,11 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.like) {
         playHaptic()
-        if (feedContext) {
-          sendInteraction({
-            item: post.uri,
-            event: 'app.bsky.feed.defs#interactionLike',
-            feedContext,
-          })
-        }
+        sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionLike',
+          feedContext,
+        })
         await queueLike()
       } else {
         await queueUnlike()
@@ -121,13 +119,11 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.repost) {
         playHaptic()
-        if (feedContext) {
-          sendInteraction({
-            item: post.uri,
-            event: 'app.bsky.feed.defs#interactionRepost',
-            feedContext,
-          })
-        }
+        sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionRepost',
+          feedContext,
+        })
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -150,13 +146,11 @@ let PostCtrls = ({
 
   const onQuote = useCallback(() => {
     closeModal()
-    if (feedContext) {
-      sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionQuote',
-        feedContext,
-      })
-    }
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionQuote',
+      feedContext,
+    })
     openComposer({
       quote: {
         uri: post.uri,
@@ -185,13 +179,11 @@ let PostCtrls = ({
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
     shareUrl(url)
-    if (feedContext) {
-      sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionShare',
-        feedContext,
-      })
-    }
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionShare',
+      feedContext,
+    })
   }, [post.uri, post.author, sendInteraction, feedContext])
 
   return (
