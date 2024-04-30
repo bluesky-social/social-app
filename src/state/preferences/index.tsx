@@ -7,6 +7,7 @@ import {Provider as DisableHapticsProvider} from './disable-haptics'
 import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 import {Provider as HiddenPostsProvider} from './hidden-posts'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
+import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
 
 export {
@@ -32,7 +33,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             <InAppBrowserProvider>
               <DisableHapticsProvider>
                 <AutoplayProvider>
-                  <DmServiceUrlProvider>{children}</DmServiceUrlProvider>
+                  <DmServiceUrlProvider>
+                    <KawaiiProvider>{children}</KawaiiProvider>
+                  </DmServiceUrlProvider>
                 </AutoplayProvider>
               </DisableHapticsProvider>
             </InAppBrowserProvider>
