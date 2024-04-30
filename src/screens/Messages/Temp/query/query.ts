@@ -130,8 +130,10 @@ export function useSendMessageMutation(chatId: string) {
           ...prev,
           messages: [
             {
+              $type: 'temp.dm.defs#messageView',
               id: variables.tempId,
               text: variables.message,
+              sender: {did: headers.Authorization}, // TODO a real DID get
             },
             ...prev.messages,
           ],
@@ -193,11 +195,11 @@ export function useChatLogQuery() {
         for (const log of json.logs) {
           if (TempDmChatDefs.isLogCreateMessage(log)) {
             queryClient.setQueryData(['chat', log.chatId], (prev: Chat) => {
+              // TODO hack filter out duplicates
+              if (prev?.messages.find(m => m.id === log.message.id)) return
+
               // What to do in this case
               if (!prev) return
-
-              // HACK we don't know who the creator of a message is, so just filter by id for now
-              // if (prev.messages.find(m => m.id === log.message.id)) return prev
 
               return {
                 ...prev,
