@@ -367,7 +367,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         handle: account.handle,
       }
 
-      if (!isSessionExpired(account)) {
+      if (isSessionExpired(account)) {
+        logger.debug(`session: attempting to resume using previous session`)
+
+        try {
+          const freshAccount = await resumeSessionWithFreshAccount()
+          __globalAgent = agent
+          await fetchingGates
+          upsertAccount(freshAccount)
+        } catch (e) {
+          /*
+           * Note: `agent.persistSession` is also called when this fails, and
+           * we handle that failure via `createPersistSessionHandler`
+           */
+          logger.info(`session: resumeSessionWithFreshAccount failed`, {
+            message: e,
+          })
+
+          __globalAgent = PUBLIC_BSKY_AGENT
+        }
+      } else {
         logger.debug(`session: attempting to reuse previous session`)
 
         agent.session = prevSession
@@ -404,25 +423,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
             __globalAgent = PUBLIC_BSKY_AGENT
           })
-      } else {
-        logger.debug(`session: attempting to resume using previous session`)
-
-        try {
-          const freshAccount = await resumeSessionWithFreshAccount()
-          __globalAgent = agent
-          await fetchingGates
-          upsertAccount(freshAccount)
-        } catch (e) {
-          /*
-           * Note: `agent.persistSession` is also called when this fails, and
-           * we handle that failure via `createPersistSessionHandler`
-           */
-          logger.info(`session: resumeSessionWithFreshAccount failed`, {
-            message: e,
-          })
-
-          __globalAgent = PUBLIC_BSKY_AGENT
-        }
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
