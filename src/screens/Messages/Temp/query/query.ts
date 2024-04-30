@@ -70,10 +70,10 @@ export function useChat(chatId: string) {
 
       if (!chatResponse.ok) throw new Error('Failed to fetch chat')
 
-      queryClient.setQueryData(['chatQuery', chatId], chatResponse)
-
       const chatJson =
         (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
+
+      queryClient.setQueryData(['chatQuery', chatId], chatJson.chat)
 
       const newChat = {
         chatId,
@@ -294,8 +294,8 @@ export function useChatQuery(chatId: string) {
 
       if (!chatResponse.ok) throw new Error('Failed to fetch chat')
 
-      const chatResponseJson = await chatResponse.json()
-      return chatResponseJson as TempDmChatGetChat.OutputSchema
+      const json = (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
+      return json.chat
     },
   })
 }
