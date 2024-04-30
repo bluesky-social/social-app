@@ -25,7 +25,7 @@ export function MessageItem({
     TempDmChatDefs.isMessageView(next) &&
     next.sender?.did === getAgent().session?.did
 
-  const isLastInGroup = isFromSelf ? !isNextFromSelf : isNextFromSelf
+  const isLastInGroup = !next || isFromSelf ? !isNextFromSelf : isNextFromSelf
 
   return (
     <View>
