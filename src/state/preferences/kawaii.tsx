@@ -30,7 +30,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     // dumb and stupid but it's web only so just refresh the page if you want to change it
 
     if (isWeb) {
-      // @ts-expect-error - web only
       const kawaii = new URLSearchParams(window.location.search).get('kawaii')
       switch (kawaii) {
         case 'true':
