@@ -23,8 +23,13 @@ import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
 
-export function NewChat({onNewChat}: {onNewChat: (chatId: string) => void}) {
-  const control = Dialog.useDialogControl()
+export function NewChat({
+  control,
+  onNewChat,
+}: {
+  control: Dialog.DialogControlProps
+  onNewChat: (chatId: string) => void
+}) {
   const t = useTheme()
   const {_} = useLingui()
 
