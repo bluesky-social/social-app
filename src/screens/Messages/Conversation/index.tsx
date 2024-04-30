@@ -42,8 +42,6 @@ export function MessagesConversationScreen({route}: Props) {
     return chat?.members?.find(m => m.did !== myDid)
   }, [chat?.members, myDid])
 
-  console.log(otherProfile)
-
   if (!gate('dms')) return <ClipClopGate />
 
   if (!chat || !otherProfile) {
