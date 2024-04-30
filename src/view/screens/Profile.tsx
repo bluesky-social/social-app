@@ -18,14 +18,13 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {useGate} from 'lib/statsig/statsig'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
@@ -143,7 +142,6 @@ function ProfileScreenLoaded({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
-  const shouldUseScrollableHeader = useGate('new_profile_scroll_component')
   const {
     data: labelerInfo,
     error: labelerError,
@@ -184,8 +182,7 @@ function ProfileScreenLoaded({
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
   const showLikesTab = isMe
-  const showFeedsTab =
-    hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
+  const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
@@ -318,21 +315,8 @@ function ProfileScreenLoaded({
   // =
 
   const renderHeader = React.useCallback(() => {
-    if (shouldUseScrollableHeader) {
-      return (
-        <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
-          <ProfileHeader
-            profile={profile}
-            labeler={labelerInfo}
-            descriptionRT={hasDescription ? descriptionRT : null}
-            moderationOpts={moderationOpts}
-            hideBackButton={hideBackButton}
-            isPlaceholderProfile={showPlaceholder}
-          />
-        </ExpoScrollForwarderView>
-      )
-    } else {
-      return (
+    return (
+      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
           profile={profile}
           labeler={labelerInfo}
@@ -341,10 +325,9 @@ function ProfileScreenLoaded({
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
         />
-      )
-    }
+      </ExpoScrollForwarderView>
+    )
   }, [
-    shouldUseScrollableHeader,
     scrollViewTag,
     profile,
     labelerInfo,
@@ -487,6 +470,7 @@ function ProfileScreenLoaded({
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
+  const {getAgent} = useAgent()
   const [prevText, setPrevText] = React.useState(text)
   const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
@@ -510,7 +494,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     return () => {
       ignore = true
     }
-  }, [text])
+  }, [text, getAgent])
   const isResolving = resolvedRT === null
   return [resolvedRT ?? rawRT, isResolving]
 }

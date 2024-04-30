@@ -1,6 +1,7 @@
 import React from 'react'
-import * as persisted from '#/state/persisted'
+
 import {AppLanguage} from '#/locale/languages'
+import * as persisted from '#/state/persisted'
 
 type SetStateCb = (
   s: persisted.Schema['languagePrefs'],
@@ -9,6 +10,7 @@ type StateContext = persisted.Schema['languagePrefs']
 type ApiContext = {
   setPrimaryLanguage: (code2: string) => void
   setPostLanguage: (commaSeparatedLangCodes: string) => void
+  setContentLanguage: (code2: string) => void
   toggleContentLanguage: (code2: string) => void
   togglePostLanguage: (code2: string) => void
   savePostLanguageToHistory: () => void
@@ -21,6 +23,7 @@ const stateContext = React.createContext<StateContext>(
 const apiContext = React.createContext<ApiContext>({
   setPrimaryLanguage: (_: string) => {},
   setPostLanguage: (_: string) => {},
+  setContentLanguage: (_: string) => {},
   toggleContentLanguage: (_: string) => {},
   togglePostLanguage: (_: string) => {},
   savePostLanguageToHistory: () => {},
@@ -52,6 +55,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
       setPostLanguage(commaSeparatedLangCodes: string) {
         setStateWrapped(s => ({...s, postLanguage: commaSeparatedLangCodes}))
+      },
+      setContentLanguage(code2: string) {
+        setStateWrapped(s => ({...s, contentLanguages: [code2]}))
       },
       toggleContentLanguage(code2: string) {
         setStateWrapped(s => {

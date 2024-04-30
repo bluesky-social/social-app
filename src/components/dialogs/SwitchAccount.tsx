@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {AccountList} from '../AccountList'
@@ -21,23 +20,25 @@ export function SwitchAccountDialog({
   const {currentAccount} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const closeAllActiveElements = useCloseAllActiveElements()
 
   const onSelectAccount = useCallback(
     (account: SessionAccount) => {
-      if (account.did === currentAccount?.did) {
-        control.close()
+      if (account.did !== currentAccount?.did) {
+        control.close(() => {
+          onPressSwitchAccount(account, 'SwitchAccount')
+        })
       } else {
-        onPressSwitchAccount(account, 'SwitchAccount')
+        control.close()
       }
     },
     [currentAccount, control, onPressSwitchAccount],
   )
 
   const onPressAddAccount = useCallback(() => {
-    setShowLoggedOut(true)
-    closeAllActiveElements()
-  }, [setShowLoggedOut, closeAllActiveElements])
+    control.close(() => {
+      setShowLoggedOut(true)
+    })
+  }, [setShowLoggedOut, control])
 
   return (
     <Dialog.Outer control={control}>

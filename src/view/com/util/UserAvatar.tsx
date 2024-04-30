@@ -2,18 +2,21 @@ import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   useCameraPermission,
   usePhotoLibraryPermission,
 } from 'lib/hooks/usePermissions'
+import {makeProfileLink} from 'lib/routes/links'
 import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {
@@ -22,9 +25,10 @@ import {
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {Link} from '#/components/Link'
 import * as Menu from '#/components/Menu'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {UserPreviewLink} from './UserPreviewLink'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -45,9 +49,8 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  did: string
-  handle: string
   onBeforePress?: () => void
+  profile: AppBskyActorDefs.ProfileViewBasic
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -370,16 +373,32 @@ let EditableUserAvatar = ({
 EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
 
-let PreviewableUserAvatar = (
-  props: PreviewableUserAvatarProps,
-): React.ReactNode => {
+let PreviewableUserAvatar = ({
+  moderation,
+  profile,
+  onBeforePress,
+  ...rest
+}: PreviewableUserAvatarProps): React.ReactNode => {
+  const {_} = useLingui()
+  const queryClient = useQueryClient()
+
+  const onPress = React.useCallback(() => {
+    onBeforePress?.()
+    precacheProfile(queryClient, profile)
+  }, [profile, queryClient, onBeforePress])
+
   return (
-    <UserPreviewLink
-      did={props.did}
-      handle={props.handle}
-      onBeforePress={props.onBeforePress}>
-      <UserAvatar {...props} />
-    </UserPreviewLink>
+    <ProfileHoverCard did={profile.did}>
+      <Link
+        label={_(msg`See profile`)}
+        to={makeProfileLink({
+          did: profile.did,
+          handle: profile.handle,
+        })}
+        onPress={onPress}>
+        <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
+      </Link>
+    </ProfileHoverCard>
   )
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)

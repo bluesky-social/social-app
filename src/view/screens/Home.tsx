@@ -2,8 +2,10 @@ import React from 'react'
 import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
@@ -11,15 +13,19 @@ import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {
+  useMinimalShellMode,
+  useSetDrawerSwipeDisabled,
+  useSetMinimalShellMode,
+} from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
-import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -51,6 +57,8 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: FeedSourceInfo[]
 }) {
+  useOTAUpdates()
+
   const allFeeds = React.useMemo(() => {
     const feeds: FeedDescriptor[] = []
     feeds.push('home')
@@ -108,21 +116,25 @@ function HomeScreenReady({
     }),
   )
 
-  const disableMinShellOnForegrounding = useGate(
-    'disable_min_shell_on_foregrounding',
-  )
+  const gate = useGate()
+  const mode = useMinimalShellMode()
+  const {isMobile} = useWebMediaQueries()
   React.useEffect(() => {
-    if (disableMinShellOnForegrounding) {
-      const listener = AppState.addEventListener('change', nextAppState => {
-        if (nextAppState === 'active') {
+    const listener = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'active') {
+        if (
+          isMobile &&
+          mode.value === 1 &&
+          gate('disable_min_shell_on_foregrounding_v2')
+        ) {
           setMinimalShellMode(false)
         }
-      })
-      return () => {
-        listener.remove()
       }
+    })
+    return () => {
+      listener.remove()
     }
-  }, [setMinimalShellMode, disableMinShellOnForegrounding])
+  }, [setMinimalShellMode, mode, isMobile, gate])
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -231,7 +243,12 @@ function HomeScreenReady({
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
-      <HomeLoggedOutCTA />
+      <FeedPage
+        testID="customFeedPage"
+        isPageFocused
+        feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
+        renderEmptyState={renderCustomFeedEmptyState}
+      />
     </Pager>
   )
 }

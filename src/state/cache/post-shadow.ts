@@ -62,25 +62,29 @@ function mergeShadow(
     return POST_TOMBSTONE
   }
 
-  const wasLiked = !!post.viewer?.like
-  const isLiked = !!shadow.likeUri
   let likeCount = post.likeCount ?? 0
-  if (wasLiked && !isLiked) {
-    likeCount--
-  } else if (!wasLiked && isLiked) {
-    likeCount++
+  if ('likeUri' in shadow) {
+    const wasLiked = !!post.viewer?.like
+    const isLiked = !!shadow.likeUri
+    if (wasLiked && !isLiked) {
+      likeCount--
+    } else if (!wasLiked && isLiked) {
+      likeCount++
+    }
+    likeCount = Math.max(0, likeCount)
   }
-  likeCount = Math.max(0, likeCount)
 
-  const wasReposted = !!post.viewer?.repost
-  const isReposted = !!shadow.repostUri
   let repostCount = post.repostCount ?? 0
-  if (wasReposted && !isReposted) {
-    repostCount--
-  } else if (!wasReposted && isReposted) {
-    repostCount++
+  if ('repostUri' in shadow) {
+    const wasReposted = !!post.viewer?.repost
+    const isReposted = !!shadow.repostUri
+    if (wasReposted && !isReposted) {
+      repostCount--
+    } else if (!wasReposted && isReposted) {
+      repostCount++
+    }
+    repostCount = Math.max(0, repostCount)
   }
-  repostCount = Math.max(0, repostCount)
 
   return castAsShadow({
     ...post,

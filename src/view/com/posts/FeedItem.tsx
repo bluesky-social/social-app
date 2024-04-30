@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
@@ -25,8 +26,10 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines} from 'lib/strings/helpers'
 import {s} from 'lib/styles'
+import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
 import {ContentHider} from '#/components/moderation/ContentHider'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -111,6 +114,7 @@ let FeedItemInner = ({
   isThreadLastChild?: boolean
   isThreadParent?: boolean
 }): React.ReactNode => {
+  const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -146,14 +150,6 @@ let FeedItemInner = ({
     })
   }, [post, record, openComposer, moderation, sendInteraction, feedContext])
 
-  const onOpenPost = React.useCallback(() => {
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughItem',
-      feedContext,
-    })
-  }, [sendInteraction, post, feedContext])
-
   const onOpenAuthor = React.useCallback(() => {
     sendInteraction({
       item: post.uri,
@@ -178,6 +174,15 @@ let FeedItemInner = ({
     })
   }, [sendInteraction, post, feedContext])
 
+  const onBeforePress = React.useCallback(() => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughItem',
+      feedContext,
+    })
+    precacheProfile(queryClient, post.author)
+  }, [queryClient, post, sendInteraction, feedContext])
+
   const outerStyles = [
     styles.outer,
     {
@@ -197,7 +202,7 @@ let FeedItemInner = ({
       href={href}
       noFeedback
       accessible={false}
-      onBeforePress={onOpenPost}>
+      onBeforePress={onBeforePress}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
@@ -260,18 +265,21 @@ let FeedItemInner = ({
                 numberOfLines={1}>
                 <Trans>
                   Reposted by{' '}
-                  <TextLinkOnWebOnly
-                    type="sm-bold"
-                    style={pal.textLight}
-                    lineHeight={1.2}
-                    numberOfLines={1}
-                    text={sanitizeDisplayName(
-                      reason.by.displayName || sanitizeHandle(reason.by.handle),
-                      moderation.ui('displayName'),
-                    )}
-                    href={makeProfileLink(reason.by)}
-                    onBeforePress={onOpenReposter}
-                  />
+                  <ProfileHoverCard inline did={reason.by.did}>
+                    <TextLinkOnWebOnly
+                      type="sm-bold"
+                      style={pal.textLight}
+                      lineHeight={1.2}
+                      numberOfLines={1}
+                      text={sanitizeDisplayName(
+                        reason.by.displayName ||
+                          sanitizeHandle(reason.by.handle),
+                        moderation.ui('displayName'),
+                      )}
+                      href={makeProfileLink(reason.by)}
+                      onBeforePress={onOpenReposter}
+                    />
+                  </ProfileHoverCard>
                 </Trans>
               </Text>
             </Link>
@@ -283,9 +291,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={post.author.did}
-            handle={post.author.handle}
-            avatar={post.author.avatar}
+            profile={post.author}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
             onBeforePress={onOpenAuthor}
@@ -329,12 +335,14 @@ let FeedItemInner = ({
                 numberOfLines={1}>
                 <Trans context="description">
                   Reply to{' '}
-                  <UserInfoText
-                    type="md"
-                    did={replyAuthorDid}
-                    attr="displayName"
-                    style={[pal.textLight]}
-                  />
+                  <ProfileHoverCard inline did={replyAuthorDid}>
+                    <UserInfoText
+                      type="md"
+                      did={replyAuthorDid}
+                      attr="displayName"
+                      style={[pal.textLight]}
+                    />
+                  </ProfileHoverCard>
                 </Trans>
               </Text>
             </View>
@@ -353,6 +361,7 @@ let FeedItemInner = ({
             richText={richText}
             onPressReply={onPressReply}
             logContext="FeedItem"
+            feedContext={feedContext}
           />
         </View>
       </View>

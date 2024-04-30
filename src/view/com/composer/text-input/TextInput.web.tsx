@@ -1,28 +1,32 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {RichText, AppBskyRichtextFacet} from '@atproto/api'
-import EventEmitter from 'eventemitter3'
-import {useEditor, EditorContent, JSONContent} from '@tiptap/react'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {Trans} from '@lingui/macro'
 import {Document} from '@tiptap/extension-document'
-import History from '@tiptap/extension-history'
 import Hardbreak from '@tiptap/extension-hard-break'
+import History from '@tiptap/extension-history'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
-import isEqual from 'lodash.isequal'
-import {createSuggestion} from './web/Autocomplete'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {isUriImage, blobToDataUri} from 'lib/media/util'
-import {Emoji} from './web/EmojiPicker.web'
-import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import EventEmitter from 'eventemitter3'
+
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {blobToDataUri, isUriImage} from 'lib/media/util'
+import {
+  LinkFacetMatch,
+  suggestLinkCardUri,
+} from 'view/com/composer/text-input/text-input-util'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
-import {Trans} from '@lingui/macro'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {createSuggestion} from './web/Autocomplete'
+import {Emoji} from './web/EmojiPicker.web'
+import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
 export interface TextInputRef {
@@ -38,7 +42,7 @@ interface TextInputProps {
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
-  onSuggestedLinksChanged: (uris: Set<string>) => void
+  onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
 
@@ -48,17 +52,15 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
-    suggestedLinks,
     setRichText,
     onPhotoPasted,
     onPressPublish,
-    onSuggestedLinksChanged,
+    onNewLink,
   }: // onError, TODO
   TextInputProps,
   ref,
 ) {
   const autocomplete = useActorAutocompleteFn()
-
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
@@ -139,6 +141,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [setIsDropping])
 
+  const pastSuggestedUris = useRef(new Set<string>())
+  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
   const editor = useEditor(
     {
       extensions,
@@ -180,25 +184,33 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
+        const newText = editorJsonToText(json)
+        const isPaste = window.event?.type === 'paste'
 
-        const newRt = new RichText({text: editorJsonToText(json).trimEnd()})
+        const newRt = new RichText({text: newText})
         newRt.detectFacetsWithoutResolution()
         setRichText(newRt)
 
-        const set: Set<string> = new Set()
-
+        const nextDetectedUris = new Map<string, LinkFacetMatch>()
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
-                set.add(feature.uri)
+                nextDetectedUris.set(feature.uri, {facet, rt: newRt})
               }
             }
           }
         }
 
-        if (!isEqual(set, suggestedLinks)) {
-          onSuggestedLinksChanged(set)
+        const suggestedUri = suggestLinkCardUri(
+          isPaste,
+          nextDetectedUris,
+          prevDetectedUris.current,
+          pastSuggestedUris.current,
+        )
+        prevDetectedUris.current = nextDetectedUris
+        if (suggestedUri) {
+          onNewLink(suggestedUri)
         }
       },
     },
@@ -256,15 +268,29 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 })
 
-function editorJsonToText(json: JSONContent): string {
+function editorJsonToText(
+  json: JSONContent,
+  isLastDocumentChild: boolean = false,
+): string {
   let text = ''
-  if (json.type === 'doc' || json.type === 'paragraph') {
+  if (json.type === 'doc') {
     if (json.content?.length) {
-      for (const node of json.content) {
+      for (let i = 0; i < json.content.length; i++) {
+        const node = json.content[i]
+        const isLastNode = i === json.content.length - 1
+        text += editorJsonToText(node, isLastNode)
+      }
+    }
+  } else if (json.type === 'paragraph') {
+    if (json.content?.length) {
+      for (let i = 0; i < json.content.length; i++) {
+        const node = json.content[i]
         text += editorJsonToText(node)
       }
     }
-    text += '\n'
+    if (!isLastDocumentChild) {
+      text += '\n'
+    }
   } else if (json.type === 'hardBreak') {
     text += '\n'
   } else if (json.type === 'text') {

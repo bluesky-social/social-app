@@ -148,9 +148,10 @@ export const TextLink = memo(function TextLink({
   dataSet,
   title,
   onPress,
+  onBeforePress,
   disableMismatchWarning,
   navigationAction,
-  onBeforePress,
+  anchorNoUnderline,
   ...orgProps
 }: {
   testID?: string
@@ -164,6 +165,7 @@ export const TextLink = memo(function TextLink({
   title?: string
   disableMismatchWarning?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
+  anchorNoUnderline?: boolean
   onBeforePress?: () => void
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
@@ -173,6 +175,11 @@ export const TextLink = memo(function TextLink({
 
   if (!disableMismatchWarning && typeof text !== 'string') {
     console.error('Unable to detect mismatching label')
+  }
+
+  if (anchorNoUnderline) {
+    dataSet = dataSet ?? {}
+    dataSet.noUnderline = 1
   }
 
   props.onPress = React.useCallback(
@@ -271,8 +278,9 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   title?: string
   navigationAction?: 'push' | 'replace' | 'navigate'
   disableMismatchWarning?: boolean
-  onPointerEnter?: () => void
   onBeforePress?: () => void
+  onPointerEnter?: () => void
+  anchorNoUnderline?: boolean
 }
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
@@ -284,6 +292,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   lineHeight,
   navigationAction,
   disableMismatchWarning,
+  onBeforePress,
   ...props
 }: TextLinkOnWebOnlyProps) {
   if (isWeb) {
@@ -299,6 +308,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
         title={props.title}
         navigationAction={navigationAction}
         disableMismatchWarning={disableMismatchWarning}
+        onBeforePress={onBeforePress}
         {...props}
       />
     )

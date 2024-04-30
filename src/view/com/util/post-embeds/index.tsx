@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {
   InteractionManager,
   StyleProp,
@@ -18,15 +18,12 @@ import {
   ModerationDecision,
 } from '@atproto/api'
 
-import {shareUrl} from '#/lib/sharing'
-import {isNative} from '#/platform/detection'
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {Link} from '../Link'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
@@ -51,16 +48,6 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
-
-  const externalUri = AppBskyEmbedExternal.isView(embed)
-    ? embed.external.uri
-    : null
-
-  const onShareExternal = useCallback(() => {
-    if (externalUri && isNative) {
-      shareUrl(externalUri)
-    }
-  }, [externalUri])
 
   // quote post with media
   // =
@@ -168,19 +155,9 @@ export function PostEmbeds({
   // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
-
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <Link
-          asAnchor
-          anchorNoUnderline
-          href={link.uri}
-          style={[styles.extOuter, pal.view, pal.borderDark, style]}
-          hoverStyle={{borderColor: pal.colors.borderLinkHover}}
-          onLongPress={onShareExternal}
-          onBeforePress={onOpen}>
-          <ExternalLinkEmbed link={link} />
-        </Link>
+        <ExternalLinkEmbed link={link} onOpen={onOpen} style={style} />
       </ContentHider>
     )
   }
@@ -194,11 +171,6 @@ const styles = StyleSheet.create({
   },
   singleImage: {
     borderRadius: 8,
-  },
-  extOuter: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 4,
   },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',

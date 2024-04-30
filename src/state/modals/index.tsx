@@ -107,6 +107,7 @@ export interface PostLanguagesSettingsModal {
 export interface VerifyEmailModal {
   name: 'verify-email'
   showReminder?: boolean
+  onSuccess?: () => void
 }
 
 export interface ChangeEmailModal {

@@ -54,7 +54,7 @@ let PostCtrls = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  feedContext: string | undefined
+  feedContext?: string | undefined
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
@@ -90,11 +90,13 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.like) {
         playHaptic()
-        sendInteraction({
-          item: post.uri,
-          event: 'app.bsky.feed.defs#interactionLike',
-          feedContext,
-        })
+        if (feedContext) {
+          sendInteraction({
+            item: post.uri,
+            event: 'app.bsky.feed.defs#interactionLike',
+            feedContext,
+          })
+        }
         await queueLike()
       } else {
         await queueUnlike()
@@ -119,11 +121,13 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.repost) {
         playHaptic()
-        sendInteraction({
-          item: post.uri,
-          event: 'app.bsky.feed.defs#interactionRepost',
-          feedContext,
-        })
+        if (feedContext) {
+          sendInteraction({
+            item: post.uri,
+            event: 'app.bsky.feed.defs#interactionRepost',
+            feedContext,
+          })
+        }
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -146,11 +150,13 @@ let PostCtrls = ({
 
   const onQuote = useCallback(() => {
     closeModal()
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#interactionQuote',
-      feedContext,
-    })
+    if (feedContext) {
+      sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionQuote',
+        feedContext,
+      })
+    }
     openComposer({
       quote: {
         uri: post.uri,
@@ -179,11 +185,13 @@ let PostCtrls = ({
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
     shareUrl(url)
-    sendInteraction({
-      item: post.uri,
-      event: 'app.bsky.feed.defs#interactionShare',
-      feedContext,
-    })
+    if (feedContext) {
+      sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionShare',
+        feedContext,
+      })
+    }
   }, [post.uri, post.author, sendInteraction, feedContext])
 
   return (
@@ -308,6 +316,7 @@ let PostCtrls = ({
           richText={richText}
           style={styles.btnPad}
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}
+          timestamp={post.indexedAt}
         />
       </View>
     </View>

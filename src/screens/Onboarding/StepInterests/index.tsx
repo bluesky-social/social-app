@@ -8,7 +8,7 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
   DescriptionText,
@@ -39,6 +39,7 @@ export function StepInterests() {
     state.interestsStepResults.selectedInterests.map(i => i),
   )
   const onboardDispatch = useOnboardingDispatch()
+  const {getAgent} = useAgent()
   const {isLoading, isError, error, data, refetch, isFetching} = useQuery({
     queryKey: ['interests'],
     queryFn: async () => {
