@@ -9,7 +9,7 @@ import {jwtDecode} from 'jwt-decode'
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
 import {IS_TEST_USER} from '#/lib/constants'
-import {logEvent, LogEvents, tryFetchGates} from '#/lib/statsig/statsig'
+import {logEvent, tryFetchGates} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -21,80 +21,15 @@ import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
 
-let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
+export type {SessionAccount} from '#/state/session/types'
+import {
+  SessionAccount,
+  SessionApiContext,
+  SessionState,
+  SessionStateContext,
+} from '#/state/session/types'
 
-function __getAgent() {
-  return __globalAgent
-}
-
-export function useAgent() {
-  return React.useMemo(() => ({getAgent: __getAgent}), [])
-}
-
-export type SessionAccount = persisted.PersistedAccount
-
-export type SessionState = {
-  isInitialLoad: boolean
-  isSwitchingAccounts: boolean
-  accounts: SessionAccount[]
-  currentAccount: SessionAccount | undefined
-}
-export type StateContext = SessionState & {
-  hasSession: boolean
-}
-export type ApiContext = {
-  createAccount: (props: {
-    service: string
-    email: string
-    password: string
-    handle: string
-    inviteCode?: string
-    verificationPhone?: string
-    verificationCode?: string
-  }) => Promise<void>
-  login: (
-    props: {
-      service: string
-      identifier: string
-      password: string
-      authFactorToken?: string | undefined
-    },
-    logContext: LogEvents['account:loggedIn']['logContext'],
-  ) => Promise<void>
-  /**
-   * A full logout. Clears the `currentAccount` from session, AND removes
-   * access tokens from all accounts, so that returning as any user will
-   * require a full login.
-   */
-  logout: (
-    logContext: LogEvents['account:loggedOut']['logContext'],
-  ) => Promise<void>
-  /**
-   * A partial logout. Clears the `currentAccount` from session, but DOES NOT
-   * clear access tokens from accounts, allowing the user to return to their
-   * other accounts without logging in.
-   *
-   * Used when adding a new account, deleting an account.
-   */
-  clearCurrentAccount: () => void
-  initSession: (account: SessionAccount) => Promise<void>
-  resumeSession: (account?: SessionAccount) => Promise<void>
-  removeAccount: (account: SessionAccount) => void
-  selectAccount: (
-    account: SessionAccount,
-    logContext: LogEvents['account:loggedIn']['logContext'],
-  ) => Promise<void>
-  updateCurrentAccount: (
-    account: Partial<
-      Pick<
-        SessionAccount,
-        'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
-      >
-    >,
-  ) => void
-}
-
-const StateContext = React.createContext<StateContext>({
+const StateContext = React.createContext<SessionStateContext>({
   isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
@@ -102,7 +37,7 @@ const StateContext = React.createContext<StateContext>({
   hasSession: false,
 })
 
-const ApiContext = React.createContext<ApiContext>({
+const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
   logout: async () => {},
@@ -113,6 +48,16 @@ const ApiContext = React.createContext<ApiContext>({
   updateCurrentAccount: () => {},
   clearCurrentAccount: () => {},
 })
+
+let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
+
+function __getAgent() {
+  return __globalAgent
+}
+
+export function useAgent() {
+  return React.useMemo(() => ({getAgent: __getAgent}), [])
+}
 
 function createPersistSessionHandler(
   agent: BskyAgent,
@@ -220,7 +165,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }))
   }, [setStateAndPersist])
 
-  const createAccount = React.useCallback<ApiContext['createAccount']>(
+  const createAccount = React.useCallback<SessionApiContext['createAccount']>(
     async ({
       service,
       email,
@@ -305,7 +250,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [upsertAccount, clearCurrentAccount],
   )
 
-  const login = React.useCallback<ApiContext['login']>(
+  const login = React.useCallback<SessionApiContext['login']>(
     async ({service, identifier, password, authFactorToken}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
@@ -361,7 +306,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [upsertAccount, clearCurrentAccount],
   )
 
-  const logout = React.useCallback<ApiContext['logout']>(
+  const logout = React.useCallback<SessionApiContext['logout']>(
     async logContext => {
       logger.debug(`session: logout`)
       clearCurrentAccount()
@@ -380,7 +325,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [clearCurrentAccount, setStateAndPersist],
   )
 
-  const initSession = React.useCallback<ApiContext['initSession']>(
+  const initSession = React.useCallback<SessionApiContext['initSession']>(
     async account => {
       logger.debug(`session: initSession`, {}, logger.DebugContext.session)
       const fetchingGates = tryFetchGates(account.did, 'prefer-low-latency')
@@ -521,7 +466,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [upsertAccount, clearCurrentAccount],
   )
 
-  const resumeSession = React.useCallback<ApiContext['resumeSession']>(
+  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
     async account => {
       try {
         if (account) {
@@ -539,7 +484,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [initSession],
   )
 
-  const removeAccount = React.useCallback<ApiContext['removeAccount']>(
+  const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
       setStateAndPersist(s => {
         return {
@@ -552,7 +497,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const updateCurrentAccount = React.useCallback<
-    ApiContext['updateCurrentAccount']
+    SessionApiContext['updateCurrentAccount']
   >(
     account => {
       setStateAndPersist(s => {
@@ -588,7 +533,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setStateAndPersist],
   )
 
-  const selectAccount = React.useCallback<ApiContext['selectAccount']>(
+  const selectAccount = React.useCallback<SessionApiContext['selectAccount']>(
     async (account, logContext) => {
       setState(s => ({...s, isSwitchingAccounts: true}))
       try {
