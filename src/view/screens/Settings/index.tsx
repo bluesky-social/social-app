@@ -791,7 +791,7 @@ export function SettingsScreen({}: Props) {
             <TextField.Input
               value={dmServiceUrl}
               onChangeText={(text: string) => {
-                if (text.endsWith('/')) {
+                if (text.length > 9 && text.endsWith('/')) {
                   text = text.slice(0, -1)
                 }
                 setDmServiceUrl(text)
