@@ -47,6 +47,7 @@ export function MessageInput({
         onFocus={onFocus}
         onBlur={onBlur}
         placeholderTextColor={t.palette.contrast_500}
+        keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
         ref={inputRef}
       />
       <Pressable
