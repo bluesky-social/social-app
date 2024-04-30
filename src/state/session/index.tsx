@@ -1,6 +1,5 @@
 import React from 'react'
 import {AtpPersistSessionHandler, BskyAgent} from '@atproto/api'
-import {jwtDecode} from 'jwt-decode'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
@@ -17,6 +16,7 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
   isSessionDeactivated,
+  isSessionExpired,
 } from './util'
 
 export type {SessionAccount} from '#/state/session/types'
@@ -357,21 +357,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (IS_DEV && isWeb) window.agent = agent
       await configureModerationForAccount(agent, account)
 
-      let canReusePrevSession = false
-      try {
-        if (account.accessJwt) {
-          const decoded = jwtDecode(account.accessJwt)
-          if (decoded.exp) {
-            const didExpire = Date.now() >= decoded.exp * 1000
-            if (!didExpire) {
-              canReusePrevSession = true
-            }
-          }
-        }
-      } catch (e) {
-        logger.error(`session: could not decode jwt`)
-      }
-
       const accountOrSessionDeactivated =
         isSessionDeactivated(account.accessJwt) || account.deactivated
 
@@ -382,7 +367,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         handle: account.handle,
       }
 
-      if (canReusePrevSession) {
+      if (!isSessionExpired(account)) {
         logger.debug(`session: attempting to reuse previous session`)
 
         agent.session = prevSession

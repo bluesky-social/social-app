@@ -3,6 +3,7 @@ import {jwtDecode} from 'jwt-decode'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {hasProp} from '#/lib/type-guards'
+import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {readLabelers} from '../agent-config'
 import {SessionAccount} from '../types'
@@ -60,4 +61,23 @@ async function trySwitchToTestAppLabeler(agent: BskyAgent) {
     console.warn('USING TEST ENV MODERATION')
     BskyAgent.configure({appLabelers: [did]})
   }
+}
+
+export function isSessionExpired(account: SessionAccount) {
+  let canReusePrevSession = false
+  try {
+    if (account.accessJwt) {
+      const decoded = jwtDecode(account.accessJwt)
+      if (decoded.exp) {
+        const didExpire = Date.now() >= decoded.exp * 1000
+        if (!didExpire) {
+          canReusePrevSession = true
+        }
+      }
+    }
+  } catch (e) {
+    logger.error(`session: could not decode jwt`)
+  }
+
+  return !canReusePrevSession
 }
