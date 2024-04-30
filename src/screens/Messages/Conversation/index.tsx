@@ -12,15 +12,13 @@ import {useGate} from '#/lib/statsig/statsig'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
-import {useChat, useChatQuery} from '#/screens/Messages/Temp/query/query'
+import {useChatQuery} from '#/screens/Messages/Temp/query/query'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {DialogControlProps} from '#/components/Dialog'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {Button, ButtonIcon} from '#/components/Button'
+import {DotGrid_Stroke2_Corner0_Rounded} from '#/components/icons/DotGrid'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
@@ -31,7 +29,6 @@ type Props = NativeStackScreenProps<
   'MessagesConversation'
 >
 export function MessagesConversationScreen({route}: Props) {
-  const {_} = useLingui()
   const gate = useGate()
 
   const chatId = route.params.conversation
@@ -39,11 +36,7 @@ export function MessagesConversationScreen({route}: Props) {
   const {currentAccount} = useSession()
   const myDid = currentAccount?.did
 
-  const {
-    data: chat,
-    isLoading: isLoading,
-    isError: isError,
-  } = useChatQuery(chatId)
+  const {data: chat, isError: isError} = useChatQuery(chatId)
 
   const otherProfile = React.useMemo(() => {
     return chat?.members?.find(m => m.did !== myDid)
@@ -121,20 +114,31 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
       )}
       <View style={[a.align_center, a.gap_sm]}>
         <UserAvatar size={32} avatar={profile.avatar} />
-        <Text style={[a.text_2xl, a.font_bold]}>
+        <Text style={[a.text_lg, a.font_bold]}>
           <Trans>{profile.displayName}</Trans>
         </Text>
       </View>
       <View>
-        <Button
-          label={_(msg`Chat settings`)}
-          color="secondary"
-          size="large"
-          variant="ghost"
-          style={[{height: 'auto', width: 'auto'}, a.px_sm, a.py_sm]}
-          onPress={() => {}}>
-          <ButtonIcon icon={SettingsSlider} />
-        </Button>
+        <TouchableOpacity
+          testID="viewHeaderDrawerBtn"
+          onPress={onPressBack}
+          hitSlop={BACK_HITSLOP}
+          style={{
+            width: 30,
+            height: 30,
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Back`)}
+          accessibilityHint={_(msg`Access navigation links and settings`)}>
+          <DotGrid_Stroke2_Corner0_Rounded
+            style={[
+              t.atoms.text,
+              {
+                marginTop: 6,
+              },
+            ]}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   )
