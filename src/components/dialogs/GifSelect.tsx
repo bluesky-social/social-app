@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {Keyboard, TextInput, View} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
@@ -216,7 +216,7 @@ function GifList({
         keyExtractor={(item: Gif) => item.id}
         // @ts-expect-error web only
         style={isWeb && {minHeight: '100vh'}}
-        onScrollBeginDrag={() => Keyboard.dismiss()}
+        keyboardDismissMode="on-drag"
         ListFooterComponent={
           hasData ? (
             <ListFooter
