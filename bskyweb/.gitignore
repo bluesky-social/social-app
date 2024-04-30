@@ -11,6 +11,7 @@ static/js/*.map
 static/js/*.js.LICENSE.txt
 static/js/empty.txt
 static/media/*.png
+static/media/empty.txt
 templates/scripts.html
 templates/*-embed.html
 static/embed/*.html
