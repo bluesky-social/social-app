@@ -31,6 +31,10 @@ import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 
+interface SearchRef extends View {
+  contains: (node: Node | null) => boolean
+}
+
 let SearchLinkCard = ({
   label,
   to,
@@ -152,6 +156,7 @@ export function DesktopSearch() {
   const navigation = useNavigation<NavigationProp>()
   const [isActive, setIsActive] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
+  const searchViewRef = React.useRef<SearchRef>(null)
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
     query,
     true,
@@ -180,12 +185,38 @@ export function DesktopSearch() {
     setIsActive(false)
   }, [])
 
-  const onBlur = React.useCallback(() => {
-    setIsActive(false)
+  React.useEffect(() => {
+    const handleFocusIn = () => {
+      const shouldBeActive = Boolean(
+        searchViewRef.current?.contains(document.activeElement),
+      )
+      setIsActive(shouldBeActive)
+    }
+    const handleFocusOut = (event: FocusEvent) => {
+      const relatedTarget = event.relatedTarget
+
+      if (relatedTarget === null) {
+        setIsActive(false)
+        return
+      }
+
+      const shouldBeActive = Boolean(
+        searchViewRef.current?.contains(relatedTarget as Element),
+      )
+      setIsActive(shouldBeActive)
+    }
+
+    document.addEventListener('focusin', handleFocusIn)
+    document.addEventListener('focusout', handleFocusOut)
+
+    return () => {
+      document.removeEventListener('focusin', handleFocusIn)
+      document.removeEventListener('focusout', handleFocusOut)
+    }
   }, [])
 
   return (
-    <View style={[styles.container, pal.view]}>
+    <View style={[styles.container, pal.view]} ref={searchViewRef}>
       <View
         style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
         <View style={[styles.inputContainer]}>
@@ -201,7 +232,6 @@ export function DesktopSearch() {
             returnKeyType="search"
             value={query}
             style={[pal.textLight, styles.input]}
-            onBlur={onBlur}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             accessibilityRole="search"
