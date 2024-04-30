@@ -1,4 +1,9 @@
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
 import * as TempDmChatDefs from '#/temp/dm/defs'
@@ -6,6 +11,7 @@ import * as TempDmChatGetChat from '#/temp/dm/getChat'
 import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
+import * as TempDmChatListChats from '#/temp/dm/listChats'
 import {useDmServiceUrlStorage} from '../useDmServiceUrlStorage'
 
 /**
@@ -248,5 +254,28 @@ export function useGetChatFromMembers({
       onSuccess?.(data)
     },
     onError,
+  })
+}
+
+export function useListChats() {
+  const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
+
+  return useInfiniteQuery({
+    queryKey: ['chats'],
+    queryFn: async ({pageParam}) => {
+      const response = await fetch(
+        `${serviceUrl}/xrpc/temp.dm.listChats${
+          pageParam ? `?cursor=${pageParam}` : ''
+        }`,
+        {headers},
+      )
+
+      if (!response.ok) throw new Error('Failed to fetch chats')
+
+      return (await response.json()) as TempDmChatListChats.OutputSchema
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: lastPage => lastPage.cursor,
   })
 }
