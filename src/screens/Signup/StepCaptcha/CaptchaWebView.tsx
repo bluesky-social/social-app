@@ -3,7 +3,6 @@ import {StyleSheet} from 'react-native'
 import {WebView, WebViewNavigation} from 'react-native-webview'
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
-import {logger} from '#/logger'
 import {SignupState} from '#/screens/Signup/state'
 
 const ALLOWED_HOSTS = [
@@ -27,7 +26,7 @@ export function CaptchaWebView({
   stateParam: string
   state?: SignupState
   onSuccess: (code: string) => void
-  onError: () => void
+  onError: (error: object) => void
 }) {
   const redirectHost = React.useMemo(() => {
     if (!state?.serviceUrl) return 'bsky.app'
@@ -57,7 +56,7 @@ export function CaptchaWebView({
 
       const code = urlp.searchParams.get('code')
       if (urlp.searchParams.get('state') !== stateParam || !code) {
-        onError()
+        onError({error: 'Invalid state or code'})
         return
       }
 
@@ -77,14 +76,10 @@ export function CaptchaWebView({
       scrollEnabled={false}
       on
       onError={e => {
-        logger.warn('Signup Flow Error: CaptchaWebView', {
-          webViewError: JSON.stringify(e.nativeEvent),
-        })
+        onError(e.nativeEvent)
       }}
       onHttpError={e => {
-        logger.warn('Signup Flow Error: CaptchaWebView', {
-          webViewError: JSON.stringify(e.nativeEvent),
-        })
+        onError(e.nativeEvent)
       }}
     />
   )

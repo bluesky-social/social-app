@@ -1,8 +1,6 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-import {logger} from '#/logger'
-
 // @ts-ignore web only, we will always redirect to the app on web (CORS)
 const REDIRECT_HOST = new URL(window.location.href).host
 
@@ -15,7 +13,7 @@ export function CaptchaWebView({
   url: string
   stateParam: string
   onSuccess: (code: string) => void
-  onError: () => void
+  onError: (error: object) => void
 }) {
   const onLoad = React.useCallback(() => {
     // @ts-ignore web
@@ -34,7 +32,7 @@ export function CaptchaWebView({
 
       const code = urlp.searchParams.get('code')
       if (urlp.searchParams.get('state') !== stateParam || !code) {
-        onError()
+        onError({error: 'Invalid state or code'})
         return
       }
       onSuccess(code)
@@ -50,9 +48,7 @@ export function CaptchaWebView({
       id="captcha-iframe"
       onLoad={onLoad}
       onError={e => {
-        logger.warn('Signup Flow Error: CaptchaWebView', {
-          webViewError: JSON.stringify(e.nativeEvent),
-        })
+        onError(e.nativeEvent)
       }}
     />
   )
