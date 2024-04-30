@@ -90,13 +90,12 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
         t.atoms.border_contrast_low,
         a.border_b,
         a.flex_row,
-        a.align_center,
         a.justify_between,
         a.gap_lg,
         a.px_lg,
         a.py_sm,
       ]}>
-      <View>
+      {!gtTablet ? (
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
           onPress={onPressBack}
@@ -114,16 +113,19 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
             style={{
               marginTop: 6,
             }}
+            color={t.atoms.text.color}
           />
         </TouchableOpacity>
-      </View>
+      ) : (
+        <View style={{width: 30}} />
+      )}
       <View style={[a.align_center, a.gap_sm]}>
         <UserAvatar size={32} avatar={profile.avatar} />
         <Text style={[a.text_2xl, a.font_bold]}>
           <Trans>{profile.displayName}</Trans>
         </Text>
       </View>
-      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+      <View>
         <Button
           label={_(msg`Chat settings`)}
           color="secondary"
