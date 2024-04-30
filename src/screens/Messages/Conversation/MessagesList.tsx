@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {Alert, FlatList, View, ViewToken} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
@@ -60,6 +60,7 @@ export function MessagesList({chatId}: {chatId: string}) {
 
   // Because the viewableItemsChanged callback won't have access to the updated state, we use a ref to store the
   // total number of clops
+  // TODO this needs to be set to whatever the initial number of messages is
   const totalMessages = useRef(10)
 
   // TODO later
@@ -69,10 +70,6 @@ export function MessagesList({chatId}: {chatId: string}) {
   const {data: chat} = useChat(chatId)
   const {mutate: sendMessage} = useSendMessageMutation(chatId)
   useChatLogQuery()
-
-  useEffect(() => {
-    totalMessages.current = chat?.messages.length ?? 0
-  }, [chat])
 
   const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
     return [
@@ -137,7 +134,7 @@ export function MessagesList({chatId}: {chatId: string}) {
   const messages = useMemo(() => {
     if (!chat) return []
 
-    return chat.messages.filter(
+    const filtered = chat.messages.filter(
       (
         message,
       ): message is
@@ -149,6 +146,7 @@ export function MessagesList({chatId}: {chatId: string}) {
         )
       },
     )
+    totalMessages.current = filtered.length
   }, [chat])
 
   return (
@@ -160,21 +158,26 @@ export function MessagesList({chatId}: {chatId: string}) {
       <FlatList
         data={messages}
         keyExtractor={item => item.id}
-        maintainVisibleContentPosition={{
-          minIndexForVisible: 1,
-        }}
         renderItem={renderItem}
         contentContainerStyle={{paddingHorizontal: 10}}
+        // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
+        // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
+        // this...probably
         initialNumToRender={20}
-        maxToRenderPerBatch={20}
+        // Same with the max to render per batch. Let's be safe for now though.
+        maxToRenderPerBatch={25}
         inverted={true}
         onEndReached={onEndReached}
         onScrollToIndexFailed={onScrollToEndFailed}
         onContentSizeChange={onContentSizeChange}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+        }}
+        // This is actually a header since we are inverted!
         ListFooterComponent={<MaybeLoader isLoading={false} />}
-        removeClippedSubviews
+        removeClippedSubviews={true}
         ref={flatListRef}
         keyboardDismissMode="none"
       />
