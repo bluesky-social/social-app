@@ -9,6 +9,7 @@ import {
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
+import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {STALE} from '#/state/queries'
@@ -36,7 +37,7 @@ export function usePreferencesQuery() {
   const {getAgent} = useAgent()
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
-    structuralSharing: true,
+    structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
