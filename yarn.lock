@@ -2765,9 +2765,9 @@
     pino "^8.11.0"
     pino-http "^8.3.3"
 
-"@discord/bottom-sheet@https://github.com/bluesky-social/react-native-bottom-sheet.git#discord-fork-4.6.1":
+"@discord/bottom-sheet@bluesky-social/react-native-bottom-sheet":
   version "4.6.1"
-  resolved "https://github.com/bluesky-social/react-native-bottom-sheet.git#54dc2e0e318b0524a2d2d8fb817f6c48101bb0b1"
+  resolved "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/2b3f77e04a25c454e70d893a2692e8c03aced06b"
   dependencies:
     "@gorhom/portal" "1.0.14"
     invariant "^2.2.4"
@@ -18694,6 +18694,11 @@ react-native-ios-context-menu@^1.15.3:
   integrity sha512-UNkVl7ocvSpNaEpvBvE1aHOfDy/DFdZ5I+ElfnTXFsRxrVZmxLtST0b1q2wSWGWDmd2Ig2AYd7GRbYtcY222Ag==
   dependencies:
     "@dominicstop/ts-event-emitter" "^1.1.0"
+
+react-native-keyboard-controller@^1.11.7:
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.11.7.tgz#85640374e4c3627c3b667256a1d308698ff80393"
+  integrity sha512-K2zlqVyWX4QO7r+dHMQgZT41G2dSEWtDYgBdht1WVyTaMQmwTMalZcHCWBVOnzyGaJq/hMKhF1kSPqJP1xqSFA==
 
 react-native-pager-view@6.2.3:
   version "6.2.3"

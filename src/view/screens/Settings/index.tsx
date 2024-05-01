@@ -51,6 +51,7 @@ import {HandIcon, HashtagIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
+import {useGate} from 'lib/statsig/statsig'
 import {colors, s} from 'lib/styles'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
@@ -61,8 +62,10 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import * as TextField from '#/components/forms/TextField'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
@@ -168,6 +171,11 @@ export function SettingsScreen({}: Props) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
+
+  // TODO: TEMP REMOVE WHEN CLOPS ARE RELEASED
+  const gate = useGate()
+  const {serviceUrl: dmServiceUrl, setServiceUrl: setDmServiceUrl} =
+    useDmServiceUrlStorage()
 
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
@@ -778,6 +786,22 @@ export function SettingsScreen({}: Props) {
             <Trans>System log</Trans>
           </Text>
         </TouchableOpacity>
+        {gate('dms') && (
+          <TextField.Root>
+            <TextField.Input
+              value={dmServiceUrl}
+              onChangeText={(text: string) => {
+                if (text.length > 9 && text.endsWith('/')) {
+                  text = text.slice(0, -1)
+                }
+                setDmServiceUrl(text)
+              }}
+              autoCapitalize="none"
+              keyboardType="url"
+              label="🐴"
+            />
+          </TextField.Root>
+        )}
         {__DEV__ ? (
           <>
             <TouchableOpacity

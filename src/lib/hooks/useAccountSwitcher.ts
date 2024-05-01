@@ -1,6 +1,9 @@
 import {useCallback} from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -8,6 +11,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
+  const {_} = useLingui()
   const {track} = useAnalytics()
   const {selectAccount, clearCurrentAccount} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -31,21 +35,26 @@ export function useAccountSwitcher() {
           }
           await selectAccount(account, logContext)
           setTimeout(() => {
-            Toast.show(`Signed in as @${account.handle}`)
+            Toast.show(_(msg`Signed in as @${account.handle}`))
           }, 100)
         } else {
           requestSwitchToAccount({requestedAccount: account.did})
           Toast.show(
-            `Please sign in as @${account.handle}`,
+            _(msg`Please sign in as @${account.handle}`),
             'circle-exclamation',
           )
         }
-      } catch (e) {
-        Toast.show('Sorry! We need you to enter your password.')
+      } catch (e: any) {
+        logger.error(`switch account: selectAccount failed`, {
+          message: e.message,
+        })
         clearCurrentAccount() // back user out to login
+        setTimeout(() => {
+          Toast.show(_(msg`Sorry! We need you to enter your password.`))
+        }, 100)
       }
     },
-    [track, clearCurrentAccount, selectAccount, requestSwitchToAccount],
+    [_, track, clearCurrentAccount, selectAccount, requestSwitchToAccount],
   )
 
   return {onPressSwitchAccount}

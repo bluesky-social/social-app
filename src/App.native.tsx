@@ -4,6 +4,7 @@ import 'view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
@@ -137,7 +138,9 @@ function App() {
                   <LightboxStateProvider>
                     <I18nProvider>
                       <PortalProvider>
-                        <InnerApp />
+                        <KeyboardProvider>
+                          <InnerApp />
+                        </KeyboardProvider>
                       </PortalProvider>
                     </I18nProvider>
                   </LightboxStateProvider>

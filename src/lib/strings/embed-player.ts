@@ -95,7 +95,8 @@ export function parseEmbedPlayerFromUrl(
   if (
     urlp.hostname === 'www.youtube.com' ||
     urlp.hostname === 'youtube.com' ||
-    urlp.hostname === 'm.youtube.com'
+    urlp.hostname === 'm.youtube.com' ||
+    urlp.hostname === 'music.youtube.com'
   ) {
     const [_, page, shortVideoId] = urlp.pathname.split('/')
     const videoId =

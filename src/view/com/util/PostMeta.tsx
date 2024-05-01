@@ -1,8 +1,9 @@
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {usePrefetchProfileQuery} from '#/state/queries/profile'
+import {precacheProfile, usePrefetchProfileQuery} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -10,6 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
 import {TimeElapsed} from './TimeElapsed'
@@ -40,49 +42,56 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     ? () => prefetchProfileQuery(opts.author.did)
     : undefined
 
+  const queryClient = useQueryClient()
+  const onBeforePress = useCallback(() => {
+    precacheProfile(queryClient, opts.author)
+  }, [queryClient, opts.author])
+
   return (
     <View style={[styles.container, opts.style]}>
       {opts.showAvatar && (
         <View style={styles.avatar}>
           <PreviewableUserAvatar
             size={opts.avatarSize || 16}
-            did={opts.author.did}
-            handle={opts.author.handle}
-            avatar={opts.author.avatar}
+            profile={opts.author}
             moderation={opts.avatarModeration}
             type={opts.author.associated?.labeler ? 'labeler' : 'user'}
           />
         </View>
       )}
-      <Text
-        numberOfLines={1}
-        style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
-        <TextLinkOnWebOnly
-          type={opts.displayNameType || 'lg-bold'}
-          style={[pal.text]}
-          lineHeight={1.2}
-          disableMismatchWarning
-          text={
-            <>
-              {sanitizeDisplayName(
-                displayName,
-                opts.moderation?.ui('displayName'),
-              )}
-            </>
-          }
-          href={profileLink}
-          onPointerEnter={onPointerEnter}
-        />
-        <TextLinkOnWebOnly
-          type="md"
-          disableMismatchWarning
-          style={[pal.textLight, {flexShrink: 4}]}
-          text={'\xa0' + sanitizeHandle(handle, '@')}
-          href={profileLink}
-          onPointerEnter={onPointerEnter}
-          anchorNoUnderline
-        />
-      </Text>
+      <ProfileHoverCard inline did={opts.author.did}>
+        <Text
+          numberOfLines={1}
+          style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
+          <TextLinkOnWebOnly
+            type={opts.displayNameType || 'lg-bold'}
+            style={[pal.text]}
+            lineHeight={1.2}
+            disableMismatchWarning
+            text={
+              <>
+                {sanitizeDisplayName(
+                  displayName,
+                  opts.moderation?.ui('displayName'),
+                )}
+              </>
+            }
+            href={profileLink}
+            onBeforePress={onBeforePress}
+            onPointerEnter={onPointerEnter}
+          />
+          <TextLinkOnWebOnly
+            type="md"
+            disableMismatchWarning
+            style={[pal.textLight, {flexShrink: 4}]}
+            text={'\xa0' + sanitizeHandle(handle, '@')}
+            href={profileLink}
+            onBeforePress={onBeforePress}
+            onPointerEnter={onPointerEnter}
+            anchorNoUnderline
+          />
+        </Text>
+      </ProfileHoverCard>
       {!isAndroid && (
         <Text
           type="md"
@@ -103,6 +112,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             title={niceDate(opts.timestamp)}
             accessibilityHint=""
             href={opts.postHref}
+            onBeforePress={onBeforePress}
           />
         )}
       </TimeElapsed>
