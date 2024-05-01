@@ -1,4 +1,8 @@
-import {BskyAgent, ChatBskyConvoLeaveConvo} from '@atproto-labs/api'
+import {
+  BskyAgent,
+  ChatBskyConvoLeaveConvo,
+  ChatBskyConvoListConvos,
+} from '@atproto-labs/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -29,10 +33,30 @@ export function useLeaveConvo(
 
       return data
     },
+    onMutate: () => {
+      queryClient.setQueryData(
+        CONVO_LIST_KEY,
+        (
+          old?: Array<{
+            pageParams: Array<string | undefined>
+            pages: Array<ChatBskyConvoListConvos.OutputSchema>
+          }>,
+        ) => {
+          if (!old) return old
+          return old.map(page => ({
+            ...page,
+            pages: page.pages.filter(convo => convo.id !== convoId),
+          }))
+        },
+      )
+    },
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       onSuccess?.(data)
     },
-    onError,
+    onError: error => {
+      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
+      onError?.(error)
+    },
   })
 }
