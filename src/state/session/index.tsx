@@ -329,6 +329,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
 
           __globalAgent = PUBLIC_BSKY_AGENT
+          // TODO: Should this update currentAccountDid?
         }
       } else {
         logger.debug(`session: attempting to reuse previous session`)
@@ -366,6 +367,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             })
 
             __globalAgent = PUBLIC_BSKY_AGENT
+            // TODO: Should this update currentAccountDid?
           })
       }
 
