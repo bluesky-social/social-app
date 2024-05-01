@@ -14,14 +14,6 @@ export function listenSoftReset(fn: () => void): UnlistenFn {
   return () => emitter.off('soft-reset', fn)
 }
 
-export function emitSessionDropped() {
-  emitter.emit('session-dropped')
-}
-export function listenSessionDropped(fn: () => void): UnlistenFn {
-  emitter.on('session-dropped', fn)
-  return () => emitter.off('session-dropped', fn)
-}
-
 export function emitPostCreated() {
   emitter.emit('post-created')
 }

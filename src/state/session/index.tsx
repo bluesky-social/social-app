@@ -1,5 +1,7 @@
 import React from 'react'
 import {AtpPersistSessionHandler, BskyAgent} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
@@ -9,9 +11,9 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
+import * as Toast from 'view/com/util/Toast'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_DEV} from '#/env'
-import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
   configureModerationForAccount,
@@ -67,6 +69,7 @@ type State = {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const {_} = useLingui()
   const [isInitialLoad, setIsInitialLoad] = React.useState(true)
   const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
   const [state, setState] = React.useState<State>({
@@ -150,7 +153,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         if (expired) {
           logger.warn(`session: expired`)
-          emitSessionDropped()
+          Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
         }
 
         /*
@@ -169,7 +172,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         })
       }
     },
-    [],
+    [_],
   )
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
