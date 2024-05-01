@@ -67,13 +67,13 @@ type State = {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true)
+  const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
   const [state, setState] = React.useState<State>({
     accounts: persisted.get('session').accounts,
     currentAccount: undefined, // assume logged out to start
     needsPersist: false,
   })
-  const [isInitialLoad, setIsInitialLoad] = React.useState(true)
-  const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
 
   const upsertAccount = React.useCallback(
     (account: SessionAccount, expired = false) => {
