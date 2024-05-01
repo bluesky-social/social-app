@@ -1,3 +1,4 @@
+import {AppBskyActorDefs} from '@atproto/api'
 import {
   BskyAgent,
   ChatBskyConvoDefs,
@@ -24,7 +25,7 @@ export enum ConvoStatus {
 
 export type ConvoItem =
   | {
-      type: 'message'
+      type: 'message' | 'pending-message'
       key: string
       message: ChatBskyConvoDefs.MessageView
       nextMessage:
@@ -40,11 +41,6 @@ export type ConvoItem =
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
-    }
-  | {
-      type: 'pending-message'
-      key: string
-      message: ChatBskyConvoSendMessage.InputSchema['message']
     }
   | {
       type: 'pending-retry'
@@ -85,16 +81,18 @@ export function isConvoItemMessage(
 }
 
 export class Convo {
-  private convoId: string
   private agent: BskyAgent
   private __tempFromUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
   private error: any
-  private convo: ChatBskyConvoDefs.ConvoView | undefined
   private historyCursor: string | undefined | null = undefined
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
+
+  convoId: string
+  convo: ChatBskyConvoDefs.ConvoView | undefined
+  sender: AppBskyActorDefs.ProfileViewBasic | undefined
 
   private pastMessages: Map<
     string,
@@ -137,6 +135,9 @@ export class Convo {
       const {convo} = response.data
 
       this.convo = convo
+      this.sender = this.convo.members.find(
+        m => m.did === this.__tempFromUserDid,
+      )
       this.status = ConvoStatus.Ready
 
       this.commit()
@@ -324,7 +325,7 @@ export class Convo {
       this.newMessages.set(res.id, {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
-        sender: this.convo?.members.find(m => m.did === this.__tempFromUserDid),
+        sender: this.sender,
       })
       this.pendingMessages.delete(id)
 
@@ -440,7 +441,14 @@ export class Convo {
       items.unshift({
         type: 'pending-message',
         key: m.id,
-        message: m.message,
+        message: {
+          ...m.message,
+          id: nanoid(),
+          rev: '__fake__',
+          sentAt: new Date().toISOString(),
+          sender: this.sender,
+        },
+        nextMessage: null,
       })
     })
 
