@@ -1,13 +1,19 @@
 import React, {useCallback, useMemo} from 'react'
-import {StyleProp, TextStyle, View} from 'react-native'
+import {Pressable, StyleProp, TextStyle, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
+import {useHaptics} from 'lib/haptics'
+import {isNative, isWeb} from 'platform/detection'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+
+function onPressPlaceholder() {
+  // Placeholder onPress function
+}
 
 export function MessageItem({
   item,
@@ -21,6 +27,7 @@ export function MessageItem({
 }) {
   const t = useTheme()
   const {currentAccount} = useSession()
+  const playHaptic = useHaptics()
 
   const isFromSelf = item.sender?.did === currentAccount?.did
 
@@ -48,8 +55,19 @@ export function MessageItem({
     return true
   }, [item, next, isFromSelf, isNextFromSelf])
 
+  const onOpenMenu = React.useCallback(() => {
+    if (isNative) {
+      playHaptic()
+    }
+
+    // Open menu
+  }, [playHaptic])
+
   return (
-    <View>
+    <Pressable
+      accessibilityRole="button"
+      onPress={isWeb ? onOpenMenu : onPressPlaceholder}
+      onLongPress={onOpenMenu}>
       <View
         style={[
           a.py_sm,
@@ -82,7 +100,7 @@ export function MessageItem({
         isLastInGroup={isLastInGroup}
         style={isFromSelf ? a.text_right : a.text_left}
       />
-    </View>
+    </Pressable>
   )
 }
 
