@@ -27,19 +27,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const hiddenPosts = useHiddenPosts() // TODO move this into pds-stored prefs
 
   const userDid = currentAccount?.did
+  const moderationPrefs = prefs.data?.moderationPrefs
   const value = useMemo<ModerationOpts | undefined>(() => {
     if (override) {
       return override
     }
-    if (!prefs.data) {
-      return
+    if (!moderationPrefs) {
+      return undefined
     }
     return {
       userDid,
       prefs: {
-        ...prefs.data.moderationPrefs,
-        labelers: prefs.data.moderationPrefs.labelers.length
-          ? prefs.data.moderationPrefs.labelers
+        ...moderationPrefs,
+        labelers: moderationPrefs.labelers.length
+          ? moderationPrefs.labelers
           : [
               {
                 did: BSKY_LABELER_DID,
@@ -50,7 +51,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
       labelDefs,
     }
-  }, [override, userDid, labelDefs, prefs.data, hiddenPosts])
+  }, [override, userDid, labelDefs, moderationPrefs, hiddenPosts])
 
   return (
     <moderationOptsContext.Provider value={value}>
