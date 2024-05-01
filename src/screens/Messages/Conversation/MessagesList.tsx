@@ -119,7 +119,7 @@ export function MessagesListInner() {
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           maintainVisibleContentPosition={{
-            minIndexForVisible: 0,
+            minIndexForVisible: 1,
           }}
           ListFooterComponent={
             <MaybeLoader isLoading={chat.state.isFetchingHistory} />
