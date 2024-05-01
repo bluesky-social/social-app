@@ -5,6 +5,7 @@ import {
 } from '@atproto-labs/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {RQKEY as CONVO_LIST_KEY} from './list-converations'
 import {useHeaders} from './temp-headers'
@@ -36,17 +37,21 @@ export function useLeaveConvo(
     onMutate: () => {
       queryClient.setQueryData(
         CONVO_LIST_KEY,
-        (
-          old?: Array<{
-            pageParams: Array<string | undefined>
-            pages: Array<ChatBskyConvoListConvos.OutputSchema>
-          }>,
-        ) => {
+        (old?: {
+          pageParams: Array<string | undefined>
+          pages: Array<ChatBskyConvoListConvos.OutputSchema>
+        }) => {
+          console.log('old', old)
           if (!old) return old
-          return old.map(page => ({
-            ...page,
-            pages: page.pages.filter(convo => convo.id !== convoId),
-          }))
+          return {
+            ...old,
+            pages: old.pages.map(page => {
+              return {
+                ...page,
+                convos: page.convos.filter(convo => convo.id !== convoId),
+              }
+            }),
+          }
         },
       )
     },
@@ -55,6 +60,7 @@ export function useLeaveConvo(
       onSuccess?.(data)
     },
     onError: error => {
+      logger.error(error)
       queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       onError?.(error)
     },

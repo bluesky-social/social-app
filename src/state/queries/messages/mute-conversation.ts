@@ -5,6 +5,7 @@ import {
 } from '@atproto-labs/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {RQKEY as CONVO_LIST_KEY} from './list-converations'
@@ -39,7 +40,10 @@ export function useMuteConvo(
       queryClient.invalidateQueries({queryKey: CONVO_KEY(convoId)})
       onSuccess?.(data)
     },
-    onError,
+    onError: error => {
+      logger.error(error)
+      onError?.(error)
+    },
   })
 }
 
@@ -72,6 +76,9 @@ export function useUnmuteConvo(
       queryClient.invalidateQueries({queryKey: CONVO_KEY(convoId)})
       onSuccess?.(data)
     },
-    onError,
+    onError: error => {
+      logger.error(error)
+      onError?.(error)
+    },
   })
 }

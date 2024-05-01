@@ -1,6 +1,7 @@
 import {BskyAgent, ChatBskyConvoGetConvoForMembers} from '@atproto-labs/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {useHeaders} from './temp-headers'
@@ -30,6 +31,9 @@ export function useGetConvoForMembers({
       queryClient.setQueryData(CONVO_KEY(data.convo.id), data.convo)
       onSuccess?.(data)
     },
-    onError,
+    onError: error => {
+      logger.error(error)
+      onError?.(error)
+    },
   })
 }
