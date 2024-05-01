@@ -3,13 +3,11 @@ import {PersistedAccount} from '#/state/persisted'
 
 export type SessionAccount = PersistedAccount
 
-export type SessionState = {
-  isInitialLoad: boolean
-  isSwitchingAccounts: boolean
+export type SessionStateContext = {
   accounts: SessionAccount[]
   currentAccount: SessionAccount | undefined
-}
-export type SessionStateContext = SessionState & {
+  isInitialLoad: boolean
+  isSwitchingAccounts: boolean
   hasSession: boolean
 }
 export type SessionApiContext = {

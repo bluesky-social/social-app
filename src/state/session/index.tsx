@@ -26,7 +26,6 @@ export type {SessionAccount} from '#/state/session/types'
 import {
   SessionAccount,
   SessionApiContext,
-  SessionState,
   SessionStateContext,
 } from '#/state/session/types'
 
@@ -61,17 +60,22 @@ function __getAgent() {
   return __globalAgent
 }
 
+type State = {
+  accounts: SessionStateContext['accounts']
+  currentAccount: SessionStateContext['currentAccount']
+}
+
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const isDirty = React.useRef(false)
-  const [state, setState] = React.useState<SessionState>({
-    isInitialLoad: true,
-    isSwitchingAccounts: false,
+  const [state, setState] = React.useState<State>({
     accounts: persisted.get('session').accounts,
     currentAccount: undefined, // assume logged out to start
   })
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true)
+  const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
 
   const setStateAndPersist = React.useCallback(
-    (fn: (prev: SessionState) => SessionState) => {
+    (fn: (prev: State) => State) => {
       isDirty.current = true
       setState(fn)
     },
@@ -397,10 +401,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
       } finally {
-        setState(s => ({
-          ...s,
-          isInitialLoad: false,
-        }))
+        setIsInitialLoad(false)
       }
     },
     [initSession],
@@ -457,19 +458,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const selectAccount = React.useCallback<SessionApiContext['selectAccount']>(
     async (account, logContext) => {
-      setState(s => ({...s, isSwitchingAccounts: true}))
+      setIsSwitchingAccounts(true)
       try {
         await initSession(account)
-        setState(s => ({...s, isSwitchingAccounts: false}))
+        setIsSwitchingAccounts(false)
         logEvent('account:loggedIn', {logContext, withPassword: false})
       } catch (e) {
         // reset this in case of error
-        setState(s => ({...s, isSwitchingAccounts: false}))
+        setIsSwitchingAccounts(false)
         // but other listeners need a throw
         throw e
       }
     },
-    [setState, initSession],
+    [initSession],
   )
 
   React.useEffect(() => {
@@ -544,9 +545,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const stateContext = React.useMemo(
     () => ({
       ...state,
+      isInitialLoad,
+      isSwitchingAccounts,
       hasSession: !!state.currentAccount,
     }),
-    [state],
+    [state, isInitialLoad, isSwitchingAccounts],
   )
 
   const api = React.useMemo(
