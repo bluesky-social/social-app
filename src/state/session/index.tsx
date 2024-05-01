@@ -86,9 +86,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     (account: SessionAccount, expired = false) => {
       setStateAndPersist(s => {
         return {
-          ...s,
-          currentAccount: expired ? undefined : account,
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
+          currentAccount: expired ? undefined : account,
         }
       })
     },
@@ -100,7 +99,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     __globalAgent = PUBLIC_BSKY_AGENT
     configureModerationForGuest()
     setStateAndPersist(s => ({
-      ...s,
+      accounts: s.accounts,
       currentAccount: undefined,
     }))
   }, [setStateAndPersist])
@@ -266,12 +265,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       clearCurrentAccount()
       setStateAndPersist(s => {
         return {
-          ...s,
           accounts: s.accounts.map(a => ({
             ...a,
             refreshJwt: undefined,
             accessJwt: undefined,
           })),
+          currentAccount: s.currentAccount,
         }
       })
       logEvent('account:loggedOut', {logContext})
@@ -411,8 +410,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     account => {
       setStateAndPersist(s => {
         return {
-          ...s,
           accounts: s.accounts.filter(a => a.did !== account.did),
+          currentAccount: s.currentAccount,
         }
       })
     },
@@ -444,12 +443,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
 
         return {
-          ...s,
-          currentAccount: updatedAccount,
           accounts: [
             updatedAccount,
             ...s.accounts.filter(a => a.did !== currentAccount.did),
           ],
+          currentAccount: updatedAccount,
         }
       })
     },
@@ -534,8 +532,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         clearCurrentAccount()
       }
 
-      setState(s => ({
-        ...s,
+      setState(() => ({
         accounts: session.accounts,
         currentAccount: selectedAccount,
       }))
