@@ -28,6 +28,7 @@ import {
   CogIcon,
   CogIconSolid,
   ComposeIcon2,
+  HandIcon,
   HashtagIcon,
   HomeIcon,
   HomeIconSolid,
@@ -395,6 +396,24 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Lists`)}
+          />
+          <NavItem
+            href="/moderation"
+            icon={
+              <HandIcon
+                style={pal.text}
+                size={isDesktop ? 24 : 27}
+                strokeWidth={5.5}
+              />
+            }
+            iconFilled={
+              <FontAwesomeIcon
+                icon="hand"
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 23 : 26}
+              />
+            }
+            label={_(msg`Moderation`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}

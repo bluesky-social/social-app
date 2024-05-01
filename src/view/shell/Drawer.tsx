@@ -31,6 +31,7 @@ import {
   BellIcon,
   BellIconSolid,
   CogIcon,
+  HandIcon,
   HashtagIcon,
   HomeIcon,
   HomeIconSolid,
@@ -178,6 +179,12 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     setDrawerOpen(false)
   }, [navigation, track, setDrawerOpen])
 
+  const onPressModeration = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Moderation'})
+    navigation.navigate('Moderation')
+    setDrawerOpen(false)
+  }, [navigation, track, setDrawerOpen])
+
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
@@ -235,6 +242,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               />
               <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
               <ListsMenuItem onPress={onPressLists} />
+              <ModerationMenuItem onPress={onPressModeration} />
               <ProfileMenuItem
                 isActive={isAtMyProfile}
                 onPress={onPressProfile}
@@ -511,6 +519,25 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   )
 }
 ListsMenuItem = React.memo(ListsMenuItem)
+
+let ModerationMenuItem = ({
+  onPress,
+}: {
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const pal = usePalette('default')
+  return (
+    <MenuItem
+      icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
+      label={_(msg`Moderation`)}
+      accessibilityLabel={_(msg`Moderation`)}
+      accessibilityHint=""
+      onPress={onPress}
+    />
+  )
+}
+ModerationMenuItem = React.memo(ModerationMenuItem)
 
 let ProfileMenuItem = ({
   isActive,
