@@ -1,4 +1,4 @@
-import {BskyAgent} from '@atproto-labs/api'
+import {BskyAgent, ChatBskyConvoGetConvoForMembers} from '@atproto-labs/api'
 import {
   useInfiniteQuery,
   useMutation,
@@ -10,7 +10,6 @@ import {useSession} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import * as TempDmChatDefs from '#/temp/dm/defs'
 import * as TempDmChatGetChat from '#/temp/dm/getChat'
-import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
 
@@ -218,11 +217,11 @@ export function useChatLogQuery() {
   })
 }
 
-export function useGetChatFromMembers({
+export function useGetConvoForMembers({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (data: TempDmChatGetChatForMembers.OutputSchema) => void
+  onSuccess?: (data: ChatBskyConvoGetConvoForMembers.OutputSchema) => void
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
@@ -231,22 +230,19 @@ export function useGetChatFromMembers({
 
   return useMutation({
     mutationFn: async (members: string[]) => {
-      const response = await fetch(
-        `${serviceUrl}/xrpc/temp.dm.getChatForMembers?members=${members.join(
-          ',',
-        )}`,
+      const agent = new BskyAgent({service: serviceUrl})
+      const {data} = await agent.api.chat.bsky.convo.getConvoForMembers(
+        {members: members},
         {headers},
       )
 
-      if (!response.ok) throw new Error('Failed to fetch chat')
-
-      return (await response.json()) as TempDmChatGetChatForMembers.OutputSchema
+      return data
     },
     onSuccess: data => {
-      queryClient.setQueryData(['chat', data.chat.id], {
-        chatId: data.chat.id,
+      queryClient.setQueryData(['chat', data.convo.id], {
+        chatId: data.convo.id,
         messages: [],
-        lastRev: data.chat.rev,
+        lastRev: data.convo.rev,
       })
       onSuccess?.(data)
     },
