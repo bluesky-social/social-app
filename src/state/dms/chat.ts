@@ -230,6 +230,11 @@ export class Chat {
             TempDmDefs.isLogCreateMessage(log) &&
             TempDmDefs.isMessageView(log.message)
           ) {
+            if (this.newMessages.has(log.message.id)) {
+              // Trust the log as the source of truth on ordering
+              // TODO test this
+              this.newMessages.delete(log.message.id)
+            }
             this.newMessages.set(log.message.id, log.message)
           } else if (
             TempDmDefs.isLogDeleteMessage(log) &&
