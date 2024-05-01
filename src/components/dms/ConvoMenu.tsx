@@ -23,6 +23,7 @@ import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheck} from '#/components/i
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
+import * as Prompt from '#/components/Prompt'
 
 let ConvoMenu = ({
   profile,
@@ -33,6 +34,7 @@ let ConvoMenu = ({
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
+  const leaveConvoControl = Prompt.usePromptControl()
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
@@ -70,74 +72,93 @@ let ConvoMenu = ({
   })
 
   return (
-    <Menu.Root>
-      <Menu.Trigger label={_(msg`Chat settings`)}>
-        {({props, state}) => (
-          <Pressable
-            {...props}
-            style={[
-              a.p_sm,
-              a.rounded_sm,
-              (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-            ]}>
-            <DotsHorizontal size="lg" style={t.atoms.text} />
-          </Pressable>
+    <>
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Chat settings`)}>
+          {({props, state}) => (
+            <Pressable
+              {...props}
+              style={[
+                a.p_sm,
+                a.rounded_sm,
+                (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+              ]}>
+              <DotsHorizontal size="lg" style={t.atoms.text} />
+            </Pressable>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Go to user's profile`)}
+              onPress={onNavigateToProfile}>
+              <Menu.ItemText>
+                <Trans>Go to profile</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Person} />
+            </Menu.Item>
+            <Menu.Item
+              label={_(msg`Mute notifications`)}
+              onPress={() =>
+                chat.service.convo?.muted ? unmuteConvo() : muteConvo()
+              }>
+              <Menu.ItemText>
+                {chat.service.convo?.muted ? (
+                  <Trans>Unmute notifications</Trans>
+                ) : (
+                  <Trans>Mute notifications</Trans>
+                )}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={chat.service.convo?.muted ? Unmute : Mute} />
+            </Menu.Item>
+          </Menu.Group>
+          {/* TODO(samuel): implement these */}
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Block account`)}
+              onPress={() => {}}
+              disabled>
+              <Menu.ItemText>
+                <Trans>Block account</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon
+                icon={profile.viewer?.blocking ? PersonCheck : PersonX}
+              />
+            </Menu.Item>
+            <Menu.Item
+              label={_(msg`Report account`)}
+              onPress={() => {}}
+              disabled>
+              <Menu.ItemText>
+                <Trans>Report account</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Flag} />
+            </Menu.Item>
+          </Menu.Group>
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Leave conversation`)}
+              onPress={leaveConvoControl.open}>
+              <Menu.ItemText>
+                <Trans>Leave conversation</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ArrowBoxLeft} />
+            </Menu.Item>
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
+
+      <Prompt.Basic
+        control={leaveConvoControl}
+        title={_(msg`Leave conversation`)}
+        description={_(
+          msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants.`,
         )}
-      </Menu.Trigger>
-      <Menu.Outer>
-        <Menu.Group>
-          <Menu.Item
-            label={_(msg`Go to user's profile`)}
-            onPress={onNavigateToProfile}>
-            <Menu.ItemText>
-              <Trans>Go to profile</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={Person} />
-          </Menu.Item>
-          <Menu.Item
-            label={_(msg`Mute notifications`)}
-            onPress={() =>
-              chat.service.convo?.muted ? unmuteConvo() : muteConvo()
-            }>
-            <Menu.ItemText>
-              {chat.service.convo?.muted ? (
-                <Trans>Unmute notifications</Trans>
-              ) : (
-                <Trans>Mute notifications</Trans>
-              )}
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={chat.service.convo?.muted ? Unmute : Mute} />
-          </Menu.Item>
-        </Menu.Group>
-        {/* TODO(samuel): implement these */}
-        <Menu.Group>
-          <Menu.Item label={_(msg`Block account`)} onPress={() => {}} disabled>
-            <Menu.ItemText>
-              <Trans>Block account</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon
-              icon={profile.viewer?.blocking ? PersonCheck : PersonX}
-            />
-          </Menu.Item>
-          <Menu.Item label={_(msg`Report account`)} onPress={() => {}} disabled>
-            <Menu.ItemText>
-              <Trans>Report account</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={Flag} />
-          </Menu.Item>
-        </Menu.Group>
-        <Menu.Group>
-          <Menu.Item
-            label={_(msg`Leave conversation`)}
-            onPress={() => leaveConvo()}>
-            <Menu.ItemText>
-              <Trans>Leave conversation</Trans>
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={ArrowBoxLeft} />
-          </Menu.Item>
-        </Menu.Group>
-      </Menu.Outer>
-    </Menu.Root>
+        confirmButtonCta={_(msg`Leave`)}
+        confirmButtonColor="negative"
+        onConfirm={() => leaveConvo()}
+      />
+    </>
   )
 }
 ConvoMenu = React.memo(ConvoMenu)
