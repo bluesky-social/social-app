@@ -80,8 +80,9 @@ function InnerApp() {
             <QueryProvider currentDid={currentAccount?.did}>
               <PushNotificationsListener>
                 <StatsigProvider>
-                  <ModerationOptsProvider>
-                    <LabelDefsProvider>
+                  {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                  <LabelDefsProvider>
+                    <ModerationOptsProvider>
                       <LoggedOutViewProvider>
                         <SelectedFeedProvider>
                           <UnreadNotifsProvider>
@@ -97,8 +98,8 @@ function InnerApp() {
                           </UnreadNotifsProvider>
                         </SelectedFeedProvider>
                       </LoggedOutViewProvider>
-                    </LabelDefsProvider>
-                  </ModerationOptsProvider>
+                    </ModerationOptsProvider>
+                  </LabelDefsProvider>
                 </StatsigProvider>
               </PushNotificationsListener>
             </QueryProvider>
