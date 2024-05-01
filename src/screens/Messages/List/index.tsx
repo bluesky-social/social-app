@@ -18,6 +18,7 @@ import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
@@ -110,19 +111,36 @@ export function MessagesListScreen({navigation}: Props) {
 
   if (conversations.length < 1) {
     return (
-      <>
+      <View style={a.flex_1}>
+        {gtMobile ? (
+          <CenteredView sideBorders>
+            <DesktopHeader
+              newChatControl={newChatControl}
+              onNavigateToSettings={onNavigateToSettings}
+            />
+          </CenteredView>
+        ) : (
+          <ViewHeader
+            title={_(msg`Messages`)}
+            renderButton={renderButton}
+            showBorder
+            canGoBack={false}
+          />
+        )}
+        {!isError && <NewChat onNewChat={onNewChat} control={newChatControl} />}
         <ListMaybePlaceholder
           isLoading={isLoading}
           isError={isError}
           emptyType="results"
+          emptyTitle={_(msg`No messages yet`)}
           emptyMessage={_(
             msg`You have no messages yet. Start a conversation with someone!`,
           )}
           errorMessage={cleanError(error)}
           onRetry={isError ? refetch : undefined}
+          hideBackButton
         />
-        {!isError && <NewChat onNewChat={onNewChat} control={newChatControl} />}
-      </>
+      </View>
     )
   }
 

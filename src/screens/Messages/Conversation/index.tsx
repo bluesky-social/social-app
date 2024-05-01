@@ -9,9 +9,10 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
-import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
+import {ChatProvider, useChat} from 'state/messages'
+import {ConvoStatus} from 'state/messages/convo'
 import {useSession} from 'state/session'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
@@ -30,33 +31,49 @@ type Props = NativeStackScreenProps<
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
   const convoId = route.params.conversation
-  const {currentAccount} = useSession()
-  const myDid = currentAccount?.did
-
-  const {data: chat, isError: isError} = useConvoQuery(convoId)
-  const otherProfile = React.useMemo(() => {
-    return chat?.members?.find(m => m.did !== myDid)
-  }, [chat?.members, myDid])
 
   if (!gate('dms')) return <ClipClopGate />
 
-  if (!chat || !otherProfile) {
+  return (
+    <ChatProvider convoId={convoId}>
+      <Inner />
+    </ChatProvider>
+  )
+}
+
+function Inner() {
+  const chat = useChat()
+  const {currentAccount} = useSession()
+  const myDid = currentAccount?.did
+
+  const otherProfile = React.useMemo(() => {
+    if (chat.state.status !== ConvoStatus.Ready) return
+    return chat.state.convo.members.find(m => m.did !== myDid)
+  }, [chat.state, myDid])
+
+  // TODO whenever we have error messages, we should use them in here -hailey
+  if (chat.state.status !== ConvoStatus.Ready || !otherProfile) {
     return (
-      <CenteredView style={{flex: 1}} sideBorders>
-        <ListMaybePlaceholder isLoading={true} isError={isError} />
-      </CenteredView>
+      <ListMaybePlaceholder
+        isLoading={true}
+        isError={chat.state.status === ConvoStatus.Error}
+      />
     )
   }
 
   return (
     <CenteredView style={{flex: 1}} sideBorders>
       <Header profile={otherProfile} />
-      <MessagesList convoId={convoId} />
+      <MessagesList />
     </CenteredView>
   )
 }
 
-function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+let Header = ({
+  profile,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+}): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
@@ -126,3 +143,5 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
     </View>
   )
 }
+
+Header = React.memo(Header)
