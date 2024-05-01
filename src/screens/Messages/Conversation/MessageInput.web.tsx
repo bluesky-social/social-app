@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import TextareaAutosize from 'react-textarea-autosize'
@@ -53,12 +53,16 @@ export function MessageInput({
         {borderRadius: 23},
       ]}>
       <TextareaAutosize
-        style={{
-          backgroundColor: 'transparent',
-          border: 'none',
-          resize: 'none',
-          flex: 1,
-        }}
+        style={StyleSheet.flatten([
+          a.flex_1,
+          a.px_sm,
+          a.py_xs,
+          {
+            backgroundColor: 'transparent',
+            border: 'none',
+            resize: 'none',
+          },
+        ])}
         maxRows={12}
         placeholder={_(msg`Write a message`)}
         defaultValue=""
