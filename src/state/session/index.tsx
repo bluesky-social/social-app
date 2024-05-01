@@ -16,6 +16,8 @@ import {
   agentToSessionAccount,
   configureModerationForAccount,
   configureModerationForGuest,
+  createAgentAndCreateAccount,
+  createAgentAndLogin,
   isSessionDeactivated,
   isSessionExpired,
 } from './util'
@@ -181,47 +183,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       inviteCode,
       verificationPhone,
       verificationCode,
-    }: any) => {
+    }) => {
       logger.info(`session: creating account`)
       track('Try Create Account')
       logEvent('account:create:begin', {})
-
-      const agent = new BskyAgent({service})
-
-      await agent.createAccount({
-        handle,
-        password,
-        email,
-        inviteCode,
-        verificationPhone,
-        verificationCode,
-      })
-
-      const account = agentToSessionAccount(agent)
-      if (!agent.session || !account) {
-        throw new Error(`session: createAccount failed to establish a session`)
-      }
-
-      const fetchingGates = tryFetchGates(
-        agent.session.did,
-        'prefer-fresh-gates',
+      const {agent, account, fetchingGates} = await createAgentAndCreateAccount(
+        {
+          service,
+          email,
+          password,
+          handle,
+          inviteCode,
+          verificationPhone,
+          verificationCode,
+        },
       )
-
-      if (!account.deactivated) {
-        /*dont await*/ agent.upsertProfile(_existing => {
-          return {
-            displayName: '',
-
-            // HACKFIX
-            // creating a bunch of identical profile objects is breaking the relay
-            // tossing this unspecced field onto it to reduce the size of the problem
-            // -prf
-            createdAt: new Date().toISOString(),
-          }
-        })
-      }
-
-      await configureModerationForAccount(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
@@ -248,21 +224,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const login = React.useCallback<SessionApiContext['login']>(
     async ({service, identifier, password, authFactorToken}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
-
-      const agent = new BskyAgent({service})
-      await agent.login({identifier, password, authFactorToken})
-      const account = agentToSessionAccount(agent)
-
-      if (!agent.session || !account) {
-        throw new Error(`session: login failed to establish a session`)
-      }
-
-      const fetchingGates = tryFetchGates(
-        agent.session.did,
-        'prefer-fresh-gates',
-      )
-
-      await configureModerationForAccount(agent, account)
+      const {agent, account, fetchingGates} = await createAgentAndLogin({
+        service,
+        identifier,
+        password,
+        authFactorToken,
+      })
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(

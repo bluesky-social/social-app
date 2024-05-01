@@ -2,11 +2,12 @@ import {BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
 import {jwtDecode} from 'jwt-decode'
 
 import {IS_TEST_USER} from '#/lib/constants'
+import {tryFetchGates} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {readLabelers} from '../agent-config'
-import {SessionAccount} from '../types'
+import {SessionAccount, SessionApiContext} from '../types'
 
 export function isSessionDeactivated(accessJwt: string | undefined) {
   if (accessJwt) {
@@ -99,4 +100,82 @@ export function isSessionExpired(account: SessionAccount) {
   }
 
   return !canReusePrevSession
+}
+
+export async function createAgentAndLogin({
+  service,
+  identifier,
+  password,
+  authFactorToken,
+}: {
+  service: string
+  identifier: string
+  password: string
+  authFactorToken?: string
+}) {
+  const agent = new BskyAgent({service})
+  await agent.login({identifier, password, authFactorToken})
+
+  const account = agentToSessionAccount(agent)
+  if (!agent.session || !account) {
+    throw new Error(`session: login failed to establish a session`)
+  }
+
+  const fetchingGates = tryFetchGates(account.did, 'prefer-fresh-gates')
+  await configureModerationForAccount(agent, account)
+
+  return {
+    agent,
+    account,
+    fetchingGates,
+  }
+}
+
+export async function createAgentAndCreateAccount({
+  service,
+  email,
+  password,
+  handle,
+  inviteCode,
+  verificationPhone,
+  verificationCode,
+}: Parameters<SessionApiContext['createAccount']>[0]) {
+  const agent = new BskyAgent({service})
+  await agent.createAccount({
+    email,
+    password,
+    handle,
+    inviteCode,
+    verificationPhone,
+    verificationCode,
+  })
+
+  const account = agentToSessionAccount(agent)!
+  if (!agent.session || !account) {
+    throw new Error(`session: createAccount failed to establish a session`)
+  }
+
+  const fetchingGates = tryFetchGates(account.did, 'prefer-fresh-gates')
+
+  if (!account.deactivated) {
+    /*dont await*/ agent.upsertProfile(_existing => {
+      return {
+        displayName: '',
+
+        // HACKFIX
+        // creating a bunch of identical profile objects is breaking the relay
+        // tossing this unspecced field onto it to reduce the size of the problem
+        // -prf
+        createdAt: new Date().toISOString(),
+      }
+    })
+  }
+
+  await configureModerationForAccount(agent, account)
+
+  return {
+    agent,
+    account,
+    fetchingGates,
+  }
 }
