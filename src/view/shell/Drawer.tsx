@@ -18,6 +18,7 @@ import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {emitSoftReset} from '#/state/events'
+import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {SessionAccount, useSession} from '#/state/session'
@@ -117,6 +118,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
+  const kawaii = useKawaiiMode()
 
   // events
   // =
@@ -262,6 +264,17 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               href="https://bsky.social/about/support/privacy-policy"
               text={_(msg`Privacy Policy`)}
             />
+            {kawaii && (
+              <Text type="md" style={pal.textLight}>
+                Logo by{' '}
+                <TextLink
+                  type="md"
+                  href="/profile/sawaratsuki.bsky.social"
+                  text="@sawaratsuki.bsky.social"
+                  style={pal.link}
+                />
+              </Text>
+            )}
           </View>
 
           <View style={styles.smallSpacer} />
