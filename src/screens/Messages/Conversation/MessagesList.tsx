@@ -50,13 +50,6 @@ export function MessagesList() {
   // We use this to know if we should scroll after a new clop is added to the list
   const isAtBottom = useRef(false)
 
-  // Because the viewableItemsChanged callback won't have access to the updated state, we use a ref to store the
-  // total number of clops
-  // TODO this needs to be set to whatever the initial number of messages is
-  // const totalMessages = useRef(10)
-
-  // TODO later
-
   const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
     return [
       (info: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
@@ -129,9 +122,8 @@ export function MessagesList() {
         ListFooterComponent={
           <MaybeLoader
             isLoading={
-              chat.state.status === ConvoStatus.Initializing ||
-              (chat.state.status === ConvoStatus.Ready &&
-                chat.state.isFetchingHistory)
+              chat.state.status === ConvoStatus.Ready &&
+              chat.state.isFetchingHistory
             }
           />
         }

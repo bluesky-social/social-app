@@ -48,16 +48,11 @@ function Inner() {
 
   const otherProfile = React.useMemo(() => {
     if (chat.state.status !== ConvoStatus.Ready) return
-
     return chat.state.convo.members.find(m => m.did !== myDid)
   }, [chat.state, myDid])
 
   // TODO whenever we have error messages, we should use them in here -hailey
-  if (
-    (chat.state.status !== ConvoStatus.Initializing &&
-      chat.state.status !== ConvoStatus.Ready) ||
-    !otherProfile
-  ) {
+  if (chat.state.status !== ConvoStatus.Ready || !otherProfile) {
     return (
       <ListMaybePlaceholder
         isLoading={true}
