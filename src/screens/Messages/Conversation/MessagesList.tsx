@@ -7,6 +7,7 @@ import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
+import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -105,6 +106,19 @@ export function MessagesListInner() {
     },
     [chat.service],
   )
+
+  // TODO whenever we have error messages, we should use them in here -hailey
+  if (
+    chat.state.status !== ConvoStatus.Initializing &&
+    chat.state.status !== ConvoStatus.Ready
+  ) {
+    return (
+      <ListMaybePlaceholder
+        isLoading={true}
+        isError={chat.state.status === ConvoStatus.Error}
+      />
+    )
+  }
 
   return (
     <KeyboardAvoidingView
