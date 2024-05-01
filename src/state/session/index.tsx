@@ -63,46 +63,41 @@ function __getAgent() {
 type State = {
   accounts: SessionStateContext['accounts']
   currentAccount: SessionStateContext['currentAccount']
+  needsPersist: boolean
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const isDirty = React.useRef(false)
   const [state, setState] = React.useState<State>({
     accounts: persisted.get('session').accounts,
     currentAccount: undefined, // assume logged out to start
+    needsPersist: false,
   })
   const [isInitialLoad, setIsInitialLoad] = React.useState(true)
   const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
 
-  const setStateAndPersist = React.useCallback(
-    (fn: (prev: State) => State) => {
-      isDirty.current = true
-      setState(fn)
-    },
-    [setState],
-  )
-
   const upsertAccount = React.useCallback(
     (account: SessionAccount, expired = false) => {
-      setStateAndPersist(s => {
+      setState(s => {
         return {
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
           currentAccount: expired ? undefined : account,
+          needsPersist: true,
         }
       })
     },
-    [setStateAndPersist],
+    [setState],
   )
 
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
     configureModerationForGuest()
-    setStateAndPersist(s => ({
+    setState(s => ({
       accounts: s.accounts,
       currentAccount: undefined,
+      needsPersist: true,
     }))
-  }, [setStateAndPersist])
+  }, [setState])
 
   const createPersistSessionHandler = React.useCallback(
     (
@@ -263,7 +258,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async logContext => {
       logger.debug(`session: logout`)
       clearCurrentAccount()
-      setStateAndPersist(s => {
+      setState(s => {
         return {
           accounts: s.accounts.map(a => ({
             ...a,
@@ -271,11 +266,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             accessJwt: undefined,
           })),
           currentAccount: s.currentAccount,
+          needsPersist: true,
         }
       })
       logEvent('account:loggedOut', {logContext})
     },
-    [clearCurrentAccount, setStateAndPersist],
+    [clearCurrentAccount, setState],
   )
 
   const initSession = React.useCallback<SessionApiContext['initSession']>(
@@ -408,21 +404,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
-      setStateAndPersist(s => {
+      setState(s => {
         return {
           accounts: s.accounts.filter(a => a.did !== account.did),
           currentAccount: s.currentAccount,
+          needsPersist: true,
         }
       })
     },
-    [setStateAndPersist],
+    [setState],
   )
 
   const updateCurrentAccount = React.useCallback<
     SessionApiContext['updateCurrentAccount']
   >(
     account => {
-      setStateAndPersist(s => {
+      setState(s => {
         const currentAccount = s.currentAccount
 
         // ignore, should never happen
@@ -448,10 +445,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             ...s.accounts.filter(a => a.did !== currentAccount.did),
           ],
           currentAccount: updatedAccount,
+          needsPersist: true,
         }
       })
     },
-    [setStateAndPersist],
+    [setState],
   )
 
   const selectAccount = React.useCallback<SessionApiContext['selectAccount']>(
@@ -472,8 +470,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    if (isDirty.current) {
-      isDirty.current = false
+    if (state.needsPersist) {
+      state.needsPersist = false
       persisted.write('session', {
         accounts: state.accounts,
         currentAccount: state.currentAccount,
@@ -535,6 +533,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(() => ({
         accounts: session.accounts,
         currentAccount: selectedAccount,
+        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }))
     })
   }, [state, setState, clearCurrentAccount, initSession])
