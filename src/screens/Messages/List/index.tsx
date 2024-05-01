@@ -292,6 +292,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             // TODO(sam) show on hover on web
             // tricky because it captures the mouse event
             hideTrigger
+            currentScreen="list"
           />
         </View>
       )}

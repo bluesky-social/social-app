@@ -31,12 +31,14 @@ let ConvoMenu = ({
   onUpdateConvo,
   control,
   hideTrigger,
+  currentScreen,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
   control?: Menu.MenuControlProps
   hideTrigger?: boolean
+  currentScreen: 'list' | 'conversation'
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -69,7 +71,9 @@ let ConvoMenu = ({
 
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onSuccess: () => {
-      navigation.popToTop()
+      if (currentScreen === 'conversation') {
+        navigation.replace('MessagesList')
+      }
     },
     onError: () => {
       Toast.show(_(msg`Could not leave chat`))

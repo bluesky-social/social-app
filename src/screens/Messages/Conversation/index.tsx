@@ -140,6 +140,7 @@ let Header = ({
           convo={service.convo}
           profile={profile}
           onUpdateConvo={onUpdateConvo}
+          currentScreen="conversation"
         />
       ) : (
         <View style={{width: 30}} />
