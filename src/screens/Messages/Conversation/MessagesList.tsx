@@ -2,12 +2,11 @@ import React, {useCallback, useMemo, useRef} from 'react'
 import {FlatList, View, ViewToken} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
-import {ChatProvider, useChat} from '#/state/messages'
+import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
-import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -45,15 +44,7 @@ function onScrollToEndFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
 
-export function MessagesList({convoId}: {convoId: string}) {
-  return (
-    <ChatProvider convoId={convoId}>
-      <MessagesListInner />
-    </ChatProvider>
-  )
-}
-
-export function MessagesListInner() {
+export function MessagesList() {
   const chat = useChat()
   const flatListRef = useRef<FlatList>(null)
   // We use this to know if we should scroll after a new clop is added to the list
@@ -106,19 +97,6 @@ export function MessagesListInner() {
     },
     [chat.service],
   )
-
-  // TODO whenever we have error messages, we should use them in here -hailey
-  if (
-    chat.state.status !== ConvoStatus.Initializing &&
-    chat.state.status !== ConvoStatus.Ready
-  ) {
-    return (
-      <ListMaybePlaceholder
-        isLoading={true}
-        isError={chat.state.status === ConvoStatus.Error}
-      />
-    )
-  }
 
   return (
     <KeyboardAvoidingView
