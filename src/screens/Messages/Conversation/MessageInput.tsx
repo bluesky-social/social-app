@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -22,6 +24,7 @@ export function MessageInput({
   onFocus: () => void
   onBlur: () => void
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const [message, setMessage] = React.useState('')
   const [maxHeight, setMaxHeight] = React.useState<number | undefined>()
@@ -65,11 +68,11 @@ export function MessageInput({
         {borderRadius: 23},
       ]}>
       <TextInput
-        accessibilityLabel="Text input field"
-        accessibilityHint="Write a message"
-        value={message}
-        placeholder="Write a message"
+        accessibilityLabel={_(msg`Message input field`)}
+        accessibilityHint={_(msg`Type your message here`)}
+        placeholder={_(msg`Write a message`)}
         placeholderTextColor={t.palette.contrast_500}
+        value={message}
         multiline={true}
         onChangeText={setMessage}
         style={[a.flex_1, a.text_md, a.px_sm, t.atoms.text, {maxHeight}]}
