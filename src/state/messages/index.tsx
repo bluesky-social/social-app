@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext, useEffect, useMemo, useState} from 'react'
 import {BskyAgent} from '@atproto-labs/api'
 
 import {Convo, ConvoParams} from '#/state/messages/convo'
@@ -8,15 +8,14 @@ import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlSto
 const ChatContext = React.createContext<{
   service: Convo
   state: Convo['state']
-}>({
-  // @ts-ignore
-  service: null,
-  // @ts-ignore
-  state: null,
-})
+} | null>(null)
 
 export function useChat() {
-  return React.useContext(ChatContext)
+  const ctx = useContext(ChatContext)
+  if (!ctx) {
+    throw new Error('useChat must be used within a ChatProvider')
+  }
+  return ctx
 }
 
 export function ChatProvider({
@@ -25,7 +24,7 @@ export function ChatProvider({
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
-  const [service] = React.useState(
+  const [service] = useState(
     () =>
       new Convo({
         convoId,
@@ -35,13 +34,13 @@ export function ChatProvider({
         __tempFromUserDid: getAgent().session?.did!,
       }),
   )
-  const [state, setState] = React.useState(service.state)
+  const [state, setState] = useState(service.state)
 
-  React.useEffect(() => {
+  useEffect(() => {
     service.initialize()
   }, [service])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const update = () => setState(service.state)
     service.on('update', update)
     return () => {
@@ -49,9 +48,7 @@ export function ChatProvider({
     }
   }, [service])
 
-  return (
-    <ChatContext.Provider value={{state, service}}>
-      {children}
-    </ChatContext.Provider>
-  )
+  const value = useMemo(() => ({service, state}), [service, state])
+
+  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }
