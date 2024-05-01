@@ -1,3 +1,4 @@
+import {BskyAgent} from '@atproto-labs/api'
 import {
   useInfiniteQuery,
   useMutation,
@@ -296,6 +297,30 @@ export function useChatQuery(chatId: string) {
 
       const json = (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
       return json.chat
+    },
+  })
+}
+
+export function useConvoQuery(convoId: string) {
+  const headers = useHeaders()
+  const {serviceUrl} = useDmServiceUrlStorage()
+
+  return useQuery({
+    queryKey: ['convoQuery', convoId],
+    queryFn: async () => {
+      const agent = new BskyAgent({
+        service: serviceUrl,
+      })
+      const {data} = await agent.api.chat.bsky.convo.getConvo(
+        {
+          convoId,
+        },
+        {
+          headers,
+        },
+      )
+
+      return data.convo
     },
   })
 }
