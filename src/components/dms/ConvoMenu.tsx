@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react'
 import {Pressable} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
-import {useChat} from '#/state/messages'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {
   useMuteConvo,
@@ -26,11 +26,14 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 
 let ConvoMenu = ({
+  convo,
   profile,
+  onUpdateConvo,
 }: {
+  convo: ChatBskyConvoDefs.ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
+  onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
 }): React.ReactNode => {
-  const chat = useChat()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
@@ -40,10 +43,9 @@ let ConvoMenu = ({
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 
-  const {mutate: muteConvo} = useMuteConvo(chat.service.convoId, {
+  const {mutate: muteConvo} = useMuteConvo(convo.id, {
     onSuccess: data => {
-      // TODO(sam/eric): move mute state to chat service
-      chat.service.convo = data.convo
+      onUpdateConvo?.(data.convo)
       Toast.show(_(msg`Chat muted`))
     },
     onError: () => {
@@ -51,10 +53,9 @@ let ConvoMenu = ({
     },
   })
 
-  const {mutate: unmuteConvo} = useUnmuteConvo(chat.service.convoId, {
+  const {mutate: unmuteConvo} = useUnmuteConvo(convo.id, {
     onSuccess: data => {
-      // TODO(sam/eric): move mute state to chat service
-      chat.service.convo = data.convo
+      onUpdateConvo?.(data.convo)
       Toast.show(_(msg`Chat unmuted`))
     },
     onError: () => {
@@ -62,7 +63,7 @@ let ConvoMenu = ({
     },
   })
 
-  const {mutate: leaveConvo} = useLeaveConvo(chat.service.convoId, {
+  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onSuccess: () => {
       navigation.popToTop()
     },
@@ -82,6 +83,8 @@ let ConvoMenu = ({
                 a.p_sm,
                 a.rounded_sm,
                 (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                // make sure pfp is in the middle
+                {marginLeft: -10},
               ]}>
               <DotsHorizontal size="lg" style={t.atoms.text} />
             </Pressable>
@@ -99,17 +102,15 @@ let ConvoMenu = ({
             </Menu.Item>
             <Menu.Item
               label={_(msg`Mute notifications`)}
-              onPress={() =>
-                chat.service.convo?.muted ? unmuteConvo() : muteConvo()
-              }>
+              onPress={() => (convo?.muted ? unmuteConvo() : muteConvo())}>
               <Menu.ItemText>
-                {chat.service.convo?.muted ? (
+                {convo?.muted ? (
                   <Trans>Unmute notifications</Trans>
                 ) : (
                   <Trans>Mute notifications</Trans>
                 )}
               </Menu.ItemText>
-              <Menu.ItemIcon icon={chat.service.convo?.muted ? Unmute : Mute} />
+              <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
             </Menu.Item>
           </Menu.Group>
           {/* TODO(samuel): implement these */}

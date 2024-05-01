@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -77,14 +78,22 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
+  const {service} = useChat()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (isWeb) {
       navigation.replace('MessagesList')
     } else {
       navigation.pop()
     }
   }, [navigation])
+
+  const onUpdateConvo = useCallback(
+    (convo: ChatBskyConvoDefs.ConvoView) => {
+      service.convo = convo
+    },
+    [service],
+  )
 
   return (
     <View
@@ -126,7 +135,15 @@ let Header = ({
           <Trans>{profile.displayName}</Trans>
         </Text>
       </View>
-      <ConvoMenu profile={profile} />
+      {service.convo ? (
+        <ConvoMenu
+          convo={service.convo}
+          profile={profile}
+          onUpdateConvo={onUpdateConvo}
+        />
+      ) : (
+        <View style={{width: 30}} />
+      )}
     </View>
   )
 }
