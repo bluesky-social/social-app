@@ -246,6 +246,10 @@ export function useSubmitSignup({
         !verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
+        logger.error('Signup Flow Error', {
+          errorMessage: 'Verification captcha code was not set.',
+          registrationHandle: state.handle,
+        })
         return dispatch({
           type: 'setError',
           value: _(msg`Please complete the verification captcha.`),
@@ -282,20 +286,17 @@ export function useSubmitSignup({
           return
         }
 
-        if ([400, 429].includes(e.status)) {
-          logger.warn('Failed to create account', {message: e})
-        } else {
-          logger.error(`Failed to create account (${e.status} status)`, {
-            message: e,
-          })
-        }
-
         const error = cleanError(errMsg)
         const isHandleError = error.toLowerCase().includes('handle')
 
         dispatch({type: 'setIsLoading', value: false})
-        dispatch({type: 'setError', value: cleanError(errMsg)})
+        dispatch({type: 'setError', value: error})
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
+
+        logger.error('Signup Flow Error', {
+          errorMessage: error,
+          registrationHandle: state.handle,
+        })
       } finally {
         dispatch({type: 'setIsLoading', value: false})
       }
