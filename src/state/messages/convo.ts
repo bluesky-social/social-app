@@ -24,7 +24,7 @@ export enum ConvoStatus {
 
 export type ConvoItem =
   | {
-      type: 'message'
+      type: 'message' | 'pending-message'
       key: string
       message: ChatBskyConvoDefs.MessageView
       nextMessage:
@@ -40,11 +40,6 @@ export type ConvoItem =
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
-    }
-  | {
-      type: 'pending-message'
-      key: string
-      message: ChatBskyConvoSendMessage.InputSchema['message']
     }
   | {
       type: 'pending-retry'
@@ -112,6 +107,10 @@ export class Convo {
 
   private pendingEventIngestion: Promise<void> | undefined
   private isProcessingPendingMessages = false
+
+  get sender() {
+    return this.convo?.members.find(m => m.did === this.__tempFromUserDid)
+  }
 
   constructor(params: ConvoParams) {
     this.convoId = params.convoId
@@ -324,7 +323,7 @@ export class Convo {
       this.newMessages.set(res.id, {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
-        sender: this.convo?.members.find(m => m.did === this.__tempFromUserDid),
+        sender: this.sender,
       })
       this.pendingMessages.delete(id)
 
@@ -440,7 +439,14 @@ export class Convo {
       items.unshift({
         type: 'pending-message',
         key: m.id,
-        message: m.message,
+        message: {
+          ...m.message,
+          id: nanoid(),
+          rev: '__fake__',
+          sentAt: new Date().toISOString(),
+          sender: this.sender,
+        },
+        nextMessage: null,
       })
     })
 
