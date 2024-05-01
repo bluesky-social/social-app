@@ -108,18 +108,22 @@ function Metadata({
 
       const diff = now.getTime() - date.getTime()
 
-      // under 1 minute
+      // if under 1 minute
       if (diff < 1000 * 60) {
         return _(msg`Now`)
       }
 
-      // in the last day
-      if (now.getDate() === date.getDate()) {
+      // if in the last day
+      if (now.toISOString().slice(0, 10) === date.toISOString().slice(0, 10)) {
         return time
       }
 
       // if yesterday
-      if (diff < 24 * 60 * 60 * 1000 && now.getDate() - date.getDate() === 1) {
+      const yesterday = new Date(now)
+      yesterday.setDate(yesterday.getDate() - 1)
+      if (
+        yesterday.toISOString().slice(0, 10) === date.toISOString().slice(0, 10)
+      ) {
         return _(msg`Yesterday, ${time}`)
       }
 
