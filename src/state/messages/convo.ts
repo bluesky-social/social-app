@@ -1,3 +1,4 @@
+import {AppBskyActorDefs} from '@atproto/api'
 import {
   BskyAgent,
   ChatBskyConvoDefs,
@@ -91,6 +92,8 @@ export class Convo {
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
 
+  sender: AppBskyActorDefs.ProfileViewBasic | undefined
+
   private pastMessages: Map<
     string,
     ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
@@ -107,10 +110,6 @@ export class Convo {
 
   private pendingEventIngestion: Promise<void> | undefined
   private isProcessingPendingMessages = false
-
-  get sender() {
-    return this.convo?.members.find(m => m.did === this.__tempFromUserDid)
-  }
 
   constructor(params: ConvoParams) {
     this.convoId = params.convoId
@@ -136,6 +135,9 @@ export class Convo {
       const {convo} = response.data
 
       this.convo = convo
+      this.sender = this.convo.members.find(
+        m => m.did === this.__tempFromUserDid,
+      )
       this.status = ConvoStatus.Ready
 
       this.commit()
