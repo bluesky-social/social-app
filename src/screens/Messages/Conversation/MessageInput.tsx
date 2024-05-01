@@ -91,7 +91,8 @@ export function MessageInput({
           a.align_center,
           a.justify_center,
           {height: 30, width: 30, backgroundColor: t.palette.primary_500},
-        ]}>
+        ]}
+        onPress={onSubmit}>
         <Text style={a.text_md}>🐴</Text>
       </Pressable>
     </View>
