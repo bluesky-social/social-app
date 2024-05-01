@@ -3,7 +3,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {RQKEY as CONVO_KEY} from './conversation'
-import {useHeaders} from './query'
+import {useHeaders} from './temp-headers'
 
 export function useGetConvoForMembers({
   onSuccess,

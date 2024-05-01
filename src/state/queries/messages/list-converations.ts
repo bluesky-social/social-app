@@ -2,7 +2,7 @@ import {BskyAgent} from '@atproto-labs/api'
 import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
-import {useHeaders} from './query'
+import {useHeaders} from './temp-headers'
 
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined

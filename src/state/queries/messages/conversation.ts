@@ -2,7 +2,7 @@ import {BskyAgent} from '@atproto-labs/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
-import {useHeaders} from './query'
+import {useHeaders} from './temp-headers'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
