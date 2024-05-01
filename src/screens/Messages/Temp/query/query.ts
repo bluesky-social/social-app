@@ -1,5 +1,3 @@
-import React from 'react'
-import {BskyAgent} from '@atproto/api'
 import {
   useInfiniteQuery,
   useMutation,
@@ -13,6 +11,7 @@ import * as TempDmChatGetChat from '#/temp/dm/getChat'
 import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
+import * as TempDmChatListChats from '#/temp/dm/listChats'
 import {useDmServiceUrlStorage} from '../useDmServiceUrlStorage'
 
 /**
@@ -230,24 +229,19 @@ export function useGetChatFromMembers({
   const queryClient = useQueryClient()
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
-  const [agent] = React.useState(() => {
-    return new BskyAgent({
-      service: serviceUrl,
-    })
-  })
 
   return useMutation({
     mutationFn: async (members: string[]) => {
-      const {data} = await agent.api.temp.dm.getChatForMembers(
-        {
-          members,
-        },
-        {
-          headers,
-        },
+      const response = await fetch(
+        `${serviceUrl}/xrpc/temp.dm.getChatForMembers?members=${members.join(
+          ',',
+        )}`,
+        {headers},
       )
 
-      return data
+      if (!response.ok) throw new Error('Failed to fetch chat')
+
+      return (await response.json()) as TempDmChatGetChatForMembers.OutputSchema
     },
     onSuccess: data => {
       queryClient.setQueryData(['chat', data.chat.id], {
@@ -264,25 +258,20 @@ export function useGetChatFromMembers({
 export function useListChats() {
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
-  const [agent] = React.useState(() => {
-    return new BskyAgent({
-      service: serviceUrl,
-    })
-  })
 
   return useInfiniteQuery({
     queryKey: ['chats'],
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.api.temp.dm.listChats(
-        {
-          cursor: pageParam,
-        },
-        {
-          headers,
-        },
+      const response = await fetch(
+        `${serviceUrl}/xrpc/temp.dm.listChats${
+          pageParam ? `?cursor=${pageParam}` : ''
+        }`,
+        {headers},
       )
 
-      return data
+      if (!response.ok) throw new Error('Failed to fetch chats')
+
+      return (await response.json()) as TempDmChatListChats.OutputSchema
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
