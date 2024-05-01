@@ -2,8 +2,7 @@ import React, {useCallback, useMemo, useRef} from 'react'
 import {FlatList, View, ViewToken} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
-import {useChat} from '#/state/messages'
-import {ChatProvider} from '#/state/messages'
+import {ChatProvider, useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
@@ -113,35 +112,41 @@ export function MessagesListInner() {
       behavior="padding"
       keyboardVerticalOffset={70}
       contentContainerStyle={{flex: 1}}>
-      {chat.state.status === ConvoStatus.Ready && (
-        <FlatList
-          data={chat.state.items}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          contentContainerStyle={{paddingHorizontal: 10}}
-          // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
-          // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
-          // this...probably.
-          initialNumToRender={20}
-          // Same with the max to render per batch. Let's be safe for now though.
-          maxToRenderPerBatch={25}
-          inverted={true}
-          onEndReached={onEndReached}
-          onScrollToIndexFailed={onScrollToEndFailed}
-          onContentSizeChange={onContentSizeChange}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={viewabilityConfig}
-          maintainVisibleContentPosition={{
-            minIndexForVisible: 1,
-          }}
-          ListFooterComponent={
-            <MaybeLoader isLoading={chat.state.isFetchingHistory} />
-          }
-          removeClippedSubviews={true}
-          ref={flatListRef}
-          keyboardDismissMode="none"
-        />
-      )}
+      <FlatList
+        data={
+          chat.state.status === ConvoStatus.Ready ? chat.state.items : undefined
+        }
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        contentContainerStyle={{paddingHorizontal: 10}}
+        // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
+        // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
+        // this...probably.
+        initialNumToRender={20}
+        // Same with the max to render per batch. Let's be safe for now though.
+        maxToRenderPerBatch={25}
+        inverted={true}
+        onEndReached={onEndReached}
+        onScrollToIndexFailed={onScrollToEndFailed}
+        onContentSizeChange={onContentSizeChange}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 1,
+        }}
+        ListFooterComponent={
+          <MaybeLoader
+            isLoading={
+              chat.state.status === ConvoStatus.Initializing ||
+              (chat.state.status === ConvoStatus.Ready &&
+                chat.state.isFetchingHistory)
+            }
+          />
+        }
+        removeClippedSubviews={true}
+        ref={flatListRef}
+        keyboardDismissMode="none"
+      />
 
       <View style={{paddingHorizontal: 10}}>
         <MessageInput
