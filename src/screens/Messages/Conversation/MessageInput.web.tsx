@@ -1,4 +1,4 @@
-import React, {ReactHTMLElement} from 'react'
+import React from 'react'
 import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,12 +18,9 @@ export function MessageInput({
   const t = useTheme()
   const [message, setMessage] = React.useState('')
 
-  const inputRef = React.useRef<ReactHTMLElement<HTMLTextAreaElement>>(null)
-
   const onSubmit = React.useCallback(() => {
     onSendMessage(message)
     setMessage('')
-    inputRef.current?.focus?.()
   }, [message, onSendMessage])
 
   const onKeyDown = React.useCallback(
@@ -63,14 +60,13 @@ export function MessageInput({
           flex: 1,
         }}
         maxRows={12}
-        accessibilityLabel={_(msg`Message input field`)}
-        accessibilityHint={_(msg`Type your message here`)}
         placeholder={_(msg`Write a message`)}
+        defaultValue=""
         value={message}
+        dirName="ltr"
         autoFocus={true}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        ref={inputRef}
       />
       <Pressable
         accessibilityRole="button"
