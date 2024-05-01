@@ -18,8 +18,8 @@ import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Button} from '../Button'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
 
@@ -54,7 +54,7 @@ export function NewChat({
       <FAB
         testID="newChatFAB"
         onPress={control.open}
-        icon={<Envelope size="xl" fill={t.palette.white} />}
+        icon={<Plus size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New chat`)}
         accessibilityHint=""
