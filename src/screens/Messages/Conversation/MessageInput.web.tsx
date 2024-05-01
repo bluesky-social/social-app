@@ -26,6 +26,24 @@ export function MessageInput({
     inputRef.current?.focus?.()
   }, [message, onSendMessage])
 
+  const onKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter') {
+        if (e.shiftKey) return
+        e.preventDefault()
+        onSubmit()
+      }
+    },
+    [onSubmit],
+  )
+
+  const onChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setMessage(e.target.value)
+    },
+    [],
+  )
+
   return (
     <View
       style={[
@@ -48,7 +66,10 @@ export function MessageInput({
         accessibilityLabel={_(msg`Message input field`)}
         accessibilityHint={_(msg`Type your message here`)}
         placeholder={_(msg`Write a message`)}
+        value={message}
         autoFocus={true}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
         ref={inputRef}
       />
       <Pressable
