@@ -14,7 +14,7 @@ import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
 import * as TempDmChatGetChatLog from '#/temp/dm/getChatLog'
 import * as TempDmChatGetChatMessages from '#/temp/dm/getChatMessages'
 
-const useHeaders = () => {
+export const useHeaders = () => {
   const {currentAccount} = useSession()
   return {
     get Authorization() {
@@ -271,22 +271,5 @@ export function useListConvos() {
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
-  })
-}
-
-export function useConvoQuery(convoId: string) {
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
-
-  return useQuery({
-    queryKey: ['convoQuery', convoId],
-    queryFn: async () => {
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.getConvo(
-        {convoId},
-        {headers},
-      )
-      return data.convo
-    },
   })
 }
