@@ -43,6 +43,20 @@ export function agentToSessionAccount(
   }
 }
 
+export function sessionAccountToAgentSession(
+  account: SessionAccount,
+): BskyAgent['session'] {
+  return {
+    refreshJwt: account.refreshJwt || '',
+    accessJwt: account.accessJwt || '',
+    did: account.did,
+    handle: account.handle,
+    email: account.email,
+    emailConfirmed: account.emailConfirmed,
+    emailAuthFactor: account.emailAuthFactor,
+  }
+}
+
 export function configureModerationForGuest() {
   switchToBskyAppLabeler()
 }
