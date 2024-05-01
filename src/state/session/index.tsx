@@ -422,13 +422,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.error(`session: could not decode jwt`)
       }
 
+      const accountOrSessionDeactivated =
+        isSessionDeactivated(account.accessJwt) || account.deactivated
+
       const prevSession = {
         accessJwt: account.accessJwt || '',
         refreshJwt: account.refreshJwt || '',
         did: account.did,
         handle: account.handle,
-        deactivated:
-          isSessionDeactivated(account.accessJwt) || account.deactivated,
       }
 
       if (canReusePrevSession) {
@@ -440,7 +441,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         await fetchingGates
         upsertAccount(account)
 
-        if (prevSession.deactivated) {
+        if (accountOrSessionDeactivated) {
           // don't attempt to resume
           // use will be taken to the deactivated screen
           logger.debug(`session: reusing session for deactivated account`)
