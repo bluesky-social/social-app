@@ -267,9 +267,14 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
                 a.flex_0,
                 a.ml_md,
                 a.mt_sm,
-                {backgroundColor: t.palette.primary_500},
                 a.rounded_full,
-                {height: 7, width: 7},
+                {
+                  backgroundColor: convo.muted
+                    ? t.palette.contrast_200
+                    : t.palette.primary_500,
+                  height: 7,
+                  width: 7,
+                },
               ]}
             />
           )}

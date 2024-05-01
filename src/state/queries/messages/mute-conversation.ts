@@ -7,6 +7,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {RQKEY as CONVO_KEY} from './conversation'
+import {RQKEY as CONVO_LIST_KEY} from './list-converations'
 import {useHeaders} from './temp-headers'
 
 export function useMuteConvo(
@@ -34,6 +35,7 @@ export function useMuteConvo(
       return data
     },
     onSuccess: data => {
+      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       queryClient.invalidateQueries({queryKey: CONVO_KEY(convoId)})
       onSuccess?.(data)
     },
@@ -66,6 +68,7 @@ export function useUnmuteConvo(
       return data
     },
     onSuccess: data => {
+      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       queryClient.invalidateQueries({queryKey: CONVO_KEY(convoId)})
       onSuccess?.(data)
     },

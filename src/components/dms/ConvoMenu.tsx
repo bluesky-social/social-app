@@ -8,6 +8,10 @@ import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from '#/lib/routes/types'
 import {useChat} from '#/state/messages'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import {
+  useMuteConvo,
+  useUnmuteConvo,
+} from '#/state/queries/messages/mute-conversation'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
@@ -25,7 +29,7 @@ let ConvoMenu = ({
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
 }): React.ReactNode => {
-  const {convoId} = useChat()
+  const chat = useChat()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
@@ -34,12 +38,32 @@ let ConvoMenu = ({
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 
-  const {mutate: leaveConvo} = useLeaveConvo(convoId, {
+  const {mutate: muteConvo} = useMuteConvo(chat.service.convoId, {
+    onSuccess: data => {
+      chat.service.convo = data.convo
+      Toast.show(_(msg`Chat muted`))
+    },
+    onError: () => {
+      Toast.show(_(msg`Could not mute chat`))
+    },
+  })
+
+  const {mutate: unmuteConvo} = useUnmuteConvo(chat.service.convoId, {
+    onSuccess: data => {
+      chat.service.convo = data.convo
+      Toast.show(_(msg`Chat unmuted`))
+    },
+    onError: () => {
+      Toast.show(_(msg`Could not unmute chat`))
+    },
+  })
+
+  const {mutate: leaveConvo} = useLeaveConvo(chat.service.convoId, {
     onSuccess: () => {
       navigation.popToTop()
     },
     onError: () => {
-      Toast.show('Could not leave chat')
+      Toast.show(_(msg`Could not leave chat`))
     },
   })
 
@@ -68,15 +92,24 @@ let ConvoMenu = ({
             </Menu.ItemText>
             <Menu.ItemIcon icon={Person} />
           </Menu.Item>
-          <Menu.Item label={_(msg`Mute conversation`)} onPress={() => {}}>
+          <Menu.Item
+            label={_(msg`Mute notifications`)}
+            onPress={() =>
+              chat.service.convo?.muted ? unmuteConvo() : muteConvo()
+            }>
             <Menu.ItemText>
-              <Trans>Mute conversation</Trans>
+              {chat.service.convo?.muted ? (
+                <Trans>Unmute notifications</Trans>
+              ) : (
+                <Trans>Mute notifications</Trans>
+              )}
             </Menu.ItemText>
-            <Menu.ItemIcon icon={profile.viewer?.muted ? Unmute : Mute} />
+            <Menu.ItemIcon icon={chat.service.convo?.muted ? Unmute : Mute} />
           </Menu.Item>
         </Menu.Group>
+        {/* TODO(samuel): implement these */}
         <Menu.Group>
-          <Menu.Item label={_(msg`Block account`)} onPress={() => {}}>
+          <Menu.Item label={_(msg`Block account`)} onPress={() => {}} disabled>
             <Menu.ItemText>
               <Trans>Block account</Trans>
             </Menu.ItemText>
@@ -84,7 +117,7 @@ let ConvoMenu = ({
               icon={profile.viewer?.blocking ? PersonCheck : PersonX}
             />
           </Menu.Item>
-          <Menu.Item label={_(msg`Report account`)} onPress={() => {}}>
+          <Menu.Item label={_(msg`Report account`)} onPress={() => {}} disabled>
             <Menu.ItemText>
               <Trans>Report account</Trans>
             </Menu.ItemText>

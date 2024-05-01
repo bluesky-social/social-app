@@ -6,7 +6,6 @@ import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 
 const ChatContext = React.createContext<{
-  convoId: string
   service: Convo
   state: Convo['state']
 } | null>(null)
@@ -49,10 +48,7 @@ export function ChatProvider({
     }
   }, [service])
 
-  const value = useMemo(
-    () => ({convoId, service, state}),
-    [convoId, service, state],
-  )
+  const value = useMemo(() => ({service, state}), [service, state])
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }
