@@ -91,6 +91,28 @@ module.exports = function (config) {
         entitlements: {
           'com.apple.security.application-groups': 'group.app.bsky',
         },
+        privacyManifests: {
+          NSPrivacyAccessedAPITypes: [
+            {
+              NSPrivacyAccessedAPIType:
+                'NSPrivacyAccessedAPICategoryFileTimestamp',
+              NSPrivacyAccessedAPITypeReasons: ['C617.1', '3B52.1', '0A2A.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryDiskSpace',
+              NSPrivacyAccessedAPITypeReasons: ['E174.1', '85F4.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryBootTime',
+              NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType:
+                'NSPrivacyAccessedAPICategoryUserDefaults',
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+            },
+          ],
+        },
       },
       androidStatusBar: {
         barStyle: 'light-content',
