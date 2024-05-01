@@ -1,10 +1,5 @@
 import {BskyAgent, ChatBskyConvoGetConvoForMembers} from '@atproto-labs/api'
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useSession} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -112,25 +107,5 @@ export function useGetConvoForMembers({
       onSuccess?.(data)
     },
     onError,
-  })
-}
-
-export function useListConvos() {
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
-
-  return useInfiniteQuery({
-    queryKey: ['chats'],
-    queryFn: async ({pageParam}) => {
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.listConvos(
-        {cursor: pageParam},
-        {headers},
-      )
-
-      return data
-    },
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
   })
 }
