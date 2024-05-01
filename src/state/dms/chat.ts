@@ -1,4 +1,8 @@
-import {BskyAgent, TempDmDefs, TempDmSendMessage} from '@atproto/api'
+import {
+  BskyAgent,
+  ChatBskyConvoDefs,
+  ChatBskyConvoSendMessage,
+} from '@atproto-labs/api'
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -20,19 +24,25 @@ export type ChatItem =
   | {
       type: 'message'
       key: string
-      message: TempDmDefs.MessageView
-      nextMessage: TempDmDefs.MessageView | TempDmDefs.DeletedMessage | null
+      message: ChatBskyConvoDefs.MessageView
+      nextMessage:
+        | ChatBskyConvoDefs.MessageView
+        | ChatBskyConvoDefs.DeletedMessageView
+        | null
     }
   | {
       type: 'deleted-message'
       key: string
-      message: TempDmDefs.DeletedMessage
-      nextMessage: TempDmDefs.MessageView | TempDmDefs.DeletedMessage | null
+      message: ChatBskyConvoDefs.DeletedMessageView
+      nextMessage:
+        | ChatBskyConvoDefs.MessageView
+        | ChatBskyConvoDefs.DeletedMessageView
+        | null
     }
   | {
       type: 'pending-message'
       key: string
-      message: TempDmSendMessage.InputSchema['message']
+      message: ChatBskyConvoSendMessage.InputSchema['message']
     }
 
 export type ChatState =
@@ -45,7 +55,7 @@ export type ChatState =
   | {
       status: ChatStatus.Ready
       items: ChatItem[]
-      chat: TempDmDefs.ChatView
+      chat: ChatBskyConvoDefs.ConvoView
       isFetchingHistory: boolean
     }
   | {
@@ -63,22 +73,22 @@ export class Chat {
 
   private status: ChatStatus = ChatStatus.Uninitialized
   private error: any
-  private chat: TempDmDefs.ChatView | undefined
+  private chat: ChatBskyConvoDefs.ConvoView | undefined
   private historyCursor: string | undefined | null = undefined
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
 
   private pastMessages: Map<
     string,
-    TempDmDefs.MessageView | TempDmDefs.DeletedMessage
+    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
   > = new Map()
   private newMessages: Map<
     string,
-    TempDmDefs.MessageView | TempDmDefs.DeletedMessage
+    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
   > = new Map()
   private pendingMessages: Map<
     string,
-    {id: string; message: TempDmSendMessage.InputSchema['message']}
+    {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
 
   private pendingEventIngestion: Promise<void> | undefined
@@ -94,9 +104,9 @@ export class Chat {
     this.status = ChatStatus.Initializing
 
     try {
-      const response = await this.agent.api.temp.dm.getChat(
+      const response = await this.agent.api.chat.bsky.convo.getConvo(
         {
-          chatId: this.chatId,
+          convoId: this.chatId,
         },
         {
           headers: {
@@ -104,9 +114,9 @@ export class Chat {
           },
         },
       )
-      const {chat} = response.data
+      const {convo} = response.data
 
-      this.chat = chat
+      this.chat = convo
       this.status = ChatStatus.Ready
 
       this.commit()
@@ -151,10 +161,10 @@ export class Chat {
       await new Promise(y => setTimeout(y, 500))
     }
 
-    const response = await this.agent.api.temp.dm.getChatMessages(
+    const response = await this.agent.api.chat.bsky.convo.getMessages(
       {
         cursor: this.historyCursor,
-        chatId: this.chatId,
+        convoId: this.chatId,
         limit: 20,
       },
       {
@@ -169,8 +179,8 @@ export class Chat {
 
     for (const message of messages) {
       if (
-        TempDmDefs.isMessageView(message) ||
-        TempDmDefs.isDeletedMessage(message)
+        ChatBskyConvoDefs.isMessageView(message) ||
+        ChatBskyConvoDefs.isDeletedMessageView(message)
       ) {
         this.pastMessages.set(message.id, message)
 
@@ -191,7 +201,7 @@ export class Chat {
   async ingestLatestEvents() {
     if (this.status === ChatStatus.Destroyed) return
 
-    const response = await this.agent.api.temp.dm.getChatLog(
+    const response = await this.agent.api.chat.bsky.convo.getLog(
       {
         cursor: this.eventsCursor,
       },
@@ -227,8 +237,8 @@ export class Chat {
           if (log.chatId !== this.chatId) continue
 
           if (
-            TempDmDefs.isLogCreateMessage(log) &&
-            TempDmDefs.isMessageView(log.message)
+            ChatBskyConvoDefs.isLogCreateMessage(log) &&
+            ChatBskyConvoDefs.isMessageView(log.message)
           ) {
             if (this.newMessages.has(log.message.id)) {
               // Trust the log as the source of truth on ordering
@@ -237,8 +247,8 @@ export class Chat {
             }
             this.newMessages.set(log.message.id, log.message)
           } else if (
-            TempDmDefs.isLogDeleteMessage(log) &&
-            TempDmDefs.isDeletedMessage(log.message)
+            ChatBskyConvoDefs.isLogDeleteMessage(log) &&
+            ChatBskyConvoDefs.isDeletedMessageView(log.message)
           ) {
             /*
              * Update if we have this in state. If we don't, don't worry about it.
@@ -260,7 +270,7 @@ export class Chat {
     this.commit()
   }
 
-  async sendMessage(message: TempDmSendMessage.InputSchema['message']) {
+  async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     if (this.status === ChatStatus.Destroyed) return
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text) return
@@ -274,9 +284,9 @@ export class Chat {
     this.commit()
 
     await new Promise(y => setTimeout(y, 500))
-    const response = await this.agent.api.temp.dm.sendMessage(
+    const response = await this.agent.api.chat.bsky.convo.sendMessage(
       {
-        chatId: this.chatId,
+        convoId: this.chatId,
         message,
       },
       {
@@ -310,14 +320,14 @@ export class Chat {
 
     // `newMessages` is in insertion order, unshift to reverse
     this.newMessages.forEach(m => {
-      if (TempDmDefs.isMessageView(m)) {
+      if (ChatBskyConvoDefs.isMessageView(m)) {
         items.unshift({
           type: 'message',
           key: m.id,
           message: m,
           nextMessage: null,
         })
-      } else if (TempDmDefs.isDeletedMessage(m)) {
+      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.unshift({
           type: 'deleted-message',
           key: m.id,
@@ -337,14 +347,14 @@ export class Chat {
     })
 
     this.pastMessages.forEach(m => {
-      if (TempDmDefs.isMessageView(m)) {
+      if (ChatBskyConvoDefs.isMessageView(m)) {
         items.push({
           type: 'message',
           key: m.id,
           message: m,
           nextMessage: null,
         })
-      } else if (TempDmDefs.isDeletedMessage(m)) {
+      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
         items.push({
           type: 'deleted-message',
           key: m.id,
@@ -358,14 +368,14 @@ export class Chat {
       let nextMessage = null
 
       if (
-        TempDmDefs.isMessageView(item.message) ||
-        TempDmDefs.isDeletedMessage(item.message)
+        ChatBskyConvoDefs.isMessageView(item.message) ||
+        ChatBskyConvoDefs.isDeletedMessageView(item.message)
       ) {
         const next = items[i - 1]
         if (
           next &&
-          (TempDmDefs.isMessageView(next.message) ||
-            TempDmDefs.isDeletedMessage(next.message))
+          (ChatBskyConvoDefs.isMessageView(next.message) ||
+            ChatBskyConvoDefs.isDeletedMessageView(next.message))
         ) {
           nextMessage = next.message
         }

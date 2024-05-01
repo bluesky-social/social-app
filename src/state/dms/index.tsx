@@ -1,5 +1,5 @@
 import React from 'react'
-import {BskyAgent} from '@atproto/api'
+import {BskyAgent} from '@atproto-labs/api'
 
 import {Chat, ChatParams} from '#/state/dms/chat'
 import {useAgent} from '#/state/session'
