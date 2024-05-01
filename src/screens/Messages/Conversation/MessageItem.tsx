@@ -10,10 +10,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function MessageItem({
-  item,
+  message,
   next,
 }: {
-  item: ChatBskyConvoDefs.MessageView
+  message: ChatBskyConvoDefs.MessageView
   next:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
@@ -22,7 +22,7 @@ export function MessageItem({
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  const isFromSelf = item.sender?.did === currentAccount?.did
+  const isFromSelf = message.sender?.did === currentAccount?.did
 
   const isNextFromSelf =
     ChatBskyConvoDefs.isMessageView(next) &&
@@ -36,7 +36,7 @@ export function MessageItem({
 
     // or, if there's a 10 minute gap between this message and the next
     if (ChatBskyConvoDefs.isMessageView(next)) {
-      const thisDate = new Date(item.sentAt)
+      const thisDate = new Date(message.sentAt)
       const nextDate = new Date(next.sentAt)
 
       const diff = nextDate.getTime() - thisDate.getTime()
@@ -46,7 +46,7 @@ export function MessageItem({
     }
 
     return true
-  }, [item, next, isFromSelf, isNextFromSelf])
+  }, [message, next, isFromSelf, isNextFromSelf])
 
   return (
     <View>
@@ -74,11 +74,11 @@ export function MessageItem({
             a.leading_snug,
             isFromSelf && {color: t.palette.white},
           ]}>
-          {item.text}
+          {message.text}
         </Text>
       </View>
       <Metadata
-        message={item}
+        message={message}
         isLastInGroup={isLastInGroup}
         style={isFromSelf ? a.text_right : a.text_left}
       />
