@@ -84,22 +84,18 @@ async function trySwitchToTestAppLabeler(agent: BskyAgent) {
 }
 
 export function isSessionExpired(account: SessionAccount) {
-  let canReusePrevSession = false
   try {
     if (account.accessJwt) {
       const decoded = jwtDecode(account.accessJwt)
       if (decoded.exp) {
         const didExpire = Date.now() >= decoded.exp * 1000
-        if (!didExpire) {
-          canReusePrevSession = true
-        }
+        return didExpire
       }
     }
   } catch (e) {
     logger.error(`session: could not decode jwt`)
   }
-
-  return !canReusePrevSession
+  return true
 }
 
 export async function createAgentAndLogin({
