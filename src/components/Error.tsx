@@ -72,7 +72,7 @@ export function Error({
             a.text_center,
             t.atoms.text_contrast_high,
             {lineHeight: 1.4},
-            gtMobile && {width: 450},
+            gtMobile ? {width: 450} : [a.w_full, a.px_lg],
           ]}>
           {message}
         </Text>
