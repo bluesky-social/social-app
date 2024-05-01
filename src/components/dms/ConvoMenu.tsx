@@ -15,13 +15,13 @@ import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Per
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 
-export function ConvoMenu({
+let ConvoMenu = ({
   onNavigateToProfile,
   profile,
 }: {
   onNavigateToProfile: () => void
   profile: AppBskyActorDefs.ProfileViewBasic
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
 
@@ -85,3 +85,6 @@ export function ConvoMenu({
     </Menu.Root>
   )
 }
+ConvoMenu = React.memo(ConvoMenu)
+
+export {ConvoMenu}
