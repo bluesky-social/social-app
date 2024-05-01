@@ -122,7 +122,7 @@ export function MessagesListScreen({navigation}: Props) {
           errorMessage={cleanError(error)}
           onRetry={isError ? refetch : undefined}
         />
-        <NewChat onNewChat={onNewChat} control={newChatControl} />
+        {!isError && <NewChat onNewChat={onNewChat} control={newChatControl} />}
       </>
     )
   }
