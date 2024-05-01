@@ -1,28 +1,24 @@
-import {createContext, useContext, useMemo} from 'react'
 import {
   AppBskyActorDefs,
-  BSKY_LABELER_DID,
   BskyFeedViewPreference,
   LabelPreference,
-  ModerationOpts,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
+import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
-import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
   DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
-import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
   ThreadViewPreferences,
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
 
 export * from '#/state/queries/preferences/const'
@@ -36,7 +32,7 @@ export function usePreferencesQuery() {
   const {getAgent} = useAgent()
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
-    structuralSharing: true,
+    structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
@@ -77,44 +73,6 @@ export function usePreferencesQuery() {
       }
     },
   })
-}
-
-// used in the moderation state devtool
-export const moderationOptsOverrideContext = createContext<
-  ModerationOpts | undefined
->(undefined)
-
-export function useModerationOpts() {
-  const override = useContext(moderationOptsOverrideContext)
-  const {currentAccount} = useSession()
-  const prefs = usePreferencesQuery()
-  const {labelDefs} = useLabelDefinitions()
-  const hiddenPosts = useHiddenPosts() // TODO move this into pds-stored prefs
-  const opts = useMemo<ModerationOpts | undefined>(() => {
-    if (override) {
-      return override
-    }
-    if (!prefs.data) {
-      return
-    }
-    return {
-      userDid: currentAccount?.did,
-      prefs: {
-        ...prefs.data.moderationPrefs,
-        labelers: prefs.data.moderationPrefs.labelers.length
-          ? prefs.data.moderationPrefs.labelers
-          : [
-              {
-                did: BSKY_LABELER_DID,
-                labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
-              },
-            ],
-        hiddenPosts: hiddenPosts || [],
-      },
-      labelDefs,
-    }
-  }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])
-  return opts
 }
 
 export function useClearPreferencesMutation() {

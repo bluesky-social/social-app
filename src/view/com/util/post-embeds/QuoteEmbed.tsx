@@ -25,7 +25,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {s} from '#/lib/styles'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'

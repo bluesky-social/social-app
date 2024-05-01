@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   sortThread,
   ThreadBlocked,
@@ -16,10 +17,7 @@ import {
   ThreadPost,
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
-import {
-  useModerationOpts,
-  usePreferencesQuery,
-} from '#/state/queries/preferences'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {usePalette} from 'lib/hooks/usePalette'
