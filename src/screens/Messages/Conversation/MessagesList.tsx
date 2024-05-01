@@ -37,6 +37,10 @@ function renderItem({item}: {item: ConvoItem}) {
   return null
 }
 
+function keyExtractor(item: ConvoItem) {
+  return item.key
+}
+
 function onScrollToEndFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
@@ -103,7 +107,7 @@ export function MessagesListInner() {
       {chat.state.status === ConvoStatus.Ready && (
         <FlatList
           data={chat.state.items}
-          keyExtractor={item => item.key}
+          keyExtractor={keyExtractor}
           renderItem={renderItem}
           contentContainerStyle={{paddingHorizontal: 10}}
           // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
