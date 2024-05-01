@@ -35,7 +35,10 @@ export function MessageInput({
   const inputRef = React.useRef<TextInput>(null)
 
   const onSubmit = React.useCallback(() => {
-    onSendMessage(message)
+    if (message.trim() === '') {
+      return
+    }
+    onSendMessage(message.trimEnd())
     setMessage('')
     setTimeout(() => {
       inputRef.current?.focus()
