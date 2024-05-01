@@ -81,17 +81,17 @@ export function isConvoItemMessage(
 }
 
 export class Convo {
-  private convoId: string
   private agent: BskyAgent
   private __tempFromUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
   private error: any
-  private convo: ChatBskyConvoDefs.ConvoView | undefined
   private historyCursor: string | undefined | null = undefined
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
 
+  convoId: string
+  convo: ChatBskyConvoDefs.ConvoView | undefined
   sender: AppBskyActorDefs.ProfileViewBasic | undefined
 
   private pastMessages: Map<
