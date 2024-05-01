@@ -98,6 +98,15 @@ export function MessagesListInner() {
 
   const onInputBlur = useCallback(() => {}, [])
 
+  const onSendMessage = useCallback(
+    (text: string) => {
+      chat.service.sendMessage({
+        text,
+      })
+    },
+    [chat.service],
+  )
+
   return (
     <KeyboardAvoidingView
       style={{flex: 1, marginBottom: isWeb ? 20 : 85}}
@@ -136,11 +145,7 @@ export function MessagesListInner() {
 
       <View style={{paddingHorizontal: 10}}>
         <MessageInput
-          onSendMessage={text => {
-            chat.service.sendMessage({
-              text,
-            })
-          }}
+          onSendMessage={onSendMessage}
           onFocus={onInputFocus}
           onBlur={onInputBlur}
         />
