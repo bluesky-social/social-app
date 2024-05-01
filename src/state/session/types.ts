@@ -1,17 +1,37 @@
+import {BskyAgent} from '@atproto/api'
+
 import {LogEvents} from '#/lib/statsig/statsig'
 import {PersistedAccount} from '#/state/persisted'
 
+/**
+ * Alias for `PersistedAccount` from persisted storage.
+ */
 export type SessionAccount = PersistedAccount
 
-export type SessionState = {
+/**
+ * Subset of `SessionAccount` that excludes tokens.
+ */
+export type CurrentAccount = Omit<SessionAccount, 'accessJwt' | 'refreshJwt'>
+
+/**
+ * Context shape returned from `useSession()`
+ */
+export type SessionStateContext = {
+  currentAgent: BskyAgent
   isInitialLoad: boolean
   isSwitchingAccounts: boolean
-  accounts: SessionAccount[]
-  currentAccount: SessionAccount | undefined
-}
-export type SessionStateContext = SessionState & {
   hasSession: boolean
+  accounts: SessionAccount[]
+  /**
+   * Contains the full account object persisted to storage, minus access
+   * tokens.
+   */
+  currentAccount: CurrentAccount | undefined
 }
+
+/**
+ * Context shape returned from `useSessionApi()`
+ */
 export type SessionApiContext = {
   createAccount: (props: {
     service: string
@@ -54,6 +74,13 @@ export type SessionApiContext = {
     account: SessionAccount,
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
+  /**
+   * Refreshes the BskyAgent's session and derive a fresh `currentAccount`
+   */
+  refreshSession: () => void
+  /**
+   * @deprecated Use `refreshSession` instead.
+   */
   updateCurrentAccount: (
     account: Partial<
       Pick<
