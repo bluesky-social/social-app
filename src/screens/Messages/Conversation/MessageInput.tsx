@@ -13,7 +13,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
 export function MessageInput({
   onSendMessage,
@@ -96,7 +96,7 @@ export function MessageInput({
           {height: 30, width: 30, backgroundColor: t.palette.primary_500},
         ]}
         onPress={onSubmit}>
-        <Text style={a.text_md}>🐴</Text>
+        <PaperPlane fill={t.palette.white} />
       </Pressable>
     </View>
   )

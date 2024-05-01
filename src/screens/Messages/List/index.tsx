@@ -23,7 +23,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/NewChat'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
@@ -328,7 +328,7 @@ function DesktopHeader({
             variant="solid"
             style={[{height: 'auto', width: 'auto'}, a.px_md, a.py_sm]}
             onPress={newChatControl.open}>
-            <ButtonIcon icon={Envelope} position="right" />
+            <ButtonIcon icon={Plus} position="right" />
             <ButtonText>
               <Trans>New chat</Trans>
             </ButtonText>
