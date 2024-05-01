@@ -1,9 +1,14 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {Pressable} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {NavigationProp} from '#/lib/routes/types'
+import {useChat} from '#/state/messages'
+import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
@@ -16,14 +21,27 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import * as Menu from '#/components/Menu'
 
 let ConvoMenu = ({
-  onNavigateToProfile,
   profile,
 }: {
-  onNavigateToProfile: () => void
   profile: AppBskyActorDefs.ProfileViewBasic
 }): React.ReactNode => {
+  const {convoId} = useChat()
+  const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
+
+  const onNavigateToProfile = useCallback(() => {
+    navigation.navigate('Profile', {name: profile.did})
+  }, [navigation, profile.did])
+
+  const {mutate: leaveConvo} = useLeaveConvo(convoId, {
+    onSuccess: () => {
+      navigation.popToTop()
+    },
+    onError: () => {
+      Toast.show('Could not leave chat')
+    },
+  })
 
   return (
     <Menu.Root>
@@ -74,7 +92,9 @@ let ConvoMenu = ({
           </Menu.Item>
         </Menu.Group>
         <Menu.Group>
-          <Menu.Item label={_(msg`Leave conversation`)} onPress={() => {}}>
+          <Menu.Item
+            label={_(msg`Leave conversation`)}
+            onPress={() => leaveConvo()}>
             <Menu.ItemText>
               <Trans>Leave conversation</Trans>
             </Menu.ItemText>

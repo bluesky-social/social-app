@@ -86,10 +86,6 @@ let Header = ({
     }
   }, [navigation])
 
-  const onNavigateToProfile = React.useCallback(() => {
-    navigation.navigate('Profile', {name: profile.did})
-  }, [navigation, profile.did])
-
   return (
     <View
       style={[
@@ -130,7 +126,7 @@ let Header = ({
           <Trans>{profile.displayName}</Trans>
         </Text>
       </View>
-      <ConvoMenu profile={profile} onNavigateToProfile={onNavigateToProfile} />
+      <ConvoMenu profile={profile} />
     </View>
   )
 }
