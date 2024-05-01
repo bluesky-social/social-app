@@ -1,5 +1,4 @@
-import {BskyAgent, ChatBskyConvoGetConvoForMembers} from '@atproto-labs/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useSession} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -74,38 +73,5 @@ export function useChatLogQuery() {
       }
     },
     refetchInterval: 5000,
-  })
-}
-
-export function useGetConvoForMembers({
-  onSuccess,
-  onError,
-}: {
-  onSuccess?: (data: ChatBskyConvoGetConvoForMembers.OutputSchema) => void
-  onError?: (error: Error) => void
-}) {
-  const queryClient = useQueryClient()
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
-
-  return useMutation({
-    mutationFn: async (members: string[]) => {
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.getConvoForMembers(
-        {members: members},
-        {headers},
-      )
-
-      return data
-    },
-    onSuccess: data => {
-      queryClient.setQueryData(['chat', data.convo.id], {
-        chatId: data.convo.id,
-        messages: [],
-        lastRev: data.convo.rev,
-      })
-      onSuccess?.(data)
-    },
-    onError,
   })
 }
