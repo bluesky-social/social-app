@@ -136,7 +136,6 @@ export async function createAgentAndLogin({
 
   return {
     agent,
-    account,
     fetchingGates,
   }
 }
@@ -185,7 +184,6 @@ export async function createAgentAndCreateAccount({
 
   return {
     agent,
-    account,
     fetchingGates,
   }
 }
