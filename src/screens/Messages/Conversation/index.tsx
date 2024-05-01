@@ -9,7 +9,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
-import {useConvoQuery} from '#/state/queries/messages/query'
+import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
