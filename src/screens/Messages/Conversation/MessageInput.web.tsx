@@ -19,6 +19,10 @@ export function MessageInput({
   const [message, setMessage] = React.useState('')
 
   const onSubmit = React.useCallback(() => {
+    if (message.trim() === '') {
+      return
+    }
+    onSendMessage(message.trimEnd())
     onSendMessage(message)
     setMessage('')
   }, [message, onSendMessage])
