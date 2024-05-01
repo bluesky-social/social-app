@@ -11,6 +11,7 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useListConvos} from '#/state/queries/messages/query'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -28,7 +29,6 @@ import {Text} from '#/components/Typography'
 import * as TempDmChatDefs from '#/temp/dm/defs'
 import {NewChat} from '../../../components/dms/NewChat'
 import {ClipClopGate} from '../gate'
-import {useListChats} from '../Temp/query/query'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'MessagesList'>
 export function MessagesListScreen({navigation}: Props) {
@@ -59,13 +59,13 @@ export function MessagesListScreen({navigation}: Props) {
     fetchNextPage,
     error,
     refetch,
-  } = useListChats()
+  } = useListConvos()
 
   const isError = !!error
 
   const conversations = useMemo(() => {
     if (data?.pages) {
-      return data.pages.flatMap(page => page.chats)
+      return data.pages.flatMap(page => page.convos)
     }
     return []
   }, [data])
