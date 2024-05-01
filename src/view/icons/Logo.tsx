@@ -41,7 +41,7 @@ export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
         accessibilityLabel="Bluesky"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
-        style={[{height: size <= 98 ? 100 : size, aspectRatio: 1.4}]}
+        style={[{height: size <= 100 ? 86 : size, aspectRatio: 1.4}]}
       />
     )
   }
