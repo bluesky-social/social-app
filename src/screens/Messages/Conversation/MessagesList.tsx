@@ -2,9 +2,9 @@ import React, {useCallback, useMemo, useRef} from 'react'
 import {FlatList, View, ViewToken} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
-import {useChat} from '#/state/dms'
-import {ChatProvider} from '#/state/dms'
-import {ChatItem, ChatStatus} from '#/state/dms/chat'
+import {useChat} from '#/state/messages'
+import {ChatProvider} from '#/state/messages'
+import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
@@ -25,7 +25,7 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function renderItem({item}: {item: ChatItem}) {
+function renderItem({item}: {item: ConvoItem}) {
   if (item.type === 'message') {
     return <MessageItem item={item.message} next={item.nextMessage} />
   } else if (item.type === 'deleted-message') {
@@ -41,9 +41,9 @@ function onScrollToEndFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
 
-export function MessagesList({chatId}: {chatId: string}) {
+export function MessagesList({convoId}: {convoId: string}) {
   return (
-    <ChatProvider chatId={chatId}>
+    <ChatProvider convoId={convoId}>
       <MessagesListInner />
     </ChatProvider>
   )
@@ -100,7 +100,7 @@ export function MessagesListInner() {
       behavior="padding"
       keyboardVerticalOffset={70}
       contentContainerStyle={{flex: 1}}>
-      {chat.state.status === ChatStatus.Ready && (
+      {chat.state.status === ConvoStatus.Ready && (
         <FlatList
           data={chat.state.items}
           keyExtractor={item => item.key}

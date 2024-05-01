@@ -29,11 +29,11 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
-  const chatId = route.params.conversation
+  const convoId = route.params.conversation
   const {currentAccount} = useSession()
   const myDid = currentAccount?.did
 
-  const {data: chat, isError: isError} = useConvoQuery(chatId)
+  const {data: chat, isError: isError} = useConvoQuery(convoId)
   const otherProfile = React.useMemo(() => {
     return chat?.members?.find(m => m.did !== myDid)
   }, [chat?.members, myDid])
@@ -51,7 +51,7 @@ export function MessagesConversationScreen({route}: Props) {
   return (
     <CenteredView style={{flex: 1}} sideBorders>
       <Header profile={otherProfile} />
-      <MessagesList chatId={chatId} />
+      <MessagesList convoId={convoId} />
     </CenteredView>
   )
 }

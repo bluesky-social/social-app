@@ -1,13 +1,13 @@
 import React from 'react'
 import {BskyAgent} from '@atproto-labs/api'
 
-import {Chat, ChatParams} from '#/state/dms/chat'
+import {Convo, ConvoParams} from '#/state/messages/convo'
 import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 
 const ChatContext = React.createContext<{
-  service: Chat
-  state: Chat['state']
+  service: Convo
+  state: Convo['state']
 }>({
   // @ts-ignore
   service: null,
@@ -21,14 +21,14 @@ export function useChat() {
 
 export function ChatProvider({
   children,
-  chatId,
-}: Pick<ChatParams, 'chatId'> & {children: React.ReactNode}) {
+  convoId,
+}: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
   const [service] = React.useState(
     () =>
-      new Chat({
-        chatId,
+      new Convo({
+        convoId,
         agent: new BskyAgent({
           service: serviceUrl,
         }),

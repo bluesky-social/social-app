@@ -6,13 +6,13 @@ import {
 import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
-export type ChatParams = {
-  chatId: string
+export type ConvoParams = {
+  convoId: string
   agent: BskyAgent
   __tempFromUserDid: string
 }
 
-export enum ChatStatus {
+export enum ConvoStatus {
   Uninitialized = 'uninitialized',
   Initializing = 'initializing',
   Ready = 'ready',
@@ -20,7 +20,7 @@ export enum ChatStatus {
   Destroyed = 'destroyed',
 }
 
-export type ChatItem =
+export type ConvoItem =
   | {
       type: 'message'
       key: string
@@ -45,35 +45,35 @@ export type ChatItem =
       message: ChatBskyConvoSendMessage.InputSchema['message']
     }
 
-export type ChatState =
+export type ConvoState =
   | {
-      status: ChatStatus.Uninitialized
+      status: ConvoStatus.Uninitialized
     }
   | {
-      status: ChatStatus.Initializing
+      status: ConvoStatus.Initializing
     }
   | {
-      status: ChatStatus.Ready
-      items: ChatItem[]
-      chat: ChatBskyConvoDefs.ConvoView
+      status: ConvoStatus.Ready
+      items: ConvoItem[]
+      convo: ChatBskyConvoDefs.ConvoView
       isFetchingHistory: boolean
     }
   | {
-      status: ChatStatus.Error
+      status: ConvoStatus.Error
       error: any
     }
   | {
-      status: ChatStatus.Destroyed
+      status: ConvoStatus.Destroyed
     }
 
-export class Chat {
-  private chatId: string
+export class Convo {
+  private convoId: string
   private agent: BskyAgent
   private __tempFromUserDid: string
 
-  private status: ChatStatus = ChatStatus.Uninitialized
+  private status: ConvoStatus = ConvoStatus.Uninitialized
   private error: any
-  private chat: ChatBskyConvoDefs.ConvoView | undefined
+  private convo: ChatBskyConvoDefs.ConvoView | undefined
   private historyCursor: string | undefined | null = undefined
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
@@ -93,20 +93,20 @@ export class Chat {
 
   private pendingEventIngestion: Promise<void> | undefined
 
-  constructor(params: ChatParams) {
-    this.chatId = params.chatId
+  constructor(params: ConvoParams) {
+    this.convoId = params.convoId
     this.agent = params.agent
     this.__tempFromUserDid = params.__tempFromUserDid
   }
 
   async initialize() {
     if (this.status !== 'uninitialized') return
-    this.status = ChatStatus.Initializing
+    this.status = ConvoStatus.Initializing
 
     try {
       const response = await this.agent.api.chat.bsky.convo.getConvo(
         {
-          convoId: this.chatId,
+          convoId: this.convoId,
         },
         {
           headers: {
@@ -116,8 +116,8 @@ export class Chat {
       )
       const {convo} = response.data
 
-      this.chat = convo
-      this.status = ChatStatus.Ready
+      this.convo = convo
+      this.status = ConvoStatus.Ready
 
       this.commit()
 
@@ -125,13 +125,13 @@ export class Chat {
 
       this.pollEvents()
     } catch (e) {
-      this.status = ChatStatus.Error
+      this.status = ConvoStatus.Error
       this.error = e
     }
   }
 
   private async pollEvents() {
-    if (this.status === ChatStatus.Destroyed) return
+    if (this.status === ConvoStatus.Destroyed) return
     if (this.pendingEventIngestion) return
     setTimeout(async () => {
       this.pendingEventIngestion = this.ingestLatestEvents()
@@ -142,7 +142,7 @@ export class Chat {
   }
 
   async fetchMessageHistory() {
-    if (this.status === ChatStatus.Destroyed) return
+    if (this.status === ConvoStatus.Destroyed) return
     // reached end
     if (this.historyCursor === null) return
     if (this.isFetchingHistory) return
@@ -164,7 +164,7 @@ export class Chat {
     const response = await this.agent.api.chat.bsky.convo.getMessages(
       {
         cursor: this.historyCursor,
-        convoId: this.chatId,
+        convoId: this.convoId,
         limit: 20,
       },
       {
@@ -186,7 +186,6 @@ export class Chat {
 
         // set to latest rev
         if (
-          // @ts-ignore TODO divy said so
           message.rev > (this.eventsCursor = this.eventsCursor || message.rev)
         ) {
           this.eventsCursor = message.rev
@@ -199,7 +198,7 @@ export class Chat {
   }
 
   async ingestLatestEvents() {
-    if (this.status === ChatStatus.Destroyed) return
+    if (this.status === ConvoStatus.Destroyed) return
 
     const response = await this.agent.api.chat.bsky.convo.getLog(
       {
@@ -234,7 +233,7 @@ export class Chat {
            *
            * TODO there may be a better way to handle this
            */
-          if (log.chatId !== this.chatId) continue
+          if (log.convoId !== this.convoId) continue
 
           if (
             ChatBskyConvoDefs.isLogCreateMessage(log) &&
@@ -271,7 +270,7 @@ export class Chat {
   }
 
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
-    if (this.status === ChatStatus.Destroyed) return
+    if (this.status === ConvoStatus.Destroyed) return
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text) return
 
@@ -286,7 +285,7 @@ export class Chat {
     await new Promise(y => setTimeout(y, 500))
     const response = await this.agent.api.chat.bsky.convo.sendMessage(
       {
-        convoId: this.chatId,
+        convoId: this.convoId,
         message,
       },
       {
@@ -304,8 +303,8 @@ export class Chat {
      */
     this.newMessages.set(res.id, {
       ...res,
-      $type: 'temp.dm.defs#messageView',
-      sender: this.chat?.members.find(m => m.did === this.__tempFromUserDid),
+      $type: 'chat.bsky.convo.defs#messageView',
+      sender: this.convo?.members.find(m => m.did === this.__tempFromUserDid),
     })
     this.pendingMessages.delete(tempId)
 
@@ -315,8 +314,8 @@ export class Chat {
   /*
    * Items in reverse order, since FlatList inverts
    */
-  get items(): ChatItem[] {
-    const items: ChatItem[] = []
+  get items(): ConvoItem[] {
+    const items: ConvoItem[] = []
 
     // `newMessages` is in insertion order, unshift to reverse
     this.newMessages.forEach(m => {
@@ -389,39 +388,39 @@ export class Chat {
   }
 
   destroy() {
-    this.status = ChatStatus.Destroyed
+    this.status = ConvoStatus.Destroyed
     this.commit()
   }
 
-  get state(): ChatState {
+  get state(): ConvoState {
     switch (this.status) {
-      case ChatStatus.Initializing: {
+      case ConvoStatus.Initializing: {
         return {
-          status: ChatStatus.Initializing,
+          status: ConvoStatus.Initializing,
         }
       }
-      case ChatStatus.Ready: {
+      case ConvoStatus.Ready: {
         return {
-          status: ChatStatus.Ready,
+          status: ConvoStatus.Ready,
           items: this.items,
-          chat: this.chat!,
+          convo: this.convo!,
           isFetchingHistory: this.isFetchingHistory,
         }
       }
-      case ChatStatus.Error: {
+      case ConvoStatus.Error: {
         return {
-          status: ChatStatus.Error,
+          status: ConvoStatus.Error,
           error: this.error,
         }
       }
-      case ChatStatus.Destroyed: {
+      case ConvoStatus.Destroyed: {
         return {
-          status: ChatStatus.Destroyed,
+          status: ConvoStatus.Destroyed,
         }
       }
       default: {
         return {
-          status: ChatStatus.Uninitialized,
+          status: ConvoStatus.Uninitialized,
         }
       }
     }
