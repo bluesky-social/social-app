@@ -466,41 +466,36 @@ export class Convo {
       }
     })
 
-    try {
-      return items.map((item, i) => {
-        let nextMessage = null
-        const isMessage = isConvoItemMessage(item)
+    return items.map((item, i) => {
+      let nextMessage = null
+      const isMessage = isConvoItemMessage(item)
 
-        if (isMessage) {
+      if (isMessage) {
+        if (
+          isMessage &&
+          (ChatBskyConvoDefs.isMessageView(item.message) ||
+            ChatBskyConvoDefs.isDeletedMessageView(item.message))
+        ) {
+          const next = items[i - 1]
+
           if (
-            isMessage &&
-            (ChatBskyConvoDefs.isMessageView(item.message) ||
-              ChatBskyConvoDefs.isDeletedMessageView(item.message))
+            isConvoItemMessage(next) &&
+            next &&
+            (ChatBskyConvoDefs.isMessageView(next.message) ||
+              ChatBskyConvoDefs.isDeletedMessageView(next.message))
           ) {
-            const next = items[i - 1]
-
-            if (
-              isConvoItemMessage(next) &&
-              next &&
-              (ChatBskyConvoDefs.isMessageView(next.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(next.message))
-            ) {
-              nextMessage = next.message
-            }
-          }
-
-          return {
-            ...item,
-            nextMessage,
+            nextMessage = next.message
           }
         }
 
-        return item
-      })
-    } catch (e) {
-      console.error(e)
-      return items
-    }
+        return {
+          ...item,
+          nextMessage,
+        }
+      }
+
+      return item
+    })
   }
 
   destroy() {
