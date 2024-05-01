@@ -1,3 +1,4 @@
+import {BskyAgent} from '@atproto-labs/api'
 import {
   useInfiniteQuery,
   useMutation,
@@ -277,24 +278,19 @@ export function useListChats() {
   })
 }
 
-export function useChatQuery(chatId: string) {
+export function useConvoQuery(convoId: string) {
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
 
   return useQuery({
-    queryKey: ['chatQuery', chatId],
+    queryKey: ['convoQuery', convoId],
     queryFn: async () => {
-      const chatResponse = await fetch(
-        `${serviceUrl}/xrpc/temp.dm.getChat?chatId=${chatId}`,
-        {
-          headers,
-        },
+      const agent = new BskyAgent({service: serviceUrl})
+      const {data} = await agent.api.chat.bsky.convo.getConvo(
+        {convoId},
+        {headers},
       )
-
-      if (!chatResponse.ok) throw new Error('Failed to fetch chat')
-
-      const json = (await chatResponse.json()) as TempDmChatGetChat.OutputSchema
-      return json.chat
+      return data.convo
     },
   })
 }
