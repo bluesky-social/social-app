@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useSession} from '#/state/session'
 import * as TempDmChatDefs from '#/temp/dm/defs'
 import * as TempDmChatGetChat from '#/temp/dm/getChat'
 import * as TempDmChatGetChatForMembers from '#/temp/dm/getChatForMembers'
@@ -20,10 +20,10 @@ import {useDmServiceUrlStorage} from '../useDmServiceUrlStorage'
  */
 
 const useHeaders = () => {
-  const {getAgent} = useAgent()
+  const {currentAccount} = useSession()
   return {
     get Authorization() {
-      return getAgent().session!.did
+      return currentAccount!.did
     },
   }
 }
@@ -195,6 +195,10 @@ export function useChatLogQuery() {
 
         const json =
           (await response.json()) as TempDmChatGetChatLog.OutputSchema
+
+        if (json.logs.length > 0) {
+          queryClient.invalidateQueries({queryKey: ['chats']})
+        }
 
         for (const log of json.logs) {
           if (TempDmChatDefs.isLogCreateMessage(log)) {

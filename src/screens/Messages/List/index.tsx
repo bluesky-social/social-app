@@ -11,7 +11,7 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -169,12 +169,12 @@ export function MessagesListScreen({navigation}: Props) {
 function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {getAgent} = useAgent()
+  const {currentAccount} = useSession()
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt = null
   if (TempDmChatDefs.isMessageView(chat.lastMessage)) {
-    if (chat.lastMessage.sender?.did === getAgent().session?.did) {
+    if (chat.lastMessage.sender?.did === currentAccount?.did) {
       lastMessage = _(msg`You: ${chat.lastMessage.text}`)
     } else {
       lastMessage = chat.lastMessage.text
@@ -186,7 +186,7 @@ function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
   }
 
   const otherUser = chat.members.find(
-    member => member.did !== getAgent().session?.did,
+    member => member.did !== currentAccount?.did,
   )
 
   if (!otherUser) {
