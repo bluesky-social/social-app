@@ -3,7 +3,7 @@ import {StyleProp, TextStyle, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgent} from '#/state/session'
+import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -17,13 +17,13 @@ export function MessageItem({
   next: TempDmChatDefs.MessageView | TempDmChatDefs.DeletedMessage | null
 }) {
   const t = useTheme()
-  const {getAgent} = useAgent()
+  const {currentAccount} = useSession()
 
-  const isFromSelf = item.sender?.did === getAgent().session?.did
+  const isFromSelf = item.sender?.did === currentAccount?.did
 
   const isNextFromSelf =
     TempDmChatDefs.isMessageView(next) &&
-    next.sender?.did === getAgent().session?.did
+    next.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
     // if the next message is from a different sender, then it's the last in the group

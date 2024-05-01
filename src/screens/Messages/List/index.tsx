@@ -11,8 +11,9 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
+import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {useBreakpoints, useTheme} from '#/alf'
@@ -168,15 +169,24 @@ export function MessagesListScreen({navigation}: Props) {
 function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {getAgent} = useAgent()
+  const {currentAccount} = useSession()
 
   let lastMessage = _(msg`No messages yet`)
+  let lastMessageSentAt: string | null = null
   if (TempDmChatDefs.isMessageView(chat.lastMessage)) {
-    lastMessage = chat.lastMessage.text
+    if (chat.lastMessage.sender?.did === currentAccount?.did) {
+      lastMessage = _(msg`You: ${chat.lastMessage.text}`)
+    } else {
+      lastMessage = chat.lastMessage.text
+    }
+    lastMessageSentAt = chat.lastMessage.sentAt
+  }
+  if (TempDmChatDefs.isDeletedMessage(chat.lastMessage)) {
+    lastMessage = _(msg`Message deleted`)
   }
 
   const otherUser = chat.members.find(
-    member => member.did !== getAgent().session?.did,
+    member => member.did !== currentAccount?.did,
   )
 
   if (!otherUser) {
@@ -200,19 +210,32 @@ function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
             <PreviewableUserAvatar profile={otherUser} size={42} />
           </View>
           <View style={[a.flex_1]}>
-            <Text numberOfLines={1} style={a.leading_snug}>
+            <Text numberOfLines={1} style={[a.text_md, a.leading_normal]}>
               <Text style={[t.atoms.text, chat.unreadCount > 0 && a.font_bold]}>
                 {otherUser.displayName || otherUser.handle}
               </Text>{' '}
-              <Text style={t.atoms.text_contrast_medium}>
-                @{otherUser.handle}
-              </Text>
+              {lastMessageSentAt ? (
+                <TimeElapsed timestamp={lastMessageSentAt}>
+                  {({timeElapsed}) => (
+                    <Text style={t.atoms.text_contrast_medium}>
+                      @{otherUser.handle} &middot; {timeElapsed}
+                    </Text>
+                  )}
+                </TimeElapsed>
+              ) : (
+                <Text style={t.atoms.text_contrast_medium}>
+                  @{otherUser.handle}
+                </Text>
+              )}
             </Text>
             <Text
               numberOfLines={2}
               style={[
                 a.text_sm,
-                chat.unread ? a.font_bold : t.atoms.text_contrast_medium,
+                a.leading_snug,
+                chat.unreadCount > 0
+                  ? a.font_bold
+                  : t.atoms.text_contrast_medium,
               ]}>
               {lastMessage}
             </Text>
@@ -221,8 +244,8 @@ function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
             <View
               style={[
                 a.flex_0,
-                a.ml_2xl,
-                a.mt_xs,
+                a.ml_md,
+                a.mt_sm,
                 {backgroundColor: t.palette.primary_500},
                 a.rounded_full,
                 {height: 7, width: 7},
