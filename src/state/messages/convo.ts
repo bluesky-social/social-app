@@ -405,9 +405,6 @@ export class Convo {
     })
     this.commit()
 
-    // UNCOMMENT TO TEST RETRIES
-    // await new Promise(y => setTimeout(y, 2000))
-
     if (!this.isProcessingPendingMessages) {
       this.processPendingMessages()
     }
@@ -472,28 +469,33 @@ export class Convo {
     try {
       return items.map((item, i) => {
         let nextMessage = null
+        const isMessage = isConvoItemMessage(item)
 
-        if (
-          isConvoItemMessage(item) &&
-          (ChatBskyConvoDefs.isMessageView(item.message) ||
-            ChatBskyConvoDefs.isDeletedMessageView(item.message))
-        ) {
-          const next = items[i - 1]
-
+        if (isMessage) {
           if (
-            isConvoItemMessage(next) &&
-            next &&
-            (ChatBskyConvoDefs.isMessageView(next.message) ||
-              ChatBskyConvoDefs.isDeletedMessageView(next.message))
+            isMessage &&
+            (ChatBskyConvoDefs.isMessageView(item.message) ||
+              ChatBskyConvoDefs.isDeletedMessageView(item.message))
           ) {
-            nextMessage = next.message
+            const next = items[i - 1]
+
+            if (
+              isConvoItemMessage(next) &&
+              next &&
+              (ChatBskyConvoDefs.isMessageView(next.message) ||
+                ChatBskyConvoDefs.isDeletedMessageView(next.message))
+            ) {
+              nextMessage = next.message
+            }
+          }
+
+          return {
+            ...item,
+            nextMessage,
           }
         }
 
-        return {
-          ...item,
-          nextMessage,
-        }
+        return item
       })
     } catch (e) {
       console.error(e)
