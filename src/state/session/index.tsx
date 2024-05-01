@@ -26,7 +26,6 @@ export type {SessionAccount} from '#/state/session/types'
 import {
   SessionAccount,
   SessionApiContext,
-  SessionState,
   SessionStateContext,
 } from '#/state/session/types'
 
@@ -61,45 +60,44 @@ function __getAgent() {
   return __globalAgent
 }
 
+type State = {
+  accounts: SessionStateContext['accounts']
+  currentAccount: SessionStateContext['currentAccount']
+  needsPersist: boolean
+}
+
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const isDirty = React.useRef(false)
-  const [state, setState] = React.useState<SessionState>({
-    isInitialLoad: true,
-    isSwitchingAccounts: false,
+  const [isInitialLoad, setIsInitialLoad] = React.useState(true)
+  const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
+  const [state, setState] = React.useState<State>({
     accounts: persisted.get('session').accounts,
     currentAccount: undefined, // assume logged out to start
+    needsPersist: false,
   })
-
-  const setStateAndPersist = React.useCallback(
-    (fn: (prev: SessionState) => SessionState) => {
-      isDirty.current = true
-      setState(fn)
-    },
-    [setState],
-  )
 
   const upsertAccount = React.useCallback(
     (account: SessionAccount, expired = false) => {
-      setStateAndPersist(s => {
+      setState(s => {
         return {
-          ...s,
-          currentAccount: expired ? undefined : account,
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
+          currentAccount: expired ? undefined : account,
+          needsPersist: true,
         }
       })
     },
-    [setStateAndPersist],
+    [setState],
   )
 
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
     configureModerationForGuest()
-    setStateAndPersist(s => ({
-      ...s,
+    setState(s => ({
+      accounts: s.accounts,
       currentAccount: undefined,
+      needsPersist: true,
     }))
-  }, [setStateAndPersist])
+  }, [setState])
 
   const createPersistSessionHandler = React.useCallback(
     (
@@ -260,19 +258,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async logContext => {
       logger.debug(`session: logout`)
       clearCurrentAccount()
-      setStateAndPersist(s => {
+      setState(s => {
         return {
-          ...s,
           accounts: s.accounts.map(a => ({
             ...a,
             refreshJwt: undefined,
             accessJwt: undefined,
           })),
+          currentAccount: s.currentAccount,
+          needsPersist: true,
         }
       })
       logEvent('account:loggedOut', {logContext})
     },
-    [clearCurrentAccount, setStateAndPersist],
+    [clearCurrentAccount, setState],
   )
 
   const initSession = React.useCallback<SessionApiContext['initSession']>(
@@ -397,10 +396,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
       } finally {
-        setState(s => ({
-          ...s,
-          isInitialLoad: false,
-        }))
+        setIsInitialLoad(false)
       }
     },
     [initSession],
@@ -408,21 +404,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
-      setStateAndPersist(s => {
+      setState(s => {
         return {
-          ...s,
           accounts: s.accounts.filter(a => a.did !== account.did),
+          currentAccount: s.currentAccount,
+          needsPersist: true,
         }
       })
     },
-    [setStateAndPersist],
+    [setState],
   )
 
   const updateCurrentAccount = React.useCallback<
     SessionApiContext['updateCurrentAccount']
   >(
     account => {
-      setStateAndPersist(s => {
+      setState(s => {
         const currentAccount = s.currentAccount
 
         // ignore, should never happen
@@ -443,38 +440,38 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
 
         return {
-          ...s,
-          currentAccount: updatedAccount,
           accounts: [
             updatedAccount,
             ...s.accounts.filter(a => a.did !== currentAccount.did),
           ],
+          currentAccount: updatedAccount,
+          needsPersist: true,
         }
       })
     },
-    [setStateAndPersist],
+    [setState],
   )
 
   const selectAccount = React.useCallback<SessionApiContext['selectAccount']>(
     async (account, logContext) => {
-      setState(s => ({...s, isSwitchingAccounts: true}))
+      setIsSwitchingAccounts(true)
       try {
         await initSession(account)
-        setState(s => ({...s, isSwitchingAccounts: false}))
+        setIsSwitchingAccounts(false)
         logEvent('account:loggedIn', {logContext, withPassword: false})
       } catch (e) {
         // reset this in case of error
-        setState(s => ({...s, isSwitchingAccounts: false}))
+        setIsSwitchingAccounts(false)
         // but other listeners need a throw
         throw e
       }
     },
-    [setState, initSession],
+    [initSession],
   )
 
   React.useEffect(() => {
-    if (isDirty.current) {
-      isDirty.current = false
+    if (state.needsPersist) {
+      state.needsPersist = false
       persisted.write('session', {
         accounts: state.accounts,
         currentAccount: state.currentAccount,
@@ -533,10 +530,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         clearCurrentAccount()
       }
 
-      setState(s => ({
-        ...s,
+      setState(() => ({
         accounts: session.accounts,
         currentAccount: selectedAccount,
+        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }))
     })
   }, [state, setState, clearCurrentAccount, initSession])
@@ -544,9 +541,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const stateContext = React.useMemo(
     () => ({
       ...state,
+      isInitialLoad,
+      isSwitchingAccounts,
       hasSession: !!state.currentAccount,
     }),
-    [state],
+    [state, isInitialLoad, isSwitchingAccounts],
   )
 
   const api = React.useMemo(
