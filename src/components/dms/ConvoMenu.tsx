@@ -40,6 +40,7 @@ let ConvoMenu = ({
 
   const {mutate: muteConvo} = useMuteConvo(chat.service.convoId, {
     onSuccess: data => {
+      // TODO(sam/eric): move mute state to chat service
       chat.service.convo = data.convo
       Toast.show(_(msg`Chat muted`))
     },
@@ -50,6 +51,7 @@ let ConvoMenu = ({
 
   const {mutate: unmuteConvo} = useUnmuteConvo(chat.service.convoId, {
     onSuccess: data => {
+      // TODO(sam/eric): move mute state to chat service
       chat.service.convo = data.convo
       Toast.show(_(msg`Chat unmuted`))
     },
