@@ -172,7 +172,7 @@ function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
   const {currentAccount} = useSession()
 
   let lastMessage = _(msg`No messages yet`)
-  let lastMessageSentAt = null
+  let lastMessageSentAt: string | null = null
   if (TempDmChatDefs.isMessageView(chat.lastMessage)) {
     if (chat.lastMessage.sender?.did === currentAccount?.did) {
       lastMessage = _(msg`You: ${chat.lastMessage.text}`)
