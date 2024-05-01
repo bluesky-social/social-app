@@ -57,8 +57,9 @@ function InnerApp() {
         key={currentAccount?.did}>
         <QueryProvider currentDid={currentAccount?.did}>
           <StatsigProvider>
-            <ModerationOptsProvider>
-              <LabelDefsProvider>
+            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+            <LabelDefsProvider>
+              <ModerationOptsProvider>
                 <LoggedOutViewProvider>
                   <SelectedFeedProvider>
                     <UnreadNotifsProvider>
@@ -74,8 +75,8 @@ function InnerApp() {
                     </UnreadNotifsProvider>
                   </SelectedFeedProvider>
                 </LoggedOutViewProvider>
-              </LabelDefsProvider>
-            </ModerationOptsProvider>
+              </ModerationOptsProvider>
+            </LabelDefsProvider>
           </StatsigProvider>
         </QueryProvider>
       </React.Fragment>

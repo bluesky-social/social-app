@@ -12,6 +12,7 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
 import {useListConvos} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
@@ -22,11 +23,13 @@ import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
+import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {NewChat} from '#/components/dms/NewChat'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
 
@@ -190,6 +193,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
+  const menuControl = useMenuControl()
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
@@ -214,7 +218,10 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   }
 
   return (
-    <Link to={`/messages/${convo.id}`} style={a.flex_1}>
+    <Link
+      to={`/messages/${convo.id}`}
+      style={a.flex_1}
+      onLongPress={isNative ? menuControl.open : undefined}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -267,12 +274,26 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
                 a.flex_0,
                 a.ml_md,
                 a.mt_sm,
-                {backgroundColor: t.palette.primary_500},
                 a.rounded_full,
-                {height: 7, width: 7},
+                {
+                  backgroundColor: convo.muted
+                    ? t.palette.contrast_200
+                    : t.palette.primary_500,
+                  height: 7,
+                  width: 7,
+                },
               ]}
             />
           )}
+          <ConvoMenu
+            convo={convo}
+            profile={otherUser}
+            control={menuControl}
+            // TODO(sam) show on hover on web
+            // tricky because it captures the mouse event
+            hideTrigger
+            currentScreen="list"
+          />
         </View>
       )}
     </Link>

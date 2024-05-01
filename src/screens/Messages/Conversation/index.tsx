@@ -1,6 +1,7 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -14,12 +15,11 @@ import {isWeb} from 'platform/detection'
 import {ChatProvider, useChat} from 'state/messages'
 import {ConvoStatus} from 'state/messages/convo'
 import {useSession} from 'state/session'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {DotGrid_Stroke2_Corner0_Rounded} from '#/components/icons/DotGrid'
+import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
@@ -78,14 +78,22 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
+  const {service} = useChat()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (isWeb) {
       navigation.replace('MessagesList')
     } else {
       navigation.pop()
     }
   }, [navigation])
+
+  const onUpdateConvo = useCallback(
+    (convo: ChatBskyConvoDefs.ConvoView) => {
+      service.convo = convo
+    },
+    [service],
+  )
 
   return (
     <View
@@ -95,22 +103,20 @@ let Header = ({
         a.border_b,
         a.flex_row,
         a.justify_between,
+        a.align_start,
         a.gap_lg,
         a.px_lg,
         a.py_sm,
       ]}>
       {!gtTablet ? (
         <TouchableOpacity
-          testID="viewHeaderDrawerBtn"
+          testID="conversationHeaderBackBtn"
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
-          style={{
-            width: 30,
-            height: 30,
-          }}
+          style={{width: 30, height: 30}}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Back`)}
-          accessibilityHint={_(msg`Access navigation links and settings`)}>
+          accessibilityHint="">
           <FontAwesomeIcon
             size={18}
             icon="angle-left"
@@ -124,24 +130,22 @@ let Header = ({
         <View style={{width: 30}} />
       )}
       <View style={[a.align_center, a.gap_sm]}>
-        <UserAvatar size={32} avatar={profile.avatar} />
+        <PreviewableUserAvatar size={32} profile={profile} />
         <Text style={[a.text_lg, a.font_bold]}>
           <Trans>{profile.displayName}</Trans>
         </Text>
       </View>
-      <View>
-        <Button
-          label={_(msg`Chat settings`)}
-          color="secondary"
-          size="large"
-          variant="ghost"
-          style={[{height: 'auto', width: 'auto'}, a.px_sm, a.py_sm]}
-          onPress={() => {}}>
-          <ButtonIcon icon={DotGrid_Stroke2_Corner0_Rounded} />
-        </Button>
-      </View>
+      {service.convo ? (
+        <ConvoMenu
+          convo={service.convo}
+          profile={profile}
+          onUpdateConvo={onUpdateConvo}
+          currentScreen="conversation"
+        />
+      ) : (
+        <View style={{width: 30}} />
+      )}
     </View>
   )
 }
-
 Header = React.memo(Header)

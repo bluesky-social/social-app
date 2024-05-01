@@ -1,6 +1,13 @@
-import React, {useCallback, useMemo, useRef} from 'react'
-import {FlatList, View, ViewToken} from 'react-native'
+import React, {useCallback, useRef} from 'react'
+import {
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  View,
+} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
@@ -25,19 +32,32 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
+function RetryButton({onPress}: {onPress: () => unknown}) {
+  const {_} = useLingui()
+
+  return (
+    <View style={{alignItems: 'center'}}>
+      <Button
+        label={_(msg`Press to Retry`)}
+        onPress={onPress}
+        variant="ghost"
+        color="negative"
+        size="small">
+        <ButtonText>
+          <Trans>Press to Retry</Trans>
+        </ButtonText>
+      </Button>
+    </View>
+  )
+}
+
 function renderItem({item}: {item: ConvoItem}) {
   if (item.type === 'message' || item.type === 'pending-message') {
     return <MessageItem item={item.message} next={item.nextMessage} />
   } else if (item.type === 'deleted-message') {
     return <Text>Deleted message</Text>
   } else if (item.type === 'pending-retry') {
-    return (
-      <View>
-        <Button label="Retry" onPress={item.retry}>
-          <ButtonText>Retry</ButtonText>
-        </Button>
-      </View>
-    )
+    return <RetryButton onPress={item.retry} />
   }
 
   return null
@@ -56,23 +76,10 @@ export function MessagesList() {
   const flatListRef = useRef<FlatList>(null)
   // We use this to know if we should scroll after a new clop is added to the list
   const isAtBottom = useRef(false)
-
-  const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
-    return [
-      (info: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
-        const firstVisibleIndex = info.viewableItems[0]?.index
-
-        isAtBottom.current = Number(firstVisibleIndex) < 2
-      },
-      {
-        itemVisiblePercentThreshold: 50,
-        minimumViewTime: 10,
-      },
-    ]
-  }, [])
+  const currentOffset = React.useRef(0)
 
   const onContentSizeChange = useCallback(() => {
-    if (isAtBottom.current) {
+    if (currentOffset.current <= 100) {
       flatListRef.current?.scrollToOffset({offset: 0, animated: true})
     }
   }, [])
@@ -98,6 +105,13 @@ export function MessagesList() {
     [chat.service],
   )
 
+  const onScroll = React.useCallback(
+    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+      currentOffset.current = e.nativeEvent.contentOffset.y
+    },
+    [],
+  )
+
   return (
     <KeyboardAvoidingView
       style={{flex: 1, marginBottom: isWeb ? 20 : 85}}
@@ -121,8 +135,9 @@ export function MessagesList() {
         onEndReached={onEndReached}
         onScrollToIndexFailed={onScrollToEndFailed}
         onContentSizeChange={onContentSizeChange}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
+        onScroll={onScroll}
+        // We don't really need to call this much since there are not any animations that rely on this
+        scrollEventThrottle={100}
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,
         }}
