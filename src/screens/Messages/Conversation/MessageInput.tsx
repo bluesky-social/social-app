@@ -81,10 +81,10 @@ export function MessageInput({
         style={[a.flex_1, a.text_md, a.px_sm, t.atoms.text, {maxHeight}]}
         keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
         scrollEnabled={isInputScrollable}
-        onSubmitEditing={onSubmit}
         onFocus={onFocus}
         onBlur={onBlur}
         onContentSizeChange={onInputLayout}
+        blurOnSubmit={false}
         ref={inputRef}
       />
       <Pressable
