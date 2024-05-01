@@ -121,7 +121,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const onBackPress = React.useCallback(() => {
     if (state.activeStep !== SignupStep.INFO) {
       if (state.activeStep === SignupStep.CAPTCHA) {
-        logger.error('Signup Flow Error:', {
+        logger.error('Signup Flow Error', {
           errorMessage:
             'User went back from captcha step. Possibly encountered an error.',
           registrationHandle: state.handle,

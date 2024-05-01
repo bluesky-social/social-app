@@ -246,7 +246,7 @@ export function useSubmitSignup({
         !verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
-        logger.error('Signup Flow Error:', {
+        logger.error('Signup Flow Error', {
           errorMessage: 'Verification captcha code was not set.',
           registrationHandle: state.handle,
         })
@@ -293,7 +293,7 @@ export function useSubmitSignup({
         dispatch({type: 'setError', value: error})
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
 
-        logger.error('Signup Flow Error:', {
+        logger.error('Signup Flow Error', {
           errorMessage: error,
           registrationHandle: state.handle,
         })

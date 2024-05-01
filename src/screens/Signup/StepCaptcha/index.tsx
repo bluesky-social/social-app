@@ -50,10 +50,10 @@ export function StepCaptcha() {
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),
       })
-      logger.error(
-        'Signup Flow Error: An error occurred during the captcha process.',
-        {registrationHandle: state.handle, error},
-      )
+      logger.error('Signup Flow Error', {
+        registrationHandle: state.handle,
+        error,
+      })
     },
     [_, dispatch, state.handle],
   )
