@@ -1,5 +1,5 @@
-import React, {useCallback, useMemo, useRef} from 'react'
-import {FlatList, View, ViewToken} from 'react-native'
+import React, {useCallback, useRef} from 'react'
+import {FlatList, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 
 import {useChat} from '#/state/messages'
@@ -57,20 +57,6 @@ export function MessagesList() {
   // We use this to know if we should scroll after a new clop is added to the list
   const isAtBottom = useRef(false)
 
-  const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
-    return [
-      (info: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
-        const firstVisibleIndex = info.viewableItems[0]?.index
-
-        isAtBottom.current = Number(firstVisibleIndex) < 2
-      },
-      {
-        itemVisiblePercentThreshold: 50,
-        minimumViewTime: 10,
-      },
-    ]
-  }, [])
-
   const onContentSizeChange = useCallback(() => {
     if (isAtBottom.current) {
       flatListRef.current?.scrollToOffset({offset: 0, animated: true})
@@ -121,8 +107,6 @@ export function MessagesList() {
         onEndReached={onEndReached}
         onScrollToIndexFailed={onScrollToEndFailed}
         onContentSizeChange={onContentSizeChange}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={viewabilityConfig}
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,
         }}
