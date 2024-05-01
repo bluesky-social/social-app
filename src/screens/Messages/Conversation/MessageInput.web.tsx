@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
 export function MessageInput({
   onSendMessage,
@@ -84,7 +84,7 @@ export function MessageInput({
           a.justify_center,
           {height: 30, width: 30, backgroundColor: t.palette.primary_500},
         ]}>
-        <Text style={a.text_md}>🐴</Text>
+        <PaperPlane fill={t.palette.white} />
       </Pressable>
     </View>
   )
