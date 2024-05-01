@@ -29,10 +29,14 @@ let ConvoMenu = ({
   convo,
   profile,
   onUpdateConvo,
+  control,
+  hideTrigger,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
+  control?: Menu.MenuControlProps
+  hideTrigger?: boolean
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -74,22 +78,24 @@ let ConvoMenu = ({
 
   return (
     <>
-      <Menu.Root>
-        <Menu.Trigger label={_(msg`Chat settings`)}>
-          {({props, state}) => (
-            <Pressable
-              {...props}
-              style={[
-                a.p_sm,
-                a.rounded_sm,
-                (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-                // make sure pfp is in the middle
-                {marginLeft: -10},
-              ]}>
-              <DotsHorizontal size="lg" style={t.atoms.text} />
-            </Pressable>
-          )}
-        </Menu.Trigger>
+      <Menu.Root control={control}>
+        {!hideTrigger && (
+          <Menu.Trigger label={_(msg`Chat settings`)}>
+            {({props, state}) => (
+              <Pressable
+                {...props}
+                style={[
+                  a.p_sm,
+                  a.rounded_sm,
+                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                  // make sure pfp is in the middle
+                  {marginLeft: -10},
+                ]}>
+                <DotsHorizontal size="lg" style={t.atoms.text} />
+              </Pressable>
+            )}
+          </Menu.Trigger>
+        )}
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item
