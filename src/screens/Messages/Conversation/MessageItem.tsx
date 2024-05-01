@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleProp, TextStyle, View} from 'react-native'
+import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -7,14 +8,16 @@ import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-import * as TempDmChatDefs from '#/temp/dm/defs'
 
 export function MessageItem({
   item,
   next,
 }: {
-  item: TempDmChatDefs.MessageView
-  next: TempDmChatDefs.MessageView | TempDmChatDefs.DeletedMessage | null
+  item: ChatBskyConvoDefs.MessageView
+  next:
+    | ChatBskyConvoDefs.MessageView
+    | ChatBskyConvoDefs.DeletedMessageView
+    | null
 }) {
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -22,7 +25,7 @@ export function MessageItem({
   const isFromSelf = item.sender?.did === currentAccount?.did
 
   const isNextFromSelf =
-    TempDmChatDefs.isMessageView(next) &&
+    ChatBskyConvoDefs.isMessageView(next) &&
     next.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
@@ -32,7 +35,7 @@ export function MessageItem({
     }
 
     // or, if there's a 10 minute gap between this message and the next
-    if (TempDmChatDefs.isMessageView(next)) {
+    if (ChatBskyConvoDefs.isMessageView(next)) {
       const thisDate = new Date(item.sentAt)
       const nextDate = new Date(next.sentAt)
 
@@ -88,7 +91,7 @@ function Metadata({
   isLastInGroup,
   style,
 }: {
-  message: TempDmChatDefs.MessageView
+  message: ChatBskyConvoDefs.MessageView
   isLastInGroup: boolean
   style: StyleProp<TextStyle>
 }) {
