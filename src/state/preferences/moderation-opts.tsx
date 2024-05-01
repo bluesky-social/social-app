@@ -27,7 +27,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const hiddenPosts = useHiddenPosts() // TODO move this into pds-stored prefs
 
   const value = useMemo<ModerationOpts | undefined>(() => {
-    console.log('hit')
     if (override) {
       return override
     }
