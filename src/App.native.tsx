@@ -18,6 +18,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
+import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {readLastActiveAccount} from '#/state/session/util'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {useNotificationsListener} from 'lib/notifications/notifications'
@@ -79,23 +80,25 @@ function InnerApp() {
             <QueryProvider currentDid={currentAccount?.did}>
               <PushNotificationsListener>
                 <StatsigProvider>
-                  <LabelDefsProvider>
-                    <LoggedOutViewProvider>
-                      <SelectedFeedProvider>
-                        <UnreadNotifsProvider>
-                          <ThemeProvider theme={theme}>
-                            {/* All components should be within this provider */}
-                            <RootSiblingParent>
-                              <GestureHandlerRootView style={s.h100pct}>
-                                <TestCtrls />
-                                <Shell />
-                              </GestureHandlerRootView>
-                            </RootSiblingParent>
-                          </ThemeProvider>
-                        </UnreadNotifsProvider>
-                      </SelectedFeedProvider>
-                    </LoggedOutViewProvider>
-                  </LabelDefsProvider>
+                  <ModerationOptsProvider>
+                    <LabelDefsProvider>
+                      <LoggedOutViewProvider>
+                        <SelectedFeedProvider>
+                          <UnreadNotifsProvider>
+                            <ThemeProvider theme={theme}>
+                              {/* All components should be within this provider */}
+                              <RootSiblingParent>
+                                <GestureHandlerRootView style={s.h100pct}>
+                                  <TestCtrls />
+                                  <Shell />
+                                </GestureHandlerRootView>
+                              </RootSiblingParent>
+                            </ThemeProvider>
+                          </UnreadNotifsProvider>
+                        </SelectedFeedProvider>
+                      </LoggedOutViewProvider>
+                    </LabelDefsProvider>
+                  </ModerationOptsProvider>
                 </StatsigProvider>
               </PushNotificationsListener>
             </QueryProvider>
