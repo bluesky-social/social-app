@@ -9,6 +9,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
@@ -17,7 +18,6 @@ import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {useGetChatFromMembers} from '../../screens/Messages/Temp/query/query'
 import {Button} from '../Button'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
@@ -33,9 +33,9 @@ export function NewChat({
   const t = useTheme()
   const {_} = useLingui()
 
-  const {mutate: createChat} = useGetChatFromMembers({
+  const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
-      onNewChat(data.chat.id)
+      onNewChat(data.convo.id)
     },
     onError: error => {
       Toast.show(error.message)

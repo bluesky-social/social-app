@@ -2,6 +2,7 @@
 
 import React, {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -11,24 +12,22 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useListConvos} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {useBreakpoints, useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
+import {NewChat} from '#/components/dms/NewChat'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import * as TempDmChatDefs from '#/temp/dm/defs'
-import {NewChat} from '../../../components/dms/NewChat'
 import {ClipClopGate} from '../gate'
-import {useListChats} from '../Temp/query/query'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'MessagesList'>
 export function MessagesListScreen({navigation}: Props) {
@@ -59,13 +58,13 @@ export function MessagesListScreen({navigation}: Props) {
     fetchNextPage,
     error,
     refetch,
-  } = useListChats()
+  } = useListConvos()
 
   const isError = !!error
 
   const conversations = useMemo(() => {
     if (data?.pages) {
-      return data.pages.flatMap(page => page.chats)
+      return data.pages.flatMap(page => page.convos)
     }
     return []
   }, [data])
@@ -99,9 +98,12 @@ export function MessagesListScreen({navigation}: Props) {
     navigation.navigate('MessagesSettings')
   }, [navigation])
 
-  const renderItem = useCallback(({item}: {item: TempDmChatDefs.ChatView}) => {
-    return <ChatListItem key={item.id} chat={item} />
-  }, [])
+  const renderItem = useCallback(
+    ({item}: {item: ChatBskyConvoDefs.ConvoView}) => {
+      return <ChatListItem key={item.id} convo={item} />
+    },
+    [],
+  )
 
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
@@ -119,7 +121,7 @@ export function MessagesListScreen({navigation}: Props) {
           errorMessage={cleanError(error)}
           onRetry={isError ? refetch : undefined}
         />
-        <NewChat onNewChat={onNewChat} control={newChatControl} />
+        {!isError && <NewChat onNewChat={onNewChat} control={newChatControl} />}
       </>
     )
   }
@@ -166,26 +168,26 @@ export function MessagesListScreen({navigation}: Props) {
   )
 }
 
-function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
+function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
-  if (TempDmChatDefs.isMessageView(chat.lastMessage)) {
-    if (chat.lastMessage.sender?.did === currentAccount?.did) {
-      lastMessage = _(msg`You: ${chat.lastMessage.text}`)
+  if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+    if (convo.lastMessage.sender?.did === currentAccount?.did) {
+      lastMessage = _(msg`You: ${convo.lastMessage.text}`)
     } else {
-      lastMessage = chat.lastMessage.text
+      lastMessage = convo.lastMessage.text
     }
-    lastMessageSentAt = chat.lastMessage.sentAt
+    lastMessageSentAt = convo.lastMessage.sentAt
   }
-  if (TempDmChatDefs.isDeletedMessage(chat.lastMessage)) {
+  if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
     lastMessage = _(msg`Message deleted`)
   }
 
-  const otherUser = chat.members.find(
+  const otherUser = convo.members.find(
     member => member.did !== currentAccount?.did,
   )
 
@@ -194,7 +196,7 @@ function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
   }
 
   return (
-    <Link to={`/messages/${chat.id}`} style={a.flex_1}>
+    <Link to={`/messages/${convo.id}`} style={a.flex_1}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -211,7 +213,8 @@ function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
           </View>
           <View style={[a.flex_1]}>
             <Text numberOfLines={1} style={[a.text_md, a.leading_normal]}>
-              <Text style={[t.atoms.text, chat.unreadCount > 0 && a.font_bold]}>
+              <Text
+                style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
                 {otherUser.displayName || otherUser.handle}
               </Text>{' '}
               {lastMessageSentAt ? (
@@ -233,14 +236,14 @@ function ChatListItem({chat}: {chat: TempDmChatDefs.ChatView}) {
               style={[
                 a.text_sm,
                 a.leading_snug,
-                chat.unreadCount > 0
+                convo.unreadCount > 0
                   ? a.font_bold
                   : t.atoms.text_contrast_medium,
               ]}>
               {lastMessage}
             </Text>
           </View>
-          {chat.unreadCount > 0 && (
+          {convo.unreadCount > 0 && (
             <View
               style={[
                 a.flex_0,

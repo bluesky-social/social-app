@@ -9,13 +9,13 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
-import {useChatQuery} from '#/screens/Messages/Temp/query/query'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {DotGrid_Stroke2_Corner0_Rounded} from '#/components/icons/DotGrid'
@@ -29,11 +29,11 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
-  const chatId = route.params.conversation
+  const convoId = route.params.conversation
   const {currentAccount} = useSession()
   const myDid = currentAccount?.did
 
-  const {data: chat, isError: isError} = useChatQuery(chatId)
+  const {data: chat, isError: isError} = useConvoQuery(convoId)
   const otherProfile = React.useMemo(() => {
     return chat?.members?.find(m => m.did !== myDid)
   }, [chat?.members, myDid])
@@ -51,7 +51,7 @@ export function MessagesConversationScreen({route}: Props) {
   return (
     <CenteredView style={{flex: 1}} sideBorders>
       <Header profile={otherProfile} />
-      <MessagesList chatId={chatId} />
+      <MessagesList convoId={convoId} />
     </CenteredView>
   )
 }
