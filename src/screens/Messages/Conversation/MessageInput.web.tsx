@@ -56,11 +56,12 @@ export function MessageInput({
         style={StyleSheet.flatten([
           a.flex_1,
           a.px_sm,
-          a.py_xs,
+          a.border_0,
+          t.atoms.text,
           {
             backgroundColor: 'transparent',
-            border: 'none',
             resize: 'none',
+            paddingTop: 6,
           },
         ])}
         maxRows={12}
