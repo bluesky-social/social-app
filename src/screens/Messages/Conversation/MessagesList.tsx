@@ -7,6 +7,7 @@ import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
+import {Button, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -31,6 +32,14 @@ function renderItem({item}: {item: ConvoItem}) {
     return <Text>Deleted message</Text>
   } else if (item.type === 'pending-message') {
     return <Text>{item.message.text}</Text>
+  } else if (item.type === 'pending-retry') {
+    return (
+      <View>
+        <Button label="Retry" onPress={item.retry}>
+          <ButtonText>Retry</ButtonText>
+        </Button>
+      </View>
+    )
   }
 
   return null
