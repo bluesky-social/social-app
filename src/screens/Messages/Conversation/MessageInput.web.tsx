@@ -23,7 +23,6 @@ export function MessageInput({
       return
     }
     onSendMessage(message.trimEnd())
-    onSendMessage(message)
     setMessage('')
   }, [message, onSendMessage])
 
