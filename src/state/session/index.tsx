@@ -70,11 +70,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const upsertAccount = React.useCallback(
-    (account: SessionAccount, expired = false) => {
+    (account: SessionAccount) => {
       setState(s => {
         return {
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
-          currentAccountDid: expired ? undefined : account.did,
+          currentAccountDid: account.did,
           needsPersist: true,
         }
       })
@@ -133,12 +133,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         event,
         deactivated: refreshedAccount.deactivated,
       })
-
-      if (expired) {
-        logger.warn(`session: expired`)
-        emitSessionDropped()
-      }
-
       /*
        * If the session expired, or it was successfully created/updated, we want
        * to update/persist the data.
@@ -149,7 +143,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
        * to persist this data and wipe their tokens, effectively logging them
        * out.
        */
-      upsertAccount(refreshedAccount, expired)
+      upsertAccount(refreshedAccount)
+
+      if (expired) {
+        logger.warn(`session: expired`)
+        emitSessionDropped()
+        setState(s => ({
+          accounts: s.accounts,
+          currentAccountDid: undefined,
+          needsPersist: true,
+        }))
+        // TODO: Should this reset the agent too?
+      }
     },
     [clearCurrentAccount, upsertAccount],
   )
