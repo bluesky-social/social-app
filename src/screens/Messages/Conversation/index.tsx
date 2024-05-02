@@ -3,7 +3,7 @@ import {TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -131,9 +131,7 @@ let Header = ({
       )}
       <View style={[a.align_center, a.gap_sm]}>
         <PreviewableUserAvatar size={32} profile={profile} />
-        <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>{profile.displayName}</Trans>
-        </Text>
+        <Text style={[a.text_lg, a.font_bold]}>{profile.displayName}</Text>
       </View>
       {service.convo ? (
         <ConvoMenu
