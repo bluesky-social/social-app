@@ -133,6 +133,7 @@ export const PostComposer = ({
               post={post}
               dispatch={dispatch}
               profile={currentProfile}
+              hasPrevious={index !== 0}
               hasNext={index !== state.posts.length - 1}
               isReplying={state.replyTo !== undefined}
             />
@@ -227,6 +228,7 @@ let Post = ({
   post,
   dispatch,
   profile,
+  hasPrevious,
   hasNext,
   isReplying,
 }: {
@@ -235,6 +237,7 @@ let Post = ({
   post: ComposedPost
   dispatch: React.Dispatch<ComposedAction>
   profile: AppBskyActorDefs.ProfileViewDetailed | undefined
+  hasPrevious: boolean
   hasNext: boolean
   isReplying: boolean
 }): React.ReactNode => {
@@ -304,7 +307,7 @@ let Post = ({
           onPressPublish={onPressPublish}
         />
 
-        {active && hasNext && post.length === 0 && (
+        {active && (hasPrevious || hasNext) && post.length === 0 && (
           <View style={[a.pt_2xs, a.absolute, {top: 2, right: -6}]}>
             <RemovePostBtn onPress={onPostRemove} />
           </View>
