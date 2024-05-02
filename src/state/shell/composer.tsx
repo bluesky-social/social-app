@@ -36,6 +36,7 @@ export interface ComposerOpts {
   onPost?: () => void
   quote?: ComposerOptsQuote
   mention?: string // handle of user to mention
+  /** @deprecated */
   openPicker?: (pos: DOMRect | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number}[]
