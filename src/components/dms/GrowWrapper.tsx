@@ -1,4 +1,4 @@
-import React, {useCallback, useImperativeHandle} from 'react'
+import React, {useCallback} from 'react'
 import {Pressable} from 'react-native'
 import Animated, {
   cancelAnimation,
@@ -8,22 +8,19 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
+import {useHaptics} from 'lib/haptics'
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-export interface GrowWrapperRef {
-  reset: () => void
-}
+export const GrowWrapper = function GrowWrapper({
+  onOpenMenu,
+  children,
+}: {
+  onOpenMenu: () => unknown
+  children: React.ReactNode
+}) {
+  const playHaptic = useHaptics()
 
-export const GrowWrapper = React.forwardRef(function GrowWrapper(
-  {
-    onOpenMenu,
-    children,
-  }: {
-    onOpenMenu: () => unknown
-    children: React.ReactNode
-  },
-  ref,
-) {
   const scale = useSharedValue(1)
   const animationDidComplete = useSharedValue(false)
 
@@ -31,30 +28,20 @@ export const GrowWrapper = React.forwardRef(function GrowWrapper(
     transform: [{scale: scale.value}],
   }))
 
-  const reset = useCallback(() => {
+  const onTouchStart = React.useCallback(() => {
+    scale.value = withTiming(1.05, {duration: 750}, finished => {
+      if (!finished) return
+      animationDidComplete.value = true
+      runOnJS(playHaptic)()
+      runOnJS(onOpenMenu)()
+    })
+  }, [scale, animationDidComplete, playHaptic, onOpenMenu])
+
+  const onTouchEnd = useCallback(() => {
     cancelAnimation(scale)
     animationDidComplete.value = false
     scale.value = withTiming(1, {duration: 200})
   }, [animationDidComplete, scale])
-
-  const onTouchStart = React.useCallback(() => {
-    scale.value = withTiming(1.05, {duration: 750}, finished => {
-      if (!finished) return
-
-      animationDidComplete.value = true
-      runOnJS(onOpenMenu)()
-    })
-  }, [scale, animationDidComplete, onOpenMenu])
-
-  const onTouchEnd = React.useCallback(() => {
-    if (!animationDidComplete.value) {
-      reset()
-    }
-  }, [animationDidComplete, reset])
-
-  useImperativeHandle(ref, () => ({
-    reset,
-  }))
 
   return (
     <AnimatedPressable
@@ -65,4 +52,4 @@ export const GrowWrapper = React.forwardRef(function GrowWrapper(
       {children}
     </AnimatedPressable>
   )
-})
+}

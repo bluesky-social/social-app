@@ -9,18 +9,16 @@ import * as Dialog from '#/components/Dialog'
 export let MessageMenu = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   message,
-  onClose,
   control,
 }: {
   message: ChatBskyConvoDefs.MessageView
-  onClose: () => void
   control: Dialog.DialogControlProps
 }): React.ReactNode => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {_} = useLingui()
 
   return (
-    <Dialog.Outer control={control} onClose={onClose}>
+    <Dialog.Outer control={control}>
       <Dialog.Handle />
 
       <Dialog.ScrollableInner label="Menu TODO">
