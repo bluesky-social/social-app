@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -78,7 +77,7 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const {service} = useChat()
+  const {state} = useChat()
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -88,12 +87,9 @@ let Header = ({
     }
   }, [navigation])
 
-  const onUpdateConvo = useCallback(
-    (convo: ChatBskyConvoDefs.ConvoView) => {
-      service.convo = convo
-    },
-    [service],
-  )
+  const onUpdateConvo = useCallback(() => {
+    // TODO eric update muted state
+  }, [])
 
   return (
     <View
@@ -133,9 +129,9 @@ let Header = ({
         <PreviewableUserAvatar size={32} profile={profile} />
         <Text style={[a.text_lg, a.font_bold]}>{profile.displayName}</Text>
       </View>
-      {service.convo ? (
+      {state.status === ConvoStatus.Ready && state.convo ? (
         <ConvoMenu
-          convo={service.convo}
+          convo={state.convo}
           profile={profile}
           onUpdateConvo={onUpdateConvo}
           currentScreen="conversation"

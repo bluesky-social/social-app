@@ -4,7 +4,6 @@ import {
   ChatBskyConvoDefs,
   ChatBskyConvoSendMessage,
 } from '@atproto-labs/api'
-import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {isNative} from '#/platform/detection'
@@ -69,6 +68,17 @@ export type ConvoState =
       status: ConvoStatus.Destroyed
     }
 
+export type ConvoInterface = {
+  state: ConvoState
+  service: {
+    deleteMessage: (messageId: string) => void
+    sendMessage: (
+      message: ChatBskyConvoSendMessage.InputSchema['message'],
+    ) => void
+    fetchMessageHistory: () => void
+  }
+}
+
 export function isConvoItemMessage(
   item: ConvoItem,
 ): item is ConvoItem & {type: 'message'} {
@@ -116,10 +126,40 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.__tempFromUserDid = params.__tempFromUserDid
+
+    this.subscribe = this.subscribe.bind(this)
+    this.getSnapshot = this.getSnapshot.bind(this)
+  }
+
+  private subscribers: (() => void)[] = []
+
+  subscribe(subscriber: () => void) {
+    console.log('SUBSCRIBE')
+    this.subscribers.push(subscriber)
+    this.initialize()
+    return () => {
+      console.log('UN-SUBSCRIBE')
+      this.subscribers = this.subscribers.filter(s => s !== subscriber)
+    }
+  }
+
+  snapshot: ConvoInterface = {
+    state: {
+      status: ConvoStatus.Uninitialized,
+    },
+    service: {
+      deleteMessage: this.deleteMessage.bind(this),
+      sendMessage: this.sendMessage.bind(this),
+      fetchMessageHistory: this.fetchMessageHistory.bind(this),
+    },
+  }
+
+  getSnapshot(): ConvoInterface {
+    return this.snapshot
   }
 
   async initialize() {
-    if (this.status !== 'uninitialized') return
+    if (this.status !== ConvoStatus.Uninitialized) return
     this.status = ConvoStatus.Initializing
 
     try {
@@ -545,51 +585,50 @@ export class Convo {
     this.commit()
   }
 
-  get state(): ConvoState {
+  private commit() {
     switch (this.status) {
       case ConvoStatus.Initializing: {
-        return {
+        this.snapshot.state = {
           status: ConvoStatus.Initializing,
         }
+        break
       }
       case ConvoStatus.Ready: {
-        return {
+        this.snapshot.state = {
           status: ConvoStatus.Ready,
           items: this.items,
           convo: this.convo!,
           isFetchingHistory: this.isFetchingHistory,
         }
+        break
       }
       case ConvoStatus.Error: {
-        return {
+        this.snapshot.state = {
           status: ConvoStatus.Error,
           error: this.error,
         }
+        break
       }
       case ConvoStatus.Destroyed: {
-        return {
+        this.snapshot.state = {
           status: ConvoStatus.Destroyed,
         }
+        break
       }
       default: {
-        return {
+        this.snapshot.state = {
           status: ConvoStatus.Uninitialized,
         }
+        break
       }
     }
+
+    this.snapshot = Object.assign({}, this.snapshot)
+
+    this.alertSubscribers()
   }
 
-  private _emitter = new EventEmitter()
-
-  private commit() {
-    this._emitter.emit('update')
-  }
-
-  on(event: 'update', cb: () => void) {
-    this._emitter.on(event, cb)
-  }
-
-  off(event: 'update', cb: () => void) {
-    this._emitter.off(event, cb)
+  private alertSubscribers() {
+    this.subscribers.forEach(subscriber => subscriber())
   }
 }

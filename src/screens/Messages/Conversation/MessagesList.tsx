@@ -106,7 +106,7 @@ export function MessagesList() {
         text,
       })
     },
-    [chat.service],
+    [chat],
   )
 
   const onScroll = React.useCallback(

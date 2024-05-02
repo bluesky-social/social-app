@@ -1,14 +1,11 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react'
+import React, {useContext, useState, useSyncExternalStore} from 'react'
 import {BskyAgent} from '@atproto-labs/api'
 
-import {Convo, ConvoParams} from '#/state/messages/convo'
+import {Convo, ConvoInterface, ConvoParams} from '#/state/messages/convo'
 import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 
-const ChatContext = React.createContext<{
-  service: Convo
-  state: Convo['state']
-} | null>(null)
+const ChatContext = React.createContext<ConvoInterface | null>(null)
 
 export function useChat() {
   const ctx = useContext(ChatContext)
@@ -24,7 +21,7 @@ export function ChatProvider({
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
-  const [service] = useState(
+  const [convo] = useState(
     () =>
       new Convo({
         convoId,
@@ -34,21 +31,7 @@ export function ChatProvider({
         __tempFromUserDid: getAgent().session?.did!,
       }),
   )
-  const [state, setState] = useState(service.state)
+  const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
 
-  useEffect(() => {
-    service.initialize()
-  }, [service])
-
-  useEffect(() => {
-    const update = () => setState(service.state)
-    service.on('update', update)
-    return () => {
-      service.destroy()
-    }
-  }, [service])
-
-  const value = useMemo(() => ({service, state}), [service, state])
-
-  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
+  return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }
