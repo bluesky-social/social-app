@@ -1,8 +1,11 @@
 import {BskyAgent} from '@atproto/api'
-import {isBskyAppUrl} from '../strings/url-helpers'
-import {extractBskyMeta} from './bsky'
+import {msg} from '@lingui/macro'
+import {I18nContext} from '@lingui/react'
+
 import {LINK_META_PROXY} from 'lib/constants'
 import {getGiphyMetaUri} from 'lib/strings/embed-player'
+import {isBskyAppUrl} from '../strings/url-helpers'
+import {extractBskyMeta} from './bsky'
 
 export enum LikelyType {
   HTML,
@@ -26,7 +29,8 @@ export interface LinkMeta {
 export async function getLinkMeta(
   agent: BskyAgent,
   url: string,
-  timeout = 15e3,
+  timeout: number,
+  i18n: I18nContext['i18n'],
 ): Promise<LinkMeta> {
   if (isBskyAppUrl(url)) {
     return extractBskyMeta(agent, url)
@@ -58,9 +62,11 @@ export async function getLinkMeta(
     return meta
   }
 
+  const controller = new AbortController()
+  const signal = controller.signal
+
   try {
-    const controller = new AbortController()
-    const to = setTimeout(() => controller.abort(), timeout || 5e3)
+    const to = setTimeout(() => controller.abort('TIMEOUT'), timeout || 5e3)
 
     const response = await fetch(
       `${LINK_META_PROXY(agent.service.toString() || '')}${encodeURIComponent(
@@ -82,9 +88,13 @@ export async function getLinkMeta(
     meta.image = image
     meta.title = title
   } catch (e) {
-    // failed
-    console.error(e)
-    meta.error = e instanceof Error ? e.toString() : 'Failed to fetch link'
+    if (signal.aborted) {
+      meta.error = i18n._(
+        msg`We were unable to fetch a preview for this URL because the request timed out.`,
+      )
+    } else {
+      meta.error = i18n._(msg`We were unable to fetch a preview for this URL.`)
+    }
   }
 
   return meta
