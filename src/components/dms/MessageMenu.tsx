@@ -7,6 +7,7 @@ import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 
 export let MessageMenu = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   message,
   onClose,
   control,
@@ -15,6 +16,7 @@ export let MessageMenu = ({
   onClose: () => void
   control: Dialog.DialogControlProps
 }): React.ReactNode => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {_} = useLingui()
 
   return (
