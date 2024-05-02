@@ -24,32 +24,17 @@ import {
 } from 'view/com/composer/text-input/text-input-util'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
+import type {TextInputProps} from './TextInput'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
-export interface TextInputRef {
-  focus: () => void
-  blur: () => void
-  getCursorPosition: () => DOMRect | undefined
-}
-
-interface TextInputProps {
-  richtext: RichText
-  placeholder: string
-  suggestedLinks: Set<string>
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
-  onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
-  onNewLink: (uri: string) => void
-  onError: (err: string) => void
-}
-
 export const textInputWebEmitter = new EventEmitter()
 
 export const TextInput = React.forwardRef(function TextInputImpl(
   {
+    disabled,
     richtext,
     placeholder,
     setRichText,
@@ -80,6 +65,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       Paragraph,
       Placeholder.configure({
         placeholder,
+        showOnlyWhenEditable: false,
       }),
       TiptapText,
       History,
@@ -89,9 +75,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 
   React.useEffect(() => {
-    textInputWebEmitter.addListener('publish', onPressPublish)
-    return () => {
-      textInputWebEmitter.removeListener('publish', onPressPublish)
+    if (onPressPublish) {
+      textInputWebEmitter.addListener('publish', onPressPublish)
+      return () => {
+        textInputWebEmitter.removeListener('publish', onPressPublish)
+      }
     }
   }, [onPressPublish])
   React.useEffect(() => {
@@ -170,7 +158,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       },
       content: generateJSON(richtext.text.toString(), extensions),
       autofocus: 'end',
-      editable: true,
+      editable: !disabled,
       injectCSS: true,
       onCreate({editor: editorProp}) {
         // HACK
@@ -214,7 +202,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         }
       },
     },
-    [modeClass],
+    [modeClass, disabled],
   )
 
   const onEmojiInserted = React.useCallback(
@@ -244,6 +232,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       <View style={styles.container}>
         <EditorContent
           editor={editor}
+          className="post-composer"
           style={{color: pal.text.color as string}}
         />
       </View>
@@ -304,10 +293,7 @@ function editorJsonToText(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: 'flex-start',
-    padding: 5,
-    marginLeft: 8,
-    marginBottom: 10,
+    alignSelf: 'stretch',
   },
   dropContainer: {
     backgroundColor: '#0007',

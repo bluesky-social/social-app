@@ -1,15 +1,7 @@
-import React, {
-  ComponentProps,
-  forwardRef,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, {forwardRef, useCallback, useMemo, useRef, useState} from 'react'
 import {
   NativeSyntheticEvent,
   StyleSheet,
-  TextInput as RNTextInput,
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
@@ -40,12 +32,15 @@ export interface TextInputRef {
   getCursorPosition: () => DOMRect | undefined
 }
 
-interface TextInputProps extends ComponentProps<typeof RNTextInput> {
+export interface TextInputProps {
+  disabled?: boolean
   richtext: RichText
   placeholder: string
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
+  autoFocus?: boolean
+  setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
+  /** Web-only */
+  onPressPublish?: () => void
   onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
