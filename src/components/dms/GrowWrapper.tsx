@@ -37,11 +37,14 @@ export const GrowWrapper = React.forwardRef(function GrowWrapper(
 
   const reset = useCallback(() => {
     cancelAnimation(scale)
+    animationDidComplete.value = false
     scale.value = withTiming(1, {duration: 200})
-  }, [scale])
+  }, [animationDidComplete, scale])
 
   const onTouchStart = React.useCallback(() => {
-    scale.value = withTiming(1.05, {duration: 750}, () => {
+    scale.value = withTiming(1.05, {duration: 750}, finished => {
+      if (!finished) return
+
       animationDidComplete.value = true
       runOnJS(onOpenMenu)()
     })
