@@ -48,7 +48,7 @@ import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
 import {router} from './routes'
 import {MessagesConversationScreen} from './screens/Messages/Conversation'
-import {MessagesListScreen} from './screens/Messages/List'
+import {MessagesScreen} from './screens/Messages/List'
 import {MessagesSettingsScreen} from './screens/Messages/Settings'
 import {useModalControls} from './state/modals'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
@@ -462,8 +462,8 @@ function MessagesTabNavigator() {
         contentStyle: pal.view,
       }}>
       <MessagesTab.Screen
-        name="MessagesList"
-        getComponent={() => MessagesListScreen}
+        name="Messages"
+        getComponent={() => MessagesScreen}
         options={{requireAuth: true}}
       />
       {commonScreens(MessagesTab as typeof HomeTab)}
@@ -512,8 +512,8 @@ const FlatNavigator = () => {
         options={{title: title(msg`Notifications`), requireAuth: true}}
       />
       <Flat.Screen
-        name="MessagesList"
-        getComponent={() => MessagesListScreen}
+        name="Messages"
+        getComponent={() => MessagesScreen}
         options={{title: title(msg`Messages`), requireAuth: true}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
@@ -570,7 +570,7 @@ const LINKING = {
         return buildStateObject('HomeTab', 'Home', params)
       }
       if (name === 'Messages') {
-        return buildStateObject('MessagesTab', 'MessagesList', params)
+        return buildStateObject('MessagesTab', 'Messages', params)
       }
       // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
       return buildStateObject('HomeTab', name, params, [

@@ -33,8 +33,8 @@ import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
 
-type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'MessagesList'>
-export function MessagesListScreen({navigation}: Props) {
+type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
+export function MessagesScreen({navigation}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
