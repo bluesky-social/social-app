@@ -106,6 +106,7 @@ export class Convo {
     string,
     {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
+  private deletedMessages: Set<string> = new Set()
   private footerItems: Map<string, ConvoItem> = new Map()
 
   private pendingEventIngestion: Promise<void> | undefined
@@ -474,36 +475,69 @@ export class Convo {
       }
     })
 
-    return items.map((item, i) => {
-      let nextMessage = null
-      const isMessage = isConvoItemMessage(item)
+    return items
+      .filter(item => {
+        if (isConvoItemMessage(item)) {
+          return !this.deletedMessages.has(item.message.id)
+        }
+        return true
+      })
+      .map((item, i) => {
+        let nextMessage = null
+        const isMessage = isConvoItemMessage(item)
 
-      if (isMessage) {
-        if (
-          isMessage &&
-          (ChatBskyConvoDefs.isMessageView(item.message) ||
-            ChatBskyConvoDefs.isDeletedMessageView(item.message))
-        ) {
-          const next = items[i - 1]
-
+        if (isMessage) {
           if (
-            isConvoItemMessage(next) &&
-            next &&
-            (ChatBskyConvoDefs.isMessageView(next.message) ||
-              ChatBskyConvoDefs.isDeletedMessageView(next.message))
+            isMessage &&
+            (ChatBskyConvoDefs.isMessageView(item.message) ||
+              ChatBskyConvoDefs.isDeletedMessageView(item.message))
           ) {
-            nextMessage = next.message
+            const next = items[i - 1]
+
+            if (
+              isConvoItemMessage(next) &&
+              next &&
+              (ChatBskyConvoDefs.isMessageView(next.message) ||
+                ChatBskyConvoDefs.isDeletedMessageView(next.message))
+            ) {
+              nextMessage = next.message
+            }
+          }
+
+          return {
+            ...item,
+            nextMessage,
           }
         }
 
-        return {
-          ...item,
-          nextMessage,
-        }
-      }
+        return item
+      })
+  }
 
-      return item
-    })
+  async deleteMessage(messageId: string) {
+    this.deletedMessages.add(messageId)
+    this.commit()
+
+    await this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+      {
+        convoId: this.convoId,
+        messageId,
+      },
+      {
+        encoding: 'application/json',
+        headers: {
+          Authorization: this.__tempFromUserDid,
+        },
+      },
+    )
+
+    // remove from optimistic
+    this.deletedMessages.delete(messageId)
+    // remove from either new or past messages
+    this.pastMessages.delete(messageId)
+    this.newMessages.delete(messageId)
+    // commit
+    this.commit()
   }
 
   destroy() {
