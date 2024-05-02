@@ -262,6 +262,7 @@ let Post = ({
                 : _(msg`What's up?`)
               : _(msg`Write another post`)
           }
+          grow={index === 0 && !hasNext}
           setRichText={onRichTextChange}
           onNewLink={onNewLink}
           onError={onError}
