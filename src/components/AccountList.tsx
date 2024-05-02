@@ -61,8 +61,7 @@ export function AccountList({
               a.flex_row,
               a.align_center,
               {height: 48},
-              (hovered || pressed || isSwitchingAccounts) &&
-                t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
             <Text
               style={[

@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   Linking,
   Platform,
   Pressable,
@@ -382,26 +381,20 @@ export function SettingsScreen({}: Props) {
             <View style={styles.spacer20} />
 
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
+
+            <View style={[s.flexRow, styles.heading]}>
+              <Text type="xl-bold" style={pal.text}>
+                <Trans>Signed in as</Trans>
+              </Text>
+              <View style={s.flex1} />
+            </View>
+            <SettingsAccountCard
+              account={currentAccount}
+              onPressSwitchAccount={onPressSwitchAccount}
+              isSwitchingAccounts={isSwitchingAccounts}
+            />
           </>
         ) : null}
-        <View style={[s.flexRow, styles.heading]}>
-          <Text type="xl-bold" style={pal.text}>
-            <Trans>Signed in as</Trans>
-          </Text>
-          <View style={s.flex1} />
-        </View>
-
-        {isSwitchingAccounts ? (
-          <View style={[pal.view, styles.linkCard]}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <SettingsAccountCard
-            account={currentAccount!}
-            onPressSwitchAccount={onPressSwitchAccount}
-            isSwitchingAccounts={isSwitchingAccounts}
-          />
-        )}
 
         {accounts
           .filter(a => a.did !== currentAccount?.did)
@@ -416,11 +409,7 @@ export function SettingsScreen({}: Props) {
 
         <TouchableOpacity
           testID="switchToNewAccountBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
+          style={[styles.linkCard, pal.view]}
           onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Add account`)}
