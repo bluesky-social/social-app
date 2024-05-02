@@ -1,10 +1,18 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
-import {cacheDirectory, copyAsync, deleteAsync} from 'expo-file-system'
+import {
+  cacheDirectory,
+  copyAsync,
+  deleteAsync,
+  EncodingType,
+  makeDirectoryAsync,
+  writeAsStringAsync,
+} from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
+import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
 import {isAndroid, isIOS} from 'platform/detection'
@@ -239,4 +247,31 @@ function normalizePath(str: string, allPlatforms = false): string {
     }
   }
   return str
+}
+
+export async function saveBytesToDisk(
+  filename: string,
+  bytes: Uint8Array,
+  type: string,
+) {
+  // Should never happen on native (here for type safety)
+  if (!cacheDirectory) throw new Error('No cache directory ')
+
+  const encoded = Buffer.from(bytes).toString('base64')
+
+  const directoryUri = joinPath(cacheDirectory, String(uuid.v4()))
+  await makeDirectoryAsync(directoryUri, {intermediates: true})
+
+  const fileUri = joinPath(directoryUri, filename)
+  await writeAsStringAsync(fileUri, encoded, {encoding: EncodingType.Base64})
+
+  try {
+    if (isIOS) {
+      await RNShare.share({url: fileUri})
+    } else {
+      await Sharing.shareAsync(fileUri, {mimeType: type})
+    }
+  } finally {
+    await deleteAsync(directoryUri, {idempotent: true})
+  }
 }
