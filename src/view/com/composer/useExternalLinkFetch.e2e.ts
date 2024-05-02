@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import {useLingui} from '@lingui/react'
 
 import {useAgent} from '#/state/session'
 import * as apilib from 'lib/api/index'
@@ -8,6 +9,7 @@ import {ComposerOpts} from 'state/shell/composer'
 export function useExternalLinkFetch({}: {
   setQuote: (opts: ComposerOpts['quote']) => void
 }) {
+  const {i18n} = useLingui()
   const {getAgent} = useAgent()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
@@ -22,7 +24,7 @@ export function useExternalLinkFetch({}: {
       return cleanup
     }
     if (!extLink.meta) {
-      getLinkMeta(getAgent(), extLink.uri).then(meta => {
+      getLinkMeta(getAgent(), extLink.uri, 5e3, i18n).then(meta => {
         if (aborted) {
           return
         }
@@ -41,7 +43,7 @@ export function useExternalLinkFetch({}: {
       })
     }
     return cleanup
-  }, [extLink, getAgent])
+  }, [extLink, getAgent, i18n])
 
   return {extLink, setExtLink}
 }
