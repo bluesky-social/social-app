@@ -3,13 +3,14 @@ import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useSession} from 'state/session'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 
 export let MessageMenu = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   message,
   control,
 }: {
@@ -17,10 +18,17 @@ export let MessageMenu = ({
   control: Menu.MenuControlProps
 }): React.ReactNode => {
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const deleteControl = usePromptControl()
+
+  const isFromSelf = message.sender?.did === currentAccount?.did
 
   const onDelete = React.useCallback(() => {
     // TODO delete the message
+  }, [])
+
+  const onReport = React.useCallback(() => {
+    // TODO report the message
   }, [])
 
   return (
@@ -29,12 +37,21 @@ export let MessageMenu = ({
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item
-              testID="postDropdownDeleteBtn"
+              testID="messageDropdownDeleteBtn"
               label={_(msg`Delete message`)}
               onPress={deleteControl.open}>
-              <Menu.ItemText>{_(msg`Delete message`)}</Menu.ItemText>
+              <Menu.ItemText>{_(msg`Delete`)}</Menu.ItemText>
               <Menu.ItemIcon icon={Trash} position="right" />
             </Menu.Item>
+            {!isFromSelf && (
+              <Menu.Item
+                testID="messageDropdownReportBtn"
+                label={_(msg`Report message`)}
+                onPress={onReport}>
+                <Menu.ItemText>{_(msg`Report`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={Warning} position="right" />
+              </Menu.Item>
+            )}
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
