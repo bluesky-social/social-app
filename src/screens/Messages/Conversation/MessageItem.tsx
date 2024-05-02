@@ -153,7 +153,7 @@ function Metadata({
           style={[
             t.atoms.text_contrast_medium,
             a.text_xs,
-            a.mt_xs,
+            a.mt_2xs,
             a.mb_lg,
             style,
           ]}>
