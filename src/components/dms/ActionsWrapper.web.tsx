@@ -47,6 +47,7 @@ export function ActionsWrapper({
         <View
           style={[
             a.mr_md,
+            a.justify_center,
             {
               marginLeft: 'auto',
             },

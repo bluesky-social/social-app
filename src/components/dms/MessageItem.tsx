@@ -48,37 +48,39 @@ export function MessageItem({
   }, [item, next, isFromSelf, isNextFromSelf])
 
   return (
-    <ActionsWrapper isFromSelf={isFromSelf} message={item}>
-      <View
-        style={[
-          a.py_sm,
-          a.px_lg,
-          a.my_2xs,
-          a.rounded_md,
-          {
-            backgroundColor: isFromSelf
-              ? t.palette.primary_500
-              : t.palette.contrast_50,
-            borderRadius: 17,
-          },
-          isFromSelf
-            ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-            : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
-        ]}>
-        <Text
+    <View>
+      <ActionsWrapper isFromSelf={isFromSelf} message={item}>
+        <View
           style={[
-            a.text_md,
-            a.leading_snug,
-            isFromSelf && {color: t.palette.white},
+            a.py_sm,
+            a.px_lg,
+            a.my_2xs,
+            a.rounded_md,
+            {
+              backgroundColor: isFromSelf
+                ? t.palette.primary_500
+                : t.palette.contrast_50,
+              borderRadius: 17,
+            },
+            isFromSelf
+              ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+              : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
           ]}>
-          {item.text}
-        </Text>
-      </View>
+          <Text
+            style={[
+              a.text_md,
+              a.leading_snug,
+              isFromSelf && {color: t.palette.white},
+            ]}>
+            {item.text}
+          </Text>
+        </View>
+      </ActionsWrapper>
       <MessageItemMetadata
         message={item}
         isLastInGroup={isLastInGroup}
         style={isFromSelf ? a.text_right : a.text_left}
       />
-    </ActionsWrapper>
+    </View>
   )
 }
