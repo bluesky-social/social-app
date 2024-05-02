@@ -65,45 +65,46 @@ export function MessageItem({
   }, [control, playHaptic])
 
   return (
-    <GrowWrapper onOpenMenu={onOpenMenu} ref={itemRef}>
-      <View
-        style={[
-          a.py_sm,
-          a.px_lg,
-          a.my_2xs,
-          a.rounded_md,
-          isFromSelf ? a.self_end : a.self_start,
-          {
-            maxWidth: '65%',
-            backgroundColor: isFromSelf
-              ? t.palette.primary_500
-              : t.palette.contrast_50,
-            borderRadius: 17,
-          },
-          isFromSelf
-            ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-            : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
-        ]}>
-        <Text
+    <View
+      style={{maxWidth: '65%', marginLeft: isFromSelf ? 'auto' : undefined}}>
+      <GrowWrapper onOpenMenu={onOpenMenu} ref={itemRef}>
+        <View
           style={[
-            a.text_md,
-            a.leading_snug,
-            isFromSelf && {color: t.palette.white},
+            a.py_sm,
+            a.px_lg,
+            a.my_2xs,
+            a.rounded_md,
+            {
+              backgroundColor: isFromSelf
+                ? t.palette.primary_500
+                : t.palette.contrast_50,
+              borderRadius: 17,
+            },
+            isFromSelf
+              ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+              : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
           ]}>
-          {item.text}
-        </Text>
-      </View>
-      <Metadata
-        message={item}
-        isLastInGroup={isLastInGroup}
-        style={isFromSelf ? a.text_right : a.text_left}
-      />
-      <MessageMenu
-        message={item}
-        onClose={() => itemRef.current?.reset()}
-        control={control}
-      />
-    </GrowWrapper>
+          <Text
+            style={[
+              a.text_md,
+              a.leading_snug,
+              isFromSelf && {color: t.palette.white},
+            ]}>
+            {item.text}
+          </Text>
+        </View>
+        <Metadata
+          message={item}
+          isLastInGroup={isLastInGroup}
+          style={isFromSelf ? a.text_right : a.text_left}
+        />
+        <MessageMenu
+          message={item}
+          onClose={() => itemRef.current?.reset()}
+          control={control}
+        />
+      </GrowWrapper>
+    </View>
   )
 }
 
