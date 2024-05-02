@@ -157,7 +157,12 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions),
+      content: generateJSON(
+        richtext.text
+          .toString()
+          .replace(/^[^\n]*$/gm, line => `<p>${escapeHTML(line)}</p>`),
+        extensions,
+      ),
       autofocus: 'end',
       editable: !disabled,
       injectCSS: true,
@@ -203,7 +208,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         }
       },
     },
-    [modeClass],
+    [modeClass, disabled, extensions],
   )
 
   const onEmojiInserted = React.useCallback(
@@ -223,7 +228,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     if (editor) {
       // `editable` doesn't control whether it can be tabbed-into or not
       editor.view.dom.tabIndex = !disabled ? 0 : -1
-      editor.setEditable(!disabled)
     }
   }, [editor, disabled])
 
@@ -362,4 +366,10 @@ function getImageFromUri(
       }
     }
   }
+}
+
+// generateJSON expects HTML content
+const escapeHTML = (str: string) => {
+  // We're only escaping text content, so we only need to deal with these 2
+  return str.replace(/[&<]/g, c => `&#${c.charCodeAt(0)};`)
 }
