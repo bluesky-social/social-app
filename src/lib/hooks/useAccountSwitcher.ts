@@ -24,7 +24,10 @@ export function useAccountSwitcher() {
       logContext: LogEvents['account:loggedIn']['logContext'],
     ) => {
       track('Settings:SwitchAccountButtonClicked')
-
+      if (isSwitchingAccounts) {
+        // The session API isn't resilient to race conditions so let's just ignore this.
+        return
+      }
       try {
         setIsSwitchingAccounts(true)
         if (account.accessJwt) {
@@ -60,7 +63,14 @@ export function useAccountSwitcher() {
         setIsSwitchingAccounts(false)
       }
     },
-    [_, track, clearCurrentAccount, initSession, requestSwitchToAccount],
+    [
+      _,
+      track,
+      clearCurrentAccount,
+      initSession,
+      requestSwitchToAccount,
+      isSwitchingAccounts,
+    ],
   )
 
   return {onPressSwitchAccount, isSwitchingAccounts}

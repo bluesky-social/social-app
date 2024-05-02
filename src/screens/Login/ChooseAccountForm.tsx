@@ -35,6 +35,10 @@ export const ChooseAccountForm = ({
 
   const onSelect = React.useCallback(
     async (account: SessionAccount) => {
+      if (isSwitchingAccounts) {
+        // The session API isn't resilient to race conditions so let's just ignore this.
+        return
+      }
       if (account.accessJwt) {
         if (account.did === currentAccount?.did) {
           setShowLoggedOut(false)
@@ -64,7 +68,15 @@ export const ChooseAccountForm = ({
         onSelectAccount(account)
       }
     },
-    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut, _],
+    [
+      currentAccount,
+      track,
+      initSession,
+      isSwitchingAccounts,
+      onSelectAccount,
+      setShowLoggedOut,
+      _,
+    ],
   )
 
   return (
