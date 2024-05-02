@@ -273,6 +273,7 @@ let Post = ({
 
       {!active && (
         <Pressable
+          accessibilityLabel={_(msg`Post #${index + 1}`)}
           onPress={onFocus}
           style={[a.absolute, a.inset_0, a.mx_lg]}></Pressable>
       )}
