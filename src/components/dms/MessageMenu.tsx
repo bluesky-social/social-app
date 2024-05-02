@@ -43,7 +43,7 @@ export let MessageMenu = ({
         control={deleteControl}
         title={_(msg`Delete message`)}
         description={_(
-          msg`Are you sure you want to delete this message?? The message will be deleted for you, but not for other participants.`,
+          msg`Are you sure you want to delete this message? The message will be deleted for you, but not for other participants.`,
         )}
         confirmButtonCta={_(msg`Delete`)}
         confirmButtonColor="negative"
