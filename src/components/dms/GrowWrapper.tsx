@@ -28,27 +28,32 @@ export const GrowWrapper = function GrowWrapper({
     transform: [{scale: scale.value}],
   }))
 
-  const onTouchStart = React.useCallback(() => {
+  const shrink = useCallback(() => {
+    'worklet'
+    cancelAnimation(scale)
+    scale.value = withTiming(1, {duration: 200}, () => {
+      animationDidComplete.value = false
+    })
+  }, [animationDidComplete, scale])
+
+  const grow = React.useCallback(() => {
+    'worklet'
     scale.value = withTiming(1.05, {duration: 750}, finished => {
       if (!finished) return
       animationDidComplete.value = true
       runOnJS(playHaptic)()
       runOnJS(onOpenMenu)()
-    })
-  }, [scale, animationDidComplete, playHaptic, onOpenMenu])
 
-  const onTouchEnd = useCallback(() => {
-    cancelAnimation(scale)
-    animationDidComplete.value = false
-    scale.value = withTiming(1, {duration: 200})
-  }, [animationDidComplete, scale])
+      shrink()
+    })
+  }, [scale, animationDidComplete, playHaptic, onOpenMenu, shrink])
 
   return (
     <AnimatedPressable
       style={animatedStyle}
       unstable_pressDelay={300}
-      onPressIn={onTouchStart}
-      onTouchEnd={onTouchEnd}>
+      onPressIn={grow}
+      onTouchEnd={shrink}>
       {children}
     </AnimatedPressable>
   )
