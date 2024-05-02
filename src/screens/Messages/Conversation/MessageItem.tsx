@@ -1,17 +1,13 @@
 import React, {useMemo} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
 import {GrowWrapper} from '#/components/dms/GrowWrapper'
+import {MessageItemMetadata} from '#/components/dms/MesageItemMetadata'
 import {MessageMenu} from '#/components/dms/MessageMenu'
-import * as Prompt from '#/components/Prompt'
-import {usePromptControl} from '#/components/Prompt'
+import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
 export function MessageItem({
@@ -25,10 +21,9 @@ export function MessageItem({
     | null
 }) {
   const t = useTheme()
-  const {_} = useLingui()
   const {currentAccount} = useSession()
 
-  const control = useDialogControl()
+  const menuControl = useMenuControl()
 
   const isFromSelf = item.sender?.did === currentAccount?.did
 
@@ -57,8 +52,8 @@ export function MessageItem({
   }, [item, next, isFromSelf, isNextFromSelf])
 
   const onOpenMenu = React.useCallback(() => {
-    control.open()
-  }, [control])
+    menuControl.open()
+  }, [menuControl])
 
   return (
     <View
@@ -94,17 +89,7 @@ export function MessageItem({
           isLastInGroup={isLastInGroup}
           style={isFromSelf ? a.text_right : a.text_left}
         />
-        <MessageMenu message={item} control={control} />
-        <Prompt.Basic
-          control={deleteControl}
-          title={_(msg`Delete message`)}
-          description={_(
-            msg`Are you sure you want to delete this message?? The message will be deleted for you, but not for other participants.`,
-          )}
-          confirmButtonCta={_(msg`Leave`)}
-          confirmButtonColor="negative"
-          onConfirm={onDelete}
-        />
+        <MessageMenu message={item} control={menuControl} />
       </GrowWrapper>
     </View>
   )
