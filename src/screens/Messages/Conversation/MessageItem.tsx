@@ -1,5 +1,5 @@
-import React, {useCallback, useMemo} from 'react'
-import {StyleProp, TextStyle, View} from 'react-native'
+import React, {useMemo} from 'react'
+import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,11 +7,13 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {useHaptics} from 'lib/haptics'
 import {isNative} from 'platform/detection'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {GrowWrapper, GrowWrapperRef} from '#/components/dms/GrowWrapper'
+import {MessageItemMetadata} from '#/components/dms/MesageItemMetadata'
 import {MessageMenu} from '#/components/dms/MessageMenu'
+import * as Prompt from '#/components/Prompt'
+import {usePromptControl} from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 
 export function MessageItem({
@@ -25,10 +27,12 @@ export function MessageItem({
     | null
 }) {
   const t = useTheme()
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const playHaptic = useHaptics()
 
-  const control = useDialogControl()
+  const menuControl = useDialogControl()
+  const deleteControl = usePromptControl()
   const itemRef = React.useRef<GrowWrapperRef>(null)
 
   const isFromSelf = item.sender?.did === currentAccount?.did
@@ -61,8 +65,17 @@ export function MessageItem({
     if (isNative) {
       playHaptic()
     }
-    control.open()
-  }, [control, playHaptic])
+    menuControl.open()
+  }, [menuControl, playHaptic])
+
+  const onDialogClose = React.useCallback(() => {
+    itemRef.current?.reset()
+  }, [])
+
+  const onDelete = React.useCallback(() => {
+    itemRef.current?.reset()
+    // TODO delete the message
+  }, [])
 
   return (
     <View
@@ -93,95 +106,27 @@ export function MessageItem({
             {item.text}
           </Text>
         </View>
-        <Metadata
+        <MessageItemMetadata
           message={item}
           isLastInGroup={isLastInGroup}
           style={isFromSelf ? a.text_right : a.text_left}
         />
         <MessageMenu
           message={item}
-          onClose={() => itemRef.current?.reset()}
-          control={control}
+          onClose={onDialogClose}
+          control={menuControl}
+        />
+        <Prompt.Basic
+          control={deleteControl}
+          title={_(msg`Delete message`)}
+          description={_(
+            msg`Are you sure you want to delete this message?? The message will be deleted for you, but not for other participants.`,
+          )}
+          confirmButtonCta={_(msg`Leave`)}
+          confirmButtonColor="negative"
+          onConfirm={onDelete}
         />
       </GrowWrapper>
     </View>
-  )
-}
-
-function Metadata({
-  message,
-  isLastInGroup,
-  style,
-}: {
-  message: ChatBskyConvoDefs.MessageView
-  isLastInGroup: boolean
-  style: StyleProp<TextStyle>
-}) {
-  const t = useTheme()
-  const {_} = useLingui()
-
-  const relativeTimestamp = useCallback(
-    (timestamp: string) => {
-      const date = new Date(timestamp)
-      const now = new Date()
-
-      const time = new Intl.DateTimeFormat(undefined, {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-      }).format(date)
-
-      const diff = now.getTime() - date.getTime()
-
-      // if under 1 minute
-      if (diff < 1000 * 60) {
-        return _(msg`Now`)
-      }
-
-      // if in the last day
-      if (now.toISOString().slice(0, 10) === date.toISOString().slice(0, 10)) {
-        return time
-      }
-
-      // if yesterday
-      const yesterday = new Date(now)
-      yesterday.setDate(yesterday.getDate() - 1)
-      if (
-        yesterday.toISOString().slice(0, 10) === date.toISOString().slice(0, 10)
-      ) {
-        return _(msg`Yesterday, ${time}`)
-      }
-
-      return new Intl.DateTimeFormat(undefined, {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-      }).format(date)
-    },
-    [_],
-  )
-
-  if (!isLastInGroup) {
-    return null
-  }
-
-  return (
-    <TimeElapsed timestamp={message.sentAt} timeToString={relativeTimestamp}>
-      {({timeElapsed}) => (
-        <Text
-          style={[
-            t.atoms.text_contrast_medium,
-            a.text_xs,
-            a.mt_xs,
-            a.mb_lg,
-            style,
-          ]}>
-          {timeElapsed}
-        </Text>
-      )}
-    </TimeElapsed>
   )
 }
