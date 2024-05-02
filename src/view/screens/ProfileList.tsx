@@ -454,33 +454,29 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       })
     }
-    if (isCurateList) {
+    if (isCurateList && (isBlocking || isMuting)) {
       items.push({label: 'separator'})
 
-      if (!isBlocking) {
+      if (isMuting) {
         items.push({
           testID: 'listHeaderDropdownMuteBtn',
-          label: isMuting ? _(msg`Un-mute list`) : _(msg`Mute list`),
-          onPress: isMuting
-            ? onUnsubscribeMute
-            : subscribeMutePromptControl.open,
+          label: _(msg`Un-mute list`),
+          onPress: onUnsubscribeMute,
           icon: {
             ios: {
-              name: isMuting ? 'eye' : 'eye.slash',
+              name: 'eye',
             },
             android: '',
-            web: isMuting ? 'eye' : ['far', 'eye-slash'],
+            web: 'eye',
           },
         })
       }
 
-      if (!isMuting) {
+      if (isBlocking) {
         items.push({
           testID: 'listHeaderDropdownBlockBtn',
-          label: isBlocking ? _(msg`Un-block list`) : _(msg`Block list`),
-          onPress: isBlocking
-            ? onUnsubscribeBlock
-            : subscribeBlockPromptControl.open,
+          label: _(msg`Un-block list`),
+          onPress: onUnsubscribeBlock,
           icon: {
             ios: {
               name: 'person.fill.xmark',
@@ -508,9 +504,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     isBlocking,
     isMuting,
     onUnsubscribeMute,
-    subscribeMutePromptControl.open,
     onUnsubscribeBlock,
-    subscribeBlockPromptControl.open,
   ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
