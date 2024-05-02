@@ -57,7 +57,12 @@ export function MessageItem({
 
   return (
     <View
-      style={{maxWidth: '65%', marginLeft: isFromSelf ? 'auto' : undefined}}>
+      style={[
+        {
+          maxWidth: '65%',
+        },
+        isFromSelf ? a.self_end : a.self_start,
+      ]}>
       <GrowWrapper onOpenMenu={onOpenMenu}>
         <View
           style={[
