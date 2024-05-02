@@ -5,12 +5,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
-import {useHaptics} from 'lib/haptics'
-import {isNative} from 'platform/detection'
+import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
-import {GrowWrapper, GrowWrapperRef} from '#/components/dms/GrowWrapper'
-import {MessageItemMetadata} from '#/components/dms/MesageItemMetadata'
+import {GrowWrapper} from '#/components/dms/GrowWrapper'
 import {MessageMenu} from '#/components/dms/MessageMenu'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
@@ -29,11 +27,8 @@ export function MessageItem({
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const playHaptic = useHaptics()
 
-  const menuControl = useDialogControl()
-  const deleteControl = usePromptControl()
-  const itemRef = React.useRef<GrowWrapperRef>(null)
+  const control = useDialogControl()
 
   const isFromSelf = item.sender?.did === currentAccount?.did
 
@@ -62,25 +57,13 @@ export function MessageItem({
   }, [item, next, isFromSelf, isNextFromSelf])
 
   const onOpenMenu = React.useCallback(() => {
-    if (isNative) {
-      playHaptic()
-    }
-    menuControl.open()
-  }, [menuControl, playHaptic])
-
-  const onDialogClose = React.useCallback(() => {
-    itemRef.current?.reset()
-  }, [])
-
-  const onDelete = React.useCallback(() => {
-    itemRef.current?.reset()
-    // TODO delete the message
-  }, [])
+    control.open()
+  }, [control])
 
   return (
     <View
       style={{maxWidth: '65%', marginLeft: isFromSelf ? 'auto' : undefined}}>
-      <GrowWrapper onOpenMenu={onOpenMenu} ref={itemRef}>
+      <GrowWrapper onOpenMenu={onOpenMenu}>
         <View
           style={[
             a.py_sm,
@@ -111,11 +94,7 @@ export function MessageItem({
           isLastInGroup={isLastInGroup}
           style={isFromSelf ? a.text_right : a.text_left}
         />
-        <MessageMenu
-          message={item}
-          onClose={onDialogClose}
-          control={menuControl}
-        />
+        <MessageMenu message={item} control={control} />
         <Prompt.Basic
           control={deleteControl}
           title={_(msg`Delete message`)}
