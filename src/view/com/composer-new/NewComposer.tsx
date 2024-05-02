@@ -127,10 +127,10 @@ export const PostComposer = ({
           contentContainerStyle={[a.gap_sm]}>
           {state.posts.map((post, index) => (
             <Post
-              key={post.key}
+              key={post.id}
               active={index === state.active}
-              index={index}
               post={post}
+              index={index}
               dispatch={dispatch}
               profile={currentProfile}
               hasPrevious={index !== 0}
@@ -142,7 +142,6 @@ export const PostComposer = ({
 
         <Actions
           activePost={activePost}
-          activeIndex={state.active}
           dispatch={dispatch}
           canCreatePost={canCreatePost}
         />
@@ -153,20 +152,20 @@ export const PostComposer = ({
 
 let Actions = ({
   activePost,
-  activeIndex,
   dispatch,
   canCreatePost,
 }: {
   activePost: ComposedPost
-  activeIndex: number
   dispatch: React.Dispatch<ComposedAction>
   canCreatePost: boolean
 }): React.ReactNode => {
   const t = useTheme()
 
+  const activeId = activePost.id
+
   const addNewPost = React.useCallback(() => {
-    return dispatch({type: 'addPost', index: activeIndex})
-  }, [dispatch, activeIndex])
+    return dispatch({type: 'addPost', id: activeId})
+  }, [dispatch, activeId])
 
   return (
     <View
@@ -224,8 +223,8 @@ const borderNextStyle = {borderLeftWidth: 2}
 
 let Post = ({
   active,
-  index,
   post,
+  index,
   dispatch,
   profile,
   hasPrevious,
@@ -233,8 +232,8 @@ let Post = ({
   isReplying,
 }: {
   active: boolean
-  index: number
   post: ComposedPost
+  index: number
   dispatch: React.Dispatch<ComposedAction>
   profile: AppBskyActorDefs.ProfileViewDetailed | undefined
   hasPrevious: boolean
@@ -246,11 +245,13 @@ let Post = ({
 
   const textInputRef = React.useRef<TextInputRef>()
 
+  const id = post.id
+
   const onRichTextChange = React.useCallback(
     (richText: RichText) => {
-      return dispatch({type: 'setText', index, richText})
+      return dispatch({type: 'setText', id, richText})
     },
-    [dispatch, index],
+    [dispatch, id],
   )
 
   const onNewLink = React.useCallback((uri: string) => {}, [])
@@ -259,11 +260,11 @@ let Post = ({
   const onPressPublish = React.useCallback(() => {}, [])
 
   const onPostRemove = React.useCallback(() => {
-    return dispatch({type: 'removePost', index})
-  }, [dispatch, index])
+    return dispatch({type: 'removePost', id})
+  }, [dispatch, id])
   const onFocus = React.useCallback(() => {
-    return dispatch({type: 'setActive', index})
-  }, [dispatch, index])
+    return dispatch({type: 'setActive', id})
+  }, [dispatch, id])
 
   React.useLayoutEffect(() => {
     if (active) {
@@ -293,13 +294,13 @@ let Post = ({
           disabled={!active}
           richtext={post.richText}
           placeholder={
-            index === 0
+            !hasNext && !hasPrevious
               ? isReplying
                 ? _(msg`Write your reply`)
                 : _(msg`What's up?`)
               : _(msg`Write another post`)
           }
-          grow={index === 0 && !hasNext}
+          grow={!hasNext && !hasPrevious}
           setRichText={onRichTextChange}
           onNewLink={onNewLink}
           onError={onError}

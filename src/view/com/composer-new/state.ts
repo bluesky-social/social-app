@@ -5,7 +5,7 @@ import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {ComposerOpts, ComposerOptsPostRef} from '#/state/shell/composer'
 
 export interface ComposedPostState {
-  key: string
+  id: string
   richText: RichText
 }
 
@@ -24,10 +24,10 @@ export interface Composed extends ComposedState {
 }
 
 export type ComposedAction =
-  | {type: 'setActive'; index: number}
-  | {type: 'setText'; index: number; richText: RichText}
-  | {type: 'addPost'; index: number}
-  | {type: 'removePost'; index: number}
+  | {type: 'setActive'; id: string}
+  | {type: 'setText'; id: string; richText: RichText}
+  | {type: 'addPost'; id: string}
+  | {type: 'removePost'; id: string}
 
 export const createComposerState = (data: ComposerOpts): Composed => {
   const initialText = data.text
@@ -46,20 +46,22 @@ export const createComposerState = (data: ComposerOpts): Composed => {
 export const reducer = (state: Composed, action: ComposedAction): Composed => {
   switch (action.type) {
     case 'setActive': {
-      if (state.active === action.index) {
+      const index = state.posts.findIndex(p => p.id === action.id)
+
+      if (index === -1 || state.active === index) {
         return state
       }
 
       return computeComposer({
         ...state,
-        active: action.index,
+        active: index,
       })
     }
     case 'setText': {
       return computeComposer({
         ...state,
-        posts: state.posts.map((p, i) => {
-          if (i === action.index) {
+        posts: state.posts.map(p => {
+          if (p.id === action.id) {
             return computePost({...p, richText: action.richText})
           }
 
@@ -69,7 +71,14 @@ export const reducer = (state: Composed, action: ComposedAction): Composed => {
     }
     case 'addPost': {
       const posts = state.posts
-      const target = posts[action.index]
+
+      const initialIndex = posts.findIndex(p => p.id === action.id)
+
+      if (initialIndex === -1) {
+        return state
+      }
+
+      const target = posts[initialIndex]
 
       if (target.length === 0) {
         return state
@@ -88,17 +97,23 @@ export const reducer = (state: Composed, action: ComposedAction): Composed => {
     }
     case 'removePost': {
       const newPosts = state.posts.slice()
-      const nextIndex = newPosts[action.index + 1]
-        ? action.index
-        : newPosts[action.index - 1]
-        ? action.index - 1
+      const index = newPosts.findIndex(p => p.id === action.id)
+
+      if (index === -1) {
+        return state
+      }
+
+      const nextIndex = newPosts[index + 1]
+        ? index
+        : newPosts[index - 1]
+        ? index - 1
         : null
 
       if (nextIndex === null) {
         return state
       }
 
-      newPosts.splice(action.index, 1)
+      newPosts.splice(index, 1)
 
       return computeComposer({
         ...state,
@@ -117,7 +132,7 @@ const createPost = (text = ''): ComposedPost => {
     richText.detectFacetsWithoutResolution()
   }
 
-  return computePost({key: TID.nextStr(), richText})
+  return computePost({id: TID.nextStr(), richText})
 }
 
 const computeComposer = (state: ComposedState): Composed => {
