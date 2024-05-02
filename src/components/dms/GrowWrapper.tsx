@@ -51,7 +51,7 @@ export const GrowWrapper = function GrowWrapper({
   return (
     <AnimatedPressable
       style={animatedStyle}
-      unstable_pressDelay={300}
+      unstable_pressDelay={200}
       onPressIn={grow}
       onTouchEnd={shrink}>
       {children}
