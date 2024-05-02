@@ -31,7 +31,11 @@ import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {CharProgress} from './components/CharProgress'
 import {TextInput, TextInputRef} from '../composer/text-input/TextInput'
 import {AddPostBtn} from './components/AddPostBtn'
-import {Text} from '#/components/Typography'
+import {SelectGifBtn} from './photos/SelectGifBtn'
+import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {SelectEmojiBtn} from './components/SelectEmojiBtn'
+import {SelectThreadgateBtn} from './components/SelectThreadgateBtn'
+import {SelectLabelsBtn} from './components/SelectLabelsBtn'
 
 export const PostComposer = ({
   data,
@@ -85,9 +89,10 @@ export const PostComposer = ({
             t.atoms.border_contrast_low,
             a.flex_row,
             a.align_center,
-            a.px_sm,
             a.border_b,
-            isWeb ? a.py_sm : [a.pt_sm, a.pb_xs],
+            a.px_sm,
+            a.py_xs,
+            a.gap_md,
           ]}>
           <Button
             label={_(msg`Cancel`)}
@@ -99,6 +104,12 @@ export const PostComposer = ({
           </Button>
 
           <View style={[a.flex_1]}></View>
+
+          <View style={[a.flex_row, a.gap_xs]}>
+            <SelectLabelsBtn />
+
+            {state.replyTo === undefined && <SelectThreadgateBtn />}
+          </View>
 
           <Button
             label={_(msg`Post`)}
@@ -161,27 +172,46 @@ let Actions = ({
         t.atoms.border_contrast_low,
         a.flex_row,
         a.align_center,
-        a.px_sm,
+        a.justify_between,
         a.border_t,
+        a.px_sm,
         a.py_xs,
       ]}>
-      <SelectPhotoBtn />
+      <View style={[a.flex_row, a.gap_xs]}>
+        <SelectPhotoBtn />
 
-      <View style={a.flex_1}></View>
+        <OpenCameraBtn />
 
-      <CharProgress length={activePost.length} />
+        <SelectGifBtn />
 
-      <View
-        style={[
-          t.atoms.border_contrast_low,
-          a.border_l,
-          a.self_stretch,
-          a.mx_sm,
-          a.my_sm,
-        ]}
-      />
+        <SelectEmojiBtn />
+      </View>
 
-      <AddPostBtn disabled={!canCreatePost} onPress={addNewPost} />
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <Button
+          label="English"
+          variant="ghost"
+          color="primary"
+          size="small"
+          style={[a.px_sm]}>
+          <ButtonText style={{color: t.palette.primary_500}}>
+            English
+          </ButtonText>
+        </Button>
+
+        <CharProgress length={activePost.length} />
+
+        <View
+          style={[
+            t.atoms.border_contrast_low,
+            a.border_l,
+            a.self_stretch,
+            a.my_sm,
+          ]}
+        />
+
+        <AddPostBtn disabled={!canCreatePost} onPress={addNewPost} />
+      </View>
     </View>
   )
 }
