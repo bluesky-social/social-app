@@ -16,12 +16,14 @@ export function AccountList({
   onSelectAccount,
   onSelectOther,
   otherLabel,
+  isSwitchingAccounts,
 }: {
   onSelectAccount: (account: SessionAccount) => void
   onSelectOther: () => void
   otherLabel?: string
+  isSwitchingAccounts: boolean
 }) {
-  const {isSwitchingAccounts, currentAccount, accounts} = useSession()
+  const {currentAccount, accounts} = useSession()
   const t = useTheme()
   const {_} = useLingui()
 

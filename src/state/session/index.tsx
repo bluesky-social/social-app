@@ -35,7 +35,6 @@ const PUBLIC_BSKY_AGENT = new BskyAgent({service: PUBLIC_BSKY_SERVICE})
 configureModerationForGuest()
 
 const StateContext = React.createContext<SessionStateContext>({
-  isSwitchingAccounts: false,
   accounts: [],
   currentAccount: undefined,
   hasSession: false,
@@ -47,7 +46,6 @@ const ApiContext = React.createContext<SessionApiContext>({
   logout: async () => {},
   initSession: async () => {},
   removeAccount: () => {},
-  selectAccount: async () => {},
   updateCurrentAccount: () => {},
   clearCurrentAccount: () => {},
 })
@@ -65,7 +63,6 @@ type State = {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
   const [state, setState] = React.useState<State>({
     accounts: persisted.get('session').accounts,
     currentAccountDid: undefined, // assume logged out to start
@@ -437,23 +434,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  const selectAccount = React.useCallback<SessionApiContext['selectAccount']>(
-    async (account, logContext) => {
-      setIsSwitchingAccounts(true)
-      try {
-        await initSession(account)
-        setIsSwitchingAccounts(false)
-        logEvent('account:loggedIn', {logContext, withPassword: false})
-      } catch (e) {
-        // reset this in case of error
-        setIsSwitchingAccounts(false)
-        // but other listeners need a throw
-        throw e
-      }
-    },
-    [initSession],
-  )
-
   React.useEffect(() => {
     if (state.needsPersist) {
       state.needsPersist = false
@@ -529,10 +509,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       currentAccount: state.accounts.find(
         a => a.did === state.currentAccountDid,
       ),
-      isSwitchingAccounts,
       hasSession: !!state.currentAccountDid,
     }),
-    [state, isSwitchingAccounts],
+    [state],
   )
 
   const api = React.useMemo(
@@ -542,7 +521,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logout,
       initSession,
       removeAccount,
-      selectAccount,
       updateCurrentAccount,
       clearCurrentAccount,
     }),
@@ -552,7 +530,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logout,
       initSession,
       removeAccount,
-      selectAccount,
       updateCurrentAccount,
       clearCurrentAccount,
     ],

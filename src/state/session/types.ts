@@ -6,7 +6,6 @@ export type SessionAccount = PersistedAccount
 export type SessionStateContext = {
   accounts: SessionAccount[]
   currentAccount: SessionAccount | undefined
-  isSwitchingAccounts: boolean
   hasSession: boolean
 }
 export type SessionApiContext = {
@@ -46,10 +45,6 @@ export type SessionApiContext = {
   clearCurrentAccount: () => void
   initSession: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
-  selectAccount: (
-    account: SessionAccount,
-    logContext: LogEvents['account:loggedIn']['logContext'],
-  ) => Promise<void>
   updateCurrentAccount: (
     account: Partial<
       Pick<

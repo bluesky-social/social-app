@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,12 +8,14 @@ import {isWeb} from '#/platform/detection'
 import {SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
+import {logEvent} from '../statsig/statsig'
 import {LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
+  const [isSwitchingAccounts, setIsSwitchingAccounts] = useState(false)
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {selectAccount, clearCurrentAccount} = useSessionApi()
+  const {initSession, clearCurrentAccount} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
@@ -24,6 +26,7 @@ export function useAccountSwitcher() {
       track('Settings:SwitchAccountButtonClicked')
 
       try {
+        setIsSwitchingAccounts(true)
         if (account.accessJwt) {
           if (isWeb) {
             // We're switching accounts, which remounts the entire app.
@@ -33,7 +36,8 @@ export function useAccountSwitcher() {
             // So we change the URL ourselves. The navigator will pick it up on remount.
             history.pushState(null, '', '/')
           }
-          await selectAccount(account, logContext)
+          await initSession(account)
+          logEvent('account:loggedIn', {logContext, withPassword: false})
           setTimeout(() => {
             Toast.show(_(msg`Signed in as @${account.handle}`))
           }, 100)
@@ -52,10 +56,12 @@ export function useAccountSwitcher() {
         setTimeout(() => {
           Toast.show(_(msg`Sorry! We need you to enter your password.`))
         }, 100)
+      } finally {
+        setIsSwitchingAccounts(false)
       }
     },
-    [_, track, clearCurrentAccount, selectAccount, requestSwitchToAccount],
+    [_, track, clearCurrentAccount, initSession, requestSwitchToAccount],
   )
 
-  return {onPressSwitchAccount}
+  return {onPressSwitchAccount, isSwitchingAccounts}
 }

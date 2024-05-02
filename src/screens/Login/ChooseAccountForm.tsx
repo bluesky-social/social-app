@@ -22,6 +22,7 @@ export const ChooseAccountForm = ({
   onSelectAccount: (account?: SessionAccount) => void
   onPressBack: () => void
 }) => {
+  const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
   const {track, screen} = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -40,6 +41,7 @@ export const ChooseAccountForm = ({
           Toast.show(_(msg`Already signed in as @${account.handle}`))
         } else {
           try {
+            setIsSwitchingAccounts(true)
             await initSession(account)
             logEvent('account:loggedIn', {
               logContext: 'ChooseAccountForm',
@@ -54,6 +56,8 @@ export const ChooseAccountForm = ({
               message: e.message,
             })
             onSelectAccount(account)
+          } finally {
+            setIsSwitchingAccounts(false)
           }
         }
       } else {
@@ -74,6 +78,7 @@ export const ChooseAccountForm = ({
         <AccountList
           onSelectAccount={onSelect}
           onSelectOther={() => onSelectAccount()}
+          isSwitchingAccounts={isSwitchingAccounts}
         />
       </View>
       <View style={[a.flex_row]}>
