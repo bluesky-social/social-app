@@ -3553,7 +3553,7 @@ msgstr ""
 
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
-msgstr "刪除轉發"
+msgstr "刪除轉貼"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:202
 msgid "Remove this feed from your saved feeds"
@@ -3652,36 +3652,36 @@ msgstr "檢舉這個用戶"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgctxt "action"
 msgid "Repost"
-msgstr "轉發"
+msgstr "轉貼"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
-msgstr "轉發"
+msgstr "轉貼"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
 msgid "Repost or quote post"
-msgstr "轉發或引用貼文"
+msgstr "轉貼或引用貼文"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr "轉發"
+msgstr "轉貼"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
-msgstr "由 {0} 轉發"
+msgstr "由 {0} 轉貼"
 
 #: src/view/com/posts/FeedItem.tsx:224
 msgid "Reposted by <0><1/></0>"
-msgstr "由 <0><1/></0> 轉發"
+msgstr "由 <0><1/></0> 轉貼"
 
 #: src/view/com/notifications/FeedItem.tsx:161
 msgid "reposted your post"
-msgstr "轉發你的貼文"
+msgstr "轉貼你的貼文"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:188
 msgid "Reposts of this post"
-msgstr "轉發這條貼文"
+msgstr "轉貼這條貼文"
 
 #: src/view/com/modals/ChangeEmail.tsx:183
 #: src/view/com/modals/ChangeEmail.tsx:185
@@ -4052,23 +4052,23 @@ msgstr "設定新密碼"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "將此設定項設為「關」會隱藏來自訂閱訊息流的所有引用貼文。轉發仍將可見。"
+msgstr "將此設定項設為「關」以隱藏訊息流中所有引用的貼文，但轉貼依然會顯示。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "將此設定項設為「關」以隱藏來自訂閱訊息流的所有回覆。"
+msgstr "將此設定項設為「關」以隱藏訊息流中所有回覆貼文。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "將此設定項設為「關」以隱藏來自訂閱訊息流的所有轉發。"
+msgstr "將此設定項設為「關」以隱藏訊息流的所有轉貼貼文。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "將此設定項設為「開」以在分層視圖中顯示回覆。這是一個實驗性功能。"
+msgstr "將此設定項設為「開」以分層顯示回覆，這是一項實驗性功能。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "將此設定為「是」以在你的追蹤訊息流中顯示你保存的訊息流。這是一個實驗性功能。"
+msgstr "將此設定為「是」以在 \"Following 訊息流\" 中顯示你追蹤的訊息流中的選錄貼文，這是一個實驗性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -4185,11 +4185,11 @@ msgstr "仍然顯示"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:27
 #: src/lib/moderation/useLabelBehaviorDescription.ts:63
 msgid "Show badge"
-msgstr "顯示徽章"
+msgstr "顯示標籤"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
-msgstr "顯示徽章並從訊息流中篩選"
+msgstr "顯示標籤並從訊息流中篩選"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
 msgid "Show follows similar to {0}"
@@ -4203,7 +4203,7 @@ msgstr "顯示更多"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:258
 msgid "Show Posts from My Feeds"
-msgstr "在自訂訊息流中顯示貼文"
+msgstr "顯示來自已儲存訊息流的貼文"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:222
 msgid "Show Quote Posts"
@@ -4219,7 +4219,7 @@ msgstr "在跟隨中顯示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:95
 msgid "Show re-posts in Following feed"
-msgstr "在跟隨訊息流中顯示轉發"
+msgstr "在跟隨訊息流中顯示轉貼貼文"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 msgid "Show Replies"
@@ -4243,11 +4243,11 @@ msgstr "顯示至少包含 {value} 個{0}的回覆"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:188
 msgid "Show Reposts"
-msgstr "顯示轉發"
+msgstr "顯示轉貼貼文"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:111
 msgid "Show reposts in Following"
-msgstr "在跟隨中顯示轉發"
+msgstr "在跟隨中顯示轉貼貼文"
 
 #: src/components/moderation/ContentHider.tsx:68
 #: src/components/moderation/PostHider.tsx:73
@@ -4930,7 +4930,7 @@ msgstr "取消封鎖？"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:60
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Undo repost"
-msgstr "取消轉發"
+msgstr "取消轉貼"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
