@@ -1,5 +1,5 @@
 import React from 'react'
-import {NativeSyntheticEvent, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
 import {atoms as a} from '#/alf'
@@ -30,21 +30,17 @@ export function ActionsWrapper({
 
   // We need to handle the `onFocus` separately because we want to know if there is a related target (the element
   // that is losing focus). If there isn't that means the focus is coming from a dropdown that is now closed.
-  // TODO what is the type for this?
-  const onFocus = React.useCallback((e: NativeSyntheticEvent<any>) => {
+  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
     setShowActions(true)
   }, [])
 
   return (
     <View
-      // @ts-ignore web only
+      // @ts-expect-error web only
       onMouseEnter={onMouseEnter}
-      // @ts-ignore web only
       onMouseLeave={onMouseLeave}
-      // @ts-ignore web only
       onFocus={onFocus}
-      // @ts-ignore web only
       onBlur={onMouseLeave}
       style={StyleSheet.flatten([a.flex_1, a.flex_row])}
       ref={viewRef}>
@@ -62,7 +58,7 @@ export function ActionsWrapper({
             control={menuControl}
             triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
             onTriggerPress={onMouseEnter}
-            // @ts-ignore web only
+            // @ts-expect-error web only
             onMouseLeave={onMouseLeave}
           />
         </View>
@@ -80,7 +76,7 @@ export function ActionsWrapper({
             control={menuControl}
             triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
             onTriggerPress={onMouseEnter}
-            // @ts-ignore web only
+            // @ts-expect-error web only
             onMouseLeave={onMouseLeave}
           />
         </View>
