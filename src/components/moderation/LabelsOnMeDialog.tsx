@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -173,6 +173,7 @@ function AppealForm({
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
+  const {getAgent} = useAgent()
 
   const onSubmit = async () => {
     try {

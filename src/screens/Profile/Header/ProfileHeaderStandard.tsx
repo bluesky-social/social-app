@@ -12,7 +12,7 @@ import {useLingui} from '@lingui/react'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
@@ -94,7 +94,7 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
-        if (isWeb && gate('autoexpand_suggestions_on_profile_follow')) {
+        if (isWeb && gate('autoexpand_suggestions_on_profile_follow_v2')) {
           setShowSuggestedFollows(true)
         }
       } catch (e: any) {
@@ -152,10 +152,12 @@ let ProfileHeaderStandard = ({
       moderation={moderation}
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
-      <View style={[a.px_lg, a.pt_md, a.pb_sm]} pointerEvents="box-none">
+      <View
+        style={[a.px_lg, a.pt_md, a.pb_sm]}
+        pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
           style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_sm]}
-          pointerEvents="box-none">
+          pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <Button
               testID="profileHeaderEditProfileButton"

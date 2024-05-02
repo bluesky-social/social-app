@@ -86,9 +86,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       )}>
       <PreviewableUserAvatar
         size={50}
-        did={replyTo.author.did}
-        handle={replyTo.author.handle}
-        avatar={replyTo.author.avatar}
+        profile={replyTo.author}
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />

@@ -21,6 +21,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useRequireAuth, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useHaptics} from 'lib/haptics'
+import {isIOS} from 'platform/detection'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
@@ -164,10 +165,12 @@ let ProfileHeaderLabeler = ({
       moderation={moderation}
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
-      <View style={[a.px_lg, a.pt_md, a.pb_sm]} pointerEvents="box-none">
+      <View
+        style={[a.px_lg, a.pt_md, a.pb_sm]}
+        pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
           style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_lg]}
-          pointerEvents="box-none">
+          pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <Button
               testID="profileHeaderEditProfileButton"

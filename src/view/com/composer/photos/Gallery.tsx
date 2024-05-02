@@ -1,20 +1,19 @@
 import React, {useState} from 'react'
 import {ImageStyle, Keyboard, LayoutChangeEvent} from 'react-native'
+import {GalleryModel} from 'state/models/media/gallery'
+import {observer} from 'mobx-react-lite'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {s, colors} from 'lib/styles'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {observer} from 'mobx-react-lite'
-
-import {useModalControls} from '#/state/modals'
+import {Text} from 'view/com/util/text/Text'
+import {Dimensions} from 'lib/media/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Dimensions} from 'lib/media/types'
-import {colors, s} from 'lib/styles'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 import {isNative} from 'platform/detection'
-import {GalleryModel} from 'state/models/media/gallery'
-import {Text} from 'view/com/util/text/Text'
 
 const IMAGE_GAP = 8
 
@@ -198,7 +197,6 @@ const GalleryInner = observer(function GalleryImpl({
               }}
               accessible={true}
               accessibilityIgnoresInvertColors
-              transition={200}
             />
           </View>
         ))}

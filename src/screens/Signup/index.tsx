@@ -8,8 +8,9 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,
@@ -35,6 +36,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
+  const {getAgent} = useAgent()
 
   const {
     data: serviceInfo,
@@ -113,15 +115,24 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     state.serviceDescription?.phoneVerificationRequired,
     state.userDomain,
     submit,
+    getAgent,
   ])
 
   const onBackPress = React.useCallback(() => {
     if (state.activeStep !== SignupStep.INFO) {
+      if (state.activeStep === SignupStep.CAPTCHA) {
+        logger.error('Signup Flow Error', {
+          errorMessage:
+            'User went back from captcha step. Possibly encountered an error.',
+          registrationHandle: state.handle,
+        })
+      }
+
       dispatch({type: 'prev'})
     } else {
       onPressBack()
     }
-  }, [onPressBack, state.activeStep])
+  }, [onPressBack, state.activeStep, state.handle])
 
   return (
     <SignupContext.Provider value={{state, dispatch}}>

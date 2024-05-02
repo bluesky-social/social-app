@@ -7,8 +7,9 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
-import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
+import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
+import {readLastActiveAccount} from '#/state/session/util'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {QueryProvider} from 'lib/react-query'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -42,7 +43,7 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    const account = persisted.get('session').currentAccount
+    const account = readLastActiveAccount()
     resumeSession(account)
   }, [resumeSession])
 
@@ -56,22 +57,25 @@ function InnerApp() {
         key={currentAccount?.did}>
         <QueryProvider currentDid={currentAccount?.did}>
           <StatsigProvider>
+            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
             <LabelDefsProvider>
-              <LoggedOutViewProvider>
-                <SelectedFeedProvider>
-                  <UnreadNotifsProvider>
-                    <ThemeProvider theme={theme}>
-                      {/* All components should be within this provider */}
-                      <RootSiblingParent>
-                        <SafeAreaProvider>
-                          <Shell />
-                        </SafeAreaProvider>
-                      </RootSiblingParent>
-                      <ToastContainer />
-                    </ThemeProvider>
-                  </UnreadNotifsProvider>
-                </SelectedFeedProvider>
-              </LoggedOutViewProvider>
+              <ModerationOptsProvider>
+                <LoggedOutViewProvider>
+                  <SelectedFeedProvider>
+                    <UnreadNotifsProvider>
+                      <ThemeProvider theme={theme}>
+                        {/* All components should be within this provider */}
+                        <RootSiblingParent>
+                          <SafeAreaProvider>
+                            <Shell />
+                          </SafeAreaProvider>
+                        </RootSiblingParent>
+                        <ToastContainer />
+                      </ThemeProvider>
+                    </UnreadNotifsProvider>
+                  </SelectedFeedProvider>
+                </LoggedOutViewProvider>
+              </ModerationOptsProvider>
             </LabelDefsProvider>
           </StatsigProvider>
         </QueryProvider>

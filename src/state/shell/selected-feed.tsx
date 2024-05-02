@@ -27,7 +27,7 @@ function getInitialFeed(gate: (gateName: Gate) => boolean) {
       return feedFromSession
     }
   }
-  if (!gate('start_session_with_following')) {
+  if (!gate('start_session_with_following_v2')) {
     const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
     if (feedFromPersisted) {
       // Fall back to the last chosen one across all tabs.

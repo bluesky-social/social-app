@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.79.0",
+  "version": "1.80.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -15,7 +15,7 @@
     "web": "expo start --web",
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
     "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
-    "build-web": "expo export:web && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/",
+    "build-web": "expo export:web && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/ && cp -v ./web-build/static/media/*.png ./bskyweb/static/media/",
     "build-all": "yarn intl:build && yarn use-build-number-with-bump eas build --platform all",
     "build-ios": "yarn use-build-number-with-bump eas build -p ios",
     "build-android": "yarn use-build-number-with-bump eas build -p android",
@@ -50,10 +50,11 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.3",
+    "@atproto-labs/api": "^0.12.8-clipclops.0",
+    "@atproto/api": "^0.12.5",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
-    "@discord/bottom-sheet": "https://github.com/bluesky-social/react-native-bottom-sheet.git#discord-fork-4.6.1",
+    "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.4.2",
     "@expo/webpack-config": "^19.0.0",
@@ -168,6 +169,7 @@
     "react-native-get-random-values": "~1.11.0",
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-ios-context-menu": "^1.15.3",
+    "react-native-keyboard-controller": "^1.11.7",
     "react-native-pager-view": "6.2.3",
     "react-native-picker-select": "^8.1.0",
     "react-native-progress": "bluesky-social/react-native-progress",
@@ -183,6 +185,7 @@
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "13.6.4",
     "react-responsive": "^9.0.2",
+    "react-textarea-autosize": "^8.5.3",
     "rn-fetch-blob": "^0.12.0",
     "sentry-expo": "~7.0.1",
     "statsig-react-native-expo": "^4.6.1",

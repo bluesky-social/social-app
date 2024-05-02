@@ -1,17 +1,19 @@
 import {useCallback} from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {useSessionApi, SessionAccount} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {useCloseAllActiveElements} from '#/state/util'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import * as Toast from '#/view/com/util/Toast'
 import {LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
+  const {_} = useLingui()
   const {track} = useAnalytics()
   const {selectAccount, clearCurrentAccount} = useSessionApi()
-  const closeAllActiveElements = useCloseAllActiveElements()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
@@ -23,7 +25,6 @@ export function useAccountSwitcher() {
 
       try {
         if (account.accessJwt) {
-          closeAllActiveElements()
           if (isWeb) {
             // We're switching accounts, which remounts the entire app.
             // On mobile, this gets us Home, but on the web we also need reset the URL.
@@ -34,28 +35,26 @@ export function useAccountSwitcher() {
           }
           await selectAccount(account, logContext)
           setTimeout(() => {
-            Toast.show(`Signed in as @${account.handle}`)
+            Toast.show(_(msg`Signed in as @${account.handle}`))
           }, 100)
         } else {
-          closeAllActiveElements()
           requestSwitchToAccount({requestedAccount: account.did})
           Toast.show(
-            `Please sign in as @${account.handle}`,
+            _(msg`Please sign in as @${account.handle}`),
             'circle-exclamation',
           )
         }
-      } catch (e) {
-        Toast.show('Sorry! We need you to enter your password.')
+      } catch (e: any) {
+        logger.error(`switch account: selectAccount failed`, {
+          message: e.message,
+        })
         clearCurrentAccount() // back user out to login
+        setTimeout(() => {
+          Toast.show(_(msg`Sorry! We need you to enter your password.`))
+        }, 100)
       }
     },
-    [
-      track,
-      clearCurrentAccount,
-      selectAccount,
-      closeAllActiveElements,
-      requestSwitchToAccount,
-    ],
+    [_, track, clearCurrentAccount, selectAccount, requestSwitchToAccount],
   )
 
   return {onPressSwitchAccount}

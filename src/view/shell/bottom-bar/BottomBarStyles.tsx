@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+
 import {colors} from 'lib/styles'
 
 export const styles = StyleSheet.create({
@@ -64,6 +65,9 @@ export const styles = StyleSheet.create({
   },
   profileIcon: {
     top: -4,
+  },
+  messagesIcon: {
+    top: 2,
   },
   onProfile: {
     borderWidth: 1,

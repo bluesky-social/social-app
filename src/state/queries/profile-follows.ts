@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -17,6 +17,7 @@ const RQKEY_ROOT = 'profile-follows'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileFollowsQuery(did: string | undefined) {
+  const {getAgent} = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetFollows.OutputSchema,
     Error,

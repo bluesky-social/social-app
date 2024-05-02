@@ -148,6 +148,7 @@ export const TextLink = memo(function TextLink({
   dataSet,
   title,
   onPress,
+  onBeforePress,
   disableMismatchWarning,
   navigationAction,
   anchorNoUnderline,
@@ -165,6 +166,7 @@ export const TextLink = memo(function TextLink({
   disableMismatchWarning?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   anchorNoUnderline?: boolean
+  onBeforePress?: () => void
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const navigation = useNavigationDeduped()
@@ -202,6 +204,7 @@ export const TextLink = memo(function TextLink({
         // Let the browser handle opening in new tab etc.
         return
       }
+      onBeforePress?.()
       if (onPress) {
         e?.preventDefault?.()
         // @ts-ignore function signature differs by platform -prf
@@ -226,6 +229,7 @@ export const TextLink = memo(function TextLink({
       disableMismatchWarning,
       navigationAction,
       openLink,
+      onBeforePress,
     ],
   )
   const hrefAttrs = useMemo(() => {
@@ -274,6 +278,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   title?: string
   navigationAction?: 'push' | 'replace' | 'navigate'
   disableMismatchWarning?: boolean
+  onBeforePress?: () => void
   onPointerEnter?: () => void
   anchorNoUnderline?: boolean
 }
@@ -287,6 +292,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   lineHeight,
   navigationAction,
   disableMismatchWarning,
+  onBeforePress,
   ...props
 }: TextLinkOnWebOnlyProps) {
   if (isWeb) {
@@ -302,6 +308,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
         title={props.title}
         navigationAction={navigationAction}
         disableMismatchWarning={disableMismatchWarning}
+        onBeforePress={onBeforePress}
         {...props}
       />
     )

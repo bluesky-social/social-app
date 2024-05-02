@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
@@ -38,15 +39,22 @@ export const ChooseAccountForm = ({
           setShowLoggedOut(false)
           Toast.show(_(msg`Already signed in as @${account.handle}`))
         } else {
-          await initSession(account)
-          logEvent('account:loggedIn', {
-            logContext: 'ChooseAccountForm',
-            withPassword: false,
-          })
-          track('Sign In', {resumedSession: true})
-          setTimeout(() => {
-            Toast.show(_(msg`Signed in as @${account.handle}`))
-          }, 100)
+          try {
+            await initSession(account)
+            logEvent('account:loggedIn', {
+              logContext: 'ChooseAccountForm',
+              withPassword: false,
+            })
+            track('Sign In', {resumedSession: true})
+            setTimeout(() => {
+              Toast.show(_(msg`Signed in as @${account.handle}`))
+            }, 100)
+          } catch (e: any) {
+            logger.error('choose account: initSession failed', {
+              message: e.message,
+            })
+            onSelectAccount(account)
+          }
         }
       } else {
         onSelectAccount(account)

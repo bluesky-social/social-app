@@ -1,26 +1,28 @@
 import * as React from 'react'
 import {
   LayoutChangeEvent,
+  NativeScrollEvent,
   ScrollView,
   StyleSheet,
   View,
-  NativeScrollEvent,
 } from 'react-native'
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
+  AnimatedRef,
   runOnJS,
   runOnUI,
   scrollTo,
-  useAnimatedRef,
-  AnimatedRef,
   SharedValue,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {TabBar} from './TabBar'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {ListMethods} from '../util/List'
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {isIOS} from 'platform/detection'
+import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {ListMethods} from '../util/List'
+import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
@@ -236,9 +238,12 @@ let PagerTabBar = ({
   const headerRef = React.useRef(null)
   return (
     <Animated.View
-      pointerEvents="box-none"
+      pointerEvents={isIOS ? 'auto' : 'box-none'}
       style={[styles.tabBarMobile, headerTransform]}>
-      <View ref={headerRef} pointerEvents="box-none" collapsable={false}>
+      <View
+        ref={headerRef}
+        pointerEvents={isIOS ? 'auto' : 'box-none'}
+        collapsable={false}>
         {renderHeader?.()}
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
