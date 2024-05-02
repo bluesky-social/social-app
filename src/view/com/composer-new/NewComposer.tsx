@@ -110,7 +110,9 @@ export const PostComposer = ({
           </Button>
         </View>
 
-        <ScrollView style={[a.flex_1, a.pt_lg, a.pb_lg]}>
+        <ScrollView
+          style={[a.flex_1, a.py_lg]}
+          contentContainerStyle={[a.gap_sm]}>
           {state.posts.map((post, index) => (
             <Post
               key={post.key}
@@ -208,6 +210,8 @@ let Post = ({
   const {_} = useLingui()
   const t = useTheme()
 
+  const textInputRef = React.useRef<TextInputRef>()
+
   const onRichTextChange = React.useCallback(
     (richText: RichText) => {
       return dispatch({type: 'setText', index, richText})
@@ -224,15 +228,15 @@ let Post = ({
     return dispatch({type: 'setActive', index})
   }, [dispatch, index])
 
+  React.useLayoutEffect(() => {
+    if (active) {
+      textInputRef.current?.focus()
+    }
+  }, [active])
+
   return (
     <View style={[a.flex_row, a.gap_lg, a.px_lg, a.relative]}>
-      <View
-        style={[
-          a.align_center,
-          hasNext && a.pb_sm,
-          a.gap_sm,
-          !active && opacityStyle,
-        ]}>
+      <View style={[a.align_center, a.gap_sm, !active && opacityStyle]}>
         <UserAvatar
           avatar={profile?.avatar}
           size={48}
@@ -248,6 +252,7 @@ let Post = ({
 
       <View style={[a.flex_1, a.relative, !active && opacityStyle]}>
         <TextInput
+          ref={textInputRef}
           disabled={!active}
           richtext={post.richText}
           placeholder={
@@ -268,12 +273,7 @@ let Post = ({
       {!active && (
         <Pressable
           onPress={onFocus}
-          style={[
-            a.absolute,
-            a.inset_0,
-            hasNext && a.mb_lg,
-            a.mx_lg,
-          ]}></Pressable>
+          style={[a.absolute, a.inset_0, a.mx_lg]}></Pressable>
       )}
     </View>
   )

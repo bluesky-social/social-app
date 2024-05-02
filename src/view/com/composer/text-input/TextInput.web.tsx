@@ -202,7 +202,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         }
       },
     },
-    [modeClass, disabled],
+    [modeClass],
   )
 
   const onEmojiInserted = React.useCallback(
@@ -218,8 +218,18 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [onEmojiInserted])
 
+  React.useLayoutEffect(() => {
+    if (editor) {
+      // `editable` doesn't control whether it can be tabbed-into or not
+      editor.view.dom.tabIndex = !disabled ? 0 : -1
+      editor.setEditable(!disabled)
+    }
+  }, [editor, disabled])
+
   React.useImperativeHandle(ref, () => ({
-    focus: () => {}, // TODO
+    focus: () => {
+      editor?.view.focus()
+    },
     blur: () => {}, // TODO
     getCursorPosition: () => {
       const pos = editor?.state.selection.$anchor.pos
