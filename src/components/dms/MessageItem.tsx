@@ -5,8 +5,9 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
+import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
+import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {Text} from '#/components/Typography'
 
 export function MessageItem({
@@ -50,34 +51,34 @@ export function MessageItem({
 
   return (
     <View>
-      <View
-        style={[
-          a.py_sm,
-          a.px_lg,
-          a.my_2xs,
-          a.rounded_md,
-          isFromSelf ? a.self_end : a.self_start,
-          {
-            maxWidth: '65%',
-            backgroundColor: isFromSelf
-              ? t.palette.primary_500
-              : t.palette.contrast_50,
-            borderRadius: 17,
-          },
-          isFromSelf
-            ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-            : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
-        ]}>
-        <Text
+      <ActionsWrapper isFromSelf={isFromSelf} message={item}>
+        <View
           style={[
-            a.text_md,
-            a.leading_snug,
-            isFromSelf && {color: t.palette.white},
+            a.py_sm,
+            a.px_lg,
+            a.my_2xs,
+            a.rounded_md,
+            {
+              backgroundColor: isFromSelf
+                ? t.palette.primary_500
+                : t.palette.contrast_50,
+              borderRadius: 17,
+            },
+            isFromSelf
+              ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+              : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
           ]}>
-          {item.text}
-        </Text>
-      </View>
-      <Metadata
+          <Text
+            style={[
+              a.text_md,
+              a.leading_snug,
+              isFromSelf && {color: t.palette.white},
+            ]}>
+            {item.text}
+          </Text>
+        </View>
+      </ActionsWrapper>
+      <MessageItemMetadata
         message={item}
         isLastInGroup={isLastInGroup}
         style={isFromSelf ? a.text_right : a.text_left}
@@ -86,7 +87,7 @@ export function MessageItem({
   )
 }
 
-function Metadata({
+export function MessageItemMetadata({
   message,
   isLastInGroup,
   style,
