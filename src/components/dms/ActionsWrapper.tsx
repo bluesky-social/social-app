@@ -16,7 +16,7 @@ import {useMenuControl} from '#/components/Menu'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-export const ActionsWrapper = function GrowWrapper({
+export function ActionsWrapper({
   message,
   isFromSelf,
   children,
@@ -35,6 +35,10 @@ export const ActionsWrapper = function GrowWrapper({
     transform: [{scale: scale.value}],
   }))
 
+  const open = useCallback(() => {
+    menuControl.open()
+  }, [menuControl])
+
   const shrink = useCallback(() => {
     'worklet'
     cancelAnimation(scale)
@@ -49,11 +53,11 @@ export const ActionsWrapper = function GrowWrapper({
       if (!finished) return
       animationDidComplete.value = true
       runOnJS(playHaptic)()
-      runOnJS(menuControl.open)()
+      runOnJS(open)()
 
       shrink()
     })
-  }, [scale, animationDidComplete, playHaptic, shrink, menuControl])
+  }, [scale, animationDidComplete, playHaptic, shrink, open])
 
   return (
     <View
