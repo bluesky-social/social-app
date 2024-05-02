@@ -53,8 +53,6 @@ export let MessageMenu = ({
                     a.p_sm,
                     a.rounded_full,
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-                    // make sure pfp is in the middle
-                    {marginLeft: -10},
                   ]}>
                   <DotsHorizontal size="sm" style={t.atoms.text} />
                 </Pressable>

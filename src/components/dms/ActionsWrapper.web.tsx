@@ -46,7 +46,7 @@ export function ActionsWrapper({
       {isFromSelf && (
         <View
           style={[
-            a.mr_md,
+            a.mr_xl,
             a.justify_center,
             {
               marginLeft: 'auto',
