@@ -35,6 +35,8 @@ export function ActionsWrapper({
     transform: [{scale: scale.value}],
   }))
 
+  // Reanimated's `runOnJS` doesn't like refs, so we can't use `runOnJS(menuControl.open)()`. Instead, we'll use this
+  // function
   const open = useCallback(() => {
     menuControl.open()
   }, [menuControl])
