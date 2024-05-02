@@ -58,14 +58,18 @@ function __getAgent() {
 
 type State = {
   accounts: SessionStateContext['accounts']
-  currentAccountDid: string | undefined
+  currentAgentState: {
+    did: string | undefined
+  }
   needsPersist: boolean
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<State>({
     accounts: persisted.get('session').accounts,
-    currentAccountDid: undefined, // assume logged out to start
+    currentAgentState: {
+      did: undefined, // assume logged out to start
+    },
     needsPersist: false,
   })
 
@@ -74,7 +78,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(s => {
         return {
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
-          currentAccountDid: expired ? undefined : account.did,
+          currentAgentState: {
+            did: expired ? undefined : account.did,
+          },
           needsPersist: true,
         }
       })
@@ -88,7 +94,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     configureModerationForGuest()
     setState(s => ({
       accounts: s.accounts,
-      currentAccountDid: undefined,
+      currentAgentState: {
+        did: undefined,
+      },
       needsPersist: true,
     }))
   }, [setState])
@@ -233,7 +241,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             refreshJwt: undefined,
             accessJwt: undefined,
           })),
-          currentAccountDid: s.currentAccountDid,
+          currentAgentState: s.currentAgentState,
           needsPersist: true,
         }
       })
@@ -355,7 +363,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(s => {
         return {
           accounts: s.accounts.filter(a => a.did !== account.did),
-          currentAccountDid: s.currentAccountDid,
+          currentAgentState: s.currentAgentState,
           needsPersist: true,
         }
       })
@@ -369,7 +377,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     account => {
       setState(s => {
         const currentAccount = s.accounts.find(
-          a => a.did === s.currentAccountDid,
+          a => a.did === s.currentAgentState.did,
         )
         // ignore, should never happen
         if (!currentAccount) return s
@@ -393,7 +401,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             updatedAccount,
             ...s.accounts.filter(a => a.did !== currentAccount.did),
           ],
-          currentAccountDid: s.currentAccountDid,
+          currentAgentState: s.currentAgentState,
           needsPersist: true,
         }
       })
@@ -407,7 +415,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       persisted.write('session', {
         accounts: state.accounts,
         currentAccount: state.accounts.find(
-          a => a.did === state.currentAccountDid,
+          a => a.did === state.currentAgentState.did,
         ),
       })
     }
@@ -424,10 +432,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       if (selectedAccount && selectedAccount.refreshJwt) {
-        if (selectedAccount.did !== state.currentAccountDid) {
+        if (selectedAccount.did !== state.currentAgentState.did) {
           logger.debug(`session: persisted onUpdate, switching accounts`, {
             from: {
-              did: state.currentAccountDid,
+              did: state.currentAgentState.did,
             },
             to: {
               did: selectedAccount.did,
@@ -446,7 +454,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // @ts-ignore we checked for `refreshJwt` above
           __globalAgent.session = selectedAccount
         }
-      } else if (!selectedAccount && state.currentAccountDid) {
+      } else if (!selectedAccount && state.currentAgentState.did) {
         logger.debug(
           `session: persisted onUpdate, logging out`,
           {},
@@ -464,7 +472,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(() => ({
         accounts: persistedSession.accounts,
-        currentAccountDid: selectedAccount?.did,
+        currentAgentState: {
+          did: selectedAccount?.did,
+        },
         needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }))
     })
@@ -474,9 +484,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       accounts: state.accounts,
       currentAccount: state.accounts.find(
-        a => a.did === state.currentAccountDid,
+        a => a.did === state.currentAgentState.did,
       ),
-      hasSession: !!state.currentAccountDid,
+      hasSession: !!state.currentAgentState.did,
     }),
     [state],
   )
