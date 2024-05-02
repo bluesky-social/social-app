@@ -17,9 +17,10 @@ export type ConvoParams = {
 export enum ConvoStatus {
   Uninitialized = 'uninitialized',
   Initializing = 'initializing',
+  Resuming = 'resuming',
   Ready = 'ready',
   Error = 'error',
-  Destroyed = 'destroyed',
+  Suspended = 'suspended',
 }
 
 export type ConvoItem =
@@ -59,25 +60,28 @@ export type ConvoState =
       items: ConvoItem[]
       convo: ChatBskyConvoDefs.ConvoView
       isFetchingHistory: boolean
+      deleteMessage: (messageId: string) => void
+      sendMessage: (
+        message: ChatBskyConvoSendMessage.InputSchema['message'],
+      ) => void
+      fetchMessageHistory: () => void
+    }
+  | {
+      status: ConvoStatus.Suspended
+      items: ConvoItem[]
+      convo: ChatBskyConvoDefs.ConvoView
+      isFetchingHistory: boolean
+    }
+  | {
+      status: ConvoStatus.Resuming
+      items: ConvoItem[]
+      convo: ChatBskyConvoDefs.ConvoView
+      isFetchingHistory: boolean
     }
   | {
       status: ConvoStatus.Error
       error: any
     }
-  | {
-      status: ConvoStatus.Destroyed
-    }
-
-export type ConvoInterface = {
-  state: ConvoState
-  service: {
-    deleteMessage: (messageId: string) => void
-    sendMessage: (
-      message: ChatBskyConvoSendMessage.InputSchema['message'],
-    ) => void
-    fetchMessageHistory: () => void
-  }
-}
 
 export function isConvoItemMessage(
   item: ConvoItem,
@@ -127,97 +131,98 @@ export class Convo {
     this.agent = params.agent
     this.__tempFromUserDid = params.__tempFromUserDid
 
+    /*
+     * Bind methods used by `useSyncExternalStore`
+     */
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
   }
 
-  private subscribers: (() => void)[] = []
-
-  subscribe(subscriber: () => void) {
-    console.log('SUBSCRIBE')
-    this.subscribers.push(subscriber)
-    this.initialize()
-    return () => {
-      console.log('UN-SUBSCRIBE')
-      this.subscribers = this.subscribers.filter(s => s !== subscriber)
-    }
+  async refreshConvo() {
+    const response = await this.agent.api.chat.bsky.convo.getConvo(
+      {
+        convoId: this.convoId,
+      },
+      {
+        headers: {
+          Authorization: this.__tempFromUserDid,
+        },
+      },
+    )
+    this.convo = response.data.convo
+    this.sender = this.convo.members.find(m => m.did === this.__tempFromUserDid)
   }
 
-  snapshot: ConvoInterface = {
-    state: {
-      status: ConvoStatus.Uninitialized,
-    },
-    service: {
-      deleteMessage: this.deleteMessage.bind(this),
-      sendMessage: this.sendMessage.bind(this),
-      fetchMessageHistory: this.fetchMessageHistory.bind(this),
-    },
-  }
-
-  getSnapshot(): ConvoInterface {
-    return this.snapshot
-  }
-
-  async initialize() {
-    if (this.status !== ConvoStatus.Uninitialized) return
-    this.status = ConvoStatus.Initializing
-
+  async resume() {
     try {
-      const response = await this.agent.api.chat.bsky.convo.getConvo(
-        {
-          convoId: this.convoId,
-        },
-        {
-          headers: {
-            Authorization: this.__tempFromUserDid,
-          },
-        },
-      )
-      const {convo} = response.data
+      if (this.status === ConvoStatus.Uninitialized) {
+        console.log('INITIALIZING')
+        this.status = ConvoStatus.Initializing
+        this.generateSnapshot()
 
-      this.convo = convo
-      this.sender = this.convo.members.find(
-        m => m.did === this.__tempFromUserDid,
-      )
-      this.status = ConvoStatus.Ready
+        await this.refreshConvo()
+        this.status = ConvoStatus.Ready
+        this.generateSnapshot()
 
-      this.commit()
+        await this.fetchMessageHistory()
 
-      await this.fetchMessageHistory()
+        this.pollEvents()
+      } else if (this.status === ConvoStatus.Suspended) {
+        console.log('RESUMING')
+        this.status = ConvoStatus.Resuming
+        this.generateSnapshot()
 
-      this.pollEvents()
+        await this.refreshConvo()
+        this.status = ConvoStatus.Ready
+        this.generateSnapshot()
+
+        await this.fetchMessageHistory()
+
+        this.pollEvents()
+      }
     } catch (e) {
       this.status = ConvoStatus.Error
       this.error = e
     }
   }
 
+  async suspend() {
+    this.status = ConvoStatus.Suspended
+    this.generateSnapshot()
+  }
+
   private async pollEvents() {
-    if (this.status === ConvoStatus.Destroyed) return
+    if (this.status !== ConvoStatus.Ready) return
     if (this.pendingEventIngestion) return
+
+    console.log('POLL')
     setTimeout(async () => {
       this.pendingEventIngestion = this.ingestLatestEvents()
       await this.pendingEventIngestion
       this.pendingEventIngestion = undefined
       this.pollEvents()
-    }, 5e3)
+    }, 1e3)
   }
 
   async fetchMessageHistory() {
-    if (this.status === ConvoStatus.Destroyed) return
-    // reached end
+    if (this.status !== ConvoStatus.Ready) return
+
+    /*
+     * If historyCursor is null, we've fetched all history.
+     */
     if (this.historyCursor === null) return
+
+    /*
+     * Don't fetch again if a fetch is already in progress
+     */
     if (this.isFetchingHistory) return
 
     this.isFetchingHistory = true
-    this.commit()
+    this.generateSnapshot()
 
     /*
-     * Delay if paginating while scrolled.
-     *
-     * TODO why does the FlatList jump without this delay?
-     *
-     * Tbh it feels a little more natural with a slight delay.
+     * Delay if paginating while scrolled to prevent momentum scrolling from
+     * jerking the list around, plus makes it feel a little more human.
      */
     if (this.pastMessages.size > 0) {
       await new Promise(y => setTimeout(y, 500))
@@ -256,11 +261,11 @@ export class Convo {
     }
 
     this.isFetchingHistory = false
-    this.commit()
+    this.generateSnapshot()
   }
 
   async ingestLatestEvents() {
-    if (this.status === ConvoStatus.Destroyed) return
+    if (this.status === ConvoStatus.Suspended) return
 
     const response = await this.agent.api.chat.bsky.convo.getLog(
       {
@@ -327,7 +332,7 @@ export class Convo {
       }
     }
 
-    this.commit()
+    this.generateSnapshot()
   }
 
   async processPendingMessages() {
@@ -374,20 +379,20 @@ export class Convo {
 
       await this.processPendingMessages()
 
-      this.commit()
+      this.generateSnapshot()
     } catch (e) {
       this.footerItems.set('pending-retry', {
         type: 'pending-retry',
         key: 'pending-retry',
         retry: this.batchRetryPendingMessages.bind(this),
       })
-      this.commit()
+      this.generateSnapshot()
     }
   }
 
   async batchRetryPendingMessages() {
     this.footerItems.delete('pending-retry')
-    this.commit()
+    this.generateSnapshot()
 
     try {
       const messageArray = Array.from(this.pendingMessages.values())
@@ -425,19 +430,19 @@ export class Convo {
         this.pendingMessages.delete(pendingMessage.id)
       }
 
-      this.commit()
+      this.generateSnapshot()
     } catch (e) {
       this.footerItems.set('pending-retry', {
         type: 'pending-retry',
         key: 'pending-retry',
         retry: this.batchRetryPendingMessages.bind(this),
       })
-      this.commit()
+      this.generateSnapshot()
     }
   }
 
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
-    if (this.status === ConvoStatus.Destroyed) return
+    if (this.status === ConvoStatus.Suspended) return
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim()) return
 
@@ -447,7 +452,7 @@ export class Convo {
       id: tempId,
       message,
     })
-    this.commit()
+    this.generateSnapshot()
 
     if (!this.isProcessingPendingMessages) {
       this.processPendingMessages()
@@ -456,7 +461,7 @@ export class Convo {
 
   async deleteMessage(messageId: string) {
     this.deletedMessages.add(messageId)
-    this.commit()
+    this.generateSnapshot()
 
     try {
       await this.agent.api.chat.bsky.convo.deleteMessageForSelf(
@@ -473,7 +478,7 @@ export class Convo {
       )
     } catch (e) {
       this.deletedMessages.delete(messageId)
-      this.commit()
+      this.generateSnapshot()
       throw e
     }
   }
@@ -481,7 +486,7 @@ export class Convo {
   /*
    * Items in reverse order, since FlatList inverts
    */
-  get items(): ConvoItem[] {
+  getItems(): ConvoItem[] {
     const items: ConvoItem[] = []
 
     // `newMessages` is in insertion order, unshift to reverse
@@ -580,55 +585,84 @@ export class Convo {
       })
   }
 
-  destroy() {
-    this.status = ConvoStatus.Destroyed
-    this.commit()
+  snapshot: ConvoState = {
+    status: ConvoStatus.Uninitialized,
   }
 
-  private commit() {
+  private generateSnapshot() {
     switch (this.status) {
       case ConvoStatus.Initializing: {
-        this.snapshot.state = {
+        this.snapshot = {
           status: ConvoStatus.Initializing,
         }
         break
       }
       case ConvoStatus.Ready: {
-        this.snapshot.state = {
-          status: ConvoStatus.Ready,
-          items: this.items,
+        this.snapshot = {
+          status: this.status,
+          items: this.getItems(),
+          convo: this.convo!,
+          isFetchingHistory: this.isFetchingHistory,
+          deleteMessage: this.deleteMessage.bind(this),
+          sendMessage: this.sendMessage.bind(this),
+          fetchMessageHistory: this.fetchMessageHistory.bind(this),
+        }
+        break
+      }
+      case ConvoStatus.Suspended: {
+        this.snapshot = {
+          status: this.status,
+          items: this.getItems(),
+          convo: this.convo!,
+          isFetchingHistory: this.isFetchingHistory,
+        }
+        break
+      }
+      case ConvoStatus.Resuming: {
+        this.snapshot = {
+          status: this.status,
+          items: this.getItems(),
           convo: this.convo!,
           isFetchingHistory: this.isFetchingHistory,
         }
         break
       }
       case ConvoStatus.Error: {
-        this.snapshot.state = {
+        this.snapshot = {
           status: ConvoStatus.Error,
           error: this.error,
         }
         break
       }
-      case ConvoStatus.Destroyed: {
-        this.snapshot.state = {
-          status: ConvoStatus.Destroyed,
-        }
-        break
-      }
       default: {
-        this.snapshot.state = {
+        this.snapshot = {
           status: ConvoStatus.Uninitialized,
         }
         break
       }
     }
 
-    this.snapshot = Object.assign({}, this.snapshot)
-
-    this.alertSubscribers()
+    this.emitNewSnapshot()
   }
 
-  private alertSubscribers() {
+  private emitNewSnapshot() {
     this.subscribers.forEach(subscriber => subscriber())
+  }
+
+  private subscribers: (() => void)[] = []
+
+  subscribe(subscriber: () => void) {
+    console.log('SUBSCRIBED')
+    this.subscribers.push(subscriber)
+    this.resume()
+    return () => {
+      console.log('UN-SUBSCRIBED')
+      this.suspend()
+      this.subscribers = this.subscribers.filter(s => s !== subscriber)
+    }
+  }
+
+  getSnapshot(): ConvoState {
+    return this.snapshot
   }
 }

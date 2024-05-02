@@ -46,16 +46,16 @@ function Inner() {
   const myDid = currentAccount?.did
 
   const otherProfile = React.useMemo(() => {
-    if (chat.state.status !== ConvoStatus.Ready) return
-    return chat.state.convo.members.find(m => m.did !== myDid)
-  }, [chat.state, myDid])
+    if (chat.status !== ConvoStatus.Ready) return
+    return chat.convo.members.find(m => m.did !== myDid)
+  }, [chat, myDid])
 
   // TODO whenever we have error messages, we should use them in here -hailey
-  if (chat.state.status !== ConvoStatus.Ready || !otherProfile) {
+  if (chat.status !== ConvoStatus.Ready || !otherProfile) {
     return (
       <ListMaybePlaceholder
         isLoading={true}
-        isError={chat.state.status === ConvoStatus.Error}
+        isError={chat.status === ConvoStatus.Error}
       />
     )
   }
@@ -77,7 +77,7 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const {state} = useChat()
+  const chat = useChat()
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -129,9 +129,9 @@ let Header = ({
         <PreviewableUserAvatar size={32} profile={profile} />
         <Text style={[a.text_lg, a.font_bold]}>{profile.displayName}</Text>
       </View>
-      {state.status === ConvoStatus.Ready && state.convo ? (
+      {chat.status === ConvoStatus.Ready ? (
         <ConvoMenu
-          convo={state.convo}
+          convo={chat.convo}
           profile={profile}
           onUpdateConvo={onUpdateConvo}
           currentScreen="conversation"

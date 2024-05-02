@@ -1,11 +1,12 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
 import {BskyAgent} from '@atproto-labs/api'
+import {useFocusEffect} from '@react-navigation/native'
 
-import {Convo, ConvoInterface, ConvoParams} from '#/state/messages/convo'
+import {Convo, ConvoParams, ConvoState} from '#/state/messages/convo'
 import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 
-const ChatContext = React.createContext<ConvoInterface | null>(null)
+const ChatContext = React.createContext<ConvoState | null>(null)
 
 export function useChat() {
   const ctx = useContext(ChatContext)
@@ -32,6 +33,16 @@ export function ChatProvider({
       }),
   )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      convo.resume()
+
+      return () => {
+        convo.suspend()
+      }
+    }, [convo]),
+  )
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }

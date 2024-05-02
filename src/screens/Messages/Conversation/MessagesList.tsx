@@ -89,7 +89,9 @@ export function MessagesList() {
   }, [])
 
   const onEndReached = useCallback(() => {
-    chat.service.fetchMessageHistory()
+    if (chat.status === ConvoStatus.Ready) {
+      chat.fetchMessageHistory()
+    }
   }, [chat])
 
   const onInputFocus = useCallback(() => {
@@ -102,9 +104,11 @@ export function MessagesList() {
 
   const onSendMessage = useCallback(
     (text: string) => {
-      chat.service.sendMessage({
-        text,
-      })
+      if (chat.status === ConvoStatus.Ready) {
+        chat.sendMessage({
+          text,
+        })
+      }
     },
     [chat],
   )
@@ -134,9 +138,7 @@ export function MessagesList() {
       contentContainerStyle={a.flex_1}>
       <FlatList
         ref={flatListRef}
-        data={
-          chat.state.status === ConvoStatus.Ready ? chat.state.items : undefined
-        }
+        data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         contentContainerStyle={{paddingHorizontal: 10}}
@@ -159,8 +161,7 @@ export function MessagesList() {
         ListFooterComponent={
           <MaybeLoader
             isLoading={
-              chat.state.status === ConvoStatus.Ready &&
-              chat.state.isFetchingHistory
+              chat.status === ConvoStatus.Ready && chat.isFetchingHistory
             }
           />
         }
