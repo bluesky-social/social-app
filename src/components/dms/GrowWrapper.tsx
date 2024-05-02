@@ -24,10 +24,6 @@ export const GrowWrapper = React.forwardRef(function GrowWrapper(
   },
   ref,
 ) {
-  useImperativeHandle(ref, () => ({
-    reset,
-  }))
-
   const scale = useSharedValue(1)
   const animationDidComplete = useSharedValue(false)
 
@@ -56,11 +52,15 @@ export const GrowWrapper = React.forwardRef(function GrowWrapper(
     }
   }, [animationDidComplete, reset])
 
+  useImperativeHandle(ref, () => ({
+    reset,
+  }))
+
   return (
     <AnimatedPressable
-      onPressIn={onTouchStart}
       style={animatedStyle}
       unstable_pressDelay={300}
+      onPressIn={onTouchStart}
       onTouchEnd={onTouchEnd}>
       {children}
     </AnimatedPressable>
