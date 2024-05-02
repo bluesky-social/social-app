@@ -16,7 +16,9 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {isNative, isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
+import {useScrollToEndOnFocus} from '#/screens/Messages/Conversation/useScrollToEndOnFocus'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
@@ -72,54 +74,58 @@ function keyExtractor(item: ConvoItem) {
   return item.key
 }
 
-function onScrollToEndFailed() {
+function onScrollToIndexFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
 
 export function MessagesList() {
   const chat = useChat()
   const flatListRef = useRef<FlatList>(null)
-  // We use this to know if we should scroll after a new clop is added to the list
-  const isAtBottom = useRef(false)
-  const currentOffset = React.useRef(0)
+  const isAtBottom = React.useRef(true)
 
-  const onContentSizeChange = useCallback(() => {
-    if (currentOffset.current <= 100) {
-      flatListRef.current?.scrollToOffset({offset: 0, animated: true})
+  useScrollToEndOnFocus(flatListRef)
+
+  const messages = React.useMemo(() => {
+    if (chat.state.status !== ConvoStatus.Ready) {
+      return []
     }
+    const items = chat.state.items
+    return chat.state.status === ConvoStatus.Ready
+      ? items.map((item, index) => items[items.length - 1 - index])
+      : []
+  }, [chat.state])
+
+  const onContentSizeChange = useCallback((_: number, height: number) => {
+    if (!isAtBottom.current) return
+    flatListRef.current?.scrollToOffset({animated: isNative, offset: height})
   }, [])
 
-  const onEndReached = useCallback(() => {
-    if (chat.status === ConvoStatus.Ready) {
-      chat.fetchMessageHistory()
-    }
-  }, [chat])
-
-  const onInputFocus = useCallback(() => {
-    if (!isAtBottom.current) {
-      flatListRef.current?.scrollToOffset({offset: 0, animated: true})
-    }
-  }, [])
-
-  const onInputBlur = useCallback(() => {}, [])
+  const onStartReached = useCallback(() => {
+    chat.service.fetchMessageHistory()
+  }, [chat.service])
 
   const onSendMessage = useCallback(
     (text: string) => {
-      if (chat.status === ConvoStatus.Ready) {
-        chat.sendMessage({
-          text,
-        })
-      }
+      chat.service.sendMessage({
+        text,
+      })
     },
-    [chat],
+    [chat.service],
   )
 
   const onScroll = React.useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      currentOffset.current = e.nativeEvent.contentOffset.y
+      const bottomOffset =
+        e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height
+
+      isAtBottom.current = e.nativeEvent.contentSize.height - 100 < bottomOffset
     },
     [],
   )
+
+  const onInputFocus = React.useCallback(() => {
+    flatListRef.current?.scrollToEnd({animated: true})
+  }, [flatListRef])
 
   const setMinShellMode = useSetMinimalShellMode()
   useFocusEffect(
@@ -140,40 +146,40 @@ export function MessagesList() {
       contentContainerStyle={a.flex_1}>
       <FlatList
         ref={flatListRef}
-        data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
+        data={chat.state.status === ConvoStatus.Ready ? messages : undefined}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         contentContainerStyle={{paddingHorizontal: 10}}
         // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
         // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
         // this...probably.
-        initialNumToRender={20}
+        initialNumToRender={25}
         // Same with the max to render per batch. Let's be safe for now though.
         maxToRenderPerBatch={25}
-        inverted={true}
-        onEndReached={onEndReached}
-        onScrollToIndexFailed={onScrollToEndFailed}
-        onContentSizeChange={onContentSizeChange}
-        onScroll={onScroll}
-        // We don't really need to call this much since there are not any animations that rely on this
-        scrollEventThrottle={100}
+        removeClippedSubviews={false}
+        keyboardDismissMode="on-drag"
+        disableVirtualization={true}
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,
         }}
-        ListFooterComponent={
+        onContentSizeChange={onContentSizeChange}
+        onStartReached={onStartReached}
+        onScrollToIndexFailed={onScrollToIndexFailed}
+        onScroll={onScroll}
+        // We don't really need to call this much since there are not any animations that rely on this
+        scrollEventThrottle={100}
+        ListHeaderComponent={
           <MaybeLoader
             isLoading={
-              chat.status === ConvoStatus.Ready && chat.isFetchingHistory
+              chat.state.status === ConvoStatus.Ready &&
+              chat.state.isFetchingHistory
             }
           />
         }
-        removeClippedSubviews={true}
-        keyboardDismissMode="on-drag"
       />
       <MessageInput
         onSendMessage={onSendMessage}
-        onFocus={onInputFocus}
-        onBlur={onInputBlur}
+        onFocus={isWeb ? onInputFocus : undefined}
       />
     </KeyboardAvoidingView>
   )

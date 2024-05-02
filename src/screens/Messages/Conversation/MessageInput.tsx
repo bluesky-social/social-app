@@ -19,11 +19,9 @@ import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/ico
 export function MessageInput({
   onSendMessage,
   onFocus,
-  onBlur,
 }: {
   onSendMessage: (message: string) => void
-  onFocus: () => void
-  onBlur: () => void
+  onFocus?: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -85,7 +83,6 @@ export function MessageInput({
           scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
           onFocus={onFocus}
-          onBlur={onBlur}
           onContentSizeChange={onInputLayout}
           ref={inputRef}
         />
