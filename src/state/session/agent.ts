@@ -1,5 +1,14 @@
+<<<<<<< HEAD
 import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
 import {TID} from '@atproto/common-web'
+=======
+import {
+  AtpSessionData,
+  AtpSessionEvent,
+  BskyAgent,
+  SessionDispatcher,
+} from '@atproto/api'
+>>>>>>> 1a535b0b7 (use xrpc dispatcher)
 
 import {networkRetry} from '#/lib/async/retry'
 import {
@@ -35,7 +44,7 @@ export async function createAgentAndResume(
 ) {
   const agent = new BskyAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
-    agent.pdsUrl = agent.api.xrpc.uri = new URL(storedAccount.pdsUrl)
+    agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)

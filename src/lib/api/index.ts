@@ -280,7 +280,7 @@ export async function createThreadgate(
 
   const postUrip = new AtUri(postUri)
   await agent.api.com.atproto.repo.putRecord({
-    repo: agent.session!.did,
+    repo: agent.accountDid,
     collection: 'app.bsky.feed.threadgate',
     rkey: postUrip.rkey,
     record: {
