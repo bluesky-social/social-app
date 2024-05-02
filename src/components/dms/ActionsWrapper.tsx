@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {Pressable} from 'react-native'
+import {Pressable, View} from 'react-native'
 import Animated, {
   cancelAnimation,
   runOnJS,
@@ -9,13 +9,16 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {useHaptics} from 'lib/haptics'
+import {atoms as a} from '#/alf'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-export const GrowWrapper = function GrowWrapper({
+export const ActionsWrapper = function GrowWrapper({
+  isFromSelf,
   onOpenMenu,
   children,
 }: {
+  isFromSelf: boolean
   onOpenMenu: () => unknown
   children: React.ReactNode
 }) {
@@ -49,12 +52,20 @@ export const GrowWrapper = function GrowWrapper({
   }, [scale, animationDidComplete, playHaptic, onOpenMenu, shrink])
 
   return (
-    <AnimatedPressable
-      style={animatedStyle}
-      unstable_pressDelay={200}
-      onPressIn={grow}
-      onTouchEnd={shrink}>
-      {children}
-    </AnimatedPressable>
+    <View
+      style={[
+        {
+          maxWidth: '65%',
+        },
+        isFromSelf ? a.self_end : a.self_start,
+      ]}>
+      <AnimatedPressable
+        style={animatedStyle}
+        unstable_pressDelay={200}
+        onPressIn={grow}
+        onTouchEnd={shrink}>
+        {children}
+      </AnimatedPressable>
+    </View>
   )
 }

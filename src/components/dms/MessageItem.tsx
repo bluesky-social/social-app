@@ -4,7 +4,7 @@ import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
 import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {GrowWrapper} from '#/components/dms/GrowWrapper'
+import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {MessageItemMetadata} from '#/components/dms/MesageItemMetadata'
 import {MessageMenu} from '#/components/dms/MessageMenu'
 import {useMenuControl} from '#/components/Menu'
@@ -56,46 +56,38 @@ export function MessageItem({
   }, [menuControl])
 
   return (
-    <View
-      style={[
-        {
-          maxWidth: '65%',
-        },
-        isFromSelf ? a.self_end : a.self_start,
-      ]}>
-      <GrowWrapper onOpenMenu={onOpenMenu}>
-        <View
+    <ActionsWrapper onOpenMenu={onOpenMenu} isFromSelf={isFromSelf}>
+      <View
+        style={[
+          a.py_sm,
+          a.px_lg,
+          a.my_2xs,
+          a.rounded_md,
+          {
+            backgroundColor: isFromSelf
+              ? t.palette.primary_500
+              : t.palette.contrast_50,
+            borderRadius: 17,
+          },
+          isFromSelf
+            ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+            : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+        ]}>
+        <Text
           style={[
-            a.py_sm,
-            a.px_lg,
-            a.my_2xs,
-            a.rounded_md,
-            {
-              backgroundColor: isFromSelf
-                ? t.palette.primary_500
-                : t.palette.contrast_50,
-              borderRadius: 17,
-            },
-            isFromSelf
-              ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-              : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+            a.text_md,
+            a.leading_snug,
+            isFromSelf && {color: t.palette.white},
           ]}>
-          <Text
-            style={[
-              a.text_md,
-              a.leading_snug,
-              isFromSelf && {color: t.palette.white},
-            ]}>
-            {item.text}
-          </Text>
-        </View>
-        <MessageItemMetadata
-          message={item}
-          isLastInGroup={isLastInGroup}
-          style={isFromSelf ? a.text_right : a.text_left}
-        />
-        <MessageMenu message={item} control={menuControl} />
-      </GrowWrapper>
-    </View>
+          {item.text}
+        </Text>
+      </View>
+      <MessageItemMetadata
+        message={item}
+        isLastInGroup={isLastInGroup}
+        style={isFromSelf ? a.text_right : a.text_left}
+      />
+      <MessageMenu message={item} control={menuControl} />
+    </ActionsWrapper>
   )
 }
