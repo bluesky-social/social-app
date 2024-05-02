@@ -1,5 +1,5 @@
 import React from 'react'
-import {AtpPersistSessionHandler, BskyAgent} from '@atproto/api'
+import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
@@ -93,77 +93,65 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }))
   }, [setState])
 
-  const createPersistSessionHandler = React.useCallback(
+  const onAgentSessionChange = React.useCallback(
     (
       agent: BskyAgent,
       account: SessionAccount,
-      persistSessionCallback: (props: {
-        expired: boolean
-        refreshedAccount: SessionAccount
-      }) => void,
-      {
-        networkErrorCallback,
-      }: {
-        networkErrorCallback?: () => void
-      } = {},
-    ): AtpPersistSessionHandler => {
-      return function persistSession(event, session) {
-        const expired = event === 'expired' || event === 'create-failed'
+      event: AtpSessionEvent,
+      session: AtpSessionData | undefined,
+    ) => {
+      const expired = event === 'expired' || event === 'create-failed'
 
-        if (event === 'network-error') {
-          logger.warn(
-            `session: persistSessionHandler received network-error event`,
-          )
-          networkErrorCallback?.()
-          return
-        }
+      if (event === 'network-error') {
+        logger.warn(
+          `session: persistSessionHandler received network-error event`,
+        )
+        clearCurrentAccount()
+        return
+      }
 
-        // TODO: use agentToSessionAccount for this too.
-        const refreshedAccount: SessionAccount = {
-          service: account.service,
-          did: session?.did || account.did,
-          handle: session?.handle || account.handle,
-          email: session?.email || account.email,
-          emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
-          emailAuthFactor: session?.emailAuthFactor || account.emailAuthFactor,
-          deactivated: isSessionDeactivated(session?.accessJwt),
-          pdsUrl: agent.pdsUrl?.toString(),
-
-          /*
-           * Tokens are undefined if the session expires, or if creation fails for
-           * any reason e.g. tokens are invalid, network error, etc.
-           */
-          refreshJwt: session?.refreshJwt,
-          accessJwt: session?.accessJwt,
-        }
-
-        logger.debug(`session: persistSession`, {
-          event,
-          deactivated: refreshedAccount.deactivated,
-        })
-
-        if (expired) {
-          logger.warn(`session: expired`)
-          emitSessionDropped()
-        }
+      // TODO: use agentToSessionAccount for this too.
+      const refreshedAccount: SessionAccount = {
+        service: account.service,
+        did: session?.did || account.did,
+        handle: session?.handle || account.handle,
+        email: session?.email || account.email,
+        emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
+        emailAuthFactor: session?.emailAuthFactor || account.emailAuthFactor,
+        deactivated: isSessionDeactivated(session?.accessJwt),
+        pdsUrl: agent.pdsUrl?.toString(),
 
         /*
-         * If the session expired, or it was successfully created/updated, we want
-         * to update/persist the data.
-         *
-         * If the session creation failed, it could be a network error, or it could
-         * be more serious like an invalid token(s). We can't differentiate, so in
-         * order to allow the user to get a fresh token (if they need it), we need
-         * to persist this data and wipe their tokens, effectively logging them
-         * out.
+         * Tokens are undefined if the session expires, or if creation fails for
+         * any reason e.g. tokens are invalid, network error, etc.
          */
-        persistSessionCallback({
-          expired,
-          refreshedAccount,
-        })
+        refreshJwt: session?.refreshJwt,
+        accessJwt: session?.accessJwt,
       }
+
+      logger.debug(`session: persistSession`, {
+        event,
+        deactivated: refreshedAccount.deactivated,
+      })
+
+      if (expired) {
+        logger.warn(`session: expired`)
+        emitSessionDropped()
+      }
+
+      /*
+       * If the session expired, or it was successfully created/updated, we want
+       * to update/persist the data.
+       *
+       * If the session creation failed, it could be a network error, or it could
+       * be more serious like an invalid token(s). We can't differentiate, so in
+       * order to allow the user to get a fresh token (if they need it), we need
+       * to persist this data and wipe their tokens, effectively logging them
+       * out.
+       */
+      upsertAccount(refreshedAccount, expired)
     },
-    [],
+    [clearCurrentAccount, upsertAccount],
   )
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
@@ -191,16 +179,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
       )
 
-      agent.setPersistSessionHandler(
-        createPersistSessionHandler(
-          agent,
-          account,
-          ({expired, refreshedAccount}) => {
-            upsertAccount(refreshedAccount, expired)
-          },
-          {networkErrorCallback: clearCurrentAccount},
-        ),
-      )
+      agent.setPersistSessionHandler((event, session) => {
+        onAgentSessionChange(agent, account, event, session)
+      })
 
       __globalAgent = agent
       await fetchingGates
@@ -210,7 +191,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [upsertAccount, clearCurrentAccount, createPersistSessionHandler],
+    [upsertAccount, onAgentSessionChange],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -223,16 +204,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         authFactorToken,
       })
 
-      agent.setPersistSessionHandler(
-        createPersistSessionHandler(
-          agent,
-          account,
-          ({expired, refreshedAccount}) => {
-            upsertAccount(refreshedAccount, expired)
-          },
-          {networkErrorCallback: clearCurrentAccount},
-        ),
-      )
+      agent.setPersistSessionHandler((event, session) => {
+        onAgentSessionChange(agent, account, event, session)
+      })
 
       __globalAgent = agent
       // @ts-ignore
@@ -245,7 +219,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [upsertAccount, clearCurrentAccount, createPersistSessionHandler],
+    [upsertAccount, onAgentSessionChange],
   )
 
   const logout = React.useCallback<SessionApiContext['logout']>(
@@ -280,16 +254,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         agent.pdsUrl = agent.api.xrpc.uri = new URL(account.pdsUrl)
       }
 
-      agent.setPersistSessionHandler(
-        createPersistSessionHandler(
-          agent,
-          account,
-          ({expired, refreshedAccount}) => {
-            upsertAccount(refreshedAccount, expired)
-          },
-          {networkErrorCallback: clearCurrentAccount},
-        ),
-      )
+      agent.setPersistSessionHandler((event, session) => {
+        onAgentSessionChange(agent, account, event, session)
+      })
 
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
@@ -380,7 +347,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return sessionAccount
       }
     },
-    [upsertAccount, clearCurrentAccount, createPersistSessionHandler],
+    [upsertAccount, onAgentSessionChange],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
