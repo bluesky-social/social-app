@@ -70,14 +70,24 @@ import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
-function SettingsAccountCard({account}: {account: SessionAccount}) {
+function SettingsAccountCard({
+  account,
+  isSwitchingAccounts,
+  onPressSwitchAccount,
+}: {
+  account: SessionAccount
+  isSwitchingAccounts: boolean
+  onPressSwitchAccount: (
+    account: SessionAccount,
+    logContext: 'Settings',
+  ) => void
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isSwitchingAccounts, currentAccount} = useSession()
+  const {currentAccount} = useSession()
   const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
-  const {onPressSwitchAccount} = useAccountSwitcher()
 
   const contents = (
     <View style={[pal.view, styles.linkCard]}>
@@ -165,12 +175,13 @@ export function SettingsScreen({}: Props) {
   const {isMobile} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
-  const {isSwitchingAccounts, accounts, currentAccount} = useSession()
+  const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
+  const {isSwitchingAccounts, onPressSwitchAccount} = useAccountSwitcher()
 
   // TODO: TEMP REMOVE WHEN CLOPS ARE RELEASED
   const gate = useGate()
@@ -385,13 +396,22 @@ export function SettingsScreen({}: Props) {
             <ActivityIndicator />
           </View>
         ) : (
-          <SettingsAccountCard account={currentAccount!} />
+          <SettingsAccountCard
+            account={currentAccount!}
+            onPressSwitchAccount={onPressSwitchAccount}
+            isSwitchingAccounts={isSwitchingAccounts}
+          />
         )}
 
         {accounts
           .filter(a => a.did !== currentAccount?.did)
           .map(account => (
-            <SettingsAccountCard key={account.did} account={account} />
+            <SettingsAccountCard
+              key={account.did}
+              account={account}
+              onPressSwitchAccount={onPressSwitchAccount}
+              isSwitchingAccounts={isSwitchingAccounts}
+            />
           ))}
 
         <TouchableOpacity
