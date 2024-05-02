@@ -20,7 +20,7 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
@@ -237,7 +237,9 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             <PreviewableUserAvatar profile={otherUser} size={42} />
           </View>
           <View style={[a.flex_1]}>
-            <Text numberOfLines={1} style={[a.text_md, a.leading_normal]}>
+            <Text
+              numberOfLines={1}
+              style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
               <Text
                 style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
                 {otherUser.displayName || otherUser.handle}
