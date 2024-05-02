@@ -11,6 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {isIOS} from '#/platform/detection'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -128,7 +129,7 @@ export function MessagesList() {
   return (
     <KeyboardAvoidingView
       style={[a.flex_1, {marginBottom: bottomInset}]}
-      keyboardVerticalOffset={60}
+      keyboardVerticalOffset={isIOS ? 60 : 25}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
       <FlatList

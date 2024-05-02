@@ -12,6 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_10} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
@@ -90,6 +91,9 @@ export function MessageInput({
         />
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={_(msg`Send message`)}
+          accessibilityHint=""
+          hitSlop={HITSLOP_10}
           style={[
             a.rounded_full,
             a.align_center,
