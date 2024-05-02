@@ -82,7 +82,7 @@ let Header = ({
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
-      navigation.replace('MessagesList')
+      navigation.replace('Messages')
     } else {
       navigation.pop()
     }
