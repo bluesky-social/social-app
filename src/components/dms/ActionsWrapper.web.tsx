@@ -1,11 +1,10 @@
 import React from 'react'
-import {View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
 import {atoms as a} from '#/alf'
 import {MessageMenu} from '#/components/dms/MessageMenu'
 import {useMenuControl} from '#/components/Menu'
-import {Text} from '#/components/Typography'
 
 export function ActionsWrapper({
   message,
@@ -32,44 +31,39 @@ export function ActionsWrapper({
     <View
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      style={[a.flex_1, a.flex_row]}>
+      onFocus={onMouseEnter}
+      onBlur={onMouseLeave}
+      style={StyleSheet.flatten([a.flex_1, a.flex_row])}>
       {isFromSelf && (
         <View
           style={[
+            a.mr_md,
             {
-              width: 100,
               marginLeft: 'auto',
-              alignItems: 'flex-end',
             },
           ]}>
-          <ActionBar control={menuControl} message={message} />
+          <MessageMenu
+            message={message}
+            control={menuControl}
+            triggerOpacity={showActions ? 1 : 0}
+          />
         </View>
       )}
       <View
-        style={[
-          {
-            maxWidth: '65%',
-          },
-        ]}>
+        style={{
+          maxWidth: '65%',
+        }}>
         {children}
       </View>
       {!isFromSelf && (
-        <View style={[{width: 100}]}>{showActions && <Text>Hello</Text>}</View>
+        <View style={[a.flex_row, a.align_center, a.ml_xl]}>
+          <MessageMenu
+            message={message}
+            control={menuControl}
+            triggerOpacity={showActions ? 1 : 0}
+          />
+        </View>
       )}
-    </View>
-  )
-}
-
-function ActionBar({
-  control,
-  message,
-}: {
-  control: Menu.MenuControlProps
-  message: ChatBskyConvoDefs.MessageView
-}) {
-  return (
-    <View style={[a.flex_row, a.mx_md]}>
-      <MessageMenu message={message} control={control} />
     </View>
   )
 }
