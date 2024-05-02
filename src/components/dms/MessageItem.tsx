@@ -2,7 +2,7 @@ import React, {useMemo} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
-import {useSession} from '#/state/session'
+import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {GrowWrapper} from '#/components/dms/GrowWrapper'
 import {MessageItemMetadata} from '#/components/dms/MesageItemMetadata'
