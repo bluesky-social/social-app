@@ -1,17 +1,11 @@
 import React, {useMemo} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
-import {useSession} from '#/state/session'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
+import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
-import {GrowWrapper} from '#/components/dms/GrowWrapper'
-import {MessageMenu} from '#/components/dms/MessageMenu'
-import * as Prompt from '#/components/Prompt'
-import {usePromptControl} from '#/components/Prompt'
+import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
+import {MessageItemMetadata} from '#/components/dms/MesageItemMetadata'
 import {Text} from '#/components/Typography'
 
 export function MessageItem({
@@ -25,10 +19,7 @@ export function MessageItem({
     | null
 }) {
   const t = useTheme()
-  const {_} = useLingui()
   const {currentAccount} = useSession()
-
-  const control = useDialogControl()
 
   const isFromSelf = item.sender?.did === currentAccount?.did
 
@@ -56,14 +47,9 @@ export function MessageItem({
     return true
   }, [item, next, isFromSelf, isNextFromSelf])
 
-  const onOpenMenu = React.useCallback(() => {
-    control.open()
-  }, [control])
-
   return (
-    <View
-      style={{maxWidth: '65%', marginLeft: isFromSelf ? 'auto' : undefined}}>
-      <GrowWrapper onOpenMenu={onOpenMenu}>
+    <View>
+      <ActionsWrapper isFromSelf={isFromSelf} message={item}>
         <View
           style={[
             a.py_sm,
@@ -89,23 +75,12 @@ export function MessageItem({
             {item.text}
           </Text>
         </View>
-        <MessageItemMetadata
-          message={item}
-          isLastInGroup={isLastInGroup}
-          style={isFromSelf ? a.text_right : a.text_left}
-        />
-        <MessageMenu message={item} control={control} />
-        <Prompt.Basic
-          control={deleteControl}
-          title={_(msg`Delete message`)}
-          description={_(
-            msg`Are you sure you want to delete this message?? The message will be deleted for you, but not for other participants.`,
-          )}
-          confirmButtonCta={_(msg`Leave`)}
-          confirmButtonColor="negative"
-          onConfirm={onDelete}
-        />
-      </GrowWrapper>
+      </ActionsWrapper>
+      <MessageItemMetadata
+        message={item}
+        isLastInGroup={isLastInGroup}
+        style={isFromSelf ? a.text_right : a.text_left}
+      />
     </View>
   )
 }
