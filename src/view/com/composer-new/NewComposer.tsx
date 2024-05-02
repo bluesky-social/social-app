@@ -174,9 +174,10 @@ let Actions = ({
         a.flex_row,
         a.align_center,
         a.justify_between,
-        a.border_t,
         a.px_sm,
         a.py_xs,
+        a.gap_sm,
+        a.border_t,
       ]}>
       <View style={[a.flex_row, a.gap_xs]}>
         <SelectPhotoBtn />
