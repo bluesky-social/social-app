@@ -279,6 +279,8 @@ export class Convo {
                *   this.pastMessages.set(log.message.id, log.message)
                */
               this.pastMessages.delete(log.message.id)
+              this.newMessages.delete(log.message.id)
+              this.deletedMessages.delete(log.message.id)
             }
           }
         }
@@ -412,6 +414,30 @@ export class Convo {
     }
   }
 
+  async deleteMessage(messageId: string) {
+    this.deletedMessages.add(messageId)
+    this.commit()
+
+    try {
+      await this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+        {
+          convoId: this.convoId,
+          messageId,
+        },
+        {
+          encoding: 'application/json',
+          headers: {
+            Authorization: this.__tempFromUserDid,
+          },
+        },
+      )
+    } catch (e) {
+      this.deletedMessages.delete(messageId)
+      this.commit()
+      throw e
+    }
+  }
+
   /*
    * Items in reverse order, since FlatList inverts
    */
@@ -512,32 +538,6 @@ export class Convo {
 
         return item
       })
-  }
-
-  async deleteMessage(messageId: string) {
-    this.deletedMessages.add(messageId)
-    this.commit()
-
-    await this.agent.api.chat.bsky.convo.deleteMessageForSelf(
-      {
-        convoId: this.convoId,
-        messageId,
-      },
-      {
-        encoding: 'application/json',
-        headers: {
-          Authorization: this.__tempFromUserDid,
-        },
-      },
-    )
-
-    // remove from optimistic
-    this.deletedMessages.delete(messageId)
-    // remove from either new or past messages
-    this.pastMessages.delete(messageId)
-    this.newMessages.delete(messageId)
-    // commit
-    this.commit()
   }
 
   destroy() {
