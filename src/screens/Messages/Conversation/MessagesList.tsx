@@ -1,8 +1,10 @@
-import React, {useCallback, useRef} from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 import {
+  Dimensions,
   FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   View,
 } from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
@@ -11,7 +13,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {isIOS} from '#/platform/detection'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -125,11 +126,12 @@ export function MessagesList() {
   )
 
   const {bottom: bottomInset} = useSafeAreaInsets()
+  const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
   return (
     <KeyboardAvoidingView
       style={[a.flex_1, {marginBottom: bottomInset}]}
-      keyboardVerticalOffset={isIOS ? 60 : 25}
+      keyboardVerticalOffset={keyboardVerticalOffset}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
       <FlatList
@@ -174,4 +176,27 @@ export function MessagesList() {
       />
     </KeyboardAvoidingView>
   )
+}
+
+function useKeyboardVerticalOffset() {
+  const {top: topInset} = useSafeAreaInsets()
+  const [screenWindowDifference, setScreenWindowDifference] = React.useState(
+    () => Dimensions.get('screen').height - Dimensions.get('window').height,
+  )
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener(
+      'change',
+      ({screen, window}) => {
+        setScreenWindowDifference(screen.height - window.height)
+      },
+    )
+    return () => subscription.remove()
+  }, [])
+
+  return Platform.select({
+    ios: topInset,
+    android: screenWindowDifference,
+    default: 0,
+  })
 }
