@@ -21,6 +21,7 @@ export let MessageMenu = ({
 }: {
   hideTrigger?: boolean
   triggerOpacity?: number
+  onTriggerPress?: () => void
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
 }): React.ReactNode => {

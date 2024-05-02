@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {NativeSyntheticEvent, StyleSheet, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
 import {atoms as a} from '#/alf'
@@ -15,9 +15,10 @@ export function ActionsWrapper({
   isFromSelf: boolean
   children: React.ReactNode
 }) {
-  const [showActions, setShowActions] = React.useState(false)
-
   const menuControl = useMenuControl()
+  const viewRef = React.useRef(null)
+
+  const [showActions, setShowActions] = React.useState(false)
 
   const onMouseEnter = React.useCallback(() => {
     setShowActions(true)
@@ -27,13 +28,21 @@ export function ActionsWrapper({
     setShowActions(false)
   }, [])
 
+  // We need to handle the `onFocus` separately because we want to know if there is a related target (the element
+  // that is losing focus). If there isn't that means the focus is coming from a dropdown that is now closed.
+  const onFocus = React.useCallback((e: NativeSyntheticEvent<any>) => {
+    if (e.nativeEvent.relatedTarget == null) return
+    setShowActions(true)
+  }, [])
+
   return (
     <View
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      onFocus={onMouseEnter}
+      onFocus={onFocus}
       onBlur={onMouseLeave}
-      style={StyleSheet.flatten([a.flex_1, a.flex_row])}>
+      style={StyleSheet.flatten([a.flex_1, a.flex_row])}
+      ref={viewRef}>
       {isFromSelf && (
         <View
           style={[
@@ -45,7 +54,8 @@ export function ActionsWrapper({
           <MessageMenu
             message={message}
             control={menuControl}
-            triggerOpacity={showActions ? 1 : 0}
+            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
+            onTriggerPress={onMouseEnter}
           />
         </View>
       )}
@@ -60,7 +70,8 @@ export function ActionsWrapper({
           <MessageMenu
             message={message}
             control={menuControl}
-            triggerOpacity={showActions ? 1 : 0}
+            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
+            onTriggerPress={onMouseEnter}
           />
         </View>
       )}
