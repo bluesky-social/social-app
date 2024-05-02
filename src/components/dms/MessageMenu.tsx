@@ -1,9 +1,12 @@
 import React from 'react'
+import {Pressable} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from 'state/session'
+import {atoms as a, useTheme} from '#/alf'
+import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Menu from '#/components/Menu'
@@ -13,11 +16,14 @@ import {usePromptControl} from '#/components/Prompt'
 export let MessageMenu = ({
   message,
   control,
+  hideTrigger,
 }: {
+  hideTrigger?: boolean
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
 }): React.ReactNode => {
   const {_} = useLingui()
+  const t = useTheme()
   const {currentAccount} = useSession()
   const deleteControl = usePromptControl()
 
@@ -34,6 +40,24 @@ export let MessageMenu = ({
   return (
     <>
       <Menu.Root control={control}>
+        {!hideTrigger && (
+          <Menu.Trigger label={_(msg`Chat settings`)}>
+            {({props, state}) => (
+              <Pressable
+                {...props}
+                style={[
+                  a.p_sm,
+                  a.rounded_full,
+                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                  // make sure pfp is in the middle
+                  {marginLeft: -10},
+                ]}>
+                <DotsHorizontal size="sm" style={t.atoms.text} />
+              </Pressable>
+            )}
+          </Menu.Trigger>
+        )}
+
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item

@@ -6,8 +6,6 @@ import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {MessageItemMetadata} from '#/components/dms/MesageItemMetadata'
-import {MessageMenu} from '#/components/dms/MessageMenu'
-import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
 export function MessageItem({
@@ -22,8 +20,6 @@ export function MessageItem({
 }) {
   const t = useTheme()
   const {currentAccount} = useSession()
-
-  const menuControl = useMenuControl()
 
   const isFromSelf = item.sender?.did === currentAccount?.did
 
@@ -51,12 +47,8 @@ export function MessageItem({
     return true
   }, [item, next, isFromSelf, isNextFromSelf])
 
-  const onOpenMenu = React.useCallback(() => {
-    menuControl.open()
-  }, [menuControl])
-
   return (
-    <ActionsWrapper onOpenMenu={onOpenMenu} isFromSelf={isFromSelf}>
+    <ActionsWrapper isFromSelf={isFromSelf} message={item}>
       <View
         style={[
           a.py_sm,
@@ -87,7 +79,6 @@ export function MessageItem({
         isLastInGroup={isLastInGroup}
         style={isFromSelf ? a.text_right : a.text_left}
       />
-      <MessageMenu message={item} control={menuControl} />
     </ActionsWrapper>
   )
 }

@@ -7,22 +7,26 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
 import {useHaptics} from 'lib/haptics'
 import {atoms as a} from '#/alf'
+import {MessageMenu} from '#/components/dms/MessageMenu'
+import {useMenuControl} from '#/components/Menu'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 export const ActionsWrapper = function GrowWrapper({
+  message,
   isFromSelf,
-  onOpenMenu,
   children,
 }: {
+  message: ChatBskyConvoDefs.MessageView
   isFromSelf: boolean
-  onOpenMenu: () => unknown
   children: React.ReactNode
 }) {
   const playHaptic = useHaptics()
+  const menuControl = useMenuControl()
 
   const scale = useSharedValue(1)
   const animationDidComplete = useSharedValue(false)
@@ -45,11 +49,11 @@ export const ActionsWrapper = function GrowWrapper({
       if (!finished) return
       animationDidComplete.value = true
       runOnJS(playHaptic)()
-      runOnJS(onOpenMenu)()
+      runOnJS(menuControl.open)()
 
       shrink()
     })
-  }, [scale, animationDidComplete, playHaptic, onOpenMenu, shrink])
+  }, [scale, animationDidComplete, playHaptic, shrink, menuControl])
 
   return (
     <View
@@ -66,6 +70,7 @@ export const ActionsWrapper = function GrowWrapper({
         onTouchEnd={shrink}>
         {children}
       </AnimatedPressable>
+      <MessageMenu message={message} control={menuControl} hideTrigger={true} />
     </View>
   )
 }
