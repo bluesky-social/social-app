@@ -27,6 +27,7 @@ export type ComposedAction =
   | {type: 'setActive'; index: number}
   | {type: 'setText'; index: number; richText: RichText}
   | {type: 'addPost'; index: number}
+  | {type: 'removePost'; index: number}
 
 export const createComposerState = (data: ComposerOpts): Composed => {
   const initialText = data.text
@@ -82,6 +83,26 @@ export const reducer = (state: Composed, action: ComposedAction): Composed => {
       return computeComposer({
         ...state,
         active: targetIndex + 1,
+        posts: newPosts,
+      })
+    }
+    case 'removePost': {
+      const newPosts = state.posts.slice()
+      const nextIndex = newPosts[action.index + 1]
+        ? action.index
+        : newPosts[action.index - 1]
+        ? action.index - 1
+        : null
+
+      if (nextIndex === null) {
+        return state
+      }
+
+      newPosts.splice(action.index, 1)
+
+      return computeComposer({
+        ...state,
+        active: nextIndex,
         posts: newPosts,
       })
     }

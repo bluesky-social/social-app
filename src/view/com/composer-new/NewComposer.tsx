@@ -36,6 +36,7 @@ import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {SelectEmojiBtn} from './components/SelectEmojiBtn'
 import {SelectThreadgateBtn} from './components/SelectThreadgateBtn'
 import {SelectLabelsBtn} from './components/SelectLabelsBtn'
+import {RemovePostBtn} from './components/RemovePostBtn'
 
 export const PostComposer = ({
   data,
@@ -254,6 +255,9 @@ let Post = ({
   const onPhotoPasted = React.useCallback((uri: string) => {}, [])
   const onPressPublish = React.useCallback(() => {}, [])
 
+  const onPostRemove = React.useCallback(() => {
+    return dispatch({type: 'removePost', index})
+  }, [dispatch, index])
   const onFocus = React.useCallback(() => {
     return dispatch({type: 'setActive', index})
   }, [dispatch, index])
@@ -299,6 +303,12 @@ let Post = ({
           onPhotoPasted={onPhotoPasted}
           onPressPublish={onPressPublish}
         />
+
+        {active && hasNext && post.length === 0 && (
+          <View style={[a.pt_2xs, a.absolute, {top: 2, right: -6}]}>
+            <RemovePostBtn onPress={onPostRemove} />
+          </View>
+        )}
       </View>
 
       {!active && (
