@@ -33,6 +33,8 @@ export interface TextInputRef {
 }
 
 export interface TextInputProps {
+  /** Web-only */
+  grow?: boolean
   disabled?: boolean
   richtext: RichText
   placeholder: string

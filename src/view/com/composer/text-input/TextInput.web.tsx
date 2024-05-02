@@ -34,6 +34,7 @@ export const textInputWebEmitter = new EventEmitter()
 
 export const TextInput = React.forwardRef(function TextInputImpl(
   {
+    grow,
     disabled,
     richtext,
     placeholder,
@@ -242,7 +243,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       <View style={styles.container}>
         <EditorContent
           editor={editor}
-          className="post-composer"
+          className={'post-composer' + (grow ? ' can-grow' : '')}
           style={{color: pal.text.color as string}}
         />
       </View>
