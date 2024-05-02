@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-02 10:13+0900\n"
+"PO-Revision-Date: 2024-05-03 02:03+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -16,10 +16,6 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:151
 msgid "(no email)"
 msgstr "メールがありません"
-
-#: src/screens/Messages/Conversation/index.tsx:135
-msgid "{0}"
-msgstr "{0}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/screens/Profile/Header/Metrics.tsx:44
@@ -4036,6 +4032,10 @@ msgstr "メールを送信"
 #: src/view/shell/Drawer.tsx:317
 msgid "Send feedback"
 msgstr "フィードバックを送信"
+
+#: src/screens/Messages/Conversation/MessageInput.tsx:94
+msgid "Send message"
+msgstr "メッセージを送信"
 
 #: src/components/ReportDialog/SubmitView.tsx:215
 #: src/components/ReportDialog/SubmitView.tsx:219
