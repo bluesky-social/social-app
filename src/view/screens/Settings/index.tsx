@@ -396,42 +396,46 @@ export function SettingsScreen({}: Props) {
               </Text>
               <View style={s.flex1} />
             </View>
-            <SettingsAccountCard
-              account={currentAccount}
-              onPressSwitchAccount={onPressSwitchAccount}
-              pendingDid={pendingDid}
-            />
+            <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+              <SettingsAccountCard
+                account={currentAccount}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            </View>
           </>
         ) : null}
 
-        {accounts
-          .filter(a => a.did !== currentAccount?.did)
-          .map(account => (
-            <SettingsAccountCard
-              key={account.did}
-              account={account}
-              onPressSwitchAccount={onPressSwitchAccount}
-              pendingDid={pendingDid}
-            />
-          ))}
+        <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+          {accounts
+            .filter(a => a.did !== currentAccount?.did)
+            .map(account => (
+              <SettingsAccountCard
+                key={account.did}
+                account={account}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            ))}
 
-        <TouchableOpacity
-          testID="switchToNewAccountBtn"
-          style={[styles.linkCard, pal.view]}
-          onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Add account`)}
-          accessibilityHint={_(msg`Create a new Bluesky account`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="plus"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Add account</Trans>
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            testID="switchToNewAccountBtn"
+            style={[styles.linkCard, pal.view]}
+            onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Add account`)}
+            accessibilityHint={_(msg`Create a new Bluesky account`)}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="plus"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              <Trans>Add account</Trans>
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.spacer20} />
 

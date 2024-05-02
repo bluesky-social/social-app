@@ -33,6 +33,7 @@ export function AccountList({
 
   return (
     <View
+      pointerEvents={pendingDid ? 'none' : 'auto'}
       style={[
         a.rounded_md,
         a.overflow_hidden,
