@@ -35,7 +35,6 @@ const PUBLIC_BSKY_AGENT = new BskyAgent({service: PUBLIC_BSKY_SERVICE})
 configureModerationForGuest()
 
 const StateContext = React.createContext<SessionStateContext>({
-  isInitialLoad: true,
   isSwitchingAccounts: false,
   accounts: [],
   currentAccount: undefined,
@@ -47,7 +46,6 @@ const ApiContext = React.createContext<SessionApiContext>({
   login: async () => {},
   logout: async () => {},
   initSession: async () => {},
-  resumeSession: async () => {},
   removeAccount: () => {},
   selectAccount: async () => {},
   updateCurrentAccount: () => {},
@@ -67,7 +65,6 @@ type State = {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [isInitialLoad, setIsInitialLoad] = React.useState(true)
   const [isSwitchingAccounts, setIsSwitchingAccounts] = React.useState(false)
   const [state, setState] = React.useState<State>({
     accounts: persisted.get('session').accounts,
@@ -389,21 +386,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [upsertAccount, clearCurrentAccount, createPersistSessionHandler],
   )
 
-  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
-    async account => {
-      try {
-        if (account) {
-          await initSession(account)
-        }
-      } catch (e) {
-        logger.error(`session: resumeSession failed`, {message: e})
-      } finally {
-        setIsInitialLoad(false)
-      }
-    },
-    [initSession],
-  )
-
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
       setState(s => {
@@ -547,11 +529,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       currentAccount: state.accounts.find(
         a => a.did === state.currentAccountDid,
       ),
-      isInitialLoad,
       isSwitchingAccounts,
       hasSession: !!state.currentAccountDid,
     }),
-    [state, isInitialLoad, isSwitchingAccounts],
+    [state, isSwitchingAccounts],
   )
 
   const api = React.useMemo(
@@ -560,7 +541,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       login,
       logout,
       initSession,
-      resumeSession,
       removeAccount,
       selectAccount,
       updateCurrentAccount,
@@ -571,7 +551,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       login,
       logout,
       initSession,
-      resumeSession,
       removeAccount,
       selectAccount,
       updateCurrentAccount,
