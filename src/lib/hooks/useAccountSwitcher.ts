@@ -12,7 +12,7 @@ import {logEvent} from '../statsig/statsig'
 import {LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
-  const [isSwitchingAccounts, setIsSwitchingAccounts] = useState(false)
+  const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
   const {track} = useAnalytics()
   const {initSession, clearCurrentAccount} = useSessionApi()
@@ -24,12 +24,12 @@ export function useAccountSwitcher() {
       logContext: LogEvents['account:loggedIn']['logContext'],
     ) => {
       track('Settings:SwitchAccountButtonClicked')
-      if (isSwitchingAccounts) {
+      if (pendingDid) {
         // The session API isn't resilient to race conditions so let's just ignore this.
         return
       }
       try {
-        setIsSwitchingAccounts(true)
+        setPendingDid(account.did)
         if (account.accessJwt) {
           if (isWeb) {
             // We're switching accounts, which remounts the entire app.
@@ -60,7 +60,7 @@ export function useAccountSwitcher() {
           Toast.show(_(msg`Sorry! We need you to enter your password.`))
         }, 100)
       } finally {
-        setIsSwitchingAccounts(false)
+        setPendingDid(null)
       }
     },
     [
@@ -69,9 +69,9 @@ export function useAccountSwitcher() {
       clearCurrentAccount,
       initSession,
       requestSwitchToAccount,
-      isSwitchingAccounts,
+      pendingDid,
     ],
   )
 
-  return {onPressSwitchAccount, isSwitchingAccounts}
+  return {onPressSwitchAccount, pendingDid}
 }
