@@ -126,7 +126,7 @@ function HomeScreenReady({
           if (
             isMobile &&
             mode.value === 1 &&
-            gate('disable_min_shell_on_foregrounding_v2')
+            gate('disable_min_shell_on_foregrounding_v3')
           ) {
             setMinimalShellMode(false)
           }
