@@ -6,29 +6,23 @@ import {useLingui} from '@lingui/react'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 
-export const AddPostBtn = ({
-  disabled,
-  onPress,
-}: {
-  disabled?: boolean
-  onPress?: () => void
-}) => {
+export const SelectThreadgateBtn = ({}: {}) => {
   const {_} = useLingui()
   const t = useTheme()
 
   return (
     <Button
-      label={_(msg`Add new post`)}
-      onPress={onPress}
+      testID="openReplyGateButton"
+      label={_(msg`Who can reply`)}
+      accessibilityHint={''}
       style={[a.p_sm, a.m_2xs]}
       variant="ghost"
       shape="round"
-      color="primary"
-      disabled={disabled}>
+      color="primary">
       <FontAwesomeIcon
-        icon="add"
+        icon={['far', 'comments']}
         size={20}
-        color={!disabled ? t.palette.primary_500 : t.palette.contrast_400}
+        color={t.palette.primary_500}
       />
     </Button>
   )
