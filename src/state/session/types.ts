@@ -35,14 +35,6 @@ export type SessionApiContext = {
   logout: (
     logContext: LogEvents['account:loggedOut']['logContext'],
   ) => Promise<void>
-  /**
-   * A partial logout. Clears the `currentAccount` from session, but DOES NOT
-   * clear access tokens from accounts, allowing the user to return to their
-   * other accounts without logging in.
-   *
-   * Used when adding a new account, deleting an account.
-   */
-  clearCurrentAccount: () => void
   initSession: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
   updateCurrentAccount: (

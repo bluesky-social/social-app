@@ -46,7 +46,6 @@ const ApiContext = React.createContext<SessionApiContext>({
   initSession: async () => {},
   removeAccount: () => {},
   updateCurrentAccount: () => {},
-  clearCurrentAccount: () => {},
 })
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
@@ -83,14 +82,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     currentAgentState: setupPublicAgentState(),
     needsPersist: false,
   }))
-
-  const clearCurrentAccount = React.useCallback(() => {
-    setState(s => ({
-      accounts: s.accounts,
-      currentAgentState: setupPublicAgentState(),
-      needsPersist: true,
-    }))
-  }, [setState])
 
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, event: AtpSessionEvent) => {
@@ -338,7 +329,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(s => {
         return {
           accounts: s.accounts.filter(a => a.did !== account.did),
-          currentAgentState: s.currentAgentState,
+          currentAgentState:
+            s.currentAgentState.did === account.did
+              ? setupPublicAgentState()
+              : s.currentAgentState,
           needsPersist: true,
         }
       })
@@ -442,7 +436,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       initSession,
       removeAccount,
       updateCurrentAccount,
-      clearCurrentAccount,
     }),
     [
       createAccount,
@@ -451,7 +444,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       initSession,
       removeAccount,
       updateCurrentAccount,
-      clearCurrentAccount,
     ],
   )
 
