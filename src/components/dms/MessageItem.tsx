@@ -35,15 +35,15 @@ export function MessageItem({
       return true
     }
 
-    // or, if there's a 10 minute gap between this message and the next
+    // or, if there's a 3 minute gap between this message and the next
     if (ChatBskyConvoDefs.isMessageView(next)) {
       const thisDate = new Date(item.sentAt)
       const nextDate = new Date(next.sentAt)
 
       const diff = nextDate.getTime() - thisDate.getTime()
 
-      // 10 minutes
-      return diff > 10 * 60 * 1000
+      // 3 minutes
+      return diff > 3 * 60 * 1000
     }
 
     return true
