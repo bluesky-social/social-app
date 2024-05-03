@@ -786,7 +786,7 @@ export class Convo {
             (ChatBskyConvoDefs.isMessageView(item.message) ||
               ChatBskyConvoDefs.isDeletedMessageView(item.message))
           ) {
-            const next = items[i - 1]
+            const next = items[i + 1]
 
             if (
               isConvoItemMessage(next) &&

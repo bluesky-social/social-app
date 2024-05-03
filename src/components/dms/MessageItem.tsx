@@ -32,6 +32,11 @@ export let MessageItem = ({
     next.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
+    // TODO this means it's a placeholder. Let's figure out the right way to do this though!
+    if (item.id.length > 13) {
+      return false
+    }
+
     // if the next message is from a different sender, then it's the last in the group
     if (isFromSelf ? !isNextFromSelf : isNextFromSelf) {
       return true
