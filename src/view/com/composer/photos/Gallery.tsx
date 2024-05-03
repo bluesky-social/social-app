@@ -1,19 +1,21 @@
 import React, {useState} from 'react'
 import {ImageStyle, Keyboard, LayoutChangeEvent} from 'react-native'
-import {GalleryModel} from 'state/models/media/gallery'
-import {observer} from 'mobx-react-lite'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {s, colors} from 'lib/styles'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
-import {Text} from 'view/com/util/text/Text'
-import {Dimensions} from 'lib/media/types'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {observer} from 'mobx-react-lite'
+
+import {useModalControls} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
+import {Dimensions} from 'lib/media/types'
+import {colors, s} from 'lib/styles'
 import {isNative} from 'platform/detection'
+import {GalleryModel} from 'state/models/media/gallery'
+import {Text} from 'view/com/util/text/Text'
+import {useTheme} from '#/alf'
 
 const IMAGE_GAP = 8
 
@@ -53,6 +55,7 @@ const GalleryInner = observer(function GalleryImpl({
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
+  const t = useTheme()
 
   let side: number
 
@@ -126,16 +129,22 @@ const GalleryInner = observer(function GalleryImpl({
                 })
               }}
               style={[styles.altTextControl, altTextControlStyle]}>
-              <Text style={styles.altTextControlLabel} accessible={false}>
-                <Trans>ALT</Trans>
-              </Text>
               {image.altText.length > 0 ? (
                 <FontAwesomeIcon
                   icon="check"
                   size={10}
-                  style={{color: colors.green3}}
+                  style={{color: t.palette.white}}
                 />
-              ) : undefined}
+              ) : (
+                <FontAwesomeIcon
+                  icon="plus"
+                  size={10}
+                  style={{color: t.palette.white}}
+                />
+              )}
+              <Text style={styles.altTextControlLabel} accessible={false}>
+                <Trans>ALT</Trans>
+              </Text>
             </TouchableOpacity>
             <View style={imageControlsStyle}>
               <TouchableOpacity
@@ -244,6 +253,7 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 4,
   },
   altTextControlLabel: {
     color: 'white',
