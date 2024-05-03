@@ -17,6 +17,7 @@ import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
+import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
@@ -63,6 +64,8 @@ function renderItem({item}: {item: ConvoItem}) {
     return <Text>Deleted message</Text>
   } else if (item.type === 'pending-retry') {
     return <RetryButton onPress={item.retry} />
+  } else if (item.type === 'error-recoverable') {
+    return <MessageListError item={item} />
   }
 
   return null
