@@ -347,7 +347,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
 
           __globalAgent = PUBLIC_BSKY_AGENT
-          // TODO: Should this update currentAgentState?
+          // TODO: This needs a setState.
         }
       } else {
         logger.debug(`session: attempting to reuse previous session`)
@@ -409,7 +409,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             })
 
             __globalAgent = PUBLIC_BSKY_AGENT
-            // TODO: Should this update currentAccountDid?
+            // TODO: This needs a setState.
           })
       }
 
@@ -526,6 +526,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            */
           // @ts-ignore we checked for `refreshJwt` above
           __globalAgent.session = selectedAccount
+          // TODO: This needs a setState.
         }
       } else if (!selectedAccount && state.currentAgentState.did) {
         logger.debug(
@@ -549,7 +550,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             did: undefined,
             agent: PUBLIC_BSKY_AGENT,
           },
-          needsPersist: true,
+          needsPersist: true, // TODO: This seems bad in this codepath. Existing behavior.
         }))
       }
 
