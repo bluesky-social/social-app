@@ -73,21 +73,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     needsPersist: false,
   })
 
-  const upsertAccount = React.useCallback(
-    (account: SessionAccount, expired = false) => {
-      setState(s => {
-        return {
-          accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
-          currentAgentState: {
-            did: expired ? undefined : account.did,
-          },
-          needsPersist: true,
-        }
-      })
-    },
-    [setState],
-  )
-
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
@@ -157,9 +142,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
        * to persist this data and wipe their tokens, effectively logging them
        * out.
        */
-      upsertAccount(refreshedAccount, expired)
+      setState(s => {
+        return {
+          accounts: [
+            refreshedAccount,
+            ...s.accounts.filter(a => a.did !== refreshedAccount.did),
+          ],
+          currentAgentState: {
+            did: expired ? undefined : refreshedAccount.did,
+          },
+          needsPersist: true,
+        }
+      })
     },
-    [clearCurrentAccount, upsertAccount],
+    [clearCurrentAccount],
   )
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
@@ -193,13 +189,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       __globalAgent = agent
       await fetchingGates
-      upsertAccount(account)
+      setState(s => {
+        return {
+          accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
+          currentAgentState: {
+            did: account.did,
+          },
+          needsPersist: true,
+        }
+      })
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [upsertAccount, onAgentSessionChange],
+    [onAgentSessionChange],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -220,14 +224,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
       await fetchingGates
-      upsertAccount(account)
+      setState(s => {
+        return {
+          accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
+          currentAgentState: {
+            did: account.did,
+          },
+          needsPersist: true,
+        }
+      })
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
 
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [upsertAccount, onAgentSessionChange],
+    [onAgentSessionChange],
   )
 
   const logout = React.useCallback<SessionApiContext['logout']>(
@@ -287,7 +299,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           const freshAccount = await resumeSessionWithFreshAccount()
           __globalAgent = agent
           await fetchingGates
-          upsertAccount(freshAccount)
+          setState(s => {
+            return {
+              accounts: [
+                freshAccount,
+                ...s.accounts.filter(a => a.did !== freshAccount.did),
+              ],
+              currentAgentState: {
+                did: freshAccount.did,
+              },
+              needsPersist: true,
+            }
+          })
         } catch (e) {
           /*
            * Note: `agent.persistSession` is also called when this fails, and
@@ -307,7 +330,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         __globalAgent = agent
         await fetchingGates
-        upsertAccount(account)
+        setState(s => {
+          return {
+            accounts: [
+              account,
+              ...s.accounts.filter(a => a.did !== account.did),
+            ],
+            currentAgentState: {
+              did: account.did,
+            },
+            needsPersist: true,
+          }
+        })
 
         if (accountOrSessionDeactivated) {
           // don't attempt to resume
@@ -323,7 +357,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               logger.info(
                 `session: reuse of previous session returned a fresh account, upserting`,
               )
-              upsertAccount(freshAccount)
+              setState(s => {
+                return {
+                  accounts: [
+                    freshAccount,
+                    ...s.accounts.filter(a => a.did !== freshAccount.did),
+                  ],
+                  currentAgentState: {
+                    did: freshAccount.did,
+                  },
+                  needsPersist: true,
+                }
+              })
             }
           })
           .catch(e => {
@@ -355,7 +400,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return sessionAccount
       }
     },
-    [upsertAccount, onAgentSessionChange],
+    [onAgentSessionChange],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
