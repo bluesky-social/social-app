@@ -417,23 +417,18 @@ export class Convo {
 
   private async pollEvents() {
     if (
-      this.status !== ConvoStatus.Ready &&
-      this.status !== ConvoStatus.Backgrounded
-    )
-      return
-    if (this.pendingEventIngestion) return
+      this.status === ConvoStatus.Ready ||
+      this.status === ConvoStatus.Backgrounded
+    ) {
+      if (this.pendingEventIngestion) return
 
-    setTimeout(async () => {
-      logger.debug(
-        'Convo: poll',
-        {pollInterval: this.pollInterval},
-        logger.DebugContext.convo,
-      )
-      this.pendingEventIngestion = this.ingestLatestEvents()
-      await this.pendingEventIngestion
-      this.pendingEventIngestion = undefined
-      this.pollEvents()
-    }, this.pollInterval)
+      setTimeout(async () => {
+        this.pendingEventIngestion = this.ingestLatestEvents()
+        await this.pendingEventIngestion
+        this.pendingEventIngestion = undefined
+        this.pollEvents()
+      }, this.pollInterval)
+    }
   }
 
   async ingestLatestEvents() {
@@ -448,6 +443,8 @@ export class Convo {
       },
     )
     const {logs} = response.data
+
+    let needsCommit = false
 
     for (const log of logs) {
       /*
@@ -479,6 +476,7 @@ export class Convo {
               this.newMessages.delete(log.message.id)
             }
             this.newMessages.set(log.message.id, log.message)
+            needsCommit = true
           } else if (
             ChatBskyConvoDefs.isLogDeleteMessage(log) &&
             ChatBskyConvoDefs.isDeletedMessageView(log.message)
@@ -496,13 +494,16 @@ export class Convo {
               this.pastMessages.delete(log.message.id)
               this.newMessages.delete(log.message.id)
               this.deletedMessages.delete(log.message.id)
+              needsCommit = true
             }
           }
         }
       }
     }
 
-    this.commit()
+    if (needsCommit) {
+      this.commit()
+    }
   }
 
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
