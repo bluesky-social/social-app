@@ -379,38 +379,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         // Intentionally not awaited to unblock the UI:
         resumeSessionWithFreshAccount()
-          .then(freshAccount => {
-            if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
-              logger.info(
-                `session: reuse of previous session returned a fresh account, upserting`,
-              )
-              setState(s => {
-                return {
-                  accounts: [
-                    freshAccount,
-                    ...s.accounts.filter(a => a.did !== freshAccount.did),
-                  ],
-                  currentAgentState: {
-                    did: freshAccount.did,
-                    agent: agent,
-                  },
-                  needsPersist: true,
-                }
-              })
-            }
-          })
-          .catch(e => {
-            /*
-             * Note: `agent.persistSession` is also called when this fails, and
-             * we handle that failure via `createPersistSessionHandler`
-             */
-            logger.info(`session: resumeSessionWithFreshAccount failed`, {
-              message: e,
-            })
-
-            __globalAgent = PUBLIC_BSKY_AGENT
-            // TODO: This needs a setState.
-          })
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
