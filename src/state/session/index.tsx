@@ -1,5 +1,5 @@
 import React from 'react'
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
@@ -90,12 +90,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [setState])
 
   const onAgentSessionChange = React.useCallback(
-    (
-      agent: BskyAgent,
-      account: SessionAccount,
-      event: AtpSessionEvent,
-      session: AtpSessionData | undefined,
-    ) => {
+    (agent: BskyAgent, accountDid: string, event: AtpSessionEvent) => {
+      const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
       const expired = event === 'expired' || event === 'create-failed'
       if (expired) {
         emitSessionDropped()
@@ -129,41 +125,30 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       setState(s => {
-        // TODO: use agentToSessionAccount for this too.
-        const refreshedAccount: SessionAccount = {
-          service: account.service,
-          did: session?.did ?? account.did,
-          handle: session?.handle ?? account.handle,
-          email: session?.email ?? account.email,
-          emailConfirmed: session?.emailConfirmed ?? account.emailConfirmed,
-          emailAuthFactor: session?.emailAuthFactor ?? account.emailAuthFactor,
-          deactivated: isSessionDeactivated(session?.accessJwt),
-          pdsUrl: agent.pdsUrl?.toString(),
-
-          /*
-           * Tokens are undefined if the session expires, or if creation fails for
-           * any reason e.g. tokens are invalid, network error, etc.
-           */
-          refreshJwt: session?.refreshJwt,
-          accessJwt: session?.accessJwt,
-        }
-        const existingAccount = s.accounts.find(
-          a => a.did === refreshedAccount.did,
-        )
+        const existingAccount = s.accounts.find(a => a.did === accountDid)
         if (
-          !expired &&
-          existingAccount &&
-          refreshedAccount &&
+          !existingAccount ||
           JSON.stringify(existingAccount) === JSON.stringify(refreshedAccount)
         ) {
           // Fast path without a state update.
           return s
         }
         return {
-          accounts: [
-            refreshedAccount,
-            ...s.accounts.filter(a => a.did !== refreshedAccount.did),
-          ],
+          accounts: s.accounts.map(a => {
+            if (a.did !== accountDid) {
+              return a
+            }
+            if (refreshedAccount) {
+              return refreshedAccount
+            } else {
+              return {
+                ...a,
+                // If we didn't receive a refreshed account, clear out the tokens.
+                accessJwt: undefined,
+                refreshJwt: undefined,
+              }
+            }
+          }),
           currentAgentState: s.currentAgentState,
           needsPersist: true,
         }
@@ -196,8 +181,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
       )
 
-      agent.setPersistSessionHandler((event, session) => {
-        onAgentSessionChange(agent, account, event, session)
+      agent.setPersistSessionHandler(event => {
+        onAgentSessionChange(agent, account.did, event)
       })
 
       __globalAgent = agent
@@ -228,8 +213,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         authFactorToken,
       })
 
-      agent.setPersistSessionHandler((event, session) => {
-        onAgentSessionChange(agent, account, event, session)
+      agent.setPersistSessionHandler(event => {
+        onAgentSessionChange(agent, account.did, event)
       })
 
       __globalAgent = agent
@@ -287,8 +272,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         agent.pdsUrl = agent.api.xrpc.uri = new URL(account.pdsUrl)
       }
 
-      agent.setPersistSessionHandler((event, session) => {
-        onAgentSessionChange(agent, account, event, session)
+      agent.setPersistSessionHandler(event => {
+        onAgentSessionChange(agent, account.did, event)
       })
 
       // @ts-ignore
