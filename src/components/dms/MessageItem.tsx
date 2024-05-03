@@ -69,7 +69,7 @@ export function MessageItem({
             {
               backgroundColor: isFromSelf
                 ? pending
-                  ? t.palette.primary_300
+                  ? t.palette.primary_200
                   : t.palette.primary_500
                 : t.palette.contrast_50,
               borderRadius: 17,
