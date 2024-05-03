@@ -54,7 +54,6 @@ export function useAccountSwitcher() {
           message: e.message,
         })
         clearCurrentAccount() // back user out to login
-        Toast.show(_(msg`Sorry! We need you to enter your password.`))
       } finally {
         setPendingDid(null)
       }

@@ -4,6 +4,8 @@ import 'view/icons'
 import React, {useEffect, useState} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -30,18 +32,21 @@ import {
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from 'state/shell/selected-feed'
+import * as Toast from 'view/com/util/Toast'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {Shell} from 'view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as PortalProvider} from '#/components/Portal'
 import I18nProvider from './locale/i18nProvider'
+import {listenSessionDropped} from './state/events'
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
   const {initSession} = useSessionApi()
   const theme = useColorModeTheme()
+  const {_} = useLingui()
   useIntentHandler()
 
   // init
@@ -60,6 +65,12 @@ function InnerApp() {
     const account = readLastActiveAccount()
     resumeSession(account)
   }, [initSession])
+
+  useEffect(() => {
+    return listenSessionDropped(() => {
+      Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
+    })
+  }, [_])
 
   // wait for session to resume
   if (!isReady) return null
