@@ -1,6 +1,5 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import React, {useCallback, useRef} from 'react'
 import {
-  Dimensions,
   FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -184,23 +183,12 @@ export function MessagesList() {
 
 function useKeyboardVerticalOffset() {
   const {top: topInset} = useSafeAreaInsets()
-  const [screenWindowDifference, setScreenWindowDifference] = React.useState(
-    () => Dimensions.get('screen').height - Dimensions.get('window').height,
-  )
-
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener(
-      'change',
-      ({screen, window}) => {
-        setScreenWindowDifference(screen.height - window.height)
-      },
-    )
-    return () => subscription.remove()
-  }, [])
 
   return Platform.select({
     ios: topInset,
-    android: screenWindowDifference,
+    // I thought this might be the navigation bar height, but not sure
+    // 25 is just trial and error
+    android: 25,
     default: 0,
   })
 }
