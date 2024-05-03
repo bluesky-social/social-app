@@ -65,11 +65,6 @@ export type ConvoItem =
       code: ConvoItemError
       retry: () => void
     }
-  | {
-      type: 'error-fatal'
-      code: ConvoItemError
-      key: string
-    }
 
 export type ConvoState =
   | {
