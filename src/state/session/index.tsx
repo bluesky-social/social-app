@@ -99,7 +99,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         logger.warn(
           `session: persistSessionHandler received network-error event`,
         )
-        clearCurrentAccount()
+        logger.warn(`session: clear current account`)
+        __globalAgent = PUBLIC_BSKY_AGENT
+        configureModerationForGuest()
+        setState(s => ({
+          accounts: s.accounts,
+          currentAgentState: {
+            did: undefined,
+          },
+          needsPersist: true,
+        }))
         return
       }
 
@@ -155,7 +164,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       })
     },
-    [clearCurrentAccount],
+    [],
   )
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
@@ -245,7 +254,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const logout = React.useCallback<SessionApiContext['logout']>(
     async logContext => {
       logger.debug(`session: logout`)
-      clearCurrentAccount()
+      logger.warn(`session: clear current account`)
+      __globalAgent = PUBLIC_BSKY_AGENT
+      configureModerationForGuest()
+      setState(s => ({
+        accounts: s.accounts,
+        currentAgentState: {
+          did: undefined,
+        },
+        needsPersist: true,
+      }))
       setState(s => {
         return {
           accounts: s.accounts.map(a => ({
@@ -259,7 +277,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       logEvent('account:loggedOut', {logContext})
     },
-    [clearCurrentAccount, setState],
+    [setState],
   )
 
   const initSession = React.useCallback<SessionApiContext['initSession']>(
@@ -512,7 +530,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
          * handled by `persistSession` (which nukes this accounts tokens only),
          * or by a `logout` call  which nukes all accounts tokens)
          */
-        clearCurrentAccount()
+        logger.warn(`session: clear current account`)
+        __globalAgent = PUBLIC_BSKY_AGENT
+        configureModerationForGuest()
+        setState(s => ({
+          accounts: s.accounts,
+          currentAgentState: {
+            did: undefined,
+          },
+          needsPersist: true,
+        }))
       }
 
       setState(() => ({
@@ -523,7 +550,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }))
     })
-  }, [state, setState, clearCurrentAccount, initSession])
+  }, [state, setState, initSession])
 
   const stateContext = React.useMemo(
     () => ({
