@@ -168,9 +168,11 @@ export function MessagesList() {
     [contentHeight.value, hasInitiallyScrolled, isAtBottom],
   )
 
-  const onInputFocus = React.useCallback(() => {
-    flatListRef.current?.scrollToEnd({animated: true})
-  }, [flatListRef])
+  const scrollToEnd = React.useCallback(() => {
+    requestAnimationFrame(() =>
+      flatListRef.current?.scrollToEnd({animated: true}),
+    )
+  }, [])
 
   const {bottom: bottomInset} = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
@@ -215,10 +217,7 @@ export function MessagesList() {
           />
         </ScrollProvider>
       </View>
-      <MessageInput
-        onSendMessage={onSendMessage}
-        onFocus={isWeb ? onInputFocus : undefined}
-      />
+      <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
     </KeyboardAvoidingView>
   )
 }
