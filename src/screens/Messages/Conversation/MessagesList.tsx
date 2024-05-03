@@ -1,7 +1,7 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, Platform, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
-import {useSharedValue} from 'react-native-reanimated'
+import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -91,7 +91,7 @@ export function MessagesList() {
   // onStartReached to fire.
   const contentHeight = useSharedValue(0)
 
-  const hasInitiallyScrolled = useSharedValue(false)
+  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
 
   // This is only used on native because `Keyboard` can't be imported on web. On web, an input focus will immediately
   // trigger scrolling to the bottom. On native however, we need to wait for the keyboard to present before scrolling,
@@ -116,11 +116,11 @@ export function MessagesList() {
       }
 
       flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled.value,
+        animated: hasInitiallyScrolled,
         offset: height,
       })
     },
-    [contentHeight, hasInitiallyScrolled.value, isAtBottom.value],
+    [contentHeight, hasInitiallyScrolled, isAtBottom.value],
   )
 
   const onStartReached = useCallback(() => {
@@ -152,8 +152,8 @@ export function MessagesList() {
       // This number _must_ be the height of the MaybeLoader component.
       // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
       // adds a 50 pixel offset.
-      if (contentHeight.value > 50 && !hasInitiallyScrolled.value) {
-        hasInitiallyScrolled.value = true
+      if (contentHeight.value > 50 && !hasInitiallyScrolled) {
+        runOnJS(setHasInitiallyScrolled)(true)
       }
     },
     [contentHeight.value, hasInitiallyScrolled, isAtBottom],
@@ -181,8 +181,8 @@ export function MessagesList() {
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             disableVirtualization={true}
-            initialNumToRender={isWeb ? 100 : 25}
-            maxToRenderPerBatch={isWeb ? 100 : 25}
+            initialNumToRender={isWeb ? 50 : 25}
+            maxToRenderPerBatch={isWeb ? 50 : 25}
             keyboardDismissMode="on-drag"
             maintainVisibleContentPosition={{
               minIndexForVisible: 1,
