@@ -106,6 +106,16 @@ export function MessagesList() {
     }, [setMinShellMode]),
   )
 
+  // Every time the content size changes, that means one of two things is happening:
+  // 1. New messages are being added from the log or from a message you have sent
+  // 2. Old messages are being prepended to the top
+  //
+  // The first time that the content size changes is when the initial items are rendered. Because we cannot rely on
+  // `initialScrollIndex`, we need to immediately scroll to the bottom of the list. That scroll will not be animated.
+  //
+  // Subsequent resizes will only scroll to the bottom if the user is at the bottom of the list (within 100 pixels of
+  // the bottom). Therefore, any new messages that come in or are sent will result in an animated scroll to end. However
+  // we will not scroll whenever new items get prepended to the top.
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
       contentHeight.value = height
@@ -123,6 +133,8 @@ export function MessagesList() {
     [contentHeight, hasInitiallyScrolled, isAtBottom.value],
   )
 
+  // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
+  // immediately on mount, since we are in fact at an offset of zero, so we have to ignore those initial calls.
   const onStartReached = useCallback(() => {
     if (chat.status === ConvoStatus.Ready && hasInitiallyScrolled) {
       chat.fetchMessageHistory()
@@ -172,8 +184,10 @@ export function MessagesList() {
       keyboardVerticalOffset={keyboardVerticalOffset}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
+      {/* This view keeps the scroll bar and content within the CenterView on web, otherwise the entire window would scroll */}
       {/* @ts-expect-error web only */}
       <View style={[{flex: 1}, isWeb && {'overflow-y': 'scroll'}]}>
+        {/* Custom scroll provider so we can use the `onScroll` event in our custom List implementation */}
         <ScrollProvider onScroll={onScroll}>
           <List
             ref={flatListRef}
