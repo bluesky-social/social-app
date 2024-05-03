@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -47,16 +46,16 @@ function Inner() {
   const myDid = currentAccount?.did
 
   const otherProfile = React.useMemo(() => {
-    if (chat.state.status !== ConvoStatus.Ready) return
-    return chat.state.convo.members.find(m => m.did !== myDid)
-  }, [chat.state, myDid])
+    if (chat.status !== ConvoStatus.Ready) return
+    return chat.convo.members.find(m => m.did !== myDid)
+  }, [chat, myDid])
 
   // TODO whenever we have error messages, we should use them in here -hailey
-  if (chat.state.status !== ConvoStatus.Ready || !otherProfile) {
+  if (chat.status !== ConvoStatus.Ready || !otherProfile) {
     return (
       <ListMaybePlaceholder
         isLoading={true}
-        isError={chat.state.status === ConvoStatus.Error}
+        isError={chat.status === ConvoStatus.Error}
       />
     )
   }
@@ -78,7 +77,7 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const {service} = useChat()
+  const chat = useChat()
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -88,12 +87,9 @@ let Header = ({
     }
   }, [navigation])
 
-  const onUpdateConvo = useCallback(
-    (convo: ChatBskyConvoDefs.ConvoView) => {
-      service.convo = convo
-    },
-    [service],
-  )
+  const onUpdateConvo = useCallback(() => {
+    // TODO eric update muted state
+  }, [])
 
   return (
     <View
@@ -133,9 +129,9 @@ let Header = ({
         <PreviewableUserAvatar size={32} profile={profile} />
         <Text style={[a.text_lg, a.font_bold]}>{profile.displayName}</Text>
       </View>
-      {service.convo ? (
+      {chat.status === ConvoStatus.Ready ? (
         <ConvoMenu
-          convo={service.convo}
+          convo={chat.convo}
           profile={profile}
           onUpdateConvo={onUpdateConvo}
           currentScreen="conversation"

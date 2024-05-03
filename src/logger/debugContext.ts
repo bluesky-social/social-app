@@ -9,4 +9,5 @@ export const DebugContext = {
   // e.g. composer: 'composer'
   session: 'session',
   notifications: 'notifications',
+  convo: 'convo',
 } as const
