@@ -27,6 +27,7 @@ import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {NewChat} from '#/components/dms/NewChat'
 import * as TextField from '#/components/forms/TextField'
+import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
@@ -75,7 +76,9 @@ export function MessagesScreen({navigation}: Props) {
     fetchNextPage,
     error,
     refetch,
-  } = useListConvos()
+  } = useListConvos({refetchInterval: 15_000})
+
+  useRefreshOnFocus(refetch)
 
   const isError = !!error
 

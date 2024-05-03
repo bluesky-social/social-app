@@ -337,35 +337,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (isSessionExpired(account)) {
         logger.debug(`session: attempting to resume using previous session`)
 
-        try {
-          const freshAccount = await resumeSessionWithFreshAccount()
-          __globalAgent = agent
-          await fetchingGates
-          setState(s => {
-            return {
-              accounts: [
-                freshAccount,
-                ...s.accounts.filter(a => a.did !== freshAccount.did),
-              ],
-              currentAgentState: {
-                did: freshAccount.did,
-                agent: agent,
-              },
-              needsPersist: true,
-            }
-          })
-        } catch (e) {
-          /*
-           * Note: `agent.persistSession` is also called when this fails, and
-           * we handle that failure via `createPersistSessionHandler`
-           */
-          logger.info(`session: resumeSessionWithFreshAccount failed`, {
-            message: e,
-          })
-
-          __globalAgent = PUBLIC_BSKY_AGENT
-          // TODO: This needs a setState.
-        }
+        const freshAccount = await resumeSessionWithFreshAccount()
+        __globalAgent = agent
+        await fetchingGates
+        setState(s => {
+          return {
+            accounts: [
+              freshAccount,
+              ...s.accounts.filter(a => a.did !== freshAccount.did),
+            ],
+            currentAgentState: {
+              did: freshAccount.did,
+              agent: agent,
+            },
+            needsPersist: true,
+          }
+        })
       } else {
         logger.debug(`session: attempting to reuse previous session`)
 
@@ -480,6 +467,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const persistedSession = persisted.get('session')
 
       logger.debug(`session: persisted onUpdate`, {})
+      setState(s => ({
+        accounts: persistedSession.accounts,
+        currentAgentState: s.currentAgentState,
+        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
+      }))
 
       const selectedAccount = persistedSession.accounts.find(
         a => a.did === persistedSession.currentAccount?.did,
@@ -531,15 +523,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             did: undefined,
             agent: PUBLIC_BSKY_AGENT,
           },
-          needsPersist: true, // TODO: This seems bad in this codepath. Existing behavior.
+          needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
         }))
       }
-
-      setState(s => ({
-        accounts: persistedSession.accounts,
-        currentAgentState: s.currentAgentState,
-        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
-      }))
     })
   }, [state, setState, initSession])
 

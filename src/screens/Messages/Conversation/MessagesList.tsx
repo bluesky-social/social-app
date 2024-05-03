@@ -6,18 +6,17 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 
+import {isIOS} from '#/platform/detection'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {useScrollToEndOnFocus} from '#/screens/Messages/Conversation/useScrollToEndOnFocus'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
@@ -98,14 +97,6 @@ export function MessagesList() {
   // which is what this hook listens for
   useScrollToEndOnFocus(flatListRef)
 
-  const setMinShellMode = useSetMinimalShellMode()
-  useFocusEffect(
-    useCallback(() => {
-      setMinShellMode(true)
-      return () => setMinShellMode(false)
-    }, [setMinShellMode]),
-  )
-
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
   // 2. Old messages are being prepended to the top
@@ -176,11 +167,13 @@ export function MessagesList() {
   }, [flatListRef])
 
   const {bottom: bottomInset} = useSafeAreaInsets()
+  const {gtMobile} = useBreakpoints()
+  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
   return (
     <KeyboardAvoidingView
-      style={[a.flex_1, {marginBottom: bottomInset}]}
+      style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
       keyboardVerticalOffset={keyboardVerticalOffset}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
