@@ -95,29 +95,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, event: AtpSessionEvent) => {
       const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
-      const expired = event === 'expired' || event === 'create-failed'
-      if (expired) {
+      if (event === 'expired' || event === 'create-failed') {
         emitSessionDropped()
       }
-
-      if (event === 'network-error') {
-        setState(s => ({
-          accounts: s.accounts,
-          currentAgentState: setupPublicAgentState(),
-          needsPersist: true,
-        }))
-        return
-      }
-
-      if (expired) {
-        setState(s => ({
-          accounts: s.accounts,
-          currentAgentState: setupPublicAgentState(),
-          needsPersist: true,
-        }))
-      }
-
       setState(s => {
+        if (event === 'network-error') {
+          // Don't change stored accounts but kick to the choose account screen.
+          return {
+            accounts: s.accounts,
+            currentAgentState: setupPublicAgentState(),
+            needsPersist: true,
+          }
+        }
         const existingAccount = s.accounts.find(a => a.did === accountDid)
         if (
           !existingAccount ||
@@ -142,7 +131,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               }
             }
           }),
-          currentAgentState: s.currentAgentState,
+          currentAgentState: refreshedAccount
+            ? s.currentAgentState
+            : setupPublicAgentState(),
           needsPersist: true,
         }
       })
