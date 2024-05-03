@@ -411,8 +411,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           initSession(selectedAccount)
         } else {
           // @ts-ignore we checked for `refreshJwt` above
-          __globalAgent.session = selectedAccount
-          // TODO: This needs a setState.
+          state.currentAgentState.agent.session = selectedAccount
         }
       } else if (!selectedAccount && state.currentAgentState.did) {
         setState(s => ({
