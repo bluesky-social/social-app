@@ -98,6 +98,8 @@ export function MessagesList() {
   // onStartReached to fire.
   const contentHeight = React.useRef(0)
 
+  const isPrepending = React.useRef(false)
+
   // This is only used on native because `Keyboard` can't be imported on web. On web, an input focus will immediately
   // trigger scrolling to the bottom. On native however, we need to wait for the keyboard to present before scrolling,
   // which is what this hook listens for
@@ -113,6 +115,15 @@ export function MessagesList() {
 
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
+      if (isWeb && !isAtBottom.current) {
+        flatListRef.current?.scrollToOffset({
+          animated: false,
+          offset: height - contentHeight.current,
+        })
+        contentHeight.current = height
+        return
+      }
+
       contentHeight.current = height
 
       // This number _must_ be the height of the MaybeLoader component
@@ -129,9 +140,20 @@ export function MessagesList() {
   )
 
   const onStartReached = useCallback(() => {
+    if (isPrepending.current) {
+      return
+    }
+
+    isPrepending.current = true
+
     if (chat.status === ConvoStatus.Ready && hasInitiallyScrolled) {
       chat.fetchMessageHistory()
     }
+
+    // TODO hack, can we await `fetchMessageHistory`?
+    setTimeout(() => {
+      isPrepending.current = false
+    }, 2000)
   }, [chat, hasInitiallyScrolled])
 
   const onSendMessage = useCallback(
@@ -182,13 +204,9 @@ export function MessagesList() {
         data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        contentContainerStyle={{
-          paddingHorizontal: 10,
-          opacity: hasInitiallyScrolled ? 1 : 0,
-        }}
         disableVirtualization={true}
-        initialNumToRender={isWeb ? 50 : 25}
-        maxToRenderPerBatch={isWeb ? 50 : 25}
+        initialNumToRender={isWeb ? 100 : 25}
+        maxToRenderPerBatch={isWeb ? 100 : 25}
         keyboardDismissMode="on-drag"
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,
