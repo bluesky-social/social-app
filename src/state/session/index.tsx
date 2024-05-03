@@ -56,22 +56,26 @@ function __getAgent() {
   return __globalAgent
 }
 
+type AgentState = {
+  readonly agent: BskyAgent
+  readonly did: string | undefined
+}
+
 type State = {
   accounts: SessionStateContext['accounts']
-  currentAgentState: {
-    did: string | undefined
-  }
+  currentAgentState: AgentState
   needsPersist: boolean
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState<State>({
+  const [state, setState] = React.useState<State>(() => ({
     accounts: persisted.get('session').accounts,
     currentAgentState: {
+      agent: PUBLIC_BSKY_AGENT,
       did: undefined, // assume logged out to start
     },
     needsPersist: false,
-  })
+  }))
 
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
@@ -80,6 +84,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     setState(s => ({
       accounts: s.accounts,
       currentAgentState: {
+        agent: PUBLIC_BSKY_AGENT,
         did: undefined,
       },
       needsPersist: true,
@@ -105,6 +110,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         setState(s => ({
           accounts: s.accounts,
           currentAgentState: {
+            agent: PUBLIC_BSKY_AGENT,
             did: undefined,
           },
           needsPersist: true,
@@ -157,9 +163,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             refreshedAccount,
             ...s.accounts.filter(a => a.did !== refreshedAccount.did),
           ],
-          currentAgentState: {
-            did: expired ? undefined : refreshedAccount.did,
-          },
+          currentAgentState: expired
+            ? {
+                agent: PUBLIC_BSKY_AGENT,
+                did: undefined,
+              }
+            : s.currentAgentState,
           needsPersist: true,
         }
       })
@@ -203,6 +212,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
           currentAgentState: {
             did: account.did,
+            agent: agent,
           },
           needsPersist: true,
         }
@@ -238,6 +248,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           accounts: [account, ...s.accounts.filter(a => a.did !== account.did)],
           currentAgentState: {
             did: account.did,
+            agent: agent,
           },
           needsPersist: true,
         }
@@ -261,6 +272,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         accounts: s.accounts,
         currentAgentState: {
           did: undefined,
+          agent: PUBLIC_BSKY_AGENT,
         },
         needsPersist: true,
       }))
@@ -325,6 +337,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               ],
               currentAgentState: {
                 did: freshAccount.did,
+                agent: agent,
               },
               needsPersist: true,
             }
@@ -339,7 +352,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
 
           __globalAgent = PUBLIC_BSKY_AGENT
-          // TODO: Should this update currentAccountDid?
+          // TODO: Should this update currentAgentState?
         }
       } else {
         logger.debug(`session: attempting to reuse previous session`)
@@ -356,6 +369,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             ],
             currentAgentState: {
               did: account.did,
+              agent: agent,
             },
             needsPersist: true,
           }
@@ -383,6 +397,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                   ],
                   currentAgentState: {
                     did: freshAccount.did,
+                    agent: agent,
                   },
                   needsPersist: true,
                 }
@@ -537,14 +552,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           accounts: s.accounts,
           currentAgentState: {
             did: undefined,
+            agent: PUBLIC_BSKY_AGENT,
           },
           needsPersist: true,
         }))
       }
 
-      setState(() => ({
+      setState(s => ({
         accounts: persistedSession.accounts,
         currentAgentState: {
+          agent: s.currentAgentState.agent, // TODO: This is shady. Restructure.
           did: selectedAccount?.did,
         },
         needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
