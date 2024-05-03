@@ -121,11 +121,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // TODO: use agentToSessionAccount for this too.
       const refreshedAccount: SessionAccount = {
         service: account.service,
-        did: session?.did || account.did,
-        handle: session?.handle || account.handle,
-        email: session?.email || account.email,
-        emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
-        emailAuthFactor: session?.emailAuthFactor || account.emailAuthFactor,
+        did: session?.did ?? account.did,
+        handle: session?.handle ?? account.handle,
+        email: session?.email ?? account.email,
+        emailConfirmed: session?.emailConfirmed ?? account.emailConfirmed,
+        emailAuthFactor: session?.emailAuthFactor ?? account.emailAuthFactor,
         deactivated: isSessionDeactivated(session?.accessJwt),
         pdsUrl: agent.pdsUrl?.toString(),
 
@@ -311,8 +311,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         isSessionDeactivated(account.accessJwt) || account.deactivated
 
       const prevSession = {
-        accessJwt: account.accessJwt || '',
-        refreshJwt: account.refreshJwt || '',
+        accessJwt: account.accessJwt ?? '',
+        refreshJwt: account.refreshJwt ?? '',
         did: account.did,
         handle: account.handle,
       }
@@ -457,16 +457,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         const updatedAccount = {
           ...currentAccount,
-          handle: account.handle || currentAccount.handle,
-          email: account.email || currentAccount.email,
+          handle: account.handle ?? currentAccount.handle,
+          email: account.email ?? currentAccount.email,
           emailConfirmed:
-            account.emailConfirmed !== undefined
-              ? account.emailConfirmed
-              : currentAccount.emailConfirmed,
+            account.emailConfirmed ?? currentAccount.emailConfirmed,
           emailAuthFactor:
-            account.emailAuthFactor !== undefined
-              ? account.emailAuthFactor
-              : currentAccount.emailAuthFactor,
+            account.emailAuthFactor ?? currentAccount.emailAuthFactor,
         }
 
         return {
