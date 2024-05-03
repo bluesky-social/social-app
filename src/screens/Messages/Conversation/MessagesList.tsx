@@ -16,6 +16,7 @@ import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {isWeb} from 'platform/detection'
+import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {useScrollToEndOnFocus} from '#/screens/Messages/Conversation/useScrollToEndOnFocus'
@@ -199,33 +200,36 @@ export function MessagesList() {
       keyboardVerticalOffset={keyboardVerticalOffset}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
-      <FlatList
-        ref={flatListRef}
-        data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        disableVirtualization={true}
-        initialNumToRender={isWeb ? 100 : 25}
-        maxToRenderPerBatch={isWeb ? 100 : 25}
-        keyboardDismissMode="on-drag"
-        maintainVisibleContentPosition={{
-          minIndexForVisible: 1,
-        }}
-        removeClippedSubviews={false}
-        showsVerticalScrollIndicator={hasInitiallyScrolled}
-        onContentSizeChange={onContentSizeChange}
-        onStartReached={onStartReached}
-        onScrollToIndexFailed={onScrollToIndexFailed}
-        onScroll={onScroll}
-        scrollEventThrottle={100}
-        ListHeaderComponent={
-          <MaybeLoader
-            isLoading={
-              chat.status === ConvoStatus.Ready && chat.isFetchingHistory
-            }
-          />
-        }
-      />
+      {/* @ts-expect-error web only */}
+      <View style={[{flex: 1}, isWeb && {'overflow-y': 'scroll'}]}>
+        <List
+          ref={flatListRef}
+          data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          disableVirtualization={true}
+          initialNumToRender={isWeb ? 100 : 25}
+          maxToRenderPerBatch={isWeb ? 100 : 25}
+          keyboardDismissMode="on-drag"
+          maintainVisibleContentPosition={{
+            minIndexForVisible: 1,
+          }}
+          removeClippedSubviews={false}
+          showsVerticalScrollIndicator={hasInitiallyScrolled}
+          onContentSizeChange={onContentSizeChange}
+          onStartReached={onStartReached}
+          onScrollToIndexFailed={onScrollToIndexFailed}
+          onScroll={onScroll}
+          scrollEventThrottle={100}
+          ListHeaderComponent={
+            <MaybeLoader
+              isLoading={
+                chat.status === ConvoStatus.Ready && chat.isFetchingHistory
+              }
+            />
+          }
+        />
+      </View>
       <MessageInput
         onSendMessage={onSendMessage}
         onFocus={isWeb ? onInputFocus : undefined}
