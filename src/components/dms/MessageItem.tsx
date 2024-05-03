@@ -118,16 +118,15 @@ export function MessageItemMetadata({
       }
 
       // if in the last day
-      if (now.toISOString().slice(0, 10) === date.toISOString().slice(0, 10)) {
+      if (localDateString(now) === localDateString(date)) {
         return time
       }
 
       // if yesterday
       const yesterday = new Date(now)
       yesterday.setDate(yesterday.getDate() - 1)
-      if (
-        yesterday.toISOString().slice(0, 10) === date.toISOString().slice(0, 10)
-      ) {
+
+      if (localDateString(yesterday) === localDateString(date)) {
         return _(msg`Yesterday, ${time}`)
       }
 
@@ -163,4 +162,13 @@ export function MessageItemMetadata({
       )}
     </TimeElapsed>
   )
+}
+
+function localDateString(date: Date) {
+  // can't use toISOString because it should be in local time
+  const mm = date.getMonth()
+  const dd = date.getDate()
+  const yyyy = date.getFullYear()
+  // not padding with 0s because it's not necessary, it's just used for comparison
+  return `${yyyy}-${mm}-${dd}`
 }
