@@ -24,6 +24,11 @@ export type ListProps<ItemT> = Omit<
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
+const ON_ITEM_SEEN_WAIT_DURATION = 3e3 // post must be "seen" 3 seconds before capturing
+const ON_ITEM_SEEN_INTERSECTION_OPTS = {
+  rootMargin: '-200px 0px -200px 0px',
+} // post must be 200px visible to be "seen"
+
 function ListImpl<ItemT>(
   {
     ListHeaderComponent,
@@ -253,7 +258,7 @@ let Row = function RowImpl<ItemT>({
   onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
   const rowRef = React.useRef(null)
-  const isIntersecting = React.useRef(false)
+  const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -262,10 +267,15 @@ let Row = function RowImpl<ItemT>({
           return
         }
         entries.forEach(entry => {
-          if (entry.isIntersecting !== isIntersecting.current) {
-            isIntersecting.current = entry.isIntersecting
-            if (entry.isIntersecting) {
-              onItemSeen!(item)
+          if (entry.isIntersecting) {
+            if (!intersectionTimeout.current) {
+              intersectionTimeout.current = setTimeout(() => {
+                onItemSeen!(item)
+              }, ON_ITEM_SEEN_WAIT_DURATION)
+            }
+          } else {
+            if (intersectionTimeout.current) {
+              clearTimeout(intersectionTimeout.current)
             }
           }
         })
@@ -277,7 +287,10 @@ let Row = function RowImpl<ItemT>({
     if (!onItemSeen) {
       return
     }
-    const observer = new IntersectionObserver(handleIntersection)
+    const observer = new IntersectionObserver(
+      handleIntersection,
+      ON_ITEM_SEEN_INTERSECTION_OPTS,
+    )
     const row: Element | null = rowRef.current!
     observer.observe(row)
     return () => {
