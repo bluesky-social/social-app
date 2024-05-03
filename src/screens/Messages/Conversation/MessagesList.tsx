@@ -85,32 +85,26 @@ export function MessagesList() {
 
   useScrollToEndOnFocus(flatListRef)
 
-  const messages = React.useMemo(() => {
-    if (chat.state.status !== ConvoStatus.Ready) {
-      return []
-    }
-    const items = chat.state.items
-    return chat.state.status === ConvoStatus.Ready
-      ? items.map((item, index) => items[items.length - 1 - index])
-      : []
-  }, [chat.state])
-
   const onContentSizeChange = useCallback((_: number, height: number) => {
     if (!isAtBottom.current) return
     flatListRef.current?.scrollToOffset({animated: isNative, offset: height})
   }, [])
 
   const onStartReached = useCallback(() => {
-    chat.service.fetchMessageHistory()
-  }, [chat.service])
+    if (chat.status === ConvoStatus.Ready) {
+      chat.fetchMessageHistory()
+    }
+  }, [chat])
 
   const onSendMessage = useCallback(
     (text: string) => {
-      chat.service.sendMessage({
-        text,
-      })
+      if (chat.status === ConvoStatus.Ready) {
+        chat.sendMessage({
+          text,
+        })
+      }
     },
-    [chat.service],
+    [chat],
   )
 
   const onScroll = React.useCallback(
@@ -138,6 +132,8 @@ export function MessagesList() {
   const {bottom: bottomInset} = useSafeAreaInsets()
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
+  console.log(chat.items)
+
   return (
     <KeyboardAvoidingView
       style={[a.flex_1, {marginBottom: bottomInset}]}
@@ -146,7 +142,7 @@ export function MessagesList() {
       contentContainerStyle={a.flex_1}>
       <FlatList
         ref={flatListRef}
-        data={chat.state.status === ConvoStatus.Ready ? messages : undefined}
+        data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         contentContainerStyle={{paddingHorizontal: 10}}
@@ -171,8 +167,7 @@ export function MessagesList() {
         ListHeaderComponent={
           <MaybeLoader
             isLoading={
-              chat.state.status === ConvoStatus.Ready &&
-              chat.state.isFetchingHistory
+              chat.status === ConvoStatus.Ready && chat.isFetchingHistory
             }
           />
         }

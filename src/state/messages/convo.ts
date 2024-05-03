@@ -673,45 +673,6 @@ export class Convo {
   getItems(): ConvoItem[] {
     const items: ConvoItem[] = []
 
-    // `newMessages` is in insertion order, unshift to reverse
-    this.newMessages.forEach(m => {
-      if (ChatBskyConvoDefs.isMessageView(m)) {
-        items.unshift({
-          type: 'message',
-          key: m.id,
-          message: m,
-          nextMessage: null,
-        })
-      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
-        items.unshift({
-          type: 'deleted-message',
-          key: m.id,
-          message: m,
-          nextMessage: null,
-        })
-      }
-    })
-
-    // `newMessages` is in insertion order, unshift to reverse
-    this.pendingMessages.forEach(m => {
-      items.unshift({
-        type: 'pending-message',
-        key: m.id,
-        message: {
-          ...m.message,
-          id: nanoid(),
-          rev: '__fake__',
-          sentAt: new Date().toISOString(),
-          sender: this.sender,
-        },
-        nextMessage: null,
-      })
-    })
-
-    this.footerItems.forEach(item => {
-      items.unshift(item)
-    })
-
     this.pastMessages.forEach(m => {
       if (ChatBskyConvoDefs.isMessageView(m)) {
         items.push({
@@ -728,6 +689,43 @@ export class Convo {
           nextMessage: null,
         })
       }
+    })
+
+    this.newMessages.forEach(m => {
+      if (ChatBskyConvoDefs.isMessageView(m)) {
+        items.push({
+          type: 'message',
+          key: m.id,
+          message: m,
+          nextMessage: null,
+        })
+      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
+        items.push({
+          type: 'deleted-message',
+          key: m.id,
+          message: m,
+          nextMessage: null,
+        })
+      }
+    })
+
+    this.pendingMessages.forEach(m => {
+      items.push({
+        type: 'pending-message',
+        key: m.id,
+        message: {
+          ...m.message,
+          id: nanoid(),
+          rev: '__fake__',
+          sentAt: new Date().toISOString(),
+          sender: this.sender,
+        },
+        nextMessage: null,
+      })
+    })
+
+    this.footerItems.forEach(item => {
+      items.push(item)
     })
 
     return items
