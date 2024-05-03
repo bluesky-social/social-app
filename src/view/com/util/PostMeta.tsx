@@ -127,6 +127,9 @@ const styles = StyleSheet.create({
   maxWidth: {
     flex: isAndroid ? 1 : undefined,
     flexShrink: isAndroid ? undefined : 1,
-    maxWidth: isAndroid ? undefined : '85%',
+    // This should take up the full space on Android. On web, it should only take up 80% so that the hover
+    // timestamp fully appears. On iOS, letting it size to 90% gives us a bit more space to render things without looking
+    // too close to the side of the screen
+    maxWidth: isAndroid ? undefined : isWeb ? '80%' : '90%',
   },
 })
