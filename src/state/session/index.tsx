@@ -99,6 +99,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         emitSessionDropped()
       }
       setState(s => {
+        if (agent !== s.currentAgentState.agent) {
+          return s
+        }
         if (event === 'network-error') {
           // Don't change stored accounts but kick to the choose account screen.
           return {
