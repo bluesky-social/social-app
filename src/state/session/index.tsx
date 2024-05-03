@@ -30,14 +30,13 @@ import {
 
 export {isSessionDeactivated}
 
-const PUBLIC_BSKY_AGENT = new BskyAgent({service: PUBLIC_BSKY_SERVICE})
-configureModerationForGuest()
-
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
   currentAccount: undefined,
   hasSession: false,
 })
+
+const AgentContext = React.createContext<BskyAgent | null>(null)
 
 const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
@@ -47,12 +46,6 @@ const ApiContext = React.createContext<SessionApiContext>({
   removeAccount: () => {},
   updateCurrentAccount: () => {},
 })
-
-let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
-
-function __getAgent() {
-  return __globalAgent
-}
 
 type AgentState = {
   readonly agent: BskyAgent
@@ -100,13 +93,10 @@ type Action =
       syncedCurrentDid: string | undefined
     }
 
-// This is supposed to not have side effects but it does for now.
-function setupPublicAgentState() {
-  // TODO: Actually create new agents.
-  __globalAgent = PUBLIC_BSKY_AGENT // Side effect but will be removed.
+function createPublicAgentState() {
   configureModerationForGuest() // Side effect but only relevant for tests
   return {
-    agent: PUBLIC_BSKY_AGENT,
+    agent: new BskyAgent({service: PUBLIC_BSKY_SERVICE}),
     did: undefined,
   }
 }
@@ -114,7 +104,7 @@ function setupPublicAgentState() {
 function getInitialState(): State {
   return {
     accounts: persisted.get('session').accounts,
-    currentAgentState: setupPublicAgentState(),
+    currentAgentState: createPublicAgentState(),
     needsPersist: false,
   }
 }
@@ -131,7 +121,7 @@ function reducer(state: State, action: Action): State {
         // Don't change stored accounts but kick to the choose account screen.
         return {
           accounts: state.accounts,
-          currentAgentState: setupPublicAgentState(),
+          currentAgentState: createPublicAgentState(),
           needsPersist: true,
         }
       }
@@ -162,7 +152,7 @@ function reducer(state: State, action: Action): State {
         }),
         currentAgentState: refreshedAccount
           ? state.currentAgentState
-          : setupPublicAgentState(), // Log out if expired.
+          : createPublicAgentState(), // Log out if expired.
         needsPersist: true,
       }
     }
@@ -203,7 +193,7 @@ function reducer(state: State, action: Action): State {
         accounts: state.accounts.filter(a => a.did !== accountDid),
         currentAgentState:
           state.currentAgentState.did === accountDid
-            ? setupPublicAgentState() // Log out if removing the current one.
+            ? createPublicAgentState() // Log out if removing the current one.
             : state.currentAgentState,
         needsPersist: true,
       }
@@ -216,7 +206,7 @@ function reducer(state: State, action: Action): State {
           refreshJwt: undefined,
           accessJwt: undefined,
         })),
-        currentAgentState: setupPublicAgentState(),
+        currentAgentState: createPublicAgentState(),
         needsPersist: true,
       }
     }
@@ -227,7 +217,7 @@ function reducer(state: State, action: Action): State {
         currentAgentState:
           syncedCurrentDid === state.currentAgentState.did
             ? state.currentAgentState
-            : setupPublicAgentState(), // Log out if different user.
+            : createPublicAgentState(), // Log out if different user.
         needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }
     }
@@ -280,7 +270,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       agent.setPersistSessionHandler(event => {
         onAgentSessionChange(agent, account.did, event)
       })
-      __globalAgent = agent
       await fetchingGates
       dispatch({
         type: 'switched-to-account',
@@ -301,14 +290,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         password,
         authFactorToken,
       })
-
       agent.setPersistSessionHandler(event => {
         onAgentSessionChange(agent, account.did, event)
       })
-
-      __globalAgent = agent
-      // @ts-ignore
-      if (IS_DEV && isWeb) window.agent = agent
       await fetchingGates
       dispatch({
         type: 'switched-to-account',
@@ -342,8 +326,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       agent.setPersistSessionHandler(event => {
         onAgentSessionChange(agent, account.did, event)
       })
-      // @ts-ignore
-      if (IS_DEV && isWeb) window.agent = agent
       await configureModerationForAccount(agent, account)
 
       const prevSession = {
@@ -355,7 +337,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       if (isSessionExpired(account)) {
         const freshAccount = await resumeSessionWithFreshAccount()
-        __globalAgent = agent
         await fetchingGates
         dispatch({
           type: 'switched-to-account',
@@ -364,7 +345,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         })
       } else {
         agent.session = prevSession
-        __globalAgent = agent
         await fetchingGates
         dispatch({
           type: 'switched-to-account',
@@ -479,10 +459,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     ],
   )
 
+  // @ts-ignore
+  if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
+
   return (
-    <StateContext.Provider value={stateContext}>
-      <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
-    </StateContext.Provider>
+    <AgentContext.Provider value={state.currentAgentState.agent}>
+      <StateContext.Provider value={stateContext}>
+        <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
+      </StateContext.Provider>
+    </AgentContext.Provider>
   )
 }
 
@@ -512,6 +497,17 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent() {
-  return React.useMemo(() => ({getAgent: __getAgent}), [])
+export function useAgent(): {getAgent: () => BskyAgent} {
+  const agent = React.useContext(AgentContext)
+  if (!agent) {
+    throw Error('useAgent() must be below <SessionProvider>.')
+  }
+  return React.useMemo(
+    () => ({
+      getAgent() {
+        return agent
+      },
+    }),
+    [agent],
+  )
 }
