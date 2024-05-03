@@ -52,9 +52,7 @@ export const ChooseAccountForm = ({
               withPassword: false,
             })
             track('Sign In', {resumedSession: true})
-            setTimeout(() => {
-              Toast.show(_(msg`Signed in as @${account.handle}`))
-            }, 100)
+            Toast.show(_(msg`Signed in as @${account.handle}`))
           } catch (e: any) {
             logger.error('choose account: initSession failed', {
               message: e.message,
