@@ -10,7 +10,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {Text} from '#/components/Typography'
 
-export function MessageItem({
+export let MessageItem = ({
   item,
   next,
 }: {
@@ -19,7 +19,7 @@ export function MessageItem({
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
     | null
-}) {
+}): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
 
@@ -87,7 +87,9 @@ export function MessageItem({
   )
 }
 
-export function MessageItemMetadata({
+MessageItem = React.memo(MessageItem)
+
+let MessageItemMetadata = ({
   message,
   isLastInGroup,
   style,
@@ -95,7 +97,7 @@ export function MessageItemMetadata({
   message: ChatBskyConvoDefs.MessageView
   isLastInGroup: boolean
   style: StyleProp<TextStyle>
-}) {
+}): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
 
@@ -163,6 +165,8 @@ export function MessageItemMetadata({
     </TimeElapsed>
   )
 }
+
+MessageItemMetadata = React.memo(MessageItemMetadata)
 
 function localDateString(date: Date) {
   // can't use toISOString because it should be in local time
