@@ -1,5 +1,5 @@
-import React, {useCallback, useMemo} from 'react'
-import {StyleProp, TextStyle, View} from 'react-native'
+import React, {useCallback, useMemo, useRef} from 'react'
+import {LayoutAnimation, StyleProp, TextStyle, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,12 +13,14 @@ import {Text} from '#/components/Typography'
 export function MessageItem({
   item,
   next,
+  pending,
 }: {
   item: ChatBskyConvoDefs.MessageView
   next:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
     | null
+  pending?: boolean
 }) {
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -49,6 +51,12 @@ export function MessageItem({
     return true
   }, [item, next, isFromSelf, isNextFromSelf])
 
+  const lastInGroupRef = useRef(isLastInGroup)
+  if (lastInGroupRef.current !== isLastInGroup) {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    lastInGroupRef.current = isLastInGroup
+  }
+
   return (
     <View>
       <ActionsWrapper isFromSelf={isFromSelf} message={item}>
@@ -60,7 +68,9 @@ export function MessageItem({
             a.rounded_md,
             {
               backgroundColor: isFromSelf
-                ? t.palette.primary_500
+                ? pending
+                  ? t.palette.primary_300
+                  : t.palette.primary_500
                 : t.palette.contrast_50,
               borderRadius: 17,
             },
