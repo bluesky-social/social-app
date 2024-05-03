@@ -39,7 +39,7 @@ export function ChatProvider({
       convo.resume()
 
       return () => {
-        convo.suspend()
+        convo.background()
       }
     }, [convo]),
   )
