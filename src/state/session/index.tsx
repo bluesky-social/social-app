@@ -66,25 +66,28 @@ type State = {
   needsPersist: boolean
 }
 
+// This is supposed to not have side effects but it does for now.
+function setupPublicAgentState() {
+  // TODO: Actually create new agents.
+  __globalAgent = PUBLIC_BSKY_AGENT // Side effect but will be removed.
+  configureModerationForGuest() // Side effect but only relevant for tests
+  return {
+    agent: PUBLIC_BSKY_AGENT,
+    did: undefined,
+  }
+}
+
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<State>(() => ({
     accounts: persisted.get('session').accounts,
-    currentAgentState: {
-      agent: PUBLIC_BSKY_AGENT,
-      did: undefined, // assume logged out to start
-    },
+    currentAgentState: setupPublicAgentState(),
     needsPersist: false,
   }))
 
   const clearCurrentAccount = React.useCallback(() => {
-    __globalAgent = PUBLIC_BSKY_AGENT
-    configureModerationForGuest()
     setState(s => ({
       accounts: s.accounts,
-      currentAgentState: {
-        agent: PUBLIC_BSKY_AGENT,
-        did: undefined,
-      },
+      currentAgentState: setupPublicAgentState(),
       needsPersist: true,
     }))
   }, [setState])
@@ -98,28 +101,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       if (event === 'network-error') {
-        __globalAgent = PUBLIC_BSKY_AGENT
-        configureModerationForGuest()
         setState(s => ({
           accounts: s.accounts,
-          currentAgentState: {
-            agent: PUBLIC_BSKY_AGENT,
-            did: undefined,
-          },
+          currentAgentState: setupPublicAgentState(),
           needsPersist: true,
         }))
         return
       }
 
       if (expired) {
-        __globalAgent = PUBLIC_BSKY_AGENT
-        configureModerationForGuest()
         setState(s => ({
           accounts: s.accounts,
-          currentAgentState: {
-            agent: PUBLIC_BSKY_AGENT,
-            did: undefined,
-          },
+          currentAgentState: setupPublicAgentState(),
           needsPersist: true,
         }))
       }
@@ -240,8 +233,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const logout = React.useCallback<SessionApiContext['logout']>(
     async logContext => {
-      __globalAgent = PUBLIC_BSKY_AGENT
-      configureModerationForGuest()
       setState(s => {
         return {
           accounts: s.accounts.map(a => ({
@@ -249,10 +240,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             refreshJwt: undefined,
             accessJwt: undefined,
           })),
-          currentAgentState: {
-            did: undefined,
-            agent: PUBLIC_BSKY_AGENT,
-          },
+          currentAgentState: setupPublicAgentState(),
           needsPersist: true,
         }
       })
@@ -433,14 +421,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // TODO: This needs a setState.
         }
       } else if (!selectedAccount && state.currentAgentState.did) {
-        __globalAgent = PUBLIC_BSKY_AGENT
-        configureModerationForGuest()
         setState(s => ({
           accounts: s.accounts,
-          currentAgentState: {
-            did: undefined,
-            agent: PUBLIC_BSKY_AGENT,
-          },
+          currentAgentState: setupPublicAgentState(),
           needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
         }))
       }
