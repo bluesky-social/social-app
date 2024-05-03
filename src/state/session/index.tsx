@@ -145,6 +145,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (expired) {
         logger.warn(`session: expired`)
         emitSessionDropped()
+        __globalAgent = PUBLIC_BSKY_AGENT
+        configureModerationForGuest()
+        setState(s => ({
+          accounts: s.accounts,
+          currentAgentState: {
+            agent: PUBLIC_BSKY_AGENT,
+            did: undefined,
+          },
+          needsPersist: true,
+        }))
       }
 
       /*
@@ -175,12 +185,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             refreshedAccount,
             ...s.accounts.filter(a => a.did !== refreshedAccount.did),
           ],
-          currentAgentState: expired
-            ? {
-                agent: PUBLIC_BSKY_AGENT,
-                did: undefined,
-              }
-            : s.currentAgentState,
+          currentAgentState: s.currentAgentState,
           needsPersist: true,
         }
       })
