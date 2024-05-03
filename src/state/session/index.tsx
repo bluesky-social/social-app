@@ -124,8 +124,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         did: session?.did || account.did,
         handle: session?.handle || account.handle,
         email: session?.email || account.email,
-        emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
-        emailAuthFactor: session?.emailAuthFactor || account.emailAuthFactor,
+        emailConfirmed: session?.emailConfirmed ?? account.emailConfirmed,
+        emailAuthFactor: session?.emailAuthFactor ?? account.emailAuthFactor,
         deactivated: isSessionDeactivated(session?.accessJwt),
         pdsUrl: agent.pdsUrl?.toString(),
 
