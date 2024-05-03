@@ -480,6 +480,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const persistedSession = persisted.get('session')
 
       logger.debug(`session: persisted onUpdate`, {})
+      setState(s => ({
+        accounts: persistedSession.accounts,
+        currentAgentState: s.currentAgentState,
+        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
+      }))
 
       const selectedAccount = persistedSession.accounts.find(
         a => a.did === persistedSession.currentAccount?.did,
@@ -534,12 +539,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           needsPersist: true, // TODO: This seems bad in this codepath. Existing behavior.
         }))
       }
-
-      setState(s => ({
-        accounts: persistedSession.accounts,
-        currentAgentState: s.currentAgentState,
-        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
-      }))
     })
   }, [state, setState, initSession])
 
