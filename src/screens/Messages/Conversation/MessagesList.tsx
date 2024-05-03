@@ -16,7 +16,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {isNative, isWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {useScrollToEndOnFocus} from '#/screens/Messages/Conversation/useScrollToEndOnFocus'
 import {atoms as a} from '#/alf'
@@ -81,17 +81,50 @@ function onScrollToIndexFailed() {
 export function MessagesList() {
   const chat = useChat()
   const flatListRef = useRef<FlatList>(null)
+
+  // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
+  // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
+  // the bottom.
   const isAtBottom = React.useRef(true)
+
+  // Whenever we first add items to the list, we need to scroll to the end of the list immediately. However, we don't
+  // want this to fire multiple times. This also keeps track of whether we should actually try to append items to
+  // the top of the list through `onStartReached`.
+  const shouldFetchOnStartReached = React.useRef(false)
+
+  // contentOpacity is a web-only hack. There is a slight delay between the rendering of the items and the user being
+  // scrolled to the bottom of the view. If we don't hide the items, there's a jarring flash whenever the scroll
+  // happens. Therefore, let's not show the items until that first scroll has actually happened
+  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(isWeb)
+
+  // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
+  // onStartReached to fire.
+  const contentHeight = React.useRef(0)
 
   useScrollToEndOnFocus(flatListRef)
 
-  const onContentSizeChange = useCallback((_: number, height: number) => {
-    if (!isAtBottom.current) return
-    flatListRef.current?.scrollToOffset({animated: isNative, offset: height})
-  }, [])
+  const onContentSizeChange = useCallback(
+    (_: number, height: number) => {
+      contentHeight.current = height
+
+      // This number _must_ be the height of the MaybeLoader component
+      if (height <= 50 || !isAtBottom.current) {
+        return
+      }
+
+      flatListRef.current?.scrollToOffset({
+        animated: hasInitiallyScrolled,
+        offset: height,
+      })
+    },
+    [hasInitiallyScrolled],
+  )
 
   const onStartReached = useCallback(() => {
-    if (chat.status === ConvoStatus.Ready) {
+    if (
+      chat.status === ConvoStatus.Ready &&
+      shouldFetchOnStartReached.current
+    ) {
       chat.fetchMessageHistory()
     }
   }, [chat])
@@ -113,8 +146,16 @@ export function MessagesList() {
         e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height
 
       isAtBottom.current = e.nativeEvent.contentSize.height - 100 < bottomOffset
+
+      if (contentHeight.current > 50 && hasInitiallyScrolled) {
+        setHasInitiallyScrolled(true)
+      }
+
+      if (isAtBottom.current && !shouldFetchOnStartReached.current) {
+        shouldFetchOnStartReached.current = true
+      }
     },
-    [],
+    [hasInitiallyScrolled],
   )
 
   const onInputFocus = React.useCallback(() => {
@@ -132,8 +173,6 @@ export function MessagesList() {
   const {bottom: bottomInset} = useSafeAreaInsets()
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
-  console.log(chat.items)
-
   return (
     <KeyboardAvoidingView
       style={[a.flex_1, {marginBottom: bottomInset}]}
@@ -145,16 +184,15 @@ export function MessagesList() {
         data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        contentContainerStyle={{paddingHorizontal: 10}}
-        // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
-        // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
-        // this...probably.
-        initialNumToRender={25}
-        // Same with the max to render per batch. Let's be safe for now though.
-        maxToRenderPerBatch={25}
+        contentContainerStyle={{
+          paddingHorizontal: 10,
+          opacity: hasInitiallyScrolled ? 1 : 0,
+        }}
+        initialNumToRender={isWeb ? 50 : 25}
+        maxToRenderPerBatch={isWeb ? 50 : 25}
         removeClippedSubviews={false}
-        keyboardDismissMode="on-drag"
         disableVirtualization={true}
+        keyboardDismissMode="on-drag"
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,
         }}
@@ -162,8 +200,8 @@ export function MessagesList() {
         onStartReached={onStartReached}
         onScrollToIndexFailed={onScrollToIndexFailed}
         onScroll={onScroll}
-        // We don't really need to call this much since there are not any animations that rely on this
         scrollEventThrottle={100}
+        showsVerticalScrollIndicator={hasInitiallyScrolled}
         ListHeaderComponent={
           <MaybeLoader
             isLoading={
