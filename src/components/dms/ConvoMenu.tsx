@@ -123,6 +123,7 @@ let ConvoMenu = ({
               <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
             </Menu.Item>
           </Menu.Group>
+          <Menu.Divider />
           {/* TODO(samuel): implement these */}
           <Menu.Group>
             <Menu.Item
@@ -146,6 +147,7 @@ let ConvoMenu = ({
               <Menu.ItemIcon icon={Flag} />
             </Menu.Item>
           </Menu.Group>
+          <Menu.Divider />
           <Menu.Group>
             <Menu.Item
               label={_(msg`Leave conversation`)}
