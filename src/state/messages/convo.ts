@@ -50,8 +50,6 @@ export type ConvoItem =
       retry: () => void
     }
 
-export type ConvoStateSharedFields<T> = T & {}
-
 export type ConvoState =
   | {
       status: ConvoStatus.Uninitialized
