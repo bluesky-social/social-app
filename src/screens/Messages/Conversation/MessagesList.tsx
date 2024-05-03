@@ -1,13 +1,7 @@
 import React, {useCallback, useRef} from 'react'
-import {
-  FlatList,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Platform,
-  View,
-} from 'react-native'
+import {FlatList, Platform, View} from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
-import {runOnJS, useSharedValue} from 'react-native-reanimated'
+import {useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -17,8 +11,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnimatedScrollHandler} from 'lib/hooks/useAnimatedScrollHandler_FIXED'
-import {ScrollProvider, useScrollHandlers} from 'lib/ScrollContext'
+import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
@@ -94,16 +87,11 @@ export function MessagesList() {
   // the bottom.
   const isAtBottom = useSharedValue(true)
 
-  // contentOpacity is a web-only hack. There is a slight delay between the rendering of the items and the user being
-  // scrolled to the bottom of the view. If we don't hide the items, there's a jarring flash whenever the scroll
-  // happens. Therefore, let's not show the items until that first scroll has actually happened
-  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
-
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
   const contentHeight = useSharedValue(0)
 
-  const isPrepending = React.useRef(false)
+  const hasInitiallyScrolled = useSharedValue(false)
 
   // This is only used on native because `Keyboard` can't be imported on web. On web, an input focus will immediately
   // trigger scrolling to the bottom. On native however, we need to wait for the keyboard to present before scrolling,
@@ -120,17 +108,7 @@ export function MessagesList() {
 
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
-      console.log(height)
-      // if (isWeb && !isAtBottom.value) {
-      //   flatListRef.current?.scrollToOffset({
-      //     animated: false,
-      //     offset: height - contentHeight.value,
-      //   })
-      //   contentHeight.value = height
-      //   return
-      // }
-      //
-      // contentHeight.value = height
+      contentHeight.value = height
 
       // This number _must_ be the height of the MaybeLoader component
       if (height <= 50 || !isAtBottom.value) {
@@ -138,28 +116,17 @@ export function MessagesList() {
       }
 
       flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled,
+        animated: hasInitiallyScrolled.value,
         offset: height,
       })
     },
-    [hasInitiallyScrolled, isAtBottom.value],
+    [contentHeight, hasInitiallyScrolled.value, isAtBottom.value],
   )
 
   const onStartReached = useCallback(() => {
-    if (isPrepending.current) {
-      return
-    }
-
-    isPrepending.current = true
-
     if (chat.status === ConvoStatus.Ready && hasInitiallyScrolled) {
       chat.fetchMessageHistory()
     }
-
-    // TODO hack, can we await `fetchMessageHistory`?
-    setTimeout(() => {
-      isPrepending.current = false
-    }, 2000)
   }, [chat, hasInitiallyScrolled])
 
   const onSendMessage = useCallback(
@@ -176,7 +143,6 @@ export function MessagesList() {
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
-      console.log('test')
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
@@ -186,8 +152,8 @@ export function MessagesList() {
       // This number _must_ be the height of the MaybeLoader component.
       // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
       // adds a 50 pixel offset.
-      if (contentHeight.value > 50 && !hasInitiallyScrolled) {
-        runOnJS(setHasInitiallyScrolled)(true)
+      if (contentHeight.value > 50 && !hasInitiallyScrolled.value) {
+        hasInitiallyScrolled.value = true
       }
     },
     [contentHeight.value, hasInitiallyScrolled, isAtBottom],
@@ -222,7 +188,6 @@ export function MessagesList() {
               minIndexForVisible: 1,
             }}
             removeClippedSubviews={false}
-            showsVerticalScrollIndicator={hasInitiallyScrolled}
             onContentSizeChange={onContentSizeChange}
             onStartReached={onStartReached}
             onScrollToIndexFailed={onScrollToIndexFailed}
