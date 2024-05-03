@@ -432,6 +432,8 @@ export class Convo {
         }
       }
     } catch (e: any) {
+      logger.error('Convo: failed to fetch message history')
+
       this.headerItems.set(ConvoError.HistoryFailed, {
         type: 'error-recoverable',
         key: ConvoError.HistoryFailed,
