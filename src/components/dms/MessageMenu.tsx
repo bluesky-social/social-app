@@ -5,6 +5,8 @@ import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useChat} from 'state/messages'
+import {ConvoStatus} from 'state/messages/convo'
 import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -31,6 +33,7 @@ export let MessageMenu = ({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
+  const chat = useChat()
   const deleteControl = usePromptControl()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
@@ -44,8 +47,10 @@ export let MessageMenu = ({
   }, [_, message.text])
 
   const onDelete = React.useCallback(() => {
-    // TODO delete the message
-  }, [])
+    if (chat.status !== ConvoStatus.Ready) return
+
+    chat.deleteMessage(message.id)
+  }, [chat, message.id])
 
   const onReport = React.useCallback(() => {
     // TODO report the message
