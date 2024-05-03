@@ -66,18 +66,18 @@ function InnerApp() {
 
   return (
     <Alf theme={theme}>
-      <React.Fragment
-        // Resets the entire tree below when it changes:
-        key={currentAccount?.did}>
-        <QueryProvider currentDid={currentAccount?.did}>
-          <StatsigProvider>
-            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-            <LabelDefsProvider>
-              <ModerationOptsProvider>
-                <LoggedOutViewProvider>
-                  <SelectedFeedProvider>
-                    <UnreadNotifsProvider>
-                      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <React.Fragment
+          // Resets the entire tree below when it changes:
+          key={currentAccount?.did}>
+          <QueryProvider currentDid={currentAccount?.did}>
+            <StatsigProvider>
+              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+              <LabelDefsProvider>
+                <ModerationOptsProvider>
+                  <LoggedOutViewProvider>
+                    <SelectedFeedProvider>
+                      <UnreadNotifsProvider>
                         {/* All components should be within this provider */}
                         <RootSiblingParent>
                           <SafeAreaProvider>
@@ -85,15 +85,15 @@ function InnerApp() {
                           </SafeAreaProvider>
                         </RootSiblingParent>
                         <ToastContainer />
-                      </ThemeProvider>
-                    </UnreadNotifsProvider>
-                  </SelectedFeedProvider>
-                </LoggedOutViewProvider>
-              </ModerationOptsProvider>
-            </LabelDefsProvider>
-          </StatsigProvider>
-        </QueryProvider>
-      </React.Fragment>
+                      </UnreadNotifsProvider>
+                    </SelectedFeedProvider>
+                  </LoggedOutViewProvider>
+                </ModerationOptsProvider>
+              </LabelDefsProvider>
+            </StatsigProvider>
+          </QueryProvider>
+        </React.Fragment>
+      </ThemeProvider>
     </Alf>
   )
 }

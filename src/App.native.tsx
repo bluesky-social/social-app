@@ -89,20 +89,20 @@ function InnerApp() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <Alf theme={theme}>
-        <Splash isReady={isReady}>
-          <React.Fragment
-            // Resets the entire tree below when it changes:
-            key={currentAccount?.did}>
-            <QueryProvider currentDid={currentAccount?.did}>
-              <PushNotificationsListener>
-                <StatsigProvider>
-                  {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                  <LabelDefsProvider>
-                    <ModerationOptsProvider>
-                      <LoggedOutViewProvider>
-                        <SelectedFeedProvider>
-                          <UnreadNotifsProvider>
-                            <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <Splash isReady={isReady}>
+            <React.Fragment
+              // Resets the entire tree below when it changes:
+              key={currentAccount?.did}>
+              <QueryProvider currentDid={currentAccount?.did}>
+                <PushNotificationsListener>
+                  <StatsigProvider>
+                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                    <LabelDefsProvider>
+                      <ModerationOptsProvider>
+                        <LoggedOutViewProvider>
+                          <SelectedFeedProvider>
+                            <UnreadNotifsProvider>
                               {/* All components should be within this provider */}
                               <RootSiblingParent>
                                 <GestureHandlerRootView style={s.h100pct}>
@@ -110,17 +110,17 @@ function InnerApp() {
                                   <Shell />
                                 </GestureHandlerRootView>
                               </RootSiblingParent>
-                            </ThemeProvider>
-                          </UnreadNotifsProvider>
-                        </SelectedFeedProvider>
-                      </LoggedOutViewProvider>
-                    </ModerationOptsProvider>
-                  </LabelDefsProvider>
-                </StatsigProvider>
-              </PushNotificationsListener>
-            </QueryProvider>
-          </React.Fragment>
-        </Splash>
+                            </UnreadNotifsProvider>
+                          </SelectedFeedProvider>
+                        </LoggedOutViewProvider>
+                      </ModerationOptsProvider>
+                    </LabelDefsProvider>
+                  </StatsigProvider>
+                </PushNotificationsListener>
+              </QueryProvider>
+            </React.Fragment>
+          </Splash>
+        </ThemeProvider>
       </Alf>
     </SafeAreaProvider>
   )
