@@ -25,6 +25,10 @@ export enum ConvoStatus {
   Suspended = 'suspended',
 }
 
+export enum ConvoError {
+  HistoryFailed = 'historyFailed',
+}
+
 export type ConvoItem =
   | {
       type: 'message' | 'pending-message'
@@ -48,6 +52,17 @@ export type ConvoItem =
       type: 'pending-retry'
       key: string
       retry: () => void
+    }
+  | {
+      type: 'error-recoverable'
+      key: string
+      code: ConvoError
+      retry: () => void
+    }
+  | {
+      type: 'error-fatal'
+      code: ConvoError
+      key: string
     }
 
 export type ConvoState =
@@ -169,6 +184,7 @@ export class Convo {
   > = new Map()
   private deletedMessages: Set<string> = new Set()
   private footerItems: Map<string, ConvoItem> = new Map()
+  private headerItems: Map<string, ConvoItem> = new Map()
 
   private pendingEventIngestion: Promise<void> | undefined
   private isProcessingPendingMessages = false
@@ -366,51 +382,72 @@ export class Convo {
      */
     if (this.isFetchingHistory) return
 
-    this.isFetchingHistory = true
-    this.commit()
-
     /*
-     * Delay if paginating while scrolled to prevent momentum scrolling from
-     * jerking the list around, plus makes it feel a little more human.
+     * If we've rendered a retry state for history fetching, exit. Upon retry,
+     * this will be removed and we'll try again.
      */
-    if (this.pastMessages.size > 0) {
-      await new Promise(y => setTimeout(y, 500))
-    }
+    if (this.headerItems.has(ConvoError.HistoryFailed)) return
 
-    const response = await this.agent.api.chat.bsky.convo.getMessages(
-      {
-        cursor: this.historyCursor,
-        convoId: this.convoId,
-        limit: isNative ? 25 : 50,
-      },
-      {
-        headers: {
-          Authorization: this.__tempFromUserDid,
+    try {
+      this.isFetchingHistory = true
+      this.commit()
+
+      /*
+       * Delay if paginating while scrolled to prevent momentum scrolling from
+       * jerking the list around, plus makes it feel a little more human.
+       */
+      if (this.pastMessages.size > 0) {
+        await new Promise(y => setTimeout(y, 500))
+        // throw new Error('UNCOMMENT TO TEST RETRY')
+      }
+
+      const response = await this.agent.api.chat.bsky.convo.getMessages(
+        {
+          cursor: this.historyCursor,
+          convoId: this.convoId,
+          limit: isNative ? 25 : 50,
         },
-      },
-    )
-    const {cursor, messages} = response.data
+        {
+          headers: {
+            Authorization: this.__tempFromUserDid,
+          },
+        },
+      )
+      const {cursor, messages} = response.data
 
-    this.historyCursor = cursor || null
+      this.historyCursor = cursor ?? null
 
-    for (const message of messages) {
-      if (
-        ChatBskyConvoDefs.isMessageView(message) ||
-        ChatBskyConvoDefs.isDeletedMessageView(message)
-      ) {
-        this.pastMessages.set(message.id, message)
-
-        // set to latest rev
+      for (const message of messages) {
         if (
-          message.rev > (this.eventsCursor = this.eventsCursor || message.rev)
+          ChatBskyConvoDefs.isMessageView(message) ||
+          ChatBskyConvoDefs.isDeletedMessageView(message)
         ) {
-          this.eventsCursor = message.rev
+          this.pastMessages.set(message.id, message)
+
+          // set to latest rev
+          if (
+            message.rev > (this.eventsCursor = this.eventsCursor || message.rev)
+          ) {
+            this.eventsCursor = message.rev
+          }
         }
       }
-    }
+    } catch (e: any) {
+      logger.error('Convo: failed to fetch message history')
 
-    this.isFetchingHistory = false
-    this.commit()
+      this.headerItems.set(ConvoError.HistoryFailed, {
+        type: 'error-recoverable',
+        key: ConvoError.HistoryFailed,
+        code: ConvoError.HistoryFailed,
+        retry: () => {
+          this.headerItems.delete(ConvoError.HistoryFailed)
+          this.fetchMessageHistory()
+        },
+      })
+    } finally {
+      this.isFetchingHistory = false
+      this.commit()
+    }
   }
 
   private async pollEvents() {
@@ -728,6 +765,10 @@ export class Convo {
           nextMessage: null,
         })
       }
+    })
+
+    this.headerItems.forEach(item => {
+      items.push(item)
     })
 
     return items
