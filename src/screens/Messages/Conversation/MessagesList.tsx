@@ -57,7 +57,13 @@ function RetryButton({onPress}: {onPress: () => unknown}) {
 
 function renderItem({item}: {item: ConvoItem}) {
   if (item.type === 'message' || item.type === 'pending-message') {
-    return <MessageItem item={item.message} next={item.nextMessage} />
+    return (
+      <MessageItem
+        item={item.message}
+        next={item.nextMessage}
+        pending={item.type === 'pending-message'}
+      />
+    )
   } else if (item.type === 'deleted-message') {
     return <Text>Deleted message</Text>
   } else if (item.type === 'pending-retry') {

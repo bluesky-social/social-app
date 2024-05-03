@@ -1,5 +1,5 @@
-import React, {useCallback, useMemo} from 'react'
-import {StyleProp, TextStyle, View} from 'react-native'
+import React, {useCallback, useMemo, useRef} from 'react'
+import {LayoutAnimation, StyleProp, TextStyle, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,12 +13,14 @@ import {Text} from '#/components/Typography'
 export function MessageItem({
   item,
   next,
+  pending,
 }: {
   item: ChatBskyConvoDefs.MessageView
   next:
     | ChatBskyConvoDefs.MessageView
     | ChatBskyConvoDefs.DeletedMessageView
     | null
+  pending?: boolean
 }) {
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -35,19 +37,25 @@ export function MessageItem({
       return true
     }
 
-    // or, if there's a 10 minute gap between this message and the next
+    // or, if there's a 3 minute gap between this message and the next
     if (ChatBskyConvoDefs.isMessageView(next)) {
       const thisDate = new Date(item.sentAt)
       const nextDate = new Date(next.sentAt)
 
       const diff = nextDate.getTime() - thisDate.getTime()
 
-      // 10 minutes
-      return diff > 10 * 60 * 1000
+      // 3 minutes
+      return diff > 3 * 60 * 1000
     }
 
     return true
   }, [item, next, isFromSelf, isNextFromSelf])
+
+  const lastInGroupRef = useRef(isLastInGroup)
+  if (lastInGroupRef.current !== isLastInGroup) {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    lastInGroupRef.current = isLastInGroup
+  }
 
   return (
     <View>
@@ -60,7 +68,9 @@ export function MessageItem({
             a.rounded_md,
             {
               backgroundColor: isFromSelf
-                ? t.palette.primary_500
+                ? pending
+                  ? t.palette.primary_200
+                  : t.palette.primary_500
                 : t.palette.contrast_50,
               borderRadius: 17,
             },
