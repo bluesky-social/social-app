@@ -125,9 +125,11 @@ let Header = ({
       ) : (
         <View style={{width: 30}} />
       )}
-      <View style={[a.align_center, a.gap_sm]}>
+      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
         <PreviewableUserAvatar size={32} profile={profile} />
-        <Text style={[a.text_lg, a.font_bold]}>{profile.displayName}</Text>
+        <Text style={[a.text_lg, a.font_bold, a.text_center]}>
+          {profile.displayName}
+        </Text>
       </View>
       {chat.status === ConvoStatus.Ready ? (
         <ConvoMenu
