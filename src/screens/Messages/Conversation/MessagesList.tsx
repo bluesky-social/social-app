@@ -87,21 +87,27 @@ export function MessagesList() {
   // the bottom.
   const isAtBottom = React.useRef(true)
 
-  // Whenever we first add items to the list, we need to scroll to the end of the list immediately. However, we don't
-  // want this to fire multiple times. This also keeps track of whether we should actually try to append items to
-  // the top of the list through `onStartReached`.
-  const shouldFetchOnStartReached = React.useRef(false)
-
   // contentOpacity is a web-only hack. There is a slight delay between the rendering of the items and the user being
   // scrolled to the bottom of the view. If we don't hide the items, there's a jarring flash whenever the scroll
   // happens. Therefore, let's not show the items until that first scroll has actually happened
-  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(isWeb)
+  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
 
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
   const contentHeight = React.useRef(0)
 
+  // This is only used on native because `Keyboard` can't be imported on web. On web, an input focus will immediately
+  // trigger scrolling to the bottom. On native however, we need to wait for the keyboard to present before scrolling,
+  // which is what this hook listens for
   useScrollToEndOnFocus(flatListRef)
+
+  const setMinShellMode = useSetMinimalShellMode()
+  useFocusEffect(
+    useCallback(() => {
+      setMinShellMode(true)
+      return () => setMinShellMode(false)
+    }, [setMinShellMode]),
+  )
 
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
@@ -121,13 +127,10 @@ export function MessagesList() {
   )
 
   const onStartReached = useCallback(() => {
-    if (
-      chat.status === ConvoStatus.Ready &&
-      shouldFetchOnStartReached.current
-    ) {
+    if (chat.status === ConvoStatus.Ready && hasInitiallyScrolled) {
       chat.fetchMessageHistory()
     }
-  }, [chat])
+  }, [chat, hasInitiallyScrolled])
 
   const onSendMessage = useCallback(
     (text: string) => {
@@ -145,14 +148,15 @@ export function MessagesList() {
       const bottomOffset =
         e.nativeEvent.contentOffset.y + e.nativeEvent.layoutMeasurement.height
 
+      // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
+      // when a new message is added, hence the 100 pixel offset
       isAtBottom.current = e.nativeEvent.contentSize.height - 100 < bottomOffset
 
-      if (contentHeight.current > 50 && hasInitiallyScrolled) {
+      // This number _must_ be the height of the MaybeLoader component.
+      // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
+      // adds a 50 pixel offset.
+      if (contentHeight.current > 50 && !hasInitiallyScrolled) {
         setHasInitiallyScrolled(true)
-      }
-
-      if (isAtBottom.current && !shouldFetchOnStartReached.current) {
-        shouldFetchOnStartReached.current = true
       }
     },
     [hasInitiallyScrolled],
@@ -161,14 +165,6 @@ export function MessagesList() {
   const onInputFocus = React.useCallback(() => {
     flatListRef.current?.scrollToEnd({animated: true})
   }, [flatListRef])
-
-  const setMinShellMode = useSetMinimalShellMode()
-  useFocusEffect(
-    useCallback(() => {
-      setMinShellMode(true)
-      return () => setMinShellMode(false)
-    }, [setMinShellMode]),
-  )
 
   const {bottom: bottomInset} = useSafeAreaInsets()
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
@@ -182,26 +178,26 @@ export function MessagesList() {
       <FlatList
         ref={flatListRef}
         data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
-        keyExtractor={keyExtractor}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         contentContainerStyle={{
           paddingHorizontal: 10,
           opacity: hasInitiallyScrolled ? 1 : 0,
         }}
+        disableVirtualization={true}
         initialNumToRender={isWeb ? 50 : 25}
         maxToRenderPerBatch={isWeb ? 50 : 25}
-        removeClippedSubviews={false}
-        disableVirtualization={true}
         keyboardDismissMode="on-drag"
         maintainVisibleContentPosition={{
           minIndexForVisible: 1,
         }}
+        removeClippedSubviews={false}
+        showsVerticalScrollIndicator={hasInitiallyScrolled}
         onContentSizeChange={onContentSizeChange}
         onStartReached={onStartReached}
         onScrollToIndexFailed={onScrollToIndexFailed}
         onScroll={onScroll}
         scrollEventThrottle={100}
-        showsVerticalScrollIndicator={hasInitiallyScrolled}
         ListHeaderComponent={
           <MaybeLoader
             isLoading={
