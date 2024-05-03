@@ -91,34 +91,33 @@ function InnerApp() {
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
           <Splash isReady={isReady}>
-            <React.Fragment
-              // Resets the entire tree below when it changes:
-              key={currentAccount?.did}>
-              <QueryProvider currentDid={currentAccount?.did}>
-                <PushNotificationsListener>
-                  <StatsigProvider>
-                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                    <LabelDefsProvider>
-                      <ModerationOptsProvider>
-                        <LoggedOutViewProvider>
-                          <SelectedFeedProvider>
-                            <UnreadNotifsProvider>
-                              {/* All components should be within this provider */}
-                              <RootSiblingParent>
+            <RootSiblingParent>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <PushNotificationsListener>
+                    <StatsigProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
                                 <GestureHandlerRootView style={s.h100pct}>
                                   <TestCtrls />
                                   <Shell />
                                 </GestureHandlerRootView>
-                              </RootSiblingParent>
-                            </UnreadNotifsProvider>
-                          </SelectedFeedProvider>
-                        </LoggedOutViewProvider>
-                      </ModerationOptsProvider>
-                    </LabelDefsProvider>
-                  </StatsigProvider>
-                </PushNotificationsListener>
-              </QueryProvider>
-            </React.Fragment>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </StatsigProvider>
+                  </PushNotificationsListener>
+                </QueryProvider>
+              </React.Fragment>
+            </RootSiblingParent>
           </Splash>
         </ThemeProvider>
       </Alf>
