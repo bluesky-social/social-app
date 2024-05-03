@@ -87,7 +87,7 @@ export function MessageInput({
             {height: 30, width: 30, backgroundColor: t.palette.primary_500},
           ]}
           onPress={onSubmit}>
-          <PaperPlane fill={t.palette.white} />
+          <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
     </View>
