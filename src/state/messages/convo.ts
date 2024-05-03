@@ -25,8 +25,13 @@ export enum ConvoStatus {
   Suspended = 'suspended',
 }
 
-export enum ConvoError {
+export enum ConvoItemError {
   HistoryFailed = 'historyFailed',
+  ResumeFailed = 'resumeFailed',
+}
+
+export enum ConvoError {
+  InitFailed = 'initFailed',
 }
 
 export type ConvoItem =
@@ -56,12 +61,12 @@ export type ConvoItem =
   | {
       type: 'error-recoverable'
       key: string
-      code: ConvoError
+      code: ConvoItemError
       retry: () => void
     }
   | {
       type: 'error-fatal'
-      code: ConvoError
+      code: ConvoItemError
       key: string
     }
 
@@ -71,6 +76,8 @@ export type ConvoState =
       items: []
       convo: undefined
       error: undefined
+      sender: undefined
+      recipients: undefined
       isFetchingHistory: false
       deleteMessage: undefined
       sendMessage: undefined
@@ -81,6 +88,8 @@ export type ConvoState =
       items: []
       convo: undefined
       error: undefined
+      sender: undefined
+      recipients: undefined
       isFetchingHistory: boolean
       deleteMessage: undefined
       sendMessage: undefined
@@ -91,6 +100,8 @@ export type ConvoState =
       items: ConvoItem[]
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
+      sender: AppBskyActorDefs.ProfileViewBasic
+      recipients: AppBskyActorDefs.ProfileViewBasic[]
       isFetchingHistory: boolean
       deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
@@ -103,6 +114,8 @@ export type ConvoState =
       items: ConvoItem[]
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
+      sender: AppBskyActorDefs.ProfileViewBasic
+      recipients: AppBskyActorDefs.ProfileViewBasic[]
       isFetchingHistory: boolean
       deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
@@ -115,6 +128,8 @@ export type ConvoState =
       items: ConvoItem[]
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
+      sender: AppBskyActorDefs.ProfileViewBasic
+      recipients: AppBskyActorDefs.ProfileViewBasic[]
       isFetchingHistory: boolean
       deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
@@ -127,6 +142,8 @@ export type ConvoState =
       items: ConvoItem[]
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
+      sender: AppBskyActorDefs.ProfileViewBasic
+      recipients: AppBskyActorDefs.ProfileViewBasic[]
       isFetchingHistory: boolean
       deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
@@ -139,6 +156,8 @@ export type ConvoState =
       items: []
       convo: undefined
       error: any
+      sender: undefined
+      recipients: undefined
       isFetchingHistory: false
       deleteMessage: undefined
       sendMessage: undefined
@@ -165,7 +184,13 @@ export class Convo {
 
   private pollInterval = ACTIVE_POLL_INTERVAL
   private status: ConvoStatus = ConvoStatus.Uninitialized
-  private error: any
+  private error:
+    | {
+        code: ConvoError
+        exception?: Error
+        retry: () => void
+      }
+    | undefined
   private historyCursor: string | undefined | null = undefined
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
@@ -192,6 +217,7 @@ export class Convo {
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
   sender: AppBskyActorDefs.ProfileViewBasic | undefined
+  recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
@@ -226,7 +252,7 @@ export class Convo {
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
-    logger.debug('Convo: snapshotted', {}, logger.DebugContext.convo)
+    // logger.debug('Convo: snapshotted', {}, logger.DebugContext.convo)
     return this.snapshot
   }
 
@@ -238,6 +264,8 @@ export class Convo {
           items: [],
           convo: undefined,
           error: undefined,
+          sender: undefined,
+          recipients: undefined,
           isFetchingHistory: this.isFetchingHistory,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -253,6 +281,8 @@ export class Convo {
           items: this.getItems(),
           convo: this.convo!,
           error: undefined,
+          sender: this.sender!,
+          recipients: this.recipients!,
           isFetchingHistory: this.isFetchingHistory,
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
@@ -265,6 +295,8 @@ export class Convo {
           items: [],
           convo: undefined,
           error: this.error,
+          sender: undefined,
+          recipients: undefined,
           isFetchingHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -277,6 +309,8 @@ export class Convo {
           items: [],
           convo: undefined,
           error: undefined,
+          sender: undefined,
+          recipients: undefined,
           isFetchingHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -289,7 +323,10 @@ export class Convo {
   async init() {
     logger.debug('Convo: init', {}, logger.DebugContext.convo)
 
-    if (this.status === ConvoStatus.Uninitialized) {
+    if (
+      this.status === ConvoStatus.Uninitialized ||
+      this.status === ConvoStatus.Error
+    ) {
       try {
         this.status = ConvoStatus.Initializing
         this.commit()
@@ -301,8 +338,16 @@ export class Convo {
         await this.fetchMessageHistory()
 
         this.pollEvents()
-      } catch (e) {
-        this.error = e
+      } catch (e: any) {
+        logger.error('Convo: failed to init')
+        this.error = {
+          exception: e,
+          code: ConvoError.InitFailed,
+          retry: () => {
+            this.error = undefined
+            this.init()
+          },
+        }
         this.status = ConvoStatus.Error
         this.commit()
       }
@@ -318,6 +363,8 @@ export class Convo {
       this.status === ConvoStatus.Suspended ||
       this.status === ConvoStatus.Backgrounded
     ) {
+      const fromStatus = this.status
+
       try {
         this.status = ConvoStatus.Resuming
         this.commit()
@@ -326,14 +373,24 @@ export class Convo {
         this.status = ConvoStatus.Ready
         this.commit()
 
-        await this.fetchMessageHistory()
+        // throw new Error('UNCOMMENT TO TEST RESUME FAILURE')
 
         this.pollInterval = ACTIVE_POLL_INTERVAL
         this.pollEvents()
       } catch (e) {
-        // TODO handle errors in one place
-        this.error = e
-        this.status = ConvoStatus.Error
+        logger.error('Convo: failed to resume')
+
+        this.footerItems.set(ConvoItemError.ResumeFailed, {
+          type: 'error-recoverable',
+          key: ConvoItemError.ResumeFailed,
+          code: ConvoItemError.ResumeFailed,
+          retry: () => {
+            this.footerItems.delete(ConvoItemError.ResumeFailed)
+            this.resume()
+          },
+        })
+
+        this.status = fromStatus
         this.commit()
       }
     } else {
@@ -367,6 +424,19 @@ export class Convo {
     )
     this.convo = response.data.convo
     this.sender = this.convo.members.find(m => m.did === this.__tempFromUserDid)
+    this.recipients = this.convo.members.filter(
+      m => m.did !== this.__tempFromUserDid,
+    )
+
+    /*
+     * Prevent invalid states
+     */
+    if (!this.sender) {
+      throw new Error('Convo: could not find sender in convo')
+    }
+    if (!this.recipients) {
+      throw new Error('Convo: could not find recipients in convo')
+    }
   }
 
   async fetchMessageHistory() {
@@ -386,7 +456,7 @@ export class Convo {
      * If we've rendered a retry state for history fetching, exit. Upon retry,
      * this will be removed and we'll try again.
      */
-    if (this.headerItems.has(ConvoError.HistoryFailed)) return
+    if (this.headerItems.has(ConvoItemError.HistoryFailed)) return
 
     try {
       this.isFetchingHistory = true
@@ -435,12 +505,12 @@ export class Convo {
     } catch (e: any) {
       logger.error('Convo: failed to fetch message history')
 
-      this.headerItems.set(ConvoError.HistoryFailed, {
+      this.headerItems.set(ConvoItemError.HistoryFailed, {
         type: 'error-recoverable',
-        key: ConvoError.HistoryFailed,
-        code: ConvoError.HistoryFailed,
+        key: ConvoItemError.HistoryFailed,
+        code: ConvoItemError.HistoryFailed,
         retry: () => {
-          this.headerItems.delete(ConvoError.HistoryFailed)
+          this.headerItems.delete(ConvoItemError.HistoryFailed)
           this.fetchMessageHistory()
         },
       })
