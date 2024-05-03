@@ -39,31 +39,33 @@ export const ChooseAccountForm = ({
         // The session API isn't resilient to race conditions so let's just ignore this.
         return
       }
-      if (account.accessJwt) {
-        if (account.did === currentAccount?.did) {
-          setShowLoggedOut(false)
-          Toast.show(_(msg`Already signed in as @${account.handle}`))
-        } else {
-          try {
-            setPendingDid(account.did)
-            await initSession(account)
-            logEvent('account:loggedIn', {
-              logContext: 'ChooseAccountForm',
-              withPassword: false,
-            })
-            track('Sign In', {resumedSession: true})
-            Toast.show(_(msg`Signed in as @${account.handle}`))
-          } catch (e: any) {
-            logger.error('choose account: initSession failed', {
-              message: e.message,
-            })
-            onSelectAccount(account)
-          } finally {
-            setPendingDid(null)
-          }
-        }
-      } else {
+      if (!account.accessJwt) {
+        // Move to login form.
         onSelectAccount(account)
+        return
+      }
+      if (account.did === currentAccount?.did) {
+        setShowLoggedOut(false)
+        Toast.show(_(msg`Already signed in as @${account.handle}`))
+        return
+      }
+      try {
+        setPendingDid(account.did)
+        await initSession(account)
+        logEvent('account:loggedIn', {
+          logContext: 'ChooseAccountForm',
+          withPassword: false,
+        })
+        track('Sign In', {resumedSession: true})
+        Toast.show(_(msg`Signed in as @${account.handle}`))
+      } catch (e: any) {
+        logger.error('choose account: initSession failed', {
+          message: e.message,
+        })
+        // Move to login form.
+        onSelectAccount(account)
+      } finally {
+        setPendingDid(null)
       }
     },
     [

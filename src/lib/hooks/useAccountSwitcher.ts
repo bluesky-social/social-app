@@ -15,7 +15,7 @@ export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {initSession, clearCurrentAccount} = useSessionApi()
+  const {initSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
@@ -53,19 +53,11 @@ export function useAccountSwitcher() {
         logger.error(`switch account: selectAccount failed`, {
           message: e.message,
         })
-        clearCurrentAccount() // back user out to login
       } finally {
         setPendingDid(null)
       }
     },
-    [
-      _,
-      track,
-      clearCurrentAccount,
-      initSession,
-      requestSwitchToAccount,
-      pendingDid,
-    ],
+    [_, track, initSession, requestSwitchToAccount, pendingDid],
   )
 
   return {onPressSwitchAccount, pendingDid}
