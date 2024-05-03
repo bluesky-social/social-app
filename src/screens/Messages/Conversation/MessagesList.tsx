@@ -202,6 +202,7 @@ export function MessagesList() {
             maintainVisibleContentPosition={{
               minIndexForVisible: 1,
             }}
+            contentContainerStyle={{paddingHorizontal: 10}}
             removeClippedSubviews={false}
             onContentSizeChange={onContentSizeChange}
             onStartReached={onStartReached}
