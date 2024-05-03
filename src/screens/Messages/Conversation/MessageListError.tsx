@@ -45,7 +45,7 @@ export function MessageListError({
               item.retry()
               return false
             }}>
-            {_(msg`Retry`)}
+            {_(msg`Retry.`)}
           </InlineLinkText>
         </Text>
       </View>

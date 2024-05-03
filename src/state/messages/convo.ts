@@ -398,6 +398,7 @@ export class Convo {
        */
       if (this.pastMessages.size > 0) {
         await new Promise(y => setTimeout(y, 500))
+        // throw new Error('UNCOMMENT TO TEST RETRY')
       }
 
       const response = await this.agent.api.chat.bsky.convo.getMessages(
