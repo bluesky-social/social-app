@@ -41,9 +41,7 @@ export function useAccountSwitcher() {
           }
           await initSession(account)
           logEvent('account:loggedIn', {logContext, withPassword: false})
-          setTimeout(() => {
-            Toast.show(_(msg`Signed in as @${account.handle}`))
-          }, 100)
+          Toast.show(_(msg`Signed in as @${account.handle}`))
         } else {
           requestSwitchToAccount({requestedAccount: account.did})
           Toast.show(
@@ -56,9 +54,6 @@ export function useAccountSwitcher() {
           message: e.message,
         })
         clearCurrentAccount() // back user out to login
-        setTimeout(() => {
-          Toast.show(_(msg`Sorry! We need you to enter your password.`))
-        }, 100)
       } finally {
         setPendingDid(null)
       }
