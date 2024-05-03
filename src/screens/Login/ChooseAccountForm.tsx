@@ -22,6 +22,7 @@ export const ChooseAccountForm = ({
   onSelectAccount: (account?: SessionAccount) => void
   onPressBack: () => void
 }) => {
+  const [pendingDid, setPendingDid] = React.useState<string | null>(null)
   const {track, screen} = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -34,12 +35,17 @@ export const ChooseAccountForm = ({
 
   const onSelect = React.useCallback(
     async (account: SessionAccount) => {
+      if (pendingDid) {
+        // The session API isn't resilient to race conditions so let's just ignore this.
+        return
+      }
       if (account.accessJwt) {
         if (account.did === currentAccount?.did) {
           setShowLoggedOut(false)
           Toast.show(_(msg`Already signed in as @${account.handle}`))
         } else {
           try {
+            setPendingDid(account.did)
             await initSession(account)
             logEvent('account:loggedIn', {
               logContext: 'ChooseAccountForm',
@@ -54,13 +60,23 @@ export const ChooseAccountForm = ({
               message: e.message,
             })
             onSelectAccount(account)
+          } finally {
+            setPendingDid(null)
           }
         }
       } else {
         onSelectAccount(account)
       }
     },
-    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut, _],
+    [
+      currentAccount,
+      track,
+      initSession,
+      pendingDid,
+      onSelectAccount,
+      setShowLoggedOut,
+      _,
+    ],
   )
 
   return (
@@ -74,6 +90,7 @@ export const ChooseAccountForm = ({
         <AccountList
           onSelectAccount={onSelect}
           onSelectOther={() => onSelectAccount()}
+          pendingDid={pendingDid}
         />
       </View>
       <View style={[a.flex_row]}>

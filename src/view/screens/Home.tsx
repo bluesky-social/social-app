@@ -119,22 +119,24 @@ function HomeScreenReady({
   const gate = useGate()
   const mode = useMinimalShellMode()
   const {isMobile} = useWebMediaQueries()
-  React.useEffect(() => {
-    const listener = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'active') {
-        if (
-          isMobile &&
-          mode.value === 1 &&
-          gate('disable_min_shell_on_foregrounding_v2')
-        ) {
-          setMinimalShellMode(false)
+  useFocusEffect(
+    React.useCallback(() => {
+      const listener = AppState.addEventListener('change', nextAppState => {
+        if (nextAppState === 'active') {
+          if (
+            isMobile &&
+            mode.value === 1 &&
+            gate('disable_min_shell_on_foregrounding_v3')
+          ) {
+            setMinimalShellMode(false)
+          }
         }
+      })
+      return () => {
+        listener.remove()
       }
-    })
-    return () => {
-      listener.remove()
-    }
-  }, [setMinimalShellMode, mode, isMobile, gate])
+    }, [setMinimalShellMode, mode, isMobile, gate]),
+  )
 
   const onPageSelected = React.useCallback(
     (index: number) => {

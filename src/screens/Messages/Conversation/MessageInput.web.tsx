@@ -78,12 +78,15 @@ export function MessageInput({
         />
         <Pressable
           accessibilityRole="button"
+          accessibilityLabel={_(msg`Send message`)}
+          accessibilityHint=""
           style={[
             a.rounded_full,
             a.align_center,
             a.justify_center,
             {height: 30, width: 30, backgroundColor: t.palette.primary_500},
-          ]}>
+          ]}
+          onPress={onSubmit}>
           <PaperPlane fill={t.palette.white} />
         </Pressable>
       </View>
