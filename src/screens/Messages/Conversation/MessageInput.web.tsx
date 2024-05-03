@@ -12,7 +12,6 @@ export function MessageInput({
 }: {
   onSendMessage: (message: string) => void
   onFocus: () => void
-  onBlur: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()

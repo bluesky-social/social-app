@@ -710,8 +710,11 @@ export class Convo {
   getItems(): ConvoItem[] {
     const items: ConvoItem[] = []
 
-    // `newMessages` is in insertion order, unshift to reverse
-    this.newMessages.forEach(m => {
+    this.headerItems.forEach(item => {
+      items.push(item)
+    })
+
+    this.pastMessages.forEach(m => {
       if (ChatBskyConvoDefs.isMessageView(m)) {
         items.unshift({
           type: 'message',
@@ -729,9 +732,26 @@ export class Convo {
       }
     })
 
-    // `newMessages` is in insertion order, unshift to reverse
+    this.newMessages.forEach(m => {
+      if (ChatBskyConvoDefs.isMessageView(m)) {
+        items.push({
+          type: 'message',
+          key: m.id,
+          message: m,
+          nextMessage: null,
+        })
+      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
+        items.push({
+          type: 'deleted-message',
+          key: m.id,
+          message: m,
+          nextMessage: null,
+        })
+      }
+    })
+
     this.pendingMessages.forEach(m => {
-      items.unshift({
+      items.push({
         type: 'pending-message',
         key: m.id,
         message: {
@@ -746,28 +766,6 @@ export class Convo {
     })
 
     this.footerItems.forEach(item => {
-      items.unshift(item)
-    })
-
-    this.pastMessages.forEach(m => {
-      if (ChatBskyConvoDefs.isMessageView(m)) {
-        items.push({
-          type: 'message',
-          key: m.id,
-          message: m,
-          nextMessage: null,
-        })
-      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
-        items.push({
-          type: 'deleted-message',
-          key: m.id,
-          message: m,
-          nextMessage: null,
-        })
-      }
-    })
-
-    this.headerItems.forEach(item => {
       items.push(item)
     })
 
