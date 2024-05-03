@@ -57,12 +57,13 @@ export const ChooseAccountForm = ({
             logger.error('choose account: initSession failed', {
               message: e.message,
             })
+            onSelectAccount(account) // Move to login form.
           } finally {
             setPendingDid(null)
           }
         }
       } else {
-        onSelectAccount(account)
+        onSelectAccount(account) // Move to login form.
       }
     },
     [
