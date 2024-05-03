@@ -158,6 +158,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
        * out.
        */
       setState(s => {
+        const existingAccount = s.accounts.find(
+          a => a.did === refreshedAccount.did,
+        )
+        if (
+          !expired &&
+          existingAccount &&
+          refreshedAccount &&
+          JSON.stringify(existingAccount) === JSON.stringify(refreshedAccount)
+        ) {
+          // Fast path without a state update.
+          return s
+        }
         return {
           accounts: [
             refreshedAccount,
