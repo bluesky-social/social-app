@@ -28,6 +28,7 @@ export enum ConvoStatus {
 export enum ConvoItemError {
   HistoryFailed = 'historyFailed',
   ResumeFailed = 'resumeFailed',
+  PollFailed = 'pollFailed',
 }
 
 export enum ConvoError {
@@ -194,6 +195,7 @@ export class Convo {
   private historyCursor: string | undefined | null = undefined
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
+  private pollingFailure = false
 
   private pastMessages: Map<
     string,
@@ -527,6 +529,11 @@ export class Convo {
     ) {
       if (this.pendingEventIngestion) return
 
+      /*
+       * Represents a failed state, which is retryable.
+       */
+      if (this.pollingFailure) return
+
       setTimeout(async () => {
         this.pendingEventIngestion = this.ingestLatestEvents()
         await this.pendingEventIngestion
@@ -537,76 +544,94 @@ export class Convo {
   }
 
   async ingestLatestEvents() {
-    const response = await this.agent.api.chat.bsky.convo.getLog(
-      {
-        cursor: this.eventsCursor,
-      },
-      {
-        headers: {
-          Authorization: this.__tempFromUserDid,
+    try {
+      // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
+      const response = await this.agent.api.chat.bsky.convo.getLog(
+        {
+          cursor: this.eventsCursor,
         },
-      },
-    )
-    const {logs} = response.data
+        {
+          headers: {
+            Authorization: this.__tempFromUserDid,
+          },
+        },
+      )
+      const {logs} = response.data
 
-    let needsCommit = false
+      let needsCommit = false
 
-    for (const log of logs) {
-      /*
-       * If there's a rev, we should handle it. If there's not a rev, we don't
-       * know what it is.
-       */
-      if (typeof log.rev === 'string') {
+      for (const log of logs) {
         /*
-         * We only care about new events
+         * If there's a rev, we should handle it. If there's not a rev, we don't
+         * know what it is.
          */
-        if (log.rev > (this.eventsCursor = this.eventsCursor || log.rev)) {
+        if (typeof log.rev === 'string') {
           /*
-           * Update rev regardless of if it's a log type we care about or not
+           * We only care about new events
            */
-          this.eventsCursor = log.rev
-
-          /*
-           * This is VERY important. We don't want to insert any messages from
-           * your other chats.
-           */
-          if (log.convoId !== this.convoId) continue
-
-          if (
-            ChatBskyConvoDefs.isLogCreateMessage(log) &&
-            ChatBskyConvoDefs.isMessageView(log.message)
-          ) {
-            if (this.newMessages.has(log.message.id)) {
-              // Trust the log as the source of truth on ordering
-              this.newMessages.delete(log.message.id)
-            }
-            this.newMessages.set(log.message.id, log.message)
-            needsCommit = true
-          } else if (
-            ChatBskyConvoDefs.isLogDeleteMessage(log) &&
-            ChatBskyConvoDefs.isDeletedMessageView(log.message)
-          ) {
+          if (log.rev > (this.eventsCursor = this.eventsCursor || log.rev)) {
             /*
-             * Update if we have this in state. If we don't, don't worry about it.
+             * Update rev regardless of if it's a log type we care about or not
              */
-            if (this.pastMessages.has(log.message.id)) {
-              /*
-               * For now, we remove deleted messages from the thread, if we receive one.
-               *
-               * To support them, it'd look something like this:
-               *   this.pastMessages.set(log.message.id, log.message)
-               */
-              this.pastMessages.delete(log.message.id)
-              this.newMessages.delete(log.message.id)
-              this.deletedMessages.delete(log.message.id)
+            this.eventsCursor = log.rev
+
+            /*
+             * This is VERY important. We don't want to insert any messages from
+             * your other chats.
+             */
+            if (log.convoId !== this.convoId) continue
+
+            if (
+              ChatBskyConvoDefs.isLogCreateMessage(log) &&
+              ChatBskyConvoDefs.isMessageView(log.message)
+            ) {
+              if (this.newMessages.has(log.message.id)) {
+                // Trust the log as the source of truth on ordering
+                this.newMessages.delete(log.message.id)
+              }
+              this.newMessages.set(log.message.id, log.message)
               needsCommit = true
+            } else if (
+              ChatBskyConvoDefs.isLogDeleteMessage(log) &&
+              ChatBskyConvoDefs.isDeletedMessageView(log.message)
+            ) {
+              /*
+               * Update if we have this in state. If we don't, don't worry about it.
+               */
+              if (this.pastMessages.has(log.message.id)) {
+                /*
+                 * For now, we remove deleted messages from the thread, if we receive one.
+                 *
+                 * To support them, it'd look something like this:
+                 *   this.pastMessages.set(log.message.id, log.message)
+                 */
+                this.pastMessages.delete(log.message.id)
+                this.newMessages.delete(log.message.id)
+                this.deletedMessages.delete(log.message.id)
+                needsCommit = true
+              }
             }
           }
         }
       }
-    }
 
-    if (needsCommit) {
+      if (needsCommit) {
+        this.commit()
+      }
+    } catch (e: any) {
+      logger.error('Convo: failed to poll events')
+      this.pollingFailure = true
+      this.footerItems.set(ConvoItemError.PollFailed, {
+        type: 'error-recoverable',
+        key: ConvoItemError.PollFailed,
+        code: ConvoItemError.PollFailed,
+        retry: () => {
+          this.footerItems.delete(ConvoItemError.PollFailed)
+          this.pollingFailure = false
+          this.commit()
+          this.pollEvents()
+        },
+      })
       this.commit()
     }
   }

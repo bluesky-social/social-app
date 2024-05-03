@@ -22,6 +22,9 @@ export function MessageListError({
       [ConvoItemError.ResumeFailed]: _(
         msg`There was an issue connecting to the chat.`,
       ),
+      [ConvoItemError.PollFailed]: _(
+        msg`This chat was disconnected due to a network error.`,
+      ),
     }[item.code]
   }, [_, item.code])
 
