@@ -10,14 +10,13 @@ import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 
+import {isIOS} from '#/platform/detection'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
@@ -123,20 +122,14 @@ export function MessagesList() {
     [],
   )
 
-  const setMinShellMode = useSetMinimalShellMode()
-  useFocusEffect(
-    useCallback(() => {
-      setMinShellMode(true)
-      return () => setMinShellMode(false)
-    }, [setMinShellMode]),
-  )
-
   const {bottom: bottomInset} = useSafeAreaInsets()
+  const {gtMobile} = useBreakpoints()
+  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
   const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
   return (
     <KeyboardAvoidingView
-      style={[a.flex_1, {marginBottom: bottomInset}]}
+      style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
       keyboardVerticalOffset={keyboardVerticalOffset}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
