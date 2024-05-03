@@ -268,14 +268,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.warn(`session: clear current account`)
       __globalAgent = PUBLIC_BSKY_AGENT
       configureModerationForGuest()
-      setState(s => ({
-        accounts: s.accounts,
-        currentAgentState: {
-          did: undefined,
-          agent: PUBLIC_BSKY_AGENT,
-        },
-        needsPersist: true,
-      }))
       setState(s => {
         return {
           accounts: s.accounts.map(a => ({
@@ -283,7 +275,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             refreshJwt: undefined,
             accessJwt: undefined,
           })),
-          currentAgentState: s.currentAgentState,
+          currentAgentState: {
+            did: undefined,
+            agent: PUBLIC_BSKY_AGENT,
+          },
           needsPersist: true,
         }
       })
@@ -560,10 +555,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       setState(s => ({
         accounts: persistedSession.accounts,
-        currentAgentState: {
-          agent: s.currentAgentState.agent, // TODO: This is shady. Restructure.
-          did: selectedAccount?.did,
-        },
+        currentAgentState: s.currentAgentState,
         needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }))
     })
