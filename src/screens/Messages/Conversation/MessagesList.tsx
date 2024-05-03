@@ -1,20 +1,25 @@
-import React, {useCallback, useRef} from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 import {
+  Dimensions,
   FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   View,
 } from 'react-native'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
-import {isWeb} from 'platform/detection'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
-import {MessageItem} from '#/screens/Messages/Conversation/MessageItem'
+import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -112,13 +117,25 @@ export function MessagesList() {
     [],
   )
 
+  const setMinShellMode = useSetMinimalShellMode()
+  useFocusEffect(
+    useCallback(() => {
+      setMinShellMode(true)
+      return () => setMinShellMode(false)
+    }, [setMinShellMode]),
+  )
+
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const keyboardVerticalOffset = useKeyboardVerticalOffset()
+
   return (
     <KeyboardAvoidingView
-      style={{flex: 1, marginBottom: isWeb ? 20 : 85}}
+      style={[a.flex_1, {marginBottom: bottomInset}]}
+      keyboardVerticalOffset={keyboardVerticalOffset}
       behavior="padding"
-      keyboardVerticalOffset={70}
-      contentContainerStyle={{flex: 1}}>
+      contentContainerStyle={a.flex_1}>
       <FlatList
+        ref={flatListRef}
         data={
           chat.state.status === ConvoStatus.Ready ? chat.state.items : undefined
         }
@@ -150,17 +167,36 @@ export function MessagesList() {
           />
         }
         removeClippedSubviews={true}
-        ref={flatListRef}
-        keyboardDismissMode="none"
+        keyboardDismissMode="on-drag"
       />
-
-      <View style={{paddingHorizontal: 10}}>
-        <MessageInput
-          onSendMessage={onSendMessage}
-          onFocus={onInputFocus}
-          onBlur={onInputBlur}
-        />
-      </View>
+      <MessageInput
+        onSendMessage={onSendMessage}
+        onFocus={onInputFocus}
+        onBlur={onInputBlur}
+      />
     </KeyboardAvoidingView>
   )
+}
+
+function useKeyboardVerticalOffset() {
+  const {top: topInset} = useSafeAreaInsets()
+  const [screenWindowDifference, setScreenWindowDifference] = React.useState(
+    () => Dimensions.get('screen').height - Dimensions.get('window').height,
+  )
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener(
+      'change',
+      ({screen, window}) => {
+        setScreenWindowDifference(screen.height - window.height)
+      },
+    )
+    return () => subscription.remove()
+  }, [])
+
+  return Platform.select({
+    ios: topInset,
+    android: screenWindowDifference,
+    default: 0,
+  })
 }

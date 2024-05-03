@@ -72,7 +72,7 @@ let ConvoMenu = ({
   const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
     onSuccess: () => {
       if (currentScreen === 'conversation') {
-        navigation.replace('MessagesList')
+        navigation.replace('Messages')
       }
     },
     onError: () => {
