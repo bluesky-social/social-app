@@ -82,7 +82,6 @@ function InnerApp() {
                           <SafeAreaProvider>
                             <Shell />
                           </SafeAreaProvider>
-                          <ToastContainer />
                         </UnreadNotifsProvider>
                       </SelectedFeedProvider>
                     </LoggedOutViewProvider>
@@ -91,6 +90,7 @@ function InnerApp() {
               </StatsigProvider>
             </QueryProvider>
           </React.Fragment>
+          <ToastContainer />
         </RootSiblingParent>
       </ThemeProvider>
     </Alf>
