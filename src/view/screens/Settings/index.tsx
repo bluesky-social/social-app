@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   Linking,
   Platform,
   Pressable,
@@ -63,6 +62,7 @@ import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import * as TextField from '#/components/forms/TextField'
@@ -70,17 +70,33 @@ import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
-function SettingsAccountCard({account}: {account: SessionAccount}) {
+function SettingsAccountCard({
+  account,
+  pendingDid,
+  onPressSwitchAccount,
+}: {
+  account: SessionAccount
+  pendingDid: string | null
+  onPressSwitchAccount: (
+    account: SessionAccount,
+    logContext: 'Settings',
+  ) => void
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isSwitchingAccounts, currentAccount} = useSession()
+  const t = useTheme()
+  const {currentAccount} = useSession()
   const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
-  const {onPressSwitchAccount} = useAccountSwitcher()
 
   const contents = (
-    <View style={[pal.view, styles.linkCard]}>
+    <View
+      style={[
+        pal.view,
+        styles.linkCard,
+        account.did === pendingDid && t.atoms.bg_contrast_25,
+      ]}>
       <View style={styles.avi}>
         <UserAvatar
           size={40}
@@ -112,7 +128,8 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
           }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
-          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
+          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}
+          activeOpacity={0.8}>
           <Text type="lg" style={pal.link}>
             <Trans>Sign out</Trans>
           </Text>
@@ -138,13 +155,12 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       testID={`switchToAccountBtn-${account.handle}`}
       key={account.did}
       onPress={
-        isSwitchingAccounts
-          ? undefined
-          : () => onPressSwitchAccount(account, 'Settings')
+        pendingDid ? undefined : () => onPressSwitchAccount(account, 'Settings')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}
-      accessibilityHint={_(msg`Switches the account you are logged in to`)}>
+      accessibilityHint={_(msg`Switches the account you are logged in to`)}
+      activeOpacity={0.8}>
       {contents}
     </TouchableOpacity>
   )
@@ -165,12 +181,14 @@ export function SettingsScreen({}: Props) {
   const {isMobile} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
-  const {isSwitchingAccounts, accounts, currentAccount} = useSession()
+  const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
+  const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
+  const isSwitchingAccounts = !!pendingDid
 
   // TODO: TEMP REMOVE WHEN CLOPS ARE RELEASED
   const gate = useGate()
@@ -371,50 +389,53 @@ export function SettingsScreen({}: Props) {
             <View style={styles.spacer20} />
 
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
+
+            <View style={[s.flexRow, styles.heading]}>
+              <Text type="xl-bold" style={pal.text}>
+                <Trans>Signed in as</Trans>
+              </Text>
+              <View style={s.flex1} />
+            </View>
+            <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+              <SettingsAccountCard
+                account={currentAccount}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            </View>
           </>
         ) : null}
-        <View style={[s.flexRow, styles.heading]}>
-          <Text type="xl-bold" style={pal.text}>
-            <Trans>Signed in as</Trans>
-          </Text>
-          <View style={s.flex1} />
+
+        <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+          {accounts
+            .filter(a => a.did !== currentAccount?.did)
+            .map(account => (
+              <SettingsAccountCard
+                key={account.did}
+                account={account}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            ))}
+
+          <TouchableOpacity
+            testID="switchToNewAccountBtn"
+            style={[styles.linkCard, pal.view]}
+            onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Add account`)}
+            accessibilityHint={_(msg`Create a new Bluesky account`)}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="plus"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              <Trans>Add account</Trans>
+            </Text>
+          </TouchableOpacity>
         </View>
-
-        {isSwitchingAccounts ? (
-          <View style={[pal.view, styles.linkCard]}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <SettingsAccountCard account={currentAccount!} />
-        )}
-
-        {accounts
-          .filter(a => a.did !== currentAccount?.did)
-          .map(account => (
-            <SettingsAccountCard key={account.did} account={account} />
-          ))}
-
-        <TouchableOpacity
-          testID="switchToNewAccountBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Add account`)}
-          accessibilityHint={_(msg`Create a new Bluesky account`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="plus"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Add account</Trans>
-          </Text>
-        </TouchableOpacity>
 
         <View style={styles.spacer20} />
 
