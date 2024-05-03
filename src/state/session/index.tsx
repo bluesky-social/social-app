@@ -97,6 +97,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       session: AtpSessionData | undefined,
     ) => {
       const expired = event === 'expired' || event === 'create-failed'
+      if (expired) {
+        emitSessionDropped()
+      }
 
       if (event === 'network-error') {
         __globalAgent = PUBLIC_BSKY_AGENT
@@ -132,7 +135,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       if (expired) {
-        emitSessionDropped()
         __globalAgent = PUBLIC_BSKY_AGENT
         configureModerationForGuest()
         setState(s => ({
