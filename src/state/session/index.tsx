@@ -115,25 +115,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
 
-      // TODO: use agentToSessionAccount for this too.
-      const refreshedAccount: SessionAccount = {
-        service: account.service,
-        did: session?.did ?? account.did,
-        handle: session?.handle ?? account.handle,
-        email: session?.email ?? account.email,
-        emailConfirmed: session?.emailConfirmed ?? account.emailConfirmed,
-        emailAuthFactor: session?.emailAuthFactor ?? account.emailAuthFactor,
-        deactivated: isSessionDeactivated(session?.accessJwt),
-        pdsUrl: agent.pdsUrl?.toString(),
-
-        /*
-         * Tokens are undefined if the session expires, or if creation fails for
-         * any reason e.g. tokens are invalid, network error, etc.
-         */
-        refreshJwt: session?.refreshJwt,
-        accessJwt: session?.accessJwt,
-      }
-
       if (expired) {
         __globalAgent = PUBLIC_BSKY_AGENT
         configureModerationForGuest()
@@ -148,6 +129,24 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       setState(s => {
+        // TODO: use agentToSessionAccount for this too.
+        const refreshedAccount: SessionAccount = {
+          service: account.service,
+          did: session?.did ?? account.did,
+          handle: session?.handle ?? account.handle,
+          email: session?.email ?? account.email,
+          emailConfirmed: session?.emailConfirmed ?? account.emailConfirmed,
+          emailAuthFactor: session?.emailAuthFactor ?? account.emailAuthFactor,
+          deactivated: isSessionDeactivated(session?.accessJwt),
+          pdsUrl: agent.pdsUrl?.toString(),
+
+          /*
+           * Tokens are undefined if the session expires, or if creation fails for
+           * any reason e.g. tokens are invalid, network error, etc.
+           */
+          refreshJwt: session?.refreshJwt,
+          accessJwt: session?.accessJwt,
+        }
         const existingAccount = s.accounts.find(
           a => a.did === refreshedAccount.did,
         )
