@@ -132,7 +132,7 @@ export type ConvoState =
       fetchMessageHistory: undefined
     }
 
-const ACTIVE_POLL_INTERVAL = 1e3
+const ACTIVE_POLL_INTERVAL = 2e3
 const BACKGROUND_POLL_INTERVAL = 10e3
 
 export function isConvoItemMessage(
