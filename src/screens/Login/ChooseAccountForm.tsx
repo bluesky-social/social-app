@@ -57,7 +57,6 @@ export const ChooseAccountForm = ({
             logger.error('choose account: initSession failed', {
               message: e.message,
             })
-            onSelectAccount(account)
           } finally {
             setPendingDid(null)
           }
