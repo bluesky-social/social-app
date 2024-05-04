@@ -17,16 +17,15 @@ import {
 } from './agent'
 import {configureModerationForAccount} from './moderation'
 import {getInitialState, reducer} from './reducer'
-import {isSessionDeactivated, isSessionExpired} from './util'
+import {isSessionExpired} from './util'
 
+export {isSessionDeactivated} from './util'
 export type {SessionAccount} from '#/state/session/types'
 import {
   SessionAccount,
   SessionApiContext,
   SessionStateContext,
 } from '#/state/session/types'
-
-export {isSessionDeactivated}
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
@@ -176,13 +175,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           newAgent: agent,
           newAccount: account,
         })
-        if (isSessionDeactivated(account.accessJwt) || account.deactivated) {
-          // don't attempt to resume
-          // use will be taken to the deactivated screen
+        if (!account.deactivated) {
+          // Intentionally not awaited to unblock the UI:
+          resumeSessionWithFreshAccount()
           return
         }
-        // Intentionally not awaited to unblock the UI:
-        resumeSessionWithFreshAccount()
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
