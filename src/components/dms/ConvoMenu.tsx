@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {Pressable} from 'react-native'
+import {Keyboard, Pressable} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
@@ -88,6 +88,11 @@ let ConvoMenu = ({
             {({props, state}) => (
               <Pressable
                 {...props}
+                onPress={() => {
+                  Keyboard.dismiss()
+                  // eslint-disable-next-line react/prop-types -- eslint is confused by the name `props`
+                  props.onPress()
+                }}
                 style={[
                   a.p_sm,
                   a.rounded_sm,
