@@ -71,10 +71,11 @@ export let MessageItem = ({
         <View
           style={[
             a.py_sm,
-            a.px_lg,
             a.my_2xs,
             a.rounded_md,
             {
+              paddingLeft: 14,
+              paddingRight: 14,
               backgroundColor: isFromSelf
                 ? pending
                   ? pendingColor
