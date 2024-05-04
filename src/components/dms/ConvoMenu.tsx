@@ -85,12 +85,13 @@ let ConvoMenu = ({
       <Menu.Root control={control}>
         {!hideTrigger && (
           <Menu.Trigger label={_(msg`Chat settings`)}>
-            {({props, state, control: ctxControl}) => (
+            {({props, state}) => (
               <Pressable
                 {...props}
                 onPress={() => {
                   Keyboard.dismiss()
-                  ctxControl.open()
+                  // eslint-disable-next-line react/prop-types -- eslint is confused by the name `props`
+                  props.onPress()
                 }}
                 style={[
                   a.p_sm,
