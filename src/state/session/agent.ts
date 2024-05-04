@@ -6,7 +6,7 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
-import {SessionAccount, SessionApiContext} from './types'
+import {SessionAccount} from './types'
 import {isSessionDeactivated} from './util'
 import {IS_PROD_SERVICE} from '#/lib/constants'
 import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
@@ -57,7 +57,15 @@ export async function createAgentAndCreateAccount({
   inviteCode,
   verificationPhone,
   verificationCode,
-}: Parameters<SessionApiContext['createAccount']>[0]) {
+}: {
+  service: string
+  email: string
+  password: string
+  handle: string
+  inviteCode?: string
+  verificationPhone?: string
+  verificationCode?: string
+}) {
   const agent = new BskyAgent({service})
   await agent.createAccount({
     email,
