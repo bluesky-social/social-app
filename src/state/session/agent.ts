@@ -1,6 +1,7 @@
 import {BskyAgent} from '@atproto/api'
 import {AtpSessionEvent} from '@atproto-labs/api'
 
+import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
 import {
@@ -8,13 +9,62 @@ import {
   configureModerationForGuest,
 } from './moderation'
 import {SessionAccount} from './types'
-import {isSessionDeactivated} from './util'
+import {isSessionDeactivated, isSessionExpired} from './util'
 import {IS_PROD_SERVICE} from '#/lib/constants'
 import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
   return new BskyAgent({service: PUBLIC_BSKY_SERVICE})
+}
+
+export async function createAgentAndResume(
+  {
+    storedAccount,
+  }: {
+    storedAccount: SessionAccount
+  },
+  onAgentSessionChange: (
+    agent: BskyAgent,
+    did: string,
+    event: AtpSessionEvent,
+  ) => void,
+) {
+  const fetchingGates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
+  const agent = new BskyAgent({service: storedAccount.service})
+  if (storedAccount.pdsUrl) {
+    agent.pdsUrl = agent.api.xrpc.uri = new URL(storedAccount.pdsUrl)
+  }
+
+  await configureModerationForAccount(agent, storedAccount)
+
+  agent.setPersistSessionHandler(event => {
+    onAgentSessionChange(agent, storedAccount.did, event)
+  })
+
+  const prevSession = {
+    accessJwt: storedAccount.accessJwt ?? '',
+    refreshJwt: storedAccount.refreshJwt ?? '',
+    did: storedAccount.did,
+    handle: storedAccount.handle,
+  }
+  if (isSessionExpired(storedAccount)) {
+    await networkRetry(1, () => agent.resumeSession(prevSession))
+    const account = agentToSessionAccount(agent)
+    if (!agent.session || !account) {
+      throw new Error(`session: login failed to establish a session`)
+    }
+    await fetchingGates
+    return {agent, account}
+  } else {
+    agent.session = prevSession
+    if (!storedAccount.deactivated) {
+      // Intentionally not awaited to unblock the UI:
+      networkRetry(1, () => agent.resumeSession(prevSession))
+    }
+    await fetchingGates
+    return {agent, account: storedAccount}
+  }
 }
 
 export async function createAgentAndLogin(

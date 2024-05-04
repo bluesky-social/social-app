@@ -2,8 +2,7 @@ import React from 'react'
 import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
-import {networkRetry} from '#/lib/async/retry'
-import {logEvent, tryFetchGates} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -14,18 +13,13 @@ import {
   agentToSessionAccount,
   createAgentAndCreateAccount,
   createAgentAndLogin,
+  createAgentAndResume,
 } from './agent'
-import {configureModerationForAccount} from './moderation'
 import {getInitialState, reducer} from './reducer'
-import {isSessionExpired} from './util'
 
 export {isSessionDeactivated} from './util'
 export type {SessionAccount} from '#/state/session/types'
-import {
-  SessionAccount,
-  SessionApiContext,
-  SessionStateContext,
-} from '#/state/session/types'
+import {SessionApiContext, SessionStateContext} from '#/state/session/types'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
@@ -67,29 +61,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
-    async ({
-      service,
-      email,
-      password,
-      handle,
-      birthDate,
-      inviteCode,
-      verificationPhone,
-      verificationCode,
-    }) => {
+    async params => {
       track('Try Create Account')
       logEvent('account:create:begin', {})
       const {agent, account} = await createAgentAndCreateAccount(
-        {
-          service,
-          email,
-          password,
-          handle,
-          birthDate,
-          inviteCode,
-          verificationPhone,
-          verificationCode,
-        },
+        params,
         onAgentSessionChange,
       )
       dispatch({
@@ -104,14 +80,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
-    async ({service, identifier, password, authFactorToken}, logContext) => {
+    async (params, logContext) => {
       const {agent, account} = await createAgentAndLogin(
-        {
-          service,
-          identifier,
-          password,
-          authFactorToken,
-        },
+        params,
         onAgentSessionChange,
       )
       dispatch({
@@ -136,60 +107,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const initSession = React.useCallback<SessionApiContext['initSession']>(
-    async account => {
-      const fetchingGates = tryFetchGates(account.did, 'prefer-low-latency')
-      const agent = new BskyAgent({service: account.service})
-      // restore the correct PDS URL if available
-      if (account.pdsUrl) {
-        agent.pdsUrl = agent.api.xrpc.uri = new URL(account.pdsUrl)
-      }
-      agent.setPersistSessionHandler(event => {
-        onAgentSessionChange(agent, account.did, event)
+    async storedAccount => {
+      const {agent, account} = await createAgentAndResume(
+        {storedAccount},
+        onAgentSessionChange,
+      )
+      dispatch({
+        type: 'switched-to-account',
+        newAgent: agent,
+        newAccount: account,
       })
-      await configureModerationForAccount(agent, account)
-
-      const prevSession = {
-        accessJwt: account.accessJwt ?? '',
-        refreshJwt: account.refreshJwt ?? '',
-        did: account.did,
-        handle: account.handle,
-      }
-
-      if (isSessionExpired(account)) {
-        const freshAccount = await resumeSessionWithFreshAccount()
-        await fetchingGates
-        dispatch({
-          type: 'switched-to-account',
-          newAgent: agent,
-          newAccount: freshAccount,
-        })
-      } else {
-        agent.session = prevSession
-        await fetchingGates
-        dispatch({
-          type: 'switched-to-account',
-          newAgent: agent,
-          newAccount: account,
-        })
-        if (!account.deactivated) {
-          // Intentionally not awaited to unblock the UI:
-          resumeSessionWithFreshAccount()
-          return
-        }
-      }
-
-      async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
-        await networkRetry(1, () => agent.resumeSession(prevSession))
-        const sessionAccount = agentToSessionAccount(agent)
-        /*
-         * If `agent.resumeSession` fails above, it'll throw. This is just to
-         * make TypeScript happy.
-         */
-        if (!sessionAccount) {
-          throw new Error(`session: initSession failed to establish a session`)
-        }
-        return sessionAccount
-      }
     },
     [onAgentSessionChange],
   )
