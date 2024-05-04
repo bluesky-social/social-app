@@ -50,7 +50,7 @@ export function MessagesScreen({navigation}: Props) {
   const hasValidServiceUrl = useMemo(() => {
     const hash = sha256(serviceUrl)
     return (
-      hash !==
+      hash ===
       'a32318b49dd3fe6aa6a35c66c13fcc4c1cb6202b24f5a852d9a2279acee4169f'
     )
   }, [serviceUrl])
