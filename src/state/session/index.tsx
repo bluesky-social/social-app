@@ -79,7 +79,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }) => {
       track('Try Create Account')
       logEvent('account:create:begin', {})
-      const {agent, account, fetchingGates} = await createAgentAndCreateAccount(
+      const {agent, account} = await createAgentAndCreateAccount(
         {
           service,
           email,
@@ -90,11 +90,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           verificationPhone,
           verificationCode,
         },
+        onAgentSessionChange,
       )
-      agent.setPersistSessionHandler(event => {
-        onAgentSessionChange(agent, account.did, event)
-      })
-      await fetchingGates
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -108,16 +105,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const login = React.useCallback<SessionApiContext['login']>(
     async ({service, identifier, password, authFactorToken}, logContext) => {
-      const {agent, account, fetchingGates} = await createAgentAndLogin({
-        service,
-        identifier,
-        password,
-        authFactorToken,
-      })
-      agent.setPersistSessionHandler(event => {
-        onAgentSessionChange(agent, account.did, event)
-      })
-      await fetchingGates
+      const {agent, account} = await createAgentAndLogin(
+        {
+          service,
+          identifier,
+          password,
+          authFactorToken,
+        },
+        onAgentSessionChange,
+      )
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,

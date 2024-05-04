@@ -1,4 +1,5 @@
 import {BskyAgent} from '@atproto/api'
+import {AtpSessionEvent} from '@atproto-labs/api'
 
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
@@ -16,17 +17,24 @@ export function createPublicAgent() {
   return new BskyAgent({service: PUBLIC_BSKY_SERVICE})
 }
 
-export async function createAgentAndLogin({
-  service,
-  identifier,
-  password,
-  authFactorToken,
-}: {
-  service: string
-  identifier: string
-  password: string
-  authFactorToken?: string
-}) {
+export async function createAgentAndLogin(
+  {
+    service,
+    identifier,
+    password,
+    authFactorToken,
+  }: {
+    service: string
+    identifier: string
+    password: string
+    authFactorToken?: string
+  },
+  onAgentSessionChange: (
+    agent: BskyAgent,
+    did: string,
+    event: AtpSessionEvent,
+  ) => void,
+) {
   const agent = new BskyAgent({service})
   await agent.login({identifier, password, authFactorToken})
 
@@ -38,6 +46,10 @@ export async function createAgentAndLogin({
   const fetchingGates = tryFetchGates(account.did, 'prefer-fresh-gates')
   await configureModerationForAccount(agent, account)
 
+  agent.setPersistSessionHandler(event => {
+    onAgentSessionChange(agent, account.did, event)
+  })
+
   return {
     agent,
     account,
@@ -45,24 +57,32 @@ export async function createAgentAndLogin({
   }
 }
 
-export async function createAgentAndCreateAccount({
-  service,
-  email,
-  password,
-  handle,
-  birthDate,
-  inviteCode,
-  verificationPhone,
-  verificationCode,
-}: {
-  service: string
-  email: string
-  password: string
-  handle: string
-  inviteCode?: string
-  verificationPhone?: string
-  verificationCode?: string
-}) {
+export async function createAgentAndCreateAccount(
+  {
+    service,
+    email,
+    password,
+    handle,
+    birthDate,
+    inviteCode,
+    verificationPhone,
+    verificationCode,
+  }: {
+    service: string
+    email: string
+    password: string
+    handle: string
+    birthDate: Date
+    inviteCode?: string
+    verificationPhone?: string
+    verificationCode?: string
+  },
+  onAgentSessionChange: (
+    agent: BskyAgent,
+    did: string,
+    event: AtpSessionEvent,
+  ) => void,
+) {
   const agent = new BskyAgent({service})
   await agent.createAccount({
     email,
@@ -102,6 +122,11 @@ export async function createAgentAndCreateAccount({
   }
 
   await configureModerationForAccount(agent, account)
+  await fetchingGates
+
+  agent.setPersistSessionHandler(event => {
+    onAgentSessionChange(agent, account.did, event)
+  })
 
   return {
     agent,
