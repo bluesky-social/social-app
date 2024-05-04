@@ -145,7 +145,7 @@ jobs:
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
-          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d")" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ Create Bundle
@@ -225,7 +225,7 @@ jobs:
         run: |
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
-          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d")" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
       - name: 🏗️ EAS Build
@@ -288,7 +288,7 @@ jobs:
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
-          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d")" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build

@@ -56,4 +56,4 @@ jobs:
           cache-to: type=gha,mode=max
         env:
           EXPO_PUBLIC_BUNDLE_IDENTIFIER: $(git rev-parse --short HEAD)
-          EXPO_PUBLIC_BUNDLE_DATE: $(date -u +"%y%m%d")
+          EXPO_PUBLIC_BUNDLE_DATE: $(date -u +"%y%m%d%H")
