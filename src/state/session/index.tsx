@@ -109,7 +109,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const initSession = React.useCallback<SessionApiContext['initSession']>(
     async storedAccount => {
       const {agent, account} = await createAgentAndResume(
-        {storedAccount},
+        storedAccount,
         onAgentSessionChange,
       )
       dispatch({

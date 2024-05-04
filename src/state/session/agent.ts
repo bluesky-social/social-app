@@ -19,11 +19,7 @@ export function createPublicAgent() {
 }
 
 export async function createAgentAndResume(
-  {
-    storedAccount,
-  }: {
-    storedAccount: SessionAccount
-  },
+  storedAccount: SessionAccount,
   onSessionChange: (
     agent: BskyAgent,
     did: string,
