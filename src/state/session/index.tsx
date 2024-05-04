@@ -219,8 +219,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // @ts-ignore
   if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
 
+  const agent = state.currentAgentState.agent as BskyAgent
   return (
-    <AgentContext.Provider value={state.currentAgentState.agent}>
+    <AgentContext.Provider value={agent}>
       <StateContext.Provider value={stateContext}>
         <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
       </StateContext.Provider>

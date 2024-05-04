@@ -8,6 +8,7 @@ export type SessionStateContext = {
   currentAccount: SessionAccount | undefined
   hasSession: boolean
 }
+
 export type SessionApiContext = {
   createAccount: (props: {
     service: string

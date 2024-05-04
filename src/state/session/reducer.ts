@@ -1,28 +1,38 @@
-import {AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {AtpSessionEvent} from '@atproto/api'
 
 import {createPublicAgent} from './agent'
 import {SessionAccount} from './types'
 
+// A hack so that the reducer can't read anything from the agent.
+// From the reducer's point of view, it should be a completely opaque object.
+type OpaqueBskyAgent = {
+  readonly api: unknown
+  readonly app: unknown
+  readonly com: unknown
+}
+
+type AgentState = {
+  readonly agent: OpaqueBskyAgent
+  readonly did: string | undefined
+}
+
 export type State = {
-  accounts: SessionAccount[]
-  currentAgentState: {
-    readonly agent: BskyAgent
-    readonly did: string | undefined
-  }
-  needsPersist: boolean
+  readonly accounts: SessionAccount[]
+  readonly currentAgentState: AgentState
+  needsPersist: boolean // Mutated in an effect.
 }
 
 export type Action =
   | {
       type: 'received-agent-event'
-      agent: BskyAgent
+      agent: OpaqueBskyAgent
       accountDid: string
       refreshedAccount: SessionAccount | undefined
       sessionEvent: AtpSessionEvent
     }
   | {
       type: 'switched-to-account'
-      newAgent: BskyAgent
+      newAgent: OpaqueBskyAgent
       newAccount: SessionAccount
     }
   | {
@@ -47,7 +57,7 @@ export type Action =
       syncedCurrentDid: string | undefined
     }
 
-function createPublicAgentState() {
+function createPublicAgentState(): AgentState {
   return {
     agent: createPublicAgent(),
     did: undefined,
