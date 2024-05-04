@@ -24,24 +24,18 @@ export async function createAgentAndResume(
   }: {
     storedAccount: SessionAccount
   },
-  onAgentSessionChange: (
+  onSessionChange: (
     agent: BskyAgent,
     did: string,
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const fetchingGates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const agent = new BskyAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
     agent.pdsUrl = agent.api.xrpc.uri = new URL(storedAccount.pdsUrl)
   }
-
-  await configureModerationForAccount(agent, storedAccount)
-
-  agent.setPersistSessionHandler(event => {
-    onAgentSessionChange(agent, storedAccount.did, event)
-  })
-
+  const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
+  const moderation = configureModerationForAccount(agent, storedAccount)
   const prevSession = {
     accessJwt: storedAccount.accessJwt ?? '',
     refreshJwt: storedAccount.refreshJwt ?? '',
@@ -50,23 +44,15 @@ export async function createAgentAndResume(
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
-    const account = agentToSessionAccount(agent)
-    if (!agent.session || !account) {
-      throw new Error(`session: login failed to establish a session`)
-    }
-
-    await fetchingGates
-    return {agent, account}
   } else {
     agent.session = prevSession
     if (!storedAccount.deactivated) {
       // Intentionally not awaited to unblock the UI:
       networkRetry(1, () => agent.resumeSession(prevSession))
     }
-
-    await fetchingGates
-    return {agent, account: storedAccount}
   }
+
+  return prepareAgent(agent, gates, moderation, onSessionChange)
 }
 
 export async function createAgentAndLogin(
@@ -81,7 +67,7 @@ export async function createAgentAndLogin(
     password: string
     authFactorToken?: string
   },
-  onAgentSessionChange: (
+  onSessionChange: (
     agent: BskyAgent,
     did: string,
     event: AtpSessionEvent,
@@ -90,23 +76,10 @@ export async function createAgentAndLogin(
   const agent = new BskyAgent({service})
   await agent.login({identifier, password, authFactorToken})
 
-  const account = agentToSessionAccount(agent)
-  if (!agent.session || !account) {
-    throw new Error(`session: login failed to establish a session`)
-  }
-
-  const fetchingGates = tryFetchGates(account.did, 'prefer-fresh-gates')
-  await configureModerationForAccount(agent, account)
-
-  agent.setPersistSessionHandler(event => {
-    onAgentSessionChange(agent, account.did, event)
-  })
-
-  await fetchingGates
-  return {
-    agent,
-    account,
-  }
+  const account = agentToSessionAccountOrThrow(agent)
+  const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
+  const moderation = configureModerationForAccount(agent, account)
+  return prepareAgent(agent, moderation, gates, onSessionChange)
 }
 
 export async function createAgentAndCreateAccount(
@@ -129,7 +102,7 @@ export async function createAgentAndCreateAccount(
     verificationPhone?: string
     verificationCode?: string
   },
-  onAgentSessionChange: (
+  onSessionChange: (
     agent: BskyAgent,
     did: string,
     event: AtpSessionEvent,
@@ -144,19 +117,13 @@ export async function createAgentAndCreateAccount(
     verificationPhone,
     verificationCode,
   })
-
-  const account = agentToSessionAccount(agent)!
-  if (!agent.session || !account) {
-    throw new Error(`session: createAccount failed to establish a session`)
-  }
-
-  const fetchingGates = tryFetchGates(account.did, 'prefer-fresh-gates')
-
+  const account = agentToSessionAccountOrThrow(agent)
+  const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
+  const moderation = configureModerationForAccount(agent, account)
   if (!account.deactivated) {
     /*dont await*/ agent.upsertProfile(_existing => {
       return {
         displayName: '',
-
         // HACKFIX
         // creating a bunch of identical profile objects is breaking the relay
         // tossing this unspecced field onto it to reduce the size of the problem
@@ -173,25 +140,45 @@ export async function createAgentAndCreateAccount(
     agent.setSavedFeeds(DEFAULT_PROD_FEEDS.saved, DEFAULT_PROD_FEEDS.pinned)
   }
 
-  await configureModerationForAccount(agent, account)
-  await fetchingGates
+  return prepareAgent(agent, gates, moderation, onSessionChange)
+}
 
+async function prepareAgent(
+  agent: BskyAgent,
+  // Not awaited in the calling code so we can delay blocking on them.
+  gates: Promise<void>,
+  moderation: Promise<void>,
+  onSessionChange: (
+    agent: BskyAgent,
+    did: string,
+    event: AtpSessionEvent,
+  ) => void,
+) {
+  // There's nothing else left to do, so block on them here.
+  await Promise.all([gates, moderation])
+
+  // Now the agent is ready.
+  const account = agentToSessionAccountOrThrow(agent)
   agent.setPersistSessionHandler(event => {
-    onAgentSessionChange(agent, account.did, event)
+    onSessionChange(agent, account.did, event)
   })
+  return {agent, account}
+}
 
-  await fetchingGates
-  return {
-    agent,
-    account,
+export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
+  const account = agentToSessionAccount(agent)
+  if (!account) {
+    throw Error('Expected an active session')
   }
+  return account
 }
 
 export function agentToSessionAccount(
   agent: BskyAgent,
 ): SessionAccount | undefined {
-  if (!agent.session) return undefined
-
+  if (!agent.session) {
+    return undefined
+  }
   return {
     service: agent.service.toString(),
     did: agent.session.did,
