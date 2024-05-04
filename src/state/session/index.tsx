@@ -13,13 +13,14 @@ import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
-  configureModerationForAccount,
-  configureModerationForGuest,
   createAgentAndCreateAccount,
   createAgentAndLogin,
-  isSessionDeactivated,
-  isSessionExpired,
-} from './util'
+} from './agent'
+import {
+  configureModerationForAccount,
+  configureModerationForGuest,
+} from './moderation'
+import {isSessionDeactivated, isSessionExpired} from './util'
 
 export type {SessionAccount} from '#/state/session/types'
 import {
