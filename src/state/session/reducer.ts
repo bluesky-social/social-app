@@ -6,6 +6,7 @@ import {SessionAccount} from './types'
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
 type OpaqueBskyAgent = {
+  readonly service: URL
   readonly api: unknown
   readonly app: unknown
   readonly com: unknown
