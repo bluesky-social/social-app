@@ -213,7 +213,7 @@ export function MessagesList() {
       contentContainerStyle={a.flex_1}>
       {/* This view keeps the scroll bar and content within the CenterView on web, otherwise the entire window would scroll */}
       {/* @ts-expect-error web only */}
-      <View style={[{flex: 1}, isWeb && {'overflow-y': 'scroll'}]}>
+      <View style={[a.flex_1, isWeb && {'overflow-y': 'scroll'}]}>
         {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
         <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
           <List
