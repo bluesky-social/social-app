@@ -62,6 +62,9 @@ export let MessageItem = ({
     lastInGroupRef.current = isLastInGroup
   }
 
+  const pendingColor =
+    t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
+
   return (
     <View>
       <ActionsWrapper isFromSelf={isFromSelf} message={item}>
@@ -74,7 +77,7 @@ export let MessageItem = ({
             {
               backgroundColor: isFromSelf
                 ? pending
-                  ? t.palette.primary_200
+                  ? pendingColor
                   : t.palette.primary_500
                 : t.palette.contrast_50,
               borderRadius: 17,
@@ -88,6 +91,7 @@ export let MessageItem = ({
               a.text_md,
               a.leading_snug,
               isFromSelf && {color: t.palette.white},
+              pending && t.name !== 'light' && {color: t.palette.primary_300},
             ]}>
             {item.text}
           </Text>
