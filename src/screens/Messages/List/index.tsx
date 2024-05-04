@@ -21,6 +21,7 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
@@ -130,7 +131,7 @@ export function MessagesScreen({navigation}: Props) {
 
   if (!hasValidServiceUrl) {
     return (
-      <CenteredView sideBorders style={[a.flex_1, a.p_md]}>
+      <ScrollView contentContainerStyle={a.p_lg}>
         <View>
           <TextField.LabelText>Service URL</TextField.LabelText>
           <TextField.Root>
@@ -143,7 +144,7 @@ export function MessagesScreen({navigation}: Props) {
             />
           </TextField.Root>
         </View>
-      </CenteredView>
+      </ScrollView>
     )
   }
 
