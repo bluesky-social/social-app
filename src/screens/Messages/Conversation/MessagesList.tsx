@@ -96,6 +96,10 @@ export function MessagesList() {
   // onStartReached to fire.
   const contentHeight = useSharedValue(0)
 
+  // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
+  // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
+  const isMomentumScrolling = useSharedValue(false)
+
   const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
 
   // This is only used on native because `Keyboard` can't be imported on web. On web, an input focus will immediately
@@ -126,8 +130,14 @@ export function MessagesList() {
         animated: hasInitiallyScrolled,
         offset: height,
       })
+      isMomentumScrolling.value = true
     },
-    [contentHeight, hasInitiallyScrolled, isAtBottom.value],
+    [
+      contentHeight,
+      hasInitiallyScrolled,
+      isAtBottom.value,
+      isMomentumScrolling,
+    ],
   )
 
   // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
@@ -168,11 +178,19 @@ export function MessagesList() {
     [contentHeight.value, hasInitiallyScrolled, isAtBottom],
   )
 
+  const onMomentumEnd = React.useCallback(() => {
+    'worklet'
+    isMomentumScrolling.value = false
+  }, [isMomentumScrolling])
+
   const scrollToEnd = React.useCallback(() => {
-    requestAnimationFrame(() =>
-      flatListRef.current?.scrollToEnd({animated: true}),
-    )
-  }, [])
+    requestAnimationFrame(() => {
+      if (isMomentumScrolling.value) return
+
+      flatListRef.current?.scrollToEnd({animated: true})
+      isMomentumScrolling.value = true
+    })
+  }, [isMomentumScrolling])
 
   const {bottom: bottomInset} = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
@@ -188,8 +206,8 @@ export function MessagesList() {
       {/* This view keeps the scroll bar and content within the CenterView on web, otherwise the entire window would scroll */}
       {/* @ts-expect-error web only */}
       <View style={[{flex: 1}, isWeb && {'overflow-y': 'scroll'}]}>
-        {/* Custom scroll provider so we can use the `onScroll` event in our custom List implementation */}
-        <ScrollProvider onScroll={onScroll}>
+        {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
+        <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
           <List
             ref={flatListRef}
             data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
