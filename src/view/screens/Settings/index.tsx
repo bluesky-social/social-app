@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Linking,
   Platform,
   Pressable,
   StyleSheet,
@@ -40,7 +39,7 @@ import {
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
-import * as AppInfo from 'lib/app-info'
+import {appVersion, BUNDLE_DATE, bundleInfo} from 'lib/app-info'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
@@ -256,7 +255,7 @@ export function SettingsScreen({}: Props) {
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
-      `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
+      `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
   }, [_])
@@ -292,10 +291,6 @@ export function SettingsScreen({}: Props) {
   const onPressAccessibilitySettings = React.useCallback(() => {
     navigation.navigate('AccessibilitySettings')
   }, [navigation])
-
-  const onPressStatusPage = React.useCallback(() => {
-    Linking.openURL(STATUS_PAGE_URL)
-  }, [])
 
   const onPressBirthday = React.useCallback(() => {
     birthdayControl.open()
@@ -870,17 +865,9 @@ export function SettingsScreen({}: Props) {
             accessibilityRole="button"
             onPress={onPressBuildInfo}>
             <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Version {AppInfo.appVersion}</Trans>
-            </Text>
-          </TouchableOpacity>
-          <Text type="sm" style={[pal.textLight]}>
-            &nbsp; &middot; &nbsp;
-          </Text>
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={onPressStatusPage}>
-            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Status page</Trans>
+              <Trans>
+                Version {appVersion} {bundleInfo}
+              </Trans>
             </Text>
           </TouchableOpacity>
         </View>
@@ -901,6 +888,12 @@ export function SettingsScreen({}: Props) {
             style={pal.link}
             href="https://bsky.social/about/support/privacy-policy"
             text={_(msg`Privacy Policy`)}
+          />
+          <TextLink
+            type="md"
+            style={pal.link}
+            href={STATUS_PAGE_URL}
+            text={_(msg`Status Page`)}
           />
         </View>
         <View style={s.footerSpacer} />
@@ -1047,7 +1040,6 @@ const styles = StyleSheet.create({
   footer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
     paddingLeft: 18,
   },
 })

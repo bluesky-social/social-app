@@ -13,7 +13,7 @@ export const BUNDLE_IDENTIFIER = process.env.EXPO_PUBLIC_COMMIT_HASH ?? 'dev'
 export const BUNDLE_DATE =
   IS_TESTFLIGHT || IS_DEV ? 0 : Number(process.env.EXPO_PUBLIC_BUNDLE_DATE)
 
-const UPDATES_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
-export const appVersion = `${nativeApplicationVersion} (${nativeBuildVersion}, ${
-  IS_DEV ? 'development' : UPDATES_CHANNEL
+export const appVersion = `${nativeApplicationVersion}.${nativeBuildVersion}`
+export const bundleInfo = `${BUNDLE_IDENTIFIER} (${
+  IS_DEV ? 'dev' : IS_TESTFLIGHT ? 'tf' : 'prod'
 })`
