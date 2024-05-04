@@ -11,12 +11,9 @@ import {isSessionDeactivated} from './util'
 import {IS_PROD_SERVICE} from '#/lib/constants'
 import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
 
-export function createPublicAgentState() {
+export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
-  return {
-    agent: new BskyAgent({service: PUBLIC_BSKY_SERVICE}),
-    did: undefined,
-  }
+  return new BskyAgent({service: PUBLIC_BSKY_SERVICE})
 }
 
 export async function createAgentAndLogin({

@@ -1,16 +1,14 @@
 import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
-import {createPublicAgentState} from './agent'
+import {createPublicAgent} from './agent'
 import {SessionAccount} from './types'
-
-type AgentState = {
-  readonly agent: BskyAgent
-  readonly did: string | undefined
-}
 
 export type State = {
   accounts: SessionAccount[]
-  currentAgentState: AgentState
+  currentAgentState: {
+    readonly agent: BskyAgent
+    readonly did: string | undefined
+  }
   needsPersist: boolean
 }
 
@@ -48,6 +46,13 @@ export type Action =
       syncedAccounts: SessionAccount[]
       syncedCurrentDid: string | undefined
     }
+
+function createPublicAgentState() {
+  return {
+    agent: createPublicAgent(),
+    did: undefined,
+  }
+}
 
 export function getInitialState(persistedAccounts: SessionAccount[]): State {
   return {
