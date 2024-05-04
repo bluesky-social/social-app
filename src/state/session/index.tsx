@@ -3,7 +3,6 @@ import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
-import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {logEvent, tryFetchGates} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -16,10 +15,8 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
 } from './agent'
-import {
-  configureModerationForAccount,
-  configureModerationForGuest,
-} from './moderation'
+import {configureModerationForAccount} from './moderation'
+import {getInitialState, reducer} from './reducer'
 import {isSessionDeactivated, isSessionExpired} from './util'
 
 export type {SessionAccount} from '#/state/session/types'
@@ -48,185 +45,10 @@ const ApiContext = React.createContext<SessionApiContext>({
   updateCurrentAccount: () => {},
 })
 
-type AgentState = {
-  readonly agent: BskyAgent
-  readonly did: string | undefined
-}
-
-type State = {
-  accounts: SessionStateContext['accounts']
-  currentAgentState: AgentState
-  needsPersist: boolean
-}
-
-type Action =
-  | {
-      type: 'received-agent-event'
-      agent: BskyAgent
-      accountDid: string
-      refreshedAccount: SessionAccount | undefined
-      sessionEvent: AtpSessionEvent
-    }
-  | {
-      type: 'switched-to-account'
-      newAgent: BskyAgent
-      newAccount: SessionAccount
-    }
-  | {
-      type: 'updated-current-account'
-      updatedFields: Partial<
-        Pick<
-          SessionAccount,
-          'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
-        >
-      >
-    }
-  | {
-      type: 'removed-account'
-      accountDid: string
-    }
-  | {
-      type: 'logged-out'
-    }
-  | {
-      type: 'synced-accounts'
-      syncedAccounts: SessionAccount[]
-      syncedCurrentDid: string | undefined
-    }
-
-function createPublicAgentState() {
-  configureModerationForGuest() // Side effect but only relevant for tests
-  return {
-    agent: new BskyAgent({service: PUBLIC_BSKY_SERVICE}),
-    did: undefined,
-  }
-}
-
-function getInitialState(): State {
-  return {
-    accounts: persisted.get('session').accounts,
-    currentAgentState: createPublicAgentState(),
-    needsPersist: false,
-  }
-}
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'received-agent-event': {
-      const {agent, accountDid, refreshedAccount, sessionEvent} = action
-      if (agent !== state.currentAgentState.agent) {
-        // Only consider events from the active agent.
-        return state
-      }
-      if (sessionEvent === 'network-error') {
-        // Don't change stored accounts but kick to the choose account screen.
-        return {
-          accounts: state.accounts,
-          currentAgentState: createPublicAgentState(),
-          needsPersist: true,
-        }
-      }
-      const existingAccount = state.accounts.find(a => a.did === accountDid)
-      if (
-        !existingAccount ||
-        JSON.stringify(existingAccount) === JSON.stringify(refreshedAccount)
-      ) {
-        // Fast path without a state update.
-        return state
-      }
-      return {
-        accounts: state.accounts.map(a => {
-          if (a.did === accountDid) {
-            if (refreshedAccount) {
-              return refreshedAccount
-            } else {
-              return {
-                ...a,
-                // If we didn't receive a refreshed account, clear out the tokens.
-                accessJwt: undefined,
-                refreshJwt: undefined,
-              }
-            }
-          } else {
-            return a
-          }
-        }),
-        currentAgentState: refreshedAccount
-          ? state.currentAgentState
-          : createPublicAgentState(), // Log out if expired.
-        needsPersist: true,
-      }
-    }
-    case 'switched-to-account': {
-      const {newAccount, newAgent} = action
-      return {
-        accounts: [
-          newAccount,
-          ...state.accounts.filter(a => a.did !== newAccount.did),
-        ],
-        currentAgentState: {
-          did: newAccount.did,
-          agent: newAgent,
-        },
-        needsPersist: true,
-      }
-    }
-    case 'updated-current-account': {
-      const {updatedFields} = action
-      return {
-        accounts: state.accounts.map(a => {
-          if (a.did === state.currentAgentState.did) {
-            return {
-              ...a,
-              ...updatedFields,
-            }
-          } else {
-            return a
-          }
-        }),
-        currentAgentState: state.currentAgentState,
-        needsPersist: true,
-      }
-    }
-    case 'removed-account': {
-      const {accountDid} = action
-      return {
-        accounts: state.accounts.filter(a => a.did !== accountDid),
-        currentAgentState:
-          state.currentAgentState.did === accountDid
-            ? createPublicAgentState() // Log out if removing the current one.
-            : state.currentAgentState,
-        needsPersist: true,
-      }
-    }
-    case 'logged-out': {
-      return {
-        accounts: state.accounts.map(a => ({
-          ...a,
-          // Clear tokens for *every* account (this is a hard logout).
-          refreshJwt: undefined,
-          accessJwt: undefined,
-        })),
-        currentAgentState: createPublicAgentState(),
-        needsPersist: true,
-      }
-    }
-    case 'synced-accounts': {
-      const {syncedAccounts, syncedCurrentDid} = action
-      return {
-        accounts: syncedAccounts,
-        currentAgentState:
-          syncedCurrentDid === state.currentAgentState.did
-            ? state.currentAgentState
-            : createPublicAgentState(), // Log out if different user.
-        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
-      }
-    }
-  }
-}
-
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, dispatch] = React.useReducer(reducer, null, getInitialState)
+  const [state, dispatch] = React.useReducer(reducer, null, () =>
+    getInitialState(persisted.get('session').accounts),
+  )
 
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {

@@ -1,11 +1,23 @@
 import {BskyAgent} from '@atproto/api'
 
+import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
-import {configureModerationForAccount} from './moderation'
+import {
+  configureModerationForAccount,
+  configureModerationForGuest,
+} from './moderation'
 import {SessionAccount, SessionApiContext} from './types'
 import {isSessionDeactivated} from './util'
 import {IS_PROD_SERVICE} from '#/lib/constants'
 import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
+
+export function createPublicAgentState() {
+  configureModerationForGuest() // Side effect but only relevant for tests
+  return {
+    agent: new BskyAgent({service: PUBLIC_BSKY_SERVICE}),
+    did: undefined,
+  }
+}
 
 export async function createAgentAndLogin({
   service,
