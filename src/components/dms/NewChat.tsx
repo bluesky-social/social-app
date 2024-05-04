@@ -213,7 +213,7 @@ function SearchablePeopleList({
       ListHeaderComponent={
         <>
           {listHeader}
-          {searchText.length === 0 && (
+          {searchText.length === 0 ? (
             <View style={[a.pt_4xl, a.align_center, a.px_lg]}>
               <Envelope width={64} fill={t.palette.contrast_200} />
               <Text
@@ -226,21 +226,22 @@ function SearchablePeopleList({
                 <Trans>Search for someone to start a conversation with.</Trans>
               </Text>
             </View>
-          )}
-          {searchText.length > 0 && !actorAutocompleteData?.length && (
-            <ListMaybePlaceholder
-              isLoading={isFetching}
-              isError={isError}
-              onRetry={refetch}
-              hideBackButton={true}
-              emptyType="results"
-              sideBorders={false}
-              emptyMessage={
-                isError
-                  ? _(msg`No search results found for "${searchText}".`)
-                  : _(msg`Could not load profiles. Please try again later.`)
-              }
-            />
+          ) : (
+            !actorAutocompleteData?.length && (
+              <ListMaybePlaceholder
+                isLoading={isFetching}
+                isError={isError}
+                onRetry={refetch}
+                hideBackButton={true}
+                emptyType="results"
+                sideBorders={false}
+                emptyMessage={
+                  isError
+                    ? _(msg`No search results found for "${searchText}".`)
+                    : _(msg`Could not load profiles. Please try again later.`)
+                }
+              />
+            )
           )}
         </>
       }
