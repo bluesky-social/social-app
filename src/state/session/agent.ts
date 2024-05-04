@@ -54,6 +54,7 @@ export async function createAgentAndResume(
     if (!agent.session || !account) {
       throw new Error(`session: login failed to establish a session`)
     }
+
     await fetchingGates
     return {agent, account}
   } else {
@@ -62,6 +63,7 @@ export async function createAgentAndResume(
       // Intentionally not awaited to unblock the UI:
       networkRetry(1, () => agent.resumeSession(prevSession))
     }
+
     await fetchingGates
     return {agent, account: storedAccount}
   }
@@ -100,10 +102,10 @@ export async function createAgentAndLogin(
     onAgentSessionChange(agent, account.did, event)
   })
 
+  await fetchingGates
   return {
     agent,
     account,
-    fetchingGates,
   }
 }
 
@@ -178,10 +180,10 @@ export async function createAgentAndCreateAccount(
     onAgentSessionChange(agent, account.did, event)
   })
 
+  await fetchingGates
   return {
     agent,
     account,
-    fetchingGates,
   }
 }
 
