@@ -13,6 +13,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {useHaptics} from 'lib/haptics'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
@@ -25,6 +26,7 @@ export function MessageInput({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const playHaptic = useHaptics()
   const [message, setMessage] = React.useState('')
   const [maxHeight, setMaxHeight] = React.useState<number | undefined>()
   const [isInputScrollable, setIsInputScrollable] = React.useState(false)
@@ -38,11 +40,12 @@ export function MessageInput({
       return
     }
     onSendMessage(message.trimEnd())
+    playHaptic()
     setMessage('')
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [message, onSendMessage])
+  }, [message, onSendMessage, playHaptic])
 
   const onInputLayout = React.useCallback(
     (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {

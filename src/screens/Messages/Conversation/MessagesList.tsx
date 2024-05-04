@@ -1,6 +1,9 @@
 import React, {useCallback, useRef} from 'react'
-import {FlatList, Platform, View} from 'react-native'
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+import {FlatList, View} from 'react-native'
+import {
+  KeyboardAvoidingView,
+  useKeyboardHandler,
+} from 'react-native-keyboard-controller'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -15,7 +18,6 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {useScrollToEndOnFocus} from '#/screens/Messages/Conversation/useScrollToEndOnFocus'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
@@ -96,12 +98,11 @@ export function MessagesList() {
   // onStartReached to fire.
   const contentHeight = useSharedValue(0)
 
-  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
+  // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
+  // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
+  const isMomentumScrolling = useSharedValue(false)
 
-  // This is only used on native because `Keyboard` can't be imported on web. On web, an input focus will immediately
-  // trigger scrolling to the bottom. On native however, we need to wait for the keyboard to present before scrolling,
-  // which is what this hook listens for
-  useScrollToEndOnFocus(flatListRef)
+  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -126,8 +127,14 @@ export function MessagesList() {
         animated: hasInitiallyScrolled,
         offset: height,
       })
+      isMomentumScrolling.value = true
     },
-    [contentHeight, hasInitiallyScrolled, isAtBottom.value],
+    [
+      contentHeight,
+      hasInitiallyScrolled,
+      isAtBottom.value,
+      isMomentumScrolling,
+    ],
   )
 
   // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
@@ -168,28 +175,47 @@ export function MessagesList() {
     [contentHeight.value, hasInitiallyScrolled, isAtBottom],
   )
 
-  const scrollToEnd = React.useCallback(() => {
-    requestAnimationFrame(() =>
-      flatListRef.current?.scrollToEnd({animated: true}),
-    )
-  }, [])
+  const onMomentumEnd = React.useCallback(() => {
+    'worklet'
+    isMomentumScrolling.value = false
+  }, [isMomentumScrolling])
 
-  const {bottom: bottomInset} = useSafeAreaInsets()
+  const scrollToEnd = React.useCallback(() => {
+    requestAnimationFrame(() => {
+      if (isMomentumScrolling.value) return
+
+      flatListRef.current?.scrollToEnd({animated: true})
+      isMomentumScrolling.value = true
+    })
+  }, [isMomentumScrolling])
+
+  const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
-  const keyboardVerticalOffset = useKeyboardVerticalOffset()
+
+  // This is only used inside the useKeyboardHandler because the worklet won't work with a ref directly.
+  const scrollToEndNow = React.useCallback(() => {
+    flatListRef.current?.scrollToEnd({animated: false})
+  }, [])
+
+  useKeyboardHandler({
+    onMove: () => {
+      'worklet'
+      runOnJS(scrollToEndNow)()
+    },
+  })
 
   return (
     <KeyboardAvoidingView
       style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
-      keyboardVerticalOffset={keyboardVerticalOffset}
+      keyboardVerticalOffset={isIOS ? topInset : 0}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
       {/* This view keeps the scroll bar and content within the CenterView on web, otherwise the entire window would scroll */}
       {/* @ts-expect-error web only */}
       <View style={[{flex: 1}, isWeb && {'overflow-y': 'scroll'}]}>
-        {/* Custom scroll provider so we can use the `onScroll` event in our custom List implementation */}
-        <ScrollProvider onScroll={onScroll}>
+        {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
+        <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
           <List
             ref={flatListRef}
             data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
@@ -221,16 +247,4 @@ export function MessagesList() {
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
     </KeyboardAvoidingView>
   )
-}
-
-function useKeyboardVerticalOffset() {
-  const {top: topInset} = useSafeAreaInsets()
-
-  return Platform.select({
-    ios: topInset,
-    // I thought this might be the navigation bar height, but not sure
-    // 25 is just trial and error
-    android: 25,
-    default: 0,
-  })
 }
