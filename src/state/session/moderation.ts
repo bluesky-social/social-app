@@ -5,6 +5,8 @@ import {readLabelers} from './agent-config'
 import {SessionAccount} from './types'
 
 export function configureModerationForGuest() {
+  // This global mutation is *only* OK because this code is only relevant for testing.
+  // Don't add any other global behavior here!
   switchToBskyAppLabeler()
 }
 
@@ -12,13 +14,14 @@ export async function configureModerationForAccount(
   agent: BskyAgent,
   account: SessionAccount,
 ) {
-  // These are global side effects (which can break things!) but
-  // Don't add any other global behavior here, you can only mess with the agent.
+  // This global mutation is *only* OK because this code is only relevant for testing.
+  // Don't add any other global behavior here!
   switchToBskyAppLabeler()
   if (IS_TEST_USER(account.handle)) {
     await trySwitchToTestAppLabeler(agent)
   }
 
+  // The code below is actually relevant to production (and isn't global).
   const labelerDids = await readLabelers(account.did).catch(_ => {})
   if (labelerDids) {
     agent.configureLabelersHeader(
