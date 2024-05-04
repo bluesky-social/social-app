@@ -33,9 +33,7 @@ export type SessionApiContext = {
    * access tokens from all accounts, so that returning as any user will
    * require a full login.
    */
-  logout: (
-    logContext: LogEvents['account:loggedOut']['logContext'],
-  ) => Promise<void>
+  logout: (logContext: LogEvents['account:loggedOut']['logContext']) => void
   resumeSession: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
   updateCurrentAccount: (

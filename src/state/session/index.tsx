@@ -39,6 +39,7 @@ const ApiContext = React.createContext<SessionApiContext>({
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const cancelPendingTask = useOneTaskAtATime()
   const [state, dispatch] = React.useReducer(reducer, null, () =>
     getInitialState(persisted.get('session').accounts),
   )
@@ -62,12 +63,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
     async params => {
+      const signal = cancelPendingTask()
       track('Try Create Account')
       logEvent('account:create:begin', {})
       const {agent, account} = await createAgentAndCreateAccount(
         params,
         onAgentSessionChange,
       )
+
+      throwIfAborted(signal)
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -76,15 +80,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [onAgentSessionChange],
+    [onAgentSessionChange, cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
+      const signal = cancelPendingTask()
       const {agent, account} = await createAgentAndLogin(
         params,
         onAgentSessionChange,
       )
+
+      throwIfAborted(signal)
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -93,42 +100,47 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [onAgentSessionChange],
+    [onAgentSessionChange, cancelPendingTask],
   )
 
   const logout = React.useCallback<SessionApiContext['logout']>(
-    async logContext => {
+    logContext => {
+      cancelPendingTask()
       dispatch({
         type: 'logged-out',
       })
       logEvent('account:loggedOut', {logContext})
     },
-    [],
+    [cancelPendingTask],
   )
 
   const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
     async storedAccount => {
+      const signal = cancelPendingTask()
       const {agent, account} = await createAgentAndResume(
         storedAccount,
         onAgentSessionChange,
       )
+
+      throwIfAborted(signal)
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
         newAccount: account,
       })
     },
-    [onAgentSessionChange],
+    [onAgentSessionChange, cancelPendingTask],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
+      cancelPendingTask()
       dispatch({
         type: 'removed-account',
         accountDid: account.did,
       })
     },
-    [],
+    [cancelPendingTask],
   )
 
   const updateCurrentAccount = React.useCallback<
@@ -214,6 +226,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       </StateContext.Provider>
     </AgentContext.Provider>
   )
+}
+
+function useOneTaskAtATime() {
+  const abortController = React.useRef<AbortController | null>(null)
+  const cancelPendingTask = React.useCallback(() => {
+    if (abortController.current) {
+      abortController.current.abort()
+    }
+    abortController.current = new AbortController()
+    return abortController.current.signal
+  }, [])
+  return cancelPendingTask
+}
+
+// RN does not have signal.throwIfAborted().
+function throwIfAborted(signal: AbortSignal) {
+  if (signal.aborted) {
+    throw Error('Task cancelled')
+  }
 }
 
 export function useSession() {
