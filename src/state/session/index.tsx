@@ -33,7 +33,7 @@ const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
   logout: async () => {},
-  initSession: async () => {},
+  resumeSession: async () => {},
   removeAccount: () => {},
   updateCurrentAccount: () => {},
 })
@@ -106,7 +106,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [],
   )
 
-  const initSession = React.useCallback<SessionApiContext['initSession']>(
+  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
     async storedAccount => {
       const {agent, account} = await createAgentAndResume(
         storedAccount,
@@ -165,14 +165,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
-          initSession(syncedAccount)
+          resumeSession(syncedAccount)
         } else {
           // @ts-ignore we checked for `refreshJwt` above
           state.currentAgentState.agent.session = syncedAccount
         }
       }
     })
-  }, [state, initSession])
+  }, [state, resumeSession])
 
   const stateContext = React.useMemo(
     () => ({
@@ -190,7 +190,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       createAccount,
       login,
       logout,
-      initSession,
+      resumeSession,
       removeAccount,
       updateCurrentAccount,
     }),
@@ -198,7 +198,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       createAccount,
       login,
       logout,
-      initSession,
+      resumeSession,
       removeAccount,
       updateCurrentAccount,
     ],

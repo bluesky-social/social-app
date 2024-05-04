@@ -36,7 +36,7 @@ export type SessionApiContext = {
   logout: (
     logContext: LogEvents['account:loggedOut']['logContext'],
   ) => Promise<void>
-  initSession: (account: SessionAccount) => Promise<void>
+  resumeSession: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
   updateCurrentAccount: (
     account: Partial<
