@@ -139,7 +139,7 @@ function ListImpl<ItemT>(
 
   // --- onScroll ---
   const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
-  const handleWindowScroll = useNonReactiveCallback(() => {
+  const handleScroll = useNonReactiveCallback(() => {
     if (!isInsideVisibleTree) return
 
     // If we are in "contain" mode, scroll events come from the container div rather than the window. We can use the
@@ -195,11 +195,11 @@ function ListImpl<ItemT>(
       ? (nativeRef.current as HTMLDivElement | null)
       : window
 
-    element?.addEventListener('scroll', handleWindowScroll)
+    element?.addEventListener('scroll', handleScroll)
     return () => {
-      element?.removeEventListener('scroll', handleWindowScroll)
+      element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleWindowScroll, contain])
+  }, [isInsideVisibleTree, handleScroll, contain])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
