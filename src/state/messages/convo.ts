@@ -92,7 +92,7 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
       ) => void
@@ -104,11 +104,11 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => void
-      fetchMessageHistory: () => void
+      ) => Promise<void>
+      fetchMessageHistory: () => Promise<void>
     }
   | {
       status: ConvoStatus.Backgrounded
@@ -116,11 +116,11 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => void
-      fetchMessageHistory: () => void
+      ) => Promise<void>
+      fetchMessageHistory: () => Promise<void>
     }
   | {
       status: ConvoStatus.Resuming
@@ -128,11 +128,11 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => void
-      fetchMessageHistory: () => void
+      ) => Promise<void>
+      fetchMessageHistory: () => Promise<void>
     }
   | {
       status: ConvoStatus.Error
@@ -776,7 +776,7 @@ export class Convo {
         }
         return true
       })
-      .map((item, i) => {
+      .map((item, i, arr) => {
         let nextMessage = null
         const isMessage = isConvoItemMessage(item)
 
@@ -786,7 +786,7 @@ export class Convo {
             (ChatBskyConvoDefs.isMessageView(item.message) ||
               ChatBskyConvoDefs.isDeletedMessageView(item.message))
           ) {
-            const next = items[i + 1]
+            const next = arr[i + 1]
 
             if (
               isConvoItemMessage(next) &&
