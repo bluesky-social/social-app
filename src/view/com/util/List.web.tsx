@@ -213,8 +213,8 @@ function ListImpl<ItemT>(
         ))}
         {onEndReached && (
           <Visibility
-            topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
             onVisibleChange={onTailVisibilityChange}
+            bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
         {footer}
@@ -276,10 +276,12 @@ Row = React.memo(Row)
 
 let Visibility = ({
   topMargin = '0px',
+  bottomMargin = '0px',
   onVisibleChange,
   style,
 }: {
   topMargin?: string
+  bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
 }): React.ReactNode => {
@@ -301,14 +303,14 @@ let Visibility = ({
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
-      rootMargin: `${topMargin} 0px 0px 0px`,
+      rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
     })
     const tail: Element | null = tailRef.current!
     observer.observe(tail)
     return () => {
       observer.unobserve(tail)
     }
-  }, [handleIntersection, topMargin])
+  }, [bottomMargin, handleIntersection, topMargin])
 
   return (
     <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
