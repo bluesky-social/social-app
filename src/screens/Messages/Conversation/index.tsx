@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -61,10 +62,12 @@ function Inner() {
   }
 
   return (
-    <CenteredView style={{flex: 1}} sideBorders>
-      <Header profile={otherProfile} />
-      <MessagesList />
-    </CenteredView>
+    <KeyboardProvider>
+      <CenteredView style={{flex: 1}} sideBorders>
+        <Header profile={otherProfile} />
+        <MessagesList />
+      </CenteredView>
+    </KeyboardProvider>
   )
 }
 
