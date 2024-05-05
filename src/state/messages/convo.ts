@@ -92,7 +92,7 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
       ) => void
@@ -104,11 +104,11 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => void
-      fetchMessageHistory: () => void
+      ) => Promise<void>
+      fetchMessageHistory: () => Promise<void>
     }
   | {
       status: ConvoStatus.Backgrounded
@@ -116,11 +116,11 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => void
-      fetchMessageHistory: () => void
+      ) => Promise<void>
+      fetchMessageHistory: () => Promise<void>
     }
   | {
       status: ConvoStatus.Resuming
@@ -128,11 +128,11 @@ export type ConvoState =
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
       isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => void
+      deleteMessage: (messageId: string) => Promise<void>
       sendMessage: (
         message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => void
-      fetchMessageHistory: () => void
+      ) => Promise<void>
+      fetchMessageHistory: () => Promise<void>
     }
   | {
       status: ConvoStatus.Error
