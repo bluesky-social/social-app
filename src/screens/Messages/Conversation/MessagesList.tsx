@@ -211,40 +211,37 @@ export function MessagesList() {
       keyboardVerticalOffset={isIOS ? topInset : 0}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
-      {/* This view keeps the scroll bar and content within the CenterView on web, otherwise the entire window would scroll */}
-      {/* @ts-expect-error web only */}
-      <View style={[a.flex_1, isWeb && {'overflow-y': 'scroll'}]}>
-        {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-        <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
-          <List
-            ref={flatListRef}
-            data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            disableVirtualization={true}
-            initialNumToRender={isWeb ? 50 : 25}
-            maxToRenderPerBatch={isWeb ? 50 : 25}
-            keyboardDismissMode="on-drag"
-            keyboardShouldPersistTaps="handled"
-            maintainVisibleContentPosition={{
-              minIndexForVisible: 1,
-            }}
-            contentContainerStyle={{paddingHorizontal: 10}}
-            removeClippedSubviews={false}
-            onContentSizeChange={onContentSizeChange}
-            onStartReached={onStartReached}
-            onScrollToIndexFailed={onScrollToIndexFailed}
-            scrollEventThrottle={100}
-            ListHeaderComponent={
-              <MaybeLoader
-                isLoading={
-                  chat.status === ConvoStatus.Ready && chat.isFetchingHistory
-                }
-              />
-            }
-          />
-        </ScrollProvider>
-      </View>
+      {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
+      <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
+        <List
+          ref={flatListRef}
+          data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          disableVirtualization={true}
+          initialNumToRender={isWeb ? 50 : 25}
+          maxToRenderPerBatch={isWeb ? 50 : 25}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          maintainVisibleContentPosition={{
+            minIndexForVisible: 1,
+          }}
+          containWeb={true}
+          contentContainerStyle={{paddingHorizontal: 10}}
+          removeClippedSubviews={false}
+          onContentSizeChange={onContentSizeChange}
+          onStartReached={onStartReached}
+          onScrollToIndexFailed={onScrollToIndexFailed}
+          scrollEventThrottle={100}
+          ListHeaderComponent={
+            <MaybeLoader
+              isLoading={
+                chat.status === ConvoStatus.Ready && chat.isFetchingHistory
+              }
+            />
+          }
+        />
+      </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
     </KeyboardAvoidingView>
   )
