@@ -1,11 +1,12 @@
-import React, {isValidElement, memo, useRef, startTransition} from 'react'
+import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {addStyle} from 'lib/styles'
+
+import {batchedUpdates} from '#/lib/batchedUpdates'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useScrollHandlers} from '#/lib/ScrollContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {batchedUpdates} from '#/lib/batchedUpdates'
+import {addStyle} from 'lib/styles'
 
 export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<
@@ -27,11 +28,13 @@ function ListImpl<ItemT>(
   {
     ListHeaderComponent,
     ListFooterComponent,
+    containWeb,
     contentContainerStyle,
     data,
     desktopFixedHeight,
     headerOffset,
     keyExtractor,
+    maintainVisibleContentPosition,
     refreshing: _unsupportedRefreshing,
     onEndReached,
     onEndReachedThreshold = 0,
