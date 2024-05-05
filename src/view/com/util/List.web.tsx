@@ -88,25 +88,27 @@ function ListImpl<ItemT>(
 
   const getScrollableNode = React.useCallback(() => {
     if (containWeb) {
-      if (!nativeRef.current) return null
+      const element = nativeRef.current as HTMLDivElement | null
+      if (!element) return
+
       return {
-        scrollWidth: nativeRef.current?.scrollWidth,
-        scrollHeight: nativeRef.current?.scrollHeight,
-        clientWidth: nativeRef.current?.clientWidth,
-        clientHeight: nativeRef.current?.clientHeight,
-        scrollY: nativeRef.current?.scrollTop,
-        scrollX: nativeRef.current?.scrollLeft,
+        scrollWidth: element.scrollWidth,
+        scrollHeight: element.scrollHeight,
+        clientWidth: element.clientWidth,
+        clientHeight: element.clientHeight,
+        scrollY: element.scrollTop,
+        scrollX: element.scrollLeft,
         scrollTo(options?: ScrollToOptions) {
-          nativeRef.current?.scrollTo(options)
+          element.scrollTo(options)
         },
         scrollBy(options: ScrollToOptions) {
-          nativeRef.current?.scrollBy(options)
+          element.scrollBy(options)
         },
         addEventListener(event: string, handler: any) {
-          nativeRef.current?.addEventListener(event, handler)
+          element.addEventListener(event, handler)
         },
         removeEventListener(event: string, handler: any) {
-          nativeRef.current?.removeEventListener(event, handler)
+          element.removeEventListener(event, handler)
         },
       }
     } else {
