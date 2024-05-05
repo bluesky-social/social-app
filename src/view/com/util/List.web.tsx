@@ -248,7 +248,7 @@ function ListImpl<ItemT>(
     <View
       {...props}
       // @ts-ignore web only
-      style={[style, containWeb && {flex: 1, 'overflow-y': 'scroll'}]}
+      style={[style, containWeb && {'overflow-y': 'scroll'}]}
       ref={nativeRef}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
