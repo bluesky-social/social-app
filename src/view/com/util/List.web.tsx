@@ -1,11 +1,12 @@
-import React, {isValidElement, memo, useRef, startTransition} from 'react'
+import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {addStyle} from 'lib/styles'
+
+import {batchedUpdates} from '#/lib/batchedUpdates'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useScrollHandlers} from '#/lib/ScrollContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {batchedUpdates} from '#/lib/batchedUpdates'
+import {addStyle} from 'lib/styles'
 
 export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<
@@ -32,6 +33,8 @@ function ListImpl<ItemT>(
     headerOffset,
     keyExtractor,
     refreshing: _unsupportedRefreshing,
+    onStartReached,
+    onStartReachedThreshold = 0,
     onEndReached,
     onEndReachedThreshold = 0,
     onRefresh: _unsupportedOnRefresh,
@@ -148,6 +151,17 @@ function ListImpl<ItemT>(
     }
   }
 
+  // --- onStartReached ---
+  const onHeadVisibilityChange = useNonReactiveCallback(
+    (isHeadVisible: boolean) => {
+      if (isHeadVisible) {
+        onStartReached?.({
+          distanceFromStart: onStartReachedThreshold || 0,
+        })
+      }
+    },
+  )
+
   // --- onEndReached ---
   const onTailVisibilityChange = useNonReactiveCallback(
     (isTailVisible: boolean) => {
@@ -181,6 +195,12 @@ function ListImpl<ItemT>(
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
+        {onStartReached && (
+          <Visibility
+            onVisibleChange={onHeadVisibilityChange}
+            topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+          />
+        )}
         {header}
         {(data as Array<ItemT>).map((item, index) => (
           <Row<ItemT>
