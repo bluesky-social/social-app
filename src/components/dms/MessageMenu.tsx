@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {LayoutAnimation, Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
@@ -50,6 +50,7 @@ export let MessageMenu = ({
   const onDelete = React.useCallback(() => {
     if (chat.status !== ConvoStatus.Ready) return
 
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     chat
       .deleteMessage(message.id)
       .then(() => Toast.show(_(msg`Message deleted`)))
