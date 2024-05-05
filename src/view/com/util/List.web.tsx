@@ -116,6 +116,8 @@ function ListImpl<ItemT>(
   const handleWindowScroll = useNonReactiveCallback(() => {
     if (!isInsideVisibleTree) return
 
+    // If we are in "contain" mode, scroll events come from the container div rather than the window. We can use the
+    // `nativeRef` to get the needed values.
     if (contain) {
       const element = nativeRef.current as HTMLDivElement | null
       contextScrollHandlers.onScroll?.(
@@ -157,6 +159,8 @@ function ListImpl<ItemT>(
   })
 
   React.useEffect(() => {
+    const element = nativeRef.current as HTMLDivElement | null
+
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
@@ -164,13 +168,13 @@ function ListImpl<ItemT>(
     }
 
     if (contain) {
-      nativeRef.current?.addEventListener('scroll', handleWindowScroll)
+      element?.addEventListener('scroll', handleWindowScroll)
     } else {
       window.addEventListener('scroll', handleWindowScroll)
     }
     return () => {
       if (contain) {
-        nativeRef.current?.addEventListener('scroll', handleWindowScroll)
+        element?.removeEventListener('scroll', handleWindowScroll)
       } else {
         window.removeEventListener('scroll', handleWindowScroll)
       }
