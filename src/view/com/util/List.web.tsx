@@ -34,8 +34,9 @@ function ListImpl<ItemT>(
     desktopFixedHeight,
     headerOffset,
     keyExtractor,
-    maintainVisibleContentPosition,
     refreshing: _unsupportedRefreshing,
+    onStartReached,
+    onStartReachedThreshold = 0,
     onEndReached,
     onEndReachedThreshold = 0,
     onRefresh: _unsupportedOnRefresh,
@@ -215,6 +216,17 @@ function ListImpl<ItemT>(
     }
   }
 
+  // --- onStartReached ---
+  const onHeadVisibilityChange = useNonReactiveCallback(
+    (isHeadVisible: boolean) => {
+      if (isHeadVisible) {
+        onStartReached?.({
+          distanceFromStart: onStartReachedThreshold || 0,
+        })
+      }
+    },
+  )
+
   // --- onEndReached ---
   const onTailVisibilityChange = useNonReactiveCallback(
     (isTailVisible: boolean) => {
@@ -254,6 +266,13 @@ function ListImpl<ItemT>(
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
+        {onStartReached && (
+          <Visibility
+            root={containWeb ? nativeRef.current : null}
+            onVisibleChange={onHeadVisibilityChange}
+            topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+          />
+        )}
         {header}
         {(data as Array<ItemT>).map((item, index) => (
           <Row<ItemT>
@@ -267,8 +286,8 @@ function ListImpl<ItemT>(
         {onEndReached && (
           <Visibility
             root={containWeb ? nativeRef.current : null}
-            topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
             onVisibleChange={onTailVisibilityChange}
+            bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
         {footer}
@@ -329,13 +348,15 @@ let Row = function RowImpl<ItemT>({
 Row = React.memo(Row)
 
 let Visibility = ({
-  topMargin = '0px',
   root = null,
+  topMargin = '0px',
+  bottomMargin = '0px',
   onVisibleChange,
   style,
 }: {
-  topMargin?: string
   root?: Element | null
+  topMargin?: string
+  bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
 }): React.ReactNode => {
@@ -358,14 +379,14 @@ let Visibility = ({
   React.useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
       root,
-      rootMargin: `${topMargin} 0px 0px 0px`,
+      rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
     })
     const tail: Element | null = tailRef.current!
     observer.observe(tail)
     return () => {
       observer.unobserve(tail)
     }
-  }, [handleIntersection, topMargin])
+  }, [bottomMargin, handleIntersection, topMargin, root])
 
   return (
     <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
