@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {Pressable, View} from 'react-native'
+import {Keyboard, Pressable, View} from 'react-native'
 import Animated, {
   cancelAnimation,
   runOnJS,
@@ -38,6 +38,7 @@ export function ActionsWrapper({
   // Reanimated's `runOnJS` doesn't like refs, so we can't use `runOnJS(menuControl.open)()`. Instead, we'll use this
   // function
   const open = useCallback(() => {
+    Keyboard.dismiss()
     menuControl.open()
   }, [menuControl])
 
