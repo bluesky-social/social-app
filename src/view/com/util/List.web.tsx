@@ -101,7 +101,6 @@ function ListImpl<ItemT>(
         scrollToTop() {
           getScrollableNode()?.scrollTo({top: 0})
         },
-
         scrollToOffset({
           animated,
           offset,
@@ -115,7 +114,6 @@ function ListImpl<ItemT>(
             behavior: animated ? 'smooth' : 'instant',
           })
         },
-
         scrollToEnd({animated = true}: {animated?: boolean}) {
           const element = getScrollableNode()
           element?.scrollTo({
