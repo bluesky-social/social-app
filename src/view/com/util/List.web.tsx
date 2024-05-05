@@ -85,17 +85,21 @@ function ListImpl<ItemT>(
     })
   }
 
+  const getScrollableNode = React.useCallback(() => {
+    if (containWeb) {
+      return nativeRef.current as HTMLDivElement | null
+    } else {
+      return window
+    }
+  }, [containWeb])
+
   const nativeRef = React.useRef(null)
   React.useImperativeHandle(
     ref,
     () =>
       ({
         scrollToTop() {
-          const element = containWeb
-            ? (nativeRef.current as HTMLDivElement | null)
-            : window
-
-          element?.scrollTo({top: 0})
+          getScrollableNode()?.scrollTo({top: 0})
         },
 
         scrollToOffset({
@@ -105,11 +109,7 @@ function ListImpl<ItemT>(
           animated: boolean
           offset: number
         }) {
-          const element = containWeb
-            ? (nativeRef.current as HTMLDivElement | null)
-            : window
-
-          element?.scrollTo({
+          getScrollableNode()?.scrollTo({
             left: 0,
             top: offset,
             behavior: animated ? 'smooth' : 'instant',
@@ -117,23 +117,17 @@ function ListImpl<ItemT>(
         },
 
         scrollToEnd({animated = true}: {animated?: boolean}) {
-          if (containWeb) {
-            const element = nativeRef.current as HTMLDivElement | null
-            element?.scrollTo({
-              left: 0,
-              top: element?.scrollHeight,
-              behavior: animated ? 'smooth' : 'instant',
-            })
-          } else {
-            window.scrollTo({
-              left: 0,
-              top: document.documentElement.scrollHeight,
-              behavior: animated ? 'smooth' : 'instant',
-            })
-          }
+          const element = getScrollableNode()
+          element?.scrollTo({
+            left: 0,
+            top: containWeb
+              ? element?.scrollHeight
+              : document.documentElement.scrollHeight,
+            behavior: animated ? 'smooth' : 'instant',
+          })
         },
       } as any), // TODO: Better types.
-    [containWeb],
+    [containWeb, getScrollableNode],
   )
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
@@ -148,7 +142,7 @@ function ListImpl<ItemT>(
     // If we are in "contain" mode, scroll events come from the container div rather than the window. We can use the
     // `nativeRef` to get the needed values.
     if (containWeb) {
-      const element = nativeRef.current as HTMLDivElement | null
+      const element = getScrollableNode()
       contextScrollHandlers.onScroll?.(
         {
           contentOffset: {
@@ -194,15 +188,12 @@ function ListImpl<ItemT>(
       return
     }
 
-    const element = containWeb
-      ? (nativeRef.current as HTMLDivElement | null)
-      : window
-
+    const element = getScrollableNode()
     element?.addEventListener('scroll', handleScroll)
     return () => {
       element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleScroll, containWeb])
+  }, [isInsideVisibleTree, handleScroll, containWeb, getScrollableNode])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
