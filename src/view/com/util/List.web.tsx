@@ -271,6 +271,7 @@ function ListImpl<ItemT>(
           pal.border,
         ]}>
         <Visibility
+          root={containWeb ? nativeRef.current : null}
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
@@ -286,6 +287,7 @@ function ListImpl<ItemT>(
         ))}
         {onEndReached && (
           <Visibility
+            root={containWeb ? nativeRef.current : null}
             topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
             onVisibleChange={onTailVisibilityChange}
           />
@@ -349,10 +351,12 @@ Row = React.memo(Row)
 
 let Visibility = ({
   topMargin = '0px',
+  root = null,
   onVisibleChange,
   style,
 }: {
   topMargin?: string
+  root?: Element | null
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
 }): React.ReactNode => {
@@ -374,6 +378,7 @@ let Visibility = ({
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
+      root,
       rootMargin: `${topMargin} 0px 0px 0px`,
     })
     const tail: Element | null = tailRef.current!
