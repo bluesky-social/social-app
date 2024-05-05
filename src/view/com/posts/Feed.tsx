@@ -28,6 +28,7 @@ import {
 import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {ScrollProvider} from 'lib/ScrollContext'
 import {useTheme} from 'lib/ThemeContext'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -327,33 +328,35 @@ let Feed = ({
 
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={feedItems}
-        keyExtractor={item => item._reactKey}
-        renderItem={renderItem}
-        ListFooterComponent={FeedFooter}
-        ListHeaderComponent={ListHeaderComponent}
-        refreshing={isPTRing}
-        onRefresh={onRefresh}
-        headerOffset={headerOffset}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}
-        onScrolledDownChange={onScrolledDownChange}
-        indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={2} // number of posts left to trigger load more
-        removeClippedSubviews={true}
-        extraData={extraData}
-        // @ts-ignore our .web version only -prf
-        desktopFixedHeight={
-          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
-        }
-        initialNumToRender={initialNumToRender}
-        windowSize={11}
-      />
+      <ScrollProvider>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={feedItems}
+          keyExtractor={item => item._reactKey}
+          renderItem={renderItem}
+          ListFooterComponent={FeedFooter}
+          ListHeaderComponent={ListHeaderComponent}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          headerOffset={headerOffset}
+          contentContainerStyle={{
+            minHeight: Dimensions.get('window').height * 1.5,
+          }}
+          onScrolledDownChange={onScrolledDownChange}
+          indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={2} // number of posts left to trigger load more
+          removeClippedSubviews={true}
+          extraData={extraData}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight={
+            desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+          }
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
+        />
+      </ScrollProvider>
     </View>
   )
 }
