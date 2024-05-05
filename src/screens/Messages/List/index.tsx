@@ -6,6 +6,7 @@ import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {sha256} from 'js-sha256'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
@@ -20,11 +21,14 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {NewChat} from '#/components/dms/NewChat'
+import * as TextField from '#/components/forms/TextField'
+import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
@@ -32,6 +36,7 @@ import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
+import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 export function MessagesScreen({navigation}: Props) {
@@ -39,6 +44,16 @@ export function MessagesScreen({navigation}: Props) {
   const t = useTheme()
   const newChatControl = useDialogControl()
   const {gtMobile} = useBreakpoints()
+
+  // TEMP
+  const {serviceUrl, setServiceUrl} = useDmServiceUrlStorage()
+  const hasValidServiceUrl = useMemo(() => {
+    const hash = sha256(serviceUrl)
+    return (
+      hash ===
+      'a32318b49dd3fe6aa6a35c66c13fcc4c1cb6202b24f5a852d9a2279acee4169f'
+    )
+  }, [serviceUrl])
 
   const renderButton = useCallback(() => {
     return (
@@ -62,7 +77,9 @@ export function MessagesScreen({navigation}: Props) {
     fetchNextPage,
     error,
     refetch,
-  } = useListConvos()
+  } = useListConvos({refetchInterval: 15_000})
+
+  useRefreshOnFocus(refetch)
 
   const isError = !!error
 
@@ -111,6 +128,25 @@ export function MessagesScreen({navigation}: Props) {
 
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
+
+  if (!hasValidServiceUrl) {
+    return (
+      <ScrollView contentContainerStyle={a.p_lg}>
+        <View>
+          <TextField.LabelText>Service URL</TextField.LabelText>
+          <TextField.Root>
+            <TextField.Input
+              value={serviceUrl}
+              onChangeText={text => setServiceUrl(text)}
+              autoCapitalize="none"
+              keyboardType="url"
+              label="https://"
+            />
+          </TextField.Root>
+        </View>
+      </ScrollView>
+    )
+  }
 
   if (conversations.length < 1) {
     return (

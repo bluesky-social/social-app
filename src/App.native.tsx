@@ -4,7 +4,6 @@ import 'view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
@@ -89,38 +88,37 @@ function InnerApp() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <Alf theme={theme}>
-        <Splash isReady={isReady}>
-          <React.Fragment
-            // Resets the entire tree below when it changes:
-            key={currentAccount?.did}>
-            <QueryProvider currentDid={currentAccount?.did}>
-              <PushNotificationsListener>
-                <StatsigProvider>
-                  {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                  <LabelDefsProvider>
-                    <ModerationOptsProvider>
-                      <LoggedOutViewProvider>
-                        <SelectedFeedProvider>
-                          <UnreadNotifsProvider>
-                            <ThemeProvider theme={theme}>
-                              {/* All components should be within this provider */}
-                              <RootSiblingParent>
+        <ThemeProvider theme={theme}>
+          <Splash isReady={isReady}>
+            <RootSiblingParent>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <PushNotificationsListener>
+                    <StatsigProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
                                 <GestureHandlerRootView style={s.h100pct}>
                                   <TestCtrls />
                                   <Shell />
                                 </GestureHandlerRootView>
-                              </RootSiblingParent>
-                            </ThemeProvider>
-                          </UnreadNotifsProvider>
-                        </SelectedFeedProvider>
-                      </LoggedOutViewProvider>
-                    </ModerationOptsProvider>
-                  </LabelDefsProvider>
-                </StatsigProvider>
-              </PushNotificationsListener>
-            </QueryProvider>
-          </React.Fragment>
-        </Splash>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </StatsigProvider>
+                  </PushNotificationsListener>
+                </QueryProvider>
+              </React.Fragment>
+            </RootSiblingParent>
+          </Splash>
+        </ThemeProvider>
       </Alf>
     </SafeAreaProvider>
   )
@@ -158,9 +156,7 @@ function App() {
                   <LightboxStateProvider>
                     <I18nProvider>
                       <PortalProvider>
-                        <KeyboardProvider>
-                          <InnerApp />
-                        </KeyboardProvider>
+                        <InnerApp />
                       </PortalProvider>
                     </I18nProvider>
                   </LightboxStateProvider>

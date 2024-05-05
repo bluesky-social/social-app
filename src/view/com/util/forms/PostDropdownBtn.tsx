@@ -1,6 +1,6 @@
 import React, {memo} from 'react'
 import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
-import {setStringAsync} from 'expo-clipboard'
+import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyActorDefs,
   AppBskyFeedPost,
@@ -160,7 +160,7 @@ let PostDropdownBtn = ({
   const onCopyPostText = React.useCallback(() => {
     const str = richTextToString(richText, true)
 
-    setStringAsync(str)
+    Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
