@@ -1,11 +1,5 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {
-  LayoutAnimation,
-  Pressable,
-  StyleProp,
-  TextStyle,
-  View,
-} from 'react-native'
+import React, {useCallback, useMemo, useRef} from 'react'
+import {LayoutAnimation, StyleProp, TextStyle, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -30,24 +24,14 @@ export let MessageItem = ({
 }): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
-  const [hasBeenPressed, setHasBeenPressed] = useState(false)
 
   const isFromSelf = item.sender?.did === currentAccount?.did
-
-  const handlePress = useCallback(() => {
-    setHasBeenPressed(p => !p)
-  }, [])
 
   const isNextFromSelf =
     ChatBskyConvoDefs.isMessageView(next) &&
     next.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
-    // override showing date if the message has been pressed
-    if (hasBeenPressed) {
-      return true
-    }
-
     // TODO this means it's a placeholder. Let's figure out the right way to do this though!
     if (item.id.length > 13) {
       return false
@@ -70,14 +54,7 @@ export let MessageItem = ({
     }
 
     return true
-  }, [
-    hasBeenPressed,
-    item.id.length,
-    item.sentAt,
-    isFromSelf,
-    isNextFromSelf,
-    next,
-  ])
+  }, [item, next, isFromSelf, isNextFromSelf])
 
   const lastInGroupRef = useRef(isLastInGroup)
   if (lastInGroupRef.current !== isLastInGroup) {
@@ -91,40 +68,35 @@ export let MessageItem = ({
   return (
     <View>
       <ActionsWrapper isFromSelf={isFromSelf} message={item}>
-        <Pressable
-          accessibilityRole="none"
-          accessibilityHint="Show message info"
-          onPress={handlePress}>
-          <View
+        <View
+          style={[
+            a.py_sm,
+            a.my_2xs,
+            a.rounded_md,
+            {
+              paddingLeft: 14,
+              paddingRight: 14,
+              backgroundColor: isFromSelf
+                ? pending
+                  ? pendingColor
+                  : t.palette.primary_500
+                : t.palette.contrast_50,
+              borderRadius: 17,
+            },
+            isFromSelf
+              ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+              : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+          ]}>
+          <Text
             style={[
-              a.py_sm,
-              a.my_2xs,
-              a.rounded_md,
-              {
-                paddingLeft: 14,
-                paddingRight: 14,
-                backgroundColor: isFromSelf
-                  ? pending
-                    ? pendingColor
-                    : t.palette.primary_500
-                  : t.palette.contrast_50,
-                borderRadius: 17,
-              },
-              isFromSelf
-                ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-                : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+              a.text_md,
+              a.leading_snug,
+              isFromSelf && {color: t.palette.white},
+              pending && t.name !== 'light' && {color: t.palette.primary_300},
             ]}>
-            <Text
-              style={[
-                a.text_md,
-                a.leading_snug,
-                isFromSelf && {color: t.palette.white},
-                pending && t.name !== 'light' && {color: t.palette.primary_300},
-              ]}>
-              {item.text}
-            </Text>
-          </View>
-        </Pressable>
+            {item.text}
+          </Text>
+        </View>
       </ActionsWrapper>
       <MessageItemMetadata
         message={item}
