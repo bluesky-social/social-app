@@ -225,6 +225,7 @@ export function MessagesList() {
             initialNumToRender={isWeb ? 50 : 25}
             maxToRenderPerBatch={isWeb ? 50 : 25}
             keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="handled"
             maintainVisibleContentPosition={{
               minIndexForVisible: 1,
             }}
