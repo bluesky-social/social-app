@@ -776,7 +776,7 @@ export class Convo {
         }
         return true
       })
-      .map((item, i) => {
+      .map((item, i, arr) => {
         let nextMessage = null
         const isMessage = isConvoItemMessage(item)
 
@@ -786,7 +786,7 @@ export class Convo {
             (ChatBskyConvoDefs.isMessageView(item.message) ||
               ChatBskyConvoDefs.isDeletedMessageView(item.message))
           ) {
-            const next = items[i + 1]
+            const next = arr[i + 1]
 
             if (
               isConvoItemMessage(next) &&
