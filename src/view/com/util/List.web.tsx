@@ -88,8 +88,13 @@ function ListImpl<ItemT>(
     () =>
       ({
         scrollToTop() {
-          window.scrollTo({top: 0})
+          const element = contain
+            ? (nativeRef.current as HTMLDivElement | null)
+            : window
+
+          element?.scrollTo({top: 0})
         },
+
         scrollToOffset({
           animated,
           offset,
@@ -97,14 +102,35 @@ function ListImpl<ItemT>(
           animated: boolean
           offset: number
         }) {
-          window.scrollTo({
+          const element = contain
+            ? (nativeRef.current as HTMLDivElement | null)
+            : window
+
+          element?.scrollTo({
             left: 0,
             top: offset,
             behavior: animated ? 'smooth' : 'instant',
           })
         },
+
+        scrollToEnd({animated = true}: {animated?: boolean}) {
+          if (contain) {
+            const element = nativeRef.current as HTMLDivElement | null
+            element?.scrollTo({
+              left: 0,
+              top: element?.scrollHeight,
+              behavior: animated ? 'smooth' : 'instant',
+            })
+          } else {
+            window.scrollTo({
+              left: 0,
+              top: document.documentElement.scrollHeight,
+              behavior: animated ? 'smooth' : 'instant',
+            })
+          }
+        },
       } as any), // TODO: Better types.
-    [],
+    [contain],
   )
 
   // --- onContentSizeChange ---
