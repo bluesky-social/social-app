@@ -159,25 +159,19 @@ function ListImpl<ItemT>(
   })
 
   React.useEffect(() => {
-    const element = nativeRef.current as HTMLDivElement | null
-
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
       return
     }
 
-    if (contain) {
-      element?.addEventListener('scroll', handleWindowScroll)
-    } else {
-      window.addEventListener('scroll', handleWindowScroll)
-    }
+    const element = contain
+      ? (nativeRef.current as HTMLDivElement | null)
+      : window
+
+    element?.addEventListener('scroll', handleWindowScroll)
     return () => {
-      if (contain) {
-        element?.removeEventListener('scroll', handleWindowScroll)
-      } else {
-        window.removeEventListener('scroll', handleWindowScroll)
-      }
+      element?.removeEventListener('scroll', handleWindowScroll)
     }
   }, [isInsideVisibleTree, handleWindowScroll, contain])
 
