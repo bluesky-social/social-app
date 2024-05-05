@@ -25,7 +25,7 @@ export type ListProps<ItemT> = Omit<
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
-  contain?: boolean
+  containWeb?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 

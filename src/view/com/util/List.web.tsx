@@ -19,7 +19,7 @@ export type ListProps<ItemT> = Omit<
   refreshing?: boolean
   onRefresh?: () => void
   desktopFixedHeight: any // TODO: Better types.
-  contain?: boolean
+  containWeb?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -41,7 +41,6 @@ function ListImpl<ItemT>(
     renderItem,
     extraData,
     style,
-    contain,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -88,7 +87,7 @@ function ListImpl<ItemT>(
     () =>
       ({
         scrollToTop() {
-          const element = contain
+          const element = containWeb
             ? (nativeRef.current as HTMLDivElement | null)
             : window
 
@@ -102,7 +101,7 @@ function ListImpl<ItemT>(
           animated: boolean
           offset: number
         }) {
-          const element = contain
+          const element = containWeb
             ? (nativeRef.current as HTMLDivElement | null)
             : window
 
@@ -114,7 +113,7 @@ function ListImpl<ItemT>(
         },
 
         scrollToEnd({animated = true}: {animated?: boolean}) {
-          if (contain) {
+          if (containWeb) {
             const element = nativeRef.current as HTMLDivElement | null
             element?.scrollTo({
               left: 0,
@@ -130,7 +129,7 @@ function ListImpl<ItemT>(
           }
         },
       } as any), // TODO: Better types.
-    [containerMode],
+    [containWeb],
   )
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
@@ -145,7 +144,7 @@ function ListImpl<ItemT>(
     if (Number(maintainVisibleContentPosition?.minIndexForVisible) >= 0) {
       const diff = h - contentHeight.current
       if (diff > 0) {
-        const element = containerMode
+        const element = containWeb
           ? (nativeRef.current as HTMLDivElement | null)
           : window
         element?.scrollBy(0, diff)
@@ -165,7 +164,7 @@ function ListImpl<ItemT>(
 
     // If we are in "contain" mode, scroll events come from the container div rather than the window. We can use the
     // `nativeRef` to get the needed values.
-    if (contain) {
+    if (containWeb) {
       const element = nativeRef.current as HTMLDivElement | null
       contextScrollHandlers.onScroll?.(
         {
@@ -212,7 +211,7 @@ function ListImpl<ItemT>(
       return
     }
 
-    const element = contain
+    const element = containWeb
       ? (nativeRef.current as HTMLDivElement | null)
       : window
 
@@ -220,7 +219,7 @@ function ListImpl<ItemT>(
     return () => {
       element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleScroll, contain])
+  }, [isInsideVisibleTree, handleScroll, containWeb])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -249,7 +248,7 @@ function ListImpl<ItemT>(
     <View
       {...props}
       // @ts-ignore web only
-      style={[style, contain && {flex: 1, 'overflow-y': 'scroll'}]}
+      style={[style, containWeb && {flex: 1, 'overflow-y': 'scroll'}]}
       ref={nativeRef}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
