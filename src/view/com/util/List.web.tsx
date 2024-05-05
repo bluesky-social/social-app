@@ -19,6 +19,7 @@ export type ListProps<ItemT> = Omit<
   refreshing?: boolean
   onRefresh?: () => void
   desktopFixedHeight: any // TODO: Better types.
+  contain?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -40,6 +41,7 @@ function ListImpl<ItemT>(
     renderItem,
     extraData,
     style,
+    contain,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -112,29 +114,68 @@ function ListImpl<ItemT>(
   // --- onScroll ---
   const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
   const handleWindowScroll = useNonReactiveCallback(() => {
-    if (isInsideVisibleTree) {
+    if (!isInsideVisibleTree) return
+
+    if (contain) {
+      const element = nativeRef.current as HTMLDivElement | null
+      contextScrollHandlers.onScroll?.(
+        {
+          contentOffset: {
+            x: Math.max(0, element?.scrollLeft ?? 0),
+            y: Math.max(0, element?.scrollTop ?? 0),
+          },
+          layoutMeasurement: {
+            width: element?.clientWidth,
+            height: element?.clientHeight,
+          },
+          contentSize: {
+            width: element?.scrollWidth,
+            height: element?.scrollHeight,
+          },
+        } as any, // TODO: Better types.
+        null as any,
+      )
+    } else {
       contextScrollHandlers.onScroll?.(
         {
           contentOffset: {
             x: Math.max(0, window.scrollX),
             y: Math.max(0, window.scrollY),
           },
+          layoutMeasurement: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+          },
+          contentSize: {
+            width: document.documentElement.scrollWidth,
+            height: document.documentElement.scrollHeight,
+          },
         } as any, // TODO: Better types.
         null as any,
       )
     }
   })
+
   React.useEffect(() => {
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
       return
     }
-    window.addEventListener('scroll', handleWindowScroll)
-    return () => {
-      window.removeEventListener('scroll', handleWindowScroll)
+
+    if (contain) {
+      nativeRef.current?.addEventListener('scroll', handleWindowScroll)
+    } else {
+      window.addEventListener('scroll', handleWindowScroll)
     }
-  }, [isInsideVisibleTree, handleWindowScroll])
+    return () => {
+      if (contain) {
+        nativeRef.current?.addEventListener('scroll', handleWindowScroll)
+      } else {
+        window.removeEventListener('scroll', handleWindowScroll)
+      }
+    }
+  }, [isInsideVisibleTree, handleWindowScroll, contain])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -160,7 +201,11 @@ function ListImpl<ItemT>(
   )
 
   return (
-    <View {...props} style={style} ref={nativeRef}>
+    <View
+      {...props}
+      // @ts-ignore web only
+      style={[style, contain && {flex: 1, 'overflow-y': 'scroll'}]}
+      ref={nativeRef}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
         style={
