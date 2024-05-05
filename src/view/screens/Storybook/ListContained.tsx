@@ -7,8 +7,6 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
-// 100 random messages
-
 export function ListContained() {
   const [animated, setAnimated] = React.useState(false)
   const ref = React.useRef<FlatList>(null)
