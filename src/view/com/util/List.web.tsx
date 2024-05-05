@@ -137,28 +137,7 @@ function ListImpl<ItemT>(
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
   const containerRef = useRef(null)
-  const contentHeight = useRef(0)
-
-  const onResize = useNonReactiveCallback((w: number, h: number) => {
-    // If `minIndexForVisible` is set, we should maintain the scroll position any time the content size changes.
-    // In a real implementation, this number would be configurable. However, becuase we do not use it this way in our
-    // app I am opting to simply require it to be set to a number greater than or equal to 0. If the time comes that
-    // this is needed, we can make it configurable.
-    if (Number(maintainVisibleContentPosition?.minIndexForVisible) >= 0) {
-      const diff = h - contentHeight.current
-      if (diff > 0) {
-        const element = containWeb
-          ? (nativeRef.current as HTMLDivElement | null)
-          : window
-        element?.scrollBy(0, diff)
-      }
-    }
-
-    contentHeight.current = h
-    onContentSizeChange?.(w, h)
-  })
-
-  useResizeObserver(containerRef, onResize)
+  useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
   const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
