@@ -94,6 +94,9 @@ export function MessagesList() {
   // the bottom.
   const isAtBottom = useSharedValue(true)
 
+  // This will be used on web to assist in determing if we need to maintain the content offset
+  const isAtTop = useSharedValue(true)
+
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
   const contentHeight = useSharedValue(0)
@@ -116,6 +119,15 @@ export function MessagesList() {
   // we will not scroll whenever new items get prepended to the top.
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
+      // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
+      // previous offset whenever we add new content to the previous offset whenever we add new content to the list.
+      if (isWeb && isAtTop.value && hasInitiallyScrolled) {
+        flatListRef.current?.scrollToOffset({
+          animated: false,
+          offset: height - contentHeight.value,
+        })
+      }
+
       contentHeight.value = height
 
       // This number _must_ be the height of the MaybeLoader component
@@ -133,6 +145,7 @@ export function MessagesList() {
       contentHeight,
       hasInitiallyScrolled,
       isAtBottom.value,
+      isAtTop.value,
       isMomentumScrolling,
     ],
   )
@@ -164,6 +177,7 @@ export function MessagesList() {
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
       // when a new message is added, hence the 100 pixel offset
       isAtBottom.value = e.contentSize.height - 100 < bottomOffset
+      isAtTop.value = e.contentOffset.y <= 1
 
       // This number _must_ be the height of the MaybeLoader component.
       // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
@@ -172,7 +186,7 @@ export function MessagesList() {
         runOnJS(setHasInitiallyScrolled)(true)
       }
     },
-    [contentHeight.value, hasInitiallyScrolled, isAtBottom],
+    [contentHeight.value, hasInitiallyScrolled, isAtBottom, isAtTop],
   )
 
   const onMomentumEnd = React.useCallback(() => {
