@@ -254,6 +254,7 @@ function ListImpl<ItemT>(
       style={[style, containWeb && {'overflow-y': 'scroll'}]}
       ref={nativeRef}>
       <Visibility
+        root={containWeb ? nativeRef.current : null}
         onVisibleChange={setIsInsideVisibleTree}
         style={
           // This has position: fixed, so it should always report as visible
