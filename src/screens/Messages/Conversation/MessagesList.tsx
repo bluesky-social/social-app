@@ -229,7 +229,6 @@ export function MessagesList() {
       <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
         <List
           ref={flatListRef}
-          style={{flex: 1}}
           data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
