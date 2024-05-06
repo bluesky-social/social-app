@@ -1,7 +1,7 @@
 import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
-import debounce from 'lodash.debounce'
+import throttle from 'lodash.throttle'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -36,7 +36,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
   >(new WeakSet())
 
-  const sendToFeedNotDebounced = React.useCallback(() => {
+  const sendToFeedNoDelay = React.useCallback(() => {
     const proxyAgent = getAgent().withProxy(
       // @ts-ignore TODO need to update withProxy() to support this key -prf
       'bsky_fg',
@@ -55,8 +55,12 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   }, [getAgent])
 
   const sendToFeed = React.useMemo(
-    () => debounce(sendToFeedNotDebounced, 15e3, {maxWait: 60e3}),
-    [sendToFeedNotDebounced],
+    () =>
+      throttle(sendToFeedNoDelay, 15e3, {
+        leading: false,
+        trailing: true,
+      }),
+    [sendToFeedNoDelay],
   )
 
   React.useEffect(() => {
@@ -123,7 +127,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       // pass this method to the <List> onItemSeen
       onItemSeen,
       // call on various events
-      // queues the event to be sent with the debounced sendToFeed call
+      // queues the event to be sent with the throttled sendToFeed call
       sendInteraction,
       // call on feed refresh
       // immediately sends all queued events
