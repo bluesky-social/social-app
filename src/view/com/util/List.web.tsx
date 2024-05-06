@@ -1,5 +1,6 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -85,17 +86,62 @@ function ListImpl<ItemT>(
     })
   }
 
+  const getScrollableNode = React.useCallback(() => {
+    if (containWeb) {
+      const element = nativeRef.current as HTMLDivElement | null
+      if (!element) return
+
+      return {
+        scrollWidth: element.scrollWidth,
+        scrollHeight: element.scrollHeight,
+        clientWidth: element.clientWidth,
+        clientHeight: element.clientHeight,
+        scrollY: element.scrollTop,
+        scrollX: element.scrollLeft,
+        scrollTo(options?: ScrollToOptions) {
+          element.scrollTo(options)
+        },
+        scrollBy(options: ScrollToOptions) {
+          element.scrollBy(options)
+        },
+        addEventListener(event: string, handler: any) {
+          element.addEventListener(event, handler)
+        },
+        removeEventListener(event: string, handler: any) {
+          element.removeEventListener(event, handler)
+        },
+      }
+    } else {
+      return {
+        scrollWidth: document.documentElement.scrollWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+        clientWidth: window.innerWidth,
+        clientHeight: window.innerHeight,
+        scrollY: window.scrollY,
+        scrollX: window.scrollX,
+        scrollTo(options: ScrollToOptions) {
+          window.scrollTo(options)
+        },
+        scrollBy(options: ScrollToOptions) {
+          window.scrollBy(options)
+        },
+        addEventListener(event: string, handler: any) {
+          window.addEventListener(event, handler)
+        },
+        removeEventListener(event: string, handler: any) {
+          window.removeEventListener(event, handler)
+        },
+      }
+    }
+  }, [containWeb])
+
   const nativeRef = React.useRef(null)
   React.useImperativeHandle(
     ref,
     () =>
       ({
         scrollToTop() {
-          const element = containWeb
-            ? (nativeRef.current as HTMLDivElement | null)
-            : window
-
-          element?.scrollTo({top: 0})
+          getScrollableNode()?.scrollTo({top: 0})
         },
 
         scrollToOffset({
@@ -105,35 +151,22 @@ function ListImpl<ItemT>(
           animated: boolean
           offset: number
         }) {
-          const element = containWeb
-            ? (nativeRef.current as HTMLDivElement | null)
-            : window
-
-          element?.scrollTo({
+          getScrollableNode()?.scrollTo({
             left: 0,
             top: offset,
             behavior: animated ? 'smooth' : 'instant',
           })
         },
-
         scrollToEnd({animated = true}: {animated?: boolean}) {
-          if (containWeb) {
-            const element = nativeRef.current as HTMLDivElement | null
-            element?.scrollTo({
-              left: 0,
-              top: element?.scrollHeight,
-              behavior: animated ? 'smooth' : 'instant',
-            })
-          } else {
-            window.scrollTo({
-              left: 0,
-              top: document.documentElement.scrollHeight,
-              behavior: animated ? 'smooth' : 'instant',
-            })
-          }
+          const element = getScrollableNode()
+          element?.scrollTo({
+            left: 0,
+            top: element.scrollHeight,
+            behavior: animated ? 'smooth' : 'instant',
+          })
         },
       } as any), // TODO: Better types.
-    [containWeb],
+    [getScrollableNode],
   )
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
@@ -145,46 +178,31 @@ function ListImpl<ItemT>(
   const handleScroll = useNonReactiveCallback(() => {
     if (!isInsideVisibleTree) return
 
-    // If we are in "contain" mode, scroll events come from the container div rather than the window. We can use the
-    // `nativeRef` to get the needed values.
-    if (containWeb) {
-      const element = nativeRef.current as HTMLDivElement | null
-      contextScrollHandlers.onScroll?.(
-        {
-          contentOffset: {
-            x: Math.max(0, element?.scrollLeft ?? 0),
-            y: Math.max(0, element?.scrollTop ?? 0),
-          },
-          layoutMeasurement: {
-            width: element?.clientWidth,
-            height: element?.clientHeight,
-          },
-          contentSize: {
-            width: element?.scrollWidth,
-            height: element?.scrollHeight,
-          },
-        } as any, // TODO: Better types.
-        null as any,
-      )
-    } else {
-      contextScrollHandlers.onScroll?.(
-        {
-          contentOffset: {
-            x: Math.max(0, window.scrollX),
-            y: Math.max(0, window.scrollY),
-          },
-          layoutMeasurement: {
-            width: window.innerWidth,
-            height: window.innerHeight,
-          },
-          contentSize: {
-            width: document.documentElement.scrollWidth,
-            height: document.documentElement.scrollHeight,
-          },
-        } as any, // TODO: Better types.
-        null as any,
-      )
-    }
+    const element = getScrollableNode()
+    contextScrollHandlers.onScroll?.(
+      {
+        contentOffset: {
+          x: Math.max(0, element?.scrollX ?? 0),
+          y: Math.max(0, element?.scrollY ?? 0),
+        },
+        layoutMeasurement: {
+          width: element?.clientWidth,
+          height: element?.clientHeight,
+        },
+        contentSize: {
+          width: element?.scrollWidth,
+          height: element?.scrollHeight,
+        },
+      } as Exclude<
+        ReanimatedScrollEvent,
+        | 'velocity'
+        | 'eventName'
+        | 'zoomScale'
+        | 'targetContentOffset'
+        | 'contentInset'
+      >,
+      null as any,
+    )
   })
 
   React.useEffect(() => {
@@ -194,15 +212,13 @@ function ListImpl<ItemT>(
       return
     }
 
-    const element = containWeb
-      ? (nativeRef.current as HTMLDivElement | null)
-      : window
+    const element = getScrollableNode()
 
     element?.addEventListener('scroll', handleScroll)
     return () => {
       element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleScroll, containWeb])
+  }, [isInsideVisibleTree, handleScroll, containWeb, getScrollableNode])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
