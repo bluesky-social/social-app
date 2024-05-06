@@ -4,8 +4,11 @@ import 'view/icons'
 import React, {useEffect, useState} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
@@ -22,64 +25,85 @@ import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
+  SessionAccount,
   useSession,
   useSessionApi,
 } from 'state/session'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from 'state/shell/selected-feed'
+import * as Toast from 'view/com/util/Toast'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {Shell} from 'view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as PortalProvider} from '#/components/Portal'
 import I18nProvider from './locale/i18nProvider'
+import {listenSessionDropped} from './state/events'
 
 function InnerApp() {
-  const {isInitialLoad, currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const [isReady, setIsReady] = React.useState(false)
+  const {currentAccount} = useSession()
+  const {initSession} = useSessionApi()
   const theme = useColorModeTheme()
+  const {_} = useLingui()
   useIntentHandler()
 
   // init
   useEffect(() => {
+    async function resumeSession(account?: SessionAccount) {
+      try {
+        if (account) {
+          await initSession(account)
+        }
+      } catch (e) {
+        logger.error(`session: resumeSession failed`, {message: e})
+      } finally {
+        setIsReady(true)
+      }
+    }
     const account = readLastActiveAccount()
     resumeSession(account)
-  }, [resumeSession])
+  }, [initSession])
+
+  useEffect(() => {
+    return listenSessionDropped(() => {
+      Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
+    })
+  }, [_])
 
   // wait for session to resume
-  if (isInitialLoad) return null
+  if (!isReady) return null
 
   return (
     <Alf theme={theme}>
-      <React.Fragment
-        // Resets the entire tree below when it changes:
-        key={currentAccount?.did}>
-        <QueryProvider currentDid={currentAccount?.did}>
-          <StatsigProvider>
-            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-            <LabelDefsProvider>
-              <ModerationOptsProvider>
-                <LoggedOutViewProvider>
-                  <SelectedFeedProvider>
-                    <UnreadNotifsProvider>
-                      <ThemeProvider theme={theme}>
-                        {/* All components should be within this provider */}
-                        <RootSiblingParent>
+      <ThemeProvider theme={theme}>
+        <RootSiblingParent>
+          <React.Fragment
+            // Resets the entire tree below when it changes:
+            key={currentAccount?.did}>
+            <QueryProvider currentDid={currentAccount?.did}>
+              <StatsigProvider>
+                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                <LabelDefsProvider>
+                  <ModerationOptsProvider>
+                    <LoggedOutViewProvider>
+                      <SelectedFeedProvider>
+                        <UnreadNotifsProvider>
                           <SafeAreaProvider>
                             <Shell />
                           </SafeAreaProvider>
-                        </RootSiblingParent>
-                        <ToastContainer />
-                      </ThemeProvider>
-                    </UnreadNotifsProvider>
-                  </SelectedFeedProvider>
-                </LoggedOutViewProvider>
-              </ModerationOptsProvider>
-            </LabelDefsProvider>
-          </StatsigProvider>
-        </QueryProvider>
-      </React.Fragment>
+                        </UnreadNotifsProvider>
+                      </SelectedFeedProvider>
+                    </LoggedOutViewProvider>
+                  </ModerationOptsProvider>
+                </LabelDefsProvider>
+              </StatsigProvider>
+            </QueryProvider>
+          </React.Fragment>
+          <ToastContainer />
+        </RootSiblingParent>
+      </ThemeProvider>
     </Alf>
   )
 }
