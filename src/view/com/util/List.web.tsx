@@ -26,7 +26,7 @@ export type ListProps<ItemT> = Omit<
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
-const ON_ITEM_SEEN_WAIT_DURATION = 3e3 // post must be "seen" 3 seconds before capturing
+const ON_ITEM_SEEN_WAIT_DURATION = 2e3 // post must be "seen" 2 seconds before capturing
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
   rootMargin: '-200px 0px -200px 0px',
 } // post must be 200px visible to be "seen"
