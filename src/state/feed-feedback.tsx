@@ -66,55 +66,64 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     return () => sub.remove()
   }, [enabled, sendToFeed])
 
-  return React.useMemo(() => {
-    return {
-      enabled,
-
-      // pass this method to the <List> onItemSeen
-      onItemSeen: (slice: any) => {
-        if (!enabled) {
-          return
-        }
-        if (!isFeedPostSlice(slice)) {
-          return
-        }
-        for (const postItem of slice.items) {
-          const str = toString({
-            item: postItem.uri,
-            event: 'app.bsky.feed.defs#interactionSeen',
-            feedContext: postItem.feedContext,
-          })
-          if (!history.current.has(str)) {
-            queue.current.add(str)
-            sendToFeed()
-          }
-        }
-      },
-
-      // call on various events
-      // queues the event to be sent with the debounced sendToFeed call
-      sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => {
-        if (!enabled) {
-          return
-        }
-        const str = toString(interaction)
+  const onItemSeen = React.useCallback(
+    (slice: any) => {
+      if (!enabled) {
+        return
+      }
+      if (!isFeedPostSlice(slice)) {
+        return
+      }
+      for (const postItem of slice.items) {
+        const str = toString({
+          item: postItem.uri,
+          event: 'app.bsky.feed.defs#interactionSeen',
+          feedContext: postItem.feedContext,
+        })
         if (!history.current.has(str)) {
           queue.current.add(str)
           sendToFeed()
         }
-      },
+      }
+    },
+    [enabled, sendToFeed],
+  )
 
+  const sendInteraction = React.useCallback(
+    (interaction: AppBskyFeedDefs.Interaction) => {
+      if (!enabled) {
+        return
+      }
+      const str = toString(interaction)
+      if (!history.current.has(str)) {
+        queue.current.add(str)
+        sendToFeed()
+      }
+    },
+    [enabled, sendToFeed],
+  )
+
+  const flushAndReset = React.useCallback(() => {
+    if (!enabled) {
+      return
+    }
+    sendToFeed.flush()
+    history.current.clear()
+  }, [enabled, sendToFeed])
+
+  return React.useMemo(() => {
+    return {
+      enabled,
+      // pass this method to the <List> onItemSeen
+      onItemSeen,
+      // call on various events
+      // queues the event to be sent with the debounced sendToFeed call
+      sendInteraction,
       // call on feed refresh
       // immediately sends all queued events and clears the history tracker
-      flushAndReset: () => {
-        if (!enabled) {
-          return
-        }
-        sendToFeed.flush()
-        history.current.clear()
-      },
+      flushAndReset,
     }
-  }, [enabled, queue, sendToFeed])
+  }, [enabled, onItemSeen, sendInteraction, flushAndReset])
 }
 
 export const FeedFeedbackProvider = stateContext.Provider
