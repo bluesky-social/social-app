@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-27 16:07+0900\n"
+"PO-Revision-Date: 2024-05-06 15:47+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -247,6 +247,10 @@ msgstr "以前のメールアドレス{0}にメールが送信されました。
 msgid "An error occured"
 msgstr "エラーが発生しました"
 
+#: src/components/dms/MessageMenu.tsx:132
+msgid "An error occurred while trying to delete the message. Please try again."
+msgstr "メッセージ削除中にエラーが発生しました。再実行してみてください。"
+
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
 msgstr "ほかの選択肢にはあてはまらない問題"
@@ -324,6 +328,14 @@ msgstr "背景"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "アプリパスワード「{name}」を本当に削除しますか？"
 
+#: src/components/dms/MessageMenu.tsx:90
+msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
+msgstr "このメッセージを本当に削除しますか？このメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
+
+#: src/components/dms/ConvoMenu.tsx:166
+msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
+msgstr "この会話から退出しますか？あなたのメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
+
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "あなたのフィードから{0}を削除してもよろしいですか？"
@@ -388,6 +400,11 @@ msgstr "生年月日："
 #: src/view/com/profile/ProfileMenu.tsx:361
 msgid "Block"
 msgstr "ブロック"
+
+#: src/components/dms/ConvoMenu.tsx:129
+#: src/components/dms/ConvoMenu.tsx:133
+msgid "Block account"
+msgstr "アカウントをブロック"
 
 #: src/view/com/profile/ProfileMenu.tsx:300
 #: src/view/com/profile/ProfileMenu.tsx:307
@@ -617,9 +634,17 @@ msgstr "メールアドレスを変更"
 msgid "Chat"
 msgstr "チャット"
 
-#: src/screens/Messages/Conversation/index.tsx:26
-msgid "Chat with {chatId}"
-msgstr "{chatId}とのチャット"
+#: src/components/dms/ConvoMenu.tsx:55
+msgid "Chat muted"
+msgstr "チャットをミュートしました"
+
+#: src/components/dms/ConvoMenu.tsx:87
+msgid "Chat settings"
+msgstr "チャットの設定"
+
+#: src/components/dms/ConvoMenu.tsx:65
+msgid "Chat unmuted"
+msgstr "チャットのミュートを解除しました"
 
 #: src/screens/Deactivated.tsx:79
 #: src/screens/Deactivated.tsx:83
@@ -966,6 +991,11 @@ msgstr "リストへのリンクをコピー"
 msgid "Copy link to post"
 msgstr "投稿へのリンクをコピー"
 
+#: src/components/dms/MessageMenu.tsx:89
+#: src/components/dms/MessageMenu.tsx:91
+msgid "Copy message text"
+msgstr "メッセージのテキストをコピー"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:230
 #: src/view/com/util/forms/PostDropdownBtn.tsx:232
 msgid "Copy post text"
@@ -976,6 +1006,10 @@ msgstr "投稿のテキストをコピー"
 msgid "Copyright Policy"
 msgstr "著作権ポリシー"
 
+#: src/components/dms/ConvoMenu.tsx:79
+msgid "Could not leave chat"
+msgstr "チャットからの退出に失敗しました"
+
 #: src/view/screens/ProfileFeed.tsx:103
 msgid "Could not load feed"
 msgstr "フィードの読み込みに失敗しました"
@@ -983,6 +1017,18 @@ msgstr "フィードの読み込みに失敗しました"
 #: src/view/screens/ProfileList.tsx:909
 msgid "Could not load list"
 msgstr "リストの読み込みに失敗しました"
+
+#: src/components/dms/NewChat.tsx:225
+msgid "Could not load profiles. Please try again later."
+msgstr "プロフィールの読み込みに失敗しました。時間をおいてもう一度お試しください。"
+
+#: src/components/dms/ConvoMenu.tsx:58
+msgid "Could not mute chat"
+msgstr "チャットのミュートに失敗しました"
+
+#: src/components/dms/ConvoMenu.tsx:68
+msgid "Could not unmute chat"
+msgstr "チャットのミュートの解除に失敗しました"
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:101
@@ -1088,9 +1134,22 @@ msgstr "アプリパスワードを削除"
 msgid "Delete app password?"
 msgstr "アプリパスワードを削除しますか？"
 
+#: src/components/dms/MessageMenu.tsx:101
+msgid "Delete for me"
+msgstr "自分宛を削除"
+
 #: src/view/screens/ProfileList.tsx:417
 msgid "Delete List"
 msgstr "リストを削除"
+
+#: src/components/dms/MessageMenu.tsx:68
+#: src/components/dms/MessageMenu.tsx:88
+msgid "Delete message"
+msgstr "メッセージを削除"
+
+#: src/components/dms/MessageMenu.tsx:99
+msgid "Delete message for me"
+msgstr "メッセージの宛先から自分を削除"
 
 #: src/view/com/modals/DeleteAccount.tsx:223
 msgid "Delete my account"
@@ -1584,6 +1643,10 @@ msgstr "アプリパスワードの作成に失敗しました。"
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "リストの作成に失敗しました。インターネットへの接続を確認の上、もう一度お試しください。"
 
+#: src/components/dms/MessageMenu.tsx:130
+msgid "Failed to delete message"
+msgstr "メッセージの削除に失敗しました"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:131
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
@@ -1591,6 +1654,10 @@ msgstr "投稿の削除に失敗しました。もう一度お試しください
 #: src/components/dialogs/GifSelect.tsx:200
 msgid "Failed to load GIFs"
 msgstr "GIFの読み込みに失敗しました"
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:21
+msgid "Failed to load past messages."
+msgstr "過去のメッセージの読み込みに失敗しました。"
 
 #: src/view/com/lightbox/Lightbox.tsx:83
 msgid "Failed to save image: {0}"
@@ -1853,15 +1920,18 @@ msgstr "ホームへ"
 msgid "Go Home"
 msgstr "ホームへ"
 
-#: src/view/screens/Search/Search.tsx:827
-#: src/view/shell/desktop/Search.tsx:263
-#~ msgid "Go to @{queryMaybeHandle}"
-#~ msgstr "@{queryMaybeHandle}へ"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Go to next"
 msgstr "次へ"
+
+#: src/components/dms/ConvoMenu.tsx:109
+msgid "Go to profile"
+msgstr "プロフィールへ"
+
+#: src/components/dms/ConvoMenu.tsx:106
+msgid "Go to user's profile"
+msgstr "ユーザーのプロフィールへ移動"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 msgid "Graphic Media"
@@ -2218,6 +2288,16 @@ msgstr "Blueskyで公開されている内容はこちらを参照してくだ�
 msgid "Learn more."
 msgstr "詳細。"
 
+#: src/components/dms/ConvoMenu.tsx:168
+msgid "Leave"
+msgstr "退出"
+
+#: src/components/dms/ConvoMenu.tsx:151
+#: src/components/dms/ConvoMenu.tsx:154
+#: src/components/dms/ConvoMenu.tsx:164
+msgid "Leave conversation"
+msgstr "会話を退出"
+
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
 msgstr "どの言語も表示するには、すべてのチェックを外したままにします。"
@@ -2411,9 +2491,17 @@ msgstr "メンションされたユーザー"
 msgid "Menu"
 msgstr "メニュー"
 
+#: src/screens/Messages/List/index.tsx:209
+msgid "Message deleted"
+msgstr "メッセージは削除されました"
+
 #: src/view/com/posts/FeedErrorMessage.tsx:192
 msgid "Message from server: {0}"
 msgstr "サーバーからのメッセージ：{0}"
+
+#: src/screens/Messages/Conversation/MessageInput.tsx:74
+msgid "Message input field"
+msgstr "メッセージを入力するフィールド"
 
 #: src/screens/Messages/List/index.tsx:34
 msgid "Message settings"
@@ -2543,6 +2631,11 @@ msgstr "テキストとタグをミュート"
 msgid "Mute list"
 msgstr "リストをミュート"
 
+#: src/components/dms/ConvoMenu.tsx:114
+#: src/components/dms/ConvoMenu.tsx:120
+msgid "Mute notifications"
+msgstr "通知をミュート"
+
 #: src/view/screens/ProfileList.tsx:621
 msgid "Mute these accounts?"
 msgstr "これらのアカウントをミュートしますか？"
@@ -2665,6 +2758,12 @@ msgstr "新規"
 msgid "New"
 msgstr "新規"
 
+#: src/components/dms/NewChat.tsx:59
+#: src/screens/Messages/List/index.tsx:346
+#: src/screens/Messages/List/index.tsx:354
+msgid "New chat"
+msgstr "新しいチャット"
+
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "New Moderation List"
 msgstr "新しいモデレーションリスト"
@@ -2755,6 +2854,11 @@ msgstr "{0}のフォローを解除しました"
 msgid "No longer than 253 characters"
 msgstr "253文字まで"
 
+#: src/screens/Messages/List/index.tsx:138
+#: src/screens/Messages/List/index.tsx:198
+msgid "No messages yet"
+msgstr "メッセージはありません"
+
 #: src/view/com/notifications/Feed.tsx:109
 msgid "No notifications yet!"
 msgstr "お知らせはありません！"
@@ -2780,7 +2884,11 @@ msgstr "「{query}」の検索結果はありません"
 
 #: src/components/dialogs/GifSelect.tsx:204
 msgid "No search results found for \"{search}\"."
-msgstr "「{search}」の検索結果はありません"
+msgstr "「{search}」の検索結果はありません。"
+
+#: src/components/dms/NewChat.tsx:224
+msgid "No search results found for \"{searchText}\"."
+msgstr "「{searchText}」の検索結果はありません。"
 
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
@@ -2833,6 +2941,10 @@ msgstr "注記：Blueskyはオープンでパブリックなネットワーク�
 #: src/view/shell/Drawer.tsx:437
 msgid "Notifications"
 msgstr "通知"
+
+#: src/screens/Messages/Conversation/MessageItem.tsx:116
+msgid "Now"
+msgstr "今"
 
 #: src/view/com/modals/SelfLabel.tsx:103
 msgid "Nudity"
@@ -3218,6 +3330,10 @@ msgstr "パスワードも入力してください："
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "{0}によって貼られたこのラベルが誤って適用されたと思われる理由を説明してください"
 
+#: src/lib/hooks/useAccountSwitcher.ts:43
+msgid "Please sign in as @{0}"
+msgstr "@{0}としてサインインしてください"
+
 #: src/view/com/modals/VerifyEmail.tsx:110
 msgid "Please Verify Your Email"
 msgstr "メールアドレスを確認してください"
@@ -3315,6 +3431,11 @@ msgstr "ホスティングプロバイダーを変える"
 #: src/screens/Signup/index.tsx:189
 msgid "Press to retry"
 msgstr "再実行する"
+
+#: src/screens/Messages/Conversation/MessagesList.tsx:41
+#: src/screens/Messages/Conversation/MessagesList.tsx:47
+msgid "Press to Retry"
+msgstr "再実行"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -3520,6 +3641,15 @@ msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0>に返信"
 
+#: src/components/dms/MessageMenu.tsx:78
+msgid "Report"
+msgstr "報告"
+
+#: src/components/dms/ConvoMenu.tsx:140
+#: src/components/dms/ConvoMenu.tsx:144
+msgid "Report account"
+msgstr "アカウントを報告"
+
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
@@ -3537,6 +3667,10 @@ msgstr "フィードを報告"
 #: src/view/screens/ProfileList.tsx:431
 msgid "Report List"
 msgstr "リストを報告"
+
+#: src/components/dms/MessageMenu.tsx:76
+msgid "Report message"
+msgstr "メッセージを報告"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
 #: src/view/com/util/forms/PostDropdownBtn.tsx:318
@@ -3678,6 +3812,10 @@ msgstr "エラーになった最後のアクションをやり直す"
 msgid "Retry"
 msgstr "再試行"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:48
+msgid "Retry."
+msgstr "再試行。"
+
 #: src/components/Error.tsx:95
 #: src/view/screens/ProfileList.tsx:919
 msgid "Return to previous page"
@@ -3795,6 +3933,10 @@ msgstr "{displayTag}のすべての投稿を検索（@{authorHandle}のみ）"
 msgid "Search for all posts with tag {displayTag}"
 msgstr "{displayTag}のすべての投稿を検索（すべてのユーザー）"
 
+#: src/components/dms/NewChat.tsx:226
+msgid "Search for someone to start a conversation with."
+msgstr "会話を始める相手を検索。"
+
 #: src/view/com/auth/LoggedOut.tsx:105
 #: src/view/com/auth/LoggedOut.tsx:106
 #: src/view/com/modals/ListAddRemoveUsers.tsx:70
@@ -3804,6 +3946,10 @@ msgstr "ユーザーを検索"
 #: src/components/dialogs/GifSelect.tsx:158
 msgid "Search GIFs"
 msgstr "GIFを検索"
+
+#: src/components/dms/NewChat.tsx:182
+msgid "Search profiles"
+msgstr "プロフィールを検索"
 
 #: src/components/dialogs/GifSelect.tsx:159
 msgid "Search Tenor"
@@ -3936,6 +4082,10 @@ msgstr "メールを送信"
 #: src/view/shell/Drawer.tsx:317
 msgid "Send feedback"
 msgstr "フィードバックを送信"
+
+#: src/screens/Messages/Conversation/MessageInput.tsx:94
+msgid "Send message"
+msgstr "メッセージを送信"
 
 #: src/components/ReportDialog/SubmitView.tsx:215
 #: src/components/ReportDialog/SubmitView.tsx:219
@@ -4309,8 +4459,12 @@ msgstr "スポーツ"
 msgid "Square"
 msgstr "正方形"
 
-#: src/view/screens/Settings/index.tsx:862
-msgid "Status page"
+#: src/components/dms/NewChat.tsx:177
+msgid "Start a new chat"
+msgstr "新しいチャットを開始"
+
+#: src/view/screens/Settings/index.tsx:896
+msgid "Status Page"
 msgstr "ステータスページ"
 
 #: src/screens/Signup/index.tsx:145
@@ -4799,6 +4953,10 @@ msgstr "再試行"
 msgid "Two-factor authentication"
 msgstr "２要素認証"
 
+#: src/screens/Messages/Conversation/MessageInput.tsx:75
+msgid "Type your message here"
+msgstr "ここにメッセージを入力する"
+
 #: src/view/com/modals/ChangeHandle.tsx:429
 msgid "Type:"
 msgstr "タイプ："
@@ -4892,6 +5050,10 @@ msgstr "アカウントのミュートを解除"
 #: src/components/TagMenu/index.tsx:208
 msgid "Unmute all {displayTag} posts"
 msgstr "{displayTag}のすべての投稿のミュートを解除"
+
+#: src/components/dms/ConvoMenu.tsx:118
+msgid "Unmute notifications"
+msgstr "通知のミュートを解除"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:273
 #: src/view/com/util/forms/PostDropdownBtn.tsx:278
@@ -5093,9 +5255,9 @@ msgstr "新しいメールアドレスを確認"
 msgid "Verify Your Email"
 msgstr "メールアドレスを確認"
 
-#: src/view/screens/Settings/index.tsx:852
-msgid "Version {0}"
-msgstr "バージョン {0}"
+#: src/view/screens/Settings/index.tsx:868
+msgid "Version {appVersion} {bundleInfo}"
+msgstr "バージョン {appVersion} {bundleInfo}"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
@@ -5279,6 +5441,11 @@ msgstr "なぜこのユーザーをレビューする必要がありますか？
 msgid "Wide"
 msgstr "ワイド"
 
+#: src/screens/Messages/Conversation/MessageInput.tsx:76
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:71
+msgid "Write a message"
+msgstr "メッセージを書く"
+
 #: src/view/com/composer/Composer.tsx:468
 msgid "Write post"
 msgstr "投稿を書く"
@@ -5301,6 +5468,10 @@ msgstr "ライター"
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "はい"
+
+#: src/screens/Messages/Conversation/MessageItem.tsx:130
+msgid "Yesterday, {time}"
+msgstr "昨日、{time}"
 
 #: src/screens/Deactivated.tsx:137
 msgid "You are in line."
@@ -5434,6 +5605,10 @@ msgstr "これ以降、このスレッドに関する通知を受け取ること
 #: src/screens/Login/SetNewPasswordForm.tsx:104
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "「リセットコード」が記載されたメールが届きます。ここにコードを入力し、新しいパスワードを入力します。"
+
+#: src/screens/Messages/List/index.tsx:202
+msgid "You: {0}"
+msgstr "あなた： {0}"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:60
 msgid "You're in control"
