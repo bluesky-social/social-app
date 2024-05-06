@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react'
-import {Keyboard, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,6 +11,7 @@ import {
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
 import {enforceLen} from '#/lib/strings/helpers'
+import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -66,10 +67,7 @@ export function GifAltText({
         accessibilityLabel={_(msg`Add alt text`)}
         accessibilityHint=""
         hitSlop={HITSLOP_10}
-        onPress={() => {
-          Keyboard.dismiss()
-          control.open()
-        }}
+        onPress={control.open}
         style={[
           a.absolute,
           {top: 20, left: 12},
@@ -96,7 +94,9 @@ export function GifAltText({
 
       <AltTextReminder />
 
-      <Dialog.Outer control={control}>
+      <Dialog.Outer
+        control={control}
+        nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
         <Dialog.Handle />
         <AltTextInner
           onSubmit={onPressSubmit}
@@ -130,7 +130,6 @@ function AltTextInner({
 
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
-      <Dialog.Close />
       <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
         <Trans>Add ALT text</Trans>
       </Text>
@@ -150,6 +149,7 @@ function AltTextInner({
               value={altText}
               multiline
               numberOfLines={3}
+              autoFocus
             />
           </TextField.Root>
         </View>
@@ -164,7 +164,7 @@ function AltTextInner({
           </ButtonText>
         </Button>
       </View>
-      <AltTextReminder />
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
