@@ -174,7 +174,7 @@ function AltText({text}: {text: string}) {
         <Prompt.TitleText>
           <Trans>Alt Text</Trans>
         </Prompt.TitleText>
-        <Prompt.DescriptionText>{text}</Prompt.DescriptionText>
+        <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
             onPress={control.close}
