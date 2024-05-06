@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-03 09:27+0900\n"
+"PO-Revision-Date: 2024-05-06 15:47+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -246,6 +246,10 @@ msgstr "以前のメールアドレス{0}にメールが送信されました。
 #: src/components/dialogs/GifSelect.tsx:284
 msgid "An error occured"
 msgstr "エラーが発生しました"
+
+#: src/components/dms/MessageMenu.tsx:132
+msgid "An error occurred while trying to delete the message. Please try again."
+msgstr "メッセージ削除中にエラーが発生しました。再実行してみてください。"
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
@@ -987,6 +991,11 @@ msgstr "リストへのリンクをコピー"
 msgid "Copy link to post"
 msgstr "投稿へのリンクをコピー"
 
+#: src/components/dms/MessageMenu.tsx:89
+#: src/components/dms/MessageMenu.tsx:91
+msgid "Copy message text"
+msgstr "メッセージのテキストをコピー"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:230
 #: src/view/com/util/forms/PostDropdownBtn.tsx:232
 msgid "Copy post text"
@@ -1125,6 +1134,10 @@ msgstr "アプリパスワードを削除"
 msgid "Delete app password?"
 msgstr "アプリパスワードを削除しますか？"
 
+#: src/components/dms/MessageMenu.tsx:101
+msgid "Delete for me"
+msgstr "自分宛を削除"
+
 #: src/view/screens/ProfileList.tsx:417
 msgid "Delete List"
 msgstr "リストを削除"
@@ -1133,6 +1146,10 @@ msgstr "リストを削除"
 #: src/components/dms/MessageMenu.tsx:88
 msgid "Delete message"
 msgstr "メッセージを削除"
+
+#: src/components/dms/MessageMenu.tsx:99
+msgid "Delete message for me"
+msgstr "メッセージの宛先から自分を削除"
 
 #: src/view/com/modals/DeleteAccount.tsx:223
 msgid "Delete my account"
@@ -1626,6 +1643,10 @@ msgstr "アプリパスワードの作成に失敗しました。"
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "リストの作成に失敗しました。インターネットへの接続を確認の上、もう一度お試しください。"
 
+#: src/components/dms/MessageMenu.tsx:130
+msgid "Failed to delete message"
+msgstr "メッセージの削除に失敗しました"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:131
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
@@ -1633,6 +1654,10 @@ msgstr "投稿の削除に失敗しました。もう一度お試しください
 #: src/components/dialogs/GifSelect.tsx:200
 msgid "Failed to load GIFs"
 msgstr "GIFの読み込みに失敗しました"
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:21
+msgid "Failed to load past messages."
+msgstr "過去のメッセージの読み込みに失敗しました。"
 
 #: src/view/com/lightbox/Lightbox.tsx:83
 msgid "Failed to save image: {0}"
@@ -3787,6 +3812,10 @@ msgstr "エラーになった最後のアクションをやり直す"
 msgid "Retry"
 msgstr "再試行"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:48
+msgid "Retry."
+msgstr "再試行。"
+
 #: src/components/Error.tsx:95
 #: src/view/screens/ProfileList.tsx:919
 msgid "Return to previous page"
@@ -3903,6 +3932,10 @@ msgstr "{displayTag}のすべての投稿を検索（@{authorHandle}のみ）"
 #: src/components/TagMenu/index.tsx:94
 msgid "Search for all posts with tag {displayTag}"
 msgstr "{displayTag}のすべての投稿を検索（すべてのユーザー）"
+
+#: src/components/dms/NewChat.tsx:226
+msgid "Search for someone to start a conversation with."
+msgstr "会話を始める相手を検索。"
 
 #: src/view/com/auth/LoggedOut.tsx:105
 #: src/view/com/auth/LoggedOut.tsx:106
@@ -4394,10 +4427,6 @@ msgstr "ソフトウェア開発"
 msgid "Something went wrong, please try again."
 msgstr "なにか間違っているようなので、もう一度お試しください。"
 
-#: src/lib/hooks/useAccountSwitcher.ts:53
-msgid "Sorry! We need you to enter your password."
-msgstr "大変申し訳ありません！パスワードを入力してください。"
-
 #: src/App.native.tsx:64
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "大変申し訳ありません！セッションの有効期限が切れました。もう一度ログインしてください。"
@@ -4434,8 +4463,8 @@ msgstr "正方形"
 msgid "Start a new chat"
 msgstr "新しいチャットを開始"
 
-#: src/view/screens/Settings/index.tsx:862
-msgid "Status page"
+#: src/view/screens/Settings/index.tsx:896
+msgid "Status Page"
 msgstr "ステータスページ"
 
 #: src/screens/Signup/index.tsx:145
@@ -5226,9 +5255,9 @@ msgstr "新しいメールアドレスを確認"
 msgid "Verify Your Email"
 msgstr "メールアドレスを確認"
 
-#: src/view/screens/Settings/index.tsx:852
-msgid "Version {0}"
-msgstr "バージョン {0}"
+#: src/view/screens/Settings/index.tsx:868
+msgid "Version {appVersion} {bundleInfo}"
+msgstr "バージョン {appVersion} {bundleInfo}"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
