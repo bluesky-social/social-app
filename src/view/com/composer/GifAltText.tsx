@@ -130,41 +130,48 @@ function AltTextInner({
 
   return (
     <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
-      <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
-        <Trans>Add ALT text</Trans>
-      </Text>
-      <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
-        <GifEmbed link={link} params={params} hideAlt />
-      </View>
-      <View style={[a.mt_md, a.gap_md]}>
-        <View>
-          <TextField.LabelText>
-            <Trans>Descriptive alt text</Trans>
-          </TextField.LabelText>
-          <TextField.Root>
-            <Dialog.Input
-              label={_(msg`Alt text`)}
-              placeholder={link.title}
-              onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
-              value={altText}
-              multiline
-              numberOfLines={3}
-              autoFocus
-            />
-          </TextField.Root>
+      <View style={a.flex_col_reverse}>
+        <View style={[a.mt_md, a.gap_md]}>
+          <View>
+            <TextField.LabelText>
+              <Trans>Descriptive alt text</Trans>
+            </TextField.LabelText>
+            <TextField.Root>
+              <Dialog.Input
+                label={_(msg`Alt text`)}
+                placeholder={link.title}
+                onChangeText={text =>
+                  setAltText(enforceLen(text, MAX_ALT_TEXT))
+                }
+                value={altText}
+                multiline
+                numberOfLines={3}
+                autoFocus
+              />
+            </TextField.Root>
+          </View>
+          <Button
+            label={_(msg`Save`)}
+            size="medium"
+            color="primary"
+            variant="solid"
+            onPress={onPressSubmit}>
+            <ButtonText>
+              <Trans>Save</Trans>
+            </ButtonText>
+          </Button>
         </View>
-        <Button
-          label={_(msg`Save`)}
-          size="medium"
-          color="primary"
-          variant="solid"
-          onPress={onPressSubmit}>
-          <ButtonText>
-            <Trans>Save</Trans>
-          </ButtonText>
-        </Button>
+        {/* below the text input to force tab order */}
+        <View>
+          <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
+            <Trans>Add ALT text</Trans>
+          </Text>
+          <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
+            <GifEmbed link={link} params={params} hideAlt />
+          </View>
+          <Dialog.Close />
+        </View>
       </View>
-      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
