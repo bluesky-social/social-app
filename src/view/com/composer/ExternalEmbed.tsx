@@ -62,7 +62,7 @@ export const ExternalEmbed = ({
         </Container>
       ) : linkInfo ? (
         <View style={{pointerEvents: !gif ? 'none' : 'auto'}}>
-          <ExternalLinkEmbed link={linkInfo} />
+          <ExternalLinkEmbed link={linkInfo} hideAlt />
         </View>
       ) : null}
       <TouchableOpacity
