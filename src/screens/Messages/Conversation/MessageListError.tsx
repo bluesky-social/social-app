@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ConvoError, ConvoItem} from '#/state/messages/convo'
+import {ConvoItem, ConvoItemError} from '#/state/messages/convo'
 import {atoms as a, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {InlineLinkText} from '#/components/Link'
@@ -18,7 +18,13 @@ export function MessageListError({
   const {_} = useLingui()
   const message = React.useMemo(() => {
     return {
-      [ConvoError.HistoryFailed]: _(msg`Failed to load past messages.`),
+      [ConvoItemError.HistoryFailed]: _(msg`Failed to load past messages.`),
+      [ConvoItemError.ResumeFailed]: _(
+        msg`There was an issue connecting to the chat.`,
+      ),
+      [ConvoItemError.PollFailed]: _(
+        msg`This chat was disconnected due to a network error.`,
+      ),
     }[item.code]
   }, [_, item.code])
 

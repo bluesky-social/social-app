@@ -229,7 +229,7 @@ export function MessagesList() {
       <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
         <List
           ref={flatListRef}
-          data={chat.status === ConvoStatus.Ready ? chat.items : undefined}
+          data={chat.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           disableVirtualization={true}
@@ -248,11 +248,7 @@ export function MessagesList() {
           onScrollToIndexFailed={onScrollToIndexFailed}
           scrollEventThrottle={100}
           ListHeaderComponent={
-            <MaybeLoader
-              isLoading={
-                chat.status === ConvoStatus.Ready && chat.isFetchingHistory
-              }
-            />
+            <MaybeLoader isLoading={chat.isFetchingHistory} />
           }
         />
       </ScrollProvider>

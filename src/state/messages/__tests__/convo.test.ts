@@ -1,15 +1,19 @@
 import {describe, it} from '@jest/globals'
 
 describe(`#/state/messages/convo`, () => {
-  describe(`status states`, () => {
+  describe(`init`, () => {
+    it.todo(`fails if sender and recipients aren't found`)
     it.todo(`cannot re-initialize from a non-unintialized state`)
     it.todo(`can re-initialize from a failed state`)
+  })
 
-    describe(`destroy`, () => {
-      it.todo(`cannot be interacted with when destroyed`)
-      it.todo(`polling is stopped when destroyed`)
-      it.todo(`events are cleaned up when destroyed`)
-    })
+  describe(`resume`, () => {
+    it.todo(`restores previous state if resume fails`)
+  })
+
+  describe(`suspend`, () => {
+    it.todo(`cannot be interacted with when suspended`)
+    it.todo(`polling is stopped when suspended`)
   })
 
   describe(`read states`, () => {
