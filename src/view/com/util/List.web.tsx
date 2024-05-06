@@ -278,14 +278,18 @@ function ListImpl<ItemT>(
     },
   )
 
-  // Ignoring the error here because `nativeRef` will indeed be a `HTMLDivElement`. However, becuase we are using
-  // the RN `View`, it is not typed properly.
   return (
-    // @ts-expect-error
     <View
       {...props}
-      style={[style, containWeb && {flex: 1, 'overflow-y': 'scroll'}]}
-      ref={nativeRef}>
+      style={[
+        style,
+        containWeb && {
+          flex: 1,
+          // @ts-expect-error web only
+          'overflow-y': 'scroll',
+        },
+      ]}
+      ref={nativeRef as any}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
         style={
