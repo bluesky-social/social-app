@@ -11,6 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
+import {atoms as a} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -59,63 +60,74 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         </View>
       )}
-      <ProfileHoverCard inline did={opts.author.did}>
-        <Text
-          numberOfLines={1}
-          style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
-          <TextLinkOnWebOnly
-            type={opts.displayNameType || 'lg-bold'}
-            style={[pal.text]}
-            lineHeight={1.2}
-            disableMismatchWarning
-            text={
-              <>
-                {sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                )}
-              </>
-            }
-            href={profileLink}
-            onBeforePress={onBeforePress}
-            onPointerEnter={onPointerEnter}
-          />
-          <TextLinkOnWebOnly
-            type="md"
-            disableMismatchWarning
-            style={[pal.textLight, {flexShrink: 4}]}
-            text={'\xa0' + sanitizeHandle(handle, '@')}
-            href={profileLink}
-            onBeforePress={onBeforePress}
-            onPointerEnter={onPointerEnter}
-            anchorNoUnderline
-          />
-        </Text>
-      </ProfileHoverCard>
-      {!isAndroid && (
-        <Text
-          type="md"
-          style={pal.textLight}
-          lineHeight={1.2}
-          accessible={false}>
-          &middot;
-        </Text>
-      )}
-      <TimeElapsed timestamp={opts.timestamp}>
-        {({timeElapsed}) => (
-          <TextLinkOnWebOnly
+      <View
+        style={[
+          a.flex,
+          a.flex_row,
+          {
+            gap: 4,
+            // 87% is about the size where our timestamp hover starts to feel right. Anything higher feels too cramped
+            maxWidth: isWeb ? '87%' : '90%',
+          },
+        ]}>
+        <ProfileHoverCard inline did={opts.author.did}>
+          <Text
+            numberOfLines={1}
+            style={[{flexShrink: 1}, pal.textLight, opts.displayNameStyle]}>
+            <TextLinkOnWebOnly
+              type={opts.displayNameType || 'lg-bold'}
+              style={[pal.text]}
+              lineHeight={1.2}
+              disableMismatchWarning
+              text={
+                <>
+                  {sanitizeDisplayName(
+                    displayName,
+                    opts.moderation?.ui('displayName'),
+                  )}
+                </>
+              }
+              href={profileLink}
+              onBeforePress={onBeforePress}
+              onPointerEnter={onPointerEnter}
+            />
+            <TextLinkOnWebOnly
+              type="md"
+              disableMismatchWarning
+              style={[pal.textLight, {flexShrink: 4}]}
+              text={'\xa0' + sanitizeHandle(handle, '@')}
+              href={profileLink}
+              onBeforePress={onBeforePress}
+              onPointerEnter={onPointerEnter}
+              anchorNoUnderline
+            />
+          </Text>
+        </ProfileHoverCard>
+        {!isAndroid && (
+          <Text
             type="md"
             style={pal.textLight}
             lineHeight={1.2}
-            text={timeElapsed}
-            accessibilityLabel={niceDate(opts.timestamp)}
-            title={niceDate(opts.timestamp)}
-            accessibilityHint=""
-            href={opts.postHref}
-            onBeforePress={onBeforePress}
-          />
+            accessible={false}>
+            &middot;
+          </Text>
         )}
-      </TimeElapsed>
+        <TimeElapsed timestamp={opts.timestamp}>
+          {({timeElapsed}) => (
+            <TextLinkOnWebOnly
+              type="md"
+              style={pal.textLight}
+              lineHeight={1.2}
+              text={timeElapsed}
+              accessibilityLabel={niceDate(opts.timestamp)}
+              title={niceDate(opts.timestamp)}
+              accessibilityHint=""
+              href={opts.postHref}
+              onBeforePress={onBeforePress}
+            />
+          )}
+        </TimeElapsed>
+      </View>
     </View>
   )
 }
@@ -134,12 +146,8 @@ const styles = StyleSheet.create({
   avatar: {
     alignSelf: 'center',
   },
-  maxWidth: {
+  textFlex: {
     flex: isAndroid ? 1 : undefined,
     flexShrink: isAndroid ? undefined : 1,
-    // This should take up the full space on Android. On web, it should only take up 80% so that the hover
-    // timestamp fully appears. On iOS, letting it size to 90% gives us a bit more space to render things without looking
-    // too close to the side of the screen
-    maxWidth: isAndroid ? undefined : isWeb ? '80%' : '90%',
   },
 })
