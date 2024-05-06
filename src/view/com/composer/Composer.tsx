@@ -345,7 +345,9 @@ export const ComposePost = observer(function ComposePost({
               meta: {
                 ...ext?.meta,
                 description:
-                  altText.trim().length === 0 ? '' : `ALT: ${altText.trim()}`,
+                  altText.trim().length === 0
+                    ? ''
+                    : `Alt text: ${altText.trim()}`,
               },
             }
           : ext,

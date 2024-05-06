@@ -99,7 +99,7 @@ export function GifAltText({
           onSubmit={onPressSubmit}
           link={link}
           params={params}
-          initalValue={link.description.replace('ALT: ', '')}
+          initalValue={link.description.replace('Alt text: ', '')}
           key={link.uri}
         />
       </Dialog.Outer>

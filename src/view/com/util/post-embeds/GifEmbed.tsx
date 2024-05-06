@@ -140,11 +140,11 @@ export function GifEmbed({
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={link.description.replace('ALT: ', '')}
+          accessibilityLabel={link.description.replace('Alt text: ', '')}
         />
 
-        {!hideAlt && link.description.startsWith('ALT: ') && (
-          <AltText text={link.description.replace('ALT: ', '')} />
+        {!hideAlt && link.description.startsWith('Alt text: ') && (
+          <AltText text={link.description.replace('Alt text: ', '')} />
         )}
       </View>
     </View>
