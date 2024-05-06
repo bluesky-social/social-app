@@ -22,9 +22,15 @@ export function ListContained() {
     <>
       <View style={{width: '100%', height: 300}}>
         <ScrollProvider
-          onScroll={() => {
+          onScroll={e => {
             'worklet'
-            console.log('onScroll')
+            console.log(
+              JSON.stringify({
+                contentOffset: e.contentOffset,
+                layoutMeasurement: e.layoutMeasurement,
+                contentSize: e.contentSize,
+              }),
+            )
           }}>
           <List
             data={data}

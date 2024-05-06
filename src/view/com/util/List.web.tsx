@@ -92,12 +92,24 @@ function ListImpl<ItemT>(
       if (!element) return
 
       return {
-        scrollWidth: element.scrollWidth,
-        scrollHeight: element.scrollHeight,
-        clientWidth: element.clientWidth,
-        clientHeight: element.clientHeight,
-        scrollY: element.scrollTop,
-        scrollX: element.scrollLeft,
+        get scrollWidth() {
+          return element.scrollWidth
+        },
+        get scrollHeight() {
+          return element.scrollHeight
+        },
+        get clientWidth() {
+          return element.clientWidth
+        },
+        get clientHeight() {
+          return element.clientHeight
+        },
+        get scrollY() {
+          return element.scrollTop
+        },
+        get scrollX() {
+          return element.scrollLeft
+        },
         scrollTo(options?: ScrollToOptions) {
           element.scrollTo(options)
         },
@@ -113,12 +125,24 @@ function ListImpl<ItemT>(
       }
     } else {
       return {
-        scrollWidth: document.documentElement.scrollWidth,
-        scrollHeight: document.documentElement.scrollHeight,
-        clientWidth: window.innerWidth,
-        clientHeight: window.innerHeight,
-        scrollY: window.scrollY,
-        scrollX: window.scrollX,
+        get scrollWidth() {
+          return document.documentElement.scrollWidth
+        },
+        get scrollHeight() {
+          return document.documentElement.scrollHeight
+        },
+        get clientWidth() {
+          return window.innerWidth
+        },
+        get clientHeight() {
+          return window.innerHeight
+        },
+        get scrollY() {
+          return window.scrollY
+        },
+        get scrollX() {
+          return window.scrollX
+        },
         scrollTo(options: ScrollToOptions) {
           window.scrollTo(options)
         },
@@ -135,7 +159,7 @@ function ListImpl<ItemT>(
     }
   }, [containWeb])
 
-  const nativeRef = React.useRef(null)
+  const nativeRef = React.useRef<HTMLDivElement>(null)
   React.useImperativeHandle(
     ref,
     () =>
@@ -257,9 +281,15 @@ function ListImpl<ItemT>(
   return (
     <View
       {...props}
-      // @ts-ignore web only
-      style={[style, containWeb && {flex: 1, 'overflow-y': 'scroll'}]}
-      ref={nativeRef}>
+      style={[
+        style,
+        containWeb && {
+          flex: 1,
+          // @ts-expect-error web only
+          'overflow-y': 'scroll',
+        },
+      ]}
+      ref={nativeRef as any}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
         style={
@@ -277,13 +307,13 @@ function ListImpl<ItemT>(
           pal.border,
         ]}>
         <Visibility
-          root={containWeb ? nativeRef.current : null}
+          root={containWeb ? nativeRef : null}
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
         {onStartReached && (
           <Visibility
-            root={containWeb ? nativeRef.current : null}
+            root={containWeb ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
@@ -300,7 +330,7 @@ function ListImpl<ItemT>(
         ))}
         {onEndReached && (
           <Visibility
-            root={containWeb ? nativeRef.current : null}
+            root={containWeb ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
           />
@@ -363,13 +393,13 @@ let Row = function RowImpl<ItemT>({
 Row = React.memo(Row)
 
 let Visibility = ({
-  root = null,
+  root,
   topMargin = '0px',
   bottomMargin = '0px',
   onVisibleChange,
   style,
 }: {
-  root?: Element | null
+  root?: React.RefObject<HTMLDivElement> | null
   topMargin?: string
   bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
@@ -393,7 +423,7 @@ let Visibility = ({
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
-      root,
+      root: root?.current ?? null,
       rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
     })
     const tail: Element | null = tailRef.current!
