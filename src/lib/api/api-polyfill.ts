@@ -1,5 +1,5 @@
-import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
 import RNFS from 'react-native-fs'
+import {BskyAgent, jsonStringToLex, stringifyLex} from '@atproto/api'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
@@ -62,14 +62,21 @@ async function fetchHandler(
     resHeaders[key] = value
   })
   const resMimeType = resHeaders['Content-Type'] || resHeaders['content-type']
+  const data = await res.arrayBuffer()
   let resBody
   if (resMimeType) {
-    if (resMimeType.startsWith('application/json')) {
-      resBody = jsonToLex(await res.json())
-    } else if (resMimeType.startsWith('text/')) {
-      resBody = await res.text()
+    if (resMimeType.startsWith('application/json') && data?.byteLength) {
+      const str = new TextDecoder().decode(data)
+      resBody = jsonStringToLex(str)
+    } else if (resMimeType.startsWith('text/') && data?.byteLength) {
+      resBody = new TextDecoder().decode(data)
+    }
+  }
+  if (resBody === undefined) {
+    if (data instanceof ArrayBuffer) {
+      resBody = new Uint8Array(data)
     } else {
-      throw new Error('TODO: non-textual response body')
+      resBody = data
     }
   }
 
