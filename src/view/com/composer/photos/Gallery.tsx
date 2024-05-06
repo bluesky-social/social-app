@@ -8,7 +8,6 @@ import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
 import {useModalControls} from '#/state/modals'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Dimensions} from 'lib/media/types'
 import {colors, s} from 'lib/styles'
@@ -51,7 +50,6 @@ const GalleryInner = observer(function GalleryImpl({
   gallery,
   containerInfo,
 }: GalleryInnerProps) {
-  const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
@@ -209,17 +207,6 @@ const GalleryInner = observer(function GalleryImpl({
             />
           </View>
         ))}
-      </View>
-      <View style={[styles.reminder]}>
-        <View style={[styles.infoIcon, pal.viewLight]}>
-          <FontAwesomeIcon icon="info" size={12} color={pal.colors.text} />
-        </View>
-        <Text type="sm" style={[pal.textLight, s.flex1]}>
-          <Trans>
-            Alt text describes images for blind and low-vision users, and helps
-            give context to everyone.
-          </Trans>
-        </Text>
       </View>
       <AltTextReminder />
     </>
