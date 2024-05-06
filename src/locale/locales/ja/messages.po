@@ -330,11 +330,11 @@ msgstr "アプリパスワード「{name}」を本当に削除しますか？"
 
 #: src/components/dms/MessageMenu.tsx:90
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
-msgstr "このメッセージを本当に削除しますか？メッセージはあなたにとっては削除したものとなりますが、他の参加者にとっては削除されないままです。"
+msgstr "このメッセージを本当に削除しますか？このメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
 
 #: src/components/dms/ConvoMenu.tsx:166
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
-msgstr "この会話から退出しますか？メッセージはあなたからは見えなくなりますが、他の参加者からは見えるままです。"
+msgstr "この会話から退出しますか？あなたのメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -3435,7 +3435,7 @@ msgstr "再実行する"
 #: src/screens/Messages/Conversation/MessagesList.tsx:41
 #: src/screens/Messages/Conversation/MessagesList.tsx:47
 msgid "Press to Retry"
-msgstr "再読み込み"
+msgstr "再実行"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -5608,7 +5608,7 @@ msgstr "「リセットコード」が記載されたメールが届きます。
 
 #: src/screens/Messages/List/index.tsx:202
 msgid "You: {0}"
-msgstr "あなた: {0}"
+msgstr "あなた： {0}"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:60
 msgid "You're in control"
