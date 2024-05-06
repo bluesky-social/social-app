@@ -92,12 +92,24 @@ function ListImpl<ItemT>(
       if (!element) return
 
       return {
-        scrollWidth: element.scrollWidth,
-        scrollHeight: element.scrollHeight,
-        clientWidth: element.clientWidth,
-        clientHeight: element.clientHeight,
-        scrollY: element.scrollTop,
-        scrollX: element.scrollLeft,
+        get scrollWidth() {
+          return element.scrollWidth
+        },
+        get scrollHeight() {
+          return element.scrollHeight
+        },
+        get clientWidth() {
+          return element.clientWidth
+        },
+        get clientHeight() {
+          return element.clientHeight
+        },
+        get scrollY() {
+          return element.scrollTop
+        },
+        get scrollX() {
+          return element.scrollLeft
+        },
         scrollTo(options?: ScrollToOptions) {
           element.scrollTo(options)
         },
@@ -113,12 +125,24 @@ function ListImpl<ItemT>(
       }
     } else {
       return {
-        scrollWidth: document.documentElement.scrollWidth,
-        scrollHeight: document.documentElement.scrollHeight,
-        clientWidth: window.innerWidth,
-        clientHeight: window.innerHeight,
-        scrollY: window.scrollY,
-        scrollX: window.scrollX,
+        get scrollWidth() {
+          return document.documentElement.scrollWidth
+        },
+        get scrollHeight() {
+          return document.documentElement.scrollHeight
+        },
+        get clientWidth() {
+          return window.innerWidth
+        },
+        get clientHeight() {
+          return window.innerHeight
+        },
+        get scrollY() {
+          return window.scrollY
+        },
+        get scrollX() {
+          return window.scrollX
+        },
         scrollTo(options: ScrollToOptions) {
           window.scrollTo(options)
         },
