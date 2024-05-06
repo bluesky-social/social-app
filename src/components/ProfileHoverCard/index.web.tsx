@@ -374,6 +374,10 @@ function Inner({
     one: 'follower',
     other: 'followers',
   })
+  const pluralizedFollowings = plural(profile.followsCount || 0, {
+    one: 'following',
+    other: 'following',
+  })
   const profileURL = makeProfileLink({
     did: profile.did,
     handle: profile.handle,
@@ -450,7 +454,9 @@ function Inner({
               onPress={hide}>
               <Trans>
                 <Text style={[a.text_md, a.font_bold]}>{following} </Text>
-                <Text style={[t.atoms.text_contrast_medium]}>following</Text>
+                <Text style={[t.atoms.text_contrast_medium]}>
+                  {pluralizedFollowings}
+                </Text>
               </Trans>
             </InlineLinkText>
           </View>
