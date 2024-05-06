@@ -315,37 +315,46 @@ export class Convo {
     }
   }
 
-  async init() {
+  init() {
     if (
       this.status === ConvoStatus.Uninitialized ||
       this.status === ConvoStatus.Error
     ) {
       logger.debug('Convo: init', {id: this.id}, logger.DebugContext.convo)
 
-      try {
-        this.status = ConvoStatus.Initializing
-        this.commit()
+      this.status = ConvoStatus.Initializing
+      this.commit()
 
-        await this.refreshConvo()
-        this.status = ConvoStatus.Ready
-        this.commit()
+      this.refreshConvo()
+        .then(async () => {
+          await new Promise(y => setTimeout(y, 2000))
+          if (this.status === ConvoStatus.Initializing) {
+            this.status = ConvoStatus.Ready
+            this.commit()
 
-        await this.fetchMessageHistory()
-
-        this.pollEvents()
-      } catch (e: any) {
-        logger.error('Convo: failed to init')
-        this.error = {
-          exception: e,
-          code: ConvoError.InitFailed,
-          retry: () => {
-            this.error = undefined
-            this.init()
-          },
-        }
-        this.status = ConvoStatus.Error
-        this.commit()
-      }
+            this.fetchMessageHistory()
+            this.pollEvents()
+          } else {
+            logger.debug(
+              `Convo: init was canceled`,
+              {},
+              logger.DebugContext.convo,
+            )
+          }
+        })
+        .catch(e => {
+          logger.error('Convo: failed to init')
+          this.error = {
+            exception: e,
+            code: ConvoError.InitFailed,
+            retry: () => {
+              this.error = undefined
+              this.init()
+            },
+          }
+          this.status = ConvoStatus.Error
+          this.commit()
+        })
     } else if (this.status === ConvoStatus.Suspended) {
       this.resume()
     } else {
@@ -354,6 +363,7 @@ export class Convo {
   }
 
   // TODO resume failure
+  // TODO can I resume from error?
   resume() {
     if (
       this.status === ConvoStatus.Suspended ||
@@ -381,7 +391,11 @@ export class Convo {
   }
 
   background() {
-    if (this.status === ConvoStatus.Ready) {
+    if (
+      this.status === ConvoStatus.Initializing ||
+      this.status === ConvoStatus.Ready ||
+      this.status === ConvoStatus.Error
+    ) {
       logger.debug(
         'Convo: backgrounded',
         {id: this.id},
@@ -395,7 +409,9 @@ export class Convo {
 
   suspend() {
     if (
+      this.status === ConvoStatus.Initializing ||
       this.status === ConvoStatus.Ready ||
+      this.status === ConvoStatus.Error ||
       this.status === ConvoStatus.Backgrounded
     ) {
       logger.debug('Convo: suspended', {id: this.id}, logger.DebugContext.convo)
