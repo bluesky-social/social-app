@@ -248,11 +248,7 @@ export function MessagesList() {
           onScrollToIndexFailed={onScrollToIndexFailed}
           scrollEventThrottle={100}
           ListHeaderComponent={
-            <MaybeLoader
-              isLoading={
-                chat.isFetchingHistory
-              }
-            />
+            <MaybeLoader isLoading={chat.isFetchingHistory} />
           }
         />
       </ScrollProvider>
