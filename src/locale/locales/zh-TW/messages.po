@@ -657,11 +657,11 @@ msgstr "選擇您的密碼"
 
 #: src/view/screens/Settings/index.tsx:827
 msgid "Clear all legacy storage data"
-msgstr "清除所有遺留資料"
+msgstr "清除所有殘存資料"
 
 #: src/view/screens/Settings/index.tsx:830
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "清除所有遺留資料（並重啟）"
+msgstr "清除所有殘存資料（並重啟）"
 
 #: src/view/screens/Settings/index.tsx:839
 msgid "Clear all storage data"
@@ -1570,7 +1570,7 @@ msgstr "外部媒體可能允許網站收集有關您和您裝置的資料。在
 #: src/view/screens/PreferencesExternalEmbeds.tsx:53
 #: src/view/screens/Settings/index.tsx:629
 msgid "External Media Preferences"
-msgstr "外部媒體偏好設定"
+msgstr "外部媒體偏好"
 
 #: src/view/screens/Settings/index.tsx:620
 msgid "External media settings"
@@ -3054,7 +3054,7 @@ msgstr "開啟系統日誌頁面"
 
 #: src/view/screens/Settings/index.tsx:570
 msgid "Opens the threads preferences"
-msgstr "開啟對話串設定偏好"
+msgstr "開啟對話串偏好"
 
 #: src/view/com/util/forms/DropdownButton.tsx:280
 msgid "Option {0} of {numItems}"
@@ -3644,7 +3644,7 @@ msgstr "重設密碼"
 #: src/view/screens/Settings/index.tsx:807
 #: src/view/screens/Settings/index.tsx:810
 msgid "Reset preferences state"
-msgstr "重設設定偏好狀態"
+msgstr "重設偏好狀態"
 
 #: src/view/screens/Settings/index.tsx:818
 msgid "Resets the onboarding state"
@@ -3652,7 +3652,7 @@ msgstr "重設初始設定狀態"
 
 #: src/view/screens/Settings/index.tsx:808
 msgid "Resets the preferences state"
-msgstr "重設設定偏好狀態"
+msgstr "重設偏好狀態"
 
 #: src/screens/Login/LoginForm.tsx:283
 msgid "Retries login"
@@ -4553,7 +4553,7 @@ msgstr "提交您的檢舉時出現問題，請檢查您的網路連線。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:65
 msgid "There was an issue syncing your preferences with the server"
-msgstr "與伺服器同步設定偏好時發生問題"
+msgstr "與伺服器同步偏好時發生問題"
 
 #: src/view/screens/AppPasswords.tsx:68
 msgid "There was an issue with fetching your app passwords"
@@ -5186,7 +5186,7 @@ msgstr "我們推薦我們的「Discover」動態源:"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
-msgstr "我們無法載入您的出生日期設定偏好，請再試一次。"
+msgstr "我們無法載入您的出生日期偏好，請再試一次。"
 
 #: src/screens/Moderation/index.tsx:385
 msgid "We were unable to load your configured labelers at this time."
