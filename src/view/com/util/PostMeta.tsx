@@ -147,8 +147,4 @@ const styles = StyleSheet.create({
   avatar: {
     alignSelf: 'center',
   },
-  textFlex: {
-    flex: isAndroid ? 1 : undefined,
-    flexShrink: isAndroid ? undefined : 1,
-  },
 })
