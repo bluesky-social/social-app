@@ -413,8 +413,8 @@ let Row = function RowImpl<ItemT>({
             }
           } else {
             if (intersectionTimeout.current) {
-              intersectionTimeout.current = undefined
               clearTimeout(intersectionTimeout.current)
+              intersectionTimeout.current = undefined
             }
           }
         })
