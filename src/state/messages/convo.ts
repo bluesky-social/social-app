@@ -18,7 +18,6 @@ export type ConvoParams = {
 export enum ConvoStatus {
   Uninitialized = 'uninitialized',
   Initializing = 'initializing',
-  Resuming = 'resuming',
   Ready = 'ready',
   Error = 'error',
   Backgrounded = 'backgrounded',
@@ -121,20 +120,6 @@ export type ConvoState =
     }
   | {
       status: ConvoStatus.Backgrounded
-      items: ConvoItem[]
-      convo: ChatBskyConvoDefs.ConvoView
-      error: undefined
-      sender: AppBskyActorDefs.ProfileViewBasic
-      recipients: AppBskyActorDefs.ProfileViewBasic[]
-      isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => Promise<void>
-      sendMessage: (
-        message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => Promise<void>
-      fetchMessageHistory: () => Promise<void>
-    }
-  | {
-      status: ConvoStatus.Resuming
       items: ConvoItem[]
       convo: ChatBskyConvoDefs.ConvoView
       error: undefined
@@ -285,7 +270,6 @@ export class Convo {
       }
       case ConvoStatus.Suspended:
       case ConvoStatus.Backgrounded:
-      case ConvoStatus.Resuming:
       case ConvoStatus.Ready: {
         return {
           status: this.status,
@@ -369,45 +353,24 @@ export class Convo {
     }
   }
 
-  async resume() {
+  // TODO resume failure
+  resume() {
     if (
       this.status === ConvoStatus.Suspended ||
       this.status === ConvoStatus.Backgrounded
     ) {
       logger.debug('Convo: resume', {id: this.id}, logger.DebugContext.convo)
 
-      const fromStatus = this.status
+      this.status = ConvoStatus.Ready
+      this.cancelNextPoll()
+      this.pollInterval = ACTIVE_POLL_INTERVAL
+      this.pollEvents()
+      this.commit()
 
-      try {
-        this.cancelNextPoll()
-
-        this.status = ConvoStatus.Resuming
+      // intentionally un-awaited
+      this.refreshConvo().then(() => {
         this.commit()
-
-        await this.refreshConvo()
-        this.status = ConvoStatus.Ready
-        this.commit()
-
-        // throw new Error('UNCOMMENT TO TEST RESUME FAILURE')
-
-        this.pollInterval = ACTIVE_POLL_INTERVAL
-        this.pollEvents()
-      } catch (e) {
-        logger.error('Convo: failed to resume')
-
-        this.footerItems.set(ConvoItemError.ResumeFailed, {
-          type: 'error-recoverable',
-          key: ConvoItemError.ResumeFailed,
-          code: ConvoItemError.ResumeFailed,
-          retry: () => {
-            this.footerItems.delete(ConvoItemError.ResumeFailed)
-            this.resume()
-          },
-        })
-
-        this.status = fromStatus
-        this.commit()
-      }
+      })
     } else {
       logger.debug(
         `Convo: resume called from ${this.status}`,
@@ -417,11 +380,8 @@ export class Convo {
     }
   }
 
-  async background() {
-    if (
-      this.status === ConvoStatus.Ready ||
-      this.status === ConvoStatus.Resuming
-    ) {
+  background() {
+    if (this.status === ConvoStatus.Ready) {
       logger.debug(
         'Convo: backgrounded',
         {id: this.id},
@@ -433,11 +393,10 @@ export class Convo {
     }
   }
 
-  async suspend() {
+  suspend() {
     if (
       this.status === ConvoStatus.Ready ||
-      this.status === ConvoStatus.Backgrounded ||
-      this.status === ConvoStatus.Resuming
+      this.status === ConvoStatus.Backgrounded
     ) {
       logger.debug('Convo: suspended', {id: this.id}, logger.DebugContext.convo)
       DEBUG_ACTIVE_CHAT = undefined
