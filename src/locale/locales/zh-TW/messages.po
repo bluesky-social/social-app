@@ -657,11 +657,11 @@ msgstr "選擇您的密碼"
 
 #: src/view/screens/Settings/index.tsx:827
 msgid "Clear all legacy storage data"
-msgstr "清除所有遺留資料"
+msgstr "清除所有殘存資料"
 
 #: src/view/screens/Settings/index.tsx:830
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "清除所有遺留資料（並重啟）"
+msgstr "清除所有殘存資料（並重啟）"
 
 #: src/view/screens/Settings/index.tsx:839
 msgid "Clear all storage data"
