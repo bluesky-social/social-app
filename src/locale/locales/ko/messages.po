@@ -147,11 +147,17 @@ msgstr "이 리스트에 사용자 추가"
 msgid "Add account"
 msgstr "계정 추가"
 
-#: src/view/com/composer/photos/Gallery.tsx:119
-#: src/view/com/composer/photos/Gallery.tsx:180
+#: src/view/com/composer/GifAltText.tsx:67
+#: src/view/com/composer/GifAltText.tsx:132
+#: src/view/com/composer/photos/Gallery.tsx:120
+#: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/modals/AltImage.tsx:117
 msgid "Add alt text"
-msgstr "대체 텍스트 추가하기"
+msgstr "대체 텍스트 추가"
+
+#: src/view/com/composer/GifAltText.tsx:167
+msgid "Add ALT text"
+msgstr "대체 텍스트 추가"
 
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
@@ -221,16 +227,23 @@ msgstr "이미 코드가 있나요?"
 msgid "Already signed in as @{0}"
 msgstr "이미 @{0}(으)로 로그인했습니다"
 
-#: src/view/com/composer/photos/Gallery.tsx:130
+#: src/view/com/composer/GifAltText.tsx:91
+#: src/view/com/composer/photos/Gallery.tsx:144
+#: src/view/com/util/post-embeds/GifEmbed.tsx:169
 msgid "ALT"
 msgstr "ALT"
 
+#: src/view/com/composer/GifAltText.tsx:141
 #: src/view/com/modals/EditImage.tsx:316
 #: src/view/screens/AccessibilitySettings.tsx:77
 msgid "Alt text"
 msgstr "대체 텍스트"
 
-#: src/view/com/composer/photos/Gallery.tsx:209
+#: src/view/com/util/post-embeds/GifEmbed.tsx:175
+msgid "Alt Text"
+msgstr "대체 텍스트"
+
+#: src/view/com/composer/photos/Gallery.tsx:224
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "대체 텍스트는 시각장애인과 저시력 사용자를 위해 이미지를 설명하며 모든 사용자의 이해를 돕습니다."
 
@@ -273,7 +286,7 @@ msgstr "및"
 msgid "Animals"
 msgstr "동물"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:135
+#: src/view/com/util/post-embeds/GifEmbed.tsx:142
 msgid "Animated GIF"
 msgstr "움직이는 GIF"
 
@@ -340,7 +353,7 @@ msgstr "정말 이 대화를 종료하시겠습니까? 나에게 보이는 메�
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:529
+#: src/view/com/composer/Composer.tsx:557
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -374,7 +387,7 @@ msgstr "3자 이상"
 #: src/screens/Login/LoginForm.tsx:275
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:117
+#: src/screens/Messages/Conversation/index.tsx:115
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:191
 #: src/view/com/util/ViewHeader.tsx:89
@@ -438,7 +451,7 @@ msgid "Blocked accounts"
 msgstr "차단한 계정"
 
 #: src/Navigation.tsx:141
-#: src/view/screens/ModerationBlockedAccounts.tsx:112
+#: src/view/screens/ModerationBlockedAccounts.tsx:109
 msgid "Blocked Accounts"
 msgstr "차단한 계정"
 
@@ -446,7 +459,7 @@ msgstr "차단한 계정"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:120
+#: src/view/screens/ModerationBlockedAccounts.tsx:117
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
 
@@ -528,18 +541,18 @@ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must 
 msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
 
 #: src/components/Menu/index.tsx:215
-#: src/components/Prompt.tsx:113
-#: src/components/Prompt.tsx:115
+#: src/components/Prompt.tsx:119
+#: src/components/Prompt.tsx:121
 #: src/components/TagMenu/index.tsx:268
-#: src/view/com/composer/Composer.tsx:350
-#: src/view/com/composer/Composer.tsx:355
+#: src/view/com/composer/Composer.tsx:371
+#: src/view/com/composer/Composer.tsx:376
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/ChangeEmail.tsx:222
 #: src/view/com/modals/ChangeHandle.tsx:155
 #: src/view/com/modals/ChangePassword.tsx:269
 #: src/view/com/modals/ChangePassword.tsx:272
 #: src/view/com/modals/CreateOrEditList.tsx:358
-#: src/view/com/modals/crop-image/CropImage.web.tsx:138
+#: src/view/com/modals/crop-image/CropImage.web.tsx:162
 #: src/view/com/modals/EditImage.tsx:324
 #: src/view/com/modals/EditProfile.tsx:250
 #: src/view/com/modals/InAppBrowserConsent.tsx:78
@@ -570,7 +583,7 @@ msgstr "계정 삭제 취소"
 msgid "Cancel change handle"
 msgstr "핸들 변경 취소"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:135
+#: src/view/com/modals/crop-image/CropImage.web.tsx:159
 msgid "Cancel image crop"
 msgstr "이미지 자르기 취소"
 
@@ -724,6 +737,7 @@ msgstr "기후"
 #: src/components/dialogs/GifSelect.tsx:300
 #: src/view/com/modals/ChangePassword.tsx:269
 #: src/view/com/modals/ChangePassword.tsx:272
+#: src/view/com/util/post-embeds/GifEmbed.tsx:181
 msgid "Close"
 msgstr "닫기"
 
@@ -773,7 +787,7 @@ msgstr "하단 탐색 막대를 닫습니다"
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
-#: src/view/com/composer/Composer.tsx:352
+#: src/view/com/composer/Composer.tsx:373
 msgid "Closes post composer and discards post draft"
 msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
@@ -806,7 +820,7 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:470
+#: src/view/com/composer/Composer.tsx:491
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -826,8 +840,8 @@ msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>검토 설정</0>에서 설정합니다."
 
-#: src/components/Prompt.tsx:153
-#: src/components/Prompt.tsx:156
+#: src/components/Prompt.tsx:159
+#: src/components/Prompt.tsx:162
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:240
 #: src/view/com/modals/VerifyEmail.tsx:242
@@ -1189,7 +1203,11 @@ msgstr "삭제된 게시물."
 msgid "Description"
 msgstr "설명"
 
-#: src/view/com/composer/Composer.tsx:229
+#: src/view/com/composer/GifAltText.tsx:137
+msgid "Descriptive alt text"
+msgstr "설명이 포함된 대체 텍스트"
+
+#: src/view/com/composer/Composer.tsx:230
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 있나요?"
 
@@ -1216,11 +1234,11 @@ msgstr "햅틱 피드백 끄기"
 msgid "Disabled"
 msgstr "비활성화됨"
 
-#: src/view/com/composer/Composer.tsx:531
+#: src/view/com/composer/Composer.tsx:559
 msgid "Discard"
 msgstr "삭제"
 
-#: src/view/com/composer/Composer.tsx:528
+#: src/view/com/composer/Composer.tsx:556
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1274,7 +1292,7 @@ msgstr "도메인을 확인했습니다."
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/modals/AddAppPasswords.tsx:227
 #: src/view/com/modals/AltImage.tsx:140
-#: src/view/com/modals/crop-image/CropImage.web.tsx:153
+#: src/view/com/modals/crop-image/CropImage.web.tsx:177
 #: src/view/com/modals/InviteCodes.tsx:81
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
@@ -1358,12 +1376,12 @@ msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
-#: src/view/com/util/UserAvatar.tsx:302
-#: src/view/com/util/UserBanner.tsx:85
+#: src/view/com/util/UserAvatar.tsx:309
+#: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "아바타 편집"
 
-#: src/view/com/composer/photos/Gallery.tsx:144
+#: src/view/com/composer/photos/Gallery.tsx:151
 #: src/view/com/modals/EditImage.tsx:208
 msgid "Edit image"
 msgstr "이미지 편집"
@@ -1577,7 +1595,7 @@ msgstr "계정 삭제 프로세스를 종료합니다"
 msgid "Exits handle change process"
 msgstr "핸들 변경 프로세스를 종료합니다"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:136
+#: src/view/com/modals/crop-image/CropImage.web.tsx:160
 msgid "Exits image cropping process"
 msgstr "이미지 자르기 프로세스를 종료합니다"
 
@@ -2113,7 +2131,7 @@ msgstr "비밀번호를 변경하고 싶다면 본인 계정임을 확인할 수
 msgid "Illegal and Urgent"
 msgstr "불법 및 긴급 사항"
 
-#: src/view/com/util/images/Gallery.tsx:38
+#: src/view/com/util/images/Gallery.tsx:39
 msgid "Image"
 msgstr "이미지"
 
@@ -2672,11 +2690,11 @@ msgid "Muted accounts"
 msgstr "뮤트한 계정"
 
 #: src/Navigation.tsx:136
-#: src/view/screens/ModerationMutedAccounts.tsx:112
+#: src/view/screens/ModerationMutedAccounts.tsx:109
 msgid "Muted Accounts"
 msgstr "뮤트한 계정"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:120
+#: src/view/screens/ModerationMutedAccounts.tsx:117
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "계정을 뮤트하면 피드와 알림에서 해당 계정의 게시물이 사라집니다. 뮤트 목록은 완전히 비공개로 유지됩니다."
 
@@ -2993,7 +3011,7 @@ msgstr "오래된 순"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:425
+#: src/view/com/composer/Composer.tsx:446
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -3019,8 +3037,8 @@ msgstr "이런!"
 msgid "Open"
 msgstr "공개성"
 
-#: src/view/com/composer/Composer.tsx:511
-#: src/view/com/composer/Composer.tsx:512
+#: src/view/com/composer/Composer.tsx:539
+#: src/view/com/composer/Composer.tsx:540
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -3229,7 +3247,7 @@ msgstr "비밀번호 변경됨"
 msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:31
+#: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Pause"
 msgstr "일시 정지"
 
@@ -3274,7 +3292,7 @@ msgstr "홈에 고정"
 msgid "Pinned Feeds"
 msgstr "고정된 피드"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:31
+#: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play"
 msgstr "재생"
 
@@ -3282,7 +3300,7 @@ msgstr "재생"
 msgid "Play {0}"
 msgstr "{0} 재생"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:30
+#: src/view/com/util/post-embeds/GifEmbed.tsx:34
 msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
@@ -3343,7 +3361,7 @@ msgstr "@{0}(으)로 로그인하세요"
 msgid "Please Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/view/com/composer/Composer.tsx:233
+#: src/view/com/composer/Composer.tsx:234
 msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
@@ -3355,8 +3373,8 @@ msgstr "정치"
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:400
-#: src/view/com/composer/Composer.tsx:408
+#: src/view/com/composer/Composer.tsx:421
+#: src/view/com/composer/Composer.tsx:429
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -3433,7 +3451,7 @@ msgstr "호스팅 제공자를 변경하려면 누릅니다"
 
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:83
-#: src/screens/Messages/Conversation/MessageListError.tsx:42
+#: src/screens/Messages/Conversation/MessageListError.tsx:48
 #: src/screens/Signup/index.tsx:198
 msgid "Press to retry"
 msgstr "다시 시도하려면 누르기"
@@ -3505,11 +3523,11 @@ msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가�
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
-#: src/view/com/composer/Composer.tsx:385
+#: src/view/com/composer/Composer.tsx:406
 msgid "Publish post"
 msgstr "게시물 게시하기"
 
-#: src/view/com/composer/Composer.tsx:385
+#: src/view/com/composer/Composer.tsx:406
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
@@ -3552,11 +3570,11 @@ msgstr "제거"
 msgid "Remove account"
 msgstr "계정 제거"
 
-#: src/view/com/util/UserAvatar.tsx:361
+#: src/view/com/util/UserAvatar.tsx:368
 msgid "Remove Avatar"
 msgstr "아바타 제거"
 
-#: src/view/com/util/UserBanner.tsx:148
+#: src/view/com/util/UserBanner.tsx:155
 msgid "Remove Banner"
 msgstr "배너 제거"
 
@@ -3579,11 +3597,11 @@ msgstr "내 피드에서 제거"
 msgid "Remove from my feeds?"
 msgstr "내 피드에서 제거하시겠습니까?"
 
-#: src/view/com/composer/photos/Gallery.tsx:167
+#: src/view/com/composer/photos/Gallery.tsx:174
 msgid "Remove image"
 msgstr "이미지 제거"
 
-#: src/view/com/composer/ExternalEmbed.tsx:82
+#: src/view/com/composer/ExternalEmbed.tsx:87
 msgid "Remove image preview"
 msgstr "이미지 미리보기 제거"
 
@@ -3616,7 +3634,7 @@ msgstr "내 피드에서 제거됨"
 msgid "Removed from your feeds"
 msgstr "내 피드에서 제거됨"
 
-#: src/view/com/composer/ExternalEmbed.tsx:83
+#: src/view/com/composer/ExternalEmbed.tsx:88
 msgid "Removes default thumbnail from {0}"
 msgstr "{0}에서 기본 미리보기 이미지를 제거합니다"
 
@@ -3632,7 +3650,7 @@ msgstr "답글"
 msgid "Replies to this thread are disabled"
 msgstr "이 스레드에 대한 답글이 비활성화됩니다."
 
-#: src/view/com/composer/Composer.tsx:398
+#: src/view/com/composer/Composer.tsx:419
 msgctxt "action"
 msgid "Reply"
 msgstr "답글"
@@ -3819,7 +3837,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 msgid "Retry"
 msgstr "다시 시도"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:48
+#: src/screens/Messages/Conversation/MessageListError.tsx:54
 msgid "Retry."
 msgstr "다시 시도"
 
@@ -3838,6 +3856,8 @@ msgid "Returns to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
+#: src/view/com/composer/GifAltText.tsx:154
+#: src/view/com/composer/GifAltText.tsx:160
 #: src/view/com/modals/ChangeHandle.tsx:175
 #: src/view/com/modals/CreateOrEditList.tsx:340
 #: src/view/com/modals/EditProfile.tsx:225
@@ -3866,7 +3886,7 @@ msgstr "변경 사항 저장"
 msgid "Save handle change"
 msgstr "핸들 변경 저장"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:145
+#: src/view/com/modals/crop-image/CropImage.web.tsx:169
 msgid "Save image crop"
 msgstr "이미지 자르기 저장"
 
@@ -3895,7 +3915,7 @@ msgstr "프로필에 대한 모든 변경 사항을 저장합니다"
 msgid "Saves handle change to {handle}"
 msgstr "핸들을 {handle}(으)로 변경합니다"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:146
+#: src/view/com/modals/crop-image/CropImage.web.tsx:170
 msgid "Saves image crop settings"
 msgstr "이미지 자르기 설정을 저장합니다"
 
@@ -3984,7 +4004,7 @@ msgid "See <0>{displayTag}</0> posts by this user"
 msgstr "이 사용자의 <0>{displayTag}</0> 게시물 보기"
 
 #: src/view/com/notifications/FeedItem.tsx:409
-#: src/view/com/util/UserAvatar.tsx:390
+#: src/view/com/util/UserAvatar.tsx:397
 msgid "See profile"
 msgstr "프로필 보기"
 
@@ -4178,15 +4198,15 @@ msgstr "어두운 테마를 살짝 밝게 설정합니다"
 msgid "Sets email for password reset"
 msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:124
+#: src/view/com/modals/crop-image/CropImage.web.tsx:146
 msgid "Sets image aspect ratio to square"
 msgstr "이미지 비율을 정사각형으로 설정합니다"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:114
+#: src/view/com/modals/crop-image/CropImage.web.tsx:136
 msgid "Sets image aspect ratio to tall"
 msgstr "이미지 비율을 세로로 길게 설정합니다"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:104
+#: src/view/com/modals/crop-image/CropImage.web.tsx:126
 msgid "Sets image aspect ratio to wide"
 msgstr "이미지 비율을 가로로 길게 설정합니다"
 
@@ -4252,6 +4272,10 @@ msgstr "표시"
 #: src/view/screens/PreferencesFollowingFeed.tsx:68
 msgid "Show all replies"
 msgstr "모든 답글 표시"
+
+#: src/view/com/util/post-embeds/GifEmbed.tsx:163
+msgid "Show alt text"
+msgstr "대체 텍스트 표시"
 
 #: src/components/moderation/ScreenHider.tsx:169
 #: src/components/moderation/ScreenHider.tsx:172
@@ -4470,7 +4494,7 @@ msgstr "스팸, 과도한 멘션 또는 답글"
 msgid "Sports"
 msgstr "스포츠"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:123
+#: src/view/com/modals/crop-image/CropImage.web.tsx:145
 msgid "Square"
 msgstr "정사각형"
 
@@ -4572,7 +4596,7 @@ msgstr "태그"
 msgid "Tag menu: {displayTag}"
 msgstr "태그 메뉴: {displayTag}"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:113
+#: src/view/com/modals/crop-image/CropImage.web.tsx:135
 msgid "Tall"
 msgstr "세로"
 
@@ -4689,6 +4713,10 @@ msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터
 msgid "There was an issue connecting to Tenor."
 msgstr "Tenor에 연결하는 동안 문제가 발생했습니다."
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:23
+msgid "There was an issue connecting to the chat."
+msgstr "채팅에 연결하는 동안 문제가 발생했습니다."
+
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
 #: src/view/screens/SavedFeeds.tsx:211
@@ -4776,6 +4804,10 @@ msgstr "이 계정의 프로필을 보려면 로그인해야 합니다."
 #: src/components/moderation/LabelsOnMeDialog.tsx:205
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "이 이의신청은 <0>{0}</0>에게 보내집니다."
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:26
+msgid "This chat was disconnected due to a network error."
+msgstr "네트워크 오류로 인해 채팅 연결이 끊어졌습니다."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -5116,22 +5148,22 @@ msgstr "업데이트 중…"
 msgid "Upload a text file to:"
 msgstr "텍스트 파일 업로드 경로:"
 
-#: src/view/com/util/UserAvatar.tsx:329
-#: src/view/com/util/UserAvatar.tsx:332
-#: src/view/com/util/UserBanner.tsx:116
-#: src/view/com/util/UserBanner.tsx:119
+#: src/view/com/util/UserAvatar.tsx:336
+#: src/view/com/util/UserAvatar.tsx:339
+#: src/view/com/util/UserBanner.tsx:123
+#: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "카메라에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:346
-#: src/view/com/util/UserBanner.tsx:133
+#: src/view/com/util/UserAvatar.tsx:353
+#: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "파일에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:340
-#: src/view/com/util/UserAvatar.tsx:344
-#: src/view/com/util/UserBanner.tsx:127
-#: src/view/com/util/UserBanner.tsx:131
+#: src/view/com/util/UserAvatar.tsx:347
+#: src/view/com/util/UserAvatar.tsx:351
+#: src/view/com/util/UserBanner.tsx:134
+#: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
 msgstr "라이브러리에서 업로드"
 
@@ -5415,7 +5447,7 @@ msgstr "어떤 관심사가 있으신가요?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:307
+#: src/view/com/composer/Composer.tsx:308
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -5452,7 +5484,7 @@ msgstr "이 게시물을 검토해야 하는 이유는 무엇인가요?"
 msgid "Why should this user be reviewed?"
 msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 
-#: src/view/com/modals/crop-image/CropImage.web.tsx:103
+#: src/view/com/modals/crop-image/CropImage.web.tsx:125
 msgid "Wide"
 msgstr "가로"
 
@@ -5461,11 +5493,11 @@ msgstr "가로"
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:468
+#: src/view/com/composer/Composer.tsx:489
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:306
+#: src/view/com/composer/Composer.tsx:307
 #: src/view/com/composer/Prompt.tsx:37
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -5577,7 +5609,7 @@ msgstr "리스트가 없습니다."
 msgid "You have no messages yet. Start a conversation with someone!"
 msgstr "아직 메시지가 없습니다. 사람들과 대화를 시작해 보세요!"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:137
+#: src/view/screens/ModerationBlockedAccounts.tsx:134
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr "아직 어떤 계정도 차단하지 않았습니다. 계정을 차단하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 차단\"을 선택하세요."
 
@@ -5585,7 +5617,7 @@ msgstr "아직 어떤 계정도 차단하지 않았습니다. 계정을 차단�
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "아직 앱 비밀번호를 생성하지 않았습니다. 아래 버튼을 눌러 생성할 수 있습니다."
 
-#: src/view/screens/ModerationMutedAccounts.tsx:136
+#: src/view/screens/ModerationMutedAccounts.tsx:133
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 뮤트\"를 선택하세요."
 
@@ -5706,7 +5738,7 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:295
+#: src/view/com/composer/Composer.tsx:296
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
@@ -5718,7 +5750,7 @@ msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은
 msgid "Your profile"
 msgstr "내 프로필"
 
-#: src/view/com/composer/Composer.tsx:294
+#: src/view/com/composer/Composer.tsx:295
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
