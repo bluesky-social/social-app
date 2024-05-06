@@ -26,7 +26,7 @@ export function ProfileHeaderMetrics({
   })
   const pluralizedFollowings = plural(profile.followsCount || 0, {
     one: 'following',
-    other: 'followings',
+    other: 'following',
   })
 
   return (
