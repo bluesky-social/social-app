@@ -1,6 +1,7 @@
 import React, {memo, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -40,7 +41,6 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserInfoText} from '../util/UserInfoText'
 
 export function FeedItem({
   post,
@@ -48,6 +48,7 @@ export function FeedItem({
   reason,
   feedContext,
   moderation,
+  grandparentAuthor,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
@@ -57,6 +58,7 @@ export function FeedItem({
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   feedContext: string | undefined
   moderation: ModerationDecision
+  grandparentAuthor?: AppBskyActorDefs.ProfileViewBasic
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -87,6 +89,7 @@ export function FeedItem({
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
+        grandparentAuthor={grandparentAuthor}
       />
     )
   }
@@ -100,6 +103,7 @@ let FeedItemInner = ({
   feedContext,
   richText,
   moderation,
+  grandparentAuthor,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
@@ -110,6 +114,7 @@ let FeedItemInner = ({
   feedContext: string | undefined
   richText: RichTextAPI
   moderation: ModerationDecision
+  grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -123,14 +128,6 @@ let FeedItemInner = ({
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const {sendInteraction} = useFeedFeedbackContext()
-
-  const replyAuthorDid = useMemo(() => {
-    if (!record?.reply) {
-      return ''
-    }
-    const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
-    return urip.hostname
-  }, [record?.reply])
 
   const onPressReply = React.useCallback(() => {
     sendInteraction({
@@ -318,34 +315,8 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild && replyAuthorDid !== '' && (
-            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-              <FontAwesomeIcon
-                icon="reply"
-                size={9}
-                style={[
-                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
-                  s.mr5,
-                ]}
-              />
-              <Text
-                type="md"
-                style={[pal.textLight, s.mr2]}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                <Trans context="description">
-                  Reply to{' '}
-                  <ProfileHoverCard inline did={replyAuthorDid}>
-                    <UserInfoText
-                      type="md"
-                      did={replyAuthorDid}
-                      attr="displayName"
-                      style={[pal.textLight]}
-                    />
-                  </ProfileHoverCard>
-                </Trans>
-              </Text>
-            </View>
+          {!isThreadChild && grandparentAuthor && (
+            <ReplyToLabel grandparentAuthor={grandparentAuthor} />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
@@ -433,6 +404,47 @@ let PostContent = ({
   )
 }
 PostContent = memo(PostContent)
+
+function ReplyToLabel({
+  grandparentAuthor,
+}: {
+  grandparentAuthor: AppBskyActorDefs.ProfileViewBasic
+}) {
+  const pal = usePalette('default')
+
+  return (
+    <View style={[s.flexRow, s.mb2, s.alignCenter]}>
+      <FontAwesomeIcon
+        icon="reply"
+        size={9}
+        style={[{color: pal.colors.textLight} as FontAwesomeIconStyle, s.mr5]}
+      />
+      <Text
+        type="md"
+        style={[pal.textLight, s.mr2]}
+        lineHeight={1.2}
+        numberOfLines={1}>
+        <Trans context="description">
+          Reply to{' '}
+          <ProfileHoverCard inline did={grandparentAuthor.did}>
+            <TextLinkOnWebOnly
+              type="md"
+              style={pal.textLight}
+              lineHeight={1.2}
+              numberOfLines={1}
+              href={makeProfileLink(grandparentAuthor)}
+              text={
+                grandparentAuthor.displayName
+                  ? sanitizeDisplayName(grandparentAuthor.displayName)
+                  : sanitizeHandle(grandparentAuthor.handle)
+              }
+            />
+          </ProfileHoverCard>
+        </Trans>
+      </Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   outer: {

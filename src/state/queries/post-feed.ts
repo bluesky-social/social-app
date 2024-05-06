@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -72,6 +73,7 @@ export interface FeedPostSliceItem {
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
   feedContext: string | undefined
   moderation: ModerationDecision
+  grandparentAuthor?: AppBskyActorDefs.ProfileViewBasic
 }
 
 export interface FeedPostSlice {
@@ -302,6 +304,15 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
+                          const grandparentAuthor =
+                            // We don't want to add a grandparent if this is not the first post in the slice
+                            i === 0
+                              ? // If we have removed a parent, we need to use the parent's author rather than the gp's
+                                slice.items.length === 1
+                                ? slice.items[i].reply?.parent.author
+                                : slice.items[i + 1]?.reply?.grandparentAuthor
+                              : undefined
+
                           return {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
@@ -313,6 +324,7 @@ export function usePostFeedQuery(
                                 : item.reason,
                             feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
+                            grandparentAuthor,
                           }
                         }
                         return undefined
