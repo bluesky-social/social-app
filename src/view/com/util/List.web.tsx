@@ -143,6 +143,7 @@ function ListImpl<ItemT>(
         scrollToTop() {
           getScrollableNode()?.scrollTo({top: 0})
         },
+
         scrollToOffset({
           animated,
           offset,
