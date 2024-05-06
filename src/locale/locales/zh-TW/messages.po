@@ -3041,7 +3041,7 @@ msgstr "開啟網站連結"
 
 #: src/screens/Messages/List/index.tsx:35
 msgid "Opens the message settings page"
-msgstr "打開思訊設定頁面"
+msgstr "打開私訊設定頁面"
 
 #: src/view/screens/Settings/index.tsx:788
 #: src/view/screens/Settings/index.tsx:798
