@@ -12,14 +12,13 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {CommentBottomArrow, HeartIcon, HeartIconSolid} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
-import {pluralize} from '#/lib/strings/helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
@@ -159,9 +158,10 @@ let PostCtrls = ({
             }
           }}
           accessibilityRole="button"
-          accessibilityLabel={`Reply (${post.replyCount} ${
-            post.replyCount === 1 ? 'reply' : 'replies'
-          })`}
+          accessibilityLabel={plural(post.replyCount || 0, {
+            one: 'Reply (# reply)',
+            other: 'Reply (# replies)',
+          })}
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           <CommentBottomArrow
@@ -193,9 +193,17 @@ let PostCtrls = ({
             requireAuth(() => onPressToggleLike())
           }}
           accessibilityRole="button"
-          accessibilityLabel={`${
-            post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-          } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+          accessibilityLabel={
+            post.viewer?.like
+              ? plural(post.likeCount || 0, {
+                  one: 'Unlike (# like)',
+                  other: 'Unlike (# likes)',
+                })
+              : plural(post.likeCount || 0, {
+                  one: 'Like (# like)',
+                  other: 'Like (# likes)',
+                })
+          }
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           {post.viewer?.like ? (

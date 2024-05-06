@@ -60,6 +60,8 @@
     "@expo/webpack-config": "^19.0.0",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
+    "@formatjs/intl-locale": "^3.4.3",
+    "@formatjs/intl-pluralrules": "^5.2.10",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",

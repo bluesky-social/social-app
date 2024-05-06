@@ -8,7 +8,7 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
@@ -24,7 +24,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {countLines, pluralize} from 'lib/strings/helpers'
+import {countLines} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
@@ -336,7 +336,11 @@ let PostThreadItemLoaded = ({
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.repostCount)}
                       </Text>{' '}
-                      {pluralize(post.repostCount, 'repost')}
+                      <Plural
+                        value={post.repostCount}
+                        one="repost"
+                        other="reposts"
+                      />
                     </Text>
                   </Link>
                 ) : null}
@@ -352,7 +356,7 @@ let PostThreadItemLoaded = ({
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.likeCount)}
                       </Text>{' '}
-                      {pluralize(post.likeCount, 'like')}
+                      <Plural value={post.likeCount} one="like" other="likes" />
                     </Text>
                   </Link>
                 ) : null}
