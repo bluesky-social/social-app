@@ -163,6 +163,9 @@ export type ConvoState =
 const ACTIVE_POLL_INTERVAL = 2e3
 const BACKGROUND_POLL_INTERVAL = 10e3
 
+// TODO temporary
+let DEBUG_ACTIVE_CHAT: string | undefined
+
 export function isConvoItemMessage(
   item: ConvoItem,
 ): item is ConvoItem & {type: 'message'} {
@@ -175,6 +178,8 @@ export function isConvoItemMessage(
 }
 
 export class Convo {
+  private id: string
+
   private agent: BskyAgent
   private __tempFromUserDid: string
 
@@ -217,10 +222,8 @@ export class Convo {
   recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
   snapshot: ConvoState | undefined
 
-  id: string
-
   constructor(params: ConvoParams) {
-    this.id = nanoid(2)
+    this.id = nanoid(3)
     this.convoId = params.convoId
     this.agent = params.agent
     this.__tempFromUserDid = params.__tempFromUserDid
@@ -231,11 +234,13 @@ export class Convo {
     this.deleteMessage = this.deleteMessage.bind(this)
     this.fetchMessageHistory = this.fetchMessageHistory.bind(this)
 
-    logger.debug(
-      'Convo: created',
-      {convoId: this.convoId, id: this.id},
-      logger.DebugContext.convo,
-    )
+    if (DEBUG_ACTIVE_CHAT) {
+      logger.error(`Convo: another chat was already active`, {
+        convoId: this.convoId,
+      })
+    } else {
+      DEBUG_ACTIVE_CHAT = this.convoId
+    }
   }
 
   private commit() {
@@ -331,7 +336,7 @@ export class Convo {
       this.status === ConvoStatus.Uninitialized ||
       this.status === ConvoStatus.Error
     ) {
-      logger.debug('Convo: init', {}, logger.DebugContext.convo)
+      logger.debug('Convo: init', {id: this.id}, logger.DebugContext.convo)
 
       try {
         this.status = ConvoStatus.Initializing
@@ -369,7 +374,7 @@ export class Convo {
       this.status === ConvoStatus.Suspended ||
       this.status === ConvoStatus.Backgrounded
     ) {
-      logger.debug('Convo: resume', {}, logger.DebugContext.convo)
+      logger.debug('Convo: resume', {id: this.id}, logger.DebugContext.convo)
 
       const fromStatus = this.status
 
@@ -417,7 +422,11 @@ export class Convo {
       this.status === ConvoStatus.Ready ||
       this.status === ConvoStatus.Resuming
     ) {
-      logger.debug('Convo: backgrounded', {}, logger.DebugContext.convo)
+      logger.debug(
+        'Convo: backgrounded',
+        {id: this.id},
+        logger.DebugContext.convo,
+      )
       this.status = ConvoStatus.Backgrounded
       this.pollInterval = BACKGROUND_POLL_INTERVAL
       this.commit()
@@ -430,7 +439,8 @@ export class Convo {
       this.status === ConvoStatus.Backgrounded ||
       this.status === ConvoStatus.Resuming
     ) {
-      logger.debug('Convo: suspended', {}, logger.DebugContext.convo)
+      logger.debug('Convo: suspended', {id: this.id}, logger.DebugContext.convo)
+      DEBUG_ACTIVE_CHAT = undefined
       this.status = ConvoStatus.Suspended
       this.commit()
     }
@@ -552,11 +562,11 @@ export class Convo {
       this.status === ConvoStatus.Ready ||
       this.status === ConvoStatus.Backgrounded
     ) {
-      logger.debug(
-        'Convo: poll events',
-        {convoId: this.convoId, id: this.id},
-        logger.DebugContext.convo,
-      )
+      // logger.debug(
+      //   'Convo: poll events',
+      //   {id: this.id},
+      //   logger.DebugContext.convo,
+      // )
 
       try {
         this.pendingPoll = this.ingestLatestEvents()
