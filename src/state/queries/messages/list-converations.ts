@@ -7,7 +7,7 @@ import {useHeaders} from './temp-headers'
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
-export function useListConvos() {
+export function useListConvos({refetchInterval}: {refetchInterval: number}) {
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
 
@@ -24,5 +24,6 @@ export function useListConvos() {
     },
     initialPageParam: undefined as RQPageParam,
     getNextPageParam: lastPage => lastPage.cursor,
+    refetchInterval,
   })
 }

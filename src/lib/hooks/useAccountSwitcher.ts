@@ -15,7 +15,7 @@ export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {initSession, clearCurrentAccount} = useSessionApi()
+  const {initSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
@@ -41,9 +41,7 @@ export function useAccountSwitcher() {
           }
           await initSession(account)
           logEvent('account:loggedIn', {logContext, withPassword: false})
-          setTimeout(() => {
-            Toast.show(_(msg`Signed in as @${account.handle}`))
-          }, 100)
+          Toast.show(_(msg`Signed in as @${account.handle}`))
         } else {
           requestSwitchToAccount({requestedAccount: account.did})
           Toast.show(
@@ -55,22 +53,11 @@ export function useAccountSwitcher() {
         logger.error(`switch account: selectAccount failed`, {
           message: e.message,
         })
-        clearCurrentAccount() // back user out to login
-        setTimeout(() => {
-          Toast.show(_(msg`Sorry! We need you to enter your password.`))
-        }, 100)
       } finally {
         setPendingDid(null)
       }
     },
-    [
-      _,
-      track,
-      clearCurrentAccount,
-      initSession,
-      requestSwitchToAccount,
-      pendingDid,
-    ],
+    [_, track, initSession, requestSwitchToAccount, pendingDid],
   )
 
   return {onPressSwitchAccount, pendingDid}

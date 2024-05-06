@@ -13,20 +13,20 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {useHaptics} from 'lib/haptics'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
 export function MessageInput({
   onSendMessage,
-  onFocus,
-  onBlur,
+  scrollToEnd,
 }: {
   onSendMessage: (message: string) => void
-  onFocus: () => void
-  onBlur: () => void
+  scrollToEnd: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const playHaptic = useHaptics()
   const [message, setMessage] = React.useState('')
   const [maxHeight, setMaxHeight] = React.useState<number | undefined>()
   const [isInputScrollable, setIsInputScrollable] = React.useState(false)
@@ -40,11 +40,12 @@ export function MessageInput({
       return
     }
     onSendMessage(message.trimEnd())
+    playHaptic()
     setMessage('')
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [message, onSendMessage])
+  }, [message, onSendMessage, playHaptic])
 
   const onInputLayout = React.useCallback(
     (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
@@ -56,8 +57,10 @@ export function MessageInput({
 
       setMaxHeight(max)
       setIsInputScrollable(availableSpace < 30)
+
+      scrollToEnd()
     },
-    [topInset],
+    [scrollToEnd, topInset],
   )
 
   return (
@@ -84,8 +87,7 @@ export function MessageInput({
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
-          onFocus={onFocus}
-          onBlur={onBlur}
+          onFocus={scrollToEnd}
           onContentSizeChange={onInputLayout}
           ref={inputRef}
         />
@@ -101,7 +103,7 @@ export function MessageInput({
             {height: 30, width: 30, backgroundColor: t.palette.primary_500},
           ]}
           onPress={onSubmit}>
-          <PaperPlane fill={t.palette.white} />
+          <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
     </View>
