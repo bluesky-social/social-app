@@ -64,7 +64,7 @@ type NonTextElements =
 
 export type ButtonProps = Pick<
   PressableProps,
-  'disabled' | 'onPress' | 'testID'
+  'disabled' | 'onPress' | 'testID' | 'onLongPress'
 > &
   AccessibilityProps &
   VariantProps & {

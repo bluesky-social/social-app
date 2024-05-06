@@ -18,11 +18,9 @@ import {
 } from '#/lib/api/feed/utils'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
-import {
-  useModerationOpts,
-  usePreferencesQuery,
-} from '#/state/queries/preferences'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
+import {useModerationOpts} from '../preferences/moderation-opts'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 const suggestedFollowsQueryKey = [suggestedFollowsQueryKeyRoot]

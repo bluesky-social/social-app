@@ -8,6 +8,7 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
@@ -119,11 +120,19 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
   const onBackPress = React.useCallback(() => {
     if (state.activeStep !== SignupStep.INFO) {
+      if (state.activeStep === SignupStep.CAPTCHA) {
+        logger.error('Signup Flow Error', {
+          errorMessage:
+            'User went back from captcha step. Possibly encountered an error.',
+          registrationHandle: state.handle,
+        })
+      }
+
       dispatch({type: 'prev'})
     } else {
       onPressBack()
     }
-  }, [onPressBack, state.activeStep])
+  }, [onPressBack, state.activeStep, state.handle])
 
   return (
     <SignupContext.Provider value={{state, dispatch}}>

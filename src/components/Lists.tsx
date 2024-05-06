@@ -134,6 +134,7 @@ let ListMaybePlaceholder = ({
   emptyType = 'page',
   onRetry,
   onGoBack,
+  hideBackButton,
   sideBorders,
 }: {
   isLoading: boolean
@@ -146,6 +147,7 @@ let ListMaybePlaceholder = ({
   emptyType?: 'page' | 'results'
   onRetry?: () => Promise<unknown>
   onGoBack?: () => void
+  hideBackButton?: boolean
   sideBorders?: boolean
 }): React.ReactNode => {
   const t = useTheme()
@@ -179,6 +181,7 @@ let ListMaybePlaceholder = ({
         onRetry={onRetry}
         onGoBack={onGoBack}
         sideBorders={sideBorders}
+        hideBackButton={hideBackButton}
       />
     )
   }
@@ -198,6 +201,7 @@ let ListMaybePlaceholder = ({
         }
         onRetry={onRetry}
         onGoBack={onGoBack}
+        hideBackButton={hideBackButton}
         sideBorders={sideBorders}
       />
     )

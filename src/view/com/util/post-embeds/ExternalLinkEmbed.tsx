@@ -21,10 +21,12 @@ export const ExternalLinkEmbed = ({
   link,
   onOpen,
   style,
+  hideAlt,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  hideAlt?: boolean
 }) => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -39,7 +41,7 @@ export const ExternalLinkEmbed = ({
   }, [link.uri, externalEmbedPrefs])
 
   if (embedPlayerParams?.source === 'tenor') {
-    return <GifEmbed params={embedPlayerParams} link={link} />
+    return <GifEmbed params={embedPlayerParams} link={link} hideAlt={hideAlt} />
   }
 
   return (

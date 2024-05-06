@@ -28,8 +28,8 @@ import {
 
 import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent} from '#/state/session'
+import {useModerationOpts} from '../../preferences/moderation-opts'
 import {STALE} from '..'
-import {useModerationOpts} from '../preferences'
 import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
 import {FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'

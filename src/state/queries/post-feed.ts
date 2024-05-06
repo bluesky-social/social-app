@@ -32,7 +32,8 @@ import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
-import {useModerationOpts, usePreferencesQuery} from './preferences'
+import {useModerationOpts} from '../preferences/moderation-opts'
+import {usePreferencesQuery} from './preferences'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
