@@ -12,6 +12,10 @@ describe(`#/state/messages/convo`, () => {
     })
   })
 
+  describe(`read states`, () => {
+    it.todo(`should mark messages as read as they come in`)
+  })
+
   describe(`history fetching`, () => {
     it.todo(`fetches initial chat history`)
     it.todo(`fetches additional chat history`)

@@ -20,6 +20,7 @@ import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Button} from '../Button'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
 
@@ -178,7 +179,7 @@ function SearchablePeopleList({
         </Text>
         <TextField.Root>
           <TextField.Icon icon={Search} />
-          <TextField.Input
+          <Dialog.Input
             label={_(msg`Search profiles`)}
             placeholder={_(msg`Search`)}
             value={searchText}
@@ -197,6 +198,7 @@ function SearchablePeopleList({
             autoCorrect={false}
             autoComplete="off"
             autoCapitalize="none"
+            autoFocus
           />
         </TextField.Root>
       </View>
@@ -211,20 +213,35 @@ function SearchablePeopleList({
       ListHeaderComponent={
         <>
           {listHeader}
-          {searchText.length > 0 && !actorAutocompleteData?.length && (
-            <ListMaybePlaceholder
-              isLoading={isFetching}
-              isError={isError}
-              onRetry={refetch}
-              hideBackButton={true}
-              emptyType="results"
-              sideBorders={false}
-              emptyMessage={
-                isError
-                  ? _(msg`No search results found for "${searchText}".`)
-                  : _(msg`Could not load profiles. Please try again later.`)
-              }
-            />
+          {searchText.length === 0 ? (
+            <View style={[a.pt_4xl, a.align_center, a.px_lg]}>
+              <Envelope width={64} fill={t.palette.contrast_200} />
+              <Text
+                style={[
+                  a.text_lg,
+                  a.text_center,
+                  a.mt_md,
+                  t.atoms.text_contrast_low,
+                ]}>
+                <Trans>Search for someone to start a conversation with.</Trans>
+              </Text>
+            </View>
+          ) : (
+            !actorAutocompleteData?.length && (
+              <ListMaybePlaceholder
+                isLoading={isFetching}
+                isError={isError}
+                onRetry={refetch}
+                hideBackButton={true}
+                emptyType="results"
+                sideBorders={false}
+                emptyMessage={
+                  isError
+                    ? _(msg`No search results found for "${searchText}".`)
+                    : _(msg`Could not load profiles. Please try again later.`)
+                }
+              />
+            )
           )}
         </>
       }
