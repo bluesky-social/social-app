@@ -28,31 +28,30 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<Set<string>>(new Set())
 
-  const [sendToFeed] = React.useState(() =>
-    debounce(
-      () => {
-        const proxyAgent = getAgent().withProxy(
-          // @ts-ignore TODO need to update withProxy() to support this key -prf
-          'bsky_fg',
-          // TODO when we start sending to other feeds, we need to grab their DID -prf
-          'did:web:discover.bsky.app',
-        ) as BskyAgent
-        proxyAgent.app.bsky.feed
-          .sendInteractions({
-            interactions: Array.from(queue.current).map(toInteraction),
-          })
-          .catch((e: any) => {
-            logger.warn('Failed to send feed interactions', {error: e})
-          })
+  const sendToFeedNotDebounced = React.useCallback(() => {
+    const proxyAgent = getAgent().withProxy(
+      // @ts-ignore TODO need to update withProxy() to support this key -prf
+      'bsky_fg',
+      // TODO when we start sending to other feeds, we need to grab their DID -prf
+      'did:web:discover.bsky.app',
+    ) as BskyAgent
+    proxyAgent.app.bsky.feed
+      .sendInteractions({
+        interactions: Array.from(queue.current).map(toInteraction),
+      })
+      .catch((e: any) => {
+        logger.warn('Failed to send feed interactions', {error: e})
+      })
 
-        for (const v of queue.current) {
-          history.current.add(v)
-        }
-        queue.current.clear()
-      },
-      15e3,
-      {maxWait: 60e3},
-    ),
+    for (const v of queue.current) {
+      history.current.add(v)
+    }
+    queue.current.clear()
+  }, [getAgent])
+
+  const sendToFeed = React.useMemo(
+    () => debounce(sendToFeedNotDebounced, 15e3, {maxWait: 60e3}),
+    [sendToFeedNotDebounced],
   )
 
   React.useEffect(() => {
