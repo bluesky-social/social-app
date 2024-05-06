@@ -407,11 +407,13 @@ let Row = function RowImpl<ItemT>({
           if (entry.isIntersecting) {
             if (!intersectionTimeout.current) {
               intersectionTimeout.current = setTimeout(() => {
+                intersectionTimeout.current = undefined
                 onItemSeen!(item)
               }, ON_ITEM_SEEN_WAIT_DURATION)
             }
           } else {
             if (intersectionTimeout.current) {
+              intersectionTimeout.current = undefined
               clearTimeout(intersectionTimeout.current)
             }
           }
