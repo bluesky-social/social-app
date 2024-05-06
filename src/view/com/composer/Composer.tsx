@@ -345,10 +345,10 @@ export const ComposePost = observer(function ComposePost({
               meta: {
                 ...ext?.meta,
                 description:
-                  altText.trim().length > 0 ? '' : `ALT: ${altText.trim()}`,
+                  altText.trim().length === 0 ? '' : `ALT: ${altText.trim()}`,
               },
             }
-          : undefined,
+          : ext,
       )
     },
     [setExtLink],

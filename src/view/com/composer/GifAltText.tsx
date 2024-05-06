@@ -1,13 +1,18 @@
 import React, {useCallback, useState} from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
+import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {ExternalEmbedDraft} from '#/lib/api'
-import {HITSLOP_10} from '#/lib/constants'
-import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
+import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
+import {
+  EmbedPlayerParams,
+  parseEmbedPlayerFromUrl,
+} from '#/lib/strings/embed-player'
+import {enforceLen} from '#/lib/strings/helpers'
 import {Gif} from '#/state/queries/tenor'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -28,7 +33,6 @@ export function GifAltText({
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
   const t = useTheme()
-  const [altText, setAltText] = useState('')
 
   const {link, params} = React.useMemo(() => {
     return {
@@ -42,11 +46,14 @@ export function GifAltText({
     }
   }, [linkProp])
 
-  const onPressSubmit = useCallback(() => {
-    control.close(() => {
-      onSubmit(altText)
-    })
-  }, [onSubmit, altText, control])
+  const onPressSubmit = useCallback(
+    (alt: string) => {
+      control.close(() => {
+        onSubmit(alt)
+      })
+    },
+    [onSubmit, control],
+  )
 
   if (!gif || !params) return null
 
@@ -60,7 +67,6 @@ export function GifAltText({
         hitSlop={HITSLOP_10}
         onPress={() => {
           Keyboard.dismiss()
-          setAltText(link.description.replace('ALT: ', ''))
           control.open()
         }}
         style={[
@@ -72,10 +78,11 @@ export function GifAltText({
           a.py_2xs,
           a.flex_row,
           a.gap_xs,
+          a.align_center,
           {backgroundColor: 'rgba(0, 0, 0, 0.75)'},
         ]}>
         {link.description ? (
-          <Check size="sm" fill={t.palette.white} />
+          <Check size="xs" fill={t.palette.white} style={a.ml_xs} />
         ) : (
           <Plus size="sm" fill={t.palette.white} />
         )}
@@ -88,48 +95,72 @@ export function GifAltText({
 
       <Dialog.Outer control={control}>
         <Dialog.Handle />
-        <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
-          <Dialog.Close />
-          <Text
-            style={[
-              a.text_2xl,
-              a.font_bold,
-              a.leading_tight,
-              a.pb_sm,
-              web(a.pt_lg),
-            ]}>
-            <Trans>Add ALT text</Trans>
-          </Text>
-          <GifEmbed link={link} params={params} />
-          <View style={[a.mt_md, a.gap_md]}>
-            <View>
-              <TextField.LabelText>
-                <Trans>Descriptive alt text</Trans>
-              </TextField.LabelText>
-              <TextField.Root>
-                <Dialog.Input
-                  label={_(msg`Alt text`)}
-                  placeholder={link.title}
-                  value={altText}
-                  onChangeText={setAltText}
-                  onSubmitEditing={onPressSubmit}
-                  returnKeyType="done"
-                />
-              </TextField.Root>
-            </View>
-            <Button
-              label={_(msg`Save`)}
-              size="medium"
-              color="primary"
-              variant="solid"
-              onPress={onPressSubmit}>
-              <ButtonText>
-                <Trans>Save</Trans>
-              </ButtonText>
-            </Button>
-          </View>
-        </Dialog.ScrollableInner>
+        <AltTextInner
+          onSubmit={onPressSubmit}
+          link={link}
+          params={params}
+          initalValue={link.description.replace('ALT: ', '')}
+          key={link.uri}
+        />
       </Dialog.Outer>
     </>
+  )
+}
+
+function AltTextInner({
+  onSubmit,
+  link,
+  params,
+  initalValue,
+}: {
+  onSubmit: (text: string) => void
+  link: AppBskyEmbedExternal.ViewExternal
+  params: EmbedPlayerParams
+  initalValue: string
+}) {
+  const {_} = useLingui()
+  const [altText, setAltText] = useState(initalValue)
+
+  const onPressSubmit = useCallback(() => {
+    onSubmit(altText)
+  }, [onSubmit, altText])
+
+  return (
+    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+      <Dialog.Close />
+      <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
+        <Trans>Add ALT text</Trans>
+      </Text>
+      <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
+        <GifEmbed link={link} params={params} hideAlt />
+      </View>
+      <View style={[a.mt_md, a.gap_md]}>
+        <View>
+          <TextField.LabelText>
+            <Trans>Descriptive alt text</Trans>
+          </TextField.LabelText>
+          <TextField.Root>
+            <Dialog.Input
+              label={_(msg`Alt text`)}
+              placeholder={link.title}
+              onChangeText={text => setAltText(enforceLen(text, MAX_ALT_TEXT))}
+              value={altText}
+              multiline
+              numberOfLines={3}
+            />
+          </TextField.Root>
+        </View>
+        <Button
+          label={_(msg`Save`)}
+          size="medium"
+          color="primary"
+          variant="solid"
+          onPress={onPressSubmit}>
+          <ButtonText>
+            <Trans>Save</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+    </Dialog.ScrollableInner>
   )
 }
