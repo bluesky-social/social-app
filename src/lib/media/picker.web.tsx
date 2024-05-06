@@ -13,7 +13,7 @@ export async function openCamera(_opts: CameraOpts): Promise<RNImage> {
 
 export async function openCropper(opts: CropperOptions): Promise<RNImage> {
   // TODO handle more opts
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     unstable__openModal({
       name: 'crop-image',
       uri: opts.path,
@@ -24,6 +24,8 @@ export async function openCropper(opts: CropperOptions): Promise<RNImage> {
       onSelect: (img?: RNImage) => {
         if (img) {
           resolve(img)
+        } else {
+          reject(new Error('Canceled'))
         }
       },
     })

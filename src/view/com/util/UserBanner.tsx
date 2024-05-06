@@ -6,6 +6,7 @@ import {ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   useCameraPermission,
@@ -64,14 +65,20 @@ export function UserBanner({
       return
     }
 
-    onSelectNewBanner?.(
-      await openCropper({
-        mediaType: 'photo',
-        path: items[0].path,
-        width: 3000,
-        height: 1000,
-      }),
-    )
+    try {
+      onSelectNewBanner?.(
+        await openCropper({
+          mediaType: 'photo',
+          path: items[0].path,
+          width: 3000,
+          height: 1000,
+        }),
+      )
+    } catch (e: any) {
+      if (!String(e).includes('Canceled')) {
+        logger.error('Failed to crop banner', {error: e})
+      }
+    }
   }, [onSelectNewBanner, requestPhotoAccessIfNeeded])
 
   const onRemoveBanner = React.useCallback(() => {
