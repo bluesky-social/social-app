@@ -164,6 +164,7 @@ function AltTextInner({
           </ButtonText>
         </Button>
       </View>
+      <AltTextReminder />
     </Dialog.ScrollableInner>
   )
 }
