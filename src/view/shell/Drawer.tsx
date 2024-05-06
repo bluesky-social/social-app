@@ -107,7 +107,7 @@ let DrawerProfileCard = ({
           <Plural
             value={profile?.followsCount || 0}
             one="following"
-            other="followings"
+            other="following"
           />
         </Trans>
       </Text>
