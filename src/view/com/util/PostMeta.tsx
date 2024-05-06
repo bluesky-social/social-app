@@ -64,6 +64,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         style={[
           a.flex,
           a.flex_row,
+          a.align_end,
           {
             gap: 4,
             // 87% is about the size where our timestamp hover starts to feel right. Anything higher feels too cramped
