@@ -20,6 +20,7 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
+import {AltTextReminder} from './photos/Gallery'
 
 export function GifAltText({
   link: linkProp,
@@ -72,7 +73,7 @@ export function GifAltText({
         style={[
           a.absolute,
           {top: 20, left: 12},
-          a.rounded_xs,
+          {borderRadius: 6},
           a.pl_xs,
           a.pr_sm,
           a.py_2xs,
@@ -92,6 +93,8 @@ export function GifAltText({
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
+
+      <AltTextReminder />
 
       <Dialog.Outer control={control}>
         <Dialog.Handle />

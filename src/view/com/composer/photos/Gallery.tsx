@@ -221,9 +221,27 @@ const GalleryInner = observer(function GalleryImpl({
           </Trans>
         </Text>
       </View>
+      <AltTextReminder />
     </>
   ) : null
 })
+
+export function AltTextReminder() {
+  const t = useTheme()
+  return (
+    <View style={[styles.reminder]}>
+      <View style={[styles.infoIcon, t.atoms.bg_contrast_25]}>
+        <FontAwesomeIcon icon="info" size={12} color={t.atoms.text.color} />
+      </View>
+      <Text type="sm" style={[t.atoms.text_contrast_medium, s.flex1]}>
+        <Trans>
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
+        </Trans>
+      </Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   gallery: {
