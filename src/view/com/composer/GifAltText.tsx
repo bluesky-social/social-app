@@ -169,9 +169,9 @@ function AltTextInner({
           <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
             <GifEmbed link={link} params={params} hideAlt />
           </View>
-          <Dialog.Close />
         </View>
       </View>
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
