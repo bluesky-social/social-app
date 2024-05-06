@@ -5,28 +5,36 @@ import debounce from 'lodash.debounce'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logger} from '#/logger'
-import {FeedDescriptor, isFeedPostSlice} from '#/state/queries/post-feed'
+import {
+  FeedDescriptor,
+  FeedPostSliceItem,
+  isFeedPostSlice,
+} from '#/state/queries/post-feed'
 import {useAgent} from './session'
 
 type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
-  flushAndReset: () => void
+  flush: () => void
 }
 
 const stateContext = React.createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
-  flushAndReset: () => {},
+  flush: () => {},
 })
 
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   const {getAgent} = useAgent()
   const enabled = isDiscoverFeed(feed) && hasSession
   const queue = React.useRef<Set<string>>(new Set())
-  const history = React.useRef<Set<string>>(new Set())
+  const history = React.useRef<
+    // Use a WeakSet so that we don't need to clear it.
+    // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
+    WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
+  >(new WeakSet())
 
   const sendToFeedNotDebounced = React.useCallback(() => {
     const proxyAgent = getAgent().withProxy(
@@ -35,18 +43,15 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       // TODO when we start sending to other feeds, we need to grab their DID -prf
       'did:web:discover.bsky.app',
     ) as BskyAgent
+
+    const interactions = Array.from(queue.current).map(toInteraction)
+    queue.current.clear()
+
     proxyAgent.app.bsky.feed
-      .sendInteractions({
-        interactions: Array.from(queue.current).map(toInteraction),
-      })
+      .sendInteractions({interactions})
       .catch((e: any) => {
         logger.warn('Failed to send feed interactions', {error: e})
       })
-
-    for (const v of queue.current) {
-      history.current.add(v)
-    }
-    queue.current.clear()
   }, [getAgent])
 
   const sendToFeed = React.useMemo(
@@ -75,13 +80,15 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
         return
       }
       for (const postItem of slice.items) {
-        const str = toString({
-          item: postItem.uri,
-          event: 'app.bsky.feed.defs#interactionSeen',
-          feedContext: postItem.feedContext,
-        })
-        if (!history.current.has(str)) {
-          queue.current.add(str)
+        if (!history.current.has(postItem)) {
+          history.current.add(postItem)
+          queue.current.add(
+            toString({
+              item: postItem.uri,
+              event: 'app.bsky.feed.defs#interactionSeen',
+              feedContext: postItem.feedContext,
+            }),
+          )
           sendToFeed()
         }
       }
@@ -94,21 +101,20 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       if (!enabled) {
         return
       }
-      const str = toString(interaction)
-      if (!history.current.has(str)) {
-        queue.current.add(str)
+      if (!history.current.has(interaction)) {
+        history.current.add(interaction)
+        queue.current.add(toString(interaction))
         sendToFeed()
       }
     },
     [enabled, sendToFeed],
   )
 
-  const flushAndReset = React.useCallback(() => {
+  const flush = React.useCallback(() => {
     if (!enabled) {
       return
     }
     sendToFeed.flush()
-    history.current.clear()
   }, [enabled, sendToFeed])
 
   return React.useMemo(() => {
@@ -120,10 +126,10 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       // queues the event to be sent with the debounced sendToFeed call
       sendInteraction,
       // call on feed refresh
-      // immediately sends all queued events and clears the history tracker
-      flushAndReset,
+      // immediately sends all queued events
+      flush,
     }
-  }, [enabled, onItemSeen, sendInteraction, flushAndReset])
+  }, [enabled, onItemSeen, sendInteraction, flush])
 }
 
 export const FeedFeedbackProvider = stateContext.Provider

@@ -226,7 +226,7 @@ let Feed = ({
     setIsPTRing(true)
     try {
       await refetch()
-      feedFeedback.flushAndReset()
+      feedFeedback.flush()
       onHasNew?.(false)
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})

@@ -468,7 +468,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const feedFeedback = useFeedFeedback(feed, hasSession)
 
     const onScrollToTop = useCallback(() => {
-      feedFeedback.flushAndReset()
+      feedFeedback.flush()
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,

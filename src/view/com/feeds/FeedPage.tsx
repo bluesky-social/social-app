@@ -70,7 +70,7 @@ export function FeedPage({
       getTabState(getRootNavigation(navigation).getState(), 'Home') ===
       TabState.InsideAtRoot
     if (isScreenFocused && isPageFocused) {
-      feedFeedback.flushAndReset()
+      feedFeedback.flush()
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
@@ -105,7 +105,7 @@ export function FeedPage({
   }, [openComposer, track])
 
   const onPressLoadLatest = React.useCallback(() => {
-    feedFeedback.flushAndReset()
+    feedFeedback.flush()
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
