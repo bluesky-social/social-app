@@ -777,11 +777,11 @@ msgstr "Canvia el teu correu"
 
 #: src/Navigation.tsx:302
 msgid "Chat"
-msgstr ""
+msgstr "Xat"
 
 #: src/screens/Messages/Conversation/index.tsx:26
 msgid "Chat with {chatId}"
-msgstr ""
+msgstr "Xateja amb {chatId}"
 
 #: src/screens/Deactivated.tsx:79
 #: src/screens/Deactivated.tsx:83
@@ -2858,18 +2858,18 @@ msgstr "Missatge del servidor: {0}"
 
 #: src/screens/Messages/List/index.tsx:34
 msgid "Message settings"
-msgstr ""
+msgstr "Configuració dels missatges"
 
 #: src/Navigation.tsx:517
 #: src/screens/Messages/List/index.tsx:103
 #: src/view/shell/bottom-bar/BottomBar.tsx:261
 #: src/view/shell/desktop/LeftNav.tsx:360
 msgid "Messages"
-msgstr ""
+msgstr "Missatges"
 
 #: src/Navigation.tsx:307
 msgid "Messaging settings"
-msgstr ""
+msgstr "Configuració dels missatges"
 
 #: src/lib/moderation/useReportOptions.ts:45
 msgid "Misleading Account"
@@ -3569,7 +3569,7 @@ msgstr "Obre la web enllaçada"
 
 #: src/screens/Messages/List/index.tsx:35
 msgid "Opens the message settings page"
-msgstr ""
+msgstr "Obre la pàgina de configuració dels missatges"
 
 #: src/view/screens/Settings/index.tsx:788
 #: src/view/screens/Settings/index.tsx:798
@@ -4044,7 +4044,7 @@ msgstr "Elimina la paraula silenciada de la teva llista"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:208
 msgid "Remove quote"
-msgstr ""
+msgstr "Elimina la citació"
 
 #: src/view/com/modals/Repost.tsx:48
 msgid "Remove repost"
@@ -4081,7 +4081,7 @@ msgstr "Elimina la miniatura per defecte de {0}"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:209
 msgid "Removes quoted post"
-msgstr ""
+msgstr "Elimina la publicació amb la citació"
 
 #: src/view/screens/Profile.tsx:194
 msgid "Replies"
@@ -4413,7 +4413,7 @@ msgstr "Cerca per \"{query}\""
 
 #: src/view/screens/Search/Search.tsx:839
 msgid "Search for \"{searchText}\""
-msgstr ""
+msgstr "Cerca per \"{searchText}\""
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
@@ -6261,7 +6261,7 @@ msgstr "No tens llistes."
 
 #: src/screens/Messages/List/index.tsx:92
 msgid "You have no messages yet. Start a conversation with someone!"
-msgstr ""
+msgstr "Encara no tens missatges. Comença una conversa amb algú!"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:137
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
