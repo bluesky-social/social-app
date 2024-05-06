@@ -12,10 +12,10 @@ import {
   QueryClient,
   QueryKey,
   useInfiniteQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
 
 import {HomeFeedAPI} from '#/lib/api/feed/home'
+import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
@@ -32,8 +32,8 @@ import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
-import {useModerationOpts} from './preferences'
-import {precacheFeedPostProfiles} from './profile'
+import {useModerationOpts} from '../preferences/moderation-opts'
+import {usePreferencesQuery} from './preferences'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
@@ -102,11 +102,13 @@ export function usePostFeedQuery(
   params?: FeedParams,
   opts?: {enabled?: boolean; ignoreFilterFor?: string},
 ) {
-  const queryClient = useQueryClient()
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
+  const {data: preferences} = usePreferencesQuery()
+  const enabled =
+    opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
+  const userInterests = aggregateUserInterests(preferences)
   const {getAgent} = useAgent()
-  const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -144,6 +146,7 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
+              userInterests, // Not in the query key because they don't change.
               getAgent,
             }),
             cursor: undefined,
@@ -151,7 +154,6 @@ export function usePostFeedQuery(
 
       try {
         const res = await api.fetch({cursor, limit: PAGE_SIZE})
-        precacheFeedPostProfiles(queryClient, res.feed)
 
         /*
          * If this is a public view, we need to check if posts fail moderation.
@@ -375,11 +377,13 @@ function createApi({
   feedDesc,
   feedParams,
   feedTuners,
+  userInterests,
   getAgent,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
+  userInterests?: string
   getAgent: () => BskyAgent
 }) {
   if (feedDesc === 'home') {
@@ -388,9 +392,10 @@ function createApi({
         getAgent,
         feedParams,
         feedTuners,
+        userInterests,
       })
     } else {
-      return new HomeFeedAPI({getAgent})
+      return new HomeFeedAPI({getAgent, userInterests})
     }
   } else if (feedDesc === 'following') {
     return new FollowingFeedAPI({getAgent})
@@ -405,6 +410,7 @@ function createApi({
     return new CustomFeedAPI({
       getAgent,
       feedParams: {feed},
+      userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')

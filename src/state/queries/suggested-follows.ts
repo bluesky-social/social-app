@@ -12,9 +12,15 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
+import {
+  aggregateUserInterests,
+  createBskyTopicsHeader,
+} from '#/lib/api/feed/utils'
+import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
+import {useModerationOpts} from '../preferences/moderation-opts'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 const suggestedFollowsQueryKey = [suggestedFollowsQueryKeyRoot]
@@ -29,6 +35,7 @@ export function useSuggestedFollowsQuery() {
   const {currentAccount} = useSession()
   const {getAgent} = useAgent()
   const moderationOpts = useModerationOpts()
+  const {data: preferences} = usePreferencesQuery()
 
   return useInfiniteQuery<
     AppBskyActorGetSuggestions.OutputSchema,
@@ -37,14 +44,23 @@ export function useSuggestedFollowsQuery() {
     QueryKey,
     string | undefined
   >({
-    enabled: !!moderationOpts,
+    enabled: !!moderationOpts && !!preferences,
     staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFollowsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.actor.getSuggestions({
-        limit: 25,
-        cursor: pageParam,
-      })
+      const contentLangs = getContentLanguages().join(',')
+      const res = await getAgent().app.bsky.actor.getSuggestions(
+        {
+          limit: 25,
+          cursor: pageParam,
+        },
+        {
+          headers: {
+            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            'Accept-Language': contentLangs,
+          },
+        },
+      )
 
       res.data.actors = res.data.actors
         .filter(

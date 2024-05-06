@@ -59,6 +59,7 @@ import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import {CharProgress} from './char-progress/CharProgress'
 import {ExternalEmbed} from './ExternalEmbed'
+import {GifAltText} from './GifAltText'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {Gallery} from './photos/Gallery'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
@@ -327,10 +328,30 @@ export const ComposePost = observer(function ComposePost({
           image: gif.media_formats.preview.url,
           likelyType: LikelyType.HTML,
           title: gif.content_description,
-          description: `ALT: ${gif.content_description}`,
+          description: '',
         },
       })
       setExtGif(gif)
+    },
+    [setExtLink],
+  )
+
+  const handleChangeGifAltText = useCallback(
+    (altText: string) => {
+      setExtLink(ext =>
+        ext && ext.meta
+          ? {
+              ...ext,
+              meta: {
+                ...ext?.meta,
+                description:
+                  altText.trim().length === 0
+                    ? ''
+                    : `Alt text: ${altText.trim()}`,
+              },
+            }
+          : ext,
+      )
     },
     [setExtLink],
   )
@@ -474,14 +495,21 @@ export const ComposePost = observer(function ComposePost({
 
           <Gallery gallery={gallery} />
           {gallery.isEmpty && extLink && (
-            <ExternalEmbed
-              link={extLink}
-              gif={extGif}
-              onRemove={() => {
-                setExtLink(undefined)
-                setExtGif(undefined)
-              }}
-            />
+            <View style={a.relative}>
+              <ExternalEmbed
+                link={extLink}
+                gif={extGif}
+                onRemove={() => {
+                  setExtLink(undefined)
+                  setExtGif(undefined)
+                }}
+              />
+              <GifAltText
+                link={extLink}
+                gif={extGif}
+                onSubmit={handleChangeGifAltText}
+              />
+            </View>
           )}
           {quote ? (
             <View style={[s.mt5, isWeb && s.mb10]}>

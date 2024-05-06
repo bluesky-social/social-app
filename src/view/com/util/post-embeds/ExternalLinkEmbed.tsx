@@ -20,9 +20,11 @@ import {Text} from '../text/Text'
 export const ExternalLinkEmbed = ({
   link,
   style,
+  hideAlt,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
   style?: StyleProp<ViewStyle>
+  hideAlt?: boolean
 }) => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -37,7 +39,7 @@ export const ExternalLinkEmbed = ({
   }, [link.uri, externalEmbedPrefs])
 
   if (embedPlayerParams?.source === 'tenor') {
-    return <GifEmbed params={embedPlayerParams} link={link} />
+    return <GifEmbed params={embedPlayerParams} link={link} hideAlt={hideAlt} />
   }
 
   return (

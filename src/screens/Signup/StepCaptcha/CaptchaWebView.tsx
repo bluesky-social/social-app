@@ -26,7 +26,7 @@ export function CaptchaWebView({
   stateParam: string
   state?: SignupState
   onSuccess: (code: string) => void
-  onError: () => void
+  onError: (error: unknown) => void
 }) {
   const redirectHost = React.useMemo(() => {
     if (!state?.serviceUrl) return 'bsky.app'
@@ -56,7 +56,7 @@ export function CaptchaWebView({
 
       const code = urlp.searchParams.get('code')
       if (urlp.searchParams.get('state') !== stateParam || !code) {
-        onError()
+        onError({error: 'Invalid state or code'})
         return
       }
 
@@ -74,6 +74,12 @@ export function CaptchaWebView({
       onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       onNavigationStateChange={onNavigationStateChange}
       scrollEnabled={false}
+      onError={e => {
+        onError(e.nativeEvent)
+      }}
+      onHttpError={e => {
+        onError(e.nativeEvent)
+      }}
     />
   )
 }

@@ -25,11 +25,11 @@ import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
@@ -49,11 +49,7 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {
-  MATCH_HANDLE,
-  SearchLinkCard,
-  SearchProfileCard,
-} from '#/view/shell/desktop/Search'
+import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
 
@@ -156,7 +152,7 @@ function useSuggestedFollows(): [
   return [items, onEndReached]
 }
 
-function SearchScreenSuggestedFollows() {
+let SearchScreenSuggestedFollows = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
   const [suggestions, onEndReached] = useSuggestedFollows()
 
@@ -180,6 +176,7 @@ function SearchScreenSuggestedFollows() {
     </CenteredView>
   )
 }
+SearchScreenSuggestedFollows = React.memo(SearchScreenSuggestedFollows)
 
 type SearchResultSlice =
   | {
@@ -192,7 +189,7 @@ type SearchResultSlice =
       key: string
     }
 
-function SearchScreenPostResults({
+let SearchScreenPostResults = ({
   query,
   sort,
   active,
@@ -200,7 +197,7 @@ function SearchScreenPostResults({
   query: string
   sort?: 'top' | 'latest'
   active: boolean
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
@@ -298,14 +295,15 @@ function SearchScreenPostResults({
     </>
   )
 }
+SearchScreenPostResults = React.memo(SearchScreenPostResults)
 
-function SearchScreenUserResults({
+let SearchScreenUserResults = ({
   query,
   active,
 }: {
   query: string
   active: boolean
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
@@ -334,8 +332,9 @@ function SearchScreenUserResults({
     <Loader />
   )
 }
+SearchScreenUserResults = React.memo(SearchScreenUserResults)
 
-export function SearchScreenInner({query}: {query?: string}) {
+let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -467,18 +466,17 @@ export function SearchScreenInner({query}: {query?: string}) {
     </CenteredView>
   )
 }
+SearchScreenInner = React.memo(SearchScreenInner)
 
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const navigation = useNavigation<NavigationProp>()
-  const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
-  const moderationOpts = useModerationOpts()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
@@ -527,23 +525,10 @@ export function SearchScreen(
 
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
-
-    if (showAutocomplete) {
-      textInput.current?.blur()
-      setShowAutocomplete(false)
-      setSearchText(queryParam)
-    } else {
-      // If we just `setParams` and set `q` to an empty string, the URL still displays `q=`, which isn't pretty.
-      // However, `.replace()` on native has a "push" animation that we don't want. So we need to handle these
-      // differently.
-      if (isWeb) {
-        navigation.replace('Search', {})
-      } else {
-        setSearchText('')
-        navigation.setParams({q: ''})
-      }
-    }
-  }, [showAutocomplete, navigation, queryParam])
+    textInput.current?.blur()
+    setShowAutocomplete(false)
+    setSearchText(queryParam)
+  }, [queryParam])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -597,20 +582,31 @@ export function SearchScreen(
     navigateToItem(searchText)
   }, [navigateToItem, searchText])
 
-  const handleHistoryItemClick = (item: string) => {
-    setSearchText(item)
-    navigateToItem(item)
-  }
+  const onAutocompleteResultPress = React.useCallback(() => {
+    if (isWeb) {
+      setShowAutocomplete(false)
+    } else {
+      textInput.current?.blur()
+    }
+  }, [])
+
+  const handleHistoryItemClick = React.useCallback(
+    (item: string) => {
+      setSearchText(item)
+      navigateToItem(item)
+    },
+    [navigateToItem],
+  )
 
   const onSoftReset = React.useCallback(() => {
-    scrollToTopWeb()
-    onPressCancelSearch()
-  }, [onPressCancelSearch])
-
-  const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(queryParam)
-    return match && match[1]
-  }, [queryParam])
+    if (isWeb) {
+      // Empty params resets the URL to be /search rather than /search?q=
+      navigation.replace('Search', {})
+    } else {
+      setSearchText('')
+      navigation.setParams({q: ''})
+    }
+  }, [navigation])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -619,15 +615,19 @@ export function SearchScreen(
     }, [onSoftReset, setMinimalShellMode]),
   )
 
-  const handleRemoveHistoryItem = (itemToRemove: string) => {
-    const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
-    setSearchHistory(updatedHistory)
-    AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory)).catch(
-      e => {
+  const handleRemoveHistoryItem = React.useCallback(
+    (itemToRemove: string) => {
+      const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
+      setSearchHistory(updatedHistory)
+      AsyncStorage.setItem(
+        'searchHistory',
+        JSON.stringify(updatedHistory),
+      ).catch(e => {
         logger.error('Failed to update search history', {message: e})
-      },
-    )
-  }
+      })
+    },
+    [searchHistory],
+  )
 
   return (
     <View style={isWeb ? null : {flex: 1}}>
@@ -655,175 +655,269 @@ export function SearchScreen(
             />
           </Pressable>
         )}
-
-        <View
-          style={[
-            {backgroundColor: pal.colors.backgroundLight},
-            styles.headerSearchContainer,
-          ]}>
-          <MagnifyingGlassIcon
-            style={[pal.icon, styles.headerSearchIcon]}
-            size={21}
-          />
-          <TextInput
-            testID="searchTextInput"
-            ref={textInput}
-            placeholder={_(msg`Search`)}
-            placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus={isNative}
-            returnKeyType="search"
-            value={searchText}
-            style={[pal.text, styles.headerSearchInput]}
-            keyboardAppearance={theme.colorScheme}
-            onFocus={() => {
-              if (isWeb) {
-                // Prevent a jump on iPad by ensuring that
-                // the initial focused render has no result list.
-                requestAnimationFrame(() => {
-                  setShowAutocomplete(true)
-                })
-              } else {
-                setShowAutocomplete(true)
-              }
-            }}
-            onChangeText={onChangeText}
-            onSubmitEditing={onSubmit}
-            autoFocus={false}
-            accessibilityRole="search"
-            accessibilityLabel={_(msg`Search`)}
-            accessibilityHint=""
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-          />
-          {showAutocomplete ? (
-            <Pressable
-              testID="searchTextInputClearBtn"
-              onPress={onPressClearQuery}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint=""
-              hitSlop={HITSLOP_10}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </Pressable>
-          ) : undefined}
-        </View>
-
-        {(queryParam || showAutocomplete) && (
-          <View style={styles.headerCancelBtn}>
+        <SearchInputBox
+          textInput={textInput}
+          searchText={searchText}
+          showAutocomplete={showAutocomplete}
+          setShowAutocomplete={setShowAutocomplete}
+          onChangeText={onChangeText}
+          onSubmit={onSubmit}
+          onPressClearQuery={onPressClearQuery}
+        />
+        {showAutocomplete && (
+          <View style={[styles.headerCancelBtn]}>
             <Pressable
               onPress={onPressCancelSearch}
               accessibilityRole="button"
               hitSlop={HITSLOP_10}>
-              <Text style={[pal.text]}>
+              <Text style={pal.text}>
                 <Trans>Cancel</Trans>
               </Text>
             </Pressable>
           </View>
         )}
       </CenteredView>
-
-      {showAutocomplete && searchText.length > 0 ? (
-        <>
-          {(isAutocompleteFetching && !autocompleteData?.length) ||
-          !moderationOpts ? (
-            <Loader />
-          ) : (
-            <ScrollView
-              style={{height: '100%'}}
-              // @ts-ignore web only -prf
-              dataSet={{stableGutters: '1'}}
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode="on-drag">
-              <SearchLinkCard
-                label={_(msg`Search for "${searchText}"`)}
-                onPress={isNative ? onSubmit : undefined}
-                to={
-                  isNative
-                    ? undefined
-                    : `/search?q=${encodeURIComponent(searchText)}`
-                }
-                style={{borderBottomWidth: 1}}
-              />
-
-              {queryMaybeHandle ? (
-                <SearchLinkCard
-                  label={_(msg`Go to @${queryMaybeHandle}`)}
-                  to={`/profile/${queryMaybeHandle}`}
-                />
-              ) : null}
-
-              {autocompleteData?.map(item => (
-                <SearchProfileCard
-                  key={item.did}
-                  profile={item}
-                  moderation={moderateProfile(item, moderationOpts)}
-                  onPress={() => {
-                    if (isWeb) {
-                      setShowAutocomplete(false)
-                    } else {
-                      textInput.current?.blur()
-                    }
-                  }}
-                />
-              ))}
-
-              <View style={{height: 200}} />
-            </ScrollView>
-          )}
-        </>
-      ) : !queryParam && showAutocomplete ? (
-        <CenteredView
-          sideBorders={isTabletOrDesktop}
-          // @ts-ignore web only -prf
-          style={{
-            height: isWeb ? '100vh' : undefined,
-          }}>
-          <View style={styles.searchHistoryContainer}>
-            {searchHistory.length > 0 && (
-              <View style={styles.searchHistoryContent}>
-                <Text style={[pal.text, styles.searchHistoryTitle]}>
-                  <Trans>Recent Searches</Trans>
-                </Text>
-                {searchHistory.map((historyItem, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      a.flex_row,
-                      a.mt_md,
-                      a.justify_center,
-                      a.justify_between,
-                    ]}>
-                    <Pressable
-                      accessibilityRole="button"
-                      onPress={() => handleHistoryItemClick(historyItem)}
-                      style={[a.flex_1, a.py_sm]}>
-                      <Text style={pal.text}>{historyItem}</Text>
-                    </Pressable>
-                    <Pressable
-                      accessibilityRole="button"
-                      onPress={() => handleRemoveHistoryItem(historyItem)}
-                      style={[a.px_md, a.py_xs, a.justify_center]}>
-                      <FontAwesomeIcon
-                        icon="xmark"
-                        size={16}
-                        style={pal.textLight as FontAwesomeIconStyle}
-                      />
-                    </Pressable>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-        </CenteredView>
-      ) : (
+      <View
+        style={{
+          display: showAutocomplete ? 'flex' : 'none',
+          flex: 1,
+        }}>
+        {searchText.length > 0 ? (
+          <AutocompleteResults
+            isAutocompleteFetching={isAutocompleteFetching}
+            autocompleteData={autocompleteData}
+            searchText={searchText}
+            onSubmit={onSubmit}
+            onResultPress={onAutocompleteResultPress}
+          />
+        ) : (
+          <SearchHistory
+            searchHistory={searchHistory}
+            onItemClick={handleHistoryItemClick}
+            onRemoveItemClick={handleRemoveHistoryItem}
+          />
+        )}
+      </View>
+      <View
+        style={{
+          display: showAutocomplete ? 'none' : 'flex',
+          flex: 1,
+        }}>
         <SearchScreenInner query={queryParam} />
-      )}
+      </View>
     </View>
+  )
+}
+
+let SearchInputBox = ({
+  textInput,
+  searchText,
+  showAutocomplete,
+  setShowAutocomplete,
+  onChangeText,
+  onSubmit,
+  onPressClearQuery,
+}: {
+  textInput: React.RefObject<TextInput>
+  searchText: string
+  showAutocomplete: boolean
+  setShowAutocomplete: (show: boolean) => void
+  onChangeText: (text: string) => void
+  onSubmit: () => void
+  onPressClearQuery: () => void
+}): React.ReactNode => {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const theme = useTheme()
+  return (
+    <Pressable
+      // This only exists only for extra hitslop so don't expose it to the a11y tree.
+      accessible={false}
+      focusable={false}
+      // @ts-ignore web-only
+      tabIndex={-1}
+      style={[
+        {backgroundColor: pal.colors.backgroundLight},
+        styles.headerSearchContainer,
+        isWeb && {
+          // @ts-ignore web only
+          cursor: 'default',
+        },
+      ]}
+      onPress={() => {
+        textInput.current?.focus()
+      }}>
+      <MagnifyingGlassIcon
+        style={[pal.icon, styles.headerSearchIcon]}
+        size={21}
+      />
+      <TextInput
+        testID="searchTextInput"
+        ref={textInput}
+        placeholder={_(msg`Search`)}
+        placeholderTextColor={pal.colors.textLight}
+        returnKeyType="search"
+        value={searchText}
+        style={[pal.text, styles.headerSearchInput]}
+        keyboardAppearance={theme.colorScheme}
+        selectTextOnFocus={isNative}
+        onFocus={() => {
+          if (isWeb) {
+            // Prevent a jump on iPad by ensuring that
+            // the initial focused render has no result list.
+            requestAnimationFrame(() => {
+              setShowAutocomplete(true)
+            })
+          } else {
+            setShowAutocomplete(true)
+            if (isIOS) {
+              // We rely on selectTextOnFocus, but it's broken on iOS:
+              // https://github.com/facebook/react-native/issues/41988
+              textInput.current?.setSelection(0, searchText.length)
+              // We still rely on selectTextOnFocus for it to be instant on Android.
+            }
+          }
+        }}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmit}
+        autoFocus={false}
+        accessibilityRole="search"
+        accessibilityLabel={_(msg`Search`)}
+        accessibilityHint=""
+        autoCorrect={false}
+        autoComplete="off"
+        autoCapitalize="none"
+      />
+      {showAutocomplete && searchText.length > 0 && (
+        <Pressable
+          testID="searchTextInputClearBtn"
+          onPress={onPressClearQuery}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Clear search query`)}
+          accessibilityHint=""
+          hitSlop={HITSLOP_10}>
+          <FontAwesomeIcon
+            icon="xmark"
+            size={16}
+            style={pal.textLight as FontAwesomeIconStyle}
+          />
+        </Pressable>
+      )}
+    </Pressable>
+  )
+}
+SearchInputBox = React.memo(SearchInputBox)
+
+let AutocompleteResults = ({
+  isAutocompleteFetching,
+  autocompleteData,
+  searchText,
+  onSubmit,
+  onResultPress,
+}: {
+  isAutocompleteFetching: boolean
+  autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
+  searchText: string
+  onSubmit: () => void
+  onResultPress: () => void
+}): React.ReactNode => {
+  const moderationOpts = useModerationOpts()
+  const {_} = useLingui()
+  return (
+    <>
+      {(isAutocompleteFetching && !autocompleteData?.length) ||
+      !moderationOpts ? (
+        <Loader />
+      ) : (
+        <ScrollView
+          style={{height: '100%'}}
+          // @ts-ignore web only -prf
+          dataSet={{stableGutters: '1'}}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
+          <SearchLinkCard
+            label={_(msg`Search for "${searchText}"`)}
+            onPress={isNative ? onSubmit : undefined}
+            to={
+              isNative
+                ? undefined
+                : `/search?q=${encodeURIComponent(searchText)}`
+            }
+            style={{borderBottomWidth: 1}}
+          />
+          {autocompleteData?.map(item => (
+            <SearchProfileCard
+              key={item.did}
+              profile={item}
+              moderation={moderateProfile(item, moderationOpts)}
+              onPress={onResultPress}
+            />
+          ))}
+          <View style={{height: 200}} />
+        </ScrollView>
+      )}
+    </>
+  )
+}
+AutocompleteResults = React.memo(AutocompleteResults)
+
+function SearchHistory({
+  searchHistory,
+  onItemClick,
+  onRemoveItemClick,
+}: {
+  searchHistory: string[]
+  onItemClick: (item: string) => void
+  onRemoveItemClick: (item: string) => void
+}) {
+  const {isTabletOrDesktop} = useWebMediaQueries()
+  const pal = usePalette('default')
+  return (
+    <CenteredView
+      sideBorders={isTabletOrDesktop}
+      // @ts-ignore web only -prf
+      style={{
+        height: isWeb ? '100vh' : undefined,
+      }}>
+      <View style={styles.searchHistoryContainer}>
+        {searchHistory.length > 0 && (
+          <View style={styles.searchHistoryContent}>
+            <Text style={[pal.text, styles.searchHistoryTitle]}>
+              <Trans>Recent Searches</Trans>
+            </Text>
+            {searchHistory.map((historyItem, index) => (
+              <View
+                key={index}
+                style={[
+                  a.flex_row,
+                  a.mt_md,
+                  a.justify_center,
+                  a.justify_between,
+                ]}>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => onItemClick(historyItem)}
+                  hitSlop={HITSLOP_10}
+                  style={[a.flex_1, a.py_sm]}>
+                  <Text style={pal.text}>{historyItem}</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => onRemoveItemClick(historyItem)}
+                  hitSlop={HITSLOP_10}
+                  style={[a.px_md, a.py_xs, a.justify_center]}>
+                  <FontAwesomeIcon
+                    icon="xmark"
+                    size={16}
+                    style={pal.textLight as FontAwesomeIconStyle}
+                  />
+                </Pressable>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+    </CenteredView>
   )
 }
 
@@ -874,6 +968,9 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
+    alignSelf: 'center',
+    zIndex: -1,
+    elevation: -1, // For Android
   },
   tabBarContainer: {
     // @ts-ignore web only
