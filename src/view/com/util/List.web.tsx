@@ -1,5 +1,6 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -20,6 +21,7 @@ export type ListProps<ItemT> = Omit<
   refreshing?: boolean
   onRefresh?: () => void
   desktopFixedHeight: any // TODO: Better types.
+  containWeb?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -27,6 +29,7 @@ function ListImpl<ItemT>(
   {
     ListHeaderComponent,
     ListFooterComponent,
+    containWeb,
     contentContainerStyle,
     data,
     desktopFixedHeight,
@@ -83,13 +86,62 @@ function ListImpl<ItemT>(
     })
   }
 
+  const getScrollableNode = React.useCallback(() => {
+    if (containWeb) {
+      const element = nativeRef.current as HTMLDivElement | null
+      if (!element) return
+
+      return {
+        scrollWidth: element.scrollWidth,
+        scrollHeight: element.scrollHeight,
+        clientWidth: element.clientWidth,
+        clientHeight: element.clientHeight,
+        scrollY: element.scrollTop,
+        scrollX: element.scrollLeft,
+        scrollTo(options?: ScrollToOptions) {
+          element.scrollTo(options)
+        },
+        scrollBy(options: ScrollToOptions) {
+          element.scrollBy(options)
+        },
+        addEventListener(event: string, handler: any) {
+          element.addEventListener(event, handler)
+        },
+        removeEventListener(event: string, handler: any) {
+          element.removeEventListener(event, handler)
+        },
+      }
+    } else {
+      return {
+        scrollWidth: document.documentElement.scrollWidth,
+        scrollHeight: document.documentElement.scrollHeight,
+        clientWidth: window.innerWidth,
+        clientHeight: window.innerHeight,
+        scrollY: window.scrollY,
+        scrollX: window.scrollX,
+        scrollTo(options: ScrollToOptions) {
+          window.scrollTo(options)
+        },
+        scrollBy(options: ScrollToOptions) {
+          window.scrollBy(options)
+        },
+        addEventListener(event: string, handler: any) {
+          window.addEventListener(event, handler)
+        },
+        removeEventListener(event: string, handler: any) {
+          window.removeEventListener(event, handler)
+        },
+      }
+    }
+  }, [containWeb])
+
   const nativeRef = React.useRef(null)
   React.useImperativeHandle(
     ref,
     () =>
       ({
         scrollToTop() {
-          window.scrollTo({top: 0})
+          getScrollableNode()?.scrollTo({top: 0})
         },
         scrollToOffset({
           animated,
@@ -98,46 +150,74 @@ function ListImpl<ItemT>(
           animated: boolean
           offset: number
         }) {
-          window.scrollTo({
+          getScrollableNode()?.scrollTo({
             left: 0,
             top: offset,
             behavior: animated ? 'smooth' : 'instant',
           })
         },
+        scrollToEnd({animated = true}: {animated?: boolean}) {
+          const element = getScrollableNode()
+          element?.scrollTo({
+            left: 0,
+            top: element.scrollHeight,
+            behavior: animated ? 'smooth' : 'instant',
+          })
+        },
       } as any), // TODO: Better types.
-    [],
+    [getScrollableNode],
   )
 
-  // --- onContentSizeChange ---
+  // --- onContentSizeChange, maintainVisibleContentPosition ---
   const containerRef = useRef(null)
   useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
   const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
-  const handleWindowScroll = useNonReactiveCallback(() => {
-    if (isInsideVisibleTree) {
-      contextScrollHandlers.onScroll?.(
-        {
-          contentOffset: {
-            x: Math.max(0, window.scrollX),
-            y: Math.max(0, window.scrollY),
-          },
-        } as any, // TODO: Better types.
-        null as any,
-      )
-    }
+  const handleScroll = useNonReactiveCallback(() => {
+    if (!isInsideVisibleTree) return
+
+    const element = getScrollableNode()
+    contextScrollHandlers.onScroll?.(
+      {
+        contentOffset: {
+          x: Math.max(0, element?.scrollX ?? 0),
+          y: Math.max(0, element?.scrollY ?? 0),
+        },
+        layoutMeasurement: {
+          width: element?.clientWidth,
+          height: element?.clientHeight,
+        },
+        contentSize: {
+          width: element?.scrollWidth,
+          height: element?.scrollHeight,
+        },
+      } as Exclude<
+        ReanimatedScrollEvent,
+        | 'velocity'
+        | 'eventName'
+        | 'zoomScale'
+        | 'targetContentOffset'
+        | 'contentInset'
+      >,
+      null as any,
+    )
   })
+
   React.useEffect(() => {
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
       return
     }
-    window.addEventListener('scroll', handleWindowScroll)
+
+    const element = getScrollableNode()
+
+    element?.addEventListener('scroll', handleScroll)
     return () => {
-      window.removeEventListener('scroll', handleWindowScroll)
+      element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleWindowScroll])
+  }, [isInsideVisibleTree, handleScroll, containWeb, getScrollableNode])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -174,7 +254,11 @@ function ListImpl<ItemT>(
   )
 
   return (
-    <View {...props} style={style} ref={nativeRef}>
+    <View
+      {...props}
+      // @ts-ignore web only
+      style={[style, containWeb && {flex: 1, 'overflow-y': 'scroll'}]}
+      ref={nativeRef}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
         style={
@@ -192,11 +276,13 @@ function ListImpl<ItemT>(
           pal.border,
         ]}>
         <Visibility
+          root={containWeb ? nativeRef.current : null}
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
         {onStartReached && (
           <Visibility
+            root={containWeb ? nativeRef.current : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
@@ -213,6 +299,7 @@ function ListImpl<ItemT>(
         ))}
         {onEndReached && (
           <Visibility
+            root={containWeb ? nativeRef.current : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
           />
@@ -275,11 +362,13 @@ let Row = function RowImpl<ItemT>({
 Row = React.memo(Row)
 
 let Visibility = ({
+  root = null,
   topMargin = '0px',
   bottomMargin = '0px',
   onVisibleChange,
   style,
 }: {
+  root?: Element | null
   topMargin?: string
   bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
@@ -303,6 +392,7 @@ let Visibility = ({
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
+      root,
       rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
     })
     const tail: Element | null = tailRef.current!
@@ -310,7 +400,7 @@ let Visibility = ({
     return () => {
       observer.unobserve(tail)
     }
-  }, [bottomMargin, handleIntersection, topMargin])
+  }, [bottomMargin, handleIntersection, topMargin, root])
 
   return (
     <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
