@@ -327,7 +327,6 @@ export class Convo {
 
       this.refreshConvo()
         .then(async () => {
-          await new Promise(y => setTimeout(y, 2000))
           if (this.status === ConvoStatus.Initializing) {
             this.status = ConvoStatus.Ready
             this.commit()
@@ -363,7 +362,6 @@ export class Convo {
   }
 
   // TODO resume failure
-  // TODO can I resume from error?
   resume() {
     if (
       this.status === ConvoStatus.Suspended ||
@@ -381,6 +379,8 @@ export class Convo {
       this.refreshConvo().then(() => {
         this.commit()
       })
+    } else if (this.status === ConvoStatus.Error) {
+      this.init()
     } else {
       logger.debug(
         `Convo: resume called from ${this.status}`,
