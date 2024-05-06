@@ -1,4 +1,5 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
+import {AppState} from 'react-native'
 import {BskyAgent} from '@atproto-labs/api'
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -43,6 +44,22 @@ export function ChatProvider({
       }
     }, [convo]),
   )
+
+  React.useEffect(() => {
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'active') {
+        convo.resume()
+      } else {
+        convo.background()
+      }
+    }
+
+    const sub = AppState.addEventListener('change', handleAppStateChange)
+
+    return () => {
+      sub.remove()
+    }
+  }, [convo])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }

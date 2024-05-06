@@ -190,7 +190,6 @@ export class Convo {
   private historyCursor: string | undefined | null = undefined
   private isFetchingHistory = false
   private eventsCursor: string | undefined = undefined
-  private pollingFailure = false
 
   private pastMessages: Map<
     string,
@@ -208,8 +207,9 @@ export class Convo {
   private footerItems: Map<string, ConvoItem> = new Map()
   private headerItems: Map<string, ConvoItem> = new Map()
 
-  private pendingEventIngestion: Promise<void> | undefined
   private isProcessingPendingMessages = false
+  private pendingPoll: Promise<void> | undefined
+  private nextPoll: NodeJS.Timeout | undefined
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
@@ -217,7 +217,10 @@ export class Convo {
   recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
   snapshot: ConvoState | undefined
 
+  id: string
+
   constructor(params: ConvoParams) {
+    this.id = nanoid(2)
     this.convoId = params.convoId
     this.agent = params.agent
     this.__tempFromUserDid = params.__tempFromUserDid
@@ -227,6 +230,12 @@ export class Convo {
     this.sendMessage = this.sendMessage.bind(this)
     this.deleteMessage = this.deleteMessage.bind(this)
     this.fetchMessageHistory = this.fetchMessageHistory.bind(this)
+
+    logger.debug(
+      'Convo: created',
+      {convoId: this.convoId, id: this.id},
+      logger.DebugContext.convo,
+    )
   }
 
   private commit() {
@@ -318,12 +327,12 @@ export class Convo {
   }
 
   async init() {
-    logger.debug('Convo: init', {}, logger.DebugContext.convo)
-
     if (
       this.status === ConvoStatus.Uninitialized ||
       this.status === ConvoStatus.Error
     ) {
+      logger.debug('Convo: init', {}, logger.DebugContext.convo)
+
       try {
         this.status = ConvoStatus.Initializing
         this.commit()
@@ -348,21 +357,25 @@ export class Convo {
         this.status = ConvoStatus.Error
         this.commit()
       }
+    } else if (this.status === ConvoStatus.Suspended) {
+      this.resume()
     } else {
       logger.warn(`Convo: cannot init from ${this.status}`)
     }
   }
 
   async resume() {
-    logger.debug('Convo: resume', {}, logger.DebugContext.convo)
-
     if (
       this.status === ConvoStatus.Suspended ||
       this.status === ConvoStatus.Backgrounded
     ) {
+      logger.debug('Convo: resume', {}, logger.DebugContext.convo)
+
       const fromStatus = this.status
 
       try {
+        this.cancelNextPoll()
+
         this.status = ConvoStatus.Resuming
         this.commit()
 
@@ -391,21 +404,36 @@ export class Convo {
         this.commit()
       }
     } else {
-      logger.warn(`Convo: cannot resume from ${this.status}`)
+      logger.debug(
+        `Convo: resume called from ${this.status}`,
+        {},
+        logger.DebugContext.convo,
+      )
     }
   }
 
   async background() {
-    logger.debug('Convo: backgrounded', {}, logger.DebugContext.convo)
-    this.status = ConvoStatus.Backgrounded
-    this.pollInterval = BACKGROUND_POLL_INTERVAL
-    this.commit()
+    if (
+      this.status === ConvoStatus.Ready ||
+      this.status === ConvoStatus.Resuming
+    ) {
+      logger.debug('Convo: backgrounded', {}, logger.DebugContext.convo)
+      this.status = ConvoStatus.Backgrounded
+      this.pollInterval = BACKGROUND_POLL_INTERVAL
+      this.commit()
+    }
   }
 
   async suspend() {
-    logger.debug('Convo: suspended', {}, logger.DebugContext.convo)
-    this.status = ConvoStatus.Suspended
-    this.commit()
+    if (
+      this.status === ConvoStatus.Ready ||
+      this.status === ConvoStatus.Backgrounded ||
+      this.status === ConvoStatus.Resuming
+    ) {
+      logger.debug('Convo: suspended', {}, logger.DebugContext.convo)
+      this.status = ConvoStatus.Suspended
+      this.commit()
+    }
   }
 
   async refreshConvo() {
@@ -518,115 +546,125 @@ export class Convo {
   }
 
   private async pollEvents() {
+    if (this.pendingPoll) return
+
     if (
       this.status === ConvoStatus.Ready ||
       this.status === ConvoStatus.Backgrounded
     ) {
-      if (this.pendingEventIngestion) return
+      logger.debug(
+        'Convo: poll events',
+        {convoId: this.convoId, id: this.id},
+        logger.DebugContext.convo,
+      )
 
-      /*
-       * Represents a failed state, which is retryable.
-       */
-      if (this.pollingFailure) return
+      try {
+        this.pendingPoll = this.ingestLatestEvents()
+        await this.pendingPoll
+        this.pendingPoll = undefined
+        this.nextPoll = setTimeout(() => {
+          this.pollEvents()
+        }, this.pollInterval)
+      } catch (e: any) {
+        logger.error('Convo: poll events failed')
 
-      setTimeout(async () => {
-        this.pendingEventIngestion = this.ingestLatestEvents()
-        await this.pendingEventIngestion
-        this.pendingEventIngestion = undefined
-        this.pollEvents()
-      }, this.pollInterval)
+        this.cancelNextPoll()
+        this.pendingPoll = undefined
+
+        this.footerItems.set(ConvoItemError.PollFailed, {
+          type: 'error-recoverable',
+          key: ConvoItemError.PollFailed,
+          code: ConvoItemError.PollFailed,
+          retry: () => {
+            this.footerItems.delete(ConvoItemError.PollFailed)
+            this.commit()
+            this.pollEvents()
+          },
+        })
+
+        this.commit()
+      }
     }
+
+    return
+  }
+
+  private cancelNextPoll() {
+    if (this.nextPoll) clearTimeout(this.nextPoll)
   }
 
   async ingestLatestEvents() {
-    try {
-      // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
-      const response = await this.agent.api.chat.bsky.convo.getLog(
-        {
-          cursor: this.eventsCursor,
+    // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
+    const response = await this.agent.api.chat.bsky.convo.getLog(
+      {
+        cursor: this.eventsCursor,
+      },
+      {
+        headers: {
+          Authorization: this.__tempFromUserDid,
         },
-        {
-          headers: {
-            Authorization: this.__tempFromUserDid,
-          },
-        },
-      )
-      const {logs} = response.data
+      },
+    )
+    const {logs} = response.data
 
-      let needsCommit = false
+    let needsCommit = false
 
-      for (const log of logs) {
+    for (const log of logs) {
+      /*
+       * If there's a rev, we should handle it. If there's not a rev, we don't
+       * know what it is.
+       */
+      if (typeof log.rev === 'string') {
         /*
-         * If there's a rev, we should handle it. If there's not a rev, we don't
-         * know what it is.
+         * We only care about new events
          */
-        if (typeof log.rev === 'string') {
+        if (log.rev > (this.eventsCursor = this.eventsCursor || log.rev)) {
           /*
-           * We only care about new events
+           * Update rev regardless of if it's a log type we care about or not
            */
-          if (log.rev > (this.eventsCursor = this.eventsCursor || log.rev)) {
-            /*
-             * Update rev regardless of if it's a log type we care about or not
-             */
-            this.eventsCursor = log.rev
+          this.eventsCursor = log.rev
 
-            /*
-             * This is VERY important. We don't want to insert any messages from
-             * your other chats.
-             */
-            if (log.convoId !== this.convoId) continue
+          /*
+           * This is VERY important. We don't want to insert any messages from
+           * your other chats.
+           */
+          if (log.convoId !== this.convoId) continue
 
-            if (
-              ChatBskyConvoDefs.isLogCreateMessage(log) &&
-              ChatBskyConvoDefs.isMessageView(log.message)
-            ) {
-              if (this.newMessages.has(log.message.id)) {
-                // Trust the log as the source of truth on ordering
-                this.newMessages.delete(log.message.id)
-              }
-              this.newMessages.set(log.message.id, log.message)
-              needsCommit = true
-            } else if (
-              ChatBskyConvoDefs.isLogDeleteMessage(log) &&
-              ChatBskyConvoDefs.isDeletedMessageView(log.message)
-            ) {
+          if (
+            ChatBskyConvoDefs.isLogCreateMessage(log) &&
+            ChatBskyConvoDefs.isMessageView(log.message)
+          ) {
+            if (this.newMessages.has(log.message.id)) {
+              // Trust the log as the source of truth on ordering
+              this.newMessages.delete(log.message.id)
+            }
+            this.newMessages.set(log.message.id, log.message)
+            needsCommit = true
+          } else if (
+            ChatBskyConvoDefs.isLogDeleteMessage(log) &&
+            ChatBskyConvoDefs.isDeletedMessageView(log.message)
+          ) {
+            /*
+             * Update if we have this in state. If we don't, don't worry about it.
+             */
+            if (this.pastMessages.has(log.message.id)) {
               /*
-               * Update if we have this in state. If we don't, don't worry about it.
+               * For now, we remove deleted messages from the thread, if we receive one.
+               *
+               * To support them, it'd look something like this:
+               *   this.pastMessages.set(log.message.id, log.message)
                */
-              if (this.pastMessages.has(log.message.id)) {
-                /*
-                 * For now, we remove deleted messages from the thread, if we receive one.
-                 *
-                 * To support them, it'd look something like this:
-                 *   this.pastMessages.set(log.message.id, log.message)
-                 */
-                this.pastMessages.delete(log.message.id)
-                this.newMessages.delete(log.message.id)
-                this.deletedMessages.delete(log.message.id)
-                needsCommit = true
-              }
+              this.pastMessages.delete(log.message.id)
+              this.newMessages.delete(log.message.id)
+              this.deletedMessages.delete(log.message.id)
+              needsCommit = true
             }
           }
         }
       }
+    }
 
-      if (needsCommit) {
-        this.commit()
-      }
-    } catch (e: any) {
-      logger.error('Convo: failed to poll events')
-      this.pollingFailure = true
-      this.footerItems.set(ConvoItemError.PollFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PollFailed,
-        code: ConvoItemError.PollFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PollFailed)
-          this.pollingFailure = false
-          this.commit()
-          this.pollEvents()
-        },
-      })
+    if (needsCommit) {
       this.commit()
     }
   }
