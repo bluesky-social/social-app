@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-07 11:28+0900\n"
+"PO-Revision-Date: 2024-05-07 22:58+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -71,10 +71,6 @@ msgstr "{0, plural, other {再投稿}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, other {いいねを外す (#個のいいね)}}"
 
-#: src/screens/Profile/Header/Metrics.tsx:61
-msgid "{0} <0>{1}</0>"
-msgstr "{0} <0>{1}</0>"
-
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#人のユーザーがいいね}}"
@@ -111,30 +107,20 @@ msgid "<0/> members"
 msgstr "<0/>のメンバー"
 
 #: src/view/shell/Drawer.tsx:92
-msgid "<0>{0}</0> {1, plural, one {follower} other {followers}} ·"
-msgstr "<0>{0}</0> {1, plural, other {フォロワー}} ·"
+msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
+msgstr "<0>{0}</0> {1, plural, other {フォロワー}}"
 
 #: src/view/shell/Drawer.tsx:103
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, other {フォロー}}"
 
-#: src/view/shell/Drawer.tsx:96
-msgid "<0>{0}</0> following"
-msgstr "<0>{0}</0> フォロー"
-
 #: src/components/ProfileHoverCard/index.web.tsx:437
 msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
 msgstr "<0>{followers} </0><1>フォロワー</1>"
 
-#: src/components/ProfileHoverCard/index.web.tsx:455
-#: src/screens/Profile/Header/Metrics.tsx:53
-msgid "<0>{following} </0><1>{pluralizedFollowings}</1>"
-msgstr "<0>{following} </0><1>{pluralizedFollowings}</1>"
-
-#: src/components/ProfileHoverCard/index.web.tsx:449
-#: src/screens/Profile/Header/Metrics.tsx:45
-msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following} </0><1>フォロー</1>"
+#: src/view/com/modals/SelfLabel.tsx:134
+msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
+msgstr "<0>適用できません。</0> この警告はメディアが添付された投稿にのみ利用可能です。"
 
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
@@ -166,10 +152,6 @@ msgstr "アクセシビリティの設定"
 #: src/view/screens/AccessibilitySettings.tsx:63
 msgid "Accessibility Settings"
 msgstr "アクセシビリティの設定"
-
-#: src/components/moderation/LabelsOnMe.tsx:42
-msgid "account"
-msgstr "アカウント"
 
 #: src/screens/Login/LoginForm.tsx:161
 #: src/view/screens/Settings/index.tsx:323
@@ -365,6 +347,10 @@ msgstr "ほかの選択肢にはあてはまらない問題"
 msgid "An issue occurred, please try again."
 msgstr "問題が発生しました。もう一度お試しください。"
 
+#: src/screens/Onboarding/StepInterests/index.tsx:194
+msgid "an unknown error occurred"
+msgstr "何らかのエラーが発生しました"
+
 #: src/view/com/notifications/FeedItem.tsx:236
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
@@ -418,8 +404,8 @@ msgid "Appeal \"{0}\" label"
 msgstr "「{0}」のラベルに異議を申し立てる"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:193
-msgid "Appeal submitted."
-msgstr "異議申し立てを提出しました。"
+msgid "Appeal submitted"
+msgstr "異議申し立てを提出しました"
 
 #: src/view/screens/Settings/index.tsx:414
 msgid "Appearance"
@@ -607,6 +593,10 @@ msgstr "作成者：-"
 #: src/components/LabelingServiceCard/index.tsx:57
 msgid "By {0}"
 msgstr "作成者：{0}"
+
+#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:112
+msgid "by @{0}"
+msgstr "作成者：@{0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:161
 msgid "by <0/>"
@@ -977,10 +967,6 @@ msgstr "接続中..."
 msgid "Contact support"
 msgstr "サポートに連絡"
 
-#: src/components/moderation/LabelsOnMe.tsx:42
-msgid "content"
-msgstr "コンテンツ"
-
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
 msgstr "ブロックされたコンテンツ"
@@ -1224,8 +1210,8 @@ msgid "Delete account"
 msgstr "アカウントを削除"
 
 #: src/view/com/modals/DeleteAccount.tsx:87
-msgid "Delete Account"
-msgstr "アカウントを削除"
+msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
+msgstr "アカウント<0>「</0><1>{0}</1><2>」</2>を削除"
 
 #: src/view/screens/AppPasswords.tsx:239
 msgid "Delete app password"
@@ -2317,10 +2303,6 @@ msgstr "仕事"
 msgid "Journalism"
 msgstr "報道"
 
-#: src/components/moderation/LabelsOnMe.tsx:59
-msgid "label has been placed on this {labelTarget}"
-msgstr "個のラベルがこの{labelTarget}に貼られました"
-
 #: src/components/moderation/ContentHider.tsx:144
 msgid "Labeled by {0}."
 msgstr "{0}によるラベル"
@@ -2336,10 +2318,6 @@ msgstr "ラベル"
 #: src/screens/Profile/Sections/Labels.tsx:156
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "ラベルは、ユーザーやコンテンツに対する注釈です。ラベルはネットワークを隠したり、警告したり、分類したりするのに使われます。"
-
-#: src/components/moderation/LabelsOnMe.tsx:61
-msgid "labels have been placed on this {labelTarget}"
-msgstr "個のラベルがこの{labelTarget}に貼られました"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:62
 msgid "Labels on your account"
@@ -2432,10 +2410,6 @@ msgstr "さあ始めましょう！"
 msgid "Light"
 msgstr "ライト"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:197
-msgid "Like"
-msgstr "いいね"
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "Like this feed"
@@ -2452,20 +2426,6 @@ msgstr "いいねしたユーザー"
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
 msgstr "いいねしたユーザー"
-
-#: src/view/com/feeds/FeedSourceCard.tsx:268
-msgid "Liked by {0} {1}"
-msgstr "{0} {1}にいいねされました"
-
-#: src/components/LabelingServiceCard/index.tsx:72
-msgid "Liked by {count} {0}"
-msgstr "{count} {0}にいいねされました"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:287
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:301
-#: src/view/screens/ProfileFeed.tsx:600
-msgid "Liked by {likeCount} {0}"
-msgstr "いいねしたユーザー：{likeCount}人"
 
 #: src/view/com/notifications/FeedItem.tsx:169
 msgid "liked your custom feed"
@@ -3013,10 +2973,6 @@ msgstr "まだ誰もこれをいいねしていません。あなたが最初に
 msgid "Non-sexual Nudity"
 msgstr "性的ではないヌード"
 
-#: src/view/com/modals/SelfLabel.tsx:135
-msgid "Not Applicable."
-msgstr "該当なし。"
-
 #: src/Navigation.tsx:116
 #: src/view/screens/Profile.tsx:100
 msgid "Not Found"
@@ -3058,10 +3014,6 @@ msgstr "ヌード"
 #: src/lib/moderation/useReportOptions.ts:71
 msgid "Nudity or adult content not labeled as such"
 msgstr "ヌードあるいは成人向けコンテンツと表示されていないもの"
-
-#: src/screens/Signup/index.tsx:145
-msgid "of"
-msgstr "/"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -3978,8 +3930,8 @@ msgid "Saved Feeds"
 msgstr "保存されたフィード"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
-msgid "Saved to your camera roll."
-msgstr "カメラロールに保存しました。"
+msgid "Saved to your camera roll"
+msgstr "カメラロールに保存しました"
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
@@ -4345,10 +4297,6 @@ msgstr "リンクしたウェブサイトを共有"
 msgid "Show"
 msgstr "表示"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:68
-msgid "Show all replies"
-msgstr "すべての返信を表示"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:163
 msgid "Show alt text"
 msgstr "ALTテキストを表示"
@@ -4422,10 +4370,6 @@ msgstr "Followingフィードで返信を表示"
 #: src/screens/Onboarding/StepFollowingFeed.tsx:71
 msgid "Show replies in Following feed"
 msgstr "Followingフィードで返信を表示"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:70
-msgid "Show replies with at least {value} {0}"
-msgstr "{value}個以上の{0}がついた返信を表示"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:188
 msgid "Show Reposts"
@@ -4586,9 +4530,9 @@ msgstr "新しいチャットを開始"
 msgid "Status Page"
 msgstr "ステータスページ"
 
-#: src/screens/Signup/index.tsx:145
-msgid "Step"
-msgstr "ステップ"
+#: src/screens/Signup/index.tsx:154
+msgid "Step {0} of {1}"
+msgstr "ステップ {0} / {1}"
 
 #: src/view/screens/Settings/index.tsx:288
 msgid "Storage cleared, you need to restart the app now."
@@ -4730,10 +4674,6 @@ msgstr "そのハンドルはすでに使用されています。"
 #: src/view/com/profile/ProfileMenu.tsx:349
 msgid "The account will be able to interact with you after unblocking."
 msgstr "このアカウントは、ブロック解除後にあなたとやり取りすることができます。"
-
-#: src/components/moderation/ModerationDetailsDialog.tsx:127
-msgid "the author"
-msgstr "投稿者"
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
@@ -4936,9 +4876,13 @@ msgstr "この情報は他のユーザーと共有されません。"
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "これは、メールアドレスの変更やパスワードのリセットが必要な場合に重要です。"
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:124
-msgid "This label was applied by {0}."
-msgstr "{0}によって適用されたラベルです。"
+#: src/components/moderation/ModerationDetailsDialog.tsx:127
+msgid "This label was applied by <0>{0}</0>."
+msgstr "<0>{0}</0>よって適用されたラベルです。"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:125
+msgid "This label was applied by the author."
+msgstr "投稿者によって適用されたラベルです。"
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5009,10 +4953,6 @@ msgstr "このユーザーはミュートした<0>{0}</0>リストに含まれ�
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
 msgstr "このユーザーは誰もフォローしていません。"
-
-#: src/view/com/modals/SelfLabel.tsx:137
-msgid "This warning is only available for posts with media attached."
-msgstr "この警告は、メディアが添付されている投稿にのみ使用できます。"
 
 #: src/components/dialogs/MutedWords.tsx:283
 msgid "This will delete {0} from your muted words. You can always add it back later."
@@ -5151,10 +5091,6 @@ msgstr "{0}のフォローを解除"
 #: src/view/com/profile/ProfileMenu.tsx:251
 msgid "Unfollow Account"
 msgstr "アカウントのフォローを解除"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:197
-msgid "Unlike"
-msgstr "いいねを外す"
 
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "Unlike this feed"
@@ -5357,9 +5293,9 @@ msgstr "このコンテンツやプロフィールにいいねをしているユ
 msgid "Value:"
 msgstr "値："
 
-#: src/view/com/modals/ChangeHandle.tsx:510
-msgid "Verify {0}"
-msgstr "{0}で認証"
+#: src/view/com/modals/ChangeHandle.tsx:511
+msgid "Verify DNS Record"
+msgstr "DNSレコードを確認"
 
 #: src/view/screens/Settings/index.tsx:901
 msgid "Verify email"
@@ -5377,6 +5313,10 @@ msgstr "メールアドレスを確認"
 #: src/view/com/modals/ChangeEmail.tsx:209
 msgid "Verify New Email"
 msgstr "新しいメールアドレスを確認"
+
+#: src/view/com/modals/ChangeHandle.tsx:512
+msgid "Verify Text File"
+msgstr "テキストファイルを確認"
 
 #: src/view/com/modals/VerifyEmail.tsx:112
 msgid "Verify Your Email"
