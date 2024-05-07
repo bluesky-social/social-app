@@ -17,7 +17,7 @@ import {CommonNavigatorParams} from '#/lib/routes/types'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -36,11 +36,11 @@ import {EmbedDialog} from '#/components/dialogs/Embed'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
+import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
 } from '#/components/icons/Emoji'
-import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
@@ -288,37 +288,33 @@ let PostDropdownBtn = ({
             )}
           </Menu.Group>
 
+          {hasSession && feedFeedback.enabled && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
+                <Menu.Item
+                  testID="postDropdownShowMoreBtn"
+                  label={_(msg`Show more like this`)}
+                  onPress={onPressShowMore}>
+                  <Menu.ItemText>{_(msg`Show more like this`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={EmojiSmile} position="right" />
+                </Menu.Item>
+
+                <Menu.Item
+                  testID="postDropdownShowLessBtn"
+                  label={_(msg`Show less like this`)}
+                  onPress={onPressShowLess}>
+                  <Menu.ItemText>{_(msg`Show less like this`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={EmojiSad} position="right" />
+                </Menu.Item>
+              </Menu.Group>
+            </>
+          )}
+
           {hasSession && (
             <>
+              <Menu.Divider />
               <Menu.Group>
-                {!isNative && <Menu.Divider />}
-
-                {feedFeedback.enabled && (
-                  <>
-                    <Menu.Item
-                      testID="postDropdownShowMoreBtn"
-                      label={_(msg`Show more like this`)}
-                      onPress={onPressShowMore}>
-                      <Menu.ItemText>
-                        {_(msg`Show more like this`)}
-                      </Menu.ItemText>
-                      <Menu.ItemIcon icon={EmojiSmile} position="right" />
-                    </Menu.Item>
-
-                    <Menu.Item
-                      testID="postDropdownShowLessBtn"
-                      label={_(msg`Show less like this`)}
-                      onPress={onPressShowLess}>
-                      <Menu.ItemText>
-                        {_(msg`Show less like this`)}
-                      </Menu.ItemText>
-                      <Menu.ItemIcon icon={EmojiSad} position="right" />
-                    </Menu.Item>
-
-                    <Menu.Divider />
-                  </>
-                )}
-
                 <Menu.Item
                   testID="postDropdownMuteThreadBtn"
                   label={
@@ -360,7 +356,6 @@ let PostDropdownBtn = ({
           {hasSession && (
             <>
               <Menu.Divider />
-
               <Menu.Group>
                 {!isAuthor && (
                   <Menu.Item
