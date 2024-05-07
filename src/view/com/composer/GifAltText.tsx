@@ -80,7 +80,7 @@ export function GifAltText({
           a.align_center,
           {backgroundColor: 'rgba(0, 0, 0, 0.75)'},
         ]}>
-        {link.description ? (
+        {link.description.startsWith('Alt text: ') ? (
           <Check size="xs" fill={t.palette.white} style={a.ml_xs} />
         ) : (
           <Plus size="sm" fill={t.palette.white} />
@@ -102,7 +102,11 @@ export function GifAltText({
           onSubmit={onPressSubmit}
           link={link}
           params={params}
-          initalValue={link.description.replace('Alt text: ', '')}
+          initalValue={
+            link.description.startsWith('ALT: ')
+              ? ''
+              : link.description.replace('Alt text: ', '')
+          }
           key={link.uri}
         />
       </Dialog.Outer>

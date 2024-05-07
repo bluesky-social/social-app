@@ -328,7 +328,7 @@ export const ComposePost = observer(function ComposePost({
           image: gif.media_formats.preview.url,
           likelyType: LikelyType.HTML,
           title: gif.content_description,
-          description: '',
+          description: `ALT: ${gif.content_description}`,
         },
       })
       setExtGif(gif)
@@ -343,10 +343,10 @@ export const ComposePost = observer(function ComposePost({
           ? {
               ...ext,
               meta: {
-                ...ext?.meta,
+                ...ext.meta,
                 description:
                   altText.trim().length === 0
-                    ? ''
+                    ? `ALT: ${ext.meta.title}`
                     : `Alt text: ${altText.trim()}`,
               },
             }

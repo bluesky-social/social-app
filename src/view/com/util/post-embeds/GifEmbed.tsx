@@ -140,15 +140,23 @@ export function GifEmbed({
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={link.description.replace('Alt text: ', '')}
+          accessibilityLabel={getAltText(link.description)}
         />
 
         {!hideAlt && link.description.startsWith('Alt text: ') && (
-          <AltText text={link.description.replace('Alt text: ', '')} />
+          <AltText text={link.description} />
         )}
       </View>
     </View>
   )
+}
+
+function getAltText(text: string) {
+  if (text.startsWith('Alt text: ')) {
+    return text.replace('Alt text: ', '')
+  } else if (text.startsWith('ALT: ')) {
+    return text.replace('ALT: ', '')
+  }
 }
 
 function AltText({text}: {text: string}) {
@@ -174,7 +182,9 @@ function AltText({text}: {text: string}) {
         <Prompt.TitleText>
           <Trans>Alt Text</Trans>
         </Prompt.TitleText>
-        <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
+        <Prompt.DescriptionText selectable>
+          {getAltText(text)}
+        </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
             onPress={control.close}
