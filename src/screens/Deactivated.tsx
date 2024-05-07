@@ -1,10 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {pluralize} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {isSessionDeactivated, useAgent, useSessionApi} from '#/state/session'
@@ -205,10 +204,16 @@ function msToString(ms: number | undefined): string | undefined {
         return undefined
       }
       // hours
-      return `${estimatedTimeHrs} ${pluralize(estimatedTimeHrs, 'hour')}`
+      return `${estimatedTimeHrs} ${plural(estimatedTimeHrs, {
+        one: 'hour',
+        other: 'hours',
+      })}`
     }
     // minutes
-    return `${estimatedTimeMins} ${pluralize(estimatedTimeMins, 'minute')}`
+    return `${estimatedTimeMins} ${plural(estimatedTimeMins, {
+      one: 'minute',
+      other: 'minutes',
+    })}`
   }
   return undefined
 }

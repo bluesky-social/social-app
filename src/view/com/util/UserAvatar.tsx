@@ -8,6 +8,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   useCameraPermission,
@@ -49,6 +50,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
+  onBeforePress?: () => void
   profile: AppBskyActorDefs.ProfileViewBasic
 }
 
@@ -282,15 +284,21 @@ let EditableUserAvatar = ({
       return
     }
 
-    const croppedImage = await openCropper({
-      mediaType: 'photo',
-      cropperCircleOverlay: true,
-      height: item.height,
-      width: item.width,
-      path: item.path,
-    })
+    try {
+      const croppedImage = await openCropper({
+        mediaType: 'photo',
+        cropperCircleOverlay: true,
+        height: item.height,
+        width: item.width,
+        path: item.path,
+      })
 
-    onSelectNewAvatar(croppedImage)
+      onSelectNewAvatar(croppedImage)
+    } catch (e: any) {
+      if (!String(e).includes('Canceled')) {
+        logger.error('Failed to crop banner', {error: e})
+      }
+    }
   }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
 
   const onRemoveAvatar = React.useCallback(() => {
@@ -375,14 +383,16 @@ export {EditableUserAvatar}
 let PreviewableUserAvatar = ({
   moderation,
   profile,
+  onBeforePress,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
 
   const onPress = React.useCallback(() => {
+    onBeforePress?.()
     precacheProfile(queryClient, profile)
-  }, [profile, queryClient])
+  }, [profile, queryClient, onBeforePress])
 
   return (
     <ProfileHoverCard did={profile.did}>

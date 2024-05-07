@@ -1,14 +1,18 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_10} from '#/lib/constants'
+import {isWeb} from '#/platform/detection'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
 
@@ -82,9 +86,11 @@ function PlaybackControls({
 export function GifEmbed({
   params,
   link,
+  hideAlt,
 }: {
   params: EmbedPlayerParams
   link: AppBskyEmbedExternal.ViewExternal
+  hideAlt?: boolean
 }) {
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
@@ -111,7 +117,8 @@ export function GifEmbed({
   }, [])
 
   return (
-    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm]}>
+    <View
+      style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {maxWidth: '100%'}]}>
       <View
         style={[
           a.rounded_sm,
@@ -133,9 +140,69 @@ export function GifEmbed({
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={link.description.replace('ALT: ', '')}
+          accessibilityLabel={link.description.replace('Alt text: ', '')}
         />
+
+        {!hideAlt && link.description.startsWith('Alt text: ') && (
+          <AltText text={link.description.replace('Alt text: ', '')} />
+        )}
       </View>
     </View>
   )
 }
+
+function AltText({text}: {text: string}) {
+  const control = Prompt.usePromptControl()
+
+  const {_} = useLingui()
+  return (
+    <>
+      <TouchableOpacity
+        testID="altTextButton"
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Show alt text`)}
+        accessibilityHint=""
+        hitSlop={HITSLOP_10}
+        onPress={control.open}
+        style={styles.altContainer}>
+        <Text style={styles.alt} accessible={false}>
+          <Trans>ALT</Trans>
+        </Text>
+      </TouchableOpacity>
+
+      <Prompt.Outer control={control}>
+        <Prompt.TitleText>
+          <Trans>Alt Text</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
+        <Prompt.Actions>
+          <Prompt.Action
+            onPress={control.close}
+            cta={_(msg`Close`)}
+            color="secondary"
+          />
+        </Prompt.Actions>
+      </Prompt.Outer>
+    </>
+  )
+}
+
+const styles = StyleSheet.create({
+  altContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    position: 'absolute',
+    // Related to margin/gap hack. This keeps the alt label in the same position
+    // on all platforms
+    left: isWeb ? 8 : 5,
+    bottom: isWeb ? 8 : 5,
+    zIndex: 2,
+  },
+  alt: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+})

@@ -189,9 +189,9 @@ export function StepInterests() {
                     color: t.palette.negative_900,
                   },
                 ]}>
-                Error:{' '}
+                <Trans>Error:</Trans>{' '}
               </Text>
-              {error?.message || 'an unknown error occurred'}
+              {error?.message || _(msg`an unknown error occurred`)}
             </Text>
           </View>
         ) : (

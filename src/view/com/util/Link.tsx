@@ -220,6 +220,7 @@ export const TextLink = memo(function TextLink({
       )
     },
     [
+      onBeforePress,
       onPress,
       closeModal,
       openModal,
@@ -229,7 +230,6 @@ export const TextLink = memo(function TextLink({
       disableMismatchWarning,
       navigationAction,
       openLink,
-      onBeforePress,
     ],
   )
   const hrefAttrs = useMemo(() => {

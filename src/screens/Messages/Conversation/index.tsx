@@ -14,7 +14,6 @@ import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {ChatProvider, useChat} from 'state/messages'
 import {ConvoStatus} from 'state/messages/convo'
-import {useSession} from 'state/session'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
@@ -43,28 +42,27 @@ export function MessagesConversationScreen({route}: Props) {
 
 function Inner() {
   const chat = useChat()
-  const {currentAccount} = useSession()
-  const myDid = currentAccount?.did
 
-  const otherProfile = React.useMemo(() => {
-    if (chat.status !== ConvoStatus.Ready) return
-    return chat.convo.members.find(m => m.did !== myDid)
-  }, [chat, myDid])
-
-  // TODO whenever we have error messages, we should use them in here -hailey
-  if (chat.status !== ConvoStatus.Ready || !otherProfile) {
-    return (
-      <ListMaybePlaceholder
-        isLoading={true}
-        isError={chat.status === ConvoStatus.Error}
-      />
-    )
+  if (
+    chat.status === ConvoStatus.Uninitialized ||
+    chat.status === ConvoStatus.Initializing
+  ) {
+    return <ListMaybePlaceholder isLoading />
   }
+
+  if (chat.status === ConvoStatus.Error) {
+    // TODO error
+    return null
+  }
+
+  /*
+   * Any other chat states (atm) are "ready" states
+   */
 
   return (
     <KeyboardProvider>
       <CenteredView style={{flex: 1}} sideBorders>
-        <Header profile={otherProfile} />
+        <Header profile={chat.recipients[0]} />
         <MessagesList />
       </CenteredView>
     </KeyboardProvider>

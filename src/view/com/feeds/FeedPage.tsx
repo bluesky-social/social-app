@@ -9,6 +9,7 @@ import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -51,6 +52,7 @@ export function FeedPage({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
+  const feedFeedback = useFeedFeedback(feed, hasSession)
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
   const gate = useGate()
@@ -113,20 +115,22 @@ export function FeedPage({
   return (
     <View testID={testID} style={s.h100pct}>
       <MainScrollProvider>
-        <Feed
-          testID={testID ? `${testID}-feed` : undefined}
-          enabled={isPageFocused}
-          feed={feed}
-          feedParams={feedParams}
-          pollInterval={POLL_FREQ}
-          disablePoll={hasNew}
-          scrollElRef={scrollElRef}
-          onScrolledDownChange={setIsScrolledDown}
-          onHasNew={setHasNew}
-          renderEmptyState={renderEmptyState}
-          renderEndOfFeed={renderEndOfFeed}
-          headerOffset={headerOffset}
-        />
+        <FeedFeedbackProvider value={feedFeedback}>
+          <Feed
+            testID={testID ? `${testID}-feed` : undefined}
+            enabled={isPageFocused}
+            feed={feed}
+            feedParams={feedParams}
+            pollInterval={POLL_FREQ}
+            disablePoll={hasNew}
+            scrollElRef={scrollElRef}
+            onScrolledDownChange={setIsScrolledDown}
+            onHasNew={setHasNew}
+            renderEmptyState={renderEmptyState}
+            renderEndOfFeed={renderEndOfFeed}
+            headerOffset={headerOffset}
+          />
+        </FeedFeedbackProvider>
       </MainScrollProvider>
       {(isScrolledDown || adjustedHasNew) && (
         <LoadLatestBtn

@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -10,6 +10,7 @@ import {HITSLOP_20} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
@@ -35,7 +36,6 @@ import {makeCustomFeedLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
-import {pluralize} from 'lib/strings/helpers'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
@@ -463,6 +463,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
     const isScreenFocused = useIsFocused()
+    const {hasSession} = useSession()
+    const feedFeedback = useFeedFeedback(feed, hasSession)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -490,17 +492,19 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     return (
       <View>
-        <Feed
-          enabled={isFocused}
-          feed={feed}
-          pollInterval={60e3}
-          disablePoll={hasNew}
-          scrollElRef={scrollElRef}
-          onHasNew={setHasNew}
-          onScrolledDownChange={setIsScrolledDown}
-          renderEmptyState={renderPostsEmpty}
-          headerOffset={headerHeight}
-        />
+        <FeedFeedbackProvider value={feedFeedback}>
+          <Feed
+            enabled={isFocused}
+            feed={feed}
+            pollInterval={60e3}
+            disablePoll={hasNew}
+            scrollElRef={scrollElRef}
+            onHasNew={setHasNew}
+            onScrolledDownChange={setIsScrolledDown}
+            renderEmptyState={renderPostsEmpty}
+            headerOffset={headerHeight}
+          />
+        </FeedFeedbackProvider>
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
@@ -597,7 +601,11 @@ function AboutSection({
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             style={[t.atoms.text_contrast_medium, a.font_bold]}>
-            {_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
+            <Plural
+              value={likeCount}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
           </InlineLinkText>
         )}
       </View>

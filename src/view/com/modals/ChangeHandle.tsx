@@ -507,7 +507,9 @@ function CustomHandleForm({
           <Text type="xl-medium" style={[s.white, s.textCenter]}>
             {canSave
               ? _(msg`Update to ${handle}`)
-              : _(msg`Verify ${isDNSForm ? 'DNS Record' : 'Text File'}`)}
+              : isDNSForm
+              ? _(msg`Verify DNS Record`)
+              : _(msg`Verify Text File`)}
           </Text>
         )}
       </Button>

@@ -13,7 +13,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -42,7 +42,6 @@ import {
 } from 'lib/icons'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
 import {colors, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {isWeb} from 'platform/detection'
@@ -90,15 +89,26 @@ let DrawerProfileCard = ({
         @{account.handle}
       </Text>
       <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
-        <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(profile?.followersCount ?? 0)}
-        </Text>{' '}
-        {pluralize(profile?.followersCount || 0, 'follower')} &middot;{' '}
+        <Trans>
+          <Text type="xl-medium" style={pal.text}>
+            {formatCountShortOnly(profile?.followersCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followersCount || 0}
+            one="follower"
+            other="followers"
+          />
+        </Trans>{' '}
+        &middot;{' '}
         <Trans>
           <Text type="xl-medium" style={pal.text}>
             {formatCountShortOnly(profile?.followsCount ?? 0)}
           </Text>{' '}
-          following
+          <Plural
+            value={profile?.followsCount || 0}
+            one="following"
+            other="following"
+          />
         </Trans>
       </Text>
     </TouchableOpacity>
