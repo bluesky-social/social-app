@@ -70,7 +70,7 @@ jobs:
       - name: 🕵️ Get the base commit
         id: base-commit
         run: |
-          if [ ${{ inputs.channel == 'production' }} ]; then
+          if ${{ inputs.channel == 'production' }}; then
             echo base-commit=$(git show-ref -s ${{ inputs.runtimeVersion }}) >> "$GITHUB_OUTPUT"
           else
             echo base-commit=${{ steps.last-successful-commit.base-commit }} >> "$GITHUB_OUTPUT"
