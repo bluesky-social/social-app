@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-06 15:47+0900\n"
+"PO-Revision-Date: 2024-05-07 11:28+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -17,18 +17,106 @@ msgstr ""
 msgid "(no email)"
 msgstr "メールがありません"
 
+#: src/view/com/notifications/FeedItem.tsx:239
+msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
+msgstr "{0, plural, other {他{formattedCount}人}}"
+
+#: src/components/moderation/LabelsOnMe.tsx:57
+msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
+msgstr "{0, plural, other {#個のラベルがこのアカウントに貼られています}}"
+
+#: src/components/moderation/LabelsOnMe.tsx:63
+msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
+msgstr "{0, plural, other {#個のラベルがこのコンテンツに貼られています}}"
+
+#: src/view/com/util/post-ctrls/RepostButton.tsx:61
+msgid "{0, plural, one {# repost} other {# reposts}}"
+msgstr "{0, plural, other {#回のリポスト}}"
+
+#: src/components/ProfileHoverCard/index.web.tsx:373
+#: src/screens/Profile/Header/Metrics.tsx:23
+msgid "{0, plural, one {follower} other {followers}}"
+msgstr "{0, plural, other {フォロワー}}"
+
+#: src/components/ProfileHoverCard/index.web.tsx:377
+#: src/screens/Profile/Header/Metrics.tsx:27
+msgid "{0, plural, one {following} other {following}}"
+msgstr "{0, plural, other {フォロー中}}"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:245
+msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
+msgstr "{0, plural, other {いいね (#個のいいね)}}"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:359
+msgid "{0, plural, one {like} other {likes}}"
+msgstr "{0, plural, other {いいね}}"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:267
+msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
+msgstr "{0, plural, other {#人のユーザーがいいね}}"
+
+#: src/screens/Profile/Header/Metrics.tsx:65
+msgid "{0, plural, one {post} other {posts}}"
+msgstr "{0, plural, other {投稿}}"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
+msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
+msgstr "{0, plural, other {返信 (#件の返信)}}"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:339
+msgid "{0, plural, one {repost} other {reposts}}"
+msgstr "{0, plural, other {再投稿}}"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:241
+msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
+msgstr "{0, plural, other {いいねを外す (#個のいいね)}}"
+
+#: src/screens/Profile/Header/Metrics.tsx:61
+msgid "{0} <0>{1}</0>"
+msgstr "{0} <0>{1}</0>"
+
+#: src/components/LabelingServiceCard/index.tsx:71
+msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
+msgstr "{count, plural, other {#人のユーザーがいいね}}"
+
+#: src/screens/Deactivated.tsx:207
+msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
+msgstr "{estimatedTimeHrs, plural, other {時間}}"
+
+#: src/screens/Deactivated.tsx:213
+msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
+msgstr "{estimatedTimeMins, plural, other {分}}"
+
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/screens/Profile/Header/Metrics.tsx:44
 msgid "{following} following"
 msgstr "{following} フォロー"
 
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
+#: src/view/screens/ProfileFeed.tsx:604
+msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
+msgstr "{likeCount, plural, other {#人のユーザーがいいね}}"
+
 #: src/view/shell/Drawer.tsx:441
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications}件の未読"
 
+#: src/view/screens/PreferencesFollowingFeed.tsx:66
+msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
+msgstr "{value, plural, =0 {すべての返信を表示} other {#個以上のいいねがついた返信を表示}}"
+
 #: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
 msgstr "<0/>のメンバー"
+
+#: src/view/shell/Drawer.tsx:92
+msgid "<0>{0}</0> {1, plural, one {follower} other {followers}} ·"
+msgstr "<0>{0}</0> {1, plural, other {フォロワー}} ·"
+
+#: src/view/shell/Drawer.tsx:103
+msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
+msgstr "<0>{0}</0> {1, plural, other {フォロー}}"
 
 #: src/view/shell/Drawer.tsx:96
 msgid "<0>{0}</0> following"
@@ -37,6 +125,11 @@ msgstr "<0>{0}</0> フォロー"
 #: src/components/ProfileHoverCard/index.web.tsx:437
 msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
 msgstr "<0>{followers} </0><1>フォロワー</1>"
+
+#: src/components/ProfileHoverCard/index.web.tsx:455
+#: src/screens/Profile/Header/Metrics.tsx:53
+msgid "<0>{following} </0><1>{pluralizedFollowings}</1>"
+msgstr "<0>{following} </0><1>{pluralizedFollowings}</1>"
 
 #: src/components/ProfileHoverCard/index.web.tsx:449
 #: src/screens/Profile/Header/Metrics.tsx:45
@@ -153,6 +246,10 @@ msgstr "アカウントを追加"
 msgid "Add alt text"
 msgstr "ALTテキストを追加"
 
+#: src/view/com/composer/GifAltText.tsx:167
+msgid "Add ALT text"
+msgstr "ALTテキストを追加"
+
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
 #: src/view/screens/AppPasswords.tsx:158
@@ -228,6 +325,10 @@ msgstr "ALT"
 #: src/view/com/modals/EditImage.tsx:316
 #: src/view/screens/AccessibilitySettings.tsx:77
 msgid "Alt text"
+msgstr "ALTテキスト"
+
+#: src/view/com/util/post-embeds/GifEmbed.tsx:175
+msgid "Alt Text"
 msgstr "ALTテキスト"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
@@ -1187,6 +1288,10 @@ msgstr "投稿を削除しました。"
 msgid "Description"
 msgstr "説明"
 
+#: src/view/com/composer/GifAltText.tsx:137
+msgid "Descriptive alt text"
+msgstr "説明的なALTテキスト"
+
 #: src/view/com/composer/Composer.tsx:229
 msgid "Did you want to say anything?"
 msgstr "なにか言いたいことはあった？"
@@ -1795,7 +1900,7 @@ msgstr "自分がフォローしているユーザーのみ"
 
 #: src/view/com/notifications/FeedItem.tsx:165
 msgid "followed you"
-msgstr "あなたをフォローしました"
+msgstr "があなたをフォローしました"
 
 #: src/view/com/profile/ProfileFollowers.tsx:104
 #: src/view/screens/ProfileFollowers.tsx:25
@@ -2364,11 +2469,11 @@ msgstr "いいねしたユーザー：{likeCount}人"
 
 #: src/view/com/notifications/FeedItem.tsx:169
 msgid "liked your custom feed"
-msgstr "あなたのカスタムフィードがいいねされました"
+msgstr "があなたのカスタムフィードをいいねしました"
 
 #: src/view/com/notifications/FeedItem.tsx:154
 msgid "liked your post"
-msgstr "あなたの投稿がいいねされました"
+msgstr "があなたの投稿をいいねしました"
 
 #: src/view/screens/Profile.tsx:196
 msgid "Likes"
@@ -3728,7 +3833,7 @@ msgstr "<0><1/></0>がリポスト"
 
 #: src/view/com/notifications/FeedItem.tsx:161
 msgid "reposted your post"
-msgstr "あなたの投稿はリポストされました"
+msgstr "があなたの投稿をリポストしました"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:188
 msgid "Reposts of this post"
@@ -4244,6 +4349,10 @@ msgstr "表示"
 msgid "Show all replies"
 msgstr "すべての返信を表示"
 
+#: src/view/com/util/post-embeds/GifEmbed.tsx:163
+msgid "Show alt text"
+msgstr "ALTテキストを表示"
+
 #: src/components/moderation/ScreenHider.tsx:169
 #: src/components/moderation/ScreenHider.tsx:172
 msgid "Show anyway"
@@ -4262,11 +4371,21 @@ msgstr "バッジの表示とフィードからのフィルタリング"
 msgid "Show follows similar to {0}"
 msgstr "{0}に似たおすすめのフォロー候補を表示"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:305
+#: src/view/com/util/forms/PostDropdownBtn.tsx:307
+msgid "Show less like this"
+msgstr "このような投稿の表示を減らす"
+
 #: src/view/com/post-thread/PostThreadItem.tsx:504
 #: src/view/com/post/Post.tsx:213
 #: src/view/com/posts/FeedItem.tsx:368
 msgid "Show More"
 msgstr "さらに表示"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:297
+#: src/view/com/util/forms/PostDropdownBtn.tsx:299
+msgid "Show more like this"
+msgstr "このような投稿の表示を増やす"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:258
 msgid "Show Posts from My Feeds"
@@ -4674,6 +4793,10 @@ msgstr "フィードの更新中に問題が発生しました。インターネ
 msgid "There was an issue connecting to Tenor."
 msgstr "Tenorへの接続中に問題が発生しました。"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:23
+msgid "There was an issue connecting to the chat."
+msgstr "チャットへの接続中に問題が発生しました。"
+
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
 #: src/view/screens/SavedFeeds.tsx:211
@@ -4761,6 +4884,10 @@ msgstr "このアカウントを閲覧するためにはサインインが必要
 #: src/components/moderation/LabelsOnMeDialog.tsx:205
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "この申し立ては<0>{0}</0>に送られます。"
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:26
+msgid "This chat was disconnected due to a network error."
+msgstr "ネットワークのエラーでこのチャットは切断されました。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
