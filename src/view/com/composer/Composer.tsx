@@ -43,14 +43,13 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {colors, gradients, s} from 'lib/styles'
-import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
@@ -112,7 +111,6 @@ export const ComposePost = observer(function ComposePost({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
 
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
@@ -150,11 +148,10 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingBottom:
-        isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isMobile && isWeb ? 15 : insets.top,
+      paddingBottom: isNative ? insets.bottom : 0,
+      paddingTop: isMobile && isWeb ? 15 : 0,
     }),
-    [insets, isKeyboardVisible, isMobile],
+    [insets, isMobile],
   )
 
   const onPressCancel = useCallback(() => {
@@ -358,6 +355,7 @@ export const ComposePost = observer(function ComposePost({
     <KeyboardAvoidingView
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={insets.bottom}
       style={a.flex_1}>
       <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
         <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
@@ -569,10 +567,8 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: -14,
-    paddingBottom: 4,
     paddingHorizontal: 20,
-    height: 50,
+    height: 55,
     gap: 4,
   },
   topbarDesktop: {
