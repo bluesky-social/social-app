@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -444,12 +444,10 @@ function Inner({
               label={`${followers} ${pluralizedFollowers}`}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Trans>
-                <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
-                <Text style={[t.atoms.text_contrast_medium]}>
-                  {pluralizedFollowers}
-                </Text>
-              </Trans>
+              <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {pluralizedFollowers}
+              </Text>
             </InlineLinkText>
             <InlineLinkText
               to={makeProfileLink(profile, 'follows')}
