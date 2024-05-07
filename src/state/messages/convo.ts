@@ -236,6 +236,13 @@ export class Convo {
   private isProcessingPendingMessages = false
   private pendingPoll: Promise<void> | undefined
   private nextPoll: NodeJS.Timeout | undefined
+  private pendingConvoFetch:
+    | Promise<{
+        convo: ChatBskyConvoDefs.ConvoView
+        sender: AppBskyActorDefs.ProfileViewBasic | undefined
+        recipients: AppBskyActorDefs.ProfileViewBasic[]
+      }>
+    | undefined
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
@@ -524,11 +531,18 @@ export class Convo {
 
   private async setup() {
     try {
-      await this.fetchConvo()
+      const {convo, sender, recipients} = await this.fetchConvo()
+
+      this.convo = convo
+      this.sender = sender
+      this.recipients = recipients
 
       /*
        * Some validation prior to `Ready` status
        */
+      if (!this.convo) {
+        throw new Error('Convo: could not find convo')
+      }
       if (!this.sender) {
         throw new Error('Convo: could not find sender in convo')
       }
@@ -573,29 +587,51 @@ export class Convo {
   }
 
   async fetchConvo() {
-    const response = await this.agent.api.chat.bsky.convo.getConvo(
-      {
-        convoId: this.convoId,
-      },
-      {
-        headers: {
-          Authorization: this.__tempFromUserDid,
-        },
-      },
-    )
-    this.convo = response.data.convo
-    this.sender = this.convo.members.find(m => m.did === this.__tempFromUserDid)
-    this.recipients = this.convo.members.filter(
-      m => m.did !== this.__tempFromUserDid,
-    )
+    if (this.pendingConvoFetch) return this.pendingConvoFetch
 
-    this.commit()
+    this.pendingConvoFetch = new Promise<{
+      convo: ChatBskyConvoDefs.ConvoView
+      sender: AppBskyActorDefs.ProfileViewBasic | undefined
+      recipients: AppBskyActorDefs.ProfileViewBasic[]
+    }>(async (resolve, reject) => {
+      try {
+        const response = await this.agent.api.chat.bsky.convo.getConvo(
+          {
+            convoId: this.convoId,
+          },
+          {
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+
+        const convo = response.data.convo
+
+        resolve({
+          convo,
+          sender: convo.members.find(m => m.did === this.__tempFromUserDid),
+          recipients: convo.members.filter(
+            m => m.did !== this.__tempFromUserDid,
+          ),
+        })
+      } catch (e) {
+        reject(e)
+      } finally {
+        this.pendingConvoFetch = undefined
+      }
+    })
+
+    return this.pendingConvoFetch
   }
 
   async refreshConvo() {
     try {
-      await this.fetchConvo()
+      const {convo, sender, recipients} = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
+      this.convo = convo || this.convo
+      this.sender = sender || this.sender
+      this.recipients = recipients || this.recipients
     } catch (e: any) {
       logger.error(`Convo: failed to refresh convo`)
 
