@@ -18,6 +18,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {
+  createGIFDescription,
+  parseAltFromGIFDescription,
+} from '#/lib/gif-alt-text'
 import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -211,11 +215,25 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
+  const needsAltText = useMemo(() => {
+    if (!requireAltTextEnabled) return false
+
+    if (gallery.needsAltText) return true
+    if (extGif) {
+      if (!extLink?.meta?.description) return true
+
+      const parsedAlt = parseAltFromGIFDescription(extLink.meta.description)
+      if (!parsedAlt.isPreferred) return true
+    }
+    return false
+  }, [gallery.needsAltText, extLink, extGif, requireAltTextEnabled])
+
   const onPressPublish = async () => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
-    if (requireAltTextEnabled && gallery.needsAltText) {
+
+    if (needsAltText) {
       return
     }
 
@@ -298,10 +316,8 @@ export const ComposePost = observer(function ComposePost({
   }
 
   const canPost = useMemo(
-    () =>
-      graphemeLength <= MAX_GRAPHEME_LENGTH &&
-      (!requireAltTextEnabled || !gallery.needsAltText),
-    [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
+    () => graphemeLength <= MAX_GRAPHEME_LENGTH && !needsAltText,
+    [graphemeLength, needsAltText],
   )
   const selectTextInputPlaceholder = replyTo
     ? _(msg`Write your reply`)
@@ -328,7 +344,7 @@ export const ComposePost = observer(function ComposePost({
           image: gif.media_formats.preview.url,
           likelyType: LikelyType.HTML,
           title: gif.content_description,
-          description: `ALT: ${gif.content_description}`,
+          description: createGIFDescription(gif.content_description),
         },
       })
       setExtGif(gif)
@@ -344,10 +360,10 @@ export const ComposePost = observer(function ComposePost({
               ...ext,
               meta: {
                 ...ext.meta,
-                description:
-                  altText.trim().length === 0
-                    ? `ALT: ${ext.meta.title}`
-                    : `Alt text: ${altText.trim()}`,
+                description: createGIFDescription(
+                  ext.meta.title ?? '',
+                  altText,
+                ),
               },
             }
           : ext,
@@ -433,7 +449,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           )}
         </View>
-        {requireAltTextEnabled && gallery.needsAltText && (
+        {requireAltTextEnabled && needsAltText && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
               <FontAwesomeIcon

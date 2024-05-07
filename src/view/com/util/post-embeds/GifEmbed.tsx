@@ -6,6 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {isWeb} from '#/platform/detection'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
@@ -116,6 +117,11 @@ export function GifEmbed({
     playerRef.current?.toggleAsync()
   }, [])
 
+  const altText = React.useMemo(
+    () => parseAltFromGIFDescription(link.description),
+    [link],
+  )
+
   return (
     <View
       style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {maxWidth: '100%'}]}>
@@ -140,23 +146,13 @@ export function GifEmbed({
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={getAltText(link.description)}
+          accessibilityLabel={altText.alt}
         />
 
-        {!hideAlt && link.description.startsWith('Alt text: ') && (
-          <AltText text={link.description} />
-        )}
+        {!hideAlt && altText.isPreferred && <AltText text={altText.alt} />}
       </View>
     </View>
   )
-}
-
-function getAltText(text: string) {
-  if (text.startsWith('Alt text: ')) {
-    return text.replace('Alt text: ', '')
-  } else if (text.startsWith('ALT: ')) {
-    return text.replace('ALT: ', '')
-  }
 }
 
 function AltText({text}: {text: string}) {
@@ -182,9 +178,7 @@ function AltText({text}: {text: string}) {
         <Prompt.TitleText>
           <Trans>Alt Text</Trans>
         </Prompt.TitleText>
-        <Prompt.DescriptionText selectable>
-          {getAltText(text)}
-        </Prompt.DescriptionText>
+        <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
             onPress={control.close}
