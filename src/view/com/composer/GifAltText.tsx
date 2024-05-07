@@ -58,6 +58,8 @@ export function GifAltText({
     [onSubmit, control],
   )
 
+  const parsedValue = parseAltFromGIFDescription(link.description)
+
   if (!gif || !params) return null
 
   return (
@@ -103,7 +105,7 @@ export function GifAltText({
           onSubmit={onPressSubmit}
           link={link}
           params={params}
-          initalValue={parseAltFromGIFDescription(link.description).alt}
+          initalValue={parsedValue.isPreferred ? parsedValue.alt : ''}
           key={link.uri}
         />
       </Dialog.Outer>
@@ -124,6 +126,7 @@ function AltTextInner({
 }) {
   const {_} = useLingui()
   const [altText, setAltText] = useState(initalValue)
+  const control = Dialog.useDialogContext()
 
   const onPressSubmit = useCallback(() => {
     onSubmit(altText)
@@ -148,6 +151,11 @@ function AltTextInner({
                 multiline
                 numberOfLines={3}
                 autoFocus
+                onKeyPress={({nativeEvent}) => {
+                  if (nativeEvent.key === 'Escape') {
+                    control.close()
+                  }
+                }}
               />
             </TextField.Root>
           </View>
