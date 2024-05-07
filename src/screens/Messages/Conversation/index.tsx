@@ -10,6 +10,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {useMarkAsReadWhileMounted} from '#/state/queries/messages/list-converations'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {ChatProvider, useChat} from 'state/messages'
@@ -30,6 +31,8 @@ type Props = NativeStackScreenProps<
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
   const convoId = route.params.conversation
+
+  useMarkAsReadWhileMounted(convoId)
 
   if (!gate('dms')) return <ClipClopGate />
 
