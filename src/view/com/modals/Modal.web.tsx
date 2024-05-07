@@ -55,7 +55,7 @@ function Modal({modal, active}: {modal: ModalIface; active: boolean}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const containerRef = React.useRef(null)
 
   useOutsideClick(containerRef, closeModal, active)
 
@@ -109,17 +109,16 @@ function Modal({modal, active}: {modal: ModalIface; active: boolean}) {
       style={styles.mask}
       entering={FadeIn.duration(150)}
       exiting={FadeOut}>
-      <div ref={containerRef}>
-        <View
-          style={[
-            styles.container,
-            isMobile && styles.containerMobile,
-            pal.view,
-            pal.border,
-          ]}>
-          {element}
-        </View>
-      </div>
+      <View
+        ref={containerRef}
+        style={[
+          styles.container,
+          isMobile && styles.containerMobile,
+          pal.view,
+          pal.border,
+        ]}>
+        {element}
+      </View>
     </Animated.View>
   )
 }
