@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {ExternalEmbedDraft} from '#/lib/api'
 import {HITSLOP_10, MAX_ALT_TEXT} from '#/lib/constants'
+import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {
   EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
@@ -59,6 +60,7 @@ export function GifAltText({
 
   if (!gif || !params) return null
 
+  const parsedAlt = parseAltFromGIFDescription(link.description)
   return (
     <>
       <TouchableOpacity
@@ -80,7 +82,7 @@ export function GifAltText({
           a.align_center,
           {backgroundColor: 'rgba(0, 0, 0, 0.75)'},
         ]}>
-        {link.description ? (
+        {parsedAlt.isPreferred ? (
           <Check size="xs" fill={t.palette.white} style={a.ml_xs} />
         ) : (
           <Plus size="sm" fill={t.palette.white} />
@@ -102,7 +104,7 @@ export function GifAltText({
           onSubmit={onPressSubmit}
           link={link}
           params={params}
-          initalValue={link.description.replace('Alt text: ', '')}
+          initialValue={parsedAlt.isPreferred ? parsedAlt.alt : ''}
           key={link.uri}
         />
       </Dialog.Outer>
@@ -114,15 +116,16 @@ function AltTextInner({
   onSubmit,
   link,
   params,
-  initalValue,
+  initialValue: initalValue,
 }: {
   onSubmit: (text: string) => void
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
-  initalValue: string
+  initialValue: string
 }) {
   const {_} = useLingui()
   const [altText, setAltText] = useState(initalValue)
+  const control = Dialog.useDialogContext()
 
   const onPressSubmit = useCallback(() => {
     onSubmit(altText)
@@ -147,6 +150,11 @@ function AltTextInner({
                 multiline
                 numberOfLines={3}
                 autoFocus
+                onKeyPress={({nativeEvent}) => {
+                  if (nativeEvent.key === 'Escape') {
+                    control.close()
+                  }
+                }}
               />
             </TextField.Root>
           </View>
