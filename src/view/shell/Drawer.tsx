@@ -97,9 +97,9 @@ let DrawerProfileCard = ({
             value={profile?.followersCount || 0}
             one="follower"
             other="followers"
-          />{' '}
-          &middot;{' '}
-        </Trans>
+          />
+        </Trans>{' '}
+        &middot;{' '}
         <Trans>
           <Text type="xl-medium" style={pal.text}>
             {formatCountShortOnly(profile?.followsCount ?? 0)}
