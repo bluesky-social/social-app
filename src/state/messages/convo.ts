@@ -2,6 +2,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {
   BskyAgent,
   ChatBskyConvoDefs,
+  ChatBskyConvoGetLog,
   ChatBskyConvoSendMessage,
 } from '@atproto-labs/api'
 import {nanoid} from 'nanoid/non-secure'
@@ -181,7 +182,7 @@ export type ConvoState =
       fetchMessageHistory: undefined
     }
 
-const ACTIVE_POLL_INTERVAL = 2e3
+const ACTIVE_POLL_INTERVAL = 1e3
 const BACKGROUND_POLL_INTERVAL = 10e3
 
 // TODO temporary
@@ -236,13 +237,6 @@ export class Convo {
   private isProcessingPendingMessages = false
   private pendingPoll: Promise<void> | undefined
   private nextPoll: NodeJS.Timeout | undefined
-  private pendingConvoFetch:
-    | Promise<{
-        convo: ChatBskyConvoDefs.ConvoView
-        sender: AppBskyActorDefs.ProfileViewBasic | undefined
-        recipients: AppBskyActorDefs.ProfileViewBasic[]
-      }>
-    | undefined
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
@@ -586,10 +580,17 @@ export class Convo {
     DEBUG_ACTIVE_CHAT = undefined
   }
 
+  private pendingFetchConvo:
+    | Promise<{
+        convo: ChatBskyConvoDefs.ConvoView
+        sender: AppBskyActorDefs.ProfileViewBasic | undefined
+        recipients: AppBskyActorDefs.ProfileViewBasic[]
+      }>
+    | undefined
   async fetchConvo() {
-    if (this.pendingConvoFetch) return this.pendingConvoFetch
+    if (this.pendingFetchConvo) return this.pendingFetchConvo
 
-    this.pendingConvoFetch = new Promise<{
+    this.pendingFetchConvo = new Promise<{
       convo: ChatBskyConvoDefs.ConvoView
       sender: AppBskyActorDefs.ProfileViewBasic | undefined
       recipients: AppBskyActorDefs.ProfileViewBasic[]
@@ -618,11 +619,11 @@ export class Convo {
       } catch (e) {
         reject(e)
       } finally {
-        this.pendingConvoFetch = undefined
+        this.pendingFetchConvo = undefined
       }
     })
 
-    return this.pendingConvoFetch
+    return this.pendingFetchConvo
   }
 
   async refreshConvo() {
@@ -731,16 +732,14 @@ export class Convo {
 
   private initiatePoll() {
     this.cancelNextPoll()
-    this.pollEvents()
+    this.pollLatestEvents()
   }
 
   private cancelNextPoll() {
     if (this.nextPoll) clearTimeout(this.nextPoll)
   }
 
-  private async pollEvents() {
-    if (this.pendingPoll) return
-
+  private pollLatestEvents() {
     if (
       this.status === ConvoStatus.Ready ||
       this.status === ConvoStatus.Backgrounded
@@ -748,24 +747,23 @@ export class Convo {
       /*
        * Uncomment to view poll events
        */
-      // logger.debug(
-      //   'Convo: poll events',
-      //   {id: this.id},
-      //   logger.DebugContext.convo,
-      // )
+      logger.debug(
+        'Convo: poll events',
+        {id: this.id},
+        logger.DebugContext.convo,
+      )
 
       try {
-        this.pendingPoll = this.ingestLatestEvents()
-        await this.pendingPoll
-        this.pendingPoll = undefined
+        this.fetchLatestEvents().then(({events}) => {
+          this.applyLatestEvents(events)
+        })
         this.nextPoll = setTimeout(() => {
-          this.pollEvents()
+          this.pollLatestEvents()
         }, this.pollInterval)
       } catch (e: any) {
         logger.error('Convo: poll events failed')
 
         this.cancelNextPoll()
-        this.pendingPoll = undefined
 
         this.footerItems.set(ConvoItemError.PollFailed, {
           type: 'error-recoverable',
@@ -774,7 +772,7 @@ export class Convo {
           retry: () => {
             this.footerItems.delete(ConvoItemError.PollFailed)
             this.commit()
-            this.pollEvents()
+            this.pollLatestEvents()
           },
         })
 
@@ -785,70 +783,92 @@ export class Convo {
     return
   }
 
-  async ingestLatestEvents() {
-    // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
-    const response = await this.agent.api.chat.bsky.convo.getLog(
-      {
-        cursor: this.eventsCursor,
-      },
-      {
-        headers: {
-          Authorization: this.__tempFromUserDid,
-        },
-      },
-    )
-    const {logs} = response.data
+  private pendingFetchLatestEvents:
+    | Promise<{
+        events: ChatBskyConvoGetLog.OutputSchema['logs']
+      }>
+    | undefined
+  async fetchLatestEvents() {
+    if (this.pendingFetchLatestEvents) return this.pendingFetchLatestEvents
 
+    this.pendingFetchLatestEvents = new Promise<{
+      events: ChatBskyConvoGetLog.OutputSchema['logs']
+    }>(async (resolve, reject) => {
+      try {
+        // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
+        const response = await this.agent.api.chat.bsky.convo.getLog(
+          {
+            cursor: this.eventsCursor,
+          },
+          {
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+        const {logs} = response.data
+        resolve({events: logs})
+      } catch (e) {
+        reject(e)
+      } finally {
+        this.pendingFetchLatestEvents = undefined
+      }
+    })
+
+    return this.pendingFetchLatestEvents
+  }
+
+  private applyLatestEvents(events: ChatBskyConvoGetLog.OutputSchema['logs']) {
     let needsCommit = false
 
-    for (const log of logs) {
+    for (const ev of events) {
       /*
        * If there's a rev, we should handle it. If there's not a rev, we don't
        * know what it is.
        */
-      if (typeof log.rev === 'string') {
+      if (typeof ev.rev === 'string') {
         /*
          * We only care about new events
          */
-        if (log.rev > (this.eventsCursor = this.eventsCursor || log.rev)) {
+        if (ev.rev > (this.eventsCursor = this.eventsCursor || ev.rev)) {
           /*
-           * Update rev regardless of if it's a log type we care about or not
+           * Update rev regardless of if it's a ev type we care about or not
            */
-          this.eventsCursor = log.rev
+          this.eventsCursor = ev.rev
 
           /*
            * This is VERY important. We don't want to insert any messages from
            * your other chats.
            */
-          if (log.convoId !== this.convoId) continue
+          if (ev.convoId !== this.convoId) continue
 
           if (
-            ChatBskyConvoDefs.isLogCreateMessage(log) &&
-            ChatBskyConvoDefs.isMessageView(log.message)
+            ChatBskyConvoDefs.isLogCreateMessage(ev) &&
+            ChatBskyConvoDefs.isMessageView(ev.message)
           ) {
-            if (this.newMessages.has(log.message.id)) {
-              // Trust the log as the source of truth on ordering
-              this.newMessages.delete(log.message.id)
+            if (this.newMessages.has(ev.message.id)) {
+              // Trust the ev as the source of truth on ordering
+              this.newMessages.delete(ev.message.id)
             }
-            this.newMessages.set(log.message.id, log.message)
+            this.newMessages.set(ev.message.id, ev.message)
             needsCommit = true
           } else if (
-            ChatBskyConvoDefs.isLogDeleteMessage(log) &&
-            ChatBskyConvoDefs.isDeletedMessageView(log.message)
+            ChatBskyConvoDefs.isLogDeleteMessage(ev) &&
+            ChatBskyConvoDefs.isDeletedMessageView(ev.message)
           ) {
             /*
              * Update if we have this in state. If we don't, don't worry about it.
              */
-            if (this.pastMessages.has(log.message.id)) {
+            if (this.pastMessages.has(ev.message.id)) {
               /*
                * For now, we remove deleted messages from the thread, if we receive one.
                *
                * To support them, it'd look something like this:
-               *   this.pastMessages.set(log.message.id, log.message)
+               *   this.pastMessages.set(ev.message.id, ev.message)
                */
-              this.pastMessages.delete(log.message.id)
-              this.newMessages.delete(log.message.id)
-              this.deletedMessages.delete(log.message.id)
+              this.pastMessages.delete(ev.message.id)
+              this.newMessages.delete(ev.message.id)
+              this.deletedMessages.delete(ev.message.id)
               needsCommit = true
             }
           }
