@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
-      cancel-in-progress: false
+      cancel-in-progress: true
     outputs:
       fingerprint-is-different: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different }}
 
@@ -54,7 +54,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: last-successful-commit-hash.txt
-          key: last-successful-deployment-commit-${{ github.ref_name }}
+          key: last-successful-deployment-commit-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            last-successful-deployment-commit-${{ github.ref_name }}-
 
       - name: Add the last successful deployment commit to the output
         id: last-successful-commit
