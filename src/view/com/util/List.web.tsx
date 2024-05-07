@@ -20,10 +20,16 @@ export type ListProps<ItemT> = Omit<
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
+  onItemSeen?: (item: ItemT) => void
   desktopFixedHeight: any // TODO: Better types.
   containWeb?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
+
+const ON_ITEM_SEEN_WAIT_DURATION = 2e3 // post must be "seen" 2 seconds before capturing
+const ON_ITEM_SEEN_INTERSECTION_OPTS = {
+  rootMargin: '-200px 0px -200px 0px',
+} // post must be 200px visible to be "seen"
 
 function ListImpl<ItemT>(
   {
@@ -43,6 +49,7 @@ function ListImpl<ItemT>(
     onRefresh: _unsupportedOnRefresh,
     onScrolledDownChange,
     onContentSizeChange,
+    onItemSeen,
     renderItem,
     extraData,
     style,
@@ -319,15 +326,19 @@ function ListImpl<ItemT>(
           />
         )}
         {header}
-        {(data as Array<ItemT>).map((item, index) => (
-          <Row<ItemT>
-            key={keyExtractor!(item, index)}
-            item={item}
-            index={index}
-            renderItem={renderItem}
-            extraData={extraData}
-          />
-        ))}
+        {(data as Array<ItemT>).map((item, index) => {
+          const key = keyExtractor!(item, index)
+          return (
+            <Row<ItemT>
+              key={key}
+              item={item}
+              index={index}
+              renderItem={renderItem}
+              extraData={extraData}
+              onItemSeen={onItemSeen}
+            />
+          )
+        })}
         {onEndReached && (
           <Visibility
             root={containWeb ? nativeRef : null}
@@ -372,6 +383,7 @@ let Row = function RowImpl<ItemT>({
   index,
   renderItem,
   extraData: _unused,
+  onItemSeen,
 }: {
   item: ItemT
   index: number
@@ -380,12 +392,57 @@ let Row = function RowImpl<ItemT>({
     | undefined
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
+  onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
+  const rowRef = React.useRef(null)
+  const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
+
+  const handleIntersection = useNonReactiveCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      batchedUpdates(() => {
+        if (!onItemSeen) {
+          return
+        }
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (!intersectionTimeout.current) {
+              intersectionTimeout.current = setTimeout(() => {
+                intersectionTimeout.current = undefined
+                onItemSeen!(item)
+              }, ON_ITEM_SEEN_WAIT_DURATION)
+            }
+          } else {
+            if (intersectionTimeout.current) {
+              clearTimeout(intersectionTimeout.current)
+              intersectionTimeout.current = undefined
+            }
+          }
+        })
+      })
+    },
+  )
+
+  React.useEffect(() => {
+    if (!onItemSeen) {
+      return
+    }
+    const observer = new IntersectionObserver(
+      handleIntersection,
+      ON_ITEM_SEEN_INTERSECTION_OPTS,
+    )
+    const row: Element | null = rowRef.current!
+    observer.observe(row)
+    return () => {
+      observer.unobserve(row)
+    }
+  }, [handleIntersection, onItemSeen])
+
   if (!renderItem) {
     return null
   }
+
   return (
-    <View style={styles.row}>
+    <View style={styles.row} ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
   )

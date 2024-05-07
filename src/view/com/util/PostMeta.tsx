@@ -28,6 +28,7 @@ interface PostMetaOpts {
   avatarSize?: number
   displayNameType?: TypographyVariant
   displayNameStyle?: StyleProp<TextStyle>
+  onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
 }
 
@@ -43,7 +44,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     : undefined
 
   const queryClient = useQueryClient()
-  const onBeforePress = useCallback(() => {
+  const onOpenAuthor = opts.onOpenAuthor
+  const onBeforePressAuthor = useCallback(() => {
+    precacheProfile(queryClient, opts.author)
+    onOpenAuthor?.()
+  }, [queryClient, opts.author, onOpenAuthor])
+  const onBeforePressPost = useCallback(() => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
 
@@ -77,7 +83,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               </>
             }
             href={profileLink}
-            onBeforePress={onBeforePress}
+            onBeforePress={onBeforePressAuthor}
             onPointerEnter={onPointerEnter}
           />
           <TextLinkOnWebOnly
@@ -86,7 +92,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             style={[pal.textLight, {flexShrink: 4}]}
             text={'\xa0' + sanitizeHandle(handle, '@')}
             href={profileLink}
-            onBeforePress={onBeforePress}
+            onBeforePress={onBeforePressAuthor}
             onPointerEnter={onPointerEnter}
             anchorNoUnderline
           />
@@ -112,7 +118,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             title={niceDate(opts.timestamp)}
             accessibilityHint=""
             href={opts.postHref}
-            onBeforePress={onBeforePress}
+            onBeforePress={onBeforePressPost}
           />
         )}
       </TimeElapsed>

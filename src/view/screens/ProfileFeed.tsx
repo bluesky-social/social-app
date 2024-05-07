@@ -10,6 +10,7 @@ import {HITSLOP_20} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
@@ -462,6 +463,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
     const isScreenFocused = useIsFocused()
+    const {hasSession} = useSession()
+    const feedFeedback = useFeedFeedback(feed, hasSession)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -489,17 +492,19 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     return (
       <View>
-        <Feed
-          enabled={isFocused}
-          feed={feed}
-          pollInterval={60e3}
-          disablePoll={hasNew}
-          scrollElRef={scrollElRef}
-          onHasNew={setHasNew}
-          onScrolledDownChange={setIsScrolledDown}
-          renderEmptyState={renderPostsEmpty}
-          headerOffset={headerHeight}
-        />
+        <FeedFeedbackProvider value={feedFeedback}>
+          <Feed
+            enabled={isFocused}
+            feed={feed}
+            pollInterval={60e3}
+            disablePoll={hasNew}
+            scrollElRef={scrollElRef}
+            onHasNew={setHasNew}
+            onScrolledDownChange={setIsScrolledDown}
+            renderEmptyState={renderPostsEmpty}
+            headerOffset={headerHeight}
+          />
+        </FeedFeedbackProvider>
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
