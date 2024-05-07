@@ -17,11 +17,9 @@ jest.mock('#/env', () => ({
 }))
 
 jest.mock('@sentry/react-native', () => ({
-  Native: {
-    addBreadcrumb: jest.fn(),
-    captureException: jest.fn(),
-    captureMessage: jest.fn(),
-  },
+  addBreadcrumb: jest.fn(),
+  captureException: jest.fn(),
+  captureMessage: jest.fn(),
 }))
 
 beforeAll(() => {
