@@ -152,7 +152,7 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isMobile && isWeb ? 15 : 0,
+      paddingTop: isMobile && isWeb ? 15 : insets.top,
     }),
     [insets, isKeyboardVisible, isMobile],
   )
@@ -358,8 +358,8 @@ export const ComposePost = observer(function ComposePost({
     <KeyboardAvoidingView
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.outer}>
-      <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
+      style={a.flex_1}>
+      <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
         <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
           <TouchableOpacity
             testID="composerDiscardButton"
@@ -566,18 +566,13 @@ export function useComposerCancelRef() {
 }
 
 const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'column',
-    flex: 1,
-    height: '100%',
-  },
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 6,
+    marginTop: -14,
     paddingBottom: 4,
     paddingHorizontal: 20,
-    height: 55,
+    height: 50,
     gap: 4,
   },
   topbarDesktop: {
