@@ -20,7 +20,6 @@ export function parseAltFromGIFDescription(description: string): {
   isPreferred: boolean
   alt: string
 } {
-  console.log('description', description)
   if (description.startsWith(USER_ALT_PREFIX)) {
     return {
       isPreferred: true,
