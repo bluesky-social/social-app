@@ -371,14 +371,15 @@ export class Convo {
           case ConvoDispatchEvent.Ready: {
             this.status = ConvoStatus.Ready
             this.pollInterval = ACTIVE_POLL_INTERVAL
-            this.fetchMessageHistory()
-            this.initiatePoll()
+            this.fetchMessageHistory().then(() => {
+              this.initiatePoll()
+            })
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
             this.pollInterval = BACKGROUND_POLL_INTERVAL
-            this.fetchMessageHistory()
+            // TODO truncate history, then poll again
             this.initiatePoll()
             break
           }
