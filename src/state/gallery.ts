@@ -240,6 +240,8 @@ export async function compressImage(img: ComposerImage): Promise<ImageSource> {
 async function moveIfNecessary(from: string) {
   if (cacheDirectory && from.startsWith(cacheDirectory!)) {
     const to = joinPath(imageCacheDirectory!, uuid.v4() + '')
+
+    await makeDirectoryAsync(imageCacheDirectory!, {intermediates: true})
     await moveAsync({from, to})
 
     return to
