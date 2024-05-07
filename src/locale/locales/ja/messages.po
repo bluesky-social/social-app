@@ -23,11 +23,11 @@ msgstr "{0, plural, other {他{formattedCount}人}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr "{0, plural, other {#個のラベルがこのアカウントに貼られています}}"
+msgstr "{0, plural, other {#個のラベルがこのアカウントに適用されています}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "{0, plural, other {#個のラベルがこのコンテンツに貼られています}}"
+msgstr "{0, plural, other {#個のラベルがこのコンテンツに適用されています}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -548,7 +548,7 @@ msgstr "投稿をブロックしました。"
 
 #: src/screens/Profile/Sections/Labels.tsx:166
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr "ブロックしてもこのラベラーがあなたのアカウントにラベルを貼ることができます。"
+msgstr "ブロックしてもこのラベラーがあなたのアカウントにラベルを適用することができます。"
 
 #: src/view/screens/ProfileList.tsx:627
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -556,7 +556,7 @@ msgstr "ブロックしたことは公開されます。ブロック中のアカ
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "ブロックしてもこのラベラーがあなたのアカウントにラベルを貼ることができますが、このアカウントがあなたのスレッドに返信したり、やりとりをしたりといったことはできなくなります。"
+msgstr "ブロックしてもこのラベラーがあなたのアカウントにラベルを適用することができますが、このアカウントがあなたのスレッドに返信したり、やりとりをしたりといったことはできなくなります。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:154
 msgid "Blog"
@@ -3401,7 +3401,7 @@ msgstr "パスワードも入力してください："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:222
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "{0}によって貼られたこのラベルが誤って適用されたと思われる理由を説明してください"
+msgstr "{0}によって適用されたこのラベルが誤りであると思われる理由を説明してください"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 msgid "Please sign in as @{0}"
@@ -5671,7 +5671,7 @@ msgstr "まだワードやタグをミュートしていません"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:68
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "これらのラベルが誤って貼られたと思った場合は、異議申し立てを行うことができます。"
+msgstr "これらのラベルが誤って適用されたと思った場合は、異議申し立てを行うことができます。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
