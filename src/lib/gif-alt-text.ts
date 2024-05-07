@@ -1,4 +1,4 @@
-const USER_ALT_PREFIX = 'User-provided alt text: '
+const USER_ALT_PREFIX = 'Alt: '
 const DEFAULT_ALT_PREFIX = 'ALT: '
 
 export function createGIFDescription(
