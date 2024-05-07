@@ -709,11 +709,14 @@ export class Convo {
       this.status === ConvoStatus.Ready ||
       this.status === ConvoStatus.Backgrounded
     ) {
-      logger.debug(
-        'Convo: poll events',
-        {id: this.id},
-        logger.DebugContext.convo,
-      )
+      /*
+       * Uncomment to view poll events
+       */
+      // logger.debug(
+      //   'Convo: poll events',
+      //   {id: this.id},
+      //   logger.DebugContext.convo,
+      // )
 
       try {
         this.pendingPoll = this.ingestLatestEvents()
