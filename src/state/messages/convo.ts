@@ -372,15 +372,16 @@ export class Convo {
             this.status = ConvoStatus.Ready
             this.pollInterval = ACTIVE_POLL_INTERVAL
             this.fetchMessageHistory().then(() => {
-              this.initiatePoll()
+              this.restartPoll()
             })
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
             this.pollInterval = BACKGROUND_POLL_INTERVAL
-            // TODO truncate history, then poll again
-            this.initiatePoll()
+            this.fetchMessageHistory().then(() => {
+              this.restartPoll()
+            })
             break
           }
           case ConvoDispatchEvent.Suspend: {
@@ -399,21 +400,24 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Resume: {
             this.refreshConvo()
-            this.initiatePoll()
+            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
             this.pollInterval = BACKGROUND_POLL_INTERVAL
+            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cancelNextPoll()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cancelNextPoll()
             break
           }
         }
@@ -425,16 +429,19 @@ export class Convo {
             this.status = ConvoStatus.Ready
             this.pollInterval = ACTIVE_POLL_INTERVAL
             this.refreshConvo()
-            this.initiatePoll()
+            // TODO truncate history if needed
+            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cancelNextPoll()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cancelNextPoll()
             break
           }
         }
@@ -446,14 +453,15 @@ export class Convo {
             this.status = ConvoStatus.Ready
             this.pollInterval = ACTIVE_POLL_INTERVAL
             this.refreshConvo()
-            this.initiatePoll()
+            // TODO truncate history if needed
+            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Resume: {
             this.status = ConvoStatus.Ready
             this.pollInterval = ACTIVE_POLL_INTERVAL
             this.refreshConvo()
-            this.initiatePoll()
+            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Error: {
@@ -731,7 +739,7 @@ export class Convo {
     }
   }
 
-  private initiatePoll() {
+  private restartPoll() {
     this.cancelNextPoll()
     this.pollLatestEvents()
   }
@@ -741,47 +749,36 @@ export class Convo {
   }
 
   private pollLatestEvents() {
-    if (
-      this.status === ConvoStatus.Ready ||
-      this.status === ConvoStatus.Backgrounded
-    ) {
-      /*
-       * Uncomment to view poll events
-       */
-      logger.debug(
-        'Convo: poll events',
-        {id: this.id},
-        logger.DebugContext.convo,
-      )
+    /*
+     * Uncomment to view poll events
+     */
+    logger.debug('Convo: poll events', {id: this.id}, logger.DebugContext.convo)
 
-      try {
-        this.fetchLatestEvents().then(({events}) => {
-          this.applyLatestEvents(events)
-        })
-        this.nextPoll = setTimeout(() => {
+    try {
+      this.fetchLatestEvents().then(({events}) => {
+        this.applyLatestEvents(events)
+      })
+      this.nextPoll = setTimeout(() => {
+        this.pollLatestEvents()
+      }, this.pollInterval)
+    } catch (e: any) {
+      logger.error('Convo: poll events failed')
+
+      this.cancelNextPoll()
+
+      this.footerItems.set(ConvoItemError.PollFailed, {
+        type: 'error-recoverable',
+        key: ConvoItemError.PollFailed,
+        code: ConvoItemError.PollFailed,
+        retry: () => {
+          this.footerItems.delete(ConvoItemError.PollFailed)
+          this.commit()
           this.pollLatestEvents()
-        }, this.pollInterval)
-      } catch (e: any) {
-        logger.error('Convo: poll events failed')
+        },
+      })
 
-        this.cancelNextPoll()
-
-        this.footerItems.set(ConvoItemError.PollFailed, {
-          type: 'error-recoverable',
-          key: ConvoItemError.PollFailed,
-          code: ConvoItemError.PollFailed,
-          retry: () => {
-            this.footerItems.delete(ConvoItemError.PollFailed)
-            this.commit()
-            this.pollLatestEvents()
-          },
-        })
-
-        this.commit()
-      }
+      this.commit()
     }
-
-    return
   }
 
   private pendingFetchLatestEvents:
