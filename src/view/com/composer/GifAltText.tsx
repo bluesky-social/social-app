@@ -105,7 +105,7 @@ export function GifAltText({
           onSubmit={onPressSubmit}
           link={link}
           params={params}
-          initalValue={parsedValue.isPreferred ? parsedValue.alt : ''}
+          initialValue={parsedValue.isPreferred ? parsedValue.alt : ''}
           key={link.uri}
         />
       </Dialog.Outer>
@@ -117,12 +117,12 @@ function AltTextInner({
   onSubmit,
   link,
   params,
-  initalValue,
+  initialValue: initalValue,
 }: {
   onSubmit: (text: string) => void
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
-  initalValue: string
+  initialValue: string
 }) {
   const {_} = useLingui()
   const [altText, setAltText] = useState(initalValue)
