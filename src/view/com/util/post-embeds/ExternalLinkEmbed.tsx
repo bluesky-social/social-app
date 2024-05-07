@@ -19,9 +19,11 @@ import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
   link,
+  onOpen,
   style,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) => {
   const pal = usePalette('default')
@@ -42,7 +44,7 @@ export const ExternalLinkEmbed = ({
 
   return (
     <View style={[a.flex_col, a.rounded_sm, a.overflow_hidden, a.mt_sm]}>
-      <LinkWrapper link={link} style={style}>
+      <LinkWrapper link={link} onOpen={onOpen} style={style}>
         {link.thumb && !embedPlayerParams ? (
           <Image
             style={{
@@ -95,10 +97,12 @@ export const ExternalLinkEmbed = ({
 
 function LinkWrapper({
   link,
+  onOpen,
   style,
   children,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
@@ -123,6 +127,7 @@ function LinkWrapper({
         style,
       ]}
       hoverStyle={t.atoms.border_contrast_high}
+      onBeforePress={onOpen}
       onLongPress={onShareExternal}>
       {children}
     </Link>

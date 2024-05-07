@@ -49,6 +49,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
+  onBeforePress?: () => void
   profile: AppBskyActorDefs.ProfileViewBasic
 }
 
@@ -375,14 +376,16 @@ export {EditableUserAvatar}
 let PreviewableUserAvatar = ({
   moderation,
   profile,
+  onBeforePress,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
 
   const onPress = React.useCallback(() => {
+    onBeforePress?.()
     precacheProfile(queryClient, profile)
-  }, [profile, queryClient])
+  }, [profile, queryClient, onBeforePress])
 
   return (
     <ProfileHoverCard did={profile.did}>
