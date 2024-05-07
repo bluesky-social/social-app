@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
+"PO-Revision-Date: 2024-05-07 09:00+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -4460,10 +4460,6 @@ msgstr "소프트웨어 개발"
 #: src/screens/Profile/Sections/Labels.tsx:87
 msgid "Something went wrong, please try again."
 msgstr "뭔가 잘못되었습니다. 다시 시도해 주세요."
-
-#: src/lib/hooks/useAccountSwitcher.ts:60
-#~ msgid "Sorry! We need you to enter your password."
-#~ msgstr "죄송합니다. 비밀번호를 입력해 주세요."
 
 #: src/App.native.tsx:84
 #: src/App.web.tsx:71
