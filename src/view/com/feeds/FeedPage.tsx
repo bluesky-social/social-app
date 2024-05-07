@@ -70,7 +70,6 @@ export function FeedPage({
       getTabState(getRootNavigation(navigation).getState(), 'Home') ===
       TabState.InsideAtRoot
     if (isScreenFocused && isPageFocused) {
-      feedFeedback.flush()
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
@@ -80,15 +79,7 @@ export function FeedPage({
         reason: 'soft-reset',
       })
     }
-  }, [
-    navigation,
-    isPageFocused,
-    scrollToTop,
-    queryClient,
-    feed,
-    setHasNew,
-    feedFeedback,
-  ])
+  }, [navigation, isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
   // fires when page within screen is activated/deactivated
   React.useEffect(() => {
@@ -105,7 +96,6 @@ export function FeedPage({
   }, [openComposer, track])
 
   const onPressLoadLatest = React.useCallback(() => {
-    feedFeedback.flush()
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
@@ -114,7 +104,7 @@ export function FeedPage({
       feedUrl: feed,
       reason: 'load-latest',
     })
-  }, [scrollToTop, feed, queryClient, setHasNew, feedFeedback])
+  }, [scrollToTop, feed, queryClient, setHasNew])
 
   const isDiscoverFeed =
     feed ===

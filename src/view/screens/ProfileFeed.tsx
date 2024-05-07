@@ -468,14 +468,13 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const feedFeedback = useFeedFeedback(feed, hasSession)
 
     const onScrollToTop = useCallback(() => {
-      feedFeedback.flush()
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,
       })
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
-    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew, feedFeedback])
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,

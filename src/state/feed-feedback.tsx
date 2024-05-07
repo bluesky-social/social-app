@@ -16,14 +16,12 @@ type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
-  flush: () => void
 }
 
 const stateContext = React.createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
-  flush: () => {},
 })
 
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
@@ -114,13 +112,6 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [enabled, sendToFeed],
   )
 
-  const flush = React.useCallback(() => {
-    if (!enabled) {
-      return
-    }
-    sendToFeed.flush()
-  }, [enabled, sendToFeed])
-
   return React.useMemo(() => {
     return {
       enabled,
@@ -129,11 +120,8 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       // call on various events
       // queues the event to be sent with the throttled sendToFeed call
       sendInteraction,
-      // call on feed refresh
-      // immediately sends all queued events
-      flush,
     }
-  }, [enabled, onItemSeen, sendInteraction, flush])
+  }, [enabled, onItemSeen, sendInteraction])
 }
 
 export const FeedFeedbackProvider = stateContext.Provider
