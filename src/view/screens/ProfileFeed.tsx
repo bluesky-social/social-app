@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -35,7 +35,6 @@ import {makeCustomFeedLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
-import {pluralize} from 'lib/strings/helpers'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
@@ -597,7 +596,11 @@ function AboutSection({
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             style={[t.atoms.text_contrast_medium, a.font_bold]}>
-            {_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
+            <Plural
+              value={likeCount}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
           </InlineLinkText>
         )}
       </View>

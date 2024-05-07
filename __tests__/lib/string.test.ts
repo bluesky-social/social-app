@@ -3,7 +3,7 @@ import {RichText} from '@atproto/api'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
-import {enforceLen, pluralize} from '../../src/lib/strings/helpers'
+import {enforceLen} from '../../src/lib/strings/helpers'
 import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
 import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
 import {ago} from '../../src/lib/strings/time'
@@ -122,35 +122,6 @@ describe('detectLinkables', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
       const output = detectLinkables(input)
-      expect(output).toEqual(outputs[i])
-    }
-  })
-})
-
-describe('pluralize', () => {
-  const inputs: [number, string, string?][] = [
-    [1, 'follower'],
-    [1, 'member'],
-    [100, 'post'],
-    [1000, 'repost'],
-    [10000, 'upvote'],
-    [100000, 'other'],
-    [2, 'man', 'men'],
-  ]
-  const outputs = [
-    'follower',
-    'member',
-    'posts',
-    'reposts',
-    'upvotes',
-    'others',
-    'men',
-  ]
-
-  it('correctly pluralizes a set of words', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i]
-      const output = pluralize(...input)
       expect(output).toEqual(outputs[i])
     }
   })

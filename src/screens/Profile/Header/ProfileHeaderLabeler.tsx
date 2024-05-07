@@ -7,11 +7,10 @@ import {
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isAppLabeler} from '#/lib/moderation'
-import {pluralize} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
@@ -283,12 +282,10 @@ let ProfileHeaderLabeler = ({
                       },
                     }}
                     size="tiny"
-                    label={_(
-                      msg`Liked by ${likeCount} ${pluralize(
-                        likeCount,
-                        'user',
-                      )}`,
-                    )}>
+                    label={plural(likeCount, {
+                      one: 'Liked by # user',
+                      other: 'Liked by # users',
+                    })}>
                     {({hovered, focused, pressed}) => (
                       <Text
                         style={[
@@ -298,9 +295,11 @@ let ProfileHeaderLabeler = ({
                           (hovered || focused || pressed) &&
                             t.atoms.text_contrast_high,
                         ]}>
-                        <Trans>
-                          Liked by {likeCount} {pluralize(likeCount, 'user')}
-                        </Trans>
+                        <Plural
+                          value={likeCount}
+                          one="Liked by # user"
+                          other="Liked by # users"
+                        />
                       </Text>
                     )}
                   </Link>
