@@ -151,11 +151,13 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             ]}>
             <View style={[a.gap_sm, a.pb_3xl]}>
               <Text style={[a.font_semibold, t.atoms.text_contrast_medium]}>
-                <Trans>Step</Trans> {state.activeStep + 1} <Trans>of</Trans>{' '}
-                {state.serviceDescription &&
-                !state.serviceDescription.phoneVerificationRequired
-                  ? '2'
-                  : '3'}
+                <Trans>
+                  Step {state.activeStep + 1} of{' '}
+                  {state.serviceDescription &&
+                  !state.serviceDescription.phoneVerificationRequired
+                    ? '2'
+                    : '3'}
+                </Trans>
               </Text>
               <Text style={[a.text_3xl, a.font_bold]}>
                 {state.activeStep === SignupStep.INFO ? (
