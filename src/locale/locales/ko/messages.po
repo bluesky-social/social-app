@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-07 13:11+0900\n"
+"PO-Revision-Date: 2024-05-07 13:12+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -23,11 +23,11 @@ msgstr "{0, plural, one {외 {formattedCount}명} other {외 {formattedCount}명
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr "{0, plural, one {이 계정에 #개의 라벨이 지정되었습니다} other {이 계정에 #개의 라벨이 지정되었습니다}}"
+msgstr "{0, plural, one {이 계정에 #개의 라벨이 지정됨} other {이 계정에 #개의 라벨이 지정됨}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "{0, plural, one {이 콘텐츠에 #개의 라벨이 지정되었습니다} other {이 콘텐츠에 #개의 라벨이 지정되었습니다}}"
+msgstr "{0, plural, one {이 콘텐츠에 #개의 라벨이 지정됨} other {이 콘텐츠에 #개의 라벨이 지정됨}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
