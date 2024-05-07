@@ -1,6 +1,7 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
+import {AppState} from 'react-native'
 import {BskyAgent} from '@atproto-labs/api'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 
 import {Convo, ConvoParams, ConvoState} from '#/state/messages/convo'
 import {useAgent} from '#/state/session'
@@ -20,6 +21,7 @@ export function ChatProvider({
   children,
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
+  const isScreenFocused = useIsFocused()
   const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
   const [convo] = useState(
@@ -43,6 +45,24 @@ export function ChatProvider({
       }
     }, [convo]),
   )
+
+  React.useEffect(() => {
+    const handleAppStateChange = (nextAppState: string) => {
+      if (isScreenFocused) {
+        if (nextAppState === 'active') {
+          convo.resume()
+        } else {
+          convo.background()
+        }
+      }
+    }
+
+    const sub = AppState.addEventListener('change', handleAppStateChange)
+
+    return () => {
+      sub.remove()
+    }
+  }, [convo, isScreenFocused])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }

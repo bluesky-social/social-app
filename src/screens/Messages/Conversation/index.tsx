@@ -18,6 +18,7 @@ import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
@@ -51,8 +52,21 @@ function Inner() {
   }
 
   if (chat.status === ConvoStatus.Error) {
-    // TODO error
-    return null
+    // TODO
+    return (
+      <View>
+        <CenteredView style={{flex: 1}} sideBorders>
+          <Text>Something went wrong</Text>
+          <Button
+            label="Retry"
+            onPress={() => {
+              chat.error.retry()
+            }}>
+            <ButtonText>Retry</ButtonText>
+          </Button>
+        </CenteredView>
+      </View>
+    )
   }
 
   /*

@@ -18,10 +18,10 @@ export function MessageListError({
   const {_} = useLingui()
   const message = React.useMemo(() => {
     return {
-      [ConvoItemError.HistoryFailed]: _(msg`Failed to load past messages.`),
-      [ConvoItemError.ResumeFailed]: _(
+      [ConvoItemError.Network]: _(
         msg`There was an issue connecting to the chat.`,
       ),
+      [ConvoItemError.HistoryFailed]: _(msg`Failed to load past messages.`),
       [ConvoItemError.PollFailed]: _(
         msg`This chat was disconnected due to a network error.`,
       ),
