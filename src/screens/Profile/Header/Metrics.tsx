@@ -50,21 +50,16 @@ export function ProfileHeaderMetrics({
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'follows')}
         label={_(msg`${following} following`)}>
-        <Trans>
-          <Text style={[a.font_bold, a.text_md]}>{following} </Text>
-          <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            {pluralizedFollowings}
-          </Text>
-        </Trans>
+        <Text style={[a.font_bold, a.text_md]}>{following} </Text>
+        <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+          {pluralizedFollowings}
+        </Text>
       </InlineLinkText>
       <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
-        <Trans>
-          {formatCount(profile.postsCount || 0)}{' '}
-          <Text
-            style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
-            {plural(profile.postsCount || 0, {one: 'post', other: 'posts'})}
-          </Text>
-        </Trans>
+        {formatCount(profile.postsCount || 0)}{' '}
+        <Text style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
+          {plural(profile.postsCount || 0, {one: 'post', other: 'posts'})}
+        </Text>
       </Text>
     </View>
   )

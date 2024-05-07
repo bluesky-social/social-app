@@ -1,5 +1,5 @@
 import React, {memo} from 'react'
-import {FlatListProps, RefreshControl} from 'react-native'
+import {FlatListProps, RefreshControl, ViewToken} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
@@ -23,6 +23,7 @@ export type ListProps<ItemT> = Omit<
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
+  onItemSeen?: (item: ItemT) => void
   containWeb?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
@@ -34,6 +35,7 @@ function ListImpl<ItemT>(
     onScrolledDownChange,
     refreshing,
     onRefresh,
+    onItemSeen,
     headerOffset,
     style,
     ...props
@@ -73,6 +75,25 @@ function ListImpl<ItemT>(
     },
   })
 
+  const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
+    if (!onItemSeen) {
+      return [undefined, undefined]
+    }
+    return [
+      (info: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
+        for (const item of info.changed) {
+          if (item.isViewable) {
+            onItemSeen(item.item)
+          }
+        }
+      },
+      {
+        itemVisiblePercentThreshold: 40,
+        minimumViewTime: 2e3,
+      },
+    ]
+  }, [onItemSeen])
+
   let refreshControl
   if (refreshing !== undefined || onRefresh !== undefined) {
     refreshControl = (
@@ -102,6 +123,8 @@ function ListImpl<ItemT>(
       refreshControl={refreshControl}
       onScroll={scrollHandler}
       scrollEventThrottle={1}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={viewabilityConfig}
       style={style}
       ref={ref}
     />
