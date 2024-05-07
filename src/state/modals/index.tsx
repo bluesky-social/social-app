@@ -50,12 +50,6 @@ export interface CropImageModal {
   onSelect: (img?: RNImage) => void
 }
 
-export interface AltTextImageModal {
-  name: 'alt-text-image'
-  image: ComposerImage
-  onChange: (next: ComposerImage) => void
-}
-
 export interface DeleteAccountModal {
   name: 'delete-account'
 }
@@ -151,7 +145,6 @@ export type Modal =
   | ListAddRemoveUsersModal
 
   // Posts
-  | AltTextImageModal
   | CropImageModal
   | EditImageModal
   | RepostModal
