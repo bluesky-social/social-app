@@ -71,7 +71,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         onAgentSessionChange,
       )
 
-      throwIfAborted(signal)
+      if (signal.aborted) {
+        return
+      }
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -91,7 +93,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         onAgentSessionChange,
       )
 
-      throwIfAborted(signal)
+      if (signal.aborted) {
+        return
+      }
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -122,7 +126,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         onAgentSessionChange,
       )
 
-      throwIfAborted(signal)
+      if (signal.aborted) {
+        return
+      }
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -239,13 +245,6 @@ function useOneTaskAtATime() {
     return abortController.current.signal
   }, [])
   return cancelPendingTask
-}
-
-// RN does not have signal.throwIfAborted().
-function throwIfAborted(signal: AbortSignal) {
-  if (signal.aborted) {
-    throw Error('Task cancelled')
-  }
 }
 
 export function useSession() {
