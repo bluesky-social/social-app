@@ -259,14 +259,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   )
                 }
                 onPress={onPressMessages}
-                notificationCount={
-                  numUnreadMessages > 0 ? String(numUnreadMessages) : ''
-                }
+                notificationCount={numUnreadMessages.numUnread}
                 accessible={true}
                 accessibilityRole="tab"
                 accessibilityLabel={_(msg`Messages`)}
                 accessibilityHint={
-                  numUnreadMessages > 0 ? `${numUnreadMessages} unread` : ''
+                  numUnreadMessages.count > 0
+                    ? `${numUnreadMessages.numUnread} unread`
+                    : ''
                 }
               />
             )}

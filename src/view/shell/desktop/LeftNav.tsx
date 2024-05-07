@@ -355,7 +355,7 @@ export function DesktopLeftNav() {
           {gate('dms') && (
             <NavItem
               href="/messages"
-              count={numUnreadMessages > 0 ? String(numUnreadMessages) : ''}
+              count={numUnreadMessages.numUnread}
               icon={<Envelope style={pal.text} width={isDesktop ? 26 : 30} />}
               iconFilled={
                 <EnvelopeFilled style={pal.text} width={isDesktop ? 26 : 30} />
