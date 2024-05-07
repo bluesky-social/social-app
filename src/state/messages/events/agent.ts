@@ -413,8 +413,10 @@ export class MessagesEventBus {
     if (needsEmit) {
       try {
         this.emitter.emit('events', batch)
-      } catch (e) {
-        logger.error(e)
+      } catch (e: any) {
+        logger.error(e, {
+          context: `${LOGGER_CONTEXT}: process latest events`,
+        })
       }
     }
   }
