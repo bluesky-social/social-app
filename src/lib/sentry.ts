@@ -4,10 +4,11 @@
  */
 
 import {Platform} from 'react-native'
-import {nativeApplicationVersion, nativeBuildVersion} from 'expo-application'
+import {nativeApplicationVersion} from 'expo-application'
+import {isEmbeddedLaunch} from 'expo-updates'
 import * as Sentry from '@sentry/react-native'
 
-import {BUILD_ENV, IS_DEV, IS_TESTFLIGHT} from 'lib/app-info'
+import {BUILD_ENV, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from 'lib/app-info'
 
 /**
  * Examples:
@@ -18,16 +19,14 @@ const release = nativeApplicationVersion ?? 'dev'
 
 /**
  * Examples:
- * - `web.dev`
- * - `ios.dev`
- * - `android.dev`
- * - `web.1.57.0`
- * - `ios.1.57.0.3`
- * - `android.1.57.0.46`
+ * - web.e93024c8
+ * - web.dev
+ * - ios.e93024c8
+ * - ios.dev
+ * - android.e93024c8
+ * - android.dev
  */
-const dist = `${Platform.OS}.${nativeBuildVersion}.${
-  IS_TESTFLIGHT ? 'tf' : ''
-}${IS_DEV ? 'dev' : ''}`
+const dist = `${Platform.OS}.${BUNDLE_IDENTIFIER ?? 'dev'}`
 
 Sentry.init({
   autoSessionTracking: false,
@@ -37,4 +36,10 @@ Sentry.init({
   dist,
   release,
   tracesSampleRate: 0.25,
+})
+
+Sentry.configureScope(scope => {
+  scope.setTag('updates-channel', IS_TESTFLIGHT ? 'testflight' : 'production')
+  scope.setTag('updates-is-embedded', isEmbeddedLaunch)
+  scope.setTag('updates-identifier', BUNDLE_IDENTIFIER)
 })
