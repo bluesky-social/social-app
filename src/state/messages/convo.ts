@@ -26,13 +26,49 @@ export enum ConvoStatus {
 
 export enum ConvoItemError {
   HistoryFailed = 'historyFailed',
-  ResumeFailed = 'resumeFailed',
   PollFailed = 'pollFailed',
+  Network = 'network',
 }
 
-export enum ConvoError {
+export enum ConvoErrorCode {
   InitFailed = 'initFailed',
 }
+
+export type ConvoError = {
+  code: ConvoErrorCode
+  exception?: Error
+  retry: () => void
+}
+
+export enum ConvoDispatchEvent {
+  Init = 'init',
+  Ready = 'ready',
+  Resume = 'resume',
+  Background = 'background',
+  Suspend = 'suspend',
+  Error = 'error',
+}
+
+export type ConvoDispatch =
+  | {
+      event: ConvoDispatchEvent.Init
+    }
+  | {
+      event: ConvoDispatchEvent.Ready
+    }
+  | {
+      event: ConvoDispatchEvent.Resume
+    }
+  | {
+      event: ConvoDispatchEvent.Background
+    }
+  | {
+      event: ConvoDispatchEvent.Suspend
+    }
+  | {
+      event: ConvoDispatchEvent.Error
+      payload: ConvoError
+    }
 
 export type ConvoItem =
   | {
@@ -168,11 +204,11 @@ export class Convo {
   private agent: BskyAgent
   private __tempFromUserDid: string
 
-  private pollInterval = ACTIVE_POLL_INTERVAL
   private status: ConvoStatus = ConvoStatus.Uninitialized
+  private pollInterval = ACTIVE_POLL_INTERVAL
   private error:
     | {
-        code: ConvoError
+        code: ConvoErrorCode
         exception?: Error
         retry: () => void
       }
@@ -315,113 +351,228 @@ export class Convo {
     }
   }
 
-  init() {
-    if (
-      this.status === ConvoStatus.Uninitialized ||
-      this.status === ConvoStatus.Error
-    ) {
-      logger.debug('Convo: init', {id: this.id}, logger.DebugContext.convo)
+  dispatch(action: ConvoDispatch) {
+    const prevStatus = this.status
 
-      this.status = ConvoStatus.Initializing
-      this.commit()
-
-      this.refreshConvo()
-        .then(async () => {
-          if (this.status === ConvoStatus.Initializing) {
+    switch (this.status) {
+      case ConvoStatus.Uninitialized: {
+        switch (action.event) {
+          case ConvoDispatchEvent.Init: {
+            this.status = ConvoStatus.Initializing
+            this.setup()
+            break
+          }
+        }
+        break
+      }
+      case ConvoStatus.Initializing: {
+        switch (action.event) {
+          case ConvoDispatchEvent.Ready: {
             this.status = ConvoStatus.Ready
-            this.commit()
-
+            this.pollInterval = ACTIVE_POLL_INTERVAL
             this.fetchMessageHistory()
-            this.pollEvents()
-          } else {
-            logger.debug(
-              `Convo: init was canceled`,
-              {},
-              logger.DebugContext.convo,
-            )
+            this.initiatePoll()
+            break
           }
-        })
-        .catch(e => {
-          logger.error('Convo: failed to init')
-          this.error = {
-            exception: e,
-            code: ConvoError.InitFailed,
-            retry: () => {
-              this.error = undefined
-              this.init()
-            },
+          case ConvoDispatchEvent.Background: {
+            this.status = ConvoStatus.Backgrounded
+            this.pollInterval = BACKGROUND_POLL_INTERVAL
+            this.fetchMessageHistory()
+            this.initiatePoll()
+            break
           }
-          this.status = ConvoStatus.Error
-          this.commit()
-        })
-    } else if (this.status === ConvoStatus.Suspended) {
-      this.resume()
-    } else {
-      logger.warn(`Convo: cannot init from ${this.status}`)
+          case ConvoDispatchEvent.Suspend: {
+            this.status = ConvoStatus.Suspended
+            break
+          }
+          case ConvoDispatchEvent.Error: {
+            this.status = ConvoStatus.Error
+            this.error = action.payload
+            break
+          }
+        }
+        break
+      }
+      case ConvoStatus.Ready: {
+        switch (action.event) {
+          case ConvoDispatchEvent.Resume: {
+            this.refreshConvo()
+            this.initiatePoll()
+            break
+          }
+          case ConvoDispatchEvent.Background: {
+            this.status = ConvoStatus.Backgrounded
+            this.pollInterval = BACKGROUND_POLL_INTERVAL
+            break
+          }
+          case ConvoDispatchEvent.Suspend: {
+            this.status = ConvoStatus.Suspended
+            break
+          }
+          case ConvoDispatchEvent.Error: {
+            this.status = ConvoStatus.Error
+            this.error = action.payload
+            break
+          }
+        }
+        break
+      }
+      case ConvoStatus.Backgrounded: {
+        switch (action.event) {
+          case ConvoDispatchEvent.Resume: {
+            this.status = ConvoStatus.Ready
+            this.pollInterval = ACTIVE_POLL_INTERVAL
+            this.refreshConvo()
+            this.initiatePoll()
+            break
+          }
+          case ConvoDispatchEvent.Suspend: {
+            this.status = ConvoStatus.Suspended
+            break
+          }
+          case ConvoDispatchEvent.Error: {
+            this.status = ConvoStatus.Error
+            this.error = action.payload
+            break
+          }
+        }
+        break
+      }
+      case ConvoStatus.Suspended: {
+        switch (action.event) {
+          case ConvoDispatchEvent.Init: {
+            this.status = ConvoStatus.Ready
+            this.pollInterval = ACTIVE_POLL_INTERVAL
+            this.refreshConvo()
+            this.initiatePoll()
+            break
+          }
+          case ConvoDispatchEvent.Resume: {
+            this.status = ConvoStatus.Ready
+            this.pollInterval = ACTIVE_POLL_INTERVAL
+            this.refreshConvo()
+            this.initiatePoll()
+            break
+          }
+          case ConvoDispatchEvent.Error: {
+            this.status = ConvoStatus.Error
+            this.error = action.payload
+            break
+          }
+        }
+        break
+      }
+      case ConvoStatus.Error: {
+        switch (action.event) {
+          case ConvoDispatchEvent.Init: {
+            this.reset()
+            break
+          }
+          case ConvoDispatchEvent.Resume: {
+            this.reset()
+            break
+          }
+          case ConvoDispatchEvent.Suspend: {
+            this.status = ConvoStatus.Suspended
+            break
+          }
+          case ConvoDispatchEvent.Error: {
+            this.status = ConvoStatus.Error
+            this.error = action.payload
+            break
+          }
+        }
+        break
+      }
+      default:
+        break
+    }
+
+    logger.debug(
+      `Convo: dispatch '${action.event}'`,
+      {
+        id: this.id,
+        prev: prevStatus,
+        next: this.status,
+      },
+      logger.DebugContext.convo,
+    )
+
+    this.commit()
+  }
+
+  private reset() {
+    this.convo = undefined
+    this.sender = undefined
+    this.recipients = undefined
+    this.snapshot = undefined
+
+    this.status = ConvoStatus.Uninitialized
+    this.error = undefined
+    this.historyCursor = undefined
+    this.eventsCursor = undefined
+
+    this.pastMessages = new Map()
+    this.newMessages = new Map()
+    this.pendingMessages = new Map()
+    this.deletedMessages = new Set()
+    this.footerItems = new Map()
+    this.headerItems = new Map()
+
+    this.dispatch({event: ConvoDispatchEvent.Init})
+  }
+
+  private async setup() {
+    try {
+      await this.fetchConvo()
+
+      /*
+       * Some validation prior to `Ready` status
+       */
+      if (!this.sender) {
+        throw new Error('Convo: could not find sender in convo')
+      }
+      if (!this.recipients) {
+        throw new Error('Convo: could not find recipients in convo')
+      }
+
+      // await new Promise(y => setTimeout(y, 2000))
+      // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
+      this.dispatch({event: ConvoDispatchEvent.Ready})
+    } catch (e: any) {
+      logger.error('Convo: setup() failed')
+
+      this.dispatch({
+        event: ConvoDispatchEvent.Error,
+        payload: {
+          exception: e,
+          code: ConvoErrorCode.InitFailed,
+          retry: () => {
+            this.reset()
+          },
+        },
+      })
     }
   }
 
-  // TODO resume failure
+  init() {
+    this.dispatch({event: ConvoDispatchEvent.Init})
+  }
+
   resume() {
-    if (
-      this.status === ConvoStatus.Suspended ||
-      this.status === ConvoStatus.Backgrounded
-    ) {
-      logger.debug('Convo: resume', {id: this.id}, logger.DebugContext.convo)
-
-      this.status = ConvoStatus.Ready
-      this.cancelNextPoll()
-      this.pollInterval = ACTIVE_POLL_INTERVAL
-      this.pollEvents()
-      this.commit()
-
-      // intentionally un-awaited
-      this.refreshConvo().then(() => {
-        this.commit()
-      })
-    } else if (this.status === ConvoStatus.Error) {
-      this.init()
-    } else {
-      logger.debug(
-        `Convo: resume called from ${this.status}`,
-        {},
-        logger.DebugContext.convo,
-      )
-    }
+    this.dispatch({event: ConvoDispatchEvent.Resume})
   }
 
   background() {
-    if (
-      this.status === ConvoStatus.Initializing ||
-      this.status === ConvoStatus.Ready ||
-      this.status === ConvoStatus.Error
-    ) {
-      logger.debug(
-        'Convo: backgrounded',
-        {id: this.id},
-        logger.DebugContext.convo,
-      )
-      this.status = ConvoStatus.Backgrounded
-      this.pollInterval = BACKGROUND_POLL_INTERVAL
-      this.commit()
-    }
+    this.dispatch({event: ConvoDispatchEvent.Background})
   }
 
   suspend() {
-    if (
-      this.status === ConvoStatus.Initializing ||
-      this.status === ConvoStatus.Ready ||
-      this.status === ConvoStatus.Error ||
-      this.status === ConvoStatus.Backgrounded
-    ) {
-      logger.debug('Convo: suspended', {id: this.id}, logger.DebugContext.convo)
-      DEBUG_ACTIVE_CHAT = undefined
-      this.status = ConvoStatus.Suspended
-      this.commit()
-    }
+    this.dispatch({event: ConvoDispatchEvent.Suspend})
+    DEBUG_ACTIVE_CHAT = undefined
   }
 
-  async refreshConvo() {
+  async fetchConvo() {
     const response = await this.agent.api.chat.bsky.convo.getConvo(
       {
         convoId: this.convoId,
@@ -438,14 +589,26 @@ export class Convo {
       m => m.did !== this.__tempFromUserDid,
     )
 
-    /*
-     * Prevent invalid states
-     */
-    if (!this.sender) {
-      throw new Error('Convo: could not find sender in convo')
-    }
-    if (!this.recipients) {
-      throw new Error('Convo: could not find recipients in convo')
+    this.commit()
+  }
+
+  async refreshConvo() {
+    try {
+      await this.fetchConvo()
+      // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
+    } catch (e: any) {
+      logger.error(`Convo: failed to refresh convo`)
+
+      this.footerItems.set(ConvoItemError.Network, {
+        type: 'error-recoverable',
+        key: ConvoItemError.Network,
+        code: ConvoItemError.Network,
+        retry: () => {
+          this.footerItems.delete(ConvoItemError.Network)
+          this.resume()
+        },
+      })
+      this.commit()
     }
   }
 
@@ -530,6 +693,15 @@ export class Convo {
     }
   }
 
+  private initiatePoll() {
+    this.cancelNextPoll()
+    this.pollEvents()
+  }
+
+  private cancelNextPoll() {
+    if (this.nextPoll) clearTimeout(this.nextPoll)
+  }
+
   private async pollEvents() {
     if (this.pendingPoll) return
 
@@ -537,11 +709,11 @@ export class Convo {
       this.status === ConvoStatus.Ready ||
       this.status === ConvoStatus.Backgrounded
     ) {
-      // logger.debug(
-      //   'Convo: poll events',
-      //   {id: this.id},
-      //   logger.DebugContext.convo,
-      // )
+      logger.debug(
+        'Convo: poll events',
+        {id: this.id},
+        logger.DebugContext.convo,
+      )
 
       try {
         this.pendingPoll = this.ingestLatestEvents()
@@ -572,10 +744,6 @@ export class Convo {
     }
 
     return
-  }
-
-  private cancelNextPoll() {
-    if (this.nextPoll) clearTimeout(this.nextPoll)
   }
 
   async ingestLatestEvents() {
