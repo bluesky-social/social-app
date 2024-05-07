@@ -158,7 +158,7 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isMobile && isWeb ? 15 : 0,
+      paddingTop: isMobile && isWeb ? 15 : insets.top,
     }),
     [insets, isKeyboardVisible, isMobile],
   )
@@ -476,34 +476,34 @@ export const ComposePost = observer(function ComposePost({
             keyboardShouldPersistTaps="always">
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
-          <View
-            style={[
-              pal.border,
-              styles.textInputLayout,
-              isNative && styles.textInputLayoutMobile,
-            ]}>
-            <UserAvatar
-              avatar={currentProfile?.avatar}
-              size={50}
-              type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-            />
-            <TextInput
-              ref={textInput}
-              richtext={richtext}
-              placeholder={selectTextInputPlaceholder}
-              autoFocus={true}
-              setRichText={setRichText}
-              onPhotoPasted={onPhotoPasted}
-              onPressPublish={onPressPublish}
-              onNewLink={onNewLink}
-              onError={setError}
-              accessible={true}
-              accessibilityLabel={_(msg`Write post`)}
-              accessibilityHint={_(
-                msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
-              )}
-            />
-          </View>
+            <View
+              style={[
+                pal.border,
+                styles.textInputLayout,
+                isNative && styles.textInputLayoutMobile,
+              ]}>
+              <UserAvatar
+                avatar={currentProfile?.avatar}
+                size={50}
+                type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+              />
+              <TextInput
+                ref={textInput}
+                richtext={richtext}
+                placeholder={selectTextInputPlaceholder}
+                autoFocus={true}
+                setRichText={setRichText}
+                onPhotoPasted={onPhotoPasted}
+                onPressPublish={onPressPublish}
+                onNewLink={onNewLink}
+                onError={setError}
+                accessible={true}
+                accessibilityLabel={_(msg`Write post`)}
+                accessibilityHint={_(
+                  msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+                )}
+              />
+            </View>
 
             <Gallery gallery={gallery} />
             {gallery.isEmpty && extLink && (
@@ -577,7 +577,7 @@ export const ComposePost = observer(function ComposePost({
         confirmButtonCta={_(msg`Discard`)}
         confirmButtonColor="negative"
       />
-    </KeyboardAvoidingView>
+    </>
   )
 })
 
@@ -586,18 +586,13 @@ export function useComposerCancelRef() {
 }
 
 const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'column',
-    flex: 1,
-    height: '100%',
-  },
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 6,
+    marginTop: -14,
     paddingBottom: 4,
     paddingHorizontal: 20,
-    height: 55,
+    height: 50,
     gap: 4,
   },
   topbarDesktop: {
