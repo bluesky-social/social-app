@@ -1,5 +1,10 @@
 import {useCallback, useMemo} from 'react'
-import {BskyAgent} from '@atproto-labs/api'
+import {
+  BskyAgent,
+  ChatBskyConvoDefs,
+  ChatBskyConvoListConvos,
+} from '@atproto-labs/api'
+import {useFocusEffect} from '@react-navigation/native'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -49,33 +54,104 @@ export function useUnreadMessageCount() {
   }, [count])
 }
 
-type ConvoListQueryData = ReturnType<typeof useListConvos>['data']
+type ConvoListQueryData = {
+  pageParams: Array<string | undefined>
+  pages: Array<ChatBskyConvoListConvos.OutputSchema>
+}
 
-export function useOptimisticMarkAsRead() {
+export function useOnMarkAsRead() {
   const queryClient = useQueryClient()
 
   return useCallback(
     (chatId: string) => {
       queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
-        if (!old) {
-          return old
-        }
-
-        return {
-          pages: old.pages.map(page => {
-            return {
-              ...page,
-              convos: page.convos.map(convo => {
-                return {
-                  ...convo,
-                  unreadCount: convo.chatId === chatId ? 0 : convo.unreadCount,
-                }
-              }),
-            }
-          }),
-        }
+        return optimisticUpdate(chatId, old, convo => ({
+          ...convo,
+          unreadCount: 0,
+        }))
       })
     },
     [queryClient],
   )
+}
+
+export function useMarkAsReadWhileMounted(chatId: string) {
+  const markAsRead = useOnMarkAsRead()
+
+  return useFocusEffect(
+    useCallback(() => {
+      markAsRead(chatId)
+      return () => markAsRead(chatId)
+    }, [markAsRead, chatId]),
+  )
+}
+
+export function useOnDeleteMessage() {
+  const queryClient = useQueryClient()
+
+  return useCallback(
+    (chatId: string, messageId: string) => {
+      queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
+        return optimisticUpdate(chatId, old, convo =>
+          messageId === convo.lastMessage?.id
+            ? {
+                ...convo,
+                lastMessage: {
+                  $type: 'chat.bsky.convo.defs#deletedMessageView',
+                  id: messageId,
+                  rev: '',
+                },
+              }
+            : convo,
+        )
+      })
+    },
+    [queryClient],
+  )
+}
+
+export function useOnNewMessage() {
+  const queryClient = useQueryClient()
+
+  return useCallback(
+    (chatId: string, message: ChatBskyConvoDefs.MessageView) => {
+      queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
+        return optimisticUpdate(chatId, old, convo => ({
+          ...convo,
+          lastMessage: message,
+          unreadCount: convo.unreadCount + 1,
+        }))
+      })
+      queryClient.invalidateQueries({queryKey: RQKEY})
+    },
+    [queryClient],
+  )
+}
+
+export function useOnCreateConvo() {
+  const queryClient = useQueryClient()
+
+  return useCallback(() => {
+    queryClient.invalidateQueries({queryKey: RQKEY})
+  }, [queryClient])
+}
+
+function optimisticUpdate(
+  chatId: string,
+  old: ConvoListQueryData,
+  updateFn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
+) {
+  if (!old) {
+    return old
+  }
+
+  return {
+    ...old,
+    pages: old.pages.map(page => ({
+      ...page,
+      convos: page.convos.map(convo =>
+        chatId === convo.id ? updateFn(convo) : convo,
+      ),
+    })),
+  }
 }
