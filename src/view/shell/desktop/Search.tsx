@@ -213,7 +213,7 @@ export function DesktopSearch() {
       document.removeEventListener('focusin', handleFocusIn)
       document.removeEventListener('focusout', handleFocusOut)
     }
-  }, [])
+  }, [searchViewRef, setIsActive])
 
   return (
     <View style={[styles.container, pal.view]} ref={searchViewRef}>
