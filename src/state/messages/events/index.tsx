@@ -48,7 +48,7 @@ export function MessagesEventBusProvider({
       if (nextAppState === 'active') {
         bus.resume()
       } else {
-        bus.suspend()
+        bus.background()
       }
     }
 

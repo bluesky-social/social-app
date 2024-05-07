@@ -10,6 +10,7 @@ export enum MessagesEventBusStatus {
   Initializing = 'initializing',
   Ready = 'ready',
   Error = 'error',
+  Backgrounded = 'backgrounded',
   Suspended = 'suspended',
 }
 
@@ -17,6 +18,7 @@ export enum MessagesEventBusDispatchEvent {
   Init = 'init',
   Ready = 'ready',
   Error = 'error',
+  Background = 'background',
   Suspend = 'suspend',
   Resume = 'resume',
 }
@@ -39,6 +41,9 @@ export type MessagesEventBusDispatch =
     }
   | {
       event: MessagesEventBusDispatchEvent.Ready
+    }
+  | {
+      event: MessagesEventBusDispatchEvent.Background
     }
   | {
       event: MessagesEventBusDispatchEvent.Suspend
@@ -73,6 +78,15 @@ export type MessagesEventBusState =
   | {
       status: MessagesEventBusStatus.Ready
       rev: string
+      error: undefined
+      setPollInterval: (interval: number) => void
+      trail: (
+        handler: (events: ChatBskyConvoGetLog.OutputSchema['logs']) => void,
+      ) => () => void
+    }
+  | {
+      status: MessagesEventBusStatus.Backgrounded
+      rev: string | undefined
       error: undefined
       setPollInterval: (interval: number) => void
       trail: (
