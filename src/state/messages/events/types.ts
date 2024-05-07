@@ -54,6 +54,7 @@ export type MessagesEventBusDispatch =
 export type MessagesEventBusState =
   | {
       status: MessagesEventBusStatus.Uninitialized
+      rev: undefined
       error: undefined
       setPollInterval: (interval: number) => void
       trail: (
@@ -62,6 +63,7 @@ export type MessagesEventBusState =
     }
   | {
       status: MessagesEventBusStatus.Initializing
+      rev: undefined
       error: undefined
       setPollInterval: (interval: number) => void
       trail: (
@@ -70,6 +72,7 @@ export type MessagesEventBusState =
     }
   | {
       status: MessagesEventBusStatus.Ready
+      rev: string
       error: undefined
       setPollInterval: (interval: number) => void
       trail: (
@@ -78,6 +81,7 @@ export type MessagesEventBusState =
     }
   | {
       status: MessagesEventBusStatus.Suspended
+      rev: string | undefined
       error: undefined
       setPollInterval: (interval: number) => void
       trail: (
@@ -86,6 +90,7 @@ export type MessagesEventBusState =
     }
   | {
       status: MessagesEventBusStatus.Error
+      rev: string | undefined
       error: MessagesEventBusError
       setPollInterval: (interval: number) => void
       trail: (

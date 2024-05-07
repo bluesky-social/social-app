@@ -76,6 +76,7 @@ export class MessagesEventBus {
       case MessagesEventBusStatus.Initializing: {
         return {
           status: MessagesEventBusStatus.Initializing,
+          rev: undefined,
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
@@ -84,6 +85,7 @@ export class MessagesEventBus {
       case MessagesEventBusStatus.Ready: {
         return {
           status: this.status,
+          rev: this.latestRev!,
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
@@ -92,6 +94,7 @@ export class MessagesEventBus {
       case MessagesEventBusStatus.Suspended: {
         return {
           status: this.status,
+          rev: this.latestRev,
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
@@ -100,6 +103,7 @@ export class MessagesEventBus {
       case MessagesEventBusStatus.Error: {
         return {
           status: MessagesEventBusStatus.Error,
+          rev: this.latestRev,
           error: this.error || {
             code: MessagesEventBusErrorCode.Unknown,
             retry: () => {
@@ -113,6 +117,7 @@ export class MessagesEventBus {
       default: {
         return {
           status: MessagesEventBusStatus.Uninitialized,
+          rev: undefined,
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
@@ -406,7 +411,11 @@ export class MessagesEventBus {
     }
 
     if (needsEmit) {
-      this.emitter.emit('events', batch)
+      try {
+        this.emitter.emit('events', batch)
+      } catch (e) {
+        logger.error(e)
+      }
     }
   }
 }
