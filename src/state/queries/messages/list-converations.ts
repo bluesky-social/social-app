@@ -43,7 +43,7 @@ export function useUnreadMessageCount() {
     convos.data?.pages
       .flatMap(page => page.convos)
       .reduce((acc, convo) => {
-        return acc + (convo.unreadCount > 0 ? 1 : 0)
+        return acc + (!convo.muted && convo.unreadCount > 0 ? 1 : 0)
       }, 0) ?? 0
 
   return useMemo(() => {
