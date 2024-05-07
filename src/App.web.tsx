@@ -110,15 +110,14 @@ function InnerApp() {
 
 function App() {
   const [isReady, setReady] = useState(false)
-  
+
   React.useEffect(() => {
     initPersistedState().then(() => {
       setReady(true)
-      
-      const preloadElement = document.getElementById('preload');
-      preloadElement.remove();
+
+      const preloadElement = document.getElementById('preload')
+      preloadElement?.remove()
     })
-    
   }, [])
 
   if (!isReady) {
