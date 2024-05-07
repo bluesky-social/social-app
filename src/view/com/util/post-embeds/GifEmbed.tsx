@@ -117,7 +117,7 @@ export function GifEmbed({
     playerRef.current?.toggleAsync()
   }, [])
 
-  const altText = React.useMemo(
+  const parsedAlt = React.useMemo(
     () => parseAltFromGIFDescription(link.description),
     [link],
   )
@@ -146,10 +146,10 @@ export function GifEmbed({
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={altText.alt}
+          accessibilityLabel={parsedAlt.alt}
         />
 
-        {!hideAlt && altText.isPreferred && <AltText text={altText.alt} />}
+        {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>
     </View>
   )

@@ -58,10 +58,9 @@ export function GifAltText({
     [onSubmit, control],
   )
 
-  const parsedValue = parseAltFromGIFDescription(link.description)
-
   if (!gif || !params) return null
 
+  const parsedAlt = parseAltFromGIFDescription(link.description)
   return (
     <>
       <TouchableOpacity
@@ -83,7 +82,7 @@ export function GifAltText({
           a.align_center,
           {backgroundColor: 'rgba(0, 0, 0, 0.75)'},
         ]}>
-        {parseAltFromGIFDescription(link.description).isPreferred ? (
+        {parsedAlt.isPreferred ? (
           <Check size="xs" fill={t.palette.white} style={a.ml_xs} />
         ) : (
           <Plus size="sm" fill={t.palette.white} />
@@ -105,7 +104,7 @@ export function GifAltText({
           onSubmit={onPressSubmit}
           link={link}
           params={params}
-          initialValue={parsedValue.isPreferred ? parsedValue.alt : ''}
+          initialValue={parsedAlt.isPreferred ? parsedAlt.alt : ''}
           key={link.uri}
         />
       </Dialog.Outer>

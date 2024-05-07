@@ -3,11 +3,8 @@ const DEFAULT_ALT_PREFIX = 'ALT: '
 
 export function createGIFDescription(
   tenorDescription: string,
-  preferredAlt?: string,
+  preferredAlt: string = '',
 ) {
-  if (!preferredAlt) {
-    return DEFAULT_ALT_PREFIX + tenorDescription
-  }
   preferredAlt = preferredAlt.trim()
   if (preferredAlt !== '') {
     return USER_ALT_PREFIX + preferredAlt
