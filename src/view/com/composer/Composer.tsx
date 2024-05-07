@@ -215,7 +215,7 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
-  const needsAltText = useMemo(() => {
+  const isAltTextRequiredAndMissing = useMemo(() => {
     if (!requireAltTextEnabled) return false
 
     if (gallery.needsAltText) return true
@@ -233,7 +233,7 @@ export const ComposePost = observer(function ComposePost({
       return
     }
 
-    if (needsAltText) {
+    if (isAltTextRequiredAndMissing) {
       return
     }
 
@@ -316,8 +316,8 @@ export const ComposePost = observer(function ComposePost({
   }
 
   const canPost = useMemo(
-    () => graphemeLength <= MAX_GRAPHEME_LENGTH && !needsAltText,
-    [graphemeLength, needsAltText],
+    () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
+    [graphemeLength, isAltTextRequiredAndMissing],
   )
   const selectTextInputPlaceholder = replyTo
     ? _(msg`Write your reply`)
@@ -449,7 +449,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           )}
         </View>
-        {requireAltTextEnabled && needsAltText && (
+        {isAltTextRequiredAndMissing && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
               <FontAwesomeIcon
