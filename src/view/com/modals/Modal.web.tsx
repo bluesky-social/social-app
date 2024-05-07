@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
+import {useOutsideClick} from '#/lib/hooks/useOutsideClick'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import type {Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
@@ -39,49 +40,24 @@ export function ModalsContainer() {
   return (
     <>
       {activeModals.map((modal, i) => (
-        <Modal key={`modal-${i}`} modal={modal} />
+        <Modal
+          key={`modal-${i}`}
+          modal={modal}
+          active={i === activeModals.length - 1}
+        />
       ))}
     </>
   )
 }
 
-function Modal({modal}: {modal: ModalIface}) {
-  const {isModalActive} = useModals()
+function Modal({modal, active}: {modal: ModalIface; active: boolean}) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
-  const clickInsideRef = React.useRef<boolean>(false)
+  const containerRef = React.useRef<HTMLDivElement>(null)
 
-  if (!isModalActive) {
-    return null
-  }
-
-  const onPressMask = (ev: React.MouseEvent<HTMLDivElement>) => {
-    // 1. Ignore clicks from inside the modal
-    // 2. Ignore clicks that started inside the modal and ended in the mask
-    if (ev.target !== ev.currentTarget.firstChild || clickInsideRef.current) {
-      return
-    }
-
-    if (
-      modal.name === 'crop-image' ||
-      modal.name === 'edit-image' ||
-      modal.name === 'alt-text-image'
-    ) {
-      return // dont close on mask presses during crop
-    }
-
-    closeModal()
-  }
-
-  const onInnerPressIn = () => {
-    clickInsideRef.current = true
-  }
-
-  const onInnerPressOut = () => {
-    clickInsideRef.current = false
-  }
+  useOutsideClick(containerRef, closeModal, active)
 
   let element
   if (modal.name === 'edit-profile') {
@@ -129,24 +105,22 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   return (
-    <div onClick={onPressMask}>
-      <Animated.View
-        style={styles.mask}
-        entering={FadeIn.duration(150)}
-        exiting={FadeOut}>
-        <div onPointerDown={onInnerPressIn} onPointerUp={onInnerPressOut}>
-          <View
-            style={[
-              styles.container,
-              isMobile && styles.containerMobile,
-              pal.view,
-              pal.border,
-            ]}>
-            {element}
-          </View>
-        </div>
-      </Animated.View>
-    </div>
+    <Animated.View
+      style={styles.mask}
+      entering={FadeIn.duration(150)}
+      exiting={FadeOut}>
+      <div ref={containerRef}>
+        <View
+          style={[
+            styles.container,
+            isMobile && styles.containerMobile,
+            pal.view,
+            pal.border,
+          ]}>
+          {element}
+        </View>
+      </div>
+    </Animated.View>
   )
 }
 
