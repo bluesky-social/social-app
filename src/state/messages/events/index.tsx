@@ -2,6 +2,7 @@ import React from 'react'
 import {AppState} from 'react-native'
 import {BskyAgent} from '@atproto-labs/api'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusState} from '#/state/messages/events/types'
@@ -20,7 +21,7 @@ export function useMessagesEventBus() {
   return ctx
 }
 
-export function MessagesEventBusProvider({
+export function Temp_MessagesEventBusProvider({
   children,
 }: {
   children: React.ReactNode
@@ -64,4 +65,19 @@ export function MessagesEventBusProvider({
       {children}
     </MessagesEventBusContext.Provider>
   )
+}
+
+export function MessagesEventBusProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const gate = useGate()
+  const {serviceUrl} = useDmServiceUrlStorage()
+  if (gate('dms') && serviceUrl) {
+    return (
+      <Temp_MessagesEventBusProvider>{children}</Temp_MessagesEventBusProvider>
+    )
+  }
+  return children
 }
