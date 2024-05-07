@@ -73,7 +73,7 @@ export interface FeedPostSliceItem {
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
   feedContext: string | undefined
   moderation: ModerationDecision
-  replyToAuthor?: AppBskyActorDefs.ProfileViewBasic
+  parentAuthor?: AppBskyActorDefs.ProfileViewBasic
 }
 
 export interface FeedPostSlice {
@@ -304,10 +304,9 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
-                          const replyToAuthor =
-                            slice.items.length === 1
-                              ? slice.items[0].reply?.parent.author
-                              : slice.items[1]?.reply?.grandparentAuthor
+                          const parentAuthor =
+                            item.reply?.parent?.author ??
+                            slice.items[i + 1].reply?.grandparentAuthor
 
                           return {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
@@ -320,7 +319,7 @@ export function usePostFeedQuery(
                                 : item.reason,
                             feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
-                            replyToAuthor,
+                            parentAuthor,
                           }
                         }
                         return undefined
