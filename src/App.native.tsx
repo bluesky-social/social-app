@@ -16,6 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {MessagesEventBusProvider} from '#/state/messages/events'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
@@ -95,25 +96,27 @@ function InnerApp() {
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <PushNotificationsListener>
-                    <StatsigProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <UnreadNotifsProvider>
-                                <GestureHandlerRootView style={s.h100pct}>
-                                  <TestCtrls />
-                                  <Shell />
-                                </GestureHandlerRootView>
-                              </UnreadNotifsProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </StatsigProvider>
-                  </PushNotificationsListener>
+                  <MessagesEventBusProvider>
+                    <PushNotificationsListener>
+                      <StatsigProvider>
+                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                        <LabelDefsProvider>
+                          <ModerationOptsProvider>
+                            <LoggedOutViewProvider>
+                              <SelectedFeedProvider>
+                                <UnreadNotifsProvider>
+                                  <GestureHandlerRootView style={s.h100pct}>
+                                    <TestCtrls />
+                                    <Shell />
+                                  </GestureHandlerRootView>
+                                </UnreadNotifsProvider>
+                              </SelectedFeedProvider>
+                            </LoggedOutViewProvider>
+                          </ModerationOptsProvider>
+                        </LabelDefsProvider>
+                      </StatsigProvider>
+                    </PushNotificationsListener>
+                  </MessagesEventBusProvider>
                 </QueryProvider>
               </React.Fragment>
             </RootSiblingParent>
