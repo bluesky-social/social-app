@@ -91,6 +91,7 @@ export async function pasteImage(
   uri: string,
 ): Promise<ComposerImageWithoutTransformation> {
   const {width, height} = await getImageDim(uri)
+  const match = /^data:(.+?);/.exec(uri)
 
   return {
     alt: '',
@@ -98,7 +99,7 @@ export async function pasteImage(
       path: uri,
       width: width,
       height: height,
-      mime: 'image/jpeg',
+      mime: match ? match[1] : 'image/jpeg',
     },
   }
 }
