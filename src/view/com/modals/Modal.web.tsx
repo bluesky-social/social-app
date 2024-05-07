@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
@@ -51,11 +51,19 @@ function Modal({modal}: {modal: ModalIface}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
+  const clickInsideRef = React.useRef<boolean>(false)
+
   if (!isModalActive) {
     return null
   }
 
-  const onPressMask = () => {
+  const onPressMask = (ev: React.MouseEvent<HTMLDivElement>) => {
+    // 1. Ignore clicks from inside the modal
+    // 2. Ignore clicks that started inside the modal and ended in the mask
+    if (ev.target !== ev.currentTarget.firstChild || clickInsideRef.current) {
+      return
+    }
+
     if (
       modal.name === 'crop-image' ||
       modal.name === 'edit-image' ||
@@ -63,11 +71,16 @@ function Modal({modal}: {modal: ModalIface}) {
     ) {
       return // dont close on mask presses during crop
     }
+
     closeModal()
   }
-  const onInnerPress = () => {
-    // TODO: can we use prevent default?
-    // do nothing, we just want to stop it from bubbling
+
+  const onInnerPressIn = () => {
+    clickInsideRef.current = true
+  }
+
+  const onInnerPressOut = () => {
+    clickInsideRef.current = false
   }
 
   let element
@@ -116,14 +129,12 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   return (
-    // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
-    <TouchableWithoutFeedback onPress={onPressMask}>
+    <div onClick={onPressMask}>
       <Animated.View
         style={styles.mask}
         entering={FadeIn.duration(150)}
         exiting={FadeOut}>
-        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
-        <TouchableWithoutFeedback onPress={onInnerPress}>
+        <div onPointerDown={onInnerPressIn} onPointerUp={onInnerPressOut}>
           <View
             style={[
               styles.container,
@@ -133,9 +144,9 @@ function Modal({modal}: {modal: ModalIface}) {
             ]}>
             {element}
           </View>
-        </TouchableWithoutFeedback>
+        </div>
       </Animated.View>
-    </TouchableWithoutFeedback>
+    </div>
   )
 }
 
