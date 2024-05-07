@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
-      cancel-in-progress: true
+      cancel-in-progress: false
     outputs:
       fingerprint-is-different: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different }}
 
@@ -68,7 +68,7 @@ jobs:
       - name: 🕵️ Get the base commit
         id: base-commit
         run: |
-          if [ -z "${{ inputs.channel == 'production' }}" ]; then
+          if [ ${{ inputs.channel == 'production' }} ]; then
             echo base-commit=$(git show-ref -s ${{ inputs.runtimeVersion }}) >> "$GITHUB_OUTPUT"
           else
             echo base-commit=${{ steps.last-successful-commit.base-commit }} >> "$GITHUB_OUTPUT"
@@ -184,6 +184,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -255,6 +257,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
