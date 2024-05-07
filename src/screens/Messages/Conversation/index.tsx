@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -14,7 +14,6 @@ import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {ChatProvider, useChat} from 'state/messages'
 import {ConvoStatus} from 'state/messages/convo'
-import {useSession} from 'state/session'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
@@ -43,29 +42,30 @@ export function MessagesConversationScreen({route}: Props) {
 
 function Inner() {
   const chat = useChat()
-  const {currentAccount} = useSession()
-  const myDid = currentAccount?.did
 
-  const otherProfile = React.useMemo(() => {
-    if (chat.state.status !== ConvoStatus.Ready) return
-    return chat.state.convo.members.find(m => m.did !== myDid)
-  }, [chat.state, myDid])
-
-  // TODO whenever we have error messages, we should use them in here -hailey
-  if (chat.state.status !== ConvoStatus.Ready || !otherProfile) {
-    return (
-      <ListMaybePlaceholder
-        isLoading={true}
-        isError={chat.state.status === ConvoStatus.Error}
-      />
-    )
+  if (
+    chat.status === ConvoStatus.Uninitialized ||
+    chat.status === ConvoStatus.Initializing
+  ) {
+    return <ListMaybePlaceholder isLoading />
   }
 
+  if (chat.status === ConvoStatus.Error) {
+    // TODO error
+    return null
+  }
+
+  /*
+   * Any other chat states (atm) are "ready" states
+   */
+
   return (
-    <CenteredView style={{flex: 1}} sideBorders>
-      <Header profile={otherProfile} />
-      <MessagesList />
-    </CenteredView>
+    <KeyboardProvider>
+      <CenteredView style={{flex: 1}} sideBorders>
+        <Header profile={chat.recipients[0]} />
+        <MessagesList />
+      </CenteredView>
+    </KeyboardProvider>
   )
 }
 
@@ -78,7 +78,7 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const {service} = useChat()
+  const chat = useChat()
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -88,12 +88,9 @@ let Header = ({
     }
   }, [navigation])
 
-  const onUpdateConvo = useCallback(
-    (convo: ChatBskyConvoDefs.ConvoView) => {
-      service.convo = convo
-    },
-    [service],
-  )
+  const onUpdateConvo = useCallback(() => {
+    // TODO eric update muted state
+  }, [])
 
   return (
     <View
@@ -129,13 +126,15 @@ let Header = ({
       ) : (
         <View style={{width: 30}} />
       )}
-      <View style={[a.align_center, a.gap_sm]}>
+      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
         <PreviewableUserAvatar size={32} profile={profile} />
-        <Text style={[a.text_lg, a.font_bold]}>{profile.displayName}</Text>
+        <Text style={[a.text_lg, a.font_bold, a.text_center]}>
+          {profile.displayName}
+        </Text>
       </View>
-      {service.convo ? (
+      {chat.status === ConvoStatus.Ready ? (
         <ConvoMenu
-          convo={service.convo}
+          convo={chat.convo}
           profile={profile}
           onUpdateConvo={onUpdateConvo}
           currentScreen="conversation"

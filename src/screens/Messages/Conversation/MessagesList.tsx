@@ -1,23 +1,24 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import React, {useCallback, useRef} from 'react'
+import {FlatList, View} from 'react-native'
 import {
-  Dimensions,
-  FlatList,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Platform,
-  View,
-} from 'react-native'
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
+  KeyboardAvoidingView,
+  useKeyboardHandler,
+} from 'react-native-keyboard-controller'
+import {runOnJS, useSharedValue} from 'react-native-reanimated'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 
+import {isIOS} from '#/platform/detection'
 import {useChat} from '#/state/messages'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
-import {useSetMinimalShellMode} from '#/state/shell'
+import {ScrollProvider} from 'lib/ScrollContext'
+import {isWeb} from 'platform/detection'
+import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
-import {atoms as a} from '#/alf'
+import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
@@ -58,11 +59,19 @@ function RetryButton({onPress}: {onPress: () => unknown}) {
 
 function renderItem({item}: {item: ConvoItem}) {
   if (item.type === 'message' || item.type === 'pending-message') {
-    return <MessageItem item={item.message} next={item.nextMessage} />
+    return (
+      <MessageItem
+        item={item.message}
+        next={item.nextMessage}
+        pending={item.type === 'pending-message'}
+      />
+    )
   } else if (item.type === 'deleted-message') {
     return <Text>Deleted message</Text>
   } else if (item.type === 'pending-retry') {
     return <RetryButton onPress={item.retry} />
+  } else if (item.type === 'error-recoverable') {
+    return <MessageListError item={item} />
   }
 
   return null
@@ -72,131 +81,178 @@ function keyExtractor(item: ConvoItem) {
   return item.key
 }
 
-function onScrollToEndFailed() {
+function onScrollToIndexFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
 
 export function MessagesList() {
   const chat = useChat()
   const flatListRef = useRef<FlatList>(null)
-  // We use this to know if we should scroll after a new clop is added to the list
-  const isAtBottom = useRef(false)
-  const currentOffset = React.useRef(0)
 
-  const onContentSizeChange = useCallback(() => {
-    if (currentOffset.current <= 100) {
-      flatListRef.current?.scrollToOffset({offset: 0, animated: true})
+  // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
+  // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
+  // the bottom.
+  const isAtBottom = useSharedValue(true)
+
+  // This will be used on web to assist in determing if we need to maintain the content offset
+  const isAtTop = useSharedValue(true)
+
+  // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
+  // onStartReached to fire.
+  const contentHeight = useSharedValue(0)
+
+  // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
+  // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
+  const isMomentumScrolling = useSharedValue(false)
+
+  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
+
+  // Every time the content size changes, that means one of two things is happening:
+  // 1. New messages are being added from the log or from a message you have sent
+  // 2. Old messages are being prepended to the top
+  //
+  // The first time that the content size changes is when the initial items are rendered. Because we cannot rely on
+  // `initialScrollIndex`, we need to immediately scroll to the bottom of the list. That scroll will not be animated.
+  //
+  // Subsequent resizes will only scroll to the bottom if the user is at the bottom of the list (within 100 pixels of
+  // the bottom). Therefore, any new messages that come in or are sent will result in an animated scroll to end. However
+  // we will not scroll whenever new items get prepended to the top.
+  const onContentSizeChange = useCallback(
+    (_: number, height: number) => {
+      // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
+      // previous offset whenever we add new content to the previous offset whenever we add new content to the list.
+      if (isWeb && isAtTop.value && hasInitiallyScrolled) {
+        flatListRef.current?.scrollToOffset({
+          animated: false,
+          offset: height - contentHeight.value,
+        })
+      }
+
+      contentHeight.value = height
+
+      // This number _must_ be the height of the MaybeLoader component
+      if (height <= 50 || !isAtBottom.value) {
+        return
+      }
+
+      flatListRef.current?.scrollToOffset({
+        animated: hasInitiallyScrolled,
+        offset: height,
+      })
+      isMomentumScrolling.value = true
+    },
+    [
+      contentHeight,
+      hasInitiallyScrolled,
+      isAtBottom.value,
+      isAtTop.value,
+      isMomentumScrolling,
+    ],
+  )
+
+  // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
+  // immediately on mount, since we are in fact at an offset of zero, so we have to ignore those initial calls.
+  const onStartReached = useCallback(() => {
+    if (chat.status === ConvoStatus.Ready && hasInitiallyScrolled) {
+      chat.fetchMessageHistory()
     }
-  }, [])
-
-  const onEndReached = useCallback(() => {
-    chat.service.fetchMessageHistory()
-  }, [chat])
-
-  const onInputFocus = useCallback(() => {
-    if (!isAtBottom.current) {
-      flatListRef.current?.scrollToOffset({offset: 0, animated: true})
-    }
-  }, [])
-
-  const onInputBlur = useCallback(() => {}, [])
+  }, [chat, hasInitiallyScrolled])
 
   const onSendMessage = useCallback(
     (text: string) => {
-      chat.service.sendMessage({
-        text,
-      })
+      if (chat.status === ConvoStatus.Ready) {
+        chat.sendMessage({
+          text,
+        })
+      }
     },
-    [chat.service],
+    [chat],
   )
 
   const onScroll = React.useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      currentOffset.current = e.nativeEvent.contentOffset.y
+    (e: ReanimatedScrollEvent) => {
+      'worklet'
+      const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
+
+      // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
+      // when a new message is added, hence the 100 pixel offset
+      isAtBottom.value = e.contentSize.height - 100 < bottomOffset
+      isAtTop.value = e.contentOffset.y <= 1
+
+      // This number _must_ be the height of the MaybeLoader component.
+      // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
+      // adds a 50 pixel offset.
+      if (contentHeight.value > 50 && !hasInitiallyScrolled) {
+        runOnJS(setHasInitiallyScrolled)(true)
+      }
     },
-    [],
+    [contentHeight.value, hasInitiallyScrolled, isAtBottom, isAtTop],
   )
 
-  const setMinShellMode = useSetMinimalShellMode()
-  useFocusEffect(
-    useCallback(() => {
-      setMinShellMode(true)
-      return () => setMinShellMode(false)
-    }, [setMinShellMode]),
-  )
+  const onMomentumEnd = React.useCallback(() => {
+    'worklet'
+    isMomentumScrolling.value = false
+  }, [isMomentumScrolling])
 
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const keyboardVerticalOffset = useKeyboardVerticalOffset()
+  const scrollToEnd = React.useCallback(() => {
+    requestAnimationFrame(() => {
+      if (isMomentumScrolling.value) return
+
+      flatListRef.current?.scrollToEnd({animated: true})
+      isMomentumScrolling.value = true
+    })
+  }, [isMomentumScrolling])
+
+  const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
+  const {gtMobile} = useBreakpoints()
+  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
+
+  // This is only used inside the useKeyboardHandler because the worklet won't work with a ref directly.
+  const scrollToEndNow = React.useCallback(() => {
+    flatListRef.current?.scrollToEnd({animated: false})
+  }, [])
+
+  useKeyboardHandler({
+    onMove: () => {
+      'worklet'
+      runOnJS(scrollToEndNow)()
+    },
+  })
 
   return (
     <KeyboardAvoidingView
-      style={[a.flex_1, {marginBottom: bottomInset}]}
-      keyboardVerticalOffset={keyboardVerticalOffset}
+      style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
+      keyboardVerticalOffset={isIOS ? topInset : 0}
       behavior="padding"
       contentContainerStyle={a.flex_1}>
-      <FlatList
-        ref={flatListRef}
-        data={
-          chat.state.status === ConvoStatus.Ready ? chat.state.items : undefined
-        }
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        contentContainerStyle={{paddingHorizontal: 10}}
-        // In the future, we might want to adjust this value. Not very concerning right now as long as we are only
-        // dealing with text. But whenever we have images or other media and things are taller, we will want to lower
-        // this...probably.
-        initialNumToRender={20}
-        // Same with the max to render per batch. Let's be safe for now though.
-        maxToRenderPerBatch={25}
-        inverted={true}
-        onEndReached={onEndReached}
-        onScrollToIndexFailed={onScrollToEndFailed}
-        onContentSizeChange={onContentSizeChange}
-        onScroll={onScroll}
-        // We don't really need to call this much since there are not any animations that rely on this
-        scrollEventThrottle={100}
-        maintainVisibleContentPosition={{
-          minIndexForVisible: 1,
-        }}
-        ListFooterComponent={
-          <MaybeLoader
-            isLoading={
-              chat.state.status === ConvoStatus.Ready &&
-              chat.state.isFetchingHistory
-            }
-          />
-        }
-        removeClippedSubviews={true}
-        keyboardDismissMode="on-drag"
-      />
-      <MessageInput
-        onSendMessage={onSendMessage}
-        onFocus={onInputFocus}
-        onBlur={onInputBlur}
-      />
+      {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
+      <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
+        <List
+          ref={flatListRef}
+          data={chat.items}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          disableVirtualization={true}
+          initialNumToRender={isWeb ? 50 : 25}
+          maxToRenderPerBatch={isWeb ? 50 : 25}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+          maintainVisibleContentPosition={{
+            minIndexForVisible: 1,
+          }}
+          containWeb={true}
+          contentContainerStyle={{paddingHorizontal: 10}}
+          removeClippedSubviews={false}
+          onContentSizeChange={onContentSizeChange}
+          onStartReached={onStartReached}
+          onScrollToIndexFailed={onScrollToIndexFailed}
+          scrollEventThrottle={100}
+          ListHeaderComponent={
+            <MaybeLoader isLoading={chat.isFetchingHistory} />
+          }
+        />
+      </ScrollProvider>
+      <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
     </KeyboardAvoidingView>
   )
-}
-
-function useKeyboardVerticalOffset() {
-  const {top: topInset} = useSafeAreaInsets()
-  const [screenWindowDifference, setScreenWindowDifference] = React.useState(
-    () => Dimensions.get('screen').height - Dimensions.get('window').height,
-  )
-
-  useEffect(() => {
-    const subscription = Dimensions.addEventListener(
-      'change',
-      ({screen, window}) => {
-        setScreenWindowDifference(screen.height - window.height)
-      },
-    )
-    return () => subscription.remove()
-  }, [])
-
-  return Platform.select({
-    ios: topInset,
-    android: screenWindowDifference,
-    default: 0,
-  })
 }

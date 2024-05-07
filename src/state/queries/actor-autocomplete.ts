@@ -24,7 +24,11 @@ export function useActorAutocompleteQuery(
   const moderationOpts = useModerationOpts()
   const {getAgent} = useAgent()
 
-  prefix = prefix.toLowerCase()
+  prefix = prefix.toLowerCase().trim()
+  if (prefix.endsWith('.')) {
+    // Going from "foo" to "foo." should not clear matches.
+    prefix = prefix.slice(0, -1)
+  }
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,

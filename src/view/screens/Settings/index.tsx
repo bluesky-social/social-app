@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  Linking,
   Platform,
   Pressable,
   StyleSheet,
@@ -40,7 +39,7 @@ import {
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
-import * as AppInfo from 'lib/app-info'
+import {appVersion, BUNDLE_DATE, bundleInfo} from 'lib/app-info'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
@@ -50,7 +49,6 @@ import {HandIcon, HashtagIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
-import {useGate} from 'lib/statsig/statsig'
 import {colors, s} from 'lib/styles'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
@@ -61,11 +59,9 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import * as TextField from '#/components/forms/TextField'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
@@ -190,11 +186,6 @@ export function SettingsScreen({}: Props) {
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const isSwitchingAccounts = !!pendingDid
 
-  // TODO: TEMP REMOVE WHEN CLOPS ARE RELEASED
-  const gate = useGate()
-  const {serviceUrl: dmServiceUrl, setServiceUrl: setDmServiceUrl} =
-    useDmServiceUrlStorage()
-
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
   //   dark: {backgroundColor: colors.blue6},
@@ -264,7 +255,7 @@ export function SettingsScreen({}: Props) {
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
-      `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
+      `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
   }, [_])
@@ -300,10 +291,6 @@ export function SettingsScreen({}: Props) {
   const onPressAccessibilitySettings = React.useCallback(() => {
     navigation.navigate('AccessibilitySettings')
   }, [navigation])
-
-  const onPressStatusPage = React.useCallback(() => {
-    Linking.openURL(STATUS_PAGE_URL)
-  }, [])
 
   const onPressBirthday = React.useCallback(() => {
     birthdayControl.open()
@@ -807,22 +794,6 @@ export function SettingsScreen({}: Props) {
             <Trans>System log</Trans>
           </Text>
         </TouchableOpacity>
-        {gate('dms') && (
-          <TextField.Root>
-            <TextField.Input
-              value={dmServiceUrl}
-              onChangeText={(text: string) => {
-                if (text.length > 9 && text.endsWith('/')) {
-                  text = text.slice(0, -1)
-                }
-                setDmServiceUrl(text)
-              }}
-              autoCapitalize="none"
-              keyboardType="url"
-              label="🐴"
-            />
-          </TextField.Root>
-        )}
         {__DEV__ ? (
           <>
             <TouchableOpacity
@@ -894,17 +865,9 @@ export function SettingsScreen({}: Props) {
             accessibilityRole="button"
             onPress={onPressBuildInfo}>
             <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Version {AppInfo.appVersion}</Trans>
-            </Text>
-          </TouchableOpacity>
-          <Text type="sm" style={[pal.textLight]}>
-            &nbsp; &middot; &nbsp;
-          </Text>
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={onPressStatusPage}>
-            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Status page</Trans>
+              <Trans>
+                Version {appVersion} {bundleInfo}
+              </Trans>
             </Text>
           </TouchableOpacity>
         </View>
@@ -925,6 +888,12 @@ export function SettingsScreen({}: Props) {
             style={pal.link}
             href="https://bsky.social/about/support/privacy-policy"
             text={_(msg`Privacy Policy`)}
+          />
+          <TextLink
+            type="md"
+            style={pal.link}
+            href={STATUS_PAGE_URL}
+            text={_(msg`Status Page`)}
           />
         </View>
         <View style={s.footerSpacer} />
@@ -1071,7 +1040,6 @@ const styles = StyleSheet.create({
   footer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
     paddingLeft: 18,
   },
 })
