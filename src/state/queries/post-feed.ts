@@ -73,7 +73,7 @@ export interface FeedPostSliceItem {
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
   feedContext: string | undefined
   moderation: ModerationDecision
-  grandparentAuthor?: AppBskyActorDefs.ProfileViewBasic
+  replyToAuthor?: AppBskyActorDefs.ProfileViewBasic
 }
 
 export interface FeedPostSlice {
@@ -304,14 +304,10 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
-                          const grandparentAuthor =
-                            // We don't want to add a grandparent if this is not the first post in the slice
-                            i === 0
-                              ? // If we have removed a parent, we need to use the parent's author rather than the gp's
-                                slice.items.length === 1
-                                ? slice.items[i].reply?.parent.author
-                                : slice.items[i + 1]?.reply?.grandparentAuthor
-                              : undefined
+                          const replyToAuthor =
+                            slice.items.length === 1
+                              ? slice.items[0].reply?.parent.author
+                              : slice.items[1]?.reply?.grandparentAuthor
 
                           return {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
@@ -324,7 +320,7 @@ export function usePostFeedQuery(
                                 : item.reason,
                             feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
-                            grandparentAuthor,
+                            replyToAuthor,
                           }
                         }
                         return undefined

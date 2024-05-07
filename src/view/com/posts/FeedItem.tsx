@@ -48,7 +48,7 @@ export function FeedItem({
   reason,
   feedContext,
   moderation,
-  grandparentAuthor,
+  replyToAuthor,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
@@ -58,7 +58,7 @@ export function FeedItem({
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   feedContext: string | undefined
   moderation: ModerationDecision
-  grandparentAuthor?: AppBskyActorDefs.ProfileViewBasic
+  replyToAuthor?: AppBskyActorDefs.ProfileViewBasic
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -89,7 +89,7 @@ export function FeedItem({
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
-        grandparentAuthor={grandparentAuthor}
+        replyToAuthor={replyToAuthor}
       />
     )
   }
@@ -103,7 +103,7 @@ let FeedItemInner = ({
   feedContext,
   richText,
   moderation,
-  grandparentAuthor,
+  replyToAuthor,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
@@ -114,7 +114,7 @@ let FeedItemInner = ({
   feedContext: string | undefined
   richText: RichTextAPI
   moderation: ModerationDecision
-  grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  replyToAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -315,8 +315,8 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild && grandparentAuthor && (
-            <ReplyToLabel grandparentAuthor={grandparentAuthor} />
+          {!isThreadChild && replyToAuthor && (
+            <ReplyToLabel grandparentAuthor={replyToAuthor} />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
