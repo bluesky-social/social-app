@@ -9,6 +9,7 @@ import {useLingui} from '@lingui/react'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {MessagesEventBusProvider} from '#/state/messages/events'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
@@ -83,22 +84,24 @@ function InnerApp() {
             // Resets the entire tree below when it changes:
             key={currentAccount?.did}>
             <QueryProvider currentDid={currentAccount?.did}>
-              <StatsigProvider>
-                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                <LabelDefsProvider>
-                  <ModerationOptsProvider>
-                    <LoggedOutViewProvider>
-                      <SelectedFeedProvider>
-                        <UnreadNotifsProvider>
-                          <SafeAreaProvider>
-                            <Shell />
-                          </SafeAreaProvider>
-                        </UnreadNotifsProvider>
-                      </SelectedFeedProvider>
-                    </LoggedOutViewProvider>
-                  </ModerationOptsProvider>
-                </LabelDefsProvider>
-              </StatsigProvider>
+              <MessagesEventBusProvider>
+                <StatsigProvider>
+                  {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                  <LabelDefsProvider>
+                    <ModerationOptsProvider>
+                      <LoggedOutViewProvider>
+                        <SelectedFeedProvider>
+                          <UnreadNotifsProvider>
+                            <SafeAreaProvider>
+                              <Shell />
+                            </SafeAreaProvider>
+                          </UnreadNotifsProvider>
+                        </SelectedFeedProvider>
+                      </LoggedOutViewProvider>
+                    </ModerationOptsProvider>
+                  </LabelDefsProvider>
+                </StatsigProvider>
+              </MessagesEventBusProvider>
             </QueryProvider>
           </React.Fragment>
           <ToastContainer />
@@ -112,12 +115,7 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    initPersistedState().then(() => {
-      setReady(true)
-
-      const preloadElement = document.getElementById('preload')
-      preloadElement?.remove()
-    })
+    initPersistedState().then(() => setReady(true))
   }, [])
 
   if (!isReady) {
