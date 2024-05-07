@@ -56,7 +56,7 @@ jobs:
           path: last-successful-commit-hash.txt
           key: last-successful-deployment-commit-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
-            last-successful-deployment-commit-main-
+            last-successful-deployment-commit-${{ github.ref_name }}-
 
       - name: Add the last successful deployment commit to the output
         id: last-successful-commit
