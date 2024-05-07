@@ -44,6 +44,7 @@ export class MessagesEventBus {
     this.resume = this.resume.bind(this)
     this.setPollInterval = this.setPollInterval.bind(this)
     this.trail = this.trail.bind(this)
+    this.trailConvo = this.trailConvo.bind(this)
   }
 
   private commit() {
@@ -79,6 +80,7 @@ export class MessagesEventBus {
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
+          trailConvo: this.trailConvo,
         }
       }
       case MessagesEventBusStatus.Ready: {
@@ -88,6 +90,7 @@ export class MessagesEventBus {
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
+          trailConvo: this.trailConvo,
         }
       }
       case MessagesEventBusStatus.Suspended: {
@@ -97,6 +100,7 @@ export class MessagesEventBus {
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
+          trailConvo: this.trailConvo,
         }
       }
       case MessagesEventBusStatus.Error: {
@@ -111,6 +115,7 @@ export class MessagesEventBus {
           },
           setPollInterval: this.setPollInterval,
           trail: this.trail,
+          trailConvo: this.trailConvo,
         }
       }
       default: {
@@ -120,6 +125,7 @@ export class MessagesEventBus {
           error: undefined,
           setPollInterval: this.setPollInterval,
           trail: this.trail,
+          trailConvo: this.trailConvo,
         }
       }
     }
@@ -309,6 +315,29 @@ export class MessagesEventBus {
     this.emitter.on('events', handler)
     return () => {
       this.emitter.off('events', handler)
+    }
+  }
+
+  trailConvo(
+    convoId: string,
+    handler: (events: ChatBskyConvoGetLog.OutputSchema['logs']) => void,
+  ) {
+    const handle = (events: ChatBskyConvoGetLog.OutputSchema['logs']) => {
+      const convoEvents = events.filter(ev => {
+        if (typeof ev.convoId === 'string' && ev.convoId === convoId) {
+          return ev.convoId === convoId
+        }
+        return false
+      })
+
+      if (convoEvents.length > 0) {
+        handler(convoEvents)
+      }
+    }
+
+    this.emitter.on('events', handle)
+    return () => {
+      this.emitter.off('events', handle)
     }
   }
 
