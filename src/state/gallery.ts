@@ -36,7 +36,6 @@ export type ImageSource = {
 type ComposerImageBase = {
   alt: string
   source: ImageSource
-  compressed?: ImageSource
 }
 type ComposerImageWithoutTransformation = ComposerImageBase & {
   transformed?: undefined
