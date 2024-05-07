@@ -456,12 +456,10 @@ function Inner({
               label={_(msg`${following} following`)}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Trans>
-                <Text style={[a.text_md, a.font_bold]}>{following} </Text>
-                <Text style={[t.atoms.text_contrast_medium]}>
-                  {pluralizedFollowings}
-                </Text>
-              </Trans>
+              <Text style={[a.text_md, a.font_bold]}>{following} </Text>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {pluralizedFollowings}
+              </Text>
             </InlineLinkText>
           </View>
 
