@@ -61,7 +61,7 @@ msgstr "⚠Virheellinen käyttäjätunnus"
 
 #: src/screens/Login/LoginForm.tsx:238
 msgid "2FA Confirmation"
-msgstr ""
+msgstr "Kaksivaiheisen tunnistautumisen vahvistus"
 
 #: src/view/com/util/ViewHeader.tsx:91
 #: src/view/screens/Search/Search.tsx:650
@@ -79,12 +79,12 @@ msgstr "Saavutettavuus"
 
 #: src/view/screens/Settings/index.tsx:484
 msgid "Accessibility settings"
-msgstr ""
+msgstr "Esteettömyysasetukset""
 
 #: src/Navigation.tsx:290
 #: src/view/screens/AccessibilitySettings.tsx:63
 msgid "Accessibility Settings"
-msgstr ""
+msgstr "Esteettömyysasetukset""
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 msgid "account"
@@ -170,14 +170,6 @@ msgstr "Lisää ALT-teksti"
 #: src/view/screens/AppPasswords.tsx:158
 msgid "Add App Password"
 msgstr "Lisää sovelluksen salasana"
-
-#: src/view/com/composer/Composer.tsx:467
-#~ msgid "Add link card"
-#~ msgstr "Lisää linkkikortti"
-
-#: src/view/com/composer/Composer.tsx:472
-#~ msgid "Add link card:"
-#~ msgstr "Lisää linkkikortti:"
 
 #: src/components/dialogs/MutedWords.tsx:157
 msgid "Add mute word for configured settings"
@@ -269,7 +261,7 @@ msgstr "Sähköposti on lähetetty aiempaan osoitteeseesi, {0}. Siinä on vahvis
 
 #: src/components/dialogs/GifSelect.tsx:284
 msgid "An error occured"
-msgstr ""
+msgstr "Tapahtui virhe"
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
@@ -295,7 +287,7 @@ msgstr "Eläimet"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:135
 msgid "Animated GIF"
-msgstr ""
+msgstr "Animoitu GIF"
 
 #: src/lib/moderation/useReportOptions.ts:31
 msgid "Anti-Social Behavior"
@@ -679,7 +671,7 @@ msgstr "Tarkista tilani"
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr ""
+msgstr "Tarkista sähköpostistasi kirjautumiskoodi ja syötä se tähän."
 
 #: src/view/com/modals/DeleteAccount.tsx:169
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -747,10 +739,6 @@ msgstr "klikkaa tästä"
 msgid "Click here to open tag menu for {tag}"
 msgstr "Avaa tästä valikko aihetunnisteelle {tag}"
 
-#: src/components/RichText.tsx:198
-#~ msgid "Click here to open tag menu for #{tag}"
-#~ msgstr "Klikkaa tästä avataksesi valikon aihetunnisteelle #{tag}."
-
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
 msgstr "Ilmasto"
@@ -776,11 +764,11 @@ msgstr "Sulje alavalinnat"
 
 #: src/components/dialogs/GifSelect.tsx:294
 msgid "Close dialog"
-msgstr ""
+msgstr "Sulje valintaikkuna."
 
 #: src/components/dialogs/GifSelect.tsx:150
 msgid "Close GIF dialog"
-msgstr ""
+msgstr "Sulje GIF-valintaikkuna."
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
 msgid "Close image"
@@ -854,7 +842,7 @@ msgstr "Määritä sisällönsuodatusasetus aiheille: {0}"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr ""
+msgstr "Määritä sisällönsuodatusasetukset kategorialle: {name}"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
@@ -1079,10 +1067,6 @@ msgstr "Luo raportti: {0}"
 msgid "Created {0}"
 msgstr "{0} luotu"
 
-#: src/view/com/composer/Composer.tsx:469
-#~ msgid "Creates a card with a thumbnail. The card links to {url}"
-#~ msgstr "Luo kortin pikkukuvan kanssa. Kortti linkittyy osoitteeseen {url}"
-
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
 msgstr "Kulttuuri"
@@ -1202,23 +1186,15 @@ msgstr "Himmeä"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
-msgstr ""
+msgstr "Älä käynnistä giffejä automaattisesti"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:91
 msgid "Disable Email 2FA"
-msgstr ""
+msgstr "Poista sähköpostiin perustuva kaksivaiheinen tunnistautuminen käytöstä"
 
 #: src/view/screens/AccessibilitySettings.tsx:108
 msgid "Disable haptic feedback"
-msgstr ""
-
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable haptics"
-#~ msgstr "Poista haptiset palautteet käytöstä"
-
-#: src/view/screens/Settings/index.tsx:697
-#~ msgid "Disable vibrations"
-#~ msgstr "Poista värinät käytöstä"
+msgstr "Poista haptiset palautteet käytöstä"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
@@ -1435,7 +1411,7 @@ msgstr "Sähköposti"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:65
 msgid "Email 2FA disabled"
-msgstr ""
+msgstr "Sähköpostiin perustuva kaksivaiheinen tunnistautuminen poistettu käytöstä"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 msgid "Email address"
@@ -1504,7 +1480,7 @@ msgstr "Ota tämä asetus käyttöön nähdäksesi vastaukset vain seuraamiltasi
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
-msgstr ""
+msgstr "Ota käyttöön vain tämä lähde"
 
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
@@ -1662,7 +1638,7 @@ msgstr "Viestin poistaminen epäonnistui, yritä uudelleen"
 
 #: src/components/dialogs/GifSelect.tsx:200
 msgid "Failed to load GIFs"
-msgstr ""
+msgstr "GIF-animaatioiden lataaminen epäonnistui"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
@@ -1733,15 +1709,7 @@ msgstr "Etsi seurattavia tilejä"
 
 #: src/view/screens/Search/Search.tsx:462
 msgid "Find posts and users on Bluesky"
-msgstr ""
-
-#: src/view/screens/Search/Search.tsx:589
-#~ msgid "Find users on Bluesky"
-#~ msgstr "Etsi käyttäjiä Bluesky-palvelusta"
-
-#: src/view/screens/Search/Search.tsx:587
-#~ msgid "Find users with the search tool on the right"
-#~ msgstr "Etsi käyttäjiä oikealla olevan hakutyökalun avulla"
+msgstr "Etsi viestejä ja käyttäjiä Blueskysta"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
 #~ msgid "Finding similar accounts..."
@@ -1894,7 +1862,7 @@ msgstr "Julkaisee usein ei-toivottua sisältöä"
 
 #: src/screens/Hashtag.tsx:118
 msgid "From @{sanitizedAuthor}"
-msgstr ""
+msgstr "Käyttäjältä @{sanitizedAuthor}"
 
 #: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
@@ -1970,7 +1938,7 @@ msgstr "Käyttäjätunnus"
 
 #: src/view/screens/AccessibilitySettings.tsx:103
 msgid "Haptics"
-msgstr ""
+msgstr "Haptiikka"
 
 #: src/lib/moderation/useReportOptions.ts:32
 msgid "Harassment, trolling, or intolerance"
@@ -2120,7 +2088,7 @@ msgstr "Jos mitään ei ole valittu, sopii kaikenikäisille."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:83
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr ""
+msgstr "Jos et ole vielä täysi-ikäinen, huoltajasi tai laillisen edustajasi on luettava nämä ehdot puolestasi."
 
 #: src/view/screens/ProfileList.tsx:612
 msgid "If you delete this list, you won't be able to recover it."
@@ -2172,7 +2140,7 @@ msgstr "Syötä salasana käyttäjätilin poistoa varten"
 
 #: src/screens/Login/LoginForm.tsx:257
 msgid "Input the code which has been emailed to you"
-msgstr ""
+msgstr "Syötä sinulle sähköpostitse lähetetty koodi"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Input the password tied to {identifier}"
@@ -2197,7 +2165,7 @@ msgstr "Syötä käyttäjätunnuksesi"
 #: src/screens/Login/LoginForm.tsx:126
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:71
 msgid "Invalid 2FA confirmation code."
-msgstr ""
+msgstr "Virheellinen kaksivaiheisen tunnistautumisen vahvistuskoodi."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:222
 msgid "Invalid or unsupported post record"
@@ -2253,7 +2221,7 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:191
 msgid "Labels"
-msgstr ""
+msgstr "Merkinnät"
 
 #: src/screens/Profile/Sections/Labels.tsx:156
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
@@ -2476,11 +2444,11 @@ msgstr "Kirjaudu tiliin, joka ei ole luettelossa"
 
 #: src/components/RichText.tsx:207
 msgid "Long press to open tag menu for #{tag}"
-msgstr ""
+msgstr "Pidä alaspainettuna avataksesi tunnistevalikon tunnisteelle #{tag}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
-msgstr ""
+msgstr "Näkyy muodossa XXXXX-XXXXX"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2852,7 +2820,7 @@ msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:206
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr ""
+msgstr "Ei löydetty esillä olevia GIF-kuvia. Tenor-palvelussa saattaa olla ongelma."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -2887,7 +2855,7 @@ msgstr "Ei tuloksia haulle {query}"
 
 #: src/components/dialogs/GifSelect.tsx:204
 msgid "No search results found for \"{search}\"."
-msgstr ""
+msgstr "Ei tuloksia hakusanalle \"{search}\"."
 
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
@@ -3032,7 +3000,7 @@ msgstr "Avaa navigointi"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:191
 msgid "Open post options menu"
-msgstr ""
+msgstr "Avaa viestin asetusvalikko"
 
 #: src/view/screens/Settings/index.tsx:787
 #: src/view/screens/Settings/index.tsx:797
@@ -3049,7 +3017,7 @@ msgstr "Avaa {numItems} asetusta"
 
 #: src/view/screens/Settings/index.tsx:485
 msgid "Opens accessibility settings"
-msgstr ""
+msgstr "Avaa esteettömyysasetukset"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
@@ -3087,11 +3055,11 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:65
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Opens flow to sign into your existing Bluesky account"
-msgstr ""
+msgstr "Avaa toiminto kirjautumiseksi olemassa olevaan Bluesky-tiliisi."
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:37
 msgid "Opens GIF select dialog"
-msgstr ""
+msgstr "Avaa GIF-valinnan valintaikkunan."
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -3221,7 +3189,7 @@ msgstr "Salasana päivitetty!"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Pause"
-msgstr ""
+msgstr "Pysäytä"
 
 #: src/view/screens/Search/Search.tsx:379
 msgid "People"
@@ -3266,7 +3234,7 @@ msgstr "Kiinnitetyt syötteet"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:31
 msgid "Play"
-msgstr ""
+msgstr "Käynnistä"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
@@ -3274,7 +3242,7 @@ msgstr "Toista {0}"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:30
 msgid "Play or pause the GIF"
-msgstr ""
+msgstr "Toista tai pysäytä GIF"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
@@ -3415,7 +3383,7 @@ msgstr "Mahdollisesti harhaanjohtava linkki"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
-msgstr ""
+msgstr "Klikkaa vaihtaaksesi palveluntarjoajaa"
 
 #: src/components/Error.tsx:83
 #: src/components/Lists.tsx:83
@@ -3629,17 +3597,11 @@ msgstr "Vastaa"
 msgid "Reply Filters"
 msgstr "Vastaussuodattimet"
 
-#: src/view/com/post/Post.tsx:177
-#: src/view/com/posts/FeedItem.tsx:285
-#~ msgctxt "description"
-#~ msgid "Reply to <0/>"
-#~ msgstr "Vastaa käyttäjälle <0/>"
-
 #: src/view/com/post/Post.tsx:176
 #: src/view/com/posts/FeedItem.tsx:291
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr ""
+msgstr "Vastaa käyttäjälle <0><1/></0>"
 
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
@@ -3737,7 +3699,7 @@ msgstr "Edellytä ALT-tekstiä ennen viestin julkaisua"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:54
 msgid "Require email code to log into your account"
-msgstr ""
+msgstr "Edellytä sähköpostikoodia kirjautumisessa"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
@@ -3746,7 +3708,7 @@ msgstr "Vaaditaan tälle instanssille"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:169
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:172
 msgid "Resend email"
-msgstr ""
+msgstr "Lähetä sähköposti uudelleen"
 
 #: src/view/com/modals/ChangePassword.tsx:187
 msgid "Reset code"
@@ -3924,11 +3886,11 @@ msgstr "Hae käyttäjiä"
 
 #: src/components/dialogs/GifSelect.tsx:158
 msgid "Search GIFs"
-msgstr ""
+msgstr "Hae GIF-animaatioita"
 
 #: src/components/dialogs/GifSelect.tsx:159
 msgid "Search Tenor"
-msgstr ""
+msgstr "Hae Tenorista"
 
 #: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Security Step Required"
@@ -3965,7 +3927,7 @@ msgstr "Valitse {item}"
 
 #: src/screens/Login/ChooseAccountForm.tsx:61
 msgid "Select account"
-msgstr ""
+msgstr "Valitse käyttäjätili"
 
 #: src/screens/Login/index.tsx:120
 msgid "Select from an existing account"
@@ -3973,11 +3935,11 @@ msgstr "Valitse olemassa olevalta tililtä"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Select GIF"
-msgstr ""
+msgstr "Valitse GIF"
 
 #: src/components/dialogs/GifSelect.tsx:253
 msgid "Select GIF \"{0}\""
-msgstr ""
+msgstr "Valitse GIF \"{0}\""
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
@@ -4070,7 +4032,7 @@ msgstr ""
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:120
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:123
 msgid "Send verification email"
-msgstr ""
+msgstr "Lähetä vahvistussähköposti"
 
 #: src/view/com/modals/DeleteAccount.tsx:133
 msgid "Sends email with confirmation code for account deletion"
@@ -4339,7 +4301,7 @@ msgstr "Kirjaudu sisään nimellä..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr ""
+msgstr "Kirjaudu sisään tai luo tili osallistuaksesi keskusteluun!"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
@@ -4639,7 +4601,7 @@ msgstr "Syötteiden päivittämisessä on ongelmia, tarkista internetyhteytesi j
 
 #: src/components/dialogs/GifSelect.tsx:201
 msgid "There was an issue connecting to Tenor."
-msgstr ""
+msgstr "Yhteyden muodostamisessa Tenoriin ilmeni ongelma."
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
@@ -4877,7 +4839,7 @@ msgstr "Keskusteluketjujen asetukset"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:103
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr ""
+msgstr "Jos haluat poistaa sähköpostiin perustuvan kaksivaiheisen tunnistautumisen käytöstä, vahvista pääsysi sähköpostiosoitteeseen."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -4918,7 +4880,7 @@ msgstr "Yritä uudelleen"
 
 #: src/view/screens/Settings/index.tsx:695
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "Kaksivaiheinen tunnistautuminen"
 
 #: src/view/com/modals/ChangeHandle.tsx:429
 msgid "Type:"
@@ -5089,7 +5051,7 @@ msgstr "Käytä sovellussalasanoja kirjautuaksesi muihin Bluesky-sovelluksiin an
 
 #: src/view/com/modals/ChangeHandle.tsx:518
 msgid "Use bsky.social as hosting provider"
-msgstr ""
+msgstr "Käytä bsky.socialia palveluntarjoajana."
 
 #: src/view/com/modals/ChangeHandle.tsx:517
 msgid "Use default provider"
@@ -5538,7 +5500,7 @@ msgstr "Voit valittaa näistä merkinnöistä, jos ne ovat mielestäsi virheelli
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
-msgstr ""
+msgstr "Sinun on oltava vähintään 13-vuotias rekisteröityäksesi."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:110
 msgid "You must be 18 years or older to enable adult content"
