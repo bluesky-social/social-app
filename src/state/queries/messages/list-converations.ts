@@ -27,3 +27,19 @@ export function useListConvos({refetchInterval}: {refetchInterval: number}) {
     refetchInterval,
   })
 }
+
+export function useUnreadMessageCount() {
+  const convos = useListConvos({
+    refetchInterval: 30_000,
+  })
+
+  if (!convos.data) {
+    return 0
+  }
+
+  return convos.data.pages
+    .flatMap(page => page.convos)
+    .reduce((acc, convo) => {
+      return acc + (convo.unreadCount > 0 ? 1 : 0)
+    }, 0)
+}
