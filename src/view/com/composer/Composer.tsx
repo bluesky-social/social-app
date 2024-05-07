@@ -16,7 +16,6 @@ import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {observer} from 'mobx-react-lite'
 
 import {
   createGIFDescription,
@@ -26,6 +25,7 @@ import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
+import {ComposerImage, createInitialImages, pasteImage} from '#/state/gallery'
 import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -50,7 +50,6 @@ import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {colors, gradients, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
-import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a} from '#/alf'
@@ -77,8 +76,10 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 
+const MAX_IMAGES = 4
+
 type Props = ComposerOpts
-export const ComposePost = observer(function ComposePost({
+export const ComposePost = ({
   replyTo,
   onPost,
   quote: initQuote,
@@ -86,7 +87,7 @@ export const ComposePost = observer(function ComposePost({
   openPicker,
   text: initText,
   imageUris: initImageUris,
-}: Props) {
+}: Props) => {
   const {currentAccount} = useSession()
   const {getAgent} = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -123,6 +124,7 @@ export const ComposePost = observer(function ComposePost({
   const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
+
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
@@ -130,10 +132,11 @@ export const ComposePost = observer(function ComposePost({
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
-  const gallery = useMemo(
-    () => new GalleryModel(initImageUris),
-    [initImageUris],
+
+  const [images, setImages] = useState<ComposerImage[]>(() =>
+    createInitialImages(initImageUris),
   )
+
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
@@ -149,7 +152,7 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const onPressCancel = useCallback(() => {
-    if (graphemeLength > 0 || !gallery.isEmpty) {
+    if (graphemeLength > 0 || images.length !== 0) {
       closeAllDialogs()
       if (Keyboard) {
         Keyboard.dismiss()
@@ -160,7 +163,7 @@ export const ComposePost = observer(function ComposePost({
     }
   }, [
     graphemeLength,
-    gallery.isEmpty,
+    images.length,
     closeAllDialogs,
     discardPromptControl,
     onClose,
@@ -207,18 +210,27 @@ export const ComposePost = observer(function ComposePost({
     [extLink, setExtLink],
   )
 
+  const onImageAdd = useCallback(
+    (next: ComposerImage[]) => {
+      setImages(prev => prev.concat(next.slice(0, MAX_IMAGES - prev.length)))
+    },
+    [setImages],
+  )
+
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
-      await gallery.paste(uri)
+
+      const res = await pasteImage(uri)
+      onImageAdd([res])
     },
-    [gallery, track],
+    [track, onImageAdd],
   )
 
   const isAltTextRequiredAndMissing = useMemo(() => {
     if (!requireAltTextEnabled) return false
 
-    if (gallery.needsAltText) return true
+    if (images.some(img => img.alt === '')) return true
     if (extGif) {
       if (!extLink?.meta?.description) return true
 
@@ -226,7 +238,7 @@ export const ComposePost = observer(function ComposePost({
       if (!parsedAlt.isPreferred) return true
     }
     return false
-  }, [gallery.needsAltText, extLink, extGif, requireAltTextEnabled])
+  }, [images, extLink, extGif, requireAltTextEnabled])
 
   const onPressPublish = async () => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
@@ -241,7 +253,7 @@ export const ComposePost = observer(function ComposePost({
 
     if (
       richtext.text.trim().length === 0 &&
-      gallery.isEmpty &&
+      images.length === 0 &&
       !extLink &&
       !quote
     ) {
@@ -261,7 +273,7 @@ export const ComposePost = observer(function ComposePost({
         await apilib.post(getAgent(), {
           rawText: richtext.text,
           replyTo: replyTo?.uri,
-          images: gallery.images,
+          images: images,
           quote,
           extLink,
           labels,
@@ -273,7 +285,7 @@ export const ComposePost = observer(function ComposePost({
     } catch (e: any) {
       logger.error(e, {
         message: `Composer: create post failed`,
-        hasImages: gallery.size > 0,
+        hasImages: images.length > 0,
       })
 
       if (extLink) {
@@ -289,7 +301,7 @@ export const ComposePost = observer(function ComposePost({
     } finally {
       if (postUri) {
         logEvent('post:create', {
-          imageCount: gallery.size,
+          imageCount: images.length,
           isReply: replyTo != null,
           hasLink: extLink != null,
           hasQuote: quote != null,
@@ -298,7 +310,7 @@ export const ComposePost = observer(function ComposePost({
         })
       }
       track('Create Post', {
-        imageCount: gallery.size,
+        imageCount: images.length,
       })
       if (replyTo && replyTo.uri) track('Post:Reply')
     }
@@ -323,8 +335,8 @@ export const ComposePost = observer(function ComposePost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages = gallery.size < 4 && !extLink
-  const hasMedia = gallery.size > 0 || Boolean(extLink)
+  const canSelectImages = images.length < MAX_IMAGES && !extLink
+  const hasMedia = images.length > 0 || Boolean(extLink)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
@@ -509,8 +521,8 @@ export const ComposePost = observer(function ComposePost({
             />
           </View>
 
-          <Gallery gallery={gallery} />
-          {gallery.isEmpty && extLink && (
+          <Gallery images={images} onChange={setImages} />
+          {images.length === 0 && extLink && (
             <View style={a.relative}>
               <ExternalEmbed
                 link={extLink}
@@ -541,8 +553,12 @@ export const ComposePost = observer(function ComposePost({
         <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-            <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+            <SelectPhotoBtn
+              size={images.length}
+              disabled={!canSelectImages}
+              onAdd={onImageAdd}
+            />
+            <OpenCameraBtn disabled={!canSelectImages} onAdd={onImageAdd} />
             <SelectGifBtn
               onClose={focusTextInput}
               onSelectGif={onSelectGif}
@@ -577,7 +593,7 @@ export const ComposePost = observer(function ComposePost({
       />
     </KeyboardAvoidingView>
   )
-})
+}
 
 const styles = StyleSheet.create({
   outer: {

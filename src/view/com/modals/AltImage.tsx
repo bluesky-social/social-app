@@ -13,6 +13,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {ComposerImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {MAX_ALT_TEXT} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
@@ -21,21 +22,21 @@ import {enforceLen} from 'lib/strings/helpers'
 import {gradients, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {isWeb} from 'platform/detection'
-import {ImageModel} from 'state/models/media/image'
 import {Text} from '../util/text/Text'
 import {ScrollView, TextInput} from './util'
 
 export const snapPoints = ['100%']
 
 interface Props {
-  image: ImageModel
+  image: ComposerImage
+  onChange: (next: ComposerImage) => void
 }
 
-export function Component({image}: Props) {
+export function Component({image, onChange}: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {_} = useLingui()
-  const [altText, setAltText] = useState(image.altText)
+  const [altText, setAltText] = useState(image.alt)
   const windim = useWindowDimensions()
   const {closeModal} = useModalControls()
   const inputRef = React.useRef<RNTextInput>(null)
@@ -59,7 +60,9 @@ export function Component({image}: Props) {
 
   const imageStyles = useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
-    if (image.height > image.width) {
+    const source = image.transformed ?? image.source
+
+    if (source.height > source.width) {
       return {
         resizeMode: 'contain',
         width: '100%',
@@ -69,7 +72,7 @@ export function Component({image}: Props) {
     }
     return {
       width: '100%',
-      height: (maxWidth / image.width) * image.height,
+      height: (maxWidth / source.width) * source.height,
       borderRadius: 8,
     }
   }, [image, windim])
@@ -78,15 +81,14 @@ export function Component({image}: Props) {
     (v: string) => {
       v = enforceLen(v, MAX_ALT_TEXT)
       setAltText(v)
-      image.setAltText(v)
     },
-    [setAltText, image],
+    [setAltText],
   )
 
   const onPressSave = useCallback(() => {
-    image.setAltText(altText)
     closeModal()
-  }, [closeModal, image, altText])
+    onChange({...image, alt: altText.trim()})
+  }, [closeModal, image, altText, onChange])
 
   return (
     <ScrollView
@@ -101,7 +103,7 @@ export function Component({image}: Props) {
             testID="selectedPhotoImage"
             style={imageStyles}
             source={{
-              uri: image.cropped?.path ?? image.path,
+              uri: (image.transformed ?? image.source).path,
             }}
             contentFit="contain"
             accessible={true}

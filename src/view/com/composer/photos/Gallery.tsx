@@ -1,29 +1,29 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {ImageStyle, Keyboard, LayoutChangeEvent} from 'react-native'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {observer} from 'mobx-react-lite'
 
+import {ComposerImage, cropImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Dimensions} from 'lib/media/types'
 import {colors, s} from 'lib/styles'
 import {isNative} from 'platform/detection'
-import {GalleryModel} from 'state/models/media/gallery'
 import {Text} from 'view/com/util/text/Text'
 import {useTheme} from '#/alf'
 
 const IMAGE_GAP = 8
 
 interface GalleryProps {
-  gallery: GalleryModel
+  images: ComposerImage[]
+  onChange: (next: ComposerImage[]) => void
 }
 
-export const Gallery = (props: GalleryProps) => {
-  const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
+export let Gallery = (props: GalleryProps): React.ReactNode => {
+  const [containerInfo, setContainerInfo] = React.useState<Dimensions>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
     const {width, height} = evt.nativeEvent.layout
@@ -41,15 +41,13 @@ export const Gallery = (props: GalleryProps) => {
     </View>
   )
 }
+Gallery = React.memo(Gallery)
 
 interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = observer(function GalleryImpl({
-  gallery,
-  containerInfo,
-}: GalleryInnerProps) {
+const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
@@ -57,10 +55,11 @@ const GalleryInner = observer(function GalleryImpl({
 
   let side: number
 
-  if (gallery.size === 1) {
+  if (images.length === 1) {
     side = 250
   } else {
-    side = (containerInfo.width - IMAGE_GAP * (gallery.size - 1)) / gallery.size
+    side =
+      (containerInfo.width - IMAGE_GAP * (images.length - 1)) / images.length
   }
 
   const imageStyle = {
@@ -68,150 +67,153 @@ const GalleryInner = observer(function GalleryImpl({
     width: side,
   }
 
-  const isOverflow = isMobile && gallery.size > 2
+  const isOverflow = isMobile && images.length > 2
 
   const altTextControlStyle = isOverflow
-    ? {
-        left: 4,
-        bottom: 4,
-      }
-    : !isMobile && gallery.size < 3
-    ? {
-        left: 8,
-        top: 8,
-      }
-    : {
-        left: 4,
-        top: 4,
-      }
+    ? {left: 4, bottom: 4}
+    : !isMobile && images.length < 3
+    ? {left: 8, top: 8}
+    : {left: 4, top: 4}
 
   const imageControlsStyle = {
     display: 'flex' as const,
     flexDirection: 'row' as const,
     position: 'absolute' as const,
     ...(isOverflow
-      ? {
-          top: 4,
-          right: 4,
-          gap: 4,
-        }
-      : !isMobile && gallery.size < 3
-      ? {
-          top: 8,
-          right: 8,
-          gap: 8,
-        }
-      : {
-          top: 4,
-          right: 4,
-          gap: 4,
-        }),
+      ? {top: 4, right: 4, gap: 4}
+      : !isMobile && images.length < 3
+      ? {top: 8, right: 8, gap: 8}
+      : {top: 4, right: 4, gap: 4}),
     zIndex: 1,
   }
 
-  return !gallery.isEmpty ? (
+  return images.length !== 0 ? (
     <>
       <View testID="selectedPhotosView" style={styles.gallery}>
-        {gallery.images.map(image => (
-          <View key={`selected-image-${image.path}`} style={[imageStyle]}>
-            <TouchableOpacity
-              testID="altTextButton"
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Add alt text`)}
-              accessibilityHint=""
-              onPress={() => {
-                Keyboard.dismiss()
-                openModal({
-                  name: 'alt-text-image',
-                  image,
-                })
-              }}
-              style={[styles.altTextControl, altTextControlStyle]}>
-              {image.altText.length > 0 ? (
-                <FontAwesomeIcon
-                  icon="check"
-                  size={10}
-                  style={{color: t.palette.white}}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon="plus"
-                  size={10}
-                  style={{color: t.palette.white}}
-                />
-              )}
-              <Text style={styles.altTextControlLabel} accessible={false}>
-                <Trans>ALT</Trans>
-              </Text>
-            </TouchableOpacity>
-            <View style={imageControlsStyle}>
-              <TouchableOpacity
-                testID="editPhotoButton"
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Edit image`)}
-                accessibilityHint=""
-                onPress={() => {
-                  if (isNative) {
-                    gallery.crop(image)
-                  } else {
-                    openModal({
-                      name: 'edit-image',
-                      image,
-                      gallery,
-                    })
-                  }
-                }}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="pen"
-                  size={12}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                testID="removePhotoButton"
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Remove image`)}
-                accessibilityHint=""
-                onPress={() => gallery.remove(image)}
-                style={styles.imageControl}>
-                <FontAwesomeIcon
-                  icon="xmark"
-                  size={16}
-                  style={{color: colors.white}}
-                />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Add alt text`)}
-              accessibilityHint=""
-              onPress={() => {
-                Keyboard.dismiss()
-                openModal({
-                  name: 'alt-text-image',
-                  image,
-                })
-              }}
-              style={styles.altTextHiddenRegion}
-            />
+        {images.map((image, index) => {
+          const onRemove = () => {
+            const next = images.slice()
+            next.splice(index, 1)
 
-            <Image
-              testID="selectedPhotoImage"
-              style={[styles.image, imageStyle] as ImageStyle}
-              source={{
-                uri: image.cropped?.path ?? image.path,
-              }}
-              accessible={true}
-              accessibilityIgnoresInvertColors
-            />
-          </View>
-        ))}
+            onChange(next)
+          }
+
+          const onAltText = () => {
+            Keyboard.dismiss()
+            openModal({
+              name: 'alt-text-image',
+              image,
+              onChange(next) {
+                onChange(
+                  images.map(i => (i.source === image.source ? next : i)),
+                )
+              },
+            })
+          }
+
+          const onEdit = () => {
+            if (isNative) {
+              cropImage(image).then(next => {
+                if (next === image) {
+                  return
+                }
+
+                onChange(
+                  images.map(i => (i.source === image.source ? next : i)),
+                )
+              })
+            } else {
+              // openModal({
+              //   name: 'edit-image',
+              //   image,
+              //   gallery,
+              // })
+            }
+          }
+
+          return (
+            <View
+              key={`selected-image-${image.source.path}`}
+              style={[imageStyle]}>
+              <TouchableOpacity
+                testID="altTextButton"
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Add alt text`)}
+                accessibilityHint=""
+                onPress={onAltText}
+                style={[styles.altTextControl, altTextControlStyle]}>
+                {image.alt.length !== 0 ? (
+                  <FontAwesomeIcon
+                    icon="check"
+                    size={10}
+                    style={{color: t.palette.white}}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon="plus"
+                    size={10}
+                    style={{color: t.palette.white}}
+                  />
+                )}
+                <Text style={styles.altTextControlLabel} accessible={false}>
+                  <Trans>ALT</Trans>
+                </Text>
+              </TouchableOpacity>
+              <View style={imageControlsStyle}>
+                {isNative && (
+                  <TouchableOpacity
+                    testID="editPhotoButton"
+                    accessibilityRole="button"
+                    accessibilityLabel={_(msg`Edit image`)}
+                    accessibilityHint=""
+                    onPress={onEdit}
+                    style={styles.imageControl}>
+                    <FontAwesomeIcon
+                      icon="pen"
+                      size={12}
+                      style={{color: colors.white}}
+                    />
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  testID="removePhotoButton"
+                  accessibilityRole="button"
+                  accessibilityLabel={_(msg`Remove image`)}
+                  accessibilityHint=""
+                  onPress={onRemove}
+                  style={styles.imageControl}>
+                  <FontAwesomeIcon
+                    icon="xmark"
+                    size={16}
+                    style={{color: colors.white}}
+                  />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Add alt text`)}
+                accessibilityHint=""
+                onPress={onAltText}
+                style={styles.altTextHiddenRegion}
+              />
+
+              <Image
+                testID="selectedPhotoImage"
+                style={[styles.image, imageStyle] as ImageStyle}
+                source={{
+                  uri: (image.transformed ?? image.source).path,
+                }}
+                accessible={true}
+                accessibilityIgnoresInvertColors
+              />
+            </View>
+          )
+        })}
       </View>
       <AltTextReminder />
     </>
   ) : null
-})
+}
 
 export function AltTextReminder() {
   const t = useTheme()

@@ -3,8 +3,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {GalleryModel} from '#/state/models/media/gallery'
-import {ImageModel} from '#/state/models/media/image'
+import {ComposerImage} from '../gallery'
 import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface EditProfileModal {
@@ -40,8 +39,8 @@ export interface ListAddRemoveUsersModal {
 
 export interface EditImageModal {
   name: 'edit-image'
-  image: ImageModel
-  gallery: GalleryModel
+  image: ComposerImage
+  onChange: (next: ComposerImage) => void
 }
 
 export interface CropImageModal {
@@ -53,7 +52,8 @@ export interface CropImageModal {
 
 export interface AltTextImageModal {
   name: 'alt-text-image'
-  image: ImageModel
+  image: ComposerImage
+  onChange: (next: ComposerImage) => void
 }
 
 export interface DeleteAccountModal {
