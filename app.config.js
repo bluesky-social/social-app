@@ -177,7 +177,6 @@ module.exports = function (config) {
       assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
-        Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
         [
           'expo-build-properties',
           {
@@ -199,6 +198,13 @@ module.exports = function (config) {
           {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
+          },
+        ],
+        [
+          '@sentry/react-native/expo',
+          {
+            organization: 'blueskyweb',
+            project: 'react-native',
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
@@ -229,22 +235,6 @@ module.exports = function (config) {
           },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
-      },
-      hooks: {
-        postPublish: [
-          /*
-           * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
-           */
-          {
-            file: 'sentry-expo/upload-sourcemaps',
-            config: {
-              organization: 'blueskyweb',
-              project: 'react-native',
-              release: VERSION,
-              dist: SENTRY_DIST,
-            },
-          },
-        ],
       },
     },
   }

@@ -12,6 +12,7 @@ import {
 import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as Sentry from '@sentry/react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
@@ -170,4 +171,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.wrap(App)

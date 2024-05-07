@@ -6,6 +6,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import Sentry from '@sentry/react-native'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -153,4 +154,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.wrap(App)
