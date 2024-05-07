@@ -8,10 +8,11 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {emitter as notificationsEmitter} from '#/lib/hooks/useNotificationHandler'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {BACK_HITSLOP} from 'lib/constants'
-import {isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {ChatProvider, useChat} from 'state/messages'
 import {ConvoStatus} from 'state/messages/convo'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
@@ -28,8 +29,30 @@ type Props = NativeStackScreenProps<
   'MessagesConversation'
 >
 export function MessagesConversationScreen({route}: Props) {
+  const navigation = useNavigation()
   const gate = useGate()
   const convoId = route.params.conversation
+
+  React.useEffect(() => {
+    if (!isNative) return
+
+    const onFocus = () => {
+      notificationsEmitter.emit('setChat', convoId)
+    }
+
+    const onBlur = () => {
+      notificationsEmitter.emit('setChat', null)
+    }
+
+    navigation.addListener('focus', onFocus)
+    navigation.addListener('blur', onBlur)
+
+    return () => {
+      onBlur()
+      navigation.removeListener('focus', onFocus)
+      navigation.removeListener('blur', onBlur)
+    }
+  }, [convoId, navigation])
 
   if (!gate('dms')) return <ClipClopGate />
 

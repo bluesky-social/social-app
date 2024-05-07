@@ -12,6 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
 import {useNavigationState} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
 import {
@@ -20,6 +21,7 @@ import {
   useSetDrawerOpen,
 } from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
+import {useNotificationsListener} from 'lib/hooks/useNotificationHandler'
 import {usePalette} from 'lib/hooks/usePalette'
 import * as notifications from 'lib/notifications/notifications'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
@@ -37,6 +39,7 @@ import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
+  const queryClient = useQueryClient()
   const isDrawerOpen = useIsDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const setIsDrawerOpen = useSetDrawerOpen()
@@ -62,6 +65,8 @@ function ShellInner() {
   const {importantForAccessibility} = useDialogStateContext()
   // start undefined
   const currentAccountDid = React.useRef<string | undefined>(undefined)
+
+  useNotificationsListener(queryClient)
 
   React.useEffect(() => {
     let listener = {remove() {}}
