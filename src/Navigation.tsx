@@ -464,7 +464,7 @@ function MessagesTabNavigator() {
       <MessagesTab.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
-        options={{requireAuth: true}}
+        options={{requireAuth: true, animationTypeForReplace: 'pop'}}
       />
       {commonScreens(MessagesTab as typeof HomeTab)}
     </MessagesTab.Navigator>
