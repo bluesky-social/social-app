@@ -16,6 +16,7 @@ import {useGate} from '#/lib/statsig/statsig'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -274,7 +275,8 @@ export function DesktopLeftNav() {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
-  const numUnread = useUnreadNotifications()
+  const numUnreadNotifications = useUnreadNotifications()
+  const numUnreadMessages = useUnreadMessageCount()
   const gate = useGate()
 
   if (!hasSession && !isDesktop) {
@@ -333,7 +335,7 @@ export function DesktopLeftNav() {
           />
           <NavItem
             href="/notifications"
-            count={numUnread}
+            count={numUnreadNotifications}
             icon={
               <BellIcon
                 strokeWidth={2}
@@ -353,6 +355,7 @@ export function DesktopLeftNav() {
           {gate('dms') && (
             <NavItem
               href="/messages"
+              count={numUnreadMessages.numUnread}
               icon={<Envelope style={pal.text} width={isDesktop ? 26 : 30} />}
               iconFilled={
                 <EnvelopeFilled style={pal.text} width={isDesktop ? 26 : 30} />
