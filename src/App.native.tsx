@@ -16,7 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {MessagesEventBusProvider} from '#/state/messages/events'
+import {MessagesProvider} from '#/state/messages'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
@@ -98,7 +98,7 @@ function InnerApp() {
                 <QueryProvider currentDid={currentAccount?.did}>
                   <PushNotificationsListener>
                     <StatsigProvider>
-                      <MessagesEventBusProvider>
+                      <MessagesProvider>
                         {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
                         <LabelDefsProvider>
                           <ModerationOptsProvider>
@@ -114,7 +114,7 @@ function InnerApp() {
                             </LoggedOutViewProvider>
                           </ModerationOptsProvider>
                         </LabelDefsProvider>
-                      </MessagesEventBusProvider>
+                      </MessagesProvider>
                     </StatsigProvider>
                   </PushNotificationsListener>
                 </QueryProvider>
