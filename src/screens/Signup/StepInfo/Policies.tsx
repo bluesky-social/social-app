@@ -61,10 +61,12 @@ export const Policies = ({
     els.splice(
       1,
       0,
-      <Text key="and" style={[t.atoms.text_contrast_medium]}>
-        {' '}
-        and{' '}
-      </Text>,
+      <Trans>
+        <Text key="and" style={[t.atoms.text_contrast_medium]}>
+          <Text> </Text>
+          and{' '}
+        </Text>
+      </Trans>,
     )
   }
 
