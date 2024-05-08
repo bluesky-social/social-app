@@ -647,14 +647,14 @@ msgid "Cancel"
 msgstr "취소"
 
 #: src/view/com/modals/CreateOrEditList.tsx:363
-#: src/view/com/modals/DeleteAccount.tsx:156
-#: src/view/com/modals/DeleteAccount.tsx:234
+#: src/view/com/modals/DeleteAccount.tsx:155
+#: src/view/com/modals/DeleteAccount.tsx:233
 msgctxt "action"
 msgid "Cancel"
 msgstr "취소"
 
-#: src/view/com/modals/DeleteAccount.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:230
+#: src/view/com/modals/DeleteAccount.tsx:151
+#: src/view/com/modals/DeleteAccount.tsx:229
 msgid "Cancel account deletion"
 msgstr "계정 삭제 취소"
 
@@ -748,7 +748,7 @@ msgstr "내 상태 확인"
 msgid "Check your email for a login code and enter it here."
 msgstr "이메일에서 로그인 코드를 확인한 후 여기에 입력하세요."
 
-#: src/view/com/modals/DeleteAccount.tsx:169
+#: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "받은 편지함에서 아래에 입력하는 인증 코드가 포함된 이메일이 있는지 확인하세요:"
 
@@ -940,7 +940,7 @@ msgstr "변경 확인"
 msgid "Confirm content language settings"
 msgstr "콘텐츠 언어 설정 확인"
 
-#: src/view/com/modals/DeleteAccount.tsx:220
+#: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Confirm delete account"
 msgstr "계정 삭제 확인"
 
@@ -954,8 +954,8 @@ msgstr "생년월일 확인"
 
 #: src/screens/Login/LoginForm.tsx:244
 #: src/view/com/modals/ChangeEmail.tsx:159
-#: src/view/com/modals/DeleteAccount.tsx:176
-#: src/view/com/modals/DeleteAccount.tsx:182
+#: src/view/com/modals/DeleteAccount.tsx:175
+#: src/view/com/modals/DeleteAccount.tsx:181
 #: src/view/com/modals/VerifyEmail.tsx:174
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:144
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:150
@@ -1214,7 +1214,7 @@ msgstr "삭제"
 msgid "Delete account"
 msgstr "계정 삭제"
 
-#: src/view/com/modals/DeleteAccount.tsx:87
+#: src/view/com/modals/DeleteAccount.tsx:86
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
 msgstr "<0>\"</0><1>{0}</1><2>\"</2> 계정 삭제"
 
@@ -1242,7 +1242,7 @@ msgstr "메시지 삭제"
 msgid "Delete message for me"
 msgstr "내게 보이는 메시지 삭제"
 
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:222
 msgid "Delete my account"
 msgstr "내 계정 삭제"
 
@@ -1663,7 +1663,7 @@ msgstr "모두"
 msgid "Excessive mentions or replies"
 msgstr "과도한 멘션 또는 답글"
 
-#: src/view/com/modals/DeleteAccount.tsx:231
+#: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Exits account deletion process"
 msgstr "계정 삭제 프로세스를 종료합니다"
 
@@ -1780,8 +1780,8 @@ msgstr "피드백"
 #: src/view/screens/Feeds.tsx:444
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Profile.tsx:197
-#: src/view/shell/bottom-bar/BottomBar.tsx:212
-#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/bottom-bar/BottomBar.tsx:214
+#: src/view/shell/desktop/LeftNav.tsx:382
 #: src/view/shell/Drawer.tsx:500
 #: src/view/shell/Drawer.tsx:501
 msgid "Feeds"
@@ -1937,7 +1937,7 @@ msgstr "나를 팔로우함"
 msgid "Food"
 msgstr "음식"
 
-#: src/view/com/modals/DeleteAccount.tsx:111
+#: src/view/com/modals/DeleteAccount.tsx:110
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "보안상의 이유로 이메일 주소로 인증 코드를 보내야 합니다."
 
@@ -1991,7 +1991,7 @@ msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:112
 #: src/view/screens/ProfileList.tsx:912
-#: src/view/shell/desktop/LeftNav.tsx:111
+#: src/view/shell/desktop/LeftNav.tsx:112
 msgid "Go back"
 msgstr "뒤로"
 
@@ -2147,8 +2147,8 @@ msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "검토 서비스를 불러올 수 없습니다."
 
 #: src/Navigation.tsx:497
-#: src/view/shell/bottom-bar/BottomBar.tsx:168
-#: src/view/shell/desktop/LeftNav.tsx:314
+#: src/view/shell/bottom-bar/BottomBar.tsx:170
+#: src/view/shell/desktop/LeftNav.tsx:316
 #: src/view/shell/Drawer.tsx:422
 #: src/view/shell/Drawer.tsx:423
 msgid "Home"
@@ -2227,7 +2227,7 @@ msgstr "신원 또는 소속에 대한 사칭 또는 허위 주장"
 msgid "Input code sent to your email for password reset"
 msgstr "비밀번호 재설정을 위해 이메일로 전송된 코드를 입력합니다"
 
-#: src/view/com/modals/DeleteAccount.tsx:184
+#: src/view/com/modals/DeleteAccount.tsx:183
 msgid "Input confirmation code for account deletion"
 msgstr "계정 삭제를 위한 인증 코드를 입력합니다"
 
@@ -2239,7 +2239,7 @@ msgstr "앱 비밀번호의 이름을 입력합니다"
 msgid "Input new password"
 msgstr "새 비밀번호를 입력합니다"
 
-#: src/view/com/modals/DeleteAccount.tsx:203
+#: src/view/com/modals/DeleteAccount.tsx:202
 msgid "Input password for account deletion"
 msgstr "계정을 삭제하기 위해 비밀번호를 입력합니다"
 
@@ -2288,7 +2288,7 @@ msgstr "친구 초대하기"
 msgid "Invite code"
 msgstr "초대 코드"
 
-#: src/screens/Signup/state.ts:282
+#: src/screens/Signup/state.ts:272
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "초대 코드가 올바르지 않습니다. 코드를 올바르게 입력했는지 확인한 후 다시 시도하세요."
 
@@ -2491,7 +2491,7 @@ msgstr "리스트 언뮤트됨"
 #: src/Navigation.tsx:121
 #: src/view/screens/Profile.tsx:192
 #: src/view/screens/Profile.tsx:198
-#: src/view/shell/desktop/LeftNav.tsx:397
+#: src/view/shell/desktop/LeftNav.tsx:400
 #: src/view/shell/Drawer.tsx:516
 #: src/view/shell/Drawer.tsx:517
 msgid "Lists"
@@ -2566,7 +2566,7 @@ msgid "Menu"
 msgstr "메뉴"
 
 #: src/components/dms/MessageMenu.tsx:56
-#: src/screens/Messages/List/index.tsx:245
+#: src/screens/Messages/List/index.tsx:254
 msgid "Message deleted"
 msgstr "메시지 삭제됨"
 
@@ -2578,17 +2578,17 @@ msgstr "서버에서 보낸 메시지: {0}"
 msgid "Message input field"
 msgstr "메시지 입력 필드"
 
-#: src/screens/Messages/List/index.tsx:62
-#: src/screens/Messages/List/index.tsx:374
+#: src/screens/Messages/List/index.tsx:63
+#: src/screens/Messages/List/index.tsx:383
 msgid "Message settings"
 msgstr "메시지 설정"
 
 #: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:163
-#: src/screens/Messages/List/index.tsx:190
-#: src/screens/Messages/List/index.tsx:370
-#: src/view/shell/bottom-bar/BottomBar.tsx:261
-#: src/view/shell/desktop/LeftNav.tsx:360
+#: src/screens/Messages/List/index.tsx:172
+#: src/screens/Messages/List/index.tsx:199
+#: src/screens/Messages/List/index.tsx:379
+#: src/view/shell/bottom-bar/BottomBar.tsx:265
+#: src/view/shell/desktop/LeftNav.tsx:363
 msgid "Messages"
 msgstr "메시지"
 
@@ -2773,7 +2773,7 @@ msgstr "내 생년월일"
 msgid "My Feeds"
 msgstr "내 피드"
 
-#: src/view/shell/desktop/LeftNav.tsx:68
+#: src/view/shell/desktop/LeftNav.tsx:69
 msgid "My Profile"
 msgstr "내 프로필"
 
@@ -2836,8 +2836,8 @@ msgid "New"
 msgstr "새로 만들기"
 
 #: src/components/dms/NewChat.tsx:60
-#: src/screens/Messages/List/index.tsx:384
-#: src/screens/Messages/List/index.tsx:392
+#: src/screens/Messages/List/index.tsx:393
+#: src/screens/Messages/List/index.tsx:401
 msgid "New chat"
 msgstr "새 대화"
 
@@ -2864,11 +2864,11 @@ msgstr "새 게시물"
 #: src/view/screens/ProfileFeed.tsx:445
 #: src/view/screens/ProfileList.tsx:200
 #: src/view/screens/ProfileList.tsx:228
-#: src/view/shell/desktop/LeftNav.tsx:255
+#: src/view/shell/desktop/LeftNav.tsx:256
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/shell/desktop/LeftNav.tsx:265
+#: src/view/shell/desktop/LeftNav.tsx:266
 msgctxt "action"
 msgid "New Post"
 msgstr "새 게시물"
@@ -2931,8 +2931,8 @@ msgstr "더 이상 {0} 님을 팔로우하지 않음"
 msgid "No longer than 253 characters"
 msgstr "253자를 초과하지 않음"
 
-#: src/screens/Messages/List/index.tsx:174
-#: src/screens/Messages/List/index.tsx:234
+#: src/screens/Messages/List/index.tsx:183
+#: src/screens/Messages/List/index.tsx:243
 msgid "No messages yet"
 msgstr "아직 메시지가 없습니다"
 
@@ -3008,8 +3008,8 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 #: src/Navigation.tsx:512
 #: src/view/screens/Notifications.tsx:124
 #: src/view/screens/Notifications.tsx:148
-#: src/view/shell/bottom-bar/BottomBar.tsx:236
-#: src/view/shell/desktop/LeftNav.tsx:351
+#: src/view/shell/bottom-bar/BottomBar.tsx:238
+#: src/view/shell/desktop/LeftNav.tsx:353
 #: src/view/shell/Drawer.tsx:459
 #: src/view/shell/Drawer.tsx:460
 msgid "Notifications"
@@ -3224,7 +3224,7 @@ msgstr "팔로우 중 피드 설정을 엽니다"
 msgid "Opens the linked website"
 msgstr "연결된 웹사이트를 엽니다"
 
-#: src/screens/Messages/List/index.tsx:63
+#: src/screens/Messages/List/index.tsx:64
 msgid "Opens the message settings page"
 msgstr "메시지 설정 페이지를 엽니다"
 
@@ -3276,8 +3276,8 @@ msgstr "페이지를 찾을 수 없음"
 
 #: src/screens/Login/LoginForm.tsx:195
 #: src/screens/Signup/StepInfo/index.tsx:102
-#: src/view/com/modals/DeleteAccount.tsx:195
-#: src/view/com/modals/DeleteAccount.tsx:202
+#: src/view/com/modals/DeleteAccount.tsx:194
+#: src/view/com/modals/DeleteAccount.tsx:201
 msgid "Password"
 msgstr "비밀번호"
 
@@ -3359,15 +3359,15 @@ msgstr "동영상 재생"
 msgid "Plays the GIF"
 msgstr "GIF를 재생합니다"
 
-#: src/screens/Signup/state.ts:241
+#: src/screens/Signup/state.ts:234
 msgid "Please choose your handle."
 msgstr "핸들을 입력하세요."
 
-#: src/screens/Signup/state.ts:234
+#: src/screens/Signup/state.ts:227
 msgid "Please choose your password."
 msgstr "비밀번호를 입력하세요."
 
-#: src/screens/Signup/state.ts:255
+#: src/screens/Signup/state.ts:248
 msgid "Please complete the verification captcha."
 msgstr "인증 캡차를 완료해 주세요."
 
@@ -3387,11 +3387,11 @@ msgstr "이 앱 비밀번호에 대해 고유한 이름을 입력하거나 무�
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "뮤트할 단어나 태그 또는 문구를 입력하세요"
 
-#: src/screens/Signup/state.ts:220
+#: src/screens/Signup/state.ts:213
 msgid "Please enter your email."
 msgstr "이메일을 입력하세요."
 
-#: src/view/com/modals/DeleteAccount.tsx:191
+#: src/view/com/modals/DeleteAccount.tsx:190
 msgid "Please enter your password as well:"
 msgstr "비밀번호도 입력해 주세요:"
 
@@ -3541,8 +3541,8 @@ msgstr "처리 중…"
 msgid "profile"
 msgstr "프로필"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:303
-#: src/view/shell/desktop/LeftNav.tsx:415
+#: src/view/shell/bottom-bar/BottomBar.tsx:311
+#: src/view/shell/desktop/LeftNav.tsx:418
 #: src/view/shell/Drawer.tsx:69
 #: src/view/shell/Drawer.tsx:551
 #: src/view/shell/Drawer.tsx:552
@@ -3982,8 +3982,8 @@ msgstr "맨 위로 스크롤"
 #: src/view/screens/Search/Search.tsx:444
 #: src/view/screens/Search/Search.tsx:757
 #: src/view/screens/Search/Search.tsx:785
-#: src/view/shell/bottom-bar/BottomBar.tsx:190
-#: src/view/shell/desktop/LeftNav.tsx:332
+#: src/view/shell/bottom-bar/BottomBar.tsx:192
+#: src/view/shell/desktop/LeftNav.tsx:334
 #: src/view/shell/desktop/Search.tsx:194
 #: src/view/shell/desktop/Search.tsx:203
 #: src/view/shell/Drawer.tsx:386
@@ -4143,11 +4143,11 @@ msgstr "보조 알고리즘 피드를 선택하세요"
 msgid "Send Confirmation Email"
 msgstr "인증 이메일 보내기"
 
-#: src/view/com/modals/DeleteAccount.tsx:131
+#: src/view/com/modals/DeleteAccount.tsx:130
 msgid "Send email"
 msgstr "이메일 보내기"
 
-#: src/view/com/modals/DeleteAccount.tsx:144
+#: src/view/com/modals/DeleteAccount.tsx:143
 msgctxt "action"
 msgid "Send Email"
 msgstr "이메일 보내기"
@@ -4176,7 +4176,7 @@ msgstr "{0} 님에게 신고 보내기"
 msgid "Send verification email"
 msgstr "인증 메일 보내기"
 
-#: src/view/com/modals/DeleteAccount.tsx:133
+#: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
 msgstr "계정 삭제를 위한 확인 코드가 포함된 이메일을 전송합니다"
 
@@ -4259,7 +4259,7 @@ msgstr "이미지 비율을 가로로 길게 설정합니다"
 #: src/Navigation.tsx:146
 #: src/screens/Messages/Settings/index.tsx:21
 #: src/view/screens/Settings/index.tsx:322
-#: src/view/shell/desktop/LeftNav.tsx:433
+#: src/view/shell/desktop/LeftNav.tsx:436
 #: src/view/shell/Drawer.tsx:572
 #: src/view/shell/Drawer.tsx:573
 msgid "Settings"
@@ -4427,9 +4427,9 @@ msgstr "피드에 {0} 님의 게시물을 표시합니다"
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
 #: src/view/com/auth/SplashScreen.web.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:343
-#: src/view/shell/bottom-bar/BottomBar.tsx:344
-#: src/view/shell/bottom-bar/BottomBar.tsx:346
+#: src/view/shell/bottom-bar/BottomBar.tsx:351
+#: src/view/shell/bottom-bar/BottomBar.tsx:352
+#: src/view/shell/bottom-bar/BottomBar.tsx:354
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:196
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:199
@@ -4460,9 +4460,9 @@ msgstr "Bluesky에 로그인하거나 새 계정 만들기"
 msgid "Sign out"
 msgstr "로그아웃"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:333
-#: src/view/shell/bottom-bar/BottomBar.tsx:334
-#: src/view/shell/bottom-bar/BottomBar.tsx:336
+#: src/view/shell/bottom-bar/BottomBar.tsx:341
+#: src/view/shell/bottom-bar/BottomBar.tsx:342
+#: src/view/shell/bottom-bar/BottomBar.tsx:344
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:186
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:187
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:189
@@ -5645,7 +5645,7 @@ msgstr "피드가 없습니다."
 msgid "You have no lists."
 msgstr "리스트가 없습니다."
 
-#: src/screens/Messages/List/index.tsx:176
+#: src/screens/Messages/List/index.tsx:185
 msgid "You have no messages yet. Start a conversation with someone!"
 msgstr "아직 메시지가 없습니다. 사람들과 대화를 시작해 보세요!"
 
@@ -5693,7 +5693,7 @@ msgstr "이제 이 스레드에 대한 알림을 받습니다"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력합니다."
 
-#: src/screens/Messages/List/index.tsx:238
+#: src/screens/Messages/List/index.tsx:247
 msgid "You: {0}"
 msgstr "나: {0}"
 
@@ -5745,7 +5745,7 @@ msgid "Your default feed is \"Following\""
 msgstr "기본 피드는 \"팔로우 중\"입니다"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:57
-#: src/screens/Signup/state.ts:227
+#: src/screens/Signup/state.ts:220
 #: src/view/com/modals/ChangePassword.tsx:56
 msgid "Your email appears to be invalid."
 msgstr "이메일이 잘못된 것 같습니다."
