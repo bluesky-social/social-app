@@ -582,6 +582,7 @@ export class Convo {
         error?.retry()
       },
     })
+    this.commit()
   }
 
   ingestFirehose(events: ChatBskyConvoGetLog.OutputSchema['logs']) {

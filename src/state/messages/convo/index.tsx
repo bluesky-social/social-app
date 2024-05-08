@@ -44,11 +44,15 @@ export function ConvoProvider({
   const events = useMessagesEventBus()
 
   React.useEffect(() => {
-    const remove = events.trailConvo(convoId, events => {
+    const trail = events.trailConvo(convoId, events => {
       convo.ingestFirehose(events)
     })
+    const onConnect = events.onConnect(convo.onFirehoseConnect)
+    const onError = events.onError(convo.onFirehoseError)
     return () => {
-      remove()
+      trail()
+      onConnect()
+      onError()
     }
   }, [convoId, convo, events])
 
