@@ -17,9 +17,11 @@ export const snapPoints = ['0%']
 
 export function Component({
   uri,
+  dimensions,
   onSelect,
 }: {
   uri: string
+  dimensions?: {width: number; height: number}
   onSelect: (img?: RNImage) => void
 }) {
   const pal = usePalette('default')
@@ -31,6 +33,7 @@ export function Component({
   const [crop, setCrop] = React.useState<PercentCrop>()
 
   const isEmpty = !crop || (crop.width || crop.height) === 0
+  const aspect = dimensions ? dimensions.width / dimensions.height : undefined
 
   const onPressCancel = () => {
     onSelect(undefined)
@@ -75,7 +78,10 @@ export function Component({
   return (
     <View>
       <View style={[styles.cropper, pal.borderDark]}>
-        <ReactCrop crop={crop} onChange={(_, next) => setCrop(next)}>
+        <ReactCrop
+          aspect={aspect}
+          crop={crop}
+          onChange={(_, next) => setCrop(next)}>
           <img ref={imageRef} src={uri} style={{maxHeight: '75vh'}} />
         </ReactCrop>
       </View>

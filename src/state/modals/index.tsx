@@ -39,6 +39,7 @@ export interface ListAddRemoveUsersModal {
 export interface CropImageModal {
   name: 'crop-image'
   uri: string
+  dimensions?: {width: number; height: number}
   onSelect: (img?: RNImage) => void
 }
 
