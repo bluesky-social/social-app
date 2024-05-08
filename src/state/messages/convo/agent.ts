@@ -10,6 +10,10 @@ import {nanoid} from 'nanoid/non-secure'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
+  ACTIVE_POLL_INTERVAL,
+  BACKGROUND_POLL_INTERVAL,
+} from '#/state/messages/convo/const'
+import {
   ConvoDispatch,
   ConvoDispatchEvent,
   ConvoErrorCode,
@@ -19,6 +23,7 @@ import {
   ConvoState,
   ConvoStatus,
 } from '#/state/messages/convo/types'
+import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 
 // TODO temporary
@@ -39,6 +44,7 @@ export class Convo {
   private id: string
 
   private agent: BskyAgent
+  private events: MessagesEventBus
   private __tempFromUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
@@ -49,9 +55,9 @@ export class Convo {
         retry: () => void
       }
     | undefined
-  private historyCursor: string | undefined | null = undefined
+  private oldestRev: string | undefined | null = undefined
   private isFetchingHistory = false
-  private eventsCursor: string | undefined = undefined
+  private latestRev: string | undefined = undefined
 
   private pastMessages: Map<
     string,
@@ -81,6 +87,7 @@ export class Convo {
     this.id = nanoid(3)
     this.convoId = params.convoId
     this.agent = params.agent
+    this.events = params.events
     this.__tempFromUserDid = params.__tempFromUserDid
 
     this.subscribe = this.subscribe.bind(this)
@@ -99,6 +106,12 @@ export class Convo {
     } else {
       DEBUG_ACTIVE_CHAT = this.convoId
     }
+
+    this.events.trailConvo(this.convoId, events => {
+      this.ingestFirehose(events)
+    })
+    this.events.onConnect(this.onFirehoseConnect)
+    this.events.onError(this.onFirehoseError)
   }
 
   private commit() {
@@ -346,8 +359,8 @@ export class Convo {
 
     this.status = ConvoStatus.Uninitialized
     this.error = undefined
-    this.historyCursor = undefined
-    this.eventsCursor = undefined
+    this.oldestRev = undefined
+    this.latestRev = undefined
 
     this.pastMessages = new Map()
     this.newMessages = new Map()
@@ -401,19 +414,34 @@ export class Convo {
 
   init() {
     this.dispatch({event: ConvoDispatchEvent.Init})
+    this.requestPollInterval(ACTIVE_POLL_INTERVAL)
   }
 
   resume() {
     this.dispatch({event: ConvoDispatchEvent.Resume})
+    this.requestPollInterval(ACTIVE_POLL_INTERVAL)
   }
 
   background() {
     this.dispatch({event: ConvoDispatchEvent.Background})
+    this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
   }
 
   suspend() {
     this.dispatch({event: ConvoDispatchEvent.Suspend})
+    this.withdrawRequestedPollInterval()
     DEBUG_ACTIVE_CHAT = undefined
+  }
+
+  private requestedPollInterval: (() => void) | undefined
+  private requestPollInterval(interval: number) {
+    this.withdrawRequestedPollInterval()
+    this.requestedPollInterval = this.events.requestPollInterval(interval)
+  }
+  private withdrawRequestedPollInterval() {
+    if (this.requestedPollInterval) {
+      this.requestedPollInterval()
+    }
   }
 
   private pendingFetchConvo:
@@ -489,9 +517,9 @@ export class Convo {
     logger.debug('Convo: fetch message history', {}, logger.DebugContext.convo)
 
     /*
-     * If historyCursor is null, we've fetched all history.
+     * If oldestRev is null, we've fetched all history.
      */
-    if (this.historyCursor === null) return
+    if (this.oldestRev === null) return
 
     /*
      * Don't fetch again if a fetch is already in progress
@@ -519,7 +547,7 @@ export class Convo {
 
       const response = await this.agent.api.chat.bsky.convo.getMessages(
         {
-          cursor: this.historyCursor,
+          cursor: this.oldestRev,
           convoId: this.convoId,
           limit: isNative ? 25 : 50,
         },
@@ -531,21 +559,22 @@ export class Convo {
       )
       const {cursor, messages} = response.data
 
-      this.historyCursor = cursor ?? null
+      this.oldestRev = cursor ?? null
 
       for (const message of messages) {
         if (
           ChatBskyConvoDefs.isMessageView(message) ||
           ChatBskyConvoDefs.isDeletedMessageView(message)
         ) {
-          this.pastMessages.set(message.id, message)
-
-          // set to latest rev
-          if (
-            message.rev > (this.eventsCursor = this.eventsCursor || message.rev)
-          ) {
-            this.eventsCursor = message.rev
+          /*
+           * If this message is already in new messages, it was added by the
+           * firehose ingestion, and we can safely overwrite it. This trusts
+           * the server on ordering, and keeps it in sync.
+           */
+          if (this.newMessages.has(message.id)) {
+            this.newMessages.delete(message.id)
           }
+          this.pastMessages.set(message.id, message)
         }
       }
     } catch (e: any) {
@@ -594,14 +623,25 @@ export class Convo {
        * know what it is.
        */
       if (typeof ev.rev === 'string') {
+        const isUninitialized = !this.latestRev
+        const isNewEvent = this.latestRev && ev.rev > this.latestRev
+
+        /*
+         * We received an event prior to fetching any history, so we can safely
+         * use this as the initial history cursor
+         */
+        if (this.oldestRev === undefined && isUninitialized) {
+          this.oldestRev = ev.rev
+        }
+
         /*
          * We only care about new events
          */
-        if (ev.rev > (this.eventsCursor = this.eventsCursor || ev.rev)) {
+        if (isNewEvent || isUninitialized) {
           /*
            * Update rev regardless of if it's a ev type we care about or not
            */
-          this.eventsCursor = ev.rev
+          this.latestRev = ev.rev
 
           /*
            * This is VERY important. We don't want to insert any messages from
@@ -613,8 +653,14 @@ export class Convo {
             ChatBskyConvoDefs.isLogCreateMessage(ev) &&
             ChatBskyConvoDefs.isMessageView(ev.message)
           ) {
+            /**
+             * If this message is already in new messages, it was added by our
+             * sending logic, and is based on client-ordering. When we receive
+             * the "commited" event from the log, we should replace this
+             * reference and re-insert in order to respect the order we receied
+             * from the log.
+             */
             if (this.newMessages.has(ev.message.id)) {
-              // Trust the ev as the source of truth on ordering
               this.newMessages.delete(ev.message.id)
             }
             this.newMessages.set(ev.message.id, ev.message)
@@ -626,6 +672,7 @@ export class Convo {
             /*
              * Update if we have this in state. If we don't, don't worry about it.
              */
+            // TODO check for other storage spots
             if (this.pastMessages.has(ev.message.id)) {
               /*
                * For now, we remove deleted messages from the thread, if we receive one.

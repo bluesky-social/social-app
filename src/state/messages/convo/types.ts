@@ -5,9 +5,12 @@ import {
   ChatBskyConvoSendMessage,
 } from '@atproto-labs/api'
 
+import {MessagesEventBus} from '#/state/messages/events/agent'
+
 export type ConvoParams = {
   convoId: string
   agent: BskyAgent
+  events: MessagesEventBus
   __tempFromUserDid: string
 }
 

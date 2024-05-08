@@ -4,7 +4,6 @@ import {BskyAgent} from '@atproto-labs/api'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 
 import {Convo} from '#/state/messages/convo/agent'
-import {ACTIVE_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {ConvoParams, ConvoState} from '#/state/messages/convo/types'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
@@ -29,6 +28,7 @@ export function ConvoProvider({
   const isScreenFocused = useIsFocused()
   const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
+  const events = useMessagesEventBus()
   const [convo] = useState(
     () =>
       new Convo({
@@ -36,33 +36,15 @@ export function ConvoProvider({
         agent: new BskyAgent({
           service: serviceUrl,
         }),
+        events,
         __tempFromUserDid: getAgent().session?.did!,
       }),
   )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
-  const events = useMessagesEventBus()
-
-  React.useEffect(() => {
-    const trail = events.trailConvo(convoId, events => {
-      convo.ingestFirehose(events)
-    })
-    const onConnect = events.onConnect(convo.onFirehoseConnect)
-    const onError = events.onError(convo.onFirehoseError)
-    return () => {
-      trail()
-      onConnect()
-      onError()
-    }
-  }, [convoId, convo, events])
 
   useFocusEffect(
     React.useCallback(() => {
-      if (!requestedPollInterval.current) {
-        requestedPollInterval.current =
-          events.requestPollInterval(ACTIVE_POLL_INTERVAL)
-      }
-
       convo.resume()
       markAsRead({convoId})
 
@@ -74,7 +56,7 @@ export function ConvoProvider({
         convo.background()
         markAsRead({convoId})
       }
-    }, [convo, convoId, markAsRead, events]),
+    }, [convo, convoId, markAsRead]),
   )
 
   React.useEffect(() => {
@@ -82,16 +64,8 @@ export function ConvoProvider({
       if (isScreenFocused) {
         if (nextAppState === 'active') {
           convo.resume()
-
-          if (!requestedPollInterval.current) {
-            requestedPollInterval.current =
-              events.requestPollInterval(ACTIVE_POLL_INTERVAL)
-          }
         } else {
           convo.background()
-          if (requestedPollInterval.current) {
-            requestedPollInterval.current = requestedPollInterval.current()
-          }
         }
 
         markAsRead({convoId})
@@ -103,7 +77,7 @@ export function ConvoProvider({
     return () => {
       sub.remove()
     }
-  }, [convoId, convo, isScreenFocused, markAsRead, events])
+  }, [convoId, convo, isScreenFocused, markAsRead])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }
