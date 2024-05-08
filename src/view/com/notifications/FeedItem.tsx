@@ -220,30 +220,29 @@ let FeedItem = ({
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text style={styles.meta}>
-            <TextLink
-              key={authors[0].href}
-              style={[pal.text, s.bold]}
-              href={authors[0].href}
-              text={sanitizeDisplayName(
-                authors[0].profile.displayName || authors[0].profile.handle,
-              )}
-              disableMismatchWarning
-            />
-            {authors.length > 1 ? (
-              <>
-                <Text style={[pal.text, s.mr5, s.ml5]}>
-                  {' '}
-                  <Trans>and</Trans>{' '}
-                </Text>
-                <Text style={[pal.text, s.bold]}>
-                  {plural(authors.length - 1, {
-                    one: `${formattedCount} other`,
-                    other: `${formattedCount} others`,
-                  })}
-                </Text>
-              </>
-            ) : undefined}
-            <Text style={[pal.text]}> {action}</Text>
+            <Trans>
+              <TextLink
+                key={authors[0].href}
+                style={[pal.text, s.bold]}
+                href={authors[0].href}
+                text={sanitizeDisplayName(
+                  authors[0].profile.displayName || authors[0].profile.handle,
+                )}
+                disableMismatchWarning
+              />
+              {authors.length > 1 ? (
+                <Trans>
+                  <Text style={[pal.text]}> and </Text>
+                  <Text style={[pal.text, s.bold]}>
+                    {plural(authors.length - 1, {
+                      one: `${formattedCount} other`,
+                      other: `${formattedCount} others`,
+                    })}
+                  </Text>
+                </Trans>
+              ) : undefined}
+              <Text style={[pal.text]}> {action}</Text>
+            </Trans>
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
                 <Text
