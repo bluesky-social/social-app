@@ -31,8 +31,10 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
 
   const {initialCrop, initialAspect, sourceAspect} = React.useMemo(() => {
     const initialArea = manips?.crop
+    const originalAspect = source.width / source.height
 
     let crop: PercentCrop | undefined
+    let aspect = originalAspect
 
     if (initialArea) {
       crop = {
@@ -42,15 +44,13 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
         width: (initialArea.width / source.width) * 100,
         height: (initialArea.height / source.height) * 100,
       }
-    }
 
-    const originalAspect = source.width / source.height
+      aspect = initialArea.aspect
+    }
 
     return {
       initialCrop: crop,
-      initialAspect: initialArea
-        ? initialArea.width / initialArea.height
-        : originalAspect,
+      initialAspect: aspect,
       sourceAspect: originalAspect,
     }
   }, [source, manips])
@@ -65,6 +65,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
     const result = await manipulateImage(image, {
       crop: !isEmpty
         ? {
+            aspect: aspect,
             originX: (crop.x * source.width) / 100,
             originY: (crop.y * source.height) / 100,
             width: (crop.width * source.width) / 100,
@@ -75,7 +76,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
 
     onChange(result)
     control.close()
-  }, [crop, isEmpty, image, source, control, onChange])
+  }, [crop, isEmpty, aspect, image, source, control, onChange])
 
   const changeAspect = (next: number) => {
     if (next !== aspect) {

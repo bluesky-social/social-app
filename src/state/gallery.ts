@@ -19,7 +19,9 @@ import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {isIOS, isNative} from '#/platform/detection'
 
-export type ImageTransformation = Partial<ActionCrop>
+export type ImageTransformation = {
+  crop?: ActionCrop['crop'] & {aspect: number}
+}
 
 export type ImageMeta = {
   path: string
