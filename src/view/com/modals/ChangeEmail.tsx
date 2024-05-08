@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
@@ -28,7 +28,6 @@ export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
   const {getAgent} = useAgent()
-  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.InputEmail)
   const [email, setEmail] = useState<string>(currentAccount?.email || '')
@@ -51,10 +50,7 @@ export function Component() {
         setStage(Stages.ConfirmCode)
       } else {
         await getAgent().com.atproto.server.updateEmail({email: email.trim()})
-        updateCurrentAccount({
-          email: email.trim(),
-          emailConfirmed: false,
-        })
+        await getAgent().resumeSession(getAgent().session!)
         Toast.show(_(msg`Email updated`))
         setStage(Stages.Done)
       }
@@ -83,10 +79,7 @@ export function Component() {
         email: email.trim(),
         token: confirmationCode.trim(),
       })
-      updateCurrentAccount({
-        email: email.trim(),
-        emailConfirmed: false,
-      })
+      await getAgent().resumeSession(getAgent().session!)
       Toast.show(_(msg`Email updated`))
       setStage(Stages.Done)
     } catch (e) {
