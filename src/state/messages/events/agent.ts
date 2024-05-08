@@ -22,7 +22,11 @@ export class MessagesEventBus {
 
   private agent: BskyAgent
   private __tempFromUserDid: string
-  private emitter = new EventEmitter()
+  private emitter = new EventEmitter<{
+    events: [ChatBskyConvoGetLog.OutputSchema['logs']]
+    connect: undefined
+    error: [MessagesEventBusError] | undefined
+  }>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Uninitialized
   private error: MessagesEventBusError | undefined
@@ -45,6 +49,8 @@ export class MessagesEventBus {
     this.requestPollInterval = this.requestPollInterval.bind(this)
     this.trail = this.trail.bind(this)
     this.trailConvo = this.trailConvo.bind(this)
+    this.onConnect = this.onConnect.bind(this)
+    this.onError = this.onError.bind(this)
   }
 
   private commit() {
@@ -81,6 +87,8 @@ export class MessagesEventBus {
           requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
+          onConnect: this.onConnect,
+          onError: this.onError,
         }
       }
       case MessagesEventBusStatus.Ready: {
@@ -91,6 +99,8 @@ export class MessagesEventBus {
           requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
+          onConnect: this.onConnect,
+          onError: this.onError,
         }
       }
       case MessagesEventBusStatus.Suspended: {
@@ -101,6 +111,8 @@ export class MessagesEventBus {
           requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
+          onConnect: this.onConnect,
+          onError: this.onError,
         }
       }
       case MessagesEventBusStatus.Error: {
@@ -116,6 +128,8 @@ export class MessagesEventBus {
           requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
+          onConnect: this.onConnect,
+          onError: this.onError,
         }
       }
       default: {
@@ -126,6 +140,8 @@ export class MessagesEventBus {
           requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
+          onConnect: this.onConnect,
+          onError: this.onError,
         }
       }
     }
@@ -150,11 +166,13 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Ready: {
             this.status = MessagesEventBusStatus.Ready
             this.resetPoll()
+            this.emitter.emit('connect')
             break
           }
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
             this.resetPoll()
+            this.emitter.emit('connect')
             break
           }
           case MessagesEventBusDispatchEvent.Suspend: {
@@ -164,6 +182,7 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
             this.error = action.payload
+            this.emitter.emit('error', action.payload)
             break
           }
         }
@@ -185,6 +204,7 @@ export class MessagesEventBus {
             this.status = MessagesEventBusStatus.Error
             this.error = action.payload
             this.stopPoll()
+            this.emitter.emit('error', action.payload)
             break
           }
         }
@@ -206,6 +226,7 @@ export class MessagesEventBus {
             this.status = MessagesEventBusStatus.Error
             this.error = action.payload
             this.stopPoll()
+            this.emitter.emit('error', action.payload)
             break
           }
         }
@@ -227,6 +248,7 @@ export class MessagesEventBus {
             this.status = MessagesEventBusStatus.Error
             this.error = action.payload
             this.stopPoll()
+            this.emitter.emit('error', action.payload)
             break
           }
         }
@@ -240,6 +262,7 @@ export class MessagesEventBus {
             this.error = undefined
             this.latestRev = undefined
             this.setup()
+            this.emitter.emit('connect')
             break
           }
         }
@@ -343,6 +366,34 @@ export class MessagesEventBus {
     this.emitter.on('events', handle)
     return () => {
       this.emitter.off('events', handle)
+    }
+  }
+
+  onConnect(handler: () => void) {
+    this.emitter.on('connect', handler)
+
+    if (
+      this.status === MessagesEventBusStatus.Ready ||
+      this.status === MessagesEventBusStatus.Backgrounded ||
+      this.status === MessagesEventBusStatus.Suspended
+    ) {
+      handler()
+    }
+
+    return () => {
+      this.emitter.off('connect', handler)
+    }
+  }
+
+  onError(handler: (payload?: MessagesEventBusError) => void) {
+    this.emitter.on('error', handler)
+
+    if (this.status === MessagesEventBusStatus.Error) {
+      handler(this.error)
+    }
+
+    return () => {
+      this.emitter.off('error', handler)
     }
   }
 

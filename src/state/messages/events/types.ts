@@ -61,6 +61,10 @@ export type TrailHandler = (
 ) => void
 
 export type RequestPollIntervalHandler = (interval: number) => () => void
+export type OnConnectHandler = (handler: () => void) => () => void
+export type OnDisconnectHandler = (
+  handler: (error?: MessagesEventBusError) => void,
+) => () => void
 
 export type MessagesEventBusState =
   | {
@@ -70,6 +74,8 @@ export type MessagesEventBusState =
       requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
+      onConnect: OnConnectHandler
+      onError: OnDisconnectHandler
     }
   | {
       status: MessagesEventBusStatus.Initializing
@@ -78,6 +84,8 @@ export type MessagesEventBusState =
       requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
+      onConnect: OnConnectHandler
+      onError: OnDisconnectHandler
     }
   | {
       status: MessagesEventBusStatus.Ready
@@ -86,6 +94,8 @@ export type MessagesEventBusState =
       requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
+      onConnect: OnConnectHandler
+      onError: OnDisconnectHandler
     }
   | {
       status: MessagesEventBusStatus.Backgrounded
@@ -94,6 +104,8 @@ export type MessagesEventBusState =
       requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
+      onConnect: OnConnectHandler
+      onError: OnDisconnectHandler
     }
   | {
       status: MessagesEventBusStatus.Suspended
@@ -102,6 +114,8 @@ export type MessagesEventBusState =
       requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
+      onConnect: OnConnectHandler
+      onError: OnDisconnectHandler
     }
   | {
       status: MessagesEventBusStatus.Error
@@ -110,4 +124,6 @@ export type MessagesEventBusState =
       requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
+      onConnect: OnConnectHandler
+      onError: OnDisconnectHandler
     }
