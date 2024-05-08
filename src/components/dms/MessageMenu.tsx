@@ -5,8 +5,8 @@ import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useChat} from 'state/messages'
-import {ConvoStatus} from 'state/messages/convo'
+import {useConvo} from 'state/messages/convo'
+import {ConvoStatus} from 'state/messages/convo/types'
 import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -33,7 +33,7 @@ export let MessageMenu = ({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const chat = useChat()
+  const convo = useConvo()
   const deleteControl = usePromptControl()
   const retryDeleteControl = usePromptControl()
 
@@ -48,14 +48,14 @@ export let MessageMenu = ({
   }, [_, message.text])
 
   const onDelete = React.useCallback(() => {
-    if (chat.status !== ConvoStatus.Ready) return
+    if (convo.status !== ConvoStatus.Ready) return
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    chat
+    convo
       .deleteMessage(message.id)
       .then(() => Toast.show(_(msg`Message deleted`)))
       .catch(() => retryDeleteControl.open())
-  }, [_, chat, message.id, retryDeleteControl])
+  }, [_, convo, message.id, retryDeleteControl])
 
   const onReport = React.useCallback(() => {
     // TODO report the message

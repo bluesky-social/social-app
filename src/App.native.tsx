@@ -15,6 +15,7 @@ import {useLingui} from '@lingui/react'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {MessagesProvider} from '#/state/messages'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
@@ -54,7 +55,7 @@ SplashScreen.preventAutoHideAsync()
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
-  const {initSession} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
 
@@ -62,20 +63,20 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    async function resumeSession(account?: SessionAccount) {
+    async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
-          await initSession(account)
+          await resumeSession(account)
         }
       } catch (e) {
-        logger.error(`session: resumeSession failed`, {message: e})
+        logger.error(`session: resume failed`, {message: e})
       } finally {
         setIsReady(true)
       }
     }
     const account = readLastActiveAccount()
-    resumeSession(account)
-  }, [initSession])
+    onLaunch(account)
+  }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -94,21 +95,23 @@ function InnerApp() {
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
                   <StatsigProvider>
-                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                    <LabelDefsProvider>
-                      <ModerationOptsProvider>
-                        <LoggedOutViewProvider>
-                          <SelectedFeedProvider>
-                            <UnreadNotifsProvider>
-                              <GestureHandlerRootView style={s.h100pct}>
-                                <TestCtrls />
-                                <Shell />
-                              </GestureHandlerRootView>
-                            </UnreadNotifsProvider>
-                          </SelectedFeedProvider>
-                        </LoggedOutViewProvider>
-                      </ModerationOptsProvider>
-                    </LabelDefsProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
+                                <GestureHandlerRootView style={s.h100pct}>
+                                  <TestCtrls />
+                                  <Shell />
+                                </GestureHandlerRootView>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
                   </StatsigProvider>
                 </QueryProvider>
               </React.Fragment>
