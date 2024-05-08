@@ -6,6 +6,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {Convo, ConvoParams, ConvoState} from '#/state/messages/convo'
 import {CurrentConvoIdProvider} from '#/state/messages/current-convo-id'
 import {MessagesEventBusProvider} from '#/state/messages/events'
+import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 
@@ -37,15 +38,18 @@ export function ChatProvider({
       }),
   )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
+  const {mutate: markAsRead} = useMarkAsReadMutation()
 
   useFocusEffect(
     React.useCallback(() => {
       convo.resume()
+      markAsRead({convoId})
 
       return () => {
         convo.background()
+        markAsRead({convoId})
       }
-    }, [convo]),
+    }, [convo, convoId, markAsRead]),
   )
 
   React.useEffect(() => {
@@ -56,6 +60,8 @@ export function ChatProvider({
         } else {
           convo.background()
         }
+
+        markAsRead({convoId})
       }
     }
 
@@ -64,7 +70,7 @@ export function ChatProvider({
     return () => {
       sub.remove()
     }
-  }, [convo, isScreenFocused])
+  }, [convoId, convo, isScreenFocused, markAsRead])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }
