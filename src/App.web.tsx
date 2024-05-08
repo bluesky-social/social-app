@@ -45,17 +45,17 @@ import {listenSessionDropped} from './state/events'
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
-  const {initSession} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
 
   // init
   useEffect(() => {
-    async function resumeSession(account?: SessionAccount) {
+    async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
-          await initSession(account)
+          await resumeSession(account)
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -64,8 +64,8 @@ function InnerApp() {
       }
     }
     const account = readLastActiveAccount()
-    resumeSession(account)
-  }, [initSession])
+    onLaunch(account)
+  }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {
