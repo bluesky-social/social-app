@@ -2,10 +2,12 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 import React from 'react'
 import {View} from 'react-native'
+import {Path, Svg} from 'react-native-svg'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import ReactCrop, {PixelCrop} from 'react-image-crop'
+import ReactCrop, {PercentCrop} from 'react-image-crop'
 
+import {manipulateImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -30,15 +32,15 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
   const {initialCrop, initialAspect, sourceAspect} = React.useMemo(() => {
     const initialArea = manips?.crop
 
-    let crop: PixelCrop | undefined
+    let crop: PercentCrop | undefined
 
     if (initialArea) {
       crop = {
-        unit: 'px',
-        x: initialArea.originX,
-        y: initialArea.originY,
-        width: initialArea.width,
-        height: initialArea.height,
+        unit: '%',
+        x: (initialArea.originX / source.width) * 100,
+        y: (initialArea.originY / source.height) * 100,
+        width: (initialArea.width / source.width) * 100,
+        height: (initialArea.height / source.height) * 100,
       }
     }
 
@@ -46,7 +48,9 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
 
     return {
       initialCrop: crop,
-      initialAspect: crop ? crop.width / crop.height : originalAspect,
+      initialAspect: initialArea
+        ? initialArea.width / initialArea.height
+        : originalAspect,
       sourceAspect: originalAspect,
     }
   }, [source, manips])
@@ -61,17 +65,17 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
     const result = await manipulateImage(image, {
       crop: !isEmpty
         ? {
-            originX: crop.x,
-            originY: crop.y,
-            width: crop.width,
-            height: crop.height,
+            originX: (crop.x * source.width) / 100,
+            originY: (crop.y * source.height) / 100,
+            width: (crop.width * source.width) / 100,
+            height: (crop.height * source.height) / 100,
           }
         : undefined,
     })
 
     onChange(result)
     control.close()
-  }, [crop, isEmpty, image, control, onChange])
+  }, [crop, isEmpty, image, source, control, onChange])
 
   const changeAspect = (next: number) => {
     if (next !== aspect) {
@@ -90,7 +94,7 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
         <ReactCrop
           aspect={aspect}
           crop={crop}
-          onChange={setCrop}
+          onChange={(_, next) => setCrop(next)}
           className="ReactCrop--no-animate">
           <img src={source.path} style={{maxHeight: `50vh`}} />
         </ReactCrop>
@@ -183,6 +187,3 @@ const ToolbarButton = ({
     </Button>
   )
 }
-import {Path, Svg} from 'react-native-svg'
-
-import {manipulateImage} from '#/state/gallery'

@@ -5,7 +5,7 @@ import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import ReactCrop, {PixelCrop} from 'react-image-crop'
+import ReactCrop, {PercentCrop} from 'react-image-crop'
 
 import {useModalControls} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -27,7 +27,8 @@ export function Component({
 
   const {closeModal} = useModalControls()
 
-  const [crop, setCrop] = React.useState<PixelCrop>()
+  const imageRef = React.useRef<HTMLImageElement>(null)
+  const [crop, setCrop] = React.useState<PercentCrop>()
 
   const isEmpty = !crop || (crop.width || crop.height) === 0
 
@@ -37,15 +38,17 @@ export function Component({
   }
   const onPressDone = async () => {
     if (!isEmpty) {
+      const img = imageRef.current!
+
       const result = await manipulateAsync(
         uri,
         [
           {
             crop: {
-              originX: crop.x,
-              originY: crop.y,
-              width: crop.width,
-              height: crop.height,
+              originX: (crop.x * img.width) / 100,
+              originY: (crop.y * img.height) / 100,
+              width: (crop.width * img.width) / 100,
+              height: (crop.height * img.height) / 100,
             },
           },
         ],
@@ -72,8 +75,8 @@ export function Component({
   return (
     <View>
       <View style={[styles.cropper, pal.borderDark]}>
-        <ReactCrop crop={crop} onChange={setCrop}>
-          <img src={uri} style={{maxHeight: '75vh'}} />
+        <ReactCrop crop={crop} onChange={(_, next) => setCrop(next)}>
+          <img ref={imageRef} src={uri} style={{maxHeight: '75vh'}} />
         </ReactCrop>
       </View>
       <View style={styles.btns}>
