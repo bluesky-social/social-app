@@ -406,7 +406,7 @@ export class MessagesEventBus {
           exception: e,
           code: MessagesEventBusErrorCode.PollFailed,
           retry: () => {
-            this.init()
+            this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
           },
         },
       })

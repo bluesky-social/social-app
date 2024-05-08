@@ -42,17 +42,6 @@ export function Temp_MessagesEventBusProvider({
     if (isWeb && IS_DEV) {
       // @ts-ignore
       window.bus = bus
-      setTimeout(() => {
-        bus.trail(events => {
-          console.log(events)
-        })
-        bus.onConnect(() => {
-          console.log('CONNECT')
-        })
-        bus.onError(e => {
-          console.log('ERROR', e)
-        })
-      }, 4000)
     }
   }, [bus])
 
