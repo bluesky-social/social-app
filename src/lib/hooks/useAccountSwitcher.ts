@@ -10,8 +10,6 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {logEvent} from '../statsig/statsig'
 import {LogEvents} from '../statsig/statsig'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
@@ -19,7 +17,6 @@ export function useAccountSwitcher() {
   const {track} = useAnalytics()
   const {initSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
-  const {_} = useLingui()
 
   const onPressSwitchAccount = useCallback(
     async (
