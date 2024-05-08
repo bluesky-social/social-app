@@ -24,7 +24,6 @@ export function ConvoProvider({
   children,
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
-  const requestedPollInterval = React.useRef<(() => void) | void>()
   const isScreenFocused = useIsFocused()
   const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
@@ -49,10 +48,6 @@ export function ConvoProvider({
       markAsRead({convoId})
 
       return () => {
-        if (requestedPollInterval.current) {
-          requestedPollInterval.current = requestedPollInterval.current()
-        }
-
         convo.background()
         markAsRead({convoId})
       }
