@@ -122,7 +122,6 @@ export function useOnMarkAsRead() {
           unreadCount: 0,
         }))
       })
-      queryClient.invalidateQueries({queryKey: RQKEY})
     },
     [queryClient],
   )
