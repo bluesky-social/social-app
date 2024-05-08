@@ -1,11 +1,12 @@
 import {BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
 import {jwtDecode} from 'jwt-decode'
 
-import {IS_TEST_USER} from '#/lib/constants'
+import {IS_PROD_SERVICE, IS_TEST_USER} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
+import {DEFAULT_PROD_FEEDS} from '#/state/queries/preferences'
 import {readLabelers} from '../agent-config'
 import {SessionAccount, SessionApiContext} from '../types'
 
@@ -132,6 +133,7 @@ export async function createAgentAndCreateAccount({
   email,
   password,
   handle,
+  birthDate,
   inviteCode,
   verificationPhone,
   verificationCode,
@@ -165,6 +167,13 @@ export async function createAgentAndCreateAccount({
         createdAt: new Date().toISOString(),
       }
     })
+  }
+
+  // Not awaited so that we can still get into onboarding.
+  // This is OK because we won't let you toggle adult stuff until you set the date.
+  agent.setPersonalDetails({birthDate: birthDate.toISOString()})
+  if (IS_PROD_SERVICE(service)) {
+    agent.setSavedFeeds(DEFAULT_PROD_FEEDS.saved, DEFAULT_PROD_FEEDS.pinned)
   }
 
   await configureModerationForAccount(agent, account)
