@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
 import {AtUri} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
@@ -57,10 +57,8 @@ export function useNotificationsHandler() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  const handleNotification = useRef<(payload?: NotificationRecord) => void>()
-
   useEffect(() => {
-    handleNotification.current = (payload?: NotificationRecord) => {
+    const handleNotification = (payload?: NotificationRecord) => {
       if (!payload) return
 
       if (payload.reason === 'chat-message') {
@@ -68,8 +66,7 @@ export function useNotificationsHandler() {
           storedPayload = payload
           const account = accounts.find(a => a.did === payload.recipientDid)
           if (account) {
-            // TODO what goes in context?
-            onPressSwitchAccount(account, 'SwitchAccount')
+            onPressSwitchAccount(account, 'Notification')
           } else {
             closeAllActiveElements()
             setShowLoggedOut(true)
@@ -90,6 +87,7 @@ export function useNotificationsHandler() {
           case 'like':
           case 'repost':
             resetToTab('NotificationsTab')
+            break
           case 'follow':
             const uri = new AtUri(payload.uri)
             setTimeout(() => {
@@ -119,16 +117,7 @@ export function useNotificationsHandler() {
         }
       }
     }
-  }, [
-    accounts,
-    closeAllActiveElements,
-    currentAccount?.did,
-    navigation,
-    onPressSwitchAccount,
-    setShowLoggedOut,
-  ])
 
-  useEffect(() => {
     //<editor-fold desc="determine when to show notifications while app is foregrounded">
     Notifications.setNotificationHandler({
       handleNotification: async e => {
@@ -160,7 +149,6 @@ export function useNotificationsHandler() {
     //<editor-fold desc="handle incoming notifications while app is launched">
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
-        console.log(e)
         logger.debug(
           'Notifications: response received',
           {
@@ -168,6 +156,7 @@ export function useNotificationsHandler() {
           },
           logger.DebugContext.notifications,
         )
+
         if (
           e.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
           e.notification.request.trigger.type === 'push'
@@ -185,7 +174,7 @@ export function useNotificationsHandler() {
             content: e.notification.request.content,
             payload: e.notification.request.trigger.payload,
           })
-          handleNotification.current?.(
+          handleNotification(
             e.notification.request.trigger.payload as NotificationRecord,
           )
           Notifications.dismissAllNotificationsAsync()
@@ -199,14 +188,23 @@ export function useNotificationsHandler() {
       storedPayload.reason === 'chat-message' &&
       currentAccount.did === storedPayload.recipientDid
     ) {
-      setTimeout(() => {
-        handleNotification.current?.(storedPayload)
-        storedPayload = undefined
-      }, 1000)
+      handleNotification(storedPayload)
+      storedPayload = undefined
     }
 
     return () => {
+      // subscription.remove()
       responseReceivedListener.remove()
     }
-  }, [queryClient, currentAccount, currentConvoId])
+  }, [
+    queryClient,
+    currentAccount,
+    currentConvoId,
+    accounts,
+    closeAllActiveElements,
+    currentAccount?.did,
+    navigation,
+    onPressSwitchAccount,
+    setShowLoggedOut,
+  ])
 }
