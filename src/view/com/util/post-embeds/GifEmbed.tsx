@@ -6,6 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {isWeb} from '#/platform/detection'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
@@ -116,6 +117,11 @@ export function GifEmbed({
     playerRef.current?.toggleAsync()
   }, [])
 
+  const parsedAlt = React.useMemo(
+    () => parseAltFromGIFDescription(link.description),
+    [link],
+  )
+
   return (
     <View
       style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {maxWidth: '100%'}]}>
@@ -140,12 +146,10 @@ export function GifEmbed({
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
-          accessibilityLabel={link.description.replace('Alt text: ', '')}
+          accessibilityLabel={parsedAlt.alt}
         />
 
-        {!hideAlt && link.description.startsWith('Alt text: ') && (
-          <AltText text={link.description.replace('Alt text: ', '')} />
-        )}
+        {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>
     </View>
   )
