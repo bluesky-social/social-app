@@ -60,12 +60,14 @@ export type TrailHandler = (
   events: ChatBskyConvoGetLog.OutputSchema['logs'],
 ) => void
 
+export type RequestPollIntervalHandler = (interval: number) => () => void
+
 export type MessagesEventBusState =
   | {
       status: MessagesEventBusStatus.Uninitialized
       rev: undefined
       error: undefined
-      setPollInterval: (interval: number) => void
+      requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
     }
@@ -73,7 +75,7 @@ export type MessagesEventBusState =
       status: MessagesEventBusStatus.Initializing
       rev: undefined
       error: undefined
-      setPollInterval: (interval: number) => void
+      requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
     }
@@ -81,7 +83,7 @@ export type MessagesEventBusState =
       status: MessagesEventBusStatus.Ready
       rev: string
       error: undefined
-      setPollInterval: (interval: number) => void
+      requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
     }
@@ -89,7 +91,7 @@ export type MessagesEventBusState =
       status: MessagesEventBusStatus.Backgrounded
       rev: string | undefined
       error: undefined
-      setPollInterval: (interval: number) => void
+      requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
     }
@@ -97,7 +99,7 @@ export type MessagesEventBusState =
       status: MessagesEventBusStatus.Suspended
       rev: string | undefined
       error: undefined
-      setPollInterval: (interval: number) => void
+      requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
     }
@@ -105,7 +107,7 @@ export type MessagesEventBusState =
       status: MessagesEventBusStatus.Error
       rev: string | undefined
       error: MessagesEventBusError
-      setPollInterval: (interval: number) => void
+      requestPollInterval: RequestPollIntervalHandler
       trail: (handler: TrailHandler) => () => void
       trailConvo: (convoId: string, handler: TrailHandler) => () => void
     }
