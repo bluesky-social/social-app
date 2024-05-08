@@ -220,7 +220,7 @@ let FeedItem = ({
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text style={styles.meta}>
-            <Trans>
+            <Trans context="notification">
               <TextLink
                 key={authors[0].href}
                 style={[pal.text, s.bold]}
@@ -231,7 +231,7 @@ let FeedItem = ({
                 disableMismatchWarning
               />
               {authors.length > 1 ? (
-                <Trans>
+                <Trans context="notification">
                   <Text style={[pal.text]}> and </Text>
                   <Text style={[pal.text, s.bold]}>
                     {plural(authors.length - 1, {
