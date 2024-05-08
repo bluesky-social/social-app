@@ -8,10 +8,6 @@ import {
 import {
   Action,
   ActionCrop,
-  ActionExtent,
-  ActionFlip,
-  ActionResize,
-  ActionRotate,
   manipulateAsync,
   SaveFormat,
 } from 'expo-image-manipulator'
@@ -23,9 +19,7 @@ import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
 import {isIOS, isNative} from '#/platform/detection'
 
-export type ImageTransformation = Partial<
-  ActionCrop & ActionExtent & ActionFlip & ActionResize & ActionRotate
->
+export type ImageTransformation = Partial<ActionCrop>
 
 export type ImageMeta = {
   path: string
@@ -44,10 +38,11 @@ type ComposerImageBase = {
 }
 type ComposerImageWithoutTransformation = ComposerImageBase & {
   transformed?: undefined
+  manips?: undefined
 }
 type ComposerImageWithTransformation = ComposerImageBase & {
   transformed: ImageMeta
-  transformations?: ImageTransformation
+  manips?: ImageTransformation
 }
 
 export type ComposerImage =
@@ -161,13 +156,7 @@ export async function manipulateImage(
   img: ComposerImage,
   trans: ImageTransformation,
 ): Promise<ComposerImage> {
-  const rawActions: (Action | undefined)[] = [
-    trans.extent && {extent: trans.extent},
-    trans.flip && {flip: trans.flip},
-    trans.rotate !== undefined ? {rotate: trans.rotate} : undefined,
-    trans.resize && {resize: trans.resize},
-    trans.crop && {crop: trans.crop},
-  ]
+  const rawActions: (Action | undefined)[] = [trans.crop && {crop: trans.crop}]
 
   const actions = rawActions.filter((a): a is Action => a !== undefined)
 
@@ -193,7 +182,7 @@ export async function manipulateImage(
       height: result.height,
       mime: 'image/png',
     },
-    transformations: trans,
+    manips: trans,
   }
 }
 

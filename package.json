@@ -164,6 +164,7 @@
     "react": "18.2.0",
     "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
+    "react-image-crop": "^11.0.5",
     "react-keyed-flatten-children": "^3.0.0",
     "react-native": "0.73.2",
     "react-native-date-picker": "^4.4.0",
