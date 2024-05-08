@@ -12,8 +12,6 @@ import {
   useMutation,
   useQuery,
 } from '@tanstack/react-query'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -246,25 +244,6 @@ export function usePinnedFeedsInfos() {
   const {getAgent} = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedUris = preferences?.feeds?.pinned ?? []
-  const {_} = useLingui()
-
-  const FOLLOWING_FEED_STUB: FeedSourceInfo = {
-    type: 'feed',
-    displayName: _(msg`Following`),
-    uri: '',
-    route: {
-      href: '/',
-      name: 'Home',
-      params: {},
-    },
-    cid: '',
-    avatar: '',
-    description: new RichText({text: ''}),
-    creatorDid: '',
-    creatorHandle: '',
-    likeCount: 0,
-    likeUri: '',
-  }
 
   return useQuery({
     staleTime: STALE.INFINITY,
