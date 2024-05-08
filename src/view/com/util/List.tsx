@@ -25,6 +25,7 @@ export type ListProps<ItemT> = Omit<
   onRefresh?: () => void
   onItemSeen?: (item: ItemT) => void
   containWeb?: boolean
+  sideBorders?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
