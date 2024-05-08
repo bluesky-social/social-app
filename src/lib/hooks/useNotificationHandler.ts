@@ -1,19 +1,18 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
+import {useNavigation} from '@react-navigation/native'
 import {QueryClient} from '@tanstack/react-query'
-import EventEmitter from 'eventemitter3'
 
 import {logger} from '#/logger'
 import {track} from 'lib/analytics/analytics'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {logEvent} from 'lib/statsig/statsig'
+import {useCurrentConvoId} from 'state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from 'state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from 'state/queries/notifications/unread'
 import {truncateAndInvalidate} from 'state/queries/util'
 import {useSession} from 'state/session'
 import {resetToTab} from '#/Navigation'
-
-export const emitter = new EventEmitter()
 
 type NotificationReason =
   | 'like'
@@ -46,18 +45,10 @@ const DEFAULT_HANDLER_OPTIONS = {
 export function useNotificationsListener(queryClient: QueryClient) {
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
-  // const navigation = useNavigation()
+  const navigation = useNavigation()
+  const {currentConvoId} = useCurrentConvoId()
 
   useEffect(() => {
-    //<editor-fold desc="update the currently visible conversation">
-    let convoId: string | null = null
-    const onSetChat = (_convoId: string | null) => {
-      console.log(_convoId)
-      convoId = _convoId
-    }
-    emitter.addListener('setChat', onSetChat)
-    //</editor-fold>
-
     //<editor-fold desc="determine when to show notifications while app is foregrounded">
     Notifications.setNotificationHandler({
       handleNotification: async e => {
@@ -74,7 +65,7 @@ export function useNotificationsListener(queryClient: QueryClient) {
         if (
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did &&
-          convoId !== payload.convoId
+          currentConvoId !== payload.convoId
         ) {
           return {
             shouldShowAlert: true,
@@ -103,11 +94,13 @@ export function useNotificationsListener(queryClient: QueryClient) {
             // TODO what goes in context?
             onPressSwitchAccount(account, 'SwitchAccount')
           } else {
-            // navigation.navigate('MessagesConversation', {
-            //   conversation: payload.convoId,
-            // })
           }
         } else {
+          console.log('should nav')
+          navigation.navigate('MessagesTab', {
+            screen: 'MessagesConversation',
+            conversation: payload.convoId,
+          })
         }
       } else {
         resetToTab('NotificationsTab')
@@ -176,8 +169,14 @@ export function useNotificationsListener(queryClient: QueryClient) {
     //</editor-fold>
 
     return () => {
-      emitter.removeListener('setChat', onSetChat)
       responseReceivedListener.remove()
     }
-  }, [queryClient, currentAccount, accounts, onPressSwitchAccount])
+  }, [
+    queryClient,
+    currentAccount,
+    accounts,
+    onPressSwitchAccount,
+    currentConvoId,
+    navigation,
+  ])
 }
