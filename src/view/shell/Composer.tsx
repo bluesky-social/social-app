@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
 
-import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useComposerState} from 'state/shell/composer'
@@ -14,10 +13,6 @@ export const Composer = ({winHeight}: {winHeight: number}) => {
 
   useEffect(() => {
     if (state) {
-      if (process.env.NODE_ENV !== 'development') {
-        purgeTemporaryImageFiles()
-      }
-
       Animated.timing(initInterp, {
         toValue: 1,
         duration: 300,
