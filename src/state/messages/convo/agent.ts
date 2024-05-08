@@ -210,6 +210,7 @@ export class Convo {
           case ConvoDispatchEvent.Init: {
             this.status = ConvoStatus.Initializing
             this.setup()
+            this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
         }
@@ -225,15 +226,18 @@ export class Convo {
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
             this.fetchMessageHistory()
+            this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
             break
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.withdrawRequestedPollInterval()
             break
           }
         }
@@ -243,19 +247,23 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Resume: {
             this.refreshConvo()
+            this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
+            this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
             break
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.withdrawRequestedPollInterval()
             break
           }
         }
@@ -272,15 +280,18 @@ export class Convo {
               this.status = ConvoStatus.Initializing
               this.setup()
             }
+            this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.withdrawRequestedPollInterval()
             break
           }
         }
@@ -288,20 +299,12 @@ export class Convo {
       }
       case ConvoStatus.Suspended: {
         switch (action.event) {
-          // TODO truncate history if needed
           case ConvoDispatchEvent.Init: {
-            if (this.convo) {
-              this.status = ConvoStatus.Ready
-              this.refreshConvo()
-            } else {
-              this.status = ConvoStatus.Initializing
-              this.setup()
-            }
+            this.reset()
             break
           }
           case ConvoDispatchEvent.Resume: {
-            this.status = ConvoStatus.Ready
-            this.refreshConvo()
+            this.reset()
             break
           }
           case ConvoDispatchEvent.Error: {
@@ -414,22 +417,18 @@ export class Convo {
 
   init() {
     this.dispatch({event: ConvoDispatchEvent.Init})
-    this.requestPollInterval(ACTIVE_POLL_INTERVAL)
   }
 
   resume() {
     this.dispatch({event: ConvoDispatchEvent.Resume})
-    this.requestPollInterval(ACTIVE_POLL_INTERVAL)
   }
 
   background() {
     this.dispatch({event: ConvoDispatchEvent.Background})
-    this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
   }
 
   suspend() {
     this.dispatch({event: ConvoDispatchEvent.Suspend})
-    this.withdrawRequestedPollInterval()
     DEBUG_ACTIVE_CHAT = undefined
   }
 
