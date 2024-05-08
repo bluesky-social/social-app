@@ -46,6 +46,7 @@ const DEFAULT_HANDLER_OPTIONS = {
   shouldSetBadge: false,
 }
 
+// This needs to stay outside the hook to persist between account switches
 let storedPayload: NotificationRecord | undefined
 
 export function useNotificationsHandler() {
@@ -62,7 +63,7 @@ export function useNotificationsHandler() {
       if (!payload) return
 
       if (payload.reason === 'chat-message') {
-        if (payload.recipientDid !== currentAccount?.did) {
+        if (payload.recipientDid !== currentAccount?.did && !storedPayload) {
           storedPayload = payload
           const account = accounts.find(a => a.did === payload.recipientDid)
           if (account) {
@@ -140,6 +141,9 @@ export function useNotificationsHandler() {
             shouldSetBadge: false,
           }
         }
+
+        // Any notification other than a chat message should invalidate the unread page
+        invalidateCachedUnreadPage()
         return DEFAULT_HANDLER_OPTIONS
       },
     })
