@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-07 22:58+0900\n"
+"PO-Revision-Date: 2024-05-08 10:12+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -65,7 +65,7 @@ msgstr "{0, plural, other {返信 (#件の返信)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:339
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, other {再投稿}}"
+msgstr "{0, plural, other {リポスト}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
