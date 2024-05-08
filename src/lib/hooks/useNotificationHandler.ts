@@ -53,16 +53,11 @@ export function useNotificationsHandler() {
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
-  const {currentConvoId: currentConvoIdFromState} = useCurrentConvoId()
+  const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  const currentConvoId = useRef<string | undefined>(currentConvoIdFromState)
   const handleNotification = useRef<(payload?: NotificationRecord) => void>()
-
-  useEffect(() => {
-    currentConvoId.current = currentConvoIdFromState
-  }, [currentConvoIdFromState])
 
   useEffect(() => {
     handleNotification.current = (payload?: NotificationRecord) => {
@@ -149,17 +144,14 @@ export function useNotificationsHandler() {
         if (
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did &&
-          currentConvoId.current !== payload.convoId
+          currentConvoId !== payload.convoId
         ) {
           return {
             shouldShowAlert: true,
             shouldPlaySound: false,
             shouldSetBadge: false,
           }
-        } else {
-          invalidateCachedUnreadPage()
         }
-
         return DEFAULT_HANDLER_OPTIONS
       },
     })
@@ -216,5 +208,5 @@ export function useNotificationsHandler() {
     return () => {
       responseReceivedListener.remove()
     }
-  }, [queryClient, currentAccount])
+  }, [queryClient, currentAccount, currentConvoId])
 }
