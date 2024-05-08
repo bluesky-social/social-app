@@ -235,7 +235,6 @@ export class Convo {
   private headerItems: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
-  private pendingPoll: Promise<void> | undefined
   private nextPoll: NodeJS.Timeout | undefined
 
   convoId: string
