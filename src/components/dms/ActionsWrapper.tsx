@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import Animated, {
   cancelAnimation,
@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
+import {HITSLOP_10} from 'lib/constants'
 import {useHaptics} from 'lib/haptics'
 import {atoms as a} from '#/alf'
 import {MessageMenu} from '#/components/dms/MessageMenu'
@@ -37,12 +38,12 @@ export function ActionsWrapper({
 
   // Reanimated's `runOnJS` doesn't like refs, so we can't use `runOnJS(menuControl.open)()`. Instead, we'll use this
   // function
-  const open = useCallback(() => {
+  const open = React.useCallback(() => {
     Keyboard.dismiss()
     menuControl.open()
   }, [menuControl])
 
-  const shrink = useCallback(() => {
+  const shrink = React.useCallback(() => {
     'worklet'
     cancelAnimation(scale)
     scale.value = withTiming(1, {duration: 200}, () => {
@@ -52,7 +53,7 @@ export function ActionsWrapper({
 
   const grow = React.useCallback(() => {
     'worklet'
-    scale.value = withTiming(1.05, {duration: 750}, finished => {
+    scale.value = withTiming(1.05, {duration: 450}, finished => {
       if (!finished) return
       animationDidComplete.value = true
       runOnJS(playHaptic)()
@@ -74,7 +75,8 @@ export function ActionsWrapper({
         style={animatedStyle}
         unstable_pressDelay={200}
         onPressIn={grow}
-        onTouchEnd={shrink}>
+        onTouchEnd={shrink}
+        hitSlop={HITSLOP_10}>
         {children}
       </AnimatedPressable>
       <MessageMenu message={message} control={menuControl} hideTrigger={true} />
