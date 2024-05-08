@@ -55,8 +55,8 @@ type OEmbedResponse struct {
 	AuthorURL    string `json:"author_url,omitempty"`
 	ProviderName string `json:"provider_url,omitempty"`
 	CacheAge     int    `json:"cache_age,omitempty"`
-	Width        int    `json:"width,omitempty"`
-	Height       *int   `json:"height,omitempty"`
+	Width        *int   `json:"width"`
+	Height       *int   `json:"height"`
 	HTML         string `json:"html,omitempty"`
 }
 
@@ -122,14 +122,20 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 	}
 
 	// TODO: do we actually do something with width?
-	width := 550
+	width := 600
 	maxWidthParam := c.QueryParam("maxwidth")
 	if maxWidthParam != "" {
 		maxWidthInt, err := strconv.Atoi(maxWidthParam)
-		if err != nil || maxWidthInt < 220 || maxWidthInt > 550 {
-			return c.String(http.StatusBadRequest, "Invalid maxwidth (expected integer between 220 and 550)")
+		if err != nil {
+			return c.String(http.StatusBadRequest, "Invalid maxwidth (expected integer)")
 		}
-		width = maxWidthInt
+		if maxWidthInt < 220 {
+			width = 220
+		} else if maxWidthInt > 600 {
+			width = 600
+		} else {
+			width = maxWidthInt
+		}
 	}
 	// NOTE: maxheight ignored
 
@@ -165,7 +171,7 @@ func (srv *Server) WebOEmbed(c echo.Context) error {
 		AuthorURL:    fmt.Sprintf("https://bsky.app/profile/%s", post.Author.Handle),
 		ProviderName: "Bluesky Social",
 		CacheAge:     86400,
-		Width:        width,
+		Width:        &width,
 		Height:       nil,
 		HTML:         html,
 	}

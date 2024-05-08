@@ -1,7 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
-  Linking,
   Platform,
   Pressable,
   StyleSheet,
@@ -20,14 +18,10 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {isIOS, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {clearLegacyStorage} from '#/state/persisted/legacy'
 import {clear as clearStorage} from '#/state/persisted/store'
-import {
-  useRequireAltTextEnabled,
-  useSetRequireAltTextEnabled,
-} from '#/state/preferences'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
@@ -45,7 +39,7 @@ import {
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
-import * as AppInfo from 'lib/app-info'
+import {appVersion, BUNDLE_DATE, bundleInfo} from 'lib/app-info'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
@@ -56,10 +50,6 @@ import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
-import {
-  useHapticsDisabled,
-  useSetHapticsDisabled,
-} from 'state/preferences/disable-haptics'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
@@ -69,22 +59,40 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
+import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
-function SettingsAccountCard({account}: {account: SessionAccount}) {
+function SettingsAccountCard({
+  account,
+  pendingDid,
+  onPressSwitchAccount,
+}: {
+  account: SessionAccount
+  pendingDid: string | null
+  onPressSwitchAccount: (
+    account: SessionAccount,
+    logContext: 'Settings',
+  ) => void
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isSwitchingAccounts, currentAccount} = useSession()
+  const t = useTheme()
+  const {currentAccount} = useSession()
   const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
-  const {onPressSwitchAccount} = useAccountSwitcher()
 
   const contents = (
-    <View style={[pal.view, styles.linkCard]}>
+    <View
+      style={[
+        pal.view,
+        styles.linkCard,
+        account.did === pendingDid && t.atoms.bg_contrast_25,
+      ]}>
       <View style={styles.avi}>
         <UserAvatar
           size={40}
@@ -116,7 +124,8 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
           }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
-          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
+          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}
+          activeOpacity={0.8}>
           <Text type="lg" style={pal.link}>
             <Trans>Sign out</Trans>
           </Text>
@@ -142,13 +151,12 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       testID={`switchToAccountBtn-${account.handle}`}
       key={account.did}
       onPress={
-        isSwitchingAccounts
-          ? undefined
-          : () => onPressSwitchAccount(account, 'Settings')
+        pendingDid ? undefined : () => onPressSwitchAccount(account, 'Settings')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}
-      accessibilityHint={_(msg`Switches the account you are logged in to`)}>
+      accessibilityHint={_(msg`Switches the account you are logged in to`)}
+      activeOpacity={0.8}>
       {contents}
     </TouchableOpacity>
   )
@@ -162,23 +170,21 @@ export function SettingsScreen({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const requireAltTextEnabled = useRequireAltTextEnabled()
-  const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
-  const isHapticsDisabled = useHapticsDisabled()
-  const setHapticsDisabled = useSetHapticsDisabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
-  const {isSwitchingAccounts, accounts, currentAccount} = useSession()
+  const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
+  const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
+  const isSwitchingAccounts = !!pendingDid
 
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
@@ -249,7 +255,7 @@ export function SettingsScreen({}: Props) {
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
-      `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
+      `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
   }, [_])
@@ -282,9 +288,9 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('SavedFeeds')
   }, [navigation])
 
-  const onPressStatusPage = React.useCallback(() => {
-    Linking.openURL(STATUS_PAGE_URL)
-  }, [])
+  const onPressAccessibilitySettings = React.useCallback(() => {
+    navigation.navigate('AccessibilitySettings')
+  }, [navigation])
 
   const onPressBirthday = React.useCallback(() => {
     birthdayControl.open()
@@ -318,7 +324,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={[s.hContentRegion]}
+        style={s.hContentRegion}
         contentContainerStyle={isMobile && pal.viewLight}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
@@ -370,64 +376,52 @@ export function SettingsScreen({}: Props) {
             <View style={styles.spacer20} />
 
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
+
+            <View style={[s.flexRow, styles.heading]}>
+              <Text type="xl-bold" style={pal.text}>
+                <Trans>Signed in as</Trans>
+              </Text>
+              <View style={s.flex1} />
+            </View>
+            <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+              <SettingsAccountCard
+                account={currentAccount}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            </View>
           </>
         ) : null}
-        <View style={[s.flexRow, styles.heading]}>
-          <Text type="xl-bold" style={pal.text}>
-            <Trans>Signed in as</Trans>
-          </Text>
-          <View style={s.flex1} />
-        </View>
 
-        {isSwitchingAccounts ? (
-          <View style={[pal.view, styles.linkCard]}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <SettingsAccountCard account={currentAccount!} />
-        )}
+        <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+          {accounts
+            .filter(a => a.did !== currentAccount?.did)
+            .map(account => (
+              <SettingsAccountCard
+                key={account.did}
+                account={account}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            ))}
 
-        {accounts
-          .filter(a => a.did !== currentAccount?.did)
-          .map(account => (
-            <SettingsAccountCard key={account.did} account={account} />
-          ))}
-
-        <TouchableOpacity
-          testID="switchToNewAccountBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Add account`)}
-          accessibilityHint={_(msg`Create a new Bluesky account`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="plus"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Add account</Trans>
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.spacer20} />
-
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Accessibility</Trans>
-        </Text>
-        <View style={[pal.view, styles.toggleCard]}>
-          <ToggleButton
-            type="default-light"
-            label={_(msg`Require alt text before posting`)}
-            labelType="lg"
-            isSelected={requireAltTextEnabled}
-            onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
-          />
+          <TouchableOpacity
+            testID="switchToNewAccountBtn"
+            style={[styles.linkCard, pal.view]}
+            onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Add account`)}
+            accessibilityHint={_(msg`Create a new Bluesky account`)}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="plus"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              <Trans>Add account</Trans>
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.spacer20} />
@@ -493,6 +487,72 @@ export function SettingsScreen({}: Props) {
           <Trans>Basics</Trans>
         </Text>
         <TouchableOpacity
+          testID="accessibilitySettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts ? undefined : onPressAccessibilitySettings
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Accessibility settings`)}
+          accessibilityHint={_(msg`Opens accessibility settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="universal-access"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Accessibility</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="languageSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressLanguageSettings}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Language settings`)}
+          accessibilityHint={_(msg`Opens configurable language settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="language"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Languages</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="moderationBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('Moderation')
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Moderation settings`)}
+          accessibilityHint={_(msg`Opens moderation settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <HandIcon style={pal.text} size={18} strokeWidth={6} />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Moderation</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           testID="preferencesHomeFeedButton"
           style={[
             styles.linkCard,
@@ -551,49 +611,6 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>My Saved Feeds</Trans>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          testID="languageSettingsBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={isSwitchingAccounts ? undefined : onPressLanguageSettings}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Language settings`)}
-          accessibilityHint={_(msg`Opens configurable language settings`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="language"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Languages</Trans>
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          testID="moderationBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={
-            isSwitchingAccounts
-              ? undefined
-              : () => navigation.navigate('Moderation')
-          }
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Moderation settings`)}
-          accessibilityHint={_(msg`Opens moderation settings`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <HandIcon style={pal.text} size={18} strokeWidth={6} />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Moderation</Trans>
           </Text>
         </TouchableOpacity>
 
@@ -689,19 +706,13 @@ export function SettingsScreen({}: Props) {
             />
           </View>
         )}
-        {isNative && (
-          <View style={[pal.view, styles.toggleCard]}>
-            <ToggleButton
-              type="default-light"
-              label={
-                isIOS ? _(msg`Disable haptics`) : _(msg`Disable vibrations`)
-              }
-              labelType="lg"
-              isSelected={isHapticsDisabled}
-              onPress={() => setHapticsDisabled(!isHapticsDisabled)}
-            />
-          </View>
-        )}
+        <View style={styles.spacer20} />
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Two-factor authentication</Trans>
+        </Text>
+        <View style={[pal.view, styles.toggleCard]}>
+          <Email2FAToggle />
+        </View>
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Account</Trans>
@@ -854,17 +865,9 @@ export function SettingsScreen({}: Props) {
             accessibilityRole="button"
             onPress={onPressBuildInfo}>
             <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Version {AppInfo.appVersion}</Trans>
-            </Text>
-          </TouchableOpacity>
-          <Text type="sm" style={[pal.textLight]}>
-            &nbsp; &middot; &nbsp;
-          </Text>
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={onPressStatusPage}>
-            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Status page</Trans>
+              <Trans>
+                Version {appVersion} {bundleInfo}
+              </Trans>
             </Text>
           </TouchableOpacity>
         </View>
@@ -885,6 +888,12 @@ export function SettingsScreen({}: Props) {
             style={pal.link}
             href="https://bsky.social/about/support/privacy-policy"
             text={_(msg`Privacy Policy`)}
+          />
+          <TextLink
+            type="md"
+            style={pal.link}
+            href={STATUS_PAGE_URL}
+            text={_(msg`Status Page`)}
           />
         </View>
         <View style={s.footerSpacer} />
@@ -1031,7 +1040,6 @@ const styles = StyleSheet.create({
   footer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
     paddingLeft: 18,
   },
 })

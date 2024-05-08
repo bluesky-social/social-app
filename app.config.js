@@ -35,11 +35,6 @@ module.exports = function (config) {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
-  const DIST_BUILD_NUMBER =
-    PLATFORM === 'android'
-      ? process.env.BSKY_ANDROID_VERSION_CODE
-      : process.env.BSKY_IOS_BUILD_NUMBER
-
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
@@ -50,6 +45,10 @@ module.exports = function (config) {
     ? 'production'
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
+
+  const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
+    IS_DEV ? 'dev' : ''
+  }`
 
   return {
     expo: {
@@ -65,6 +64,8 @@ module.exports = function (config) {
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
       splash: SPLASH_CONFIG,
+      // hsl(211, 99%, 53%), same as palette.default.brandText
+      primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
@@ -89,6 +90,29 @@ module.exports = function (config) {
         },
         entitlements: {
           'com.apple.security.application-groups': 'group.app.bsky',
+        },
+        privacyManifests: {
+          NSPrivacyAccessedAPITypes: [
+            {
+              NSPrivacyAccessedAPIType:
+                'NSPrivacyAccessedAPICategoryFileTimestamp',
+              NSPrivacyAccessedAPITypeReasons: ['C617.1', '3B52.1', '0A2A.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryDiskSpace',
+              NSPrivacyAccessedAPITypeReasons: ['E174.1', '85F4.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType:
+                'NSPrivacyAccessedAPICategorySystemBootTime',
+              NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
+            },
+            {
+              NSPrivacyAccessedAPIType:
+                'NSPrivacyAccessedAPICategoryUserDefaults',
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+            },
+          ],
         },
       },
       androidStatusBar: {
@@ -181,6 +205,7 @@ module.exports = function (config) {
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
@@ -217,7 +242,7 @@ module.exports = function (config) {
               organization: 'blueskyweb',
               project: 'react-native',
               release: VERSION,
-              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
+              dist: SENTRY_DIST,
             },
           },
         ],

@@ -47,6 +47,7 @@ export interface EditImageModal {
 export interface CropImageModal {
   name: 'crop-image'
   uri: string
+  dimensions?: {width: number; height: number}
   onSelect: (img?: RNImage) => void
 }
 
@@ -107,6 +108,7 @@ export interface PostLanguagesSettingsModal {
 export interface VerifyEmailModal {
   name: 'verify-email'
   showReminder?: boolean
+  onSuccess?: () => void
 }
 
 export interface ChangeEmailModal {

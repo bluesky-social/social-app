@@ -23,12 +23,18 @@ func (srv *Server) postEmbedHTML(postView *appbsky.FeedDefs_PostView) (string, e
 		return "", err
 	}
 
-	const tpl = `<blockquote class="bluesky-embed" data-bluesky-uri="{{ .PostURI }}" data-bluesky-cid="{{ .PostCID }}"><p{{ if .PostLang }} lang="{{ .PostLang }}"{{ end }}>{{ .PostText }}</p>&mdash; {{ .PostAuthor }} {{ .PostIndexedAt }}</blockquote><script async src="{{ .WidgetURL }}" charset="utf-8"></script>`
+	const tpl = `<blockquote class="bluesky-embed" data-bluesky-uri="{{ .PostURI }}" data-bluesky-cid="{{ .PostCID }}"><p{{ if .PostLang }} lang="{{ .PostLang }}"{{ end }}>{{ .PostText }}</p>&mdash; <a href="{{ .ProfileURL }}">{{ .PostAuthor }}</a> <a href="{{ .PostURL }}">{{ .PostIndexedAt }}</a></blockquote><script async src="{{ .WidgetURL }}" charset="utf-8"></script>`
 
 	t, err := template.New("snippet").Parse(tpl)
 	if err != nil {
 		log.Error("template parse error", "err", err)
 		return "", err
+	}
+
+	sortAt := postView.IndexedAt
+	createdAt, err := syntax.ParseDatetime(post.CreatedAt)
+	if nil == err && createdAt.String() < sortAt {
+		sortAt = createdAt.String()
 	}
 
 	var lang string
@@ -41,8 +47,6 @@ func (srv *Server) postEmbedHTML(postView *appbsky.FeedDefs_PostView) (string, e
 	} else {
 		authorName = fmt.Sprintf("@%s", postView.Author.Handle)
 	}
-	fmt.Println(postView.Uri)
-	fmt.Println(fmt.Sprintf("%s", postView.Uri))
 	data := struct {
 		PostURI       template.URL
 		PostCID       string
@@ -50,6 +54,8 @@ func (srv *Server) postEmbedHTML(postView *appbsky.FeedDefs_PostView) (string, e
 		PostText      string
 		PostAuthor    string
 		PostIndexedAt string
+		ProfileURL    template.URL
+		PostURL       template.URL
 		WidgetURL     template.URL
 	}{
 		PostURI:       template.URL(postView.Uri),
@@ -57,7 +63,9 @@ func (srv *Server) postEmbedHTML(postView *appbsky.FeedDefs_PostView) (string, e
 		PostLang:      lang,
 		PostText:      post.Text,
 		PostAuthor:    authorName,
-		PostIndexedAt: postView.IndexedAt, // TODO: createdAt?
+		PostIndexedAt: sortAt,
+		ProfileURL:    template.URL(fmt.Sprintf("https://bsky.app/profile/%s?ref_src=embed", aturi.Authority())),
+		PostURL:       template.URL(fmt.Sprintf("https://bsky.app/profile/%s/post/%s?ref_src=embed", aturi.Authority(), aturi.RecordKey())),
 		WidgetURL:     template.URL("https://embed.bsky.app/static/embed.js"),
 	}
 

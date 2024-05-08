@@ -24,6 +24,7 @@ import {
 } from '#/lib/icons'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
+import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -39,9 +40,17 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
 import {styles} from './BottomBarStyles'
 
-type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
+type TabOptions =
+  | 'Home'
+  | 'Search'
+  | 'Notifications'
+  | 'MyProfile'
+  | 'Feeds'
+  | 'Messages'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
@@ -50,8 +59,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {footerHeight} = useShellLayout()
-  const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
-    useNavigationTabState()
+  const {
+    isAtHome,
+    isAtSearch,
+    isAtFeeds,
+    isAtNotifications,
+    isAtMyProfile,
+    isAtMessages,
+  } = useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -60,6 +75,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
+  const gate = useGate()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -102,6 +118,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   )
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
+  }, [onPressTab])
+
+  const onPressMessages = React.useCallback(() => {
+    onPressTab('Messages')
   }, [onPressTab])
 
   const onLongPressProfile = React.useCallback(() => {
@@ -220,6 +240,28 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   : `${numUnreadNotifications} unread`
               }
             />
+            {gate('dms') && (
+              <Btn
+                testID="bottomBarMessagesBtn"
+                icon={
+                  isAtMessages ? (
+                    <EnvelopeFilled
+                      size="lg"
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  ) : (
+                    <Envelope
+                      size="lg"
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  )
+                }
+                onPress={onPressMessages}
+                accessibilityRole="tab"
+                accessibilityLabel={_(msg`Messages`)}
+                accessibilityHint=""
+              />
+            )}
             <Btn
               testID="bottomBarProfileBtn"
               icon={

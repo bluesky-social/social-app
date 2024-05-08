@@ -1,9 +1,9 @@
 name: build-and-push-bskyweb-aws
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-      - 3p-moderators
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
@@ -54,3 +54,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+        env:
+          EXPO_PUBLIC_BUNDLE_IDENTIFIER: $(git rev-parse --short HEAD)
+          EXPO_PUBLIC_BUNDLE_DATE: $(date -u +"%y%m%d%H")

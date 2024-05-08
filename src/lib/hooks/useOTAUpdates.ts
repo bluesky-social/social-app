@@ -12,7 +12,6 @@ import {
 
 import {logger} from '#/logger'
 import {IS_TESTFLIGHT} from 'lib/app-info'
-import {useGate} from 'lib/statsig/statsig'
 import {isIOS} from 'platform/detection'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
@@ -31,8 +30,7 @@ async function setExtraParams() {
 }
 
 export function useOTAUpdates() {
-  const shouldReceiveUpdates =
-    useGate('receive_updates') && isEnabled && !__DEV__
+  const shouldReceiveUpdates = isEnabled && !__DEV__
 
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)

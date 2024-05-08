@@ -2,11 +2,13 @@ import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   useCameraPermission,
@@ -15,6 +17,7 @@ import {
 import {makeProfileLink} from 'lib/routes/links'
 import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {
@@ -47,8 +50,8 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  did: string
-  handle: string
+  onBeforePress?: () => void
+  profile: AppBskyActorDefs.ProfileViewBasic
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -281,15 +284,21 @@ let EditableUserAvatar = ({
       return
     }
 
-    const croppedImage = await openCropper({
-      mediaType: 'photo',
-      cropperCircleOverlay: true,
-      height: item.height,
-      width: item.width,
-      path: item.path,
-    })
+    try {
+      const croppedImage = await openCropper({
+        mediaType: 'photo',
+        cropperCircleOverlay: true,
+        height: item.height,
+        width: item.width,
+        path: item.path,
+      })
 
-    onSelectNewAvatar(croppedImage)
+      onSelectNewAvatar(croppedImage)
+    } catch (e: any) {
+      if (!String(e).includes('Canceled')) {
+        logger.error('Failed to crop banner', {error: e})
+      }
+    }
   }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
 
   const onRemoveAvatar = React.useCallback(() => {
@@ -371,19 +380,30 @@ let EditableUserAvatar = ({
 EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
 
-let PreviewableUserAvatar = (
-  props: PreviewableUserAvatarProps,
-): React.ReactNode => {
+let PreviewableUserAvatar = ({
+  moderation,
+  profile,
+  onBeforePress,
+  ...rest
+}: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
+  const queryClient = useQueryClient()
+
+  const onPress = React.useCallback(() => {
+    onBeforePress?.()
+    precacheProfile(queryClient, profile)
+  }, [profile, queryClient, onBeforePress])
+
   return (
-    <ProfileHoverCard did={props.did}>
+    <ProfileHoverCard did={profile.did}>
       <Link
         label={_(msg`See profile`)}
         to={makeProfileLink({
-          did: props.did,
-          handle: props.handle,
-        })}>
-        <UserAvatar {...props} />
+          did: profile.did,
+          handle: profile.handle,
+        })}
+        onPress={onPress}>
+        <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
       </Link>
     </ProfileHoverCard>
   )

@@ -34,10 +34,17 @@ export function createPortalGroup() {
       setOutlet(<>{Object.values(map.current)}</>)
     }, [])
 
+    const contextValue = React.useMemo(
+      () => ({
+        outlet,
+        append,
+        remove,
+      }),
+      [outlet, append, remove],
+    )
+
     return (
-      <Context.Provider value={{outlet, append, remove}}>
-        {props.children}
-      </Context.Provider>
+      <Context.Provider value={contextValue}>{props.children}</Context.Provider>
     )
   }
 

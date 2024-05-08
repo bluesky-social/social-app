@@ -1,15 +1,28 @@
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
+  BskyAgent,
 } from '@atproto/api'
+
 import {FeedAPI, FeedAPIResponse} from './types'
-import {getAgent} from '#/state/session'
 
 export class AuthorFeedAPI implements FeedAPI {
-  constructor(public params: GetAuthorFeed.QueryParams) {}
+  getAgent: () => BskyAgent
+  params: GetAuthorFeed.QueryParams
+
+  constructor({
+    getAgent,
+    feedParams,
+  }: {
+    getAgent: () => BskyAgent
+    feedParams: GetAuthorFeed.QueryParams
+  }) {
+    this.getAgent = getAgent
+    this.params = feedParams
+  }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await getAgent().getAuthorFeed({
+    const res = await this.getAgent().getAuthorFeed({
       ...this.params,
       limit: 1,
     })
@@ -23,7 +36,7 @@ export class AuthorFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await getAgent().getAuthorFeed({
+    const res = await this.getAgent().getAuthorFeed({
       ...this.params,
       cursor,
       limit,

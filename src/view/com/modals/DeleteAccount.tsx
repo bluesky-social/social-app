@@ -11,7 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
-import {getAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
@@ -30,6 +30,7 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const {clearCurrentAccount, removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
@@ -83,26 +84,26 @@ export function Component({}: {}) {
       <ScrollView style={[pal.view]} keyboardShouldPersistTaps="handled">
         <View style={[styles.titleContainer, pal.view]}>
           <Text type="title-xl" style={[s.textCenter, pal.text]}>
-            <Trans>Delete Account</Trans>
+            <Trans>
+              Delete Account{' '}
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                "
+              </Text>
+              <Text
+                type="title-xl"
+                numberOfLines={1}
+                style={[
+                  isMobile ? styles.titleMobile : styles.titleDesktop,
+                  pal.text,
+                  s.bold,
+                ]}>
+                {currentAccount?.handle}
+              </Text>
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                "
+              </Text>
+            </Trans>
           </Text>
-          <View style={[pal.view, s.flexRow]}>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {' "'}
-            </Text>
-            <Text
-              type="title-xl"
-              numberOfLines={1}
-              style={[
-                isMobile ? styles.titleMobile : styles.titleDesktop,
-                pal.text,
-                s.bold,
-              ]}>
-              {currentAccount?.handle}
-            </Text>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {'"'}
-            </Text>
-          </View>
         </View>
         {!isEmailSent ? (
           <>
