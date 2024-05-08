@@ -9,6 +9,7 @@ import {useLingui} from '@lingui/react'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {MessagesProvider} from '#/state/messages'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
@@ -84,20 +85,22 @@ function InnerApp() {
             key={currentAccount?.did}>
             <QueryProvider currentDid={currentAccount?.did}>
               <StatsigProvider>
-                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                <LabelDefsProvider>
-                  <ModerationOptsProvider>
-                    <LoggedOutViewProvider>
-                      <SelectedFeedProvider>
-                        <UnreadNotifsProvider>
-                          <SafeAreaProvider>
-                            <Shell />
-                          </SafeAreaProvider>
-                        </UnreadNotifsProvider>
-                      </SelectedFeedProvider>
-                    </LoggedOutViewProvider>
-                  </ModerationOptsProvider>
-                </LabelDefsProvider>
+                <MessagesProvider>
+                  {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                  <LabelDefsProvider>
+                    <ModerationOptsProvider>
+                      <LoggedOutViewProvider>
+                        <SelectedFeedProvider>
+                          <UnreadNotifsProvider>
+                            <SafeAreaProvider>
+                              <Shell />
+                            </SafeAreaProvider>
+                          </UnreadNotifsProvider>
+                        </SelectedFeedProvider>
+                      </LoggedOutViewProvider>
+                    </ModerationOptsProvider>
+                  </LabelDefsProvider>
+                </MessagesProvider>
               </StatsigProvider>
             </QueryProvider>
           </React.Fragment>

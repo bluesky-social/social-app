@@ -4,6 +4,8 @@ import {BskyAgent} from '@atproto-labs/api'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 
 import {Convo, ConvoParams, ConvoState} from '#/state/messages/convo'
+import {CurrentConvoIdProvider} from '#/state/messages/current-convo-id'
+import {MessagesEventBusProvider} from '#/state/messages/events'
 import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 
@@ -65,4 +67,12 @@ export function ChatProvider({
   }, [convo, isScreenFocused])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
+}
+
+export function MessagesProvider({children}: {children: React.ReactNode}) {
+  return (
+    <CurrentConvoIdProvider>
+      <MessagesEventBusProvider>{children}</MessagesEventBusProvider>
+    </CurrentConvoIdProvider>
+  )
 }
