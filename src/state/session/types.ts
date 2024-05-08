@@ -14,6 +14,7 @@ export type SessionApiContext = {
     email: string
     password: string
     handle: string
+    birthDate: Date
     inviteCode?: string
     verificationPhone?: string
     verificationCode?: string
