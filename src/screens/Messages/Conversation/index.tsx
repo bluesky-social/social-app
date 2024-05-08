@@ -5,11 +5,12 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {ChatProvider, useChat} from 'state/messages'
@@ -31,6 +32,16 @@ type Props = NativeStackScreenProps<
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
   const convoId = route.params.conversation
+  const {setCurrentConvoId} = useCurrentConvoId()
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentConvoId(convoId)
+      return () => {
+        setCurrentConvoId(undefined)
+      }
+    }, [convoId, setCurrentConvoId]),
+  )
 
   if (!gate('dms')) return <ClipClopGate />
 
