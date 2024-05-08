@@ -19,8 +19,8 @@ import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
+import {Error} from '#/components/Error'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
@@ -54,29 +54,30 @@ export function MessagesConversationScreen({route}: Props) {
 
 function Inner() {
   const convo = useConvo()
+  const {_} = useLingui()
 
   if (
     convo.status === ConvoStatus.Uninitialized ||
     convo.status === ConvoStatus.Initializing
   ) {
-    return <ListMaybePlaceholder isLoading />
+    return (
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header />
+        <ListMaybePlaceholder isLoading />
+      </CenteredView>
+    )
   }
 
   if (convo.status === ConvoStatus.Error) {
-    // TODO
     return (
-      <View>
-        <CenteredView style={{flex: 1}} sideBorders>
-          <Text>Something went wrong</Text>
-          <Button
-            label="Retry"
-            onPress={() => {
-              convo.error.retry()
-            }}>
-            <ButtonText>Retry</ButtonText>
-          </Button>
-        </CenteredView>
-      </View>
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header />
+        <Error
+          title={_(msg`Something went wrong`)}
+          message={_(msg`We couldn't load this conversation`)}
+          onRetry={() => convo.error.retry()}
+        />
+      </CenteredView>
     )
   }
 
@@ -86,7 +87,7 @@ function Inner() {
 
   return (
     <KeyboardProvider>
-      <CenteredView style={{flex: 1}} sideBorders>
+      <CenteredView style={a.flex_1} sideBorders>
         <Header profile={convo.recipients[0]} />
         <MessagesList />
       </CenteredView>
@@ -97,7 +98,7 @@ function Inner() {
 let Header = ({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile?: AppBskyActorDefs.ProfileViewBasic
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -152,12 +153,34 @@ let Header = ({
         <View style={{width: 30}} />
       )}
       <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-        <PreviewableUserAvatar size={32} profile={profile} />
-        <Text style={[a.text_lg, a.font_bold, a.text_center]}>
-          {profile.displayName}
-        </Text>
+        {profile ? (
+          <>
+            <PreviewableUserAvatar size={32} profile={profile} />
+            <Text style={[a.text_lg, a.font_bold, a.text_center]}>
+              {profile.displayName}
+            </Text>
+          </>
+        ) : (
+          <>
+            <View
+              style={[
+                {width: 32, height: 32},
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+              ]}
+            />
+            <View
+              style={[
+                {width: 120, height: 18},
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                a.mb_2xs,
+              ]}
+            />
+          </>
+        )}
       </View>
-      {convo.status === ConvoStatus.Ready ? (
+      {convo.status === ConvoStatus.Ready && profile ? (
         <ConvoMenu
           convo={convo.convo}
           profile={profile}
