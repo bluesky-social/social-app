@@ -15,6 +15,7 @@ import {
   manipulateAsync,
   SaveFormat,
 } from 'expo-image-manipulator'
+import {nanoid} from 'nanoid/non-secure'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
@@ -26,11 +27,15 @@ export type ImageTransformation = Partial<
   ActionCrop & ActionExtent & ActionFlip & ActionResize & ActionRotate
 >
 
-export type ImageSource = {
+export type ImageMeta = {
   path: string
   width: number
   height: number
   mime: string
+}
+
+export type ImageSource = ImageMeta & {
+  id: string
 }
 
 type ComposerImageBase = {
@@ -41,7 +46,7 @@ type ComposerImageWithoutTransformation = ComposerImageBase & {
   transformed?: undefined
 }
 type ComposerImageWithTransformation = ComposerImageBase & {
-  transformed: ImageSource
+  transformed: ImageMeta
   transformations?: ImageTransformation
 }
 
@@ -54,11 +59,12 @@ const imageCacheDirectory = isNative
   : null
 
 export async function createComposerImage(
-  raw: ImageSource,
+  raw: ImageMeta,
 ): Promise<ComposerImageWithoutTransformation> {
   return {
     alt: '',
     source: {
+      id: nanoid(),
       path: await moveIfNecessary(raw.path),
       width: raw.width,
       height: raw.height,
@@ -78,6 +84,7 @@ export function createInitialImages(
     return {
       alt: '',
       source: {
+        id: nanoid(),
         path: uri,
         width: width,
         height: height,
@@ -96,6 +103,7 @@ export async function pasteImage(
   return {
     alt: '',
     source: {
+      id: nanoid(),
       path: uri,
       width: width,
       height: height,
@@ -199,7 +207,7 @@ export function resetImageManipulation(
   return img
 }
 
-export async function compressImage(img: ComposerImage): Promise<ImageSource> {
+export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
   const source = img.transformed || img.source
 
   const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)

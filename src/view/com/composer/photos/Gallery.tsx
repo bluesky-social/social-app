@@ -91,7 +91,7 @@ const GalleryInner = ({images, containerInfo, onChange}: GalleryInnerProps) => {
         {images.map((image, index) => {
           return (
             <GalleryItem
-              key={index}
+              key={image.source.id}
               image={image}
               altTextControlStyle={altTextControlStyle}
               imageControlsStyle={imageControlsStyle}
