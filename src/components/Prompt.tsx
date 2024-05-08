@@ -43,7 +43,9 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
+          style={[
+            gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+          ]}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -60,12 +62,16 @@ export function TitleText({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function DescriptionText({children}: React.PropsWithChildren<{}>) {
+export function DescriptionText({
+  children,
+  selectable,
+}: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
+      selectable={selectable}
       style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
       {children}
     </Text>
@@ -123,6 +129,13 @@ export function Action({
   cta,
   testID,
 }: {
+  /**
+   * Callback to run when the action is pressed. The method is called _after_
+   * the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onPress: () => void
   color?: ButtonColor
   /**
@@ -165,6 +178,13 @@ export function Basic({
   description: string
   cancelButtonCta?: string
   confirmButtonCta?: string
+  /**
+   * Callback to run when the Confirm button is pressed. The method is called
+   * _after_ the dialog closes.
+   *
+   * Note: The dialog will close automatically when the action is pressed, you
+   * should NOT close the dialog as a side effect of this method.
+   */
   onConfirm: () => void
   confirmButtonColor?: ButtonColor
 }>) {

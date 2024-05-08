@@ -16,8 +16,8 @@ import {useModalControls} from '#/state/modals'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {useServiceQuery} from '#/state/queries/service'
 import {
-  getAgent,
   SessionAccount,
+  useAgent,
   useSession,
   useSessionApi,
 } from '#/state/session'
@@ -40,6 +40,7 @@ export type Props = {onChanged: () => void}
 
 export function Component(props: Props) {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const {
     isLoading,
     data: serviceInfo,
@@ -506,7 +507,9 @@ function CustomHandleForm({
           <Text type="xl-medium" style={[s.white, s.textCenter]}>
             {canSave
               ? _(msg`Update to ${handle}`)
-              : _(msg`Verify ${isDNSForm ? 'DNS Record' : 'Text File'}`)}
+              : isDNSForm
+              ? _(msg`Verify DNS Record`)
+              : _(msg`Verify Text File`)}
           </Text>
         )}
       </Button>

@@ -1,5 +1,6 @@
 import {createServer as createHTTPServer} from 'node:http'
 import {parse} from 'node:url'
+
 import {createServer, TestPDS} from '../jest/test-pds'
 
 async function main() {
@@ -14,8 +15,7 @@ async function main() {
       await server?.close()
       console.log('Starting new server')
       const inviteRequired = url?.query && 'invite' in url.query
-      const phoneRequired = url?.query && 'phone' in url.query
-      server = await createServer({inviteRequired, phoneRequired})
+      server = await createServer({inviteRequired})
       console.log('Listening at', server.pdsUrl)
       if (url?.query) {
         if ('users' in url.query) {

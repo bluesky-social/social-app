@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {Gate} from '#/lib/statsig/gates'
 import {useGate} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -10,7 +11,7 @@ type SetContext = (v: string) => void
 const stateContext = React.createContext<StateContext>('home')
 const setContext = React.createContext<SetContext>((_: string) => {})
 
-function getInitialFeed(startSessionWithFollowing: boolean) {
+function getInitialFeed(gate: (gateName: Gate) => boolean) {
   if (isWeb) {
     if (window.location.pathname === '/') {
       const params = new URLSearchParams(window.location.search)
@@ -26,7 +27,7 @@ function getInitialFeed(startSessionWithFollowing: boolean) {
       return feedFromSession
     }
   }
-  if (!startSessionWithFollowing) {
+  if (!gate('start_session_with_following_v2')) {
     const feedFromPersisted = persisted.get('lastSelectedHomeFeed')
     if (feedFromPersisted) {
       // Fall back to the last chosen one across all tabs.
@@ -37,10 +38,8 @@ function getInitialFeed(startSessionWithFollowing: boolean) {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const startSessionWithFollowing = useGate('start_session_with_following')
-  const [state, setState] = React.useState(() =>
-    getInitialFeed(startSessionWithFollowing),
-  )
+  const gate = useGate()
+  const [state, setState] = React.useState(() => getInitialFeed(gate))
 
   const saveState = React.useCallback((feed: string) => {
     setState(feed)

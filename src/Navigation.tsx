@@ -25,6 +25,7 @@ import {
   FeedsTabNavigatorParams,
   FlatNavigatorParams,
   HomeTabNavigatorParams,
+  MessagesTabNavigatorParams,
   MyProfileTabNavigatorParams,
   NotificationsTabNavigatorParams,
   SearchTabNavigatorParams,
@@ -46,6 +47,9 @@ import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
 import {router} from './routes'
+import {MessagesConversationScreen} from './screens/Messages/Conversation'
+import {MessagesScreen} from './screens/Messages/List'
+import {MessagesSettingsScreen} from './screens/Messages/Settings'
 import {useModalControls} from './state/modals'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
@@ -53,6 +57,7 @@ import {
   setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
 } from './state/shell/reminders'
+import {AccessibilitySettingsScreen} from './view/screens/AccessibilitySettings'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
 import {DebugModScreen} from './view/screens/DebugMod'
@@ -91,6 +96,8 @@ const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
 const MyProfileTab =
   createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
+const MessagesTab =
+  createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
@@ -193,7 +200,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
-        options={{title: title(msg`Feed`), requireAuth: true}}
+        options={{title: title(msg`Feed`)}}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
@@ -277,9 +284,27 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="AccessibilitySettings"
+        getComponent={() => AccessibilitySettingsScreen}
+        options={{
+          title: title(msg`Accessibility Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="Hashtag"
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
+      />
+      <Stack.Screen
+        name="MessagesConversation"
+        getComponent={() => MessagesConversationScreen}
+        options={{title: title(msg`Chat`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="MessagesSettings"
+        getComponent={() => MessagesSettingsScreen}
+        options={{title: title(msg`Messaging settings`), requireAuth: true}}
       />
     </>
   )
@@ -314,6 +339,10 @@ function TabsNavigator() {
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
       />
+      <Tab.Screen
+        name="MessagesTab"
+        getComponent={() => MessagesTabNavigator}
+      />
     </Tab.Navigator>
   )
 }
@@ -331,11 +360,7 @@ function HomeTabNavigator() {
         animationDuration: 250,
         contentStyle: pal.view,
       }}>
-      <HomeTab.Screen
-        name="Home"
-        getComponent={() => HomeScreen}
-        options={{requireAuth: true}}
-      />
+      <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -371,11 +396,7 @@ function FeedsTabNavigator() {
         animationDuration: 250,
         contentStyle: pal.view,
       }}>
-      <FeedsTab.Screen
-        name="Feeds"
-        getComponent={() => FeedsScreen}
-        options={{requireAuth: true}}
-      />
+      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
       {commonScreens(FeedsTab as typeof HomeTab)}
     </FeedsTab.Navigator>
   )
@@ -428,6 +449,28 @@ function MyProfileTabNavigator() {
   )
 }
 
+function MessagesTabNavigator() {
+  const pal = usePalette('default')
+  return (
+    <MessagesTab.Navigator
+      screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle: pal.view,
+      }}>
+      <MessagesTab.Screen
+        name="Messages"
+        getComponent={() => MessagesScreen}
+        options={{requireAuth: true}}
+      />
+      {commonScreens(MessagesTab as typeof HomeTab)}
+    </MessagesTab.Navigator>
+  )
+}
+
 /**
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
@@ -451,7 +494,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: title(msg`Home`), requireAuth: true}}
+        options={{title: title(msg`Home`)}}
       />
       <Flat.Screen
         name="Search"
@@ -461,12 +504,17 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`), requireAuth: true}}
+        options={{title: title(msg`Feeds`)}}
       />
       <Flat.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
         options={{title: title(msg`Notifications`), requireAuth: true}}
+      />
+      <Flat.Screen
+        name="Messages"
+        getComponent={() => MessagesScreen}
+        options={{title: title(msg`Messages`), requireAuth: true}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
@@ -521,6 +569,9 @@ const LINKING = {
       if (name === 'Home') {
         return buildStateObject('HomeTab', 'Home', params)
       }
+      if (name === 'Messages') {
+        return buildStateObject('MessagesTab', 'Messages', params)
+      }
       // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
       return buildStateObject('HomeTab', name, params, [
         {
@@ -539,8 +590,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
+  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
 
   function onReady() {
+    prevLoggedRouteName.current = getCurrentRouteName()
     initAnalytics(currentAccount)
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
@@ -555,7 +608,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate', {})
+        logEvent('router:navigate', {
+          from: prevLoggedRouteName.current,
+        })
+        prevLoggedRouteName.current = getCurrentRouteName()
       }}
       onReady={() => {
         attachRouteToLogEvents(getCurrentRouteName)

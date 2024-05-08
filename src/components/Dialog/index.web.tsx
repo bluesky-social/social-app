@@ -1,5 +1,10 @@
 import React, {useImperativeHandle} from 'react'
-import {TouchableWithoutFeedback, View} from 'react-native'
+import {
+  FlatList,
+  FlatListProps,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -33,39 +38,40 @@ export function Outer({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
-  const [isVisible, setIsVisible] = React.useState(true)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   const open = React.useCallback(() => {
-    setIsOpen(true)
     setDialogIsOpen(control.id, true)
+    setIsOpen(true)
   }, [setIsOpen, setDialogIsOpen, control.id])
-
-  const onCloseInner = React.useCallback(async () => {
-    setIsVisible(false)
-    await new Promise(resolve => setTimeout(resolve, 150))
-    setIsOpen(false)
-    setIsVisible(true)
-    setDialogIsOpen(control.id, false)
-    onClose?.()
-  }, [control.id, onClose, setDialogIsOpen])
 
   const close = React.useCallback<DialogControlProps['close']>(
     cb => {
+      setDialogIsOpen(control.id, false)
+      setIsOpen(false)
+
       try {
         if (cb && typeof cb === 'function') {
-          cb()
+          // This timeout ensures that the callback runs at the same time as it would on native. I.e.
+          // console.log('Step 1') -> close(() => console.log('Step 3')) -> console.log('Step 2')
+          // This should always output 'Step 1', 'Step 2', 'Step 3', but without the timeout it would output
+          // 'Step 1', 'Step 3', 'Step 2'.
+          setTimeout(cb)
         }
       } catch (e: any) {
         logger.error(`Dialog closeCallback failed`, {
           message: e.message,
         })
-      } finally {
-        onCloseInner()
       }
+
+      onClose?.()
     },
-    [onCloseInner],
+    [control.id, onClose, setDialogIsOpen],
   )
+
+  const handleBackgroundPress = React.useCallback(async () => {
+    close()
+  }, [close])
 
   useImperativeHandle(
     control.ref,
@@ -103,7 +109,7 @@ export function Outer({
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
-              onPress={onCloseInner}>
+              onPress={handleBackgroundPress}>
               <View
                 style={[
                   web(a.fixed),
@@ -113,17 +119,15 @@ export function Outer({
                   gtMobile ? a.p_lg : a.p_md,
                   {overflowY: 'auto'},
                 ]}>
-                {isVisible && (
-                  <Animated.View
-                    entering={FadeIn.duration(150)}
-                    // exiting={FadeOut.duration(150)}
-                    style={[
-                      web(a.fixed),
-                      a.inset_0,
-                      {opacity: 0.8, backgroundColor: t.palette.black},
-                    ]}
-                  />
-                )}
+                <Animated.View
+                  entering={FadeIn.duration(150)}
+                  // exiting={FadeOut.duration(150)}
+                  style={[
+                    web(a.fixed),
+                    a.inset_0,
+                    {opacity: 0.8, backgroundColor: t.palette.black},
+                  ]}
+                />
 
                 <View
                   style={[
@@ -135,7 +139,7 @@ export function Outer({
                       minHeight: web('calc(90vh - 36px)') || undefined,
                     },
                   ]}>
-                  {isVisible ? children : null}
+                  {children}
                 </View>
               </View>
             </TouchableWithoutFeedback>
@@ -192,6 +196,29 @@ export function Inner({
 }
 
 export const ScrollableInner = Inner
+
+export const InnerFlatList = React.forwardRef<
+  FlatList,
+  FlatListProps<any> & {label: string}
+>(function InnerFlatList({label, style, ...props}, ref) {
+  const {gtMobile} = useBreakpoints()
+  return (
+    <Inner
+      label={label}
+      // @ts-ignore web only -sfn
+      style={{
+        paddingHorizontal: 0,
+        maxHeight: 'calc(-36px + 100vh)',
+        overflow: 'hidden',
+      }}>
+      <FlatList
+        ref={ref}
+        style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        {...props}
+      />
+    </Inner>
+  )
+})
 
 export function Handle() {
   return null

@@ -1,27 +1,29 @@
 import React from 'react'
-import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
+import {isNative} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Text} from '#/components/Typography'
-
 import {Context} from '#/components/Menu/context'
 import {
   ContextType,
-  TriggerProps,
-  ItemProps,
   GroupProps,
-  ItemTextProps,
   ItemIconProps,
+  ItemProps,
+  ItemTextProps,
+  TriggerProps,
 } from '#/components/Menu/types'
-import {Button, ButtonText} from '#/components/Button'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {isNative} from 'platform/detection'
+import {Text} from '#/components/Typography'
 
-export {useDialogControl as useMenuControl} from '#/components/Dialog'
+export {
+  type DialogControlProps as MenuControlProps,
+  useDialogControl as useMenuControl,
+} from '#/components/Dialog'
 
 export function useMemoControlContext() {
   return React.useContext(Context)

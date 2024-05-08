@@ -9,49 +9,48 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {s, colors} from 'lib/styles'
+import {msg, Plural, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {StackActions, useNavigation} from '@react-navigation/native'
+
+import {emitSoftReset} from '#/state/events'
+import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {SessionAccount, useSession} from '#/state/session'
+import {useSetDrawerOpen} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {usePalette} from 'lib/hooks/usePalette'
 import {
-  HomeIcon,
-  HomeIconSolid,
   BellIcon,
   BellIconSolid,
-  UserIcon,
   CogIcon,
+  HashtagIcon,
+  HomeIcon,
+  HomeIconSolid,
+  ListIcon,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  UserIcon,
   UserIconSolid,
-  HashtagIcon,
-  ListIcon,
-  HandIcon,
 } from 'lib/icons'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Text} from 'view/com/util/text/Text'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {pluralize} from 'lib/strings/helpers'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
+import {colors, s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
 import {isWeb} from 'platform/detection'
-import {formatCountShortOnly} from 'view/com/util/numeric/format'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useSetDrawerOpen} from '#/state/shell'
-import {useSession, SessionAccount} from '#/state/session'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {emitSoftReset} from '#/state/events'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {TextLink} from '../com/util/Link'
-
+import {formatCountShortOnly} from 'view/com/util/numeric/format'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useTheme as useAlfTheme} from '#/alf'
+import {TextLink} from '../com/util/Link'
 
 let DrawerProfileCard = ({
   account,
@@ -90,15 +89,26 @@ let DrawerProfileCard = ({
         @{account.handle}
       </Text>
       <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
-        <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(profile?.followersCount ?? 0)}
-        </Text>{' '}
-        {pluralize(profile?.followersCount || 0, 'follower')} &middot;{' '}
+        <Trans>
+          <Text type="xl-medium" style={pal.text}>
+            {formatCountShortOnly(profile?.followersCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followersCount || 0}
+            one="follower"
+            other="followers"
+          />
+        </Trans>{' '}
+        &middot;{' '}
         <Trans>
           <Text type="xl-medium" style={pal.text}>
             {formatCountShortOnly(profile?.followsCount ?? 0)}
           </Text>{' '}
-          following
+          <Plural
+            value={profile?.followsCount || 0}
+            one="following"
+            other="following"
+          />
         </Trans>
       </Text>
     </TouchableOpacity>
@@ -118,6 +128,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   const {isAtHome, isAtSearch, isAtFeeds, isAtNotifications, isAtMyProfile} =
     useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
+  const kawaii = useKawaiiMode()
 
   // events
   // =
@@ -177,12 +188,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     setDrawerOpen(false)
   }, [navigation, track, setDrawerOpen])
 
-  const onPressModeration = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: 'Moderation'})
-    navigation.navigate('Moderation')
-    setDrawerOpen(false)
-  }, [navigation, track, setDrawerOpen])
-
   const onPressSettings = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
@@ -224,7 +229,9 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               />
             </View>
           ) : (
-            <NavSignupCard />
+            <View style={{paddingRight: 20}}>
+              <NavSignupCard />
+            </View>
           )}
 
           {hasSession ? (
@@ -238,7 +245,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               />
               <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
               <ListsMenuItem onPress={onPressLists} />
-              <ModerationMenuItem onPress={onPressModeration} />
               <ProfileMenuItem
                 isActive={isAtMyProfile}
                 onPress={onPressProfile}
@@ -246,7 +252,11 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               <SettingsMenuItem onPress={onPressSettings} />
             </>
           ) : (
-            <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+            <>
+              <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+              <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
+              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
+            </>
           )}
 
           <View style={styles.smallSpacer} />
@@ -264,6 +274,17 @@ let DrawerContent = ({}: {}): React.ReactNode => {
               href="https://bsky.social/about/support/privacy-policy"
               text={_(msg`Privacy Policy`)}
             />
+            {kawaii && (
+              <Text type="md" style={pal.textLight}>
+                Logo by{' '}
+                <TextLink
+                  type="md"
+                  href="/profile/sawaratsuki.bsky.social"
+                  text="@sawaratsuki.bsky.social"
+                  style={pal.link}
+                />
+              </Text>
+            )}
           </View>
 
           <View style={styles.smallSpacer} />
@@ -500,25 +521,6 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   )
 }
 ListsMenuItem = React.memo(ListsMenuItem)
-
-let ModerationMenuItem = ({
-  onPress,
-}: {
-  onPress: () => void
-}): React.ReactNode => {
-  const {_} = useLingui()
-  const pal = usePalette('default')
-  return (
-    <MenuItem
-      icon={<HandIcon strokeWidth={5} style={pal.text} size={24} />}
-      label={_(msg`Moderation`)}
-      accessibilityLabel={_(msg`Moderation`)}
-      accessibilityHint=""
-      onPress={onPress}
-    />
-  )
-}
-ModerationMenuItem = React.memo(ModerationMenuItem)
 
 let ProfileMenuItem = ({
   isActive,

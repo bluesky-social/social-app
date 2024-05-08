@@ -1,21 +1,28 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  findNodeHandle,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import {List, ListRef} from '../util/List'
-import {ListCard} from './ListCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {Text} from '../util/text/Text'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useProfileListsQuery, RQKEY} from '#/state/queries/profile-lists'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {useLingui} from '@lingui/react'
+import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List, ListRef} from '../util/List'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
+import {Text} from '../util/text/Text'
+import {ListCard} from './ListCard'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -33,11 +40,12 @@ interface ProfileListsProps {
   enabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
+  setScrollViewTag: (tag: number | null) => void
 }
 
 export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
   function ProfileListsImpl(
-    {did, scrollElRef, headerOffset, enabled, style, testID},
+    {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
     ref,
   ) {
     const pal = usePalette('default')
@@ -170,6 +178,13 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       },
       [error, refetch, onPressRetryLoadMore, pal, _],
     )
+
+    React.useEffect(() => {
+      if (enabled && scrollElRef.current) {
+        const nativeTag = findNodeHandle(scrollElRef.current)
+        setScrollViewTag(nativeTag)
+      }
+    }, [enabled, scrollElRef, setScrollViewTag])
 
     return (
       <View testID={testID} style={style}>

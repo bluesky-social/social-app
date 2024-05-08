@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -10,6 +10,7 @@ import {HITSLOP_20} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
@@ -27,7 +28,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {Haptics} from 'lib/haptics'
+import {useHaptics} from 'lib/haptics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
@@ -35,7 +36,6 @@ import {makeCustomFeedLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
-import {pluralize} from 'lib/strings/helpers'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
@@ -159,6 +159,7 @@ export function ProfileFeedScreenInner({
   const reportDialogControl = useReportDialogControl()
   const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
+  const playHaptic = useHaptics()
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
@@ -201,7 +202,7 @@ export function ProfileFeedScreenInner({
 
   const onToggleSaved = React.useCallback(async () => {
     try {
-      Haptics.default()
+      playHaptic()
 
       if (isSaved) {
         await removeFeed({uri: feedInfo.uri})
@@ -221,18 +222,19 @@ export function ProfileFeedScreenInner({
       logger.error('Failed up update feeds', {message: err})
     }
   }, [
-    feedInfo,
+    playHaptic,
     isSaved,
-    saveFeed,
     removeFeed,
-    resetSaveFeed,
+    feedInfo,
     resetRemoveFeed,
     _,
+    saveFeed,
+    resetSaveFeed,
   ])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
-      Haptics.default()
+      playHaptic()
 
       if (isPinned) {
         await unpinFeed({uri: feedInfo.uri})
@@ -245,7 +247,16 @@ export function ProfileFeedScreenInner({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed, _])
+  }, [
+    playHaptic,
+    isPinned,
+    unpinFeed,
+    feedInfo,
+    resetUnpinFeed,
+    pinFeed,
+    resetPinFeed,
+    _,
+  ])
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
@@ -452,6 +463,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
     const isScreenFocused = useIsFocused()
+    const {hasSession} = useSession()
+    const feedFeedback = useFeedFeedback(feed, hasSession)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -479,17 +492,19 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     return (
       <View>
-        <Feed
-          enabled={isFocused}
-          feed={feed}
-          pollInterval={60e3}
-          disablePoll={hasNew}
-          scrollElRef={scrollElRef}
-          onHasNew={setHasNew}
-          onScrolledDownChange={setIsScrolledDown}
-          renderEmptyState={renderPostsEmpty}
-          headerOffset={headerHeight}
-        />
+        <FeedFeedbackProvider value={feedFeedback}>
+          <Feed
+            enabled={isFocused}
+            feed={feed}
+            pollInterval={60e3}
+            disablePoll={hasNew}
+            scrollElRef={scrollElRef}
+            onHasNew={setHasNew}
+            onScrolledDownChange={setIsScrolledDown}
+            renderEmptyState={renderPostsEmpty}
+            headerOffset={headerHeight}
+          />
+        </FeedFeedbackProvider>
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
@@ -517,6 +532,7 @@ function AboutSection({
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
+  const playHaptic = useHaptics()
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -527,7 +543,7 @@ function AboutSection({
 
   const onToggleLiked = React.useCallback(async () => {
     try {
-      Haptics.default()
+      playHaptic()
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
@@ -546,7 +562,7 @@ function AboutSection({
       )
       logger.error('Failed up toggle like', {message: err})
     }
-  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track, _])
+  }, [playHaptic, isLiked, likeUri, unlikeFeed, track, likeFeed, feedInfo, _])
 
   return (
     <View style={[styles.aboutSectionContainer]}>
@@ -585,7 +601,11 @@ function AboutSection({
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             style={[t.atoms.text_contrast_medium, a.font_bold]}>
-            {_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
+            <Plural
+              value={likeCount}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
           </InlineLinkText>
         )}
       </View>

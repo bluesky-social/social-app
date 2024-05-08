@@ -12,15 +12,13 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
-import {isInvalidHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {listenSoftReset} from '#/state/events'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -28,12 +26,15 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {combinedDisplayName} from 'lib/strings/display-names'
+import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
+import {listenSoftReset} from 'state/events'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
+import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
 import {ProfileLists} from '../com/lists/ProfileLists'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
@@ -152,6 +153,9 @@ function ProfileScreenLoaded({
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+
+  const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
+
   const postsSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
   const mediaSectionRef = React.useRef<SectionRef>(null)
@@ -178,8 +182,7 @@ function ProfileScreenLoaded({
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
   const showLikesTab = isMe
-  const showFeedsTab =
-    hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
+  const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
@@ -297,12 +300,9 @@ function ProfileScreenLoaded({
     openComposer({mention})
   }, [openComposer, currentAccount, track, profile])
 
-  const onPageSelected = React.useCallback(
-    (i: number) => {
-      setCurrentPage(i)
-    },
-    [setCurrentPage],
-  )
+  const onPageSelected = React.useCallback((i: number) => {
+    setCurrentPage(i)
+  }, [])
 
   const onCurrentPageSelected = React.useCallback(
     (index: number) => {
@@ -316,20 +316,23 @@ function ProfileScreenLoaded({
 
   const renderHeader = React.useCallback(() => {
     return (
-      <ProfileHeader
-        profile={profile}
-        labeler={labelerInfo}
-        descriptionRT={hasDescription ? descriptionRT : null}
-        moderationOpts={moderationOpts}
-        hideBackButton={hideBackButton}
-        isPlaceholderProfile={showPlaceholder}
-      />
+      <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
+        <ProfileHeader
+          profile={profile}
+          labeler={labelerInfo}
+          descriptionRT={hasDescription ? descriptionRT : null}
+          moderationOpts={moderationOpts}
+          hideBackButton={hideBackButton}
+          isPlaceholderProfile={showPlaceholder}
+        />
+      </ExpoScrollForwarderView>
     )
   }, [
+    scrollViewTag,
     profile,
     labelerInfo,
-    descriptionRT,
     hasDescription,
+    descriptionRT,
     moderationOpts,
     hideBackButton,
     showPlaceholder,
@@ -349,7 +352,7 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}>
         {showFiltersTab
-          ? ({headerHeight, scrollElRef}) => (
+          ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection
                 ref={labelsSectionRef}
                 labelerInfo={labelerInfo}
@@ -358,6 +361,8 @@ function ProfileScreenLoaded({
                 moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
                 headerHeight={headerHeight}
+                isFocused={isFocused}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -369,6 +374,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -381,6 +387,7 @@ function ProfileScreenLoaded({
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -393,6 +400,7 @@ function ProfileScreenLoaded({
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -405,6 +413,7 @@ function ProfileScreenLoaded({
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -417,6 +426,7 @@ function ProfileScreenLoaded({
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -428,6 +438,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -439,6 +450,7 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -458,6 +470,7 @@ function ProfileScreenLoaded({
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
+  const {getAgent} = useAgent()
   const [prevText, setPrevText] = React.useState(text)
   const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
@@ -481,7 +494,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     return () => {
       ignore = true
     }
-  }, [text])
+  }, [text, getAgent])
   const isResolving = resolvedRT === null
   return [resolvedRT ?? rawRT, isResolving]
 }
