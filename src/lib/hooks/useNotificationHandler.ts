@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import React from 'react'
 import * as Notifications from 'expo-notifications'
 import {AtUri} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
@@ -57,7 +57,7 @@ export function useNotificationsHandler() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleNotification = (payload?: NotificationRecord) => {
       if (!payload) return
 
