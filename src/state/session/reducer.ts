@@ -37,15 +37,6 @@ export type Action =
       newAccount: SessionAccount
     }
   | {
-      type: 'updated-current-account'
-      updatedFields: Partial<
-        Pick<
-          SessionAccount,
-          'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
-        >
-      >
-    }
-  | {
       type: 'removed-account'
       accountDid: string
     }
@@ -131,23 +122,6 @@ export function reducer(state: State, action: Action): State {
           did: newAccount.did,
           agent: newAgent,
         },
-        needsPersist: true,
-      }
-    }
-    case 'updated-current-account': {
-      const {updatedFields} = action
-      return {
-        accounts: state.accounts.map(a => {
-          if (a.did === state.currentAgentState.did) {
-            return {
-              ...a,
-              ...updatedFields,
-            }
-          } else {
-            return a
-          }
-        }),
-        currentAgentState: state.currentAgentState,
         needsPersist: true,
       }
     }
