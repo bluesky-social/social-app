@@ -5,11 +5,12 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMarkAsReadWhileMounted} from '#/state/queries/messages/list-converations'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
@@ -19,6 +20,7 @@ import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
@@ -31,6 +33,16 @@ type Props = NativeStackScreenProps<
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
   const convoId = route.params.conversation
+  const {setCurrentConvoId} = useCurrentConvoId()
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentConvoId(convoId)
+      return () => {
+        setCurrentConvoId(undefined)
+      }
+    }, [convoId, setCurrentConvoId]),
+  )
 
   useMarkAsReadWhileMounted(convoId)
 
@@ -54,8 +66,21 @@ function Inner() {
   }
 
   if (chat.status === ConvoStatus.Error) {
-    // TODO error
-    return null
+    // TODO
+    return (
+      <View>
+        <CenteredView style={{flex: 1}} sideBorders>
+          <Text>Something went wrong</Text>
+          <Button
+            label="Retry"
+            onPress={() => {
+              chat.error.retry()
+            }}>
+            <ButtonText>Retry</ButtonText>
+          </Button>
+        </CenteredView>
+      </View>
+    )
   }
 
   /*
