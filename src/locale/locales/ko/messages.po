@@ -462,7 +462,7 @@ msgstr "3자 이상"
 #: src/screens/Login/LoginForm.tsx:275
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:129
+#: src/screens/Messages/Conversation/index.tsx:140
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -4509,8 +4509,8 @@ msgstr "소프트웨어 개발"
 msgid "Something went wrong, please try again."
 msgstr "뭔가 잘못되었습니다. 다시 시도해 주세요."
 
-#: src/App.native.tsx:84
-#: src/App.web.tsx:71
+#: src/App.native.tsx:85
+#: src/App.web.tsx:72
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
