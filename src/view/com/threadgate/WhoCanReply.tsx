@@ -7,7 +7,8 @@ import {
   AtUri,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
