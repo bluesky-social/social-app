@@ -189,7 +189,6 @@ export function useNotificationsHandler() {
     }
 
     return () => {
-      // subscription.remove()
       responseReceivedListener.remove()
     }
   }, [
