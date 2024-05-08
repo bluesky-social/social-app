@@ -347,7 +347,15 @@ export class MessagesEventBus {
 
     this.isPolling = true
 
-    logger.debug(`${LOGGER_CONTEXT}: poll`, {}, logger.DebugContext.convo)
+    // logger.debug(
+    //   `${LOGGER_CONTEXT}: poll`,
+    //   {
+    //     requestedPollIntervals: Array.from(
+    //       this.requestedPollIntervals.values(),
+    //     ),
+    //   },
+    //   logger.DebugContext.convo,
+    // )
 
     try {
       const response = await this.agent.api.chat.bsky.convo.getLog(
