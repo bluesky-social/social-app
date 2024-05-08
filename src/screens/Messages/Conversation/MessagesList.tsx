@@ -11,8 +11,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isIOS} from '#/platform/detection'
-import {useChat} from '#/state/messages'
-import {ConvoItem, ConvoStatus} from '#/state/messages/convo'
+import {useConvo} from '#/state/messages/convo'
+import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
@@ -86,7 +86,7 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
-  const chat = useChat()
+  const convo = useConvo()
   const flatListRef = useRef<FlatList>(null)
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
@@ -153,20 +153,20 @@ export function MessagesList() {
   // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
   // immediately on mount, since we are in fact at an offset of zero, so we have to ignore those initial calls.
   const onStartReached = useCallback(() => {
-    if (chat.status === ConvoStatus.Ready && hasInitiallyScrolled) {
-      chat.fetchMessageHistory()
+    if (convo.status === ConvoStatus.Ready && hasInitiallyScrolled) {
+      convo.fetchMessageHistory()
     }
-  }, [chat, hasInitiallyScrolled])
+  }, [convo, hasInitiallyScrolled])
 
   const onSendMessage = useCallback(
     (text: string) => {
-      if (chat.status === ConvoStatus.Ready) {
-        chat.sendMessage({
+      if (convo.status === ConvoStatus.Ready) {
+        convo.sendMessage({
           text,
         })
       }
     },
-    [chat],
+    [convo],
   )
 
   const onScroll = React.useCallback(
@@ -229,7 +229,7 @@ export function MessagesList() {
       <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
         <List
           ref={flatListRef}
-          data={chat.items}
+          data={convo.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           disableVirtualization={true}
@@ -248,7 +248,7 @@ export function MessagesList() {
           onScrollToIndexFailed={onScrollToIndexFailed}
           scrollEventThrottle={100}
           ListHeaderComponent={
-            <MaybeLoader isLoading={chat.isFetchingHistory} />
+            <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
         />
       </ScrollProvider>
