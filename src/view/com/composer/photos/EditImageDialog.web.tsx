@@ -86,6 +86,8 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
 
   return (
     <Dialog.Inner label={_(msg`Edit image`)}>
+      <Dialog.Close />
+
       <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
         <Trans>Edit image</Trans>
       </Text>
