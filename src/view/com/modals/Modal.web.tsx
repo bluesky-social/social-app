@@ -12,6 +12,7 @@ import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
+import * as CropImage from './CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as EditProfileModal from './EditProfile'
 import * as InviteCodesModal from './InviteCodes'
@@ -69,6 +70,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <UserAddRemoveLists.Component {...modal} />
   } else if (modal.name === 'list-add-remove-users') {
     element = <ListAddUserModal.Component {...modal} />
+  } else if (modal.name === 'crop-image') {
+    element = <CropImage.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
   } else if (modal.name === 'repost') {

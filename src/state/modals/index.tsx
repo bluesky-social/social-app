@@ -1,4 +1,5 @@
 import React from 'react'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -33,6 +34,12 @@ export interface ListAddRemoveUsersModal {
     type: 'add' | 'remove',
     profile: AppBskyActorDefs.ProfileViewBasic,
   ) => void
+}
+
+export interface CropImageModal {
+  name: 'crop-image'
+  uri: string
+  onSelect: (img?: RNImage) => void
 }
 
 export interface DeleteAccountModal {
@@ -130,6 +137,7 @@ export type Modal =
   | ListAddRemoveUsersModal
 
   // Posts
+  | CropImageModal
   | RepostModal
   | SelfLabelModal
   | ThreadgateModal
