@@ -179,10 +179,8 @@ export function useNotificationsHandler() {
       })
 
     if (
-      storedPayload &&
-      currentAccount &&
-      storedPayload.reason === 'chat-message' &&
-      currentAccount.did === storedPayload.recipientDid
+      storedPayload?.reason === 'chat-message' &&
+      currentAccount?.did === storedPayload.recipientDid
     ) {
       handleNotification(storedPayload)
       storedPayload = undefined
