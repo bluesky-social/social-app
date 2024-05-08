@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
+import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {
   useMuteConvo,
@@ -47,6 +48,7 @@ let ConvoMenu = ({
   const {_} = useLingui()
   const t = useTheme()
   const leaveConvoControl = Prompt.usePromptControl()
+  const {mutate: markAsRead} = useMarkAsReadMutation()
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
@@ -110,14 +112,24 @@ let ConvoMenu = ({
         )}
         <Menu.Outer>
           <Menu.Group>
-            {showMarkAsRead && (
-              <Menu.Item label={_(msg`Mark as read`)} onPress={() => {}}>
-                <Menu.ItemText>
-                  <Trans>Mark as read</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={Bubble} />
-              </Menu.Item>
-            )}
+            {showMarkAsRead &&
+              ChatBskyConvoDefs.isMessageView(convo.lastMessage) && (
+                <Menu.Item
+                  label={_(msg`Mark as read`)}
+                  onPress={() => {
+                    if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+                      markAsRead({
+                        convoId: convo.id,
+                        messageId: convo.lastMessage.id,
+                      })
+                    }
+                  }}>
+                  <Menu.ItemText>
+                    <Trans>Mark as read</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Bubble} />
+                </Menu.Item>
+              )}
             <Menu.Item
               label={_(msg`Go to user's profile`)}
               onPress={onNavigateToProfile}>
