@@ -286,7 +286,7 @@ function containImageRes(
   let scale = 1
 
   if (w > maxW || h > maxH) {
-    scale = w < h ? maxW / w : maxH / h
+    scale = w > h ? maxW / w : maxH / h
     w = Math.floor(w * scale)
     h = Math.floor(h * scale)
   }
