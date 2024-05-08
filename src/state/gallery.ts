@@ -49,9 +49,15 @@ export type ComposerImage =
   | ComposerImageWithoutTransformation
   | ComposerImageWithTransformation
 
-const imageCacheDirectory = isNative
-  ? joinPath(cacheDirectory!, 'bsky-composer')
-  : null
+let _imageCacheDirectory: string
+
+function getImageCacheDirectory(): string | null {
+  if (isNative) {
+    return (_imageCacheDirectory ??= joinPath(cacheDirectory!, 'bsky-composer'))
+  }
+
+  return null
+}
 
 export async function createComposerImage(
   raw: ImageMeta,
@@ -200,6 +206,7 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
   const source = img.transformed || img.source
 
   const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
+  const cacheDir = isNative && getImageCacheDirectory()
 
   for (let i = 10; i > 0; i--) {
     // Float precision
@@ -226,7 +233,7 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
       }
     }
 
-    if (imageCacheDirectory) {
+    if (cacheDir) {
       await deleteAsync(res.uri)
     }
   }
@@ -235,10 +242,12 @@ export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
 }
 
 async function moveIfNecessary(from: string) {
-  if (cacheDirectory && from.startsWith(cacheDirectory!)) {
-    const to = joinPath(imageCacheDirectory!, uuid.v4() + '')
+  const cacheDir = isNative && getImageCacheDirectory()
 
-    await makeDirectoryAsync(imageCacheDirectory!, {intermediates: true})
+  if (cacheDir && from.startsWith(cacheDir)) {
+    const to = joinPath(cacheDir, uuid.v4() + '')
+
+    await makeDirectoryAsync(cacheDir, {intermediates: true})
     await moveAsync({from, to})
 
     return to
@@ -249,9 +258,11 @@ async function moveIfNecessary(from: string) {
 
 /** Purge files that were created to accomodate image manipulation */
 export async function purgeTemporaryImageFiles() {
-  if (imageCacheDirectory) {
-    await deleteAsync(imageCacheDirectory, {idempotent: true})
-    await makeDirectoryAsync(imageCacheDirectory)
+  const cacheDir = isNative && getImageCacheDirectory()
+
+  if (cacheDir) {
+    await deleteAsync(cacheDir, {idempotent: true})
+    await makeDirectoryAsync(cacheDir)
   }
 }
 
