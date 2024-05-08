@@ -1,7 +1,7 @@
 import {BskyAgent} from '@atproto-labs/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQuery} from '@tanstack/react-query'
 
-import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-converations'
+import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {useHeaders} from './temp-headers'
 
@@ -28,7 +28,7 @@ export function useConvoQuery(convoId: string) {
 export function useMarkAsReadMutation() {
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
-  const queryClient = useQueryClient()
+  const onMarkAsRead = useOnMarkAsRead()
 
   return useMutation({
     mutationFn: async ({
@@ -50,10 +50,8 @@ export function useMarkAsReadMutation() {
         },
       )
     },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ListConvosQueryKey,
-      })
+    onSuccess(_, {convoId}) {
+      onMarkAsRead(convoId)
     },
   })
 }

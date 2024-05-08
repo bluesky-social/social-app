@@ -275,7 +275,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             a.pl_md,
             a.py_sm,
             a.gap_md,
-            a.pr_2xl,
+            a.pr_xl,
             (hovered || pressed) && t.atoms.bg_contrast_25,
           ]}>
           <View pointerEvents="none">
@@ -340,6 +340,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             // tricky because it captures the mouse event
             hideTrigger
             currentScreen="list"
+            showMarkAsRead={convo.unreadCount > 0}
           />
         </View>
       )}
