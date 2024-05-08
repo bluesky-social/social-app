@@ -47,6 +47,7 @@ export function MessagesScreen({navigation}: Props) {
 
   // TEMP
   const {serviceUrl, setServiceUrl} = useDmServiceUrlStorage()
+  const [serviceUrlValue, setServiceUrlValue] = useState(serviceUrl)
   const hasValidServiceUrl = useMemo(() => {
     const hash = sha256(serviceUrl)
     return (
@@ -136,13 +137,21 @@ export function MessagesScreen({navigation}: Props) {
           <TextField.LabelText>Service URL</TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              value={serviceUrl}
-              onChangeText={text => setServiceUrl(text)}
+              value={serviceUrlValue}
+              onChangeText={text => setServiceUrlValue(text)}
               autoCapitalize="none"
               keyboardType="url"
               label="https://"
             />
           </TextField.Root>
+          <Button
+            label="Set Service URL"
+            size="small"
+            variant="solid"
+            color="primary"
+            onPress={() => setServiceUrl(serviceUrlValue)}>
+            <ButtonText>Set</ButtonText>
+          </Button>
         </View>
       </ScrollView>
     )
