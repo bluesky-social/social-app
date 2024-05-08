@@ -2,7 +2,7 @@ import {useEffect, useRef} from 'react'
 import * as Notifications from 'expo-notifications'
 import {AtUri} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
-import {QueryClient} from '@tanstack/react-query'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {track} from 'lib/analytics/analytics'
@@ -48,7 +48,8 @@ const DEFAULT_HANDLER_OPTIONS = {
 
 let storedPayload: NotificationRecord | undefined
 
-export function useNotificationsListener(queryClient: QueryClient) {
+export function useNotificationsHandler() {
+  const queryClient = useQueryClient()
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
