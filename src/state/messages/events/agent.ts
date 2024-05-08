@@ -15,8 +15,7 @@ import {
 
 const LOGGER_CONTEXT = 'MessagesEventBus'
 
-const ACTIVE_POLL_INTERVAL = 60e3
-const BACKGROUND_POLL_INTERVAL = 60e3
+const DEFAULT_POLL_INTERVAL = 60e3
 
 export class MessagesEventBus {
   private id: string
@@ -26,9 +25,10 @@ export class MessagesEventBus {
   private emitter = new EventEmitter()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Uninitialized
-  private pollInterval = ACTIVE_POLL_INTERVAL
   private error: MessagesEventBusError | undefined
   private latestRev: string | undefined = undefined
+  private pollInterval = DEFAULT_POLL_INTERVAL
+  private requestedPollIntervals: Map<string, number> = new Map()
 
   snapshot: MessagesEventBusState | undefined
 
@@ -42,7 +42,7 @@ export class MessagesEventBus {
     this.init = this.init.bind(this)
     this.suspend = this.suspend.bind(this)
     this.resume = this.resume.bind(this)
-    this.setPollInterval = this.setPollInterval.bind(this)
+    this.requestPollInterval = this.requestPollInterval.bind(this)
     this.trail = this.trail.bind(this)
     this.trailConvo = this.trailConvo.bind(this)
   }
@@ -78,7 +78,7 @@ export class MessagesEventBus {
           status: MessagesEventBusStatus.Initializing,
           rev: undefined,
           error: undefined,
-          setPollInterval: this.setPollInterval,
+          requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
         }
@@ -88,7 +88,7 @@ export class MessagesEventBus {
           status: this.status,
           rev: this.latestRev!,
           error: undefined,
-          setPollInterval: this.setPollInterval,
+          requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
         }
@@ -98,7 +98,7 @@ export class MessagesEventBus {
           status: this.status,
           rev: this.latestRev,
           error: undefined,
-          setPollInterval: this.setPollInterval,
+          requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
         }
@@ -113,7 +113,7 @@ export class MessagesEventBus {
               this.init()
             },
           },
-          setPollInterval: this.setPollInterval,
+          requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
         }
@@ -123,7 +123,7 @@ export class MessagesEventBus {
           status: MessagesEventBusStatus.Uninitialized,
           rev: undefined,
           error: undefined,
-          setPollInterval: this.setPollInterval,
+          requestPollInterval: this.requestPollInterval,
           trail: this.trail,
           trailConvo: this.trailConvo,
         }
@@ -149,12 +149,12 @@ export class MessagesEventBus {
         switch (action.event) {
           case MessagesEventBusDispatchEvent.Ready: {
             this.status = MessagesEventBusStatus.Ready
-            this.setPollInterval(ACTIVE_POLL_INTERVAL)
+            this.resetPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
-            this.setPollInterval(BACKGROUND_POLL_INTERVAL)
+            this.resetPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Suspend: {
@@ -173,7 +173,7 @@ export class MessagesEventBus {
         switch (action.event) {
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
-            this.setPollInterval(BACKGROUND_POLL_INTERVAL)
+            this.resetPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Suspend: {
@@ -194,7 +194,7 @@ export class MessagesEventBus {
         switch (action.event) {
           case MessagesEventBusDispatchEvent.Resume: {
             this.status = MessagesEventBusStatus.Ready
-            this.setPollInterval(ACTIVE_POLL_INTERVAL)
+            this.resetPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Suspend: {
@@ -215,12 +215,12 @@ export class MessagesEventBus {
         switch (action.event) {
           case MessagesEventBusDispatchEvent.Resume: {
             this.status = MessagesEventBusStatus.Ready
-            this.setPollInterval(ACTIVE_POLL_INTERVAL)
+            this.resetPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
-            this.setPollInterval(BACKGROUND_POLL_INTERVAL)
+            this.resetPoll()
             break
           }
           case MessagesEventBusDispatchEvent.Error: {
@@ -306,9 +306,14 @@ export class MessagesEventBus {
     this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
   }
 
-  setPollInterval(interval: number) {
-    this.pollInterval = interval
+  requestPollInterval(interval: number) {
+    const id = nanoid()
+    this.requestedPollIntervals.set(id, interval)
     this.resetPoll()
+    return () => {
+      this.requestedPollIntervals.delete(id)
+      this.resetPoll()
+    }
   }
 
   trail(handler: (events: ChatBskyConvoGetLog.OutputSchema['logs']) => void) {
@@ -375,7 +380,20 @@ export class MessagesEventBus {
   private isPolling = false
   private pollIntervalRef: NodeJS.Timeout | undefined
 
+  private getPollInterval() {
+    switch (this.status) {
+      case MessagesEventBusStatus.Ready: {
+        const requested = Array.from(this.requestedPollIntervals.values())
+        const lowest = Math.min(DEFAULT_POLL_INTERVAL, ...requested)
+        return lowest
+      }
+      default:
+        return DEFAULT_POLL_INTERVAL
+    }
+  }
+
   private resetPoll() {
+    this.pollInterval = this.getPollInterval()
     this.stopPoll()
     this.startPoll()
   }
