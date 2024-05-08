@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import Animated, {
   cancelAnimation,
@@ -37,12 +37,12 @@ export function ActionsWrapper({
 
   // Reanimated's `runOnJS` doesn't like refs, so we can't use `runOnJS(menuControl.open)()`. Instead, we'll use this
   // function
-  const open = useCallback(() => {
+  const open = React.useCallback(() => {
     Keyboard.dismiss()
     menuControl.open()
   }, [menuControl])
 
-  const shrink = useCallback(() => {
+  const shrink = React.useCallback(() => {
     'worklet'
     cancelAnimation(scale)
     scale.value = withTiming(1, {duration: 200}, () => {
@@ -52,7 +52,7 @@ export function ActionsWrapper({
 
   const grow = React.useCallback(() => {
     'worklet'
-    scale.value = withTiming(1.05, {duration: 750}, finished => {
+    scale.value = withTiming(1.05, {duration: 450}, finished => {
       if (!finished) return
       animationDidComplete.value = true
       runOnJS(playHaptic)()
