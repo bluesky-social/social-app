@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 
+import {HITSLOP_10} from 'lib/constants'
 import {useHaptics} from 'lib/haptics'
 import {atoms as a} from '#/alf'
 import {MessageMenu} from '#/components/dms/MessageMenu'
@@ -74,7 +75,8 @@ export function ActionsWrapper({
         style={animatedStyle}
         unstable_pressDelay={200}
         onPressIn={grow}
-        onTouchEnd={shrink}>
+        onTouchEnd={shrink}
+        hitSlop={HITSLOP_10}>
         {children}
       </AnimatedPressable>
       <MessageMenu message={message} control={menuControl} hideTrigger={true} />
