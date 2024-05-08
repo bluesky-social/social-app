@@ -118,7 +118,6 @@ export function useNotificationsHandler() {
       }
     }
 
-    //<editor-fold desc="determine when to show notifications while app is foregrounded">
     Notifications.setNotificationHandler({
       handleNotification: async e => {
         if (e.request.trigger.type !== 'push') return DEFAULT_HANDLER_OPTIONS
@@ -144,9 +143,7 @@ export function useNotificationsHandler() {
         return DEFAULT_HANDLER_OPTIONS
       },
     })
-    //</editor-fold>
 
-    //<editor-fold desc="handle incoming notifications while app is launched">
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
         logger.debug(
@@ -180,7 +177,6 @@ export function useNotificationsHandler() {
           Notifications.dismissAllNotificationsAsync()
         }
       })
-    // </editor-fold>
 
     if (
       storedPayload &&
