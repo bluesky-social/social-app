@@ -169,10 +169,10 @@ export async function createAgentAndCreateAccount({
     })
   }
 
-  // TODO: Ideally this would be part of createAccount() so it can't fail on its own.
-  await agent.setPersonalDetails({birthDate: birthDate.toISOString()})
+  // Not awaited so that we can still get into onboarding.
+  // This is OK because we won't let you toggle adult stuff until you set the date.
+  agent.setPersonalDetails({birthDate: birthDate.toISOString()})
   if (IS_PROD_SERVICE(service)) {
-    // Not awaited so that it doesn't fail account creation completely.
     agent.setSavedFeeds(DEFAULT_PROD_FEEDS.saved, DEFAULT_PROD_FEEDS.pinned)
   }
 
