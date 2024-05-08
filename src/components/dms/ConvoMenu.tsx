@@ -112,24 +112,20 @@ let ConvoMenu = ({
         )}
         <Menu.Outer>
           <Menu.Group>
-            {showMarkAsRead &&
-              ChatBskyConvoDefs.isMessageView(convo.lastMessage) && (
-                <Menu.Item
-                  label={_(msg`Mark as read`)}
-                  onPress={() => {
-                    if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
-                      markAsRead({
-                        convoId: convo.id,
-                        messageId: convo.lastMessage.id,
-                      })
-                    }
-                  }}>
-                  <Menu.ItemText>
-                    <Trans>Mark as read</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={Bubble} />
-                </Menu.Item>
-              )}
+            {showMarkAsRead && (
+              <Menu.Item
+                label={_(msg`Mark as read`)}
+                onPress={() =>
+                  markAsRead({
+                    convoId: convo.id,
+                  })
+                }>
+                <Menu.ItemText>
+                  <Trans>Mark as read</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Bubble} />
+              </Menu.Item>
+            )}
             <Menu.Item
               label={_(msg`Go to user's profile`)}
               onPress={onNavigateToProfile}>
