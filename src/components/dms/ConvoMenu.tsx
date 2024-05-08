@@ -24,6 +24,7 @@ import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Per
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
+import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 
 let ConvoMenu = ({
   convo,
@@ -32,6 +33,7 @@ let ConvoMenu = ({
   control,
   hideTrigger,
   currentScreen,
+  showMarkAsRead,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
@@ -39,6 +41,7 @@ let ConvoMenu = ({
   control?: Menu.MenuControlProps
   hideTrigger?: boolean
   currentScreen: 'list' | 'conversation'
+  showMarkAsRead?: boolean
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -107,6 +110,14 @@ let ConvoMenu = ({
         )}
         <Menu.Outer>
           <Menu.Group>
+            {showMarkAsRead && (
+              <Menu.Item label={_(msg`Mark as read`)} onPress={() => {}}>
+                <Menu.ItemText>
+                  <Trans>Mark as read</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Bubble} />
+              </Menu.Item>
+            )}
             <Menu.Item
               label={_(msg`Go to user's profile`)}
               onPress={onNavigateToProfile}>
