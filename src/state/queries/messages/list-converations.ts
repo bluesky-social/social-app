@@ -4,9 +4,9 @@ import {
   ChatBskyConvoDefs,
   ChatBskyConvoListConvos,
 } from '@atproto-labs/api'
-import {useFocusEffect} from '@react-navigation/native'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
 
+import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {useHeaders} from './temp-headers'
 
@@ -35,6 +35,7 @@ export function useListConvos({refetchInterval}: {refetchInterval: number}) {
 }
 
 export function useUnreadMessageCount() {
+  const {currentConvoId} = useCurrentConvoId()
   const convos = useListConvos({
     refetchInterval: 30_000,
   })
@@ -42,6 +43,7 @@ export function useUnreadMessageCount() {
   const count =
     convos.data?.pages
       .flatMap(page => page.convos)
+      .filter(convo => convo.id !== currentConvoId)
       .reduce((acc, convo) => {
         return acc + (!convo.muted && convo.unreadCount > 0 ? 1 : 0)
       }, 0) ?? 0
@@ -57,33 +59,6 @@ export function useUnreadMessageCount() {
 type ConvoListQueryData = {
   pageParams: Array<string | undefined>
   pages: Array<ChatBskyConvoListConvos.OutputSchema>
-}
-
-export function useOnMarkAsRead() {
-  const queryClient = useQueryClient()
-
-  return useCallback(
-    (chatId: string) => {
-      queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
-        return optimisticUpdate(chatId, old, convo => ({
-          ...convo,
-          unreadCount: 0,
-        }))
-      })
-    },
-    [queryClient],
-  )
-}
-
-export function useMarkAsReadWhileMounted(chatId: string) {
-  const markAsRead = useOnMarkAsRead()
-
-  return useFocusEffect(
-    useCallback(() => {
-      markAsRead(chatId)
-      return () => markAsRead(chatId)
-    }, [markAsRead, chatId]),
-  )
 }
 
 export function useOnDeleteMessage() {
