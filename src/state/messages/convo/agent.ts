@@ -19,9 +19,7 @@ import {
   ConvoState,
   ConvoStatus,
 } from '#/state/messages/convo/types'
-
-const ACTIVE_POLL_INTERVAL = 1e3
-const BACKGROUND_POLL_INTERVAL = 10e3
+import {MessagesEventBusError} from '#/state/messages/events/types'
 
 // TODO temporary
 let DEBUG_ACTIVE_CHAT: string | undefined
@@ -44,7 +42,6 @@ export class Convo {
   private __tempFromUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
-  private pollInterval = ACTIVE_POLL_INTERVAL
   private error:
     | {
         code: ConvoErrorCode
@@ -73,7 +70,6 @@ export class Convo {
   private headerItems: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
-  private nextPoll: NodeJS.Timeout | undefined
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
@@ -92,6 +88,9 @@ export class Convo {
     this.sendMessage = this.sendMessage.bind(this)
     this.deleteMessage = this.deleteMessage.bind(this)
     this.fetchMessageHistory = this.fetchMessageHistory.bind(this)
+    this.ingestFirehose = this.ingestFirehose.bind(this)
+    this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
+    this.onFirehoseError = this.onFirehoseError.bind(this)
 
     if (DEBUG_ACTIVE_CHAT) {
       logger.error(`Convo: another chat was already active`, {
@@ -207,18 +206,12 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Ready: {
             this.status = ConvoStatus.Ready
-            this.pollInterval = ACTIVE_POLL_INTERVAL
-            this.fetchMessageHistory().then(() => {
-              this.restartPoll()
-            })
+            this.fetchMessageHistory()
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
-            this.pollInterval = BACKGROUND_POLL_INTERVAL
-            this.fetchMessageHistory().then(() => {
-              this.restartPoll()
-            })
+            this.fetchMessageHistory()
             break
           }
           case ConvoDispatchEvent.Suspend: {
@@ -237,24 +230,19 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Resume: {
             this.refreshConvo()
-            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
-            this.pollInterval = BACKGROUND_POLL_INTERVAL
-            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
-            this.cancelNextPoll()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
-            this.cancelNextPoll()
             break
           }
         }
@@ -262,23 +250,24 @@ export class Convo {
       }
       case ConvoStatus.Backgrounded: {
         switch (action.event) {
+          // TODO truncate history if needed
           case ConvoDispatchEvent.Resume: {
-            this.status = ConvoStatus.Ready
-            this.pollInterval = ACTIVE_POLL_INTERVAL
-            this.refreshConvo()
-            // TODO truncate history if needed
-            this.restartPoll()
+            if (this.convo) {
+              this.status = ConvoStatus.Ready
+              this.refreshConvo()
+            } else {
+              this.status = ConvoStatus.Initializing
+              this.setup()
+            }
             break
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
-            this.cancelNextPoll()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
-            this.cancelNextPoll()
             break
           }
         }
@@ -286,19 +275,20 @@ export class Convo {
       }
       case ConvoStatus.Suspended: {
         switch (action.event) {
+          // TODO truncate history if needed
           case ConvoDispatchEvent.Init: {
-            this.status = ConvoStatus.Ready
-            this.pollInterval = ACTIVE_POLL_INTERVAL
-            this.refreshConvo()
-            // TODO truncate history if needed
-            this.restartPoll()
+            if (this.convo) {
+              this.status = ConvoStatus.Ready
+              this.refreshConvo()
+            } else {
+              this.status = ConvoStatus.Initializing
+              this.setup()
+            }
             break
           }
           case ConvoDispatchEvent.Resume: {
             this.status = ConvoStatus.Ready
-            this.pollInterval = ACTIVE_POLL_INTERVAL
             this.refreshConvo()
-            this.restartPoll()
             break
           }
           case ConvoDispatchEvent.Error: {
@@ -576,84 +566,25 @@ export class Convo {
     }
   }
 
-  private restartPoll() {
-    this.cancelNextPoll()
-    this.pollLatestEvents()
+  onFirehoseConnect() {
+    this.footerItems.delete(ConvoItemError.PollFailed)
+    this.commit()
   }
 
-  private cancelNextPoll() {
-    if (this.nextPoll) clearTimeout(this.nextPoll)
-  }
-
-  private pollLatestEvents() {
-    /*
-     * Uncomment to view poll events
-     */
-    logger.debug('Convo: poll events', {id: this.id}, logger.DebugContext.convo)
-
-    try {
-      this.fetchLatestEvents().then(({events}) => {
-        this.applyLatestEvents(events)
-      })
-      this.nextPoll = setTimeout(() => {
-        this.pollLatestEvents()
-      }, this.pollInterval)
-    } catch (e: any) {
-      logger.error('Convo: poll events failed')
-
-      this.cancelNextPoll()
-
-      this.footerItems.set(ConvoItemError.PollFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PollFailed,
-        code: ConvoItemError.PollFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PollFailed)
-          this.commit()
-          this.pollLatestEvents()
-        },
-      })
-
-      this.commit()
-    }
-  }
-
-  private pendingFetchLatestEvents:
-    | Promise<{
-        events: ChatBskyConvoGetLog.OutputSchema['logs']
-      }>
-    | undefined
-  async fetchLatestEvents() {
-    if (this.pendingFetchLatestEvents) return this.pendingFetchLatestEvents
-
-    this.pendingFetchLatestEvents = new Promise<{
-      events: ChatBskyConvoGetLog.OutputSchema['logs']
-    }>(async (resolve, reject) => {
-      try {
-        // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
-        const response = await this.agent.api.chat.bsky.convo.getLog(
-          {
-            cursor: this.eventsCursor,
-          },
-          {
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
-        )
-        const {logs} = response.data
-        resolve({events: logs})
-      } catch (e) {
-        reject(e)
-      } finally {
-        this.pendingFetchLatestEvents = undefined
-      }
+  onFirehoseError(error?: MessagesEventBusError) {
+    this.footerItems.set(ConvoItemError.PollFailed, {
+      type: 'error-recoverable',
+      key: ConvoItemError.PollFailed,
+      code: ConvoItemError.PollFailed,
+      retry: () => {
+        this.footerItems.delete(ConvoItemError.PollFailed)
+        this.commit()
+        error?.retry()
+      },
     })
-
-    return this.pendingFetchLatestEvents
   }
 
-  private applyLatestEvents(events: ChatBskyConvoGetLog.OutputSchema['logs']) {
+  ingestFirehose(events: ChatBskyConvoGetLog.OutputSchema['logs']) {
     let needsCommit = false
 
     for (const ev of events) {
