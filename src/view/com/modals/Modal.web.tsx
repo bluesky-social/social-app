@@ -12,9 +12,7 @@ import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
-import * as CropImageModal from './crop-image/CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
-import * as EditImageModal from './EditImage'
 import * as EditProfileModal from './EditProfile'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
@@ -55,9 +53,6 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (modal.name === 'crop-image' || modal.name === 'edit-image') {
-      return // dont close on mask presses during crop
-    }
     closeModal()
   }
   const onInnerPress = () => {
@@ -74,8 +69,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <UserAddRemoveLists.Component {...modal} />
   } else if (modal.name === 'list-add-remove-users') {
     element = <ListAddUserModal.Component {...modal} />
-  } else if (modal.name === 'crop-image') {
-    element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
   } else if (modal.name === 'repost') {
@@ -94,9 +87,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ContentLanguagesSettingsModal.Component />
   } else if (modal.name === 'post-languages-settings') {
     element = <PostLanguagesSettingsModal.Component />
-  } else if (modal.name === 'edit-image') {
-    // @ts-expect-error: todo
-    element = <EditImageModal.Component {...modal} />
   } else if (modal.name === 'verify-email') {
     element = <VerifyEmailModal.Component {...modal} />
   } else if (modal.name === 'change-email') {

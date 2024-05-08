@@ -143,12 +143,6 @@ const GalleryItem = ({
       cropImage(image).then(next => {
         onChange(next)
       })
-    } else {
-      // openModal({
-      //   name: 'edit-image',
-      //   image,
-      //   gallery,
-      // })
     }
   }
 
