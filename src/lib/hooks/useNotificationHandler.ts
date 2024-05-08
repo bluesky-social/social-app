@@ -79,41 +79,46 @@ export function useNotificationsListener(queryClient: QueryClient) {
             setShowLoggedOut(true)
           }
         } else {
-          // @ts-expect-error types are weird here
-          navigation.navigate('MessagesTab', {
-            screen: 'MessagesConversation',
-            params: {
-              conversation: payload.convoId,
-            },
-          })
+          setTimeout(() => {
+            // @ts-expect-error types are weird here
+            navigation.navigate('MessagesTab', {
+              screen: 'MessagesConversation',
+              params: {
+                conversation: payload.convoId,
+              },
+            })
+          }, 500)
         }
       } else {
-        resetToTab('NotificationsTab')
         switch (payload.reason) {
           case 'like':
           case 'repost':
             resetToTab('NotificationsTab')
           case 'follow':
             const uri = new AtUri(payload.uri)
-            // @ts-expect-error types are weird here
-            navigation.navigate('HomeTab', {
-              screen: 'Profile',
-              params: {
-                name: uri.host,
-              },
-            })
+            setTimeout(() => {
+              // @ts-expect-error types are weird here
+              navigation.navigate('HomeTab', {
+                screen: 'Profile',
+                params: {
+                  name: uri.host,
+                },
+              })
+            }, 500)
             break
           case 'mention':
           case 'reply':
             const urip = new AtUri(payload.uri)
-            // @ts-expect-error types are weird here
-            navigation.navigate('HomeTab', {
-              screen: 'PostThread',
-              params: {
-                name: urip.host,
-                rkey: urip.rkey,
-              },
-            })
+            setTimeout(() => {
+              // @ts-expect-error types are weird here
+              navigation.navigate('HomeTab', {
+                screen: 'PostThread',
+                params: {
+                  name: urip.host,
+                  rkey: urip.rkey,
+                },
+              })
+            }, 500)
             break
         }
       }
