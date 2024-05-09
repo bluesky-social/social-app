@@ -5,6 +5,8 @@ import {
   AtUri,
   RichText,
 } from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   InfiniteData,
   QueryKey,
@@ -202,23 +204,6 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const FOLLOWING_FEED_STUB: FeedSourceInfo = {
-  type: 'feed',
-  displayName: 'Following',
-  uri: '',
-  route: {
-    href: '/',
-    name: 'Home',
-    params: {},
-  },
-  cid: '',
-  avatar: '',
-  description: new RichText({text: ''}),
-  creatorDid: '',
-  creatorHandle: '',
-  likeCount: 0,
-  likeUri: '',
-}
 const DISCOVER_FEED_STUB: FeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
@@ -244,6 +229,25 @@ export function usePinnedFeedsInfos() {
   const {getAgent} = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedUris = preferences?.feeds?.pinned ?? []
+  const {_} = useLingui()
+
+  const FOLLOWING_FEED_STUB: FeedSourceInfo = {
+    type: 'feed',
+    displayName: _(msg`Following`),
+    uri: '',
+    route: {
+      href: '/',
+      name: 'Home',
+      params: {},
+    },
+    cid: '',
+    avatar: '',
+    description: new RichText({text: ''}),
+    creatorDid: '',
+    creatorHandle: '',
+    likeCount: 0,
+    likeUri: '',
+  }
 
   return useQuery({
     staleTime: STALE.INFINITY,
