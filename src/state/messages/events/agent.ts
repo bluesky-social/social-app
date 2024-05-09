@@ -2,6 +2,7 @@ import {BskyAgent, ChatBskyConvoGetLog} from '@atproto-labs/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
+import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {DEFAULT_POLL_INTERVAL} from '#/state/messages/events/const'
 import {
@@ -265,16 +266,18 @@ export class MessagesEventBus {
     logger.debug(`${LOGGER_CONTEXT}: init`, {}, logger.DebugContext.convo)
 
     try {
-      const response = await this.agent.api.chat.bsky.convo.listConvos(
-        {
-          limit: 1,
-        },
-        {
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      const response = await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.listConvos(
+          {
+            limit: 1,
           },
-        },
-      )
+          {
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+      })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
       const {convos} = response.data
@@ -358,16 +361,18 @@ export class MessagesEventBus {
     // )
 
     try {
-      const response = await this.agent.api.chat.bsky.convo.getLog(
-        {
-          cursor: this.latestRev,
-        },
-        {
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      const response = await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.getLog(
+          {
+            cursor: this.latestRev,
           },
-        },
-      )
+          {
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+      })
 
       // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
