@@ -401,7 +401,7 @@ export class Convo {
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
       this.dispatch({event: ConvoDispatchEvent.Ready})
     } catch (e: any) {
-      logger.error('Convo: setup() failed')
+      logger.error(e, {context: 'Convo: setup failed'})
 
       this.dispatch({
         event: ConvoDispatchEvent.Error,
@@ -413,6 +413,7 @@ export class Convo {
           },
         },
       })
+      this.commit()
     }
   }
 
@@ -500,7 +501,7 @@ export class Convo {
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
     } catch (e: any) {
-      logger.error(`Convo: failed to refresh convo`)
+      logger.error(e, {context: `Convo: failed to refresh convo`})
 
       this.footerItems.set(ConvoItemError.Network, {
         type: 'error-recoverable',
@@ -601,17 +602,17 @@ export class Convo {
   }
 
   onFirehoseConnect() {
-    this.footerItems.delete(ConvoItemError.PollFailed)
+    this.footerItems.delete(ConvoItemError.FirehoseFailed)
     this.commit()
   }
 
   onFirehoseError(error?: MessagesEventBusError) {
-    this.footerItems.set(ConvoItemError.PollFailed, {
+    this.footerItems.set(ConvoItemError.FirehoseFailed, {
       type: 'error-recoverable',
-      key: ConvoItemError.PollFailed,
-      code: ConvoItemError.PollFailed,
+      key: ConvoItemError.FirehoseFailed,
+      code: ConvoItemError.FirehoseFailed,
       retry: () => {
-        this.footerItems.delete(ConvoItemError.PollFailed)
+        this.footerItems.delete(ConvoItemError.FirehoseFailed)
         this.commit()
         error?.retry()
       },
@@ -772,13 +773,21 @@ export class Convo {
       await this.processPendingMessages()
 
       this.commit()
-    } catch (e) {
-      this.footerItems.set('pending-retry', {
-        type: 'pending-retry',
-        key: 'pending-retry',
-        retry: this.batchRetryPendingMessages.bind(this),
+    } catch (e: any) {
+      logger.error(e, {context: `Convo: failed to send message`})
+      this.footerItems.set(ConvoItemError.PendingFailed, {
+        type: 'error-recoverable',
+        key: ConvoItemError.PendingFailed,
+        code: ConvoItemError.PendingFailed,
+        retry: () => {
+          this.footerItems.delete(ConvoItemError.PendingFailed)
+          this.commit()
+          this.batchRetryPendingMessages()
+        },
       })
       this.commit()
+    } finally {
+      this.isProcessingPendingMessages = false
     }
   }
 
@@ -789,10 +798,8 @@ export class Convo {
       logger.DebugContext.convo,
     )
 
-    this.footerItems.delete('pending-retry')
-    this.commit()
-
     try {
+      // throw new Error('UNCOMMENT TO TEST RETRY')
       const messageArray = Array.from(this.pendingMessages.values())
       const {data} = await networkRetry(2, () => {
         return this.agent.api.chat.bsky.convo.sendMessageBatch(
@@ -831,11 +838,23 @@ export class Convo {
       }
 
       this.commit()
-    } catch (e) {
-      this.footerItems.set('pending-retry', {
-        type: 'pending-retry',
-        key: 'pending-retry',
-        retry: this.batchRetryPendingMessages.bind(this),
+
+      logger.debug(
+        `Convo: sent ${this.pendingMessages.size} pending messages`,
+        {},
+        logger.DebugContext.convo,
+      )
+    } catch (e: any) {
+      logger.error(e, {context: `Convo: failed to batch retry messages`})
+      this.footerItems.set(ConvoItemError.PendingFailed, {
+        type: 'error-recoverable',
+        key: ConvoItemError.PendingFailed,
+        code: ConvoItemError.PendingFailed,
+        retry: () => {
+          this.footerItems.delete(ConvoItemError.PendingFailed)
+          this.commit()
+          this.batchRetryPendingMessages()
+        },
       })
       this.commit()
     }
@@ -862,7 +881,8 @@ export class Convo {
           },
         )
       })
-    } catch (e) {
+    } catch (e: any) {
+      logger.error(e, {context: `Convo: failed to delete message`})
       this.deletedMessages.delete(messageId)
       this.commit()
       throw e
@@ -874,10 +894,6 @@ export class Convo {
    */
   getItems(): ConvoItem[] {
     const items: ConvoItem[] = []
-
-    this.headerItems.forEach(item => {
-      items.push(item)
-    })
 
     this.pastMessages.forEach(m => {
       if (ChatBskyConvoDefs.isMessageView(m)) {
@@ -895,6 +911,10 @@ export class Convo {
           nextMessage: null,
         })
       }
+    })
+
+    this.headerItems.forEach(item => {
+      items.unshift(item)
     })
 
     this.newMessages.forEach(m => {
