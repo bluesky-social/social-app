@@ -57,6 +57,9 @@ export function useNotificationsHandler() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
+  // Safety to prevent double handling of the same notification
+  const prevIdentifier = React.useRef('')
+
   React.useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {
       if (!payload) return
@@ -158,6 +161,11 @@ export function useNotificationsHandler() {
 
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
+        if (e.notification.request.identifier === prevIdentifier.current) {
+          return
+        }
+        prevIdentifier.current = e.notification.request.identifier
+
         logger.debug(
           'Notifications: response received',
           {
@@ -190,6 +198,8 @@ export function useNotificationsHandler() {
         }
       })
 
+    // Whenever there's a stored payload, that means we had to switch accounts before handling the notification.
+    // Whenever currentAccount changes, we should try to handle it again.
     if (
       storedPayload?.reason === 'chat-message' &&
       currentAccount?.did === storedPayload.recipientDid
