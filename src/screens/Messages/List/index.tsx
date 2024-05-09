@@ -19,7 +19,7 @@ import {useListConvos} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -260,19 +260,19 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   )
 
   const navigation = useNavigation<NavigationProp>()
-  const [showTrigger, setShowTrigger] = React.useState(false)
+  const [isTriggerVisible, setIsTriggerVisible] = React.useState(false)
 
   const onMouseEnter = React.useCallback(() => {
-    setShowTrigger(true)
+    setIsTriggerVisible(true)
   }, [])
 
   const onMouseLeave = React.useCallback(() => {
-    setShowTrigger(false)
+    setIsTriggerVisible(false)
   }, [])
 
   const onFocus = React.useCallback<React.FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
-    setShowTrigger(true)
+    setIsTriggerVisible(true)
   }, [])
 
   const onPress = React.useCallback(() => {
@@ -297,7 +297,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
         onPress={onPress}
         style={a.flex_1}
         onLongPress={isNative ? menuControl.open : undefined}>
-        {({pressed}) => (
+        {({hovered, pressed}) => (
           <View
             style={[
               a.flex_row,
@@ -306,10 +306,10 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
               a.py_sm,
               a.gap_md,
               a.pr_xl,
-              pressed && t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
             <View pointerEvents="none">
-              <PreviewableUserAvatar profile={otherUser} size={42} />
+              <UserAvatar avatar={otherUser?.avatar} size={42} />
             </View>
             <View style={[a.flex_1]}>
               <Text
@@ -369,7 +369,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
               currentScreen="list"
               showMarkAsRead={convo.unreadCount > 0}
               hideTrigger={isNative}
-              triggerOpacity={showTrigger || menuControl.isOpen ? 1 : 0}
+              triggerOpacity={isTriggerVisible || menuControl.isOpen ? 1 : 0}
             />
           </View>
         )}
