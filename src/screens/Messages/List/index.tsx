@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import React, {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
@@ -40,6 +38,15 @@ import {ClipClopGate} from '../gate'
 import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
+
+function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
+  return <ChatListItem convo={item} />
+}
+
+function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
+  return item.id
+}
+
 export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
@@ -135,13 +142,6 @@ export function MessagesScreen({navigation, route}: Props) {
     navigation.navigate('MessagesSettings')
   }, [navigation])
 
-  const renderItem = useCallback(
-    ({item}: {item: ChatBskyConvoDefs.ConvoView}) => {
-      return <ChatListItem key={item.id} convo={item} />
-    },
-    [],
-  )
-
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
 
@@ -221,7 +221,7 @@ export function MessagesScreen({navigation, route}: Props) {
       <List
         data={conversations}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={keyExtractor}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
@@ -317,40 +317,54 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             a.flex_row,
             a.flex_1,
             a.pl_md,
-            a.py_sm,
+            isNative ? a.py_sm : a.py_md,
             a.gap_md,
             a.pr_xl,
             (hovered || pressed) && t.atoms.bg_contrast_25,
+            a.border_b,
+            t.atoms.border_contrast_low,
+            a.align_center,
           ]}>
           <View pointerEvents="none">
             <UserAvatar avatar={otherUser?.avatar} size={42} />
           </View>
           <View style={[a.flex_1]}>
-            <Text
-              numberOfLines={1}
-              style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
+            <View style={[a.flex_1, a.flex_row, a.align_end]}>
               <Text
-                style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
-                {otherUser.displayName || otherUser.handle}
-              </Text>{' '}
-              {lastMessageSentAt ? (
+                numberOfLines={1}
+                style={[
+                  {maxWidth: '85%'},
+                  web([a.leading_normal, {marginTop: -4}]),
+                ]}>
+                <Text style={[t.atoms.text, a.font_bold, {fontSize: 17}]}>
+                  {otherUser.displayName || otherUser.handle}
+                </Text>
+              </Text>
+              {lastMessageSentAt && (
                 <TimeElapsed timestamp={lastMessageSentAt}>
                   {({timeElapsed}) => (
-                    <Text style={t.atoms.text_contrast_medium}>
-                      @{otherUser.handle} &middot; {timeElapsed}
+                    <Text
+                      style={[
+                        web([a.leading_normal, {marginTop: -4}]),
+                        t.atoms.text_contrast_medium,
+                        {fontSize: 15},
+                      ]}>
+                      {' '}
+                      &middot; {timeElapsed}
                     </Text>
                   )}
                 </TimeElapsed>
-              ) : (
-                <Text style={t.atoms.text_contrast_medium}>
-                  @{otherUser.handle}
-                </Text>
               )}
+            </View>
+            <Text
+              numberOfLines={1}
+              style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
+              @{otherUser.handle}
             </Text>
             <Text
               numberOfLines={2}
               style={[
-                a.text_sm,
+                a.text_md,
                 a.leading_snug,
                 convo.unreadCount > 0
                   ? a.font_bold
@@ -359,12 +373,10 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
               {lastMessage}
             </Text>
           </View>
-          {convo.unreadCount > 0 && (
+          {convo.unreadCount > 0 - 1 && (
             <View
               style={[
-                a.flex_0,
-                a.ml_md,
-                a.mt_sm,
+                a.absolute,
                 a.rounded_full,
                 {
                   backgroundColor: convo.muted
@@ -372,6 +384,10 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
                     : t.palette.primary_500,
                   height: 7,
                   width: 7,
+                },
+                {
+                  top: 15,
+                  right: 8,
                 },
               ]}
             />
