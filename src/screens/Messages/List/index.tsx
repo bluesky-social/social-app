@@ -240,6 +240,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
+  const {gtMobile} = useBreakpoints()
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
@@ -368,7 +369,9 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             currentScreen="list"
             showMarkAsRead={convo.unreadCount > 0}
             hideTrigger={isNative}
-            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
+            triggerOpacity={
+              !gtMobile || showActions || menuControl.isOpen ? 1 : 0
+            }
           />
         </View>
       )}
