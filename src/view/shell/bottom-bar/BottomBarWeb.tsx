@@ -33,8 +33,10 @@ import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {Link} from 'view/com/util/Link'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
@@ -125,7 +127,7 @@ export function BottomBarWeb() {
               {gate('dms') && (
                 <NavItem routeName="Messages" href="/messages">
                   {({isActive}) => {
-                    const Icon = isActive ? EnvelopeFilled : Envelope
+                    const Icon = isActive ? MessageFilled : Message
                     return (
                       <Icon
                         size="lg"

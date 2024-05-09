@@ -41,8 +41,10 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
 import {styles} from './BottomBarStyles'
 
 type TabOptions =
@@ -247,12 +249,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 testID="bottomBarMessagesBtn"
                 icon={
                   isAtMessages ? (
-                    <EnvelopeFilled
+                    <MessageFilled
                       size="lg"
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   ) : (
-                    <Envelope
+                    <Message
                       size="lg"
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />

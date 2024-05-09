@@ -48,8 +48,10 @@ import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
 import {router} from '../../../routes'
 
 function ProfileCard() {
@@ -356,9 +358,9 @@ export function DesktopLeftNav() {
             <NavItem
               href="/messages"
               count={numUnreadMessages.numUnread}
-              icon={<Envelope style={pal.text} width={isDesktop ? 26 : 30} />}
+              icon={<Message style={pal.text} width={isDesktop ? 26 : 30} />}
               iconFilled={
-                <EnvelopeFilled style={pal.text} width={isDesktop ? 26 : 30} />
+                <MessageFilled style={pal.text} width={isDesktop ? 26 : 30} />
               }
               label={_(msg`Messages`)}
             />
