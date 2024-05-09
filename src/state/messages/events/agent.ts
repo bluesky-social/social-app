@@ -3,312 +3,52 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {logger} from '#/logger'
+import {DEFAULT_POLL_INTERVAL} from '#/state/messages/events/const'
 import {
   MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
   MessagesEventBusError,
   MessagesEventBusErrorCode,
+  MessagesEventBusEvents,
   MessagesEventBusParams,
-  MessagesEventBusState,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
 
 const LOGGER_CONTEXT = 'MessagesEventBus'
-
-const ACTIVE_POLL_INTERVAL = 60e3
-const BACKGROUND_POLL_INTERVAL = 60e3
 
 export class MessagesEventBus {
   private id: string
 
   private agent: BskyAgent
   private __tempFromUserDid: string
-  private emitter = new EventEmitter()
+  private emitter = new EventEmitter<MessagesEventBusEvents>()
 
-  private status: MessagesEventBusStatus = MessagesEventBusStatus.Uninitialized
-  private pollInterval = ACTIVE_POLL_INTERVAL
+  private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
   private error: MessagesEventBusError | undefined
   private latestRev: string | undefined = undefined
-
-  snapshot: MessagesEventBusState | undefined
+  private pollInterval = DEFAULT_POLL_INTERVAL
+  private requestedPollIntervals: Map<string, number> = new Map()
 
   constructor(params: MessagesEventBusParams) {
     this.id = nanoid(3)
     this.agent = params.agent
     this.__tempFromUserDid = params.__tempFromUserDid
 
-    this.subscribe = this.subscribe.bind(this)
-    this.getSnapshot = this.getSnapshot.bind(this)
-    this.init = this.init.bind(this)
-    this.suspend = this.suspend.bind(this)
-    this.resume = this.resume.bind(this)
-    this.setPollInterval = this.setPollInterval.bind(this)
-    this.trail = this.trail.bind(this)
-    this.trailConvo = this.trailConvo.bind(this)
+    this.init()
   }
 
-  private commit() {
-    this.snapshot = undefined
-    this.subscribers.forEach(subscriber => subscriber())
-  }
-
-  private subscribers: (() => void)[] = []
-
-  subscribe(subscriber: () => void) {
-    if (this.subscribers.length === 0) this.init()
-
-    this.subscribers.push(subscriber)
-
+  requestPollInterval(interval: number) {
+    const id = nanoid()
+    this.requestedPollIntervals.set(id, interval)
+    this.dispatch({
+      event: MessagesEventBusDispatchEvent.UpdatePoll,
+    })
     return () => {
-      this.subscribers = this.subscribers.filter(s => s !== subscriber)
-      if (this.subscribers.length === 0) this.suspend()
-    }
-  }
-
-  getSnapshot(): MessagesEventBusState {
-    if (!this.snapshot) this.snapshot = this.generateSnapshot()
-    // logger.debug(`${LOGGER_CONTEXT}: snapshotted`, {}, logger.DebugContext.convo)
-    return this.snapshot
-  }
-
-  private generateSnapshot(): MessagesEventBusState {
-    switch (this.status) {
-      case MessagesEventBusStatus.Initializing: {
-        return {
-          status: MessagesEventBusStatus.Initializing,
-          rev: undefined,
-          error: undefined,
-          setPollInterval: this.setPollInterval,
-          trail: this.trail,
-          trailConvo: this.trailConvo,
-        }
-      }
-      case MessagesEventBusStatus.Ready: {
-        return {
-          status: this.status,
-          rev: this.latestRev!,
-          error: undefined,
-          setPollInterval: this.setPollInterval,
-          trail: this.trail,
-          trailConvo: this.trailConvo,
-        }
-      }
-      case MessagesEventBusStatus.Suspended: {
-        return {
-          status: this.status,
-          rev: this.latestRev,
-          error: undefined,
-          setPollInterval: this.setPollInterval,
-          trail: this.trail,
-          trailConvo: this.trailConvo,
-        }
-      }
-      case MessagesEventBusStatus.Error: {
-        return {
-          status: MessagesEventBusStatus.Error,
-          rev: this.latestRev,
-          error: this.error || {
-            code: MessagesEventBusErrorCode.Unknown,
-            retry: () => {
-              this.init()
-            },
-          },
-          setPollInterval: this.setPollInterval,
-          trail: this.trail,
-          trailConvo: this.trailConvo,
-        }
-      }
-      default: {
-        return {
-          status: MessagesEventBusStatus.Uninitialized,
-          rev: undefined,
-          error: undefined,
-          setPollInterval: this.setPollInterval,
-          trail: this.trail,
-          trailConvo: this.trailConvo,
-        }
-      }
-    }
-  }
-
-  dispatch(action: MessagesEventBusDispatch) {
-    const prevStatus = this.status
-
-    switch (this.status) {
-      case MessagesEventBusStatus.Uninitialized: {
-        switch (action.event) {
-          case MessagesEventBusDispatchEvent.Init: {
-            this.status = MessagesEventBusStatus.Initializing
-            this.setup()
-            break
-          }
-        }
-        break
-      }
-      case MessagesEventBusStatus.Initializing: {
-        switch (action.event) {
-          case MessagesEventBusDispatchEvent.Ready: {
-            this.status = MessagesEventBusStatus.Ready
-            this.setPollInterval(ACTIVE_POLL_INTERVAL)
-            break
-          }
-          case MessagesEventBusDispatchEvent.Background: {
-            this.status = MessagesEventBusStatus.Backgrounded
-            this.setPollInterval(BACKGROUND_POLL_INTERVAL)
-            break
-          }
-          case MessagesEventBusDispatchEvent.Suspend: {
-            this.status = MessagesEventBusStatus.Suspended
-            break
-          }
-          case MessagesEventBusDispatchEvent.Error: {
-            this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
-            break
-          }
-        }
-        break
-      }
-      case MessagesEventBusStatus.Ready: {
-        switch (action.event) {
-          case MessagesEventBusDispatchEvent.Background: {
-            this.status = MessagesEventBusStatus.Backgrounded
-            this.setPollInterval(BACKGROUND_POLL_INTERVAL)
-            break
-          }
-          case MessagesEventBusDispatchEvent.Suspend: {
-            this.status = MessagesEventBusStatus.Suspended
-            this.stopPoll()
-            break
-          }
-          case MessagesEventBusDispatchEvent.Error: {
-            this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
-            this.stopPoll()
-            break
-          }
-        }
-        break
-      }
-      case MessagesEventBusStatus.Backgrounded: {
-        switch (action.event) {
-          case MessagesEventBusDispatchEvent.Resume: {
-            this.status = MessagesEventBusStatus.Ready
-            this.setPollInterval(ACTIVE_POLL_INTERVAL)
-            break
-          }
-          case MessagesEventBusDispatchEvent.Suspend: {
-            this.status = MessagesEventBusStatus.Suspended
-            this.stopPoll()
-            break
-          }
-          case MessagesEventBusDispatchEvent.Error: {
-            this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
-            this.stopPoll()
-            break
-          }
-        }
-        break
-      }
-      case MessagesEventBusStatus.Suspended: {
-        switch (action.event) {
-          case MessagesEventBusDispatchEvent.Resume: {
-            this.status = MessagesEventBusStatus.Ready
-            this.setPollInterval(ACTIVE_POLL_INTERVAL)
-            break
-          }
-          case MessagesEventBusDispatchEvent.Background: {
-            this.status = MessagesEventBusStatus.Backgrounded
-            this.setPollInterval(BACKGROUND_POLL_INTERVAL)
-            break
-          }
-          case MessagesEventBusDispatchEvent.Error: {
-            this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
-            this.stopPoll()
-            break
-          }
-        }
-        break
-      }
-      case MessagesEventBusStatus.Error: {
-        switch (action.event) {
-          case MessagesEventBusDispatchEvent.Resume:
-          case MessagesEventBusDispatchEvent.Init: {
-            this.status = MessagesEventBusStatus.Initializing
-            this.error = undefined
-            this.latestRev = undefined
-            this.setup()
-            break
-          }
-        }
-        break
-      }
-      default:
-        break
-    }
-
-    logger.debug(
-      `${LOGGER_CONTEXT}: dispatch '${action.event}'`,
-      {
-        id: this.id,
-        prev: prevStatus,
-        next: this.status,
-      },
-      logger.DebugContext.convo,
-    )
-
-    this.commit()
-  }
-
-  private async setup() {
-    logger.debug(`${LOGGER_CONTEXT}: setup`, {}, logger.DebugContext.convo)
-
-    try {
-      await this.initializeLatestRev()
-      this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
-    } catch (e: any) {
-      logger.error(e, {
-        context: `${LOGGER_CONTEXT}: setup failed`,
-      })
-
+      this.requestedPollIntervals.delete(id)
       this.dispatch({
-        event: MessagesEventBusDispatchEvent.Error,
-        payload: {
-          exception: e,
-          code: MessagesEventBusErrorCode.InitFailed,
-          retry: () => {
-            this.init()
-          },
-        },
+        event: MessagesEventBusDispatchEvent.UpdatePoll,
       })
     }
-  }
-
-  init() {
-    logger.debug(`${LOGGER_CONTEXT}: init`, {}, logger.DebugContext.convo)
-    this.dispatch({event: MessagesEventBusDispatchEvent.Init})
-  }
-
-  background() {
-    logger.debug(`${LOGGER_CONTEXT}: background`, {}, logger.DebugContext.convo)
-    this.dispatch({event: MessagesEventBusDispatchEvent.Background})
-  }
-
-  suspend() {
-    logger.debug(`${LOGGER_CONTEXT}: suspend`, {}, logger.DebugContext.convo)
-    this.dispatch({event: MessagesEventBusDispatchEvent.Suspend})
-  }
-
-  resume() {
-    logger.debug(`${LOGGER_CONTEXT}: resume`, {}, logger.DebugContext.convo)
-    this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
-  }
-
-  setPollInterval(interval: number) {
-    this.pollInterval = interval
-    this.resetPoll()
   }
 
   trail(handler: (events: ChatBskyConvoGetLog.OutputSchema['logs']) => void) {
@@ -341,30 +81,226 @@ export class MessagesEventBus {
     }
   }
 
-  private async initializeLatestRev() {
+  getLatestRev() {
+    return this.latestRev
+  }
+
+  onConnect(handler: () => void) {
+    this.emitter.on('connect', handler)
+
+    if (
+      this.status === MessagesEventBusStatus.Ready ||
+      this.status === MessagesEventBusStatus.Backgrounded ||
+      this.status === MessagesEventBusStatus.Suspended
+    ) {
+      handler()
+    }
+
+    return () => {
+      this.emitter.off('connect', handler)
+    }
+  }
+
+  onError(handler: (payload?: MessagesEventBusError) => void) {
+    this.emitter.on('error', handler)
+
+    if (this.status === MessagesEventBusStatus.Error) {
+      handler(this.error)
+    }
+
+    return () => {
+      this.emitter.off('error', handler)
+    }
+  }
+
+  background() {
+    logger.debug(`${LOGGER_CONTEXT}: background`, {}, logger.DebugContext.convo)
+    this.dispatch({event: MessagesEventBusDispatchEvent.Background})
+  }
+
+  suspend() {
+    logger.debug(`${LOGGER_CONTEXT}: suspend`, {}, logger.DebugContext.convo)
+    this.dispatch({event: MessagesEventBusDispatchEvent.Suspend})
+  }
+
+  resume() {
+    logger.debug(`${LOGGER_CONTEXT}: resume`, {}, logger.DebugContext.convo)
+    this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
+  }
+
+  private dispatch(action: MessagesEventBusDispatch) {
+    const prevStatus = this.status
+
+    switch (this.status) {
+      case MessagesEventBusStatus.Initializing: {
+        switch (action.event) {
+          case MessagesEventBusDispatchEvent.Ready: {
+            this.status = MessagesEventBusStatus.Ready
+            this.resetPoll()
+            this.emitter.emit('connect')
+            break
+          }
+          case MessagesEventBusDispatchEvent.Background: {
+            this.status = MessagesEventBusStatus.Backgrounded
+            this.resetPoll()
+            this.emitter.emit('connect')
+            break
+          }
+          case MessagesEventBusDispatchEvent.Suspend: {
+            this.status = MessagesEventBusStatus.Suspended
+            break
+          }
+          case MessagesEventBusDispatchEvent.Error: {
+            this.status = MessagesEventBusStatus.Error
+            this.error = action.payload
+            this.emitter.emit('error', action.payload)
+            break
+          }
+        }
+        break
+      }
+      case MessagesEventBusStatus.Ready: {
+        switch (action.event) {
+          case MessagesEventBusDispatchEvent.Background: {
+            this.status = MessagesEventBusStatus.Backgrounded
+            this.resetPoll()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Suspend: {
+            this.status = MessagesEventBusStatus.Suspended
+            this.stopPoll()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Error: {
+            this.status = MessagesEventBusStatus.Error
+            this.error = action.payload
+            this.stopPoll()
+            this.emitter.emit('error', action.payload)
+            break
+          }
+          case MessagesEventBusDispatchEvent.UpdatePoll: {
+            this.resetPoll()
+            break
+          }
+        }
+        break
+      }
+      case MessagesEventBusStatus.Backgrounded: {
+        switch (action.event) {
+          case MessagesEventBusDispatchEvent.Resume: {
+            this.status = MessagesEventBusStatus.Ready
+            this.resetPoll()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Suspend: {
+            this.status = MessagesEventBusStatus.Suspended
+            this.stopPoll()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Error: {
+            this.status = MessagesEventBusStatus.Error
+            this.error = action.payload
+            this.stopPoll()
+            this.emitter.emit('error', action.payload)
+            break
+          }
+          case MessagesEventBusDispatchEvent.UpdatePoll: {
+            this.resetPoll()
+            break
+          }
+        }
+        break
+      }
+      case MessagesEventBusStatus.Suspended: {
+        switch (action.event) {
+          case MessagesEventBusDispatchEvent.Resume: {
+            this.status = MessagesEventBusStatus.Ready
+            this.resetPoll()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Background: {
+            this.status = MessagesEventBusStatus.Backgrounded
+            this.resetPoll()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Error: {
+            this.status = MessagesEventBusStatus.Error
+            this.error = action.payload
+            this.stopPoll()
+            this.emitter.emit('error', action.payload)
+            break
+          }
+        }
+        break
+      }
+      case MessagesEventBusStatus.Error: {
+        switch (action.event) {
+          case MessagesEventBusDispatchEvent.Resume: {
+            // basically reset
+            this.status = MessagesEventBusStatus.Initializing
+            this.error = undefined
+            this.latestRev = undefined
+            this.init()
+            break
+          }
+        }
+        break
+      }
+      default:
+        break
+    }
+
     logger.debug(
-      `${LOGGER_CONTEXT}: initialize latest rev`,
-      {},
+      `${LOGGER_CONTEXT}: dispatch '${action.event}'`,
+      {
+        id: this.id,
+        prev: prevStatus,
+        next: this.status,
+      },
       logger.DebugContext.convo,
     )
+  }
 
-    const response = await this.agent.api.chat.bsky.convo.listConvos(
-      {
-        limit: 1,
-      },
-      {
-        headers: {
-          Authorization: this.__tempFromUserDid,
+  private async init() {
+    logger.debug(`${LOGGER_CONTEXT}: init`, {}, logger.DebugContext.convo)
+
+    try {
+      const response = await this.agent.api.chat.bsky.convo.listConvos(
+        {
+          limit: 1,
         },
-      },
-    )
+        {
+          headers: {
+            Authorization: this.__tempFromUserDid,
+          },
+        },
+      )
+      // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
-    const {convos} = response.data
+      const {convos} = response.data
 
-    for (const convo of convos) {
-      if (convo.rev > (this.latestRev = this.latestRev || convo.rev)) {
-        this.latestRev = convo.rev
+      for (const convo of convos) {
+        if (convo.rev > (this.latestRev = this.latestRev || convo.rev)) {
+          this.latestRev = convo.rev
+        }
       }
+
+      this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
+    } catch (e: any) {
+      logger.error(e, {
+        context: `${LOGGER_CONTEXT}: init failed`,
+      })
+
+      this.dispatch({
+        event: MessagesEventBusDispatchEvent.Error,
+        payload: {
+          exception: e,
+          code: MessagesEventBusErrorCode.InitFailed,
+          retry: () => {
+            this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
+          },
+        },
+      })
     }
   }
 
@@ -375,7 +311,20 @@ export class MessagesEventBus {
   private isPolling = false
   private pollIntervalRef: NodeJS.Timeout | undefined
 
+  private getPollInterval() {
+    switch (this.status) {
+      case MessagesEventBusStatus.Ready: {
+        const requested = Array.from(this.requestedPollIntervals.values())
+        const lowest = Math.min(DEFAULT_POLL_INTERVAL, ...requested)
+        return lowest
+      }
+      default:
+        return DEFAULT_POLL_INTERVAL
+    }
+  }
+
   private resetPoll() {
+    this.pollInterval = this.getPollInterval()
     this.stopPoll()
     this.startPoll()
   }
@@ -398,7 +347,15 @@ export class MessagesEventBus {
 
     this.isPolling = true
 
-    logger.debug(`${LOGGER_CONTEXT}: poll`, {}, logger.DebugContext.convo)
+    // logger.debug(
+    //   `${LOGGER_CONTEXT}: poll`,
+    //   {
+    //     requestedPollIntervals: Array.from(
+    //       this.requestedPollIntervals.values(),
+    //     ),
+    //   },
+    //   logger.DebugContext.convo,
+    // )
 
     try {
       const response = await this.agent.api.chat.bsky.convo.getLog(
@@ -411,6 +368,8 @@ export class MessagesEventBus {
           },
         },
       )
+
+      // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
       const {logs: events} = response.data
 
@@ -455,7 +414,7 @@ export class MessagesEventBus {
           exception: e,
           code: MessagesEventBusErrorCode.PollFailed,
           retry: () => {
-            this.init()
+            this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
           },
         },
       })

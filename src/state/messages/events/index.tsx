@@ -5,13 +5,13 @@ import {BskyAgent} from '@atproto-labs/api'
 import {useGate} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {MessagesEventBus} from '#/state/messages/events/agent'
-import {MessagesEventBusState} from '#/state/messages/events/types'
 import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {IS_DEV} from '#/env'
 
-const MessagesEventBusContext =
-  React.createContext<MessagesEventBusState | null>(null)
+const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
+  null,
+)
 
 export function useMessagesEventBus() {
   const ctx = React.useContext(MessagesEventBusContext)
@@ -37,12 +37,13 @@ export function Temp_MessagesEventBusProvider({
         __tempFromUserDid: getAgent().session?.did!,
       }),
   )
-  const service = React.useSyncExternalStore(bus.subscribe, bus.getSnapshot)
 
-  if (isWeb && IS_DEV) {
-    // @ts-ignore
-    window.messagesEventBus = service
-  }
+  React.useEffect(() => {
+    if (isWeb && IS_DEV) {
+      // @ts-ignore
+      window.bus = bus
+    }
+  }, [bus])
 
   React.useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
@@ -61,7 +62,7 @@ export function Temp_MessagesEventBusProvider({
   }, [bus])
 
   return (
-    <MessagesEventBusContext.Provider value={service}>
+    <MessagesEventBusContext.Provider value={bus}>
       {children}
     </MessagesEventBusContext.Provider>
   )

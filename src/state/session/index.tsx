@@ -35,7 +35,6 @@ const ApiContext = React.createContext<SessionApiContext>({
   logout: async () => {},
   resumeSession: async () => {},
   removeAccount: () => {},
-  updateCurrentAccount: () => {},
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -149,15 +148,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [cancelPendingTask],
   )
 
-  const updateCurrentAccount = React.useCallback<
-    SessionApiContext['updateCurrentAccount']
-  >(account => {
-    dispatch({
-      type: 'updated-current-account',
-      updatedFields: account,
-    })
-  }, [])
-
   React.useEffect(() => {
     if (state.needsPersist) {
       state.needsPersist = false
@@ -210,16 +200,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logout,
       resumeSession,
       removeAccount,
-      updateCurrentAccount,
     }),
-    [
-      createAccount,
-      login,
-      logout,
-      resumeSession,
-      removeAccount,
-      updateCurrentAccount,
-    ],
+    [createAccount, login, logout, resumeSession, removeAccount],
   )
 
   // @ts-ignore
