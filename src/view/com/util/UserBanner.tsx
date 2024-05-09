@@ -72,6 +72,7 @@ export function UserBanner({
           path: items[0].path,
           width: 3000,
           height: 1000,
+          webAspectRatio: 3,
         }),
       )
     } catch (e: any) {

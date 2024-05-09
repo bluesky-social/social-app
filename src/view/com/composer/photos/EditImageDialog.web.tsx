@@ -29,7 +29,6 @@ const EditImageInner = ({control, image, onChange}: EditImageDialogProps) => {
 
   const {initialCrop} = React.useMemo(() => {
     const initialArea = manips?.crop
-
     let crop: PercentCrop | undefined
 
     if (initialArea) {
