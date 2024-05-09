@@ -42,7 +42,7 @@ type NotificationPayload =
 const DEFAULT_HANDLER_OPTIONS = {
   shouldShowAlert: false,
   shouldPlaySound: false,
-  shouldSetBadge: false,
+  shouldSetBadge: true,
 }
 
 // This needs to stay outside the hook to persist between account switches
@@ -141,11 +141,10 @@ export function useNotificationsHandler() {
         const payload = e.request.trigger.payload as NotificationPayload
         if (
           payload.reason === 'chat-message' &&
-          payload.recipientDid === currentAccount?.did &&
-          currentConvoId !== payload.convoId
+          payload.recipientDid === currentAccount?.did
         ) {
           return {
-            shouldShowAlert: true,
+            shouldShowAlert: payload.convoId !== currentConvoId,
             shouldPlaySound: false,
             shouldSetBadge: false,
           }
