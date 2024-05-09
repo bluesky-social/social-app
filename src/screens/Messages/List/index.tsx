@@ -287,7 +287,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
 
   return (
     <Button
-      label="Test"
+      label={otherUser.displayName || otherUser.handle}
       onPress={onPress}
       style={a.flex_1}
       onLongPress={isNative ? menuControl.open : undefined}
