@@ -1,13 +1,15 @@
-import {BskyAgent} from '@atproto/api'
-import {AtpSessionEvent} from '@atproto-labs/api'
+import {AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
   PUBLIC_BSKY_SERVICE,
+  TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
@@ -133,9 +135,28 @@ export async function createAgentAndCreateAccount(
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
-  agent.setPersonalDetails({birthDate: birthDate.toISOString()})
   if (IS_PROD_SERVICE(service)) {
-    agent.addSavedFeeds([DISCOVER_SAVED_FEED])
+    try {
+      networkRetry(1, async () => {
+        await agent.setPersonalDetails({birthDate: birthDate.toISOString()})
+        await agent.overwriteSavedFeeds([
+          {
+            ...DISCOVER_SAVED_FEED,
+            id: TID.nextStr(),
+          },
+          {
+            ...TIMELINE_SAVED_FEED,
+            id: TID.nextStr(),
+          },
+        ])
+      })
+    } catch (e: any) {
+      logger.error(e, {
+        context: `session: createAgentAndCreateAccount failed to save personal details and feeds`,
+      })
+    }
+  } else {
+    agent.setPersonalDetails({birthDate: birthDate.toISOString()})
   }
 
   return prepareAgent(agent, gates, moderation, onSessionChange)
