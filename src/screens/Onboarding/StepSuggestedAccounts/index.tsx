@@ -133,7 +133,7 @@ export function StepSuggestedAccounts() {
   }, [track])
 
   return (
-    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={At} style={[a.mb_2xl]} />
 
       <TitleText>
