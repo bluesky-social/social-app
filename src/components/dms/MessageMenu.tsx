@@ -5,6 +5,7 @@ import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isWeb} from 'platform/detection'
 import {useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
 import {useSession} from 'state/session'
@@ -21,12 +22,10 @@ import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '../icons/Clipb
 export let MessageMenu = ({
   message,
   control,
-  hideTrigger,
   triggerOpacity,
 }: {
   hideTrigger?: boolean
   triggerOpacity?: number
-  onTriggerPress?: () => void
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
 }): React.ReactNode => {
@@ -64,7 +63,7 @@ export let MessageMenu = ({
   return (
     <>
       <Menu.Root control={control}>
-        {!hideTrigger && (
+        {isWeb && (
           <View style={{opacity: triggerOpacity}}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
               {({props, state}) => (
