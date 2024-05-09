@@ -102,6 +102,7 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'FeedSuggestedFollowCard'
   }
   'profile:unfollow': {
     logContext:
@@ -112,6 +113,7 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'FeedSuggestedFollowCard'
   }
 
   'test:all:always': {}
