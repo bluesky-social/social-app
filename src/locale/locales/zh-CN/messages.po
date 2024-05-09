@@ -746,7 +746,7 @@ msgstr "检查我的状态"
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
-msgstr "在这里输入刚才发送到你电子邮箱里的验证码"
+msgstr "在此输入刚才发送到你电子邮箱里的验证码。"
 
 #: src/view/com/modals/DeleteAccount.tsx:169
 msgid "Check your inbox for an email with the confirmation code to enter below:"
