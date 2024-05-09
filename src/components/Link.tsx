@@ -228,6 +228,7 @@ export function Link({
   return (
     <Button
       label={href}
+      onPoin
       {...rest}
       style={[a.justify_start, flatten(rest.style)]}
       role="link"

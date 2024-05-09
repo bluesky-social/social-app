@@ -5,11 +5,12 @@ import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {sha256} from 'js-sha256'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {MessagesTabNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -258,93 +259,122 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
     member => member.did !== currentAccount?.did,
   )
 
+  const navigation = useNavigation<NavigationProp>()
+  const [showTrigger, setShowTrigger] = React.useState(false)
+
+  const onMouseEnter = React.useCallback(() => {
+    setShowTrigger(true)
+  }, [])
+
+  const onMouseLeave = React.useCallback(() => {
+    setShowTrigger(false)
+  }, [])
+
+  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
+    if (e.nativeEvent.relatedTarget == null) return
+    setShowTrigger(true)
+  }, [])
+
+  const onPress = React.useCallback(() => {
+    navigation.push('MessagesConversation', {
+      conversation: convo.id,
+    })
+  }, [convo.id, navigation])
+
   if (!otherUser) {
     return null
   }
 
   return (
-    <Link
-      to={`/messages/${convo.id}`}
-      style={a.flex_1}
-      onLongPress={isNative ? menuControl.open : undefined}>
-      {({hovered, pressed}) => (
-        <View
-          style={[
-            a.flex_row,
-            a.flex_1,
-            a.pl_md,
-            a.py_sm,
-            a.gap_md,
-            a.pr_xl,
-            (hovered || pressed) && t.atoms.bg_contrast_25,
-          ]}>
-          <View pointerEvents="none">
-            <PreviewableUserAvatar profile={otherUser} size={42} />
-          </View>
-          <View style={[a.flex_1]}>
-            <Text
-              numberOfLines={1}
-              style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
+    <View
+      // @ts-expect-error web only
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onFocus={onFocus}
+      onBlur={onMouseLeave}>
+      <Button
+        label="Test"
+        onPress={onPress}
+        style={a.flex_1}
+        onLongPress={isNative ? menuControl.open : undefined}>
+        {({pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.flex_1,
+              a.pl_md,
+              a.py_sm,
+              a.gap_md,
+              a.pr_xl,
+              pressed && t.atoms.bg_contrast_25,
+            ]}>
+            <View pointerEvents="none">
+              <PreviewableUserAvatar profile={otherUser} size={42} />
+            </View>
+            <View style={[a.flex_1]}>
               <Text
-                style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
-                {otherUser.displayName || otherUser.handle}
-              </Text>{' '}
-              {lastMessageSentAt ? (
-                <TimeElapsed timestamp={lastMessageSentAt}>
-                  {({timeElapsed}) => (
-                    <Text style={t.atoms.text_contrast_medium}>
-                      @{otherUser.handle} &middot; {timeElapsed}
-                    </Text>
-                  )}
-                </TimeElapsed>
-              ) : (
-                <Text style={t.atoms.text_contrast_medium}>
-                  @{otherUser.handle}
-                </Text>
-              )}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={[
-                a.text_sm,
-                a.leading_snug,
-                convo.unreadCount > 0
-                  ? a.font_bold
-                  : t.atoms.text_contrast_medium,
-              ]}>
-              {lastMessage}
-            </Text>
-          </View>
-          {convo.unreadCount > 0 && (
-            <View
-              style={[
-                a.flex_0,
-                a.ml_md,
-                a.mt_sm,
-                a.rounded_full,
-                {
-                  backgroundColor: convo.muted
-                    ? t.palette.contrast_200
-                    : t.palette.primary_500,
-                  height: 7,
-                  width: 7,
-                },
-              ]}
+                numberOfLines={1}
+                style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
+                <Text
+                  style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
+                  {otherUser.displayName || otherUser.handle}
+                </Text>{' '}
+                {lastMessageSentAt ? (
+                  <TimeElapsed timestamp={lastMessageSentAt}>
+                    {({timeElapsed}) => (
+                      <Text style={t.atoms.text_contrast_medium}>
+                        @{otherUser.handle} &middot; {timeElapsed}
+                      </Text>
+                    )}
+                  </TimeElapsed>
+                ) : (
+                  <Text style={t.atoms.text_contrast_medium}>
+                    @{otherUser.handle}
+                  </Text>
+                )}
+              </Text>
+              <Text
+                numberOfLines={2}
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  convo.unreadCount > 0
+                    ? a.font_bold
+                    : t.atoms.text_contrast_medium,
+                ]}>
+                {lastMessage}
+              </Text>
+            </View>
+            {convo.unreadCount > 0 && (
+              <View
+                style={[
+                  a.flex_0,
+                  a.ml_md,
+                  a.mt_sm,
+                  a.rounded_full,
+                  {
+                    backgroundColor: convo.muted
+                      ? t.palette.contrast_200
+                      : t.palette.primary_500,
+                    height: 7,
+                    width: 7,
+                  },
+                ]}
+              />
+            )}
+            <ConvoMenu
+              convo={convo}
+              profile={otherUser}
+              control={menuControl}
+              currentScreen="list"
+              showMarkAsRead={convo.unreadCount > 0}
+              hideTrigger={isNative}
+              triggerOpacity={showTrigger || menuControl.isOpen ? 1 : 0}
             />
-          )}
-          <ConvoMenu
-            convo={convo}
-            profile={otherUser}
-            control={menuControl}
-            // TODO(sam) show on hover on web
-            // tricky because it captures the mouse event
-            hideTrigger
-            currentScreen="list"
-            showMarkAsRead={convo.unreadCount > 0}
-          />
-        </View>
-      )}
-    </Link>
+          </View>
+        )}
+      </Button>
+    </View>
   )
 }
 
