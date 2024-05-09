@@ -26,7 +26,7 @@ type NotificationReason =
   | 'quote'
   | 'chat-message'
 
-type NotificationRecord =
+type NotificationPayload =
   | {
       reason: Exclude<NotificationReason, 'chat-message'>
       uri: string
@@ -46,7 +46,7 @@ const DEFAULT_HANDLER_OPTIONS = {
 }
 
 // This needs to stay outside the hook to persist between account switches
-let storedPayload: NotificationRecord | undefined
+let storedPayload: NotificationPayload | undefined
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
@@ -58,7 +58,7 @@ export function useNotificationsHandler() {
   const closeAllActiveElements = useCloseAllActiveElements()
 
   React.useEffect(() => {
-    const handleNotification = (payload?: NotificationRecord) => {
+    const handleNotification = (payload?: NotificationPayload) => {
       if (!payload) return
 
       if (payload.reason === 'chat-message') {
@@ -131,7 +131,7 @@ export function useNotificationsHandler() {
           logger.DebugContext.notifications,
         )
 
-        const payload = e.request.trigger.payload as NotificationRecord
+        const payload = e.request.trigger.payload as NotificationPayload
         if (
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did &&
@@ -178,7 +178,7 @@ export function useNotificationsHandler() {
             payload: e.notification.request.trigger.payload,
           })
           handleNotification(
-            e.notification.request.trigger.payload as NotificationRecord,
+            e.notification.request.trigger.payload as NotificationPayload,
           )
           Notifications.dismissAllNotificationsAsync()
         }
