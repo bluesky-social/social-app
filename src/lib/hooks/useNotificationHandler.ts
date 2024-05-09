@@ -1,6 +1,6 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
-import {useNavigation} from '@react-navigation/native'
+import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -73,12 +73,19 @@ export function useNotificationsHandler() {
           }
         } else {
           setTimeout(() => {
-            // @ts-expect-error types are weird here
-            navigation.navigate('MessagesTab', {
-              screen: 'MessagesConversation',
-              params: {
-                conversation: payload.convoId,
-              },
+            navigation.dispatch(state => {
+              if (state.routes[0].name === 'Messages') {
+                return CommonActions.navigate('MessagesConversation', {
+                  conversation: payload.convoId,
+                })
+              } else {
+                return CommonActions.navigate('MessagesTab', {
+                  screen: 'Messages',
+                  params: {
+                    pushToConversation: payload.convoId,
+                  },
+                })
+              }
             })
           }, 500)
         }
