@@ -31,7 +31,7 @@ export function Component({}: {}) {
   const theme = useTheme()
   const {currentAccount} = useSession()
   const {getAgent} = useAgent()
-  const {clearCurrentAccount, removeAccount} = useSessionApi()
+  const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -69,7 +69,6 @@ export function Component({}: {}) {
       Toast.show(_(msg`Your account has been deleted`))
       resetToTab('HomeTab')
       removeAccount(currentAccount)
-      clearCurrentAccount()
       closeModal()
     } catch (e: any) {
       setError(cleanError(e))
@@ -84,26 +83,26 @@ export function Component({}: {}) {
       <ScrollView style={[pal.view]} keyboardShouldPersistTaps="handled">
         <View style={[styles.titleContainer, pal.view]}>
           <Text type="title-xl" style={[s.textCenter, pal.text]}>
-            <Trans>Delete Account</Trans>
+            <Trans>
+              Delete Account{' '}
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                "
+              </Text>
+              <Text
+                type="title-xl"
+                numberOfLines={1}
+                style={[
+                  isMobile ? styles.titleMobile : styles.titleDesktop,
+                  pal.text,
+                  s.bold,
+                ]}>
+                {currentAccount?.handle}
+              </Text>
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                "
+              </Text>
+            </Trans>
           </Text>
-          <View style={[pal.view, s.flexRow]}>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {' "'}
-            </Text>
-            <Text
-              type="title-xl"
-              numberOfLines={1}
-              style={[
-                isMobile ? styles.titleMobile : styles.titleDesktop,
-                pal.text,
-                s.bold,
-              ]}>
-              {currentAccount?.handle}
-            </Text>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {'"'}
-            </Text>
-          </View>
         </View>
         {!isEmailSent ? (
           <>

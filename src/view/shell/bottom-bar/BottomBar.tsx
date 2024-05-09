@@ -27,6 +27,7 @@ import {getTabState, TabState} from '#/lib/routes/helpers'
 import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -68,6 +69,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     isAtMessages,
   } = useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
+  const numUnreadMessages = useUnreadMessageCount()
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -257,9 +259,15 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   )
                 }
                 onPress={onPressMessages}
+                notificationCount={numUnreadMessages.numUnread}
+                accessible={true}
                 accessibilityRole="tab"
                 accessibilityLabel={_(msg`Messages`)}
-                accessibilityHint=""
+                accessibilityHint={
+                  numUnreadMessages.count > 0
+                    ? `${numUnreadMessages.numUnread} unread`
+                    : ''
+                }
               />
             )}
             <Btn

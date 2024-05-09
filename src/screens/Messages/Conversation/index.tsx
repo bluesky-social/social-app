@@ -1,24 +1,26 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
-import {useSession} from 'state/session'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {ConvoProvider, useConvo} from 'state/messages/convo'
+import {ConvoStatus} from 'state/messages/convo/types'
+import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
-import {useChatQuery} from '#/screens/Messages/Temp/query/query'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {DotGrid_Stroke2_Corner0_Rounded} from '#/components/icons/DotGrid'
+import {ConvoMenu} from '#/components/dms/ConvoMenu'
+import {Error} from '#/components/Error'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
@@ -29,46 +31,92 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
-  const chatId = route.params.conversation
-  const {currentAccount} = useSession()
-  const myDid = currentAccount?.did
+  const convoId = route.params.conversation
+  const {setCurrentConvoId} = useCurrentConvoId()
 
-  const {data: chat, isError: isError} = useChatQuery(chatId)
-  const otherProfile = React.useMemo(() => {
-    return chat?.members?.find(m => m.did !== myDid)
-  }, [chat?.members, myDid])
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentConvoId(convoId)
+      return () => {
+        setCurrentConvoId(undefined)
+      }
+    }, [convoId, setCurrentConvoId]),
+  )
 
   if (!gate('dms')) return <ClipClopGate />
 
-  if (!chat || !otherProfile) {
+  return (
+    <ConvoProvider convoId={convoId}>
+      <Inner />
+    </ConvoProvider>
+  )
+}
+
+function Inner() {
+  const convo = useConvo()
+  const {_} = useLingui()
+
+  if (
+    convo.status === ConvoStatus.Uninitialized ||
+    convo.status === ConvoStatus.Initializing
+  ) {
     return (
-      <CenteredView style={{flex: 1}} sideBorders>
-        <ListMaybePlaceholder isLoading={true} isError={isError} />
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header />
+        <ListMaybePlaceholder isLoading />
       </CenteredView>
     )
   }
 
+  if (convo.status === ConvoStatus.Error) {
+    return (
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header />
+        <Error
+          title={_(msg`Something went wrong`)}
+          message={_(msg`We couldn't load this conversation`)}
+          onRetry={() => convo.error.retry()}
+        />
+      </CenteredView>
+    )
+  }
+
+  /*
+   * Any other convo states (atm) are "ready" states
+   */
+
   return (
-    <CenteredView style={{flex: 1}} sideBorders>
-      <Header profile={otherProfile} />
-      <MessagesList chatId={chatId} />
-    </CenteredView>
+    <KeyboardProvider>
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header profile={convo.recipients[0]} />
+        <MessagesList />
+      </CenteredView>
+    </KeyboardProvider>
   )
 }
 
-function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+let Header = ({
+  profile,
+}: {
+  profile?: AppBskyActorDefs.ProfileViewBasic
+}): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
+  const convo = useConvo()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (isWeb) {
-      navigation.replace('MessagesList')
+      navigation.replace('Messages')
     } else {
       navigation.pop()
     }
   }, [navigation])
+
+  const onUpdateConvo = useCallback(() => {
+    // TODO eric update muted state
+  }, [])
 
   return (
     <View
@@ -78,22 +126,20 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
         a.border_b,
         a.flex_row,
         a.justify_between,
+        a.align_start,
         a.gap_lg,
         a.px_lg,
         a.py_sm,
       ]}>
       {!gtTablet ? (
         <TouchableOpacity
-          testID="viewHeaderDrawerBtn"
+          testID="conversationHeaderBackBtn"
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
-          style={{
-            width: 30,
-            height: 30,
-          }}
+          style={{width: 30, height: 30}}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Back`)}
-          accessibilityHint={_(msg`Access navigation links and settings`)}>
+          accessibilityHint="">
           <FontAwesomeIcon
             size={18}
             icon="angle-left"
@@ -106,23 +152,45 @@ function Header({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
       ) : (
         <View style={{width: 30}} />
       )}
-      <View style={[a.align_center, a.gap_sm]}>
-        <UserAvatar size={32} avatar={profile.avatar} />
-        <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>{profile.displayName}</Trans>
-        </Text>
+      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
+        {profile ? (
+          <>
+            <PreviewableUserAvatar size={32} profile={profile} />
+            <Text style={[a.text_lg, a.font_bold, a.text_center]}>
+              {profile.displayName}
+            </Text>
+          </>
+        ) : (
+          <>
+            <View
+              style={[
+                {width: 32, height: 32},
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+              ]}
+            />
+            <View
+              style={[
+                {width: 120, height: 18},
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                a.mb_2xs,
+              ]}
+            />
+          </>
+        )}
       </View>
-      <View>
-        <Button
-          label={_(msg`Chat settings`)}
-          color="secondary"
-          size="large"
-          variant="ghost"
-          style={[{height: 'auto', width: 'auto'}, a.px_sm, a.py_sm]}
-          onPress={() => {}}>
-          <ButtonIcon icon={DotGrid_Stroke2_Corner0_Rounded} />
-        </Button>
-      </View>
+      {convo.status === ConvoStatus.Ready && profile ? (
+        <ConvoMenu
+          convo={convo.convo}
+          profile={profile}
+          onUpdateConvo={onUpdateConvo}
+          currentScreen="conversation"
+        />
+      ) : (
+        <View style={{width: 30}} />
+      )}
     </View>
   )
 }
+Header = React.memo(Header)

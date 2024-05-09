@@ -38,10 +38,12 @@ type Embed =
 export function PostEmbeds({
   embed,
   moderation,
+  onOpen,
   style,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -52,8 +54,12 @@ export function PostEmbeds({
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     return (
       <View style={style}>
-        <PostEmbeds embed={embed.media} moderation={moderation} />
-        <MaybeQuoteEmbed embed={embed.record} />
+        <PostEmbeds
+          embed={embed.media}
+          moderation={moderation}
+          onOpen={onOpen}
+        />
+        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
       </View>
     )
   }
@@ -80,7 +86,7 @@ export function PostEmbeds({
 
     // quote post
     // =
-    return <MaybeQuoteEmbed embed={embed} style={style} />
+    return <MaybeQuoteEmbed embed={embed} style={style} onOpen={onOpen} />
   }
 
   // image embed
@@ -151,7 +157,7 @@ export function PostEmbeds({
     const link = embed.external
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalLinkEmbed link={link} style={style} />
+        <ExternalLinkEmbed link={link} onOpen={onOpen} style={style} />
       </ContentHider>
     )
   }

@@ -8,19 +8,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {
-  DEFAULT_SERVICE,
-  DISCOVER_SAVED_FEED,
-  IS_PROD_SERVICE,
-} from '#/lib/constants'
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {
-  useAddSavedFeedsMutation,
-  usePreferencesSetBirthDateMutation,
-} from '#/state/queries/preferences'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 
@@ -210,8 +202,6 @@ export function useSubmitSignup({
 }) {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
-  const {mutateAsync: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutate: addSavedFeeds} = useAddSavedFeedsMutation()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
@@ -249,6 +239,10 @@ export function useSubmitSignup({
         !verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
+        logger.error('Signup Flow Error', {
+          errorMessage: 'Verification captcha code was not set.',
+          registrationHandle: state.handle,
+        })
         return dispatch({
           type: 'setError',
           value: _(msg`Please complete the verification captcha.`),
@@ -264,16 +258,10 @@ export function useSubmitSignup({
           email: state.email,
           handle: createFullHandle(state.handle, state.userDomain),
           password: state.password,
+          birthDate: state.dateOfBirth,
           inviteCode: state.inviteCode.trim(),
           verificationCode: verificationCode,
         })
-        // this initial set triggers v1->v2 feeds migration
-        await setBirthDate({birthDate: state.dateOfBirth})
-        // add in default feed after migration has taken place
-        if (IS_PROD_SERVICE(state.serviceUrl)) {
-          // match existing handling
-          addSavedFeeds([DISCOVER_SAVED_FEED])
-        }
       } catch (e: any) {
         onboardingDispatch({type: 'skip'}) // undo starting the onboard
         let errMsg = e.toString()
@@ -288,20 +276,17 @@ export function useSubmitSignup({
           return
         }
 
-        if ([400, 429].includes(e.status)) {
-          logger.warn('Failed to create account', {message: e})
-        } else {
-          logger.error(`Failed to create account (${e.status} status)`, {
-            message: e,
-          })
-        }
-
         const error = cleanError(errMsg)
         const isHandleError = error.toLowerCase().includes('handle')
 
         dispatch({type: 'setIsLoading', value: false})
-        dispatch({type: 'setError', value: cleanError(errMsg)})
+        dispatch({type: 'setError', value: error})
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
+
+        logger.error('Signup Flow Error', {
+          errorMessage: error,
+          registrationHandle: state.handle,
+        })
       } finally {
         dispatch({type: 'setIsLoading', value: false})
       }
@@ -319,8 +304,6 @@ export function useSubmitSignup({
       _,
       onboardingDispatch,
       createAccount,
-      setBirthDate,
-      addSavedFeeds,
     ],
   )
 }

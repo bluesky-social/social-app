@@ -22,7 +22,7 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -33,7 +33,6 @@ import {HeartIconSolid} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {pluralize} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
@@ -176,6 +175,7 @@ let FeedItem = ({
     return null
   }
 
+  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
   return (
     <Link
       testID={`feedItem-by-${item.notification.author.handle}`}
@@ -236,8 +236,10 @@ let FeedItem = ({
                   <Trans>and</Trans>{' '}
                 </Text>
                 <Text style={[pal.text, s.bold]}>
-                  {formatCount(authors.length - 1)}{' '}
-                  {pluralize(authors.length - 1, 'other')}
+                  {plural(authors.length - 1, {
+                    one: `${formattedCount} other`,
+                    other: `${formattedCount} others`,
+                  })}
                 </Text>
               </>
             ) : undefined}

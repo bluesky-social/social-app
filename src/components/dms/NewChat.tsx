@@ -8,7 +8,8 @@ import {useLingui} from '@lingui/react'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
@@ -17,7 +18,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {useGetChatFromMembers} from '../../screens/Messages/Temp/query/query'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Button} from '../Button'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
@@ -33,9 +34,9 @@ export function NewChat({
   const t = useTheme()
   const {_} = useLingui()
 
-  const {mutate: createChat} = useGetChatFromMembers({
+  const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
-      onNewChat(data.chat.id)
+      onNewChat(data.convo.id)
     },
     onError: error => {
       Toast.show(error.message)
@@ -54,7 +55,7 @@ export function NewChat({
       <FAB
         testID="newChatFAB"
         onPress={control.open}
-        icon={<Envelope size="xl" fill={t.palette.white} />}
+        icon={<Plus size="lg" fill={t.palette.white} />}
         accessibilityRole="button"
         accessibilityLabel={_(msg`New chat`)}
         accessibilityHint=""
@@ -178,7 +179,7 @@ function SearchablePeopleList({
         </Text>
         <TextField.Root>
           <TextField.Icon icon={Search} />
-          <TextField.Input
+          <Dialog.Input
             label={_(msg`Search profiles`)}
             placeholder={_(msg`Search`)}
             value={searchText}
@@ -197,6 +198,7 @@ function SearchablePeopleList({
             autoCorrect={false}
             autoComplete="off"
             autoCapitalize="none"
+            autoFocus
           />
         </TextField.Root>
       </View>
@@ -211,20 +213,35 @@ function SearchablePeopleList({
       ListHeaderComponent={
         <>
           {listHeader}
-          {searchText.length > 0 && !actorAutocompleteData?.length && (
-            <ListMaybePlaceholder
-              isLoading={isFetching}
-              isError={isError}
-              onRetry={refetch}
-              hideBackButton={true}
-              emptyType="results"
-              sideBorders={false}
-              emptyMessage={
-                isError
-                  ? _(msg`No search results found for "${searchText}".`)
-                  : _(msg`Could not load profiles. Please try again later.`)
-              }
-            />
+          {searchText.length === 0 ? (
+            <View style={[a.pt_4xl, a.align_center, a.px_lg]}>
+              <Envelope width={64} fill={t.palette.contrast_200} />
+              <Text
+                style={[
+                  a.text_lg,
+                  a.text_center,
+                  a.mt_md,
+                  t.atoms.text_contrast_low,
+                ]}>
+                <Trans>Search for someone to start a conversation with.</Trans>
+              </Text>
+            </View>
+          ) : (
+            !actorAutocompleteData?.length && (
+              <ListMaybePlaceholder
+                isLoading={isFetching}
+                isError={isError}
+                onRetry={refetch}
+                hideBackButton={true}
+                emptyType="results"
+                sideBorders={false}
+                emptyMessage={
+                  isError
+                    ? _(msg`No search results found for "${searchText}".`)
+                    : _(msg`Could not load profiles. Please try again later.`)
+                }
+              />
+            )
           )}
         </>
       }

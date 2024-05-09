@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
@@ -109,7 +109,7 @@ function PrimaryFeedCardInner({
               a.py_xs,
               ctx.selected && styles.textSelected,
             ]}>
-            by @{feed.creatorHandle}
+            <Trans>by @{feed.creatorHandle}</Trans>
           </Text>
         </View>
 

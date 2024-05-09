@@ -2,7 +2,7 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
@@ -16,7 +16,6 @@ import {
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {pluralize} from 'lib/strings/helpers'
 import {s} from 'lib/styles'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import * as Toast from 'view/com/util/Toast'
@@ -267,10 +266,11 @@ export function FeedSourceCardLoaded({
 
         {showLikes && feed.type === 'feed' ? (
           <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-            <Trans>
-              Liked by {feed.likeCount || 0}{' '}
-              {pluralize(feed.likeCount || 0, 'user')}
-            </Trans>
+            <Plural
+              value={feed.likeCount || 0}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
           </Text>
         ) : null}
       </Pressable>

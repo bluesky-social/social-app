@@ -16,12 +16,14 @@ export function AccountList({
   onSelectAccount,
   onSelectOther,
   otherLabel,
+  pendingDid,
 }: {
   onSelectAccount: (account: SessionAccount) => void
   onSelectOther: () => void
   otherLabel?: string
+  pendingDid: string | null
 }) {
-  const {isSwitchingAccounts, currentAccount, accounts} = useSession()
+  const {currentAccount, accounts} = useSession()
   const t = useTheme()
   const {_} = useLingui()
 
@@ -31,6 +33,7 @@ export function AccountList({
 
   return (
     <View
+      pointerEvents={pendingDid ? 'none' : 'auto'}
       style={[
         a.rounded_md,
         a.overflow_hidden,
@@ -43,6 +46,7 @@ export function AccountList({
             account={account}
             onSelect={onSelectAccount}
             isCurrentAccount={account.did === currentAccount?.did}
+            isPendingAccount={account.did === pendingDid}
           />
           <View style={[a.border_b, t.atoms.border_contrast_low]} />
         </React.Fragment>
@@ -50,7 +54,7 @@ export function AccountList({
       <Button
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
-        onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
+        onPress={pendingDid ? undefined : onPressAddAccount}
         label={_(msg`Login to account that is not listed`)}>
         {({hovered, pressed}) => (
           <View
@@ -59,8 +63,7 @@ export function AccountList({
               a.flex_row,
               a.align_center,
               {height: 48},
-              (hovered || pressed || isSwitchingAccounts) &&
-                t.atoms.bg_contrast_25,
+              (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
             <Text
               style={[
@@ -84,10 +87,12 @@ function AccountItem({
   account,
   onSelect,
   isCurrentAccount,
+  isPendingAccount,
 }: {
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
   isCurrentAccount: boolean
+  isPendingAccount: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -115,7 +120,7 @@ function AccountItem({
             a.flex_row,
             a.align_center,
             {height: 48},
-            (hovered || pressed) && t.atoms.bg_contrast_25,
+            (hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
           ]}>
           <View style={a.p_md}>
             <UserAvatar avatar={profile?.avatar} size={24} />

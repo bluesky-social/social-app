@@ -35,7 +35,14 @@ export function DmServiceUrlProvider({children}: {children: React.ReactNode}) {
   React.useEffect(() => {
     ;(async () => {
       const v = await getItem()
-      setServiceUrl(v ?? '')
+      try {
+        if (v) {
+          new URL(v)
+          setServiceUrl(v)
+        }
+      } catch (e) {
+        console.error('Invalid service URL stored in async storage:', v)
+      }
     })()
   }, [getItem])
 
