@@ -7,10 +7,11 @@ import {
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {RichText} from '@atproto/api'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS} from '#/platform/detection'
 import {useConvo} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
@@ -163,8 +164,21 @@ export function MessagesList() {
 
   const onSendMessage = useCallback(
     async (text: string) => {
-      const rt = new RichText({text}, {cleanNewlines: true})
+      let rt = new RichText({text}, {cleanNewlines: true})
       await rt.detectFacets(getAgent())
+      rt = shortenLinks(rt)
+
+      // filter out any mention facets that didn't map to a user
+      rt.facets = rt.facets?.filter(facet => {
+        const mention = facet.features.find(feature =>
+          AppBskyRichtextFacet.isMention(feature),
+        )
+        if (mention && !mention.did) {
+          return false
+        }
+        return true
+      })
+
       if (convo.status === ConvoStatus.Ready) {
         convo.sendMessage({
           text,
