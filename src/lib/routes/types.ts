@@ -72,7 +72,7 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-  Messages: undefined
+  Messages: {pushToConversation?: string}
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
@@ -81,7 +81,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Feeds: undefined
   Notifications: undefined
   Hashtag: {tag: string; author?: string}
-  Messages: undefined
+  Messages: {pushToConversation?: string}
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
