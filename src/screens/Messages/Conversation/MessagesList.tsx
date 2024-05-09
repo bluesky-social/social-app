@@ -7,12 +7,14 @@ import {
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {RichText} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isIOS} from '#/platform/detection'
 import {useConvo} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
+import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
@@ -87,6 +89,7 @@ function onScrollToIndexFailed() {
 
 export function MessagesList() {
   const convo = useConvo()
+  const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
@@ -159,14 +162,17 @@ export function MessagesList() {
   }, [convo, hasInitiallyScrolled])
 
   const onSendMessage = useCallback(
-    (text: string) => {
+    async (text: string) => {
+      const rt = new RichText({text}, {cleanNewlines: true})
+      await rt.detectFacets(getAgent())
       if (convo.status === ConvoStatus.Ready) {
         convo.sendMessage({
           text,
+          facets: rt.facets,
         })
       }
     },
-    [convo],
+    [convo, getAgent],
   )
 
   const onScroll = React.useCallback(
