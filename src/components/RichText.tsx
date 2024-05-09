@@ -26,6 +26,7 @@ export function RichText({
   enableTags = false,
   authorHandle,
   onLinkPress,
+  display = 'color',
 }: TextStyleProp &
   Pick<TextProps, 'selectable'> & {
     value: RichTextAPI | string
@@ -35,13 +36,21 @@ export function RichText({
     enableTags?: boolean
     authorHandle?: string
     onLinkPress?: LinkProps['onPress']
+    display?: 'color' | 'underlines'
   }) {
+  const t = useTheme()
   const richText = React.useMemo(
     () =>
       value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
     [value],
   )
-  const styles = [a.leading_snug, flatten(style)]
+  const plainStyles = [a.leading_snug, flatten(style)]
+  const interactiveStyles = [
+    a.leading_snug,
+    a.pointer_events_auto,
+    display === 'color' ? {color: t.palette.primary_500} : a.underline,
+    flatten(style),
+  ]
 
   const {text, facets} = richText
 
@@ -67,7 +76,7 @@ export function RichText({
       <Text
         selectable={selectable}
         testID={testID}
-        style={styles}
+        style={plainStyles}
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
@@ -93,7 +102,7 @@ export function RichText({
           <InlineLinkText
             selectable={selectable}
             to={`/profile/${mention.did}`}
-            style={[...styles, {pointerEvents: 'auto'}]}
+            style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             onPress={onLinkPress}>
@@ -110,7 +119,7 @@ export function RichText({
             selectable={selectable}
             key={key}
             to={link.uri}
-            style={[...styles, {pointerEvents: 'auto'}]}
+            style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
@@ -130,9 +139,10 @@ export function RichText({
           key={key}
           text={segment.text}
           tag={tag.tag}
-          style={styles}
+          style={interactiveStyles}
           selectable={selectable}
           authorHandle={authorHandle}
+          display={display}
         />,
       )
     } else {
@@ -145,7 +155,7 @@ export function RichText({
     <Text
       selectable={selectable}
       testID={testID}
-      style={styles}
+      style={plainStyles}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
@@ -160,11 +170,13 @@ function RichTextTag({
   style,
   selectable,
   authorHandle,
+  display,
 }: {
   text: string
   tag: string
   selectable?: boolean
   authorHandle?: string
+  display: 'color' | 'underlines'
 } & TextStyleProp) {
   const t = useTheme()
   const {_} = useLingui()
@@ -219,19 +231,17 @@ function RichTextTag({
           onFocus={onFocus}
           onBlur={onBlur}
           style={[
-            style,
-            {
-              pointerEvents: 'auto',
-              color: t.palette.primary_500,
-            },
             web({
               cursor: 'pointer',
             }),
-            (hovered || focused || pressed) && {
-              ...web({outline: 0}),
-              textDecorationLine: 'underline',
-              textDecorationColor: t.palette.primary_500,
-            },
+            (hovered || focused || pressed) && web({outline: 0}),
+            (hovered || focused || pressed) &&
+              display === 'color' &&
+              web({
+                textDecorationLine: 'underline',
+                textDecorationColor: t.palette.primary_500,
+              }),
+            style,
           ]}>
           {text}
         </Text>
