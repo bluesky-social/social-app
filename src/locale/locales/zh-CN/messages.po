@@ -114,34 +114,9 @@ msgstr ""
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:96
-#~ msgid "<0>{0}</0> following"
-#~ msgstr "<0>{0}</0> 个正在关注"
-
-#: src/components/ProfileHoverCard/index.web.tsx:437
-#~ msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-#~ msgstr "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-
-#: src/components/ProfileHoverCard/index.web.tsx:449
-#: src/screens/Profile/Header/Metrics.tsx:45
-#~ msgid "<0>{following} </0><1>following</1>"
-#~ msgstr "<0>{following} </0><1>个正在关注</1>"
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:31
-#~ msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-#~ msgstr "<0>选择你</0><1>推荐的</1><2>信息流</2>"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:38
-#~ msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-#~ msgstr "<0>关注一些</0><1>推荐的</1><2>用户</2>"
-
 #: src/view/com/modals/SelfLabel.tsx:134
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
 msgstr ""
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
-#~ msgid "<0>Welcome to</0><1>Bluesky</1>"
-#~ msgstr "<0>欢迎来到</0><1>Bluesky</1>"
 
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
@@ -173,10 +148,6 @@ msgstr "无障碍设置"
 #: src/view/screens/AccessibilitySettings.tsx:63
 msgid "Accessibility Settings"
 msgstr "无障碍设置"
-
-#: src/components/moderation/LabelsOnMe.tsx:42
-#~ msgid "account"
-#~ msgstr "账户"
 
 #: src/screens/Login/LoginForm.tsx:161
 #: src/view/screens/Settings/index.tsx:336
@@ -285,10 +256,6 @@ msgstr "添加至列表"
 #: src/view/com/feeds/FeedSourceCard.tsx:233
 msgid "Add to my feeds"
 msgstr "添加至自定义信息流"
-
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
-#~ msgid "Added"
-#~ msgstr "已添加"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
@@ -440,10 +407,6 @@ msgstr "申诉 \"{0}\" 标记"
 #: src/components/moderation/LabelsOnMeDialog.tsx:193
 msgid "Appeal submitted"
 msgstr ""
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:193
-#~ msgid "Appeal submitted."
-#~ msgstr "申诉已提交。"
 
 #: src/view/screens/Settings/index.tsx:430
 msgid "Appearance"
@@ -604,21 +567,6 @@ msgstr "Bluesky"
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
 msgstr "Bluesky 是一个开放的公共网络，你可以选择自己的托管提供商。现在，自定义托管现在已经进入开发者测试阶段。"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
-#~ msgid "Bluesky is flexible."
-#~ msgstr "Bluesky 非常灵活。"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:69
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:71
-#~ msgid "Bluesky is open."
-#~ msgstr "Bluesky 保持开放。"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:56
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:58
-#~ msgid "Bluesky is public."
-#~ msgstr "Bluesky 为公众而生。"
-
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky 不会向未登录的用户显示你的个人资料和帖子。但其他应用可能不会遵照此请求，这无法确保你的账户隐私。"
@@ -642,10 +590,6 @@ msgstr "商务"
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
 msgstr "来自 —"
-
-#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
-#~ msgid "by {0}"
-#~ msgstr "来自 {0}"
 
 #: src/components/LabelingServiceCard/index.tsx:56
 msgid "By {0}"
@@ -795,22 +739,10 @@ msgstr ""
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/Conversation/index.tsx:26
-#~ msgid "Chat with {chatId}"
-#~ msgstr ""
-
 #: src/screens/Deactivated.tsx:78
 #: src/screens/Deactivated.tsx:82
 msgid "Check my status"
 msgstr "检查我的状态"
-
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:122
-#~ msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-#~ msgstr "查看一些推荐的信息流。点击 + 去将他们新增到你的固定信息流列表中。"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:186
-#~ msgid "Check out some recommended users. Follow them to see similar users."
-#~ msgstr "查看一些推荐的用户。关注他们还将推荐相似的用户。"
 
 #: src/screens/Login/LoginForm.tsx:262
 msgid "Check your email for a login code and enter it here."
@@ -831,11 +763,6 @@ msgstr "选择服务"
 #: src/screens/Onboarding/StepFinished.tsx:141
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "选择支持你的自定义信息流的算法。"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
-#~ msgid "Choose the algorithms that power your experience with custom feeds."
-#~ msgstr "选择可改进你自定义信息流的算法。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 msgid "Choose your main feeds"
@@ -1042,10 +969,6 @@ msgstr "连接中..."
 #: src/screens/Signup/index.tsx:238
 msgid "Contact support"
 msgstr "联系支持"
-
-#: src/components/moderation/LabelsOnMe.tsx:42
-#~ msgid "content"
-#~ msgstr "内容"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
@@ -1290,10 +1213,6 @@ msgstr "删除"
 #: src/view/screens/Settings/index.tsx:771
 msgid "Delete account"
 msgstr "删除账户"
-
-#: src/view/com/modals/DeleteAccount.tsx:87
-#~ msgid "Delete Account"
-#~ msgstr "删除账户"
 
 #: src/view/com/modals/DeleteAccount.tsx:87
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
@@ -1836,11 +1755,6 @@ msgstr "无法加载 GIF"
 msgid "Failed to load past messages."
 msgstr ""
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
-#~ msgid "Failed to load recommended feeds"
-#~ msgstr "无法加载推荐信息流"
-
 #: src/view/com/lightbox/Lightbox.tsx:83
 msgid "Failed to save image: {0}"
 msgstr "无法保存此图片：{0}"
@@ -1873,10 +1787,6 @@ msgstr "反馈"
 msgid "Feeds"
 msgstr "信息流"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
-#~ msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-#~ msgstr "信息流由用户创建并管理。选择一些你感兴趣的信息流。"
-
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "创建信息流要求一些编程基础。查看 <0/> 以获取详情。"
@@ -1906,10 +1816,6 @@ msgstr "寻找一些账户关注"
 #: src/view/screens/Search/Search.tsx:462
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 寻找帖子和用户"
-
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
-#~ msgid "Finding similar accounts..."
-#~ msgstr "正在寻找类似的账户..."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:109
 msgid "Fine-tune the content you see on your Following feed."
@@ -1972,10 +1878,6 @@ msgstr "回关"
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
 msgstr "关注选择的用户并继续下一步"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
-#~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-#~ msgstr "关注一些用户以开始，我们可以根据你感兴趣的用户向你推荐更多类似用户。"
 
 #: src/view/com/profile/ProfileCard.tsx:226
 msgid "Followed by {0}"
@@ -2117,11 +2019,6 @@ msgstr "返回主页"
 #: src/view/screens/NotFound.tsx:54
 msgid "Go Home"
 msgstr "返回主页"
-
-#: src/view/screens/Search/Search.tsx:827
-#: src/view/shell/desktop/Search.tsx:263
-#~ msgid "Go to @{queryMaybeHandle}"
-#~ msgstr "前往 @{queryMaybeHandle}"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -2415,10 +2312,6 @@ msgstr "工作"
 msgid "Journalism"
 msgstr "新闻学"
 
-#: src/components/moderation/LabelsOnMe.tsx:59
-#~ msgid "label has been placed on this {labelTarget}"
-#~ msgstr "标记已放置在 {labelTarget} 上"
-
 #: src/components/moderation/ContentHider.tsx:144
 msgid "Labeled by {0}."
 msgstr "由 {0} 标记。"
@@ -2434,10 +2327,6 @@ msgstr "标记"
 #: src/screens/Profile/Sections/Labels.tsx:156
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "标记是对特定内容及用户的提示。可以针对特定内容默认隐藏内容、显示警告或直接显示。"
-
-#: src/components/moderation/LabelsOnMe.tsx:61
-#~ msgid "labels have been placed on this {labelTarget}"
-#~ msgstr "标记已放置在 {labelTarget} 上"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:62
 msgid "Labels on your account"
@@ -2530,10 +2419,6 @@ msgstr "让我们开始！"
 msgid "Light"
 msgstr "亮色"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:197
-#~ msgid "Like"
-#~ msgstr "喜欢"
-
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:266
 #: src/view/screens/ProfileFeed.tsx:589
 msgid "Like this feed"
@@ -2550,20 +2435,6 @@ msgstr "喜欢"
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
 msgstr "喜欢"
-
-#: src/view/com/feeds/FeedSourceCard.tsx:268
-#~ msgid "Liked by {0} {1}"
-#~ msgstr "{0} 个 {1} 喜欢"
-
-#: src/components/LabelingServiceCard/index.tsx:72
-#~ msgid "Liked by {count} {0}"
-#~ msgstr "被 {count} {0} 喜欢"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:287
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:301
-#: src/view/screens/ProfileFeed.tsx:600
-#~ msgid "Liked by {likeCount} {0}"
-#~ msgstr "{likeCount} 个 {0} 喜欢"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "liked your custom feed"
@@ -2947,11 +2818,6 @@ msgstr "转到个人资料"
 msgid "Need to report a copyright violation?"
 msgstr "需要举报侵犯版权行为吗？"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
-#~ msgid "Never lose access to your followers and data."
-#~ msgstr "永远不会失去对你的关注者和数据的访问。"
-
 #: src/screens/Onboarding/StepFinished.tsx:125
 msgid "Never lose access to your followers or data."
 msgstr "永远不会失去对你的关注者或数据的访问。"
@@ -3030,11 +2896,6 @@ msgstr "新闻"
 #: src/view/com/modals/ChangePassword.tsx:257
 msgid "Next"
 msgstr "下一步"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-#~ msgctxt "action"
-#~ msgid "Next"
-#~ msgstr "下一步"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
@@ -3124,10 +2985,6 @@ msgstr "目前还没有人喜欢，也许你应该成为第一个！"
 msgid "Non-sexual Nudity"
 msgstr "非性暗示裸露"
 
-#: src/view/com/modals/SelfLabel.tsx:135
-#~ msgid "Not Applicable."
-#~ msgstr "不适用。"
-
 #: src/Navigation.tsx:116
 #: src/view/screens/Profile.tsx:100
 msgid "Not Found"
@@ -3169,10 +3026,6 @@ msgstr "裸露"
 #: src/lib/moderation/useReportOptions.ts:71
 msgid "Nudity or adult content not labeled as such"
 msgstr "未标记的裸露或成人内容"
-
-#: src/screens/Signup/index.tsx:145
-#~ msgid "of"
-#~ msgstr "of"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
@@ -3750,14 +3603,6 @@ msgstr "比率"
 msgid "Recent Searches"
 msgstr "最近的搜索"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:117
-#~ msgid "Recommended Feeds"
-#~ msgstr "推荐信息流"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:181
-#~ msgid "Recommended Users"
-#~ msgstr "推荐的用户"
-
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:283
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
@@ -4103,10 +3948,6 @@ msgstr "已保存信息流"
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll"
 msgstr ""
-
-#: src/view/com/lightbox/Lightbox.tsx:81
-#~ msgid "Saved to your camera roll."
-#~ msgstr "已保存到相机胶卷。"
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
@@ -4474,10 +4315,6 @@ msgstr "分享链接的网站"
 msgid "Show"
 msgstr "显示"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:68
-#~ msgid "Show all replies"
-#~ msgstr "显示所有回复"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:167
 msgid "Show alt text"
 msgstr ""
@@ -4551,10 +4388,6 @@ msgstr "在关注中显示回复"
 #: src/screens/Onboarding/StepFollowingFeed.tsx:71
 msgid "Show replies in Following feed"
 msgstr "在关注信息流中显示回复"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:70
-#~ msgid "Show replies with at least {value} {0}"
-#~ msgstr "显示至少包含 {value} 个 {0} 的回复"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:186
 msgid "Show Reposts"
@@ -4713,17 +4546,9 @@ msgstr "方块"
 msgid "Start a new chat"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:862
-#~ msgid "Status page"
-#~ msgstr "状态页"
-
 #: src/view/screens/Settings/index.tsx:896
 msgid "Status Page"
 msgstr ""
-
-#: src/screens/Signup/index.tsx:145
-#~ msgid "Step"
-#~ msgstr "Step"
 
 #: src/screens/Signup/index.tsx:154
 msgid "Step {0} of {1}"
@@ -4869,10 +4694,6 @@ msgstr "该用户识别符已被占用。"
 #: src/view/com/profile/ProfileMenu.tsx:349
 msgid "The account will be able to interact with you after unblocking."
 msgstr "解除屏蔽后，该账户将能够与你互动。"
-
-#: src/components/moderation/ModerationDetailsDialog.tsx:127
-#~ msgid "the author"
-#~ msgstr "作者"
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
@@ -5075,10 +4896,6 @@ msgstr "此信息不会分享给其他用户。"
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "这很重要，以防你将来需要更改电子邮箱或重置密码。"
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:124
-#~ msgid "This label was applied by {0}."
-#~ msgstr "此标记由 {0} 应用。"
-
 #: src/components/moderation/ModerationDetailsDialog.tsx:127
 msgid "This label was applied by <0>{0}</0>."
 msgstr ""
@@ -5156,10 +4973,6 @@ msgstr "此用户包含在你已隐藏的 <0>{0}</0> 列表中。"
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
 msgstr "此账户目前没有关注任何人。"
-
-#: src/view/com/modals/SelfLabel.tsx:137
-#~ msgid "This warning is only available for posts with media attached."
-#~ msgstr "此警告仅适用于附带媒体的帖子。"
 
 #: src/components/dialogs/MutedWords.tsx:283
 msgid "This will delete {0} from your muted words. You can always add it back later."
@@ -5298,10 +5111,6 @@ msgstr "取消关注 {0}"
 #: src/view/com/profile/ProfileMenu.tsx:251
 msgid "Unfollow Account"
 msgstr "取消关注账户"
-
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:197
-#~ msgid "Unlike"
-#~ msgstr "取消喜欢"
 
 #: src/view/screens/ProfileFeed.tsx:589
 msgid "Unlike this feed"
@@ -5504,10 +5313,6 @@ msgstr "已喜欢此内容或个人资料的账户"
 msgid "Value:"
 msgstr "值："
 
-#: src/view/com/modals/ChangeHandle.tsx:510
-#~ msgid "Verify {0}"
-#~ msgstr "验证 {0}"
-
 #: src/view/com/modals/ChangeHandle.tsx:511
 msgid "Verify DNS Record"
 msgstr ""
@@ -5536,10 +5341,6 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:112
 msgid "Verify Your Email"
 msgstr "验证你的邮箱"
-
-#: src/view/screens/Settings/index.tsx:852
-#~ msgid "Version {0}"
-#~ msgstr "版本 {0}"
 
 #: src/view/screens/Settings/index.tsx:868
 msgid "Version {appVersion} {bundleInfo}"
@@ -5679,10 +5480,6 @@ msgstr "很抱歉！我们找不到你正在寻找的页面。"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:329
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "很抱歉！你目前只能订阅 10 个标记者，你已达到 10 个的限制。"
-
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
-#~ msgid "Welcome to <0>Bluesky</0>"
-#~ msgstr "欢迎来到 <0>Bluesky</0>"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:135
 msgid "What are your interests?"
