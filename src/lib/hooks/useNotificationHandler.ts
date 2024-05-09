@@ -67,11 +67,12 @@ export function useNotificationsHandler() {
       if (payload.reason === 'chat-message') {
         if (payload.recipientDid !== currentAccount?.did && !storedPayload) {
           storedPayload = payload
+          closeAllActiveElements()
+
           const account = accounts.find(a => a.did === payload.recipientDid)
           if (account) {
             onPressSwitchAccount(account, 'Notification')
           } else {
-            closeAllActiveElements()
             setShowLoggedOut(true)
           }
         } else {
@@ -100,6 +101,7 @@ export function useNotificationsHandler() {
           case 'reply':
             resetToTab('NotificationsTab')
             break
+          // TODO implement these after we have an idea of how to handle each individual case
           // case 'follow':
           //   const uri = new AtUri(payload.uri)
           //   setTimeout(() => {
