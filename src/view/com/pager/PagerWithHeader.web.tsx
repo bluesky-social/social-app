@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
   },
   tabBarContainerDesktop: {
     marginHorizontal: 'auto',
+    paddingHorizontal: 2,
     width: 600,
     borderLeftWidth: 1,
     borderRightWidth: 1,
