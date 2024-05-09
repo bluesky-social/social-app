@@ -6,6 +6,7 @@ export type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
   activeStep:
+    | 'profile'
     | 'interests'
     | 'suggestedAccounts'
     | 'followingFeed'
@@ -27,6 +28,10 @@ export type OnboardingState = {
   }
   topicalFeedsStepResults: {
     feedUris: string[]
+  }
+  profileStepResults: {
+    imageUri?: string
+    imageMime?: string
   }
 }
 
@@ -56,6 +61,11 @@ export type OnboardingAction =
   | {
       type: 'setTopicalFeedsStepResults'
       feedUris: string[]
+    }
+  | {
+      type: 'setProfileStepResults'
+      imageUri: string
+      imageMime: string
     }
 
 export type ApiResponseMap = {
@@ -90,6 +100,10 @@ export const initialState: OnboardingState = {
   },
   topicalFeedsStepResults: {
     feedUris: [],
+  },
+  profileStepResults: {
+    imageUri: '',
+    imageMime: '',
   },
 }
 
@@ -240,8 +254,8 @@ export function reducer(
 
 export const initialStateReduced: OnboardingState = {
   hasPrev: false,
-  totalSteps: 7,
-  activeStep: 'interests',
+  totalSteps: 3,
+  activeStep: 'profile',
   activeStepIndex: 1,
 
   interestsStepResults: {
@@ -261,6 +275,10 @@ export const initialStateReduced: OnboardingState = {
   topicalFeedsStepResults: {
     feedUris: [],
   },
+  profileStepResults: {
+    imageUri: '',
+    imageMime: '',
+  },
 }
 
 export function reducerReduced(
@@ -271,51 +289,27 @@ export function reducerReduced(
 
   switch (a.type) {
     case 'next': {
-      if (s.activeStep === 'interests') {
-        next.activeStep = 'suggestedAccounts'
+      if (s.activeStep === 'profile') {
+        next.activeStep = 'interests'
         next.activeStepIndex = 2
-      } else if (s.activeStep === 'suggestedAccounts') {
-        next.activeStep = 'followingFeed'
-        next.activeStepIndex = 3
-      } else if (s.activeStep === 'followingFeed') {
-        next.activeStep = 'algoFeeds'
-        next.activeStepIndex = 4
-      } else if (s.activeStep === 'algoFeeds') {
-        next.activeStep = 'topicalFeeds'
-        next.activeStepIndex = 5
-      } else if (s.activeStep === 'topicalFeeds') {
-        next.activeStep = 'moderation'
-        next.activeStepIndex = 6
-      } else if (s.activeStep === 'moderation') {
+      } else if (s.activeStep === 'interests') {
         next.activeStep = 'finished'
-        next.activeStepIndex = 7
+        next.activeStepIndex = 3
       }
       break
     }
     case 'prev': {
-      if (s.activeStep === 'suggestedAccounts') {
-        next.activeStep = 'interests'
+      if (s.activeStep === 'interests') {
+        next.activeStep = 'profile'
         next.activeStepIndex = 1
-      } else if (s.activeStep === 'followingFeed') {
-        next.activeStep = 'suggestedAccounts'
-        next.activeStepIndex = 2
-      } else if (s.activeStep === 'algoFeeds') {
-        next.activeStep = 'followingFeed'
-        next.activeStepIndex = 3
-      } else if (s.activeStep === 'topicalFeeds') {
-        next.activeStep = 'algoFeeds'
-        next.activeStepIndex = 4
-      } else if (s.activeStep === 'moderation') {
-        next.activeStep = 'topicalFeeds'
-        next.activeStepIndex = 5
       } else if (s.activeStep === 'finished') {
-        next.activeStep = 'moderation'
-        next.activeStepIndex = 6
+        next.activeStep = 'interests'
+        next.activeStepIndex = 2
       }
       break
     }
     case 'finish': {
-      next = initialState
+      next = initialStateReduced
       break
     }
     case 'setInterestsStepResults': {
@@ -326,22 +320,18 @@ export function reducerReduced(
       break
     }
     case 'setSuggestedAccountsStepResults': {
-      next.suggestedAccountsStepResults = {
-        accountDids: next.suggestedAccountsStepResults.accountDids.concat(
-          a.accountDids,
-        ),
-      }
       break
     }
     case 'setAlgoFeedsStepResults': {
-      next.algoFeedsStepResults = {
-        feedUris: a.feedUris,
-      }
       break
     }
     case 'setTopicalFeedsStepResults': {
-      next.topicalFeedsStepResults = {
-        feedUris: next.topicalFeedsStepResults.feedUris.concat(a.feedUris),
+      break
+    }
+    case 'setProfileStepResults': {
+      next.profileStepResults = {
+        imageUri: a.imageUri,
+        imageMime: a.imageMime,
       }
       break
     }
@@ -349,7 +339,7 @@ export function reducerReduced(
 
   const state = {
     ...next,
-    hasPrev: next.activeStep !== 'interests',
+    hasPrev: next.activeStep !== 'profile',
   }
 
   logger.debug(`onboarding`, {
@@ -362,6 +352,7 @@ export function reducerReduced(
     suggestedAccountsStepResults: state.suggestedAccountsStepResults,
     algoFeedsStepResults: state.algoFeedsStepResults,
     topicalFeedsStepResults: state.topicalFeedsStepResults,
+    profileStepResults: state.profileStepResults,
   })
 
   if (s.activeStep !== state.activeStep) {
