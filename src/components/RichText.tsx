@@ -38,7 +38,6 @@ export function RichText({
     onLinkPress?: LinkProps['onPress']
     display?: 'color' | 'underlines'
   }) {
-  const t = useTheme()
   const richText = React.useMemo(
     () =>
       value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
@@ -50,7 +49,7 @@ export function RichText({
   const interactiveStyles = [
     a.leading_snug,
     a.pointer_events_auto,
-    display === 'color' ? {color: t.palette.primary_500} : a.underline,
+    display === 'underlines' && a.underline,
     flattenedStyle,
   ]
 
@@ -233,6 +232,7 @@ function RichTextTag({
             web({
               cursor: 'pointer',
             }),
+            {color: t.palette.primary_500},
             (hovered || focused || pressed) && {
               ...web({outline: 0}),
               textDecorationLine: 'underline',
