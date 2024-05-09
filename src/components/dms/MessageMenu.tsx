@@ -74,7 +74,7 @@ export let MessageMenu = ({
                     a.rounded_full,
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
                   ]}>
-                  <DotsHorizontal size="sm" style={t.atoms.text} />
+                  <DotsHorizontal size="md" style={t.atoms.text} />
                 </Pressable>
               )}
             </Menu.Trigger>
