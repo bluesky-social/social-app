@@ -103,12 +103,12 @@ let ConvoMenu = ({
                   }}
                   style={[
                     a.p_sm,
-                    a.rounded_sm,
+                    a.rounded_full,
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
                     // make sure pfp is in the middle
                     {marginLeft: -10},
                   ]}>
-                  <DotsHorizontal size="lg" style={t.atoms.text} />
+                  <DotsHorizontal size="md" style={t.atoms.text} />
                 </Pressable>
               )}
             </Menu.Trigger>
