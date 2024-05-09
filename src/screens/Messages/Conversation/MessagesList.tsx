@@ -181,7 +181,7 @@ export function MessagesList() {
 
       if (convo.status === ConvoStatus.Ready) {
         convo.sendMessage({
-          text,
+          text: rt.text,
           facets: rt.facets,
         })
       }
