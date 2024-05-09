@@ -101,8 +101,8 @@ let MessageItem = ({
               isFromSelf && {color: t.palette.white},
               pending && t.name !== 'light' && {color: t.palette.primary_300},
             ]}
+            interactiveStyle={a.underline}
             enableTags
-            display="underlines"
           />
         </View>
       </ActionsWrapper>

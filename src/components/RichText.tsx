@@ -1,4 +1,5 @@
 import React from 'react'
+import {TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -26,7 +27,7 @@ export function RichText({
   enableTags = false,
   authorHandle,
   onLinkPress,
-  display = 'color',
+  interactiveStyle,
 }: TextStyleProp &
   Pick<TextProps, 'selectable'> & {
     value: RichTextAPI | string
@@ -36,7 +37,7 @@ export function RichText({
     enableTags?: boolean
     authorHandle?: string
     onLinkPress?: LinkProps['onPress']
-    display?: 'color' | 'underlines'
+    interactiveStyle?: TextStyle
   }) {
   const richText = React.useMemo(
     () =>
@@ -49,7 +50,7 @@ export function RichText({
   const interactiveStyles = [
     a.leading_snug,
     a.pointer_events_auto,
-    display === 'underlines' && a.underline,
+    flatten(interactiveStyle),
     flattenedStyle,
   ]
 
