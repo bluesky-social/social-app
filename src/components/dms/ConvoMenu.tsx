@@ -13,7 +13,6 @@ import {
   useMuteConvo,
   useUnmuteConvo,
 } from '#/state/queries/messages/mute-conversation'
-import {isWeb} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
