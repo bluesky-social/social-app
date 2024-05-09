@@ -68,10 +68,8 @@ let MessageItem = ({
     t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
 
   const rt = useMemo(() => {
-    const richtext = new RichTextAPI({text: item.text})
-    richtext.detectFacetsWithoutResolution()
-    return richtext
-  }, [item.text])
+    return new RichTextAPI({text: item.text, facets: item.facets})
+  }, [item.text, item.facets])
 
   return (
     <View>
