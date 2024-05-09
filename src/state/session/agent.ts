@@ -1,5 +1,4 @@
-import {BskyAgent} from '@atproto/api'
-import {AtpSessionEvent} from '@atproto-labs/api'
+import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
@@ -32,11 +31,15 @@ export async function createAgentAndResume(
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
-  const prevSession = {
+  const prevSession: AtpSessionData = {
+    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
     accessJwt: storedAccount.accessJwt ?? '',
-    refreshJwt: storedAccount.refreshJwt ?? '',
     did: storedAccount.did,
+    email: storedAccount.email,
+    emailAuthFactor: storedAccount.emailAuthFactor,
+    emailConfirmed: storedAccount.emailConfirmed,
     handle: storedAccount.handle,
+    refreshJwt: storedAccount.refreshJwt ?? '',
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
