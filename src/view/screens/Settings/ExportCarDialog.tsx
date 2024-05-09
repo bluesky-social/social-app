@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -19,6 +19,7 @@ export function ExportCarDialog({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
 
   const downloadUrl = React.useMemo(() => {
     const agent = getAgent()
@@ -30,7 +31,7 @@ export function ExportCarDialog({
     url.pathname = '/xrpc/com.atproto.sync.getRepo'
     url.searchParams.set('did', agent.session.did)
     return url.toString()
-  }, [currentAccount])
+  }, [currentAccount, getAgent])
 
   return (
     <Dialog.Outer control={control}>

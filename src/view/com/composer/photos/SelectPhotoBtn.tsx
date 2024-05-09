@@ -1,27 +1,26 @@
+/* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
 import React, {useCallback} from 'react'
-import {TouchableOpacity, StyleSheet} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {GalleryModel} from 'state/models/media/gallery'
-import {HITSLOP_10} from 'lib/constants'
-import {isNative} from 'platform/detection'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {isNative} from '#/platform/detection'
+import {GalleryModel} from '#/state/models/media/gallery'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
 
 type Props = {
   gallery: GalleryModel
+  disabled?: boolean
 }
 
-export function SelectPhotoBtn({gallery}: Props) {
-  const pal = usePalette('default')
+export function SelectPhotoBtn({gallery, disabled}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const t = useTheme()
 
   const onPressSelectPhotos = useCallback(async () => {
     track('Composer:GalleryOpened')
@@ -34,25 +33,17 @@ export function SelectPhotoBtn({gallery}: Props) {
   }, [track, requestPhotoAccessIfNeeded, gallery])
 
   return (
-    <TouchableOpacity
+    <Button
       testID="openGalleryBtn"
       onPress={onPressSelectPhotos}
-      style={styles.button}
-      hitSlop={HITSLOP_10}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Gallery`)}
-      accessibilityHint={_(msg`Opens device photo gallery`)}>
-      <FontAwesomeIcon
-        icon={['far', 'image']}
-        style={pal.link as FontAwesomeIconStyle}
-        size={24}
-      />
-    </TouchableOpacity>
+      label={_(msg`Gallery`)}
+      accessibilityHint={_(msg`Opens device photo gallery`)}
+      style={a.p_sm}
+      variant="ghost"
+      shape="round"
+      color="primary"
+      disabled={disabled}>
+      <Image size="lg" style={disabled && t.atoms.text_contrast_low} />
+    </Button>
   )
 }
-
-const styles = StyleSheet.create({
-  button: {
-    paddingHorizontal: 15,
-  },
-})

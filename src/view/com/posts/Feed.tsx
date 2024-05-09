@@ -17,6 +17,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {STALE} from '#/state/queries'
 import {
   FeedDescriptor,
@@ -88,6 +89,7 @@ let Feed = ({
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
+  const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
@@ -353,6 +355,7 @@ let Feed = ({
         }
         initialNumToRender={initialNumToRender}
         windowSize={11}
+        onItemSeen={feedFeedback.onItemSeen}
       />
     </View>
   )

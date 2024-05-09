@@ -43,7 +43,9 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
+          style={[
+            gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+          ]}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -60,12 +62,16 @@ export function TitleText({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function DescriptionText({children}: React.PropsWithChildren<{}>) {
+export function DescriptionText({
+  children,
+  selectable,
+}: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
+      selectable={selectable}
       style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
       {children}
     </Text>

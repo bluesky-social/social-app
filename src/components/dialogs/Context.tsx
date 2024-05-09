@@ -6,10 +6,12 @@ type Control = Dialog.DialogOuterProps['control']
 
 type ControlsContext = {
   mutedWordsDialogControl: Control
+  signinDialogControl: Control
 }
 
 const ControlsContext = React.createContext({
   mutedWordsDialogControl: {} as Control,
+  signinDialogControl: {} as Control,
 })
 
 export function useGlobalDialogsControlContext() {
@@ -18,9 +20,10 @@ export function useGlobalDialogsControlContext() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
+  const signinDialogControl = Dialog.useDialogControl()
   const ctx = React.useMemo<ControlsContext>(
-    () => ({mutedWordsDialogControl}),
-    [mutedWordsDialogControl],
+    () => ({mutedWordsDialogControl, signinDialogControl}),
+    [mutedWordsDialogControl, signinDialogControl],
   )
 
   return (

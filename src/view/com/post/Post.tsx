@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react'
+import React, {useMemo, useState} from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -7,30 +7,34 @@ import {
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Link, TextLink} from '../util/Link'
-import {UserInfoText} from '../util/UserInfoText'
-import {PostMeta} from '../util/PostMeta'
-import {PostEmbeds} from '../util/post-embeds'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {ContentHider} from '../../../components/moderation/ContentHider'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {Text} from '../util/text/Text'
-import {RichText} from '#/components/RichText'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {s, colors} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
+
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useComposerControls} from '#/state/shell/composer'
+import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
-import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {useComposerControls} from '#/state/shell/composer'
-import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {colors, s} from 'lib/styles'
+import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {RichText} from '#/components/RichText'
+import {ContentHider} from '../../../components/moderation/ContentHider'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {Link, TextLink} from '../util/Link'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostMeta} from '../util/PostMeta'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {UserInfoText} from '../util/UserInfoText'
 
 export function Post({
   post,
@@ -98,6 +102,7 @@ function PostInner({
   showReplyLine?: boolean
   style?: StyleProp<ViewStyle>
 }) {
+  const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
@@ -129,16 +134,21 @@ function PostInner({
     setLimitLines(false)
   }, [setLimitLines])
 
+  const onBeforePress = React.useCallback(() => {
+    precacheProfile(queryClient, post.author)
+  }, [queryClient, post.author])
+
   return (
-    <Link href={itemHref} style={[styles.outer, pal.border, style]}>
+    <Link
+      href={itemHref}
+      style={[styles.outer, pal.border, style]}
+      onBeforePress={onBeforePress}>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={post.author.did}
-            handle={post.author.handle}
-            avatar={post.author.avatar}
+            profile={post.author}
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />
@@ -165,12 +175,14 @@ function PostInner({
                 numberOfLines={1}>
                 <Trans context="description">
                   Reply to{' '}
-                  <UserInfoText
-                    type="sm"
-                    did={replyAuthorDid}
-                    attr="displayName"
-                    style={[pal.textLight]}
-                  />
+                  <ProfileHoverCard inline did={replyAuthorDid}>
+                    <UserInfoText
+                      type="sm"
+                      did={replyAuthorDid}
+                      attr="displayName"
+                      style={[pal.textLight]}
+                    />
+                  </ProfileHoverCard>
                 </Trans>
               </Text>
             </View>

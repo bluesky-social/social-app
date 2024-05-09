@@ -1,28 +1,47 @@
 import {z} from 'zod'
 
-import {deviceLocales} from '#/platform/detection'
+import {deviceLocales, prefersReducedMotion} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
-// only data needed for rendering account page
+/**
+ * A account persisted to storage. Stored in the `accounts[]` array. Contains
+ * base account info and access tokens.
+ */
 const accountSchema = z.object({
   service: z.string(),
   did: z.string(),
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),
+  emailAuthFactor: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
   deactivated: z.boolean().optional(),
+  pdsUrl: z.string().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
+
+/**
+ * The current account. Stored in the `currentAccount` field.
+ *
+ * In previous versions, this included tokens and other info. Now, it's used
+ * only to reference the `did` field, and all other fields are marked as
+ * optional. They should be considered deprecated and not used, but are kept
+ * here for backwards compat.
+ */
+const currentAccountSchema = accountSchema.extend({
+  service: z.string().optional(),
+  handle: z.string().optional(),
+})
+export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 
 export const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
   session: z.object({
     accounts: z.array(accountSchema),
-    currentAccount: accountSchema.optional(),
+    currentAccount: currentAccountSchema.optional(),
   }),
   reminders: z.object({
     lastEmailConfirm: z.string().optional(),
@@ -60,6 +79,8 @@ export const schema = z.object({
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),
+  disableAutoplay: z.boolean().optional(),
+  kawaii: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -96,4 +117,6 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
+  disableAutoplay: prefersReducedMotion,
+  kawaii: false,
 }

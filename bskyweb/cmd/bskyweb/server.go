@@ -158,7 +158,7 @@ func serve(cctx *cli.Context) error {
 
 			// Cache javascript and images files for 1 week, which works because
 			// they're always versioned (e.g. /static/js/main.64c14927.js)
-			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") {
+			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") || strings.HasPrefix(path, "/static/media/") {
 				maxAge = 7 * (60 * 60 * 24) // 1 week
 			}
 
@@ -169,6 +169,9 @@ func serve(cctx *cli.Context) error {
 
 	// home
 	e.GET("/", server.WebHome)
+
+	// download
+	e.GET("/download", server.Download)
 
 	// generic routes
 	e.GET("/hashtag/:tag", server.WebGeneric)
@@ -187,6 +190,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/saved-feeds", server.WebGeneric)
 	e.GET("/settings/threads", server.WebGeneric)
 	e.GET("/settings/external-embeds", server.WebGeneric)
+	e.GET("/settings/accessibility", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/debug-mod", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
@@ -196,6 +200,8 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/community-guidelines", server.WebGeneric)
 	e.GET("/support/copyright", server.WebGeneric)
 	e.GET("/intent/compose", server.WebGeneric)
+	e.GET("/messages", server.WebGeneric)
+	e.GET("/messages/:conversation", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)
@@ -269,6 +275,20 @@ func (srv *Server) errorHandler(err error, c echo.Context) {
 		"statusCode": code,
 	}
 	c.Render(code, "error.html", data)
+}
+
+// Handler for redirecting to the download page.
+func (srv *Server) Download(c echo.Context) error {
+	ua := c.Request().UserAgent()
+	if strings.Contains(ua, "Android") {
+		return c.Redirect(http.StatusFound, "https://play.google.com/store/apps/details?id=xyz.blueskyweb.app")
+	}
+
+	if strings.Contains(ua, "iPhone") || strings.Contains(ua, "iPad") || strings.Contains(ua, "iPod") {
+		return c.Redirect(http.StatusFound, "https://apps.apple.com/tr/app/bluesky-social/id6444370199")
+	}
+
+	return c.Redirect(http.StatusFound, "/")
 }
 
 // handler for endpoint that have no specific server-side handling

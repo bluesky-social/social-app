@@ -2,12 +2,15 @@ import React from 'react'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {NavigationProp} from '#/lib/routes/types'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, LinkProps} from '#/components/Link'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {Text, TextProps} from '#/components/Typography'
 
@@ -22,6 +25,7 @@ export function RichText({
   selectable,
   enableTags = false,
   authorHandle,
+  onLinkPress,
 }: TextStyleProp &
   Pick<TextProps, 'selectable'> & {
     value: RichTextAPI | string
@@ -30,6 +34,7 @@ export function RichText({
     disableLinks?: boolean
     enableTags?: boolean
     authorHandle?: string
+    onLinkPress?: LinkProps['onPress']
   }) {
   const richText = React.useMemo(
     () =>
@@ -84,15 +89,17 @@ export function RichText({
       !disableLinks
     ) {
       els.push(
-        <InlineLinkText
-          selectable={selectable}
-          key={key}
-          to={`/profile/${mention.did}`}
-          style={[...styles, {pointerEvents: 'auto'}]}
-          // @ts-ignore TODO
-          dataSet={WORD_WRAP}>
-          {segment.text}
-        </InlineLinkText>,
+        <ProfileHoverCard key={key} inline did={mention.did}>
+          <InlineLinkText
+            selectable={selectable}
+            to={`/profile/${mention.did}`}
+            style={[...styles, {pointerEvents: 'auto'}]}
+            // @ts-ignore TODO
+            dataSet={WORD_WRAP}
+            onPress={onLinkPress}>
+            {segment.text}
+          </InlineLinkText>
+        </ProfileHoverCard>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       if (disableLinks) {
@@ -106,7 +113,8 @@ export function RichText({
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
-            shareOnLongPress>
+            shareOnLongPress
+            onPress={onLinkPress}>
             {toShortUrl(segment.text)}
           </InlineLinkText>,
         )
@@ -172,8 +180,15 @@ function RichTextTag({
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+  const navigation = useNavigation<NavigationProp>()
 
-  const open = React.useCallback(() => {
+  const navigateToPage = React.useCallback(() => {
+    navigation.push('Hashtag', {
+      tag: encodeURIComponent(tag),
+    })
+  }, [navigation, tag])
+
+  const openDialog = React.useCallback(() => {
     control.open()
   }, [control])
 
@@ -189,9 +204,10 @@ function RichTextTag({
           selectable={selectable}
           {...native({
             accessibilityLabel: _(msg`Hashtag: #${tag}`),
-            accessibilityHint: _(msg`Click here to open tag menu for #${tag}`),
+            accessibilityHint: _(msg`Long press to open tag menu for #${tag}`),
             accessibilityRole: isNative ? 'button' : undefined,
-            onPress: open,
+            onPress: navigateToPage,
+            onLongPress: openDialog,
             onPressIn: onPressIn,
             onPressOut: onPressOut,
           })}

@@ -1,19 +1,20 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
-import {CenteredView} from './Views'
-import {Text} from './text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {NavigationProp} from 'lib/routes/types'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
-import {useSetDrawerOpen} from '#/state/shell'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+
+import {useSetDrawerOpen} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {NavigationProp} from 'lib/routes/types'
 import {useTheme} from '#/alf'
+import {Text} from './text/Text'
+import {CenteredView} from './Views'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -62,6 +63,7 @@ export function ViewHeader({
       return (
         <DesktopWebHeader
           title={title}
+          subtitle={subtitle}
           renderButton={renderButton}
           showBorder={showBorder}
         />
@@ -136,14 +138,17 @@ export function ViewHeader({
 
 function DesktopWebHeader({
   title,
+  subtitle,
   renderButton,
   showBorder = true,
 }: {
   title: string
+  subtitle?: string
   renderButton?: () => JSX.Element
   showBorder?: boolean
 }) {
   const pal = usePalette('default')
+  const t = useTheme()
   return (
     <CenteredView
       style={[
@@ -153,13 +158,30 @@ function DesktopWebHeader({
         {
           borderBottomWidth: showBorder ? 1 : 0,
         },
+        {display: 'flex', flexDirection: 'column'},
       ]}>
-      <View style={styles.titleContainer} pointerEvents="none">
-        <Text type="title-lg" style={[pal.text, styles.title]}>
-          {title}
-        </Text>
+      <View>
+        <View style={styles.titleContainer} pointerEvents="none">
+          <Text type="title-lg" style={[pal.text, styles.title]}>
+            {title}
+          </Text>
+        </View>
+        {renderButton?.()}
       </View>
-      {renderButton?.()}
+      {subtitle ? (
+        <View>
+          <View style={[styles.titleContainer]} pointerEvents="none">
+            <Text
+              style={[
+                pal.text,
+                styles.subtitleDesktop,
+                t.atoms.text_contrast_medium,
+              ]}>
+              {subtitle}
+            </Text>
+          </View>
+        </View>
+      ) : null}
     </CenteredView>
   )
 }
@@ -235,6 +257,9 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 13,
+  },
+  subtitleDesktop: {
+    fontSize: 15,
   },
   backBtn: {
     width: 30,

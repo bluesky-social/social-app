@@ -58,6 +58,7 @@ export function StepHandle() {
           <TextField.Root>
             <TextField.Icon icon={At} />
             <TextField.Input
+              testID="handleInput"
               onChangeText={onHandleChange}
               label={_(msg`Input your user handle`)}
               defaultValue={state.handle}

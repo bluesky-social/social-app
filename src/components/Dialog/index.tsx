@@ -4,6 +4,8 @@ import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
   BottomSheetBackdropProps,
+  BottomSheetFlatList,
+  BottomSheetFlatListMethods,
   BottomSheetScrollView,
   BottomSheetScrollViewMethods,
   BottomSheetTextInput,
@@ -11,10 +13,10 @@ import BottomSheet, {
   useBottomSheet,
   WINDOW_HEIGHT,
 } from '@discord/bottom-sheet/src'
+import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bottomSheetScrollable/types'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {isNative} from 'platform/detection'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -150,6 +152,12 @@ export function Outer({
     [open, close],
   )
 
+  React.useEffect(() => {
+    return () => {
+      setDialogIsOpen(control.id, false)
+    }
+  }, [control.id, setDialogIsOpen])
+
   const context = React.useMemo(() => ({close}), [close])
 
   return (
@@ -238,11 +246,39 @@ export const ScrollableInner = React.forwardRef<
         },
         flatten(style),
       ]}
-      contentContainerStyle={isNative ? a.pb_4xl : undefined}
+      contentContainerStyle={a.pb_4xl}
       ref={ref}>
       {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
+  )
+})
+
+export const InnerFlatList = React.forwardRef<
+  BottomSheetFlatListMethods,
+  BottomSheetFlatListProps<any>
+>(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
+  const insets = useSafeAreaInsets()
+  return (
+    <BottomSheetFlatList
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={[a.pb_4xl, flatten(contentContainerStyle)]}
+      ListFooterComponent={
+        <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
+      }
+      ref={ref}
+      {...props}
+      style={[
+        a.flex_1,
+        a.p_xl,
+        a.pt_0,
+        a.h_full,
+        {
+          marginTop: 40,
+        },
+        flatten(style),
+      ]}
+    />
   )
 })
 

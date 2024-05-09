@@ -1,7 +1,10 @@
-import {AppBskyGraphFollow, AppBskyGraphGetFollows} from '@atproto/api'
+import {
+  AppBskyGraphFollow,
+  AppBskyGraphGetFollows,
+  BskyAgent,
+} from '@atproto/api'
 
 import {until} from '#/lib/async/until'
-import {getAgent} from '#/state/session'
 import {PRIMARY_FEEDS} from './StepAlgoFeeds'
 
 function shuffle(array: any) {
@@ -63,7 +66,10 @@ export function aggregateInterestItems(
   return Array.from(new Set(results)).slice(0, 20)
 }
 
-export async function bulkWriteFollows(dids: string[]) {
+export async function bulkWriteFollows(
+  getAgent: () => BskyAgent,
+  dids: string[],
+) {
   const session = getAgent().session
 
   if (!session) {
@@ -87,10 +93,15 @@ export async function bulkWriteFollows(dids: string[]) {
     repo: session.did,
     writes: followWrites,
   })
-  await whenFollowsIndexed(session.did, res => !!res.data.follows.length)
+  await whenFollowsIndexed(
+    getAgent,
+    session.did,
+    res => !!res.data.follows.length,
+  )
 }
 
 async function whenFollowsIndexed(
+  getAgent: () => BskyAgent,
   actor: string,
   fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {
@@ -107,21 +118,15 @@ async function whenFollowsIndexed(
 }
 
 /**
- * Kinda hacky, but we want For Your or Discover to appear as the first pinned
+ * Kinda hacky, but we want Discover to appear as the first pinned
  * feed after Following
  */
 export function sortPrimaryAlgorithmFeeds(uris: string[]) {
   return uris.sort((a, b) => {
-    if (a === PRIMARY_FEEDS[0].uri) {
+    if (a === PRIMARY_FEEDS[0]?.uri) {
       return -1
     }
-    if (b === PRIMARY_FEEDS[0].uri) {
-      return 1
-    }
-    if (a === PRIMARY_FEEDS[1].uri) {
-      return -1
-    }
-    if (b === PRIMARY_FEEDS[1].uri) {
+    if (b === PRIMARY_FEEDS[0]?.uri) {
       return 1
     }
     return a.localeCompare(b)

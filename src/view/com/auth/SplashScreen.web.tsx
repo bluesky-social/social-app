@@ -4,16 +4,14 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {APP_LANGUAGES} from '#/locale/languages'
-import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
+import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
@@ -30,6 +28,8 @@ export const SplashScreen = ({
   const {_} = useLingui()
   const t = useTheme()
   const {isTabletOrMobile: isMobileWeb} = useWebMediaQueries()
+
+  const kawaii = useKawaiiMode()
 
   return (
     <>
@@ -69,11 +69,13 @@ export const SplashScreen = ({
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
-              <Logo width={92} fill="sky" />
+              <Logo width={kawaii ? 300 : 92} fill="sky" />
 
-              <View style={[a.pb_sm, a.pt_5xl]}>
-                <Logotype width={161} fill={t.atoms.text.color} />
-              </View>
+              {!kawaii && (
+                <View style={[a.pb_sm, a.pt_5xl]}>
+                  <Logotype width={161} fill={t.atoms.text.color} />
+                </View>
+              )}
 
               <Text
                 style={[
@@ -131,23 +133,6 @@ export const SplashScreen = ({
 function Footer() {
   const t = useTheme()
 
-  const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useLanguagePrefsApi()
-
-  const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
-
-  const onChangeAppLanguage = React.useCallback(
-    (ev: React.ChangeEvent<HTMLSelectElement>) => {
-      const value = ev.target.value
-
-      if (!value) return
-      if (sanitizedLang !== value) {
-        setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
-      }
-    },
-    [sanitizedLang, setLangPrefs],
-  )
-
   return (
     <View
       style={[
@@ -174,39 +159,7 @@ function Footer() {
 
       <View style={a.flex_1} />
 
-      <View style={[a.flex_row, a.gap_sm, a.align_center, a.flex_shrink]}>
-        <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
-          {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
-        </Text>
-        <ChevronDown
-          fill={t.atoms.text.color}
-          size="xs"
-          style={a.flex_shrink}
-        />
-
-        <select
-          value={sanitizedLang}
-          onChange={onChangeAppLanguage}
-          style={{
-            cursor: 'pointer',
-            MozAppearance: 'none',
-            WebkitAppearance: 'none',
-            appearance: 'none',
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            color: 'transparent',
-            background: 'transparent',
-            border: 0,
-            padding: 0,
-          }}>
-          {APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => (
-            <option key={l.code2} value={l.code2}>
-              {l.name}
-            </option>
-          ))}
-        </select>
-      </View>
+      <AppLanguageDropdown />
     </View>
   )
 }

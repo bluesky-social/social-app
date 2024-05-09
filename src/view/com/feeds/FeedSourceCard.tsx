@@ -6,12 +6,11 @@ import {RichText} from '#/components/RichText'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
-import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import * as Toast from 'view/com/util/Toast'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   usePinFeedMutation,
@@ -265,10 +264,11 @@ export function FeedSourceCardLoaded({
 
         {showLikes && feed.type === 'feed' ? (
           <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-            <Trans>
-              Liked by {feed.likeCount || 0}{' '}
-              {pluralize(feed.likeCount || 0, 'user')}
-            </Trans>
+            <Plural
+              value={feed.likeCount || 0}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
           </Text>
         ) : null}
       </Pressable>
