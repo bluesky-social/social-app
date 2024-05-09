@@ -20,6 +20,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from 'lib/icons'
 import {s} from 'lib/styles'
+import {EmptyTimeline} from '#/screens/Home/EmptyTimeline'
 import {Feed} from '../posts/Feed'
 import {FAB} from '../util/fab/FAB'
 import {ListMethods} from '../util/List'
@@ -112,25 +113,32 @@ export function FeedPage({
   const adjustedHasNew =
     hasNew && !(isDiscoverFeed && gate('disable_poll_on_discover_v2'))
 
+  const isTimeline = feed === 'home'
+
   return (
     <View testID={testID} style={s.h100pct}>
       <MainScrollProvider>
-        <FeedFeedbackProvider value={feedFeedback}>
-          <Feed
-            testID={testID ? `${testID}-feed` : undefined}
-            enabled={isPageFocused}
-            feed={feed}
-            feedParams={feedParams}
-            pollInterval={POLL_FREQ}
-            disablePoll={hasNew}
-            scrollElRef={scrollElRef}
-            onScrolledDownChange={setIsScrolledDown}
-            onHasNew={setHasNew}
-            renderEmptyState={renderEmptyState}
-            renderEndOfFeed={renderEndOfFeed}
-            headerOffset={headerOffset}
-          />
-        </FeedFeedbackProvider>
+        {isTimeline ? (
+          // TODO Gate this
+          <EmptyTimeline />
+        ) : (
+          <FeedFeedbackProvider value={feedFeedback}>
+            <Feed
+              testID={testID ? `${testID}-feed` : undefined}
+              enabled={isPageFocused}
+              feed={feed}
+              feedParams={feedParams}
+              pollInterval={POLL_FREQ}
+              disablePoll={hasNew}
+              scrollElRef={scrollElRef}
+              onScrolledDownChange={setIsScrolledDown}
+              onHasNew={setHasNew}
+              renderEmptyState={renderEmptyState}
+              renderEndOfFeed={renderEndOfFeed}
+              headerOffset={headerOffset}
+            />
+          </FeedFeedbackProvider>
+        )}
       </MainScrollProvider>
       {(isScrolledDown || adjustedHasNew) && (
         <LoadLatestBtn
