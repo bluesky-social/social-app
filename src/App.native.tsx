@@ -12,7 +12,6 @@ import {
 import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -22,7 +21,6 @@ import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {readLastActiveAccount} from '#/state/session/util'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import {useNotificationsListener} from 'lib/notifications/notifications'
 import {QueryProvider} from 'lib/react-query'
 import {s} from 'lib/styles'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -96,27 +94,25 @@ function InnerApp() {
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <PushNotificationsListener>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <UnreadNotifsProvider>
-                                  <GestureHandlerRootView style={s.h100pct}>
-                                    <TestCtrls />
-                                    <Shell />
-                                  </GestureHandlerRootView>
-                                </UnreadNotifsProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </PushNotificationsListener>
+                  <StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
+                                <GestureHandlerRootView style={s.h100pct}>
+                                  <TestCtrls />
+                                  <Shell />
+                                </GestureHandlerRootView>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </StatsigProvider>
                 </QueryProvider>
               </React.Fragment>
             </RootSiblingParent>
@@ -125,12 +121,6 @@ function InnerApp() {
       </Alf>
     </SafeAreaProvider>
   )
-}
-
-function PushNotificationsListener({children}: {children: React.ReactNode}) {
-  const queryClient = useQueryClient()
-  useNotificationsListener(queryClient)
-  return children
 }
 
 function App() {

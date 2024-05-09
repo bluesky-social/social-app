@@ -40,11 +40,12 @@ import {ClipClopGate} from '../gate'
 import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
-export function MessagesScreen({navigation}: Props) {
+export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
   const {gtMobile} = useBreakpoints()
+  const pushToConversation = route.params?.pushToConversation
 
   // TEMP
   const {serviceUrl, setServiceUrl} = useDmServiceUrlStorage()
@@ -56,6 +57,19 @@ export function MessagesScreen({navigation}: Props) {
       'a32318b49dd3fe6aa6a35c66c13fcc4c1cb6202b24f5a852d9a2279acee4169f'
     )
   }, [serviceUrl])
+
+  // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
+  // this tab. We should immediately push to the conversation after pressing the notification.
+  // After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
+  // the conversation is the same as before
+  React.useEffect(() => {
+    if (pushToConversation) {
+      navigation.navigate('MessagesConversation', {
+        conversation: pushToConversation,
+      })
+      navigation.setParams({pushToConversation: undefined})
+    }
+  }, [navigation, pushToConversation])
 
   const renderButton = useCallback(() => {
     return (

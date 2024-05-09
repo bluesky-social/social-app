@@ -3,15 +3,15 @@ import {AtpSessionEvent} from '@atproto-labs/api'
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {IS_PROD_SERVICE} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
+import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
 import {SessionAccount} from './types'
 import {isSessionDeactivated, isSessionExpired} from './util'
-import {IS_PROD_SERVICE} from '#/lib/constants'
-import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
