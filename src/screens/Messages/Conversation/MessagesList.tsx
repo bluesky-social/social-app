@@ -8,8 +8,6 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS} from '#/platform/detection'
@@ -22,7 +20,6 @@ import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {atoms as a, useBreakpoints} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -41,25 +38,6 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function RetryButton({onPress}: {onPress: () => unknown}) {
-  const {_} = useLingui()
-
-  return (
-    <View style={{alignItems: 'center'}}>
-      <Button
-        label={_(msg`Press to Retry`)}
-        onPress={onPress}
-        variant="ghost"
-        color="negative"
-        size="small">
-        <ButtonText>
-          <Trans>Press to Retry</Trans>
-        </ButtonText>
-      </Button>
-    </View>
-  )
-}
-
 function renderItem({item}: {item: ConvoItem}) {
   if (item.type === 'message' || item.type === 'pending-message') {
     return (
@@ -71,8 +49,6 @@ function renderItem({item}: {item: ConvoItem}) {
     )
   } else if (item.type === 'deleted-message') {
     return <Text>Deleted message</Text>
-  } else if (item.type === 'pending-retry') {
-    return <RetryButton onPress={item.retry} />
   } else if (item.type === 'error-recoverable') {
     return <MessageListError item={item} />
   }
