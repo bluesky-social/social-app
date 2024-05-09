@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {Keyboard, Pressable} from 'react-native'
+import {Keyboard, Pressable, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
@@ -32,17 +32,19 @@ let ConvoMenu = ({
   profile,
   onUpdateConvo,
   control,
-  hideTrigger,
   currentScreen,
   showMarkAsRead,
+  hideTrigger,
+  triggerOpacity,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
   control?: Menu.MenuControlProps
-  hideTrigger?: boolean
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
+  hideTrigger?: boolean
+  triggerOpacity?: number
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -89,26 +91,28 @@ let ConvoMenu = ({
     <>
       <Menu.Root control={control}>
         {!hideTrigger && (
-          <Menu.Trigger label={_(msg`Chat settings`)}>
-            {({props, state}) => (
-              <Pressable
-                {...props}
-                onPress={() => {
-                  Keyboard.dismiss()
-                  // eslint-disable-next-line react/prop-types -- eslint is confused by the name `props`
-                  props.onPress()
-                }}
-                style={[
-                  a.p_sm,
-                  a.rounded_sm,
-                  (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-                  // make sure pfp is in the middle
-                  {marginLeft: -10},
-                ]}>
-                <DotsHorizontal size="lg" style={t.atoms.text} />
-              </Pressable>
-            )}
-          </Menu.Trigger>
+          <View style={{opacity: triggerOpacity}}>
+            <Menu.Trigger label={_(msg`Chat settings`)}>
+              {({props, state}) => (
+                <Pressable
+                  {...props}
+                  onPress={() => {
+                    Keyboard.dismiss()
+                    // eslint-disable-next-line react/prop-types -- eslint is confused by the name `props`
+                    props.onPress()
+                  }}
+                  style={[
+                    a.p_sm,
+                    a.rounded_full,
+                    (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+                    // make sure pfp is in the middle
+                    {marginLeft: -10},
+                  ]}>
+                  <DotsHorizontal size="md" style={t.atoms.text} />
+                </Pressable>
+              )}
+            </Menu.Trigger>
+          </View>
         )}
         <Menu.Outer>
           <Menu.Group>
