@@ -1,6 +1,5 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
-import {AtUri} from '@atproto/api'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -87,34 +86,37 @@ export function useNotificationsHandler() {
         switch (payload.reason) {
           case 'like':
           case 'repost':
+          case 'follow':
+          case 'mention':
+          case 'quote':
+          case 'reply':
             resetToTab('NotificationsTab')
             break
-          case 'follow':
-            const uri = new AtUri(payload.uri)
-            setTimeout(() => {
-              // @ts-expect-error types are weird here
-              navigation.navigate('HomeTab', {
-                screen: 'Profile',
-                params: {
-                  name: uri.host,
-                },
-              })
-            }, 500)
-            break
-          case 'mention':
-          case 'reply':
-            const urip = new AtUri(payload.uri)
-            setTimeout(() => {
-              // @ts-expect-error types are weird here
-              navigation.navigate('HomeTab', {
-                screen: 'PostThread',
-                params: {
-                  name: urip.host,
-                  rkey: urip.rkey,
-                },
-              })
-            }, 500)
-            break
+          // case 'follow':
+          //   const uri = new AtUri(payload.uri)
+          //   setTimeout(() => {
+          //     // @ts-expect-error types are weird here
+          //     navigation.navigate('HomeTab', {
+          //       screen: 'Profile',
+          //       params: {
+          //         name: uri.host,
+          //       },
+          //     })
+          //   }, 500)
+          //   break
+          // case 'mention':
+          // case 'reply':
+          //   const urip = new AtUri(payload.uri)
+          //   setTimeout(() => {
+          //     // @ts-expect-error types are weird here
+          //     navigation.navigate('HomeTab', {
+          //       screen: 'PostThread',
+          //       params: {
+          //         name: urip.host,
+          //         rkey: urip.rkey,
+          //       },
+          //     })
+          //   }, 500)
         }
       }
     }
