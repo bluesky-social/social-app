@@ -58,7 +58,7 @@ export function SuggestedFollowCardSkeleton() {
         </View>
       </View>
 
-      <View style={[a.flex_1, a.gap_xs]}>
+      <View style={[a.gap_xs]}>
         <View style={[a.rounded_xs, a.w_full, t.atoms.bg, {height: 12}]} />
         <View style={[a.rounded_xs, a.w_full, t.atoms.bg, {height: 12}]} />
         <View
@@ -151,7 +151,7 @@ export function SuggestedFollowCard({
         </View>
       </View>
 
-      <Text style={[a.flex_1]} numberOfLines={3}>
+      <Text numberOfLines={3}>
         <RichText value={descriptionRT} style={[t.atoms.text_contrast_high]} />
       </Text>
     </View>

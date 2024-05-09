@@ -1,24 +1,46 @@
 import React from 'react'
-import {View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import {FeedSuggestedFollowsCards} from '#/components/FeedSuggestedFollows'
 import {IconCircle} from '#/components/IconCircle'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/components/icons/ArrowRotateCounterClockwise'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
-import {Divider} from '#/components/Menu'
 import {Text} from '#/components/Typography'
+
+// TODO replace this with new shared hook
+function useHeaderOffset() {
+  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {fontScale} = useWindowDimensions()
+  if (isDesktop || isTablet) {
+    return 0
+  }
+  const navBarHeight = 42
+  const tabBarPad = 10 + 10 + 3 // padding + border
+  const normalLineHeight = 1.2
+  const tabBarText = 16 * normalLineHeight * fontScale
+  return navBarHeight + tabBarPad + tabBarText
+}
 
 export function EmptyTimeline() {
   const {_} = useLingui()
+  const offset = useHeaderOffset()
 
   return (
     <CenteredView sideBorders style={[a.h_full_vh]}>
-      <View style={[a.px_lg, a.pt_3xl]}>
+      <View
+        style={[
+          a.px_lg,
+          {
+            paddingTop: offset + a.pt_3xl.paddingTop,
+          },
+        ]}>
         <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
 
         <Text style={[a.text_xl, a.font_bold, a.mb_sm]}>
@@ -47,7 +69,7 @@ export function EmptyTimeline() {
             a.align_center,
             a.justify_end,
             a.pt_md,
-            a.gap_lg,
+            a.gap_md,
           ]}>
           <Text style={[a.leading_snug]}>
             <Trans>When you're done:</Trans>
@@ -59,7 +81,7 @@ export function EmptyTimeline() {
             variant="solid"
             color="primary">
             <ButtonText>
-              <Trans>Click to view your timeline</Trans>
+              <Trans>View your timeline</Trans>
             </ButtonText>
             <ButtonIcon icon={Refresh} position="right" />
           </Button>
