@@ -12,7 +12,7 @@ import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {Text} from '#/components/Typography'
 import {RichText} from '../RichText'
 
-export let MessageItem = ({
+let MessageItem = ({
   item,
   next,
   pending,
@@ -116,8 +116,8 @@ export let MessageItem = ({
     </View>
   )
 }
-
 MessageItem = React.memo(MessageItem)
+export {MessageItem}
 
 let MessageItemMetadata = ({
   message,

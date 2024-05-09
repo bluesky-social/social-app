@@ -44,12 +44,14 @@ export function RichText({
       value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
     [value],
   )
-  const plainStyles = [a.leading_snug, flatten(style)]
+
+  const flattenedStyle = flatten(style)
+  const plainStyles = [a.leading_snug, flattenedStyle]
   const interactiveStyles = [
     a.leading_snug,
     a.pointer_events_auto,
     display === 'color' ? {color: t.palette.primary_500} : a.underline,
-    flatten(style),
+    flattenedStyle,
   ]
 
   const {text, facets} = richText
@@ -142,7 +144,6 @@ export function RichText({
           style={interactiveStyles}
           selectable={selectable}
           authorHandle={authorHandle}
-          display={display}
         />,
       )
     } else {
@@ -170,13 +171,11 @@ function RichTextTag({
   style,
   selectable,
   authorHandle,
-  display,
 }: {
   text: string
   tag: string
   selectable?: boolean
   authorHandle?: string
-  display: 'color' | 'underlines'
 } & TextStyleProp) {
   const t = useTheme()
   const {_} = useLingui()
@@ -234,13 +233,11 @@ function RichTextTag({
             web({
               cursor: 'pointer',
             }),
-            (hovered || focused || pressed) && web({outline: 0}),
-            (hovered || focused || pressed) &&
-              display === 'color' &&
-              web({
-                textDecorationLine: 'underline',
-                textDecorationColor: t.palette.primary_500,
-              }),
+            (hovered || focused || pressed) && {
+              ...web({outline: 0}),
+              textDecorationLine: 'underline',
+              textDecorationColor: t.palette.primary_500,
+            },
             style,
           ]}>
           {text}
