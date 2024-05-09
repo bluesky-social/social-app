@@ -260,19 +260,19 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   )
 
   const navigation = useNavigation<NavigationProp>()
-  const [isTriggerVisible, setIsTriggerVisible] = React.useState(false)
+  const [showActions, setShowActions] = React.useState(false)
 
   const onMouseEnter = React.useCallback(() => {
-    setIsTriggerVisible(true)
+    setShowActions(true)
   }, [])
 
   const onMouseLeave = React.useCallback(() => {
-    setIsTriggerVisible(false)
+    setShowActions(false)
   }, [])
 
   const onFocus = React.useCallback<React.FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
-    setIsTriggerVisible(true)
+    setShowActions(true)
   }, [])
 
   const onPress = React.useCallback(() => {
@@ -286,95 +286,93 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   }
 
   return (
-    <View
+    <Button
+      label="Test"
+      onPress={onPress}
+      style={a.flex_1}
+      onLongPress={isNative ? menuControl.open : undefined}
       // @ts-expect-error web only
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
       onBlur={onMouseLeave}>
-      <Button
-        label="Test"
-        onPress={onPress}
-        style={a.flex_1}
-        onLongPress={isNative ? menuControl.open : undefined}>
-        {({hovered, pressed}) => (
-          <View
-            style={[
-              a.flex_row,
-              a.flex_1,
-              a.pl_md,
-              a.py_sm,
-              a.gap_md,
-              a.pr_xl,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-            ]}>
-            <View pointerEvents="none">
-              <UserAvatar avatar={otherUser?.avatar} size={42} />
-            </View>
-            <View style={[a.flex_1]}>
-              <Text
-                numberOfLines={1}
-                style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
-                <Text
-                  style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
-                  {otherUser.displayName || otherUser.handle}
-                </Text>{' '}
-                {lastMessageSentAt ? (
-                  <TimeElapsed timestamp={lastMessageSentAt}>
-                    {({timeElapsed}) => (
-                      <Text style={t.atoms.text_contrast_medium}>
-                        @{otherUser.handle} &middot; {timeElapsed}
-                      </Text>
-                    )}
-                  </TimeElapsed>
-                ) : (
-                  <Text style={t.atoms.text_contrast_medium}>
-                    @{otherUser.handle}
-                  </Text>
-                )}
-              </Text>
-              <Text
-                numberOfLines={2}
-                style={[
-                  a.text_sm,
-                  a.leading_snug,
-                  convo.unreadCount > 0
-                    ? a.font_bold
-                    : t.atoms.text_contrast_medium,
-                ]}>
-                {lastMessage}
-              </Text>
-            </View>
-            {convo.unreadCount > 0 && (
-              <View
-                style={[
-                  a.flex_0,
-                  a.ml_md,
-                  a.mt_sm,
-                  a.rounded_full,
-                  {
-                    backgroundColor: convo.muted
-                      ? t.palette.contrast_200
-                      : t.palette.primary_500,
-                    height: 7,
-                    width: 7,
-                  },
-                ]}
-              />
-            )}
-            <ConvoMenu
-              convo={convo}
-              profile={otherUser}
-              control={menuControl}
-              currentScreen="list"
-              showMarkAsRead={convo.unreadCount > 0}
-              hideTrigger={isNative}
-              triggerOpacity={isTriggerVisible || menuControl.isOpen ? 1 : 0}
-            />
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_row,
+            a.flex_1,
+            a.pl_md,
+            a.py_sm,
+            a.gap_md,
+            a.pr_xl,
+            (hovered || pressed) && t.atoms.bg_contrast_25,
+          ]}>
+          <View pointerEvents="none">
+            <UserAvatar avatar={otherUser?.avatar} size={42} />
           </View>
-        )}
-      </Button>
-    </View>
+          <View style={[a.flex_1]}>
+            <Text
+              numberOfLines={1}
+              style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
+              <Text
+                style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
+                {otherUser.displayName || otherUser.handle}
+              </Text>{' '}
+              {lastMessageSentAt ? (
+                <TimeElapsed timestamp={lastMessageSentAt}>
+                  {({timeElapsed}) => (
+                    <Text style={t.atoms.text_contrast_medium}>
+                      @{otherUser.handle} &middot; {timeElapsed}
+                    </Text>
+                  )}
+                </TimeElapsed>
+              ) : (
+                <Text style={t.atoms.text_contrast_medium}>
+                  @{otherUser.handle}
+                </Text>
+              )}
+            </Text>
+            <Text
+              numberOfLines={2}
+              style={[
+                a.text_sm,
+                a.leading_snug,
+                convo.unreadCount > 0
+                  ? a.font_bold
+                  : t.atoms.text_contrast_medium,
+              ]}>
+              {lastMessage}
+            </Text>
+          </View>
+          {convo.unreadCount > 0 && (
+            <View
+              style={[
+                a.flex_0,
+                a.ml_md,
+                a.mt_sm,
+                a.rounded_full,
+                {
+                  backgroundColor: convo.muted
+                    ? t.palette.contrast_200
+                    : t.palette.primary_500,
+                  height: 7,
+                  width: 7,
+                },
+              ]}
+            />
+          )}
+          <ConvoMenu
+            convo={convo}
+            profile={otherUser}
+            control={menuControl}
+            currentScreen="list"
+            showMarkAsRead={convo.unreadCount > 0}
+            hideTrigger={isNative}
+            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
+          />
+        </View>
+      )}
+    </Button>
   )
 }
 
