@@ -75,22 +75,20 @@ export function useNotificationsHandler() {
             setShowLoggedOut(true)
           }
         } else {
-          setTimeout(() => {
-            navigation.dispatch(state => {
-              if (state.routes[0].name === 'Messages') {
-                return CommonActions.navigate('MessagesConversation', {
-                  conversation: payload.convoId,
-                })
-              } else {
-                return CommonActions.navigate('MessagesTab', {
-                  screen: 'Messages',
-                  params: {
-                    pushToConversation: payload.convoId,
-                  },
-                })
-              }
-            })
-          }, 500)
+          navigation.dispatch(state => {
+            if (state.routes[0].name === 'Messages') {
+              return CommonActions.navigate('MessagesConversation', {
+                conversation: payload.convoId,
+              })
+            } else {
+              return CommonActions.navigate('MessagesTab', {
+                screen: 'Messages',
+                params: {
+                  pushToConversation: payload.convoId,
+                },
+              })
+            }
+          })
         }
       } else {
         switch (payload.reason) {

@@ -110,10 +110,7 @@ let Header = ({
     if (isWeb) {
       navigation.replace('Messages')
     } else {
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'Messages'}],
-      })
+      navigation.goBack()
     }
   }, [navigation])
 
