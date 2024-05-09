@@ -71,8 +71,9 @@ export function StepProfile() {
   const creatorControl = Dialog.useDialogControl()
   const [error, setError] = React.useState('')
 
-  const {dispatch} = React.useContext(Context)
+  const {state, dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
+    image: state.profileStepResults?.image,
     placeholder: emojiItems.at,
     backgroundColor: randomColor,
     useCreatedAvatar: false,
@@ -127,6 +128,7 @@ export function StepProfile() {
     if (imageUri) {
       dispatch({
         type: 'setProfileStepResults',
+        image: avatar.image,
         imageUri,
         imageMime: avatar.image?.mime ?? 'image/jpeg',
       })
@@ -134,13 +136,7 @@ export function StepProfile() {
 
     dispatch({type: 'next'})
     track('OnboardingV2:StepProfile:End')
-  }, [
-    avatar.image?.mime,
-    avatar.image?.path,
-    avatar.useCreatedAvatar,
-    dispatch,
-    track,
-  ])
+  }, [avatar.image, avatar.useCreatedAvatar, dispatch, track])
 
   const onDoneCreating = React.useCallback(() => {
     setAvatar(prev => ({

@@ -31,6 +31,13 @@ export type OnboardingState = {
     feedUris: string[]
   }
   profileStepResults: {
+    image?: {
+      path: string
+      mime: string
+      size: number
+      width: number
+      height: number
+    }
     imageUri?: string
     imageMime?: string
   }
@@ -65,6 +72,7 @@ export type OnboardingAction =
     }
   | {
       type: 'setProfileStepResults'
+      image?: OnboardingState['profileStepResults']['image']
       imageUri: string
       imageMime: string
     }
@@ -103,6 +111,7 @@ export const initialState: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    image: undefined,
     imageUri: '',
     imageMime: '',
   },
@@ -235,6 +244,7 @@ export function reducer(
     }
     case 'setProfileStepResults': {
       next.profileStepResults = {
+        image: a.image,
         imageUri: a.imageUri,
         imageMime: a.imageMime,
       }
@@ -291,6 +301,7 @@ export const initialStateReduced: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    image: undefined,
     imageUri: '',
     imageMime: '',
   },
@@ -345,6 +356,7 @@ export function reducerReduced(
     }
     case 'setProfileStepResults': {
       next.profileStepResults = {
+        image: a.image,
         imageUri: a.imageUri,
         imageMime: a.imageMime,
       }
