@@ -23,7 +23,7 @@ import {createPortalGroup} from '#/components/Portal'
 import {leading, P, Text} from '#/components/Typography'
 import {IS_DEV} from '#/env'
 
-const COL_WIDTH = 500
+const COL_WIDTH = 420
 
 export const OnboardingControls = createPortalGroup()
 

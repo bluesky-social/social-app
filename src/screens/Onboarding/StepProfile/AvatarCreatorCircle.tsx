@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {Avatar} from '#/screens/Onboarding/StepProfile/index'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 
 export function AvatarCreatorCircle({
   avatar,
@@ -21,14 +21,13 @@ export function AvatarCreatorCircle({
         a.overflow_hidden,
         a.align_center,
         a.justify_center,
+        a.border,
         t.atoms.border_contrast_high,
         {
           height: size,
           width: size,
           backgroundColor: avatar.backgroundColor,
         },
-        web({borderWidth: 2}),
-        native({borderWidth: 1}),
       ],
     }),
     [avatar.backgroundColor, size, t.atoms.border_contrast_high],

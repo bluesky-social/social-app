@@ -1,8 +1,7 @@
 import React from 'react'
-import {ListRenderItemInfo, Pressable, View} from 'react-native'
-// Using the FlatList from RNGH allows us to nest the scroll views on Android. The default FlatList won't allow
-// scrolling inside of the vertical ScrollView
-import {FlatList} from 'react-native-gesture-handler'
+import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {Avatar} from '#/screens/Onboarding/StepProfile/index'
 import {
@@ -12,101 +11,18 @@ import {
   EmojiName,
   emojiNames,
 } from '#/screens/Onboarding/StepProfile/types'
-import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {Text} from '#/components/Typography'
 
-function Circle({children}: React.PropsWithChildren<{}>) {
-  const t = useTheme()
-
-  const styles = React.useMemo(
-    () => ({
-      container: [
-        a.rounded_full,
-        a.overflow_hidden,
-        a.align_center,
-        a.justify_center,
-        t.atoms.bg_contrast_25,
-        web({borderWidth: 2}),
-        native({borderWidth: 1}),
-        {
-          height: 60,
-          width: 60,
-          margin: 4,
-        },
-      ],
-    }),
-    [t.atoms.bg_contrast_25],
-  )
-
-  return (
-    <View style={[styles.container, t.atoms.border_contrast_high]}>
-      {children}
-    </View>
-  )
-}
-
-function ColorItem({
-  color,
-  setAvatar,
-}: {
-  color: AvatarColor
-  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
-}) {
-  const onPress = React.useCallback(() => {
-    setAvatar(prev => ({
-      ...prev,
-      backgroundColor: color,
-    }))
-  }, [color, setAvatar])
-
-  return (
-    <Circle>
-      <Pressable
-        accessibilityRole="button"
-        style={[a.h_full, a.w_full, {backgroundColor: color}]}
-        onPress={onPress}
-      />
-    </Circle>
-  )
-}
-
-function EmojiItem({
-  emojiName,
-  avatar,
-  setAvatar,
-}: {
-  emojiName: EmojiName
-  avatar: Avatar
-  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
-}) {
-  const t = useTheme()
-  const Icon = React.useMemo(() => emojiItems[emojiName].component, [emojiName])
-
-  const onPress = React.useCallback(() => {
-    setAvatar(prev => ({
-      ...prev,
-      placeholder: emojiItems[emojiName],
-    }))
-  }, [emojiName, setAvatar])
-
-  const selected = React.useMemo(
-    () => avatar.placeholder.name === emojiName,
-    [avatar.placeholder.name, emojiName],
-  )
-
-  return (
-    <Circle>
-      <Pressable
-        accessibilityRole="button"
-        style={[a.flex_1, a.justify_center, a.align_center]}
-        onPress={onPress}>
-        <Icon
-          style={selected ? t.atoms.text : t.atoms.text_contrast_low}
-          height={30}
-          width={30}
-        />
-      </Pressable>
-    </Circle>
-  )
+const ACTIVE_BORDER_WIDTH = 3
+const ACTIVE_BORDER_STYLES = {
+  top: -ACTIVE_BORDER_WIDTH,
+  bottom: -ACTIVE_BORDER_WIDTH,
+  left: -ACTIVE_BORDER_WIDTH,
+  right: -ACTIVE_BORDER_WIDTH,
+  opacity: 0.5,
+  borderWidth: 3,
 }
 
 export function AvatarCreatorItems({
@@ -118,58 +34,112 @@ export function AvatarCreatorItems({
   avatar: Avatar
   setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
 }) {
-  const {gtMobile} = useBreakpoints()
+  const {_} = useLingui()
+  const t = useTheme()
+  const isEmojis = type === 'emojis'
 
-  const styles = React.useMemo(
-    () => ({
-      flatListOuter: gtMobile
-        ? {
-            height: 338,
-          }
-        : [a.flex_row, a.align_center, {height: 70}],
-    }),
-    [gtMobile],
-  )
-
-  const colorRenderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<AvatarColor>) => {
-      return <ColorItem color={item} setAvatar={setAvatar} />
+  const onSelectEmoji = React.useCallback(
+    (emoji: EmojiName) => {
+      setAvatar(prev => ({
+        ...prev,
+        placeholder: emojiItems[emoji],
+      }))
     },
     [setAvatar],
   )
 
-  const emojiRenderItem = React.useCallback(
-    ({item}: ListRenderItemInfo<EmojiName>) => {
-      return (
-        <EmojiItem emojiName={item} avatar={avatar} setAvatar={setAvatar} />
-      )
+  const onSelectColor = React.useCallback(
+    (color: AvatarColor) => {
+      setAvatar(prev => ({
+        ...prev,
+        backgroundColor: color,
+      }))
     },
-    [avatar, setAvatar],
+    [setAvatar],
   )
 
   return (
-    <View
-      style={[
-        styles.flatListOuter,
-        gtMobile && type === 'colors' && {width: 125},
-      ]}>
-      <FlatList<any>
-        // Changing the value of numColumns on the fly isn't supported, so we want the flatlist to re-render whenever
-        // the size of the screen changes. Should only happen when `isTabletOrDesktop` changes.
-        key={gtMobile ? 0 : 1}
-        data={type === 'colors' ? avatarColors : emojiNames}
-        renderItem={type === 'colors' ? colorRenderItem : emojiRenderItem}
-        keyExtractor={item => item}
-        style={[gtMobile && {marginHorizontal: 10}]}
-        contentContainerStyle={[
-          a.align_center,
-          gtMobile && type === 'colors' && a.pr_xs,
-          !gtMobile && {paddingHorizontal: 40},
-        ]}
-        numColumns={gtMobile && type === 'emojis' ? 4 : undefined}
-        showsHorizontalScrollIndicator={gtMobile && type === 'colors'}
-        horizontal={!gtMobile}
-      />
+    <View style={[a.w_full]}>
+      <Text style={[a.pb_md, t.atoms.text_contrast_medium]}>
+        {isEmojis ? (
+          <Trans>Select an emoji</Trans>
+        ) : (
+          <Trans>Select a color</Trans>
+        )}
+      </Text>
+
+      <View
+        style={[
+          a.flex_row,
+          a.align_start,
+          a.justify_start,
+          a.flex_wrap,
+          a.gap_md,
+        ]}>
+        {isEmojis
+          ? emojiNames.map(emojiName => (
+              <Button
+                key={emojiName}
+                label={_(msg`Select the ${emojiName} emoji as your avatar`)}
+                size="small"
+                shape="round"
+                variant="solid"
+                color="secondary"
+                onPress={() => onSelectEmoji(emojiName)}>
+                <ButtonIcon icon={emojiItems[emojiName].component} />
+                {avatar.placeholder.name === emojiName && (
+                  <View
+                    style={[
+                      a.absolute,
+                      a.rounded_full,
+                      ACTIVE_BORDER_STYLES,
+                      {
+                        borderColor: avatar.backgroundColor,
+                      },
+                    ]}
+                  />
+                )}
+              </Button>
+            ))
+          : avatarColors.map(color => (
+              <Button
+                key={color}
+                label={_(msg`Choose this color as your avatar`)}
+                size="small"
+                shape="round"
+                variant="solid"
+                onPress={() => onSelectColor(color)}>
+                {ctx => (
+                  <>
+                    <View
+                      style={[
+                        a.absolute,
+                        a.inset_0,
+                        a.rounded_full,
+                        {
+                          opacity: ctx.hovered || ctx.pressed ? 0.8 : 1,
+                          backgroundColor: color,
+                        },
+                      ]}
+                    />
+
+                    {avatar.backgroundColor === color && (
+                      <View
+                        style={[
+                          a.absolute,
+                          a.rounded_full,
+                          ACTIVE_BORDER_STYLES,
+                          {
+                            borderColor: color,
+                          },
+                        ]}
+                      />
+                    )}
+                  </>
+                )}
+              </Button>
+            ))}
+      </View>
     </View>
   )
 }

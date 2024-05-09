@@ -138,12 +138,11 @@ export const emojiItems: Record<EmojiName, Emoji> = {
 }
 
 export const avatarColors = [
-  'hsl(204,70%,53%)',
-  'hsl(168,76%,42%)',
-  'hsl(282,38%,53%)',
-  'hsl(28,80%,52%)',
-  'hsl(5,79%,57%)',
-  'hsl(314,79%,57%)',
-  'hsl(41,79%,57%)',
+  '#FE8311',
+  '#FED811',
+  '#73DF84',
+  '#1185FE',
+  '#EF75EA',
+  '#F55454',
 ] as const
 export type AvatarColor = (typeof avatarColors)[number]

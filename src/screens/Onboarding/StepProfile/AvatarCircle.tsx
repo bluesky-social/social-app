@@ -1,31 +1,15 @@
 import React from 'react'
-import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
-
-function AvatarBottomButton({...props}: TouchableOpacityProps) {
-  const t = useTheme()
-
-  return (
-    <TouchableOpacity
-      {...props}
-      style={[
-        a.absolute,
-        a.rounded_full,
-        a.align_center,
-        a.justify_center,
-        {backgroundColor: t.palette.primary_500},
-        {height: 48, width: 48, bottom: 2, right: 2},
-      ]}>
-      {props.children}
-    </TouchableOpacity>
-  )
-}
 
 export function AvatarCircle({
   openLibrary,
@@ -34,6 +18,7 @@ export function AvatarCircle({
   openLibrary: () => unknown
   openCreator: () => unknown
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const {avatar} = useAvatar()
 
@@ -44,14 +29,13 @@ export function AvatarCircle({
         a.overflow_hidden,
         a.align_center,
         a.justify_center,
+        a.border,
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
         {
           height: 200,
           width: 200,
         },
-        web({borderWidth: 2}),
-        native({borderWidth: 1}),
       ],
     }),
     [t.atoms.bg_contrast_25, t.atoms.border_contrast_low],
@@ -77,10 +61,17 @@ export function AvatarCircle({
           />
         </View>
       )}
-      <AvatarBottomButton
-        onPress={avatar.useCreatedAvatar ? openCreator : openLibrary}>
-        <Pencil size="md" style={{color: t.palette.white}} />
-      </AvatarBottomButton>
+      <View style={[a.absolute, {bottom: 2, right: 2}]}>
+        <Button
+          label={_(msg`Select an avatar`)}
+          size="large"
+          shape="round"
+          variant="solid"
+          color="primary"
+          onPress={avatar.useCreatedAvatar ? openCreator : openLibrary}>
+          <ButtonIcon icon={Pencil} />
+        </Button>
+      </View>
     </View>
   )
 }
