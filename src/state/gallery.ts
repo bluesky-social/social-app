@@ -20,7 +20,7 @@ import {getDataUriSize} from '#/lib/media/util'
 import {isIOS, isNative} from '#/platform/detection'
 
 export type ImageTransformation = {
-  crop?: ActionCrop['crop'] & {aspect: number}
+  crop?: ActionCrop['crop']
 }
 
 export type ImageMeta = {
