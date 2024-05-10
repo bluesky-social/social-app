@@ -19,7 +19,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -65,7 +65,6 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
-  const t = useTheme()
   const convo = useConvo()
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
@@ -253,22 +252,6 @@ export function MessagesList() {
         />
       </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
-      {!hasInitiallyRendered && (
-        <View
-          style={[
-            a.absolute,
-            a.z_10,
-            a.w_full,
-            a.h_full,
-            a.justify_center,
-            a.align_center,
-            t.atoms.bg,
-          ]}>
-          <View style={[{marginBottom: 75}]}>
-            <Loader size="xl" />
-          </View>
-        </View>
-      )}
     </KeyboardAvoidingView>
   )
 }
