@@ -12,7 +12,7 @@ import {MessagesTabNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {useListConvos} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
@@ -328,26 +328,28 @@ function ChatListItem({
           style={[
             a.flex_row,
             a.flex_1,
-            a.pr_xl,
-            a.pl_xl,
+            a.px_lg,
             a.py_md,
             a.gap_md,
             (hovered || pressed) && t.atoms.bg_contrast_25,
-            index === 0 && a.border_t,
-            a.border_b,
+            index === 0 && [a.border_t, a.pt_lg],
             t.atoms.border_contrast_low,
           ]}>
           <UserAvatar avatar={otherUser?.avatar} size={52} />
           <View style={[a.flex_1, a.flex_row, a.align_center]}>
             <View style={[a.flex_1]}>
-              <View style={[a.flex_1, a.flex_row, a.align_end]}>
+              <View
+                style={[
+                  a.flex_1,
+                  a.flex_row,
+                  a.align_end,
+                  a.pb_2xs,
+                  web([{marginTop: -2}]),
+                ]}>
                 <Text
                   numberOfLines={1}
-                  style={[
-                    {maxWidth: '85%'},
-                    web([a.leading_normal, {marginTop: -4}]),
-                  ]}>
-                  <Text style={[t.atoms.text, a.font_bold, {fontSize: 17}]}>
+                  style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
+                  <Text style={[a.text_md, t.atoms.text, a.font_bold]}>
                     {otherUser.displayName || otherUser.handle}
                   </Text>
                 </Text>
@@ -356,9 +358,9 @@ function ChatListItem({
                     {({timeElapsed}) => (
                       <Text
                         style={[
-                          web([a.leading_normal, {marginTop: -4}]),
+                          a.text_sm,
+                          web([a.leading_normal]),
                           t.atoms.text_contrast_medium,
-                          {fontSize: 15},
                         ]}>
                         {' '}
                         &middot; {timeElapsed}
@@ -369,17 +371,13 @@ function ChatListItem({
               </View>
               <Text
                 numberOfLines={1}
-                style={[
-                  {fontSize: 15},
-                  t.atoms.text_contrast_medium,
-                  isWeb ? a.pb_sm : a.pb_xs,
-                ]}>
+                style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
                 @{otherUser.handle}
               </Text>
               <Text
                 numberOfLines={2}
                 style={[
-                  a.text_md,
+                  a.text_sm,
                   a.leading_snug,
                   convo.unreadCount > 0
                     ? a.font_bold
