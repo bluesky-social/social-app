@@ -205,7 +205,9 @@ function HomeScreenReady({
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
       mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
-        ? preferences.savedFeeds.map(f => f.value)
+        ? preferences.savedFeeds
+            .filter(f => f.type === 'feed' || f.type === 'list')
+            .map(f => f.value)
         : [],
     }
   }, [preferences])
