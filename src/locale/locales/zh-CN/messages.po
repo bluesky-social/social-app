@@ -108,7 +108,7 @@ msgstr "<0/> 个成员"
 
 #: src/view/shell/Drawer.tsx:92
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, other {关注者}}"
+msgstr "<0>{0}</0> 关注者"
 
 #: src/view/shell/Drawer.tsx:103
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
