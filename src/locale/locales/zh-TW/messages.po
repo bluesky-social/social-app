@@ -1184,7 +1184,7 @@ msgstr "自訂網域"
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:107
 #: src/view/screens/Feeds.tsx:717
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "由社群打造的自訂動態帶來全新體驗，協助您找到所愛的內容。"
+msgstr "由社群打造的自訂動態源帶來全新體驗，協助您找到所愛的內容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:56
 msgid "Customize media from external sites."
@@ -1734,7 +1734,7 @@ msgstr "外部媒體"
 #: src/components/dialogs/EmbedConsent.tsx:71
 #: src/view/screens/PreferencesExternalEmbeds.tsx:67
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒體可能允許網站收集有關您和您裝置的資料。在您按下「播放」按鈕之前，不會傳送或請求任何資料。"
+msgstr "外部媒體可能允許網站收集有關您和您裝置的資料。在您按下「播放」按鈕之前，將不會傳送或請求任何資料。"
 
 #: src/Navigation.tsx:282
 #: src/view/screens/PreferencesExternalEmbeds.tsx:53
@@ -1980,7 +1980,7 @@ msgstr "頻繁發佈不當內容"
 
 #: src/screens/Hashtag.tsx:118
 msgid "From @{sanitizedAuthor}"
-msgstr "來自 @{sanitizedAuthor}"
+msgstr "來自@{sanitizedAuthor}"
 
 #: src/view/com/posts/FeedItem.tsx:230
 msgctxt "from-feed"
@@ -4242,7 +4242,7 @@ msgstr "將此設定項設為「開」以單頁顯示樹狀回覆，這是一項
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:259
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "將此設定為「是」以在「Following 動態源」中顯示您追蹤的動態源中的選錄貼文，這是一個實驗性功能。"
+msgstr "將此設定為「是」以在「Following 動態源」中顯示您已儲存之動態源中的選錄貼文，這是一個實驗性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
