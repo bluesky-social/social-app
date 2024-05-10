@@ -73,7 +73,7 @@ msgstr "取消喜欢（{0, plural, other {#}} 个喜欢）"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count} 位用户喜欢"
+msgstr "{count, plural, other {#}} 位用户喜欢"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
