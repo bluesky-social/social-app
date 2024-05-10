@@ -12,7 +12,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useConvo} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
@@ -275,8 +275,8 @@ export function MessagesList() {
             paddingHorizontal: 10,
           }}
           disableVirtualization={true}
-          initialNumToRender={isWeb ? 60 : 30}
-          maxToRenderPerBatch={isWeb ? 60 : 30}
+          initialNumToRender={isNative ? 30 : 60}
+          maxToRenderPerBatch={isWeb ? 30 : 60}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
