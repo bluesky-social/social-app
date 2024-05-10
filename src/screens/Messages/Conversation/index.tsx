@@ -114,10 +114,6 @@ let Header = ({
     }
   }, [navigation])
 
-  const onUpdateConvo = useCallback(() => {
-    // TODO eric update muted state
-  }, [])
-
   return (
     <View
       style={[
@@ -184,7 +180,6 @@ let Header = ({
         <ConvoMenu
           convo={convo.convo}
           profile={profile}
-          onUpdateConvo={onUpdateConvo}
           currentScreen="conversation"
         />
       ) : (
