@@ -5638,12 +5638,12 @@ msgstr "你已隐藏此用户"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
-msgstr "你还没有订阅信息流。"
+msgstr "你还没有建立任何信息流。"
 
 #: src/view/com/lists/MyLists.tsx:89
 #: src/view/com/lists/ProfileLists.tsx:148
 msgid "You have no lists."
-msgstr "你还没有任何列表。"
+msgstr "你还没有建立任何列表。"
 
 #: src/screens/Messages/List/index.tsx:176
 msgid "You have no messages yet. Start a conversation with someone!"
