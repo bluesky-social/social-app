@@ -203,9 +203,6 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-/**
- * The following feed, with fallbacks to Discover
- */
 const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
@@ -231,8 +228,6 @@ export function usePinnedFeedsInfos() {
   const {getAgent} = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
-  const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
-  const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -243,10 +238,14 @@ export function usePinnedFeedsInfos() {
         pinnedItems.map(f => f.value).join(','),
     ],
     queryFn: async () => {
+      if (!hasSession) {
+        return [PWI_DISCOVER_FEED_STUB]
+      }
+
       let resolved = new Map<string, FeedSourceInfo>()
-      let pinnedFeedsIds = pinnedFeeds.map(f => f.id)
 
       // Get all feeds. We can do this in a batch.
+      const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
       let feedsPromise = Promise.resolve()
       if (pinnedFeeds.length > 0) {
         feedsPromise = getAgent()
@@ -256,15 +255,13 @@ export function usePinnedFeedsInfos() {
           .then(res => {
             for (let i = 0; i < res.data.feeds.length; i++) {
               const feedView = res.data.feeds[i]
-              resolved.set(
-                feedView.uri + pinnedFeedsIds[i],
-                hydrateFeedGenerator(feedView),
-              )
+              resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
             }
           })
       }
 
       // Get all lists. This currently has to be done individually.
+      const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
       const listsPromises = pinnedLists.map(list =>
         getAgent()
           .app.bsky.graph.getList({
@@ -273,17 +270,16 @@ export function usePinnedFeedsInfos() {
           })
           .then(res => {
             const listView = res.data.list
-            resolved.set(listView.uri + list.id, hydrateList(listView))
+            resolved.set(listView.uri, hydrateList(listView))
           }),
       )
-
-      const result = hasSession ? [] : [PWI_DISCOVER_FEED_STUB]
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
       // order the feeds/lists in the order they were pinned
+      const result: FeedSourceInfo[] = []
       for (let pinnedItem of pinnedItems) {
-        const feedInfo = resolved.get(pinnedItem.value + pinnedItem.id)
+        const feedInfo = resolved.get(pinnedItem.value)
         if (feedInfo) {
           result.push(feedInfo)
         } else if (pinnedItem.type === 'timeline') {
@@ -306,7 +302,6 @@ export function usePinnedFeedsInfos() {
           })
         }
       }
-
       return result
     },
   })
