@@ -789,27 +789,27 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'flickr_album',
       source: 'flickr',
-      playerUri: 'https://embedr.flickr.com/groups/898944@N23/',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
     },
     {
       type: 'flickr_album',
       source: 'flickr',
-      playerUri: 'https://embedr.flickr.com/groups/898944@N23/',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
     },
     {
       type: 'flickr_album',
       source: 'flickr',
-      playerUri: 'https://embedr.flickr.com/groups/898944@N23/',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
     },
     {
       type: 'flickr_album',
       source: 'flickr',
-      playerUri: 'https://embedr.flickr.com/groups/898944@N23/',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
     },
     {
       type: 'flickr_album',
       source: 'flickr',
-      playerUri: 'https://embedr.flickr.com/groups/898944@N23/',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
     },
 
     undefined,
