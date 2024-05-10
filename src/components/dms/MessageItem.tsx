@@ -193,6 +193,7 @@ let MessageItemMetadata = ({
 }
 
 MessageItemMetadata = React.memo(MessageItemMetadata)
+export {MessageItemMetadata}
 
 function localDateString(date: Date) {
   // can't use toISOString because it should be in local time
