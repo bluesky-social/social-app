@@ -86,7 +86,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:454
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
-msgstr "{following} 個跟隨中"
+msgstr "{following}個跟隨中"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
@@ -96,7 +96,7 @@ msgstr ""
 
 #: src/view/shell/Drawer.tsx:464
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} 個未讀通知"
+msgstr "{numUnreadNotifications}個未讀通知"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:66
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -113,19 +113,6 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:103
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
-
-#: src/view/shell/Drawer.tsx:96
-#~ msgid "<0>{0}</0> following"
-#~ msgstr "<0>{0}</0> 個跟隨中"
-
-#: src/components/ProfileHoverCard/index.web.tsx:437
-#~ msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-#~ msgstr "<0>{followers} </0><1>{pluralizedFollowers}</1>"
-
-#: src/components/ProfileHoverCard/index.web.tsx:449
-#: src/screens/Profile/Header/Metrics.tsx:45
-#~ msgid "<0>{following} </0><1>following</1>"
-#~ msgstr "<0>{following} </0><1>個跟隨中</1>"
 
 #: src/view/com/modals/SelfLabel.tsx:134
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -338,11 +325,11 @@ msgstr "替代文字為盲人和視障人士描述圖片及提供情境。"
 #: src/view/com/modals/VerifyEmail.tsx:133
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:97
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "一封電子郵件已發送至 {0}。請查閱郵件並在下方輸入驗證碼。"
+msgstr "一封電子郵件已發送至{0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/view/com/modals/ChangeEmail.tsx:121
-msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封電子郵件已發送至先前填寫的電子郵件地址 {0}。請查閱郵件並在下方輸入驗證碼。"
+msgid "An email has been sent to your previous address,{0}. It includes a confirmation code which you can enter below."
+msgstr "一封電子郵件已發送至先前填寫的電子郵件地址{0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/components/dialogs/GifSelect.tsx:284
 msgid "An error occured"
@@ -447,7 +434,7 @@ msgstr ""
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "您確定要從您的動態源中移除 {0} 嗎？"
+msgstr "您確定要從您的動態源中移除{0}嗎？"
 
 #: src/view/com/composer/Composer.tsx:573
 msgid "Are you sure you'd like to discard this draft?"
@@ -459,7 +446,7 @@ msgstr "您確定嗎？"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
-msgstr "您正在使用 <0>{0}</0> 書寫嗎？"
+msgstr "您正在使用<0>{0}</0>書寫嗎？"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
@@ -492,7 +479,7 @@ msgstr "返回"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:144
 msgid "Based on your interest in {interestsText}"
-msgstr "因為您對 {interestsText} 感興趣"
+msgstr "因為您對{interestsText}感興趣"
 
 #: src/view/screens/Settings/index.tsx:487
 msgid "Basics"
@@ -614,7 +601,7 @@ msgstr "來自 ——"
 
 #: src/components/LabelingServiceCard/index.tsx:56
 msgid "By {0}"
-msgstr "來自 {0}"
+msgstr "來自{0}"
 
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:112
 msgid "by @{0}"
@@ -622,11 +609,11 @@ msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:161
 msgid "by <0/>"
-msgstr "來自 <0/>"
+msgstr "來自<0/>"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:74
 msgid "By creating an account you agree to the {els}."
-msgstr "建立帳戶即表示您同意 {els}。"
+msgstr "建立帳戶即表示您同意{els}。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "by you"
@@ -737,7 +724,7 @@ msgstr "變更密碼"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
-msgstr "變更貼文的發佈語言為 {0}"
+msgstr "變更貼文的發佈語言為{0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:111
 msgid "Change Your Email"
@@ -759,10 +746,6 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:65
 msgid "Chat unmuted"
 msgstr ""
-
-#: src/screens/Messages/Conversation/index.tsx:26
-#~ msgid "Chat with {chatId}"
-#~ msgstr "與 {chatId} 對話"
 
 #: src/screens/Deactivated.tsx:78
 #: src/screens/Deactivated.tsx:82
@@ -832,7 +815,7 @@ msgstr "點擊這裡"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
-msgstr "點擊這裡以開啟 {tag} 的標籤選單"
+msgstr "點擊這裡以開啟{tag}的標籤選單"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -926,7 +909,7 @@ msgstr "完成驗證"
 
 #: src/view/com/composer/Composer.tsx:507
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "撰寫貼文的長度最多為 {MAX_GRAPHEME_LENGTH} 個字元"
+msgstr "撰寫貼文的長度最多為{MAX_GRAPHEME_LENGTH}個字元"
 
 #: src/view/com/composer/Prompt.tsx:24
 msgid "Compose reply"
@@ -938,7 +921,7 @@ msgstr "為以下類別配置內容過濾設定：{0}"
 
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
-msgstr "為 {name} 配置內容過濾設定"
+msgstr "為{name}配置內容過濾設定"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
@@ -1042,7 +1025,7 @@ msgstr "繼續"
 
 #: src/components/AccountList.tsx:113
 msgid "Continue as {0} (currently signed in)"
-msgstr "以 {0} 繼續 (目前已登入)"
+msgstr "以{0}繼續 (目前已登入)"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:151
 #: src/screens/Onboarding/StepInterests/index.tsx:250
@@ -1095,7 +1078,7 @@ msgstr "複製"
 
 #: src/view/com/modals/ChangeHandle.tsx:481
 msgid "Copy {0}"
-msgstr "複製 {0}"
+msgstr "複製{0}"
 
 #: src/components/dialogs/Embed.tsx:120
 #: src/components/dialogs/Embed.tsx:139
@@ -1179,11 +1162,11 @@ msgstr "建立新帳號"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:94
 msgid "Create report for {0}"
-msgstr "建立 {0} 的檢舉"
+msgstr "建立{0}的檢舉"
 
 #: src/view/screens/AppPasswords.tsx:246
 msgid "Created {0}"
-msgstr "{0} 已建立"
+msgstr "{0}已建立"
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
@@ -1589,7 +1572,7 @@ msgstr "將這則貼文嵌入到您的網站。只需複製以下程式碼片段
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
-msgstr "僅啟用 {0}"
+msgstr "僅啟用{0}"
 
 #: src/screens/Moderation/index.tsx:329
 msgid "Enable adult content"
@@ -1798,7 +1781,7 @@ msgstr "動態"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:217
 msgid "Feed by {0}"
-msgstr "{0} 建立的動態源"
+msgstr "{0}建立的動態源"
 
 #: src/view/screens/Feeds.tsx:630
 msgid "Feed offline"
@@ -1822,7 +1805,7 @@ msgstr "動態源"
 
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "動態源是一種自訂演算法，使用者只需掌握一點開發技巧即可輕鬆構建。更多資訊請見 <0/>。"
+msgstr "動態源是一種自訂演算法，使用者只需掌握一點開發技巧即可輕鬆構建。更多資訊請見<0/>。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 msgid "Feeds can be topical as well!"
@@ -1893,7 +1876,7 @@ msgstr "跟隨"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:221
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
 msgid "Follow {0}"
-msgstr "跟隨 {0}"
+msgstr "跟隨{0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:242
 #: src/view/com/profile/ProfileMenu.tsx:253
@@ -1914,7 +1897,7 @@ msgstr "跟隨選擇的用戶並繼續下一步"
 
 #: src/view/com/profile/ProfileCard.tsx:226
 msgid "Followed by {0}"
-msgstr "由 {0} 跟隨"
+msgstr "由{0}跟隨"
 
 #: src/view/com/modals/Threadgate.tsx:98
 msgid "Followed users"
@@ -2002,7 +1985,7 @@ msgstr "來自 @{sanitizedAuthor}"
 #: src/view/com/posts/FeedItem.tsx:230
 msgctxt "from-feed"
 msgid "From <0/>"
-msgstr "來自 <0/>"
+msgstr "來自<0/>"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:39
 msgid "Gallery"
@@ -2282,7 +2265,7 @@ msgstr "輸入寄送至您電子郵件地址的驗證碼"
 
 #: src/screens/Login/LoginForm.tsx:212
 msgid "Input the password tied to {identifier}"
-msgstr "輸入與 {identifier} 關聯的密碼"
+msgstr "輸入與{identifier}關聯的密碼"
 
 #: src/screens/Login/LoginForm.tsx:185
 msgid "Input the username or email address you used at signup"
@@ -2327,11 +2310,11 @@ msgstr "邀請碼無效。請檢查您輸入的內容是否正確，然後重試
 
 #: src/view/com/modals/InviteCodes.tsx:171
 msgid "Invite codes: {0} available"
-msgstr "邀請碼：{0} 個可用"
+msgstr "邀請碼：{0}個可用"
 
 #: src/view/com/modals/InviteCodes.tsx:170
 msgid "Invite codes: 1 available"
-msgstr "邀請碼：1 個可用"
+msgstr "邀請碼：1個可用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 msgid "It shows posts from the people you follow as they happen."
@@ -2345,13 +2328,9 @@ msgstr "工作"
 msgid "Journalism"
 msgstr "新聞學"
 
-#: src/components/moderation/LabelsOnMe.tsx:59
-#~ msgid "label has been placed on this {labelTarget}"
-#~ msgstr "此標記已放置於 {labelTarget} 上"
-
 #: src/components/moderation/ContentHider.tsx:144
 msgid "Labeled by {0}."
-msgstr "由 {0} 標記。"
+msgstr "由{0}標記。"
 
 #: src/components/moderation/ContentHider.tsx:142
 msgid "Labeled by the author."
@@ -2364,10 +2343,6 @@ msgstr "標記"
 #: src/screens/Profile/Sections/Labels.tsx:156
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "標記是對用戶和內容的標註，可用於隱藏、警告和對網路進行分類。"
-
-#: src/components/moderation/LabelsOnMe.tsx:61
-#~ msgid "labels have been placed on this {labelTarget}"
-#~ msgstr "此標記已放置於 {labelTarget} 上"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:62
 msgid "Labels on your account"
@@ -2481,20 +2456,6 @@ msgstr "按喜歡的用戶"
 msgid "Liked By"
 msgstr "按喜歡的用戶"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:268
-#~ msgid "Liked by {0} {1}"
-#~ msgstr "{0} 個 {1} 喜歡"
-
-#: src/components/LabelingServiceCard/index.tsx:72
-#~ msgid "Liked by {count} {0}"
-#~ msgstr "{count} 個 {0} 喜歡"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:287
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:301
-#: src/view/screens/ProfileFeed.tsx:600
-#~ msgid "Liked by {likeCount} {0}"
-#~ msgstr "{likeCount} 個 {0} 喜歡"
-
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "liked your custom feed"
 msgstr "已按喜歡您的自訂動態流"
@@ -2525,7 +2486,7 @@ msgstr "列表已封鎖"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:219
 msgid "List by {0}"
-msgstr "列表由 {0} 建立"
+msgstr "列表由{0}建立"
 
 #: src/view/screens/ProfileList.tsx:357
 msgid "List deleted"
@@ -2592,7 +2553,7 @@ msgstr "登入未列出的帳號"
 
 #: src/components/RichText.tsx:207
 msgid "Long press to open tag menu for #{tag}"
-msgstr "長按開啟 #{tag} 的標籤選單"
+msgstr "長按開啟#{tag}的標籤選單"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
@@ -2672,11 +2633,11 @@ msgstr "限制詳情"
 #: src/view/com/lists/ListCard.tsx:93
 #: src/view/com/modals/UserAddRemoveLists.tsx:206
 msgid "Moderation list by {0}"
-msgstr "由 {0} 建立的限制列表"
+msgstr "由{0}建立的限制列表"
 
 #: src/view/screens/ProfileList.tsx:785
 msgid "Moderation list by <0/>"
-msgstr "由 </0> 建立的限制列表"
+msgstr "由</0>建立的限制列表"
 
 #: src/view/com/lists/ListCard.tsx:91
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
@@ -2740,7 +2701,7 @@ msgstr "靜音"
 
 #: src/components/TagMenu/index.web.tsx:105
 msgid "Mute {truncatedTag}"
-msgstr "靜音 {truncatedTag}"
+msgstr "靜音{truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:286
@@ -2753,7 +2714,7 @@ msgstr "靜音帳號"
 
 #: src/components/TagMenu/index.tsx:209
 msgid "Mute all {displayTag} posts"
-msgstr "將所有 {displayTag} 貼文靜音"
+msgstr "將所有{displayTag}貼文靜音"
 
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
@@ -2980,15 +2941,15 @@ msgstr "無 DNS 控制台"
 
 #: src/components/dialogs/GifSelect.tsx:206
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr "未找到精選 GIF，Tenor 可能發生問題。"
+msgstr "未找到精選GIF，Tenor可能發生問題。"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
-msgstr "不再跟隨 {0}"
+msgstr "不再跟隨{0}"
 
 #: src/screens/Signup/StepHandle.tsx:115
 msgid "No longer than 253 characters"
-msgstr "不超過 253 個字符"
+msgstr "不超過253個字符"
 
 #: src/screens/Messages/List/index.tsx:174
 #: src/screens/Messages/List/index.tsx:234
@@ -3016,7 +2977,7 @@ msgstr "未找到「{query}」的結果"
 #: src/view/screens/Search/Search.tsx:289
 #: src/view/screens/Search/Search.tsx:328
 msgid "No results found for {query}"
-msgstr "未找到 {query} 的結果"
+msgstr "未找到{query}的結果"
 
 #: src/components/dialogs/GifSelect.tsx:204
 msgid "No search results found for \"{search}\"."
@@ -3130,7 +3091,7 @@ msgstr "至少有一張圖片缺失了替代文字。"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
-msgstr "只有 {0} 可以回覆。"
+msgstr "只有{0}可以回覆。"
 
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
@@ -3186,7 +3147,7 @@ msgstr "開啟系統日誌"
 
 #: src/view/com/util/forms/DropdownButton.tsx:154
 msgid "Opens {numItems} options"
-msgstr "開啟 {numItems} 個選項"
+msgstr "開啟{numItems}個選項"
 
 #: src/view/screens/Settings/index.tsx:501
 msgid "Opens accessibility settings"
@@ -3310,7 +3271,7 @@ msgstr "開啟對話串偏好"
 
 #: src/view/com/util/forms/DropdownButton.tsx:280
 msgid "Option {0} of {numItems}"
-msgstr "{0} 選項，共 {numItems} 個"
+msgstr "{0}選項，共{numItems}個"
 
 #: src/components/ReportDialog/SubmitView.tsx:162
 msgid "Optionally provide additional information below:"
@@ -3370,11 +3331,11 @@ msgstr "人物"
 
 #: src/Navigation.tsx:171
 msgid "People followed by @{0}"
-msgstr "被 @{0} 跟隨的人"
+msgstr "被 @{0}跟隨的人"
 
 #: src/Navigation.tsx:164
 msgid "People following @{0}"
-msgstr "跟隨 @{0} 的人"
+msgstr "跟隨@{0}的人"
 
 #: src/view/com/lightbox/Lightbox.tsx:66
 msgid "Permission to access camera roll is required."
@@ -3411,7 +3372,7 @@ msgstr "播放"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
-msgstr "播放 {0}"
+msgstr "播放{0}"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -3464,7 +3425,7 @@ msgstr "請輸入您的密碼："
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:222
 msgid "Please explain why you think this label was incorrectly applied by {0}"
-msgstr "請解釋您認為 {0} 不正確套用此標記的原因"
+msgstr "請解釋您認為{0}不正確套用此標記的原因"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 msgid "Please sign in as @{0}"
@@ -3499,13 +3460,13 @@ msgstr "發佈"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:176
 msgid "Post by {0}"
-msgstr "{0} 的貼文"
+msgstr "{0}的貼文"
 
 #: src/Navigation.tsx:183
 #: src/Navigation.tsx:190
 #: src/Navigation.tsx:197
 msgid "Post by @{0}"
-msgstr "@{0} 的貼文"
+msgstr "@{0}的貼文"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:119
 msgid "Post deleted"
@@ -3749,7 +3710,7 @@ msgstr "從您的動態源中刪除"
 
 #: src/view/com/composer/ExternalEmbed.tsx:88
 msgid "Removes default thumbnail from {0}"
-msgstr "從 {0} 中刪除預設縮圖"
+msgstr "從{0}中刪除預設縮圖"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:224
 msgid "Removes quoted post"
@@ -3776,7 +3737,7 @@ msgstr "回覆過濾器"
 #: src/view/com/posts/FeedItem.tsx:336
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
-msgstr "對 <0><1/></0> 回覆"
+msgstr "對<0><1/></0>回覆"
 
 #: src/components/dms/MessageMenu.tsx:109
 msgid "Report"
@@ -3857,11 +3818,11 @@ msgstr "轉貼"
 
 #: src/view/com/posts/FeedItem.tsx:248
 msgid "Reposted by {0}"
-msgstr "由 {0} 轉貼"
+msgstr "由{0}轉貼"
 
 #: src/view/com/posts/FeedItem.tsx:266
 msgid "Reposted by <0><1/></0>"
-msgstr "由 <0><1/></0> 轉貼"
+msgstr "由<0><1/></0>轉貼"
 
 #: src/view/com/notifications/FeedItem.tsx:160
 msgid "reposted your post"
@@ -4030,7 +3991,7 @@ msgstr "儲存個人資料中所做的變更"
 
 #: src/view/com/modals/ChangeHandle.tsx:173
 msgid "Saves handle change to {handle}"
-msgstr "儲存帳號代碼更改至 {handle}"
+msgstr "儲存帳號代碼更改至{handle}"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:170
 msgid "Saves image crop settings"
@@ -4072,11 +4033,11 @@ msgstr "搜尋「{searchText}」"
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-msgstr "搜尋所有由 @{authorHandle} 發佈並具有標籤 {displayTag} 的貼文"
+msgstr "搜尋所有由@{authorHandle}發佈並具有標籤{displayTag}的貼文"
 
 #: src/components/TagMenu/index.tsx:94
 msgid "Search for all posts with tag {displayTag}"
-msgstr "搜尋所有具有標籤 {displayTag} 的貼文"
+msgstr "搜尋所有具有標籤{displayTag}的貼文"
 
 #: src/components/dms/NewChat.tsx:226
 msgid "Search for someone to start a conversation with."
@@ -4106,19 +4067,19 @@ msgstr "所需的安全步驟"
 
 #: src/components/TagMenu/index.web.tsx:66
 msgid "See {truncatedTag} posts"
-msgstr "查看 {truncatedTag} 的貼文"
+msgstr "查看{truncatedTag}的貼文"
 
 #: src/components/TagMenu/index.web.tsx:83
-msgid "See {truncatedTag} posts by user"
-msgstr "查看用戶的 {truncatedTag} 貼文"
+msgid "See{truncatedTag} posts by user"
+msgstr "查看用戶的{truncatedTag}貼文"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{displayTag}</0> posts"
-msgstr "查看 <0>{displayTag}</0> 的貼文"
+msgstr "查看<0>{displayTag}</0>的貼文"
 
 #: src/components/TagMenu/index.tsx:187
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "查看這個用戶的 <0>{displayTag}</0> 貼文"
+msgstr "查看這個用戶的<0>{displayTag}</0>貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:411
 #: src/view/com/util/UserAvatar.tsx:400
@@ -4131,7 +4092,7 @@ msgstr "查看指南"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
-msgstr "選擇 {item}"
+msgstr "選擇{item}"
 
 #: src/screens/Login/ChooseAccountForm.tsx:85
 msgid "Select account"
@@ -4159,7 +4120,7 @@ msgstr "選擇限制服務提供者"
 
 #: src/view/com/util/Selector.tsx:107
 msgid "Select option {i} of {numItems}"
-msgstr "選擇 {numItems} 個項目中的第 {i} 項"
+msgstr "選擇{numItems}個項目中的第{i}項"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 msgid "Select some accounts below to follow"
@@ -4240,7 +4201,7 @@ msgstr "提交檢舉"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:44
 msgid "Send report to {0}"
-msgstr "將檢舉提交至 {0}"
+msgstr "將檢舉提交至{0}"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:120
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:123
@@ -4410,7 +4371,7 @@ msgstr "顯示標記並從動態源中篩選"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
 msgid "Show follows similar to {0}"
-msgstr "顯示類似於 {0} 的跟隨者"
+msgstr "顯示類似於{0}的跟隨者"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:305
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -4464,10 +4425,6 @@ msgstr "在跟隨中顯示回覆"
 msgid "Show replies in Following feed"
 msgstr "在跟隨動態源中顯示回覆"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:70
-#~ msgid "Show replies with at least {value} {0}"
-#~ msgstr "顯示至少包含 {value} 個 {0} 的回覆"
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:186
 msgid "Show Reposts"
 msgstr "顯示轉貼貼文"
@@ -4495,7 +4452,7 @@ msgstr "顯示警告並從動態中篩選"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
 msgid "Shows posts from {0} in your feed"
-msgstr "在您的動態中顯示來自 {0} 的貼文"
+msgstr "在您的動態中顯示來自{0}的貼文"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -4520,7 +4477,7 @@ msgstr "登入"
 
 #: src/components/AccountList.tsx:114
 msgid "Sign in as {0}"
-msgstr "以 {0} 登入"
+msgstr "以{0}登入"
 
 #: src/screens/Login/ChooseAccountForm.tsx:88
 msgid "Sign in as..."
@@ -4567,7 +4524,7 @@ msgstr "登入身分"
 #: src/lib/hooks/useAccountSwitcher.ts:44
 #: src/screens/Login/ChooseAccountForm.tsx:60
 msgid "Signed in as @{0}"
-msgstr "以 @{0} 身分登入"
+msgstr "以@{0}身分登入"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:240
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
@@ -4661,7 +4618,7 @@ msgstr "訂閱"
 
 #: src/screens/Profile/Sections/Labels.tsx:194
 msgid "Subscribe to @{0} to use these labels:"
-msgstr "訂閱 @{0} 以使用這些標記："
+msgstr "訂閱@{0}以使用這些標記："
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:229
 msgid "Subscribe to Labeler"
@@ -4670,7 +4627,7 @@ msgstr "訂閱標記者"
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:172
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
 msgid "Subscribe to the {0} feed"
-msgstr "訂閱 {0} 動態源"
+msgstr "訂閱{0}動態源"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
 msgid "Subscribe to this labeler"
@@ -4705,7 +4662,7 @@ msgstr "切換帳號"
 
 #: src/view/screens/Settings/index.tsx:157
 msgid "Switch to {0}"
-msgstr "切換到 {0}"
+msgstr "切換到{0}"
 
 #: src/view/screens/Settings/index.tsx:158
 msgid "Switches the account you are logged in to"
@@ -4792,7 +4749,7 @@ msgstr "社群準則已移動到 <0/>"
 
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
-msgstr "版權政策已移動到 <0/>"
+msgstr "版權政策已移動到<0/>"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:48
 msgid "The following labels were applied to your account."
@@ -4813,11 +4770,11 @@ msgstr "這則貼文可能已被刪除。"
 
 #: src/view/screens/PrivacyPolicy.tsx:33
 msgid "The Privacy Policy has been moved to <0/>"
-msgstr "隱私政策已移動到 <0/>"
+msgstr "隱私政策已移動到<0/>"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支援表單已移至別處。如果需協助，請點擊<0/>或前往 {HELP_DESK_URL} 與我們聯繫。"
+msgstr "支援表單已移至別處。如果需協助，請點擊<0/>或前往{HELP_DESK_URL}與我們聯繫。"
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -4926,7 +4883,7 @@ msgstr "這裡是一些受歡迎的帳號，您可能會喜歡："
 
 #: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
-msgstr "{screenDescription} 已被標記："
+msgstr "{screenDescription}已被標記："
 
 #: src/components/moderation/ScreenHider.tsx:111
 msgid "This account has requested that users sign in to view their profile."
@@ -4934,7 +4891,7 @@ msgstr "此帳號要求使用者登入後才能查看其個人資料。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:205
 msgid "This appeal will be sent to <0>{0}</0>."
-msgstr "此申訴將被提交至 <0>{0}</0>。"
+msgstr "此申訴將被提交至<0>{0}</0>。"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:26
 msgid "This chat was disconnected due to a network error."
@@ -4950,7 +4907,7 @@ msgstr "此內容已套用限制提供者所設定的一般警告。"
 
 #: src/components/dialogs/EmbedConsent.tsx:64
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr "此內容由 {0} 託管。是否要啟用外部媒體？"
+msgstr "此內容由{0}託管。是否要啟用外部媒體？"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:77
@@ -4986,10 +4943,6 @@ msgstr "此資訊不會分享給其他用戶。"
 #: src/view/com/modals/VerifyEmail.tsx:128
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "這很重要，以防您將來需要更改電子郵件地址或重設密碼。"
-
-#: src/components/moderation/ModerationDetailsDialog.tsx:124
-#~ msgid "This label was applied by {0}."
-#~ msgstr "此標記是由 {0} 套用的。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:127
 msgid "This label was applied by <0>{0}</0>."
@@ -5059,23 +5012,19 @@ msgstr "此用戶要求僅將其內容顯示給已登錄的用戶。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:55
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
-msgstr "此用戶包含在您已封鎖的 <0>{0}</0> 列表中。"
+msgstr "此用戶包含在您已封鎖的<0>{0}</0>列表中。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:84
 msgid "This user is included in the <0>{0}</0> list which you have muted."
-msgstr "此用戶包含在您已靜音的 <0>{0}</0> 列表中。"
+msgstr "此用戶包含在您已靜音的<0>{0}</0>列表中。"
 
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
 msgstr "此用戶未跟隨任何人。"
 
-#: src/view/com/modals/SelfLabel.tsx:137
-#~ msgid "This warning is only available for posts with media attached."
-#~ msgstr "此警告僅適用於附帶媒體的貼文。"
-
 #: src/components/dialogs/MutedWords.tsx:283
 msgid "This will delete {0} from your muted words. You can always add it back later."
-msgstr "這將從您的靜音文字中刪除 {0}，您隨時可以在稍後添加回來。"
+msgstr "這將從您的靜音文字中刪除{0}，您隨時可以在稍後添加回來。"
 
 #: src/view/screens/Settings/index.tsx:585
 msgid "Thread preferences"
@@ -5204,7 +5153,7 @@ msgstr "取消跟隨"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:220
 msgid "Unfollow {0}"
-msgstr "取消跟隨 {0}"
+msgstr "取消跟隨{0}"
 
 #: src/view/com/profile/ProfileMenu.tsx:241
 #: src/view/com/profile/ProfileMenu.tsx:251
@@ -5226,7 +5175,7 @@ msgstr "取消靜音"
 
 #: src/components/TagMenu/index.web.tsx:104
 msgid "Unmute {truncatedTag}"
-msgstr "取消靜音 {truncatedTag}"
+msgstr "取消靜音{truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:278
 #: src/view/com/profile/ProfileMenu.tsx:284
@@ -5235,7 +5184,7 @@ msgstr "取消靜音帳號"
 
 #: src/components/TagMenu/index.tsx:208
 msgid "Unmute all {displayTag} posts"
-msgstr "取消對所有 {displayTag} 貼文的靜音"
+msgstr "取消對所有{displayTag}貼文的靜音"
 
 #: src/components/dms/ConvoMenu.tsx:123
 msgid "Unmute notifications"
@@ -5273,11 +5222,11 @@ msgstr "無關情色的內容"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:70
 msgid "Update {displayName} in Lists"
-msgstr "更新列表中的 {displayName}"
+msgstr "更新列表中的{displayName}"
 
 #: src/view/com/modals/ChangeHandle.tsx:509
-msgid "Update to {handle}"
-msgstr "更新至 {handle}"
+msgid "Update to{handle}"
+msgstr "更新至{handle}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:186
 msgid "Updating..."
@@ -5368,11 +5317,11 @@ msgstr "用戶封鎖了您"
 #: src/view/com/lists/ListCard.tsx:85
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
 msgid "User list by {0}"
-msgstr "{0} 的用戶列表"
+msgstr "{0}的用戶列表"
 
 #: src/view/screens/ProfileList.tsx:773
 msgid "User list by <0/>"
-msgstr "<0/> 的用戶列表"
+msgstr "<0/>的用戶列表"
 
 #: src/view/com/lists/ListCard.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
@@ -5402,7 +5351,7 @@ msgstr "用戶"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:143
 msgid "users followed by <0/>"
-msgstr "跟隨 <0/> 的用戶"
+msgstr "跟隨<0/>的用戶"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
@@ -5415,10 +5364,6 @@ msgstr "喜歡此內容或個人資料的用戶"
 #: src/view/com/modals/ChangeHandle.tsx:437
 msgid "Value:"
 msgstr "值："
-
-#: src/view/com/modals/ChangeHandle.tsx:510
-#~ msgid "Verify {0}"
-#~ msgstr "驗證 {0}"
 
 #: src/view/com/modals/ChangeHandle.tsx:511
 msgid "Verify DNS Record"
@@ -5448,10 +5393,6 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:112
 msgid "Verify Your Email"
 msgstr "驗證您的電子郵件"
-
-#: src/view/screens/Settings/index.tsx:852
-#~ msgid "Version {0}"
-#~ msgstr "版本 {0}"
 
 #: src/view/screens/Settings/index.tsx:868
 msgid "Version {appVersion} {bundleInfo}"
@@ -5529,7 +5470,7 @@ msgstr "我們找不到任何與該標籤相關的結果。"
 
 #: src/screens/Deactivated.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
-msgstr "我們估計還需要 {estimatedTime} 才能準備好您的帳號。"
+msgstr "我們估計還需要{estimatedTime}才能準備好您的帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:99
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -5537,7 +5478,7 @@ msgstr "我們希望您在此度過愉快的時光。請記住，Bluesky 是："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "您已看完了您跟隨的貼文。這是來自 <0/> 的最新貼文。"
+msgstr "您已看完了您跟隨的貼文。這是來自<0/>的最新貼文。"
 
 #: src/components/dialogs/MutedWords.tsx:203
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -5879,7 +5820,7 @@ msgstr "您的完整帳號代碼將修改為"
 
 #: src/view/com/modals/ChangeHandle.tsx:272
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "您的完整帳號代碼將修改為 <0>@{0}</0>"
+msgstr "您的完整帳號代碼將修改為<0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:220
 msgid "Your muted words"
