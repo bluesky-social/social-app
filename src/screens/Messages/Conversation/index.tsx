@@ -5,20 +5,22 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isWeb} from 'platform/detection'
-import {ChatProvider, useChat} from 'state/messages'
-import {ConvoStatus} from 'state/messages/convo'
+import {ConvoProvider, useConvo} from 'state/messages/convo'
+import {ConvoStatus} from 'state/messages/convo/types'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
+import {Error} from '#/components/Error'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
@@ -30,39 +32,63 @@ type Props = NativeStackScreenProps<
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
   const convoId = route.params.conversation
+  const {setCurrentConvoId} = useCurrentConvoId()
+
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentConvoId(convoId)
+      return () => {
+        setCurrentConvoId(undefined)
+      }
+    }, [convoId, setCurrentConvoId]),
+  )
 
   if (!gate('dms')) return <ClipClopGate />
 
   return (
-    <ChatProvider convoId={convoId}>
+    <ConvoProvider convoId={convoId}>
       <Inner />
-    </ChatProvider>
+    </ConvoProvider>
   )
 }
 
 function Inner() {
-  const chat = useChat()
+  const convo = useConvo()
+  const {_} = useLingui()
 
   if (
-    chat.status === ConvoStatus.Uninitialized ||
-    chat.status === ConvoStatus.Initializing
+    convo.status === ConvoStatus.Uninitialized ||
+    convo.status === ConvoStatus.Initializing
   ) {
-    return <ListMaybePlaceholder isLoading />
+    return (
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header />
+        <ListMaybePlaceholder isLoading />
+      </CenteredView>
+    )
   }
 
-  if (chat.status === ConvoStatus.Error) {
-    // TODO error
-    return null
+  if (convo.status === ConvoStatus.Error) {
+    return (
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header />
+        <Error
+          title={_(msg`Something went wrong`)}
+          message={_(msg`We couldn't load this conversation`)}
+          onRetry={() => convo.error.retry()}
+        />
+      </CenteredView>
+    )
   }
 
   /*
-   * Any other chat states (atm) are "ready" states
+   * Any other convo states (atm) are "ready" states
    */
 
   return (
     <KeyboardProvider>
-      <CenteredView style={{flex: 1}} sideBorders>
-        <Header profile={chat.recipients[0]} />
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header profile={convo.recipients[0]} />
         <MessagesList />
       </CenteredView>
     </KeyboardProvider>
@@ -72,19 +98,19 @@ function Inner() {
 let Header = ({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile?: AppBskyActorDefs.ProfileViewBasic
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const chat = useChat()
+  const convo = useConvo()
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
       navigation.replace('Messages')
     } else {
-      navigation.pop()
+      navigation.goBack()
     }
   }, [navigation])
 
@@ -127,14 +153,36 @@ let Header = ({
         <View style={{width: 30}} />
       )}
       <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-        <PreviewableUserAvatar size={32} profile={profile} />
-        <Text style={[a.text_lg, a.font_bold, a.text_center]}>
-          {profile.displayName}
-        </Text>
+        {profile ? (
+          <>
+            <PreviewableUserAvatar size={32} profile={profile} />
+            <Text style={[a.text_lg, a.font_bold, a.text_center]}>
+              {profile.displayName}
+            </Text>
+          </>
+        ) : (
+          <>
+            <View
+              style={[
+                {width: 32, height: 32},
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+              ]}
+            />
+            <View
+              style={[
+                {width: 120, height: 18},
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                a.mb_2xs,
+              ]}
+            />
+          </>
+        )}
       </View>
-      {chat.status === ConvoStatus.Ready ? (
+      {convo.status === ConvoStatus.Ready && profile ? (
         <ConvoMenu
-          convo={chat.convo}
+          convo={convo.convo}
           profile={profile}
           onUpdateConvo={onUpdateConvo}
           currentScreen="conversation"

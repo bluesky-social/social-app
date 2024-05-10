@@ -5,8 +5,9 @@ import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useChat} from 'state/messages'
-import {ConvoStatus} from 'state/messages/convo'
+import {isWeb} from 'platform/detection'
+import {useConvo} from 'state/messages/convo'
+import {ConvoStatus} from 'state/messages/convo/types'
 import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -21,19 +22,17 @@ import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '../icons/Clipb
 export let MessageMenu = ({
   message,
   control,
-  hideTrigger,
   triggerOpacity,
 }: {
   hideTrigger?: boolean
   triggerOpacity?: number
-  onTriggerPress?: () => void
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
 }): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const chat = useChat()
+  const convo = useConvo()
   const deleteControl = usePromptControl()
   const retryDeleteControl = usePromptControl()
 
@@ -48,14 +47,14 @@ export let MessageMenu = ({
   }, [_, message.text])
 
   const onDelete = React.useCallback(() => {
-    if (chat.status !== ConvoStatus.Ready) return
+    if (convo.status !== ConvoStatus.Ready) return
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    chat
+    convo
       .deleteMessage(message.id)
       .then(() => Toast.show(_(msg`Message deleted`)))
       .catch(() => retryDeleteControl.open())
-  }, [_, chat, message.id, retryDeleteControl])
+  }, [_, convo, message.id, retryDeleteControl])
 
   const onReport = React.useCallback(() => {
     // TODO report the message
@@ -64,7 +63,7 @@ export let MessageMenu = ({
   return (
     <>
       <Menu.Root control={control}>
-        {!hideTrigger && (
+        {isWeb && (
           <View style={{opacity: triggerOpacity}}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
               {({props, state}) => (
@@ -75,7 +74,7 @@ export let MessageMenu = ({
                     a.rounded_full,
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
                   ]}>
-                  <DotsHorizontal size="sm" style={t.atoms.text} />
+                  <DotsHorizontal size="md" style={t.atoms.text} />
                 </Pressable>
               )}
             </Menu.Trigger>

@@ -12,16 +12,15 @@ import {
 import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {MessagesProvider} from '#/state/messages'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {readLastActiveAccount} from '#/state/session/util'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import {useNotificationsListener} from 'lib/notifications/notifications'
 import {QueryProvider} from 'lib/react-query'
 import {s} from 'lib/styles'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -56,7 +55,7 @@ SplashScreen.preventAutoHideAsync()
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
-  const {initSession} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
 
@@ -64,20 +63,20 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    async function resumeSession(account?: SessionAccount) {
+    async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
-          await initSession(account)
+          await resumeSession(account)
         }
       } catch (e) {
-        logger.error(`session: resumeSession failed`, {message: e})
+        logger.error(`session: resume failed`, {message: e})
       } finally {
         setIsReady(true)
       }
     }
     const account = readLastActiveAccount()
-    resumeSession(account)
-  }, [initSession])
+    onLaunch(account)
+  }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -95,8 +94,8 @@ function InnerApp() {
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <PushNotificationsListener>
-                    <StatsigProvider>
+                  <StatsigProvider>
+                    <MessagesProvider>
                       {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
                       <LabelDefsProvider>
                         <ModerationOptsProvider>
@@ -112,8 +111,8 @@ function InnerApp() {
                           </LoggedOutViewProvider>
                         </ModerationOptsProvider>
                       </LabelDefsProvider>
-                    </StatsigProvider>
-                  </PushNotificationsListener>
+                    </MessagesProvider>
+                  </StatsigProvider>
                 </QueryProvider>
               </React.Fragment>
             </RootSiblingParent>
@@ -122,12 +121,6 @@ function InnerApp() {
       </Alf>
     </SafeAreaProvider>
   )
-}
-
-function PushNotificationsListener({children}: {children: React.ReactNode}) {
-  const queryClient = useQueryClient()
-  useNotificationsListener(queryClient)
-  return children
 }
 
 function App() {
