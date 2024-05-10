@@ -1,10 +1,12 @@
 import React from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
+import {RichText} from '@atproto/api'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {isWeb} from 'platform/detection'
 import {useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
@@ -18,6 +20,7 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '../icons/Clipboard'
+import {MessageReportDialog} from './MessageReportDialog'
 
 export let MessageMenu = ({
   message,
@@ -35,16 +38,22 @@ export let MessageMenu = ({
   const convo = useConvo()
   const deleteControl = usePromptControl()
   const retryDeleteControl = usePromptControl()
+  const reportControl = usePromptControl()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
   const onCopyPostText = React.useCallback(() => {
-    // use when we have rich text
-    // const str = richTextToString(richText, true)
+    const str = richTextToString(
+      new RichText({
+        text: message.text,
+        facets: message.facets,
+      }),
+      true,
+    )
 
-    Clipboard.setStringAsync(message.text)
+    Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`))
-  }, [_, message.text])
+  }, [_, message.text, message.facets])
 
   const onDelete = React.useCallback(() => {
     if (convo.status !== ConvoStatus.Ready) return
@@ -55,10 +64,6 @@ export let MessageMenu = ({
       .then(() => Toast.show(_(msg`Message deleted`)))
       .catch(() => retryDeleteControl.open())
   }, [_, convo, message.id, retryDeleteControl])
-
-  const onReport = React.useCallback(() => {
-    // TODO report the message
-  }, [])
 
   return (
     <>
@@ -104,7 +109,7 @@ export let MessageMenu = ({
               <Menu.Item
                 testID="messageDropdownReportBtn"
                 label={_(msg`Report message`)}
-                onPress={onReport}>
+                onPress={reportControl.open}>
                 <Menu.ItemText>{_(msg`Report`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={Warning} position="right" />
               </Menu.Item>
@@ -112,6 +117,8 @@ export let MessageMenu = ({
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
+
+      <MessageReportDialog message={message} control={reportControl} />
 
       <Prompt.Basic
         control={deleteControl}
