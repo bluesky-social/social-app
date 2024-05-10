@@ -29,7 +29,7 @@ export function useConvoQuery(convoId: string) {
       )
       return data.convo
     },
-    placeholderData: () => {
+    initialData: () => {
       return queryClient
         .getQueryData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>(
           LIST_CONVOS_KEY,
