@@ -10,6 +10,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {isAndroid} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
@@ -30,7 +31,9 @@ export function MessageReportDialog({
   message: ChatBskyConvoDefs.MessageView
 }) {
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={control}
+      nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
       <Dialog.Handle />
       <DialogInner message={message} />
     </Dialog.Outer>
