@@ -1,14 +1,15 @@
 import React, {memo, useCallback} from 'react'
 import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
-import {RepostIcon} from 'lib/icons'
-import {s, colors} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../text/Text'
-import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
-import {useModalControls} from '#/state/modals'
-import {useRequireAuth} from '#/state/session'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {useModalControls} from '#/state/modals'
+import {useRequireAuth} from '#/state/session'
+import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+import {RepostIcon} from 'lib/icons'
+import {colors, s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import {Text} from '../text/Text'
 
 interface Props {
   isReposted: boolean
@@ -54,11 +55,21 @@ let RepostButton = ({
       }}
       style={[styles.btn, !big && styles.btnPad]}
       accessibilityRole="button"
-      accessibilityLabel={`${
+      accessibilityLabel={
         isReposted
-          ? _(msg`Undo repost`)
-          : _(msg({message: 'Repost', context: 'action'}))
-      } (${plural(repostCount || 0, {one: '# repost', other: '# reposts'})})`}
+          ? _(
+              msg`Undo repost (${plural(repostCount || 0, {
+                one: '# repost',
+                other: '# reposts',
+              })})`,
+            )
+          : _(
+              msg`Repost (${plural(repostCount || 0, {
+                one: '# repost',
+                other: '# reposts',
+              })})`,
+            )
+      }
       accessibilityHint=""
       hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
       <RepostIcon
