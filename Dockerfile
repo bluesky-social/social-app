@@ -15,6 +15,12 @@ ENV GOARCH="amd64"
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
 
+# Expo
+ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
+ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER ${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-dev}
+ARG EXPO_PUBLIC_BUNDLE_DATE
+ENV EXPO_PUBLIC_BUNDLE_DATE ${EXPO_PUBLIC_BUNDLE_DATE:-0}
+
 COPY . .
 
 #
@@ -32,7 +38,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   npm install --global yarn && \
   yarn && \
   yarn intl:build && \
-  yarn build-web
+  EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$EXPO_PUBLIC_BUNDLE_DATE yarn build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
