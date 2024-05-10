@@ -166,9 +166,11 @@ let ConvoMenu = ({
                 icon={profile.viewer?.blocking ? PersonCheck : PersonX}
               />
             </Menu.Item>
-            <Menu.Item label={_(msg`Report chat`)} onPress={reportControl.open}>
+            <Menu.Item
+              label={_(msg`Report conversation`)}
+              onPress={reportControl.open}>
               <Menu.ItemText>
-                <Trans>Report chat</Trans>
+                <Trans>Report conversation</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={Flag} />
             </Menu.Item>
@@ -200,9 +202,9 @@ let ConvoMenu = ({
 
       <Prompt.Basic
         control={reportControl}
-        title={_(msg`Report chat`)}
+        title={_(msg`Report conversation`)}
         description={_(
-          msg`To report a chat, please report one of its messages via the chat screen. This lets our moderators understand the context of your issue.`,
+          msg`To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue.`,
         )}
         confirmButtonCta={_(msg`I understand`)}
         onConfirm={noop}
