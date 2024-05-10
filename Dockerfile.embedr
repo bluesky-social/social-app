@@ -40,6 +40,7 @@ RUN find ./bskyweb/embedr-static && find ./bskyweb/embedr-templates && find ./bs
 
 # hack around issue with empty directory and go:embed
 RUN touch bskyweb/static/js/empty.txt
+RUN touch bskyweb/static/css/empty.txt
 RUN touch bskyweb/static/media/empty.txt
 
 #
