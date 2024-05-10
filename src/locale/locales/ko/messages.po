@@ -81,7 +81,7 @@ msgstr "{estimatedTimeHrs}시간"
 
 #: src/screens/Deactivated.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "분"
+msgstr "{estimatedTimeMins}분"
 
 #: src/components/ProfileHoverCard/index.web.tsx:454
 #: src/screens/Profile/Header/Metrics.tsx:50
