@@ -77,7 +77,7 @@ msgstr "{count}명의 사용자가 좋아함"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "시간"
+msgstr "{estimatedTimeHrs}시간"
 
 #: src/screens/Deactivated.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
