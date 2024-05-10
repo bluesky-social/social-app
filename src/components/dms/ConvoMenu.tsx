@@ -29,7 +29,7 @@ import * as Prompt from '#/components/Prompt'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 
 let ConvoMenu = ({
-  convoIdOrConvo,
+  convo: initialConvo,
   profile,
   control,
   currentScreen,
@@ -37,7 +37,7 @@ let ConvoMenu = ({
   hideTrigger,
   triggerOpacity,
 }: {
-  convoIdOrConvo: string | ConvoView
+  convo: ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
   control?: Menu.MenuControlProps
@@ -52,7 +52,7 @@ let ConvoMenu = ({
   const leaveConvoControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
-  const {data: convo} = useConvoQuery(convoIdOrConvo)
+  const {data: convo} = useConvoQuery(initialConvo)
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})

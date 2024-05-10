@@ -412,7 +412,7 @@ function ChatListItem({
                 />
               )}
               <ConvoMenu
-                convoIdOrConvo={convo}
+                convo={convo}
                 profile={otherUser}
                 control={menuControl}
                 currentScreen="list"
