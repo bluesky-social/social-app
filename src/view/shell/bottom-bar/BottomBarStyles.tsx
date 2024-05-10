@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    alignItems: 'center',
     borderTopWidth: 1,
     paddingLeft: 5,
     paddingRight: 10,
@@ -49,12 +48,12 @@ export const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  ctrlIconSizingWrapper: {
-    height: 28,
-  },
+  ctrlIconSizingWrapper: {},
   homeIcon: {},
   feedsIcon: {},
-  searchIcon: {},
+  searchIcon: {
+    top: -1,
+  },
   bellIcon: {},
   profileIcon: {
     borderRadius: 100,
