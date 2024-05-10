@@ -272,7 +272,7 @@ msgstr "加入到我的動態源"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:171
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "調整在「Following」動態中顯示屬於回復貼文的最低喜歡數門檻。"
+msgstr "調整在動態中顯示屬於回復貼文的最低喜歡數門檻。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:117
@@ -434,7 +434,7 @@ msgstr ""
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "您確定要從您的動態源中移除{0}嗎？"
+msgstr "您確定要從您的動態中移除{0}嗎？"
 
 #: src/view/com/composer/Composer.tsx:573
 msgid "Are you sure you'd like to discard this draft?"
@@ -1508,7 +1508,7 @@ msgstr "編輯個人資料"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:76
 #: src/view/screens/Feeds.tsx:380
 msgid "Edit Saved Feeds"
-msgstr "編輯已儲存的動態源"
+msgstr "編輯已儲存之動態源"
 
 #: src/view/com/modals/CreateOrEditList.tsx:248
 msgid "Edit User List"
@@ -1817,7 +1817,7 @@ msgstr "檔案內容"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
-msgstr "從動態源中篩選"
+msgstr "動態源中的篩選"
 
 #: src/screens/Onboarding/StepFinished.tsx:157
 msgid "Finalizing"
@@ -1835,7 +1835,7 @@ msgstr "在 Bluesky 上尋找貼文和用戶"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:109
 msgid "Fine-tune the content you see on your Following feed."
-msgstr "對跟隨的動態源中的內容進行微調。"
+msgstr "對「Following」動態源中的內容進行微調。"
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
@@ -1931,7 +1931,7 @@ msgstr "跟隨中：{0}"
 
 #: src/view/screens/Settings/index.tsx:564
 msgid "Following feed preferences"
-msgstr "跟隨動態源偏好"
+msgstr "「Following」動態源偏好"
 
 #: src/Navigation.tsx:269
 #: src/view/com/home/HomeHeaderLayout.web.tsx:64
@@ -1939,7 +1939,7 @@ msgstr "跟隨動態源偏好"
 #: src/view/screens/PreferencesFollowingFeed.tsx:102
 #: src/view/screens/Settings/index.tsx:573
 msgid "Following Feed Preferences"
-msgstr "跟隨動態源偏好"
+msgstr "「Following」動態源偏好"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
@@ -2458,7 +2458,7 @@ msgstr "按喜歡的用戶"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "liked your custom feed"
-msgstr "已按喜歡您的自訂動態流"
+msgstr "已按喜歡您的自訂動態源"
 
 #: src/view/com/notifications/FeedItem.tsx:153
 msgid "liked your post"
@@ -3234,11 +3234,11 @@ msgstr "開啟密碼重設表單"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:77
 #: src/view/screens/Feeds.tsx:381
 msgid "Opens screen to edit Saved Feeds"
-msgstr "開啟編輯已儲存動態源的畫面"
+msgstr "開啟編輯已儲存的動態源之畫面"
 
 #: src/view/screens/Settings/index.tsx:608
 msgid "Opens screen with all saved feeds"
-msgstr "開啟包含所有已儲存動態源的畫面"
+msgstr "開啟包含所有已儲存的動態源之畫面"
 
 #: src/view/screens/Settings/index.tsx:664
 msgid "Opens the app password settings"
@@ -3246,7 +3246,7 @@ msgstr "開啟應用程式專用密碼設定畫面"
 
 #: src/view/screens/Settings/index.tsx:565
 msgid "Opens the Following feed preferences"
-msgstr "開啟跟隨動態源設定偏好"
+msgstr "開啟「Following」動態源偏好"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -3693,7 +3693,7 @@ msgstr "刪除轉貼貼文"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:202
 msgid "Remove this feed from your saved feeds"
-msgstr "將這個動態源從儲存的動態源列表中刪除"
+msgstr "將這個動態源從您已儲存之動態源列表中刪除"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
@@ -3706,7 +3706,7 @@ msgstr "從我的動態源中刪除"
 
 #: src/view/screens/ProfileFeed.tsx:210
 msgid "Removed from your feeds"
-msgstr "從您的動態源中刪除"
+msgstr "從您的動態中刪除"
 
 #: src/view/com/composer/ExternalEmbed.tsx:88
 msgid "Removes default thumbnail from {0}"
@@ -3971,15 +3971,11 @@ msgstr "儲存到我的動態源"
 
 #: src/view/screens/SavedFeeds.tsx:123
 msgid "Saved Feeds"
-msgstr "已儲存動態源"
+msgstr "已儲存之動態源"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll"
 msgstr ""
-
-#: src/view/com/lightbox/Lightbox.tsx:81
-#~ msgid "Saved to your camera roll."
-#~ msgstr "儲存到您的圖片庫。"
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
@@ -4160,7 +4156,7 @@ msgstr "從下面選擇您感興趣的選項"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
-msgstr "選擇您在動態源中翻譯的偏好的目標語言。"
+msgstr "選擇您在動態中翻譯的偏好的目標語言。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:117
 msgid "Select your primary algorithmic feeds"
@@ -4242,7 +4238,7 @@ msgstr "將此設定項設為「開」以單頁顯示樹狀回覆，這是一項
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:259
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "將此設定為「是」以在「Following 動態源」中顯示您已儲存之動態源中的選錄貼文，這是一個實驗性功能。"
+msgstr "將此設定為「是」以在「Following」動態源中顯示您已儲存之動態源中的選錄貼文，這是一個實驗性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -4347,10 +4343,6 @@ msgstr "分享網站的連結"
 msgid "Show"
 msgstr "顯示"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:68
-#~ msgid "Show all replies"
-#~ msgstr "顯示所有回覆貼文"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:167
 msgid "Show alt text"
 msgstr ""
@@ -4391,7 +4383,7 @@ msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:256
 msgid "Show Posts from My Feeds"
-msgstr "顯示來自已儲存動態源的貼文"
+msgstr "顯示來自我的動態源之貼文"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:220
 msgid "Show Quote Posts"
@@ -4399,15 +4391,15 @@ msgstr "顯示引用貼文"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:119
 msgid "Show quote-posts in Following feed"
-msgstr "在訂閱的動態消息中顯示引用貼文"
+msgstr "在「Following」動態源中顯示引用貼文"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:135
 msgid "Show quotes in Following"
-msgstr "在跟隨中顯示引用貼文"
+msgstr "在「Following」中顯示引用貼文"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:95
 msgid "Show re-posts in Following feed"
-msgstr "在跟隨動態源中顯示轉貼貼文"
+msgstr "在跟「Following」動態源中顯示轉貼貼文"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:117
 msgid "Show Replies"
@@ -4419,11 +4411,11 @@ msgstr "在所有其他回覆之前顯示您跟隨的人的回覆。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:87
 msgid "Show replies in Following"
-msgstr "在跟隨中顯示回覆"
+msgstr "在「Following」中顯示回覆"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:71
 msgid "Show replies in Following feed"
-msgstr "在跟隨動態源中顯示回覆"
+msgstr "在「Following」動態源中顯示回覆"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:186
 msgid "Show Reposts"
@@ -4431,7 +4423,7 @@ msgstr "顯示轉貼貼文"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:111
 msgid "Show reposts in Following"
-msgstr "在跟隨中顯示轉貼貼文"
+msgstr "在「Following」中顯示轉貼貼文"
 
 #: src/components/moderation/ContentHider.tsx:68
 #: src/components/moderation/PostHider.tsx:73
@@ -4795,7 +4787,7 @@ msgstr "刪除動態源時出現問題，請檢查您的網路連線並重試。
 
 #: src/view/screens/ProfileFeed.tsx:219
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "更新動態源時出現問題，請檢查您的網路連線並重試。"
+msgstr "更新動態時出現問題，請檢查您的網路連線並重試。"
 
 #: src/components/dialogs/GifSelect.tsx:201
 msgid "There was an issue connecting to Tenor."
@@ -5648,11 +5640,11 @@ msgstr "您目前還沒有任何釘選的動態源。"
 
 #: src/view/screens/Feeds.tsx:477
 msgid "You don't have any saved feeds!"
-msgstr "您目前還沒有任何儲存的動態源！"
+msgstr "您目前還沒有任何已儲存的動態源！"
 
 #: src/view/screens/SavedFeeds.tsx:136
 msgid "You don't have any saved feeds."
-msgstr "您目前還沒有任何儲存的動態源。"
+msgstr "您目前還沒有任何已儲存的動態源。"
 
 #: src/view/com/post-thread/PostThread.tsx:159
 msgid "You have blocked the author or you have been blocked by the author."
@@ -5770,7 +5762,7 @@ msgstr "您選擇在這則貼文中隱藏文字或標籤。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "您已經瀏覽完您的訂閱動態源啦！跟隨其他帳號吧。"
+msgstr "您已經瀏覽完貼文啦！跟隨其他帳號吧。"
 
 #: src/screens/Signup/index.tsx:164
 msgid "Your account"
@@ -5812,7 +5804,7 @@ msgstr "您的電子郵件地址尚未驗證。這是一個我們建議的重要
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "您的跟隨動態源是空的！跟隨更多用戶來看看發生了什麼事情。"
+msgstr "您的「Following」動態源是空的！跟隨更多用戶來看看發生了什麼事情。"
 
 #: src/screens/Signup/StepHandle.tsx:73
 msgid "Your full handle will be"
