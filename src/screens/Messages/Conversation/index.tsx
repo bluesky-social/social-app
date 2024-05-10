@@ -150,7 +150,7 @@ let Header = ({
               {profile.displayName}
             </Text>
             <Text
-              style={[t.atoms.text_contrast_medium, {fontSize: 15}]}
+              style={[t.atoms.text_contrast_medium, a.text_md]}
               numberOfLines={1}>
               @{profile.handle}
             </Text>
