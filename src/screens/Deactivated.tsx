@@ -204,16 +204,16 @@ function msToString(ms: number | undefined): string | undefined {
         return undefined
       }
       // hours
-      return `${estimatedTimeHrs} ${plural(estimatedTimeHrs, {
-        one: 'hour',
-        other: 'hours',
-      })}`
+      return plural(estimatedTimeHrs, {
+        one: '# hour',
+        other: '# hours',
+      })
     }
     // minutes
-    return `${estimatedTimeMins} ${plural(estimatedTimeMins, {
-      one: 'minute',
-      other: 'minutes',
-    })}`
+    return plural(estimatedTimeMins, {
+      one: '# minute',
+      other: '# minutes',
+    })
   }
   return undefined
 }
