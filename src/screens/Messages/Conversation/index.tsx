@@ -14,9 +14,10 @@ import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {BACK_HITSLOP} from 'lib/constants'
-import {isIOS, isWeb} from 'platform/detection'
+import {isIOS, isNative, isWeb} from 'platform/detection'
 import {ConvoProvider, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
+import {useSetMinimalShellMode} from 'state/shell'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
@@ -33,16 +34,25 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {gtMobile} = useBreakpoints()
+
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
+
+      if (isWeb && !gtMobile) {
+        setMinimalShellMode(true)
+      }
+
       return () => {
         setCurrentConvoId(undefined)
+        setMinimalShellMode(false)
       }
-    }, [convoId, setCurrentConvoId]),
+    }, [convoId, gtMobile, setCurrentConvoId, setMinimalShellMode]),
   )
 
   if (!gate('dms')) return <ClipClopGate />
@@ -101,7 +111,12 @@ function Inner() {
   return (
     <KeyboardProvider>
       <KeyboardAvoidingView
-        style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
+        style={[
+          a.flex_1,
+          isNative
+            ? {marginBottom: bottomInset + bottomBarHeight}
+            : {marginBottom: gtMobile ? 0 : 20},
+        ]}
         keyboardVerticalOffset={isIOS ? topInset : 0}
         behavior="padding"
         contentContainerStyle={a.flex_1}>
