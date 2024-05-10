@@ -53,7 +53,7 @@ msgstr "喜欢"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:267
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0} 位用户喜欢"
+msgstr "{0, plural, other {#}} 位用户喜欢"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
