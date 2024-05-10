@@ -2,18 +2,15 @@ import React from 'react'
 
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {
-  DEFAULT_FEED_DESCRIPTOR,
-  FeedDescriptor,
-} from '#/state/queries/post-feed'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 
-type StateContext = FeedDescriptor
+type StateContext = FeedDescriptor | null
 type SetContext = (v: FeedDescriptor) => void
 
-const stateContext = React.createContext<StateContext>(DEFAULT_FEED_DESCRIPTOR)
+const stateContext = React.createContext<StateContext>(null)
 const setContext = React.createContext<SetContext>((_: string) => {})
 
-function getInitialFeed(): FeedDescriptor {
+function getInitialFeed(): FeedDescriptor | null {
   if (isWeb) {
     if (window.location.pathname === '/') {
       const params = new URLSearchParams(window.location.search)
@@ -37,7 +34,7 @@ function getInitialFeed(): FeedDescriptor {
     return feedFromPersisted as FeedDescriptor
   }
 
-  return DEFAULT_FEED_DESCRIPTOR
+  return null
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {

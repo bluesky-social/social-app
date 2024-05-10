@@ -44,13 +44,8 @@ type AuthorFilter =
   | 'posts_with_media'
 type FeedUri = string
 type ListUri = string
-/**
- * Represents a "not found" state, that results in the left-most tab being
- * selected on the Home screen.
- */
-export const DEFAULT_FEED_DESCRIPTOR = '__default__'
+
 export type FeedDescriptor =
-  | '__default__'
   | 'following'
   | `author|${ActorDid}|${AuthorFilter}`
   | `feedgen|${FeedUri}`
