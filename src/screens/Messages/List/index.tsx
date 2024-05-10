@@ -328,10 +328,10 @@ function ChatListItem({
           style={[
             a.flex_row,
             a.flex_1,
-            a.pl_md,
+            a.pr_xl,
+            a.pl_xl,
             a.py_md,
             a.gap_md,
-            a.pr_xl,
             (hovered || pressed) && t.atoms.bg_contrast_25,
             index === 0 && a.border_t,
             a.border_b,

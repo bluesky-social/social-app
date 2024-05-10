@@ -128,7 +128,8 @@ let Header = ({
         a.justify_between,
         a.align_start,
         a.gap_lg,
-        a.px_lg,
+        a.pl_xl,
+        a.pr_lg,
         a.py_sm,
       ]}>
       {!gtTablet ? (
@@ -154,12 +155,15 @@ let Header = ({
       )}
       <View style={[a.align_center, a.gap_sm, a.flex_1]}>
         {profile ? (
-          <>
+          <View style={[a.align_center]}>
             <PreviewableUserAvatar size={32} profile={profile} />
-            <Text style={[a.text_lg, a.font_bold, a.text_center]}>
+            <Text style={[a.text_lg, a.font_bold, a.pt_sm]}>
               {profile.displayName}
             </Text>
-          </>
+            <Text style={[{fontSize: 15}, t.atoms.text_contrast_medium]}>
+              @{profile.handle}
+            </Text>
+          </View>
         ) : (
           <>
             <View
