@@ -280,7 +280,7 @@ msgstr "成人內容已停用。"
 #: src/screens/Moderation/index.tsx:375
 #: src/view/screens/Settings/index.tsx:652
 msgid "Advanced"
-msgstr "詳細設定"
+msgstr "進階設定"
 
 #: src/view/screens/Feeds.tsx:691
 msgid "All the feeds you've saved, right in one place."
@@ -720,7 +720,6 @@ msgid "Change Your Email"
 msgstr "變更您的電子郵件地址"
 
 #: src/Navigation.tsx:302
-#暫譯
 msgid "Chat"
 msgstr "對話"
 
