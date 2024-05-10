@@ -288,7 +288,7 @@ export function DesktopLeftNav() {
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
   const gate = useGate()
-  const iconWidth = isDesktop ? 28 : 32
+  const iconWidth = 28
 
   if (!hasSession && !isDesktop) {
     return null
