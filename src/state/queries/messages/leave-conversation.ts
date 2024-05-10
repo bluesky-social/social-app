@@ -11,7 +11,7 @@ import {RQKEY as CONVO_LIST_KEY} from './list-converations'
 import {useHeaders} from './temp-headers'
 
 export function useLeaveConvo(
-  convoId: string,
+  convoId: string | undefined,
   {
     onSuccess,
     onError,
@@ -26,6 +26,8 @@ export function useLeaveConvo(
 
   return useMutation({
     mutationFn: async () => {
+      if (!convoId) throw new Error('No convoId provided')
+
       const agent = new BskyAgent({service: serviceUrl})
       const {data} = await agent.api.chat.bsky.convo.leaveConvo(
         {convoId},
@@ -41,7 +43,6 @@ export function useLeaveConvo(
           pageParams: Array<string | undefined>
           pages: Array<ChatBskyConvoListConvos.OutputSchema>
         }) => {
-          console.log('old', old)
           if (!old) return old
           return {
             ...old,

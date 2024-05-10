@@ -56,7 +56,7 @@ export function MessagesConversationScreen({route}: Props) {
 
 function Inner() {
   const t = useTheme()
-  const convo = useConvo()
+  const convoState = useConvo()
   const {_} = useLingui()
 
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
@@ -72,23 +72,23 @@ function Inner() {
   React.useEffect(() => {
     if (
       !hasInitiallyRendered &&
-      convo.status === ConvoStatus.Ready &&
-      !convo.isFetchingHistory
+      convoState.status === ConvoStatus.Ready &&
+      !convoState.isFetchingHistory
     ) {
       setTimeout(() => {
         setHasInitiallyRendered(true)
       }, 15)
     }
-  }, [convo.isFetchingHistory, convo.items, convo.status, hasInitiallyRendered])
+  }, [convoState.isFetchingHistory, convoState.status, hasInitiallyRendered])
 
-  if (convo.status === ConvoStatus.Error) {
+  if (convoState.status === ConvoStatus.Error) {
     return (
       <CenteredView style={a.flex_1} sideBorders>
         <Header />
         <Error
           title={_(msg`Something went wrong`)}
           message={_(msg`We couldn't load this conversation`)}
-          onRetry={() => convo.error.retry()}
+          onRetry={() => convoState.error.retry()}
         />
       </CenteredView>
     )
@@ -106,9 +106,9 @@ function Inner() {
         behavior="padding"
         contentContainerStyle={a.flex_1}>
         <CenteredView style={a.flex_1} sideBorders>
-          <Header profile={convo.recipients?.[0]} />
+          <Header profile={convoState.recipients?.[0]} />
           <View style={[a.flex_1]}>
-            {convo.status !== ConvoStatus.Ready ? (
+            {convoState.status !== ConvoStatus.Ready ? (
               <ListMaybePlaceholder isLoading />
             ) : (
               <MessagesList />
@@ -145,7 +145,7 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const convo = useConvo()
+  const convoState = useConvo()
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -154,10 +154,6 @@ let Header = ({
       navigation.goBack()
     }
   }, [navigation])
-
-  const onUpdateConvo = useCallback(() => {
-    // TODO eric update muted state
-  }, [])
 
   return (
     <View
@@ -234,11 +230,10 @@ let Header = ({
           </>
         )}
       </View>
-      {convo.status === ConvoStatus.Ready && profile ? (
+      {convoState.status === ConvoStatus.Ready && profile ? (
         <ConvoMenu
-          convo={convo.convo}
+          convo={convoState.convo}
           profile={profile}
-          onUpdateConvo={onUpdateConvo}
           currentScreen="conversation"
         />
       ) : (
