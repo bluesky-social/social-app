@@ -147,12 +147,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               icon={
                 isAtHome ? (
                   <HomeFilled
-                    width={iconWidth}
+                    width={iconWidth + 2}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 ) : (
                   <Home
-                    width={iconWidth}
+                    width={iconWidth + 2}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 )
@@ -167,12 +167,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               icon={
                 isAtSearch ? (
                   <MagnifyingGlassFilled
-                    width={iconWidth}
+                    width={iconWidth + 2}
                     style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
                   />
                 ) : (
                   <MagnifyingGlass
-                    width={iconWidth}
+                    width={iconWidth + 2}
                     style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
                   />
                 )
@@ -181,32 +181,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityRole="search"
               accessibilityLabel={_(msg`Search`)}
               accessibilityHint=""
-            />
-            <Btn
-              testID="bottomBarNotificationsBtn"
-              icon={
-                isAtNotifications ? (
-                  <BellFilled
-                    width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
-                ) : (
-                  <Bell
-                    width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
-                )
-              }
-              onPress={onPressNotifications}
-              notificationCount={numUnreadNotifications}
-              accessible={true}
-              accessibilityRole="tab"
-              accessibilityLabel={_(msg`Notifications`)}
-              accessibilityHint={
-                numUnreadNotifications === ''
-                  ? ''
-                  : `${numUnreadNotifications} unread`
-              }
             />
             {gate('dms') && (
               <Btn
@@ -236,6 +210,32 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 }
               />
             )}
+            <Btn
+              testID="bottomBarNotificationsBtn"
+              icon={
+                isAtNotifications ? (
+                  <BellFilled
+                    width={iconWidth}
+                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                  />
+                ) : (
+                  <Bell
+                    width={iconWidth}
+                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                  />
+                )
+              }
+              onPress={onPressNotifications}
+              notificationCount={numUnreadNotifications}
+              accessible={true}
+              accessibilityRole="tab"
+              accessibilityLabel={_(msg`Notifications`)}
+              accessibilityHint={
+                numUnreadNotifications === ''
+                  ? ''
+                  : `${numUnreadNotifications} unread`
+              }
+            />
             <Btn
               testID="bottomBarProfileBtn"
               icon={

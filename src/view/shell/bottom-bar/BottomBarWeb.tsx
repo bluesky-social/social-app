@@ -81,7 +81,7 @@ export function BottomBarWeb() {
               const Icon = isActive ? HomeFilled : Home
               return (
                 <Icon
-                  width={iconWidth}
+                  width={iconWidth + 2}
                   style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                 />
               )
@@ -92,7 +92,7 @@ export function BottomBarWeb() {
               const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
                 <Icon
-                  width={iconWidth}
+                  width={iconWidth + 2}
                   style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
                 />
               )
@@ -101,17 +101,6 @@ export function BottomBarWeb() {
 
           {hasSession && (
             <>
-              <NavItem routeName="Notifications" href="/notifications">
-                {({isActive}) => {
-                  const Icon = isActive ? BellFilled : Bell
-                  return (
-                    <Icon
-                      width={iconWidth}
-                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                    />
-                  )
-                }}
-              </NavItem>
               {gate('dms') && (
                 <NavItem routeName="Messages" href="/messages">
                   {({isActive}) => {
@@ -125,6 +114,17 @@ export function BottomBarWeb() {
                   }}
                 </NavItem>
               )}
+              <NavItem routeName="Notifications" href="/notifications">
+                {({isActive}) => {
+                  const Icon = isActive ? BellFilled : Bell
+                  return (
+                    <Icon
+                      width={iconWidth}
+                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    />
+                  )
+                }}
+              </NavItem>
               <NavItem
                 routeName="Profile"
                 href={
@@ -139,7 +139,7 @@ export function BottomBarWeb() {
                   const Icon = isActive ? UserCircleFilled : UserCircle
                   return (
                     <Icon
-                      width={iconWidth}
+                      width={iconWidth + 2}
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
                     />
                   )
