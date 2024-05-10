@@ -418,7 +418,7 @@ msgstr "你确定要删除这条应用专用密码 \"{name}\" 吗？"
 
 #: src/components/dms/MessageMenu.tsx:121
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
-msgstr "你确定要删除这条信息吗？这条消息将从你的对话里删除，但不会在其他人的对话里删除。"
+msgstr "你确定要删除这条信息吗？这条消息将从你的对话中删除，但不会在其他人的对话中删除。"
 
 #: src/components/dms/ConvoMenu.tsx:173
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
