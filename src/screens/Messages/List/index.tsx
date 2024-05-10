@@ -323,10 +323,9 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             (hovered || pressed) && t.atoms.bg_contrast_25,
             a.border_b,
             t.atoms.border_contrast_low,
-            a.align_center,
           ]}>
-          <View pointerEvents="none">
-            <UserAvatar avatar={otherUser?.avatar} size={42} />
+          <View pointerEvents="none" style={a.pt_xs}>
+            <UserAvatar avatar={otherUser?.avatar} size={52} />
           </View>
           <View style={[a.flex_1]}>
             <View style={[a.flex_1, a.flex_row, a.align_end]}>
@@ -373,7 +372,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
               {lastMessage}
             </Text>
           </View>
-          {convo.unreadCount > 0 - 1 && (
+          {convo.unreadCount > 0 && (
             <View
               style={[
                 a.absolute,
@@ -387,7 +386,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
                 },
                 {
                   top: 15,
-                  right: 8,
+                  right: 12,
                 },
               ]}
             />
