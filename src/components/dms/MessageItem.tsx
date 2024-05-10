@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo, useRef} from 'react'
 import {LayoutAnimation, StyleProp, TextStyle, View} from 'react-native'
+import {RichText as RichTextAPI} from '@atproto/api'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,8 +10,9 @@ import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {Text} from '#/components/Typography'
+import {RichText} from '../RichText'
 
-export let MessageItem = ({
+let MessageItem = ({
   item,
   next,
   pending,
@@ -65,6 +67,10 @@ export let MessageItem = ({
   const pendingColor =
     t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
 
+  const rt = useMemo(() => {
+    return new RichTextAPI({text: item.text, facets: item.facets})
+  }, [item.text, item.facets])
+
   return (
     <View>
       <ActionsWrapper isFromSelf={isFromSelf} message={item}>
@@ -87,15 +93,17 @@ export let MessageItem = ({
               ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
               : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
           ]}>
-          <Text
+          <RichText
+            value={rt}
             style={[
               a.text_md,
               a.leading_snug,
               isFromSelf && {color: t.palette.white},
               pending && t.name !== 'light' && {color: t.palette.primary_300},
-            ]}>
-            {item.text}
-          </Text>
+            ]}
+            interactiveStyle={a.underline}
+            enableTags
+          />
         </View>
       </ActionsWrapper>
       <MessageItemMetadata
@@ -106,8 +114,8 @@ export let MessageItem = ({
     </View>
   )
 }
-
 MessageItem = React.memo(MessageItem)
+export {MessageItem}
 
 let MessageItemMetadata = ({
   message,

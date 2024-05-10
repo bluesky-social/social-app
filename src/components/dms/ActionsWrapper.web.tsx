@@ -57,9 +57,6 @@ export function ActionsWrapper({
             message={message}
             control={menuControl}
             triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
-            onTriggerPress={onMouseEnter}
-            // @ts-expect-error web only
-            onMouseLeave={onMouseLeave}
           />
         </View>
       )}
@@ -75,9 +72,6 @@ export function ActionsWrapper({
             message={message}
             control={menuControl}
             triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
-            onTriggerPress={onMouseEnter}
-            // @ts-expect-error web only
-            onMouseLeave={onMouseLeave}
           />
         </View>
       )}

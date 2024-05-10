@@ -5,11 +5,12 @@ import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {sha256} from 'js-sha256'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {MessagesTabNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -18,7 +19,7 @@ import {useListConvos} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -39,11 +40,12 @@ import {ClipClopGate} from '../gate'
 import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
-export function MessagesScreen({navigation}: Props) {
+export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
   const {gtMobile} = useBreakpoints()
+  const pushToConversation = route.params?.pushToConversation
 
   // TEMP
   const {serviceUrl, setServiceUrl} = useDmServiceUrlStorage()
@@ -55,6 +57,19 @@ export function MessagesScreen({navigation}: Props) {
       'a32318b49dd3fe6aa6a35c66c13fcc4c1cb6202b24f5a852d9a2279acee4169f'
     )
   }, [serviceUrl])
+
+  // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
+  // this tab. We should immediately push to the conversation after pressing the notification.
+  // After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
+  // the conversation is the same as before
+  React.useEffect(() => {
+    if (pushToConversation) {
+      navigation.navigate('MessagesConversation', {
+        conversation: pushToConversation,
+      })
+      navigation.setParams({pushToConversation: undefined})
+    }
+  }, [navigation, pushToConversation])
 
   const renderButton = useCallback(() => {
     return (
@@ -239,6 +254,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
+  const {gtMobile} = useBreakpoints()
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
@@ -258,15 +274,43 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
     member => member.did !== currentAccount?.did,
   )
 
+  const navigation = useNavigation<NavigationProp>()
+  const [showActions, setShowActions] = React.useState(false)
+
+  const onMouseEnter = React.useCallback(() => {
+    setShowActions(true)
+  }, [])
+
+  const onMouseLeave = React.useCallback(() => {
+    setShowActions(false)
+  }, [])
+
+  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
+    if (e.nativeEvent.relatedTarget == null) return
+    setShowActions(true)
+  }, [])
+
+  const onPress = React.useCallback(() => {
+    navigation.push('MessagesConversation', {
+      conversation: convo.id,
+    })
+  }, [convo.id, navigation])
+
   if (!otherUser) {
     return null
   }
 
   return (
-    <Link
-      to={`/messages/${convo.id}`}
+    <Button
+      label={otherUser.displayName || otherUser.handle}
+      onPress={onPress}
       style={a.flex_1}
-      onLongPress={isNative ? menuControl.open : undefined}>
+      onLongPress={isNative ? menuControl.open : undefined}
+      // @ts-expect-error web only
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onFocus={onFocus}
+      onBlur={onMouseLeave}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -279,7 +323,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             (hovered || pressed) && t.atoms.bg_contrast_25,
           ]}>
           <View pointerEvents="none">
-            <PreviewableUserAvatar profile={otherUser} size={42} />
+            <UserAvatar avatar={otherUser?.avatar} size={42} />
           </View>
           <View style={[a.flex_1]}>
             <Text
@@ -336,15 +380,16 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             convo={convo}
             profile={otherUser}
             control={menuControl}
-            // TODO(sam) show on hover on web
-            // tricky because it captures the mouse event
-            hideTrigger
             currentScreen="list"
             showMarkAsRead={convo.unreadCount > 0}
+            hideTrigger={isNative}
+            triggerOpacity={
+              !gtMobile || showActions || menuControl.isOpen ? 1 : 0
+            }
           />
         </View>
       )}
-    </Link>
+    </Button>
   )
 }
 

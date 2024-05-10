@@ -110,7 +110,7 @@ let Header = ({
     if (isWeb) {
       navigation.replace('Messages')
     } else {
-      navigation.pop()
+      navigation.goBack()
     }
   }, [navigation])
 

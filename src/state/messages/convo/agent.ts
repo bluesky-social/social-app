@@ -7,6 +7,7 @@ import {
 } from '@atproto-labs/api'
 import {nanoid} from 'nanoid/non-secure'
 
+import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
@@ -459,16 +460,18 @@ export class Convo {
       recipients: AppBskyActorDefs.ProfileViewBasic[]
     }>(async (resolve, reject) => {
       try {
-        const response = await this.agent.api.chat.bsky.convo.getConvo(
-          {
-            convoId: this.convoId,
-          },
-          {
-            headers: {
-              Authorization: this.__tempFromUserDid,
+        const response = await networkRetry(2, () => {
+          return this.agent.api.chat.bsky.convo.getConvo(
+            {
+              convoId: this.convoId,
             },
-          },
-        )
+            {
+              headers: {
+                Authorization: this.__tempFromUserDid,
+              },
+            },
+          )
+        })
 
         const convo = response.data.convo
 
@@ -544,18 +547,21 @@ export class Convo {
         // throw new Error('UNCOMMENT TO TEST RETRY')
       }
 
-      const response = await this.agent.api.chat.bsky.convo.getMessages(
-        {
-          cursor: this.oldestRev,
-          convoId: this.convoId,
-          limit: isNative ? 25 : 50,
-        },
-        {
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      const nextCursor = this.oldestRev // for TS
+      const response = await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.getMessages(
+          {
+            cursor: nextCursor,
+            convoId: this.convoId,
+            limit: isNative ? 40 : 60,
           },
-        },
-      )
+          {
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+      })
       const {cursor, messages} = response.data
 
       this.oldestRev = cursor ?? null
@@ -736,18 +742,20 @@ export class Convo {
       // throw new Error('UNCOMMENT TO TEST RETRY')
       const {id, message} = pendingMessage
 
-      const response = await this.agent.api.chat.bsky.convo.sendMessage(
-        {
-          convoId: this.convoId,
-          message,
-        },
-        {
-          encoding: 'application/json',
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      const response = await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.sendMessage(
+          {
+            convoId: this.convoId,
+            message,
           },
-        },
-      )
+          {
+            encoding: 'application/json',
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+      })
       const res = response.data
 
       /*
@@ -786,20 +794,22 @@ export class Convo {
 
     try {
       const messageArray = Array.from(this.pendingMessages.values())
-      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
-        {
-          items: messageArray.map(({message}) => ({
-            convoId: this.convoId,
-            message,
-          })),
-        },
-        {
-          encoding: 'application/json',
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      const {data} = await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.sendMessageBatch(
+          {
+            items: messageArray.map(({message}) => ({
+              convoId: this.convoId,
+              message,
+            })),
           },
-        },
-      )
+          {
+            encoding: 'application/json',
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+      })
       const {items} = data
 
       /*
@@ -838,18 +848,20 @@ export class Convo {
     this.commit()
 
     try {
-      await this.agent.api.chat.bsky.convo.deleteMessageForSelf(
-        {
-          convoId: this.convoId,
-          messageId,
-        },
-        {
-          encoding: 'application/json',
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+          {
+            convoId: this.convoId,
+            messageId,
           },
-        },
-      )
+          {
+            encoding: 'application/json',
+            headers: {
+              Authorization: this.__tempFromUserDid,
+            },
+          },
+        )
+      })
     } catch (e) {
       this.deletedMessages.delete(messageId)
       this.commit()
