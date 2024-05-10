@@ -5690,12 +5690,12 @@ msgstr "您已靜音這個用戶"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
-msgstr "您沒有訂閱動態源。"
+msgstr "您沒有建立任何動態源。"
 
 #: src/view/com/lists/MyLists.tsx:89
 #: src/view/com/lists/ProfileLists.tsx:148
 msgid "You have no lists."
-msgstr "您沒有列表。"
+msgstr "您沒有建立任何列表。"
 
 #: src/screens/Messages/List/index.tsx:176
 msgid "You have no messages yet. Start a conversation with someone!"
