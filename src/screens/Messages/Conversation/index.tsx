@@ -21,7 +21,6 @@ import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Error} from '#/components/Error'
-import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
 
@@ -56,18 +55,6 @@ function Inner() {
   const convo = useConvo()
   const {_} = useLingui()
 
-  if (
-    convo.status === ConvoStatus.Uninitialized ||
-    convo.status === ConvoStatus.Initializing
-  ) {
-    return (
-      <CenteredView style={a.flex_1} sideBorders>
-        <Header />
-        <ListMaybePlaceholder isLoading />
-      </CenteredView>
-    )
-  }
-
   if (convo.status === ConvoStatus.Error) {
     return (
       <CenteredView style={a.flex_1} sideBorders>
@@ -88,7 +75,7 @@ function Inner() {
   return (
     <KeyboardProvider>
       <CenteredView style={a.flex_1} sideBorders>
-        <Header profile={convo.recipients[0]} />
+        <Header profile={convo.recipients?.[0]} />
         <MessagesList />
       </CenteredView>
     </KeyboardProvider>
