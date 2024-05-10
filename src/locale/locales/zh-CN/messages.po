@@ -31,7 +31,7 @@ msgstr "{0, plural, other {#}} 个标签已应用到此内容"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0} 条转发"
+msgstr "{0, plural, other {#}} 条转发"
 
 #: src/components/ProfileHoverCard/index.web.tsx:373
 #: src/screens/Profile/Header/Metrics.tsx:23
