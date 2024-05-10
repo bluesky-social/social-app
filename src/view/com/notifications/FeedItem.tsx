@@ -22,7 +22,7 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -234,10 +234,11 @@ let FeedItem = ({
                 <Trans context="notification">
                   <Text style={[pal.text]}> and </Text>
                   <Text style={[pal.text, s.bold]}>
-                    {plural(authors.length - 1, {
-                      one: `${formattedCount} other`,
-                      other: `${formattedCount} others`,
-                    })}
+                    <Plural
+                      value={authors.length - 1}
+                      one="# other"
+                      other="# others"
+                    />
                   </Text>
                 </Trans>
               ) : undefined}
