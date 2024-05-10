@@ -2311,7 +2311,7 @@ msgstr "저널리즘"
 
 #: src/components/moderation/ContentHider.tsx:144
 msgid "Labeled by {0}."
-msgstr "{0} 님이 라벨 지정함."
+msgstr "{0}이(가) 라벨 지정함."
 
 #: src/components/moderation/ContentHider.tsx:142
 msgid "Labeled by the author."
@@ -4580,7 +4580,7 @@ msgstr "구독"
 
 #: src/screens/Profile/Sections/Labels.tsx:194
 msgid "Subscribe to @{0} to use these labels:"
-msgstr "이 라벨을 사용하려면 @{0} 님을 구독하세요:"
+msgstr "이 라벨을 사용하려면 @{0}을(를) 구독하세요."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:229
 msgid "Subscribe to Labeler"
