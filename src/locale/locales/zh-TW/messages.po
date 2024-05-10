@@ -459,7 +459,7 @@ msgstr "至少 3 個字元"
 #: src/screens/Login/LoginForm.tsx:275
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:141
+#: src/screens/Messages/Conversation/index.tsx:172
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -1748,13 +1748,17 @@ msgstr "無法刪除貼文，請重試"
 msgid "Failed to load GIFs"
 msgstr "無法載入 GIF"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:24
+#: src/screens/Messages/Conversation/MessageListError.tsx:28
 msgid "Failed to load past messages."
 msgstr "無法載入過去的訊息。"
 
 #: src/view/com/lightbox/Lightbox.tsx:83
 msgid "Failed to save image: {0}"
 msgstr "無法儲存圖片：{0}"
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:29
+msgid "Failed to send message(s)."
+msgstr "無法傳送訊息"
 
 #: src/Navigation.tsx:203
 msgid "Feed"
@@ -3499,15 +3503,15 @@ msgstr "按下以更改託管服務供應商"
 
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:83
-#: src/screens/Messages/Conversation/MessageListError.tsx:48
+#: src/screens/Messages/Conversation/MessageListError.tsx:59
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
 msgstr "按下以重試"
 
 #: src/screens/Messages/Conversation/MessagesList.tsx:50
 #: src/screens/Messages/Conversation/MessagesList.tsx:56
-msgid "Press to Retry"
-msgstr "按一下重試"
+#~ msgid "Press to Retry"
+#~ msgstr "按一下重試"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -3877,6 +3881,7 @@ msgstr "重試上次出錯的操作"
 #: src/components/Lists.tsx:94
 #: src/screens/Login/LoginForm.tsx:282
 #: src/screens/Login/LoginForm.tsx:289
+#: src/screens/Messages/Conversation/MessageListError.tsx:68
 #: src/screens/Onboarding/StepInterests/index.tsx:226
 #: src/screens/Onboarding/StepInterests/index.tsx:229
 #: src/screens/Signup/index.tsx:207
@@ -3886,8 +3891,8 @@ msgid "Retry"
 msgstr "重試"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:54
-msgid "Retry."
-msgstr "重試。"
+#~ msgid "Retry."
+#~ msgstr "重試。"
 
 #: src/components/Error.tsx:98
 #: src/view/screens/ProfileList.tsx:913
@@ -4505,7 +4510,7 @@ msgstr "跳過此流程"
 msgid "Software Dev"
 msgstr "軟體開發"
 
-#: src/screens/Messages/Conversation/index.tsx:76
+#: src/screens/Messages/Conversation/index.tsx:84
 msgid "Something went wrong"
 msgstr "發生了一些問題"
 
@@ -4759,7 +4764,7 @@ msgstr "更新動態時出現問題，請檢查您的網路連線並重試。"
 msgid "There was an issue connecting to Tenor."
 msgstr "連線到 Tenor 時出現問題。"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:22
+#: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "There was an issue connecting to the chat."
 msgstr "連接到對話時出現了問題。"
 
@@ -5422,7 +5427,7 @@ msgstr "警告內容並從動態源中過濾"
 msgid "We couldn't find any results for that hashtag."
 msgstr "我們找不到任何與該標籤相關的結果。"
 
-#: src/screens/Messages/Conversation/index.tsx:77
+#: src/screens/Messages/Conversation/index.tsx:85
 msgid "We couldn't load this conversation"
 msgstr "我們無法載入這段對話"
 
