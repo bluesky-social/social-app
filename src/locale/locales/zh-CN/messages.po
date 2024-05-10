@@ -45,7 +45,7 @@ msgstr "正在关注"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:245
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "喜欢（{0} 个喜欢）"
+msgstr "喜欢（{0, plural, other {#}} 个喜欢）"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:359
 msgid "{0, plural, one {like} other {likes}}"
