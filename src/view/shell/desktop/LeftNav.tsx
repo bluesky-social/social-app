@@ -34,9 +34,9 @@ import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {
-  Bell2_Filled_Corner0_Rounded as BellFilled,
-  Bell2_Stroke2_Corner0_Rounded as Bell,
-} from '#/components/icons/Bell2'
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
 import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,

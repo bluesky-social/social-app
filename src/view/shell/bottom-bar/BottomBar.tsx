@@ -33,9 +33,9 @@ import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
-  Bell2_Filled_Corner0_Rounded as BellFilled,
-  Bell2_Stroke2_Corner0_Rounded as Bell,
-} from '#/components/icons/Bell2'
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
@@ -147,12 +147,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               icon={
                 isAtHome ? (
                   <HomeFilled
-                    width={iconWidth + 2}
+                    width={iconWidth + 1}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 ) : (
                   <Home
-                    width={iconWidth + 2}
+                    width={iconWidth + 1}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 )
@@ -188,12 +188,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 icon={
                   isAtMessages ? (
                     <MessageFilled
-                      width={iconWidth}
+                      width={iconWidth - 1}
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   ) : (
                     <Message
-                      width={iconWidth}
+                      width={iconWidth - 1}
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   )
@@ -251,7 +251,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       ]}>
                       <UserAvatar
                         avatar={profile?.avatar}
-                        size={iconWidth}
+                        size={iconWidth - 3}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
@@ -262,7 +262,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
                       <UserAvatar
                         avatar={profile?.avatar}
-                        size={iconWidth}
+                        size={iconWidth - 3}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}

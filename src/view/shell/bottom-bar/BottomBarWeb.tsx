@@ -23,9 +23,9 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {Link} from 'view/com/util/Link'
 import {
-  Bell2_Filled_Corner0_Rounded as BellFilled,
-  Bell2_Stroke2_Corner0_Rounded as Bell,
-} from '#/components/icons/Bell2'
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
@@ -81,7 +81,7 @@ export function BottomBarWeb() {
               const Icon = isActive ? HomeFilled : Home
               return (
                 <Icon
-                  width={iconWidth + 2}
+                  width={iconWidth + 1}
                   style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                 />
               )
@@ -107,7 +107,7 @@ export function BottomBarWeb() {
                     const Icon = isActive ? MessageFilled : Message
                     return (
                       <Icon
-                        width={iconWidth}
+                        width={iconWidth - 1}
                         style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
                       />
                     )
@@ -139,7 +139,7 @@ export function BottomBarWeb() {
                   const Icon = isActive ? UserCircleFilled : UserCircle
                   return (
                     <Icon
-                      width={iconWidth + 2}
+                      width={iconWidth}
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
                     />
                   )
