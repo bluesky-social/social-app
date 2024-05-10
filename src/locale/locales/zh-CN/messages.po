@@ -27,7 +27,7 @@ msgstr "{0, plural, other {#}} 个标签已应用到此账户"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "{0} 个标签已应用到此内容"
+msgstr "{0, plural, other {#}} 个标签已应用到此内容"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
