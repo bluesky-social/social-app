@@ -328,7 +328,7 @@ msgid "An email has been sent to {0}. It includes a confirmation code which you 
 msgstr "一封電子郵件已發送至{0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/view/com/modals/ChangeEmail.tsx:121
-msgid "An email has been sent to your previous address,{0}. It includes a confirmation code which you can enter below."
+msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "一封電子郵件已發送至先前填寫的電子郵件地址{0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/components/dialogs/GifSelect.tsx:284
