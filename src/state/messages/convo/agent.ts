@@ -695,8 +695,6 @@ export class Convo {
     if (needsCommit) {
       this.commit()
     }
-
-    console.log(this.deletedMessages)
   }
 
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
