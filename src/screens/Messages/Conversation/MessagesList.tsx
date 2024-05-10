@@ -270,6 +270,10 @@ export function MessagesList() {
           data={convo.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
+          containWeb={true}
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+          }}
           disableVirtualization={true}
           initialNumToRender={isWeb ? 50 : 25}
           maxToRenderPerBatch={isWeb ? 50 : 25}
@@ -278,11 +282,8 @@ export function MessagesList() {
           maintainVisibleContentPosition={{
             minIndexForVisible: 1,
           }}
-          containWeb={true}
-          contentContainerStyle={{
-            paddingHorizontal: 10,
-          }}
           removeClippedSubviews={false}
+          sideBorders={false}
           onContentSizeChange={onContentSizeChange}
           onStartReached={onStartReached}
           onScrollToIndexFailed={onScrollToIndexFailed}
@@ -290,7 +291,6 @@ export function MessagesList() {
           ListHeaderComponent={
             <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
-          sideBorders={false}
         />
       </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
