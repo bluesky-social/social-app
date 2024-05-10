@@ -275,8 +275,8 @@ export function MessagesList() {
             paddingHorizontal: 10,
           }}
           disableVirtualization={true}
-          initialNumToRender={isWeb ? 50 : 25}
-          maxToRenderPerBatch={isWeb ? 50 : 25}
+          initialNumToRender={isWeb ? 60 : 30}
+          maxToRenderPerBatch={isWeb ? 60 : 30}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
