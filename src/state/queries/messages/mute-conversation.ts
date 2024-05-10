@@ -1,9 +1,11 @@
 import {
   BskyAgent,
+  ChatBskyConvoDefs,
+  ChatBskyConvoListConvos,
   ChatBskyConvoMuteConvo,
   ChatBskyConvoUnmuteConvo,
 } from '@atproto-labs/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {InfiniteData, useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -36,8 +38,34 @@ export function useMuteConvo(
       return data
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
-      queryClient.invalidateQueries({queryKey: CONVO_KEY(convoId)})
+      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+        CONVO_KEY(data.convo.id),
+        prev => {
+          if (!prev) return
+          return {
+            ...prev,
+            muted: true,
+          }
+        },
+      )
+      queryClient.setQueryData<
+        InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+      >(CONVO_LIST_KEY, prev => {
+        if (!prev?.pages) return
+        return {
+          ...prev,
+          pages: prev.pages.map(page => ({
+            ...page,
+            convos: page.convos.map(convo => {
+              if (convo.id !== data.convo.id) return convo
+              return {
+                ...convo,
+                muted: true,
+              }
+            }),
+          })),
+        }
+      })
       onSuccess?.(data)
     },
     onError: error => {
@@ -72,8 +100,34 @@ export function useUnmuteConvo(
       return data
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
-      queryClient.invalidateQueries({queryKey: CONVO_KEY(convoId)})
+      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+        CONVO_KEY(data.convo.id),
+        prev => {
+          if (!prev) return
+          return {
+            ...prev,
+            muted: false,
+          }
+        },
+      )
+      queryClient.setQueryData<
+        InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+      >(CONVO_LIST_KEY, prev => {
+        if (!prev?.pages) return
+        return {
+          ...prev,
+          pages: prev.pages.map(page => ({
+            ...page,
+            convos: page.convos.map(convo => {
+              if (convo.id !== data.convo.id) return convo
+              return {
+                ...convo,
+                muted: false,
+              }
+            }),
+          })),
+        }
+      })
       onSuccess?.(data)
     },
     onError: error => {
