@@ -554,7 +554,7 @@ export class Convo {
           {
             cursor: nextCursor,
             convoId: this.convoId,
-            limit: isNative ? 40 : 60,
+            limit: isNative ? 30 : 60,
           },
           {
             headers: {
