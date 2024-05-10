@@ -112,7 +112,7 @@ msgstr "<0>{0}</0> 关注者"
 
 #: src/view/shell/Drawer.tsx:103
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, other {正在关注}}"
+msgstr "<0>{0}</0> 正在关注"
 
 #: src/view/com/modals/SelfLabel.tsx:134
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
