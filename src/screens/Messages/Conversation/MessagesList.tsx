@@ -1,16 +1,12 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
-import {
-  KeyboardAvoidingView,
-  useKeyboardHandler,
-} from 'react-native-keyboard-controller'
+import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isIOS, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {useConvo} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
@@ -19,7 +15,6 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -199,10 +194,6 @@ export function MessagesList() {
     })
   }, [isMomentumScrolling])
 
-  const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
-  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
-
   // This is only used inside the useKeyboardHandler because the worklet won't work with a ref directly.
   const scrollToEndNow = React.useCallback(() => {
     flatListRef.current?.scrollToEnd({animated: false})
@@ -216,11 +207,7 @@ export function MessagesList() {
   })
 
   return (
-    <KeyboardAvoidingView
-      style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
-      keyboardVerticalOffset={isIOS ? topInset : 0}
-      behavior="padding"
-      contentContainerStyle={a.flex_1}>
+    <>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
       <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
         <List
@@ -252,6 +239,6 @@ export function MessagesList() {
         />
       </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
-    </KeyboardAvoidingView>
+    </>
   )
 }
