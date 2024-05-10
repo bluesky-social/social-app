@@ -24,9 +24,22 @@ export enum ConvoStatus {
 }
 
 export enum ConvoItemError {
-  HistoryFailed = 'historyFailed',
-  PollFailed = 'pollFailed',
+  /**
+   * Generic error
+   */
   Network = 'network',
+  /**
+   * Error connecting to event firehose
+   */
+  FirehoseFailed = 'firehoseFailed',
+  /**
+   * Error fetching past messages
+   */
+  HistoryFailed = 'historyFailed',
+  /**
+   * Error sending new message
+   */
+  PendingFailed = 'pendingFailed',
 }
 
 export enum ConvoErrorCode {
@@ -87,11 +100,6 @@ export type ConvoItem =
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
-    }
-  | {
-      type: 'pending-retry'
-      key: string
-      retry: () => void
     }
   | {
       type: 'error-recoverable'
