@@ -23,7 +23,7 @@ msgstr "其他 {0, plural, {{formattedCount}}} 人"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr "{0} 个标签已应用到此账户"
+msgstr "{0, plural, other {#}} 个标签已应用到此账户"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
