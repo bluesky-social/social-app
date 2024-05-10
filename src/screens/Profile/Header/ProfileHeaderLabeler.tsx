@@ -282,10 +282,12 @@ let ProfileHeaderLabeler = ({
                       },
                     }}
                     size="tiny"
-                    label={plural(likeCount, {
-                      one: 'Liked by # user',
-                      other: 'Liked by # users',
-                    })}>
+                    label={_(
+                      msg`Liked by ${plural(likeCount, {
+                        one: '# user',
+                        other: '# users',
+                      })}`,
+                    )}>
                     {({hovered, focused, pressed}) => (
                       <Text
                         style={[
@@ -295,11 +297,14 @@ let ProfileHeaderLabeler = ({
                           (hovered || focused || pressed) &&
                             t.atoms.text_contrast_high,
                         ]}>
-                        <Plural
-                          value={likeCount}
-                          one="Liked by # user"
-                          other="Liked by # users"
-                        />
+                        <Trans>
+                          Liked by{' '}
+                          <Plural
+                            value={likeCount}
+                            one="# user"
+                            other="# users"
+                          />
+                        </Trans>
                       </Text>
                     )}
                   </Link>

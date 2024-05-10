@@ -63,12 +63,15 @@ function RepliesThresholdInput({
         thumbTintColor={colors.blue3}
       />
       <Text type="xs" style={pal.text}>
-        <Plural
-          value={value}
-          _0="Show all replies"
-          one="Show replies with at least # like"
-          other="Show replies with at least # likes"
-        />
+        <Trans>
+          Show{' '}
+          <Plural
+            value={value}
+            _0="all replies"
+            one="replies with at least # like"
+            other="replies with at least # likes"
+          />
+        </Trans>
       </Text>
     </View>
   )

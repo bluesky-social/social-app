@@ -201,10 +201,10 @@ let PostCtrls = ({
             }
           }}
           accessibilityRole="button"
-          accessibilityLabel={plural(post.replyCount || 0, {
-            one: 'Reply (# reply)',
-            other: 'Reply (# replies)',
-          })}
+          accessibilityLabel={`Reply (${plural(post.replyCount || 0, {
+            one: '# reply',
+            other: '# replies',
+          })})`}
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           <CommentBottomArrow
@@ -238,14 +238,18 @@ let PostCtrls = ({
           accessibilityRole="button"
           accessibilityLabel={
             post.viewer?.like
-              ? plural(post.likeCount || 0, {
-                  one: 'Unlike (# like)',
-                  other: 'Unlike (# likes)',
-                })
-              : plural(post.likeCount || 0, {
-                  one: 'Like (# like)',
-                  other: 'Like (# likes)',
-                })
+              ? _(
+                  msg`Unlike (${plural(post.likeCount || 0, {
+                    one: '# like',
+                    other: '# likes',
+                  })})`,
+                )
+              : _(
+                  msg`Like (${plural(post.likeCount || 0, {
+                    one: '# like',
+                    other: '# likes',
+                  })})`,
+                )
           }
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>

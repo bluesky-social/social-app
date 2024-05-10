@@ -68,7 +68,9 @@ export function LikeCount({count}: {count: number}) {
         t.atoms.text_contrast_medium,
         {fontWeight: '500'},
       ]}>
-      <Plural value={count} one="Liked by # user" other="Liked by # users" />
+      <Trans>
+        Liked by <Plural value={count} one="# user" other="# users" />
+      </Trans>
     </Text>
   )
 }
