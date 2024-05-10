@@ -421,11 +421,11 @@ export function parseEmbedPlayerFromUrl(
   if (urlp.hostname === 'flic.kr') {
     const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
     let [_, type, idBase58Enc] = urlp.pathname.split('/')
-    var id = 0
+    var id = 0n
     for (var char of idBase58Enc) {
       const nextIdx = b58alph.indexOf(char)
       if (nextIdx >= 0) {
-        id = id * 58 + nextIdx
+        id = id * 58n + BigInt(nextIdx)
       } else {
         // not b58 encoded, ergo not a valid link to embed
         return undefined
