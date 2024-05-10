@@ -39,8 +39,14 @@ import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
-function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
-  return <ChatListItem convo={item} />
+function renderItem({
+  item,
+  index,
+}: {
+  item: ChatBskyConvoDefs.ConvoView
+  index: number
+}) {
+  return <ChatListItem convo={item} index={index} />
 }
 
 function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
@@ -213,7 +219,7 @@ export function MessagesScreen({navigation, route}: Props) {
         <ViewHeader
           title={_(msg`Messages`)}
           renderButton={renderButton}
-          showBorder
+          showBorder={false}
           canGoBack={false}
         />
       )}
@@ -249,7 +255,13 @@ export function MessagesScreen({navigation, route}: Props) {
   )
 }
 
-function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+function ChatListItem({
+  convo,
+  index,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+  index: number
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -317,91 +329,92 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             a.flex_row,
             a.flex_1,
             a.pl_md,
-            isNative ? a.py_sm : a.py_md,
+            a.py_md,
             a.gap_md,
             a.pr_xl,
             (hovered || pressed) && t.atoms.bg_contrast_25,
+            index === 0 && a.border_t,
             a.border_b,
             t.atoms.border_contrast_low,
           ]}>
-          <View pointerEvents="none" style={a.pt_xs}>
-            <UserAvatar avatar={otherUser?.avatar} size={52} />
-          </View>
-          <View style={[a.flex_1]}>
-            <View style={[a.flex_1, a.flex_row, a.align_end]}>
+          <UserAvatar avatar={otherUser?.avatar} size={52} />
+          <View style={[a.flex_1, a.flex_row, a.align_center]}>
+            <View style={[a.flex_1]}>
+              <View style={[a.flex_1, a.flex_row, a.align_end]}>
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    {maxWidth: '85%'},
+                    web([a.leading_normal, {marginTop: -4}]),
+                  ]}>
+                  <Text style={[t.atoms.text, a.font_bold, {fontSize: 17}]}>
+                    {otherUser.displayName || otherUser.handle}
+                  </Text>
+                </Text>
+                {lastMessageSentAt && (
+                  <TimeElapsed timestamp={lastMessageSentAt}>
+                    {({timeElapsed}) => (
+                      <Text
+                        style={[
+                          web([a.leading_normal, {marginTop: -4}]),
+                          t.atoms.text_contrast_medium,
+                          {fontSize: 15},
+                        ]}>
+                        {' '}
+                        &middot; {timeElapsed}
+                      </Text>
+                    )}
+                  </TimeElapsed>
+                )}
+              </View>
               <Text
                 numberOfLines={1}
-                style={[
-                  {maxWidth: '85%'},
-                  web([a.leading_normal, {marginTop: -4}]),
-                ]}>
-                <Text style={[t.atoms.text, a.font_bold, {fontSize: 17}]}>
-                  {otherUser.displayName || otherUser.handle}
-                </Text>
+                style={[{fontSize: 15}, t.atoms.text_contrast_medium, a.pb_sm]}>
+                @{otherUser.handle}
               </Text>
-              {lastMessageSentAt && (
-                <TimeElapsed timestamp={lastMessageSentAt}>
-                  {({timeElapsed}) => (
-                    <Text
-                      style={[
-                        web([a.leading_normal, {marginTop: -4}]),
-                        t.atoms.text_contrast_medium,
-                        {fontSize: 15},
-                      ]}>
-                      {' '}
-                      &middot; {timeElapsed}
-                    </Text>
-                  )}
-                </TimeElapsed>
-              )}
+              <Text
+                numberOfLines={2}
+                style={[
+                  a.text_md,
+                  a.leading_snug,
+                  convo.unreadCount > 0
+                    ? a.font_bold
+                    : t.atoms.text_contrast_high,
+                ]}>
+                {lastMessage}
+              </Text>
             </View>
-            <Text
-              numberOfLines={1}
-              style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
-              @{otherUser.handle}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={[
-                a.text_md,
-                a.leading_snug,
-                convo.unreadCount > 0
-                  ? a.font_bold
-                  : t.atoms.text_contrast_medium,
-              ]}>
-              {lastMessage}
-            </Text>
-          </View>
-          {convo.unreadCount > 0 && (
-            <View
-              style={[
-                a.absolute,
-                a.rounded_full,
-                {
-                  backgroundColor: convo.muted
-                    ? t.palette.contrast_200
-                    : t.palette.primary_500,
-                  height: 7,
-                  width: 7,
-                },
-                {
-                  top: 15,
-                  right: 12,
-                },
-              ]}
+            {convo.unreadCount > 0 && (
+              <View
+                style={[
+                  a.absolute,
+                  a.rounded_full,
+                  {
+                    backgroundColor: convo.muted
+                      ? t.palette.contrast_200
+                      : t.palette.primary_500,
+                    height: 7,
+                    width: 7,
+                  },
+                  {
+                    top: 15,
+                    right: 12,
+                  },
+                ]}
+              />
+            )}
+            <ConvoMenu
+              convo={convo}
+              profile={otherUser}
+              control={menuControl}
+              currentScreen="list"
+              showMarkAsRead={convo.unreadCount > 0}
+              hideTrigger={isNative}
+              triggerOpacity={
+                !gtMobile || showActions || menuControl.isOpen ? 1 : 0
+              }
             />
-          )}
-          <ConvoMenu
-            convo={convo}
-            profile={otherUser}
-            control={menuControl}
-            currentScreen="list"
-            showMarkAsRead={convo.unreadCount > 0}
-            hideTrigger={isNative}
-            triggerOpacity={
-              !gtMobile || showActions || menuControl.isOpen ? 1 : 0
-            }
-          />
+          </View>
         </View>
       )}
     </Button>
@@ -427,8 +440,6 @@ function DesktopHeader({
     <View
       style={[
         t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.border_b,
         a.flex_row,
         a.align_center,
         a.justify_between,
