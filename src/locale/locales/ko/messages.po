@@ -73,7 +73,7 @@ msgstr "좋아요 취소 ({0}개)"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0}명의 사용자가 좋아함"
+msgstr "{count}명의 사용자가 좋아함"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
