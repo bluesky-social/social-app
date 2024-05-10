@@ -204,7 +204,9 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         ) : null}
       </View>
       {isDesktop && (
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+        <Text
+          type="title"
+          style={[isCurrent ? s.bold : s.normal, pal.text, {top: -1}]}>
           {label}
         </Text>
       )}
@@ -437,8 +439,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 28,
-    height: 24,
-    marginTop: 2,
+    height: 28,
     zIndex: 1,
   },
   navItemIconWrapperTablet: {
