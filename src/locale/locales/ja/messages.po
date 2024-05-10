@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-08 10:12+0900\n"
+"PO-Revision-Date: 2024-05-10 22:43+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -228,10 +228,6 @@ msgstr "アカウントを追加"
 #: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/modals/AltImage.tsx:117
 msgid "Add alt text"
-msgstr "ALTテキストを追加"
-
-#: src/view/com/composer/GifAltText.tsx:175
-msgid "Add ALT text"
 msgstr "ALTテキストを追加"
 
 #: src/view/screens/AppPasswords.tsx:104
@@ -1763,6 +1759,10 @@ msgstr "過去のメッセージの読み込みに失敗しました。"
 msgid "Failed to save image: {0}"
 msgstr "画像の保存に失敗しました：{0}"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:29
+msgid "Failed to send message(s)."
+msgstr "メッセージの送信に失敗しました。"
+
 #: src/Navigation.tsx:203
 msgid "Feed"
 msgstr "フィード"
@@ -2550,6 +2550,11 @@ msgstr "意図した場所であることを確認してください！"
 #: src/components/dialogs/MutedWords.tsx:82
 msgid "Manage your muted words and tags"
 msgstr "ミュートしたワードとタグの管理"
+
+#: src/components/dms/ConvoMenu.tsx:121
+#: src/components/dms/ConvoMenu.tsx:128
+msgid "Mark as read"
+msgstr "既読にする"
 
 #: src/view/screens/AccessibilitySettings.tsx:89
 #: src/view/screens/Profile.tsx:195
@@ -3506,11 +3511,6 @@ msgstr "ホスティングプロバイダーを変える"
 msgid "Press to retry"
 msgstr "再実行する"
 
-#: src/screens/Messages/Conversation/MessagesList.tsx:47
-#: src/screens/Messages/Conversation/MessagesList.tsx:53
-msgid "Press to Retry"
-msgstr "再実行"
-
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
 msgstr "前の画像"
@@ -3886,10 +3886,6 @@ msgstr "エラーになった最後のアクションをやり直す"
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
 msgstr "再試行"
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:54
-msgid "Retry."
-msgstr "再試行。"
 
 #: src/components/Error.tsx:98
 #: src/view/screens/ProfileList.tsx:913
@@ -4506,6 +4502,10 @@ msgstr "この手順をスキップする"
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
 msgstr "ソフトウェア開発"
+
+#: src/screens/Messages/Conversation/index.tsx:76
+msgid "Something went wrong"
+msgstr "何らかの問題が発生しました"
 
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:114
@@ -5419,6 +5419,10 @@ msgstr "コンテンツの警告とフィードからのフィルタリング"
 #: src/screens/Hashtag.tsx:210
 msgid "We couldn't find any results for that hashtag."
 msgstr "そのハッシュタグの検索結果は見つかりませんでした。"
+
+#: src/screens/Messages/Conversation/index.tsx:77
+msgid "We couldn't load this conversation"
+msgstr "この会話を読み込めませんでした"
 
 #: src/screens/Deactivated.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
