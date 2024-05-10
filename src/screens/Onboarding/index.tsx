@@ -1,22 +1,33 @@
 import React from 'react'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {Portal} from '#/components/Portal'
-
-import {Context, initialState, reducer} from '#/screens/Onboarding/state'
+import {useGate} from '#/lib/statsig/statsig'
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
-import {StepInterests} from '#/screens/Onboarding/StepInterests'
-import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
-import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
+import {
+  Context,
+  initialState,
+  initialStateReduced,
+  reducer,
+  reducerReduced,
+} from '#/screens/Onboarding/state'
 import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
-import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
+import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
+import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepModeration} from '#/screens/Onboarding/StepModeration'
+import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
+import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
+import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, {...initialState})
+  const gate = useGate()
+  const isReducedOnboardingEnabled = gate('reduced_onboarding_and_home_algo')
+  const [state, dispatch] = React.useReducer(
+    isReducedOnboardingEnabled ? reducerReduced : reducer,
+    isReducedOnboardingEnabled ? {...initialStateReduced} : {...initialState},
+  )
 
   const interestsDisplayNames = React.useMemo(() => {
     return {

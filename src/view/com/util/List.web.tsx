@@ -23,6 +23,7 @@ export type ListProps<ItemT> = Omit<
   onItemSeen?: (item: ItemT) => void
   desktopFixedHeight: any // TODO: Better types.
   containWeb?: boolean
+  sideBorders?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -53,6 +54,7 @@ function ListImpl<ItemT>(
     renderItem,
     extraData,
     style,
+    sideBorders = true,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -308,7 +310,7 @@ function ListImpl<ItemT>(
       <View
         ref={containerRef}
         style={[
-          !isMobile && styles.sideBorders,
+          !isMobile && sideBorders && styles.sideBorders,
           contentContainerStyle,
           desktopFixedHeight ? styles.minHeightViewport : null,
           pal.border,

@@ -6,7 +6,6 @@ export type MessagesEventBusParams = {
 }
 
 export enum MessagesEventBusStatus {
-  Uninitialized = 'uninitialized',
   Initializing = 'initializing',
   Ready = 'ready',
   Error = 'error',
@@ -15,12 +14,12 @@ export enum MessagesEventBusStatus {
 }
 
 export enum MessagesEventBusDispatchEvent {
-  Init = 'init',
   Ready = 'ready',
   Error = 'error',
   Background = 'background',
   Suspend = 'suspend',
   Resume = 'resume',
+  UpdatePoll = 'updatePoll',
 }
 
 export enum MessagesEventBusErrorCode {
@@ -37,9 +36,6 @@ export type MessagesEventBusError = {
 
 export type MessagesEventBusDispatch =
   | {
-      event: MessagesEventBusDispatchEvent.Init
-    }
-  | {
       event: MessagesEventBusDispatchEvent.Ready
     }
   | {
@@ -55,57 +51,22 @@ export type MessagesEventBusDispatch =
       event: MessagesEventBusDispatchEvent.Error
       payload: MessagesEventBusError
     }
+  | {
+      event: MessagesEventBusDispatchEvent.UpdatePoll
+    }
 
 export type TrailHandler = (
   events: ChatBskyConvoGetLog.OutputSchema['logs'],
 ) => void
 
-export type MessagesEventBusState =
-  | {
-      status: MessagesEventBusStatus.Uninitialized
-      rev: undefined
-      error: undefined
-      setPollInterval: (interval: number) => void
-      trail: (handler: TrailHandler) => () => void
-      trailConvo: (convoId: string, handler: TrailHandler) => () => void
-    }
-  | {
-      status: MessagesEventBusStatus.Initializing
-      rev: undefined
-      error: undefined
-      setPollInterval: (interval: number) => void
-      trail: (handler: TrailHandler) => () => void
-      trailConvo: (convoId: string, handler: TrailHandler) => () => void
-    }
-  | {
-      status: MessagesEventBusStatus.Ready
-      rev: string
-      error: undefined
-      setPollInterval: (interval: number) => void
-      trail: (handler: TrailHandler) => () => void
-      trailConvo: (convoId: string, handler: TrailHandler) => () => void
-    }
-  | {
-      status: MessagesEventBusStatus.Backgrounded
-      rev: string | undefined
-      error: undefined
-      setPollInterval: (interval: number) => void
-      trail: (handler: TrailHandler) => () => void
-      trailConvo: (convoId: string, handler: TrailHandler) => () => void
-    }
-  | {
-      status: MessagesEventBusStatus.Suspended
-      rev: string | undefined
-      error: undefined
-      setPollInterval: (interval: number) => void
-      trail: (handler: TrailHandler) => () => void
-      trailConvo: (convoId: string, handler: TrailHandler) => () => void
-    }
-  | {
-      status: MessagesEventBusStatus.Error
-      rev: string | undefined
-      error: MessagesEventBusError
-      setPollInterval: (interval: number) => void
-      trail: (handler: TrailHandler) => () => void
-      trailConvo: (convoId: string, handler: TrailHandler) => () => void
-    }
+export type RequestPollIntervalHandler = (interval: number) => () => void
+export type OnConnectHandler = (handler: () => void) => () => void
+export type OnDisconnectHandler = (
+  handler: (error?: MessagesEventBusError) => void,
+) => () => void
+
+export type MessagesEventBusEvents = {
+  events: [ChatBskyConvoGetLog.OutputSchema['logs']]
+  connect: undefined
+  error: [MessagesEventBusError] | undefined
+}

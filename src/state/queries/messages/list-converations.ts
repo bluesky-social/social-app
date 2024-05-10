@@ -111,6 +111,22 @@ export function useOnCreateConvo() {
   }, [queryClient])
 }
 
+export function useOnMarkAsRead() {
+  const queryClient = useQueryClient()
+
+  return useCallback(
+    (chatId: string) => {
+      queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
+        return optimisticUpdate(chatId, old, convo => ({
+          ...convo,
+          unreadCount: 0,
+        }))
+      })
+    },
+    [queryClient],
+  )
+}
+
 function optimisticUpdate(
   chatId: string,
   old: ConvoListQueryData,

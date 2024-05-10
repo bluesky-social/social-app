@@ -4,7 +4,12 @@ export type LogEvents = {
     initMs: number
   }
   'account:loggedIn': {
-    logContext: 'LoginForm' | 'SwitchAccount' | 'ChooseAccountForm' | 'Settings'
+    logContext:
+      | 'LoginForm'
+      | 'SwitchAccount'
+      | 'ChooseAccountForm'
+      | 'Settings'
+      | 'Notification'
     withPassword: boolean
   }
   'account:loggedOut': {

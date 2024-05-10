@@ -5,6 +5,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 
 import {Convo} from '#/state/messages/convo/agent'
 import {ConvoParams, ConvoState} from '#/state/messages/convo/types'
+import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useAgent} from '#/state/session'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -26,6 +27,7 @@ export function ConvoProvider({
   const isScreenFocused = useIsFocused()
   const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
+  const events = useMessagesEventBus()
   const [convo] = useState(
     () =>
       new Convo({
@@ -33,6 +35,7 @@ export function ConvoProvider({
         agent: new BskyAgent({
           service: serviceUrl,
         }),
+        events,
         __tempFromUserDid: getAgent().session?.did!,
       }),
   )

@@ -1,17 +1,16 @@
-import {BskyAgent} from '@atproto/api'
-import {AtpSessionEvent} from '@atproto-labs/api'
+import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {IS_PROD_SERVICE} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
+import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
 import {SessionAccount} from './types'
 import {isSessionDeactivated, isSessionExpired} from './util'
-import {IS_PROD_SERVICE} from '#/lib/constants'
-import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
@@ -32,11 +31,15 @@ export async function createAgentAndResume(
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
-  const prevSession = {
+  const prevSession: AtpSessionData = {
+    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
     accessJwt: storedAccount.accessJwt ?? '',
-    refreshJwt: storedAccount.refreshJwt ?? '',
     did: storedAccount.did,
+    email: storedAccount.email,
+    emailAuthFactor: storedAccount.emailAuthFactor,
+    emailConfirmed: storedAccount.emailConfirmed,
     handle: storedAccount.handle,
+    refreshJwt: storedAccount.refreshJwt ?? '',
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
