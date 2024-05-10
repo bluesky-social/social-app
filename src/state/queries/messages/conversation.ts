@@ -1,4 +1,5 @@
 import {BskyAgent} from '@atproto-labs/api'
+import {ConvoView} from '@atproto-labs/api/dist/client/types/chat/bsky/convo/defs'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
@@ -9,20 +10,21 @@ import {useHeaders} from './temp-headers'
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(convoId: string) {
+export function useConvoQuery(convo: ConvoView) {
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
 
   return useQuery({
-    queryKey: RQKEY(convoId),
+    queryKey: RQKEY(convo.id),
     queryFn: async () => {
       const agent = new BskyAgent({service: serviceUrl})
       const {data} = await agent.api.chat.bsky.convo.getConvo(
-        {convoId},
+        {convoId: convo.id},
         {headers},
       )
       return data.convo
     },
+    initialData: convo,
   })
 }
 
@@ -37,9 +39,11 @@ export function useMarkAsReadMutation() {
       convoId,
       messageId,
     }: {
-      convoId: string
+      convoId?: string
       messageId?: string
     }) => {
+      if (!convoId) throw new Error('No convoId provided')
+
       const agent = new BskyAgent({service: serviceUrl})
       await agent.api.chat.bsky.convo.updateRead(
         {
@@ -53,6 +57,7 @@ export function useMarkAsReadMutation() {
       )
     },
     onMutate({convoId}) {
+      if (!convoId) throw new Error('No convoId provided')
       optimisticUpdate(convoId)
     },
     onSettled() {
