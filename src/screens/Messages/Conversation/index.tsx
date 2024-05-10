@@ -22,6 +22,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Error} from '#/components/Error'
 import {ListMaybePlaceholder} from '#/components/Lists'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
 
@@ -53,20 +54,27 @@ export function MessagesConversationScreen({route}: Props) {
 }
 
 function Inner() {
+  const t = useTheme()
   const convo = useConvo()
   const {_} = useLingui()
 
-  if (
-    convo.status === ConvoStatus.Uninitialized ||
-    convo.status === ConvoStatus.Initializing
-  ) {
-    return (
-      <CenteredView style={a.flex_1} sideBorders>
-        <Header />
-        <ListMaybePlaceholder isLoading />
-      </CenteredView>
-    )
-  }
+  const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
+
+  // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
+  // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
+  // a little flicker when the items are first renedered at the top and immediately scrolled to the bottom. to prevent
+  // this, we will wait until the first render has completed to remove the loading overlay.
+  React.useEffect(() => {
+    if (
+      !hasInitiallyRendered &&
+      convo.status === ConvoStatus.Ready &&
+      !convo.isFetchingHistory
+    ) {
+      setTimeout(() => {
+        setHasInitiallyRendered(true)
+      }, 15)
+    }
+  }, [convo.isFetchingHistory, convo.items, convo.status, hasInitiallyRendered])
 
   if (convo.status === ConvoStatus.Error) {
     return (
@@ -88,8 +96,30 @@ function Inner() {
   return (
     <KeyboardProvider>
       <CenteredView style={a.flex_1} sideBorders>
-        <Header profile={convo.recipients[0]} />
-        <MessagesList />
+        <Header profile={convo.recipients?.[0]} />
+        <View style={[a.flex_1]}>
+          {convo.status !== ConvoStatus.Ready ? (
+            <ListMaybePlaceholder isLoading />
+          ) : (
+            <MessagesList />
+          )}
+          {!hasInitiallyRendered && (
+            <View
+              style={[
+                a.absolute,
+                a.z_10,
+                a.w_full,
+                a.h_full,
+                a.justify_center,
+                a.align_center,
+                t.atoms.bg,
+              ]}>
+              <View style={[{marginBottom: 75}]}>
+                <Loader size="xl" />
+              </View>
+            </View>
+          )}
+        </View>
       </CenteredView>
     </KeyboardProvider>
   )
@@ -128,7 +158,8 @@ let Header = ({
         a.justify_between,
         a.align_start,
         a.gap_lg,
-        a.px_lg,
+        a.pl_xl,
+        a.pr_lg,
         a.py_sm,
       ]}>
       {!gtTablet ? (
@@ -154,12 +185,19 @@ let Header = ({
       )}
       <View style={[a.align_center, a.gap_sm, a.flex_1]}>
         {profile ? (
-          <>
+          <View style={[a.align_center]}>
             <PreviewableUserAvatar size={32} profile={profile} />
-            <Text style={[a.text_lg, a.font_bold, a.text_center]}>
+            <Text
+              style={[a.text_lg, a.font_bold, isWeb ? a.mt_md : a.mt_sm]}
+              numberOfLines={1}>
               {profile.displayName}
             </Text>
-          </>
+            <Text
+              style={[t.atoms.text_contrast_medium, {fontSize: 15}]}
+              numberOfLines={1}>
+              @{profile.handle}
+            </Text>
+          </View>
         ) : (
           <>
             <View
@@ -171,10 +209,17 @@ let Header = ({
             />
             <View
               style={[
-                {width: 120, height: 18},
+                {width: 120, height: 16},
                 a.rounded_xs,
                 t.atoms.bg_contrast_25,
-                a.mb_2xs,
+                a.mt_xs,
+              ]}
+            />
+            <View
+              style={[
+                {width: 175, height: 12},
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
               ]}
             />
           </>
