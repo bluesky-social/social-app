@@ -678,14 +678,10 @@ export class Convo {
             /*
              * Update if we have this in state. If we don't, don't worry about it.
              */
-            // TODO check for other storage spots
-            if (this.pastMessages.has(ev.message.id)) {
-              /*
-               * For now, we remove deleted messages from the thread, if we receive one.
-               *
-               * To support them, it'd look something like this:
-               *   this.pastMessages.set(ev.message.id, ev.message)
-               */
+            if (
+              this.pastMessages.has(ev.message.id) ||
+              this.newMessages.has(ev.message.id)
+            ) {
               this.pastMessages.delete(ev.message.id)
               this.newMessages.delete(ev.message.id)
               this.deletedMessages.delete(ev.message.id)
