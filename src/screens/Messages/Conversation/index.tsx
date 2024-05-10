@@ -21,6 +21,8 @@ import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Error} from '#/components/Error'
+import {ListMaybePlaceholder} from '#/components/Lists'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
 
@@ -52,8 +54,27 @@ export function MessagesConversationScreen({route}: Props) {
 }
 
 function Inner() {
+  const t = useTheme()
   const convo = useConvo()
   const {_} = useLingui()
+
+  const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
+
+  // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
+  // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
+  // a little flicker when the items are first renedered at the top and immediately scrolled to the bottom. to prevent
+  // this, we will wait until the first render has completed to remove the loading overlay.
+  React.useEffect(() => {
+    if (
+      !hasInitiallyRendered &&
+      convo.status === ConvoStatus.Ready &&
+      !convo.isFetchingHistory
+    ) {
+      setTimeout(() => {
+        setHasInitiallyRendered(true)
+      }, 15)
+    }
+  }, [convo.isFetchingHistory, convo.items, convo.status, hasInitiallyRendered])
 
   if (convo.status === ConvoStatus.Error) {
     return (
@@ -76,7 +97,29 @@ function Inner() {
     <KeyboardProvider>
       <CenteredView style={a.flex_1} sideBorders>
         <Header profile={convo.recipients?.[0]} />
-        <MessagesList />
+        <View style={[a.flex_1]}>
+          {convo.status !== ConvoStatus.Ready ? (
+            <ListMaybePlaceholder isLoading />
+          ) : (
+            <MessagesList />
+          )}
+          {!hasInitiallyRendered && (
+            <View
+              style={[
+                a.absolute,
+                a.z_10,
+                a.w_full,
+                a.h_full,
+                a.justify_center,
+                a.align_center,
+                t.atoms.bg,
+              ]}>
+              <View style={[{marginBottom: 75}]}>
+                <Loader size="xl" />
+              </View>
+            </View>
+          )}
+        </View>
       </CenteredView>
     </KeyboardProvider>
   )

@@ -8,11 +8,9 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useConvo} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
@@ -22,7 +20,6 @@ import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -41,25 +38,6 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
   )
 }
 
-function RetryButton({onPress}: {onPress: () => unknown}) {
-  const {_} = useLingui()
-
-  return (
-    <View style={{alignItems: 'center'}}>
-      <Button
-        label={_(msg`Press to Retry`)}
-        onPress={onPress}
-        variant="ghost"
-        color="negative"
-        size="small">
-        <ButtonText>
-          <Trans>Press to Retry</Trans>
-        </ButtonText>
-      </Button>
-    </View>
-  )
-}
-
 function renderItem({item}: {item: ConvoItem}) {
   if (item.type === 'message' || item.type === 'pending-message') {
     return (
@@ -71,8 +49,6 @@ function renderItem({item}: {item: ConvoItem}) {
     )
   } else if (item.type === 'deleted-message') {
     return <Text>Deleted message</Text>
-  } else if (item.type === 'pending-retry') {
-    return <RetryButton onPress={item.retry} />
   } else if (item.type === 'error-recoverable') {
     return <MessageListError item={item} />
   }
@@ -111,23 +87,6 @@ export function MessagesList() {
   const isMomentumScrolling = useSharedValue(false)
 
   const hasInitiallyScrolled = useSharedValue(false)
-  const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
-
-  // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
-  // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
-  // a little flicker when the items are first renedered at the top and immediately scrolled to the bottom. to prevent
-  // this, we will wait until the first render has completed to remove the loading overlay.
-  React.useEffect(() => {
-    if (
-      !hasInitiallyRendered &&
-      convo.status === ConvoStatus.Ready &&
-      !convo.isFetchingHistory
-    ) {
-      setTimeout(() => {
-        setHasInitiallyRendered(true)
-      }, 15)
-    }
-  }, [convo.isFetchingHistory, convo.items, convo.status, hasInitiallyRendered])
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -270,19 +229,20 @@ export function MessagesList() {
           data={convo.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
+          containWeb={true}
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+          }}
           disableVirtualization={true}
-          initialNumToRender={isWeb ? 50 : 25}
-          maxToRenderPerBatch={isWeb ? 50 : 25}
+          initialNumToRender={isNative ? 30 : 60}
+          maxToRenderPerBatch={isWeb ? 30 : 60}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
             minIndexForVisible: 1,
           }}
-          containWeb={true}
-          contentContainerStyle={{
-            paddingHorizontal: 10,
-          }}
           removeClippedSubviews={false}
+          sideBorders={false}
           onContentSizeChange={onContentSizeChange}
           onStartReached={onStartReached}
           onScrollToIndexFailed={onScrollToIndexFailed}
@@ -290,7 +250,6 @@ export function MessagesList() {
           ListHeaderComponent={
             <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
-          sideBorders={false}
         />
       </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
