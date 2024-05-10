@@ -56,5 +56,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            "EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ github.sha }}"
-            "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")"
+            EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ github.sha }}
+            EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")
