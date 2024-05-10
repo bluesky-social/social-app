@@ -44,10 +44,6 @@ jobs:
           tags: |
             type=sha,enable=true,priority=100,prefix=,suffix=,format=long
 
-      - name: Add bundle date to GitHub output
-        id: bundle-date
-        run: echo bundle-date=$(date -u +"%y%m%d%H") >> $GITHUB_ENV
-
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4
@@ -61,4 +57,3 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ github.sha }}
-            EXPO_PUBLIC_BUNDLE_DATE=${{ steps.bundle-date.outputs.bundle-date }}
