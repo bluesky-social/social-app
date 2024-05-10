@@ -2720,7 +2720,7 @@ msgstr "靜音帳號"
 
 #: src/components/TagMenu/index.tsx:209
 msgid "Mute all {displayTag} posts"
-msgstr "將所有{displayTag}貼文靜音"
+msgstr "將所有 {displayTag} 貼文靜音"
 
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
@@ -4035,11 +4035,11 @@ msgstr "搜尋「{searchText}」"
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-msgstr "搜尋所有由 @{authorHandle} 發佈並具有標籤{displayTag}的貼文"
+msgstr "搜尋所有由 @{authorHandle} 發佈並具有標籤 {displayTag} 的貼文"
 
 #: src/components/TagMenu/index.tsx:94
 msgid "Search for all posts with tag {displayTag}"
-msgstr "搜尋所有具有標籤{displayTag}的貼文"
+msgstr "搜尋所有具有標籤 {displayTag} 的貼文"
 
 #: src/components/dms/NewChat.tsx:226
 msgid "Search for someone to start a conversation with."
@@ -4077,11 +4077,11 @@ msgstr "查看該用戶包含 {truncatedTag} 的貼文"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{displayTag}</0> posts"
-msgstr "搜尋<0>{displayTag}</0>"
+msgstr "搜尋 <0>{displayTag}</0>"
 
 #: src/components/TagMenu/index.tsx:187
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "查看該用戶包含<0>{displayTag}</0>的貼文"
+msgstr "查看該用戶包含 <0>{displayTag}</0> 的貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:411
 #: src/view/com/util/UserAvatar.tsx:400
@@ -5190,7 +5190,7 @@ msgstr "取消靜音帳號"
 
 #: src/components/TagMenu/index.tsx:208
 msgid "Unmute all {displayTag} posts"
-msgstr "取消對所有{displayTag}貼文的靜音"
+msgstr "取消對所有 {displayTag} 貼文的靜音"
 
 #: src/components/dms/ConvoMenu.tsx:146
 msgid "Unmute notifications"
