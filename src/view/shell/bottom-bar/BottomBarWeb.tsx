@@ -27,10 +27,6 @@ import {
   Bell2_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell2'
 import {
-  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
-  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
-} from '#/components/icons/Hashtag'
-import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
@@ -55,7 +51,7 @@ export function BottomBarWeb() {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const gate = useGate()
-  const iconWidth = 28
+  const iconWidth = 26
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -105,17 +101,6 @@ export function BottomBarWeb() {
 
           {hasSession && (
             <>
-              <NavItem routeName="Feeds" href="/feeds">
-                {({isActive}) => {
-                  const Icon = isActive ? HashtagFilled : Hashtag
-                  return (
-                    <Icon
-                      width={iconWidth}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    />
-                  )
-                }}
-              </NavItem>
               <NavItem routeName="Notifications" href="/notifications">
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
