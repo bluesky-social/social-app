@@ -160,7 +160,7 @@ let Header = ({
         a.gap_lg,
         a.pl_xl,
         a.pr_lg,
-        a.py_sm,
+        a.py_md,
       ]}>
       {!gtTablet ? (
         <TouchableOpacity
@@ -188,13 +188,11 @@ let Header = ({
           <View style={[a.align_center]}>
             <PreviewableUserAvatar size={32} profile={profile} />
             <Text
-              style={[a.text_lg, a.font_bold, isWeb ? a.mt_md : a.mt_sm]}
+              style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
               numberOfLines={1}>
               {profile.displayName}
             </Text>
-            <Text
-              style={[t.atoms.text_contrast_medium, {fontSize: 15}]}
-              numberOfLines={1}>
+            <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
               @{profile.handle}
             </Text>
           </View>
