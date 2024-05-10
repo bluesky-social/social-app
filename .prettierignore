@@ -1,4 +1,4 @@
-# Ignore everything except JS-ey code.
+# Ignore everything except JS-ey or CSS code.
 # Based on https://stackoverflow.com/a/70715829/458193
 *
 !**/*.js
@@ -6,6 +6,8 @@
 !**/*.ts
 !**/*.tsx
 !*/
+
+!**/*.css
 
 # More specific ignores go below.
 .expo
