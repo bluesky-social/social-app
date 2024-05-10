@@ -21,7 +21,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
@@ -89,7 +89,6 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
-  const t = useTheme()
   const convo = useConvo()
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
@@ -111,23 +110,6 @@ export function MessagesList() {
   const isMomentumScrolling = useSharedValue(false)
 
   const hasInitiallyScrolled = useSharedValue(false)
-  const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
-
-  // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
-  // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
-  // a little flicker when the items are first renedered at the top and immediately scrolled to the bottom. to prevent
-  // this, we will wait until the first render has completed to remove the loading overlay.
-  React.useEffect(() => {
-    if (
-      !hasInitiallyRendered &&
-      convo.status === ConvoStatus.Ready &&
-      !convo.isFetchingHistory
-    ) {
-      setTimeout(() => {
-        setHasInitiallyRendered(true)
-      }, 15)
-    }
-  }, [convo.isFetchingHistory, convo.items, convo.status, hasInitiallyRendered])
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -294,22 +276,6 @@ export function MessagesList() {
         />
       </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
-      {!hasInitiallyRendered && (
-        <View
-          style={[
-            a.absolute,
-            a.z_10,
-            a.w_full,
-            a.h_full,
-            a.justify_center,
-            a.align_center,
-            t.atoms.bg,
-          ]}>
-          <View style={[{marginBottom: 75}]}>
-            <Loader size="xl" />
-          </View>
-        </View>
-      )}
     </KeyboardAvoidingView>
   )
 }
