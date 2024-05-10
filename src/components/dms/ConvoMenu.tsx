@@ -7,7 +7,10 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
-import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
+import {
+  useConvoQuery,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import * as Toast from '#/view/com/util/Toast'
@@ -25,7 +28,7 @@ import * as Prompt from '#/components/Prompt'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 
 let ConvoMenu = ({
-  convo,
+  convoId,
   profile,
   control,
   currentScreen,
@@ -33,7 +36,7 @@ let ConvoMenu = ({
   hideTrigger,
   triggerOpacity,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convoId: string
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
   control?: Menu.MenuControlProps
@@ -48,11 +51,13 @@ let ConvoMenu = ({
   const leaveConvoControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
+  const {data: convo} = useConvoQuery(convoId)
+
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 
-  const {mutate: muteConvo} = useMuteConvo(convo.id, {
+  const {mutate: muteConvo} = useMuteConvo(convoId, {
     onSuccess: data => {
       if (data.muted) {
         Toast.show(_(msg`Chat muted`))
@@ -65,7 +70,7 @@ let ConvoMenu = ({
     },
   })
 
-  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+  const {mutate: leaveConvo} = useLeaveConvo(convoId, {
     onSuccess: () => {
       if (currentScreen === 'conversation') {
         navigation.replace('Messages')
@@ -110,7 +115,7 @@ let ConvoMenu = ({
                 label={_(msg`Mark as read`)}
                 onPress={() =>
                   markAsRead({
-                    convoId: convo.id,
+                    convoId: convoId,
                   })
                 }>
                 <Menu.ItemText>

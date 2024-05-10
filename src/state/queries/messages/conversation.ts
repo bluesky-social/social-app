@@ -1,5 +1,10 @@
-import {BskyAgent} from '@atproto-labs/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {BskyAgent, ChatBskyConvoListConvos} from '@atproto-labs/api'
+import {
+  InfiniteData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -10,6 +15,7 @@ const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
 export function useConvoQuery(convoId: string) {
+  const queryClient = useQueryClient()
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
 
@@ -22,6 +28,14 @@ export function useConvoQuery(convoId: string) {
         {headers},
       )
       return data.convo
+    },
+    placeholderData: () => {
+      return queryClient
+        .getQueryData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>(
+          LIST_CONVOS_KEY,
+        )
+        ?.pages.flatMap(page => page.convos)
+        .find(convo => convo.id === convoId)
     },
   })
 }

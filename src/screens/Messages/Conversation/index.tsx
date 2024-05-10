@@ -53,12 +53,12 @@ export function MessagesConversationScreen({route}: Props) {
 }
 
 function Inner() {
-  const convo = useConvo()
+  const convoState = useConvo()
   const {_} = useLingui()
 
   if (
-    convo.status === ConvoStatus.Uninitialized ||
-    convo.status === ConvoStatus.Initializing
+    convoState.status === ConvoStatus.Uninitialized ||
+    convoState.status === ConvoStatus.Initializing
   ) {
     return (
       <CenteredView style={a.flex_1} sideBorders>
@@ -68,14 +68,14 @@ function Inner() {
     )
   }
 
-  if (convo.status === ConvoStatus.Error) {
+  if (convoState.status === ConvoStatus.Error) {
     return (
       <CenteredView style={a.flex_1} sideBorders>
         <Header />
         <Error
           title={_(msg`Something went wrong`)}
           message={_(msg`We couldn't load this conversation`)}
-          onRetry={() => convo.error.retry()}
+          onRetry={() => convoState.error.retry()}
         />
       </CenteredView>
     )
@@ -88,7 +88,7 @@ function Inner() {
   return (
     <KeyboardProvider>
       <CenteredView style={a.flex_1} sideBorders>
-        <Header profile={convo.recipients[0]} />
+        <Header profile={convoState.recipients[0]} />
         <MessagesList />
       </CenteredView>
     </KeyboardProvider>
@@ -104,7 +104,7 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const convo = useConvo()
+  const convoState = useConvo()
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -176,9 +176,9 @@ let Header = ({
           </>
         )}
       </View>
-      {convo.status === ConvoStatus.Ready && profile ? (
+      {convoState.status === ConvoStatus.Ready && profile ? (
         <ConvoMenu
-          convo={convo.convo}
+          convoId={convoState.convo.id}
           profile={profile}
           currentScreen="conversation"
         />

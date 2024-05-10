@@ -377,7 +377,7 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
             />
           )}
           <ConvoMenu
-            convo={convo}
+            convoId={convo.id}
             profile={otherUser}
             control={menuControl}
             currentScreen="list"
