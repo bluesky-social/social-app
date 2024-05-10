@@ -159,15 +159,12 @@ function HomeScreenReady({
   const onPageSelecting = React.useCallback(
     (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
       const feed = allFeeds[index]
-
-      if (feed) {
-        logEvent('home:feedDisplayed', {
-          index,
-          feedType: feed.split('|')[0],
-          feedUrl: feed,
-          reason,
-        })
-      }
+      logEvent('home:feedDisplayed', {
+        index,
+        feedType: feed.split('|')[0],
+        feedUrl: feed,
+        reason,
+      })
     },
     [allFeeds],
   )
