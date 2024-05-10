@@ -73,7 +73,7 @@ msgstr "撤回喜歡（{0} 個喜歡）"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0} 個用戶已喜歡"
+msgstr "{count} 個用戶已喜歡"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -92,7 +92,7 @@ msgstr "{following} 個跟隨中"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
 #: src/view/screens/ProfileFeed.tsx:604
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0} 個用戶已喜歡"
+msgstr "{likeCount} 個用戶已喜歡"
 
 #: src/view/shell/Drawer.tsx:464
 msgid "{numUnreadNotifications} unread"
