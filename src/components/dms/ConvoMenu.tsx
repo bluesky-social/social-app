@@ -2,6 +2,7 @@ import React, {useCallback} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ConvoView} from '@atproto-labs/api/dist/client/types/chat/bsky/convo/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -28,7 +29,7 @@ import * as Prompt from '#/components/Prompt'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 
 let ConvoMenu = ({
-  convoId,
+  convoIdOrConvo,
   profile,
   control,
   currentScreen,
@@ -36,7 +37,7 @@ let ConvoMenu = ({
   hideTrigger,
   triggerOpacity,
 }: {
-  convoId: string
+  convoIdOrConvo: string | ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
   control?: Menu.MenuControlProps
@@ -51,15 +52,15 @@ let ConvoMenu = ({
   const leaveConvoControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
-  const {data: convo} = useConvoQuery(convoId)
+  const {data: convo} = useConvoQuery(convoIdOrConvo)
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 
-  const {mutate: muteConvo} = useMuteConvo(convoId, {
+  const {mutate: muteConvo} = useMuteConvo(convo?.id, {
     onSuccess: data => {
-      if (data.muted) {
+      if (data.convo.muted) {
         Toast.show(_(msg`Chat muted`))
       } else {
         Toast.show(_(msg`Chat unmuted`))
@@ -70,7 +71,7 @@ let ConvoMenu = ({
     },
   })
 
-  const {mutate: leaveConvo} = useLeaveConvo(convoId, {
+  const {mutate: leaveConvo} = useLeaveConvo(convo?.id, {
     onSuccess: () => {
       if (currentScreen === 'conversation') {
         navigation.replace('Messages')
@@ -115,7 +116,7 @@ let ConvoMenu = ({
                 label={_(msg`Mark as read`)}
                 onPress={() =>
                   markAsRead({
-                    convoId: convoId,
+                    convoId: convo?.id,
                   })
                 }>
                 <Menu.ItemText>

@@ -6,14 +6,13 @@ import {
 } from '@atproto-labs/api'
 import {InfiniteData, useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {RQKEY as CONVO_LIST_KEY} from './list-converations'
 import {useHeaders} from './temp-headers'
 
 export function useMuteConvo(
-  convoId: string,
+  convoId: string | undefined,
   {
     onSuccess,
     onError,
@@ -28,8 +27,9 @@ export function useMuteConvo(
 
   return useMutation({
     mutationFn: async ({mute}: {mute: boolean}) => {
-      const agent = new BskyAgent({service: serviceUrl})
+      if (!convoId) throw new Error('No convoId provided')
 
+      const agent = new BskyAgent({service: serviceUrl})
       if (mute) {
         const {data} = await agent.api.chat.bsky.convo.muteConvo(
           {convoId},
@@ -73,11 +73,11 @@ export function useMuteConvo(
           })),
         }
       })
+
       onSuccess?.(data)
     },
-    onError: error => {
-      logger.error(error)
-      onError?.(error)
+    onError: e => {
+      onError?.(e)
     },
   })
 }

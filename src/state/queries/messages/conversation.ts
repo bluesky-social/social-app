@@ -1,10 +1,6 @@
-import {BskyAgent, ChatBskyConvoListConvos} from '@atproto-labs/api'
-import {
-  InfiniteData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {BskyAgent} from '@atproto-labs/api'
+import {ConvoView} from '@atproto-labs/api/dist/client/types/chat/bsky/convo/defs'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
 import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
@@ -14,29 +10,22 @@ import {useHeaders} from './temp-headers'
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(convoId: string) {
-  const queryClient = useQueryClient()
+export function useConvoQuery(convoIdOrConvo: string | ConvoView) {
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
+  const isConvoId = typeof convoIdOrConvo === 'string'
 
   return useQuery({
-    queryKey: RQKEY(convoId),
+    queryKey: RQKEY(isConvoId ? convoIdOrConvo : convoIdOrConvo.id),
     queryFn: async () => {
       const agent = new BskyAgent({service: serviceUrl})
       const {data} = await agent.api.chat.bsky.convo.getConvo(
-        {convoId},
+        {convoId: isConvoId ? convoIdOrConvo : convoIdOrConvo.id},
         {headers},
       )
       return data.convo
     },
-    initialData: () => {
-      return queryClient
-        .getQueryData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>(
-          LIST_CONVOS_KEY,
-        )
-        ?.pages.flatMap(page => page.convos)
-        .find(convo => convo.id === convoId)
-    },
+    initialData: isConvoId ? undefined : convoIdOrConvo,
   })
 }
 
@@ -51,9 +40,11 @@ export function useMarkAsReadMutation() {
       convoId,
       messageId,
     }: {
-      convoId: string
+      convoId?: string
       messageId?: string
     }) => {
+      if (!convoId) throw new Error('No convoId provided')
+
       const agent = new BskyAgent({service: serviceUrl})
       await agent.api.chat.bsky.convo.updateRead(
         {
@@ -67,6 +58,7 @@ export function useMarkAsReadMutation() {
       )
     },
     onMutate({convoId}) {
+      if (!convoId) throw new Error('No convoId provided')
       optimisticUpdate(convoId)
     },
     onSettled() {

@@ -178,7 +178,7 @@ let Header = ({
       </View>
       {convoState.status === ConvoStatus.Ready && profile ? (
         <ConvoMenu
-          convoId={convoState.convo.id}
+          convoIdOrConvo={convoState.convo}
           profile={profile}
           currentScreen="conversation"
         />
