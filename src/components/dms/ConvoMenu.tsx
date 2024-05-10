@@ -2,17 +2,18 @@ import React, {useCallback} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ConvoView} from '@atproto-labs/api/dist/client/types/chat/bsky/convo/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
-import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
-import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {
-  useMuteConvo,
-  useUnmuteConvo,
-} from '#/state/queries/messages/mute-conversation'
+  useConvoQuery,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
+import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
@@ -28,16 +29,15 @@ import * as Prompt from '#/components/Prompt'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
 
 let ConvoMenu = ({
-  convo,
+  convo: initialConvo,
   profile,
-  onUpdateConvo,
   control,
   currentScreen,
   showMarkAsRead,
   hideTrigger,
   triggerOpacity,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
   control?: Menu.MenuControlProps
@@ -52,31 +52,26 @@ let ConvoMenu = ({
   const leaveConvoControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
+  const {data: convo} = useConvoQuery(initialConvo)
+
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 
-  const {mutate: muteConvo} = useMuteConvo(convo.id, {
+  const {mutate: muteConvo} = useMuteConvo(convo?.id, {
     onSuccess: data => {
-      onUpdateConvo?.(data.convo)
-      Toast.show(_(msg`Chat muted`))
+      if (data.convo.muted) {
+        Toast.show(_(msg`Chat muted`))
+      } else {
+        Toast.show(_(msg`Chat unmuted`))
+      }
     },
     onError: () => {
       Toast.show(_(msg`Could not mute chat`))
     },
   })
 
-  const {mutate: unmuteConvo} = useUnmuteConvo(convo.id, {
-    onSuccess: data => {
-      onUpdateConvo?.(data.convo)
-      Toast.show(_(msg`Chat unmuted`))
-    },
-    onError: () => {
-      Toast.show(_(msg`Could not unmute chat`))
-    },
-  })
-
-  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+  const {mutate: leaveConvo} = useLeaveConvo(convo?.id, {
     onSuccess: () => {
       if (currentScreen === 'conversation') {
         navigation.replace('Messages')
@@ -121,7 +116,7 @@ let ConvoMenu = ({
                 label={_(msg`Mark as read`)}
                 onPress={() =>
                   markAsRead({
-                    convoId: convo.id,
+                    convoId: convo?.id,
                   })
                 }>
                 <Menu.ItemText>
@@ -140,7 +135,7 @@ let ConvoMenu = ({
             </Menu.Item>
             <Menu.Item
               label={_(msg`Mute notifications`)}
-              onPress={() => (convo?.muted ? unmuteConvo() : muteConvo())}>
+              onPress={() => muteConvo({mute: !convo?.muted})}>
               <Menu.ItemText>
                 {convo?.muted ? (
                   <Trans>Unmute notifications</Trans>
