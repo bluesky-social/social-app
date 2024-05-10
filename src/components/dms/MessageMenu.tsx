@@ -25,9 +25,9 @@ import {MessageReportDialog} from './MessageReportDialog'
 export let MessageMenu = ({
   message,
   control,
-  showActions,
+  triggerOpacity,
 }: {
-  showActions?: boolean
+  triggerOpacity?: number
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
 }): React.ReactNode => {
@@ -68,12 +68,11 @@ export let MessageMenu = ({
     <>
       <Menu.Root control={control}>
         {isWeb && (
-          <View style={{opacity: showActions ? 1 : 0}}>
+          <View style={{opacity: triggerOpacity}}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
               {({props, state}) => (
                 <Pressable
                   {...props}
-                  disabled={!showActions}
                   style={[
                     a.p_sm,
                     a.rounded_full,

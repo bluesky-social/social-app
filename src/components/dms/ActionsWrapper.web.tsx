@@ -56,7 +56,7 @@ export function ActionsWrapper({
           <MessageMenu
             message={message}
             control={menuControl}
-            showActions={showActions}
+            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
           />
         </View>
       )}
@@ -71,7 +71,7 @@ export function ActionsWrapper({
           <MessageMenu
             message={message}
             control={menuControl}
-            showActions={showActions}
+            triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
           />
         </View>
       )}
