@@ -19,19 +19,19 @@ msgstr "(이메일 없음)"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "외 {formattedCount}명"
+msgstr "외 {0, plural, {{formattedCount}}}명"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr "이 계정에 {0}개의 라벨이 지정됨"
+msgstr "이 계정에 {0, plural, other {#}}개의 라벨이 지정됨"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "이 콘텐츠에 {0}개의 라벨이 지정됨"
+msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0}개"
+msgstr "{0, plural, other {#}}개"
 
 #: src/components/ProfileHoverCard/index.web.tsx:373
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -45,7 +45,7 @@ msgstr "팔로우 중"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:245
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "좋아요 ({0}개)"
+msgstr "좋아요 ({0, plural, other {#}}개)"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:359
 msgid "{0, plural, one {like} other {likes}}"
@@ -53,7 +53,7 @@ msgstr "좋아요"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:267
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0}명의 사용자가 좋아함"
+msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
@@ -61,7 +61,7 @@ msgstr "게시물"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "답글 ({0}개)"
+msgstr "답글 ({0, plural, other {#}}개)"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:339
 msgid "{0, plural, one {repost} other {reposts}}"
@@ -69,19 +69,19 @@ msgstr "재게시"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "좋아요 취소 ({0}개)"
+msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count}명의 사용자가 좋아함"
+msgstr "{count, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs}시간"
+msgstr "시간"
 
 #: src/screens/Deactivated.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins}분"
+msgstr "분"
 
 #: src/components/ProfileHoverCard/index.web.tsx:454
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -92,7 +92,7 @@ msgstr "{following} 팔로우 중"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
 #: src/view/screens/ProfileFeed.tsx:604
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount}명의 사용자가 좋아함"
+msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/view/shell/Drawer.tsx:464
 msgid "{numUnreadNotifications} unread"
