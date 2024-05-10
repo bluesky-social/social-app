@@ -21,7 +21,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
@@ -89,6 +89,7 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
+  const t = useTheme()
   const convo = useConvo()
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
@@ -109,7 +110,24 @@ export function MessagesList() {
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
 
-  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
+  const hasInitiallyScrolled = useSharedValue(false)
+  const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
+
+  // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
+  // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
+  // a little flicker when the items are first renedered at the top and immediately scrolled to the bottom. to prevent
+  // this, we will wait until the first render has completed to remove the loading overlay.
+  React.useEffect(() => {
+    if (
+      !hasInitiallyRendered &&
+      convo.status === ConvoStatus.Ready &&
+      !convo.isFetchingHistory
+    ) {
+      setTimeout(() => {
+        setHasInitiallyRendered(true)
+      }, 15)
+    }
+  }, [convo.isFetchingHistory, convo.items, convo.status, hasInitiallyRendered])
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -125,7 +143,7 @@ export function MessagesList() {
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous offset whenever we add new content to the previous offset whenever we add new content to the list.
-      if (isWeb && isAtTop.value && hasInitiallyScrolled) {
+      if (isWeb && isAtTop.value && hasInitiallyScrolled.value) {
         flatListRef.current?.scrollToOffset({
           animated: false,
           offset: height - contentHeight.value,
@@ -140,7 +158,7 @@ export function MessagesList() {
       }
 
       flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled,
+        animated: hasInitiallyScrolled.value,
         offset: height,
       })
       isMomentumScrolling.value = true
@@ -157,7 +175,7 @@ export function MessagesList() {
   // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
   // immediately on mount, since we are in fact at an offset of zero, so we have to ignore those initial calls.
   const onStartReached = useCallback(() => {
-    if (convo.status === ConvoStatus.Ready && hasInitiallyScrolled) {
+    if (convo.status === ConvoStatus.Ready && hasInitiallyScrolled.value) {
       convo.fetchMessageHistory()
     }
   }, [convo, hasInitiallyScrolled])
@@ -202,8 +220,8 @@ export function MessagesList() {
       // This number _must_ be the height of the MaybeLoader component.
       // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
       // adds a 50 pixel offset.
-      if (contentHeight.value > 50 && !hasInitiallyScrolled) {
-        runOnJS(setHasInitiallyScrolled)(true)
+      if (contentHeight.value > 50 && !hasInitiallyScrolled.value) {
+        hasInitiallyScrolled.value = true
       }
     },
     [contentHeight.value, hasInitiallyScrolled, isAtBottom, isAtTop],
@@ -261,7 +279,9 @@ export function MessagesList() {
             minIndexForVisible: 1,
           }}
           containWeb={true}
-          contentContainerStyle={{paddingHorizontal: 10}}
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+          }}
           removeClippedSubviews={false}
           onContentSizeChange={onContentSizeChange}
           onStartReached={onStartReached}
@@ -274,6 +294,22 @@ export function MessagesList() {
         />
       </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
+      {!hasInitiallyRendered && (
+        <View
+          style={[
+            a.absolute,
+            a.z_10,
+            a.w_full,
+            a.h_full,
+            a.justify_center,
+            a.align_center,
+            t.atoms.bg,
+          ]}>
+          <View style={[{marginBottom: 75}]}>
+            <Loader size="xl" />
+          </View>
+        </View>
+      )}
     </KeyboardAvoidingView>
   )
 }
