@@ -48,27 +48,19 @@ export const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  ctrlIconSizingWrapper: {
-    height: 27,
-  },
-  homeIcon: {
-    top: 0,
-  },
-  feedsIcon: {
-    top: -2,
-  },
+  ctrlIconSizingWrapper: {},
+  homeIcon: {},
+  feedsIcon: {},
   searchIcon: {
-    top: -2,
+    top: -1,
   },
-  bellIcon: {
-    top: -2.5,
-  },
+  bellIcon: {},
   profileIcon: {
-    top: -4,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
-  messagesIcon: {
-    top: 2,
-  },
+  messagesIcon: {},
   onProfile: {
     borderWidth: 1,
     borderRadius: 100,
