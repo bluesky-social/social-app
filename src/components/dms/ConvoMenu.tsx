@@ -202,7 +202,7 @@ let ConvoMenu = ({
         control={reportControl}
         title={_(msg`Report chat`)}
         description={_(
-          msg`To report a chat, please report one of its message via the chat screen. This lets our moderators understand the context of your issue.`,
+          msg`To report a chat, please report one of its messages via the chat screen. This lets our moderators understand the context of your issue.`,
         )}
         confirmButtonCta={_(msg`I understand`)}
         onConfirm={noop}
