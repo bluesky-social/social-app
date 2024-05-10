@@ -157,7 +157,7 @@ let Header = ({
         {profile ? (
           <View style={[a.align_center]}>
             <PreviewableUserAvatar size={32} profile={profile} />
-            <Text style={[a.text_lg, a.font_bold, a.pt_sm]}>
+            <Text style={[a.text_lg, a.font_bold, a.mt_sm]}>
               {profile.displayName}
             </Text>
             <Text style={[{fontSize: 15}, t.atoms.text_contrast_medium]}>
@@ -175,10 +175,17 @@ let Header = ({
             />
             <View
               style={[
-                {width: 120, height: 18},
+                {width: 120, height: 16},
                 a.rounded_xs,
                 t.atoms.bg_contrast_25,
-                a.mb_2xs,
+                a.mt_xs,
+              ]}
+            />
+            <View
+              style={[
+                {width: 175, height: 12},
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
               ]}
             />
           </>
