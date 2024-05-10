@@ -27,6 +27,10 @@ import {
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
 import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
+import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
@@ -101,7 +105,7 @@ export function BottomBarWeb() {
 
           {hasSession && (
             <>
-              {gate('dms') && (
+              {gate('dms') ? (
                 <NavItem routeName="Messages" href="/messages">
                   {({isActive}) => {
                     const Icon = isActive ? MessageFilled : Message
@@ -109,6 +113,18 @@ export function BottomBarWeb() {
                       <Icon
                         width={iconWidth - 1}
                         style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
+                      />
+                    )
+                  }}
+                </NavItem>
+              ) : (
+                <NavItem routeName="Feeds" href="/feeds">
+                  {({isActive}) => {
+                    const Icon = isActive ? HashtagFilled : Hashtag
+                    return (
+                      <Icon
+                        width={iconWidth + 1}
+                        style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                       />
                     )
                   }}
