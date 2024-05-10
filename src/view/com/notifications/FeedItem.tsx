@@ -219,7 +219,7 @@ let FeedItem = ({
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={styles.meta}>
+          <Text style={[styles.meta, pal.text]}>
             <Trans context="notification">
               <TextLink
                 key={authors[0].href}
