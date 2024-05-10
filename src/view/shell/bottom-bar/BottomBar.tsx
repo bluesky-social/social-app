@@ -13,15 +13,6 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {
-  BellIcon,
-  BellIconSolid,
-  HashtagIcon,
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-} from '#/lib/icons'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {useGate} from '#/lib/statsig/statsig'
@@ -41,6 +32,20 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import {
+  Bell2_Filled_Corner0_Rounded as BellFilled,
+  Bell2_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell2'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
+import {
+  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
+  HomeOpen_Stoke2_Corner0_Rounded as Home,
+} from '#/components/icons/HomeOpen'
+import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
@@ -80,6 +85,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
   const gate = useGate()
+  const iconWidth = 30
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -154,15 +160,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarHomeBtn"
               icon={
                 isAtHome ? (
-                  <HomeIconSolid
-                    strokeWidth={4}
-                    size={24}
+                  <HomeFilled
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 ) : (
-                  <HomeIcon
-                    strokeWidth={4}
-                    size={24}
+                  <Home
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 )
@@ -176,16 +180,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarSearchBtn"
               icon={
                 isAtSearch ? (
-                  <MagnifyingGlassIcon2Solid
-                    size={25}
+                  <MagnifyingGlassFilled
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    strokeWidth={1.8}
                   />
                 ) : (
-                  <MagnifyingGlassIcon2
-                    size={25}
+                  <MagnifyingGlass
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    strokeWidth={1.8}
                   />
                 )
               }
@@ -198,16 +200,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarFeedsBtn"
               icon={
                 isAtFeeds ? (
-                  <HashtagIcon
-                    size={24}
+                  <HashtagFilled
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    strokeWidth={4}
                   />
                 ) : (
-                  <HashtagIcon
-                    size={24}
+                  <Hashtag
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    strokeWidth={2.25}
                   />
                 )
               }
@@ -220,15 +220,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarNotificationsBtn"
               icon={
                 isAtNotifications ? (
-                  <BellIconSolid
-                    size={24}
-                    strokeWidth={1.9}
+                  <BellFilled
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
                   />
                 ) : (
-                  <BellIcon
-                    size={24}
-                    strokeWidth={1.9}
+                  <Bell
+                    width={iconWidth}
                     style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
                   />
                 )
@@ -250,12 +248,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 icon={
                   isAtMessages ? (
                     <MessageFilled
-                      size="lg"
+                      width={iconWidth}
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   ) : (
                     <Message
-                      size="lg"
+                      width={iconWidth}
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   )
@@ -287,7 +285,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       ]}>
                       <UserAvatar
                         avatar={profile?.avatar}
-                        size={27}
+                        size={iconWidth}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
@@ -298,7 +296,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
                       <UserAvatar
                         avatar={profile?.avatar}
-                        size={28}
+                        size={iconWidth}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
