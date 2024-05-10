@@ -144,10 +144,14 @@ let Header = ({
         {profile ? (
           <View style={[a.align_center]}>
             <PreviewableUserAvatar size={32} profile={profile} />
-            <Text style={[a.text_lg, a.font_bold, isWeb ? a.mt_md : a.mt_sm]}>
+            <Text
+              style={[a.text_lg, a.font_bold, isWeb ? a.mt_md : a.mt_sm]}
+              numberOfLines={1}>
               {profile.displayName}
             </Text>
-            <Text style={[t.atoms.text_contrast_medium, {fontSize: 15}]}>
+            <Text
+              style={[t.atoms.text_contrast_medium, {fontSize: 15}]}
+              numberOfLines={1}>
               @{profile.handle}
             </Text>
           </View>
