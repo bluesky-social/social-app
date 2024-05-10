@@ -10,22 +10,21 @@ import {useHeaders} from './temp-headers'
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(convoIdOrConvo: string | ConvoView) {
+export function useConvoQuery(convo: ConvoView) {
   const headers = useHeaders()
   const {serviceUrl} = useDmServiceUrlStorage()
-  const isConvoId = typeof convoIdOrConvo === 'string'
 
   return useQuery({
-    queryKey: RQKEY(isConvoId ? convoIdOrConvo : convoIdOrConvo.id),
+    queryKey: RQKEY(convo.id),
     queryFn: async () => {
       const agent = new BskyAgent({service: serviceUrl})
       const {data} = await agent.api.chat.bsky.convo.getConvo(
-        {convoId: isConvoId ? convoIdOrConvo : convoIdOrConvo.id},
+        {convoId: convo.id},
         {headers},
       )
       return data.convo
     },
-    initialData: isConvoId ? undefined : convoIdOrConvo,
+    initialData: convo,
   })
 }
 
