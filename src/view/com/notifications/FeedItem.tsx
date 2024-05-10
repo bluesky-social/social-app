@@ -236,8 +236,8 @@ let FeedItem = ({
                   <Text style={[pal.text, s.bold]}>
                     <Plural
                       value={authors.length - 1}
-                      one="# other"
-                      other="# others"
+                      one={`${formattedCount} other`}
+                      other={`${formattedCount} others`}
                     />
                   </Text>
                 </Trans>
