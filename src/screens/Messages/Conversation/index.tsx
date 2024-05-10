@@ -56,7 +56,7 @@ export function MessagesConversationScreen({route}: Props) {
 
 function Inner() {
   const t = useTheme()
-  const convo = useConvo()
+  const convoState = useConvo()
   const {_} = useLingui()
 
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
@@ -72,14 +72,14 @@ function Inner() {
   React.useEffect(() => {
     if (
       !hasInitiallyRendered &&
-      convo.status === ConvoStatus.Ready &&
-      !convo.isFetchingHistory
+      convoState.status === ConvoStatus.Ready &&
+      !convoState.isFetchingHistory
     ) {
       setTimeout(() => {
         setHasInitiallyRendered(true)
       }, 15)
     }
-  }, [convo.isFetchingHistory, convo.items, convo.status, hasInitiallyRendered])
+  }, [convoState.isFetchingHistory, convoState.status, hasInitiallyRendered])
 
   if (convoState.status === ConvoStatus.Error) {
     return (
@@ -106,9 +106,9 @@ function Inner() {
         behavior="padding"
         contentContainerStyle={a.flex_1}>
         <CenteredView style={a.flex_1} sideBorders>
-          <Header profile={convo.recipients?.[0]} />
+          <Header profile={convoState.recipients?.[0]} />
           <View style={[a.flex_1]}>
-            {convo.status !== ConvoStatus.Ready ? (
+            {convoState.status !== ConvoStatus.Ready ? (
               <ListMaybePlaceholder isLoading />
             ) : (
               <MessagesList />
