@@ -10,6 +10,9 @@ static/js/*.js
 static/js/*.map
 static/js/*.js.LICENSE.txt
 static/js/empty.txt
+static/css/*.css
+static/css/*.map
+static/css/*.css.LICENSE.txt
 static/media/*.png
 static/media/empty.txt
 templates/scripts.html

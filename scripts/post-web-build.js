@@ -20,7 +20,16 @@ console.log(`Writing ${templateFile}`)
 const outputFile = entrypoints
   .map(name => {
     const file = path.basename(name)
-    return `<script defer="defer" src="/static/js/${file}"></script>`
+    const ext = path.extname(file)
+
+    if (ext === '.js') {
+      return `<script defer="defer" src="/static/js/${file}"></script>`
+    }
+    if (ext === '.css') {
+      return `<link rel="stylesheet" href="/static/css/${file}">`
+    }
+
+    return ''
   })
   .join('\n')
 fs.writeFileSync(templateFile, outputFile)
