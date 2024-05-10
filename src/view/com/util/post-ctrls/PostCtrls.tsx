@@ -201,10 +201,12 @@ let PostCtrls = ({
             }
           }}
           accessibilityRole="button"
-          accessibilityLabel={`Reply (${plural(post.replyCount || 0, {
-            one: '# reply',
-            other: '# replies',
-          })})`}
+          accessibilityLabel={_(
+            msg`Reply (${plural(post.replyCount || 0, {
+              one: '# reply',
+              other: '# replies',
+            })})`,
+          )}
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           <CommentBottomArrow
