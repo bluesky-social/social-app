@@ -64,6 +64,9 @@ export const styles = StyleSheet.create({
     top: -2.5,
   },
   profileIcon: {
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: 'transparent',
     top: -4,
   },
   messagesIcon: {
