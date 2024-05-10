@@ -50,6 +50,7 @@ let ConvoMenu = ({
   const {_} = useLingui()
   const t = useTheme()
   const leaveConvoControl = Prompt.usePromptControl()
+  const reportControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
   const {data: convo} = useConvoQuery(initialConvo)
@@ -147,7 +148,7 @@ let ConvoMenu = ({
             </Menu.Item>
           </Menu.Group>
           <Menu.Divider />
-          {/* TODO(samuel): implement these */}
+          {/* TODO(samuel): implement this */}
           <Menu.Group>
             <Menu.Item
               label={_(msg`Block account`)}
@@ -161,11 +162,10 @@ let ConvoMenu = ({
               />
             </Menu.Item>
             <Menu.Item
-              label={_(msg`Report account`)}
-              onPress={() => {}}
-              disabled>
+              label={_(msg`Report conversation`)}
+              onPress={reportControl.open}>
               <Menu.ItemText>
-                <Trans>Report account</Trans>
+                <Trans>Report conversation</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={Flag} />
             </Menu.Item>
@@ -194,9 +194,21 @@ let ConvoMenu = ({
         confirmButtonColor="negative"
         onConfirm={() => leaveConvo()}
       />
+
+      <Prompt.Basic
+        control={reportControl}
+        title={_(msg`Report conversation`)}
+        description={_(
+          msg`To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue.`,
+        )}
+        confirmButtonCta={_(msg`I understand`)}
+        onConfirm={noop}
+      />
     </>
   )
 }
 ConvoMenu = React.memo(ConvoMenu)
 
 export {ConvoMenu}
+
+function noop() {}
