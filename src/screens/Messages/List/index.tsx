@@ -12,7 +12,7 @@ import {MessagesTabNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useListConvos} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
@@ -369,7 +369,11 @@ function ChatListItem({
               </View>
               <Text
                 numberOfLines={1}
-                style={[{fontSize: 15}, t.atoms.text_contrast_medium, a.pb_sm]}>
+                style={[
+                  {fontSize: 15},
+                  t.atoms.text_contrast_medium,
+                  isWeb ? a.pb_sm : a.pb_xs,
+                ]}>
                 @{otherUser.handle}
               </Text>
               <Text
