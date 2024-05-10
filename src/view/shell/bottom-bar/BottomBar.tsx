@@ -37,6 +37,10 @@ import {
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
 import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
+import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
 } from '#/components/icons/HomeOpen'
@@ -63,8 +67,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {footerHeight} = useShellLayout()
-  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
-    useNavigationTabState()
+  const {
+    isAtHome,
+    isAtSearch,
+    isAtFeeds,
+    isAtNotifications,
+    isAtMyProfile,
+    isAtMessages,
+  } = useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
   const {footerMinimalShellTransform} = useMinimalShellMode()
@@ -106,6 +116,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(
     () => onPressTab('Search'),
+    [onPressTab],
+  )
+  const onPressFeeds = React.useCallback(
+    () => onPressTab('Feeds'),
     [onPressTab],
   )
   const onPressNotifications = React.useCallback(
@@ -182,7 +196,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityLabel={_(msg`Search`)}
               accessibilityHint=""
             />
-            {gate('dms') && (
+            {gate('dms') ? (
               <Btn
                 testID="bottomBarMessagesBtn"
                 icon={
@@ -208,6 +222,28 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                     ? `${numUnreadMessages.numUnread} unread`
                     : ''
                 }
+              />
+            ) : (
+              <Btn
+                testID="bottomBarFeedsBtn"
+                icon={
+                  isAtFeeds ? (
+                    <HashtagFilled
+                      width={iconWidth + 1}
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  ) : (
+                    <Hashtag
+                      width={iconWidth + 1}
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  )
+                }
+                onPress={onPressFeeds}
+                accessible={true}
+                accessibilityRole="tab"
+                accessibilityLabel={_(msg`Feeds`)}
+                accessibilityHint=""
               />
             )}
             <Btn
