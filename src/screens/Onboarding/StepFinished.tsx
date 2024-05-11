@@ -3,13 +3,17 @@ import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {BSKY_APP_ACCOUNT_DID, IS_PROD_SERVICE} from '#/lib/constants'
 import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
+import {
+  preferencesQueryKey,
+  useOverwriteSavedFeedsMutation,
+} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
@@ -41,6 +45,7 @@ export function StepFinished() {
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
   const {mutateAsync: overwriteSavedFeeds} = useOverwriteSavedFeedsMutation()
+  const queryClient = useQueryClient()
   const {getAgent} = useAgent()
   const gate = useGate()
 
@@ -139,6 +144,16 @@ export function StepFinished() {
       // don't alert the user, just let them into their account
     }
 
+    // Try to ensure that prefs are up-to-date by the time we render Home.
+    await queryClient
+      .invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+      .catch(e => {
+        logger.error(e)
+        // Keep going.
+      })
+
     setSaving(false)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
@@ -154,6 +169,7 @@ export function StepFinished() {
     track,
     getAgent,
     gate,
+    queryClient,
   ])
 
   React.useEffect(() => {
