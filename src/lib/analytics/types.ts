@@ -150,6 +150,8 @@ export type TrackPropertiesMap = {
   }
   'OnboardingV2:StepModeration:Start': {}
   'OnboardingV2:StepModeration:End': {}
+  'OnboardingV2:StepProfile:Start': {}
+  'OnboardingV2:StepProfile:End': {}
   'OnboardingV2:StepFinished:Start': {}
   'OnboardingV2:StepFinished:End': {}
   'OnboardingV2:Complete': {}

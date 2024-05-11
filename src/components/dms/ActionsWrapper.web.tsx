@@ -62,7 +62,7 @@ export function ActionsWrapper({
       )}
       <View
         style={{
-          maxWidth: '65%',
+          maxWidth: '80%',
         }}>
         {children}
       </View>

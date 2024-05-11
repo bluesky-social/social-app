@@ -3,10 +3,10 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
 
+import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {Button, ButtonText, ButtonIcon, ButtonSize} from '#/components/Button'
+import {Button, ButtonIcon, ButtonSize, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
   LabelsOnMeDialog,

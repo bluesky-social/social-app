@@ -35,11 +35,13 @@ describe(`#/state/messages/convo`, () => {
     it.todo(
       `successfully sent messages are re-ordered, if needed, by events received from server`,
     )
+    it.todo(`pending messages are cleaned up from state after firehose event`)
   })
 
   describe(`deleting messages`, () => {
     it.todo(`messages are optimistically deleted from the chat`)
     it.todo(`messages are confirmed deleted via events from the server`)
+    it.todo(`deleted messages are cleaned up from state after firehose event`)
   })
 
   describe(`log handling`, () => {

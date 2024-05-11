@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.81.0",
+  "version": "1.82.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@atproto-labs/api": "^0.12.8-clipclops.0",
-    "@atproto/api": "^0.12.5",
+    "@atproto/api": "^0.12.6",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -185,6 +185,7 @@
     "react-native-uitextview": "^1.1.6",
     "react-native-url-polyfill": "^1.3.0",
     "react-native-uuid": "^2.0.1",
+    "react-native-view-shot": "^3.8.0",
     "react-native-web": "~0.19.6",
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "13.6.4",

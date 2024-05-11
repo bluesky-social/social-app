@@ -13,15 +13,6 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {
-  BellIcon,
-  BellIconSolid,
-  HashtagIcon,
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-} from '#/lib/icons'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {useGate} from '#/lib/statsig/statsig'
@@ -41,8 +32,24 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
+import {
+  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
+  HomeOpen_Stoke2_Corner0_Rounded as Home,
+} from '#/components/icons/HomeOpen'
+import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
 import {styles} from './BottomBarStyles'
 
 type TabOptions =
@@ -78,6 +85,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
   const gate = useGate()
+  const iconWidth = 28
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -152,15 +160,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarHomeBtn"
               icon={
                 isAtHome ? (
-                  <HomeIconSolid
-                    strokeWidth={4}
-                    size={24}
+                  <HomeFilled
+                    width={iconWidth + 1}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 ) : (
-                  <HomeIcon
-                    strokeWidth={4}
-                    size={24}
+                  <Home
+                    width={iconWidth + 1}
                     style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                   />
                 )
@@ -174,16 +180,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               testID="bottomBarSearchBtn"
               icon={
                 isAtSearch ? (
-                  <MagnifyingGlassIcon2Solid
-                    size={25}
+                  <MagnifyingGlassFilled
+                    width={iconWidth + 2}
                     style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    strokeWidth={1.8}
                   />
                 ) : (
-                  <MagnifyingGlassIcon2
-                    size={25}
+                  <MagnifyingGlass
+                    width={iconWidth + 2}
                     style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    strokeWidth={1.8}
                   />
                 )
               }
@@ -192,68 +196,18 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityLabel={_(msg`Search`)}
               accessibilityHint=""
             />
-            <Btn
-              testID="bottomBarFeedsBtn"
-              icon={
-                isAtFeeds ? (
-                  <HashtagIcon
-                    size={24}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    strokeWidth={4}
-                  />
-                ) : (
-                  <HashtagIcon
-                    size={24}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    strokeWidth={2.25}
-                  />
-                )
-              }
-              onPress={onPressFeeds}
-              accessibilityRole="tab"
-              accessibilityLabel={_(msg`Feeds`)}
-              accessibilityHint=""
-            />
-            <Btn
-              testID="bottomBarNotificationsBtn"
-              icon={
-                isAtNotifications ? (
-                  <BellIconSolid
-                    size={24}
-                    strokeWidth={1.9}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
-                ) : (
-                  <BellIcon
-                    size={24}
-                    strokeWidth={1.9}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                  />
-                )
-              }
-              onPress={onPressNotifications}
-              notificationCount={numUnreadNotifications}
-              accessible={true}
-              accessibilityRole="tab"
-              accessibilityLabel={_(msg`Notifications`)}
-              accessibilityHint={
-                numUnreadNotifications === ''
-                  ? ''
-                  : `${numUnreadNotifications} unread`
-              }
-            />
-            {gate('dms') && (
+            {gate('dms') ? (
               <Btn
                 testID="bottomBarMessagesBtn"
                 icon={
                   isAtMessages ? (
-                    <EnvelopeFilled
-                      size="lg"
+                    <MessageFilled
+                      width={iconWidth - 1}
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   ) : (
-                    <Envelope
-                      size="lg"
+                    <Message
+                      width={iconWidth - 1}
                       style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
                     />
                   )
@@ -269,7 +223,55 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                     : ''
                 }
               />
+            ) : (
+              <Btn
+                testID="bottomBarFeedsBtn"
+                icon={
+                  isAtFeeds ? (
+                    <HashtagFilled
+                      width={iconWidth + 1}
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  ) : (
+                    <Hashtag
+                      width={iconWidth + 1}
+                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    />
+                  )
+                }
+                onPress={onPressFeeds}
+                accessible={true}
+                accessibilityRole="tab"
+                accessibilityLabel={_(msg`Feeds`)}
+                accessibilityHint=""
+              />
             )}
+            <Btn
+              testID="bottomBarNotificationsBtn"
+              icon={
+                isAtNotifications ? (
+                  <BellFilled
+                    width={iconWidth}
+                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                  />
+                ) : (
+                  <Bell
+                    width={iconWidth}
+                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                  />
+                )
+              }
+              onPress={onPressNotifications}
+              notificationCount={numUnreadNotifications}
+              accessible={true}
+              accessibilityRole="tab"
+              accessibilityLabel={_(msg`Notifications`)}
+              accessibilityHint={
+                numUnreadNotifications === ''
+                  ? ''
+                  : `${numUnreadNotifications} unread`
+              }
+            />
             <Btn
               testID="bottomBarProfileBtn"
               icon={
@@ -285,7 +287,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       ]}>
                       <UserAvatar
                         avatar={profile?.avatar}
-                        size={27}
+                        size={iconWidth - 3}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
@@ -296,7 +298,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
                       <UserAvatar
                         avatar={profile?.avatar}
-                        size={28}
+                        size={iconWidth - 3}
                         // See https://github.com/bluesky-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
