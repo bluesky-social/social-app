@@ -73,7 +73,7 @@ msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个�
 
 #: src/view/screens/ProfileList.tsx:286
 msgid "{0} your feeds"
-msgstr "{0} 你的信息流"
+msgstr "{0} 你的资讯源"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -247,11 +247,11 @@ msgstr "添加隐藏词和标签"
 
 #: src/screens/Home/NoFeedsPinned.tsx:112
 msgid "Add recommended feeds"
-msgstr "添加推荐的信息流"
+msgstr "添加推荐的资讯源"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:43
 msgid "Add the default feed of only people you follow"
-msgstr "添加默认的信息流（仅显示你关注的人）"
+msgstr "添加默认的资讯源（仅显示你关注的人）"
 
 #: src/view/com/modals/ChangeHandle.tsx:410
 msgid "Add the following DNS record to your domain:"
@@ -264,7 +264,7 @@ msgstr "添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:235
 msgid "Add to my feeds"
-msgstr "添加至自定义信息流"
+msgstr "添加至自定义资讯源"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
@@ -273,11 +273,11 @@ msgstr "已添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:112
 msgid "Added to my feeds"
-msgstr "已添加至自定义信息流"
+msgstr "已添加至自定义资讯源"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:172
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "调整回复中需要具有的喜欢数才会在你的信息流中显示。"
+msgstr "调整回复中需要具有的喜欢数才会在你的资讯源中显示。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:117
@@ -296,7 +296,7 @@ msgstr "详细设置"
 
 #: src/view/screens/Feeds.tsx:797
 msgid "All the feeds you've saved, right in one place."
-msgstr "你保存的所有信息流都集中在一处。"
+msgstr "你保存的所有资讯源都集中在一处。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -424,7 +424,7 @@ msgstr "外观"
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:106
 msgid "Apply default recommended feeds"
-msgstr "使用默认推荐的信息流"
+msgstr "使用默认推荐的资讯源"
 
 #: src/view/screens/AppPasswords.tsx:265
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -440,7 +440,7 @@ msgstr "您确定要离开此对话吗？你的信息将从对话列表中删除
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "你确定要从你的信息流中删除 {0} 吗？"
+msgstr "你确定要从你的资讯源中删除 {0} 吗？"
 
 #: src/view/com/composer/Composer.tsx:573
 msgid "Are you sure you'd like to discard this draft?"
@@ -591,7 +591,7 @@ msgstr "模糊化图片"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
-msgstr "模糊化图片并从信息流中过滤"
+msgstr "模糊化图片并从资讯源中过滤"
 
 #: src/screens/Onboarding/index.tsx:45
 msgid "Books"
@@ -600,7 +600,7 @@ msgstr "书籍"
 #: src/screens/Home/NoFeedsPinned.tsx:116
 #: src/screens/Home/NoFeedsPinned.tsx:123
 msgid "Browse other feeds"
-msgstr "浏览其他信息流"
+msgstr "浏览其他资讯源"
 
 #: src/view/com/auth/SplashScreen.web.tsx:151
 msgid "Business"
@@ -781,7 +781,7 @@ msgstr "选择服务"
 
 #: src/screens/Onboarding/StepFinished.tsx:213
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "选择支持你的自定义信息流的算法。"
+msgstr "选择支持你的自定义资讯源的算法。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -789,7 +789,7 @@ msgstr "选择这个颜色作为你的头像"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 msgid "Choose your main feeds"
-msgstr "选择你的主要信息流"
+msgstr "选择你的主要资讯源"
 
 #: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Choose your password"
@@ -1132,7 +1132,7 @@ msgstr "无法离开对话"
 
 #: src/view/screens/ProfileFeed.tsx:102
 msgid "Could not load feed"
-msgstr "无法加载信息流"
+msgstr "无法加载资讯源"
 
 #: src/view/screens/ProfileList.tsx:956
 msgid "Could not load list"
@@ -1201,7 +1201,7 @@ msgstr "自定义域名"
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:107
 #: src/view/screens/Feeds.tsx:823
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "由社群构建的自定义信息流能为你带来新的体验，并帮助你找到你喜欢的内容。"
+msgstr "由社群构建的自定义资讯源能为你带来新的体验，并帮助你找到你喜欢的内容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:56
 msgid "Customize media from external sites."
@@ -1354,11 +1354,11 @@ msgstr "阻止应用向未登录用户显示我的账户"
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
-msgstr "探索新的自定义信息流"
+msgstr "探索新的自定义资讯源"
 
 #: src/view/screens/Feeds.tsx:820
 msgid "Discover New Feeds"
-msgstr "探索新的信息流"
+msgstr "探索新的资讯源"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Display name"
@@ -1504,7 +1504,7 @@ msgstr "编辑内容审核列表"
 #: src/view/screens/Feeds.tsx:494
 #: src/view/screens/SavedFeeds.tsx:92
 msgid "Edit My Feeds"
-msgstr "编辑自定义信息流"
+msgstr "编辑自定义资讯源"
 
 #: src/view/com/modals/EditProfile.tsx:153
 msgid "Edit my profile"
@@ -1523,7 +1523,7 @@ msgstr "编辑个人资料"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:76
 #: src/view/screens/Feeds.tsx:415
 msgid "Edit Saved Feeds"
-msgstr "编辑保存的信息流"
+msgstr "编辑保存的资讯源"
 
 #: src/view/com/modals/CreateOrEditList.tsx:248
 msgid "Edit User List"
@@ -1600,7 +1600,7 @@ msgstr "启用成人内容"
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:79
 msgid "Enable adult content in your feeds"
-msgstr "在你的信息流中启用成人内容"
+msgstr "在你的资讯源中启用成人内容"
 
 #: src/components/dialogs/EmbedConsent.tsx:82
 #: src/components/dialogs/EmbedConsent.tsx:89
@@ -1625,7 +1625,7 @@ msgstr "已启用"
 
 #: src/screens/Profile/Sections/Feed.tsx:104
 msgid "End of feed"
-msgstr "信息流的末尾"
+msgstr "资讯源的末尾"
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1800,15 +1800,15 @@ msgstr "无法发送信息。"
 
 #: src/Navigation.tsx:203
 msgid "Feed"
-msgstr "信息流"
+msgstr "资讯源"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:219
 msgid "Feed by {0}"
-msgstr "由 {0} 创建的信息流"
+msgstr "由 {0} 创建的资讯源"
 
 #: src/view/screens/Feeds.tsx:735
 msgid "Feed offline"
-msgstr "信息流已离线"
+msgstr "资讯源已离线"
 
 #: src/view/shell/desktop/RightNav.tsx:65
 #: src/view/shell/Drawer.tsx:344
@@ -1824,15 +1824,15 @@ msgstr "反馈"
 #: src/view/shell/Drawer.tsx:492
 #: src/view/shell/Drawer.tsx:493
 msgid "Feeds"
-msgstr "信息流"
+msgstr "资讯源"
 
 #: src/view/screens/SavedFeeds.tsx:179
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "创建信息流要求一些编程基础。查看 <0/> 以获取详情。"
+msgstr "创建资讯源要求一些编程基础。查看 <0/> 以获取详情。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 msgid "Feeds can be topical as well!"
-msgstr "信息流也可以围绕某些话题！"
+msgstr "资讯源也可以围绕某些话题！"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -1840,7 +1840,7 @@ msgstr "文件内容"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
-msgstr "从信息流中过滤"
+msgstr "从资讯源中过滤"
 
 #: src/screens/Onboarding/StepFinished.tsx:229
 msgid "Finalizing"
@@ -1858,7 +1858,7 @@ msgstr "在 Bluesky 寻找帖子和用户"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:110
 msgid "Fine-tune the content you see on your Following feed."
-msgstr "调整你在“正在关注”信息流上所看到的内容。"
+msgstr "调整你在\"正在关注\"资讯源上所看到的内容。"
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
@@ -1956,7 +1956,7 @@ msgstr "正在关注 {0}"
 
 #: src/view/screens/Settings/index.tsx:564
 msgid "Following feed preferences"
-msgstr "“正在关注”信息流首选项"
+msgstr "\"正在关注\"资讯源首选项"
 
 #: src/Navigation.tsx:269
 #: src/view/com/home/HomeHeaderLayout.web.tsx:64
@@ -1964,7 +1964,7 @@ msgstr "“正在关注”信息流首选项"
 #: src/view/screens/PreferencesFollowingFeed.tsx:103
 #: src/view/screens/Settings/index.tsx:573
 msgid "Following Feed Preferences"
-msgstr "“正在关注”信息流首选项"
+msgstr "\"正在关注\"资讯源首选项"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
@@ -2122,11 +2122,11 @@ msgstr "这里有一些推荐关注的用户"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:89
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-msgstr "这里有一些流行的信息流供你挑选。"
+msgstr "这里有一些流行的资讯源供你挑选。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:84
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "这里有一些基于你兴趣所推荐的信息流供你挑选：{interestsText}。关注的信息流数量没有限制。"
+msgstr "这里有一些基于你兴趣所推荐的资讯源供你挑选：{interestsText}。关注的资讯源数量没有限制。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:154
 msgid "Here is your app password."
@@ -2170,23 +2170,23 @@ msgstr "隐藏用户列表"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:118
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "连接信息流服务器出现问题，请联系信息流的维护者反馈此问题。"
+msgstr "连接资讯源服务器出现问题，请联系资讯源的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:106
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "信息流服务器似乎配置错误，请联系信息流的维护者反馈此问题。"
+msgstr "资讯源服务器似乎配置错误，请联系资讯源的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:112
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "信息流服务器似乎已下线，请联系信息流的维护者反馈此问题。"
+msgstr "资讯源服务器似乎已下线，请联系资讯源的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:109
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "信息流服务器返回错误的响应，请联系信息流的维护者反馈此问题。"
+msgstr "资讯源服务器返回错误的响应，请联系资讯源的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:103
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "无法找到该信息流，似乎已被删除。"
+msgstr "无法找到该资讯源，似乎已被删除。"
 
 #: src/screens/Moderation/index.tsx:59
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
@@ -2476,7 +2476,7 @@ msgstr "亮色"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:266
 #: src/view/screens/ProfileFeed.tsx:570
 msgid "Like this feed"
-msgstr "喜欢这个信息流"
+msgstr "喜欢这个资讯源"
 
 #: src/components/LikesDialog.tsx:87
 #: src/Navigation.tsx:208
@@ -2492,11 +2492,11 @@ msgstr "喜欢"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "liked your custom feed"
-msgstr "赞了你的自定义信息流"
+msgstr "喜欢了你的自定义资讯源"
 
 #: src/view/com/notifications/FeedItem.tsx:153
 msgid "liked your post"
-msgstr "赞了你的帖子"
+msgstr "喜欢了你的帖子"
 
 #: src/view/screens/Profile.tsx:196
 msgid "Likes"
@@ -2595,15 +2595,15 @@ msgstr "看起来像是 XXXXX-XXXXX"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr "看起来你似乎未保存任何信息流！来看看我们提供的建议，或浏览下方的更多内容。"
+msgstr "看起来你似乎未保存任何资讯源！来看看我们提供的建议，或浏览下方的更多内容。"
 
 #: src/screens/Home/NoFeedsPinned.tsx:96
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
-msgstr "看起来你已取消固定所有信息流。不过不用担心，你仍然可以在下面添加一些😄"
+msgstr "看起来你已取消固定所有资讯源。不过不用担心，你仍然可以在下面添加一些😄"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:38
 msgid "Looks like you're missing a following feed."
-msgstr "看起来你似乎缺少 Following 信息流。"
+msgstr "看起来你似乎缺少\"正在关注\"资讯源。"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2736,7 +2736,7 @@ msgstr "更多"
 
 #: src/view/shell/desktop/Feeds.tsx:55
 msgid "More feeds"
-msgstr "更多信息流"
+msgstr "更多资讯源"
 
 #: src/view/screens/ProfileList.tsx:648
 msgid "More options"
@@ -2842,7 +2842,7 @@ msgstr "我的生日"
 
 #: src/view/screens/Feeds.tsx:794
 msgid "My Feeds"
-msgstr "自定义信息流"
+msgstr "自定义资讯源"
 
 #: src/view/shell/desktop/LeftNav.tsx:83
 msgid "My Profile"
@@ -2850,11 +2850,11 @@ msgstr "我的个人资料"
 
 #: src/view/screens/Settings/index.tsx:607
 msgid "My saved feeds"
-msgstr "我保存的信息流"
+msgstr "我保存的资讯源"
 
 #: src/view/screens/Settings/index.tsx:613
 msgid "My Saved Feeds"
-msgstr "我保存的信息流"
+msgstr "我保存的资讯源"
 
 #: src/view/com/modals/AddAppPasswords.tsx:180
 #: src/view/com/modals/CreateOrEditList.tsx:293
@@ -3169,7 +3169,7 @@ msgstr "开启表情符号选择器"
 
 #: src/view/screens/ProfileFeed.tsx:295
 msgid "Open feed options menu"
-msgstr "开启信息流选项菜单"
+msgstr "开启资讯源选项菜单"
 
 #: src/view/screens/Settings/index.tsx:702
 msgid "Open links with in-app browser"
@@ -3285,11 +3285,11 @@ msgstr "开启密码重置申请"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:77
 #: src/view/screens/Feeds.tsx:416
 msgid "Opens screen to edit Saved Feeds"
-msgstr "开启用于编辑已保存信息流的界面"
+msgstr "开启用于编辑已保存资讯源的界面"
 
 #: src/view/screens/Settings/index.tsx:608
 msgid "Opens screen with all saved feeds"
-msgstr "开启包含所有已保存信息流的界面"
+msgstr "开启包含所有已保存资讯源的界面"
 
 #: src/view/screens/Settings/index.tsx:664
 msgid "Opens the app password settings"
@@ -3297,7 +3297,7 @@ msgstr "开启应用专用密码设置界面"
 
 #: src/view/screens/Settings/index.tsx:565
 msgid "Opens the Following feed preferences"
-msgstr "开启“正在关注”信息流首选项"
+msgstr "开启\"正在关注\"资讯源首选项"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -3416,7 +3416,7 @@ msgstr "固定到主页"
 
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "Pinned Feeds"
-msgstr "固定信息流列表"
+msgstr "固定资讯源列表"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:36
 msgid "Play"
@@ -3642,7 +3642,7 @@ msgstr "公开且可共享的批量隐藏或屏蔽列表。"
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr "公开且可共享的列表，可作为信息流使用。"
+msgstr "公开且可共享的列表，可作为资讯源使用。"
 
 #: src/view/com/composer/Composer.tsx:422
 msgid "Publish post"
@@ -3705,11 +3705,11 @@ msgstr "删除横幅图片"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:169
 msgid "Remove feed"
-msgstr "删除信息流"
+msgstr "删除资讯源"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:210
 msgid "Remove feed?"
-msgstr "删除信息流？"
+msgstr "删除资讯源？"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:174
 #: src/view/com/feeds/FeedSourceCard.tsx:234
@@ -3717,11 +3717,11 @@ msgstr "删除信息流？"
 #: src/view/screens/ProfileFeed.tsx:336
 #: src/view/screens/ProfileList.tsx:438
 msgid "Remove from my feeds"
-msgstr "从自定义信息流中删除"
+msgstr "从自定义资讯源中删除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Remove from my feeds?"
-msgstr "从自定义信息流中删除？"
+msgstr "从自定义资讯源中删除？"
 
 #: src/view/com/composer/photos/Gallery.tsx:174
 msgid "Remove image"
@@ -3745,7 +3745,7 @@ msgstr "删除转发"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
-msgstr "从保存的信息流列表中删除这个信息流"
+msgstr "从保存的资讯源列表中删除这个资讯源"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
@@ -3754,12 +3754,12 @@ msgstr "从列表中删除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Removed from my feeds"
-msgstr "从自定义信息流中删除"
+msgstr "从自定义资讯源中删除"
 
 #: src/view/screens/ProfileFeed.tsx:191
 #: src/view/screens/ProfileList.tsx:315
 msgid "Removed from your feeds"
-msgstr "从你的自定义信息流中删除"
+msgstr "从你的自定义资讯源中删除"
 
 #: src/view/com/composer/ExternalEmbed.tsx:88
 msgid "Removes default thumbnail from {0}"
@@ -3814,7 +3814,7 @@ msgstr "举报页面"
 #: src/view/screens/ProfileFeed.tsx:347
 #: src/view/screens/ProfileFeed.tsx:349
 msgid "Report feed"
-msgstr "举报信息流"
+msgstr "举报资讯源"
 
 #: src/view/screens/ProfileList.tsx:480
 msgid "Report List"
@@ -3835,7 +3835,7 @@ msgstr "举报此内容"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:58
 msgid "Report this feed"
-msgstr "举报此信息流"
+msgstr "举报此资讯源"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:55
 msgid "Report this list"
@@ -4024,11 +4024,11 @@ msgstr "保存图片裁切"
 #: src/view/screens/ProfileFeed.tsx:331
 #: src/view/screens/ProfileFeed.tsx:337
 msgid "Save to my feeds"
-msgstr "保存到自定义信息流"
+msgstr "保存到自定义资讯源"
 
 #: src/view/screens/SavedFeeds.tsx:144
 msgid "Saved Feeds"
-msgstr "已保存信息流"
+msgstr "已保存资讯源"
 
 #: src/view/com/lightbox/Lightbox.tsx:82
 msgid "Saved to your camera roll"
@@ -4037,7 +4037,7 @@ msgstr "保存到你的照片图库"
 #: src/view/screens/ProfileFeed.tsx:200
 #: src/view/screens/ProfileList.tsx:295
 msgid "Saved to your feeds"
-msgstr "已保存到你的自定义信息流"
+msgstr "已保存到你的自定义资讯源"
 
 #: src/view/com/modals/EditProfile.tsx:226
 msgid "Saves any changes to your profile"
@@ -4206,7 +4206,7 @@ msgstr "选择托管你数据的服务器。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:100
 msgid "Select topical feeds to follow from the list below"
-msgstr "从下面的列表中选择要关注的专题信息流"
+msgstr "从下面的列表中选择要关注的专题资讯源"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:63
 msgid "Select what you want to see (or not see), and we’ll handle the rest."
@@ -4214,7 +4214,7 @@ msgstr "选择你想看到（或不想看到）的内容，剩下的由我们来
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "选择你希望订阅信息流中所包含的语言。如果未选择任何语言，将默认显示所有语言。"
+msgstr "选择你希望订阅资讯源中所包含的语言。如果未选择任何语言，将默认显示所有语言。"
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app."
@@ -4230,15 +4230,15 @@ msgstr "下面选择你感兴趣的选项"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
-msgstr "选择你在订阅信息流中希望进行翻译的目标首选语言。"
+msgstr "选择你在订阅资讯源中希望进行翻译的目标首选语言。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:117
 msgid "Select your primary algorithmic feeds"
-msgstr "选择你的信息流主要算法"
+msgstr "选择你的资讯源主要算法"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:133
 msgid "Select your secondary algorithmic feeds"
-msgstr "选择你的信息流次要算法"
+msgstr "选择你的资讯源次要算法"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -4298,15 +4298,15 @@ msgstr "设置新密码"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:224
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "停用此设置项以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
+msgstr "停用此设置项以隐藏来自订阅资讯源的所有引用帖子，转发仍将可见。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "停用此设置项以隐藏来自订阅信息流的所有回复。"
+msgstr "停用此设置项以隐藏来自订阅资讯源的所有回复。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:190
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "停用此设置项以隐藏来自订阅信息流的所有转发。"
+msgstr "停用此设置项以隐藏来自订阅资讯源的所有转发。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -4314,7 +4314,7 @@ msgstr "启用此设置项以在分层视图中显示回复。这是一个实验
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:260
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "启用此设置项以在“正在关注”信息流中显示已保存信息流的样例。这是一个实验性功能。"
+msgstr "启用此设置项以在\"正在关注\"资讯源中显示已保存资讯源的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -4400,7 +4400,7 @@ msgstr "仍然分享"
 #: src/view/screens/ProfileFeed.tsx:357
 #: src/view/screens/ProfileFeed.tsx:359
 msgid "Share feed"
-msgstr "分享信息流"
+msgstr "分享资讯源"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -4435,7 +4435,7 @@ msgstr "显示徽章"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
-msgstr "显示徽章并从信息流中过滤"
+msgstr "显示徽章并从资讯源中过滤"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
 msgid "Show follows similar to {0}"
@@ -4459,7 +4459,7 @@ msgstr "更多显示类似这样的"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:257
 msgid "Show Posts from My Feeds"
-msgstr "在自定义信息流中显示帖子"
+msgstr "在自定义资讯源中显示帖子"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:221
 msgid "Show Quote Posts"
@@ -4467,7 +4467,7 @@ msgstr "显示引用帖子"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:119
 msgid "Show quote-posts in Following feed"
-msgstr "在“正在关注”信息流中显示引用"
+msgstr "在\"正在关注\"资讯源中显示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:135
 msgid "Show quotes in Following"
@@ -4475,7 +4475,7 @@ msgstr "在关注中显示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:95
 msgid "Show re-posts in Following feed"
-msgstr "在“正在关注”信息流中显示转发"
+msgstr "在\"正在关注\"资讯源中显示转发"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:118
 msgid "Show Replies"
@@ -4491,7 +4491,7 @@ msgstr "在关注中显示回复"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:71
 msgid "Show replies in Following feed"
-msgstr "在“正在关注”信息流中显示回复"
+msgstr "在\"正在关注\"资讯源中显示回复"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:187
 msgid "Show Reposts"
@@ -4516,11 +4516,11 @@ msgstr "显示警告"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Show warning and filter from feeds"
-msgstr "显示警告并从信息流中过滤"
+msgstr "显示警告并从资讯源中过滤"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
 msgid "Shows posts from {0} in your feed"
-msgstr "在你的信息流中显示来自 {0} 的帖子"
+msgstr "在你的资讯源中显示来自 {0} 的帖子"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
@@ -4692,7 +4692,7 @@ msgstr "订阅标记者"
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:172
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
 msgid "Subscribe to the {0} feed"
-msgstr "订阅 {0} 信息流"
+msgstr "订阅 {0} 资讯源"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
 msgid "Subscribe to this labeler"
@@ -4844,7 +4844,7 @@ msgstr "服务条款已迁移至"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
 msgid "There are many feeds to try:"
-msgstr "这里有些信息流你可以尝试："
+msgstr "这里有些资讯源你可以尝试："
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:114
 #: src/view/screens/ProfileFeed.tsx:541
@@ -4853,11 +4853,11 @@ msgstr "连接至服务器时出现问题，请检查你的互联网连接并重
 
 #: src/view/com/posts/FeedErrorMessage.tsx:146
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "删除信息流时出现问题，请检查你的互联网连接并重试。"
+msgstr "删除资讯源时出现问题，请检查你的互联网连接并重试。"
 
 #: src/view/screens/ProfileFeed.tsx:205
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "更新信息流时出现问题，请检查你的互联网连接并重试。"
+msgstr "更新资讯源时出现问题，请检查你的互联网连接并重试。"
 
 #: src/components/dialogs/GifSelect.tsx:201
 msgid "There was an issue connecting to Tenor."
@@ -4988,17 +4988,17 @@ msgstr "该功能正在测试，你可以在<0>这篇博客文章</0>中获得�
 
 #: src/view/com/posts/FeedErrorMessage.tsx:121
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "该信息流当前使用人数较多，服务暂时不可用。请稍后再试。"
+msgstr "该资讯源当前使用人数较多，服务暂时不可用。请稍后再试。"
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 #: src/view/screens/ProfileFeed.tsx:471
 #: src/view/screens/ProfileList.tsx:724
 msgid "This feed is empty!"
-msgstr "该信息流为空！"
+msgstr "该资讯源为空！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "信息流为空！你或许需要先关注更多的用户，或检查你的语言设置。"
+msgstr "资讯源为空！你或许需要先关注更多的用户，或检查你的语言设置。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
@@ -5047,7 +5047,7 @@ msgstr "此帖子只对已登录用户可见，未登录的用户将无法看到
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:399
 msgid "This post will be hidden from feeds."
-msgstr "此帖子将从信息流中隐藏。"
+msgstr "此帖子将从资讯源中隐藏。"
 
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -5230,7 +5230,7 @@ msgstr "取消关注账户"
 
 #: src/view/screens/ProfileFeed.tsx:570
 msgid "Unlike this feed"
-msgstr "取消喜欢这个信息流"
+msgstr "取消喜欢这个资讯源"
 
 #: src/components/TagMenu/index.tsx:249
 #: src/view/screens/ProfileList.tsx:628
@@ -5519,7 +5519,7 @@ msgstr "查看 @{0} 提供的标记服务。"
 
 #: src/view/screens/ProfileFeed.tsx:582
 msgid "View users who like this feed"
-msgstr "查看此信息流被谁喜欢"
+msgstr "查看此资讯源被谁喜欢"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -5539,7 +5539,7 @@ msgstr "警告内容"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:46
 msgid "Warn content and filter from feeds"
-msgstr "警告内容并从信息流中过滤"
+msgstr "警告内容并从资讯源中过滤"
 
 #: src/screens/Hashtag.tsx:210
 msgid "We couldn't find any results for that hashtag."
@@ -5567,7 +5567,7 @@ msgstr "不建议你添加会出现在许多帖子中的常见词汇，这可能
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
 msgid "We recommend our \"Discover\" feed:"
-msgstr "我们推荐我们的 \"Discover\" 信息流:"
+msgstr "我们推荐我们的 \"Discover\" 资讯源:"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -5630,7 +5630,7 @@ msgstr "这个帖子中使用了哪些语言？"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "你想在算法信息流中看到哪些语言？"
+msgstr "你想在算法资讯源中看到哪些语言？"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
@@ -5647,7 +5647,7 @@ msgstr "为什么应该审核此内容？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Why should this feed be reviewed?"
-msgstr "为什么应该审核此信息流？"
+msgstr "为什么应该审核此资讯源？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Why should this list be reviewed?"
@@ -5712,7 +5712,7 @@ msgstr "你没有关注任何账户。"
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "你也可以探索新的自定义信息流来关注。"
+msgstr "你也可以探索新的自定义资讯源来关注。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:143
 msgid "You can change these settings later."
@@ -5733,11 +5733,11 @@ msgstr "你目前还没有邀请码！当你持续使用 Bluesky 一段时间后
 
 #: src/view/screens/SavedFeeds.tsx:116
 msgid "You don't have any pinned feeds."
-msgstr "你目前还没有任何固定的信息流。"
+msgstr "你目前还没有任何固定的资讯源。"
 
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "You don't have any saved feeds."
-msgstr "你目前还没有任何保存的信息流。"
+msgstr "你目前还没有任何保存的资讯源。"
 
 #: src/view/com/post-thread/PostThread.tsx:159
 msgid "You have blocked the author or you have been blocked by the author."
@@ -5775,7 +5775,7 @@ msgstr "你已隐藏此用户"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
-msgstr "你还没有建立任何信息流。"
+msgstr "你还没有建立任何资讯源。"
 
 #: src/view/com/lists/MyLists.tsx:89
 #: src/view/com/lists/ProfileLists.tsx:148
@@ -5855,7 +5855,7 @@ msgstr "你选择隐藏了此帖子中的词汇或标签。"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已经浏览完你的订阅信息流啦！寻找一些更多的账户关注吧。"
+msgstr "你已经浏览完你的订阅资讯源啦！寻找一些更多的账户关注吧。"
 
 #: src/screens/Signup/index.tsx:164
 msgid "Your account"
@@ -5879,7 +5879,7 @@ msgstr "你的选择将被保存，但可以稍后在设置中更改。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:62
 msgid "Your default feed is \"Following\""
-msgstr "你的默认信息流为\"关注\""
+msgstr "你的默认资讯源为\"正在关注\""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:57
 #: src/screens/Signup/state.ts:220
@@ -5897,7 +5897,7 @@ msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的“正在关注”信息流为空！关注更多用户去看看他们发了什么。"
+msgstr "你的\"正在关注\"资讯源为空！关注更多用户去看看他们发了什么。"
 
 #: src/screens/Signup/StepHandle.tsx:73
 msgid "Your full handle will be"
