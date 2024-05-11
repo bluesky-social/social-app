@@ -9,7 +9,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -59,19 +59,10 @@ function HomeScreenReady({
   pinnedFeedInfos: FeedSourceInfo[]
 }) {
   useOTAUpdates()
-  const allFeeds = React.useMemo(() => {
-    const feeds: FeedDescriptor[] = []
-    for (const {uri} of pinnedFeedInfos) {
-      if (uri.includes('app.bsky.feed.generator')) {
-        feeds.push(`feedgen|${uri}`)
-      } else if (uri.includes('app.bsky.graph.list')) {
-        feeds.push(`list|${uri}`)
-      } else if (uri === 'following') {
-        feeds.push('following')
-      }
-    }
-    return feeds
-  }, [pinnedFeedInfos])
+  const allFeeds = React.useMemo(
+    () => pinnedFeedInfos.map(f => f.feedDescriptor),
+    [pinnedFeedInfos],
+  )
 
   const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()

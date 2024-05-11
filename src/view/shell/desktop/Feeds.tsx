@@ -6,7 +6,6 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getCurrentRoute} from 'lib/routes/helpers'
@@ -32,17 +31,7 @@ export function DesktopFeeds() {
   return (
     <View style={[styles.container, pal.view]}>
       {pinnedFeedInfos.map(feedInfo => {
-        const uri = feedInfo.uri
-        let feed: FeedDescriptor
-        if (uri === 'following') {
-          feed = 'following'
-        } else if (uri.includes('app.bsky.feed.generator')) {
-          feed = `feedgen|${uri}`
-        } else if (uri.includes('app.bsky.graph.list')) {
-          feed = `list|${uri}`
-        } else {
-          return null
-        }
+        const feed = feedInfo.feedDescriptor
         return (
           <FeedItem
             key={feed}

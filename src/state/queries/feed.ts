@@ -20,10 +20,12 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
+import {FeedDescriptor} from './post-feed'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
   uri: string
+  feedDescriptor: FeedDescriptor
   route: {
     href: string
     name: string
@@ -42,6 +44,7 @@ export type FeedSourceFeedInfo = {
 export type FeedSourceListInfo = {
   type: 'list'
   uri: string
+  feedDescriptor: FeedDescriptor
   route: {
     href: string
     name: string
@@ -80,6 +83,7 @@ export function hydrateFeedGenerator(
   return {
     type: 'feed',
     uri: view.uri,
+    feedDescriptor: `feedgen|${view.uri}`,
     cid: view.cid,
     route: {
       href,
@@ -111,6 +115,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   return {
     type: 'list',
     uri: view.uri,
+    feedDescriptor: `list|${view.uri}`,
     route: {
       href,
       name: route[0],
@@ -207,6 +212,7 @@ const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
   uri: DISCOVER_FEED_URI,
+  feedDescriptor: `feedgen|${DISCOVER_FEED_URI}`,
   route: {
     href: '/',
     name: 'Home',
@@ -287,6 +293,7 @@ export function usePinnedFeedsInfos() {
             type: 'feed',
             displayName: 'Following',
             uri: pinnedItem.value,
+            feedDescriptor: 'following',
             route: {
               href: '/',
               name: 'Home',
