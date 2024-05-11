@@ -58,7 +58,7 @@ export function useNotificationsHandler() {
   const closeAllActiveElements = useCloseAllActiveElements()
 
   // Safety to prevent double handling of the same notification
-  const prevIdentifier = React.useRef('')
+  const prevDate = React.useRef(0)
 
   React.useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {
@@ -161,10 +161,10 @@ export function useNotificationsHandler() {
 
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
-        if (e.notification.request.identifier === prevIdentifier.current) {
+        if (e.notification.date === prevDate.current) {
           return
         }
-        prevIdentifier.current = e.notification.request.identifier
+        prevDate.current = e.notification.date
 
         logger.debug(
           'Notifications: response received',
