@@ -3,10 +3,13 @@ import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {isNative} from '#/platform/detection'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {NavigationProp} from 'lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -23,6 +26,7 @@ export function NoFeedsPinned({
 }) {
   const {_} = useLingui()
   const headerOffset = useHeaderOffset()
+  const navigation = useNavigation<NavigationProp>()
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
@@ -61,6 +65,15 @@ export function NoFeedsPinned({
 
     await overwriteSavedFeeds(toSave)
   }, [overwriteSavedFeeds, preferences.savedFeeds])
+
+  const onPressFeedsLink = React.useCallback(() => {
+    if (isNative) {
+      // Hack that's necessary due to how our navigators are set up.
+      navigation.navigate('FeedsTab')
+      navigation.popToTop()
+      return false
+    }
+  }, [navigation])
 
   return (
     <CenteredView sideBorders style={[a.h_full_vh]}>
@@ -102,6 +115,7 @@ export function NoFeedsPinned({
           <Link
             label={_(msg`Browse other feeds`)}
             to="/feeds"
+            onPress={onPressFeedsLink}
             size="medium"
             variant="solid"
             color="secondary">
