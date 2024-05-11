@@ -1,7 +1,7 @@
-import {BskyAgent} from '@atproto/api'
+import {BskyAgent, SessionDispatcher} from '@atproto/api'
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {agentToSessionAccountOrThrow} from '../agent'
+import {dispatcherToSessionAccountOrThrow} from '../agent'
 import {Action, getInitialState, reducer, State} from '../reducer'
 
 jest.mock('jwt-decode', () => ({
@@ -26,8 +26,8 @@ describe('session', () => {
       }
     `)
 
-    const agent = new BskyAgent({service: 'https://alice.com'})
-    agent.session = {
+    const dispatcher = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -36,8 +36,8 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: agentToSessionAccountOrThrow(agent),
+        newAgent: new BskyAgent(dispatcher),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher),
       },
     ])
     expect(state.currentAgentState.did).toBe('alice-did')
@@ -112,8 +112,8 @@ describe('session', () => {
   it('switches to the latest account, stores all of them', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -123,14 +123,14 @@ describe('session', () => {
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].did).toBe('alice-did')
     expect(state.currentAgentState.did).toBe('alice-did')
-    expect(state.currentAgentState.agent).toBe(agent1)
+    expect(state.currentAgentState.agent).toBe(dispatcher1)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -157,8 +157,8 @@ describe('session', () => {
       }
     `)
 
-    const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    const dispatcher2 = new SessionDispatcher({service: 'https://bob.com'})
+    dispatcher2.session = {
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -168,8 +168,8 @@ describe('session', () => {
       {
         // Switch to Bob.
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: new BskyAgent(dispatcher2),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher2),
       },
     ])
     expect(state.accounts.length).toBe(2)
@@ -177,7 +177,7 @@ describe('session', () => {
     expect(state.accounts[0].did).toBe('bob-did')
     expect(state.accounts[1].did).toBe('alice-did')
     expect(state.currentAgentState.did).toBe('bob-did')
-    expect(state.currentAgentState.agent).toBe(agent2)
+    expect(state.currentAgentState.agent).toBe(dispatcher2)
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -216,7 +216,7 @@ describe('session', () => {
       }
     `)
 
-    const agent3 = new BskyAgent({service: 'https://alice.com'})
+    const agent3 = new SessionDispatcher({service: 'https://alice.com'})
     agent3.session = {
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -227,8 +227,8 @@ describe('session', () => {
       {
         // Switch back to Alice.
         type: 'switched-to-account',
-        newAgent: agent3,
-        newAccount: agentToSessionAccountOrThrow(agent3),
+        newAgent: new BskyAgent(agent3),
+        newAccount: dispatcherToSessionAccountOrThrow(agent3),
       },
     ])
     expect(state.accounts.length).toBe(2)
@@ -275,7 +275,7 @@ describe('session', () => {
       }
     `)
 
-    const agent4 = new BskyAgent({service: 'https://jay.com'})
+    const agent4 = new SessionDispatcher({service: 'https://jay.com'})
     agent4.session = {
       did: 'jay-did',
       handle: 'jay.test',
@@ -286,8 +286,8 @@ describe('session', () => {
       {
         // Switch to Jay.
         type: 'switched-to-account',
-        newAgent: agent4,
-        newAccount: agentToSessionAccountOrThrow(agent4),
+        newAgent: new BskyAgent(agent4),
+        newAccount: dispatcherToSessionAccountOrThrow(agent4),
       },
     ])
     expect(state.accounts.length).toBe(3)
@@ -413,8 +413,8 @@ describe('session', () => {
   it('can log back in after logging out', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -423,8 +423,8 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -467,8 +467,8 @@ describe('session', () => {
       }
     `)
 
-    const agent2 = new BskyAgent({service: 'https://alice.com'})
-    agent2.session = {
+    const dispatcher2 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher2.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-2',
@@ -477,8 +477,8 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: new BskyAgent(dispatcher2),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher2),
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -515,8 +515,8 @@ describe('session', () => {
   it('can remove active account', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -525,8 +525,8 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -559,15 +559,15 @@ describe('session', () => {
   it('can remove inactive account', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
     }
-    const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    const dispatcher2 = new SessionDispatcher({service: 'https://bob.com'})
+    dispatcher2.session = {
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -576,13 +576,13 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: new BskyAgent(dispatcher2),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher2),
       },
     ])
     expect(state.accounts.length).toBe(2)
@@ -635,8 +635,8 @@ describe('session', () => {
   it('updates stored account with refreshed tokens', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -645,14 +645,14 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = {
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
@@ -665,8 +665,8 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
@@ -702,7 +702,7 @@ describe('session', () => {
       }
     `)
 
-    agent1.session = {
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-3',
@@ -715,8 +715,8 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
@@ -752,7 +752,7 @@ describe('session', () => {
       }
     `)
 
-    agent1.session = {
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-4',
@@ -765,8 +765,8 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
@@ -806,8 +806,8 @@ describe('session', () => {
   it('bails out of update on identical objects', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -816,14 +816,14 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = {
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
@@ -833,8 +833,8 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
@@ -846,14 +846,14 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
     expect(lastState === state).toBe(true)
 
-    agent1.session = {
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-3',
@@ -863,8 +863,8 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
@@ -875,16 +875,16 @@ describe('session', () => {
   it('ignores updates from a stale agent', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
     }
 
-    const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    const dispatcher2 = new SessionDispatcher({service: 'https://bob.com'})
+    dispatcher2.session = {
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -895,20 +895,20 @@ describe('session', () => {
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
       {
         // Switch to Bob.
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: new BskyAgent(dispatcher2),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher2),
       },
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.session = {
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
@@ -921,8 +921,8 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
@@ -970,7 +970,7 @@ describe('session', () => {
       }
     `)
 
-    agent2.session = {
+    dispatcher2.session = {
       did: 'bob-did',
       handle: 'bob-updated.test',
       accessJwt: 'bob-access-jwt-2',
@@ -981,8 +981,8 @@ describe('session', () => {
         // Update Bob.
         type: 'received-agent-event',
         accountDid: 'bob-did',
-        agent: agent2,
-        refreshedAccount: agentToSessionAccountOrThrow(agent2),
+        agent: new BskyAgent(dispatcher2),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher2),
         sessionEvent: 'update',
       },
     ])
@@ -1032,12 +1032,12 @@ describe('session', () => {
 
     // Ignore other events for inactive agent too.
     const lastState = state
-    agent1.session = undefined
+    dispatcher1.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: new BskyAgent(dispatcher1),
         refreshedAccount: undefined,
         sessionEvent: 'network-error',
       },
@@ -1047,7 +1047,7 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: new BskyAgent(dispatcher1),
         refreshedAccount: undefined,
         sessionEvent: 'expired',
       },
@@ -1058,16 +1058,16 @@ describe('session', () => {
   it('ignores updates from a removed agent', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
     }
 
-    const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    const dispatcher2 = new SessionDispatcher({service: 'https://bob.com'})
+    dispatcher2.session = {
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -1077,13 +1077,13 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: new BskyAgent(dispatcher2),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher2),
       },
       {
         type: 'removed-account',
@@ -1093,7 +1093,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.session = {
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-2',
@@ -1103,8 +1103,8 @@ describe('session', () => {
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
-        refreshedAccount: agentToSessionAccountOrThrow(agent1),
+        agent: new BskyAgent(dispatcher1),
+        refreshedAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
         sessionEvent: 'update',
       },
     ])
@@ -1117,8 +1117,8 @@ describe('session', () => {
   it('does soft logout on network error', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -1128,19 +1128,19 @@ describe('session', () => {
       {
         // Switch to Alice.
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    dispatcher1.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: new BskyAgent(dispatcher1),
         refreshedAccount: undefined,
         sessionEvent: 'network-error',
       },
@@ -1181,8 +1181,8 @@ describe('session', () => {
   it('resets tokens on expired event', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -1191,20 +1191,20 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    dispatcher1.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: new BskyAgent(dispatcher1),
         refreshedAccount: undefined,
         sessionEvent: 'expired',
       },
@@ -1243,8 +1243,8 @@ describe('session', () => {
   it('resets tokens on created-failed event', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -1253,20 +1253,20 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
     ])
     expect(state.accounts.length).toBe(1)
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    dispatcher1.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
         accountDid: 'alice-did',
-        agent: agent1,
+        agent: new BskyAgent(dispatcher1),
         refreshedAccount: undefined,
         sessionEvent: 'create-failed',
       },
@@ -1305,15 +1305,15 @@ describe('session', () => {
   it('replaces local accounts with synced accounts', () => {
     let state = getInitialState([])
 
-    const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    const dispatcher1 = new SessionDispatcher({service: 'https://alice.com'})
+    dispatcher1.session = {
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
     }
-    const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    const dispatcher2 = new SessionDispatcher({service: 'https://bob.com'})
+    dispatcher2.session = {
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -1322,27 +1322,31 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'switched-to-account',
-        newAgent: agent1,
-        newAccount: agentToSessionAccountOrThrow(agent1),
+        newAgent: new BskyAgent(dispatcher1),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher1),
       },
       {
         type: 'switched-to-account',
-        newAgent: agent2,
-        newAccount: agentToSessionAccountOrThrow(agent2),
+        newAgent: new BskyAgent(dispatcher2),
+        newAccount: dispatcherToSessionAccountOrThrow(dispatcher2),
       },
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    const anotherTabAgent1 = new BskyAgent({service: 'https://jay.com'})
-    anotherTabAgent1.session = {
+    const anotherTabDispatcher1 = new SessionDispatcher({
+      service: 'https://jay.com',
+    })
+    anotherTabDispatcher1.session = {
       did: 'jay-did',
       handle: 'jay.test',
       accessJwt: 'jay-access-jwt-1',
       refreshJwt: 'jay-refresh-jwt-1',
     }
-    const anotherTabAgent2 = new BskyAgent({service: 'https://alice.com'})
-    anotherTabAgent2.session = {
+    const anotherTabDispatcher2 = new SessionDispatcher({
+      service: 'https://alice.com',
+    })
+    anotherTabDispatcher2.session = {
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-2',
@@ -1352,8 +1356,8 @@ describe('session', () => {
       {
         type: 'synced-accounts',
         syncedAccounts: [
-          agentToSessionAccountOrThrow(anotherTabAgent1),
-          agentToSessionAccountOrThrow(anotherTabAgent2),
+          dispatcherToSessionAccountOrThrow(anotherTabDispatcher1),
+          dispatcherToSessionAccountOrThrow(anotherTabDispatcher2),
         ],
         syncedCurrentDid: 'bob-did',
       },
@@ -1404,8 +1408,10 @@ describe('session', () => {
       }
     `)
 
-    const anotherTabAgent3 = new BskyAgent({service: 'https://clarence.com'})
-    anotherTabAgent3.session = {
+    const anotherTabDispatcher3 = new SessionDispatcher({
+      service: 'https://clarence.com',
+    })
+    anotherTabDispatcher3.session = {
       did: 'clarence-did',
       handle: 'clarence.test',
       accessJwt: 'clarence-access-jwt-2',
@@ -1414,7 +1420,9 @@ describe('session', () => {
     state = run(state, [
       {
         type: 'synced-accounts',
-        syncedAccounts: [agentToSessionAccountOrThrow(anotherTabAgent3)],
+        syncedAccounts: [
+          dispatcherToSessionAccountOrThrow(anotherTabDispatcher3),
+        ],
         syncedCurrentDid: 'clarence-did',
       },
     ])
@@ -1464,7 +1472,10 @@ function printState(state: State) {
   return {
     accounts: state.accounts,
     currentAgentState: {
-      agent: {service: state.currentAgentState.agent.service},
+      agent: {
+        service: (state.currentAgentState.agent.dispatcher as SessionDispatcher)
+          .serviceUrl,
+      },
       did: state.currentAgentState.did,
     },
     needsPersist: state.needsPersist,

@@ -1,4 +1,9 @@
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {
+  AtpSessionData,
+  AtpSessionEvent,
+  BskyAgent,
+  SessionDispatcher,
+} from '@atproto/api'
 
 import {networkRetry} from '#/lib/async/retry'
 import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
@@ -25,9 +30,10 @@ export async function createAgentAndResume(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgent({service: storedAccount.service})
+  const dispatcher = new SessionDispatcher({service: storedAccount.service})
+  const agent = new BskyAgent(dispatcher)
   if (storedAccount.pdsUrl) {
-    agent.pdsUrl = agent.api.xrpc.uri = new URL(storedAccount.pdsUrl)
+    dispatcher.pdsUrl = new URL(storedAccount.pdsUrl)
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
@@ -42,16 +48,16 @@ export async function createAgentAndResume(
     refreshJwt: storedAccount.refreshJwt ?? '',
   }
   if (isSessionExpired(storedAccount)) {
-    await networkRetry(1, () => agent.resumeSession(prevSession))
+    await networkRetry(1, () => dispatcher.resumeSession(prevSession))
   } else {
-    agent.session = prevSession
+    dispatcher.session = prevSession
     if (!storedAccount.deactivated) {
       // Intentionally not awaited to unblock the UI:
-      networkRetry(1, () => agent.resumeSession(prevSession))
+      networkRetry(1, () => dispatcher.resumeSession(prevSession))
     }
   }
 
-  return prepareAgent(agent, gates, moderation, onSessionChange)
+  return prepareAgent(dispatcher, agent, gates, moderation, onSessionChange)
 }
 
 export async function createAgentAndLogin(
@@ -72,13 +78,15 @@ export async function createAgentAndLogin(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgent({service})
-  await agent.login({identifier, password, authFactorToken})
+  const dispatcher = new SessionDispatcher({service})
+  await dispatcher.login({identifier, password, authFactorToken})
 
-  const account = agentToSessionAccountOrThrow(agent)
+  const agent = new BskyAgent(dispatcher)
+
+  const account = dispatcherToSessionAccountOrThrow(dispatcher)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  return prepareAgent(agent, moderation, gates, onSessionChange)
+  return prepareAgent(dispatcher, agent, moderation, gates, onSessionChange)
 }
 
 export async function createAgentAndCreateAccount(
@@ -107,8 +115,8 @@ export async function createAgentAndCreateAccount(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgent({service})
-  await agent.createAccount({
+  const dispatcher = new SessionDispatcher({service})
+  await dispatcher.createAccount({
     email,
     password,
     handle,
@@ -116,7 +124,10 @@ export async function createAgentAndCreateAccount(
     verificationPhone,
     verificationCode,
   })
-  const account = agentToSessionAccountOrThrow(agent)
+
+  const agent = new BskyAgent(dispatcher)
+
+  const account = dispatcherToSessionAccountOrThrow(dispatcher)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
   if (!account.deactivated) {
@@ -139,10 +150,11 @@ export async function createAgentAndCreateAccount(
     agent.setSavedFeeds(DEFAULT_PROD_FEEDS.saved, DEFAULT_PROD_FEEDS.pinned)
   }
 
-  return prepareAgent(agent, gates, moderation, onSessionChange)
+  return prepareAgent(dispatcher, agent, gates, moderation, onSessionChange)
 }
 
 async function prepareAgent(
+  dispatcher: SessionDispatcher,
   agent: BskyAgent,
   // Not awaited in the calling code so we can delay blocking on them.
   gates: Promise<void>,
@@ -157,37 +169,39 @@ async function prepareAgent(
   await Promise.all([gates, moderation])
 
   // Now the agent is ready.
-  const account = agentToSessionAccountOrThrow(agent)
-  agent.setPersistSessionHandler(event => {
+  const account = dispatcherToSessionAccountOrThrow(dispatcher)
+  dispatcher.setPersistSessionHandler(event => {
     onSessionChange(agent, account.did, event)
   })
   return {agent, account}
 }
 
-export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
-  const account = agentToSessionAccount(agent)
+export function dispatcherToSessionAccountOrThrow(
+  dispatcher: SessionDispatcher,
+): SessionAccount {
+  const account = dispatcherToSessionAccount(dispatcher)
   if (!account) {
     throw Error('Expected an active session')
   }
   return account
 }
 
-export function agentToSessionAccount(
-  agent: BskyAgent,
+export function dispatcherToSessionAccount(
+  dispatcher: SessionDispatcher,
 ): SessionAccount | undefined {
-  if (!agent.session) {
+  if (!dispatcher.session) {
     return undefined
   }
   return {
-    service: agent.service.toString(),
-    did: agent.session.did,
-    handle: agent.session.handle,
-    email: agent.session.email,
-    emailConfirmed: agent.session.emailConfirmed || false,
-    emailAuthFactor: agent.session.emailAuthFactor || false,
-    refreshJwt: agent.session.refreshJwt,
-    accessJwt: agent.session.accessJwt,
-    deactivated: isSessionDeactivated(agent.session.accessJwt),
-    pdsUrl: agent.pdsUrl?.toString(),
+    service: dispatcher.serviceUrl.toString(),
+    did: dispatcher.session.did,
+    handle: dispatcher.session.handle,
+    email: dispatcher.session.email,
+    emailConfirmed: dispatcher.session.emailConfirmed || false,
+    emailAuthFactor: dispatcher.session.emailAuthFactor || false,
+    refreshJwt: dispatcher.session.refreshJwt,
+    accessJwt: dispatcher.session.accessJwt,
+    deactivated: isSessionDeactivated(dispatcher.session.accessJwt),
+    pdsUrl: dispatcher.pdsUrl?.toString(),
   }
 }

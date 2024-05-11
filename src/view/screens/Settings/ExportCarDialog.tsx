@@ -23,10 +23,7 @@ export function ExportCarDialog({
 
   const download = React.useCallback(async () => {
     const agent = getAgent()
-    if (!agent.session) {
-      return // shouldnt ever happen
-    }
-    const did = agent.session.did
+    const did = await agent.getDid()
     const res = await agent.com.atproto.sync.getRepo({did})
     await saveBytesToDisk('repo.car', res.data, res.headers['content-type'])
   }, [getAgent])
