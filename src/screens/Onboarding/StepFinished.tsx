@@ -14,6 +14,7 @@ import {
   preferencesQueryKey,
   useOverwriteSavedFeedsMutation,
 } from '#/state/queries/preferences'
+import {RQKEY as profileRQKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
@@ -141,15 +142,18 @@ export function StepFinished() {
       // don't alert the user, just let them into their account
     }
 
-    // Try to ensure that prefs are up-to-date by the time we render Home.
-    await queryClient
-      .invalidateQueries({
+    // Try to ensure that prefs and profile are up-to-date by the time we render Home.
+    await Promise.all([
+      queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
-      })
-      .catch(e => {
-        logger.error(e)
-        // Keep going.
-      })
+      }),
+      queryClient.invalidateQueries({
+        queryKey: profileRQKey(getAgent().session?.did ?? ''),
+      }),
+    ]).catch(e => {
+      logger.error(e)
+      // Keep going.
+    })
 
     setSaving(false)
     dispatch({type: 'finish'})
