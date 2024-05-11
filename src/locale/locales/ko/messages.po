@@ -19,7 +19,7 @@ msgstr "(이메일 없음)"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "외 {0, plural, {{formattedCount}}}명"
+msgstr "외 {0, plural, other {{formattedCount}}}명"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
