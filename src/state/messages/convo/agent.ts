@@ -107,12 +107,6 @@ export class Convo {
     } else {
       DEBUG_ACTIVE_CHAT = this.convoId
     }
-
-    this.events.trailConvo(this.convoId, events => {
-      this.ingestFirehose(events)
-    })
-    this.events.onConnect(this.onFirehoseConnect)
-    this.events.onError(this.onFirehoseError)
   }
 
   private commit() {
@@ -211,6 +205,7 @@ export class Convo {
           case ConvoDispatchEvent.Init: {
             this.status = ConvoStatus.Initializing
             this.setup()
+            this.setupFirehose()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
@@ -232,12 +227,14 @@ export class Convo {
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
@@ -258,12 +255,14 @@ export class Convo {
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
@@ -286,12 +285,14 @@ export class Convo {
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
@@ -601,6 +602,33 @@ export class Convo {
     }
   }
 
+  private cleanupFirehoseConnection: (() => void) | undefined
+  private setupFirehose() {
+    // remove old listeners, if exist
+    this.cleanupFirehoseConnection?.()
+
+    // reconnect
+    this.cleanupFirehoseConnection = this.events.on(
+      event => {
+        switch (event.type) {
+          case 'connect': {
+            this.onFirehoseConnect()
+            break
+          }
+          case 'error': {
+            this.onFirehoseError(event.error)
+            break
+          }
+          case 'logs': {
+            this.ingestFirehose(event.logs)
+            break
+          }
+        }
+      },
+      {convoId: this.convoId},
+    )
+  }
+
   onFirehoseConnect() {
     this.footerItems.delete(ConvoItemError.FirehoseFailed)
     this.commit()
@@ -709,6 +737,8 @@ export class Convo {
       id: tempId,
       message,
     })
+    // remove on each send, it might go through now without user having to click
+    this.footerItems.delete(ConvoItemError.PendingFailed)
     this.commit()
 
     if (!this.isProcessingPendingMessages) {
