@@ -10,6 +10,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {compressIfNeeded} from 'lib/media/manip'
 import {openCropper} from 'lib/media/picker'
@@ -136,6 +137,7 @@ export function StepProfile() {
 
     dispatch({type: 'next'})
     track('OnboardingV2:StepProfile:End')
+    logEvent('onboarding:profile:nextPressed', {})
   }, [avatar.image, avatar.useCreatedAvatar, dispatch, track])
 
   const onDoneCreating = React.useCallback(() => {
