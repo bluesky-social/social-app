@@ -19,69 +19,69 @@ msgstr "（沒有電子郵件）"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "其他 {formattedCount} 個人"
+msgstr "{0, plural, one {其他 {formattedCount} 個人} other {其他 {formattedCount} 個人}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr "該帳戶有 {0} 個標籤"
+msgstr "{0, plural, one {該帳戶有 # 個標籤} other {該帳戶有 # 個標籤}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "該帳戶有 {0} 個標籤"
+msgstr "{0, plural, one {該帳戶有 # 個標籤} other {該帳戶有 # 個標籤}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0} 個轉貼"
+msgstr "{0, plural, one {# 個轉貼} other {# 個轉貼}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:373
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "個跟隨者"
+msgstr "{0, plural,one {個跟隨者}  other {個跟隨者}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:377
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "個跟隨中"
+msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:245
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "喜歡（{0} 個喜歡）"
+msgstr "{0, plural, one {喜歡（# 個喜歡）} other {喜歡（# 個喜歡）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:359
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "喜歡"
+msgstr "{0, plural, one {喜歡}  other {喜歡}}"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:267
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0} 個用戶已喜歡"
+msgstr "{0, plural,one {# 個用戶已喜歡}  other {# 個用戶已喜歡}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "則貼文"
+msgstr "{0, plural, one {則貼文} other {則貼文}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "回覆（{0} 個回覆）"
+msgstr "{0, plural, one {回覆（# 個回覆）} other {回覆（# 個回覆）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:339
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "轉貼"
+msgstr "{0, plural, one {轉貼} other {轉貼}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "撤回喜歡（{0} 個喜歡）"
+msgstr "{0, plural, one {撤回喜歡（# 個喜歡）} other {撤回喜歡（# 個喜歡）}}"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count} 個用戶已喜歡"
+msgstr "{count, plural, one {# 個用戶已喜歡} other {# 個用戶已喜歡}}"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "時"
+msgstr "{estimatedTimeHrs, plural, one {時} other {時}}"
 
 #: src/screens/Deactivated.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "分"
+msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:454
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -92,27 +92,27 @@ msgstr "{following} 個跟隨中"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
 #: src/view/screens/ProfileFeed.tsx:604
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount} 個用戶已喜歡"
+msgstr "{likeCount, plural, one {# 個用戶已喜歡} other {# 個用戶已喜歡}}"
 
-#: src/view/shell/Drawer.tsx:464
+#: src/view/shell/Drawer.tsx:461
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications} 個未讀通知"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:66
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-msgstr "{value, plural, =0 {顯示所有回覆} other {顯示的喜歡數不低於 # 個}}"
+msgstr "{value, plural, =0 {顯示所有回覆} one {顯示的喜歡數不低於 # 個} other {顯示的喜歡數不低於 # 個}}"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:159
 msgid "<0/> members"
 msgstr "<0/> 個成員"
 
-#: src/view/shell/Drawer.tsx:92
+#: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> 個跟隨者"
+msgstr "<0>{0}</0> {1, plural, one {個跟隨者} other {個跟隨者}}"
 
-#: src/view/shell/Drawer.tsx:103
+#: src/view/shell/Drawer.tsx:112
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> 個跟隨中"
+msgstr "<0>{0}</0> {1, plural, one {個跟隨中} other {個跟隨中}}"
 
 #: src/view/com/modals/SelfLabel.tsx:134
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -328,11 +328,11 @@ msgstr "一封電子郵件已發送至先前填寫的電子郵件地址 {0}。�
 msgid "An error occured"
 msgstr "發生錯誤"
 
-#: src/components/dms/MessageMenu.tsx:131
+#: src/components/dms/MessageMenu.tsx:138
 msgid "An error occurred while trying to delete the message. Please try again."
 msgstr "嘗試刪除訊息時發生錯誤，請重試。"
 
-#: src/lib/moderation/useReportOptions.ts:26
+#: src/lib/moderation/useReportOptions.ts:27
 msgid "An issue not included in these options"
 msgstr "問題不在上述選項"
 
@@ -362,7 +362,7 @@ msgstr "動物"
 msgid "Animated GIF"
 msgstr "GIF 動畫"
 
-#: src/lib/moderation/useReportOptions.ts:31
+#: src/lib/moderation/useReportOptions.ts:32
 msgid "Anti-Social Behavior"
 msgstr "反社會行為"
 
@@ -413,11 +413,11 @@ msgstr "外觀"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "您確定要刪除這個應用程式專用密碼「{name}」嗎？"
 
-#: src/components/dms/MessageMenu.tsx:120
+#: src/components/dms/MessageMenu.tsx:127
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
 msgstr "你確定要刪除這則訊息嗎？該訊息將為您刪除，但不會為其他參與者刪除。"
 
-#: src/components/dms/ConvoMenu.tsx:196
+#: src/components/dms/ConvoMenu.tsx:191
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
 msgstr "您確定要離開此對話嗎？您的訊息將為您刪除，但不會為其他參與者刪除。"
 
@@ -459,7 +459,7 @@ msgstr "至少 3 個字元"
 #: src/screens/Login/LoginForm.tsx:275
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:172
+#: src/screens/Messages/Conversation/index.tsx:179
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -487,8 +487,8 @@ msgstr "生日："
 msgid "Block"
 msgstr "封鎖"
 
+#: src/components/dms/ConvoMenu.tsx:154
 #: src/components/dms/ConvoMenu.tsx:158
-#: src/components/dms/ConvoMenu.tsx:162
 msgid "Block account"
 msgstr "封鎖帳戶"
 
@@ -723,16 +723,16 @@ msgstr "變更您的電子郵件地址"
 msgid "Chat"
 msgstr "對話"
 
-#: src/components/dms/ConvoMenu.tsx:62
+#: src/components/dms/ConvoMenu.tsx:65
 msgid "Chat muted"
 msgstr "對話已靜音"
 
-#: src/components/dms/ConvoMenu.tsx:95
-#: src/components/dms/MessageMenu.tsx:68
+#: src/components/dms/ConvoMenu.tsx:91
+#: src/components/dms/MessageMenu.tsx:73
 msgid "Chat settings"
 msgstr "對話設定"
 
-#: src/components/dms/ConvoMenu.tsx:72
+#: src/components/dms/ConvoMenu.tsx:67
 msgid "Chat unmuted"
 msgstr "對話已解除靜音"
 
@@ -1041,7 +1041,7 @@ msgstr "已複製"
 msgid "Copied build version to clipboard"
 msgstr "已複製建構版本號至剪貼簿"
 
-#: src/components/dms/MessageMenu.tsx:46
+#: src/components/dms/MessageMenu.tsx:55
 #: src/view/com/modals/AddAppPasswords.tsx:77
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
@@ -1079,8 +1079,8 @@ msgstr "複製列表連結"
 msgid "Copy link to post"
 msgstr "複製貼文連結"
 
-#: src/components/dms/MessageMenu.tsx:88
-#: src/components/dms/MessageMenu.tsx:90
+#: src/components/dms/MessageMenu.tsx:93
+#: src/components/dms/MessageMenu.tsx:95
 msgid "Copy message text"
 msgstr "複製訊息文字"
 
@@ -1094,7 +1094,7 @@ msgstr "複製貼文文字"
 msgid "Copyright Policy"
 msgstr "著作權政策"
 
-#: src/components/dms/ConvoMenu.tsx:86
+#: src/components/dms/ConvoMenu.tsx:82
 msgid "Could not leave chat"
 msgstr "無法離開對話"
 
@@ -1110,13 +1110,13 @@ msgstr "無法載入列表"
 msgid "Could not load profiles. Please try again later."
 msgstr "無法載入設定檔。請稍後再試。"
 
-#: src/components/dms/ConvoMenu.tsx:65
+#: src/components/dms/ConvoMenu.tsx:71
 msgid "Could not mute chat"
 msgstr "無法靜音對話"
 
 #: src/components/dms/ConvoMenu.tsx:75
-msgid "Could not unmute chat"
-msgstr "無法解除靜音對話"
+#~ msgid "Could not unmute chat"
+#~ msgstr "無法解除靜音對話"
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
@@ -1145,7 +1145,7 @@ msgstr "建立應用程式專用密碼"
 msgid "Create new account"
 msgstr "建立新帳號"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:94
+#: src/components/ReportDialog/SelectReportOptionView.tsx:100
 msgid "Create report for {0}"
 msgstr "建立 {0} 的檢舉"
 
@@ -1200,7 +1200,7 @@ msgstr "內容管理偵錯"
 msgid "Debug panel"
 msgstr "偵錯面板"
 
-#: src/components/dms/MessageMenu.tsx:122
+#: src/components/dms/MessageMenu.tsx:129
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #: src/view/screens/AppPasswords.tsx:268
 #: src/view/screens/ProfileList.tsx:609
@@ -1223,7 +1223,7 @@ msgstr "刪除應用程式專用密碼"
 msgid "Delete app password?"
 msgstr "刪除應用程式專用密碼？"
 
-#: src/components/dms/MessageMenu.tsx:100
+#: src/components/dms/MessageMenu.tsx:105
 msgid "Delete for me"
 msgstr "為我刪除"
 
@@ -1231,11 +1231,11 @@ msgstr "為我刪除"
 msgid "Delete List"
 msgstr "刪除列表"
 
-#: src/components/dms/MessageMenu.tsx:118
+#: src/components/dms/MessageMenu.tsx:125
 msgid "Delete message"
 msgstr "刪除訊息"
 
-#: src/components/dms/MessageMenu.tsx:98
+#: src/components/dms/MessageMenu.tsx:103
 msgid "Delete message for me"
 msgstr "為我刪除訊息"
 
@@ -1656,9 +1656,13 @@ msgstr "錯誤："
 msgid "Everybody"
 msgstr "所有人"
 
-#: src/lib/moderation/useReportOptions.ts:66
+#: src/lib/moderation/useReportOptions.ts:67
 msgid "Excessive mentions or replies"
 msgstr "過多的提及或回覆"
+
+#: src/lib/moderation/useReportOptions.ts:80
+msgid "Excessive or unwanted messages"
+msgstr "過多或不受歡迎的訊息"
 
 #: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Exits account deletion process"
@@ -1736,7 +1740,7 @@ msgstr "建立應用程式專用密碼失敗。"
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "無法建立列表。請檢查您的網路連線並重試。"
 
-#: src/components/dms/MessageMenu.tsx:129
+#: src/components/dms/MessageMenu.tsx:136
 msgid "Failed to delete message"
 msgstr "無法刪除訊息"
 
@@ -1773,7 +1777,7 @@ msgid "Feed offline"
 msgstr "動態源已離線"
 
 #: src/view/shell/desktop/RightNav.tsx:65
-#: src/view/shell/Drawer.tsx:335
+#: src/view/shell/Drawer.tsx:344
 msgid "Feedback"
 msgstr "意見回饋"
 
@@ -1781,10 +1785,10 @@ msgstr "意見回饋"
 #: src/view/screens/Feeds.tsx:444
 #: src/view/screens/Feeds.tsx:549
 #: src/view/screens/Profile.tsx:197
-#: src/view/shell/bottom-bar/BottomBar.tsx:214
-#: src/view/shell/desktop/LeftNav.tsx:382
-#: src/view/shell/Drawer.tsx:500
-#: src/view/shell/Drawer.tsx:501
+#: src/view/shell/bottom-bar/BottomBar.tsx:245
+#: src/view/shell/desktop/LeftNav.tsx:361
+#: src/view/shell/Drawer.tsx:492
+#: src/view/shell/Drawer.tsx:493
 msgid "Feeds"
 msgstr "動態源"
 
@@ -1959,7 +1963,7 @@ msgstr "忘記密碼？"
 msgid "Forgot?"
 msgstr "忘記？"
 
-#: src/lib/moderation/useReportOptions.ts:52
+#: src/lib/moderation/useReportOptions.ts:53
 msgid "Frequently Posts Unwanted Content"
 msgstr "頻繁發佈不當內容"
 
@@ -1981,7 +1985,7 @@ msgstr "相簿"
 msgid "Get Started"
 msgstr "開始"
 
-#: src/lib/moderation/useReportOptions.ts:37
+#: src/lib/moderation/useReportOptions.ts:38
 msgid "Glaring violations of law or terms of service"
 msgstr "明顯違反法律或服務條款"
 
@@ -1992,7 +1996,7 @@ msgstr "明顯違反法律或服務條款"
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:112
 #: src/view/screens/ProfileList.tsx:912
-#: src/view/shell/desktop/LeftNav.tsx:112
+#: src/view/shell/desktop/LeftNav.tsx:126
 msgid "Go back"
 msgstr "返回"
 
@@ -2005,7 +2009,8 @@ msgstr "返回"
 msgid "Go Back"
 msgstr "返回"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:73
+#: src/components/dms/MessageReportDialog.tsx:130
+#: src/components/ReportDialog/SelectReportOptionView.tsx:79
 #: src/components/ReportDialog/SubmitView.tsx:104
 #: src/screens/Onboarding/Layout.tsx:102
 #: src/screens/Onboarding/Layout.tsx:191
@@ -2026,11 +2031,11 @@ msgstr "前往首頁"
 msgid "Go to next"
 msgstr "前往下一步"
 
-#: src/components/dms/ConvoMenu.tsx:137
+#: src/components/dms/ConvoMenu.tsx:133
 msgid "Go to profile"
 msgstr "轉跳至個人頁面"
 
-#: src/components/dms/ConvoMenu.tsx:134
+#: src/components/dms/ConvoMenu.tsx:130
 msgid "Go to user's profile"
 msgstr "轉跳至用戶個人頁面"
 
@@ -2046,7 +2051,7 @@ msgstr "帳號代碼"
 msgid "Haptics"
 msgstr "觸覺"
 
-#: src/lib/moderation/useReportOptions.ts:32
+#: src/lib/moderation/useReportOptions.ts:33
 msgid "Harassment, trolling, or intolerance"
 msgstr "騷擾、惡作劇或其他無法容忍的行為"
 
@@ -2063,7 +2068,7 @@ msgid "Having trouble?"
 msgstr "遇到問題？"
 
 #: src/view/shell/desktop/RightNav.tsx:94
-#: src/view/shell/Drawer.tsx:345
+#: src/view/shell/Drawer.tsx:354
 msgid "Help"
 msgstr "幫助"
 
@@ -2148,10 +2153,10 @@ msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "唔，我們無法載入該內容管理服務。"
 
 #: src/Navigation.tsx:497
-#: src/view/shell/bottom-bar/BottomBar.tsx:170
-#: src/view/shell/desktop/LeftNav.tsx:316
-#: src/view/shell/Drawer.tsx:422
-#: src/view/shell/Drawer.tsx:423
+#: src/view/shell/bottom-bar/BottomBar.tsx:176
+#: src/view/shell/desktop/LeftNav.tsx:321
+#: src/view/shell/Drawer.tsx:424
+#: src/view/shell/Drawer.tsx:425
 msgid "Home"
 msgstr "首頁"
 
@@ -2184,6 +2189,10 @@ msgstr "我有驗證碼"
 msgid "I have my own domain"
 msgstr "我擁有自己的網域"
 
+#: src/components/dms/ConvoMenu.tsx:204
+msgid "I understand"
+msgstr "我了解"
+
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "替代文字過長時，切換替代文字的展開狀態"
@@ -2208,7 +2217,7 @@ msgstr "如果刪除這則貼文，您將無法恢復它。"
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "如果您想更改密碼，我們將向您發送一個驗證碼以確認這是您的帳號。"
 
-#: src/lib/moderation/useReportOptions.ts:36
+#: src/lib/moderation/useReportOptions.ts:37
 msgid "Illegal and Urgent"
 msgstr "違法"
 
@@ -2220,7 +2229,7 @@ msgstr "圖片"
 msgid "Image alt text"
 msgstr "圖片替代文字"
 
-#: src/lib/moderation/useReportOptions.ts:47
+#: src/lib/moderation/useReportOptions.ts:48
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr "冒充或虛假聲明身份或隸屬關係"
 
@@ -2381,13 +2390,13 @@ msgstr "瞭解有關 Bluesky 上公開內容的更多資訊。"
 msgid "Learn more."
 msgstr "瞭解詳情。"
 
-#: src/components/dms/ConvoMenu.tsx:198
+#: src/components/dms/ConvoMenu.tsx:193
 msgid "Leave"
 msgstr "離開"
 
-#: src/components/dms/ConvoMenu.tsx:181
-#: src/components/dms/ConvoMenu.tsx:184
-#: src/components/dms/ConvoMenu.tsx:194
+#: src/components/dms/ConvoMenu.tsx:176
+#: src/components/dms/ConvoMenu.tsx:179
+#: src/components/dms/ConvoMenu.tsx:189
 msgid "Leave conversation"
 msgstr "離開對話"
 
@@ -2492,9 +2501,9 @@ msgstr "已解除靜音的列表"
 #: src/Navigation.tsx:121
 #: src/view/screens/Profile.tsx:192
 #: src/view/screens/Profile.tsx:198
-#: src/view/shell/desktop/LeftNav.tsx:400
-#: src/view/shell/Drawer.tsx:516
-#: src/view/shell/Drawer.tsx:517
+#: src/view/shell/desktop/LeftNav.tsx:367
+#: src/view/shell/Drawer.tsx:508
+#: src/view/shell/Drawer.tsx:509
 msgid "Lists"
 msgstr "列表"
 
@@ -2548,8 +2557,8 @@ msgstr "請確認這是您想要去的的地方！"
 msgid "Manage your muted words and tags"
 msgstr "管理您靜音的文字和標籤"
 
-#: src/components/dms/ConvoMenu.tsx:121
-#: src/components/dms/ConvoMenu.tsx:128
+#: src/components/dms/ConvoMenu.tsx:117
+#: src/components/dms/ConvoMenu.tsx:124
 msgid "Mark as read"
 msgstr "標記為已讀"
 
@@ -2571,8 +2580,8 @@ msgstr "被提及的用戶"
 msgid "Menu"
 msgstr "選單"
 
-#: src/components/dms/MessageMenu.tsx:55
-#: src/screens/Messages/List/index.tsx:270
+#: src/components/dms/MessageMenu.tsx:64
+#: src/screens/Messages/List/index.tsx:282
 msgid "Message deleted"
 msgstr "訊息已刪除"
 
@@ -2584,17 +2593,17 @@ msgstr "來自伺服器的訊息：{0}"
 msgid "Message input field"
 msgstr "訊息輸入欄位"
 
-#: src/screens/Messages/List/index.tsx:78
-#: src/screens/Messages/List/index.tsx:429
+#: src/screens/Messages/List/index.tsx:91
+#: src/screens/Messages/List/index.tsx:464
 msgid "Message settings"
 msgstr "訊息設定"
 
 #: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:187
-#: src/screens/Messages/List/index.tsx:214
-#: src/screens/Messages/List/index.tsx:425
-#: src/view/shell/bottom-bar/BottomBar.tsx:265
-#: src/view/shell/desktop/LeftNav.tsx:363
+#: src/screens/Messages/List/index.tsx:193
+#: src/screens/Messages/List/index.tsx:220
+#: src/screens/Messages/List/index.tsx:460
+#: src/view/shell/bottom-bar/BottomBar.tsx:219
+#: src/view/shell/desktop/LeftNav.tsx:344
 msgid "Messages"
 msgstr "訊息"
 
@@ -2602,7 +2611,7 @@ msgstr "訊息"
 msgid "Messaging settings"
 msgstr "訊息設定"
 
-#: src/lib/moderation/useReportOptions.ts:45
+#: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
 msgstr "誤導性帳戶"
 
@@ -2714,8 +2723,8 @@ msgstr "靜音文字和標籤"
 msgid "Mute list"
 msgstr "靜音列表"
 
-#: src/components/dms/ConvoMenu.tsx:142
-#: src/components/dms/ConvoMenu.tsx:148
+#: src/components/dms/ConvoMenu.tsx:138
+#: src/components/dms/ConvoMenu.tsx:144
 msgid "Mute notifications"
 msgstr "靜音通知"
 
@@ -2779,7 +2788,7 @@ msgstr "我的生日"
 msgid "My Feeds"
 msgstr "我的動態源"
 
-#: src/view/shell/desktop/LeftNav.tsx:69
+#: src/view/shell/desktop/LeftNav.tsx:83
 msgid "My Profile"
 msgstr "我的個人資料"
 
@@ -2800,9 +2809,9 @@ msgstr "名稱"
 msgid "Name is required"
 msgstr "名稱是必填項"
 
-#: src/lib/moderation/useReportOptions.ts:57
-#: src/lib/moderation/useReportOptions.ts:78
-#: src/lib/moderation/useReportOptions.ts:86
+#: src/lib/moderation/useReportOptions.ts:58
+#: src/lib/moderation/useReportOptions.ts:92
+#: src/lib/moderation/useReportOptions.ts:100
 msgid "Name or Description Violates Community Standards"
 msgstr "名稱或描述違反社群標準"
 
@@ -2816,11 +2825,11 @@ msgstr "自然"
 msgid "Navigates to the next screen"
 msgstr "切換到下一畫面"
 
-#: src/view/shell/Drawer.tsx:70
+#: src/view/shell/Drawer.tsx:79
 msgid "Navigates to your profile"
 msgstr "切換到您的個人檔案"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:123
+#: src/components/ReportDialog/SelectReportOptionView.tsx:129
 msgid "Need to report a copyright violation?"
 msgstr "需要檢舉侵權嗎？"
 
@@ -2842,8 +2851,8 @@ msgid "New"
 msgstr "新增"
 
 #: src/components/dms/NewChat.tsx:60
-#: src/screens/Messages/List/index.tsx:439
-#: src/screens/Messages/List/index.tsx:447
+#: src/screens/Messages/List/index.tsx:474
+#: src/screens/Messages/List/index.tsx:482
 msgid "New chat"
 msgstr "新對話"
 
@@ -2870,11 +2879,11 @@ msgstr "新貼文"
 #: src/view/screens/ProfileFeed.tsx:445
 #: src/view/screens/ProfileList.tsx:200
 #: src/view/screens/ProfileList.tsx:228
-#: src/view/shell/desktop/LeftNav.tsx:256
+#: src/view/shell/desktop/LeftNav.tsx:270
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/shell/desktop/LeftNav.tsx:266
+#: src/view/shell/desktop/LeftNav.tsx:276
 msgctxt "action"
 msgid "New Post"
 msgstr "新貼文"
@@ -2937,8 +2946,8 @@ msgstr "不再跟隨 {0}"
 msgid "No longer than 253 characters"
 msgstr "不超過253個字符"
 
-#: src/screens/Messages/List/index.tsx:198
-#: src/screens/Messages/List/index.tsx:259
+#: src/screens/Messages/List/index.tsx:204
+#: src/screens/Messages/List/index.tsx:271
 msgid "No messages yet"
 msgstr "還沒有訊息"
 
@@ -3014,14 +3023,14 @@ msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制�
 #: src/Navigation.tsx:512
 #: src/view/screens/Notifications.tsx:124
 #: src/view/screens/Notifications.tsx:148
-#: src/view/shell/bottom-bar/BottomBar.tsx:238
-#: src/view/shell/desktop/LeftNav.tsx:353
-#: src/view/shell/Drawer.tsx:459
-#: src/view/shell/Drawer.tsx:460
+#: src/view/shell/bottom-bar/BottomBar.tsx:268
+#: src/view/shell/desktop/LeftNav.tsx:336
+#: src/view/shell/Drawer.tsx:456
+#: src/view/shell/Drawer.tsx:457
 msgid "Notifications"
 msgstr "通知"
 
-#: src/components/dms/MessageItem.tsx:147
+#: src/components/dms/MessageItem.tsx:146
 msgid "Now"
 msgstr "現在"
 
@@ -3029,7 +3038,7 @@ msgstr "現在"
 msgid "Nudity"
 msgstr "裸露"
 
-#: src/lib/moderation/useReportOptions.ts:71
+#: src/lib/moderation/useReportOptions.ts:72
 msgid "Nudity or adult content not labeled as such"
 msgstr "未貼上此類標記的裸露或成人內容"
 
@@ -3230,7 +3239,7 @@ msgstr "開啟「Following」動態源偏好"
 msgid "Opens the linked website"
 msgstr "開啟網站連結"
 
-#: src/screens/Messages/List/index.tsx:79
+#: src/screens/Messages/List/index.tsx:92
 msgid "Opens the message settings page"
 msgstr "打開私訊設定頁面"
 
@@ -3251,6 +3260,7 @@ msgstr "開啟對話串偏好"
 msgid "Option {0} of {numItems}"
 msgstr "{0} 選項，共 {numItems} 個"
 
+#: src/components/dms/MessageReportDialog.tsx:156
 #: src/components/ReportDialog/SubmitView.tsx:162
 msgid "Optionally provide additional information below:"
 msgstr "在以下提供額外訊息（可選）："
@@ -3259,7 +3269,7 @@ msgstr "在以下提供額外訊息（可選）："
 msgid "Or combine these options:"
 msgstr "或者組合這些選項："
 
-#: src/lib/moderation/useReportOptions.ts:25
+#: src/lib/moderation/useReportOptions.ts:26
 msgid "Other"
 msgstr "其他"
 
@@ -3534,7 +3544,7 @@ msgstr "隱私"
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings/index.tsx:890
-#: src/view/shell/Drawer.tsx:275
+#: src/view/shell/Drawer.tsx:284
 msgid "Privacy Policy"
 msgstr "隱私政策"
 
@@ -3547,11 +3557,11 @@ msgstr "處理中…"
 msgid "profile"
 msgstr "個人檔案"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:311
-#: src/view/shell/desktop/LeftNav.tsx:418
-#: src/view/shell/Drawer.tsx:69
-#: src/view/shell/Drawer.tsx:551
-#: src/view/shell/Drawer.tsx:552
+#: src/view/shell/bottom-bar/BottomBar.tsx:313
+#: src/view/shell/desktop/LeftNav.tsx:373
+#: src/view/shell/Drawer.tsx:78
+#: src/view/shell/Drawer.tsx:541
+#: src/view/shell/Drawer.tsx:542
 msgid "Profile"
 msgstr "個人檔案"
 
@@ -3604,6 +3614,10 @@ msgstr "隨機顯示 (又名試試手氣)"
 #: src/view/com/modals/EditImage.tsx:237
 msgid "Ratios"
 msgstr "比率"
+
+#: src/components/dms/MessageReportDialog.tsx:149
+msgid "Reason: {0}"
+msgstr "原因：{0}"
 
 #: src/view/screens/Search/Search.tsx:886
 msgid "Recent Searches"
@@ -3717,19 +3731,25 @@ msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "對 <0><1/></0> 回覆"
 
-#: src/components/dms/MessageMenu.tsx:108
+#: src/components/dms/MessageMenu.tsx:113
 msgid "Report"
 msgstr "檢舉"
 
 #: src/components/dms/ConvoMenu.tsx:169
 #: src/components/dms/ConvoMenu.tsx:173
-msgid "Report account"
-msgstr "檢舉帳戶"
+#~ msgid "Report account"
+#~ msgstr "檢舉帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
 msgstr "檢舉帳號"
+
+#: src/components/dms/ConvoMenu.tsx:165
+#: src/components/dms/ConvoMenu.tsx:168
+#: src/components/dms/ConvoMenu.tsx:200
+msgid "Report conversation"
+msgstr "檢舉對話"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
@@ -3744,7 +3764,7 @@ msgstr "檢舉動態源"
 msgid "Report List"
 msgstr "檢舉列表"
 
-#: src/components/dms/MessageMenu.tsx:106
+#: src/components/dms/MessageMenu.tsx:111
 msgid "Report message"
 msgstr "檢舉訊息"
 
@@ -3753,23 +3773,29 @@ msgstr "檢舉訊息"
 msgid "Report post"
 msgstr "檢舉貼文"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:42
+#: src/components/ReportDialog/SelectReportOptionView.tsx:45
 msgid "Report this content"
 msgstr "檢舉這個內容"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:55
+#: src/components/ReportDialog/SelectReportOptionView.tsx:58
 msgid "Report this feed"
 msgstr "檢舉這個動態源"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:52
+#: src/components/ReportDialog/SelectReportOptionView.tsx:55
 msgid "Report this list"
 msgstr "檢舉這個列表"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:49
+#: src/components/dms/MessageReportDialog.tsx:41
+#: src/components/dms/MessageReportDialog.tsx:137
+#: src/components/ReportDialog/SelectReportOptionView.tsx:61
+msgid "Report this message"
+msgstr "檢舉這個訊息"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:52
 msgid "Report this post"
 msgstr "檢舉這則貼文"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:46
+#: src/components/ReportDialog/SelectReportOptionView.tsx:49
 msgid "Report this user"
 msgstr "檢舉這個用戶"
 
@@ -3876,7 +3902,7 @@ msgstr "重試登入"
 msgid "Retries the last action, which errored out"
 msgstr "重試上次出錯的操作"
 
-#: src/components/dms/MessageMenu.tsx:133
+#: src/components/dms/MessageMenu.tsx:140
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:94
 #: src/screens/Login/LoginForm.tsx:282
@@ -3989,12 +4015,12 @@ msgstr "滾動到頂部"
 #: src/view/screens/Search/Search.tsx:444
 #: src/view/screens/Search/Search.tsx:757
 #: src/view/screens/Search/Search.tsx:785
-#: src/view/shell/bottom-bar/BottomBar.tsx:192
-#: src/view/shell/desktop/LeftNav.tsx:334
+#: src/view/shell/bottom-bar/BottomBar.tsx:196
+#: src/view/shell/desktop/LeftNav.tsx:329
 #: src/view/shell/desktop/Search.tsx:194
 #: src/view/shell/desktop/Search.tsx:203
-#: src/view/shell/Drawer.tsx:386
-#: src/view/shell/Drawer.tsx:387
+#: src/view/shell/Drawer.tsx:393
+#: src/view/shell/Drawer.tsx:394
 msgid "Search"
 msgstr "搜尋"
 
@@ -4159,8 +4185,8 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "發送電子郵件"
 
-#: src/view/shell/Drawer.tsx:319
-#: src/view/shell/Drawer.tsx:340
+#: src/view/shell/Drawer.tsx:328
+#: src/view/shell/Drawer.tsx:349
 msgid "Send feedback"
 msgstr "提交意見"
 
@@ -4169,6 +4195,8 @@ msgstr "提交意見"
 msgid "Send message"
 msgstr "重送訊息"
 
+#: src/components/dms/MessageReportDialog.tsx:207
+#: src/components/dms/MessageReportDialog.tsx:210
 #: src/components/ReportDialog/SubmitView.tsx:215
 #: src/components/ReportDialog/SubmitView.tsx:219
 msgid "Send report"
@@ -4266,9 +4294,9 @@ msgstr "將圖像的寬高比設定為寬"
 #: src/Navigation.tsx:146
 #: src/screens/Messages/Settings/index.tsx:21
 #: src/view/screens/Settings/index.tsx:322
-#: src/view/shell/desktop/LeftNav.tsx:436
-#: src/view/shell/Drawer.tsx:572
-#: src/view/shell/Drawer.tsx:573
+#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/Drawer.tsx:558
+#: src/view/shell/Drawer.tsx:559
 msgid "Settings"
 msgstr "設定"
 
@@ -4434,12 +4462,12 @@ msgstr "在您的動態中顯示來自 {0} 的貼文"
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
 #: src/view/com/auth/SplashScreen.web.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:351
-#: src/view/shell/bottom-bar/BottomBar.tsx:352
+#: src/view/shell/bottom-bar/BottomBar.tsx:353
 #: src/view/shell/bottom-bar/BottomBar.tsx:354
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:196
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:199
+#: src/view/shell/bottom-bar/BottomBar.tsx:356
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:201
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
 #: src/view/shell/NavSignupCard.tsx:69
 #: src/view/shell/NavSignupCard.tsx:70
 #: src/view/shell/NavSignupCard.tsx:72
@@ -4467,12 +4495,12 @@ msgstr "登入 Bluesky 或建立新帳戶"
 msgid "Sign out"
 msgstr "登出"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:341
-#: src/view/shell/bottom-bar/BottomBar.tsx:342
+#: src/view/shell/bottom-bar/BottomBar.tsx:343
 #: src/view/shell/bottom-bar/BottomBar.tsx:344
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:186
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:187
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:189
+#: src/view/shell/bottom-bar/BottomBar.tsx:346
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:191
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:192
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
 #: src/view/shell/NavSignupCard.tsx:60
 #: src/view/shell/NavSignupCard.tsx:61
 #: src/view/shell/NavSignupCard.tsx:63
@@ -4510,7 +4538,7 @@ msgstr "跳過此流程"
 msgid "Software Dev"
 msgstr "軟體開發"
 
-#: src/screens/Messages/Conversation/index.tsx:84
+#: src/screens/Messages/Conversation/index.tsx:89
 msgid "Something went wrong"
 msgstr "發生了一些問題"
 
@@ -4537,11 +4565,12 @@ msgstr "對同一貼文的回覆進行排序："
 msgid "Source:"
 msgstr "來源："
 
-#: src/lib/moderation/useReportOptions.ts:65
+#: src/lib/moderation/useReportOptions.ts:66
+#: src/lib/moderation/useReportOptions.ts:79
 msgid "Spam"
 msgstr "垃圾訊息"
 
-#: src/lib/moderation/useReportOptions.ts:53
+#: src/lib/moderation/useReportOptions.ts:54
 msgid "Spam; excessive mentions or replies"
 msgstr "垃圾訊息、過多的提及或回覆"
 
@@ -4671,13 +4700,13 @@ msgstr "條款"
 #: src/screens/Signup/StepInfo/Policies.tsx:49
 #: src/view/screens/Settings/index.tsx:884
 #: src/view/screens/TermsOfService.tsx:29
-#: src/view/shell/Drawer.tsx:269
+#: src/view/shell/Drawer.tsx:278
 msgid "Terms of Service"
 msgstr "服務條款"
 
-#: src/lib/moderation/useReportOptions.ts:58
-#: src/lib/moderation/useReportOptions.ts:79
-#: src/lib/moderation/useReportOptions.ts:87
+#: src/lib/moderation/useReportOptions.ts:59
+#: src/lib/moderation/useReportOptions.ts:93
+#: src/lib/moderation/useReportOptions.ts:101
 msgid "Terms used violate community standards"
 msgstr "所使用的文字違反了社群標準"
 
@@ -4689,6 +4718,7 @@ msgstr "文字"
 msgid "Text input field"
 msgstr "文字輸入框"
 
+#: src/components/dms/MessageReportDialog.tsx:118
 #: src/components/ReportDialog/SubmitView.tsx:77
 msgid "Thank you. Your report has been sent."
 msgstr "謝謝，您的檢舉已提交。"
@@ -4798,6 +4828,7 @@ msgstr "取得列表時發生問題，點擊這裡重試。"
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "取得列表時發生問題，點擊這裡重試。"
 
+#: src/components/dms/MessageReportDialog.tsx:195
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "提交您的檢舉時出現問題，請檢查您的網路連線。"
@@ -5010,6 +5041,10 @@ msgstr "對話串偏好"
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "若要關閉電子郵件雙重驗證，請驗證您的電子郵件地址。"
 
+#: src/components/dms/ConvoMenu.tsx:202
+msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
+msgstr "若要檢舉對話，請透過對話畫面檢舉其中一則訊息。這可以讓我們的內容管理者了解您問題的背景。"
+
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "您希望向誰提交此檢舉？"
@@ -5145,7 +5180,7 @@ msgstr "取消靜音帳號"
 msgid "Unmute all {displayTag} posts"
 msgstr "取消對所有 {displayTag} 貼文的靜音"
 
-#: src/components/dms/ConvoMenu.tsx:146
+#: src/components/dms/ConvoMenu.tsx:142
 msgid "Unmute notifications"
 msgstr "撤銷通知靜音"
 
@@ -5175,7 +5210,12 @@ msgstr "取消訂閱"
 msgid "Unsubscribe from this labeler"
 msgstr "取消訂閱這個標記者"
 
-#: src/lib/moderation/useReportOptions.ts:70
+#: src/lib/moderation/useReportOptions.ts:85
+msgid "Unwanted sexual content"
+msgstr "無關情色的內容"
+
+#: src/lib/moderation/useReportOptions.ts:71
+#: src/lib/moderation/useReportOptions.ts:84
 msgid "Unwanted Sexual Content"
 msgstr "無關情色的內容"
 
@@ -5369,11 +5409,11 @@ msgstr "查看 {0} 的頭像"
 msgid "View debug entry"
 msgstr "查看偵錯項目"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:132
+#: src/components/ReportDialog/SelectReportOptionView.tsx:138
 msgid "View details"
 msgstr "查看詳細資訊"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:127
+#: src/components/ReportDialog/SelectReportOptionView.tsx:133
 msgid "View details for reporting a copyright violation"
 msgstr "查看詳細資訊以檢舉侵權"
 
@@ -5427,7 +5467,7 @@ msgstr "警告內容並從動態源中過濾"
 msgid "We couldn't find any results for that hashtag."
 msgstr "我們找不到任何與該標籤相關的結果。"
 
-#: src/screens/Messages/Conversation/index.tsx:85
+#: src/screens/Messages/Conversation/index.tsx:90
 msgid "We couldn't load this conversation"
 msgstr "我們無法載入這段對話"
 
@@ -5519,23 +5559,27 @@ msgstr "您想在演算法動態源中看到哪些語言？"
 msgid "Who can reply"
 msgstr "誰可以回覆"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:43
+#: src/components/ReportDialog/SelectReportOptionView.tsx:46
 msgid "Why should this content be reviewed?"
 msgstr "為什麼應該審查這個內容？"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:56
+#: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Why should this feed be reviewed?"
 msgstr "為什麼應該審查這個動態源？"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:53
+#: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Why should this list be reviewed?"
 msgstr "為什麼應該審查這個列表？"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:50
+#: src/components/ReportDialog/SelectReportOptionView.tsx:62
+msgid "Why should this message be reviewed?"
+msgstr "為什麼應該審查則訊息？"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Why should this post be reviewed?"
 msgstr "為什麼應該審查這則貼文？"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:47
+#: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Why should this user be reviewed?"
 msgstr "為什麼應該審查這個用戶？"
 
@@ -5571,7 +5615,7 @@ msgstr "作家"
 msgid "Yes"
 msgstr "開"
 
-#: src/components/dms/MessageItem.tsx:160
+#: src/components/dms/MessageItem.tsx:159
 msgid "Yesterday, {time}"
 msgstr "昨天，{time}"
 
@@ -5660,7 +5704,7 @@ msgstr "您沒有建立任何動態源。"
 msgid "You have no lists."
 msgstr "您沒有建立任何列表。"
 
-#: src/screens/Messages/List/index.tsx:200
+#: src/screens/Messages/List/index.tsx:206
 msgid "You have no messages yet. Start a conversation with someone!"
 msgstr "您還沒有訊息。開始與其他人對話！"
 
@@ -5708,7 +5752,7 @@ msgstr "您將收到這條對話串的通知"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "您將收到一封包含重設碼的電子郵件。請在此輸入該「重設碼」，然後輸入您的新密碼。"
 
-#: src/screens/Messages/List/index.tsx:263
+#: src/screens/Messages/List/index.tsx:275
 msgid "You: {0}"
 msgstr "你：{0}"
 
@@ -5808,6 +5852,10 @@ msgstr "您的個人資料"
 #: src/view/com/composer/Composer.tsx:313
 msgid "Your reply has been published"
 msgstr "您的回覆已發佈"
+
+#: src/components/dms/MessageReportDialog.tsx:140
+msgid "Your report will be sent to the Bluesky Moderation Service"
+msgstr "您的檢舉將發送至 Bluesky 內容管理服務"
 
 #: src/screens/Signup/index.tsx:166
 msgid "Your user handle"
