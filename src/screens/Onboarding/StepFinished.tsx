@@ -117,27 +117,29 @@ export function StepFinished() {
             ])
           }
         })(),
-      ])
 
-      if (gate('reduced_onboarding_and_home_algo')) {
-        await getAgent().upsertProfile(async existing => {
-          existing = existing ?? {}
+        (async () => {
+          if (gate('reduced_onboarding_and_home_algo')) {
+            await getAgent().upsertProfile(async existing => {
+              existing = existing ?? {}
 
-          if (profileStepResults.imageUri && profileStepResults.imageMime) {
-            const res = await uploadBlob(
-              getAgent(),
-              profileStepResults.imageUri,
-              profileStepResults.imageMime,
-            )
+              if (profileStepResults.imageUri && profileStepResults.imageMime) {
+                const res = await uploadBlob(
+                  getAgent(),
+                  profileStepResults.imageUri,
+                  profileStepResults.imageMime,
+                )
 
-            if (res.data.blob) {
-              existing.avatar = res.data.blob
-            }
+                if (res.data.blob) {
+                  existing.avatar = res.data.blob
+                }
+              }
+
+              return existing
+            })
           }
-
-          return existing
-        })
-      }
+        })(),
+      ])
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
