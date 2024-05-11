@@ -48,6 +48,7 @@ export type LogEvents = {
     selectedFeedsLength: number
   }
   'onboarding:moderation:nextPressed': {}
+  'onboarding:profile:nextPressed': {}
   'onboarding:finished:nextPressed': {}
   'home:feedDisplayed': {
     feedUrl: string

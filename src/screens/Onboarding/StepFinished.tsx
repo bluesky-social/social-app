@@ -12,6 +12,7 @@ import {logger} from '#/logger'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {uploadBlob} from 'lib/api'
 import {
   DescriptionText,
   OnboardingControls,
@@ -46,11 +47,13 @@ export function StepFinished() {
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
+    // TODO uncomment
     const {
       interestsStepResults,
       suggestedAccountsStepResults,
       algoFeedsStepResults,
       topicalFeedsStepResults,
+      profileStepResults,
     } = state
     const {selectedInterests} = interestsStepResults
     const selectedFeeds = [
@@ -110,6 +113,26 @@ export function StepFinished() {
           }
         })(),
       ])
+
+      if (gate('reduced_onboarding_and_home_algo')) {
+        await getAgent().upsertProfile(async existing => {
+          existing = existing ?? {}
+
+          if (profileStepResults.imageUri && profileStepResults.imageMime) {
+            const res = await uploadBlob(
+              getAgent(),
+              profileStepResults.imageUri,
+              profileStepResults.imageMime,
+            )
+
+            if (res.data.blob) {
+              existing.avatar = res.data.blob
+            }
+          }
+
+          return existing
+        })
+      }
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
