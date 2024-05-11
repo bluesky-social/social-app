@@ -19,7 +19,7 @@ msgstr "(没有邮件)"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "其他 {0, plural, {{formattedCount}}} 人"
+msgstr "其他 {0, plural, other {{formattedCount}}} 人"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
