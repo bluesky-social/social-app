@@ -3311,11 +3311,11 @@ msgstr "关注 @{0} 的用户"
 
 #: src/view/com/lightbox/Lightbox.tsx:66
 msgid "Permission to access camera roll is required."
-msgstr "需要相机胶卷的访问权限。"
+msgstr "需要照片图库的访问权限。"
 
 #: src/view/com/lightbox/Lightbox.tsx:72
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
-msgstr "相机胶卷的访问权限已被拒绝，请在系统设置中启用。"
+msgstr "照片图库的访问权限已被拒绝，请在系统设置中启用。"
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
@@ -3947,7 +3947,7 @@ msgstr "已保存信息流"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll"
-msgstr "保存到你的相机胶卷"
+msgstr "保存到你的照片图库"
 
 #: src/view/screens/ProfileFeed.tsx:214
 msgid "Saved to your feeds"
