@@ -122,9 +122,10 @@ export function StepFinished() {
           if (gate('reduced_onboarding_and_home_algo')) {
             const {imageUri, imageMime} = profileStepResults
             if (imageUri && imageMime) {
+              const blobPromise = uploadBlob(getAgent(), imageUri, imageMime)
               await getAgent().upsertProfile(async existing => {
                 existing = existing ?? {}
-                const res = await uploadBlob(getAgent(), imageUri, imageMime)
+                const res = await blobPromise
                 if (res.data.blob) {
                   existing.avatar = res.data.blob
                 }
