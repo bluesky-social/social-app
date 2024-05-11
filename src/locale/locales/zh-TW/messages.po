@@ -1762,7 +1762,7 @@ msgstr "無法儲存圖片：{0}"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:29
 msgid "Failed to send message(s)."
-msgstr "無法傳送訊息"
+msgstr "無法傳送訊息。"
 
 #: src/Navigation.tsx:203
 msgid "Feed"
