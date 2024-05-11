@@ -54,7 +54,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: last-successful-commit-hash.txt
-          key: last-successful-deployment-commit-${{ github.ref_name }}
+          key: last-successful-deployment-commit-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            last-successful-deployment-commit-${{ github.ref_name }}-
 
       - name: Add the last successful deployment commit to the output
         id: last-successful-commit
@@ -68,7 +70,7 @@ jobs:
       - name: 🕵️ Get the base commit
         id: base-commit
         run: |
-          if [ -z "${{ inputs.channel == 'production' }}" ]; then
+          if ${{ inputs.channel == 'production' }}; then
             echo base-commit=$(git show-ref -s ${{ inputs.runtimeVersion }}) >> "$GITHUB_OUTPUT"
           else
             echo base-commit=${{ steps.last-successful-commit.base-commit }} >> "$GITHUB_OUTPUT"
@@ -184,6 +186,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -255,6 +259,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4

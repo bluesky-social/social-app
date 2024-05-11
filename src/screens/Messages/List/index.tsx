@@ -1,15 +1,14 @@
-/* eslint-disable react/prop-types */
-
 import React, {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto-labs/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {sha256} from 'js-sha256'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {MessagesTabNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -18,7 +17,7 @@ import {useListConvos} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -39,14 +38,31 @@ import {ClipClopGate} from '../gate'
 import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
-export function MessagesScreen({navigation}: Props) {
+
+function renderItem({
+  item,
+  index,
+}: {
+  item: ChatBskyConvoDefs.ConvoView
+  index: number
+}) {
+  return <ChatListItem convo={item} index={index} />
+}
+
+function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
+  return item.id
+}
+
+export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
   const {gtMobile} = useBreakpoints()
+  const pushToConversation = route.params?.pushToConversation
 
   // TEMP
   const {serviceUrl, setServiceUrl} = useDmServiceUrlStorage()
+  const [serviceUrlValue, setServiceUrlValue] = useState(serviceUrl)
   const hasValidServiceUrl = useMemo(() => {
     const hash = sha256(serviceUrl)
     return (
@@ -54,6 +70,19 @@ export function MessagesScreen({navigation}: Props) {
       'a32318b49dd3fe6aa6a35c66c13fcc4c1cb6202b24f5a852d9a2279acee4169f'
     )
   }, [serviceUrl])
+
+  // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
+  // this tab. We should immediately push to the conversation after pressing the notification.
+  // After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
+  // the conversation is the same as before
+  React.useEffect(() => {
+    if (pushToConversation) {
+      navigation.navigate('MessagesConversation', {
+        conversation: pushToConversation,
+      })
+      navigation.setParams({pushToConversation: undefined})
+    }
+  }, [navigation, pushToConversation])
 
   const renderButton = useCallback(() => {
     return (
@@ -119,13 +148,6 @@ export function MessagesScreen({navigation}: Props) {
     navigation.navigate('MessagesSettings')
   }, [navigation])
 
-  const renderItem = useCallback(
-    ({item}: {item: ChatBskyConvoDefs.ConvoView}) => {
-      return <ChatListItem key={item.id} convo={item} />
-    },
-    [],
-  )
-
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
 
@@ -136,13 +158,21 @@ export function MessagesScreen({navigation}: Props) {
           <TextField.LabelText>Service URL</TextField.LabelText>
           <TextField.Root>
             <TextField.Input
-              value={serviceUrl}
-              onChangeText={text => setServiceUrl(text)}
+              value={serviceUrlValue}
+              onChangeText={text => setServiceUrlValue(text)}
               autoCapitalize="none"
               keyboardType="url"
               label="https://"
             />
           </TextField.Root>
+          <Button
+            label="Set Service URL"
+            size="small"
+            variant="solid"
+            color="primary"
+            onPress={() => setServiceUrl(serviceUrlValue)}>
+            <ButtonText>Set</ButtonText>
+          </Button>
         </View>
       </ScrollView>
     )
@@ -189,7 +219,7 @@ export function MessagesScreen({navigation}: Props) {
         <ViewHeader
           title={_(msg`Messages`)}
           renderButton={renderButton}
-          showBorder
+          showBorder={false}
           canGoBack={false}
         />
       )}
@@ -197,7 +227,7 @@ export function MessagesScreen({navigation}: Props) {
       <List
         data={conversations}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={keyExtractor}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
@@ -225,11 +255,18 @@ export function MessagesScreen({navigation}: Props) {
   )
 }
 
-function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+function ChatListItem({
+  convo,
+  index,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+  index: number
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
+  const {gtMobile} = useBreakpoints()
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
@@ -249,92 +286,147 @@ function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
     member => member.did !== currentAccount?.did,
   )
 
+  const navigation = useNavigation<NavigationProp>()
+  const [showActions, setShowActions] = React.useState(false)
+
+  const onMouseEnter = React.useCallback(() => {
+    setShowActions(true)
+  }, [])
+
+  const onMouseLeave = React.useCallback(() => {
+    setShowActions(false)
+  }, [])
+
+  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
+    if (e.nativeEvent.relatedTarget == null) return
+    setShowActions(true)
+  }, [])
+
+  const onPress = React.useCallback(() => {
+    navigation.push('MessagesConversation', {
+      conversation: convo.id,
+    })
+  }, [convo.id, navigation])
+
   if (!otherUser) {
     return null
   }
 
   return (
-    <Link
-      to={`/messages/${convo.id}`}
-      style={a.flex_1}
-      onLongPress={isNative ? menuControl.open : undefined}>
-      {({hovered, pressed}) => (
-        <View
-          style={[
-            a.flex_row,
-            a.flex_1,
-            a.pl_md,
-            a.py_sm,
-            a.gap_md,
-            a.pr_2xl,
-            (hovered || pressed) && t.atoms.bg_contrast_25,
-          ]}>
-          <View pointerEvents="none">
-            <PreviewableUserAvatar profile={otherUser} size={42} />
-          </View>
-          <View style={[a.flex_1]}>
-            <Text
-              numberOfLines={1}
-              style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
-              <Text
-                style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
-                {otherUser.displayName || otherUser.handle}
-              </Text>{' '}
-              {lastMessageSentAt ? (
-                <TimeElapsed timestamp={lastMessageSentAt}>
-                  {({timeElapsed}) => (
-                    <Text style={t.atoms.text_contrast_medium}>
-                      @{otherUser.handle} &middot; {timeElapsed}
+    <View
+      // @ts-expect-error web only
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onFocus={onFocus}
+      onBlur={onMouseLeave}>
+      <Button
+        label={otherUser.displayName || otherUser.handle}
+        onPress={onPress}
+        style={a.flex_1}
+        onLongPress={isNative ? menuControl.open : undefined}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.flex_1,
+              a.px_lg,
+              a.py_md,
+              a.gap_md,
+              (hovered || pressed) && t.atoms.bg_contrast_25,
+              index === 0 && [a.border_t, a.pt_lg],
+              t.atoms.border_contrast_low,
+            ]}>
+            <UserAvatar avatar={otherUser?.avatar} size={52} />
+            <View style={[a.flex_1, a.flex_row, a.align_center]}>
+              <View style={[a.flex_1]}>
+                <View
+                  style={[
+                    a.flex_1,
+                    a.flex_row,
+                    a.align_end,
+                    a.pb_2xs,
+                    web([{marginTop: -2}]),
+                  ]}>
+                  <Text
+                    numberOfLines={1}
+                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
+                    <Text style={[a.text_md, t.atoms.text, a.font_bold]}>
+                      {otherUser.displayName || otherUser.handle}
                     </Text>
+                  </Text>
+                  {lastMessageSentAt && (
+                    <TimeElapsed timestamp={lastMessageSentAt}>
+                      {({timeElapsed}) => (
+                        <Text
+                          style={[
+                            a.text_sm,
+                            web([a.leading_normal]),
+                            t.atoms.text_contrast_medium,
+                          ]}>
+                          {' '}
+                          &middot; {timeElapsed}
+                        </Text>
+                      )}
+                    </TimeElapsed>
                   )}
-                </TimeElapsed>
-              ) : (
-                <Text style={t.atoms.text_contrast_medium}>
+                </View>
+                <Text
+                  numberOfLines={1}
+                  style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
                   @{otherUser.handle}
                 </Text>
+                <Text
+                  numberOfLines={2}
+                  style={[
+                    a.text_sm,
+                    a.leading_snug,
+                    convo.unreadCount > 0
+                      ? a.font_bold
+                      : t.atoms.text_contrast_high,
+                  ]}>
+                  {lastMessage}
+                </Text>
+              </View>
+              {convo.unreadCount > 0 && (
+                <View
+                  style={[
+                    a.absolute,
+                    a.rounded_full,
+                    {
+                      backgroundColor: convo.muted
+                        ? t.palette.contrast_200
+                        : t.palette.primary_500,
+                      height: 7,
+                      width: 7,
+                    },
+                    isNative
+                      ? {
+                          top: 15,
+                          right: 12,
+                        }
+                      : {
+                          top: 0,
+                          right: 0,
+                        },
+                  ]}
+                />
               )}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={[
-                a.text_sm,
-                a.leading_snug,
-                convo.unreadCount > 0
-                  ? a.font_bold
-                  : t.atoms.text_contrast_medium,
-              ]}>
-              {lastMessage}
-            </Text>
+              <ConvoMenu
+                convo={convo}
+                profile={otherUser}
+                control={menuControl}
+                currentScreen="list"
+                showMarkAsRead={convo.unreadCount > 0}
+                hideTrigger={isNative}
+                triggerOpacity={
+                  !gtMobile || showActions || menuControl.isOpen ? 1 : 0
+                }
+              />
+            </View>
           </View>
-          {convo.unreadCount > 0 && (
-            <View
-              style={[
-                a.flex_0,
-                a.ml_md,
-                a.mt_sm,
-                a.rounded_full,
-                {
-                  backgroundColor: convo.muted
-                    ? t.palette.contrast_200
-                    : t.palette.primary_500,
-                  height: 7,
-                  width: 7,
-                },
-              ]}
-            />
-          )}
-          <ConvoMenu
-            convo={convo}
-            profile={otherUser}
-            control={menuControl}
-            // TODO(sam) show on hover on web
-            // tricky because it captures the mouse event
-            hideTrigger
-            currentScreen="list"
-          />
-        </View>
-      )}
-    </Link>
+        )}
+      </Button>
+    </View>
   )
 }
 
@@ -357,8 +449,6 @@ function DesktopHeader({
     <View
       style={[
         t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.border_b,
         a.flex_row,
         a.align_center,
         a.justify_between,

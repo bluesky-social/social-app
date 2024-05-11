@@ -1,15 +1,19 @@
 import {describe, it} from '@jest/globals'
 
 describe(`#/state/messages/convo`, () => {
-  describe(`status states`, () => {
+  describe(`init`, () => {
+    it.todo(`fails if sender and recipients aren't found`)
     it.todo(`cannot re-initialize from a non-unintialized state`)
     it.todo(`can re-initialize from a failed state`)
+  })
 
-    describe(`destroy`, () => {
-      it.todo(`cannot be interacted with when destroyed`)
-      it.todo(`polling is stopped when destroyed`)
-      it.todo(`events are cleaned up when destroyed`)
-    })
+  describe(`resume`, () => {
+    it.todo(`restores previous state if resume fails`)
+  })
+
+  describe(`suspend`, () => {
+    it.todo(`cannot be interacted with when suspended`)
+    it.todo(`polling is stopped when suspended`)
   })
 
   describe(`read states`, () => {
@@ -31,11 +35,13 @@ describe(`#/state/messages/convo`, () => {
     it.todo(
       `successfully sent messages are re-ordered, if needed, by events received from server`,
     )
+    it.todo(`pending messages are cleaned up from state after firehose event`)
   })
 
   describe(`deleting messages`, () => {
     it.todo(`messages are optimistically deleted from the chat`)
     it.todo(`messages are confirmed deleted via events from the server`)
+    it.todo(`deleted messages are cleaned up from state after firehose event`)
   })
 
   describe(`log handling`, () => {

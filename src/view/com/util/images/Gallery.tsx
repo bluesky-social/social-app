@@ -1,9 +1,10 @@
-import {AppBskyEmbedImages} from '@atproto/api'
 import React, {ComponentProps, FC} from 'react'
-import {StyleSheet, Text, Pressable, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {Image} from 'expo-image'
+import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
 import {isWeb} from 'platform/detection'
 
 type EventFunction = (index: number) => void

@@ -31,8 +31,8 @@ import {Text} from '#/components/Typography'
 export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
-  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
+  const {track} = useAnalytics()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
@@ -189,9 +189,9 @@ export function StepInterests() {
                     color: t.palette.negative_900,
                   },
                 ]}>
-                Error:{' '}
+                <Trans>Error:</Trans>{' '}
               </Text>
-              {error?.message || 'an unknown error occurred'}
+              {error?.message || _(msg`an unknown error occurred`)}
             </Text>
           </View>
         ) : (

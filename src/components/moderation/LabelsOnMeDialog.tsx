@@ -216,7 +216,7 @@ function AppealForm({
           },
           reason: details,
         })
-      Toast.show(_(msg`Appeal submitted.`))
+      Toast.show(_(msg`Appeal submitted`))
     } finally {
       control.close()
     }

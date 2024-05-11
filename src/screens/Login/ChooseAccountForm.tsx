@@ -26,7 +26,7 @@ export const ChooseAccountForm = ({
   const {track, screen} = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {initSession} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
   React.useEffect(() => {
@@ -51,7 +51,7 @@ export const ChooseAccountForm = ({
       }
       try {
         setPendingDid(account.did)
-        await initSession(account)
+        await resumeSession(account)
         logEvent('account:loggedIn', {
           logContext: 'ChooseAccountForm',
           withPassword: false,
@@ -71,7 +71,7 @@ export const ChooseAccountForm = ({
     [
       currentAccount,
       track,
-      initSession,
+      resumeSession,
       pendingDid,
       onSelectAccount,
       setShowLoggedOut,

@@ -371,11 +371,11 @@ export function PostThread({
     ],
   )
 
-  if (error || !thread) {
+  if (!thread || !preferences || error) {
     return (
       <ListMaybePlaceholder
-        isLoading={(!preferences || !thread) && !error}
-        isError={!!error}
+        isLoading={!error}
+        isError={Boolean(error)}
         noEmpty
         onRetry={refetch}
         errorTitle={error?.title}

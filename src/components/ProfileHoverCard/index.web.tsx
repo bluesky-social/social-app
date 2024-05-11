@@ -2,13 +2,12 @@ import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {pluralize} from '#/lib/strings/helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -371,7 +370,14 @@ function Inner({
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   const following = formatCount(profile.followsCount || 0)
   const followers = formatCount(profile.followersCount || 0)
-  const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
+  const pluralizedFollowers = plural(profile.followersCount || 0, {
+    one: 'follower',
+    other: 'followers',
+  })
+  const pluralizedFollowings = plural(profile.followsCount || 0, {
+    one: 'following',
+    other: 'following',
+  })
   const profileURL = makeProfileLink({
     did: profile.did,
     handle: profile.handle,
@@ -398,7 +404,9 @@ function Inner({
             color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
             variant="solid"
             label={
-              profileShadow.viewer?.following ? _('Following') : _('Follow')
+              profileShadow.viewer?.following
+                ? _(msg`Following`)
+                : _(msg`Follow`)
             }
             style={[a.rounded_full]}
             onPress={profileShadow.viewer?.following ? unfollow : follow}>
@@ -407,7 +415,9 @@ function Inner({
               icon={profileShadow.viewer?.following ? Check : Plus}
             />
             <ButtonText>
-              {profileShadow.viewer?.following ? _('Following') : _('Follow')}
+              {profileShadow.viewer?.following
+                ? _(msg`Following`)
+                : _(msg`Follow`)}
             </ButtonText>
           </Button>
         )}
@@ -434,22 +444,20 @@ function Inner({
               label={`${followers} ${pluralizedFollowers}`}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Trans>
-                <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
-                <Text style={[t.atoms.text_contrast_medium]}>
-                  {pluralizedFollowers}
-                </Text>
-              </Trans>
+              <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {pluralizedFollowers}
+              </Text>
             </InlineLinkText>
             <InlineLinkText
               to={makeProfileLink(profile, 'follows')}
               label={_(msg`${following} following`)}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Trans>
-                <Text style={[a.text_md, a.font_bold]}>{following} </Text>
-                <Text style={[t.atoms.text_contrast_medium]}>following</Text>
-              </Trans>
+              <Text style={[a.text_md, a.font_bold]}>{following} </Text>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {pluralizedFollowings}
+              </Text>
             </InlineLinkText>
           </View>
 

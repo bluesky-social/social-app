@@ -4,7 +4,12 @@ export type LogEvents = {
     initMs: number
   }
   'account:loggedIn': {
-    logContext: 'LoginForm' | 'SwitchAccount' | 'ChooseAccountForm' | 'Settings'
+    logContext:
+      | 'LoginForm'
+      | 'SwitchAccount'
+      | 'ChooseAccountForm'
+      | 'Settings'
+      | 'Notification'
     withPassword: boolean
   }
   'account:loggedOut': {
@@ -43,6 +48,7 @@ export type LogEvents = {
     selectedFeedsLength: number
   }
   'onboarding:moderation:nextPressed': {}
+  'onboarding:profile:nextPressed': {}
   'onboarding:finished:nextPressed': {}
   'home:feedDisplayed': {
     feedUrl: string
