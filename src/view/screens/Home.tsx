@@ -8,8 +8,8 @@ import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
-import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
+import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -26,6 +26,7 @@ import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
+import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -55,26 +56,16 @@ function HomeScreenReady({
   pinnedFeedInfos,
 }: Props & {
   preferences: UsePreferencesQueryResponse
-  pinnedFeedInfos: FeedSourceInfo[]
+  pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
   useOTAUpdates()
-
-  const allFeeds = React.useMemo(() => {
-    const feeds: FeedDescriptor[] = []
-    feeds.push('home')
-    for (const {uri} of pinnedFeedInfos) {
-      if (uri.includes('app.bsky.feed.generator')) {
-        feeds.push(`feedgen|${uri}`)
-      } else if (uri.includes('app.bsky.graph.list')) {
-        feeds.push(`list|${uri}`)
-      }
-    }
-    return feeds
-  }, [pinnedFeedInfos])
-
-  const rawSelectedFeed = useSelectedFeed()
+  const allFeeds = React.useMemo(
+    () => pinnedFeedInfos.map(f => f.feedDescriptor),
+    [pinnedFeedInfos],
+  )
+  const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()
-  const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed as FeedDescriptor)
+  const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
 
@@ -107,12 +98,14 @@ function HomeScreenReady({
 
   useFocusEffect(
     useNonReactiveCallback(() => {
-      logEvent('home:feedDisplayed', {
-        index: selectedIndex,
-        feedType: selectedFeed.split('|')[0],
-        feedUrl: selectedFeed,
-        reason: 'focus',
-      })
+      if (selectedFeed) {
+        logEvent('home:feedDisplayed', {
+          index: selectedIndex,
+          feedType: selectedFeed.split('|')[0],
+          feedUrl: selectedFeed,
+          reason: 'focus',
+        })
+      }
     }),
   )
 
@@ -198,12 +191,13 @@ function HomeScreenReady({
     return <CustomFeedEmptyState />
   }, [])
 
-  const [homeFeed, ...customFeeds] = allFeeds
   const homeFeedParams = React.useMemo<FeedParams>(() => {
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
       mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
-        ? preferences.feeds.saved
+        ? preferences.savedFeeds
+            .filter(f => f.type === 'feed' || f.type === 'list')
+            .map(f => f.value)
         : [],
     }
   }, [preferences])
@@ -218,26 +212,37 @@ function HomeScreenReady({
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
-      <FeedPage
-        key={homeFeed}
-        testID="followingFeedPage"
-        isPageFocused={selectedFeed === homeFeed}
-        feed={homeFeed}
-        feedParams={homeFeedParams}
-        renderEmptyState={renderFollowingEmptyState}
-        renderEndOfFeed={FollowingEndOfFeed}
-      />
-      {customFeeds.map(feed => {
-        return (
-          <FeedPage
-            key={feed}
-            testID="customFeedPage"
-            isPageFocused={selectedFeed === feed}
-            feed={feed}
-            renderEmptyState={renderCustomFeedEmptyState}
-          />
-        )
-      })}
+      {pinnedFeedInfos.length ? (
+        pinnedFeedInfos.map(feedInfo => {
+          const feed = feedInfo.feedDescriptor
+          if (feed === 'following') {
+            return (
+              <FeedPage
+                key={feed}
+                testID="followingFeedPage"
+                isPageFocused={selectedFeed === feed}
+                feed={feed}
+                feedParams={homeFeedParams}
+                renderEmptyState={renderFollowingEmptyState}
+                renderEndOfFeed={FollowingEndOfFeed}
+              />
+            )
+          }
+          const savedFeedConfig = feedInfo.savedFeed
+          return (
+            <FeedPage
+              key={feed}
+              testID="customFeedPage"
+              isPageFocused={selectedFeed === feed}
+              feed={feed}
+              renderEmptyState={renderCustomFeedEmptyState}
+              savedFeedConfig={savedFeedConfig}
+            />
+          )
+        })
+      ) : (
+        <NoFeedsPinned preferences={preferences} />
+      )}
     </Pager>
   ) : (
     <Pager

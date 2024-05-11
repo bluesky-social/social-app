@@ -1,13 +1,15 @@
 import React from 'react'
 import {View} from 'react-native'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
+import {BSKY_APP_ACCOUNT_DID, IS_PROD_SERVICE} from '#/lib/constants'
+import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
@@ -37,7 +39,7 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
+  const {mutateAsync: overwriteSavedFeeds} = useOverwriteSavedFeedsMutation()
   const {getAgent} = useAgent()
 
   const finishOnboarding = React.useCallback(async () => {
@@ -64,10 +66,41 @@ export function StepFinished() {
         // these must be serial
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
-          await saveFeeds({
-            saved: selectedFeeds,
-            pinned: selectedFeeds,
-          })
+
+          // TODO: In the reduced onboarding, we'll want to exit early here.
+
+          const otherFeeds = selectedFeeds.length
+            ? selectedFeeds.map(f => ({
+                type: 'feed',
+                value: f,
+                pinned: true,
+                id: TID.nextStr(),
+              }))
+            : []
+
+          /*
+           * If no selected feeds and we're in prod, add the discover feed
+           * (mimics old behavior)
+           */
+          if (
+            IS_PROD_SERVICE(getAgent().service.toString()) &&
+            !otherFeeds.length
+          ) {
+            otherFeeds.push({
+              ...DISCOVER_SAVED_FEED,
+              pinned: true,
+              id: TID.nextStr(),
+            })
+          }
+
+          await overwriteSavedFeeds([
+            {
+              ...TIMELINE_SAVED_FEED,
+              pinned: true,
+              id: TID.nextStr(),
+            },
+            ...otherFeeds,
+          ])
         })(),
       ])
     } catch (e: any) {
@@ -82,7 +115,15 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track, getAgent])
+  }, [
+    state,
+    dispatch,
+    onboardDispatch,
+    setSaving,
+    overwriteSavedFeeds,
+    track,
+    getAgent,
+  ])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')

@@ -1,29 +1,30 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {RichText} from '#/components/RichText'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {UserAvatar} from '../util/UserAvatar'
 import {AtUri} from '@atproto/api'
-import * as Toast from 'view/com/util/Toast'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {logger} from '#/logger'
-import {Trans, msg, Plural} from '@lingui/macro'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
+import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
-  usePinFeedMutation,
-  UsePreferencesQueryResponse,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
-  useSaveFeedMutation,
+  UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
-import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {useTheme} from '#/alf'
-import * as Prompt from '#/components/Prompt'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
+import {usePalette} from 'lib/hooks/usePalette'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {s} from 'lib/styles'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import * as Toast from 'view/com/util/Toast'
+import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 
 export function FeedSourceCard({
   feedUri,
@@ -87,53 +88,54 @@ export function FeedSourceCardLoaded({
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
 
-  const {isPending: isSavePending, mutateAsync: saveFeed} =
-    useSaveFeedMutation()
+  const {isPending: isAddSavedFeedPending, mutateAsync: addSavedFeeds} =
+    useAddSavedFeedsMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
-  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
 
-  const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed?.uri || ''))
+  const savedFeedConfig = preferences?.savedFeeds?.find(
+    f => f.value === feed?.uri,
+  )
+  const isSaved = Boolean(savedFeedConfig)
 
   const onSave = React.useCallback(async () => {
-    if (!feed) return
+    if (!feed || isSaved) return
 
     try {
-      if (pinOnSave) {
-        await pinFeed({uri: feed.uri})
-      } else {
-        await saveFeed({uri: feed.uri})
-      }
+      await addSavedFeeds([
+        {
+          type: 'feed',
+          value: feed.uri,
+          pinned: pinOnSave,
+        },
+      ])
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to save feed', {message: e})
     }
-  }, [_, feed, pinFeed, pinOnSave, saveFeed])
+  }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
 
   const onUnsave = React.useCallback(async () => {
-    if (!feed) return
+    if (!savedFeedConfig) return
 
     try {
-      await removeFeed({uri: feed.uri})
+      await removeFeed(savedFeedConfig)
       // await item.unsave()
       Toast.show(_(msg`Removed from my feeds`))
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to unsave feed', {message: e})
     }
-  }, [_, feed, removeFeed])
+  }, [_, removeFeed, savedFeedConfig])
 
   const onToggleSaved = React.useCallback(async () => {
-    // Only feeds can be un/saved, lists are handled elsewhere
-    if (feed?.type !== 'feed') return
-
     if (isSaved) {
       removePromptControl.open()
     } else {
       await onSave()
     }
-  }, [feed?.type, isSaved, removePromptControl, onSave])
+  }, [isSaved, removePromptControl, onSave])
 
   /*
    * LOAD STATE
@@ -204,7 +206,7 @@ export function FeedSourceCardLoaded({
           }
         }}
         key={feed.uri}>
-        <View style={[styles.headerContainer]}>
+        <View style={[styles.headerContainer, a.align_start]}>
           <View style={[s.mr10]}>
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
@@ -221,11 +223,11 @@ export function FeedSourceCardLoaded({
             </Text>
           </View>
 
-          {showSaveBtn && feed.type === 'feed' && (
+          {showSaveBtn && (
             <View style={[s.justifyCenter]}>
               <Pressable
                 testID={`feed-${feed.displayName}-toggleSave`}
-                disabled={isSavePending || isPinPending || isRemovePending}
+                disabled={isAddSavedFeedPending || isRemovePending}
                 accessibilityRole="button"
                 accessibilityLabel={
                   isSaved
