@@ -8,7 +8,7 @@ import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
-import {FeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
+import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
@@ -56,14 +56,13 @@ function HomeScreenReady({
   pinnedFeedInfos,
 }: Props & {
   preferences: UsePreferencesQueryResponse
-  pinnedFeedInfos: FeedSourceInfo[]
+  pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
   useOTAUpdates()
   const allFeeds = React.useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
   )
-
   const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
@@ -213,8 +212,9 @@ function HomeScreenReady({
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}>
-      {allFeeds.length ? (
-        allFeeds.map(feed => {
+      {pinnedFeedInfos.length ? (
+        pinnedFeedInfos.map(feedInfo => {
+          const feed = feedInfo.feedDescriptor
           if (feed === 'following') {
             return (
               <FeedPage
@@ -228,10 +228,7 @@ function HomeScreenReady({
               />
             )
           }
-          const savedFeedConfig = preferences.savedFeeds.find(f => {
-            return feed.includes(f.value)
-          })
-
+          const savedFeedConfig = feedInfo.savedFeed
           return (
             <FeedPage
               key={feed}

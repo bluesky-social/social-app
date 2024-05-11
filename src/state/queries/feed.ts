@@ -1,4 +1,5 @@
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
@@ -13,7 +14,7 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
-import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
@@ -208,7 +209,11 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
+export type SavedFeedSourceInfo = FeedSourceInfo & {
+  savedFeed: AppBskyActorDefs.SavedFeed
+}
+
+const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
   uri: DISCOVER_FEED_URI,
@@ -225,6 +230,11 @@ const PWI_DISCOVER_FEED_STUB: FeedSourceInfo = {
   creatorHandle: '',
   likeCount: 0,
   likeUri: '',
+  // ---
+  savedFeed: {
+    id: 'pwi-discover',
+    ...DISCOVER_SAVED_FEED,
+  },
 }
 
 const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
@@ -283,11 +293,14 @@ export function usePinnedFeedsInfos() {
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
       // order the feeds/lists in the order they were pinned
-      const result: FeedSourceInfo[] = []
+      const result: SavedFeedSourceInfo[] = []
       for (let pinnedItem of pinnedItems) {
         const feedInfo = resolved.get(pinnedItem.value)
         if (feedInfo) {
-          result.push(feedInfo)
+          result.push({
+            ...feedInfo,
+            savedFeed: pinnedItem,
+          })
         } else if (pinnedItem.type === 'timeline') {
           result.push({
             type: 'feed',
@@ -306,6 +319,7 @@ export function usePinnedFeedsInfos() {
             creatorHandle: '',
             likeCount: 0,
             likeUri: '',
+            savedFeed: pinnedItem,
           })
         }
       }
