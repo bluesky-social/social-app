@@ -231,10 +231,6 @@ msgstr "添加账户"
 msgid "Add alt text"
 msgstr "新增替代文字"
 
-#: src/view/com/composer/GifAltText.tsx:175
-#~ msgid "Add ALT text"
-#~ msgstr "新增替代文字"
-
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
 #: src/view/screens/AppPasswords.tsx:158
@@ -1149,10 +1145,6 @@ msgstr "无法加载个人资料，请稍后再试。"
 #: src/components/dms/ConvoMenu.tsx:71
 msgid "Could not mute chat"
 msgstr "无法隐藏对话"
-
-#: src/components/dms/ConvoMenu.tsx:68
-#~ msgid "Could not unmute chat"
-#~ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
@@ -3590,11 +3582,6 @@ msgstr "点击以变更托管提供商"
 msgid "Press to retry"
 msgstr "点按重试"
 
-#: src/screens/Messages/Conversation/MessagesList.tsx:47
-#: src/screens/Messages/Conversation/MessagesList.tsx:53
-#~ msgid "Press to Retry"
-#~ msgstr "点按重试"
-
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
 msgstr "上一张图片"
@@ -3809,11 +3796,6 @@ msgstr "回复 <0><1/></0>"
 msgid "Report"
 msgstr "举报"
 
-#: src/components/dms/ConvoMenu.tsx:146
-#: src/components/dms/ConvoMenu.tsx:150
-#~ msgid "Report account"
-#~ msgstr "举报账户"
-
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
@@ -3989,10 +3971,6 @@ msgstr "重试上次出错的操作"
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
 msgstr "重试"
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:54
-#~ msgid "Retry."
-#~ msgstr "重试。"
 
 #: src/components/Error.tsx:98
 #: src/view/screens/ProfileList.tsx:966
@@ -5756,10 +5734,6 @@ msgstr "你目前还没有邀请码！当你持续使用 Bluesky 一段时间后
 #: src/view/screens/SavedFeeds.tsx:116
 msgid "You don't have any pinned feeds."
 msgstr "你目前还没有任何固定的信息流。"
-
-#: src/view/screens/Feeds.tsx:477
-#~ msgid "You don't have any saved feeds!"
-#~ msgstr "你目前还没有任何保存的信息流！"
 
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "You don't have any saved feeds."
