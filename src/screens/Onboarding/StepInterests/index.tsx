@@ -31,8 +31,8 @@ import {Text} from '#/components/Typography'
 export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
-  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
+  const {track} = useAnalytics()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
