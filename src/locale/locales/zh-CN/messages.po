@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-05-10 00:47+0800\n"
+"POT-Creation-Date: 2024-05-11 10:45+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,69 +19,69 @@ msgstr "(没有邮件)"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "其他 {0, plural, other {{formattedCount}}} 人"
+msgstr "{0, plural, one {其他 {formattedCount} 人} other {其他 {formattedCount} 人}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr "{0, plural, other {#}} 个标签已应用到此账户"
+msgstr "{0, plural, one {# 个标签已应用到此账户} other {# 个标签已应用到此账户}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "{0, plural, other {#}} 个标签已应用到此内容"
+msgstr "{0, plural, one {# 个标签已应用到此内容} other {# 个标签已应用到此内容}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, other {#}} 条转发"
+msgstr "{0, plural, one {# 条转发} other {# 条转发}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:373
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "关注者"
+msgstr "{0, plural, one {关注者} other {关注者}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:377
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "正在关注"
+msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:245
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "喜欢（{0, plural, other {#}} 个喜欢）"
+msgstr "{0, plural, one {喜欢 (# 个喜欢)} other {喜欢 (# 个喜欢)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:359
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "喜欢"
+msgstr "{0, plural, one {喜欢} other {喜欢}}"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:267
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{0, plural, other {#}} 位用户喜欢"
+msgstr "{0, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "帖子"
+msgstr "{0, plural, one {帖子} other {帖子}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "回复（{0, plural, other {#}} 个回复）"
+msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:339
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "转发"
+msgstr "{0, plural, one {转发} other {转发}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "取消喜欢（{0, plural, other {#}} 个喜欢）"
+msgstr  "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{count, plural, other {#}} 位用户喜欢"
+msgstr "{count, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "时"
+msgstr "{estimatedTimeHrs, plural, one {时} other {时}}"
 
 #: src/screens/Deactivated.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "分"
+msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:454
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -92,7 +92,7 @@ msgstr "{following} 个正在关注"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
 #: src/view/screens/ProfileFeed.tsx:604
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr "{likeCount, plural, other {#}} 个用户喜欢"
+msgstr "{likeCount, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
 #: src/view/shell/Drawer.tsx:464
 msgid "{numUnreadNotifications} unread"
@@ -100,7 +100,7 @@ msgstr "{numUnreadNotifications} 个未读"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:66
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-msgstr "{value, plural, =0 {显示所有回复} other {显示至少有 # 个喜欢数的回复}}"
+msgstr "{value, plural, =0 {显示所有回复} one {显示至少含有 # 个喜欢数的回复} other {显示至少含有 # 个喜欢数的回复}}"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:159
 msgid "<0/> members"
@@ -108,11 +108,11 @@ msgstr "<0/> 个成员"
 
 #: src/view/shell/Drawer.tsx:92
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> 关注者"
+msgstr "<0>{0}</0> {1, plural, one {关注者} other {关注者}}"
 
 #: src/view/shell/Drawer.tsx:103
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> 正在关注"
+msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
 #: src/view/com/modals/SelfLabel.tsx:134
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
