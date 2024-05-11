@@ -5,8 +5,10 @@ import {
   cacheDirectory,
   copyAsync,
   deleteAsync,
+  documentDirectory,
   EncodingType,
   makeDirectoryAsync,
+  StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
@@ -16,6 +18,7 @@ import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
 import {isAndroid, isIOS} from 'platform/detection'
+import * as Toast from '#/view/com/util/Toast'
 import {Dimensions} from './types'
 
 export async function compressIfNeeded(
@@ -254,24 +257,68 @@ export async function saveBytesToDisk(
   bytes: Uint8Array,
   type: string,
 ) {
-  // Should never happen on native (here for type safety)
-  if (!cacheDirectory) throw new Error('No cache directory ')
-
   const encoded = Buffer.from(bytes).toString('base64')
+  await saveToDevice(filename, encoded, type)
+}
 
-  const directoryUri = joinPath(cacheDirectory, String(uuid.v4()))
-  await makeDirectoryAsync(directoryUri, {intermediates: true})
+export async function saveToDevice(
+  filename: string,
+  encoded: string,
+  type: string,
+) {
+  if (isIOS) {
+    await withTempFile(filename, encoded, type, async tmpFileUrl => {
+      await Sharing.shareAsync(tmpFileUrl, {UTI: type})
+    })
 
-  const fileUri = joinPath(directoryUri, filename)
-  await writeAsStringAsync(fileUri, encoded, {encoding: EncodingType.Base64})
+    Toast.show('Done!')
+  } else {
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync()
+
+    if (permissions.granted) {
+      const fileUrl = await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        filename,
+        type,
+      )
+
+      await writeAsStringAsync(fileUrl, encoded, {
+        encoding: EncodingType.Base64,
+      })
+
+      Toast.show('File saved!')
+    } else {
+      // Permissions denied, fallback to sharing
+
+      await withTempFile(filename, encoded, type, async tmpFileUrl => {
+        await Sharing.shareAsync(tmpFileUrl, {mimeType: type})
+      })
+    }
+  }
+}
+
+async function withTempFile<T>(
+  filename: string,
+  encoded: string,
+  type: string,
+  cb: (url: string) => T | Promise<T>,
+): Promise<T> {
+  // Should never happen on native (here for type safety)
+  if (!documentDirectory) throw new Error('No document directory ')
+
+  // Using a directory so that the file name is not a random string
+  const tmpDirUri = joinPath(documentDirectory, String(uuid.v4()))
+  await makeDirectoryAsync(tmpDirUri, {intermediates: true})
 
   try {
-    if (isIOS) {
-      await RNShare.share({url: fileUri})
-    } else {
-      await Sharing.shareAsync(fileUri, {mimeType: type})
-    }
+    const tmpFileUrl = joinPath(tmpDirUri, filename)
+    await writeAsStringAsync(tmpFileUrl, encoded, {
+      encoding: EncodingType.Base64,
+    })
+
+    return await cb(tmpFileUrl)
   } finally {
-    await deleteAsync(directoryUri, {idempotent: true})
+    await deleteAsync(tmpDirUri, {idempotent: true})
   }
 }
