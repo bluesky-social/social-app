@@ -5201,7 +5201,7 @@ msgstr "从文件上传"
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
-msgstr "从媒体库上传"
+msgstr "从照片图库上传"
 
 #: src/view/com/modals/ChangeHandle.tsx:409
 msgid "Use a file on your server"
