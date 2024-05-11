@@ -277,7 +277,7 @@ msgstr "已添加至自定义资讯源"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:172
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "调整回复中需要具有的喜欢数才会在你的资讯源中显示。"
+msgstr "调整至少含有多少喜欢数的回复才会在你的资讯源中显示。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:117
@@ -1613,7 +1613,7 @@ msgstr "启用媒体播放器"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:146
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "启用此设置以便仅查看你关注的用户的回复。"
+msgstr "启用此设置项将仅显示你已关注用户的回复。"
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
@@ -4298,23 +4298,23 @@ msgstr "设置新密码"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:224
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "停用此设置项以隐藏来自订阅资讯源的所有引用帖子，转发仍将可见。"
+msgstr "停用此设置项将从资讯源中隐藏所有引用帖子，但转发仍将可见。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "停用此设置项以隐藏来自订阅资讯源的所有回复。"
+msgstr "停用此设置项将从资讯源中隐藏所有回复。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:190
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "停用此设置项以隐藏来自订阅资讯源的所有转发。"
+msgstr "停用此设置项将从资讯源中隐藏所有转发。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "启用此设置项以在分层视图中显示回复。这是一个实验性功能。"
+msgstr "启用此设置项将在分层视图中显示回复。这是一个实验性功能。"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:260
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "启用此设置项以在\"正在关注\"资讯源中显示已保存资讯源的样例。这是一个实验性功能。"
+msgstr "启用此设置项将在\"正在关注\"资讯源中显示已保存资讯源的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
