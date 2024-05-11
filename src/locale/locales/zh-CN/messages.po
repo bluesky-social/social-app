@@ -1858,7 +1858,7 @@ msgstr "在 Bluesky 寻找帖子和用户"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:110
 msgid "Fine-tune the content you see on your Following feed."
-msgstr "调整你在关注信息流上所看到的内容。"
+msgstr "调整你在“正在关注”信息流上所看到的内容。"
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
@@ -1956,7 +1956,7 @@ msgstr "正在关注 {0}"
 
 #: src/view/screens/Settings/index.tsx:564
 msgid "Following feed preferences"
-msgstr "关注信息流首选项"
+msgstr "“正在关注”信息流首选项"
 
 #: src/Navigation.tsx:269
 #: src/view/com/home/HomeHeaderLayout.web.tsx:64
@@ -1964,7 +1964,7 @@ msgstr "关注信息流首选项"
 #: src/view/screens/PreferencesFollowingFeed.tsx:103
 #: src/view/screens/Settings/index.tsx:573
 msgid "Following Feed Preferences"
-msgstr "关注信息流首选项"
+msgstr "“正在关注”信息流首选项"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
@@ -3297,7 +3297,7 @@ msgstr "开启应用专用密码设置界面"
 
 #: src/view/screens/Settings/index.tsx:565
 msgid "Opens the Following feed preferences"
-msgstr "开启关注信息流首选项"
+msgstr "开启“正在关注”信息流首选项"
 
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
@@ -4314,7 +4314,7 @@ msgstr "启用此设置项以在分层视图中显示回复。这是一个实验
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:260
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "启用此设置项以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
+msgstr "启用此设置项以在“正在关注”信息流中显示已保存信息流的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
@@ -4467,7 +4467,7 @@ msgstr "显示引用帖子"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:119
 msgid "Show quote-posts in Following feed"
-msgstr "在关注信息流中显示引用"
+msgstr "在“正在关注”信息流中显示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:135
 msgid "Show quotes in Following"
@@ -4475,7 +4475,7 @@ msgstr "在关注中显示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:95
 msgid "Show re-posts in Following feed"
-msgstr "在关注信息流中显示转发"
+msgstr "在“正在关注”信息流中显示转发"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:118
 msgid "Show Replies"
@@ -4491,7 +4491,7 @@ msgstr "在关注中显示回复"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:71
 msgid "Show replies in Following feed"
-msgstr "在关注信息流中显示回复"
+msgstr "在“正在关注”信息流中显示回复"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:187
 msgid "Show Reposts"
@@ -5897,7 +5897,7 @@ msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的关注信息流为空！关注更多用户去看看他们发了什么。"
+msgstr "你的“正在关注”信息流为空！关注更多用户去看看他们发了什么。"
 
 #: src/screens/Signup/StepHandle.tsx:73
 msgid "Your full handle will be"
