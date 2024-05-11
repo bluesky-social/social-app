@@ -6,9 +6,10 @@ import {useLingui} from '@lingui/react'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {useAgent} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 
 export function ExportCarDialog({
@@ -20,15 +21,21 @@ export function ExportCarDialog({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {getAgent} = useAgent()
+  const [loading, setLoading] = React.useState(false)
 
   const download = React.useCallback(async () => {
     const agent = getAgent()
     if (!agent.session) {
       return // shouldnt ever happen
     }
-    const did = agent.session.did
-    const res = await agent.com.atproto.sync.getRepo({did})
-    await saveBytesToDisk('repo.car', res.data, res.headers['content-type'])
+    try {
+      setLoading(true)
+      const did = agent.session.did
+      const res = await agent.com.atproto.sync.getRepo({did})
+      await saveBytesToDisk('repo.car', res.data, res.headers['content-type'])
+    } finally {
+      setLoading(false)
+    }
   }, [getAgent])
 
   return (
@@ -56,10 +63,12 @@ export function ExportCarDialog({
             color="primary"
             size="large"
             label={_(msg`Download CAR file`)}
+            disabled={loading}
             onPress={download}>
             <ButtonText>
               <Trans>Download CAR file</Trans>
             </ButtonText>
+            {loading && <ButtonIcon icon={Loader} />}
           </Button>
 
           <P
