@@ -43,6 +43,9 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         await removeFeed(feedConfig)
         Toast.show(_(msg`Removed from your feeds`))
       }
+      if (hasDiscoverPinned) {
+        setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
+      }
     } catch (err: any) {
       Toast.show(
         _(
@@ -51,7 +54,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
       )
       logger.error('Failed up update feeds', {message: err})
     }
-  }, [removeFeed, feedConfig, _])
+  }, [removeFeed, feedConfig, _, hasDiscoverPinned, setSelectedFeed])
 
   const onReplaceFeed = React.useCallback(async () => {
     try {
