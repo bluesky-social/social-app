@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {BSKY_APP_ACCOUNT_DID, IS_PROD_SERVICE} from '#/lib/constants'
 import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
@@ -41,6 +41,7 @@ export function StepFinished() {
   const [saving, setSaving] = React.useState(false)
   const {mutateAsync: overwriteSavedFeeds} = useOverwriteSavedFeedsMutation()
   const {getAgent} = useAgent()
+  const gate = useGate()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -67,40 +68,46 @@ export function StepFinished() {
         (async () => {
           await getAgent().setInterestsPref({tags: selectedInterests})
 
-          // TODO: In the reduced onboarding, we'll want to exit early here.
+          /*
+           * In the reduced onboading experiment, we'll rely on the default
+           * feeds set in `createAgentAndCreateAccount`. No feeds will be
+           * selected in onboarding and therefore we don't need to run this
+           * code (which would overwrite the other feeds already set).
+           */
+          if (!gate('reduced_onboarding_and_home_algo')) {
+            const otherFeeds = selectedFeeds.length
+              ? selectedFeeds.map(f => ({
+                  type: 'feed',
+                  value: f,
+                  pinned: true,
+                  id: TID.nextStr(),
+                }))
+              : []
 
-          const otherFeeds = selectedFeeds.length
-            ? selectedFeeds.map(f => ({
-                type: 'feed',
-                value: f,
+            /*
+             * If no selected feeds and we're in prod, add the discover feed
+             * (mimics old behavior)
+             */
+            if (
+              IS_PROD_SERVICE(getAgent().service.toString()) &&
+              !otherFeeds.length
+            ) {
+              otherFeeds.push({
+                ...DISCOVER_SAVED_FEED,
                 pinned: true,
                 id: TID.nextStr(),
-              }))
-            : []
+              })
+            }
 
-          /*
-           * If no selected feeds and we're in prod, add the discover feed
-           * (mimics old behavior)
-           */
-          if (
-            IS_PROD_SERVICE(getAgent().service.toString()) &&
-            !otherFeeds.length
-          ) {
-            otherFeeds.push({
-              ...DISCOVER_SAVED_FEED,
-              pinned: true,
-              id: TID.nextStr(),
-            })
+            await overwriteSavedFeeds([
+              {
+                ...TIMELINE_SAVED_FEED,
+                pinned: true,
+                id: TID.nextStr(),
+              },
+              ...otherFeeds,
+            ])
           }
-
-          await overwriteSavedFeeds([
-            {
-              ...TIMELINE_SAVED_FEED,
-              pinned: true,
-              id: TID.nextStr(),
-            },
-            ...otherFeeds,
-          ])
         })(),
       ])
     } catch (e: any) {
@@ -123,6 +130,7 @@ export function StepFinished() {
     overwriteSavedFeeds,
     track,
     getAgent,
+    gate,
   ])
 
   React.useEffect(() => {
