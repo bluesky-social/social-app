@@ -251,7 +251,7 @@ msgstr "添加推荐的信息流"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:43
 msgid "Add the default feed of only people you follow"
-msgstr "添加仅显示你关注的人发布帖子的默认信息流"
+msgstr "添加默认信息流（仅显示你关注的人）"
 
 #: src/view/com/modals/ChangeHandle.tsx:410
 msgid "Add the following DNS record to your domain:"
