@@ -120,19 +120,17 @@ export function StepFinished() {
         })(),
 
         (async () => {
-          if (gate('reduced_onboarding_and_home_algo')) {
-            const {imageUri, imageMime} = profileStepResults
-            if (imageUri && imageMime) {
-              const blobPromise = uploadBlob(getAgent(), imageUri, imageMime)
-              await getAgent().upsertProfile(async existing => {
-                existing = existing ?? {}
-                const res = await blobPromise
-                if (res.data.blob) {
-                  existing.avatar = res.data.blob
-                }
-                return existing
-              })
-            }
+          const {imageUri, imageMime} = profileStepResults
+          if (imageUri && imageMime) {
+            const blobPromise = uploadBlob(getAgent(), imageUri, imageMime)
+            await getAgent().upsertProfile(async existing => {
+              existing = existing ?? {}
+              const res = await blobPromise
+              if (res.data.blob) {
+                existing.avatar = res.data.blob
+              }
+              return existing
+            })
           }
         })(),
       ])
