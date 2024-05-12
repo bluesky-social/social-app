@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {useAgent} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
@@ -19,7 +19,6 @@ export function ExportCarDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {getAgent} = useAgent()
   const [loading, setLoading] = React.useState(false)
 
@@ -90,8 +89,6 @@ export function ExportCarDialog({
               .
             </Trans>
           </Text>
-
-          {!gtMobile && <View style={{height: 40}} />}
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
