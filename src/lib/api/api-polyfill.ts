@@ -68,8 +68,10 @@ async function fetchHandler(
       resBody = jsonToLex(await res.json())
     } else if (resMimeType.startsWith('text/')) {
       resBody = await res.text()
-    } else {
+    } else if (resMimeType === 'application/vnd.ipld.car') {
       resBody = await res.arrayBuffer()
+    } else {
+      throw new Error('Non-supported mime type')
     }
   }
 
