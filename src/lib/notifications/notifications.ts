@@ -15,12 +15,8 @@ const SERVICE_DID = (serviceUrl?: string) =>
 async function registerPushToken(
   getAgent: () => BskyAgent,
   account: SessionAccount,
-  token?: Notifications.DevicePushToken,
+  token: Notifications.DevicePushToken,
 ) {
-  if (!token) {
-    token = await Notifications.getDevicePushTokenAsync()
-  }
-
   try {
     await getAgent().api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
