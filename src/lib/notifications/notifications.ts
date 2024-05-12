@@ -78,7 +78,12 @@ export function useRequestNotificationsPermission() {
 
   return React.useCallback(
     async (context: 'StartOnboarding' | 'AfterOnboarding') => {
-      if (!isNative || currentPermissions?.granted) {
+      if (
+        !isNative ||
+        currentPermissions?.status === 'granted' ||
+        (currentPermissions?.status === 'denied' &&
+          !currentPermissions?.canAskAgain)
+      ) {
         return
       }
 
@@ -99,6 +104,6 @@ export function useRequestNotificationsPermission() {
         status: res.status,
       })
     },
-    [currentPermissions?.granted, gate],
+    [currentPermissions?.canAskAgain, currentPermissions?.status, gate],
   )
 }
