@@ -67,7 +67,7 @@ export function ActionsWrapper({
     <View
       style={[
         {
-          maxWidth: '65%',
+          maxWidth: '80%',
         },
         isFromSelf ? a.self_end : a.self_start,
       ]}>

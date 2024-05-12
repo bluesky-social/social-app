@@ -137,7 +137,6 @@ let MessageItemMetadata = ({
       const time = new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
-        hour12: true,
       }).format(date)
 
       const diff = now.getTime() - date.getTime()
@@ -163,7 +162,6 @@ let MessageItemMetadata = ({
       return new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
-        hour12: true,
         day: 'numeric',
         month: 'numeric',
         year: 'numeric',
@@ -195,6 +193,7 @@ let MessageItemMetadata = ({
 }
 
 MessageItemMetadata = React.memo(MessageItemMetadata)
+export {MessageItemMetadata}
 
 function localDateString(date: Date) {
   // can't use toISOString because it should be in local time

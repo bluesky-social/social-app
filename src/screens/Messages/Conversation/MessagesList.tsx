@@ -1,16 +1,12 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
-import {
-  KeyboardAvoidingView,
-  useKeyboardHandler,
-} from 'react-native-keyboard-controller'
+import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isIOS} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {useConvo} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
@@ -19,7 +15,6 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -85,7 +80,7 @@ export function MessagesList() {
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
 
-  const [hasInitiallyScrolled, setHasInitiallyScrolled] = React.useState(false)
+  const hasInitiallyScrolled = useSharedValue(false)
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -101,7 +96,7 @@ export function MessagesList() {
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous offset whenever we add new content to the previous offset whenever we add new content to the list.
-      if (isWeb && isAtTop.value && hasInitiallyScrolled) {
+      if (isWeb && isAtTop.value && hasInitiallyScrolled.value) {
         flatListRef.current?.scrollToOffset({
           animated: false,
           offset: height - contentHeight.value,
@@ -116,7 +111,7 @@ export function MessagesList() {
       }
 
       flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled,
+        animated: hasInitiallyScrolled.value,
         offset: height,
       })
       isMomentumScrolling.value = true
@@ -133,7 +128,7 @@ export function MessagesList() {
   // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
   // immediately on mount, since we are in fact at an offset of zero, so we have to ignore those initial calls.
   const onStartReached = useCallback(() => {
-    if (convo.status === ConvoStatus.Ready && hasInitiallyScrolled) {
+    if (convo.status === ConvoStatus.Ready && hasInitiallyScrolled.value) {
       convo.fetchMessageHistory()
     }
   }, [convo, hasInitiallyScrolled])
@@ -178,8 +173,8 @@ export function MessagesList() {
       // This number _must_ be the height of the MaybeLoader component.
       // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
       // adds a 50 pixel offset.
-      if (contentHeight.value > 50 && !hasInitiallyScrolled) {
-        runOnJS(setHasInitiallyScrolled)(true)
+      if (contentHeight.value > 50 && !hasInitiallyScrolled.value) {
+        hasInitiallyScrolled.value = true
       }
     },
     [contentHeight.value, hasInitiallyScrolled, isAtBottom, isAtTop],
@@ -199,10 +194,6 @@ export function MessagesList() {
     })
   }, [isMomentumScrolling])
 
-  const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
-  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
-
   // This is only used inside the useKeyboardHandler because the worklet won't work with a ref directly.
   const scrollToEndNow = React.useCallback(() => {
     flatListRef.current?.scrollToEnd({animated: false})
@@ -216,11 +207,7 @@ export function MessagesList() {
   })
 
   return (
-    <KeyboardAvoidingView
-      style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
-      keyboardVerticalOffset={isIOS ? topInset : 0}
-      behavior="padding"
-      contentContainerStyle={a.flex_1}>
+    <>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
       <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
         <List
@@ -228,17 +215,20 @@ export function MessagesList() {
           data={convo.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
+          containWeb={true}
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+          }}
           disableVirtualization={true}
-          initialNumToRender={isWeb ? 50 : 25}
-          maxToRenderPerBatch={isWeb ? 50 : 25}
+          initialNumToRender={isNative ? 30 : 60}
+          maxToRenderPerBatch={isWeb ? 30 : 60}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
             minIndexForVisible: 1,
           }}
-          containWeb={true}
-          contentContainerStyle={{paddingHorizontal: 10}}
           removeClippedSubviews={false}
+          sideBorders={false}
           onContentSizeChange={onContentSizeChange}
           onStartReached={onStartReached}
           onScrollToIndexFailed={onScrollToIndexFailed}
@@ -246,10 +236,9 @@ export function MessagesList() {
           ListHeaderComponent={
             <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
-          sideBorders={false}
         />
       </ScrollProvider>
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
-    </KeyboardAvoidingView>
+    </>
   )
 }

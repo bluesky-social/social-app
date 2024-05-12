@@ -107,12 +107,6 @@ export class Convo {
     } else {
       DEBUG_ACTIVE_CHAT = this.convoId
     }
-
-    this.events.trailConvo(this.convoId, events => {
-      this.ingestFirehose(events)
-    })
-    this.events.onConnect(this.onFirehoseConnect)
-    this.events.onError(this.onFirehoseError)
   }
 
   private commit() {
@@ -211,6 +205,7 @@ export class Convo {
           case ConvoDispatchEvent.Init: {
             this.status = ConvoStatus.Initializing
             this.setup()
+            this.setupFirehose()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
@@ -232,12 +227,14 @@ export class Convo {
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
@@ -258,12 +255,14 @@ export class Convo {
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
@@ -286,12 +285,14 @@ export class Convo {
           }
           case ConvoDispatchEvent.Suspend: {
             this.status = ConvoStatus.Suspended
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
           }
@@ -554,7 +555,7 @@ export class Convo {
           {
             cursor: nextCursor,
             convoId: this.convoId,
-            limit: isNative ? 40 : 60,
+            limit: isNative ? 30 : 60,
           },
           {
             headers: {
@@ -599,6 +600,33 @@ export class Convo {
       this.isFetchingHistory = false
       this.commit()
     }
+  }
+
+  private cleanupFirehoseConnection: (() => void) | undefined
+  private setupFirehose() {
+    // remove old listeners, if exist
+    this.cleanupFirehoseConnection?.()
+
+    // reconnect
+    this.cleanupFirehoseConnection = this.events.on(
+      event => {
+        switch (event.type) {
+          case 'connect': {
+            this.onFirehoseConnect()
+            break
+          }
+          case 'error': {
+            this.onFirehoseError(event.error)
+            break
+          }
+          case 'logs': {
+            this.ingestFirehose(event.logs)
+            break
+          }
+        }
+      },
+      {convoId: this.convoId},
+    )
   }
 
   onFirehoseConnect() {
@@ -678,14 +706,10 @@ export class Convo {
             /*
              * Update if we have this in state. If we don't, don't worry about it.
              */
-            // TODO check for other storage spots
-            if (this.pastMessages.has(ev.message.id)) {
-              /*
-               * For now, we remove deleted messages from the thread, if we receive one.
-               *
-               * To support them, it'd look something like this:
-               *   this.pastMessages.set(ev.message.id, ev.message)
-               */
+            if (
+              this.pastMessages.has(ev.message.id) ||
+              this.newMessages.has(ev.message.id)
+            ) {
               this.pastMessages.delete(ev.message.id)
               this.newMessages.delete(ev.message.id)
               this.deletedMessages.delete(ev.message.id)
@@ -713,6 +737,8 @@ export class Convo {
       id: tempId,
       message,
     })
+    // remove on each send, it might go through now without user having to click
+    this.footerItems.delete(ConvoItemError.PendingFailed)
     this.commit()
 
     if (!this.isProcessingPendingMessages) {
