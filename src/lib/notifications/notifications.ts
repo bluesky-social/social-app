@@ -86,13 +86,13 @@ export function useRequestNotificationsPermission() {
       ) {
         return
       }
-
       if (
         context === 'StartOnboarding' &&
         gate('request_notifications_permission_after_onboarding')
       ) {
         return
-      } else if (
+      }
+      if (
         context === 'AfterOnboarding' &&
         !gate('request_notifications_permission_after_onboarding')
       ) {
