@@ -1,0 +1,16 @@
+diff --git a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
+index e916023..0564d97 100644
+--- a/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
++++ b/node_modules/@mattermost/react-native-paste-input/ios/PasteInputView.m
+@@ -22,6 +22,11 @@ - (instancetype)initWithBridge:(RCTBridge *)bridge
+     _backedTextInputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+     _backedTextInputView.textInputDelegate = self;
+
++    // Disable inline predictions to prevent jank in the composer
++    if (@available(iOS 17.0, *)) {
++      _backedTextInputView.inlinePredictionType = UITextInlinePredictionTypeNo;
++    }
++
+     [self addSubview:_backedTextInputView];
+   }
+
