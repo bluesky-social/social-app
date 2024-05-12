@@ -1828,7 +1828,7 @@ msgstr "资讯源"
 
 #: src/view/screens/SavedFeeds.tsx:179
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "创建资讯源仅需你掌握一点编程基础。查看 <0/> 以获取详情。"
+msgstr "创建资讯源只需你掌握一点编程基础。查看 <0/> 以获取详情。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 msgid "Feeds can be topical as well!"
