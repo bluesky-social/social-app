@@ -8,9 +8,6 @@ module.exports = function (api) {
         {
           lazyImports: true,
           native: {
-            // We should be able to remove this after upgrading Expo
-            // to a version that includes https://github.com/expo/expo/pull/24672.
-            unstable_transformProfile: 'hermes-stable',
             // Disable ESM -> CJS compilation because Metro takes care of it.
             // However, we need it in Jest tests since those run without Metro.
             disableImportExportTransform: !isTestEnv,
