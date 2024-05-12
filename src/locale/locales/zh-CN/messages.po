@@ -3676,7 +3676,7 @@ msgstr "比率"
 
 #: src/components/dms/MessageReportDialog.tsx:149
 msgid "Reason: {0}"
-msgstr "结果：{0}"
+msgstr "原因：{0}"
 
 #: src/view/screens/Search/Search.tsx:886
 msgid "Recent Searches"
