@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {useAgent} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -32,11 +33,16 @@ export function ExportCarDialog({
       const did = agent.session.did
       const res = await agent.com.atproto.sync.getRepo({did})
       await saveBytesToDisk('repo.car', res.data, res.headers['content-type'])
+
+      Toast.show(_(msg`File saved successfully!`))
+    } catch {
+      Toast.show(_(msg`Failed to save file`))
     } finally {
       setLoading(false)
+
       control.close()
     }
-  }, [control, getAgent])
+  }, [_, control, getAgent])
 
   return (
     <Dialog.Outer control={control}>

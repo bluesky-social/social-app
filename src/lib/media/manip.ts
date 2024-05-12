@@ -18,7 +18,6 @@ import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
 import {isAndroid, isIOS} from 'platform/detection'
-import * as Toast from '#/view/com/util/Toast'
 import {Dimensions} from './types'
 
 export async function compressIfNeeded(
@@ -270,8 +269,6 @@ export async function saveToDevice(
     await withTempFile(filename, encoded, type, async tmpFileUrl => {
       await Sharing.shareAsync(tmpFileUrl, {UTI: type})
     })
-
-    Toast.show('Done!')
   } else {
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync()
@@ -286,8 +283,6 @@ export async function saveToDevice(
       await writeAsStringAsync(fileUrl, encoded, {
         encoding: EncodingType.Base64,
       })
-
-      Toast.show('File saved!')
     } else {
       // Permissions denied, fallback to sharing
 
