@@ -4,7 +4,8 @@ import {BskyAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
-import {devicePlatform} from 'platform/detection'
+import {logEvent} from 'lib/statsig/statsig'
+import {devicePlatform, isNative} from 'platform/detection'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -45,7 +46,7 @@ export function useNotificationsRegistration() {
 
   React.useEffect(() => {
     if (
-      currentPermissions?.status !== 'granted' ||
+      !currentPermissions?.granted ||
       !currentAccount ||
       prevAccountDid.current === currentAccount.did
     ) {
@@ -54,6 +55,8 @@ export function useNotificationsRegistration() {
 
     registerPushToken(getAgent, currentAccount)
 
+    // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
+    // cases. This will fire `registerPushToken` whenever that happens.
     const subscription = Notifications.addPushTokenListener(() => {
       registerPushToken(getAgent, currentAccount)
     })
@@ -62,4 +65,23 @@ export function useNotificationsRegistration() {
       subscription.remove()
     }
   }, [currentAccount, currentPermissions, getAgent])
+}
+
+export function useNotificationsPermissionRequest() {
+  const [currentPermissions] = Notifications.usePermissions()
+
+  return React.useCallback(
+    async (context: 'StartOnboarding' | 'AfterOnboarding') => {
+      if (!isNative || currentPermissions?.granted) {
+        return
+      }
+
+      const res = await Notifications.requestPermissionsAsync()
+      logEvent('notifications:request', {
+        logContext: context,
+        status: res.status,
+      })
+    },
+    [currentPermissions],
+  )
 }

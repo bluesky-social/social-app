@@ -68,6 +68,10 @@ export type LogEvents = {
   }
   'composer:gif:open': {}
   'composer:gif:select': {}
+  'notifications:request': {
+    logContext: 'StartOnboarding' | 'AfterOnboarding'
+    status: 'granted' | 'denied' | 'undetermined'
+  }
 
   // Data events
   'account:create:begin': {}
