@@ -1625,7 +1625,7 @@ msgstr "已启用"
 
 #: src/screens/Profile/Sections/Feed.tsx:104
 msgid "End of feed"
-msgstr "资讯源的末尾"
+msgstr "已到末尾"
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
