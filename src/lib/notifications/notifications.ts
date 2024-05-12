@@ -67,7 +67,7 @@ export function useNotificationsRegistration() {
   }, [currentAccount, currentPermissions, getAgent])
 }
 
-export function useNotificationsPermissionRequest() {
+export function useRequestNotificationsPermission() {
   const [currentPermissions] = Notifications.usePermissions()
 
   return React.useCallback(

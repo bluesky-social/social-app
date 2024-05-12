@@ -20,6 +20,7 @@ import {
 } from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -58,7 +59,9 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
-  useOTAUpdates()
+  const gate = useGate()
+  const requestNotificationsPermission = useRequestNotificationsPermission()
+
   const allFeeds = React.useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
@@ -68,6 +71,14 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
+
+  useOTAUpdates()
+
+  React.useEffect(() => {
+    if (gate('request_notifications_permission_after_onboarding')) {
+      requestNotificationsPermission('AfterOnboarding')
+    }
+  }, [gate, requestNotificationsPermission])
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
 
