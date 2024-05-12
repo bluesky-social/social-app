@@ -18819,10 +18819,10 @@ react-native-keyboard-controller@^1.11.7:
   resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.11.7.tgz#85640374e4c3627c3b667256a1d308698ff80393"
   integrity sha512-K2zlqVyWX4QO7r+dHMQgZT41G2dSEWtDYgBdht1WVyTaMQmwTMalZcHCWBVOnzyGaJq/hMKhF1kSPqJP1xqSFA==
 
-react-native-pager-view@6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.3.1.tgz#16ef202248311262e3fffd0191d7043a88e8d5fc"
-  integrity sha512-U7Ep6ukTA5pKMQskSxHpDI9RoESzBHDcBfVFwnK5SRCy9632Dq4a7Jp2m8vA9mK5k6Vi7yaqqKLFVoHnUdC8zA==
+react-native-pager-view@6.2.3:
+  version "6.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.2.3.tgz#698f6387fdf06cecc3d8d4792604419cb89cb775"
+  integrity sha512-dqVpXWFtPNfD3D2QQQr8BP+ullS5MhjRJuF8Z/qml4QTILcrWaW8F5iAxKkQR3Jl0ikcEryG/+SQlNcwlo0Ggg==
 
 react-native-picker-select@^9.1.3:
   version "9.1.3"
