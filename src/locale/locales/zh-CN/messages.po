@@ -1140,7 +1140,7 @@ msgstr "无法加载列表"
 
 #: src/components/dms/NewChat.tsx:241
 msgid "Could not load profiles. Please try again later."
-msgstr "无法加载个人资料，请稍后再试。"
+msgstr "无法加载用户个人资料，请稍后再试。"
 
 #: src/components/dms/ConvoMenu.tsx:71
 msgid "Could not mute chat"
