@@ -118,7 +118,7 @@
     "expo-camera": "~14.1.3",
     "expo-clipboard": "^5.0.1",
     "expo-constants": "~15.4.6",
-    "expo-dev-client": "~3.3.11",
+    "expo-dev-client": "^4.0.13",
     "expo-device": "~5.9.4",
     "expo-file-system": "^16.0.9",
     "expo-haptics": "^12.8.1",
