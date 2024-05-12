@@ -1,9 +1,9 @@
 /* global jest */
-import {configure} from '@testing-library/react-native'
 import 'react-native-gesture-handler/jestSetup'
-
 // IMPORTANT: this is what's used in the native runtime
 import 'react-native-url-polyfill/auto'
+
+import {configure} from '@testing-library/react-native'
 
 configure({asyncUtilTimeout: 20000})
 
@@ -90,3 +90,8 @@ jest.mock('sentry-expo', () => ({
 }))
 
 jest.mock('crypto', () => ({}))
+
+jest.mock('expo-application', () => ({
+  nativeApplicationVersion: '1.0.0',
+  nativeBuildVersion: '1',
+}))
