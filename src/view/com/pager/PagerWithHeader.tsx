@@ -111,10 +111,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
 
     const scrollRefs = useSharedValue<AnimatedRef<any>[]>([])
     const registerRef = React.useCallback(
-      (scrollRef: AnimatedRef<any>, atIndex: number) => {
+      (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
         scrollRefs.modify(refs => {
           'worklet'
-          refs[atIndex] = scrollRef
+          if (scrollRef != null) {
+            refs[atIndex] = scrollRef
+          }
           return refs
         })
       },
