@@ -93,10 +93,7 @@ export function StepProfile() {
   React.useEffect(() => {
     // We have an experiment running for redueced onboarding, where this screen shows up as the first in onboarding.
     // We only want to request permissions when that gate is actually active to prevent pollution
-    if (
-      gate('reduced_onboarding_and_home_algo') &&
-      !gate('request_notifications_permission_after_onboarding')
-    ) {
+    if (gate('reduced_onboarding_and_home_algo')) {
       requestNotificationsPermission('StartOnboarding')
     }
   }, [gate, requestNotificationsPermission])

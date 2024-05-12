@@ -76,10 +76,8 @@ function HomeScreenReady({
   useOTAUpdates()
 
   React.useEffect(() => {
-    if (gate('request_notifications_permission_after_onboarding')) {
-      requestNotificationsPermission('AfterOnboarding')
-    }
-  }, [gate, requestNotificationsPermission])
+    requestNotificationsPermission('AfterOnboarding')
+  }, [requestNotificationsPermission])
 
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)

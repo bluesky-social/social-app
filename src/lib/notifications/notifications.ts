@@ -4,7 +4,7 @@ import {BskyAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
-import {logEvent} from 'lib/statsig/statsig'
+import {logEvent, useGate} from 'lib/statsig/statsig'
 import {devicePlatform, isNative} from 'platform/detection'
 
 const SERVICE_DID = (serviceUrl?: string) =>
@@ -73,6 +73,7 @@ export function useNotificationsRegistration() {
 }
 
 export function useRequestNotificationsPermission() {
+  const gate = useGate()
   const [currentPermissions] = Notifications.usePermissions()
 
   return React.useCallback(
@@ -81,12 +82,23 @@ export function useRequestNotificationsPermission() {
         return
       }
 
+      if (
+        context === 'StartOnboarding' &&
+        gate('request_notifications_permission_after_onboarding')
+      ) {
+        return
+      } else if (
+        context === 'AfterOnboarding' &&
+        !gate('request_notifications_permission_after_onboarding')
+      ) {
+        return
+      }
+
       const res = await Notifications.requestPermissionsAsync()
       logEvent('notifications:request', {
-        logContext: context,
         status: res.status,
       })
     },
-    [currentPermissions],
+    [currentPermissions?.granted, gate],
   )
 }
