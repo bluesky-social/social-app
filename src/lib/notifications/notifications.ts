@@ -15,8 +15,12 @@ const SERVICE_DID = (serviceUrl?: string) =>
 async function registerPushToken(
   getAgent: () => BskyAgent,
   account: SessionAccount,
+  token?: Notifications.DevicePushToken,
 ) {
-  const token = await Notifications.getDevicePushTokenAsync()
+  if (!token) {
+    token = await Notifications.getDevicePushTokenAsync()
+  }
+
   try {
     await getAgent().api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
@@ -53,12 +57,13 @@ export function useNotificationsRegistration() {
       return
     }
 
-    registerPushToken(getAgent, currentAccount)
+    // Whenever we all `getDevicePushTokenAsync()`, a change event will be fired below
+    Notifications.getDevicePushTokenAsync()
 
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
-    const subscription = Notifications.addPushTokenListener(() => {
-      registerPushToken(getAgent, currentAccount)
+    const subscription = Notifications.addPushTokenListener(async newToken => {
+      registerPushToken(getAgent, currentAccount, newToken)
     })
 
     return () => {
