@@ -273,23 +273,19 @@ export async function saveToDevice(
     const permissions =
       await StorageAccessFramework.requestDirectoryPermissionsAsync()
 
-    if (permissions.granted) {
-      const fileUrl = await StorageAccessFramework.createFileAsync(
-        permissions.directoryUri,
-        filename,
-        type,
-      )
-
-      await writeAsStringAsync(fileUrl, encoded, {
-        encoding: EncodingType.Base64,
-      })
-    } else {
-      // Permissions denied, fallback to sharing
-
-      await withTempFile(filename, encoded, type, async tmpFileUrl => {
-        await Sharing.shareAsync(tmpFileUrl, {mimeType: type})
-      })
+    if (!permissions.granted) {
+      throw new Error('Permission denied')
     }
+
+    const fileUrl = await StorageAccessFramework.createFileAsync(
+      permissions.directoryUri,
+      filename,
+      type,
+    )
+
+    await writeAsStringAsync(fileUrl, encoded, {
+      encoding: EncodingType.Base64,
+    })
   }
 }
 
