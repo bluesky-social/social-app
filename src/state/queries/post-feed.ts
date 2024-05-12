@@ -303,10 +303,7 @@ export function usePostFeedQuery(
                               i === 0 && slice.source
                                 ? slice.source
                                 : item.reason,
-                            feedContext:
-                              i === 0 && slice.feedContext
-                                ? slice.feedContext
-                                : item.feedContext,
+                            feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
                           }
                         }
