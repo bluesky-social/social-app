@@ -72,6 +72,7 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
 
+  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
 
   React.useEffect(() => {
@@ -79,8 +80,6 @@ function HomeScreenReady({
       requestNotificationsPermission('AfterOnboarding')
     }
   }, [gate, requestNotificationsPermission])
-
-  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
 
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
