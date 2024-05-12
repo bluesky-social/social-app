@@ -4994,7 +4994,7 @@ msgstr "该资讯源当前使用人数较多，服务暂时不可用。请稍后
 #: src/view/screens/ProfileFeed.tsx:471
 #: src/view/screens/ProfileList.tsx:724
 msgid "This feed is empty!"
-msgstr "该资讯源为空！"
+msgstr "这里是空的！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
