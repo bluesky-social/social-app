@@ -14,16 +14,18 @@
 
 import React from 'react'
 import {
+  FlatList,
   FlatListProps,
   ScrollViewProps,
   StyleSheet,
   View,
   ViewProps,
 } from 'react-native'
-import {addStyle} from 'lib/styles'
+import Animated from 'react-native-reanimated'
+
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import Animated from 'react-native-reanimated'
+import {addStyle} from 'lib/styles'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number
@@ -66,7 +68,7 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
     desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<Animated.FlatList<ItemT>>,
+  ref: React.Ref<FlatList<any>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
