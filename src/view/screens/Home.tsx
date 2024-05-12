@@ -120,7 +120,6 @@ function HomeScreenReady({
     }),
   )
 
-  const gate = useGate()
   const mode = useMinimalShellMode()
   const {isMobile} = useWebMediaQueries()
   useFocusEffect(
