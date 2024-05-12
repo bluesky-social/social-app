@@ -59,7 +59,7 @@ export function useNotificationsRegistration() {
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, currentPermissions, getAgent])
+  }, [currentAccount, currentPermissions?.granted, getAgent])
 }
 
 export function useRequestNotificationsPermission() {
