@@ -61,6 +61,7 @@ function ShellInner() {
   const closeAnyActiveElement = useCloseAnyActiveElement()
   const {importantForAccessibility} = useDialogStateContext()
 
+  useNotificationsRegistration()
   useNotificationsHandler()
 
   React.useEffect(() => {
@@ -74,8 +75,6 @@ function ShellInner() {
       listener.remove()
     }
   }, [closeAnyActiveElement])
-
-  useNotificationsRegistration()
 
   return (
     <>
