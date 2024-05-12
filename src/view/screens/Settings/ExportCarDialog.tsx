@@ -31,15 +31,20 @@ export function ExportCarDialog({
     try {
       setLoading(true)
       const did = agent.session.did
-      const res = await agent.com.atproto.sync.getRepo({did})
-      await saveBytesToDisk('repo.car', res.data, res.headers['content-type'])
+      const downloadRes = await agent.com.atproto.sync.getRepo({did})
+      const saveRes = await saveBytesToDisk(
+        'repo.car',
+        downloadRes.data,
+        downloadRes.headers['content-type'],
+      )
 
-      Toast.show(_(msg`File saved successfully!`))
+      if (saveRes) {
+        Toast.show(_(msg`File saved successfully!`))
+      }
     } catch {
-      Toast.show(_(msg`Failed to save file`))
+      Toast.show(_(msg`Error occurred while saving file`))
     } finally {
       setLoading(false)
-
       control.close()
     }
   }, [_, control, getAgent])
