@@ -739,8 +739,8 @@ let SearchInputBox = ({
       style={[
         {backgroundColor: pal.colors.backgroundLight},
         styles.headerSearchContainer,
+        // @ts-expect-error web only
         isWeb && {
-          // @ts-ignore web only
           cursor: 'default',
         },
       ]}
