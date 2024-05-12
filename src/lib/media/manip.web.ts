@@ -150,6 +150,7 @@ export async function saveBytesToDisk(
   await downloadUrl(url, filename)
   // Firefox requires a small delay
   setTimeout(() => URL.revokeObjectURL(url), 100)
+  return true
 }
 
 async function downloadUrl(href: string, filename: string) {

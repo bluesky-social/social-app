@@ -17,6 +17,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
+import {logger} from '#/logger'
 import {isAndroid, isIOS} from 'platform/detection'
 import {Dimensions} from './types'
 
@@ -257,7 +258,7 @@ export async function saveBytesToDisk(
   type: string,
 ) {
   const encoded = Buffer.from(bytes).toString('base64')
-  await saveToDevice(filename, encoded, type)
+  return await saveToDevice(filename, encoded, type)
 }
 
 export async function saveToDevice(
@@ -265,51 +266,49 @@ export async function saveToDevice(
   encoded: string,
   type: string,
 ) {
-  if (isIOS) {
-    await withTempFile(filename, encoded, type, async tmpFileUrl => {
+  try {
+    if (isIOS) {
+      const tmpFileUrl = await withTempFile(filename, encoded)
       await Sharing.shareAsync(tmpFileUrl, {UTI: type})
-    })
-  } else {
-    const permissions =
-      await StorageAccessFramework.requestDirectoryPermissionsAsync()
+      safeDeleteAsync(tmpFileUrl)
+      return true
+    } else {
+      const permissions =
+        await StorageAccessFramework.requestDirectoryPermissionsAsync()
 
-    if (!permissions.granted) {
-      throw new Error('Permission denied')
+      if (!permissions.granted) {
+        return false
+      }
+
+      const fileUrl = await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        filename,
+        type,
+      )
+
+      await writeAsStringAsync(fileUrl, encoded, {
+        encoding: EncodingType.Base64,
+      })
+      return true
     }
-
-    const fileUrl = await StorageAccessFramework.createFileAsync(
-      permissions.directoryUri,
-      filename,
-      type,
-    )
-
-    await writeAsStringAsync(fileUrl, encoded, {
-      encoding: EncodingType.Base64,
-    })
+  } catch (e) {
+    logger.error('Error occurred while saving file', {message: e})
+    return false
   }
 }
 
-async function withTempFile<T>(
+async function withTempFile(
   filename: string,
   encoded: string,
-  type: string,
-  cb: (url: string) => T | Promise<T>,
-): Promise<T> {
-  // Should never happen on native (here for type safety)
-  if (!documentDirectory) throw new Error('No document directory ')
-
+): Promise<string> {
   // Using a directory so that the file name is not a random string
-  const tmpDirUri = joinPath(documentDirectory, String(uuid.v4()))
+  // documentDirectory will always be available on native, so we assert as a string.
+  const tmpDirUri = joinPath(documentDirectory as string, String(uuid.v4()))
   await makeDirectoryAsync(tmpDirUri, {intermediates: true})
 
-  try {
-    const tmpFileUrl = joinPath(tmpDirUri, filename)
-    await writeAsStringAsync(tmpFileUrl, encoded, {
-      encoding: EncodingType.Base64,
-    })
-
-    return await cb(tmpFileUrl)
-  } finally {
-    await deleteAsync(tmpDirUri, {idempotent: true})
-  }
+  const tmpFileUrl = joinPath(tmpDirUri, filename)
+  await writeAsStringAsync(tmpFileUrl, encoded, {
+    encoding: EncodingType.Base64,
+  })
+  return tmpFileUrl
 }

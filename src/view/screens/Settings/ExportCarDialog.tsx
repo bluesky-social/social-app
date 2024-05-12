@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {saveBytesToDisk} from '#/lib/media/manip'
+import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -41,7 +42,8 @@ export function ExportCarDialog({
       if (saveRes) {
         Toast.show(_(msg`File saved successfully!`))
       }
-    } catch {
+    } catch (e) {
+      logger.error('Error occurred while downloading CAR file', {message: e})
       Toast.show(_(msg`Error occurred while saving file`))
     } finally {
       setLoading(false)
