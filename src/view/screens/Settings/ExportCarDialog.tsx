@@ -10,7 +10,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {P, Text} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 
 export function ExportCarDialog({
   control,
@@ -35,8 +35,9 @@ export function ExportCarDialog({
       await saveBytesToDisk('repo.car', res.data, res.headers['content-type'])
     } finally {
       setLoading(false)
+      control.close()
     }
-  }, [getAgent])
+  }, [control, getAgent])
 
   return (
     <Dialog.Outer control={control}>
@@ -45,18 +46,18 @@ export function ExportCarDialog({
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">
-        <View style={[a.relative, a.gap_md, a.w_full]}>
+        <View style={[a.relative, a.gap_lg, a.w_full]}>
           <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
             <Trans>Export My Data</Trans>
           </Text>
-          <P nativeID="dialog-description" style={[a.text_sm]}>
+          <Text nativeID="dialog-description" style={[a.text_sm]}>
             <Trans>
               Your account repository, containing all public data records, can
               be downloaded as a "CAR" file. This file does not include media
               embeds, such as images, or your private data, which must be
               fetched separately.
             </Trans>
-          </P>
+          </Text>
 
           <Button
             variant="solid"
@@ -71,9 +72,8 @@ export function ExportCarDialog({
             {loading && <ButtonIcon icon={Loader} />}
           </Button>
 
-          <P
+          <Text
             style={[
-              a.py_xs,
               t.atoms.text_contrast_medium,
               a.text_sm,
               a.leading_snug,
@@ -89,21 +89,7 @@ export function ExportCarDialog({
               </InlineLinkText>
               .
             </Trans>
-          </P>
-
-          <View style={gtMobile && [a.flex_row, a.justify_end]}>
-            <Button
-              testID="doneBtn"
-              variant="outline"
-              color="primary"
-              size={gtMobile ? 'small' : 'large'}
-              onPress={() => control.close()}
-              label={_(msg`Done`)}>
-              <ButtonText>
-                <Trans>Done</Trans>
-              </ButtonText>
-            </Button>
-          </View>
+          </Text>
 
           {!gtMobile && <View style={{height: 40}} />}
         </View>
