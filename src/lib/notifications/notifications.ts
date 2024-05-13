@@ -45,10 +45,7 @@ async function getPushToken() {
 }
 
 export function useNotificationsRegistration() {
-  const [currentPermissions] = Notifications.usePermissions()
   const {getAgent} = useAgent()
-
-  // WARNING This is not reactive. Current permissions change will not cause a re-render
   const {currentAccount} = useSession()
 
   React.useEffect(() => {
@@ -67,22 +64,20 @@ export function useNotificationsRegistration() {
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, currentPermissions, getAgent])
+  }, [currentAccount, getAgent])
 }
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
 
-  // WARNING This is not reactive. Current permissions change will not cause a re-render
-  const [currentPermissions] = Notifications.usePermissions()
-
   return React.useCallback(
     async (context: 'StartOnboarding' | 'AfterOnboarding') => {
+      const permissions = await Notifications.getPermissionsAsync()
+
       if (
         !isNative ||
-        currentPermissions?.status === 'granted' ||
-        (currentPermissions?.status === 'denied' &&
-          !currentPermissions?.canAskAgain)
+        permissions?.status === 'granted' ||
+        (permissions?.status === 'denied' && !permissions?.canAskAgain)
       ) {
         return
       }
@@ -107,6 +102,6 @@ export function useRequestNotificationsPermission() {
       // This will fire a pushTokenEvent, which will handle registration of the token
       getPushToken()
     },
-    [currentPermissions, gate],
+    [gate],
   )
 }
