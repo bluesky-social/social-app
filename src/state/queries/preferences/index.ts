@@ -6,6 +6,7 @@ import {
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {STALE} from '#/state/queries'
@@ -236,6 +237,45 @@ export function useRemoveFeedMutation() {
     mutationFn: async savedFeed => {
       await getAgent().removeSavedFeeds([savedFeed.id])
       track('CustomFeed:Unsave')
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useReplaceForYouWithDiscoverFeedMutation() {
+  const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
+
+  return useMutation({
+    mutationFn: async ({
+      forYouFeedConfig,
+      discoverFeedConfig,
+    }: {
+      forYouFeedConfig: AppBskyActorDefs.SavedFeed | undefined
+      discoverFeedConfig: AppBskyActorDefs.SavedFeed | undefined
+    }) => {
+      if (forYouFeedConfig) {
+        await getAgent().removeSavedFeeds([forYouFeedConfig.id])
+      }
+      if (!discoverFeedConfig) {
+        await getAgent().addSavedFeeds([
+          {
+            type: 'feed',
+            value: PROD_DEFAULT_FEED('whats-hot'),
+            pinned: true,
+          },
+        ])
+      } else {
+        await getAgent().updateSavedFeeds([
+          {
+            ...discoverFeedConfig,
+            pinned: true,
+          },
+        ])
+      }
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
