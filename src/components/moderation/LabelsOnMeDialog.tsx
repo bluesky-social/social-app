@@ -164,20 +164,18 @@ function Label({
           {isSelfLabel ? (
             <Trans>This label was applied by you.</Trans>
           ) : (
-            <>
-              <Trans>
-                Source:{' '}
-                <InlineLinkText
-                  to={makeProfileLink(
-                    labeler ? labeler.creator : {did: label.src, handle: ''},
-                  )}
-                  onPress={() => control.close()}>
-                  {labeler
-                    ? sanitizeHandle(labeler.creator.handle, '@')
-                    : label.src}
-                </InlineLinkText>
-              </Trans>
-            </>
+            <Trans>
+              Source:{' '}
+              <InlineLinkText
+                to={makeProfileLink(
+                  labeler ? labeler.creator : {did: label.src, handle: ''},
+                )}
+                onPress={() => control.close()}>
+                {labeler
+                  ? sanitizeHandle(labeler.creator.handle, '@')
+                  : label.src}
+              </InlineLinkText>
+            </Trans>
           )}
         </Text>
       </View>
