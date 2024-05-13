@@ -40,15 +40,19 @@ async function registerPushToken(
 export function useNotificationsRegistration() {
   const [currentPermissions] = Notifications.usePermissions()
   const {getAgent} = useAgent()
+
+  // WARNING This is not reactive. Current permissions change will not cause a re-render
   const {currentAccount} = useSession()
 
   React.useEffect(() => {
-    if (!currentAccount || !currentPermissions?.granted) {
+    if (!currentAccount) {
       return
     }
 
     // Whenever we all `getDevicePushTokenAsync()`, a change event will be fired below
-    Notifications.getDevicePushTokenAsync()
+    if (currentPermissions?.status === 'granted') {
+      Notifications.getDevicePushTokenAsync()
+    }
 
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
@@ -59,11 +63,13 @@ export function useNotificationsRegistration() {
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, currentPermissions?.granted, getAgent])
+  }, [currentAccount, currentPermissions, getAgent])
 }
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
+
+  // WARNING This is not reactive. Current permissions change will not cause a re-render
   const [currentPermissions] = Notifications.usePermissions()
 
   return React.useCallback(
@@ -93,7 +99,11 @@ export function useRequestNotificationsPermission() {
       logEvent('notifications:request', {
         status: res.status,
       })
+
+      if (res.granted) {
+        Notifications.getDevicePushTokenAsync()
+      }
     },
-    [currentPermissions?.canAskAgain, currentPermissions?.status, gate],
+    [currentPermissions, gate],
   )
 }
