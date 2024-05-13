@@ -289,6 +289,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
+      // @ts-expect-error web only prop
       onMouseUp={onPress}
       style={{flexShrink: 1}}>
       {props.children}
