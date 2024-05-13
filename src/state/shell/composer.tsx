@@ -1,11 +1,13 @@
 import React from 'react'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   ModerationDecision,
-  AppBskyActorDefs,
 } from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {purgeTemporaryImageFiles} from '../gallery'
 
 export interface ComposerOptsPostRef {
   uri: string
@@ -62,6 +64,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const closeComposer = useNonReactiveCallback(() => {
     let wasOpen = !!state
+
+    purgeTemporaryImageFiles()
     setState(undefined)
     return wasOpen
   })

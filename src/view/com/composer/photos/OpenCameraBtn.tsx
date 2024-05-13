@@ -9,17 +9,17 @@ import {useCameraPermission} from '#/lib/hooks/usePermissions'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
 import {isMobileWeb, isNative} from '#/platform/detection'
-import {GalleryModel} from '#/state/models/media/gallery'
+import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 
 type Props = {
-  gallery: GalleryModel
   disabled?: boolean
+  onAdd: (next: ComposerImage[]) => void
 }
 
-export function OpenCameraBtn({gallery, disabled}: Props) {
+export function OpenCameraBtn({disabled, onAdd}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -48,13 +48,16 @@ export function OpenCameraBtn({gallery, disabled}: Props) {
       if (mediaPermissionRes) {
         await MediaLibrary.createAssetAsync(img.path)
       }
-      gallery.add(img)
+
+      const res = await createComposerImage(img)
+
+      onAdd([res])
     } catch (err: any) {
       // ignore
       logger.warn('Error using camera', {error: err})
     }
   }, [
-    gallery,
+    onAdd,
     track,
     requestCameraAccessIfNeeded,
     mediaPermissionRes,

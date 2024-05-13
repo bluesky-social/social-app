@@ -8,14 +8,12 @@ import {useModalControls, useModals} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as AddAppPassword from './AddAppPasswords'
-import * as AltTextImageModal from './AltImage'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
-import * as CropImageModal from './crop-image/CropImage.web'
+import * as CropImage from './CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
-import * as EditImageModal from './EditImage'
 import * as EditProfileModal from './EditProfile'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
@@ -56,13 +54,6 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (
-      modal.name === 'crop-image' ||
-      modal.name === 'edit-image' ||
-      modal.name === 'alt-text-image'
-    ) {
-      return // dont close on mask presses during crop
-    }
     closeModal()
   }
   const onInnerPress = () => {
@@ -80,7 +71,7 @@ function Modal({modal}: {modal: ModalIface}) {
   } else if (modal.name === 'list-add-remove-users') {
     element = <ListAddUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
-    element = <CropImageModal.Component {...modal} />
+    element = <CropImage.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
   } else if (modal.name === 'repost') {
@@ -99,10 +90,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ContentLanguagesSettingsModal.Component />
   } else if (modal.name === 'post-languages-settings') {
     element = <PostLanguagesSettingsModal.Component />
-  } else if (modal.name === 'alt-text-image') {
-    element = <AltTextImageModal.Component {...modal} />
-  } else if (modal.name === 'edit-image') {
-    element = <EditImageModal.Component {...modal} />
   } else if (modal.name === 'verify-email') {
     element = <VerifyEmailModal.Component {...modal} />
   } else if (modal.name === 'change-email') {

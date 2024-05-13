@@ -291,6 +291,8 @@ let EditableUserAvatar = ({
         height: item.height,
         width: item.width,
         path: item.path,
+        webAspectRatio: 1,
+        webCircularCrop: true,
       })
 
       onSelectNewAvatar(croppedImage)
