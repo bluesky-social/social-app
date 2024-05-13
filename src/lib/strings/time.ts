@@ -2,7 +2,7 @@ const NOW = 5
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const MONTH = DAY * 28
+const MONTH = DAY * 30.41675 // This results in 365.001 days in a year, which is close enough for nearly all cases
 const YEAR = DAY * 365
 export function ago(date: number | string | Date): string {
   let ts: number
