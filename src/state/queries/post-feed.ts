@@ -14,7 +14,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
@@ -399,7 +398,7 @@ function createApi({
         userInterests,
       })
     } else {
-      return new HomeFeedAPI({getAgent, userInterests})
+      return new FollowingFeedAPI({getAgent})
     }
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
