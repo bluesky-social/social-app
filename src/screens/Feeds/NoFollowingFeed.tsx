@@ -33,17 +33,9 @@ export function NoFollowingFeed() {
 
   return (
     <View style={[a.flex_row, a.flex_wrap, a.align_center, a.py_md, a.px_lg]}>
-      <Text>
+      <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
         <Trans>
-          <Text
-            style={[
-              a.leading_snug,
-              t.atoms.text_contrast_medium,
-              {maxWidth: 310},
-            ]}>
-            Looks like you're missing a following feed.{' '}
-          </Text>
-
+          Looks like you're missing a following feed.{' '}
           <InlineLinkText
             to="/"
             label={_(msg`Add the default feed of only people you follow`)}
