@@ -10719,47 +10719,6 @@ detect-port-alt@^1.1.6:
     address "^1.0.1"
     debug "^2.6.0"
 
-detox@^20.14.8:
-  version "20.14.8"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-20.14.8.tgz#0a550cf677fc98a68d56d162e1c5caad317de9ca"
-  integrity sha512-3E/0/7Cb7x+wcBsZpCxD8FykZUsFnfVT00d6PWH940boc0Mo1Kzabh+I151X/On4qZMqVdUzgwmap/z8g/kmaw==
-  dependencies:
-    ajv "^8.6.3"
-    bunyan "^1.8.12"
-    bunyan-debug-stream "^3.1.0"
-    caf "^15.0.1"
-    chalk "^4.0.0"
-    child-process-promise "^2.2.0"
-    execa "^5.1.1"
-    find-up "^5.0.0"
-    fs-extra "^11.0.0"
-    funpermaproxy "^1.1.0"
-    glob "^8.0.3"
-    ini "^1.3.4"
-    jest-environment-emit "^1.0.5"
-    json-cycle "^1.3.0"
-    lodash "^4.17.11"
-    multi-sort-stream "^1.0.3"
-    multipipe "^4.0.0"
-    node-ipc "9.2.1"
-    proper-lockfile "^3.0.2"
-    resolve-from "^5.0.0"
-    sanitize-filename "^1.6.1"
-    semver "^7.0.0"
-    serialize-error "^8.0.1"
-    shell-quote "^1.7.2"
-    signal-exit "^3.0.3"
-    stream-json "^1.7.4"
-    strip-ansi "^6.0.1"
-    telnet-client "1.2.8"
-    tempfile "^2.0.0"
-    trace-event-lib "^1.3.1"
-    which "^1.3.1"
-    ws "^7.0.0"
-    yargs "^17.0.0"
-    yargs-parser "^21.0.0"
-    yargs-unparser "^2.0.0"
-
 didyoumean@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/didyoumean/-/didyoumean-1.2.2.tgz#989346ffe9e839b4555ecf5666edea0d3e8ad037"
@@ -11392,13 +11351,6 @@ eslint-module-utils@^2.8.0:
 "eslint-plugin-bsky-internal@link:./eslint":
   version "0.0.0"
   uid ""
-
-eslint-plugin-detox@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-detox/-/eslint-plugin-detox-1.0.0.tgz#2d9c0130e8ebc4ced56efb6eeaf0d0f5c163398d"
-  integrity sha512-Dd+Cwyap5IO9DBKXOKrQTE1RQk9hvSSi+qsS1cMVPZY37mojz2PvriEOfGhKj5XN1G14lJ8TArf+6Y+Np2ZsoQ==
-  dependencies:
-    requireindex "~1.1.0"
 
 eslint-plugin-eslint-comments@^3.2.0:
   version "3.2.0"
