@@ -142,6 +142,6 @@ const styles = StyleSheet.create({
   },
   maxWidth: {
     flex: isAndroid ? 1 : undefined,
-    maxWidth: !isAndroid ? '80%' : undefined,
+    flexShrink: isAndroid ? undefined : 1,
   },
 })
