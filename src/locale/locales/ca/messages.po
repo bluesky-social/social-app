@@ -298,7 +298,7 @@ msgstr "Afegeix text alternatiu"
 
 #: src/view/com/composer/GifAltText.tsx:175
 msgid "Add ALT text"
-msgstr "Afegeix ALT"
+msgstr "Afegeix text alternatiu"
 
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
@@ -5724,7 +5724,7 @@ msgstr "Aquesta apel·lació s'enviarà a <0>{0}</0>."
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:26
 msgid "This chat was disconnected due to a network error."
-msgstr Aquest xat s'ha desconnectat degut a un problema de xarxa.""
+msgstr "Aquest xat s'ha desconnectat degut a un problema de xarxa."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
