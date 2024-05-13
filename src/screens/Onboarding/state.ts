@@ -31,6 +31,7 @@ export type OnboardingState = {
     feedUris: string[]
   }
   profileStepResults: {
+    isCreatedAvatar: boolean
     image?: {
       path: string
       mime: string
@@ -72,6 +73,7 @@ export type OnboardingAction =
     }
   | {
       type: 'setProfileStepResults'
+      isCreatedAvatar: boolean
       image?: OnboardingState['profileStepResults']['image']
       imageUri: string
       imageMime: string
@@ -111,6 +113,7 @@ export const initialState: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    isCreatedAvatar: false,
     image: undefined,
     imageUri: '',
     imageMime: '',
@@ -286,6 +289,7 @@ export const initialStateReduced: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    isCreatedAvatar: false,
     image: undefined,
     imageUri: '',
     imageMime: '',
@@ -341,6 +345,7 @@ export function reducerReduced(
     }
     case 'setProfileStepResults': {
       next.profileStepResults = {
+        isCreatedAvatar: a.isCreatedAvatar,
         image: a.image,
         imageUri: a.imageUri,
         imageMime: a.imageMime,

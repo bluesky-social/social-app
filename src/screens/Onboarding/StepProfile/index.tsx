@@ -144,6 +144,7 @@ export function StepProfile() {
         image: avatar.image,
         imageUri,
         imageMime: avatar.image?.mime ?? 'image/jpeg',
+        isCreatedAvatar: avatar.useCreatedAvatar,
       })
     }
 
