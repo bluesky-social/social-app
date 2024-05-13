@@ -90,9 +90,15 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "changeBannerBtn"
 - tapOn: "Upload from Library"
+- waitForAnimationToEnd
+- tapOn: "Choose"
+- waitForAnimationToEnd
 - tapOn:
     id: "changeAvatarBtn"
 - tapOn: "Upload from Library"
+- waitForAnimationToEnd
+- tapOn: "Choose"
+- waitForAnimationToEnd
 - tapOn:
     id: "editProfileSaveBtn"
 - assertNotVisible:
