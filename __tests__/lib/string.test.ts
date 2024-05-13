@@ -158,6 +158,8 @@ describe('ago', () => {
     new Date().setDate(new Date().getDate() - 20),
     new Date().setDate(new Date().getDate() - 25),
     new Date().setDate(new Date().getDate() - 28),
+    new Date().setDate(new Date().getDate() - 29),
+    new Date().setDate(new Date().getDate() - 30),
     new Date().setMonth(new Date().getMonth() - 1),
     new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
       new Date().getDate() - 20,
@@ -167,6 +169,9 @@ describe('ago', () => {
     ),
     new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
       new Date().getDate() - 28,
+    ),
+    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+      new Date().getDate() - 29,
     ),
     new Date().setMonth(new Date().getMonth() - 11),
     new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
@@ -188,9 +193,12 @@ describe('ago', () => {
     '20d',
     '25d',
     '28d',
+    '29d',
     '1mo',
     '1mo',
     '1mo',
+    '1mo',
+    '2mo',
     '2mo',
     '11mo',
     '11mo',
