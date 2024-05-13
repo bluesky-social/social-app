@@ -1,27 +1,22 @@
+import React from 'react'
 import * as Notifications from 'expo-notifications'
 import {BskyAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
-import {SessionAccount} from '#/state/session'
-import {devicePlatform} from 'platform/detection'
+import {SessionAccount, useAgent, useSession} from '#/state/session'
+import {logEvent, useGate} from 'lib/statsig/statsig'
+import {devicePlatform, isNative} from 'platform/detection'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
-export async function requestPermissionsAndRegisterToken(
+async function registerPushToken(
   getAgent: () => BskyAgent,
   account: SessionAccount,
+  token: Notifications.DevicePushToken,
 ) {
-  // request notifications permission once the user has logged in
-  const perms = await Notifications.getPermissionsAsync()
-  if (!perms.granted) {
-    await Notifications.requestPermissionsAsync()
-  }
-
-  // register the push token with the server
-  const token = await Notifications.getDevicePushTokenAsync()
   try {
     await getAgent().api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
@@ -42,38 +37,63 @@ export async function requestPermissionsAndRegisterToken(
   }
 }
 
-export function registerTokenChangeHandler(
-  getAgent: () => BskyAgent,
-  account: SessionAccount,
-): () => void {
-  // listens for new changes to the push token
-  // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
-  const sub = Notifications.addPushTokenListener(async newToken => {
-    logger.debug(
-      'Notifications: Push token changed',
-      {tokenType: newToken.data, token: newToken.type},
-      logger.DebugContext.notifications,
-    )
-    try {
-      await getAgent().api.app.bsky.notification.registerPush({
-        serviceDid: SERVICE_DID(account.service),
-        platform: devicePlatform,
-        token: newToken.data,
-        appId: 'xyz.blueskyweb.app',
-      })
-      logger.debug(
-        'Notifications: Sent push token (event)',
-        {
-          tokenType: newToken.type,
-          token: newToken.data,
-        },
-        logger.DebugContext.notifications,
-      )
-    } catch (error) {
-      logger.error('Notifications: Failed to set push token', {message: error})
+export function useNotificationsRegistration() {
+  const [currentPermissions] = Notifications.usePermissions()
+  const {getAgent} = useAgent()
+  const {currentAccount} = useSession()
+
+  React.useEffect(() => {
+    if (!currentAccount || !currentPermissions?.granted) {
+      return
     }
-  })
-  return () => {
-    sub.remove()
-  }
+
+    // Whenever we all `getDevicePushTokenAsync()`, a change event will be fired below
+    Notifications.getDevicePushTokenAsync()
+
+    // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
+    // cases. This will fire `registerPushToken` whenever that happens.
+    const subscription = Notifications.addPushTokenListener(async newToken => {
+      registerPushToken(getAgent, currentAccount, newToken)
+    })
+
+    return () => {
+      subscription.remove()
+    }
+  }, [currentAccount, currentPermissions?.granted, getAgent])
+}
+
+export function useRequestNotificationsPermission() {
+  const gate = useGate()
+  const [currentPermissions] = Notifications.usePermissions()
+
+  return React.useCallback(
+    async (context: 'StartOnboarding' | 'AfterOnboarding') => {
+      if (
+        !isNative ||
+        currentPermissions?.status === 'granted' ||
+        (currentPermissions?.status === 'denied' &&
+          !currentPermissions?.canAskAgain)
+      ) {
+        return
+      }
+      if (
+        context === 'StartOnboarding' &&
+        gate('request_notifications_permission_after_onboarding')
+      ) {
+        return
+      }
+      if (
+        context === 'AfterOnboarding' &&
+        !gate('request_notifications_permission_after_onboarding')
+      ) {
+        return
+      }
+
+      const res = await Notifications.requestPermissionsAsync()
+      logEvent('notifications:request', {
+        status: res.status,
+      })
+    },
+    [currentPermissions?.canAskAgain, currentPermissions?.status, gate],
+  )
 }

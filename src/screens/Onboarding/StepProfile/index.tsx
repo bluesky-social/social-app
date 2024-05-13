@@ -10,11 +10,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {compressIfNeeded} from 'lib/media/manip'
 import {openCropper} from 'lib/media/picker'
 import {getDataUriSize} from 'lib/media/util'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {isNative, isWeb} from 'platform/detection'
 import {
   DescriptionText,
@@ -69,6 +70,9 @@ export function StepProfile() {
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const gate = useGate()
+  const requestNotificationsPermission = useRequestNotificationsPermission()
+
   const creatorControl = Dialog.useDialogControl()
   const [error, setError] = React.useState('')
 
@@ -85,6 +89,14 @@ export function StepProfile() {
   React.useEffect(() => {
     track('OnboardingV2:StepProfile:Start')
   }, [track])
+
+  React.useEffect(() => {
+    // We have an experiment running for redueced onboarding, where this screen shows up as the first in onboarding.
+    // We only want to request permissions when that gate is actually active to prevent pollution
+    if (gate('reduced_onboarding_and_home_algo')) {
+      requestNotificationsPermission('StartOnboarding')
+    }
+  }, [gate, requestNotificationsPermission])
 
   const openPicker = React.useCallback(
     async (opts?: ImagePickerOptions) => {

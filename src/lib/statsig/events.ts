@@ -16,6 +16,9 @@ export type LogEvents = {
     logContext: 'SwitchAccount' | 'Settings' | 'Deactivated'
   }
   'notifications:openApp': {}
+  'notifications:request': {
+    status: 'granted' | 'denied' | 'undetermined'
+  }
   'state:background': {
     secondsActive: number
   }
