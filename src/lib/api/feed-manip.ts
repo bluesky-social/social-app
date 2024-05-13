@@ -71,6 +71,10 @@ export class FeedViewPostsSlice {
       ?.__source as ReasonFeedSource
   }
 
+  get feedContext() {
+    return this.items.find(item => item.feedContext)?.feedContext
+  }
+
   containsUri(uri: string) {
     return !!this.items.find(item => item.post.uri === uri)
   }
