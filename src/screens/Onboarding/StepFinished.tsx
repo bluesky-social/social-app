@@ -120,6 +120,8 @@ export function StepFinished() {
         })(),
 
         (async () => {
+          if (!gate('reduced_onboarding_and_home_algo')) return
+
           const {imageUri, imageMime} = profileStepResults
           if (imageUri && imageMime) {
             const blobPromise = uploadBlob(getAgent(), imageUri, imageMime)
