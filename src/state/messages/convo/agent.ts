@@ -942,7 +942,11 @@ export class Convo {
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
-          sender: this.sender,
+          /*
+           * `getItems` is only run in "active" status states, where
+           * `this.sender` is defined
+           */
+          sender: this.sender!,
         },
         nextMessage: null,
       })
