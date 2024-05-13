@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {logger} from '#/logger'
+import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -31,6 +32,7 @@ export type OnboardingState = {
     feedUris: string[]
   }
   profileStepResults: {
+    isCreatedAvatar: boolean
     image?: {
       path: string
       mime: string
@@ -40,6 +42,10 @@ export type OnboardingState = {
     }
     imageUri?: string
     imageMime?: string
+    creatorState?: {
+      emoji: Emoji
+      backgroundColor: AvatarColor
+    }
   }
 }
 
@@ -72,9 +78,14 @@ export type OnboardingAction =
     }
   | {
       type: 'setProfileStepResults'
+      isCreatedAvatar: boolean
       image?: OnboardingState['profileStepResults']['image']
       imageUri: string
       imageMime: string
+      creatorState?: {
+        emoji: Emoji
+        backgroundColor: AvatarColor
+      }
     }
 
 export type ApiResponseMap = {
@@ -111,6 +122,7 @@ export const initialState: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    isCreatedAvatar: false,
     image: undefined,
     imageUri: '',
     imageMime: '',
@@ -286,6 +298,7 @@ export const initialStateReduced: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    isCreatedAvatar: false,
     image: undefined,
     imageUri: '',
     imageMime: '',
@@ -341,9 +354,11 @@ export function reducerReduced(
     }
     case 'setProfileStepResults': {
       next.profileStepResults = {
+        isCreatedAvatar: a.isCreatedAvatar,
         image: a.image,
         imageUri: a.imageUri,
         imageMime: a.imageMime,
+        creatorState: a.creatorState,
       }
       break
     }

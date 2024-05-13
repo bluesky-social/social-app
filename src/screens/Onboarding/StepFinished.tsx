@@ -134,6 +134,14 @@ export function StepFinished() {
               return existing
             })
           }
+
+          logEvent('onboarding:finished:avatarResult', {
+            avatarResult: profileStepResults.isCreatedAvatar
+              ? 'created'
+              : profileStepResults.image
+              ? 'uploaded'
+              : 'default',
+          })
         })(),
       ])
     } catch (e: any) {

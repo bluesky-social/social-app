@@ -79,9 +79,10 @@ export function StepProfile() {
   const {state, dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
     image: state.profileStepResults?.image,
-    placeholder: emojiItems.at,
-    backgroundColor: randomColor,
-    useCreatedAvatar: false,
+    placeholder: state.profileStepResults.creatorState?.emoji || emojiItems.at,
+    backgroundColor:
+      state.profileStepResults.creatorState?.backgroundColor || randomColor,
+    useCreatedAvatar: state.profileStepResults.isCreatedAvatar,
   })
 
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
@@ -144,17 +145,23 @@ export function StepProfile() {
         image: avatar.image,
         imageUri,
         imageMime: avatar.image?.mime ?? 'image/jpeg',
+        isCreatedAvatar: avatar.useCreatedAvatar,
+        creatorState: {
+          emoji: avatar.placeholder,
+          backgroundColor: avatar.backgroundColor,
+        },
       })
     }
 
     dispatch({type: 'next'})
     track('OnboardingV2:StepProfile:End')
     logEvent('onboarding:profile:nextPressed', {})
-  }, [avatar.image, avatar.useCreatedAvatar, dispatch, track])
+  }, [avatar, dispatch, track])
 
   const onDoneCreating = React.useCallback(() => {
     setAvatar(prev => ({
       ...prev,
+      image: undefined,
       useCreatedAvatar: true,
     }))
     creatorControl.close()
