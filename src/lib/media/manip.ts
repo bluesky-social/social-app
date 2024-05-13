@@ -314,6 +314,6 @@ async function withTempFile<T>(
 
     return await cb(tmpFileUrl)
   } finally {
-    safeDeleteAsync(tmpDirUri, {idempotent: true})
+    safeDeleteAsync(tmpDirUri)
   }
 }
