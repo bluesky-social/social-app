@@ -211,10 +211,10 @@ export function FeedSourceCardLoaded({
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
-            <Text style={[pal.text, s.bold]} numberOfLines={3}>
+            <Text style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
-            <Text style={[pal.textLight]} numberOfLines={3}>
+            <Text style={[pal.textLight]} numberOfLines={1}>
               {feed.type === 'feed' ? (
                 <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
               ) : (
