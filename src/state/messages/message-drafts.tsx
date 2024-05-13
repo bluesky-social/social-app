@@ -24,10 +24,9 @@ export function useMessageDraft() {
     () => ({
       getDraft: () => (currentConvoId && state[currentConvoId]) || '',
       clearDraft: () => {
-        if (!currentConvoId) {
-          throw new Error('No current convo id')
+        if (currentConvoId) {
+          dispatch({type: 'clear', convoId: currentConvoId})
         }
-        dispatch({type: 'clear', convoId: currentConvoId})
       },
     }),
     [state, dispatch, currentConvoId],
