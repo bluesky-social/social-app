@@ -778,7 +778,6 @@ export class Convo {
       this.newMessages.set(res.id, {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
-        sender: this.sender,
       })
       this.pendingMessages.delete(id)
 
@@ -834,7 +833,6 @@ export class Convo {
         this.newMessages.set(item.id, {
           ...item,
           $type: 'chat.bsky.convo.defs#messageView',
-          sender: this.convo?.members.find(m => m.did === this.senderUserDid),
         })
       }
 
