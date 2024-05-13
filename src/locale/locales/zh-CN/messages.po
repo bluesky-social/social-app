@@ -21,13 +21,13 @@ msgstr "(没有邮件)"
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr "{0, plural, one {其他 {formattedCount} 人} other {其他 {formattedCount} 人}}"
 
-#: src/components/moderation/LabelsOnMe.tsx:57
+#: src/components/moderation/LabelsOnMe.tsx:55
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr "{0, plural, one {# 个标签已应用到此账户} other {# 个标签已应用到此账户}}"
+msgstr "{0, plural, one {# 个标签已标记到此账户} other {# 个标签已标记到此账户}}"
 
-#: src/components/moderation/LabelsOnMe.tsx:63
+#: src/components/moderation/LabelsOnMe.tsx:61
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "{0, plural, one {# 个标签已应用到此内容} other {# 个标签已应用到此内容}}"
+msgstr "{0, plural, one {# 个标签已标记到此内容} other {# 个标签已标记到此内容}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:62
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -404,16 +404,16 @@ msgstr "应用专用密码设置"
 msgid "App Passwords"
 msgstr "应用专用密码"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:133
-#: src/components/moderation/LabelsOnMeDialog.tsx:136
+#: src/components/moderation/LabelsOnMeDialog.tsx:150
+#: src/components/moderation/LabelsOnMeDialog.tsx:153
 msgid "Appeal"
 msgstr "申诉"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:202
+#: src/components/moderation/LabelsOnMeDialog.tsx:228
 msgid "Appeal \"{0}\" label"
 msgstr "申诉 \"{0}\" 标记"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:193
+#: src/components/moderation/LabelsOnMeDialog.tsx:219
 msgid "Appeal submitted"
 msgstr "申诉已提交"
 
@@ -466,8 +466,8 @@ msgstr "艺术作品或非色情的裸体。"
 msgid "At least 3 characters"
 msgstr "至少 3 个字符"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:247
-#: src/components/moderation/LabelsOnMeDialog.tsx:248
+#: src/components/moderation/LabelsOnMeDialog.tsx:273
+#: src/components/moderation/LabelsOnMeDialog.tsx:274
 #: src/screens/Login/ChooseAccountForm.tsx:98
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
@@ -779,7 +779,7 @@ msgstr "选择 \"所有人\" 或是 \"没有人\""
 msgid "Choose Service"
 msgstr "选择服务"
 
-#: src/screens/Onboarding/StepFinished.tsx:213
+#: src/screens/Onboarding/StepFinished.tsx:228
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "选择支持你的自定义资讯源的算法。"
 
@@ -918,7 +918,7 @@ msgstr "漫画"
 msgid "Community Guidelines"
 msgstr "社群准则"
 
-#: src/screens/Onboarding/StepFinished.tsx:226
+#: src/screens/Onboarding/StepFinished.tsx:241
 msgid "Complete onboarding and start using your account"
 msgstr "完成引导并开始使用你的账户"
 
@@ -1403,8 +1403,6 @@ msgstr "域名已认证！"
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/screens/PreferencesFollowingFeed.tsx:310
-#: src/view/screens/Settings/ExportCarDialog.tsx:95
-#: src/view/screens/Settings/ExportCarDialog.tsx:97
 msgid "Done"
 msgstr "完成"
 
@@ -1424,8 +1422,8 @@ msgstr "完成"
 msgid "Done{extraText}"
 msgstr "完成{extraText}"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:60
-#: src/view/screens/Settings/ExportCarDialog.tsx:64
+#: src/view/screens/Settings/ExportCarDialog.tsx:78
+#: src/view/screens/Settings/ExportCarDialog.tsx:82
 msgid "Download CAR file"
 msgstr "下载 CAR 文件"
 
@@ -1677,6 +1675,10 @@ msgstr "请在下方输入你新的电子邮箱。"
 msgid "Enter your username and password"
 msgstr "输入你的用户名和密码"
 
+#: src/view/screens/Settings/ExportCarDialog.tsx:47
+msgid "Error occurred while saving file"
+msgstr "保存文件时发生错误"
+
 #: src/screens/Signup/StepCaptcha/index.tsx:51
 msgid "Error receiving captcha response."
 msgstr "Captcha 响应错误。"
@@ -1740,7 +1742,7 @@ msgstr "明确的性暗示图片。"
 msgid "Export my data"
 msgstr "导出账户数据"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:45
+#: src/view/screens/Settings/ExportCarDialog.tsx:63
 #: src/view/screens/Settings/index.tsx:763
 msgid "Export My Data"
 msgstr "导出账户数据"
@@ -1838,11 +1840,15 @@ msgstr "资讯源也可以围绕某些话题！"
 msgid "File Contents"
 msgstr "文件内容"
 
+#: src/view/screens/Settings/ExportCarDialog.tsx:43
+msgid "File saved successfully!"
+msgstr "文件保存成功！"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
 msgstr "从资讯源中过滤"
 
-#: src/screens/Onboarding/StepFinished.tsx:229
+#: src/screens/Onboarding/StepFinished.tsx:244
 msgid "Finalizing"
 msgstr "最终确定"
 
@@ -1868,7 +1874,7 @@ msgstr "调整讨论主题。"
 msgid "Fitness"
 msgstr "健康"
 
-#: src/screens/Onboarding/StepFinished.tsx:209
+#: src/screens/Onboarding/StepFinished.tsx:224
 msgid "Flexible"
 msgstr "灵活"
 
@@ -2382,11 +2388,11 @@ msgstr "标记"
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "标记是对特定内容及用户的提示。可以针对特定内容默认隐藏内容、显示警告或直接显示。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:62
+#: src/components/moderation/LabelsOnMeDialog.tsx:77
 msgid "Labels on your account"
 msgstr "你账户上的标记"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:64
+#: src/components/moderation/LabelsOnMeDialog.tsx:79
 msgid "Labels on your content"
 msgstr "你内容上的标记"
 
@@ -2465,7 +2471,7 @@ msgstr "旧存储数据已清除，你需要立即重新启动应用。"
 msgid "Let's get your password reset!"
 msgstr "让我们来重置你的密码！"
 
-#: src/screens/Onboarding/StepFinished.tsx:229
+#: src/screens/Onboarding/StepFinished.tsx:244
 msgid "Let's go!"
 msgstr "让我们开始！"
 
@@ -2889,7 +2895,7 @@ msgstr "转到个人资料"
 msgid "Need to report a copyright violation?"
 msgstr "需要举报侵犯版权行为吗？"
 
-#: src/screens/Onboarding/StepFinished.tsx:197
+#: src/screens/Onboarding/StepFinished.tsx:212
 msgid "Never lose access to your followers or data."
 msgstr "永远不会失去对你的关注者或数据的访问。"
 
@@ -3154,7 +3160,7 @@ msgstr "糟糕，发生了一些错误！"
 msgid "Oops!"
 msgstr "Oops！"
 
-#: src/screens/Onboarding/StepFinished.tsx:193
+#: src/screens/Onboarding/StepFinished.tsx:208
 msgid "Open"
 msgstr "开启"
 
@@ -3475,7 +3481,7 @@ msgstr "请输入你的电子邮箱。"
 msgid "Please enter your password as well:"
 msgstr "请输入你的密码："
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:222
+#: src/components/moderation/LabelsOnMeDialog.tsx:248
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "请解释为什么你认为此标记是由 {0} 错误应用的"
 
@@ -3632,7 +3638,7 @@ msgstr "个人资料已更新"
 msgid "Protect your account by verifying your email."
 msgstr "通过验证电子邮箱来保护你的账户。"
 
-#: src/screens/Onboarding/StepFinished.tsx:179
+#: src/screens/Onboarding/StepFinished.tsx:194
 msgid "Public"
 msgstr "公开内容"
 
@@ -3704,6 +3710,8 @@ msgid "Remove Banner"
 msgstr "删除横幅图片"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:169
+#: src/view/com/posts/FeedShutdownMsg.tsx:113
+#: src/view/com/posts/FeedShutdownMsg.tsx:117
 msgid "Remove feed"
 msgstr "删除资讯源"
 
@@ -3756,6 +3764,7 @@ msgstr "从列表中删除"
 msgid "Removed from my feeds"
 msgstr "从自定义资讯源中删除"
 
+#: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
 #: src/view/screens/ProfileList.tsx:315
 msgid "Removed from your feeds"
@@ -3768,6 +3777,11 @@ msgstr "从 {0} 中删除默认缩略图"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:224
 msgid "Removes quoted post"
 msgstr "删除引用的帖子"
+
+#: src/view/com/posts/FeedShutdownMsg.tsx:126
+#: src/view/com/posts/FeedShutdownMsg.tsx:130
+msgid "Replace with Discover"
+msgstr "替换为\"Discover\""
 
 #: src/view/screens/Profile.tsx:194
 msgid "Replies"
@@ -4630,7 +4644,7 @@ msgstr "回复排序"
 msgid "Sort replies to the same post by:"
 msgstr "对同一帖子的回复进行排序："
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:146
+#: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
 msgstr "来源："
 
@@ -4672,8 +4686,8 @@ msgstr "已清除存储，请立即重启应用。"
 msgid "Storybook"
 msgstr "Storybook"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:256
-#: src/components/moderation/LabelsOnMeDialog.tsx:257
+#: src/components/moderation/LabelsOnMeDialog.tsx:282
+#: src/components/moderation/LabelsOnMeDialog.tsx:283
 msgid "Submit"
 msgstr "提交"
 
@@ -4783,7 +4797,7 @@ msgstr "用词违反了社群准则"
 msgid "text"
 msgstr "文本"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:220
+#: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "Text input field"
 msgstr "文本输入框"
 
@@ -4813,11 +4827,15 @@ msgstr "社群准则已迁移至 <0/>"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "版权许可已迁移至 <0/>"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:48
+#: src/view/com/posts/FeedShutdownMsg.tsx:66
+msgid "The feed has been replaced with Discover."
+msgstr "资讯源已替换为\"Discover\""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "The following labels were applied to your account."
 msgstr "以下标记已应用到你的账户。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:49
+#: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to your content."
 msgstr "以下标记已应用到你的内容。"
 
@@ -4855,6 +4873,8 @@ msgstr "连接至服务器时出现问题，请检查你的互联网连接并重
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
 msgstr "删除资讯源时出现问题，请检查你的互联网连接并重试。"
 
+#: src/view/com/posts/FeedShutdownMsg.tsx:52
+#: src/view/com/posts/FeedShutdownMsg.tsx:70
 #: src/view/screens/ProfileFeed.tsx:205
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "更新资讯源时出现问题，请检查你的互联网连接并重试。"
@@ -4885,7 +4905,7 @@ msgstr "连接服务器时出现问题"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/view/com/posts/Feed.tsx:292
+#: src/view/com/posts/Feed.tsx:298
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖子时出现问题，点击重试。"
 
@@ -4953,7 +4973,7 @@ msgstr "{screenDescription} 已被标记："
 msgid "This account has requested that users sign in to view their profile."
 msgstr "此账户要求登录后才能查看其个人资料。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:205
+#: src/components/moderation/LabelsOnMeDialog.tsx:231
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "此申诉将发送至 <0>{0}</0>。"
 
@@ -4982,7 +5002,7 @@ msgstr "由于其中一个用户屏蔽了另一个用户，此内容不可用。
 msgid "This content is not viewable without a Bluesky account."
 msgstr "没有 Bluesky 账户，无法查看此内容。"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:76
+#: src/view/screens/Settings/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "该功能正在测试，你可以在<0>这篇博客文章</0>中获得关于导出数据的更多信息。"
 
@@ -5000,6 +5020,10 @@ msgstr "这里是空的！"
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "资讯源为空！你或许需要先关注更多的用户，或检查你的语言设置。"
 
+#: src/view/com/posts/FeedShutdownMsg.tsx:97
+msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
+msgstr "此资讯源已离线，我们将改为显示来自 <0>Discover</0> 资讯源的内容。"
+
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
 msgstr "此信息不会分享给其他用户。"
@@ -5010,11 +5034,15 @@ msgstr "这很重要，以防你将来需要更改电子邮箱或重置密码。
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:127
 msgid "This label was applied by <0>{0}</0>."
-msgstr "此标签是由 <0>{0}</0> 应用的。"
+msgstr "此标签是由 <0>{0}</0> 标记的。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:125
 msgid "This label was applied by the author."
-msgstr "此标签是由该作者应用的。"
+msgstr "此标签是由该作者标记的。"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:165
+msgid "This label was applied by you"
+msgstr "此标签是由你标记的"
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5499,7 +5527,7 @@ msgstr "查看举报版权侵权的详情"
 msgid "View full thread"
 msgstr "查看整个讨论串"
 
-#: src/components/moderation/LabelsOnMe.tsx:50
+#: src/components/moderation/LabelsOnMe.tsx:48
 msgid "View information about these labels"
 msgstr "查看此标记的详情"
 
@@ -5553,7 +5581,7 @@ msgstr "我们无法加载这个对话"
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "我们估计还需要 {estimatedTime} 才能完成你的账户准备。"
 
-#: src/screens/Onboarding/StepFinished.tsx:171
+#: src/screens/Onboarding/StepFinished.tsx:186
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 
@@ -5802,9 +5830,13 @@ msgstr "你还没有隐藏任何账户。要隐藏账户，请转到其个人资
 msgid "You haven't muted any words or tags yet"
 msgstr "你还没有隐藏任何词或标签"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:68
+#: src/components/moderation/LabelsOnMeDialog.tsx:84
+msgid "You may appeal non-self labels if you feel they were placed in error."
+msgstr "如果你认为被动放置标签的标记信息有误，你可以提出申诉。"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:89
 msgid "You may appeal these labels if you feel they were placed in error."
-msgstr "如果你认为这些标记是错误的，你可以申诉这些标记。"
+msgstr "如果你认为标签的标记信息有误，你可以提出申诉。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
@@ -5844,7 +5876,7 @@ msgstr "你尽在掌控"
 msgid "You're in line"
 msgstr "轮到你了"
 
-#: src/screens/Onboarding/StepFinished.tsx:168
+#: src/screens/Onboarding/StepFinished.tsx:183
 msgid "You're ready to go!"
 msgstr "你已设置完成！"
 
@@ -5865,7 +5897,7 @@ msgstr "你的账户"
 msgid "Your account has been deleted"
 msgstr "你的账户已删除"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:48
+#: src/view/screens/Settings/ExportCarDialog.tsx:66
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "你的帐户数据库包含所有公共数据记录，它们将被导出为“CAR”文件。此文件不包括帖子中的媒体，例如图像或你的隐私数据，这些数据需要另外获取。"
 
@@ -5919,7 +5951,7 @@ msgstr "你的密码已成功更改！"
 msgid "Your post has been published"
 msgstr "你的帖子已发布"
 
-#: src/screens/Onboarding/StepFinished.tsx:183
+#: src/screens/Onboarding/StepFinished.tsx:198
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "你的帖子、喜欢和屏蔽是公开可见的，而隐藏不可见。"
 
