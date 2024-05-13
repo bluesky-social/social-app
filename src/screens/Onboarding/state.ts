@@ -84,7 +84,7 @@ export type OnboardingAction =
       imageMime: string
       creatorState?: {
         emoji: Emoji
-        backgroundColor: string
+        backgroundColor: AvatarColor
       }
     }
 
