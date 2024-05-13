@@ -114,8 +114,7 @@ export async function createServer(
     pdsUrl,
     mocker: new Mocker(testNet, pdsUrl, pic),
     async close() {
-      await testNet.pds.server.destroy()
-      await testNet.plc.server.destroy()
+      await testNet.close()
     },
   }
 }

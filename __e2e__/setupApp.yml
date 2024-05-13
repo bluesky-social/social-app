@@ -1,0 +1,11 @@
+appId: xyz.blueskyweb.app
+---
+- launchApp:
+   appId: "xyz.blueskyweb.app"
+   clearState: true
+- waitForAnimationToEnd
+- tapOn: "http://localhost:8081"
+- waitForAnimationToEnd
+- swipe:
+   from: "Bluesky"
+   direction: DOWN
