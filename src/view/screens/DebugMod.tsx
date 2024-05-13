@@ -20,12 +20,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
+import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
 import {FeedNotification} from '#/state/queries/notifications/types'
 import {
   groupNotifications,
   shouldFilterNotif,
 } from '#/state/queries/notifications/util'
-import {moderationOptsOverrideContext} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -804,6 +804,7 @@ function MockPostFeedItem({
       record={post.record as AppBskyFeedPost.Record}
       moderation={moderation}
       reason={undefined}
+      feedContext={''}
     />
   )
 }

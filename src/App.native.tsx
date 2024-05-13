@@ -12,14 +12,15 @@ import {
 import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
+import {MessagesProvider} from '#/state/messages'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
-import {readLastActiveAccount} from '#/state/session/util/readLastActiveAccount'
+import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
+import {readLastActiveAccount} from '#/state/session/util'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
-import {useNotificationsListener} from 'lib/notifications/notifications'
 import {QueryProvider} from 'lib/react-query'
 import {s} from 'lib/styles'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -32,6 +33,7 @@ import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
+  SessionAccount,
   useSession,
   useSessionApi,
 } from 'state/session'
@@ -51,7 +53,8 @@ import {listenSessionDropped} from './state/events'
 SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
-  const {isInitialLoad, currentAccount} = useSession()
+  const [isReady, setIsReady] = React.useState(false)
+  const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
@@ -60,55 +63,64 @@ function InnerApp() {
 
   // init
   useEffect(() => {
-    listenSessionDropped(() => {
+    async function onLaunch(account?: SessionAccount) {
+      try {
+        if (account) {
+          await resumeSession(account)
+        }
+      } catch (e) {
+        logger.error(`session: resume failed`, {message: e})
+      } finally {
+        setIsReady(true)
+      }
+    }
+    const account = readLastActiveAccount()
+    onLaunch(account)
+  }, [resumeSession])
+
+  useEffect(() => {
+    return listenSessionDropped(() => {
       Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
     })
-
-    const account = readLastActiveAccount()
-    resumeSession(account)
-  }, [resumeSession, _])
+  }, [_])
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <Alf theme={theme}>
-        <Splash isReady={!isInitialLoad}>
-          <React.Fragment
-            // Resets the entire tree below when it changes:
-            key={currentAccount?.did}>
-            <QueryProvider currentDid={currentAccount?.did}>
-              <PushNotificationsListener>
-                <StatsigProvider>
-                  <LabelDefsProvider>
-                    <LoggedOutViewProvider>
-                      <SelectedFeedProvider>
-                        <UnreadNotifsProvider>
-                          <ThemeProvider theme={theme}>
-                            {/* All components should be within this provider */}
-                            <RootSiblingParent>
-                              <GestureHandlerRootView style={s.h100pct}>
-                                <TestCtrls />
-                                <Shell />
-                              </GestureHandlerRootView>
-                            </RootSiblingParent>
-                          </ThemeProvider>
-                        </UnreadNotifsProvider>
-                      </SelectedFeedProvider>
-                    </LoggedOutViewProvider>
-                  </LabelDefsProvider>
-                </StatsigProvider>
-              </PushNotificationsListener>
-            </QueryProvider>
-          </React.Fragment>
-        </Splash>
+        <ThemeProvider theme={theme}>
+          <Splash isReady={isReady}>
+            <RootSiblingParent>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
+                                <GestureHandlerRootView style={s.h100pct}>
+                                  <TestCtrls />
+                                  <Shell />
+                                </GestureHandlerRootView>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </StatsigProvider>
+                </QueryProvider>
+              </React.Fragment>
+            </RootSiblingParent>
+          </Splash>
+        </ThemeProvider>
       </Alf>
     </SafeAreaProvider>
   )
-}
-
-function PushNotificationsListener({children}: {children: React.ReactNode}) {
-  const queryClient = useQueryClient()
-  useNotificationsListener(queryClient)
-  return children
 }
 
 function App() {

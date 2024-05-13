@@ -6,7 +6,8 @@ import {isJustAMute} from '#/lib/moderation'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
-import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
+import {useModerationOpts} from '../preferences/moderation-opts'
+import {DEFAULT_LOGGED_OUT_PREFERENCES} from './preferences'
 
 const DEFAULT_MOD_OPTS = {
   userDid: undefined,
@@ -23,7 +24,11 @@ export function useActorAutocompleteQuery(
   const moderationOpts = useModerationOpts()
   const {getAgent} = useAgent()
 
-  prefix = prefix.toLowerCase()
+  prefix = prefix.toLowerCase().trim()
+  if (prefix.endsWith('.')) {
+    // Going from "foo" to "foo." should not clear matches.
+    prefix = prefix.slice(0, -1)
+  }
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,

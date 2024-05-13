@@ -25,11 +25,11 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {s} from '#/lib/styles'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {RQKEY as RQKEY_URI} from '#/state/queries/resolve-uri'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
+import {precacheProfile} from 'state/queries/profile'
 import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
@@ -42,9 +42,11 @@ import {PostEmbeds} from '.'
 
 export function MaybeQuoteEmbed({
   embed,
+  onOpen,
   style,
 }: {
   embed: AppBskyEmbedRecord.View
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -57,6 +59,7 @@ export function MaybeQuoteEmbed({
       <QuoteEmbedModerated
         viewRecord={embed.record}
         postRecord={embed.record.value}
+        onOpen={onOpen}
         style={style}
       />
     )
@@ -85,10 +88,12 @@ export function MaybeQuoteEmbed({
 function QuoteEmbedModerated({
   viewRecord,
   postRecord,
+  onOpen,
   style,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
@@ -108,16 +113,25 @@ function QuoteEmbedModerated({
     embeds: viewRecord.embeds,
   }
 
-  return <QuoteEmbed quote={quote} moderation={moderation} style={style} />
+  return (
+    <QuoteEmbed
+      quote={quote}
+      moderation={moderation}
+      onOpen={onOpen}
+      style={style}
+    />
+  )
 }
 
 export function QuoteEmbed({
   quote,
   moderation,
+  onOpen,
   style,
 }: {
   quote: ComposerOptsQuote
   moderation?: ModerationDecision
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const queryClient = useQueryClient()
@@ -149,8 +163,9 @@ export function QuoteEmbed({
   }, [quote.embeds])
 
   const onBeforePress = React.useCallback(() => {
-    queryClient.setQueryData(RQKEY_URI(quote.author.handle), quote.author.did)
-  }, [queryClient, quote.author.did, quote.author.handle])
+    precacheProfile(queryClient, quote.author)
+    onOpen?.()
+  }, [queryClient, quote.author, onOpen])
 
   return (
     <ContentHider modui={moderation?.ui('contentList')}>

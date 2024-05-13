@@ -37,12 +37,12 @@ export function MutedWordsDialog() {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <MutedWordsInner control={control} />
+      <MutedWordsInner />
     </Dialog.Outer>
   )
 }
 
-function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
+function MutedWordsInner() {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()

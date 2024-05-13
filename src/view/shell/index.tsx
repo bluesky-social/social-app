@@ -20,6 +20,7 @@ import {
   useSetDrawerOpen,
 } from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
+import {useNotificationsHandler} from 'lib/hooks/useNotificationHandler'
 import {usePalette} from 'lib/hooks/usePalette'
 import * as notifications from 'lib/notifications/notifications'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
@@ -62,6 +63,8 @@ function ShellInner() {
   const {importantForAccessibility} = useDialogStateContext()
   // start undefined
   const currentAccountDid = React.useRef<string | undefined>(undefined)
+
+  useNotificationsHandler()
 
   React.useEffect(() => {
     let listener = {remove() {}}

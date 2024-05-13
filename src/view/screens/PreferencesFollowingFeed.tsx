@@ -1,23 +1,24 @@
 import React, {useState} from 'react'
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Slider} from '@miblanchard/react-native-slider'
-import {Text} from '../com/util/text/Text'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isWeb} from 'platform/detection'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
-import debounce from 'lodash.debounce'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {Slider} from '@miblanchard/react-native-slider'
+import debounce from 'lodash.debounce'
+
 import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
 } from '#/state/queries/preferences'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
+import {Text} from '../com/util/text/Text'
 
 function RepliesThresholdInput({
   enabled,
@@ -27,7 +28,6 @@ function RepliesThresholdInput({
   initialValue: number
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const preValue = React.useRef(initialValue)
@@ -64,13 +64,12 @@ function RepliesThresholdInput({
         thumbTintColor={colors.blue3}
       />
       <Text type="xs" style={pal.text}>
-        {value === 0
-          ? _(msg`Show all replies`)
-          : _(
-              msg`Show replies with at least ${value} ${
-                value > 1 ? `likes` : `like`
-              }`,
-            )}
+        <Plural
+          value={value}
+          _0="Show all replies"
+          one="Show replies with at least # like"
+          other="Show replies with at least # likes"
+        />
       </Text>
     </View>
   )

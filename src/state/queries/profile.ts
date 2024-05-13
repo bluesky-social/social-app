@@ -4,11 +4,9 @@ import {
   AppBskyActorDefs,
   AppBskyActorGetProfile,
   AppBskyActorProfile,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
   AtUri,
   BskyAgent,
+  ComAtprotoRepoUploadBlob,
 } from '@atproto/api'
 import {
   QueryClient,
@@ -29,7 +27,6 @@ import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {ThreadNode} from './post-thread'
 
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
@@ -128,6 +125,26 @@ export function useProfileUpdateMutation() {
       newUserBanner,
       checkCommitted,
     }) => {
+      let newUserAvatarPromise:
+        | Promise<ComAtprotoRepoUploadBlob.Response>
+        | undefined
+      if (newUserAvatar) {
+        newUserAvatarPromise = uploadBlob(
+          getAgent(),
+          newUserAvatar.path,
+          newUserAvatar.mime,
+        )
+      }
+      let newUserBannerPromise:
+        | Promise<ComAtprotoRepoUploadBlob.Response>
+        | undefined
+      if (newUserBanner) {
+        newUserBannerPromise = uploadBlob(
+          getAgent(),
+          newUserBanner.path,
+          newUserBanner.mime,
+        )
+      }
       await getAgent().upsertProfile(async existing => {
         existing = existing || {}
         if (typeof updates === 'function') {
@@ -136,22 +153,14 @@ export function useProfileUpdateMutation() {
           existing.displayName = updates.displayName
           existing.description = updates.description
         }
-        if (newUserAvatar) {
-          const res = await uploadBlob(
-            getAgent(),
-            newUserAvatar.path,
-            newUserAvatar.mime,
-          )
+        if (newUserAvatarPromise) {
+          const res = await newUserAvatarPromise
           existing.avatar = res.data.blob
         } else if (newUserAvatar === null) {
           existing.avatar = undefined
         }
-        if (newUserBanner) {
-          const res = await uploadBlob(
-            getAgent(),
-            newUserBanner.path,
-            newUserBanner.mime,
-          )
+        if (newUserBannerPromise) {
+          const res = await newUserBannerPromise
           existing.banner = res.data.blob
         } else if (newUserBanner === null) {
           existing.banner = undefined
@@ -475,56 +484,6 @@ export function precacheProfile(
 ) {
   queryClient.setQueryData(profileBasicQueryKey(profile.handle), profile)
   queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
-}
-
-export function precacheFeedPostProfiles(
-  queryClient: QueryClient,
-  posts: AppBskyFeedDefs.FeedViewPost[],
-) {
-  for (const post of posts) {
-    // Save the author of the post every time
-    precacheProfile(queryClient, post.post.author)
-    precachePostEmbedProfile(queryClient, post.post.embed)
-
-    // Cache parent author and embeds
-    const parent = post.reply?.parent
-    if (AppBskyFeedDefs.isPostView(parent)) {
-      precacheProfile(queryClient, parent.author)
-      precachePostEmbedProfile(queryClient, parent.embed)
-    }
-  }
-}
-
-function precachePostEmbedProfile(
-  queryClient: QueryClient,
-  embed: AppBskyFeedDefs.PostView['embed'],
-) {
-  if (AppBskyEmbedRecord.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
-      precacheProfile(queryClient, embed.record.author)
-    }
-  } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record.record)) {
-      precacheProfile(queryClient, embed.record.record.author)
-    }
-  }
-}
-
-export function precacheThreadPostProfiles(
-  queryClient: QueryClient,
-  node: ThreadNode,
-) {
-  if (node.type === 'post') {
-    precacheProfile(queryClient, node.post.author)
-    if (node.parent) {
-      precacheThreadPostProfiles(queryClient, node.parent)
-    }
-    if (node.replies?.length) {
-      for (const reply of node.replies) {
-        precacheThreadPostProfiles(queryClient, reply)
-      }
-    }
-  }
 }
 
 async function whenAppViewReady(

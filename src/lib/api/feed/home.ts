@@ -32,14 +32,22 @@ export class HomeFeedAPI implements FeedAPI {
   discover: CustomFeedAPI
   usingDiscover = false
   itemCursor = 0
+  userInterests?: string
 
-  constructor({getAgent}: {getAgent: () => BskyAgent}) {
+  constructor({
+    userInterests,
+    getAgent,
+  }: {
+    userInterests?: string
+    getAgent: () => BskyAgent
+  }) {
     this.getAgent = getAgent
     this.following = new FollowingFeedAPI({getAgent})
     this.discover = new CustomFeedAPI({
       getAgent,
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
     })
+    this.userInterests = userInterests
   }
 
   reset() {
@@ -47,6 +55,7 @@ export class HomeFeedAPI implements FeedAPI {
     this.discover = new CustomFeedAPI({
       getAgent: this.getAgent,
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      userInterests: this.userInterests,
     })
     this.usingDiscover = false
     this.itemCursor = 0

@@ -152,6 +152,12 @@ export function Outer({
     [open, close],
   )
 
+  React.useEffect(() => {
+    return () => {
+      setDialogIsOpen(control.id, false)
+    }
+  }, [control.id, setDialogIsOpen])
+
   const context = React.useMemo(() => ({close}), [close])
 
   return (
@@ -207,7 +213,8 @@ export function Inner({children, style}: DialogInnerProps) {
   return (
     <BottomSheetView
       style={[
-        a.p_xl,
+        a.py_xl,
+        a.px_xl,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,

@@ -1,28 +1,25 @@
-import {createContext, useContext, useMemo} from 'react'
 import {
   AppBskyActorDefs,
-  BSKY_LABELER_DID,
   BskyFeedViewPreference,
   LabelPreference,
-  ModerationOpts,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {track} from '#/lib/analytics/analytics'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
-import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
   DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
-import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
   ThreadViewPreferences,
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
 
 export * from '#/state/queries/preferences/const'
@@ -36,7 +33,7 @@ export function usePreferencesQuery() {
   const {getAgent} = useAgent()
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
-    structuralSharing: true,
+    structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
@@ -55,14 +52,11 @@ export function usePreferencesQuery() {
 
         const preferences: UsePreferencesQueryResponse = {
           ...res,
-          feeds: {
-            saved: res.feeds?.saved || [],
-            pinned: res.feeds?.pinned || [],
-            unpinned:
-              res.feeds.saved?.filter(f => {
-                return !res.feeds.pinned?.includes(f)
-              }) || [],
-          },
+          savedFeeds: res.savedFeeds.filter(f => f.type !== 'unknown'),
+          /**
+           * Special preference, only used for following feed, previously
+           * called `home`
+           */
           feedViewPrefs: {
             ...DEFAULT_HOME_FEED_PREFS,
             ...(res.feedViewPrefs.home || {}),
@@ -77,44 +71,6 @@ export function usePreferencesQuery() {
       }
     },
   })
-}
-
-// used in the moderation state devtool
-export const moderationOptsOverrideContext = createContext<
-  ModerationOpts | undefined
->(undefined)
-
-export function useModerationOpts() {
-  const override = useContext(moderationOptsOverrideContext)
-  const {currentAccount} = useSession()
-  const prefs = usePreferencesQuery()
-  const {labelDefs} = useLabelDefinitions()
-  const hiddenPosts = useHiddenPosts() // TODO move this into pds-stored prefs
-  const opts = useMemo<ModerationOpts | undefined>(() => {
-    if (override) {
-      return override
-    }
-    if (!prefs.data) {
-      return
-    }
-    return {
-      userDid: currentAccount?.did,
-      prefs: {
-        ...prefs.data.moderationPrefs,
-        labelers: prefs.data.moderationPrefs.labelers.length
-          ? prefs.data.moderationPrefs.labelers
-          : [
-              {
-                did: BSKY_LABELER_DID,
-                labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
-              },
-            ],
-        hiddenPosts: hiddenPosts || [],
-      },
-      labelDefs,
-    }
-  }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])
-  return opts
 }
 
 export function useClearPreferencesMutation() {
@@ -210,6 +166,10 @@ export function useSetFeedViewPreferencesMutation() {
 
   return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
+      /*
+       * special handling here, merged into `feedViewPrefs` above, since
+       * following was previously called `home`
+       */
       await getAgent().setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -234,17 +194,13 @@ export function useSetThreadViewPreferencesMutation() {
   })
 }
 
-export function useSetSaveFeedsMutation() {
+export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const {getAgent} = useAgent()
 
-  return useMutation<
-    void,
-    unknown,
-    Pick<UsePreferencesQueryResponse['feeds'], 'saved' | 'pinned'>
-  >({
-    mutationFn: async ({saved, pinned}) => {
-      await getAgent().setSavedFeeds(saved, pinned)
+  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+    mutationFn: async savedFeeds => {
+      await getAgent().overwriteSavedFeeds(savedFeeds)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -253,13 +209,17 @@ export function useSetSaveFeedsMutation() {
   })
 }
 
-export function useSaveFeedMutation() {
+export function useAddSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const {getAgent} = useAgent()
 
-  return useMutation<void, unknown, {uri: string}>({
-    mutationFn: async ({uri}) => {
-      await getAgent().addSavedFeed(uri)
+  return useMutation<
+    void,
+    unknown,
+    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
+  >({
+    mutationFn: async savedFeeds => {
+      await getAgent().addSavedFeeds(savedFeeds)
       track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -273,9 +233,9 @@ export function useRemoveFeedMutation() {
   const queryClient = useQueryClient()
   const {getAgent} = useAgent()
 
-  return useMutation<void, unknown, {uri: string}>({
-    mutationFn: async ({uri}) => {
-      await getAgent().removeSavedFeed(uri)
+  return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
+    mutationFn: async savedFeed => {
+      await getAgent().removeSavedFeeds([savedFeed.id])
       track('CustomFeed:Unsave')
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -285,14 +245,37 @@ export function useRemoveFeedMutation() {
   })
 }
 
-export function usePinFeedMutation() {
+export function useReplaceForYouWithDiscoverFeedMutation() {
   const queryClient = useQueryClient()
   const {getAgent} = useAgent()
 
-  return useMutation<void, unknown, {uri: string}>({
-    mutationFn: async ({uri}) => {
-      await getAgent().addPinnedFeed(uri)
-      track('CustomFeed:Pin', {uri})
+  return useMutation({
+    mutationFn: async ({
+      forYouFeedConfig,
+      discoverFeedConfig,
+    }: {
+      forYouFeedConfig: AppBskyActorDefs.SavedFeed | undefined
+      discoverFeedConfig: AppBskyActorDefs.SavedFeed | undefined
+    }) => {
+      if (forYouFeedConfig) {
+        await getAgent().removeSavedFeeds([forYouFeedConfig.id])
+      }
+      if (!discoverFeedConfig) {
+        await getAgent().addSavedFeeds([
+          {
+            type: 'feed',
+            value: PROD_DEFAULT_FEED('whats-hot'),
+            pinned: true,
+          },
+        ])
+      } else {
+        await getAgent().updateSavedFeeds([
+          {
+            ...discoverFeedConfig,
+            pinned: true,
+          },
+        ])
+      }
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -301,14 +284,14 @@ export function usePinFeedMutation() {
   })
 }
 
-export function useUnpinFeedMutation() {
+export function useUpdateSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const {getAgent} = useAgent()
 
-  return useMutation<void, unknown, {uri: string}>({
-    mutationFn: async ({uri}) => {
-      await getAgent().removePinnedFeed(uri)
-      track('CustomFeed:Unpin', {uri})
+  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+    mutationFn: async feeds => {
+      await getAgent().updateSavedFeeds(feeds)
+
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

@@ -21,8 +21,8 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {s} from '#/lib/styles'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
@@ -31,10 +31,7 @@ import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
 
-export const MATCH_HANDLE =
-  /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
-
-export function SearchLinkCard({
+let SearchLinkCard = ({
   label,
   to,
   onPress,
@@ -44,7 +41,7 @@ export function SearchLinkCard({
   to?: string
   onPress?: () => void
   style?: ViewStyle
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
 
   const inner = (
@@ -82,8 +79,10 @@ export function SearchLinkCard({
     </Link>
   )
 }
+SearchLinkCard = React.memo(SearchLinkCard)
+export {SearchLinkCard}
 
-export function SearchProfileCard({
+let SearchProfileCard = ({
   profile,
   moderation,
   onPress: onPressInner,
@@ -91,7 +90,7 @@ export function SearchProfileCard({
   profile: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision
   onPress: () => void
-}) {
+}): React.ReactNode => {
   const pal = usePalette('default')
   const queryClient = useQueryClient()
 
@@ -144,6 +143,8 @@ export function SearchProfileCard({
     </Link>
   )
 }
+SearchProfileCard = React.memo(SearchProfileCard)
+export {SearchProfileCard}
 
 export function DesktopSearch() {
   const {_} = useLingui()
@@ -178,11 +179,6 @@ export function DesktopSearch() {
     setQuery('')
     setIsActive(false)
   }, [])
-
-  const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(query)
-    return match && match[1]
-  }, [query])
 
   return (
     <View style={[styles.container, pal.view]}>
@@ -239,19 +235,11 @@ export function DesktopSearch() {
                 label={_(msg`Search for "${query}"`)}
                 to={`/search?q=${encodeURIComponent(query)}`}
                 style={
-                  queryMaybeHandle || (autocompleteData?.length ?? 0) > 0
+                  (autocompleteData?.length ?? 0) > 0
                     ? {borderBottomWidth: 1}
                     : undefined
                 }
               />
-
-              {queryMaybeHandle ? (
-                <SearchLinkCard
-                  label={_(msg`Go to @${queryMaybeHandle}`)}
-                  to={`/profile/${queryMaybeHandle}`}
-                />
-              ) : null}
-
               {autocompleteData?.map(item => (
                 <SearchProfileCard
                   key={item.did}

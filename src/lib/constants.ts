@@ -1,4 +1,5 @@
 import {Insets, Platform} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -44,7 +45,7 @@ export function IS_TEST_USER(handle?: string) {
 }
 
 export function IS_PROD_SERVICE(url?: string) {
-  return url && url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
+  return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
 }
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
@@ -90,6 +91,28 @@ export const BSKY_FEED_OWNER_DIDS = [
   BSKY_APP_ACCOUNT_DID,
   'did:plc:vpkhqolt662uhesyj6nxm7ys',
   'did:plc:q6gjnaw2blty4crticxkmujt',
+]
+
+export const DISCOVER_FEED_URI =
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+export const DISCOVER_SAVED_FEED = {
+  type: 'feed',
+  value: DISCOVER_FEED_URI,
+  pinned: true,
+}
+export const TIMELINE_SAVED_FEED = {
+  type: 'timeline',
+  value: 'following',
+  pinned: true,
+}
+
+export const RECOMMENDED_SAVED_FEEDS: Pick<
+  AppBskyActorDefs.SavedFeed,
+  'type' | 'value' | 'pinned'
+>[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
+
+export const KNOWN_SHUTDOWN_FEEDS = [
+  'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm', // for you by skygaze
 ]
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
