@@ -101,6 +101,7 @@ export function useRequestNotificationsPermission() {
       })
 
       if (res.granted) {
+        // This will fire a pushTokenEvent, which will handle registration of the token
         Notifications.getDevicePushTokenAsync()
       }
     },
