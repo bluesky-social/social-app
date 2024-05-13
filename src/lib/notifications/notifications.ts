@@ -37,6 +37,13 @@ async function registerPushToken(
   }
 }
 
+async function getPushToken() {
+  const permissions = await Notifications.getPermissionsAsync()
+  if (permissions.granted) {
+    Notifications.getDevicePushTokenAsync()
+  }
+}
+
 export function useNotificationsRegistration() {
   const [currentPermissions] = Notifications.usePermissions()
   const {getAgent} = useAgent()
@@ -49,10 +56,7 @@ export function useNotificationsRegistration() {
       return
     }
 
-    // Whenever we all `getDevicePushTokenAsync()`, a change event will be fired below
-    if (currentPermissions?.status === 'granted') {
-      Notifications.getDevicePushTokenAsync()
-    }
+    getPushToken()
 
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
@@ -100,10 +104,8 @@ export function useRequestNotificationsPermission() {
         status: res.status,
       })
 
-      if (res.granted) {
-        // This will fire a pushTokenEvent, which will handle registration of the token
-        Notifications.getDevicePushTokenAsync()
-      }
+      // This will fire a pushTokenEvent, which will handle registration of the token
+      getPushToken()
     },
     [currentPermissions, gate],
   )
