@@ -21,11 +21,11 @@ msgstr "(이메일 없음)"
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr "외 {0, plural, other {{formattedCount}}}명"
 
-#: src/components/moderation/LabelsOnMe.tsx:57
+#: src/components/moderation/LabelsOnMe.tsx:55
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
 msgstr "이 계정에 {0, plural, other {#}}개의 라벨이 지정됨"
 
-#: src/components/moderation/LabelsOnMe.tsx:63
+#: src/components/moderation/LabelsOnMe.tsx:61
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
 msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 
@@ -404,16 +404,16 @@ msgstr "앱 비밀번호 설정"
 msgid "App Passwords"
 msgstr "앱 비밀번호"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:133
-#: src/components/moderation/LabelsOnMeDialog.tsx:136
+#: src/components/moderation/LabelsOnMeDialog.tsx:150
+#: src/components/moderation/LabelsOnMeDialog.tsx:153
 msgid "Appeal"
 msgstr "이의신청"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:202
+#: src/components/moderation/LabelsOnMeDialog.tsx:228
 msgid "Appeal \"{0}\" label"
 msgstr "\"{0}\" 라벨 이의신청"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:193
+#: src/components/moderation/LabelsOnMeDialog.tsx:219
 msgid "Appeal submitted"
 msgstr "이의신청 제출함"
 
@@ -466,8 +466,8 @@ msgstr "선정적이지 않거나 예술적인 노출."
 msgid "At least 3 characters"
 msgstr "3자 이상"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:247
-#: src/components/moderation/LabelsOnMeDialog.tsx:248
+#: src/components/moderation/LabelsOnMeDialog.tsx:273
+#: src/components/moderation/LabelsOnMeDialog.tsx:274
 #: src/screens/Login/ChooseAccountForm.tsx:98
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
@@ -779,7 +779,7 @@ msgstr "\"모두\" 또는 \"없음\"을 선택하세요."
 msgid "Choose Service"
 msgstr "서비스 선택"
 
-#: src/screens/Onboarding/StepFinished.tsx:213
+#: src/screens/Onboarding/StepFinished.tsx:228
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 
@@ -918,7 +918,7 @@ msgstr "만화"
 msgid "Community Guidelines"
 msgstr "커뮤니티 가이드라인"
 
-#: src/screens/Onboarding/StepFinished.tsx:226
+#: src/screens/Onboarding/StepFinished.tsx:241
 msgid "Complete onboarding and start using your account"
 msgstr "온보딩 완료 후 계정 사용 시작"
 
@@ -1407,8 +1407,6 @@ msgstr "도메인을 확인했습니다."
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/screens/PreferencesFollowingFeed.tsx:310
-#: src/view/screens/Settings/ExportCarDialog.tsx:95
-#: src/view/screens/Settings/ExportCarDialog.tsx:97
 msgid "Done"
 msgstr "완료"
 
@@ -1428,8 +1426,8 @@ msgstr "완료"
 msgid "Done{extraText}"
 msgstr "완료{extraText}"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:60
-#: src/view/screens/Settings/ExportCarDialog.tsx:64
+#: src/view/screens/Settings/ExportCarDialog.tsx:78
+#: src/view/screens/Settings/ExportCarDialog.tsx:82
 msgid "Download CAR file"
 msgstr "CAR 파일 다운로드"
 
@@ -1681,6 +1679,10 @@ msgstr "아래에 새 이메일 주소를 입력하세요."
 msgid "Enter your username and password"
 msgstr "사용자 이름 및 비밀번호 입력"
 
+#: src/view/screens/Settings/ExportCarDialog.tsx:47
+msgid "Error occurred while saving file"
+msgstr "파일을 저장하는 동안 오류가 발생했습니다"
+
 #: src/screens/Signup/StepCaptcha/index.tsx:51
 msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
@@ -1744,7 +1746,7 @@ msgstr "노골적인 성적 이미지."
 msgid "Export my data"
 msgstr "내 데이터 내보내기"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:45
+#: src/view/screens/Settings/ExportCarDialog.tsx:63
 #: src/view/screens/Settings/index.tsx:763
 msgid "Export My Data"
 msgstr "내 데이터 내보내기"
@@ -1842,11 +1844,15 @@ msgstr "주제 기반 피드도 있습니다!"
 msgid "File Contents"
 msgstr "파일 콘텐츠"
 
+#: src/view/screens/Settings/ExportCarDialog.tsx:43
+msgid "File saved successfully!"
+msgstr "파일을 성공적으로 저장했습니다!"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
 msgstr "피드에서 필터링"
 
-#: src/screens/Onboarding/StepFinished.tsx:229
+#: src/screens/Onboarding/StepFinished.tsx:244
 msgid "Finalizing"
 msgstr "마무리 중"
 
@@ -1872,7 +1878,7 @@ msgstr "대화 스레드를 미세 조정합니다."
 msgid "Fitness"
 msgstr "건강"
 
-#: src/screens/Onboarding/StepFinished.tsx:209
+#: src/screens/Onboarding/StepFinished.tsx:224
 msgid "Flexible"
 msgstr "유연성"
 
@@ -2386,11 +2392,11 @@ msgstr "라벨"
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "라벨은 사용자 및 콘텐츠에 대한 주석입니다. 네트워크를 숨기고, 경고하고, 분류하는 데 사용할 수 있습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:62
+#: src/components/moderation/LabelsOnMeDialog.tsx:77
 msgid "Labels on your account"
 msgstr "내 계정의 라벨"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:64
+#: src/components/moderation/LabelsOnMeDialog.tsx:79
 msgid "Labels on your content"
 msgstr "내 콘텐츠의 라벨"
 
@@ -2469,7 +2475,7 @@ msgstr "레거시 스토리지가 지워졌으며 지금 앱을 다시 시작해
 msgid "Let's get your password reset!"
 msgstr "비밀번호를 재설정해 봅시다!"
 
-#: src/screens/Onboarding/StepFinished.tsx:229
+#: src/screens/Onboarding/StepFinished.tsx:244
 msgid "Let's go!"
 msgstr "출발!"
 
@@ -2893,7 +2899,7 @@ msgstr "내 프로필로 이동합니다"
 msgid "Need to report a copyright violation?"
 msgstr "저작권 위반을 신고해야 하나요?"
 
-#: src/screens/Onboarding/StepFinished.tsx:197
+#: src/screens/Onboarding/StepFinished.tsx:212
 msgid "Never lose access to your followers or data."
 msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 마세요."
 
@@ -3158,7 +3164,7 @@ msgstr "이런, 뭔가 잘못되었습니다!"
 msgid "Oops!"
 msgstr "이런!"
 
-#: src/screens/Onboarding/StepFinished.tsx:193
+#: src/screens/Onboarding/StepFinished.tsx:208
 msgid "Open"
 msgstr "공개성"
 
@@ -3479,7 +3485,7 @@ msgstr "이메일을 입력하세요."
 msgid "Please enter your password as well:"
 msgstr "비밀번호도 입력해 주세요:"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:222
+#: src/components/moderation/LabelsOnMeDialog.tsx:248
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 설명해 주세요"
 
@@ -3641,7 +3647,7 @@ msgstr "프로필 업데이트됨"
 msgid "Protect your account by verifying your email."
 msgstr "이메일을 인증하여 계정을 보호하세요."
 
-#: src/screens/Onboarding/StepFinished.tsx:179
+#: src/screens/Onboarding/StepFinished.tsx:194
 msgid "Public"
 msgstr "공공성"
 
@@ -3713,8 +3719,8 @@ msgid "Remove Banner"
 msgstr "배너 제거"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:169
-#: src/view/com/posts/FeedShutdownMsg.tsx:131
-#: src/view/com/posts/FeedShutdownMsg.tsx:135
+#: src/view/com/posts/FeedShutdownMsg.tsx:113
+#: src/view/com/posts/FeedShutdownMsg.tsx:117
 msgid "Remove feed"
 msgstr "피드 제거"
 
@@ -3767,7 +3773,7 @@ msgstr "리스트에서 제거됨"
 msgid "Removed from my feeds"
 msgstr "내 피드에서 제거됨"
 
-#: src/view/com/posts/FeedShutdownMsg.tsx:47
+#: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
 #: src/view/screens/ProfileList.tsx:315
 msgid "Removed from your feeds"
@@ -3781,8 +3787,8 @@ msgstr "{0}에서 기본 미리보기 이미지를 제거합니다"
 msgid "Removes quoted post"
 msgstr "인용된 게시물을 제거합니다"
 
-#: src/view/com/posts/FeedShutdownMsg.tsx:144
-#: src/view/com/posts/FeedShutdownMsg.tsx:148
+#: src/view/com/posts/FeedShutdownMsg.tsx:126
+#: src/view/com/posts/FeedShutdownMsg.tsx:130
 msgid "Replace with Discover"
 msgstr "Discover로 교체"
 
@@ -4656,7 +4662,7 @@ msgstr "답글 정렬"
 msgid "Sort replies to the same post by:"
 msgstr "동일한 게시물에 대한 답글을 정렬하는 기준입니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:146
+#: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
 msgstr "출처:"
 
@@ -4698,8 +4704,8 @@ msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니
 msgid "Storybook"
 msgstr "스토리북"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:256
-#: src/components/moderation/LabelsOnMeDialog.tsx:257
+#: src/components/moderation/LabelsOnMeDialog.tsx:282
+#: src/components/moderation/LabelsOnMeDialog.tsx:283
 msgid "Submit"
 msgstr "확인"
 
@@ -4809,7 +4815,7 @@ msgstr "커뮤니티 기준을 위반하는 용어 사용"
 msgid "text"
 msgstr "글"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:220
+#: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "Text input field"
 msgstr "텍스트 입력 필드"
 
@@ -4839,15 +4845,15 @@ msgstr "커뮤니티 가이드라인을 <0/>(으)로 이동했습니다"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "저작권 정책을 <0/>(으)로 이동했습니다"
 
-#: src/view/com/posts/FeedShutdownMsg.tsx:81
+#: src/view/com/posts/FeedShutdownMsg.tsx:66
 msgid "The feed has been replaced with Discover."
 msgstr "피드를 Discover로 교체했습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:48
+#: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "The following labels were applied to your account."
 msgstr "내 계정에 다음 라벨이 적용되었습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:49
+#: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to your content."
 msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 
@@ -4886,7 +4892,7 @@ msgid "There was an an issue removing this feed. Please check your internet conn
 msgstr "이 피드를 삭제하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
-#: src/view/com/posts/FeedShutdownMsg.tsx:85
+#: src/view/com/posts/FeedShutdownMsg.tsx:70
 #: src/view/screens/ProfileFeed.tsx:205
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
@@ -4985,7 +4991,7 @@ msgstr "이 {screenDescription}에 다음 플래그가 지정되었습니다:"
 msgid "This account has requested that users sign in to view their profile."
 msgstr "이 계정의 프로필을 보려면 로그인해야 합니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:205
+#: src/components/moderation/LabelsOnMeDialog.tsx:231
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "이 이의신청은 <0>{0}</0>에게 보내집니다."
 
@@ -5014,7 +5020,7 @@ msgstr "관련 사용자 중 한 명이 다른 사용자를 차단했기 때문�
 msgid "This content is not viewable without a Bluesky account."
 msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:76
+#: src/view/screens/Settings/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "이 기능은 베타 버전입니다. 저장소 내보내기에 대한 자세한 내용은 <0>이 블로그 글</0>에서 확인할 수 있습니다."
 
@@ -5032,7 +5038,7 @@ msgstr "이 피드는 비어 있습니다."
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "이 피드는 비어 있습니다. 더 많은 사용자를 팔로우하거나 언어 설정을 조정해 보세요."
 
-#: src/view/com/posts/FeedShutdownMsg.tsx:115
+#: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr "이 피드는 더 이상 온라인 상태가 아닙니다. 대신 <0>Discover</0>를 표시합니다."
 
@@ -5051,6 +5057,10 @@ msgstr "이 라벨은 {0}이(가) 적용했습니다."
 #: src/components/moderation/ModerationDetailsDialog.tsx:125
 msgid "This label was applied by the author."
 msgstr "이 라벨은 작성자가 적용했습니다."
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:165
+msgid "This label was applied by you"
+msgstr "이 라벨은 내가 적용했습니다."
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5535,7 +5545,7 @@ msgstr "저작권 위반 신고에 대한 세부 정보 보기"
 msgid "View full thread"
 msgstr "전체 스레드 보기"
 
-#: src/components/moderation/LabelsOnMe.tsx:50
+#: src/components/moderation/LabelsOnMe.tsx:48
 msgid "View information about these labels"
 msgstr "이 라벨에 대한 정보 보기"
 
@@ -5589,7 +5599,7 @@ msgstr "이 대화를 불러올 수 없습니다"
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "계정이 준비될 때까지 {estimatedTime}이(가) 걸릴 것으로 예상됩니다."
 
-#: src/screens/Onboarding/StepFinished.tsx:171
+#: src/screens/Onboarding/StepFinished.tsx:186
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "즐거운 시간 되시기 바랍니다. Bluesky의 다음 특징을 기억하세요:"
 
@@ -5842,7 +5852,11 @@ msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트�
 msgid "You haven't muted any words or tags yet"
 msgstr "아직 어떤 단어나 태그도 뮤트하지 않았습니다"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:68
+#: src/components/moderation/LabelsOnMeDialog.tsx:84
+msgid "You may appeal non-self labels if you feel they were placed in error."
+msgstr "비셀프 라벨이 잘못 지정되었다고 생각되면 이의신청할 수 있습니다."
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:89
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "이 라벨이 잘못 지정되었다고 생각되면 이의신청할 수 있습니다."
 
@@ -5884,7 +5898,7 @@ msgstr "직접 제어하세요"
 msgid "You're in line"
 msgstr "대기 중입니다"
 
-#: src/screens/Onboarding/StepFinished.tsx:168
+#: src/screens/Onboarding/StepFinished.tsx:183
 msgid "You're ready to go!"
 msgstr "준비가 끝났습니다!"
 
@@ -5905,7 +5919,7 @@ msgstr "내 계정"
 msgid "Your account has been deleted"
 msgstr "계정을 삭제했습니다"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:48
+#: src/view/screens/Settings/ExportCarDialog.tsx:66
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR\" 파일로 다운로드할 수 있습니다. 이 파일에는 이미지와 같은 미디어 임베드나 별도로 가져와야 하는 비공개 데이터는 포함되지 않습니다."
 
@@ -5959,7 +5973,7 @@ msgstr "비밀번호를 성공적으로 변경했습니다."
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
-#: src/screens/Onboarding/StepFinished.tsx:183
+#: src/screens/Onboarding/StepFinished.tsx:198
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
 
