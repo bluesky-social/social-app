@@ -162,19 +162,21 @@ function Label({
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
         <Text style={[t.atoms.text_contrast_medium]}>
           {isSelfLabel ? (
-            <Trans>This label was applied by you</Trans>
+            <Trans>This label was applied by you.</Trans>
           ) : (
             <>
-              <Trans>Source:</Trans>{' '}
-              <InlineLinkText
-                to={makeProfileLink(
-                  labeler ? labeler.creator : {did: label.src, handle: ''},
-                )}
-                onPress={() => control.close()}>
-                {labeler
-                  ? sanitizeHandle(labeler.creator.handle, '@')
-                  : label.src}
-              </InlineLinkText>
+              <Trans>
+                Source:{' '}
+                <InlineLinkText
+                  to={makeProfileLink(
+                    labeler ? labeler.creator : {did: label.src, handle: ''},
+                  )}
+                  onPress={() => control.close()}>
+                  {labeler
+                    ? sanitizeHandle(labeler.creator.handle, '@')
+                    : label.src}
+                </InlineLinkText>
+              </Trans>
             </>
           )}
         </Text>
