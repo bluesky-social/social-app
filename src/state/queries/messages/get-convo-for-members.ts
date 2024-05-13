@@ -1,10 +1,10 @@
-import {BskyAgent, ChatBskyConvoGetConvoForMembers} from '@atproto-labs/api'
+import {ChatBskyConvoGetConvoForMembers} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {useAgent} from '#/state/session'
 import {RQKEY as CONVO_KEY} from './conversation'
-import {useHeaders} from './temp-headers'
 
 export function useGetConvoForMembers({
   onSuccess,
@@ -14,15 +14,13 @@ export function useGetConvoForMembers({
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
+  const {getAgent} = useAgent()
 
   return useMutation({
     mutationFn: async (members: string[]) => {
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.getConvoForMembers(
+      const {data} = await getAgent().api.chat.bsky.convo.getConvoForMembers(
         {members: members},
-        {headers},
+        {headers: DM_SERVICE_HEADERS},
       )
 
       return data

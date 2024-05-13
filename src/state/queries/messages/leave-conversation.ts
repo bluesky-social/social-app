@@ -1,14 +1,10 @@
-import {
-  BskyAgent,
-  ChatBskyConvoLeaveConvo,
-  ChatBskyConvoListConvos,
-} from '@atproto-labs/api'
+import {ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {useAgent} from '#/state/session'
 import {RQKEY as CONVO_LIST_KEY} from './list-converations'
-import {useHeaders} from './temp-headers'
 
 export function useLeaveConvo(
   convoId: string | undefined,
@@ -21,17 +17,15 @@ export function useLeaveConvo(
   },
 ) {
   const queryClient = useQueryClient()
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
+  const {getAgent} = useAgent()
 
   return useMutation({
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
 
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.leaveConvo(
+      const {data} = await getAgent().api.chat.bsky.convo.leaveConvo(
         {convoId},
-        {headers, encoding: 'application/json'},
+        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
       )
 
       return data

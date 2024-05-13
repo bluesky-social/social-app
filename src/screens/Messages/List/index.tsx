@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
