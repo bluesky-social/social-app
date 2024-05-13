@@ -3,9 +3,9 @@ import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useModalControls} from '#/state/modals'
-import {useSetFeedViewPreferencesMutation} from '#/state/queries/preferences'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useOnboardingDispatch} from '#/state/shell/onboarding'
 import {navigate} from '../../../Navigation'
 
 LogBox.ignoreAllLogs()
@@ -22,7 +22,7 @@ export function TestCtrls() {
   const queryClient = useQueryClient()
   const {logout, login} = useSessionApi()
   const {openModal} = useModalControls()
-  const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
+  const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
     await login(
@@ -89,12 +89,6 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
-        testID="e2eToggleMergefeed"
-        onPress={() => setFeedViewPref({lab_mergeFeedEnabled: true})}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
         testID="e2eRefreshHome"
         onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
         accessibilityRole="button"
@@ -109,6 +103,12 @@ export function TestCtrls() {
       <Pressable
         testID="e2eOpenLoggedOutView"
         onPress={() => setShowLoggedOut(true)}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
+        testID="e2eStartOnboarding"
+        onPress={() => onboardingDispatch({type: 'start'})}
         accessibilityRole="button"
         style={BTN}
       />
