@@ -160,7 +160,16 @@ export function StepFinished() {
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
-    logEvent('onboarding:finished:nextPressed', {})
+
+    let avatarResult = 'default'
+    if (profileStepResults.isCreatedAvatar) {
+      avatarResult = 'created'
+    } else if (profileStepResults.image) {
+      avatarResult = 'uploaded'
+    }
+    logEvent('onboarding:finished:nextPressed', {
+      avatarResult,
+    })
   }, [
     state,
     dispatch,
