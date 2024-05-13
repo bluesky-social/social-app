@@ -175,7 +175,7 @@ export function SavedFeeds({}: Props) {
         )}
 
         <View style={styles.footerText}>
-          <Text type="sm" style={pal.textLight}>
+          <Text type="sm" style={[a.leading_snug, pal.textLight]}>
             <Trans>
               Feeds are custom algorithms that users build with a little coding
               expertise.{' '}
