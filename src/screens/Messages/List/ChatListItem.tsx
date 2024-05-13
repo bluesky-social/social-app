@@ -116,22 +116,6 @@ export function ChatListItem({
                       {otherUser.displayName || otherUser.handle}
                     </Text>
                   </Text>
-
-                  {convo.muted && (
-                    <Text
-                      style={[
-                        a.text_sm,
-                        web([a.leading_normal, {whiteSpace: 'pre'}]),
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      {' '}
-                      &middot;{' '}
-                      <BellStroke
-                        size="xs"
-                        style={t.atoms.text_contrast_medium}
-                      />
-                    </Text>
-                  )}
                   {lastMessageSentAt && (
                     <TimeElapsed timestamp={lastMessageSentAt}>
                       {({timeElapsed}) => (
@@ -146,6 +130,21 @@ export function ChatListItem({
                         </Text>
                       )}
                     </TimeElapsed>
+                  )}
+                  {convo.muted && (
+                    <Text
+                      style={[
+                        a.text_sm,
+                        web([a.leading_normal, {whiteSpace: 'pre'}]),
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {' '}
+                      &middot;{' '}
+                      <BellStroke
+                        size="xs"
+                        style={t.atoms.text_contrast_medium}
+                      />
+                    </Text>
                   )}
                 </View>
                 <Text
