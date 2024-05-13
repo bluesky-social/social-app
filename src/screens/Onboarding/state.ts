@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {logger} from '#/logger'
+import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -41,6 +42,10 @@ export type OnboardingState = {
     }
     imageUri?: string
     imageMime?: string
+    creatorState?: {
+      emoji: Emoji
+      backgroundColor: AvatarColor
+    }
   }
 }
 
@@ -77,6 +82,10 @@ export type OnboardingAction =
       image?: OnboardingState['profileStepResults']['image']
       imageUri: string
       imageMime: string
+      creatorState?: {
+        emoji: Emoji
+        backgroundColor: string
+      }
     }
 
 export type ApiResponseMap = {
@@ -349,6 +358,7 @@ export function reducerReduced(
         image: a.image,
         imageUri: a.imageUri,
         imageMime: a.imageMime,
+        creatorState: a.creatorState,
       }
       break
     }
