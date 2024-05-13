@@ -8,8 +8,8 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-06 15:47+0900\n"
-"Last-Translator: tkusano\n"
+"PO-Revision-Date: 2024-05-13 21:32+0900\n"
+"Last-Translator: Hima-Zinn\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
 
@@ -19,69 +19,69 @@ msgstr "メールがありません"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr ""
+msgstr "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
-msgstr ""
+msgstr "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:63
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr ""
+msgstr "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr ""
+msgstr "{0, plural, one {# repost} other {# reposts}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:373
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr ""
+msgstr "{0, plural, one {follower} other {followers}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:377
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr ""
+msgstr "{0, plural, one {following} other {following}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:245
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr ""
+msgstr "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:359
 msgid "{0, plural, one {like} other {likes}}"
-msgstr ""
+msgstr "{0, plural, one {like} other {likes}}"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:267
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr ""
+msgstr "{0, plural, one {Liked by # user} other {Liked by # users}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr ""
+msgstr "{0, plural, one {post} other {posts}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr ""
+msgstr "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:339
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr ""
+msgstr "{0, plural, one {repost} other {reposts}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr ""
+msgstr "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr ""
+msgstr "{count, plural, one {Liked by # user} other {Liked by # users}}"
 
 #: src/screens/Deactivated.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr ""
+msgstr "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 
 #: src/screens/Deactivated.tsx:213
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr ""
+msgstr "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:454
 #: src/screens/Profile/Header/Metrics.tsx:50
@@ -92,7 +92,7 @@ msgstr "{following} フォロー"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
 #: src/view/screens/ProfileFeed.tsx:604
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
-msgstr ""
+msgstr "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 
 #: src/view/shell/Drawer.tsx:464
 msgid "{numUnreadNotifications} unread"
@@ -100,7 +100,7 @@ msgstr "{numUnreadNotifications}件の未読"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:66
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-msgstr ""
+msgstr "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:159
 msgid "<0/> members"
@@ -108,11 +108,11 @@ msgstr "<0/>のメンバー"
 
 #: src/view/shell/Drawer.tsx:92
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr ""
+msgstr "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 
 #: src/view/shell/Drawer.tsx:103
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr ""
+msgstr "<0>{0}</0> {1, plural, one {following} other {following}}"
 
 #: src/view/shell/Drawer.tsx:96
 #~ msgid "<0>{0}</0> following"
@@ -129,7 +129,7 @@ msgstr ""
 
 #: src/view/com/modals/SelfLabel.tsx:134
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-msgstr ""
+msgstr "<0>適用できません。</0>この警告はメディアが添付された投稿にのみ有効です。"
 
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
@@ -245,7 +245,7 @@ msgstr "ALTテキストを追加"
 
 #: src/view/com/composer/GifAltText.tsx:175
 msgid "Add ALT text"
-msgstr ""
+msgstr "ALTテキストを追加"
 
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
@@ -329,7 +329,7 @@ msgstr "ALTテキスト"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:179
 msgid "Alt Text"
-msgstr ""
+msgstr "ALTテキスト"
 
 #: src/view/com/composer/photos/Gallery.tsx:224
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
@@ -367,7 +367,7 @@ msgstr "問題が発生しました。もう一度お試しください。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:194
 msgid "an unknown error occurred"
-msgstr ""
+msgstr "未知のエラーが発生しました"
 
 #: src/view/com/notifications/FeedItem.tsx:236
 #: src/view/com/threadgate/WhoCanReply.tsx:180
@@ -423,7 +423,7 @@ msgstr "「{0}」のラベルに異議を申し立てる"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:193
 msgid "Appeal submitted"
-msgstr ""
+msgstr "異議申し立てを提出しました"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:193
 #~ msgid "Appeal submitted."
@@ -618,7 +618,7 @@ msgstr "作成者：{0}"
 
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:112
 msgid "by @{0}"
-msgstr ""
+msgstr "作成者：@{0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:161
 msgid "by <0/>"
@@ -1245,7 +1245,7 @@ msgstr "アカウントを削除"
 
 #: src/view/com/modals/DeleteAccount.tsx:87
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
-msgstr ""
+msgstr "<0>\"</0><1>{0}</1><2>\"</2>のアカウントを削除"
 
 #: src/view/screens/AppPasswords.tsx:239
 msgid "Delete app password"
@@ -1309,7 +1309,7 @@ msgstr "説明"
 
 #: src/view/com/composer/GifAltText.tsx:140
 msgid "Descriptive alt text"
-msgstr ""
+msgstr "説明用のALTテキスト"
 
 #: src/view/com/composer/Composer.tsx:248
 msgid "Did you want to say anything?"
@@ -4010,7 +4010,7 @@ msgstr "保存されたフィード"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 msgid "Saved to your camera roll"
-msgstr ""
+msgstr "カメラロールに保存されました"
 
 #: src/view/com/lightbox/Lightbox.tsx:81
 #~ msgid "Saved to your camera roll."
@@ -4388,7 +4388,7 @@ msgstr "表示"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:167
 msgid "Show alt text"
-msgstr ""
+msgstr "ALTテキストを表示"
 
 #: src/components/moderation/ScreenHider.tsx:169
 #: src/components/moderation/ScreenHider.tsx:172
@@ -4411,7 +4411,7 @@ msgstr "{0}に似たおすすめのフォロー候補を表示"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:305
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
 msgid "Show less like this"
-msgstr ""
+msgstr "このような表示を減らす"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:508
 #: src/view/com/post/Post.tsx:213
@@ -4422,7 +4422,7 @@ msgstr "さらに表示"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:297
 #: src/view/com/util/forms/PostDropdownBtn.tsx:299
 msgid "Show more like this"
-msgstr ""
+msgstr "このような表示を増やす"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:256
 msgid "Show Posts from My Feeds"
@@ -4631,7 +4631,7 @@ msgstr "ステータスページ"
 
 #: src/screens/Signup/index.tsx:154
 msgid "Step {0} of {1}"
-msgstr ""
+msgstr "ステップ {0}/{1}"
 
 #: src/view/screens/Settings/index.tsx:301
 msgid "Storage cleared, you need to restart the app now."
@@ -4838,7 +4838,7 @@ msgstr "Tenorへの接続中に問題が発生しました。"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "There was an issue connecting to the chat."
-msgstr ""
+msgstr "チャットへの接続中に問題が発生しました。"
 
 #: src/view/screens/ProfileFeed.tsx:247
 #: src/view/screens/ProfileList.tsx:277
@@ -4930,7 +4930,7 @@ msgstr "この申し立ては<0>{0}</0>に送られます。"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:26
 msgid "This chat was disconnected due to a network error."
-msgstr ""
+msgstr "このチャットはネットワークのエラーにより切断されています。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -4985,11 +4985,11 @@ msgstr "これは、メールアドレスの変更やパスワードのリセッ
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:127
 msgid "This label was applied by <0>{0}</0>."
-msgstr ""
+msgstr "<0>{0}</0>によって適用されたラベルです。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:125
 msgid "This label was applied by the author."
-msgstr ""
+msgstr "投稿者によって適用されたラベルです。"
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5414,7 +5414,7 @@ msgstr "値："
 
 #: src/view/com/modals/ChangeHandle.tsx:511
 msgid "Verify DNS Record"
-msgstr ""
+msgstr "DNSレコードを確認"
 
 #: src/view/screens/Settings/index.tsx:915
 msgid "Verify email"
@@ -5435,7 +5435,7 @@ msgstr "新しいメールアドレスを確認"
 
 #: src/view/com/modals/ChangeHandle.tsx:512
 msgid "Verify Text File"
-msgstr ""
+msgstr "テキストファイルを確認"
 
 #: src/view/com/modals/VerifyEmail.tsx:112
 msgid "Verify Your Email"
