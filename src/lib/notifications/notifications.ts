@@ -37,9 +37,10 @@ async function registerPushToken(
   }
 }
 
-async function getPushToken() {
-  const permissions = await Notifications.getPermissionsAsync()
-  if (permissions.granted) {
+async function getPushToken(skipPermissionCheck = false) {
+  const granted =
+    skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
+  if (granted) {
     Notifications.getDevicePushTokenAsync()
   }
 }
@@ -99,8 +100,10 @@ export function useRequestNotificationsPermission() {
         status: res.status,
       })
 
-      // This will fire a pushTokenEvent, which will handle registration of the token
-      getPushToken()
+      if (res.granted) {
+        // This will fire a pushTokenEvent, which will handle registration of the token
+        getPushToken(true)
+      }
     },
     [gate],
   )
