@@ -37,18 +37,24 @@ async function registerPushToken(
   }
 }
 
+async function getPushToken(skipPermissionCheck = false) {
+  const granted =
+    skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
+  if (granted) {
+    Notifications.getDevicePushTokenAsync()
+  }
+}
+
 export function useNotificationsRegistration() {
-  const [currentPermissions] = Notifications.usePermissions()
   const {getAgent} = useAgent()
   const {currentAccount} = useSession()
 
   React.useEffect(() => {
-    if (!currentAccount || !currentPermissions?.granted) {
+    if (!currentAccount) {
       return
     }
 
-    // Whenever we all `getDevicePushTokenAsync()`, a change event will be fired below
-    Notifications.getDevicePushTokenAsync()
+    getPushToken()
 
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
@@ -59,20 +65,20 @@ export function useNotificationsRegistration() {
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, currentPermissions?.granted, getAgent])
+  }, [currentAccount, getAgent])
 }
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
-  const [currentPermissions] = Notifications.usePermissions()
 
   return React.useCallback(
     async (context: 'StartOnboarding' | 'AfterOnboarding') => {
+      const permissions = await Notifications.getPermissionsAsync()
+
       if (
         !isNative ||
-        currentPermissions?.status === 'granted' ||
-        (currentPermissions?.status === 'denied' &&
-          !currentPermissions?.canAskAgain)
+        permissions?.status === 'granted' ||
+        (permissions?.status === 'denied' && !permissions?.canAskAgain)
       ) {
         return
       }
@@ -93,7 +99,12 @@ export function useRequestNotificationsPermission() {
       logEvent('notifications:request', {
         status: res.status,
       })
+
+      if (res.granted) {
+        // This will fire a pushTokenEvent, which will handle registration of the token
+        getPushToken(true)
+      }
     },
-    [currentPermissions?.canAskAgain, currentPermissions?.status, gate],
+    [gate],
   )
 }
