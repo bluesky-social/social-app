@@ -73,7 +73,7 @@ msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个�
 
 #: src/view/screens/ProfileList.tsx:286
 msgid "{0} your feeds"
-msgstr "{0} 你的资讯源"
+msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
