@@ -134,6 +134,14 @@ export function StepFinished() {
               return existing
             })
           }
+
+          logEvent('onboarding:finished:avatarResult', {
+            avatarResult: profileStepResults.isCreatedAvatar
+              ? 'created'
+              : profileStepResults.image
+              ? 'uploaded'
+              : 'default',
+          })
         })(),
       ])
     } catch (e: any) {
@@ -160,16 +168,7 @@ export function StepFinished() {
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
-
-    let avatarResult = 'default'
-    if (profileStepResults.isCreatedAvatar) {
-      avatarResult = 'created'
-    } else if (profileStepResults.image) {
-      avatarResult = 'uploaded'
-    }
-    logEvent('onboarding:finished:nextPressed', {
-      avatarResult,
-    })
+    logEvent('onboarding:finished:nextPressed', {})
   }, [
     state,
     dispatch,
