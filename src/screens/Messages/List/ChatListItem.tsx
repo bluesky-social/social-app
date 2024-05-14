@@ -35,7 +35,7 @@ export function ChatListItem({
   const isDeletedAccount = otherUser?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? 'Deleted Account'
-    : otherUser?.displayName ?? otherUser?.handle
+    : otherUser?.displayName || otherUser?.handle
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
