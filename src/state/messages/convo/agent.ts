@@ -97,6 +97,7 @@ export class Convo {
     this.sendMessage = this.sendMessage.bind(this)
     this.deleteMessage = this.deleteMessage.bind(this)
     this.fetchMessageHistory = this.fetchMessageHistory.bind(this)
+    this.revalidateConvo = this.revalidateConvo.bind(this)
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
@@ -148,6 +149,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          revalidateConvo: undefined,
         }
       }
       case ConvoStatus.Suspended:
@@ -164,6 +166,7 @@ export class Convo {
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
           fetchMessageHistory: this.fetchMessageHistory,
+          revalidateConvo: this.revalidateConvo,
         }
       }
       case ConvoStatus.Error: {
@@ -178,6 +181,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          revalidateConvo: undefined,
         }
       }
       default: {
@@ -192,6 +196,7 @@ export class Convo {
           deleteMessage: undefined,
           sendMessage: undefined,
           fetchMessageHistory: undefined,
+          revalidateConvo: undefined,
         }
       }
     }
@@ -489,7 +494,7 @@ export class Convo {
     return this.pendingFetchConvo
   }
 
-  async refreshConvo() {
+  private async refreshConvo() {
     try {
       const {convo, sender, recipients} = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
@@ -508,6 +513,20 @@ export class Convo {
           this.resume()
         },
       })
+      this.commit()
+    }
+  }
+
+  async revalidateConvo() {
+    try {
+      const {convo, sender, recipients} = await this.fetchConvo()
+      // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
+      this.convo = convo || this.convo
+      this.sender = sender || this.sender
+      this.recipients = recipients || this.recipients
+    } catch (e: any) {
+      logger.error(e, {context: `Convo: failed to revalidate convo`})
+    } finally {
       this.commit()
     }
   }

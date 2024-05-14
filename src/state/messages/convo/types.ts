@@ -124,6 +124,7 @@ export type ConvoStateUninitialized = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  revalidateConvo: undefined
 }
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
@@ -136,6 +137,7 @@ export type ConvoStateInitializing = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  revalidateConvo: undefined
 }
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
@@ -148,6 +150,7 @@ export type ConvoStateReady = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  revalidateConvo: () => void
 }
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
@@ -160,6 +163,7 @@ export type ConvoStateBackgrounded = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  revalidateConvo: () => void
 }
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
@@ -172,6 +176,7 @@ export type ConvoStateSuspended = {
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
   fetchMessageHistory: FetchMessageHistory
+  revalidateConvo: () => void
 }
 export type ConvoStateError = {
   status: ConvoStatus.Error
@@ -184,6 +189,7 @@ export type ConvoStateError = {
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+  revalidateConvo: undefined
 }
 export type ConvoState =
   | ConvoStateUninitialized
