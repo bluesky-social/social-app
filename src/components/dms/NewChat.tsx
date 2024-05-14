@@ -142,7 +142,7 @@ function SearchablePeopleList({
                 </Text>
                 <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
                   {disabled ? (
-                    <Trans>{handle} cannot be messaged</Trans>
+                    <Trans>{handle} can't be messaged</Trans>
                   ) : (
                     handle
                   )}
