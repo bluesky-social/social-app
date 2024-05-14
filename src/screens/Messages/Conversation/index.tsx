@@ -15,7 +15,7 @@ import {useGate} from '#/lib/statsig/statsig'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isIOS, isWeb} from 'platform/detection'
-import {ConvoProvider, isConvoReady, useConvo} from 'state/messages/convo'
+import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
@@ -72,7 +72,7 @@ function Inner() {
   React.useEffect(() => {
     if (
       !hasInitiallyRendered &&
-      isConvoReady(convoState) &&
+      isConvoActive(convoState) &&
       !convoState.isFetchingHistory
     ) {
       setTimeout(() => {
@@ -108,7 +108,7 @@ function Inner() {
         <CenteredView style={a.flex_1} sideBorders>
           <Header profile={convoState.recipients?.[0]} />
           <View style={[a.flex_1]}>
-            {isConvoReady(convoState) ? (
+            {isConvoActive(convoState) ? (
               <MessagesList />
             ) : (
               <ListMaybePlaceholder isLoading />
@@ -230,7 +230,7 @@ let Header = ({
           </>
         )}
       </View>
-      {isConvoReady(convoState) && profile ? (
+      {isConvoActive(convoState) && profile ? (
         <ConvoMenu
           convo={convoState.convo}
           profile={profile}

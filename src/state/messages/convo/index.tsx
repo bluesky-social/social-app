@@ -8,7 +8,7 @@ import {
   ConvoState,
   ConvoStatus,
 } from '#/state/messages/convo/types'
-import {isConvoReady} from '#/state/messages/convo/util'
+import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useAgent} from '#/state/session'
@@ -25,6 +25,11 @@ export function useConvo() {
   return ctx
 }
 
+/**
+ * This hook should only be used when the Convo is "active", meaning the chat
+ * is loaded and ready to be used, or its in a suspended or background state,
+ * and ready for resumption.
+ */
 export function useConvoActive() {
   const ctx = useContext(ChatContext) as ConvoState & {
     status: ConvoStatus.Ready | ConvoStatus.Backgrounded | ConvoStatus.Suspended
@@ -32,7 +37,7 @@ export function useConvoActive() {
   if (!ctx) {
     throw new Error('useConvo must be used within a ConvoProvider')
   }
-  if (!isConvoReady(ctx)) {
+  if (!isConvoActive(ctx)) {
     throw new Error(
       `useConvoActive must only be rendered when the Convo is ready. Current status: ${ctx.status}`,
     )
