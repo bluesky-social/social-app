@@ -140,7 +140,7 @@ function SearchablePeopleList({
                     moderation.ui('displayName'),
                   )}
                 </Text>
-                <Text style={t.atoms.text_contrast_high} numberOfLines={1}>
+                <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
                   {disabled ? (
                     <Trans>{handle} cannot be messaged</Trans>
                   ) : (
