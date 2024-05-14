@@ -10,15 +10,48 @@ let APP_GROUP = "group.app.bsky"
  * or killed
  */
 public class ExpoBackgroundNotificationHandlerModule: Module {
+  let userDefaults = UserDefaults(suiteName: APP_GROUP)
+  
   public func definition() -> ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
     
-    AsyncFunction("setPlaySoundChat") { (playSound: Bool) in
-      UserDefaults(suiteName: APP_GROUP)?.setValue(playSound, forKey: "playSoundChat")
+    AsyncFunction("getAllPrefsAsync") { (playSound: Bool) -> [String:Any]? in
+      return userDefaults?.dictionaryWithValues(forKeys: [
+        "playSoundChat",
+        "playSoundOther",
+      ])
     }
     
-    AsyncFunction("setPlaySoundOther") { (playSound: Bool) in
-      UserDefaults(suiteName: APP_GROUP)?.setValue(playSound, forKey: "playSoundOther")
+    AsyncFunction("getBoolAsync") { (forKey: String) -> Bool in
+      if let pref = userDefaults?.bool(forKey: forKey) {
+        return pref
+      }
+      return false
+    }
+    
+    AsyncFunction("getStringAsync") { (forKey: String) -> String? in
+      if let pref = userDefaults?.string(forKey: forKey) {
+        return pref
+      }
+      return nil
+    }
+    
+    AsyncFunction("setBoolAsync") { (value: Bool, forKey: String) -> Void in
+      userDefaults?.setValue(forKey, forKey: forKey)
+    }
+    
+    AsyncFunction("setBoolAsync") { (value: String, forKey: String) -> Void in
+      userDefaults?.setValue(forKey, forKey: forKey)
+    }
+  }
+  
+  func initializePrefs() {
+    if userDefaults?.bool(forKey: "initialized") != true {
+      let initialPrefs = [
+        "playSoundChat" : true,
+        "playSoundOther" : false,
+      ]
+      userDefaults?.setValuesForKeys(initialPrefs)
     }
   }
 }
