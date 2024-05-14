@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 
 import {HITSLOP_10} from 'lib/constants'
 import {useHaptics} from 'lib/haptics'

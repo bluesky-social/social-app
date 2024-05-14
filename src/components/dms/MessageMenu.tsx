@@ -1,8 +1,7 @@
 import React from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {RichText} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

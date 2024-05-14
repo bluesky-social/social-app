@@ -1,8 +1,6 @@
 import React, {useCallback} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
-import {ConvoView} from '@atproto-labs/api/dist/client/types/chat/bsky/convo/defs'
+import {AppBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -37,7 +35,7 @@ let ConvoMenu = ({
   hideTrigger,
   triggerOpacity,
 }: {
-  convo: ConvoView
+  convo: ChatBskyConvoDefs.ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
   onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
   control?: Menu.MenuControlProps
