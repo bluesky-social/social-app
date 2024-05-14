@@ -1,5 +1,8 @@
 package expo.modules.backgroundnotificationhandler
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -10,6 +13,9 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
 
   override fun definition() = ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
+
+    AsyncFunction("getAllPrefsAsync") {
+    }
 
     OnActivityEntersForeground {
       isForegrounded = true

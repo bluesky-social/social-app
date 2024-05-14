@@ -35,8 +35,7 @@ index 55b3a8d..bf5c2a7 100644
    fun getBackgroundTasks() = sBackgroundTaskConsumerReferences.values.mapNotNull { it.get() }
 
    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-+    Log.d("expo-notifications", "Received a new message")
-+    BackgroundNotificationHandler().handleMessage(remoteMessage)
++    BackgroundNotificationHandler().handleMessage(remoteMessage, context)
      NotificationsService.receive(context, createNotification(remoteMessage))
      getBackgroundTasks().forEach {
        it.scheduleJob(RemoteMessageSerializer.toBundle(remoteMessage))
