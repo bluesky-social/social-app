@@ -82,7 +82,7 @@ export function useReportOptions(): ReportOptions {
         {
           reason: ComAtprotoModerationDefs.REASONSEXUAL,
           title: _(msg`Unwanted Sexual Content`),
-          description: _(msg`Unwanted sexual content`),
+          description: _(msg`Inappropriate messages or explicit links`),
         },
         ...common,
       ],
