@@ -1,25 +1,48 @@
+import Foundation
 import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
   var contentHandler: ((UNNotificationContent) -> Void)?
-  var bestAttemptContent: UNMutableNotificationContent?
 
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-    print("Hello")
     self.contentHandler = contentHandler
-    bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
     
-    if let bestAttemptContent = bestAttemptContent {
-      bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
-      bestAttemptContent.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "blueskydm.wav"))
-      
-      contentHandler(bestAttemptContent)
+    guard var bestAttempt = createCopy(request.content),
+          let reason = request.content.userInfo["reason"] as? String
+    else {
+      return
+    }
+    
+    if reason == "chat-message" {
+      bestAttempt = mutateWithChatMessage(bestAttempt)
+    }
+    
+    // Always increment the badge
+    bestAttempt = mutateWithBadge(bestAttempt)
+    
+    contentHandler(bestAttempt)
+  }
+  
+  // If for some reason the alloted time expires, we don't actually want to display a notification
+  override func serviceExtensionTimeWillExpire() {
+    if let contentHandler = contentHandler {
+      contentHandler(UNNotificationContent())
     }
   }
   
-  override func serviceExtensionTimeWillExpire() {
-    if let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent {
-      contentHandler(bestAttemptContent)
-    }
+  func createCopy(_ content: UNNotificationContent) -> UNMutableNotificationContent? {
+    return content.mutableCopy() as? UNMutableNotificationContent
+  }
+  
+  func mutateWithChatMessage(_ content: UNMutableNotificationContent) -> UNMutableNotificationContent {
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "blueskydm.wav"))
+    return content
+  }
+  
+  func mutateWithBadge(_ content: UNMutableNotificationContent) -> UNMutableNotificationContent {
+    content.badge = 1
+    return content
   }
 }
+
+
