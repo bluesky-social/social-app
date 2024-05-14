@@ -1,0 +1,42 @@
+diff --git a/node_modules/expo-notifications/android/build.gradle b/node_modules/expo-notifications/android/build.gradle
+index 97bf4f4..8471d96 100644
+--- a/node_modules/expo-notifications/android/build.gradle
++++ b/node_modules/expo-notifications/android/build.gradle
+@@ -118,6 +118,8 @@ dependencies {
+   api 'com.google.firebase:firebase-messaging:22.0.0'
+
+   api 'me.leolin:ShortcutBadger:1.1.22@aar'
++  implementation project(':expo-background-notification-handler')
++  implementation project(':expo-background-notification-handler')
+
+   if (project.findProject(':expo-modules-test-core')) {
+     testImplementation project(':expo-modules-test-core')
+diff --git a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
+index 55b3a8d..bf5c2a7 100644
+--- a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
++++ b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
+@@ -1,6 +1,7 @@
+ package expo.modules.notifications.service.delegates
+
+ import android.content.Context
++import android.util.Log
+ import com.google.firebase.messaging.RemoteMessage
+ import expo.modules.notifications.notifications.JSONNotificationContentBuilder
+ import expo.modules.notifications.notifications.RemoteMessageSerializer
+@@ -12,6 +13,7 @@ import expo.modules.notifications.notifications.model.triggers.FirebaseNotificat
+ import expo.modules.notifications.service.NotificationsService
+ import expo.modules.notifications.service.interfaces.FirebaseMessagingDelegate
+ import expo.modules.notifications.tokens.interfaces.FirebaseTokenListener
++import expo.modules.backgroundnotificationhandler.BackgroundNotificationHandler
+ import org.json.JSONObject
+ import java.lang.ref.WeakReference
+ import java.util.*
+@@ -89,6 +91,8 @@ open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseM
+   fun getBackgroundTasks() = sBackgroundTaskConsumerReferences.values.mapNotNull { it.get() }
+
+   override fun onMessageReceived(remoteMessage: RemoteMessage) {
++    Log.d("expo-notifications", "Received a new message")
++    BackgroundNotificationHandler().handleMessage(remoteMessage)
+     NotificationsService.receive(context, createNotification(remoteMessage))
+     getBackgroundTasks().forEach {
+       it.scheduleJob(RemoteMessageSerializer.toBundle(remoteMessage))
