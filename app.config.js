@@ -208,6 +208,7 @@ module.exports = function (config) {
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
+        './plugins/notificationsExtension/withNotificationsExtension.js',
       ].filter(Boolean),
       extra: {
         eas: {

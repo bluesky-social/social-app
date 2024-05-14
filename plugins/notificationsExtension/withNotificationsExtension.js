@@ -6,7 +6,7 @@ const {withExtensionInfoPlist} = require('./withExtensionInfoPlist')
 const {withExtensionViewController} = require('./withExtensionViewController')
 
 const EXTENSION_NAME = 'Bluesky-Notifications'
-const EXTENSION_CONTROLLER_NAME = 'NotificationViewController'
+const EXTENSION_CONTROLLER_NAME = 'NotificationService'
 
 const withNotificationsExtension = config => {
   return withPlugins(config, [
