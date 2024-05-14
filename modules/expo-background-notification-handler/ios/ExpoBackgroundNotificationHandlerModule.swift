@@ -36,12 +36,12 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       return nil
     }
     
-    AsyncFunction("setBoolAsync") { (value: Bool, forKey: String) -> Void in
-      userDefaults?.setValue(forKey, forKey: forKey)
+    AsyncFunction("setBoolAsync") { (forKey: String, value: Bool) -> Void in
+      userDefaults?.setValue(value, forKey: forKey)
     }
     
-    AsyncFunction("setBoolAsync") { (value: String, forKey: String) -> Void in
-      userDefaults?.setValue(forKey, forKey: forKey)
+    AsyncFunction("setBoolAsync") { (forKey: String, value: String) -> Void in
+      userDefaults?.setValue(value, forKey: forKey)
     }
   }
   
