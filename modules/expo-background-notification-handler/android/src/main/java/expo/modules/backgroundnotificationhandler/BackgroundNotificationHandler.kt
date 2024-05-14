@@ -9,6 +9,5 @@ class BackgroundNotificationHandler {
       // We'll let expo-notifications handle the notification if the app is foregrounded
       return
     }
-    Log.d("expo-notifications", "We receiving notifications in the background, bitch")
   }
 }
