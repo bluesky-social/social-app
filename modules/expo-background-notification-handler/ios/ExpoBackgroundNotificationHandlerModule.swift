@@ -15,7 +15,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
     
-    AsyncFunction("getAllPrefsAsync") { (playSound: Bool) -> [String:Any]? in
+    AsyncFunction("getAllPrefsAsync") { () -> [String:Any]? in
       return userDefaults?.dictionaryWithValues(forKeys: [
         "playSoundChat",
         "playSoundOther",

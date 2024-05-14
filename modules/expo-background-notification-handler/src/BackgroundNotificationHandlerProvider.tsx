@@ -28,6 +28,13 @@ export function BackgroundNotificationPreferencesProvider({
       playSoundOther: false,
     })
 
+  React.useEffect(() => {
+    ;(async () => {
+      const prefs = await BackgroundNotificationHandler.getAllPrefsAsync()
+      setPreferences(prefs)
+    })()
+  }, [])
+
   const value = React.useMemo(
     () => ({
       preferences,

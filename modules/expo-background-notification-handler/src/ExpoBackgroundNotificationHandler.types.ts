@@ -1,9 +1,15 @@
 export type ExpoBackgroundNotificationHandlerModule = {
-  getAllPrefsAsync: () => Promise<Record<string, string | boolean | null>>
+  getAllPrefsAsync: () => Promise<BackgroundNotificationHandlerPreferences>
   getBoolAsync: (forKey: string) => Promise<boolean>
   getStringAsync: (forKey: string) => Promise<string>
-  setBoolAsync: (forKey: string, value: boolean) => Promise<void>
-  setStringAsync: (forKey: string, value: string) => Promise<void>
+  setBoolAsync: (
+    forKey: keyof BackgroundNotificationHandlerPreferences,
+    value: boolean,
+  ) => Promise<void>
+  setStringAsync: (
+    forKey: keyof BackgroundNotificationHandlerPreferences,
+    value: string,
+  ) => Promise<void>
 }
 
 export type BackgroundNotificationHandlerPreferences = {
