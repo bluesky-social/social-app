@@ -98,6 +98,7 @@ function Inner() {
    * Any other convo states (atm) are "ready" states
    */
 
+  console.log(convoState.blocks)
   return (
     <KeyboardProvider>
       <KeyboardAvoidingView
@@ -242,6 +243,7 @@ let Header = ({
           convo={convoState.convo}
           profile={profile}
           currentScreen="conversation"
+          onUpdateConvo={convoState.revalidateConvo}
         />
       ) : (
         <View style={{width: 30}} />

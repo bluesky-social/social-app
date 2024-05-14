@@ -12,6 +12,10 @@ import {
 } from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
+import {
+  useAwaitedProfileBlockMutation,
+  useAwaitedProfileUnblockMutation,
+} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
@@ -34,10 +38,11 @@ let ConvoMenu = ({
   showMarkAsRead,
   hideTrigger,
   triggerOpacity,
+  onUpdateConvo,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: AppBskyActorDefs.ProfileViewBasic
-  onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
+  onUpdateConvo?: () => void
   control?: Menu.MenuControlProps
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
@@ -64,11 +69,40 @@ let ConvoMenu = ({
       } else {
         Toast.show(_(msg`Chat unmuted`))
       }
+      onUpdateConvo?.()
     },
     onError: () => {
       Toast.show(_(msg`Could not mute chat`))
     },
   })
+
+  const {mutateAsync: blockProfile, isPending: isBlockPending} =
+    useAwaitedProfileBlockMutation()
+  const {mutateAsync: unblockProfile, isPending: isUnblockPending} =
+    useAwaitedProfileUnblockMutation()
+  const isBlockMutationPending = isBlockPending || isUnblockPending
+  const isBlocking = Boolean(profile.viewer?.blocking)
+
+  const toggleBlock = useCallback(async () => {
+    if (isBlockMutationPending) return
+
+    if (profile.viewer?.blocking) {
+      await unblockProfile({
+        subject: profile.did,
+        blockUri: profile.viewer?.blocking,
+      })
+    } else {
+      await blockProfile({subject: profile.did})
+    }
+
+    onUpdateConvo?.()
+  }, [
+    profile,
+    isBlockMutationPending,
+    blockProfile,
+    unblockProfile,
+    onUpdateConvo,
+  ])
 
   const {mutate: leaveConvo} = useLeaveConvo(convo?.id, {
     onSuccess: () => {
@@ -146,18 +180,17 @@ let ConvoMenu = ({
             </Menu.Item>
           </Menu.Group>
           <Menu.Divider />
-          {/* TODO(samuel): implement this */}
           <Menu.Group>
             <Menu.Item
-              label={_(msg`Block account`)}
-              onPress={() => {}}
-              disabled>
+              disabled={isBlockMutationPending}
+              label={
+                isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)
+              }
+              onPress={toggleBlock}>
               <Menu.ItemText>
-                <Trans>Block account</Trans>
+                {isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)}
               </Menu.ItemText>
-              <Menu.ItemIcon
-                icon={profile.viewer?.blocking ? PersonCheck : PersonX}
-              />
+              <Menu.ItemIcon icon={isBlocking ? PersonX : PersonCheck} />
             </Menu.Item>
             <Menu.Item
               label={_(msg`Report conversation`)}

@@ -4,9 +4,11 @@ import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {NavigationProp} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
+import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-converations'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -36,6 +38,7 @@ export function ChatListItem({
   const displayName = isDeletedAccount
     ? 'Deleted Account'
     : otherUser?.displayName || otherUser?.handle
+  const queryClient = useQueryClient()
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
@@ -72,6 +75,10 @@ export function ChatListItem({
       conversation: convo.id,
     })
   }, [convo.id, navigation])
+
+  const onUpdateConvo = React.useCallback(() => {
+    queryClient.invalidateQueries({queryKey: ListConvosQueryKey})
+  }, [queryClient])
 
   if (!otherUser) {
     return null
@@ -204,6 +211,7 @@ export function ChatListItem({
                 triggerOpacity={
                   !gtMobile || showActions || menuControl.isOpen ? 1 : 0
                 }
+                onUpdateConvo={onUpdateConvo}
               />
             </View>
           </View>

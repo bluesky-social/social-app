@@ -384,6 +384,9 @@ function useProfileUnmuteMutation() {
 
 export function useProfileBlockMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
+  options?: {
+    onSuccess?: () => void
+  },
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -414,6 +417,7 @@ export function useProfileBlockMutationQueue(
       updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
+      options?.onSuccess?.()
     },
   })
 
@@ -474,6 +478,60 @@ function useProfileUnblockMutation() {
     },
     onSuccess(_, {did}) {
       resetProfilePostsQueries(queryClient, did, 1000)
+    },
+  })
+}
+
+export function useAwaitedProfileBlockMutation() {
+  const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({subject}: {subject: string}) => {
+      if (!currentAccount) {
+        throw new Error('Not signed in')
+      }
+      await getAgent().app.bsky.graph.block.create(
+        {repo: currentAccount.did},
+        {subject: subject, createdAt: new Date().toISOString()},
+      )
+      await whenAppViewReady(
+        getAgent,
+        subject,
+        res => !!res.data.viewer?.blocking,
+      )
+    },
+    onSuccess(_, {subject}) {
+      queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
+      resetProfilePostsQueries(queryClient, subject, 1000)
+    },
+  })
+}
+
+export function useAwaitedProfileUnblockMutation() {
+  const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, Error, {subject: string; blockUri: string}>({
+    mutationFn: async ({blockUri, subject}) => {
+      if (!currentAccount) {
+        throw new Error('Not signed in')
+      }
+      const {rkey} = new AtUri(blockUri)
+      await getAgent().app.bsky.graph.block.delete({
+        repo: currentAccount.did,
+        rkey,
+      })
+      await whenAppViewReady(
+        getAgent,
+        subject,
+        res => !res.data.viewer?.blocking,
+      )
+    },
+    onSuccess(_, {subject}) {
+      resetProfilePostsQueries(queryClient, subject, 1000)
     },
   })
 }
