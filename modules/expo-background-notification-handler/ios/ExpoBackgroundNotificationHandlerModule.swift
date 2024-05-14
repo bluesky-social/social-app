@@ -40,7 +40,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       userDefaults?.setValue(value, forKey: forKey)
     }
     
-    AsyncFunction("setBoolAsync") { (forKey: String, value: String) -> Void in
+    AsyncFunction("setStringAsync") { (forKey: String, value: String) -> Void in
       userDefaults?.setValue(value, forKey: forKey)
     }
   }
