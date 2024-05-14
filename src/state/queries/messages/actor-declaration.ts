@@ -4,7 +4,6 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import {RQKEY as PROFILE_RKEY} from '../profile'
-import {DM_SERVICE_HEADERS} from './const'
 
 export function useUpdateActorDeclaration({
   onSuccess,
@@ -20,11 +19,17 @@ export function useUpdateActorDeclaration({
   return useMutation({
     mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
       if (!currentAccount) throw new Error('Not logged in')
-      const result = await getAgent().api.chat.bsky.actor.declaration.create(
-        {repo: currentAccount.did, rkey: 'self'},
-        {allowIncoming},
-        DM_SERVICE_HEADERS,
-      )
+      // TODO(sam): remove validate: false once PDSes have the new lexicon
+      const result = await getAgent().api.com.atproto.repo.putRecord({
+        collection: 'chat.bsky.actor.declaration',
+        rkey: 'self',
+        repo: currentAccount.did,
+        validate: false,
+        record: {
+          $type: 'chat.bsky.actor.declaration',
+          allowIncoming,
+        },
+      })
       return result
     },
     onMutate: allowIncoming => {
