@@ -184,7 +184,7 @@ export function MessagesScreen({navigation, route}: Props) {
           </CenteredView>
         ) : (
           <ViewHeader
-            title={_(msg`Messages`)}
+            title={_(msg`Chats`)}
             renderButton={renderButton}
             showBorder
             canGoBack={false}
@@ -195,9 +195,9 @@ export function MessagesScreen({navigation, route}: Props) {
           isLoading={isLoading}
           isError={isError}
           emptyType="results"
-          emptyTitle={_(msg`No messages yet`)}
+          emptyTitle={_(msg`No chats yet`)}
           emptyMessage={_(
-            msg`You have no messages yet. Start a conversation with someone!`,
+            msg`You have no chats yet. Start a conversation with someone!`,
           )}
           errorMessage={cleanError(error)}
           onRetry={isError ? refetch : undefined}
@@ -211,7 +211,7 @@ export function MessagesScreen({navigation, route}: Props) {
     <View style={a.flex_1}>
       {!gtMobile && (
         <ViewHeader
-          title={_(msg`Messages`)}
+          title={_(msg`Chats`)}
           renderButton={renderButton}
           showBorder={false}
           canGoBack={false}
@@ -276,7 +276,7 @@ function DesktopHeader({
         a.py_sm,
       ]}>
       <Text style={[a.text_2xl, a.font_bold]}>
-        <Trans>Messages</Trans>
+        <Trans>Chats</Trans>
       </Text>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Button

@@ -106,7 +106,7 @@ export function BottomBarWeb() {
           {hasSession && (
             <>
               {gate('dms') ? (
-                <NavItem routeName="Messages" href="/messages">
+                <NavItem routeName="Chats" href="/messages">
                   {({isActive}) => {
                     const Icon = isActive ? MessageFilled : Message
                     return (

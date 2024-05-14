@@ -304,7 +304,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
-        options={{title: title(msg`Messaging settings`), requireAuth: true}}
+        options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
     </>
   )
@@ -514,7 +514,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
-        options={{title: title(msg`Messages`), requireAuth: true}}
+        options={{title: title(msg`Chats`), requireAuth: true}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
