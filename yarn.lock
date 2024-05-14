@@ -34,10 +34,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto-labs/api@^0.12.8-clipclops.0":
-  version "0.12.8-clipclops.0"
-  resolved "https://registry.yarnpkg.com/@atproto-labs/api/-/api-0.12.8-clipclops.0.tgz#1c5d41d3396e439a0b645f7e1ccf500cc4b42580"
-  integrity sha512-YYDtWWk6BR+aRBVja/1v+gceNK81lkmF5bi6O4pTmJhFt/321XATx/ql8uTWta4VnVThoFeNPG6nLr7hs8b9cA==
+"@atproto/api@^0.12.10":
+  version "0.12.10"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.10.tgz#a745f0e9a273a8e42d208e6d7f91535b73619720"
+  integrity sha512-WhZXvtVENdWSqfiPKiVIjX84r1zFnpEKApyh8rBjxBzGstWfabiz7bKW2eybZNHMty1IyFHwMHaLXPruoSJlHQ==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.0"
@@ -50,18 +50,6 @@
   version "0.12.3"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.3.tgz#5b7b1c7d4210ee9315961504900c8409395cbb17"
   integrity sha512-y/kGpIEo+mKGQ7VOphpqCAigTI0LZRmDThNChTfSzDKm9TzEobwiw0zUID0Yw6ot1iLLFx3nKURmuZAYlEuobw==
-  dependencies:
-    "@atproto/common-web" "^0.3.0"
-    "@atproto/lexicon" "^0.4.0"
-    "@atproto/syntax" "^0.3.0"
-    "@atproto/xrpc" "^0.5.0"
-    multiformats "^9.9.0"
-    tlds "^1.234.0"
-
-"@atproto/api@^0.12.9":
-  version "0.12.9"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.9.tgz#5ae040980e574a5d9496368c4ca032c0cda174ec"
-  integrity sha512-3D4n2ZAAsDRnjevvcoIxQxuMMoqc+7vtVyP7EnrEdeOmRSCF9j8yXTqhn6rcHCbzcs3DKyYR26nQemtZsMsE0g==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.0"

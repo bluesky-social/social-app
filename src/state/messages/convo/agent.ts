@@ -1,10 +1,10 @@
-import {AppBskyActorDefs} from '@atproto/api'
 import {
+  AppBskyActorDefs,
   BskyAgent,
   ChatBskyConvoDefs,
   ChatBskyConvoGetLog,
   ChatBskyConvoSendMessage,
-} from '@atproto-labs/api'
+} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -26,6 +26,7 @@ import {
 } from '#/state/messages/convo/types'
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 // TODO temporary
 let DEBUG_ACTIVE_CHAT: string | undefined
@@ -46,7 +47,7 @@ export class Convo {
 
   private agent: BskyAgent
   private events: MessagesEventBus
-  private __tempFromUserDid: string
+  private senderUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
   private error:
@@ -89,7 +90,7 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
-    this.__tempFromUserDid = params.__tempFromUserDid
+    this.senderUserDid = params.agent.session?.did!
 
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
@@ -467,11 +468,7 @@ export class Convo {
             {
               convoId: this.convoId,
             },
-            {
-              headers: {
-                Authorization: this.__tempFromUserDid,
-              },
-            },
+            {headers: DM_SERVICE_HEADERS},
           )
         })
 
@@ -479,10 +476,8 @@ export class Convo {
 
         resolve({
           convo,
-          sender: convo.members.find(m => m.did === this.__tempFromUserDid),
-          recipients: convo.members.filter(
-            m => m.did !== this.__tempFromUserDid,
-          ),
+          sender: convo.members.find(m => m.did === this.senderUserDid),
+          recipients: convo.members.filter(m => m.did !== this.senderUserDid),
         })
       } catch (e) {
         reject(e)
@@ -557,11 +552,7 @@ export class Convo {
             convoId: this.convoId,
             limit: isNative ? 30 : 60,
           },
-          {
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {headers: DM_SERVICE_HEADERS},
         )
       })
       const {cursor, messages} = response.data
@@ -775,12 +766,7 @@ export class Convo {
             convoId: this.convoId,
             message,
           },
-          {
-            encoding: 'application/json',
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
       const res = response.data
@@ -792,7 +778,6 @@ export class Convo {
       this.newMessages.set(res.id, {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
-        sender: this.sender,
       })
       this.pendingMessages.delete(id)
 
@@ -835,12 +820,7 @@ export class Convo {
               message,
             })),
           },
-          {
-            encoding: 'application/json',
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
       const {items} = data
@@ -853,9 +833,6 @@ export class Convo {
         this.newMessages.set(item.id, {
           ...item,
           $type: 'chat.bsky.convo.defs#messageView',
-          sender: this.convo?.members.find(
-            m => m.did === this.__tempFromUserDid,
-          ),
         })
       }
 
@@ -899,12 +876,7 @@ export class Convo {
             convoId: this.convoId,
             messageId,
           },
-          {
-            encoding: 'application/json',
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
     } catch (e: any) {
@@ -970,7 +942,11 @@ export class Convo {
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
-          sender: this.sender,
+          /*
+           * `getItems` is only run in "active" status states, where
+           * `this.sender` is defined
+           */
+          sender: this.sender!,
         },
         nextMessage: null,
       })

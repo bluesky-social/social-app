@@ -1,29 +1,23 @@
 import {useCallback, useMemo} from 'react'
-import {
-  BskyAgent,
-  ChatBskyConvoDefs,
-  ChatBskyConvoListConvos,
-} from '@atproto-labs/api'
+import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
 import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
-import {useHeaders} from './temp-headers'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {useAgent} from '#/state/session'
 
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
 export function useListConvos({refetchInterval}: {refetchInterval: number}) {
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
+  const {getAgent} = useAgent()
 
   return useInfiniteQuery({
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.listConvos(
+      const {data} = await getAgent().api.chat.bsky.convo.listConvos(
         {cursor: pageParam},
-        {headers},
+        {headers: DM_SERVICE_HEADERS},
       )
 
       return data
