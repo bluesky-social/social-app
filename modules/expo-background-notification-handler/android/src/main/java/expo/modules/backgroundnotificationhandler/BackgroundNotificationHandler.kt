@@ -1,5 +1,6 @@
 package expo.modules.backgroundnotificationhandler
 
+import android.util.Log
 import com.google.firebase.messaging.RemoteMessage
 
 class BackgroundNotificationHandler {
@@ -8,7 +9,6 @@ class BackgroundNotificationHandler {
       // We'll let expo-notifications handle the notification if the app is foregrounded
       return
     }
-
-    // Handle various notification types
+    Log.d("expo-notifications", "We receiving notifications in the background, bitch")
   }
 }
