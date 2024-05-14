@@ -3767,7 +3767,7 @@ msgstr "从列表中删除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Removed from my feeds"
-msgstr "从自定义资讯源中删除"
+msgstr "已从自定义资讯源中删除"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
