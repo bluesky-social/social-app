@@ -39,7 +39,7 @@ export function useConvoActive() {
   }
   if (!isConvoActive(ctx)) {
     throw new Error(
-      `useConvoActive must only be rendered when the Convo is ready. Current status: ${ctx.status}`,
+      `useConvoActive must only be rendered when the Convo is ready.`,
     )
   }
   return ctx
