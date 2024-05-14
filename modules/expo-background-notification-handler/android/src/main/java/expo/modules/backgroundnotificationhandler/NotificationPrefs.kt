@@ -2,8 +2,8 @@ package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
 
-class NotificationPrefs (private val context: Context) {
-  private val prefs = context.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
+class NotificationPrefs (private val context: Context?) {
+  private val prefs = context?.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE) ?: throw Error("Context is null")
 
   init {
     if (!prefs.getBoolean("initialized", false)) {

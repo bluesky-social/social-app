@@ -15,6 +15,23 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
     Name("ExpoBackgroundNotificationHandler")
 
     AsyncFunction("getAllPrefsAsync") {
+      return@AsyncFunction NotificationPrefs(appContext.reactContext).getAllPrefs()
+    }
+
+    AsyncFunction("getBoolAsync") { forKey: String ->
+      return@AsyncFunction NotificationPrefs(appContext.reactContext).getBoolean(forKey)
+    }
+
+    AsyncFunction("getStringAsync") { forKey: String ->
+      return@AsyncFunction NotificationPrefs(appContext.reactContext).getString(forKey)
+    }
+
+    AsyncFunction("setBoolAsync") { forKey: String, value: Boolean ->
+      NotificationPrefs(appContext.reactContext).setBoolean(forKey, value)
+    }
+
+    AsyncFunction("setStringAsync") { forKey: String, value: String ->
+      NotificationPrefs(appContext.reactContext).setString(forKey, value)
     }
 
     OnActivityEntersForeground {
