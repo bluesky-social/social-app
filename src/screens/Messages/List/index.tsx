@@ -29,14 +29,8 @@ import {ChatListItem} from './ChatListItem'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
-function renderItem({
-  item,
-  index,
-}: {
-  item: ChatBskyConvoDefs.ConvoView
-  index: number
-}) {
-  return <ChatListItem convo={item} index={index} />
+function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
+  return <ChatListItem convo={item} />
 }
 
 function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
@@ -232,6 +226,8 @@ function DesktopHeader({
         a.gap_lg,
         a.px_lg,
         a.py_sm,
+        a.border_b,
+        t.atoms.border_contrast_low,
       ]}>
       <Text style={[a.text_2xl, a.font_bold]}>
         <Trans>Messages</Trans>
