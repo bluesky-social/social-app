@@ -27,16 +27,16 @@ export function BackgroundNotificationPreferencesProvider({
       playSoundOther: false,
     })
 
-  export const value = React.useMemo(
+  const value = React.useMemo(
     () => ({
       preferences,
-      setPref: async (k, v) => {
+      setPref: async (k: string, v: string | boolean) => {
         setPreferences(prev => ({
           ...prev,
           [k]: v,
         }))
 
-        switch (typeof value) {
+        switch (typeof v) {
           case 'boolean': {
             await BackgroundNotificationHandler.setBoolAsync(k, v)
             break
