@@ -10,6 +10,6 @@ export const BackgroundNotificationHandler = {
   getStringAsync: async (_: string) => {
     return ''
   },
-  setBoolAsync: async (_: string, _: boolean) => {},
-  setStringAsync: async (_: string, _: string) => {},
+  setBoolAsync: async (_: string, __: boolean) => {},
+  setStringAsync: async (_: string, __: string) => {},
 } as ExpoBackgroundNotificationHandlerModule
