@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -52,22 +52,22 @@ export function ChatListItem({
   }
 
   const navigation = useNavigation<NavigationProp>()
-  const [showActions, setShowActions] = React.useState(false)
+  const [showActions, setShowActions] = useState(false)
 
-  const onMouseEnter = React.useCallback(() => {
+  const onMouseEnter = useCallback(() => {
     setShowActions(true)
   }, [])
 
-  const onMouseLeave = React.useCallback(() => {
+  const onMouseLeave = useCallback(() => {
     setShowActions(false)
   }, [])
 
-  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
+  const onFocus = useCallback<React.FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
     setShowActions(true)
   }, [])
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     navigation.push('MessagesConversation', {
       conversation: convo.id,
     })
@@ -87,9 +87,9 @@ export function ChatListItem({
       <Button
         label={otherUser.displayName || otherUser.handle}
         onPress={onPress}
-        style={a.flex_1}
+        style={[a.flex_1]}
         onLongPress={isNative ? menuControl.open : undefined}>
-        {({hovered, pressed}) => (
+        {({hovered, pressed, focused}) => (
           <View
             style={[
               a.flex_row,
@@ -97,7 +97,7 @@ export function ChatListItem({
               a.px_lg,
               a.py_md,
               a.gap_md,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
+              (hovered || pressed || focused) && t.atoms.bg_contrast_25,
               index === 0 && [a.border_t, a.pt_lg],
               t.atoms.border_contrast_low,
             ]}>
