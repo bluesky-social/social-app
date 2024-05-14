@@ -226,9 +226,8 @@ module.exports = function (config) {
                     },
                   },
                   {
-                    targetName: 'Bluesky-Notifications',
-                    bundleIdentifier:
-                      'xyz.blueskyweb.app.Bluesky-Notifications',
+                    targetName: 'BlueskyNotifications',
+                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNotifications',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
