@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-14 10:48+0900\n"
+"PO-Revision-Date: 2024-05-14 10:56+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2648,6 +2648,11 @@ msgstr "サーバーからのメッセージ：{0}"
 #: src/screens/Messages/Conversation/MessageInput.tsx:79
 msgid "Message input field"
 msgstr "メッセージを入力するフィールド"
+
+#: src/screens/Messages/Conversation/MessageInput.tsx:45
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:28
+msgid "Message is too long"
+msgstr "メッセージが長すぎます"
 
 #: src/screens/Messages/List/index.tsx:62
 #: src/screens/Messages/List/index.tsx:374
