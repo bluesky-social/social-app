@@ -54,6 +54,7 @@ let ConvoMenu = ({
   const t = useTheme()
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
+  const blockedByListControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
   const {data: convo} = useConvoQuery(initialConvo)
@@ -82,9 +83,15 @@ let ConvoMenu = ({
     useAwaitedProfileUnblockMutation()
   const isBlockMutationPending = isBlockPending || isUnblockPending
   const isBlocking = Boolean(profile.viewer?.blocking)
+  const isBlockedByList = Boolean(profile.viewer?.blockingByList)
 
   const toggleBlock = useCallback(async () => {
     if (isBlockMutationPending) return
+
+    if (isBlockedByList) {
+      blockedByListControl.open()
+      return
+    }
 
     if (profile.viewer?.blocking) {
       await unblockProfile({
@@ -102,6 +109,8 @@ let ConvoMenu = ({
     blockProfile,
     unblockProfile,
     onUpdateConvo,
+    isBlockedByList,
+    blockedByListControl,
   ])
 
   const {mutate: leaveConvo} = useLeaveConvo(convo?.id, {
@@ -231,6 +240,16 @@ let ConvoMenu = ({
         title={_(msg`Report conversation`)}
         description={_(
           msg`To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue.`,
+        )}
+        confirmButtonCta={_(msg`I understand`)}
+        onConfirm={noop}
+      />
+
+      <Prompt.Basic
+        control={blockedByListControl}
+        title={_(msg`Blocked by list`)}
+        description={_(
+          msg`This user is blocked by one of your moderation lists. You can unblock them from the moderation list settings.`,
         )}
         confirmButtonCta={_(msg`I understand`)}
         onConfirm={noop}
