@@ -2,8 +2,11 @@ import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import Graphemer from 'graphemer'
 import TextareaAutosize from 'react-textarea-autosize'
 
+import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
@@ -21,9 +24,13 @@ export function MessageInput({
     if (message.trim() === '') {
       return
     }
+    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+      Toast.show(_(msg`Message is too long`))
+      return
+    }
     onSendMessage(message.trimEnd())
     setMessage('')
-  }, [message, onSendMessage])
+  }, [message, onSendMessage, _])
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
