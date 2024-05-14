@@ -5,3 +5,8 @@ export type ExpoBackgroundNotificationHandlerModule = {
   setBoolAsync: (forKey: string, value: boolean) => Promise<void>
   setStringAsync: (forKey: string, value: string) => Promise<void>
 }
+
+export type BackgroundNotificationHandlerPreferences = {
+  playSoundChat: boolean
+  playSoundOther: boolean
+}
