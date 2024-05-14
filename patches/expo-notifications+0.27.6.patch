@@ -28,6 +28,7 @@ index 55b3a8d..bf5c2a7 100644
  import expo.modules.notifications.service.interfaces.FirebaseMessagingDelegate
  import expo.modules.notifications.tokens.interfaces.FirebaseTokenListener
 +import expo.modules.backgroundnotificationhandler.BackgroundNotificationHandler
++import expo.modules.backgroundnotificationhandler.ExpoBackgroundNotificationHandlerModule
  import org.json.JSONObject
  import java.lang.ref.WeakReference
  import java.util.*
@@ -35,7 +36,11 @@ index 55b3a8d..bf5c2a7 100644
    fun getBackgroundTasks() = sBackgroundTaskConsumerReferences.values.mapNotNull { it.get() }
 
    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-+    BackgroundNotificationHandler().handleMessage(remoteMessage, context)
++    if (!ExpoBackgroundNotificationHandlerModule.isForegrounded) {
++      BackgroundNotificationHandler().handleMessage(remoteMessage, context)
++      return
++    }
++
      NotificationsService.receive(context, createNotification(remoteMessage))
      getBackgroundTasks().forEach {
        it.scheduleJob(RemoteMessageSerializer.toBundle(remoteMessage))
