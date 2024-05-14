@@ -4,7 +4,6 @@ let APP_GROUP = "group.app.bsky"
 
 class NotificationService: UNNotificationServiceExtension {
   var contentHandler: ((UNNotificationContent) -> Void)?
-  var under18: Bool = true
 
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
     self.contentHandler = contentHandler
@@ -16,10 +15,7 @@ class NotificationService: UNNotificationServiceExtension {
       return
     }
     
-    if reason == "chat-message" {
-      if under18 {
-        return
-      }
+    if reason == "chat-message", prefs.getBool("playSoundChat") == true {
       bestAttempt = mutateWithChatMessage(bestAttempt)
     }
     
@@ -48,19 +44,25 @@ class NotificationService: UNNotificationServiceExtension {
   }
 }
 
+/**
+ * Whenever we add different preferences, they should be added both in the `setValuesForKeys` initializer as well as fetched in
+ * `dictionaryWithValues`. This should also be updated inside of `ExpoBackgroundNotificationHandlerModule`.
+ */
 class NotificationPrefs {
   let userDefaults = UserDefaults(suiteName: APP_GROUP)
   var prefs: [String:Any] = [:]
   
   init() {
     if userDefaults?.bool(forKey: "initialized") != true {
-      userDefaults?.setValuesForKeys([
-        "playSoundDms" : true,
+      let initialPrefs = [
+        "playSoundChat" : true,
         "playSoundOther" : false,
-      ])
+      ]
+      userDefaults?.setValuesForKeys(initialPrefs)
+      self.prefs = initialPrefs
     } else {
       if let prefs = userDefaults?.dictionaryWithValues(forKeys: [
-        "playSoundDms",
+        "playSoundChat",
         "playSoundOther",
       ]) {
         self.prefs = prefs
@@ -68,8 +70,18 @@ class NotificationPrefs {
     }
   }
   
-  func getPref(_ forKey: String) -> Any? {
-    return prefs[forKey]
+  func getString(_ forKey: String) -> String? {
+    if let pref = prefs[forKey] as? String {
+      return pref
+    }
+    return nil
+  }
+  
+  func getBool(_ forKey: String) -> Bool {
+    if let pref = prefs[forKey] as? Bool {
+      return pref
+    }
+    return false
   }
   
   func setPref(_ forKey: String, value: Any?) {
