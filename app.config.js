@@ -110,7 +110,7 @@ module.exports = function (config) {
             {
               NSPrivacyAccessedAPIType:
                 'NSPrivacyAccessedAPICategoryUserDefaults',
-              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1', '1C8F.1'],
             },
           ],
         },
