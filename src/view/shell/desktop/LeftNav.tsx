@@ -321,7 +321,7 @@ export function DesktopLeftNav() {
             label={_(msg`Home`)}
           />
           <NavItem
-            href="/search"
+            href="/?/search"
             icon={<MagnifyingGlass style={pal.text} width={iconWidth} />}
             iconFilled={
               <MagnifyingGlassFilled style={pal.text} width={iconWidth} />
@@ -329,7 +329,7 @@ export function DesktopLeftNav() {
             label={_(msg`Search`)}
           />
           <NavItem
-            href="/notifications"
+            href="/?/notifications"
             count={numUnreadNotifications}
             icon={<Bell width={iconWidth} style={pal.text} />}
             iconFilled={<BellFilled width={iconWidth} style={pal.text} />}
@@ -337,7 +337,7 @@ export function DesktopLeftNav() {
           />
           {gate('dms') && (
             <NavItem
-              href="/messages"
+              href="/?/messages"
               count={numUnreadMessages.numUnread}
               icon={<Message style={pal.text} width={iconWidth} />}
               iconFilled={<MessageFilled style={pal.text} width={iconWidth} />}
@@ -345,7 +345,7 @@ export function DesktopLeftNav() {
             />
           )}
           <NavItem
-            href="/feeds"
+            href="/?/feeds"
             icon={
               <Hashtag
                 style={pal.text as FontAwesomeIconStyle}
@@ -361,7 +361,7 @@ export function DesktopLeftNav() {
             label={_(msg`Feeds`)}
           />
           <NavItem
-            href="/lists"
+            href="/?/lists"
             icon={<List style={pal.text} width={iconWidth} />}
             iconFilled={<ListFilled style={pal.text} width={iconWidth} />}
             label={_(msg`Lists`)}
@@ -373,7 +373,7 @@ export function DesktopLeftNav() {
             label={_(msg`Profile`)}
           />
           <NavItem
-            href="/settings"
+            href="/?/settings"
             icon={<Settings width={iconWidth} style={pal.text} />}
             iconFilled={<SettingsFilled width={iconWidth} style={pal.text} />}
             label={_(msg`Settings`)}
