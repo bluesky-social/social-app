@@ -33,6 +33,7 @@ type Props = NativeStackScreenProps<
   'MessagesConversation'
 >
 
+let prevDid: string | undefined
 function goBack(navigation: NavigationProp) {
   if (isWeb) {
     navigation.replace('Messages')
@@ -47,11 +48,13 @@ export function MessagesConversationScreen({route}: Props) {
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
-  const prevDid = React.useRef(currentAccount?.did)
 
   React.useEffect(() => {
-    if (currentAccount?.did !== prevDid.current) {
+    if (prevDid && prevDid !== currentAccount?.did) {
+      prevDid = undefined
       goBack(navigation)
+    } else {
+      prevDid = currentAccount?.did
     }
   }, [currentAccount?.did, navigation])
 
