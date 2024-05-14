@@ -84,6 +84,7 @@ export class Convo {
   sender: AppBskyActorDefs.ProfileViewBasic | undefined
   recipients: AppBskyActorDefs.ProfileViewBasic[] | undefined = undefined
   snapshot: ConvoState | undefined
+  blocks: AppBskyActorDefs.ProfileViewBasic[] = []
 
   constructor(params: ConvoParams) {
     this.id = nanoid(3)
@@ -145,6 +146,7 @@ export class Convo {
           error: undefined,
           sender: undefined,
           recipients: undefined,
+          blocks: undefined,
           isFetchingHistory: this.isFetchingHistory,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -162,6 +164,7 @@ export class Convo {
           error: undefined,
           sender: this.sender!,
           recipients: this.recipients!,
+          blocks: this.blocks,
           isFetchingHistory: this.isFetchingHistory,
           deleteMessage: this.deleteMessage,
           sendMessage: this.sendMessage,
@@ -177,6 +180,7 @@ export class Convo {
           error: this.error,
           sender: undefined,
           recipients: undefined,
+          blocks: undefined,
           isFetchingHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -192,6 +196,7 @@ export class Convo {
           error: undefined,
           sender: undefined,
           recipients: undefined,
+          blocks: undefined,
           isFetchingHistory: false,
           deleteMessage: undefined,
           sendMessage: undefined,
@@ -366,6 +371,7 @@ export class Convo {
     this.convo = undefined
     this.sender = undefined
     this.recipients = undefined
+    this.blocks = []
     this.snapshot = undefined
 
     this.status = ConvoStatus.Uninitialized
@@ -385,11 +391,12 @@ export class Convo {
 
   private async setup() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const {convo, sender, recipients, blocks} = await this.fetchConvo()
 
       this.convo = convo
       this.sender = sender
       this.recipients = recipients
+      this.blocks = blocks
 
       /*
        * Some validation prior to `Ready` status
@@ -457,6 +464,7 @@ export class Convo {
         convo: ChatBskyConvoDefs.ConvoView
         sender: AppBskyActorDefs.ProfileViewBasic | undefined
         recipients: AppBskyActorDefs.ProfileViewBasic[]
+        blocks: AppBskyActorDefs.ProfileViewBasic[]
       }>
     | undefined
   async fetchConvo() {
@@ -466,6 +474,7 @@ export class Convo {
       convo: ChatBskyConvoDefs.ConvoView
       sender: AppBskyActorDefs.ProfileViewBasic | undefined
       recipients: AppBskyActorDefs.ProfileViewBasic[]
+      blocks: AppBskyActorDefs.ProfileViewBasic[]
     }>(async (resolve, reject) => {
       try {
         const response = await networkRetry(2, () => {
@@ -483,6 +492,14 @@ export class Convo {
           convo,
           sender: convo.members.find(m => m.did === this.senderUserDid),
           recipients: convo.members.filter(m => m.did !== this.senderUserDid),
+          blocks:
+            convo.members.filter(m =>
+              Boolean(
+                m.viewer?.blocking ||
+                  m.viewer?.blockingByList ||
+                  m.viewer?.blockedBy,
+              ),
+            ) || [],
         })
       } catch (e) {
         reject(e)
@@ -494,41 +511,25 @@ export class Convo {
     return this.pendingFetchConvo
   }
 
-  private async refreshConvo() {
+  private async refreshConvo({commitResult = false} = {}) {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const {convo, sender, recipients, blocks} = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
       this.convo = convo || this.convo
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
+      this.blocks = blocks || this.blocks
+
+      if (commitResult) {
+        this.commit()
+      }
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to refresh convo`})
-
-      this.footerItems.set(ConvoItemError.Network, {
-        type: 'error-recoverable',
-        key: ConvoItemError.Network,
-        code: ConvoItemError.Network,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.Network)
-          this.resume()
-        },
-      })
-      this.commit()
     }
   }
 
   async revalidateConvo() {
-    try {
-      const {convo, sender, recipients} = await this.fetchConvo()
-      // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
-      this.convo = convo || this.convo
-      this.sender = sender || this.sender
-      this.recipients = recipients || this.recipients
-    } catch (e: any) {
-      logger.error(e, {context: `Convo: failed to revalidate convo`})
-    } finally {
-      this.commit()
-    }
+    this.refreshConvo({commitResult: true})
   }
 
   async fetchMessageHistory() {

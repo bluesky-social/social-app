@@ -120,6 +120,7 @@ export type ConvoStateUninitialized = {
   error: undefined
   sender: undefined
   recipients: undefined
+  blocks: undefined
   isFetchingHistory: false
   deleteMessage: undefined
   sendMessage: undefined
@@ -133,6 +134,7 @@ export type ConvoStateInitializing = {
   error: undefined
   sender: undefined
   recipients: undefined
+  blocks: undefined
   isFetchingHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined
@@ -146,6 +148,7 @@ export type ConvoStateReady = {
   error: undefined
   sender: AppBskyActorDefs.ProfileViewBasic
   recipients: AppBskyActorDefs.ProfileViewBasic[]
+  blocks: AppBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -159,6 +162,7 @@ export type ConvoStateBackgrounded = {
   error: undefined
   sender: AppBskyActorDefs.ProfileViewBasic
   recipients: AppBskyActorDefs.ProfileViewBasic[]
+  blocks: AppBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -172,6 +176,7 @@ export type ConvoStateSuspended = {
   error: undefined
   sender: AppBskyActorDefs.ProfileViewBasic
   recipients: AppBskyActorDefs.ProfileViewBasic[]
+  blocks: AppBskyActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -185,6 +190,7 @@ export type ConvoStateError = {
   error: any
   sender: undefined
   recipients: undefined
+  blocks: undefined
   isFetchingHistory: false
   deleteMessage: undefined
   sendMessage: undefined
