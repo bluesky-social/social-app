@@ -11,8 +11,9 @@ interface BackgroundNotificationPreferencesContext {
   ) => void
 }
 
-const Context =
-  React.createContext<BackgroundNotificationPreferencesContext | null>(null)
+const Context = React.createContext<BackgroundNotificationPreferencesContext>(
+  {} as BackgroundNotificationPreferencesContext,
+)
 export const useBackgroundNotificationPreferences = () =>
   React.useContext(Context)
 
@@ -31,11 +32,6 @@ export function BackgroundNotificationPreferencesProvider({
     () => ({
       preferences,
       setPref: async (k: string, v: string | boolean) => {
-        setPreferences(prev => ({
-          ...prev,
-          [k]: v,
-        }))
-
         switch (typeof v) {
           case 'boolean': {
             await BackgroundNotificationHandler.setBoolAsync(k, v)
@@ -49,6 +45,11 @@ export function BackgroundNotificationPreferencesProvider({
             throw new Error(`Invalid type for value: ${typeof v}`)
           }
         }
+
+        setPreferences(prev => ({
+          ...prev,
+          [k]: v,
+        }))
       },
     }),
     [preferences],
