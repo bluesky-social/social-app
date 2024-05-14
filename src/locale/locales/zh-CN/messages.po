@@ -357,7 +357,7 @@ msgstr "不在这些选项中的问题"
 msgid "An issue occurred, please try again."
 msgstr "出现问题，请重试。"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:194
+#: src/screens/Onboarding/StepInterests/index.tsx:204
 msgid "an unknown error occurred"
 msgstr "出现未知错误"
 
@@ -779,7 +779,7 @@ msgstr "选择 \"所有人\" 或是 \"没有人\""
 msgid "Choose Service"
 msgstr "选择服务"
 
-#: src/screens/Onboarding/StepFinished.tsx:228
+#: src/screens/Onboarding/StepFinished.tsx:238
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "选择支持你的自定义资讯源的算法。"
 
@@ -918,7 +918,7 @@ msgstr "漫画"
 msgid "Community Guidelines"
 msgstr "社群准则"
 
-#: src/screens/Onboarding/StepFinished.tsx:241
+#: src/screens/Onboarding/StepFinished.tsx:251
 msgid "Complete onboarding and start using your account"
 msgstr "完成引导并开始使用你的账户"
 
@@ -1032,9 +1032,9 @@ msgstr "上下文菜单背景，点击关闭菜单。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:161
 #: src/screens/Onboarding/StepFollowingFeed.tsx:154
-#: src/screens/Onboarding/StepInterests/index.tsx:253
+#: src/screens/Onboarding/StepInterests/index.tsx:263
 #: src/screens/Onboarding/StepModeration/index.tsx:103
-#: src/screens/Onboarding/StepProfile/index.tsx:253
+#: src/screens/Onboarding/StepProfile/index.tsx:272
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:118
 msgid "Continue"
 msgstr "继续"
@@ -1044,9 +1044,9 @@ msgid "Continue as {0} (currently signed in)"
 msgstr "以 {0} 继续（已登录）"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:151
-#: src/screens/Onboarding/StepInterests/index.tsx:250
+#: src/screens/Onboarding/StepInterests/index.tsx:260
 #: src/screens/Onboarding/StepModeration/index.tsx:100
-#: src/screens/Onboarding/StepProfile/index.tsx:250
+#: src/screens/Onboarding/StepProfile/index.tsx:269
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:115
 #: src/screens/Signup/index.tsx:213
 msgid "Continue to next step"
@@ -1164,7 +1164,7 @@ msgstr "创建账户"
 msgid "Create an account"
 msgstr "创建一个账户"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:267
+#: src/screens/Onboarding/StepProfile/index.tsx:286
 msgid "Create an avatar instead"
 msgstr "创建一个头像"
 
@@ -1392,8 +1392,8 @@ msgstr "域名已认证！"
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/components/forms/DateField/index.tsx:74
 #: src/components/forms/DateField/index.tsx:80
-#: src/screens/Onboarding/StepProfile/index.tsx:306
-#: src/screens/Onboarding/StepProfile/index.tsx:309
+#: src/screens/Onboarding/StepProfile/index.tsx:325
+#: src/screens/Onboarding/StepProfile/index.tsx:328
 #: src/view/com/auth/server-input/index.tsx:169
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/modals/AddAppPasswords.tsx:227
@@ -1683,7 +1683,7 @@ msgstr "保存文件时发生错误"
 msgid "Error receiving captcha response."
 msgstr "Captcha 响应错误。"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:192
+#: src/screens/Onboarding/StepInterests/index.tsx:202
 #: src/view/screens/Search/Search.tsx:108
 msgid "Error:"
 msgstr "错误："
@@ -1848,7 +1848,7 @@ msgstr "文件保存成功！"
 msgid "Filter from feeds"
 msgstr "从资讯源中过滤"
 
-#: src/screens/Onboarding/StepFinished.tsx:244
+#: src/screens/Onboarding/StepFinished.tsx:254
 msgid "Finalizing"
 msgstr "最终确定"
 
@@ -1874,7 +1874,7 @@ msgstr "调整讨论主题。"
 msgid "Fitness"
 msgstr "健康"
 
-#: src/screens/Onboarding/StepFinished.tsx:224
+#: src/screens/Onboarding/StepFinished.tsx:234
 msgid "Flexible"
 msgstr "灵活"
 
@@ -1952,7 +1952,7 @@ msgstr "关注者"
 #: src/view/com/profile/ProfileFollows.tsx:104
 #: src/view/screens/Feeds.tsx:682
 #: src/view/screens/ProfileFollows.tsx:25
-#: src/view/screens/SavedFeeds.tsx:395
+#: src/view/screens/SavedFeeds.tsx:413
 msgid "Following"
 msgstr "正在关注"
 
@@ -2027,7 +2027,7 @@ msgstr "相册"
 msgid "Get Started"
 msgstr "开始"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:209
+#: src/screens/Onboarding/StepProfile/index.tsx:228
 msgid "Give your profile a face"
 msgstr "为你的个人资料添加头像"
 
@@ -2118,7 +2118,7 @@ msgstr "任何疑问？"
 msgid "Help"
 msgstr "帮助"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:212
+#: src/screens/Onboarding/StepProfile/index.tsx:231
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "通过上传图片或创建头像来帮助人们了解你不是机器人。"
 
@@ -2471,7 +2471,7 @@ msgstr "旧存储数据已清除，你需要立即重新启动应用。"
 msgid "Let's get your password reset!"
 msgstr "让我们来重置你的密码！"
 
-#: src/screens/Onboarding/StepFinished.tsx:244
+#: src/screens/Onboarding/StepFinished.tsx:254
 msgid "Let's go!"
 msgstr "让我们开始！"
 
@@ -2651,9 +2651,14 @@ msgstr "信息已删除"
 msgid "Message from server: {0}"
 msgstr "来自服务器的信息：{0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:79
+#: src/screens/Messages/Conversation/MessageInput.tsx:85
 msgid "Message input field"
-msgstr "输入信息栏"
+msgstr "信息输入栏"
+
+#: src/screens/Messages/Conversation/MessageInput.tsx:45
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:28
+msgid "Message is too long"
+msgstr "信息过长"
 
 #: src/screens/Messages/List/index.tsx:91
 #: src/screens/Messages/List/index.tsx:464
@@ -2895,7 +2900,7 @@ msgstr "转到个人资料"
 msgid "Need to report a copyright violation?"
 msgstr "需要举报侵犯版权行为吗？"
 
-#: src/screens/Onboarding/StepFinished.tsx:212
+#: src/screens/Onboarding/StepFinished.tsx:222
 msgid "Never lose access to your followers or data."
 msgstr "永远不会失去对你的关注者或数据的访问。"
 
@@ -3113,7 +3118,7 @@ msgstr "显示"
 msgid "Oh no!"
 msgstr "糟糕！"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:133
+#: src/screens/Onboarding/StepInterests/index.tsx:143
 msgid "Oh no! Something went wrong."
 msgstr "糟糕！发生了一些错误。"
 
@@ -3138,7 +3143,7 @@ msgstr "重新开始引导流程"
 msgid "One or more images is missing alt text."
 msgstr "至少有一张图片缺失了替代文字。"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:107
+#: src/screens/Onboarding/StepProfile/index.tsx:120
 msgid "Only .jpg and .png files are supported"
 msgstr "目前只支持上传 .jpg 或 .png 图片文件"
 
@@ -3160,11 +3165,11 @@ msgstr "糟糕，发生了一些错误！"
 msgid "Oops!"
 msgstr "Oops！"
 
-#: src/screens/Onboarding/StepFinished.tsx:208
+#: src/screens/Onboarding/StepFinished.tsx:218
 msgid "Open"
 msgstr "开启"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:261
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 msgid "Open avatar creator"
 msgstr "开启头像创建工具"
 
@@ -3638,7 +3643,7 @@ msgstr "个人资料已更新"
 msgid "Protect your account by verifying your email."
 msgstr "通过验证电子邮箱来保护你的账户。"
 
-#: src/screens/Onboarding/StepFinished.tsx:194
+#: src/screens/Onboarding/StepFinished.tsx:204
 msgid "Public"
 msgstr "公开内容"
 
@@ -3978,8 +3983,8 @@ msgstr "重试上次出错的操作"
 #: src/screens/Login/LoginForm.tsx:282
 #: src/screens/Login/LoginForm.tsx:289
 #: src/screens/Messages/Conversation/MessageListError.tsx:68
-#: src/screens/Onboarding/StepInterests/index.tsx:226
-#: src/screens/Onboarding/StepInterests/index.tsx:229
+#: src/screens/Onboarding/StepInterests/index.tsx:236
+#: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Signup/index.tsx:207
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
@@ -4238,7 +4243,7 @@ msgstr "选择你的应用语言，以显示应用中的默认文本。"
 msgid "Select your date of birth"
 msgstr "输入你的出生日期"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:201
+#: src/screens/Onboarding/StepInterests/index.tsx:211
 msgid "Select your interests from the options below"
 msgstr "下面选择你感兴趣的选项"
 
@@ -4273,8 +4278,8 @@ msgstr "发送电子邮件"
 msgid "Send feedback"
 msgstr "提交反馈"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:96
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:80
+#: src/screens/Messages/Conversation/MessageInput.tsx:102
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:87
 msgid "Send message"
 msgstr "发送信息"
 
@@ -4608,12 +4613,12 @@ msgstr "登录身份"
 msgid "Signed in as @{0}"
 msgstr "以 @{0} 身份登录"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:240
+#: src/screens/Onboarding/StepInterests/index.tsx:250
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
 msgid "Skip"
 msgstr "跳过"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:237
+#: src/screens/Onboarding/StepInterests/index.tsx:247
 msgid "Skip this flow"
 msgstr "跳过此流程"
 
@@ -5184,7 +5189,7 @@ msgstr "重试"
 msgid "Two-factor authentication"
 msgstr "两步验证"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:80
+#: src/screens/Messages/Conversation/MessageInput.tsx:86
 msgid "Type your message here"
 msgstr "在这里输入你的消息"
 
@@ -5329,7 +5334,7 @@ msgstr "更新至 {handle}"
 msgid "Updating..."
 msgstr "更新中..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:265
+#: src/screens/Onboarding/StepProfile/index.tsx:284
 msgid "Upload a photo instead"
 msgstr "上传图片"
 
@@ -5581,7 +5586,7 @@ msgstr "我们无法加载这个对话"
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "我们估计还需要 {estimatedTime} 才能完成你的账户准备。"
 
-#: src/screens/Onboarding/StepFinished.tsx:186
+#: src/screens/Onboarding/StepFinished.tsx:196
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 
@@ -5605,7 +5610,7 @@ msgstr "我们无法加载你的生日首选项，请重试。"
 msgid "We were unable to load your configured labelers at this time."
 msgstr "我们暂时无法记载你已配置的标记者。"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:138
+#: src/screens/Onboarding/StepInterests/index.tsx:148
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "我们无法连接到互联网，请重试以继续设置你的账户。如果仍继续失败，你可以选择跳过此流程。"
 
@@ -5613,7 +5618,7 @@ msgstr "我们无法连接到互联网，请重试以继续设置你的账户。
 msgid "We will let you know when your account is ready."
 msgstr "我们会在你的账户准备好时通知你。"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:143
+#: src/screens/Onboarding/StepInterests/index.tsx:153
 msgid "We'll use this to help customize your experience."
 msgstr "我们将使用这些信息来帮助定制你的体验。"
 
@@ -5642,7 +5647,7 @@ msgstr "很抱歉！我们找不到你正在寻找的页面。"
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "很抱歉！你目前只能订阅 10 个标记者，你已达到 10 个的限制。"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:135
+#: src/screens/Onboarding/StepInterests/index.tsx:145
 msgid "What are your interests?"
 msgstr "你感兴趣的是什么？"
 
@@ -5697,8 +5702,8 @@ msgstr "为什么应该审核此用户？"
 msgid "Wide"
 msgstr "宽"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:81
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:70
+#: src/screens/Messages/Conversation/MessageInput.tsx:87
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:77
 msgid "Write a message"
 msgstr "编写一个信息"
 
@@ -5876,7 +5881,7 @@ msgstr "你尽在掌控"
 msgid "You're in line"
 msgstr "轮到你了"
 
-#: src/screens/Onboarding/StepFinished.tsx:183
+#: src/screens/Onboarding/StepFinished.tsx:193
 msgid "You're ready to go!"
 msgstr "你已设置完成！"
 
@@ -5951,7 +5956,7 @@ msgstr "你的密码已成功更改！"
 msgid "Your post has been published"
 msgstr "你的帖子已发布"
 
-#: src/screens/Onboarding/StepFinished.tsx:198
+#: src/screens/Onboarding/StepFinished.tsx:208
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "你的帖子、喜欢和屏蔽是公开可见的，而隐藏不可见。"
 
