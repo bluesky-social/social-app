@@ -11,9 +11,11 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import Graphemer from 'graphemer'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {useHaptics} from 'lib/haptics'
+import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
@@ -39,13 +41,17 @@ export function MessageInput({
     if (message.trim() === '') {
       return
     }
+    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+      Toast.show(_(msg`Message is too long`))
+      return
+    }
     onSendMessage(message.trimEnd())
     playHaptic()
     setMessage('')
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [message, onSendMessage, playHaptic])
+  }, [message, onSendMessage, playHaptic, _])
 
   const onInputLayout = React.useCallback(
     (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {

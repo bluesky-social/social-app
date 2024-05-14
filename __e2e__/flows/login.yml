@@ -1,0 +1,26 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eOpenLoggedOutView"
+- tapOn: "Sign in"
+- tapOn: 
+    id: "selectServiceButton"
+- tapOn: "Custom"
+- tapOn:
+    id: "customServerTextInput"
+- inputText: "http://localhost:3000"
+- tapOn: "Done"
+- tapOn:
+    id: "loginUsernameInput"
+- inputText: "Alice"
+- tapOn:
+    id: "loginPasswordInput"
+- inputText: "hunter2"
+- pressKey: Enter
+- assertVisible: "Following"

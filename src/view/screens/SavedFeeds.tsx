@@ -292,21 +292,37 @@ function ListItem({
 
   return (
     <View style={[styles.itemContainer, pal.border]}>
+      {feed.type === 'timeline' ? (
+        <FollowingFeedCard />
+      ) : (
+        <FeedSourceCard
+          key={feedUri}
+          feedUri={feedUri}
+          style={[styles.noTopBorder, isPinned && {paddingRight: 8}]}
+          showMinimalPlaceholder
+          showSaveBtn={!isPinned}
+        />
+      )}
       {isPinned ? (
-        <View style={styles.webArrowButtonsContainer}>
+        <>
           <Pressable
             disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressUp}
             hitSlop={HITSLOP_TOP}
             style={state => ({
+              backgroundColor: pal.viewLight.backgroundColor,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              borderRadius: 4,
+              marginRight: 8,
               opacity:
-                state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
+                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
             })}>
             <FontAwesomeIcon
               icon="arrow-up"
-              size={12}
-              style={[pal.text, styles.webArrowUpButton]}
+              size={14}
+              style={[pal.textLight]}
             />
           </Pressable>
           <Pressable
@@ -315,24 +331,22 @@ function ListItem({
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}
             style={state => ({
+              backgroundColor: pal.viewLight.backgroundColor,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              borderRadius: 4,
+              marginRight: 8,
               opacity:
-                state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
+                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
             })}>
-            <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
+            <FontAwesomeIcon
+              icon="arrow-down"
+              size={14}
+              style={[pal.textLight]}
+            />
           </Pressable>
-        </View>
+        </>
       ) : null}
-      {feed.type === 'timeline' ? (
-        <FollowingFeedCard />
-      ) : (
-        <FeedSourceCard
-          key={feedUri}
-          feedUri={feedUri}
-          style={styles.noTopBorder}
-          showSaveBtn
-          showMinimalPlaceholder
-        />
-      )}
       <View style={{paddingRight: 16}}>
         <Pressable
           disabled={isUpdatePending}
@@ -340,12 +354,16 @@ function ListItem({
           hitSlop={10}
           onPress={onTogglePinned}
           style={state => ({
+            backgroundColor: pal.viewLight.backgroundColor,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            borderRadius: 4,
             opacity:
               state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
           })}>
           <FontAwesomeIcon
             icon="thumb-tack"
-            size={20}
+            size={14}
             color={isPinned ? colors.blue3 : pal.colors.icon}
           />
         </Pressable>
@@ -423,14 +441,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-  },
-  webArrowButtonsContainer: {
-    paddingLeft: 16,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-  },
-  webArrowUpButton: {
-    marginBottom: 10,
   },
   noTopBorder: {
     borderTopWidth: 0,

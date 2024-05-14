@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {logger} from '#/logger'
+import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -31,6 +32,7 @@ export type OnboardingState = {
     feedUris: string[]
   }
   profileStepResults: {
+    isCreatedAvatar: boolean
     image?: {
       path: string
       mime: string
@@ -40,6 +42,10 @@ export type OnboardingState = {
     }
     imageUri?: string
     imageMime?: string
+    creatorState?: {
+      emoji: Emoji
+      backgroundColor: AvatarColor
+    }
   }
 }
 
@@ -72,9 +78,14 @@ export type OnboardingAction =
     }
   | {
       type: 'setProfileStepResults'
+      isCreatedAvatar: boolean
       image?: OnboardingState['profileStepResults']['image']
       imageUri: string
       imageMime: string
+      creatorState?: {
+        emoji: Emoji
+        backgroundColor: AvatarColor
+      }
     }
 
 export type ApiResponseMap = {
@@ -89,7 +100,7 @@ export type ApiResponseMap = {
 
 export const initialState: OnboardingState = {
   hasPrev: false,
-  totalSteps: 8,
+  totalSteps: 7,
   activeStep: 'interests',
   activeStepIndex: 1,
 
@@ -111,6 +122,7 @@ export const initialState: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    isCreatedAvatar: false,
     image: undefined,
     imageUri: '',
     imageMime: '',
@@ -178,11 +190,8 @@ export function reducer(
         next.activeStep = 'moderation'
         next.activeStepIndex = 6
       } else if (s.activeStep === 'moderation') {
-        next.activeStep = 'profile'
-        next.activeStepIndex = 7
-      } else if (s.activeStep === 'profile') {
         next.activeStep = 'finished'
-        next.activeStepIndex = 8
+        next.activeStepIndex = 7
       }
       break
     }
@@ -202,12 +211,9 @@ export function reducer(
       } else if (s.activeStep === 'moderation') {
         next.activeStep = 'topicalFeeds'
         next.activeStepIndex = 5
-      } else if (s.activeStep === 'profile') {
+      } else if (s.activeStep === 'finished') {
         next.activeStep = 'moderation'
         next.activeStepIndex = 6
-      } else if (s.activeStep === 'finished') {
-        next.activeStep = 'profile'
-        next.activeStepIndex = 7
       }
       break
     }
@@ -242,14 +248,6 @@ export function reducer(
       }
       break
     }
-    case 'setProfileStepResults': {
-      next.profileStepResults = {
-        image: a.image,
-        imageUri: a.imageUri,
-        imageMime: a.imageMime,
-      }
-      break
-    }
   }
 
   const state = {
@@ -267,7 +265,6 @@ export function reducer(
     suggestedAccountsStepResults: state.suggestedAccountsStepResults,
     algoFeedsStepResults: state.algoFeedsStepResults,
     topicalFeedsStepResults: state.topicalFeedsStepResults,
-    profileStepResults: state.profileStepResults,
   })
 
   if (s.activeStep !== state.activeStep) {
@@ -301,6 +298,7 @@ export const initialStateReduced: OnboardingState = {
     feedUris: [],
   },
   profileStepResults: {
+    isCreatedAvatar: false,
     image: undefined,
     imageUri: '',
     imageMime: '',
@@ -356,9 +354,11 @@ export function reducerReduced(
     }
     case 'setProfileStepResults': {
       next.profileStepResults = {
+        isCreatedAvatar: a.isCreatedAvatar,
         image: a.image,
         imageUri: a.imageUri,
         imageMime: a.imageMime,
+        creatorState: a.creatorState,
       }
       break
     }
