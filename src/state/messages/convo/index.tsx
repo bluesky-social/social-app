@@ -3,10 +3,17 @@ import {AppState} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 
 import {Convo} from '#/state/messages/convo/agent'
-import {ConvoParams, ConvoState} from '#/state/messages/convo/types'
+import {
+  ConvoParams,
+  ConvoState,
+  ConvoStatus,
+} from '#/state/messages/convo/types'
+import {isConvoReady} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useAgent} from '#/state/session'
+
+export * from '#/state/messages/convo/util'
 
 const ChatContext = React.createContext<ConvoState | null>(null)
 
@@ -14,6 +21,21 @@ export function useConvo() {
   const ctx = useContext(ChatContext)
   if (!ctx) {
     throw new Error('useConvo must be used within a ConvoProvider')
+  }
+  return ctx
+}
+
+export function useConvoActive() {
+  const ctx = useContext(ChatContext) as ConvoState & {
+    status: ConvoStatus.Ready | ConvoStatus.Backgrounded | ConvoStatus.Suspended
+  }
+  if (!ctx) {
+    throw new Error('useConvo must be used within a ConvoProvider')
+  }
+  if (!isConvoReady(ctx)) {
+    throw new Error(
+      `useConvoActive must only be rendered when the Convo is ready. Current status: ${ctx.status}`,
+    )
   }
   return ctx
 }
