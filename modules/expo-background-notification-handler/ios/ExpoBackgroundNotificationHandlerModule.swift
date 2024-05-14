@@ -13,8 +13,12 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
     
-    AsyncFunction("setUnder18") { (under18: Bool) in
-      UserDefaults(suiteName: APP_GROUP)?.setValue(under18, forKey: "under18")
+    AsyncFunction("setPlaySoundChat") { (playSound: Bool) in
+      UserDefaults(suiteName: APP_GROUP)?.setValue(playSound, forKey: "playSoundChat")
+    }
+    
+    AsyncFunction("setPlaySoundOther") { (playSound: Bool) in
+      UserDefaults(suiteName: APP_GROUP)?.setValue(playSound, forKey: "playSoundOther")
     }
   }
 }
