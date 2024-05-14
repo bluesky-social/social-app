@@ -195,9 +195,9 @@ export function MessagesScreen({navigation, route}: Props) {
           isLoading={isLoading}
           isError={isError}
           emptyType="results"
-          emptyTitle={_(msg`No messages yet`)}
+          emptyTitle={_(msg`No chats yet`)}
           emptyMessage={_(
-            msg`You have no messages yet. Start a conversation with someone!`,
+            msg`You have no chats yet. Start a conversation with someone!`,
           )}
           errorMessage={cleanError(error)}
           onRetry={isError ? refetch : undefined}
