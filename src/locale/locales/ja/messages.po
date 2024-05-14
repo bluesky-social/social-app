@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-13 17:59+0900\n"
+"PO-Revision-Date: 2024-05-14 10:48+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -5012,7 +5012,7 @@ msgstr "これは、メールアドレスの変更やパスワードのリセッ
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:127
 msgid "This label was applied by <0>{0}</0>."
-msgstr "<0>{0}</0>よって適用されたラベルです。"
+msgstr "<0>{0}</0>によって適用されたラベルです。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:125
 msgid "This label was applied by the author."
@@ -5119,7 +5119,7 @@ msgstr "メールでの２要素認証を無効にするには、メールアド
 
 #: src/components/dms/ConvoMenu.tsx:202
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "会話を報告するには、会話の画面経由でメッセージを報告してください。モデレーターがあなたの報告の文脈をしやすくなります。"
+msgstr "会話を報告するには、会話の画面経由でメッセージを報告してください。モデレーターがあなたの報告の文脈を理解しやすくなります。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
