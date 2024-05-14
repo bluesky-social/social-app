@@ -1,11 +1,10 @@
-import {AppBskyActorDefs, BskyAgent} from '@atproto-labs/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useSession} from '#/state/session'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {useAgent, useSession} from '#/state/session'
 import {RQKEY as PROFILE_RKEY} from '../profile'
-import {useHeaders} from './temp-headers'
+import {DM_SERVICE_HEADERS} from './const'
 
 export function useUpdateActorDeclaration({
   onSuccess,
@@ -15,18 +14,16 @@ export function useUpdateActorDeclaration({
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
 
   return useMutation({
     mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
       if (!currentAccount) throw new Error('Not logged in')
-      const agent = new BskyAgent({service: serviceUrl})
-      const result = await agent.api.chat.bsky.actor.declaration.create(
+      const result = await getAgent().api.chat.bsky.actor.declaration.create(
         {repo: currentAccount.did, rkey: 'self'},
         {allowIncoming},
-        headers,
+        DM_SERVICE_HEADERS,
       )
       return result
     },
