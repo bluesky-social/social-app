@@ -6,7 +6,9 @@ import {Convo} from '#/state/messages/convo/agent'
 import {
   ConvoParams,
   ConvoState,
-  ConvoStatus,
+  ConvoStateBackgrounded,
+  ConvoStateReady,
+  ConvoStateSuspended,
 } from '#/state/messages/convo/types'
 import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
@@ -31,9 +33,10 @@ export function useConvo() {
  * and ready for resumption.
  */
 export function useConvoActive() {
-  const ctx = useContext(ChatContext) as ConvoState & {
-    status: ConvoStatus.Ready | ConvoStatus.Backgrounded | ConvoStatus.Suspended
-  }
+  const ctx = useContext(ChatContext) as
+    | ConvoStateReady
+    | ConvoStateBackgrounded
+    | ConvoStateSuspended
   if (!ctx) {
     throw new Error('useConvo must be used within a ConvoProvider')
   }
