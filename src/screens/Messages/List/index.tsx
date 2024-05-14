@@ -184,7 +184,7 @@ export function MessagesScreen({navigation, route}: Props) {
           </CenteredView>
         ) : (
           <ViewHeader
-            title={_(msg`Chats`)}
+            title={_(msg`Messages`)}
             renderButton={renderButton}
             showBorder
             canGoBack={false}
@@ -211,7 +211,7 @@ export function MessagesScreen({navigation, route}: Props) {
     <View style={a.flex_1}>
       {!gtMobile && (
         <ViewHeader
-          title={_(msg`Chats`)}
+          title={_(msg`Messages`)}
           renderButton={renderButton}
           showBorder={false}
           canGoBack={false}
@@ -276,7 +276,7 @@ function DesktopHeader({
         a.py_sm,
       ]}>
       <Text style={[a.text_2xl, a.font_bold]}>
-        <Trans>Chats</Trans>
+        <Trans>Messages</Trans>
       </Text>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Button

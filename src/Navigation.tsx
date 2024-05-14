@@ -514,7 +514,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
-        options={{title: title(msg`Chats`), requireAuth: true}}
+        options={{title: title(msg`Messages`), requireAuth: true}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
