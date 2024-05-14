@@ -1,5 +1,6 @@
 import {ExpoBackgroundNotificationHandlerModule} from './ExpoBackgroundNotificationHandler.types'
 
+// Stub for web
 export const BackgroundNotificationHandler = {
   getAllPrefsAsync: async () => {
     return {}
