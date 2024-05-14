@@ -3,28 +3,22 @@ import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {sha256} from 'js-sha256'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {MessagesTabNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useListConvos} from '#/state/queries/messages/list-converations'
-import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
-import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {NewChat} from '#/components/dms/NewChat'
 import * as TextField from '#/components/forms/TextField'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
@@ -32,10 +26,10 @@ import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
 import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
+import {ChatListItem} from './ChatListItem'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
@@ -251,181 +245,6 @@ export function MessagesScreen({navigation, route}: Props) {
         // @ts-ignore our .web version only -sfn
         desktopFixedHeight
       />
-    </View>
-  )
-}
-
-function ChatListItem({
-  convo,
-  index,
-}: {
-  convo: ChatBskyConvoDefs.ConvoView
-  index: number
-}) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
-  const menuControl = useMenuControl()
-  const {gtMobile} = useBreakpoints()
-
-  let lastMessage = _(msg`No messages yet`)
-  let lastMessageSentAt: string | null = null
-  if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
-    if (convo.lastMessage.sender?.did === currentAccount?.did) {
-      lastMessage = _(msg`You: ${convo.lastMessage.text}`)
-    } else {
-      lastMessage = convo.lastMessage.text
-    }
-    lastMessageSentAt = convo.lastMessage.sentAt
-  }
-  if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-    lastMessage = _(msg`Message deleted`)
-  }
-
-  const otherUser = convo.members.find(
-    member => member.did !== currentAccount?.did,
-  )
-
-  const navigation = useNavigation<NavigationProp>()
-  const [showActions, setShowActions] = React.useState(false)
-
-  const onMouseEnter = React.useCallback(() => {
-    setShowActions(true)
-  }, [])
-
-  const onMouseLeave = React.useCallback(() => {
-    setShowActions(false)
-  }, [])
-
-  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
-    if (e.nativeEvent.relatedTarget == null) return
-    setShowActions(true)
-  }, [])
-
-  const onPress = React.useCallback(() => {
-    navigation.push('MessagesConversation', {
-      conversation: convo.id,
-    })
-  }, [convo.id, navigation])
-
-  if (!otherUser) {
-    return null
-  }
-
-  return (
-    <View
-      // @ts-expect-error web only
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onFocus={onFocus}
-      onBlur={onMouseLeave}>
-      <Button
-        label={otherUser.displayName || otherUser.handle}
-        onPress={onPress}
-        style={a.flex_1}
-        onLongPress={isNative ? menuControl.open : undefined}>
-        {({hovered, pressed}) => (
-          <View
-            style={[
-              a.flex_row,
-              a.flex_1,
-              a.px_lg,
-              a.py_md,
-              a.gap_md,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-              index === 0 && [a.border_t, a.pt_lg],
-              t.atoms.border_contrast_low,
-            ]}>
-            <UserAvatar avatar={otherUser?.avatar} size={52} />
-            <View style={[a.flex_1, a.flex_row, a.align_center]}>
-              <View style={[a.flex_1]}>
-                <View
-                  style={[
-                    a.flex_1,
-                    a.flex_row,
-                    a.align_end,
-                    a.pb_2xs,
-                    web([{marginTop: -2}]),
-                  ]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
-                    <Text style={[a.text_md, t.atoms.text, a.font_bold]}>
-                      {otherUser.displayName || otherUser.handle}
-                    </Text>
-                  </Text>
-                  {lastMessageSentAt && (
-                    <TimeElapsed timestamp={lastMessageSentAt}>
-                      {({timeElapsed}) => (
-                        <Text
-                          style={[
-                            a.text_sm,
-                            web([a.leading_normal]),
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          {' '}
-                          &middot; {timeElapsed}
-                        </Text>
-                      )}
-                    </TimeElapsed>
-                  )}
-                </View>
-                <Text
-                  numberOfLines={1}
-                  style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
-                  @{otherUser.handle}
-                </Text>
-                <Text
-                  numberOfLines={2}
-                  style={[
-                    a.text_sm,
-                    a.leading_snug,
-                    convo.unreadCount > 0
-                      ? a.font_bold
-                      : t.atoms.text_contrast_high,
-                  ]}>
-                  {lastMessage}
-                </Text>
-              </View>
-              {convo.unreadCount > 0 && (
-                <View
-                  style={[
-                    a.absolute,
-                    a.rounded_full,
-                    {
-                      backgroundColor: convo.muted
-                        ? t.palette.contrast_200
-                        : t.palette.primary_500,
-                      height: 7,
-                      width: 7,
-                    },
-                    isNative
-                      ? {
-                          top: 15,
-                          right: 12,
-                        }
-                      : {
-                          top: 0,
-                          right: 0,
-                        },
-                  ]}
-                />
-              )}
-              <ConvoMenu
-                convo={convo}
-                profile={otherUser}
-                control={menuControl}
-                currentScreen="list"
-                showMarkAsRead={convo.unreadCount > 0}
-                hideTrigger={isNative}
-                triggerOpacity={
-                  !gtMobile || showActions || menuControl.isOpen ? 1 : 0
-                }
-              />
-            </View>
-          </View>
-        )}
-      </Button>
     </View>
   )
 }
