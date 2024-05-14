@@ -98,7 +98,6 @@ function Inner() {
    * Any other convo states (atm) are "ready" states
    */
 
-  console.log(convoState.blocks)
   return (
     <KeyboardProvider>
       <KeyboardAvoidingView
