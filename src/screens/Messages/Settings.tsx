@@ -11,11 +11,11 @@ import {useGate} from '#/lib/statsig/statsig'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {RadioGroup} from '#/view/com/util/forms/RadioGroup'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
+import {RadioGroup} from '#/components/RadioGroup'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from './gate'
 
@@ -48,21 +48,20 @@ export function MessagesSettingsScreen({}: Props) {
   return (
     <CenteredView sideBorders>
       <ViewHeader title={_(msg`Settings`)} showOnDesktop showBorder />
-      <View style={[a.p_lg, a.gap_lg]}>
-        <Text style={[a.text_xl, a.font_bold]}>
+      <View style={[a.px_md, a.py_lg, a.gap_md]}>
+        <Text style={[a.text_xl, a.font_bold, a.px_sm]}>
           <Trans>Allow messages from</Trans>
         </Text>
-        <RadioGroup
-          initialSelection={
-            profile?.associated?.chat?.allowIncoming ?? 'following'
+        <RadioGroup<AllowIncoming>
+          value={
+            (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
+            'following'
           }
-          items={
-            [
-              {label: _(msg`Everyone`), key: 'all'},
-              {label: _(msg`Follows only`), key: 'following'},
-              {label: _(msg`No one`), key: 'none'},
-            ] satisfies Array<{label: string; key: AllowIncoming}>
-          }
+          items={[
+            {label: _(msg`Everyone`), value: 'all'},
+            {label: _(msg`Follows only`), value: 'following'},
+            {label: _(msg`No one`), value: 'none'},
+          ]}
           onSelect={onSelectItem}
         />
       </View>
