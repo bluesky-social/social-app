@@ -1,11 +1,15 @@
-import Foundation
 import UserNotifications
+
+let APP_GROUP = "group.app.bsky"
 
 class NotificationService: UNNotificationServiceExtension {
   var contentHandler: ((UNNotificationContent) -> Void)?
+  var under18: Bool = true
 
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
     self.contentHandler = contentHandler
+    
+    self.loadData()
     
     guard var bestAttempt = createCopy(request.content),
           let reason = request.content.userInfo["reason"] as? String
@@ -14,6 +18,9 @@ class NotificationService: UNNotificationServiceExtension {
     }
     
     if reason == "chat-message" {
+      if under18 {
+        return
+      }
       bestAttempt = mutateWithChatMessage(bestAttempt)
     }
     
@@ -23,11 +30,12 @@ class NotificationService: UNNotificationServiceExtension {
     contentHandler(bestAttempt)
   }
   
-  // If for some reason the alloted time expires, we don't actually want to display a notification
   override func serviceExtensionTimeWillExpire() {
-    if let contentHandler = contentHandler {
-      contentHandler(UNNotificationContent())
-    }
+    // If for some reason the alloted time expires, we don't actually want to display a notification
+  }
+  
+  func loadData() {
+    self.under18 = UserDefaults(suiteName: APP_GROUP)?.bool(forKey: "under18") ?? true
   }
   
   func createCopy(_ content: UNNotificationContent) -> UNMutableNotificationContent? {
@@ -44,5 +52,3 @@ class NotificationService: UNNotificationServiceExtension {
     return content
   }
 }
-
-
