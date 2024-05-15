@@ -288,7 +288,7 @@ export class Convo {
               if (this.convo) {
                 this.status = ConvoStatus.Ready
                 this.refreshConvo()
-                this.batchRetryPendingMessages()
+                this.attemptCleanup()
               } else {
                 this.status = ConvoStatus.Initializing
                 this.setup()
@@ -390,6 +390,12 @@ export class Convo {
     this.headerItems = new Map()
 
     this.dispatch({event: ConvoDispatchEvent.Init})
+  }
+
+  private attemptCleanup() {
+    // override what's here in case remote convo state has changed
+    this.pendingMessageFailure = 'recoverable'
+    this.batchRetryPendingMessages()
   }
 
   private async setup() {
