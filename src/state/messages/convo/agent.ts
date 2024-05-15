@@ -288,6 +288,7 @@ export class Convo {
               if (this.convo) {
                 this.status = ConvoStatus.Ready
                 this.refreshConvo()
+                this.batchRetryPendingMessages()
               } else {
                 this.status = ConvoStatus.Initializing
                 this.setup()
@@ -841,15 +842,26 @@ export class Convo {
   }
 
   async batchRetryPendingMessages() {
+    if (this.pendingMessageFailure === 'unrecoverable') return
+
+    // reset if present, and recoverable
+    if (this.pendingMessageFailure === 'recoverable') {
+      this.pendingMessageFailure = null
+      this.commit()
+    }
+
+    const messageArray = Array.from(this.pendingMessages.values())
+
+    if (messageArray.length === 0) return
+
     logger.debug(
-      `Convo: retrying ${this.pendingMessages.size} pending messages`,
+      `Convo: batch retrying ${this.pendingMessages.size} pending messages`,
       {},
       logger.DebugContext.convo,
     )
 
     try {
       // throw new Error('UNCOMMENT TO TEST RETRY')
-      const messageArray = Array.from(this.pendingMessages.values())
       const {data} = await networkRetry(2, () => {
         return this.agent.api.chat.bsky.convo.sendMessageBatch(
           {
@@ -990,8 +1002,6 @@ export class Convo {
         retry:
           this.pendingMessageFailure === 'recoverable'
             ? () => {
-                this.pendingMessageFailure = null
-                this.commit()
                 this.batchRetryPendingMessages()
               }
             : undefined,
