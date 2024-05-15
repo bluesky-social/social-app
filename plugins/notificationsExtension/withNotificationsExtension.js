@@ -10,7 +10,7 @@ const EXTENSION_NAME = 'BlueskyNSE'
 const EXTENSION_CONTROLLER_NAME = 'NotificationService'
 
 const withNotificationsExtension = config => {
-  const soundFiles = ['blueskydm.wav']
+  const soundFiles = ['dm.aiff']
 
   return withPlugins(config, [
     // IOS
