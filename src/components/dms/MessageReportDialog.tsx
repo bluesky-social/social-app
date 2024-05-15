@@ -245,8 +245,12 @@ function PreviewMessage({message}: {message: ChatBskyConvoDefs.MessageView}) {
         />
       </View>
       <MessageItemMetadata
-        message={message}
-        isLastInGroup
+        item={{
+          type: 'message',
+          message,
+          key: '',
+          nextMessage: null,
+        }}
         style={[a.text_left, a.mb_0]}
       />
     </View>

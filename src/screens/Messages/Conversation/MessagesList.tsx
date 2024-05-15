@@ -35,13 +35,7 @@ function MaybeLoader({isLoading}: {isLoading: boolean}) {
 
 function renderItem({item}: {item: ConvoItem}) {
   if (item.type === 'message' || item.type === 'pending-message') {
-    return (
-      <MessageItem
-        item={item.message}
-        next={item.nextMessage}
-        pending={item.type === 'pending-message'}
-      />
-    )
+    return <MessageItem item={item} />
   } else if (item.type === 'deleted-message') {
     return <Text>Deleted message</Text>
   } else if (item.type === 'error-recoverable') {

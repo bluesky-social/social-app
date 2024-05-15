@@ -35,10 +35,6 @@ export enum ConvoItemError {
    * Error fetching past messages
    */
   HistoryFailed = 'historyFailed',
-  /**
-   * Error sending new message
-   */
-  PendingFailed = 'pendingFailed',
 }
 
 export enum ConvoErrorCode {
@@ -83,13 +79,26 @@ export type ConvoDispatch =
 
 export type ConvoItem =
   | {
-      type: 'message' | 'pending-message'
+      type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
+    }
+  | {
+      type: 'pending-message'
+      key: string
+      message: ChatBskyConvoDefs.MessageView
+      nextMessage:
+        | ChatBskyConvoDefs.MessageView
+        | ChatBskyConvoDefs.DeletedMessageView
+        | null
+      /**
+       * Retry sending the message. If present, the message is in a failed state.
+       */
+      retry?: () => void
     }
   | {
       type: 'deleted-message'

@@ -735,6 +735,8 @@ export class Convo {
     }
   }
 
+  private pendingFailed = false
+
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim()) return
@@ -747,11 +749,9 @@ export class Convo {
       id: tempId,
       message,
     })
-    // remove on each send, it might go through now without user having to click
-    this.footerItems.delete(ConvoItemError.PendingFailed)
     this.commit()
 
-    if (!this.isProcessingPendingMessages) {
+    if (!this.isProcessingPendingMessages && !this.pendingFailed) {
       this.processPendingMessages()
     }
   }
@@ -805,16 +805,7 @@ export class Convo {
       this.commit()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     } finally {
       this.isProcessingPendingMessages = false
@@ -868,16 +859,7 @@ export class Convo {
       )
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to batch retry messages`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     }
   }
@@ -958,6 +940,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
@@ -968,6 +951,13 @@ export class Convo {
           sender: this.sender!,
         },
         nextMessage: null,
+        retry: this.pendingFailed
+          ? () => {
+              this.pendingFailed = false
+              this.commit()
+              this.batchRetryPendingMessages()
+            }
+          : undefined,
       })
     })
 
