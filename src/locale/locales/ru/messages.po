@@ -163,7 +163,7 @@ msgstr "Добавить учетную запись"
 #: src/view/com/composer/photos/Gallery.tsx:180
 #: src/view/com/modals/AltImage.tsx:117
 msgid "Add alt text"
-msgstr "Добавить альтернативный текст"
+msgstr "Добавить замещающий текст"
 
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
@@ -194,7 +194,7 @@ msgstr "Добавьте следующую DNS-запись к вашему д�
 #: src/view/com/profile/ProfileMenu.tsx:263
 #: src/view/com/profile/ProfileMenu.tsx:266
 msgid "Add to Lists"
-msgstr "Добавить в список"
+msgstr "Добавить в списки"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:234
 msgid "Add to my feeds"
@@ -215,7 +215,7 @@ msgstr "Добавлено в мои ленты"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "Настройте минимальное количество предпочтений для того чтобы ответ отобразился в вашей ленте."
+msgstr "Настройте минимальное количество лайков для того чтобы ответ отобразился в вашей ленте."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:117
@@ -225,7 +225,7 @@ msgstr "Содержимое для взрослых"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "Контент для взрослых отключен."
+msgstr "Содержимое для взрослых отключено."
 
 #: src/screens/Moderation/index.tsx:375
 #: src/view/screens/Settings/index.tsx:636
@@ -252,11 +252,11 @@ msgstr "ALT"
 #: src/view/com/modals/EditImage.tsx:316
 #: src/view/screens/AccessibilitySettings.tsx:77
 msgid "Alt text"
-msgstr "Альтернативный текст"
+msgstr "Замещающий текст"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "Альтернативный текст описывает изображение для незрячих и слабовидящих пользователей, и предоставляет дополнительный контекст для всех."
+msgstr "Замещающий текст описывает изображение для незрячих и слабовидящих пользователей, и предоставляет дополнительный контекст для всех."
 
 #: src/view/com/modals/VerifyEmail.tsx:133
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:97
@@ -330,7 +330,7 @@ msgstr "Пароли для приложений"
 #: src/components/moderation/LabelsOnMeDialog.tsx:133
 #: src/components/moderation/LabelsOnMeDialog.tsx:136
 msgid "Appeal"
-msgstr "Обращение"
+msgstr "Оспорить"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:202
 msgid "Appeal \"{0}\" label"
@@ -978,7 +978,7 @@ msgstr "Перейдите к следующему шагу, ни на кого 
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
-msgstr "Поварство"
+msgstr "Кулинария"
 
 #: src/view/com/modals/AddAppPasswords.tsx:196
 #: src/view/com/modals/InviteCodes.tsx:183
@@ -3020,7 +3020,7 @@ msgstr "Открыть меню настроек ленты"
 
 #: src/view/screens/Settings/index.tsx:686
 msgid "Open links with in-app browser"
-msgstr "Встроенный браузер"
+msgstr "Открывать ссылки встроенным браузером"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
@@ -4021,7 +4021,7 @@ msgstr "Выберите, что вы хотите видеть (или не в�
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "Выберите языки постов, которые вы хотите видеть в сохраненных каналах. Если не выбрано ни одного - будут показаны посты на всех языках."
+msgstr "Выберите языки, на которых будут отображаться подписанные вами ленты. Если вы не выберете ни одного языка, будут отображаться все языки."
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app."
@@ -4180,7 +4180,7 @@ msgstr "С сексуальным подтекстом"
 #: src/view/com/lightbox/Lightbox.tsx:141
 msgctxt "action"
 msgid "Share"
-msgstr "Распространить"
+msgstr "Поделиться"
 
 #: src/view/com/profile/ProfileMenu.tsx:215
 #: src/view/com/profile/ProfileMenu.tsx:224
@@ -4217,7 +4217,7 @@ msgstr "Распространяет ссылку"
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:54
 #: src/view/screens/Settings/index.tsx:359
 msgid "Show"
-msgstr "Показывать"
+msgstr "Показать"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:68
 msgid "Show all replies"
@@ -4273,7 +4273,7 @@ msgstr "Показывать ответы"
 
 #: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
-msgstr "Показывать ответы от людей, за которыми вы следите, выше других."
+msgstr "Показывать ответы от людей, за которыми вы следите, перед всеми остальными ответами."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:87
 msgid "Show replies in Following"
@@ -4495,7 +4495,7 @@ msgstr "Предложения для вас"
 
 #: src/view/com/modals/SelfLabel.tsx:95
 msgid "Suggestive"
-msgstr "Непристойный"
+msgstr "Неприличный"
 
 #: src/Navigation.tsx:233
 #: src/view/screens/Support.tsx:30
@@ -4985,7 +4985,7 @@ msgstr "Отписаться"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
 msgid "Unfollow"
-msgstr "Не следить"
+msgstr "Отписаться"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:220
 msgid "Unfollow {0}"
@@ -5199,7 +5199,7 @@ msgstr "Значение:"
 
 #: src/view/com/modals/ChangeHandle.tsx:510
 msgid "Verify {0}"
-msgstr "Верифицировать {0}"
+msgstr "Подтвердить {0}"
 
 #: src/view/screens/Settings/index.tsx:901
 msgid "Verify email"
