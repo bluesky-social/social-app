@@ -71,10 +71,6 @@ msgstr "{0, plural, one {转发} other {转发}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
 
-#: src/view/screens/ProfileList.tsx:286
-msgid "{0} your feeds"
-msgstr "{0} your feeds"
-
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
@@ -204,7 +200,7 @@ msgstr "已取消隐藏账户"
 #: src/components/dialogs/MutedWords.tsx:164
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
-#: src/view/screens/ProfileList.tsx:876
+#: src/view/screens/ProfileList.tsx:880
 msgid "Add"
 msgstr "添加"
 
@@ -212,7 +208,7 @@ msgstr "添加"
 msgid "Add a content warning"
 msgstr "新增内容警告"
 
-#: src/view/screens/ProfileList.tsx:866
+#: src/view/screens/ProfileList.tsx:870
 msgid "Add a user to this list"
 msgstr "将用户添加至列表"
 
@@ -249,7 +245,7 @@ msgstr "添加隐藏词和标签"
 msgid "Add recommended feeds"
 msgstr "添加推荐的资讯源"
 
-#: src/screens/Feeds/NoFollowingFeed.tsx:43
+#: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
 msgstr "添加默认的资讯源（仅显示你关注的人）"
 
@@ -522,15 +518,15 @@ msgstr "屏蔽账户"
 msgid "Block Account?"
 msgstr "屏蔽账户？"
 
-#: src/view/screens/ProfileList.tsx:579
+#: src/view/screens/ProfileList.tsx:583
 msgid "Block accounts"
 msgstr "屏蔽账户"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:687
 msgid "Block list"
 msgstr "屏蔽列表"
 
-#: src/view/screens/ProfileList.tsx:678
+#: src/view/screens/ProfileList.tsx:682
 msgid "Block these accounts?"
 msgstr "屏蔽这些账户？"
 
@@ -564,7 +560,7 @@ msgstr "已屏蔽帖子。"
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "屏蔽这个用户不能阻止他继续标记你的账户。"
 
-#: src/view/screens/ProfileList.tsx:680
+#: src/view/screens/ProfileList.tsx:684
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "屏蔽是公开的。被屏蔽的账户无法在你的帖子中回复、提及你或以其他方式与你互动。"
 
@@ -834,10 +830,6 @@ msgstr "清除所有数据"
 #: src/view/screens/Support.tsx:40
 msgid "click here"
 msgstr "点击这里"
-
-#: src/screens/Feeds/NoFollowingFeed.tsx:46
-msgid "Click here to add one."
-msgstr "点击这里来添加一个。"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
@@ -1109,7 +1101,7 @@ msgstr "复制 {0}"
 msgid "Copy code"
 msgstr "复制代码"
 
-#: src/view/screens/ProfileList.tsx:423
+#: src/view/screens/ProfileList.tsx:427
 msgid "Copy link to list"
 msgstr "复制列表链接"
 
@@ -1141,7 +1133,7 @@ msgstr "无法离开对话"
 msgid "Could not load feed"
 msgstr "无法加载资讯源"
 
-#: src/view/screens/ProfileList.tsx:956
+#: src/view/screens/ProfileList.tsx:960
 msgid "Could not load list"
 msgstr "无法加载列表"
 
@@ -1242,7 +1234,7 @@ msgstr "调试面板"
 #: src/components/dms/MessageMenu.tsx:125
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #: src/view/screens/AppPasswords.tsx:268
-#: src/view/screens/ProfileList.tsx:662
+#: src/view/screens/ProfileList.tsx:666
 msgid "Delete"
 msgstr "删除"
 
@@ -1266,7 +1258,7 @@ msgstr "删除应用专用密码？"
 msgid "Delete for me"
 msgstr "为我删除"
 
-#: src/view/screens/ProfileList.tsx:466
+#: src/view/screens/ProfileList.tsx:470
 msgid "Delete List"
 msgstr "删除列表"
 
@@ -1291,7 +1283,7 @@ msgstr "删除我的账户…"
 msgid "Delete post"
 msgstr "删除帖子"
 
-#: src/view/screens/ProfileList.tsx:657
+#: src/view/screens/ProfileList.tsx:661
 msgid "Delete this list?"
 msgstr "删除这个列表？"
 
@@ -1497,7 +1489,7 @@ msgstr "编辑头像"
 msgid "Edit image"
 msgstr "编辑图片"
 
-#: src/view/screens/ProfileList.tsx:454
+#: src/view/screens/ProfileList.tsx:458
 msgid "Edit list details"
 msgstr "编辑列表详情"
 
@@ -2056,7 +2048,7 @@ msgstr "明显违反法律或服务条款"
 #: src/view/com/auth/LoggedOut.tsx:83
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:111
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:969
 #: src/view/shell/desktop/LeftNav.tsx:126
 msgid "Go back"
 msgstr "返回"
@@ -2066,7 +2058,7 @@ msgstr "返回"
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:116
-#: src/view/screens/ProfileList.tsx:970
+#: src/view/screens/ProfileList.tsx:974
 msgid "Go Back"
 msgstr "返回"
 
@@ -2271,7 +2263,7 @@ msgstr "若不勾选，则默认为全年龄向。"
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "如果你根据你所在国家的法律定义还不是成年人，则你的父母或法定监护人必须代表你阅读这些条款。"
 
-#: src/view/screens/ProfileList.tsx:659
+#: src/view/screens/ProfileList.tsx:663
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "该列表删除后将无法恢复。"
 
@@ -2540,7 +2532,7 @@ msgstr "列表"
 msgid "List Avatar"
 msgstr "列表头像"
 
-#: src/view/screens/ProfileList.tsx:353
+#: src/view/screens/ProfileList.tsx:357
 msgid "List blocked"
 msgstr "列表已屏蔽"
 
@@ -2548,11 +2540,11 @@ msgstr "列表已屏蔽"
 msgid "List by {0}"
 msgstr "列表由 {0} 创建"
 
-#: src/view/screens/ProfileList.tsx:392
+#: src/view/screens/ProfileList.tsx:396
 msgid "List deleted"
 msgstr "列表已删除"
 
-#: src/view/screens/ProfileList.tsx:325
+#: src/view/screens/ProfileList.tsx:329
 msgid "List muted"
 msgstr "列表已隐藏"
 
@@ -2560,11 +2552,11 @@ msgstr "列表已隐藏"
 msgid "List Name"
 msgstr "列表名称"
 
-#: src/view/screens/ProfileList.tsx:367
+#: src/view/screens/ProfileList.tsx:371
 msgid "List unblocked"
 msgstr "解除对列表的屏蔽"
 
-#: src/view/screens/ProfileList.tsx:339
+#: src/view/screens/ProfileList.tsx:343
 msgid "List unmuted"
 msgstr "解除对列表的隐藏"
 
@@ -2588,7 +2580,7 @@ msgstr "加载新的通知"
 #: src/screens/Profile/Sections/Feed.tsx:86
 #: src/view/com/feeds/FeedPage.tsx:142
 #: src/view/screens/ProfileFeed.tsx:492
-#: src/view/screens/ProfileList.tsx:744
+#: src/view/screens/ProfileList.tsx:748
 msgid "Load new posts"
 msgstr "加载新的帖子"
 
@@ -2631,9 +2623,9 @@ msgstr "看起来你似乎未保存任何资讯源！来看看我们提供的建
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
 msgstr "看起来你已取消固定所有资讯源。不过别担心，你仍然可以在下面添加一些😄"
 
-#: src/screens/Feeds/NoFollowingFeed.tsx:38
-msgid "Looks like you're missing a following feed."
-msgstr "看起来你似乎缺少\"正在关注\"资讯源。"
+#: src/screens/Feeds/NoFollowingFeed.tsx:37
+msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
+msgstr "看起来你似乎缺少\"正在关注\"资讯源。<0>点击这里来重新添加它。</0>"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2715,13 +2707,13 @@ msgstr "内容审核详情"
 msgid "Moderation list by {0}"
 msgstr "由 {0} 创建的内容审核列表"
 
-#: src/view/screens/ProfileList.tsx:838
+#: src/view/screens/ProfileList.tsx:842
 msgid "Moderation list by <0/>"
 msgstr "由 </0> 创建的内容审核列表"
 
 #: src/view/com/lists/ListCard.tsx:91
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
-#: src/view/screens/ProfileList.tsx:836
+#: src/view/screens/ProfileList.tsx:840
 msgid "Moderation list by you"
 msgstr "你创建的内容审核列表"
 
@@ -2767,7 +2759,7 @@ msgstr "更多"
 msgid "More feeds"
 msgstr "更多资讯源"
 
-#: src/view/screens/ProfileList.tsx:648
+#: src/view/screens/ProfileList.tsx:652
 msgid "More options"
 msgstr "更多选项"
 
@@ -2788,7 +2780,7 @@ msgstr "隐藏 {truncatedTag}"
 msgid "Mute Account"
 msgstr "隐藏账户"
 
-#: src/view/screens/ProfileList.tsx:567
+#: src/view/screens/ProfileList.tsx:571
 msgid "Mute accounts"
 msgstr "隐藏账户"
 
@@ -2804,7 +2796,7 @@ msgstr "仅隐藏标签"
 msgid "Mute in text & tags"
 msgstr "隐藏词汇和标签"
 
-#: src/view/screens/ProfileList.tsx:673
+#: src/view/screens/ProfileList.tsx:677
 msgid "Mute list"
 msgstr "隐藏列表"
 
@@ -2813,7 +2805,7 @@ msgstr "隐藏列表"
 msgid "Mute notifications"
 msgstr "通知静音"
 
-#: src/view/screens/ProfileList.tsx:668
+#: src/view/screens/ProfileList.tsx:672
 msgid "Mute these accounts?"
 msgstr "隐藏这些账户？"
 
@@ -2860,7 +2852,7 @@ msgstr "被 \"{0}\" 隐藏"
 msgid "Muted words & tags"
 msgstr "隐藏词汇和标签"
 
-#: src/view/screens/ProfileList.tsx:670
+#: src/view/screens/ProfileList.tsx:674
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "被隐藏的账户将不会得知你已将他隐藏，已隐藏的账户将不会在你的通知或时间线中显示。"
 
@@ -3015,7 +3007,7 @@ msgid "No chats yet"
 msgstr "还没有对话哦"
 
 #: src/view/screens/ProfileFeed.tsx:559
-#: src/view/screens/ProfileList.tsx:818
+#: src/view/screens/ProfileList.tsx:822
 msgid "No description"
 msgstr "没有描述"
 
@@ -3446,7 +3438,7 @@ msgid "Pictures meant for adults."
 msgstr "适合成年人的图像。"
 
 #: src/view/screens/ProfileFeed.tsx:287
-#: src/view/screens/ProfileList.tsx:612
+#: src/view/screens/ProfileList.tsx:616
 msgid "Pin to home"
 msgstr "固定到主页"
 
@@ -3457,6 +3449,10 @@ msgstr "固定到主页"
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "Pinned Feeds"
 msgstr "固定资讯源列表"
+
+#: src/view/screens/ProfileList.tsx:288
+msgid "Pinned to your feeds"
+msgstr "固定到你的资讯源"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:36
 msgid "Play"
@@ -3757,7 +3753,7 @@ msgstr "删除资讯源？"
 #: src/view/com/feeds/FeedSourceCard.tsx:234
 #: src/view/screens/ProfileFeed.tsx:330
 #: src/view/screens/ProfileFeed.tsx:336
-#: src/view/screens/ProfileList.tsx:438
+#: src/view/screens/ProfileList.tsx:442
 msgid "Remove from my feeds"
 msgstr "从自定义资讯源中删除"
 
@@ -3800,7 +3796,7 @@ msgstr "已从自定义资讯源中删除"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
-#: src/view/screens/ProfileList.tsx:315
+#: src/view/screens/ProfileList.tsx:319
 msgid "Removed from your feeds"
 msgstr "从你的自定义资讯源中删除"
 
@@ -3864,7 +3860,7 @@ msgstr "举报页面"
 msgid "Report feed"
 msgstr "举报资讯源"
 
-#: src/view/screens/ProfileList.tsx:480
+#: src/view/screens/ProfileList.tsx:484
 msgid "Report List"
 msgstr "举报列表"
 
@@ -4021,7 +4017,7 @@ msgid "Retry"
 msgstr "重试"
 
 #: src/components/Error.tsx:98
-#: src/view/screens/ProfileList.tsx:966
+#: src/view/screens/ProfileList.tsx:970
 msgid "Return to previous page"
 msgstr "回到上一页"
 
@@ -4083,7 +4079,7 @@ msgid "Saved to your camera roll"
 msgstr "保存到你的照片图库"
 
 #: src/view/screens/ProfileFeed.tsx:200
-#: src/view/screens/ProfileList.tsx:295
+#: src/view/screens/ProfileList.tsx:299
 msgid "Saved to your feeds"
 msgstr "已保存到你的自定义资讯源"
 
@@ -4103,7 +4099,7 @@ msgstr "保存图片裁剪设置"
 msgid "Science"
 msgstr "科学"
 
-#: src/view/screens/ProfileList.tsx:922
+#: src/view/screens/ProfileList.tsx:926
 msgid "Scroll to top"
 msgstr "滚动到顶部"
 
@@ -4435,7 +4431,7 @@ msgstr "分享"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:266
 #: src/view/com/util/forms/PostDropdownBtn.tsx:275
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:288
-#: src/view/screens/ProfileList.tsx:423
+#: src/view/screens/ProfileList.tsx:427
 msgid "Share"
 msgstr "分享"
 
@@ -4678,9 +4674,9 @@ msgstr "回复排序"
 msgid "Sort replies to the same post by:"
 msgstr "对同一帖子的回复进行排序："
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:168
-msgid "Source:"
-msgstr "来源："
+#: src/components/moderation/LabelsOnMeDialog.tsx:167
+msgid "Source: <0>{0}</0>"
+msgstr "来源：<0>{0}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:66
 #: src/lib/moderation/useReportOptions.ts:79
@@ -4725,7 +4721,7 @@ msgstr "Storybook"
 msgid "Submit"
 msgstr "提交"
 
-#: src/view/screens/ProfileList.tsx:639
+#: src/view/screens/ProfileList.tsx:643
 msgid "Subscribe"
 msgstr "订阅"
 
@@ -4746,7 +4742,7 @@ msgstr "订阅 {0} 资讯源"
 msgid "Subscribe to this labeler"
 msgstr "订阅这个标记者"
 
-#: src/view/screens/ProfileList.tsx:635
+#: src/view/screens/ProfileList.tsx:639
 msgid "Subscribe to this list"
 msgstr "订阅这个列表"
 
@@ -4863,7 +4859,7 @@ msgstr "版权许可已迁移至 <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:66
 msgid "The feed has been replaced with Discover."
-msgstr "资讯源已替换为\"Discover\""
+msgstr "资讯源已替换为\"Discover\"。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "The following labels were applied to your account."
@@ -4922,8 +4918,8 @@ msgid "There was an issue connecting to the chat."
 msgstr "连接对话时出现问题。"
 
 #: src/view/screens/ProfileFeed.tsx:233
-#: src/view/screens/ProfileList.tsx:298
-#: src/view/screens/ProfileList.tsx:317
+#: src/view/screens/ProfileList.tsx:302
+#: src/view/screens/ProfileList.tsx:321
 #: src/view/screens/SavedFeeds.tsx:236
 #: src/view/screens/SavedFeeds.tsx:262
 #: src/view/screens/SavedFeeds.tsx:288
@@ -4979,10 +4975,10 @@ msgstr "获取应用专用密码时出现问题"
 msgid "There was an issue! {0}"
 msgstr "出现问题了！{0}"
 
-#: src/view/screens/ProfileList.tsx:330
-#: src/view/screens/ProfileList.tsx:344
-#: src/view/screens/ProfileList.tsx:358
-#: src/view/screens/ProfileList.tsx:372
+#: src/view/screens/ProfileList.tsx:334
+#: src/view/screens/ProfileList.tsx:348
+#: src/view/screens/ProfileList.tsx:362
+#: src/view/screens/ProfileList.tsx:376
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "出现问题了，请检查你的互联网连接并重试。"
 
@@ -5050,7 +5046,7 @@ msgstr "该资讯源当前使用人数较多，服务暂时不可用。请稍后
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 #: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:724
+#: src/view/screens/ProfileList.tsx:728
 msgid "This feed is empty!"
 msgstr "这里是空的！"
 
@@ -5079,8 +5075,8 @@ msgid "This label was applied by the author."
 msgstr "这个标签是由该作者标记的。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:165
-msgid "This label was applied by you"
-msgstr "这个标签是由你标记的"
+msgid "This label was applied by you."
+msgstr "这个标签是由你标记的。"
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5090,7 +5086,7 @@ msgstr "这个标记者尚未声明他发布的标记，并且可能处于非活
 msgid "This link is taking you to the following website:"
 msgstr "这条链接将带你到以下网站："
 
-#: src/view/screens/ProfileList.tsx:902
+#: src/view/screens/ProfileList.tsx:906
 msgid "This list is empty!"
 msgstr "这个列表为空！"
 
@@ -5230,11 +5226,11 @@ msgstr "在这里输入你的消息"
 msgid "Type:"
 msgstr "类型："
 
-#: src/view/screens/ProfileList.tsx:530
+#: src/view/screens/ProfileList.tsx:534
 msgid "Un-block list"
 msgstr "取消屏蔽列表"
 
-#: src/view/screens/ProfileList.tsx:515
+#: src/view/screens/ProfileList.tsx:519
 msgid "Un-mute list"
 msgstr "取消隐藏列表"
 
@@ -5250,7 +5246,7 @@ msgstr "无法连接到服务，请检查互联网连接。"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:181
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
 #: src/view/com/profile/ProfileMenu.tsx:361
-#: src/view/screens/ProfileList.tsx:621
+#: src/view/screens/ProfileList.tsx:625
 msgid "Unblock"
 msgstr "取消屏蔽"
 
@@ -5304,7 +5300,7 @@ msgid "Unlike this feed"
 msgstr "取消喜欢这个资讯源"
 
 #: src/components/TagMenu/index.tsx:249
-#: src/view/screens/ProfileList.tsx:628
+#: src/view/screens/ProfileList.tsx:632
 msgid "Unmute"
 msgstr "取消隐藏"
 
@@ -5331,7 +5327,7 @@ msgid "Unmute thread"
 msgstr "取消隐藏讨论串"
 
 #: src/view/screens/ProfileFeed.tsx:290
-#: src/view/screens/ProfileList.tsx:612
+#: src/view/screens/ProfileList.tsx:616
 msgid "Unpin"
 msgstr "取消固定"
 
@@ -5339,9 +5335,13 @@ msgstr "取消固定"
 msgid "Unpin from home"
 msgstr "从主页取消固定"
 
-#: src/view/screens/ProfileList.tsx:495
+#: src/view/screens/ProfileList.tsx:499
 msgid "Unpin moderation list"
 msgstr "取消固定限制列表"
+
+#: src/view/screens/ProfileList.tsx:289
+msgid "Unpinned from your feeds"
+msgstr "从你的资讯源中取消固定"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
 msgid "Unsubscribe"
@@ -5467,13 +5467,13 @@ msgstr "用户屏蔽了你"
 msgid "User list by {0}"
 msgstr "{0} 的用户列表"
 
-#: src/view/screens/ProfileList.tsx:826
+#: src/view/screens/ProfileList.tsx:830
 msgid "User list by <0/>"
 msgstr "<0/> 的用户列表"
 
 #: src/view/com/lists/ListCard.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
-#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:828
 msgid "User list by you"
 msgstr "你的用户列表"
 
@@ -5493,7 +5493,7 @@ msgstr "用户列表"
 msgid "Username or email address"
 msgstr "用户名或电子邮箱"
 
-#: src/view/screens/ProfileList.tsx:860
+#: src/view/screens/ProfileList.tsx:864
 msgid "Users"
 msgstr "用户"
 
