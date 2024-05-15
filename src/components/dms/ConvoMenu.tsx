@@ -74,7 +74,10 @@ let ConvoMenu = ({
   }, [modui])
   const isBlocking = !!userBlock || !!listBlocks.length
 
-  const {data: convo} = useConvoQuery(initialConvo)
+  const {data: convo} = useConvoQuery(
+    {convoId: initialConvo.id},
+    {initialData: initialConvo},
+  )
 
   const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
