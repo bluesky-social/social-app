@@ -22,10 +22,18 @@ class BackgroundNotificationHandler(
 
   private fun mutateWithChatMessage(remoteMessage: RemoteMessage) {
     if (NotificationPrefs(context).getBoolean("playSoundChat")) {
-      remoteMessage.data["channelId"] = "chat-messages"
+      // If oreo or higher
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        remoteMessage.data["channelId"] = "chat-messages"
+      } else {
+        remoteMessage.data["sound"] = "dm.mp3"
+      }
     } else {
-      remoteMessage.data["channelId"] = "chat-messages-muted"
-      remoteMessage.data["sound"] = null
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        remoteMessage.data["channelId"] = "chat-messages-muted"
+      } else {
+        remoteMessage.data["sound"] = null
+      }
     }
   }
 }
