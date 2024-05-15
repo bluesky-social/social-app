@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-15 09:43+0800\n"
+"PO-Revision-Date: 2024-05-15 13:58+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -70,10 +70,6 @@ msgstr "{0, plural, one {轉貼} other {轉貼}}"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {撤回喜歡（# 個喜歡）} other {撤回喜歡（# 個喜歡）}}"
-
-#: src/view/screens/ProfileList.tsx:286
-msgid "{0} your feeds"
-msgstr "{0} your feeds"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -204,7 +200,7 @@ msgstr "已取消靜音帳號"
 #: src/components/dialogs/MutedWords.tsx:164
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
-#: src/view/screens/ProfileList.tsx:876
+#: src/view/screens/ProfileList.tsx:880
 msgid "Add"
 msgstr "新增"
 
@@ -212,7 +208,7 @@ msgstr "新增"
 msgid "Add a content warning"
 msgstr "新增內容警告"
 
-#: src/view/screens/ProfileList.tsx:866
+#: src/view/screens/ProfileList.tsx:870
 msgid "Add a user to this list"
 msgstr "將用戶新增至此列表"
 
@@ -249,7 +245,7 @@ msgstr "新增靜音文字及標籤"
 msgid "Add recommended feeds"
 msgstr "添加推薦的動態源"
 
-#: src/screens/Feeds/NoFollowingFeed.tsx:43
+#: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
 msgstr "添加預設的「Following」動態源，他只會顯示你跟隨的人"
 
@@ -522,15 +518,15 @@ msgstr "封鎖帳號"
 msgid "Block Account?"
 msgstr "封鎖帳號？"
 
-#: src/view/screens/ProfileList.tsx:579
+#: src/view/screens/ProfileList.tsx:583
 msgid "Block accounts"
 msgstr "封鎖帳號"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:687
 msgid "Block list"
 msgstr "封鎖列表"
 
-#: src/view/screens/ProfileList.tsx:678
+#: src/view/screens/ProfileList.tsx:682
 msgid "Block these accounts?"
 msgstr "封鎖這些帳號？"
 
@@ -564,7 +560,7 @@ msgstr "已封鎖貼文。"
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "封鎖此帳戶不會阻止被貼上標記。"
 
-#: src/view/screens/ProfileList.tsx:680
+#: src/view/screens/ProfileList.tsx:684
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "封鎖資訊是公開的。被封鎖的帳號無法在您的討論串中回覆、提及您，或以其他方式與您互動。"
 
@@ -834,10 +830,6 @@ msgstr "清除所有資料"
 #: src/view/screens/Support.tsx:40
 msgid "click here"
 msgstr "點擊這裡"
-
-#: src/screens/Feeds/NoFollowingFeed.tsx:46
-msgid "Click here to add one."
-msgstr "點擊這裡以添加一個。"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
@@ -1109,7 +1101,7 @@ msgstr "複製 {0}"
 msgid "Copy code"
 msgstr "複製程式碼"
 
-#: src/view/screens/ProfileList.tsx:423
+#: src/view/screens/ProfileList.tsx:427
 msgid "Copy link to list"
 msgstr "複製列表連結"
 
@@ -1141,7 +1133,7 @@ msgstr "無法離開對話"
 msgid "Could not load feed"
 msgstr "無法加載動態"
 
-#: src/view/screens/ProfileList.tsx:956
+#: src/view/screens/ProfileList.tsx:960
 msgid "Could not load list"
 msgstr "無法載入列表"
 
@@ -1242,7 +1234,7 @@ msgstr "偵錯面板"
 #: src/components/dms/MessageMenu.tsx:125
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #: src/view/screens/AppPasswords.tsx:268
-#: src/view/screens/ProfileList.tsx:662
+#: src/view/screens/ProfileList.tsx:666
 msgid "Delete"
 msgstr "刪除"
 
@@ -1266,7 +1258,7 @@ msgstr "刪除應用程式專用密碼？"
 msgid "Delete for me"
 msgstr "為我刪除"
 
-#: src/view/screens/ProfileList.tsx:466
+#: src/view/screens/ProfileList.tsx:470
 msgid "Delete List"
 msgstr "刪除列表"
 
@@ -1291,7 +1283,7 @@ msgstr "刪除我的帳號…"
 msgid "Delete post"
 msgstr "刪除貼文"
 
-#: src/view/screens/ProfileList.tsx:657
+#: src/view/screens/ProfileList.tsx:661
 msgid "Delete this list?"
 msgstr "刪除此列表？"
 
@@ -1497,7 +1489,7 @@ msgstr "編輯頭像"
 msgid "Edit image"
 msgstr "編輯圖片"
 
-#: src/view/screens/ProfileList.tsx:454
+#: src/view/screens/ProfileList.tsx:458
 msgid "Edit list details"
 msgstr "編輯列表詳情"
 
@@ -1987,10 +1979,6 @@ msgstr "「Following」動態源偏好"
 msgid "Following Feed Preferences"
 msgstr "「Following」動態源偏好"
 
-#: src/screens/Messages/Settings.tsx:62
-#~ msgid "Follows only"
-#~ msgstr "只有您跟隨的用戶"
-
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
 msgstr "跟隨您"
@@ -2060,7 +2048,7 @@ msgstr "明顯違反法律或服務條款"
 #: src/view/com/auth/LoggedOut.tsx:83
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:111
-#: src/view/screens/ProfileList.tsx:965
+#: src/view/screens/ProfileList.tsx:969
 #: src/view/shell/desktop/LeftNav.tsx:126
 msgid "Go back"
 msgstr "返回"
@@ -2070,7 +2058,7 @@ msgstr "返回"
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:116
-#: src/view/screens/ProfileList.tsx:970
+#: src/view/screens/ProfileList.tsx:974
 msgid "Go Back"
 msgstr "返回"
 
@@ -2275,7 +2263,7 @@ msgstr "若不勾選，則預設為全年齡向。"
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "如果根據您所在國家的法律，您尚未成年，則您的父母或法定監護人必須代表您閱讀這些條款。"
 
-#: src/view/screens/ProfileList.tsx:659
+#: src/view/screens/ProfileList.tsx:663
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "如果刪除這個列表，您將無法恢復它。"
 
@@ -2544,7 +2532,7 @@ msgstr "列表"
 msgid "List Avatar"
 msgstr "列表頭像"
 
-#: src/view/screens/ProfileList.tsx:353
+#: src/view/screens/ProfileList.tsx:357
 msgid "List blocked"
 msgstr "列表已封鎖"
 
@@ -2552,11 +2540,11 @@ msgstr "列表已封鎖"
 msgid "List by {0}"
 msgstr "列表由 {0} 建立"
 
-#: src/view/screens/ProfileList.tsx:392
+#: src/view/screens/ProfileList.tsx:396
 msgid "List deleted"
 msgstr "列表已刪除"
 
-#: src/view/screens/ProfileList.tsx:325
+#: src/view/screens/ProfileList.tsx:329
 msgid "List muted"
 msgstr "列表已靜音"
 
@@ -2564,11 +2552,11 @@ msgstr "列表已靜音"
 msgid "List Name"
 msgstr "列表名稱"
 
-#: src/view/screens/ProfileList.tsx:367
+#: src/view/screens/ProfileList.tsx:371
 msgid "List unblocked"
 msgstr "已解除封鎖的列表"
 
-#: src/view/screens/ProfileList.tsx:339
+#: src/view/screens/ProfileList.tsx:343
 msgid "List unmuted"
 msgstr "已解除靜音的列表"
 
@@ -2592,7 +2580,7 @@ msgstr "載入新的通知"
 #: src/screens/Profile/Sections/Feed.tsx:86
 #: src/view/com/feeds/FeedPage.tsx:142
 #: src/view/screens/ProfileFeed.tsx:492
-#: src/view/screens/ProfileList.tsx:744
+#: src/view/screens/ProfileList.tsx:748
 msgid "Load new posts"
 msgstr "載入新的貼文"
 
@@ -2635,9 +2623,9 @@ msgstr "您似乎尚未儲存任何動態源！使用我們的建議或瀏覽下
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
 msgstr "看起來您已取消釘選所有動態源，但不用擔心，您可以在下面添加一些😄"
 
-#: src/screens/Feeds/NoFollowingFeed.tsx:38
-msgid "Looks like you're missing a following feed."
-msgstr "您看起來少了一個「Following」動態源。"
+#: src/screens/Feeds/NoFollowingFeed.tsx:37
+msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
+msgstr "您看起來少了一個「Following」動態源，<0>點擊這裡來添加一個。</0>"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2719,13 +2707,13 @@ msgstr "內容管理詳情"
 msgid "Moderation list by {0}"
 msgstr "由 {0} 建立的內容管理列表"
 
-#: src/view/screens/ProfileList.tsx:838
+#: src/view/screens/ProfileList.tsx:842
 msgid "Moderation list by <0/>"
 msgstr "由 </0> 建立的內容管理列表"
 
 #: src/view/com/lists/ListCard.tsx:91
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
-#: src/view/screens/ProfileList.tsx:836
+#: src/view/screens/ProfileList.tsx:840
 msgid "Moderation list by you"
 msgstr "您建立的內容管理列表"
 
@@ -2771,7 +2759,7 @@ msgstr "更多"
 msgid "More feeds"
 msgstr "更多動態源"
 
-#: src/view/screens/ProfileList.tsx:648
+#: src/view/screens/ProfileList.tsx:652
 msgid "More options"
 msgstr "更多選項"
 
@@ -2792,7 +2780,7 @@ msgstr "靜音 {truncatedTag}"
 msgid "Mute Account"
 msgstr "靜音帳號"
 
-#: src/view/screens/ProfileList.tsx:567
+#: src/view/screens/ProfileList.tsx:571
 msgid "Mute accounts"
 msgstr "靜音帳號"
 
@@ -2808,7 +2796,7 @@ msgstr "僅靜音標籤"
 msgid "Mute in text & tags"
 msgstr "靜音文字和標籤"
 
-#: src/view/screens/ProfileList.tsx:673
+#: src/view/screens/ProfileList.tsx:677
 msgid "Mute list"
 msgstr "靜音列表"
 
@@ -2817,7 +2805,7 @@ msgstr "靜音列表"
 msgid "Mute notifications"
 msgstr "靜音通知"
 
-#: src/view/screens/ProfileList.tsx:668
+#: src/view/screens/ProfileList.tsx:672
 msgid "Mute these accounts?"
 msgstr "靜音這些帳號？"
 
@@ -2864,7 +2852,7 @@ msgstr "被「{0}」靜音"
 msgid "Muted words & tags"
 msgstr "靜音文字和標籤"
 
-#: src/view/screens/ProfileList.tsx:670
+#: src/view/screens/ProfileList.tsx:674
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "封鎖是私人的。被封鎖的帳號可以與您互動，但您將無法看到他們的貼文或收到來自他們的通知。"
 
@@ -3019,7 +3007,7 @@ msgid "No chats yet"
 msgstr "還沒有對話"
 
 #: src/view/screens/ProfileFeed.tsx:559
-#: src/view/screens/ProfileList.tsx:818
+#: src/view/screens/ProfileList.tsx:822
 msgid "No description"
 msgstr "沒有描述"
 
@@ -3450,7 +3438,7 @@ msgid "Pictures meant for adults."
 msgstr "適合成年人的圖像。"
 
 #: src/view/screens/ProfileFeed.tsx:287
-#: src/view/screens/ProfileList.tsx:612
+#: src/view/screens/ProfileList.tsx:616
 msgid "Pin to home"
 msgstr "釘選到首頁"
 
@@ -3461,6 +3449,10 @@ msgstr "釘選到首頁"
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "Pinned Feeds"
 msgstr "釘選的動態源列表"
+
+#: src/view/screens/ProfileList.tsx:288
+msgid "Pinned to your feeds"
+msgstr "從您的動態中取消釘選"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:36
 msgid "Play"
@@ -3761,7 +3753,7 @@ msgstr "刪除動態源？"
 #: src/view/com/feeds/FeedSourceCard.tsx:234
 #: src/view/screens/ProfileFeed.tsx:330
 #: src/view/screens/ProfileFeed.tsx:336
-#: src/view/screens/ProfileList.tsx:438
+#: src/view/screens/ProfileList.tsx:442
 msgid "Remove from my feeds"
 msgstr "從我的動態源中刪除"
 
@@ -3804,7 +3796,7 @@ msgstr "已從我的動態源中刪除"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
-#: src/view/screens/ProfileList.tsx:315
+#: src/view/screens/ProfileList.tsx:319
 msgid "Removed from your feeds"
 msgstr "從您的動態中刪除"
 
@@ -3868,7 +3860,7 @@ msgstr "檢舉對話框"
 msgid "Report feed"
 msgstr "檢舉動態源"
 
-#: src/view/screens/ProfileList.tsx:480
+#: src/view/screens/ProfileList.tsx:484
 msgid "Report List"
 msgstr "檢舉列表"
 
@@ -4025,7 +4017,7 @@ msgid "Retry"
 msgstr "重試"
 
 #: src/components/Error.tsx:98
-#: src/view/screens/ProfileList.tsx:966
+#: src/view/screens/ProfileList.tsx:970
 msgid "Return to previous page"
 msgstr "返回上一頁"
 
@@ -4087,7 +4079,7 @@ msgid "Saved to your camera roll"
 msgstr "儲存至裝置相簿"
 
 #: src/view/screens/ProfileFeed.tsx:200
-#: src/view/screens/ProfileList.tsx:295
+#: src/view/screens/ProfileList.tsx:299
 msgid "Saved to your feeds"
 msgstr "儲存到您的動態源"
 
@@ -4107,7 +4099,7 @@ msgstr "保存圖片裁剪設定"
 msgid "Science"
 msgstr "科學"
 
-#: src/view/screens/ProfileList.tsx:922
+#: src/view/screens/ProfileList.tsx:926
 msgid "Scroll to top"
 msgstr "滾動到頂部"
 
@@ -4439,7 +4431,7 @@ msgstr "分享"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:266
 #: src/view/com/util/forms/PostDropdownBtn.tsx:275
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:288
-#: src/view/screens/ProfileList.tsx:423
+#: src/view/screens/ProfileList.tsx:427
 msgid "Share"
 msgstr "分享"
 
@@ -4682,9 +4674,9 @@ msgstr "排序回覆"
 msgid "Sort replies to the same post by:"
 msgstr "對同一貼文的回覆進行排序："
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:168
-msgid "Source:"
-msgstr "來源："
+#: src/components/moderation/LabelsOnMeDialog.tsx:167
+msgid "Source: <0>{0}</0>"
+msgstr "來源：<0>{0}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:66
 #: src/lib/moderation/useReportOptions.ts:79
@@ -4729,7 +4721,7 @@ msgstr "故事書"
 msgid "Submit"
 msgstr "提交"
 
-#: src/view/screens/ProfileList.tsx:639
+#: src/view/screens/ProfileList.tsx:643
 msgid "Subscribe"
 msgstr "訂閱"
 
@@ -4750,7 +4742,7 @@ msgstr "訂閱 {0} 動態源"
 msgid "Subscribe to this labeler"
 msgstr "訂閱這個標記者"
 
-#: src/view/screens/ProfileList.tsx:635
+#: src/view/screens/ProfileList.tsx:639
 msgid "Subscribe to this list"
 msgstr "訂閱這個列表"
 
@@ -4926,8 +4918,8 @@ msgid "There was an issue connecting to the chat."
 msgstr "連接到對話時出現了問題。"
 
 #: src/view/screens/ProfileFeed.tsx:233
-#: src/view/screens/ProfileList.tsx:298
-#: src/view/screens/ProfileList.tsx:317
+#: src/view/screens/ProfileList.tsx:302
+#: src/view/screens/ProfileList.tsx:321
 #: src/view/screens/SavedFeeds.tsx:236
 #: src/view/screens/SavedFeeds.tsx:262
 #: src/view/screens/SavedFeeds.tsx:288
@@ -4983,10 +4975,10 @@ msgstr "取得應用程式專用密碼時發生問題"
 msgid "There was an issue! {0}"
 msgstr "發生問題！{0}"
 
-#: src/view/screens/ProfileList.tsx:330
-#: src/view/screens/ProfileList.tsx:344
-#: src/view/screens/ProfileList.tsx:358
-#: src/view/screens/ProfileList.tsx:372
+#: src/view/screens/ProfileList.tsx:334
+#: src/view/screens/ProfileList.tsx:348
+#: src/view/screens/ProfileList.tsx:362
+#: src/view/screens/ProfileList.tsx:376
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "發生問題了。請檢查您的網路連線並重試。"
 
@@ -5054,7 +5046,7 @@ msgstr "此動態源由於目前使用人數眾多而暫時無法使用。請稍
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 #: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:724
+#: src/view/screens/ProfileList.tsx:728
 msgid "This feed is empty!"
 msgstr "這裡是空的！"
 
@@ -5083,8 +5075,8 @@ msgid "This label was applied by the author."
 msgstr "此標記由發布者添加。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:165
-msgid "This label was applied by you"
-msgstr "此標記由您添加"
+msgid "This label was applied by you."
+msgstr "此標記由您添加。"
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5094,7 +5086,7 @@ msgstr "此標記者尚未宣告它發佈的標記，而且可能不會生效。
 msgid "This link is taking you to the following website:"
 msgstr "此連結將帶您到以下網站："
 
-#: src/view/screens/ProfileList.tsx:902
+#: src/view/screens/ProfileList.tsx:906
 msgid "This list is empty!"
 msgstr "此列表為空！"
 
@@ -5234,11 +5226,11 @@ msgstr "在此輸入訊息"
 msgid "Type:"
 msgstr "類型:"
 
-#: src/view/screens/ProfileList.tsx:530
+#: src/view/screens/ProfileList.tsx:534
 msgid "Un-block list"
 msgstr "取消封鎖列表"
 
-#: src/view/screens/ProfileList.tsx:515
+#: src/view/screens/ProfileList.tsx:519
 msgid "Un-mute list"
 msgstr "取消靜音列表"
 
@@ -5254,7 +5246,7 @@ msgstr "無法連線到服務，請檢查您的網路連線。"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:181
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
 #: src/view/com/profile/ProfileMenu.tsx:361
-#: src/view/screens/ProfileList.tsx:621
+#: src/view/screens/ProfileList.tsx:625
 msgid "Unblock"
 msgstr "解除封鎖"
 
@@ -5308,7 +5300,7 @@ msgid "Unlike this feed"
 msgstr "取消喜歡這個動態源"
 
 #: src/components/TagMenu/index.tsx:249
-#: src/view/screens/ProfileList.tsx:628
+#: src/view/screens/ProfileList.tsx:632
 msgid "Unmute"
 msgstr "取消靜音"
 
@@ -5335,7 +5327,7 @@ msgid "Unmute thread"
 msgstr "取消靜音討論串"
 
 #: src/view/screens/ProfileFeed.tsx:290
-#: src/view/screens/ProfileList.tsx:612
+#: src/view/screens/ProfileList.tsx:616
 msgid "Unpin"
 msgstr "取消釘選"
 
@@ -5343,9 +5335,13 @@ msgstr "取消釘選"
 msgid "Unpin from home"
 msgstr "取消釘選在首頁"
 
-#: src/view/screens/ProfileList.tsx:495
+#: src/view/screens/ProfileList.tsx:499
 msgid "Unpin moderation list"
 msgstr "取消釘選內容管理列表"
+
+#: src/view/screens/ProfileList.tsx:289
+msgid "Unpinned from your feeds"
+msgstr "已從您的動態源取消釘選"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
 msgid "Unsubscribe"
@@ -5471,13 +5467,13 @@ msgstr "用戶封鎖了您"
 msgid "User list by {0}"
 msgstr "{0} 的用戶列表"
 
-#: src/view/screens/ProfileList.tsx:826
+#: src/view/screens/ProfileList.tsx:830
 msgid "User list by <0/>"
 msgstr "<0/> 的用戶列表"
 
 #: src/view/com/lists/ListCard.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
-#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:828
 msgid "User list by you"
 msgstr "您的用戶列表"
 
@@ -5497,7 +5493,7 @@ msgstr "用戶列表"
 msgid "Username or email address"
 msgstr "帳號代碼或電子郵件地址"
 
-#: src/view/screens/ProfileList.tsx:860
+#: src/view/screens/ProfileList.tsx:864
 msgid "Users"
 msgstr "用戶"
 
