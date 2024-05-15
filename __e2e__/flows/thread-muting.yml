@@ -1,0 +1,82 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users&follows"
+- runFlow:
+    file: ../setupApp.yml
+
+
+# Login, create a thread, and log out
+- tapOn:
+    id: "e2eSignInAlice"
+- tapOn:
+    id: "composeFAB"
+- inputText: "Test thread"
+- tapOn:
+    id: "composerPublishBtn"
+
+# Login, reply to the thread, and log out
+- tapOn:
+    id: "e2eSignInBob"
+- tapOn:
+    id: "replyBtn"
+- inputText: "Reply 1"
+- tapOn:
+    id: "composerPublishBtn"
+
+# Login, confirm notification exists, mute thread, and log out
+- tapOn:
+    id: "e2eSignInAlice"
+- tapOn:
+    id: "bottomBarNotificationsBtn"
+- assertVisible:
+    id: "feedItem-by-bob.test"
+- tapOn:
+    id: "feedItem-by-bob.test"
+- tapOn:
+    id: "postDropdownBtn"
+    childOf:
+        id: "postThreadItem-by-bob.test"
+- tapOn: "Mute thread"
+
+# Login, reply to the thread twice, and log out
+- tapOn:
+    id: "e2eSignInBob"
+- tapOn:
+    id: "bottomBarProfileBtn"
+- tapOn:
+    id: "profilePager-selector-1"
+- tapOn:
+    id: "replyBtn"
+- inputText: "Reply 2"
+- tapOn:
+    id: "composerPublishBtn"
+- tapOn:
+    id: "replyBtn"
+- inputText: "Reply 3"
+- tapOn:
+    id: "composerPublishBtn"
+
+
+# Login, confirm notifications dont exist, unmute the thread, confirm notifications exist
+- tapOn:
+    id: "e2eSignInAlice"
+- tapOn:
+    id: "bottomBarNotificationsBtn"
+- assertNotVisible:
+    id: "feedItem-by-bob.test"
+- tapOn:
+    id: "bottomBarHomeBtn"
+- tapOn:
+    id: "postDropdownBtn"
+- tapOn: "Unmute thread"
+- tapOn:
+    id: "bottomBarNotificationsBtn"
+- swipe:
+    from:
+        id: "notifsFeed"
+    direction: DOWN
+- assertVisible:
+    id: "feedItem-by-bob.test"

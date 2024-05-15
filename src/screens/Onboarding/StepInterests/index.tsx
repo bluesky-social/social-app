@@ -5,11 +5,12 @@ import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {
   DescriptionText,
   OnboardingControls,
@@ -33,6 +34,9 @@ export function StepInterests() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
+  const gate = useGate()
+  const requestNotificationsPermission = useRequestNotificationsPermission()
+
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
@@ -128,6 +132,12 @@ export function StepInterests() {
     track('OnboardingV2:Begin')
     track('OnboardingV2:StepInterests:Start')
   }, [track])
+
+  React.useEffect(() => {
+    if (!gate('reduced_onboarding_and_home_algo')) {
+      requestNotificationsPermission('StartOnboarding')
+    }
+  }, [gate, requestNotificationsPermission])
 
   const title = isError ? (
     <Trans>Oh no! Something went wrong.</Trans>

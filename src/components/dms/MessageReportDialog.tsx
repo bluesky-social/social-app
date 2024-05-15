@@ -1,10 +1,10 @@
 import React, {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {RichText as RichTextAPI} from '@atproto/api'
 import {
   ChatBskyConvoDefs,
   ComAtprotoModerationCreateReport,
-} from '@atproto-labs/api'
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -245,8 +245,12 @@ function PreviewMessage({message}: {message: ChatBskyConvoDefs.MessageView}) {
         />
       </View>
       <MessageItemMetadata
-        message={message}
-        isLastInGroup
+        item={{
+          type: 'message',
+          message,
+          key: '',
+          nextMessage: null,
+        }}
         style={[a.text_left, a.mb_0]}
       />
     </View>

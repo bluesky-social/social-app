@@ -1,9 +1,9 @@
-import {AppBskyActorDefs} from '@atproto/api'
 import {
+  AppBskyActorDefs,
   BskyAgent,
   ChatBskyConvoDefs,
   ChatBskyConvoSendMessage,
-} from '@atproto-labs/api'
+} from '@atproto/api'
 
 import {MessagesEventBus} from '#/state/messages/events/agent'
 
@@ -11,7 +11,6 @@ export type ConvoParams = {
   convoId: string
   agent: BskyAgent
   events: MessagesEventBus
-  __tempFromUserDid: string
 }
 
 export enum ConvoStatus {
@@ -36,10 +35,6 @@ export enum ConvoItemError {
    * Error fetching past messages
    */
   HistoryFailed = 'historyFailed',
-  /**
-   * Error sending new message
-   */
-  PendingFailed = 'pendingFailed',
 }
 
 export enum ConvoErrorCode {
@@ -84,13 +79,26 @@ export type ConvoDispatch =
 
 export type ConvoItem =
   | {
-      type: 'message' | 'pending-message'
+      type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
+    }
+  | {
+      type: 'pending-message'
+      key: string
+      message: ChatBskyConvoDefs.MessageView
+      nextMessage:
+        | ChatBskyConvoDefs.MessageView
+        | ChatBskyConvoDefs.DeletedMessageView
+        | null
+      /**
+       * Retry sending the message. If present, the message is in a failed state.
+       */
+      retry?: () => void
     }
   | {
       type: 'deleted-message'
@@ -108,82 +116,88 @@ export type ConvoItem =
       retry: () => void
     }
 
+type DeleteMessage = (messageId: string) => Promise<void>
+type SendMessage = (
+  message: ChatBskyConvoSendMessage.InputSchema['message'],
+) => Promise<void>
+type FetchMessageHistory = () => Promise<void>
+
+export type ConvoStateUninitialized = {
+  status: ConvoStatus.Uninitialized
+  items: []
+  convo: undefined
+  error: undefined
+  sender: undefined
+  recipients: undefined
+  isFetchingHistory: false
+  deleteMessage: undefined
+  sendMessage: undefined
+  fetchMessageHistory: undefined
+}
+export type ConvoStateInitializing = {
+  status: ConvoStatus.Initializing
+  items: []
+  convo: undefined
+  error: undefined
+  sender: undefined
+  recipients: undefined
+  isFetchingHistory: boolean
+  deleteMessage: undefined
+  sendMessage: undefined
+  fetchMessageHistory: undefined
+}
+export type ConvoStateReady = {
+  status: ConvoStatus.Ready
+  items: ConvoItem[]
+  convo: ChatBskyConvoDefs.ConvoView
+  error: undefined
+  sender: AppBskyActorDefs.ProfileViewBasic
+  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  isFetchingHistory: boolean
+  deleteMessage: DeleteMessage
+  sendMessage: SendMessage
+  fetchMessageHistory: FetchMessageHistory
+}
+export type ConvoStateBackgrounded = {
+  status: ConvoStatus.Backgrounded
+  items: ConvoItem[]
+  convo: ChatBskyConvoDefs.ConvoView
+  error: undefined
+  sender: AppBskyActorDefs.ProfileViewBasic
+  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  isFetchingHistory: boolean
+  deleteMessage: DeleteMessage
+  sendMessage: SendMessage
+  fetchMessageHistory: FetchMessageHistory
+}
+export type ConvoStateSuspended = {
+  status: ConvoStatus.Suspended
+  items: ConvoItem[]
+  convo: ChatBskyConvoDefs.ConvoView
+  error: undefined
+  sender: AppBskyActorDefs.ProfileViewBasic
+  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  isFetchingHistory: boolean
+  deleteMessage: DeleteMessage
+  sendMessage: SendMessage
+  fetchMessageHistory: FetchMessageHistory
+}
+export type ConvoStateError = {
+  status: ConvoStatus.Error
+  items: []
+  convo: undefined
+  error: any
+  sender: undefined
+  recipients: undefined
+  isFetchingHistory: false
+  deleteMessage: undefined
+  sendMessage: undefined
+  fetchMessageHistory: undefined
+}
 export type ConvoState =
-  | {
-      status: ConvoStatus.Uninitialized
-      items: []
-      convo: undefined
-      error: undefined
-      sender: undefined
-      recipients: undefined
-      isFetchingHistory: false
-      deleteMessage: undefined
-      sendMessage: undefined
-      fetchMessageHistory: undefined
-    }
-  | {
-      status: ConvoStatus.Initializing
-      items: []
-      convo: undefined
-      error: undefined
-      sender: undefined
-      recipients: undefined
-      isFetchingHistory: boolean
-      deleteMessage: undefined
-      sendMessage: undefined
-      fetchMessageHistory: undefined
-    }
-  | {
-      status: ConvoStatus.Ready
-      items: ConvoItem[]
-      convo: ChatBskyConvoDefs.ConvoView
-      error: undefined
-      sender: AppBskyActorDefs.ProfileViewBasic
-      recipients: AppBskyActorDefs.ProfileViewBasic[]
-      isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => Promise<void>
-      sendMessage: (
-        message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => void
-      fetchMessageHistory: () => void
-    }
-  | {
-      status: ConvoStatus.Suspended
-      items: ConvoItem[]
-      convo: ChatBskyConvoDefs.ConvoView
-      error: undefined
-      sender: AppBskyActorDefs.ProfileViewBasic
-      recipients: AppBskyActorDefs.ProfileViewBasic[]
-      isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => Promise<void>
-      sendMessage: (
-        message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => Promise<void>
-      fetchMessageHistory: () => Promise<void>
-    }
-  | {
-      status: ConvoStatus.Backgrounded
-      items: ConvoItem[]
-      convo: ChatBskyConvoDefs.ConvoView
-      error: undefined
-      sender: AppBskyActorDefs.ProfileViewBasic
-      recipients: AppBskyActorDefs.ProfileViewBasic[]
-      isFetchingHistory: boolean
-      deleteMessage: (messageId: string) => Promise<void>
-      sendMessage: (
-        message: ChatBskyConvoSendMessage.InputSchema['message'],
-      ) => Promise<void>
-      fetchMessageHistory: () => Promise<void>
-    }
-  | {
-      status: ConvoStatus.Error
-      items: []
-      convo: undefined
-      error: any
-      sender: undefined
-      recipients: undefined
-      isFetchingHistory: false
-      deleteMessage: undefined
-      sendMessage: undefined
-      fetchMessageHistory: undefined
-    }
+  | ConvoStateUninitialized
+  | ConvoStateInitializing
+  | ConvoStateReady
+  | ConvoStateBackgrounded
+  | ConvoStateSuspended
+  | ConvoStateError

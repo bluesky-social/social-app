@@ -1,15 +1,13 @@
 import React from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {RichText} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {isWeb} from 'platform/detection'
-import {useConvo} from 'state/messages/convo'
-import {ConvoStatus} from 'state/messages/convo/types'
+import {useConvoActive} from 'state/messages/convo'
 import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -27,7 +25,6 @@ export let MessageMenu = ({
   control,
   triggerOpacity,
 }: {
-  hideTrigger?: boolean
   triggerOpacity?: number
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
@@ -35,7 +32,7 @@ export let MessageMenu = ({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const convo = useConvo()
+  const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const retryDeleteControl = usePromptControl()
   const reportControl = usePromptControl()
@@ -56,8 +53,6 @@ export let MessageMenu = ({
   }, [_, message.text, message.facets])
 
   const onDelete = React.useCallback(() => {
-    if (convo.status !== ConvoStatus.Ready) return
-
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     convo
       .deleteMessage(message.id)

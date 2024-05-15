@@ -1,14 +1,21 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
 import {AppState} from 'react-native'
-import {BskyAgent} from '@atproto-labs/api'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 
 import {Convo} from '#/state/messages/convo/agent'
-import {ConvoParams, ConvoState} from '#/state/messages/convo/types'
+import {
+  ConvoParams,
+  ConvoState,
+  ConvoStateBackgrounded,
+  ConvoStateReady,
+  ConvoStateSuspended,
+} from '#/state/messages/convo/types'
+import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
 import {useAgent} from '#/state/session'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+
+export * from '#/state/messages/convo/util'
 
 const ChatContext = React.createContext<ConvoState | null>(null)
 
@@ -20,23 +27,40 @@ export function useConvo() {
   return ctx
 }
 
+/**
+ * This hook should only be used when the Convo is "active", meaning the chat
+ * is loaded and ready to be used, or its in a suspended or background state,
+ * and ready for resumption.
+ */
+export function useConvoActive() {
+  const ctx = useContext(ChatContext) as
+    | ConvoStateReady
+    | ConvoStateBackgrounded
+    | ConvoStateSuspended
+  if (!ctx) {
+    throw new Error('useConvo must be used within a ConvoProvider')
+  }
+  if (!isConvoActive(ctx)) {
+    throw new Error(
+      `useConvoActive must only be rendered when the Convo is ready.`,
+    )
+  }
+  return ctx
+}
+
 export function ConvoProvider({
   children,
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const isScreenFocused = useIsFocused()
-  const {serviceUrl} = useDmServiceUrlStorage()
   const {getAgent} = useAgent()
   const events = useMessagesEventBus()
   const [convo] = useState(
     () =>
       new Convo({
         convoId,
-        agent: new BskyAgent({
-          service: serviceUrl,
-        }),
+        agent: getAgent(),
         events,
-        __tempFromUserDid: getAgent().session?.did!,
       }),
   )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)

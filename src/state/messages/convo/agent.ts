@@ -1,10 +1,10 @@
-import {AppBskyActorDefs} from '@atproto/api'
 import {
+  AppBskyActorDefs,
   BskyAgent,
   ChatBskyConvoDefs,
   ChatBskyConvoGetLog,
   ChatBskyConvoSendMessage,
-} from '@atproto-labs/api'
+} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -13,6 +13,7 @@ import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
+  INACTIVE_TIMEOUT,
 } from '#/state/messages/convo/const'
 import {
   ConvoDispatch,
@@ -26,6 +27,7 @@ import {
 } from '#/state/messages/convo/types'
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 // TODO temporary
 let DEBUG_ACTIVE_CHAT: string | undefined
@@ -46,7 +48,7 @@ export class Convo {
 
   private agent: BskyAgent
   private events: MessagesEventBus
-  private __tempFromUserDid: string
+  private senderUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
   private error:
@@ -78,6 +80,8 @@ export class Convo {
 
   private isProcessingPendingMessages = false
 
+  private lastActiveTimestamp: number | undefined
+
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
   sender: AppBskyActorDefs.ProfileViewBasic | undefined
@@ -89,7 +93,7 @@ export class Convo {
     this.convoId = params.convoId
     this.agent = params.agent
     this.events = params.events
-    this.__tempFromUserDid = params.__tempFromUserDid
+    this.senderUserDid = params.agent.session?.did!
 
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
@@ -271,16 +275,19 @@ export class Convo {
       }
       case ConvoStatus.Backgrounded: {
         switch (action.event) {
-          // TODO truncate history if needed
           case ConvoDispatchEvent.Resume: {
-            if (this.convo) {
-              this.status = ConvoStatus.Ready
-              this.refreshConvo()
+            if (this.wasChatInactive()) {
+              this.reset()
             } else {
-              this.status = ConvoStatus.Initializing
-              this.setup()
+              if (this.convo) {
+                this.status = ConvoStatus.Ready
+                this.refreshConvo()
+              } else {
+                this.status = ConvoStatus.Initializing
+                this.setup()
+              }
+              this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             }
-            this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
           case ConvoDispatchEvent.Suspend: {
@@ -353,6 +360,7 @@ export class Convo {
       logger.DebugContext.convo,
     )
 
+    this.updateLastActiveTimestamp()
     this.commit()
   }
 
@@ -435,6 +443,18 @@ export class Convo {
     DEBUG_ACTIVE_CHAT = undefined
   }
 
+  /**
+   * Called on any state transition, like when the chat is backgrounded. This
+   * value is then checked on background -> foreground transitions.
+   */
+  private updateLastActiveTimestamp() {
+    this.lastActiveTimestamp = Date.now()
+  }
+  private wasChatInactive() {
+    if (!this.lastActiveTimestamp) return true
+    return Date.now() - this.lastActiveTimestamp > INACTIVE_TIMEOUT
+  }
+
   private requestedPollInterval: (() => void) | undefined
   private requestPollInterval(interval: number) {
     this.withdrawRequestedPollInterval()
@@ -467,11 +487,7 @@ export class Convo {
             {
               convoId: this.convoId,
             },
-            {
-              headers: {
-                Authorization: this.__tempFromUserDid,
-              },
-            },
+            {headers: DM_SERVICE_HEADERS},
           )
         })
 
@@ -479,10 +495,8 @@ export class Convo {
 
         resolve({
           convo,
-          sender: convo.members.find(m => m.did === this.__tempFromUserDid),
-          recipients: convo.members.filter(
-            m => m.did !== this.__tempFromUserDid,
-          ),
+          sender: convo.members.find(m => m.did === this.senderUserDid),
+          recipients: convo.members.filter(m => m.did !== this.senderUserDid),
         })
       } catch (e) {
         reject(e)
@@ -557,11 +571,7 @@ export class Convo {
             convoId: this.convoId,
             limit: isNative ? 30 : 60,
           },
-          {
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {headers: DM_SERVICE_HEADERS},
         )
       })
       const {cursor, messages} = response.data
@@ -725,6 +735,8 @@ export class Convo {
     }
   }
 
+  private pendingFailed = false
+
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim()) return
@@ -737,11 +749,9 @@ export class Convo {
       id: tempId,
       message,
     })
-    // remove on each send, it might go through now without user having to click
-    this.footerItems.delete(ConvoItemError.PendingFailed)
     this.commit()
 
-    if (!this.isProcessingPendingMessages) {
+    if (!this.isProcessingPendingMessages && !this.pendingFailed) {
       this.processPendingMessages()
     }
   }
@@ -775,12 +785,7 @@ export class Convo {
             convoId: this.convoId,
             message,
           },
-          {
-            encoding: 'application/json',
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
       const res = response.data
@@ -792,7 +797,6 @@ export class Convo {
       this.newMessages.set(res.id, {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
-        sender: this.sender,
       })
       this.pendingMessages.delete(id)
 
@@ -801,16 +805,7 @@ export class Convo {
       this.commit()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     } finally {
       this.isProcessingPendingMessages = false
@@ -835,12 +830,7 @@ export class Convo {
               message,
             })),
           },
-          {
-            encoding: 'application/json',
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
       const {items} = data
@@ -853,9 +843,6 @@ export class Convo {
         this.newMessages.set(item.id, {
           ...item,
           $type: 'chat.bsky.convo.defs#messageView',
-          sender: this.convo?.members.find(
-            m => m.did === this.__tempFromUserDid,
-          ),
         })
       }
 
@@ -872,16 +859,7 @@ export class Convo {
       )
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to batch retry messages`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     }
   }
@@ -899,12 +877,7 @@ export class Convo {
             convoId: this.convoId,
             messageId,
           },
-          {
-            encoding: 'application/json',
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
     } catch (e: any) {
@@ -967,12 +940,24 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
-          sender: this.sender,
+          /*
+           * `getItems` is only run in "active" status states, where
+           * `this.sender` is defined
+           */
+          sender: this.sender!,
         },
         nextMessage: null,
+        retry: this.pendingFailed
+          ? () => {
+              this.pendingFailed = false
+              this.commit()
+              this.batchRetryPendingMessages()
+            }
+          : undefined,
       })
     })
 

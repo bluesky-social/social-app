@@ -47,6 +47,7 @@ import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
+import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
 
@@ -102,10 +103,12 @@ function InnerApp() {
                           <LoggedOutViewProvider>
                             <SelectedFeedProvider>
                               <UnreadNotifsProvider>
-                                <GestureHandlerRootView style={s.h100pct}>
-                                  <TestCtrls />
-                                  <Shell />
-                                </GestureHandlerRootView>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <GestureHandlerRootView style={s.h100pct}>
+                                    <TestCtrls />
+                                    <Shell />
+                                  </GestureHandlerRootView>
+                                </BackgroundNotificationPreferencesProvider>
                               </UnreadNotifsProvider>
                             </SelectedFeedProvider>
                           </LoggedOutViewProvider>

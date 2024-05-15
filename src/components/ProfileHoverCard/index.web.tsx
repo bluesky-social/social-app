@@ -285,14 +285,14 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   }
 
   return (
-    <div
+    <View
+      // @ts-ignore View is being used as div
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
+      // @ts-ignore web only prop
       onMouseUp={onPress}
-      style={{
-        display: props.inline ? 'inline' : 'block',
-      }}>
+      style={{flexShrink: 1}}>
       {props.children}
       {isVisible && (
         <Portal>
@@ -307,7 +307,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           </div>
         </Portal>
       )}
-    </div>
+    </View>
   )
 }
 

@@ -17,6 +17,7 @@ import {
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -117,6 +118,7 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const lastPageCountRef = useRef(0)
+  const gate = useGate()
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -150,6 +152,7 @@ export function usePostFeedQuery(
               feedTuners,
               userInterests, // Not in the query key because they don't change.
               getAgent,
+              useBaseFollowingFeed: gate('reduced_onboarding_and_home_algo'),
             }),
             cursor: undefined,
           }
@@ -383,12 +386,14 @@ function createApi({
   feedTuners,
   userInterests,
   getAgent,
+  useBaseFollowingFeed,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
   getAgent: () => BskyAgent
+  useBaseFollowingFeed: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
@@ -399,7 +404,11 @@ function createApi({
         userInterests,
       })
     } else {
-      return new HomeFeedAPI({getAgent, userInterests})
+      if (useBaseFollowingFeed) {
+        return new FollowingFeedAPI({getAgent})
+      } else {
+        return new HomeFeedAPI({getAgent, userInterests})
+      }
     }
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')

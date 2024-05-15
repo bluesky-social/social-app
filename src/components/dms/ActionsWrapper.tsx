@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 
 import {HITSLOP_10} from 'lib/constants'
 import {useHaptics} from 'lib/haptics'
@@ -79,7 +79,7 @@ export function ActionsWrapper({
         hitSlop={HITSLOP_10}>
         {children}
       </AnimatedPressable>
-      <MessageMenu message={message} control={menuControl} hideTrigger={true} />
+      <MessageMenu message={message} control={menuControl} />
     </View>
   )
 }
