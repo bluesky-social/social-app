@@ -79,14 +79,15 @@ export function MessagesList() {
   // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
-
   const hasInitiallyScrolled = useSharedValue(false)
 
-  const changeSizeSinceBackground = useRef(true)
+  // After foregrounding, we want to maintain the position of the scroll
+  const changedSizeSinceBackground = useRef(true)
+  const prevCount = React.useRef(convo.items.length)
 
   React.useEffect(() => {
     if (convo.status === ConvoStatus.Backgrounded) {
-      changeSizeSinceBackground.current = false
+      changedSizeSinceBackground.current = false
     }
   }, [convo.status])
 
@@ -118,15 +119,18 @@ export function MessagesList() {
         return
       }
 
-      if (!changeSizeSinceBackground.current) {
-        changeSizeSinceBackground.current = true
-      } else {
+      if (
+        changedSizeSinceBackground.current ||
+        convo.items.length - prevCount.current <= 3
+      ) {
         flatListRef.current?.scrollToOffset({
           animated: hasInitiallyScrolled.value,
           offset: height,
         })
         isMomentumScrolling.value = true
       }
+      changedSizeSinceBackground.current = true
+      prevCount.current = convo.items.length
     },
     [
       contentHeight,
@@ -134,6 +138,7 @@ export function MessagesList() {
       isAtBottom.value,
       isAtTop.value,
       isMomentumScrolling,
+      convo.items.length,
     ],
   )
 
