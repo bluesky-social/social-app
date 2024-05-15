@@ -153,10 +153,6 @@ msgstr "无障碍设置"
 msgid "Accessibility Settings"
 msgstr "无障碍设置"
 
-#: src/components/moderation/LabelsOnMe.tsx:42
-#~ msgid "account"
-#~ msgstr "账户"
-
 #: src/screens/Login/LoginForm.tsx:164
 #: src/view/screens/Settings/index.tsx:336
 #: src/view/screens/Settings/index.tsx:718
@@ -234,10 +230,6 @@ msgstr "添加账户"
 #: src/view/com/modals/AltImage.tsx:117
 msgid "Add alt text"
 msgstr "新增替代文字"
-
-#: src/view/com/composer/GifAltText.tsx:175
-#~ msgid "Add ALT text"
-#~ msgstr "新增替代文字"
 
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
@@ -778,14 +770,6 @@ msgstr "已解除隐藏对话"
 msgid "Check my status"
 msgstr "检查我的状态"
 
-#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:122
-#~ msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-#~ msgstr "查看一些推荐的信息流。点击 + 去将他们新增到你的固定信息流列表中。"
-
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:186
-#~ msgid "Check out some recommended users. Follow them to see similar users."
-#~ msgstr "查看一些推荐的用户。关注他们还将推荐相似的用户。"
-
 #: src/screens/Login/LoginForm.tsx:265
 msgid "Check your email for a login code and enter it here."
 msgstr "在这里输入刚才发送到你电子邮箱里的验证码。"
@@ -805,11 +789,6 @@ msgstr "选择服务"
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "选择支持你的自定义资讯源的算法。"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
-#~ msgid "Choose the algorithms that power your experience with custom feeds."
-#~ msgstr "选择可改进你自定义信息流的算法。"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
@@ -1174,10 +1153,6 @@ msgstr "无法加载用户个人资料，请稍后再试。"
 msgid "Could not mute chat"
 msgstr "无法隐藏对话"
 
-#: src/components/dms/ConvoMenu.tsx:68
-#~ msgid "Could not unmute chat"
-#~ msgstr ""
-
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
 msgid "Create a new account"
@@ -1274,10 +1249,6 @@ msgstr "删除"
 #: src/view/screens/Settings/index.tsx:771
 msgid "Delete account"
 msgstr "删除账户"
-
-#: src/view/com/modals/DeleteAccount.tsx:87
-#~ msgid "Delete Account"
-#~ msgstr "删除账户"
 
 #: src/view/com/modals/DeleteAccount.tsx:86
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
@@ -1906,10 +1877,6 @@ msgstr "寻找一些账户关注"
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 寻找帖子和用户"
 
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
-#~ msgid "Finding similar accounts..."
-#~ msgstr "正在寻找类似的账户..."
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:110
 msgid "Fine-tune the content you see on your Following feed."
 msgstr "调整你在\"正在关注\"资讯源上所看到的内容。"
@@ -2445,10 +2412,6 @@ msgstr "标记"
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "标记是对特定内容及用户的提示。可以针对特定内容默认隐藏内容、显示警告或直接显示。"
 
-#: src/components/moderation/LabelsOnMe.tsx:61
-#~ msgid "labels have been placed on this {labelTarget}"
-#~ msgstr "标记已放置在 {labelTarget} 上"
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:77
 msgid "Labels on your account"
 msgstr "你账户上的标记"
@@ -2737,10 +2700,6 @@ msgstr "信息设置"
 msgid "Messages"
 msgstr "信息"
 
-#: src/Navigation.tsx:307
-#~ msgid "Messaging settings"
-#~ msgstr "信息设置"
-
 #: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
 msgstr "误导性账户"
@@ -2962,11 +2921,6 @@ msgstr "转到个人资料"
 #: src/components/ReportDialog/SelectReportOptionView.tsx:129
 msgid "Need to report a copyright violation?"
 msgstr "需要举报侵犯版权行为吗？"
-
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
-#~ msgid "Never lose access to your followers and data."
-#~ msgstr "永远不会失去对你的关注者和数据的访问。"
 
 #: src/screens/Onboarding/StepFinished.tsx:222
 msgid "Never lose access to your followers or data."
@@ -3668,11 +3622,6 @@ msgstr "点击以变更托管提供商"
 msgid "Press to retry"
 msgstr "点按重试"
 
-#: src/screens/Messages/Conversation/MessagesList.tsx:47
-#: src/screens/Messages/Conversation/MessagesList.tsx:53
-#~ msgid "Press to Retry"
-#~ msgstr ""
-
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
 msgstr "上一张图片"
@@ -3895,11 +3844,6 @@ msgstr "回复 <0><1/></0>"
 msgid "Report"
 msgstr "举报"
 
-#: src/components/dms/ConvoMenu.tsx:146
-#: src/components/dms/ConvoMenu.tsx:150
-#~ msgid "Report account"
-#~ msgstr ""
-
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
@@ -4075,10 +4019,6 @@ msgstr "重试上次出错的操作"
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
 msgstr "重试"
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:54
-#~ msgid "Retry."
-#~ msgstr ""
 
 #: src/components/Error.tsx:98
 #: src/view/screens/ProfileList.tsx:966
@@ -5359,10 +5299,6 @@ msgstr "取消关注 {0}"
 msgid "Unfollow Account"
 msgstr "取消关注账户"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:197
-#~ msgid "Unlike"
-#~ msgstr "取消喜欢"
-
 #: src/view/screens/ProfileFeed.tsx:570
 msgid "Unlike this feed"
 msgstr "取消喜欢这个资讯源"
@@ -5414,10 +5350,6 @@ msgstr "取消订阅"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:192
 msgid "Unsubscribe from this labeler"
 msgstr "取消订阅这个标记者"
-
-#: src/lib/moderation/useReportOptions.ts:85
-#~ msgid "Unwanted sexual content"
-#~ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:71
 #: src/lib/moderation/useReportOptions.ts:84
@@ -5580,10 +5512,6 @@ msgstr "已喜欢此内容或个人资料的账户"
 #: src/view/com/modals/ChangeHandle.tsx:430
 msgid "Value:"
 msgstr "值："
-
-#: src/view/com/modals/ChangeHandle.tsx:510
-#~ msgid "Verify {0}"
-#~ msgstr "验证 {0}"
 
 #: src/view/com/modals/ChangeHandle.tsx:504
 msgid "Verify DNS Record"
@@ -5757,10 +5685,6 @@ msgstr "很抱歉！我们找不到你正在寻找的页面。"
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "很抱歉！你目前只能订阅 10 个标记者，你已达到 10 个的限制。"
 
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
-#~ msgid "Welcome to <0>Bluesky</0>"
-#~ msgstr "欢迎来到 <0>Bluesky</0>"
-
 #: src/screens/Onboarding/StepInterests/index.tsx:145
 msgid "What are your interests?"
 msgstr "你感兴趣的是什么？"
@@ -5882,10 +5806,6 @@ msgstr "你目前还没有邀请码！当你持续使用 Bluesky 一段时间后
 msgid "You don't have any pinned feeds."
 msgstr "你目前还没有任何固定的资讯源。"
 
-#: src/view/screens/Feeds.tsx:477
-#~ msgid "You don't have any saved feeds!"
-#~ msgstr "你目前还没有任何保存的信息流！"
-
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "You don't have any saved feeds."
 msgstr "你目前还没有任何保存的资讯源。"
@@ -5936,10 +5856,6 @@ msgstr "你还没有建立任何资讯源。"
 #: src/view/com/lists/ProfileLists.tsx:148
 msgid "You have no lists."
 msgstr "你还没有建立任何列表。"
-
-#: src/screens/Messages/List/index.tsx:200
-#~ msgid "You have no messages yet. Start a conversation with someone!"
-#~ msgstr "你还没有任何消息。立即与其他人展开对话吧！"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:134
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
