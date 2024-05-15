@@ -1988,8 +1988,8 @@ msgid "Following Feed Preferences"
 msgstr "「Following」動態源偏好"
 
 #: src/screens/Messages/Settings.tsx:62
-msgid "Follows only"
-msgstr "只有您跟隨的用戶"
+#~ msgid "Follows only"
+#~ msgstr "只有您跟隨的用戶"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
@@ -3428,6 +3428,10 @@ msgstr "被 @{0} 跟隨的人"
 #: src/Navigation.tsx:164
 msgid "People following @{0}"
 msgstr "跟隨 @{0} 的人"
+
+#: src/screens/Messages/Settings.tsx:62
+msgid "People I Follow"
+msgstr "我跟隨的用戶"
 
 #: src/view/com/lightbox/Lightbox.tsx:67
 msgid "Permission to access camera roll is required."
@@ -5258,6 +5262,11 @@ msgstr "解除封鎖"
 msgctxt "action"
 msgid "Unblock"
 msgstr "解除封鎖"
+
+#: src/components/dms/ConvoMenu.tsx:190
+#: src/components/dms/ConvoMenu.tsx:194
+msgid "Unblock account"
+msgstr "解除封鎖帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:305
