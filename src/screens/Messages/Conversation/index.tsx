@@ -21,6 +21,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {isIOS, isWeb} from 'platform/detection'
 import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
+import {useSession} from 'state/session'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
@@ -36,10 +37,31 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'MessagesConversation'
 >
+
+let prevDid: string | undefined
+function goBack(navigation: NavigationProp) {
+  if (isWeb) {
+    navigation.replace('Messages')
+  } else {
+    navigation.goBack()
+  }
+}
+
 export function MessagesConversationScreen({route}: Props) {
+  const navigation = useNavigation<NavigationProp>()
   const gate = useGate()
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
+  const {currentAccount} = useSession()
+
+  React.useEffect(() => {
+    if (prevDid && prevDid !== currentAccount?.did) {
+      prevDid = undefined
+      goBack(navigation)
+    } else {
+      prevDid = currentAccount?.did
+    }
+  }, [currentAccount?.did, navigation])
 
   useFocusEffect(
     useCallback(() => {
@@ -154,11 +176,7 @@ let Header = ({
   const {data: profile} = useProfileQuery({did: initialProfile?.did})
 
   const onPressBack = useCallback(() => {
-    if (isWeb) {
-      navigation.replace('Messages')
-    } else {
-      navigation.goBack()
-    }
+    goBack(navigation)
   }, [navigation])
 
   return (
