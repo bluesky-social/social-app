@@ -13,6 +13,7 @@ import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
+  INACTIVE_TIMEOUT,
 } from '#/state/messages/convo/const'
 import {
   ConvoDispatch,
@@ -78,6 +79,8 @@ export class Convo {
   private headerItems: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
+
+  private lastActiveTimestamp: number | undefined
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
@@ -272,16 +275,19 @@ export class Convo {
       }
       case ConvoStatus.Backgrounded: {
         switch (action.event) {
-          // TODO truncate history if needed
           case ConvoDispatchEvent.Resume: {
-            if (this.convo) {
-              this.status = ConvoStatus.Ready
-              this.refreshConvo()
+            if (this.wasChatInactive()) {
+              this.reset()
             } else {
-              this.status = ConvoStatus.Initializing
-              this.setup()
+              if (this.convo) {
+                this.status = ConvoStatus.Ready
+                this.refreshConvo()
+              } else {
+                this.status = ConvoStatus.Initializing
+                this.setup()
+              }
+              this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             }
-            this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
           case ConvoDispatchEvent.Suspend: {
@@ -354,6 +360,7 @@ export class Convo {
       logger.DebugContext.convo,
     )
 
+    this.updateLastActiveTimestamp()
     this.commit()
   }
 
@@ -434,6 +441,18 @@ export class Convo {
   suspend() {
     this.dispatch({event: ConvoDispatchEvent.Suspend})
     DEBUG_ACTIVE_CHAT = undefined
+  }
+
+  /**
+   * Called on any state transition, like when the chat is backgrounded. This
+   * value is then checked on background -> foreground transitions.
+   */
+  private updateLastActiveTimestamp() {
+    this.lastActiveTimestamp = Date.now()
+  }
+  private wasChatInactive() {
+    if (!this.lastActiveTimestamp) return true
+    return Date.now() - this.lastActiveTimestamp > INACTIVE_TIMEOUT
   }
 
   private requestedPollInterval: (() => void) | undefined
