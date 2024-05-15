@@ -22,7 +22,6 @@ import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
-import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-converations'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
@@ -454,7 +453,6 @@ function useProfileBlockMutation() {
     onSuccess(_, {did}) {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
       resetProfilePostsQueries(queryClient, did, 1000)
-      queryClient.invalidateQueries({queryKey: ListConvosQueryKey})
     },
   })
 }
@@ -476,7 +474,6 @@ function useProfileUnblockMutation() {
     },
     onSuccess(_, {did}) {
       resetProfilePostsQueries(queryClient, did, 1000)
-      queryClient.invalidateQueries({queryKey: ListConvosQueryKey})
     },
   })
 }

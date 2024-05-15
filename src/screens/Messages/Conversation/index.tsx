@@ -15,6 +15,7 @@ import {useGate} from '#/lib/statsig/statsig'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useProfileQuery} from '#/state/queries/profile'
 import {BACK_HITSLOP} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {isIOS, isWeb} from 'platform/detection'
@@ -141,7 +142,7 @@ function Inner() {
 }
 
 let Header = ({
-  profile,
+  profile: initialProfile,
 }: {
   profile?: AppBskyActorDefs.ProfileViewBasic
 }): React.ReactNode => {
@@ -150,6 +151,7 @@ let Header = ({
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const moderationOpts = useModerationOpts()
+  const {data: profile} = useProfileQuery({did: initialProfile?.did})
 
   const onPressBack = useCallback(() => {
     if (isWeb) {

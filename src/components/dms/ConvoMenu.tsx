@@ -11,12 +11,14 @@ import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
 import {listUriToHref} from '#/lib/strings/url-helpers'
+import {Shadow} from '#/state/cache/types'
 import {
   useConvoQuery,
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -45,7 +47,7 @@ let ConvoMenu = ({
   moderation,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   control?: Menu.MenuControlProps
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
@@ -61,7 +63,7 @@ let ConvoMenu = ({
   const blockedByListControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
   const modui = moderation.ui('profileView')
-  const {listBlocks} = React.useMemo(() => {
+  const {listBlocks, userBlock} = React.useMemo(() => {
     const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
     const listBlocks = blocks.filter(alert => alert.source.type === 'list')
     const userBlock = blocks.find(alert => alert.source.type === 'user')
@@ -70,6 +72,7 @@ let ConvoMenu = ({
       userBlock,
     }
   }, [modui])
+  const isBlocking = !!userBlock || !!listBlocks.length
 
   const {data: convo} = useConvoQuery(initialConvo)
 
@@ -90,12 +93,20 @@ let ConvoMenu = ({
     },
   })
 
+  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+
   const toggleBlock = React.useCallback(() => {
     if (listBlocks.length) {
       blockedByListControl.open()
       return
     }
-  }, [listBlocks, blockedByListControl])
+
+    if (userBlock) {
+      queueUnblock()
+    } else {
+      queueBlock()
+    }
+  }, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock])
 
   const {mutate: leaveConvo} = useLeaveConvo(convo?.id, {
     onSuccess: () => {
@@ -173,15 +184,16 @@ let ConvoMenu = ({
             </Menu.Item>
           </Menu.Group>
           <Menu.Divider />
-          {/* TODO(samuel): implement this */}
           <Menu.Group>
-            <Menu.Item label={_(msg`Block account`)} onPress={toggleBlock}>
+            <Menu.Item
+              label={
+                isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)
+              }
+              onPress={toggleBlock}>
               <Menu.ItemText>
-                <Trans>Block account</Trans>
+                {isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)}
               </Menu.ItemText>
-              <Menu.ItemIcon
-                icon={profile.viewer?.blocking ? PersonCheck : PersonX}
-              />
+              <Menu.ItemIcon icon={isBlocking ? PersonX : PersonCheck} />
             </Menu.Item>
             <Menu.Item
               label={_(msg`Report conversation`)}
