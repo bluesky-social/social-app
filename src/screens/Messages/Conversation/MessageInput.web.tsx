@@ -70,13 +70,13 @@ export function MessageInput({
         ]}>
         <TextareaAutosize
           style={StyleSheet.flatten([
-            a.pb_md,
             a.flex_1,
             a.px_sm,
             a.border_0,
             t.atoms.text,
             {
               paddingTop: 10,
+              paddingBottom: 12,
               backgroundColor: 'transparent',
               resize: 'none',
             },
