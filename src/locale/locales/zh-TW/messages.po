@@ -116,7 +116,7 @@ msgstr "<0>{0}</0> {1, plural, one {個跟隨中} other {個跟隨中}}"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-msgstr "<0> 不適用。</0> 此警告只適用於附帶媒體的貼文。"
+msgstr "<0>不適用。</0> 此警告只適用於附帶媒體的貼文。"
 
 #: src/screens/Profile/Header/Handle.tsx:43
 msgid "⚠Invalid Handle"
