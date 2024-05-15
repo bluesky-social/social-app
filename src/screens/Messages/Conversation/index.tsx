@@ -147,6 +147,11 @@ let Header = ({
   const navigation = useNavigation<NavigationProp>()
   const convoState = useConvo()
 
+  const isDeletedAccount = profile?.handle === 'missing.invalid'
+  const displayName = isDeletedAccount
+    ? 'Deleted Account'
+    : profile?.displayName
+
   const onPressBack = useCallback(() => {
     if (isWeb) {
       navigation.replace('Messages')
@@ -197,11 +202,13 @@ let Header = ({
             <Text
               style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
               numberOfLines={1}>
-              {profile.displayName}
+              {displayName}
             </Text>
-            <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
-              @{profile.handle}
-            </Text>
+            {!isDeletedAccount && (
+              <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
+                @{profile.handle}
+              </Text>
+            )}
           </View>
         ) : (
           <>

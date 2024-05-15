@@ -29,6 +29,13 @@ export function ChatListItem({
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
   const {gtMobile} = useBreakpoints()
+  const otherUser = convo.members.find(
+    member => member.did !== currentAccount?.did,
+  )
+  const isDeletedAccount = otherUser?.handle === 'missing.invalid'
+  const displayName = isDeletedAccount
+    ? 'Deleted Account'
+    : otherUser?.displayName || otherUser?.handle
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
@@ -43,10 +50,6 @@ export function ChatListItem({
   if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
     lastMessage = _(msg`Message deleted`)
   }
-
-  const otherUser = convo.members.find(
-    member => member.did !== currentAccount?.did,
-  )
 
   const navigation = useNavigation<NavigationProp>()
   const [showActions, setShowActions] = React.useState(false)
@@ -113,7 +116,7 @@ export function ChatListItem({
                     numberOfLines={1}
                     style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
                     <Text style={[a.text_md, t.atoms.text, a.font_bold]}>
-                      {otherUser.displayName || otherUser.handle}
+                      {displayName}
                     </Text>
                   </Text>
                   {lastMessageSentAt && (
@@ -147,11 +150,13 @@ export function ChatListItem({
                     </Text>
                   )}
                 </View>
-                <Text
-                  numberOfLines={1}
-                  style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
-                  @{otherUser.handle}
-                </Text>
+                {!isDeletedAccount && (
+                  <Text
+                    numberOfLines={1}
+                    style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
+                    @{otherUser.handle}
+                  </Text>
+                )}
                 <Text
                   numberOfLines={2}
                   style={[

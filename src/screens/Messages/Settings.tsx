@@ -46,7 +46,7 @@ export function MessagesSettingsScreen({}: Props) {
   if (!gate('dms')) return <ClipClopGate />
 
   return (
-    <CenteredView sideBorders>
+    <CenteredView sideBorders style={a.h_full_vh}>
       <ViewHeader title={_(msg`Settings`)} showOnDesktop showBorder />
       <View style={[a.px_md, a.py_lg, a.gap_md]}>
         <Text style={[a.text_xl, a.font_bold, a.px_sm]}>
