@@ -30,6 +30,8 @@ class BackgroundNotificationHandler(
     return remoteMessage
   }
 
+  // On Android, the notifications always have a sound unless we turn them off. Let's do so to
+  // prevent people from just wanting to turn it off in all cases (don't blame them honestly)
   private fun mutateWithNoSound(remoteMessage: RemoteMessage): RemoteMessage {
     remoteMessage.data["sound"] = "false"
     return remoteMessage
