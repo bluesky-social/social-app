@@ -4,6 +4,7 @@ import {ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
@@ -13,28 +14,24 @@ import {RichText} from '../RichText'
 
 let MessageItem = ({
   item,
-  next,
-  pending,
 }: {
-  item: ChatBskyConvoDefs.MessageView
-  next:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | null
-  pending?: boolean
+  item: ConvoItem & {type: 'message' | 'pending-message'}
 }): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  const isFromSelf = item.sender?.did === currentAccount?.did
+  const {message, nextMessage} = item
+  const pending = item.type === 'pending-message'
+
+  const isFromSelf = message.sender?.did === currentAccount?.did
 
   const isNextFromSelf =
-    ChatBskyConvoDefs.isMessageView(next) &&
-    next.sender?.did === currentAccount?.did
+    ChatBskyConvoDefs.isMessageView(nextMessage) &&
+    nextMessage.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
     // TODO this means it's a placeholder. Let's figure out the right way to do this though!
-    if (item.id.length > 13) {
+    if (message.id.length > 13) {
       return false
     }
 
@@ -44,9 +41,9 @@ let MessageItem = ({
     }
 
     // or, if there's a 3 minute gap between this message and the next
-    if (ChatBskyConvoDefs.isMessageView(next)) {
-      const thisDate = new Date(item.sentAt)
-      const nextDate = new Date(next.sentAt)
+    if (ChatBskyConvoDefs.isMessageView(nextMessage)) {
+      const thisDate = new Date(message.sentAt)
+      const nextDate = new Date(nextMessage.sentAt)
 
       const diff = nextDate.getTime() - thisDate.getTime()
 
@@ -55,7 +52,7 @@ let MessageItem = ({
     }
 
     return true
-  }, [item, next, isFromSelf, isNextFromSelf])
+  }, [message, nextMessage, isFromSelf, isNextFromSelf])
 
   const lastInGroupRef = useRef(isLastInGroup)
   if (lastInGroupRef.current !== isLastInGroup) {
@@ -67,12 +64,12 @@ let MessageItem = ({
     t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
 
   const rt = useMemo(() => {
-    return new RichTextAPI({text: item.text, facets: item.facets})
-  }, [item.text, item.facets])
+    return new RichTextAPI({text: message.text, facets: message.facets})
+  }, [message.text, message.facets])
 
   return (
     <View>
-      <ActionsWrapper isFromSelf={isFromSelf} message={item}>
+      <ActionsWrapper isFromSelf={isFromSelf} message={message}>
         <View
           style={[
             a.py_sm,
@@ -106,7 +103,7 @@ let MessageItem = ({
         </View>
       </ActionsWrapper>
       <MessageItemMetadata
-        message={item}
+        message={message}
         isLastInGroup={isLastInGroup}
         style={isFromSelf ? a.text_right : a.text_left}
       />
