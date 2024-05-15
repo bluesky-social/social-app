@@ -26,7 +26,7 @@ export enum ConvoItemError {
   /**
    * Generic error
    */
-  Network = 'network',
+  Unknown = 'unknown',
   /**
    * Error connecting to event firehose
    */
@@ -35,6 +35,10 @@ export enum ConvoItemError {
    * Error fetching past messages
    */
   HistoryFailed = 'historyFailed',
+  /**
+   * Recipient is blocking the user
+   */
+  UserBlocked = 'userBlocked',
 }
 
 export enum ConvoErrorCode {
@@ -95,6 +99,7 @@ export type ConvoItem =
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
+      failed: boolean
       /**
        * Retry sending the message. If present, the message is in a failed state.
        */
@@ -110,10 +115,13 @@ export type ConvoItem =
         | null
     }
   | {
-      type: 'error-recoverable'
+      type: 'error'
       key: string
       code: ConvoItemError
-      retry: () => void
+      /**
+       * If present, error is recoverable.
+       */
+      retry?: () => void
     }
 
 type DeleteMessage = (messageId: string) => Promise<void>
@@ -201,3 +209,7 @@ export type ConvoState =
   | ConvoStateBackgrounded
   | ConvoStateSuspended
   | ConvoStateError
+
+export type ConvoEvent = {
+  type: 'sync-convo-state'
+}

@@ -10,22 +10,21 @@ import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
 
-export function MessageListError({
-  item,
-}: {
-  item: ConvoItem & {type: 'error-recoverable'}
-}) {
+export function MessageListError({item}: {item: ConvoItem & {type: 'error'}}) {
   const t = useTheme()
   const {_} = useLingui()
   const message = React.useMemo(() => {
     return {
-      [ConvoItemError.Network]: _(
-        msg`There was an issue connecting to the chat.`,
+      [ConvoItemError.Unknown]: _(
+        msg`An unknown error occurred. If the issue persists, contact support.`,
       ),
       [ConvoItemError.FirehoseFailed]: _(
         msg`This chat was disconnected due to a network error.`,
       ),
       [ConvoItemError.HistoryFailed]: _(msg`Failed to load past messages.`),
+      [ConvoItemError.UserBlocked]: _(
+        msg`The other user in this chat has blocked you.`,
+      ),
     }[item.code]
   }, [_, item.code])
 
@@ -49,24 +48,26 @@ export function MessageListError({
             fill={t.palette.negative_400}
             style={[{top: 3}]}
           />
-          <View style={[a.flex_1, {maxWidth: 200}]}>
+          <View style={[a.flex_1, {maxWidth: 240}]}>
             <Text style={[a.leading_snug]}>{message}</Text>
           </View>
         </View>
 
-        <Button
-          label={_(msg`Press to retry`)}
-          size="small"
-          variant="ghost"
-          color="secondary"
-          onPress={e => {
-            e.preventDefault()
-            item.retry()
-            return false
-          }}>
-          <ButtonText>{_(msg`Retry`)}</ButtonText>
-          <ButtonIcon icon={Refresh} position="right" />
-        </Button>
+        {item.retry && (
+          <Button
+            label={_(msg`Press to retry`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            onPress={e => {
+              e.preventDefault()
+              item.retry?.()
+              return false
+            }}>
+            <ButtonText>{_(msg`Retry`)}</ButtonText>
+            <ButtonIcon icon={Refresh} position="right" />
+          </Button>
+        )}
       </View>
     </View>
   )

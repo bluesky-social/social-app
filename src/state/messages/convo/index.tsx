@@ -79,6 +79,16 @@ export function ConvoProvider({
   )
 
   React.useEffect(() => {
+    return convo.on(event => {
+      switch (event.type) {
+        case 'sync-convo-state': {
+          console.log('SYNC')
+        }
+      }
+    })
+  }, [convo])
+
+  React.useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
       if (isScreenFocused) {
         if (nextAppState === 'active') {

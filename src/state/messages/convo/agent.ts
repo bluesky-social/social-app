@@ -5,6 +5,8 @@ import {
   ChatBskyConvoGetLog,
   ChatBskyConvoSendMessage,
 } from '@atproto/api'
+import {XRPCError} from '@atproto/xrpc'
+import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -14,11 +16,13 @@ import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
   INACTIVE_TIMEOUT,
+  NETWORK_FAILURE_STATUSES,
 } from '#/state/messages/convo/const'
 import {
   ConvoDispatch,
   ConvoDispatchEvent,
   ConvoErrorCode,
+  ConvoEvent,
   ConvoItem,
   ConvoItemError,
   ConvoParams,
@@ -81,6 +85,8 @@ export class Convo {
   private isProcessingPendingMessages = false
 
   private lastActiveTimestamp: number | undefined
+
+  private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
@@ -587,7 +593,7 @@ export class Convo {
       logger.error('Convo: failed to fetch message history')
 
       this.headerItems.set(ConvoItemError.HistoryFailed, {
-        type: 'error-recoverable',
+        type: 'error',
         key: ConvoItemError.HistoryFailed,
         code: ConvoItemError.HistoryFailed,
         retry: () => {
@@ -635,7 +641,7 @@ export class Convo {
 
   onFirehoseError(error?: MessagesEventBusError) {
     this.footerItems.set(ConvoItemError.FirehoseFailed, {
-      type: 'error-recoverable',
+      type: 'error',
       key: ConvoItemError.FirehoseFailed,
       code: ConvoItemError.FirehoseFailed,
       retry: () => {
@@ -724,7 +730,7 @@ export class Convo {
     }
   }
 
-  private pendingFailed = false
+  private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null
 
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
@@ -740,7 +746,7 @@ export class Convo {
     })
     this.commit()
 
-    if (!this.isProcessingPendingMessages && !this.pendingFailed) {
+    if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
       this.processPendingMessages()
     }
   }
@@ -765,7 +771,6 @@ export class Convo {
     try {
       this.isProcessingPendingMessages = true
 
-      // throw new Error('UNCOMMENT TO TEST RETRY')
       const {id, message} = pendingMessage
 
       const response = await networkRetry(2, () => {
@@ -794,11 +799,45 @@ export class Convo {
       this.commit()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
-      this.pendingFailed = true
-      this.commit()
+      this.handleSendMessageFailure(e)
     } finally {
       this.isProcessingPendingMessages = false
     }
+  }
+
+  private handleSendMessageFailure(e: any) {
+    if (e instanceof XRPCError) {
+      if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
+        this.pendingMessageFailure = 'recoverable'
+      } else {
+        switch (e.message) {
+          case 'block between recipient and sender':
+            this.pendingMessageFailure = 'unrecoverable'
+            this.emitter.emit('event', {type: 'sync-convo-state'})
+            break
+          default:
+            logger.warn(
+              `Convo handleSendMessageFailure could not handle error`,
+              {
+                status: e.status,
+                message: e.message,
+              },
+            )
+            break
+        }
+      }
+    } else {
+      logger.warn(`Convo handleSendMessageFailure received unknown error`, {
+        message: e.message,
+      })
+      this.footerItems.set(ConvoItemError.Unknown, {
+        type: 'error',
+        key: ConvoItemError.Unknown,
+        code: ConvoItemError.Unknown,
+      })
+    }
+
+    this.commit()
   }
 
   async batchRetryPendingMessages() {
@@ -848,8 +887,7 @@ export class Convo {
       )
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to batch retry messages`})
-      this.pendingFailed = true
-      this.commit()
+      this.handleSendMessageFailure(e)
     }
   }
 
@@ -874,6 +912,14 @@ export class Convo {
       this.deletedMessages.delete(messageId)
       this.commit()
       throw e
+    }
+  }
+
+  on(handler: (event: ConvoEvent) => void) {
+    this.emitter.on('event', handler)
+
+    return () => {
+      this.emitter.off('event', handler)
     }
   }
 
@@ -940,13 +986,15 @@ export class Convo {
           sender: this.sender!,
         },
         nextMessage: null,
-        retry: this.pendingFailed
-          ? () => {
-              this.pendingFailed = false
-              this.commit()
-              this.batchRetryPendingMessages()
-            }
-          : undefined,
+        failed: this.pendingMessageFailure !== null,
+        retry:
+          this.pendingMessageFailure === 'recoverable'
+            ? () => {
+                this.pendingMessageFailure = null
+                this.commit()
+                this.batchRetryPendingMessages()
+              }
+            : undefined,
       })
     })
 
