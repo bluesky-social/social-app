@@ -19,6 +19,7 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
+import {isIOS} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
@@ -102,7 +103,7 @@ export function MessageInput({
             a.text_md,
             a.px_sm,
             t.atoms.text,
-            {maxHeight, paddingBottom: 5},
+            {maxHeight, paddingBottom: isIOS ? 5 : 0},
           ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           scrollEnabled={isInputScrollable}
