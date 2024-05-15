@@ -747,6 +747,7 @@ export class Convo {
 
     const tempId = nanoid()
 
+    this.pendingMessageFailure = null
     this.pendingMessages.set(tempId, {
       id: tempId,
       message,
