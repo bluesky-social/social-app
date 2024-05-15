@@ -814,7 +814,13 @@ export class Convo {
         switch (e.message) {
           case 'block between recipient and sender':
             this.pendingMessageFailure = 'unrecoverable'
-            this.emitter.emit('event', {type: 'sync-convo-state'})
+            this.emitter.emit('event', {
+              type: 'invalidate-block-state',
+              accountDids: [
+                this.sender!.did,
+                ...this.recipients!.map(r => r.did),
+              ],
+            })
             break
           default:
             logger.warn(

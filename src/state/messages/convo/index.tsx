@@ -1,6 +1,7 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
 import {AppState} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {Convo} from '#/state/messages/convo/agent'
 import {
@@ -13,6 +14,8 @@ import {
 import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
+import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-converations'
+import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 
 export * from '#/state/messages/convo/util'
@@ -52,6 +55,7 @@ export function ConvoProvider({
   children,
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
+  const queryClient = useQueryClient()
   const isScreenFocused = useIsFocused()
   const {getAgent} = useAgent()
   const events = useMessagesEventBus()
@@ -81,12 +85,19 @@ export function ConvoProvider({
   React.useEffect(() => {
     return convo.on(event => {
       switch (event.type) {
-        case 'sync-convo-state': {
-          console.log('SYNC')
+        case 'invalidate-block-state': {
+          for (const did of event.accountDids) {
+            queryClient.invalidateQueries({
+              queryKey: createProfileQueryKey(did),
+            })
+          }
+          queryClient.invalidateQueries({
+            queryKey: ListConvosQueryKey,
+          })
         }
       }
     })
-  }, [convo])
+  }, [convo, queryClient])
 
   React.useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {

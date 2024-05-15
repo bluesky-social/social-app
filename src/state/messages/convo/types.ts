@@ -211,5 +211,6 @@ export type ConvoState =
   | ConvoStateError
 
 export type ConvoEvent = {
-  type: 'sync-convo-state'
+  type: 'invalidate-block-state'
+  accountDids: string[]
 }
