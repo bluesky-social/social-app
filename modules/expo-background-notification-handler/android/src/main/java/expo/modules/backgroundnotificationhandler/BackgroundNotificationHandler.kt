@@ -22,48 +22,23 @@ class BackgroundNotificationHandler(
     notifInterface.showMessage(remoteMessage)
   }
 
-  private fun mutateWithChatMessage(remoteMessage: RemoteMessage): RemoteMessage {
+  private fun mutateWithChatMessage(remoteMessage: RemoteMessage) {
     if (NotificationPrefs(context).getBoolean("playSoundChat")) {
       mutateWithDmSound(remoteMessage)
     }
-    return remoteMessage
   }
 
-  private fun mutateWithDefaultSound(remoteMessage: RemoteMessage): RemoteMessage {
+  private fun mutateWithDefaultSound(remoteMessage: RemoteMessage) {
     remoteMessage.data["sound"] = "true"
-    return remoteMessage
   }
 
-  private fun mutateWithDmSound(remoteMessage: RemoteMessage): RemoteMessage {
+  private fun mutateWithDmSound(remoteMessage: RemoteMessage) {
     remoteMessage.data["sound"] = "dm.mp3"
-    return remoteMessage
   }
 
   // On Android, the notifications always have a sound unless we turn them off. Let's do so to
   // prevent people from just wanting to turn it off in all cases (don't blame them honestly)
-  private fun mutateWithNoSound(remoteMessage: RemoteMessage): RemoteMessage {
+  private fun mutateWithNoSound(remoteMessage: RemoteMessage) {
     remoteMessage.data["sound"] = "false"
-    return remoteMessage
-  }
-}
-
-class MutableRemoteMessage(private val remoteMessage: RemoteMessage) {
-  private val data = remoteMessage.data.toMutableMap()
-
-  init {
-    remoteMessage.data.forEach { (key, value) ->
-      data[key] = value
-    }
-  }
-
-  fun setData(key: String, value: String?) {
-    data[key] = value
-  }
-
-  fun build(): RemoteMessage {
-    return RemoteMessage.Builder(remoteMessage.to ?: "")
-      .setMessageId(remoteMessage.messageId ?: "")
-      .setData(data)
-      .build()
   }
 }
