@@ -5,9 +5,9 @@ import {BackgroundNotificationHandler} from './ExpoBackgroundNotificationHandler
 
 interface BackgroundNotificationPreferencesContext {
   preferences: BackgroundNotificationHandlerPreferences
-  setPref: (
-    key: keyof BackgroundNotificationHandlerPreferences,
-    value: string | boolean,
+  setPref: <Key extends keyof BackgroundNotificationHandlerPreferences>(
+    key: Key,
+    value: BackgroundNotificationHandlerPreferences[Key],
   ) => void
 }
 
@@ -25,7 +25,7 @@ export function BackgroundNotificationPreferencesProvider({
   const [preferences, setPreferences] =
     React.useState<BackgroundNotificationHandlerPreferences>({
       playSoundChat: true,
-      playSoundOther: false,
+      mutedThreads: [],
     })
 
   React.useEffect(() => {
@@ -38,9 +38,11 @@ export function BackgroundNotificationPreferencesProvider({
   const value = React.useMemo(
     () => ({
       preferences,
-      setPref: async (
-        k: keyof BackgroundNotificationHandlerPreferences,
-        v: string | boolean,
+      setPref: async <
+        Key extends keyof BackgroundNotificationHandlerPreferences,
+      >(
+        k: Key,
+        v: BackgroundNotificationHandlerPreferences[Key],
       ) => {
         switch (typeof v) {
           case 'boolean': {

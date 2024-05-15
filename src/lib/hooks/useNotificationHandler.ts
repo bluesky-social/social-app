@@ -40,7 +40,7 @@ type NotificationPayload =
     }
 
 const DEFAULT_HANDLER_OPTIONS = {
-  shouldShowAlert: false,
+  shouldShowAlert: true,
   shouldPlaySound: false,
   shouldSetBadge: true,
 }
