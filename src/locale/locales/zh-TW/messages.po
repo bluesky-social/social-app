@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-15 20:12+0800\n"
+"PO-Revision-Date: 2024-05-15 22:11+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -2571,7 +2571,7 @@ msgstr "列表"
 
 #: src/components/dms/ConvoMenu.tsx:255
 msgid "Lists blocking this user:"
-msgstr "列表已封鎖這個用戶："
+msgstr "封鎖此用戶的列表："
 
 #: src/view/screens/Notifications.tsx:159
 msgid "Load new notifications"
@@ -2625,7 +2625,7 @@ msgstr "看起來您已取消釘選所有動態源，但不用擔心，您可以
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "您看起來少了一個「Following」動態源，<0>點擊這裡來添加一個。</0>"
+msgstr "您看起來需要「Following」動態源，<0>點選這裡來新增。</0>"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -3166,7 +3166,7 @@ msgstr "僅支援 .jpg 和 .png 文件"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
-msgstr "只有{0}可以回覆。"
+msgstr "只有 {0} 可以回覆。"
 
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
@@ -3188,7 +3188,7 @@ msgstr "開啟"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:280
 msgid "Open avatar creator"
-msgstr "開啟頭像創建器"
+msgstr "開啟頭像創建工具"
 
 #: src/view/com/composer/Composer.tsx:555
 #: src/view/com/composer/Composer.tsx:556
@@ -4859,7 +4859,7 @@ msgstr "版權政策已移動到 <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:66
 msgid "The feed has been replaced with Discover."
-msgstr "動態源已由「Discover」取代。"
+msgstr "此動態源已由「Discover」取代。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "The following labels were applied to your account."
@@ -4884,7 +4884,7 @@ msgstr "隱私政策已移動到 <0/>"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支援表單已移至別處。如果需協助，請點擊 <0/> 或前往 {HELP_DESK_URL} 與我們聯繫。"
+msgstr "支援表單已移至別處。如果需協助，請<0/>或前往 {HELP_DESK_URL} 與我們聯繫。"
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -5038,7 +5038,7 @@ msgstr "沒有 Bluesky 帳號，無法查看此內容。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr "此功能目前為測試版本。您可以在 <0> 這篇部落格文章 </0> 中了解更多有關資訊。"
+msgstr "此功能目前為測試版本。您可以在<0>這篇部落格文章</0>中了解更多有關資訊。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:121
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -5056,7 +5056,7 @@ msgstr "這個動態源是空的！您或許需要先跟隨更多的人或檢查
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "此動態源已不再上線。取而代之的是<0>「Discover」動態源</0>。"
+msgstr "此動態源已經下線。我們將展示「<0>Discover</0>」動態源。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
@@ -5354,7 +5354,7 @@ msgstr "取消訂閱這個標記者"
 #: src/lib/moderation/useReportOptions.ts:71
 #: src/lib/moderation/useReportOptions.ts:84
 msgid "Unwanted Sexual Content"
-msgstr "不受歡迎的情色的內容"
+msgstr "不受歡迎的情色內容"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:70
 msgid "Update {displayName} in Lists"
