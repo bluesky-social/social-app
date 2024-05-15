@@ -13,7 +13,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import Graphemer from 'graphemer'
 
-import {HITSLOP_10, HITSLOP_20, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   useMessageDraft,
@@ -111,7 +111,7 @@ export function MessageInput({
           onFocus={scrollToEnd}
           onContentSizeChange={onInputLayout}
           ref={inputRef}
-          hitSlop={HITSLOP_20}
+          hitSlop={HITSLOP_10}
         />
         <Pressable
           accessibilityRole="button"
