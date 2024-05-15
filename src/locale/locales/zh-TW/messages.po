@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-15 08:21+0800\n"
+"PO-Revision-Date: 2024-05-15 09:10+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -480,7 +480,7 @@ msgstr "至少 3 個字元"
 #: src/screens/Login/LoginForm.tsx:278
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:179
+#: src/screens/Messages/Conversation/index.tsx:184
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -746,6 +746,8 @@ msgid "Change Your Email"
 msgstr "變更您的電子郵件地址"
 
 #: src/Navigation.tsx:302
+#: src/view/shell/bottom-bar/BottomBar.tsx:219
+#: src/view/shell/desktop/LeftNav.tsx:344
 msgid "Chat"
 msgstr "對話"
 
@@ -755,6 +757,7 @@ msgstr "對話已靜音"
 
 #: src/components/dms/ConvoMenu.tsx:89
 #: src/components/dms/MessageMenu.tsx:69
+#: src/Navigation.tsx:307
 msgid "Chat settings"
 msgstr "對話設定"
 
@@ -2299,6 +2302,10 @@ msgstr "圖片替代文字"
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr "冒充或虛假聲明身份或隸屬關係"
 
+#: src/lib/moderation/useReportOptions.ts:85
+msgid "Inappropriate messages or explicit links"
+msgstr "不當訊息或露骨連結"
+
 #: src/screens/Login/SetNewPasswordForm.tsx:127
 msgid "Input code sent to your email for password reset"
 msgstr "輸入發送到您電子郵件地址的重設碼以重設密碼"
@@ -2659,7 +2666,7 @@ msgid "Menu"
 msgstr "選單"
 
 #: src/components/dms/MessageMenu.tsx:60
-#: src/screens/Messages/List/ChatListItem.tsx:44
+#: src/screens/Messages/List/ChatListItem.tsx:51
 msgid "Message deleted"
 msgstr "訊息已刪除"
 
@@ -2676,23 +2683,17 @@ msgstr "訊息輸入欄位"
 msgid "Message is too long"
 msgstr "訊息太長了"
 
-#: src/screens/Messages/List/index.tsx:85
-#: src/screens/Messages/List/index.tsx:283
+#: src/screens/Messages/List/index.tsx:70
+#: src/screens/Messages/List/index.tsx:241
 msgid "Message settings"
 msgstr "訊息設定"
 
 #: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:187
-#: src/screens/Messages/List/index.tsx:214
-#: src/screens/Messages/List/index.tsx:279
-#: src/view/shell/bottom-bar/BottomBar.tsx:219
-#: src/view/shell/desktop/LeftNav.tsx:344
+#: src/screens/Messages/List/index.tsx:145
+#: src/screens/Messages/List/index.tsx:172
+#: src/screens/Messages/List/index.tsx:237
 msgid "Messages"
 msgstr "訊息"
-
-#: src/Navigation.tsx:307
-msgid "Messaging settings"
-msgstr "訊息設定"
 
 #: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
@@ -2934,8 +2935,8 @@ msgid "New"
 msgstr "新增"
 
 #: src/components/dms/NewChat.tsx:60
-#: src/screens/Messages/List/index.tsx:293
-#: src/screens/Messages/List/index.tsx:301
+#: src/screens/Messages/List/index.tsx:251
+#: src/screens/Messages/List/index.tsx:259
 msgid "New chat"
 msgstr "新對話"
 
@@ -3008,6 +3009,10 @@ msgstr "下一張圖片"
 msgid "No"
 msgstr "關"
 
+#: src/screens/Messages/List/index.tsx:156
+msgid "No chats yet"
+msgstr "還沒有對話"
+
 #: src/view/screens/ProfileFeed.tsx:559
 #: src/view/screens/ProfileList.tsx:818
 msgid "No description"
@@ -3029,8 +3034,7 @@ msgstr "不再跟隨 {0}"
 msgid "No longer than 253 characters"
 msgstr "不超過 253 個字符"
 
-#: src/screens/Messages/List/ChatListItem.tsx:33
-#: src/screens/Messages/List/index.tsx:198
+#: src/screens/Messages/List/ChatListItem.tsx:40
 msgid "No messages yet"
 msgstr "還沒有訊息"
 
@@ -3334,7 +3338,7 @@ msgstr "開啟「Following」動態源偏好"
 msgid "Opens the linked website"
 msgstr "開啟網站連結"
 
-#: src/screens/Messages/List/index.tsx:86
+#: src/screens/Messages/List/index.tsx:71
 msgid "Opens the message settings page"
 msgstr "打開私訊設定頁面"
 
@@ -5333,10 +5337,6 @@ msgstr "取消訂閱"
 msgid "Unsubscribe from this labeler"
 msgstr "取消訂閱這個標記者"
 
-#: src/lib/moderation/useReportOptions.ts:85
-msgid "Unwanted sexual content"
-msgstr "不受歡迎的情色的內容"
-
 #: src/lib/moderation/useReportOptions.ts:71
 #: src/lib/moderation/useReportOptions.ts:84
 msgid "Unwanted Sexual Content"
@@ -5826,6 +5826,10 @@ msgstr "您已隱藏這個帳號。"
 msgid "You have muted this user"
 msgstr "您已靜音這個用戶"
 
+#: src/screens/Messages/List/index.tsx:158
+msgid "You have no chats yet. Start a conversation with someone!"
+msgstr "您還沒有對話，與其他用戶開始對話！"
+
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
 msgstr "您沒有建立任何動態源。"
@@ -5834,10 +5838,6 @@ msgstr "您沒有建立任何動態源。"
 #: src/view/com/lists/ProfileLists.tsx:148
 msgid "You have no lists."
 msgstr "您沒有建立任何列表。"
-
-#: src/screens/Messages/List/index.tsx:200
-msgid "You have no messages yet. Start a conversation with someone!"
-msgstr "您還沒有訊息。開始與其他人對話！"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:134
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -5887,7 +5887,7 @@ msgstr "您將收到這條討論串的通知"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "您將收到一封包含重設碼的電子郵件。請在此輸入該「重設碼」，然後輸入您的新密碼。"
 
-#: src/screens/Messages/List/ChatListItem.tsx:37
+#: src/screens/Messages/List/ChatListItem.tsx:44
 msgid "You: {0}"
 msgstr "你：{0}"
 
