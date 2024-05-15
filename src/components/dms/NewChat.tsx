@@ -24,6 +24,7 @@ import {Button} from '../Button'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
+import {canBeMessaged} from './util'
 
 export function NewChat({
   control,
@@ -274,18 +275,4 @@ function SearchablePeopleList({
       onScrollBeginDrag={() => Keyboard.dismiss()}
     />
   )
-}
-
-function canBeMessaged(profile: AppBskyActorDefs.ProfileView) {
-  if (profile.associated?.chat) {
-    if (profile.associated.chat.allowIncoming === 'all') {
-      return true
-    } else if (
-      profile.associated.chat.allowIncoming === 'following' &&
-      profile.viewer?.followedBy
-    ) {
-      return true
-    }
-  }
-  return false
 }
