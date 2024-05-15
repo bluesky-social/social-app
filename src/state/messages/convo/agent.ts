@@ -517,17 +517,6 @@ export class Convo {
       this.recipients = recipients || this.recipients
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to refresh convo`})
-
-      this.footerItems.set(ConvoItemError.Network, {
-        type: 'error-recoverable',
-        key: ConvoItemError.Network,
-        code: ConvoItemError.Network,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.Network)
-          this.resume()
-        },
-      })
-      this.commit()
     }
   }
 
