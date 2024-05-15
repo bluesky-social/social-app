@@ -10,6 +10,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
+import {useSession} from '#/state/session'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
@@ -23,6 +24,7 @@ import {Button} from '../Button'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
+import {canBeMessaged} from './util'
 
 export function NewChat({
   control,
@@ -82,6 +84,7 @@ function SearchablePeopleList({
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const {currentAccount} = useSession()
 
   const [searchText, setSearchText] = useState('')
 
@@ -95,12 +98,17 @@ function SearchablePeopleList({
   const renderItem = useCallback(
     ({item: profile}: {item: AppBskyActorDefs.ProfileView}) => {
       if (!moderationOpts) return null
+
       const moderation = moderateProfile(profile, moderationOpts)
+
+      const disabled = !canBeMessaged(profile)
+      const handle = sanitizeHandle(profile.handle, '@')
+
       return (
         <Button
           label={profile.displayName || sanitizeHandle(profile.handle)}
-          onPress={() => onCreateChat(profile.did)}>
-          {({hovered, pressed}) => (
+          onPress={() => !disabled && onCreateChat(profile.did)}>
+          {({hovered, pressed, focused}) => (
             <View
               style={[
                 a.flex_1,
@@ -110,7 +118,9 @@ function SearchablePeopleList({
                 a.align_center,
                 a.flex_row,
                 a.rounded_sm,
-                pressed
+                disabled
+                  ? {opacity: 0.5}
+                  : pressed || focused
                   ? t.atoms.bg_contrast_25
                   : hovered
                   ? t.atoms.bg_contrast_50
@@ -131,8 +141,12 @@ function SearchablePeopleList({
                     moderation.ui('displayName'),
                   )}
                 </Text>
-                <Text style={t.atoms.text_contrast_high} numberOfLines={1}>
-                  {sanitizeHandle(profile.handle, '@')}
+                <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
+                  {disabled ? (
+                    <Trans>{handle} can't be messaged</Trans>
+                  ) : (
+                    handle
+                  )}
                 </Text>
               </View>
             </View>
@@ -166,7 +180,6 @@ function SearchablePeopleList({
             t.atoms.bg,
           ]}
         />
-        <Dialog.Close />
         <Text
           style={[
             a.text_2xl,
@@ -201,14 +214,23 @@ function SearchablePeopleList({
             autoFocus
           />
         </TextField.Root>
+        <Dialog.Close />
       </View>
     )
   }, [t.atoms.bg, _, control, searchText])
 
+  const dataWithoutSelf = useMemo(() => {
+    return (
+      actorAutocompleteData?.filter(
+        profile => profile.did !== currentAccount?.did,
+      ) ?? []
+    )
+  }, [actorAutocompleteData, currentAccount?.did])
+
   return (
     <Dialog.InnerFlatList
       ref={listRef}
-      data={actorAutocompleteData}
+      data={dataWithoutSelf}
       renderItem={renderItem}
       ListHeaderComponent={
         <>
@@ -235,6 +257,7 @@ function SearchablePeopleList({
                 hideBackButton={true}
                 emptyType="results"
                 sideBorders={false}
+                topBorder={false}
                 emptyMessage={
                   isError
                     ? _(msg`No search results found for "${searchText}".`)
