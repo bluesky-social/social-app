@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'

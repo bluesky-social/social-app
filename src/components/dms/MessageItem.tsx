@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useRef} from 'react'
 import {LayoutAnimation, StyleProp, TextStyle, View} from 'react-native'
-import {RichText as RichTextAPI} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

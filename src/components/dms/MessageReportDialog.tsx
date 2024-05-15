@@ -1,10 +1,10 @@
 import React, {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {RichText as RichTextAPI} from '@atproto/api'
 import {
   ChatBskyConvoDefs,
   ComAtprotoModerationCreateReport,
-} from '@atproto-labs/api'
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'

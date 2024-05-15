@@ -16,6 +16,10 @@ export type LogEvents = {
     logContext: 'SwitchAccount' | 'Settings' | 'Deactivated'
   }
   'notifications:openApp': {}
+  'notifications:request': {
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
+    status: 'granted' | 'denied' | 'undetermined'
+  }
   'state:background': {
     secondsActive: number
   }
@@ -48,7 +52,11 @@ export type LogEvents = {
     selectedFeedsLength: number
   }
   'onboarding:moderation:nextPressed': {}
+  'onboarding:profile:nextPressed': {}
   'onboarding:finished:nextPressed': {}
+  'onboarding:finished:avatarResult': {
+    avatarResult: 'default' | 'created' | 'uploaded'
+  }
   'home:feedDisplayed': {
     feedUrl: string
     feedType: string

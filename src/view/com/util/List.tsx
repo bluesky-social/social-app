@@ -90,7 +90,7 @@ function ListImpl<ItemT>(
       },
       {
         itemVisiblePercentThreshold: 40,
-        minimumViewTime: 2e3,
+        minimumViewTime: 1.5e3,
       },
     ]
   }, [onItemSeen])
