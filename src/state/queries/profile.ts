@@ -6,6 +6,7 @@ import {
   AppBskyActorProfile,
   AtUri,
   BskyAgent,
+  ComAtprotoRepoUploadBlob,
 } from '@atproto/api'
 import {
   QueryClient,
@@ -124,6 +125,26 @@ export function useProfileUpdateMutation() {
       newUserBanner,
       checkCommitted,
     }) => {
+      let newUserAvatarPromise:
+        | Promise<ComAtprotoRepoUploadBlob.Response>
+        | undefined
+      if (newUserAvatar) {
+        newUserAvatarPromise = uploadBlob(
+          getAgent(),
+          newUserAvatar.path,
+          newUserAvatar.mime,
+        )
+      }
+      let newUserBannerPromise:
+        | Promise<ComAtprotoRepoUploadBlob.Response>
+        | undefined
+      if (newUserBanner) {
+        newUserBannerPromise = uploadBlob(
+          getAgent(),
+          newUserBanner.path,
+          newUserBanner.mime,
+        )
+      }
       await getAgent().upsertProfile(async existing => {
         existing = existing || {}
         if (typeof updates === 'function') {
@@ -132,22 +153,14 @@ export function useProfileUpdateMutation() {
           existing.displayName = updates.displayName
           existing.description = updates.description
         }
-        if (newUserAvatar) {
-          const res = await uploadBlob(
-            getAgent(),
-            newUserAvatar.path,
-            newUserAvatar.mime,
-          )
+        if (newUserAvatarPromise) {
+          const res = await newUserAvatarPromise
           existing.avatar = res.data.blob
         } else if (newUserAvatar === null) {
           existing.avatar = undefined
         }
-        if (newUserBanner) {
-          const res = await uploadBlob(
-            getAgent(),
-            newUserBanner.path,
-            newUserBanner.mime,
-          )
+        if (newUserBannerPromise) {
+          const res = await newUserBannerPromise
           existing.banner = res.data.blob
         } else if (newUserBanner === null) {
           existing.banner = undefined

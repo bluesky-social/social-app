@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -285,14 +285,14 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   }
 
   return (
-    <div
+    <View
+      // @ts-ignore View is being used as div
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
+      // @ts-ignore web only prop
       onMouseUp={onPress}
-      style={{
-        display: props.inline ? 'inline' : 'block',
-      }}>
+      style={{flexShrink: 1}}>
       {props.children}
       {isVisible && (
         <Portal>
@@ -307,7 +307,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           </div>
         </Portal>
       )}
-    </div>
+    </View>
   )
 }
 
@@ -444,12 +444,10 @@ function Inner({
               label={`${followers} ${pluralizedFollowers}`}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Trans>
-                <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
-                <Text style={[t.atoms.text_contrast_medium]}>
-                  {pluralizedFollowers}
-                </Text>
-              </Trans>
+              <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {pluralizedFollowers}
+              </Text>
             </InlineLinkText>
             <InlineLinkText
               to={makeProfileLink(profile, 'follows')}

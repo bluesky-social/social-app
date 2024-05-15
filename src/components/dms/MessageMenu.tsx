@@ -1,12 +1,13 @@
 import React from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useChat} from 'state/messages'
-import {ConvoStatus} from 'state/messages/convo'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {isWeb} from 'platform/detection'
+import {useConvoActive} from 'state/messages/convo'
 import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -17,54 +18,53 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '../icons/Clipboard'
+import {MessageReportDialog} from './MessageReportDialog'
 
 export let MessageMenu = ({
   message,
   control,
-  hideTrigger,
   triggerOpacity,
 }: {
   hideTrigger?: boolean
   triggerOpacity?: number
-  onTriggerPress?: () => void
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
 }): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const chat = useChat()
+  const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const retryDeleteControl = usePromptControl()
+  const reportControl = usePromptControl()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
   const onCopyPostText = React.useCallback(() => {
-    // use when we have rich text
-    // const str = richTextToString(richText, true)
+    const str = richTextToString(
+      new RichText({
+        text: message.text,
+        facets: message.facets,
+      }),
+      true,
+    )
 
-    Clipboard.setStringAsync(message.text)
+    Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`))
-  }, [_, message.text])
+  }, [_, message.text, message.facets])
 
   const onDelete = React.useCallback(() => {
-    if (chat.status !== ConvoStatus.Ready) return
-
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    chat
+    convo
       .deleteMessage(message.id)
       .then(() => Toast.show(_(msg`Message deleted`)))
       .catch(() => retryDeleteControl.open())
-  }, [_, chat, message.id, retryDeleteControl])
-
-  const onReport = React.useCallback(() => {
-    // TODO report the message
-  }, [])
+  }, [_, convo, message.id, retryDeleteControl])
 
   return (
     <>
       <Menu.Root control={control}>
-        {!hideTrigger && (
+        {isWeb && (
           <View style={{opacity: triggerOpacity}}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
               {({props, state}) => (
@@ -75,7 +75,7 @@ export let MessageMenu = ({
                     a.rounded_full,
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
                   ]}>
-                  <DotsHorizontal size="sm" style={t.atoms.text} />
+                  <DotsHorizontal size="md" style={t.atoms.text} />
                 </Pressable>
               )}
             </Menu.Trigger>
@@ -105,7 +105,7 @@ export let MessageMenu = ({
               <Menu.Item
                 testID="messageDropdownReportBtn"
                 label={_(msg`Report message`)}
-                onPress={onReport}>
+                onPress={reportControl.open}>
                 <Menu.ItemText>{_(msg`Report`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={Warning} position="right" />
               </Menu.Item>
@@ -113,6 +113,8 @@ export let MessageMenu = ({
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
+
+      <MessageReportDialog message={message} control={reportControl} />
 
       <Prompt.Basic
         control={deleteControl}

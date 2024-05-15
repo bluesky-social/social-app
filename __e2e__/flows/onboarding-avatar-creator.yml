@@ -1,0 +1,32 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+- tapOn:
+    id: "e2eStartOnboarding"
+- tapOn: "Open avatar creator"
+- tapOn: "Select the zap emoji as your avatar"
+- tapOn:
+    label: "Tap on yellow"
+    point: "23%,79%"
+- tapOn: "Done"
+- waitForAnimationToEnd
+- tapOn: "Select an avatar"
+- tapOn: "Select the atom emoji as your avatar"
+- tapOn: "Done"
+- waitForAnimationToEnd
+- tapOn: "Continue to next step"
+- assertVisible: "What are your interests?"
+- tapOn:
+    label: "Tap on continue"
+    point: "50%,92%"
+- assertVisible: "You're ready to go!"
+- tapOn:
+    label: "Tap on Lets go"
+    point: "50%,92%"

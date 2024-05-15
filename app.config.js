@@ -103,7 +103,8 @@ module.exports = function (config) {
               NSPrivacyAccessedAPITypeReasons: ['E174.1', '85F4.1'],
             },
             {
-              NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryBootTime',
+              NSPrivacyAccessedAPIType:
+                'NSPrivacyAccessedAPICategorySystemBootTime',
               NSPrivacyAccessedAPITypeReasons: ['35F9.1'],
             },
             {
@@ -199,6 +200,7 @@ module.exports = function (config) {
           {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
+            sounds: ['assets/blueskydm.wav'],
           },
         ],
         './plugins/withAndroidManifestPlugin.js',

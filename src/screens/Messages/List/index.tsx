@@ -1,59 +1,61 @@
-/* eslint-disable react/prop-types */
-
 import React, {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {sha256} from 'js-sha256'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useListConvos} from '#/state/queries/messages/list-converations'
-import {useSession} from '#/state/session'
 import {List} from '#/view/com/util/List'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
-import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
-import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {NewChat} from '#/components/dms/NewChat'
-import * as TextField from '#/components/forms/TextField'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
-import {useDmServiceUrlStorage} from '../Temp/useDmServiceUrlStorage'
+import {ChatListItem} from './ChatListItem'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
-export function MessagesScreen({navigation}: Props) {
+
+function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
+  return <ChatListItem convo={item} />
+}
+
+function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
+  return item.id
+}
+
+export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const newChatControl = useDialogControl()
   const {gtMobile} = useBreakpoints()
+  const pushToConversation = route.params?.pushToConversation
 
-  // TEMP
-  const {serviceUrl, setServiceUrl} = useDmServiceUrlStorage()
-  const hasValidServiceUrl = useMemo(() => {
-    const hash = sha256(serviceUrl)
-    return (
-      hash ===
-      'a32318b49dd3fe6aa6a35c66c13fcc4c1cb6202b24f5a852d9a2279acee4169f'
-    )
-  }, [serviceUrl])
+  // Whenever we have `pushToConversation` set, it means we pressed a notification for a chat without being on
+  // this tab. We should immediately push to the conversation after pressing the notification.
+  // After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
+  // the conversation is the same as before
+  React.useEffect(() => {
+    if (pushToConversation) {
+      navigation.navigate('MessagesConversation', {
+        conversation: pushToConversation,
+      })
+      navigation.setParams({pushToConversation: undefined})
+    }
+  }, [navigation, pushToConversation])
 
   const renderButton = useCallback(() => {
     return (
@@ -119,34 +121,8 @@ export function MessagesScreen({navigation}: Props) {
     navigation.navigate('MessagesSettings')
   }, [navigation])
 
-  const renderItem = useCallback(
-    ({item}: {item: ChatBskyConvoDefs.ConvoView}) => {
-      return <ChatListItem key={item.id} convo={item} />
-    },
-    [],
-  )
-
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
-
-  if (!hasValidServiceUrl) {
-    return (
-      <ScrollView contentContainerStyle={a.p_lg}>
-        <View>
-          <TextField.LabelText>Service URL</TextField.LabelText>
-          <TextField.Root>
-            <TextField.Input
-              value={serviceUrl}
-              onChangeText={text => setServiceUrl(text)}
-              autoCapitalize="none"
-              keyboardType="url"
-              label="https://"
-            />
-          </TextField.Root>
-        </View>
-      </ScrollView>
-    )
-  }
 
   if (conversations.length < 1) {
     return (
@@ -171,9 +147,9 @@ export function MessagesScreen({navigation}: Props) {
           isLoading={isLoading}
           isError={isError}
           emptyType="results"
-          emptyTitle={_(msg`No messages yet`)}
+          emptyTitle={_(msg`No chats yet`)}
           emptyMessage={_(
-            msg`You have no messages yet. Start a conversation with someone!`,
+            msg`You have no chats yet. Start a conversation with someone!`,
           )}
           errorMessage={cleanError(error)}
           onRetry={isError ? refetch : undefined}
@@ -189,7 +165,7 @@ export function MessagesScreen({navigation}: Props) {
         <ViewHeader
           title={_(msg`Messages`)}
           renderButton={renderButton}
-          showBorder
+          showBorder={false}
           canGoBack={false}
         />
       )}
@@ -197,7 +173,7 @@ export function MessagesScreen({navigation}: Props) {
       <List
         data={conversations}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={keyExtractor}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
@@ -225,119 +201,6 @@ export function MessagesScreen({navigation}: Props) {
   )
 }
 
-function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
-  const menuControl = useMenuControl()
-
-  let lastMessage = _(msg`No messages yet`)
-  let lastMessageSentAt: string | null = null
-  if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
-    if (convo.lastMessage.sender?.did === currentAccount?.did) {
-      lastMessage = _(msg`You: ${convo.lastMessage.text}`)
-    } else {
-      lastMessage = convo.lastMessage.text
-    }
-    lastMessageSentAt = convo.lastMessage.sentAt
-  }
-  if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-    lastMessage = _(msg`Message deleted`)
-  }
-
-  const otherUser = convo.members.find(
-    member => member.did !== currentAccount?.did,
-  )
-
-  if (!otherUser) {
-    return null
-  }
-
-  return (
-    <Link
-      to={`/messages/${convo.id}`}
-      style={a.flex_1}
-      onLongPress={isNative ? menuControl.open : undefined}>
-      {({hovered, pressed}) => (
-        <View
-          style={[
-            a.flex_row,
-            a.flex_1,
-            a.pl_md,
-            a.py_sm,
-            a.gap_md,
-            a.pr_2xl,
-            (hovered || pressed) && t.atoms.bg_contrast_25,
-          ]}>
-          <View pointerEvents="none">
-            <PreviewableUserAvatar profile={otherUser} size={42} />
-          </View>
-          <View style={[a.flex_1]}>
-            <Text
-              numberOfLines={1}
-              style={[a.text_md, web([a.leading_normal, {marginTop: -4}])]}>
-              <Text
-                style={[t.atoms.text, convo.unreadCount > 0 && a.font_bold]}>
-                {otherUser.displayName || otherUser.handle}
-              </Text>{' '}
-              {lastMessageSentAt ? (
-                <TimeElapsed timestamp={lastMessageSentAt}>
-                  {({timeElapsed}) => (
-                    <Text style={t.atoms.text_contrast_medium}>
-                      @{otherUser.handle} &middot; {timeElapsed}
-                    </Text>
-                  )}
-                </TimeElapsed>
-              ) : (
-                <Text style={t.atoms.text_contrast_medium}>
-                  @{otherUser.handle}
-                </Text>
-              )}
-            </Text>
-            <Text
-              numberOfLines={2}
-              style={[
-                a.text_sm,
-                a.leading_snug,
-                convo.unreadCount > 0
-                  ? a.font_bold
-                  : t.atoms.text_contrast_medium,
-              ]}>
-              {lastMessage}
-            </Text>
-          </View>
-          {convo.unreadCount > 0 && (
-            <View
-              style={[
-                a.flex_0,
-                a.ml_md,
-                a.mt_sm,
-                a.rounded_full,
-                {
-                  backgroundColor: convo.muted
-                    ? t.palette.contrast_200
-                    : t.palette.primary_500,
-                  height: 7,
-                  width: 7,
-                },
-              ]}
-            />
-          )}
-          <ConvoMenu
-            convo={convo}
-            profile={otherUser}
-            control={menuControl}
-            // TODO(sam) show on hover on web
-            // tricky because it captures the mouse event
-            hideTrigger
-            currentScreen="list"
-          />
-        </View>
-      )}
-    </Link>
-  )
-}
-
 function DesktopHeader({
   newChatControl,
   onNavigateToSettings,
@@ -357,14 +220,14 @@ function DesktopHeader({
     <View
       style={[
         t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.border_b,
         a.flex_row,
         a.align_center,
         a.justify_between,
         a.gap_lg,
         a.px_lg,
         a.py_sm,
+        a.border_b,
+        t.atoms.border_contrast_low,
       ]}>
       <Text style={[a.text_2xl, a.font_bold]}>
         <Trans>Messages</Trans>

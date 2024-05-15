@@ -8,16 +8,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {
-  DEFAULT_PROD_FEEDS,
-  usePreferencesSetBirthDateMutation,
-  useSetSaveFeedsMutation,
-} from '#/state/queries/preferences'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 
@@ -207,8 +202,6 @@ export function useSubmitSignup({
 }) {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
-  const {mutateAsync: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
@@ -265,13 +258,10 @@ export function useSubmitSignup({
           email: state.email,
           handle: createFullHandle(state.handle, state.userDomain),
           password: state.password,
+          birthDate: state.dateOfBirth,
           inviteCode: state.inviteCode.trim(),
           verificationCode: verificationCode,
         })
-        await setBirthDate({birthDate: state.dateOfBirth})
-        if (IS_PROD_SERVICE(state.serviceUrl)) {
-          setSavedFeeds(DEFAULT_PROD_FEEDS)
-        }
       } catch (e: any) {
         onboardingDispatch({type: 'skip'}) // undo starting the onboard
         let errMsg = e.toString()
@@ -314,8 +304,6 @@ export function useSubmitSignup({
       _,
       onboardingDispatch,
       createAccount,
-      setBirthDate,
-      setSavedFeeds,
     ],
   )
 }

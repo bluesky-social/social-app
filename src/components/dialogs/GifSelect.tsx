@@ -197,6 +197,7 @@ function GifList({
                 onGoBack={onGoBack}
                 emptyType="results"
                 sideBorders={false}
+                topBorder={false}
                 errorTitle={_(msg`Failed to load GIFs`)}
                 errorMessage={_(msg`There was an issue connecting to Tenor.`)}
                 emptyMessage={

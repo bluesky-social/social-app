@@ -1,12 +1,22 @@
 import {Image as RNImage, Share as RNShare} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
 import uuid from 'react-native-uuid'
-import {cacheDirectory, copyAsync, deleteAsync} from 'expo-file-system'
+import {
+  cacheDirectory,
+  copyAsync,
+  deleteAsync,
+  EncodingType,
+  makeDirectoryAsync,
+  StorageAccessFramework,
+  writeAsStringAsync,
+} from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import ImageResizer from '@bam.tech/react-native-image-resizer'
+import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
+import {logger} from '#/logger'
 import {isAndroid, isIOS} from 'platform/detection'
 import {Dimensions} from './types'
 
@@ -239,4 +249,71 @@ function normalizePath(str: string, allPlatforms = false): string {
     }
   }
   return str
+}
+
+export async function saveBytesToDisk(
+  filename: string,
+  bytes: Uint8Array,
+  type: string,
+) {
+  const encoded = Buffer.from(bytes).toString('base64')
+  return await saveToDevice(filename, encoded, type)
+}
+
+export async function saveToDevice(
+  filename: string,
+  encoded: string,
+  type: string,
+) {
+  try {
+    if (isIOS) {
+      await withTempFile(filename, encoded, async tmpFileUrl => {
+        await Sharing.shareAsync(tmpFileUrl, {UTI: type})
+      })
+      return true
+    } else {
+      const permissions =
+        await StorageAccessFramework.requestDirectoryPermissionsAsync()
+
+      if (!permissions.granted) {
+        return false
+      }
+
+      const fileUrl = await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        filename,
+        type,
+      )
+
+      await writeAsStringAsync(fileUrl, encoded, {
+        encoding: EncodingType.Base64,
+      })
+      return true
+    }
+  } catch (e) {
+    logger.error('Error occurred while saving file', {message: e})
+    return false
+  }
+}
+
+async function withTempFile<T>(
+  filename: string,
+  encoded: string,
+  cb: (url: string) => T | Promise<T>,
+): Promise<T> {
+  // cacheDirectory will not ever be null so we assert as a string.
+  // Using a directory so that the file name is not a random string
+  const tmpDirUri = joinPath(cacheDirectory as string, String(uuid.v4()))
+  await makeDirectoryAsync(tmpDirUri, {intermediates: true})
+
+  try {
+    const tmpFileUrl = joinPath(tmpDirUri, filename)
+    await writeAsStringAsync(tmpFileUrl, encoded, {
+      encoding: EncodingType.Base64,
+    })
+
+    return await cb(tmpFileUrl)
+  } finally {
+    safeDeleteAsync(tmpDirUri)
+  }
 }

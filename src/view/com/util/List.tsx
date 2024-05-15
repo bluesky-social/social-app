@@ -25,6 +25,7 @@ export type ListProps<ItemT> = Omit<
   onRefresh?: () => void
   onItemSeen?: (item: ItemT) => void
   containWeb?: boolean
+  sideBorders?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
@@ -89,7 +90,7 @@ function ListImpl<ItemT>(
       },
       {
         itemVisiblePercentThreshold: 40,
-        minimumViewTime: 2e3,
+        minimumViewTime: 1.5e3,
       },
     ]
   }, [onItemSeen])

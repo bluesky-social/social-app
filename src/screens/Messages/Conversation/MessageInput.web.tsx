@@ -2,8 +2,15 @@ import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import Graphemer from 'graphemer'
 import TextareaAutosize from 'react-textarea-autosize'
 
+import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {
+  useMessageDraft,
+  useSaveMessageDraft,
+} from '#/state/messages/message-drafts'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
@@ -15,15 +22,21 @@ export function MessageInput({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const [message, setMessage] = React.useState('')
+  const {getDraft, clearDraft} = useMessageDraft()
+  const [message, setMessage] = React.useState(getDraft)
 
   const onSubmit = React.useCallback(() => {
     if (message.trim() === '') {
       return
     }
+    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+      Toast.show(_(msg`Message is too long`))
+      return
+    }
+    clearDraft()
     onSendMessage(message.trimEnd())
     setMessage('')
-  }, [message, onSendMessage])
+  }, [message, onSendMessage, _, clearDraft])
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -42,6 +55,8 @@ export function MessageInput({
     },
     [],
   )
+
+  useSaveMessageDraft(message)
 
   return (
     <View style={a.p_sm}>

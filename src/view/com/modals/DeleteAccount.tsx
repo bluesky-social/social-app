@@ -31,7 +31,7 @@ export function Component({}: {}) {
   const theme = useTheme()
   const {currentAccount} = useSession()
   const {getAgent} = useAgent()
-  const {clearCurrentAccount, removeAccount} = useSessionApi()
+  const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -69,7 +69,6 @@ export function Component({}: {}) {
       Toast.show(_(msg`Your account has been deleted`))
       resetToTab('HomeTab')
       removeAccount(currentAccount)
-      clearCurrentAccount()
       closeModal()
     } catch (e: any) {
       setError(cleanError(e))

@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Shadow} from '#/state/cache/types'
@@ -38,12 +38,10 @@ export function ProfileHeaderMetrics({
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'followers')}
         label={`${followers} ${pluralizedFollowers}`}>
-        <Trans>
-          <Text style={[a.font_bold, a.text_md]}>{followers} </Text>
-          <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            {pluralizedFollowers}
-          </Text>
-        </Trans>
+        <Text style={[a.font_bold, a.text_md]}>{followers} </Text>
+        <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+          {pluralizedFollowers}
+        </Text>
       </InlineLinkText>
       <InlineLinkText
         testID="profileHeaderFollowsButton"
