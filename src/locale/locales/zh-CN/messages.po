@@ -3165,8 +3165,9 @@ msgid "Only .jpg and .png files are supported"
 msgstr "目前只支持上传 .jpg 或 .png 格式的图片文件"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
-msgid "Only{0}can reply."
-msgstr "只有 {0} 可以回复。"
+
+msgid "Only {0} can reply."
+msgstr "只有{0}可以回复。"
 
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
