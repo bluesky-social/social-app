@@ -34,7 +34,7 @@ class NotificationService: UNNotificationServiceExtension {
   }
   
   func mutateWithChatMessage(_ content: UNMutableNotificationContent) -> UNMutableNotificationContent {
-    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "blueskydm.wav"))
+    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "dm.aiff"))
     return content
   }
   
