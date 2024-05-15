@@ -1150,10 +1150,6 @@ msgstr "無法載入用戶個人檔案。請稍後再試。"
 msgid "Could not mute chat"
 msgstr "無法靜音對話"
 
-#: src/components/dms/ConvoMenu.tsx:75
-#~ msgid "Could not unmute chat"
-#~ msgstr "無法解除靜音對話"
-
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
 msgid "Create a new account"
@@ -3617,11 +3613,6 @@ msgstr "按下以更改託管服務供應商"
 msgid "Press to retry"
 msgstr "按下以重試"
 
-#: src/screens/Messages/Conversation/MessagesList.tsx:50
-#: src/screens/Messages/Conversation/MessagesList.tsx:56
-#~ msgid "Press to Retry"
-#~ msgstr "按一下重試"
-
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
 msgstr "上一張圖片"
@@ -3844,11 +3835,6 @@ msgstr "對 <0><1/></0> 回覆"
 msgid "Report"
 msgstr "檢舉"
 
-#: src/components/dms/ConvoMenu.tsx:169
-#: src/components/dms/ConvoMenu.tsx:173
-#~ msgid "Report account"
-#~ msgstr "檢舉帳戶"
-
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
@@ -4024,10 +4010,6 @@ msgstr "重試上次出錯的操作"
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
 msgstr "重試"
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:54
-#~ msgid "Retry."
-#~ msgstr "重試。"
 
 #: src/components/Error.tsx:98
 #: src/view/screens/ProfileList.tsx:966
@@ -5805,10 +5787,6 @@ msgstr "您目前還沒有邀請碼！當您持續使用 Bluesky 一段時間後
 #: src/view/screens/SavedFeeds.tsx:116
 msgid "You don't have any pinned feeds."
 msgstr "您目前還沒有任何釘選的動態源。"
-
-#: src/view/screens/Feeds.tsx:477
-#~ msgid "You don't have any saved feeds!"
-#~ msgstr "您目前還沒有任何已儲存的動態源！"
 
 #: src/view/screens/SavedFeeds.tsx:157
 msgid "You don't have any saved feeds."
