@@ -216,7 +216,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 notificationCount={numUnreadMessages.numUnread}
                 accessible={true}
                 accessibilityRole="tab"
-                accessibilityLabel={_(msg`Messages`)}
+                accessibilityLabel={_(msg`Chat`)}
                 accessibilityHint={
                   numUnreadMessages.count > 0
                     ? `${numUnreadMessages.numUnread} unread`

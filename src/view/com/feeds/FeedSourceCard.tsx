@@ -206,7 +206,7 @@ export function FeedSourceCardLoaded({
           }
         }}
         key={feed.uri}>
-        <View style={[styles.headerContainer, a.align_start]}>
+        <View style={[styles.headerContainer, a.align_center]}>
           <View style={[s.mr10]}>
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
@@ -224,7 +224,7 @@ export function FeedSourceCardLoaded({
           </View>
 
           {showSaveBtn && (
-            <View style={[s.justifyCenter]}>
+            <View style={{alignSelf: 'center'}}>
               <Pressable
                 testID={`feed-${feed.displayName}-toggleSave`}
                 disabled={isAddSavedFeedPending || isRemovePending}

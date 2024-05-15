@@ -1,26 +1,23 @@
-import {BskyAgent} from '@atproto-labs/api'
-import {ConvoView} from '@atproto-labs/api/dist/client/types/chat/bsky/convo/defs'
+import {ChatBskyConvoDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {useAgent} from '#/state/session'
 import {RQKEY as LIST_CONVOS_KEY} from './list-converations'
-import {useHeaders} from './temp-headers'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(convo: ConvoView) {
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
+export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
+  const {getAgent} = useAgent()
 
   return useQuery({
     queryKey: RQKEY(convo.id),
     queryFn: async () => {
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.getConvo(
+      const {data} = await getAgent().api.chat.bsky.convo.getConvo(
         {convoId: convo.id},
-        {headers},
+        {headers: DM_SERVICE_HEADERS},
       )
       return data.convo
     },
@@ -29,10 +26,9 @@ export function useConvoQuery(convo: ConvoView) {
 }
 
 export function useMarkAsReadMutation() {
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
   const optimisticUpdate = useOnMarkAsRead()
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
 
   return useMutation({
     mutationFn: async ({
@@ -44,15 +40,14 @@ export function useMarkAsReadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      const agent = new BskyAgent({service: serviceUrl})
-      await agent.api.chat.bsky.convo.updateRead(
+      await getAgent().api.chat.bsky.convo.updateRead(
         {
           convoId,
           messageId,
         },
         {
           encoding: 'application/json',
-          headers,
+          headers: DM_SERVICE_HEADERS,
         },
       )
     },
