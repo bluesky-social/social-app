@@ -8,7 +8,7 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
-import {ConvoItem} from '#/state/messages/convo/types'
+import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
@@ -82,6 +82,14 @@ export function MessagesList() {
 
   const hasInitiallyScrolled = useSharedValue(false)
 
+  const changeSizeSinceBackground = useRef(true)
+
+  React.useEffect(() => {
+    if (convo.status === ConvoStatus.Backgrounded) {
+      changeSizeSinceBackground.current = false
+    }
+  }, [convo.status])
+
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
   // 2. Old messages are being prepended to the top
@@ -95,7 +103,7 @@ export function MessagesList() {
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
-      // previous offset whenever we add new content to the previous offset whenever we add new content to the list.
+      // previous off whenever we add new content to the previous offset whenever we add new content to the list.
       if (isWeb && isAtTop.value && hasInitiallyScrolled.value) {
         flatListRef.current?.scrollToOffset({
           animated: false,
@@ -110,11 +118,15 @@ export function MessagesList() {
         return
       }
 
-      flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled.value,
-        offset: height,
-      })
-      isMomentumScrolling.value = true
+      if (!changeSizeSinceBackground.current) {
+        changeSizeSinceBackground.current = true
+      } else {
+        flatListRef.current?.scrollToOffset({
+          animated: hasInitiallyScrolled.value,
+          offset: height,
+        })
+        isMomentumScrolling.value = true
+      }
     },
     [
       contentHeight,
