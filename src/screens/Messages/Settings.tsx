@@ -59,7 +59,7 @@ export function MessagesSettingsScreen({}: Props) {
           }
           items={[
             {label: _(msg`Everyone`), value: 'all'},
-            {label: _(msg`Follows only`), value: 'following'},
+            {label: _(msg`People I Follow`), value: 'following'},
             {label: _(msg`No one`), value: 'none'},
           ]}
           onSelect={onSelectItem}
