@@ -83,13 +83,26 @@ export type ConvoDispatch =
 
 export type ConvoItem =
   | {
-      type: 'message' | 'pending-message'
+      type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
+    }
+  | {
+      type: 'pending-message'
+      key: string
+      message: ChatBskyConvoDefs.MessageView
+      nextMessage:
+        | ChatBskyConvoDefs.MessageView
+        | ChatBskyConvoDefs.DeletedMessageView
+        | null
+      /**
+       * Retry sending the message. If present, the message is in a failed state.
+       */
+      retry?: () => void
     }
   | {
       type: 'deleted-message'

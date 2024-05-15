@@ -735,6 +735,8 @@ export class Convo {
     }
   }
 
+  private pendingFailed = false
+
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim()) return
@@ -748,8 +750,11 @@ export class Convo {
       message,
     })
     // remove on each send, it might go through now without user having to click
+    // TODO do need htis?
     this.footerItems.delete(ConvoItemError.PendingFailed)
     this.commit()
+
+    // TODO maybe ignore if failed?
 
     if (!this.isProcessingPendingMessages) {
       this.processPendingMessages()
@@ -805,16 +810,7 @@ export class Convo {
       this.commit()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     } finally {
       this.isProcessingPendingMessages = false
@@ -868,16 +864,7 @@ export class Convo {
       )
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to batch retry messages`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     }
   }
@@ -968,6 +955,13 @@ export class Convo {
           sender: this.sender!,
         },
         nextMessage: null,
+        retry: this.pendingFailed
+          ? () => {
+              this.pendingFailed = false
+              this.commit()
+              this.batchRetryPendingMessages()
+            }
+          : undefined,
       })
     })
 
