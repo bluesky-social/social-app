@@ -113,6 +113,7 @@ export function MessagesList() {
         // really large - and the normal chat behavior would be to still scroll to the end if it's only one
         // message - we ignore this rule if there's only one additional message
         if (
+          hasInitiallyScrolled.value &&
           height - contentHeight.value > layoutHeight.value - 50 &&
           convo.items.length - prevItemCount.current > 1
         ) {
