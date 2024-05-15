@@ -1,9 +1,14 @@
-const {withXcodeProject} = require('@expo/config-plugins')
+const {withXcodeProject, IOSConfig} = require('@expo/config-plugins')
+const path = require('path')
+const PBXFile = require('xcode/lib/pbxFile')
 
-const withXcodeTarget = (config, {extensionName, controllerName}) => {
+const withXcodeTarget = (
+  config,
+  {extensionName, controllerName, soundFiles},
+) => {
   // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
-    const pbxProject = config.modResults
+    let pbxProject = config.modResults
 
     const target = pbxProject.addTarget(
       extensionName,
@@ -24,6 +29,14 @@ const withXcodeTarget = (config, {extensionName, controllerName}) => {
       {target: target.uuid},
       pbxGroupKey,
     )
+
+    for (const file of soundFiles) {
+      pbxProject.addSourceFile(
+        `${extensionName}/${file}`,
+        {target: target.uuid},
+        pbxGroupKey,
+      )
+    }
 
     var configurations = pbxProject.pbxXCBuildConfigurationSection()
     for (var key in configurations) {

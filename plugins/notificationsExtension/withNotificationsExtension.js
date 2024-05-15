@@ -4,11 +4,14 @@ const {withXcodeTarget} = require('./withXcodeTarget')
 const {withExtensionEntitlements} = require('./withExtensionEntitlements')
 const {withExtensionInfoPlist} = require('./withExtensionInfoPlist')
 const {withExtensionViewController} = require('./withExtensionViewController')
+const {withSounds} = require('./withSounds')
 
 const EXTENSION_NAME = 'BlueskyNSE'
 const EXTENSION_CONTROLLER_NAME = 'NotificationService'
 
 const withNotificationsExtension = config => {
+  const soundFiles = ['blueskydm.wav']
+
   return withPlugins(config, [
     // IOS
     withAppEntitlements,
@@ -32,10 +35,18 @@ const withNotificationsExtension = config => {
       },
     ],
     [
+      withSounds,
+      {
+        extensionName: EXTENSION_NAME,
+        soundFiles,
+      },
+    ],
+    [
       withXcodeTarget,
       {
         extensionName: EXTENSION_NAME,
         controllerName: EXTENSION_CONTROLLER_NAME,
+        soundFiles,
       },
     ],
   ])
