@@ -3,7 +3,7 @@ import {TouchableOpacity, View} from 'react-native'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,8 +12,12 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useProfileQuery} from '#/state/queries/profile'
 import {BACK_HITSLOP} from 'lib/constants'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {isIOS, isWeb} from 'platform/detection'
 import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
@@ -27,6 +31,7 @@ import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
+
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'MessagesConversation'
@@ -137,7 +142,7 @@ function Inner() {
 }
 
 let Header = ({
-  profile,
+  profile: initialProfile,
 }: {
   profile?: AppBskyActorDefs.ProfileViewBasic
 }): React.ReactNode => {
@@ -145,12 +150,8 @@ let Header = ({
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const convoState = useConvo()
-
-  const isDeletedAccount = profile?.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? 'Deleted Account'
-    : profile?.displayName
+  const moderationOpts = useModerationOpts()
+  const {data: profile} = useProfileQuery({did: initialProfile?.did})
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
@@ -195,23 +196,12 @@ let Header = ({
       ) : (
         <View style={{width: 30}} />
       )}
-      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-        {profile ? (
-          <View style={[a.align_center]}>
-            <PreviewableUserAvatar size={32} profile={profile} />
-            <Text
-              style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
-              numberOfLines={1}>
-              {displayName}
-            </Text>
-            {!isDeletedAccount && (
-              <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
-                @{profile.handle}
-              </Text>
-            )}
-          </View>
-        ) : (
-          <>
+
+      {profile && moderationOpts ? (
+        <HeaderReady profile={profile} moderationOpts={moderationOpts} />
+      ) : (
+        <>
+          <View style={[a.align_center, a.gap_sm, a.flex_1]}>
             <View
               style={[
                 {width: 32, height: 32},
@@ -234,19 +224,69 @@ let Header = ({
                 t.atoms.bg_contrast_25,
               ]}
             />
-          </>
-        )}
-      </View>
-      {isConvoActive(convoState) && profile ? (
-        <ConvoMenu
-          convo={convoState.convo}
-          profile={profile}
-          currentScreen="conversation"
-        />
-      ) : (
-        <View style={{width: 30}} />
+          </View>
+
+          <View style={{width: 30}} />
+        </>
       )}
     </View>
   )
 }
 Header = React.memo(Header)
+
+function HeaderReady({
+  profile: profileUnshadowed,
+  moderationOpts,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  moderationOpts: ModerationOpts
+}) {
+  const t = useTheme()
+  const convoState = useConvo()
+  const profile = useProfileShadow(profileUnshadowed)
+  const moderation = React.useMemo(
+    () => moderateProfile(profile, moderationOpts),
+    [profile, moderationOpts],
+  )
+
+  const isDeletedAccount = profile?.handle === 'missing.invalid'
+  const displayName = isDeletedAccount
+    ? 'Deleted Account'
+    : sanitizeDisplayName(
+        profile.displayName || profile.handle,
+        moderation.ui('displayName'),
+      )
+
+  return (
+    <>
+      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
+        <View style={[a.align_center]}>
+          <PreviewableUserAvatar
+            size={32}
+            profile={profile}
+            moderation={moderation.ui('avatar')}
+          />
+          <Text
+            style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
+            numberOfLines={1}>
+            {displayName}
+          </Text>
+          {!isDeletedAccount && (
+            <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
+              @{profile.handle}
+            </Text>
+          )}
+        </View>
+      </View>
+
+      {isConvoActive(convoState) && (
+        <ConvoMenu
+          convo={convoState.convo}
+          profile={profile}
+          currentScreen="conversation"
+          moderation={moderation}
+        />
+      )}
+    </>
+  )
+}

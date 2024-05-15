@@ -1,13 +1,21 @@
 import React from 'react'
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  ChatBskyConvoDefs,
+  moderateProfile,
+  ModerationOpts,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -17,25 +25,53 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
-export function ChatListItem({
+export function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+  const {currentAccount} = useSession()
+  const otherUser = convo.members.find(
+    member => member.did !== currentAccount?.did,
+  )
+  const moderationOpts = useModerationOpts()
+
+  if (!otherUser || !moderationOpts) {
+    return null
+  }
+
+  return (
+    <ChatListItemReady
+      convo={convo}
+      profile={otherUser}
+      moderationOpts={moderationOpts}
+    />
+  )
+}
+
+function ChatListItemReady({
   convo,
-  index,
+  profile: profileUnshadowed,
+  moderationOpts,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-  index: number
+  profile: AppBskyActorDefs.ProfileViewBasic
+  moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const menuControl = useMenuControl()
   const {gtMobile} = useBreakpoints()
-  const otherUser = convo.members.find(
-    member => member.did !== currentAccount?.did,
+  const profile = useProfileShadow(profileUnshadowed)
+  const moderation = React.useMemo(
+    () => moderateProfile(profile, moderationOpts),
+    [profile, moderationOpts],
   )
-  const isDeletedAccount = otherUser?.handle === 'missing.invalid'
+
+  const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? 'Deleted Account'
-    : otherUser?.displayName || otherUser?.handle
+    : sanitizeDisplayName(
+        profile.displayName || profile.handle,
+        moderation.ui('displayName'),
+      )
 
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
@@ -73,10 +109,6 @@ export function ChatListItem({
     })
   }, [convo.id, navigation])
 
-  if (!otherUser) {
-    return null
-  }
-
   return (
     <View
       // @ts-expect-error web only
@@ -85,7 +117,7 @@ export function ChatListItem({
       onFocus={onFocus}
       onBlur={onMouseLeave}>
       <Button
-        label={otherUser.displayName || otherUser.handle}
+        label={profile.displayName || profile.handle}
         onPress={onPress}
         style={a.flex_1}
         onLongPress={isNative ? menuControl.open : undefined}>
@@ -98,10 +130,13 @@ export function ChatListItem({
               a.py_md,
               a.gap_md,
               (hovered || pressed) && t.atoms.bg_contrast_25,
-              index === 0 && [a.border_t, a.pt_lg],
               t.atoms.border_contrast_low,
             ]}>
-            <UserAvatar avatar={otherUser?.avatar} size={52} />
+            <UserAvatar
+              avatar={profile.avatar}
+              size={52}
+              moderation={moderation.ui('avatar')}
+            />
             <View style={[a.flex_1, a.flex_row, a.align_center]}>
               <View style={[a.flex_1]}>
                 <View
@@ -154,7 +189,7 @@ export function ChatListItem({
                   <Text
                     numberOfLines={1}
                     style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
-                    @{otherUser.handle}
+                    @{profile.handle}
                   </Text>
                 )}
                 <Text
@@ -196,7 +231,7 @@ export function ChatListItem({
               )}
               <ConvoMenu
                 convo={convo}
-                profile={otherUser}
+                profile={profile}
                 control={menuControl}
                 currentScreen="list"
                 showMarkAsRead={convo.unreadCount > 0}
@@ -204,6 +239,7 @@ export function ChatListItem({
                 triggerOpacity={
                   !gtMobile || showActions || menuControl.isOpen ? 1 : 0
                 }
+                moderation={moderation}
               />
             </View>
           </View>

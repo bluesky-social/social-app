@@ -1,6 +1,11 @@
 import {useCallback, useMemo} from 'react'
 import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
-import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  InfiniteData,
+  QueryClient,
+  useInfiniteQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
@@ -138,5 +143,31 @@ function optimisticUpdate(
         chatId === convo.id ? updateFn(convo) : convo,
       ),
     })),
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+) {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+  >({
+    queryKey: RQKEY,
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+
+    for (const page of queryData.pages) {
+      for (const convo of page.convos) {
+        for (const member of convo.members) {
+          if (member.did === did) {
+            yield member
+          }
+        }
+      }
+    }
   }
 }
