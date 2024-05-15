@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-14 10:56+0900\n"
+"PO-Revision-Date: 2024-05-15 15:22+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -70,10 +70,6 @@ msgstr "{0, plural, other {リポスト}}"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, other {いいねを外す (#個のいいね)}}"
-
-#: src/view/screens/ProfileList.tsx:286
-msgid "{0} your feeds"
-msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -831,10 +827,6 @@ msgstr "すべてのストレージデータをクリア"
 #: src/view/screens/Support.tsx:40
 msgid "click here"
 msgstr "こちらをクリック"
-
-#: src/screens/Feeds/NoFollowingFeed.tsx:46
-msgid "Click here to add one."
-msgstr "ここをクリックして追加。"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
@@ -1984,10 +1976,6 @@ msgstr "Followingフィードの設定"
 msgid "Following Feed Preferences"
 msgstr "Followingフィードの設定"
 
-#: src/screens/Messages/Settings.tsx:62
-msgid "Follows only"
-msgstr "フォローしている人のみ"
-
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
 msgstr "あなたをフォロー"
@@ -2299,6 +2287,10 @@ msgstr "画像のALTテキスト"
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr "なりすまし、または身元もしくは所属に関する虚偽の主張"
 
+#: src/lib/moderation/useReportOptions.ts:85
+msgid "Inappropriate messages or explicit links"
+msgstr "不適切なメッセージ、または露骨なコンテンツへのリンク"
+
 #: src/screens/Login/SetNewPasswordForm.tsx:127
 msgid "Input code sent to your email for password reset"
 msgstr "パスワードをリセットするためにあなたのメールアドレスに送られたコードを入力"
@@ -2573,6 +2565,10 @@ msgstr "リストのミュートを解除しました"
 msgid "Lists"
 msgstr "リスト"
 
+#: src/components/dms/ConvoMenu.tsx:255
+msgid "Lists blocking this user:"
+msgstr "このユーザーをブロックしているリスト："
+
 #: src/view/screens/Notifications.tsx:159
 msgid "Load new notifications"
 msgstr "最新の通知を読み込む"
@@ -2623,9 +2619,9 @@ msgstr "フィードを保存してないようですね！おすすめを使う
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
 msgstr "すべてのフィードのピン留めを外したようですね。心配ありません、以下で追加できます 😄"
 
-#: src/screens/Feeds/NoFollowingFeed.tsx:38
-msgid "Looks like you're missing a following feed."
-msgstr "Followingフィードを消したようですね。"
+#: src/screens/Feeds/NoFollowingFeed.tsx:37
+msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
+msgstr "Followingフィードを消したようです。<0>ここをクリックして追加。</0>"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2689,10 +2685,6 @@ msgstr "メッセージの設定"
 #: src/view/shell/desktop/LeftNav.tsx:344
 msgid "Messages"
 msgstr "メッセージ"
-
-#: src/Navigation.tsx:307
-msgid "Messaging settings"
-msgstr "メッセージの設定"
 
 #: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
@@ -3007,6 +2999,10 @@ msgstr "次の画像"
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "いいえ"
+
+#: src/screens/Messages/List/index.tsx:150
+msgid "No chats yet"
+msgstr "チャットがまだありません"
 
 #: src/view/screens/ProfileFeed.tsx:559
 #: src/view/screens/ProfileList.tsx:818
@@ -3420,6 +3416,10 @@ msgstr "@{0}がフォロー中のユーザー"
 msgid "People following @{0}"
 msgstr "@{0}をフォロー中のユーザー"
 
+#: src/screens/Messages/Settings.tsx:62
+msgid "People I Follow"
+msgstr "フォロー中のユーザー"
+
 #: src/view/com/lightbox/Lightbox.tsx:67
 msgid "Permission to access camera roll is required."
 msgstr "カメラへのアクセス権限が必要です。"
@@ -3448,6 +3448,10 @@ msgstr "ホームにピン留め"
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "Pinned Feeds"
 msgstr "ピン留めされたフィード"
+
+#: src/view/screens/ProfileList.tsx:288
+msgid "Pinned to your feeds"
+msgstr "フィードにピン留めしました"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:36
 msgid "Play"
@@ -4669,9 +4673,9 @@ msgstr "返信を並び替える"
 msgid "Sort replies to the same post by:"
 msgstr "次の方法で同じ投稿への返信を並び替えます。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:168
-msgid "Source:"
-msgstr "ソース："
+#: src/components/moderation/LabelsOnMeDialog.tsx:167
+msgid "Source: <0>{0}</0>"
+msgstr "ソース：<0>{0}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:66
 #: src/lib/moderation/useReportOptions.ts:79
@@ -4998,6 +5002,10 @@ msgstr "この{screenDescription}にはフラグが設定されています："
 msgid "This account has requested that users sign in to view their profile."
 msgstr "このアカウントを閲覧するためにはサインインが必要です。"
 
+#: src/components/dms/ConvoMenu.tsx:250
+msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
+msgstr "このアカウントは１つ、あるいは複数のモデレーションリストでブロックされています。ブロックを解除するにはリストの画面に移動してこのユーザーをリストから外してください。"
+
 #: src/components/moderation/LabelsOnMeDialog.tsx:231
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "この申し立ては<0>{0}</0>に送られます。"
@@ -5066,8 +5074,8 @@ msgid "This label was applied by the author."
 msgstr "投稿者によって適用されたラベルです。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:165
-msgid "This label was applied by you"
-msgstr "あなたによって適用されたラベルです"
+msgid "This label was applied by you."
+msgstr "あなたによって適用されたラベルです。"
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -5246,6 +5254,11 @@ msgctxt "action"
 msgid "Unblock"
 msgstr "ブロックを解除"
 
+#: src/components/dms/ConvoMenu.tsx:190
+#: src/components/dms/ConvoMenu.tsx:194
+msgid "Unblock account"
+msgstr "アカウントのブロックを解除"
+
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:305
 msgid "Unblock Account"
@@ -5325,6 +5338,10 @@ msgstr "ホームからピン留めを解除"
 msgid "Unpin moderation list"
 msgstr "モデレーションリストのピン留めを解除"
 
+#: src/view/screens/ProfileList.tsx:289
+msgid "Unpinned from your feeds"
+msgstr "フィードからピン留めを解除"
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
 msgid "Unsubscribe"
 msgstr "登録を解除"
@@ -5332,10 +5349,6 @@ msgstr "登録を解除"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:192
 msgid "Unsubscribe from this labeler"
 msgstr "このラベラーの登録を解除"
-
-#: src/lib/moderation/useReportOptions.ts:85
-msgid "Unwanted sexual content"
-msgstr "望まない性的なコンテンツ"
 
 #: src/lib/moderation/useReportOptions.ts:71
 #: src/lib/moderation/useReportOptions.ts:84
@@ -5431,6 +5444,10 @@ msgstr "ブロック中のユーザー"
 #: src/lib/moderation/useModerationCauseDescription.ts:48
 msgid "User Blocked by \"{0}\""
 msgstr "「{0}」によってブロックされたユーザー"
+
+#: src/components/dms/ConvoMenu.tsx:243
+msgid "User blocked by list"
+msgstr "リストによってブロック中のユーザー"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:53
 msgid "User Blocked by List"
@@ -5826,6 +5843,10 @@ msgstr "このアカウントをミュートしました。"
 msgid "You have muted this user"
 msgstr "このユーザーをミュートしました"
 
+#: src/screens/Messages/List/index.tsx:152
+msgid "You have no chats yet. Start a conversation with someone!"
+msgstr "まだチャットしていません。誰かと会話を初めましょう！"
+
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
 msgstr "フィードがありません。"
@@ -5834,10 +5855,6 @@ msgstr "フィードがありません。"
 #: src/view/com/lists/ProfileLists.tsx:148
 msgid "You have no lists."
 msgstr "リストがありません。"
-
-#: src/screens/Messages/List/index.tsx:200
-msgid "You have no messages yet. Start a conversation with someone!"
-msgstr "メッセージがありません。誰かと会話を始めましょう！"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:134
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
