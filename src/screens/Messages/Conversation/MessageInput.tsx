@@ -13,7 +13,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import Graphemer from 'graphemer'
 
-import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {HITSLOP_10, HITSLOP_20, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   useMessageDraft,
@@ -97,13 +97,20 @@ export function MessageInput({
           value={message}
           multiline={true}
           onChangeText={setMessage}
-          style={[a.flex_1, a.text_md, a.px_sm, t.atoms.text, {maxHeight}]}
+          style={[
+            a.flex_1,
+            a.text_md,
+            a.px_sm,
+            t.atoms.text,
+            {maxHeight, paddingBottom: 5},
+          ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
           onFocus={scrollToEnd}
           onContentSizeChange={onInputLayout}
           ref={inputRef}
+          hitSlop={HITSLOP_20}
         />
         <Pressable
           accessibilityRole="button"
