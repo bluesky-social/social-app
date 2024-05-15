@@ -8,7 +8,7 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
-import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
+import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
@@ -80,16 +80,7 @@ export function MessagesList() {
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
   const hasInitiallyScrolled = useSharedValue(false)
-
-  // After foregrounding, we want to maintain the position of the scroll
-  const changedSizeSinceBackground = useRef(true)
-  const prevCount = React.useRef(convo.items.length)
-
-  React.useEffect(() => {
-    if (convo.status === ConvoStatus.Backgrounded) {
-      changedSizeSinceBackground.current = false
-    }
-  }, [convo.status])
+  const layoutHeight = useSharedValue(0)
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -112,33 +103,28 @@ export function MessagesList() {
         })
       }
 
-      contentHeight.value = height
-
       // This number _must_ be the height of the MaybeLoader component
-      if (height <= 50 || !isAtBottom.value) {
-        return
-      }
+      if (height > 50 && isAtBottom.value) {
+        let newOffset = height
+        if (height - contentHeight.value > layoutHeight.value - 50) {
+          newOffset = contentHeight.value - 50
+        }
 
-      if (
-        changedSizeSinceBackground.current ||
-        convo.items.length - prevCount.current <= 3
-      ) {
         flatListRef.current?.scrollToOffset({
           animated: hasInitiallyScrolled.value,
-          offset: height,
+          offset: newOffset,
         })
         isMomentumScrolling.value = true
       }
-      changedSizeSinceBackground.current = true
-      prevCount.current = convo.items.length
+      contentHeight.value = height
     },
     [
       contentHeight,
-      hasInitiallyScrolled,
+      hasInitiallyScrolled.value,
       isAtBottom.value,
       isAtTop.value,
       isMomentumScrolling,
-      convo.items.length,
+      layoutHeight.value,
     ],
   )
 
@@ -178,6 +164,8 @@ export function MessagesList() {
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
+      layoutHeight.value = e.layoutMeasurement.height
+
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
@@ -192,7 +180,13 @@ export function MessagesList() {
         hasInitiallyScrolled.value = true
       }
     },
-    [contentHeight.value, hasInitiallyScrolled, isAtBottom, isAtTop],
+    [
+      layoutHeight,
+      contentHeight.value,
+      hasInitiallyScrolled,
+      isAtBottom,
+      isAtTop,
+    ],
   )
 
   const onMomentumEnd = React.useCallback(() => {
