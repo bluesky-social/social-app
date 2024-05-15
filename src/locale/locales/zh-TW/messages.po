@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-14 08:17+0800\n"
+"PO-Revision-Date: 2024-05-15 08:21+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -300,7 +300,7 @@ msgstr "以下是您保存的動態源。"
 
 #: src/screens/Messages/Settings.tsx:53
 msgid "Allow messages from"
-msgstr ""
+msgstr "允許傳送訊息："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -1209,7 +1209,7 @@ msgstr "自訂網域"
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:107
 #: src/view/screens/Feeds.tsx:823
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "由社群打造的自訂動態源打造全新體驗，協助您找到所愛的內容。"
+msgstr "由社群打造的自訂動態源帶來全新體驗，幫助您找到所愛的內容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:56
 msgid "Customize media from external sites."
@@ -1702,7 +1702,7 @@ msgstr "所有人"
 
 #: src/screens/Messages/Settings.tsx:61
 msgid "Everyone"
-msgstr ""
+msgstr "所有人"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Excessive mentions or replies"
@@ -1814,7 +1814,7 @@ msgstr "無法傳送訊息。"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
-msgstr ""
+msgstr "無法更新設定"
 
 #: src/Navigation.tsx:203
 msgid "Feed"
@@ -1990,7 +1990,7 @@ msgstr "「Following」動態源偏好"
 
 #: src/screens/Messages/Settings.tsx:62
 msgid "Follows only"
-msgstr ""
+msgstr "只有您跟隨的用戶"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
@@ -3044,7 +3044,7 @@ msgstr "還沒有通知！"
 
 #: src/screens/Messages/Settings.tsx:63
 msgid "No one"
-msgstr ""
+msgstr "沒有人"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
