@@ -945,6 +945,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),

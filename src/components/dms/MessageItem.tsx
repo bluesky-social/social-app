@@ -37,6 +37,11 @@ let MessageItem = ({
     nextMessage.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
+    // if this message is pending, it means the next message is pending too
+    if (isPending && nextMessage) {
+      return false
+    }
+
     // if the next message is from a different sender, then it's the last in the group
     if (isFromSelf ? !isNextFromSelf : isNextFromSelf) {
       return true
@@ -54,7 +59,7 @@ let MessageItem = ({
     }
 
     return true
-  }, [message, nextMessage, isFromSelf, isNextFromSelf])
+  }, [message, nextMessage, isFromSelf, isNextFromSelf, isPending])
 
   const lastInGroupRef = useRef(isLastInGroup)
   if (lastInGroupRef.current !== isLastInGroup) {
