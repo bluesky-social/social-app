@@ -25,7 +25,6 @@ export function BackgroundNotificationPreferencesProvider({
   const [preferences, setPreferences] =
     React.useState<BackgroundNotificationHandlerPreferences>({
       playSoundChat: true,
-      mutedThreads: [],
     })
 
   React.useEffect(() => {
