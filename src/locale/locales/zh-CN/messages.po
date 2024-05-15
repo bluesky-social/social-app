@@ -4884,7 +4884,7 @@ msgstr "隐私政策已迁移至 <0/>"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支持表单已被移除。如果你需要帮助，请点击<0/>或访问{HELP_DESK_URL}与我们联系。"
+msgstr "支持表单已被移除。如果你需要帮助，请<0/>或访问{HELP_DESK_URL}与我们联系。"
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
