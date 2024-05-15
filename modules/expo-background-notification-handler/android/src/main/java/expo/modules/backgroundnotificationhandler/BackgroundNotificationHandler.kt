@@ -15,8 +15,6 @@ class BackgroundNotificationHandler(
 
     if (remoteMessage.data.getValue("reason") == "chat-message") {
       mutateWithChatMessage(remoteMessage)
-    } else {
-      mutateWithNoSound(remoteMessage)
     }
 
     notifInterface.showMessage(remoteMessage)
@@ -24,21 +22,10 @@ class BackgroundNotificationHandler(
 
   private fun mutateWithChatMessage(remoteMessage: RemoteMessage) {
     if (NotificationPrefs(context).getBoolean("playSoundChat")) {
-      mutateWithDmSound(remoteMessage)
+      remoteMessage.data["channelId"] = "chat-messages-sound"
+    } else {
+      remoteMessage.data["channelId"] = "chat-messages"
+      remoteMessage.data["sound"] = null
     }
-  }
-
-  private fun mutateWithDefaultSound(remoteMessage: RemoteMessage) {
-    remoteMessage.data["sound"] = "true"
-  }
-
-  private fun mutateWithDmSound(remoteMessage: RemoteMessage) {
-    remoteMessage.data["sound"] = "dm.mp3"
-  }
-
-  // On Android, the notifications always have a sound unless we turn them off. Let's do so to
-  // prevent people from just wanting to turn it off in all cases (don't blame them honestly)
-  private fun mutateWithNoSound(remoteMessage: RemoteMessage) {
-    remoteMessage.data["sound"] = "false"
   }
 }
