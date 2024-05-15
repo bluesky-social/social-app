@@ -300,7 +300,7 @@ msgstr "保存したすべてのフィードを１箇所にまとめます。"
 
 #: src/screens/Messages/Settings.tsx:53
 msgid "Allow messages from"
-msgstr ""
+msgstr "誰からのメッセージを許可するか："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -1698,7 +1698,7 @@ msgstr "全員"
 
 #: src/screens/Messages/Settings.tsx:61
 msgid "Everyone"
-msgstr ""
+msgstr "全員"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Excessive mentions or replies"
@@ -1810,7 +1810,7 @@ msgstr "メッセージの送信に失敗しました。"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
-msgstr ""
+msgstr "設定の更新に失敗しました"
 
 #: src/Navigation.tsx:203
 msgid "Feed"
@@ -1986,7 +1986,7 @@ msgstr "Followingフィードの設定"
 
 #: src/screens/Messages/Settings.tsx:62
 msgid "Follows only"
-msgstr ""
+msgstr "フォローしている人のみ"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
@@ -3040,7 +3040,7 @@ msgstr "お知らせはありません！"
 
 #: src/screens/Messages/Settings.tsx:63
 msgid "No one"
-msgstr ""
+msgstr "誰からも受け取らない"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3165,7 +3165,7 @@ msgstr "１つもしくは複数の画像にALTテキストがありません。
 
 #: src/screens/Onboarding/StepProfile/index.tsx:120
 msgid "Only .jpg and .png files are supported"
-msgstr ".jpgと.pngファイルのみに対応してます"
+msgstr ".jpgと.pngファイルのみに対応しています"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
@@ -5067,7 +5067,7 @@ msgstr "投稿者によって適用されたラベルです。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:165
 msgid "This label was applied by you"
-msgstr "このラベルはあなたが適用しました"
+msgstr "あなたによって適用されたラベルです"
 
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
