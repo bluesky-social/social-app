@@ -64,10 +64,19 @@ export function useNotificationsHandler() {
   React.useEffect(() => {
     if (!isAndroid) return
 
-    Notifications.setNotificationChannelAsync('chat-messages', {
+    Notifications.setNotificationChannelAsync('chat-messages-sound', {
       name: 'Chat',
       importance: Notifications.AndroidImportance.MAX,
       sound: 'dm.mp3',
+      showBadge: true,
+      vibrationPattern: [250],
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
+    })
+
+    Notifications.setNotificationChannelAsync('chat-messages', {
+      name: 'Chat',
+      importance: Notifications.AndroidImportance.MAX,
+      sound: null,
       showBadge: true,
       vibrationPattern: [250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
