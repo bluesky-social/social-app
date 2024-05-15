@@ -1987,10 +1987,6 @@ msgstr "\"正在关注\"资讯源首选项"
 msgid "Following Feed Preferences"
 msgstr "\"正在关注\"资讯源首选项"
 
-#: src/screens/Messages/Settings.tsx:62
-msgid "Follows only"
-msgstr "仅限关注者"
-
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
 msgstr "关注了你"
@@ -3428,6 +3424,10 @@ msgstr "@{0} 关注的用户"
 #: src/Navigation.tsx:164
 msgid "People following @{0}"
 msgstr "关注 @{0} 的用户"
+
+#: src/screens/Messages/Settings.tsx:62
+msgid "People I Follow"
+msgstr "我已关注的用户"
 
 #: src/view/com/lightbox/Lightbox.tsx:67
 msgid "Permission to access camera roll is required."
