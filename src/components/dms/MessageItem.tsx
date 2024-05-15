@@ -1,5 +1,11 @@
 import React, {useCallback, useMemo, useRef} from 'react'
-import {LayoutAnimation, StyleProp, TextStyle, View} from 'react-native'
+import {
+  GestureResponderEvent,
+  LayoutAnimation,
+  StyleProp,
+  TextStyle,
+  View,
+} from 'react-native'
 import {ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,6 +15,7 @@ import {useSession} from '#/state/session'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {RichText} from '../RichText'
 
@@ -21,7 +28,7 @@ let MessageItem = ({
   const {currentAccount} = useSession()
 
   const {message, nextMessage} = item
-  const pending = item.type === 'pending-message'
+  const isPending = item.type === 'pending-message'
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
@@ -30,11 +37,6 @@ let MessageItem = ({
     nextMessage.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
-    // TODO this means it's a placeholder. Let's figure out the right way to do this though!
-    if (message.id.length > 13) {
-      return false
-    }
-
     // if the next message is from a different sender, then it's the last in the group
     if (isFromSelf ? !isNextFromSelf : isNextFromSelf) {
       return true
@@ -79,7 +81,7 @@ let MessageItem = ({
               paddingLeft: 14,
               paddingRight: 14,
               backgroundColor: isFromSelf
-                ? pending
+                ? isPending
                   ? pendingColor
                   : t.palette.primary_500
                 : t.palette.contrast_50,
@@ -95,18 +97,20 @@ let MessageItem = ({
               a.text_md,
               a.leading_snug,
               isFromSelf && {color: t.palette.white},
-              pending && t.name !== 'light' && {color: t.palette.primary_300},
+              isPending && t.name !== 'light' && {color: t.palette.primary_300},
             ]}
             interactiveStyle={a.underline}
             enableTags
           />
         </View>
       </ActionsWrapper>
-      <MessageItemMetadata
-        message={message}
-        isLastInGroup={isLastInGroup}
-        style={isFromSelf ? a.text_right : a.text_left}
-      />
+
+      {isLastInGroup && (
+        <MessageItemMetadata
+          item={item}
+          style={isFromSelf ? a.text_right : a.text_left}
+        />
+      )}
     </View>
   )
 }
@@ -114,16 +118,26 @@ MessageItem = React.memo(MessageItem)
 export {MessageItem}
 
 let MessageItemMetadata = ({
-  message,
-  isLastInGroup,
+  item,
   style,
 }: {
-  message: ChatBskyConvoDefs.MessageView
-  isLastInGroup: boolean
+  item: ConvoItem & {type: 'message' | 'pending-message'}
   style: StyleProp<TextStyle>
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
+  const {message} = item
+
+  const handleRetry = useCallback(
+    (e: GestureResponderEvent) => {
+      if (item.type === 'pending-message' && item.retry) {
+        e.preventDefault()
+        item.retry()
+        return false
+      }
+    },
+    [item],
+  )
 
   const relativeTimestamp = useCallback(
     (timestamp: string) => {
@@ -166,25 +180,47 @@ let MessageItemMetadata = ({
     [_],
   )
 
-  if (!isLastInGroup) {
-    return null
-  }
-
   return (
-    <TimeElapsed timestamp={message.sentAt} timeToString={relativeTimestamp}>
-      {({timeElapsed}) => (
-        <Text
-          style={[
-            t.atoms.text_contrast_medium,
-            a.text_xs,
-            a.mt_2xs,
-            a.mb_lg,
-            style,
-          ]}>
-          {timeElapsed}
-        </Text>
+    <Text
+      style={[
+        a.text_xs,
+        a.mt_2xs,
+        a.mb_lg,
+        t.atoms.text_contrast_medium,
+        style,
+      ]}>
+      <TimeElapsed timestamp={message.sentAt} timeToString={relativeTimestamp}>
+        {({timeElapsed}) => (
+          <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            {timeElapsed}
+          </Text>
+        )}
+      </TimeElapsed>
+
+      {item.type === 'pending-message' && item.retry && (
+        <>
+          {' '}
+          &middot;{' '}
+          <Text
+            style={[
+              a.text_xs,
+              {
+                color: t.palette.negative_400,
+              },
+            ]}>
+            {_(msg`Failed to send`)}
+          </Text>{' '}
+          &middot;{' '}
+          <InlineLinkText
+            label={_(msg`Click to retry failed message`)}
+            to="#"
+            onPress={handleRetry}
+            style={[a.text_xs]}>
+            {_(msg`Retry`)}
+          </InlineLinkText>
+        </>
       )}
-    </TimeElapsed>
+    </Text>
   )
 }
 
