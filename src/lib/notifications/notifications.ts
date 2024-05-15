@@ -72,7 +72,7 @@ export function useRequestNotificationsPermission() {
   const gate = useGate()
 
   return React.useCallback(
-    async (context: 'StartOnboarding' | 'AfterOnboarding') => {
+    async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
       const permissions = await Notifications.getPermissionsAsync()
 
       if (
@@ -97,6 +97,7 @@ export function useRequestNotificationsPermission() {
 
       const res = await Notifications.requestPermissionsAsync()
       logEvent('notifications:request', {
+        context: context,
         status: res.status,
       })
 

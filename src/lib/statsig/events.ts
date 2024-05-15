@@ -17,6 +17,7 @@ export type LogEvents = {
   }
   'notifications:openApp': {}
   'notifications:request': {
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
     status: 'granted' | 'denied' | 'undetermined'
   }
   'state:background': {

@@ -341,7 +341,7 @@ export function DesktopLeftNav() {
               count={numUnreadMessages.numUnread}
               icon={<Message style={pal.text} width={iconWidth} />}
               iconFilled={<MessageFilled style={pal.text} width={iconWidth} />}
-              label={_(msg`Messages`)}
+              label={_(msg`Chat`)}
             />
           )}
           <NavItem

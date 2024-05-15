@@ -15,6 +15,10 @@ import Graphemer from 'graphemer'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {
+  useMessageDraft,
+  useSaveMessageDraft,
+} from '#/state/messages/message-drafts'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
@@ -29,7 +33,8 @@ export function MessageInput({
   const {_} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
-  const [message, setMessage] = React.useState('')
+  const {getDraft, clearDraft} = useMessageDraft()
+  const [message, setMessage] = React.useState(getDraft)
   const [maxHeight, setMaxHeight] = React.useState<number | undefined>()
   const [isInputScrollable, setIsInputScrollable] = React.useState(false)
 
@@ -45,13 +50,14 @@ export function MessageInput({
       Toast.show(_(msg`Message is too long`))
       return
     }
+    clearDraft()
     onSendMessage(message.trimEnd())
     playHaptic()
     setMessage('')
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [message, onSendMessage, playHaptic, _])
+  }, [message, onSendMessage, playHaptic, _, clearDraft])
 
   const onInputLayout = React.useCallback(
     (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
@@ -68,6 +74,8 @@ export function MessageInput({
     },
     [scrollToEnd, topInset],
   )
+
+  useSaveMessageDraft(message)
 
   return (
     <View style={a.p_sm}>

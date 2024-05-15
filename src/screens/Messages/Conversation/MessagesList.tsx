@@ -7,8 +7,8 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isNative} from '#/platform/detection'
-import {useConvo} from '#/state/messages/convo'
-import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
+import {useConvoActive} from '#/state/messages/convo'
+import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
@@ -60,7 +60,7 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
-  const convo = useConvo()
+  const convo = useConvoActive()
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
 
@@ -128,7 +128,7 @@ export function MessagesList() {
   // The check for `hasInitiallyScrolled` prevents an initial fetch on mount. FlatList triggers `onStartReached`
   // immediately on mount, since we are in fact at an offset of zero, so we have to ignore those initial calls.
   const onStartReached = useCallback(() => {
-    if (convo.status === ConvoStatus.Ready && hasInitiallyScrolled.value) {
+    if (hasInitiallyScrolled.value) {
       convo.fetchMessageHistory()
     }
   }, [convo, hasInitiallyScrolled])
@@ -150,12 +150,10 @@ export function MessagesList() {
         return true
       })
 
-      if (convo.status === ConvoStatus.Ready) {
-        convo.sendMessage({
-          text: rt.text,
-          facets: rt.facets,
-        })
-      }
+      convo.sendMessage({
+        text: rt.text,
+        facets: rt.facets,
+      })
     },
     [convo, getAgent],
   )
