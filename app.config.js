@@ -200,6 +200,7 @@ module.exports = function (config) {
           {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
+            sounds: ['assets/blueskydm.wav'],
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
