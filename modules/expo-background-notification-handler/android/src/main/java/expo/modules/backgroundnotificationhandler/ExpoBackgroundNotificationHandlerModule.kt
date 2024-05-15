@@ -11,6 +11,18 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
 
+    OnCreate {
+      NotificationPrefs(appContext.reactContext).initialize()
+    }
+
+    OnActivityEntersForeground {
+      isForegrounded = true
+    }
+
+    OnActivityEntersBackground {
+      isForegrounded = false
+    }
+
     AsyncFunction("getAllPrefsAsync") {
       return@AsyncFunction NotificationPrefs(appContext.reactContext).getAllPrefs()
     }
@@ -53,14 +65,6 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
 
     AsyncFunction("removeManyFromStringArrayAsync") { forKey: String, strings: Array<String> ->
       NotificationPrefs(appContext.reactContext).removeManyFromStringArray(forKey, strings)
-    }
-
-    OnActivityEntersForeground {
-      isForegrounded = true
-    }
-
-    OnActivityEntersBackground {
-      isForegrounded = false
     }
   }
 }

@@ -2,21 +2,47 @@ package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
 
+val DEFAULTS = mapOf<String, Any>(
+  "playSoundChat" to true,
+  "playSoundFollow" to false,
+  "playSoundLike" to false,
+  "playSoundMention" to false,
+  "playSoundQuote" to false,
+  "playSoundReply" to false,
+  "playSoundRepost" to false,
+  "mutedThreads" to mapOf<String, List<String>>()
+)
+
 class NotificationPrefs (private val context: Context?) {
   private val prefs = context?.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
     ?: throw Error("Context is null")
 
-  init {
-    if (!prefs.getBoolean("initialized", false)) {
-      prefs
-        .edit()
-        .apply {
-          putBoolean("initialized", true)
-          putBoolean("playSoundChat", true)
-          putBoolean("playSoundOther", false)
+  fun initialize() {
+    prefs
+      .edit()
+      .apply {
+        DEFAULTS.forEach { (key, value) ->
+          if (prefs.contains(key)) {
+            return@forEach
+          }
+
+          when (value) {
+            is Boolean -> {
+              putBoolean(key, value)
+            }
+            is String -> {
+              putString(key, value)
+            }
+            is Array<*> -> {
+              putStringSet(key, value.map { it.toString() }.toSet())
+            }
+            is Map<*, *> -> {
+              putStringSet(key, value.map { it.toString() }.toSet())
+            }
+          }
         }
-        .apply()
-    }
+      }
+      .apply()
   }
 
   fun getAllPrefs(): MutableMap<String, *> {

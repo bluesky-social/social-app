@@ -2,7 +2,7 @@ import ExpoModulesCore
 
 let APP_GROUP = "group.app.bsky"
 
-let DEFAULTS = [
+let DEFAULTS: [String:Any] = [
   "playSoundChat" : true,
   "playSoundFollow": false,
   "playSoundLike": false,
@@ -10,6 +10,7 @@ let DEFAULTS = [
   "playSoundQuote": false,
   "playSoundReply": false,
   "playSoundRepost": false,
+  "mutedThreads": [:] as! [String:[String]]
 ]
 
 /*
