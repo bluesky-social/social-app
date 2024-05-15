@@ -64,7 +64,7 @@ export function useNotificationsHandler() {
   React.useEffect(() => {
     if (!isAndroid) return
 
-    Notifications.setNotificationChannelAsync('chat-messages-sound', {
+    Notifications.setNotificationChannelAsync('chat-messages', {
       name: 'Chat',
       importance: Notifications.AndroidImportance.MAX,
       sound: 'dm.mp3',
@@ -73,8 +73,8 @@ export function useNotificationsHandler() {
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
     })
 
-    Notifications.setNotificationChannelAsync('chat-messages', {
-      name: 'Chat',
+    Notifications.setNotificationChannelAsync('chat-messages-muted', {
+      name: 'Chat - Muted',
       importance: Notifications.AndroidImportance.MAX,
       sound: null,
       showBadge: true,
