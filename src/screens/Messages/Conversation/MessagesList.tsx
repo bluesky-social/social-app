@@ -1,7 +1,6 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
-import {useKeyboardHandler} from 'react-native-keyboard-controller'
-import {runOnJS, useSharedValue} from 'react-native-reanimated'
+import {useSharedValue} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
@@ -186,18 +185,6 @@ export function MessagesList() {
       isMomentumScrolling.value = true
     })
   }, [isMomentumScrolling])
-
-  // This is only used inside the useKeyboardHandler because the worklet won't work with a ref directly.
-  const scrollToEndNow = React.useCallback(() => {
-    flatListRef.current?.scrollToEnd({animated: false})
-  }, [])
-
-  useKeyboardHandler({
-    onMove: () => {
-      'worklet'
-      runOnJS(scrollToEndNow)()
-    },
-  })
 
   return (
     <>

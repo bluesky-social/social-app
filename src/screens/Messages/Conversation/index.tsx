@@ -1,7 +1,5 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -76,7 +74,7 @@ function Inner() {
 
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
 
-  const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
+  const {bottom: bottomInset} = useSafeAreaInsets()
   const nativeBottomBarHeight = isIOS ? 42 : 60
 
   // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
@@ -113,43 +111,38 @@ function Inner() {
    */
 
   return (
-    <KeyboardProvider>
-      <KeyboardAvoidingView
-        style={[
-          a.flex_1,
-          isNative && {marginBottom: bottomInset + nativeBottomBarHeight},
-        ]}
-        keyboardVerticalOffset={isIOS ? topInset : 0}
-        behavior="padding"
-        contentContainerStyle={a.flex_1}>
-        <CenteredView style={a.flex_1} sideBorders>
-          <Header profile={convoState.recipients?.[0]} />
-          <View style={[a.flex_1]}>
-            {isConvoActive(convoState) ? (
-              <MessagesList />
-            ) : (
-              <ListMaybePlaceholder isLoading />
-            )}
-            {!hasInitiallyRendered && (
-              <View
-                style={[
-                  a.absolute,
-                  a.z_10,
-                  a.w_full,
-                  a.h_full,
-                  a.justify_center,
-                  a.align_center,
-                  t.atoms.bg,
-                ]}>
-                <View style={[{marginBottom: 75}]}>
-                  <Loader size="xl" />
-                </View>
+    <View
+      style={[
+        a.flex_1,
+        isNative && {marginBottom: bottomInset + nativeBottomBarHeight},
+      ]}>
+      <CenteredView style={a.flex_1} sideBorders>
+        <Header profile={convoState.recipients?.[0]} />
+        <View style={[a.flex_1]}>
+          {isConvoActive(convoState) ? (
+            <MessagesList />
+          ) : (
+            <ListMaybePlaceholder isLoading />
+          )}
+          {!hasInitiallyRendered && (
+            <View
+              style={[
+                a.absolute,
+                a.z_10,
+                a.w_full,
+                a.h_full,
+                a.justify_center,
+                a.align_center,
+                t.atoms.bg,
+              ]}>
+              <View style={[{marginBottom: 75}]}>
+                <Loader size="xl" />
               </View>
-            )}
-          </View>
-        </CenteredView>
-      </KeyboardAvoidingView>
-    </KeyboardProvider>
+            </View>
+          )}
+        </View>
+      </CenteredView>
+    </View>
   )
 }
 
