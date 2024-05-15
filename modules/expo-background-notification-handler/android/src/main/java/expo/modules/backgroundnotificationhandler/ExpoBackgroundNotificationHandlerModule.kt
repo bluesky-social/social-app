@@ -1,8 +1,5 @@
 package expo.modules.backgroundnotificationhandler
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -26,12 +23,36 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
       return@AsyncFunction NotificationPrefs(appContext.reactContext).getString(forKey)
     }
 
+    AsyncFunction("getStringArrayAsync") { forKey: String ->
+      return@AsyncFunction NotificationPrefs(appContext.reactContext).getStringArray(forKey)
+    }
+
     AsyncFunction("setBoolAsync") { forKey: String, value: Boolean ->
       NotificationPrefs(appContext.reactContext).setBoolean(forKey, value)
     }
 
     AsyncFunction("setStringAsync") { forKey: String, value: String ->
       NotificationPrefs(appContext.reactContext).setString(forKey, value)
+    }
+
+    AsyncFunction("setStringArrayAsync") { forKey: String, value: Array<String> ->
+      NotificationPrefs(appContext.reactContext).setStringArray(forKey, value)
+    }
+
+    AsyncFunction("addToStringArrayAsync") { forKey: String, string: String ->
+      NotificationPrefs(appContext.reactContext).addToStringArray(forKey, string)
+    }
+
+    AsyncFunction("removeFromStringArrayAsync") { forKey: String, string: String ->
+      NotificationPrefs(appContext.reactContext).removeFromStringArray(forKey, string)
+    }
+
+    AsyncFunction("addManyToStringArrayAsync") { forKey: String, strings: Array<String> ->
+      NotificationPrefs(appContext.reactContext).addManyToStringArray(forKey, strings)
+    }
+
+    AsyncFunction("removeManyFromStringArrayAsync") { forKey: String, strings: Array<String> ->
+      NotificationPrefs(appContext.reactContext).removeManyFromStringArray(forKey, strings)
     }
 
     OnActivityEntersForeground {

@@ -62,7 +62,19 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       return nil
     }
     
-    AsyncFunction("addStringToArrayAsync") { (forKey: String, string: String) in
+    AsyncFunction("setBoolAsync") { (forKey: String, value: Bool) -> Void in
+      userDefaults?.setValue(value, forKey: forKey)
+    }
+    
+    AsyncFunction("setStringAsync") { (forKey: String, value: String) -> Void in
+      userDefaults?.setValue(value, forKey: forKey)
+    }
+    
+    AsyncFunction("setStringArrayAsync") { (forKey: String, value: [String]) -> Void in
+      userDefaults?.setValue(value, forKey: forKey)
+    }
+    
+    AsyncFunction("addToStringArrayAsync") { (forKey: String, string: String) in
       if var curr = userDefaults?.stringArray(forKey: forKey),
          !curr.contains(string)
       {
@@ -98,18 +110,6 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
         }
         userDefaults?.setValue(curr, forKey: forKey)
       }
-    }
-    
-    AsyncFunction("setBoolAsync") { (forKey: String, value: Bool) -> Void in
-      userDefaults?.setValue(value, forKey: forKey)
-    }
-    
-    AsyncFunction("setStringAsync") { (forKey: String, value: String) -> Void in
-      userDefaults?.setValue(value, forKey: forKey)
-    }
-    
-    AsyncFunction("setStringArrayAsync") { (forKey: String, value: [String]) -> Void in
-      userDefaults?.setValue(value, forKey: forKey)
     }
   }
 }

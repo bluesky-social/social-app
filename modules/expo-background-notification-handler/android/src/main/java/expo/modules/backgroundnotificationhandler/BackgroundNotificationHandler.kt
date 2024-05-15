@@ -1,7 +1,6 @@
 package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.messaging.RemoteMessage
 
 class BackgroundNotificationHandler(
@@ -30,13 +29,6 @@ class BackgroundNotificationHandler(
     return remoteMessage
   }
 
-  // On Android, the notifications always have a sound unless we turn them off. Let's do so to
-  // prevent people from just wanting to turn it off in all cases (don't blame them honestly)
-  private fun mutateWithNoSound(remoteMessage: RemoteMessage): RemoteMessage {
-    remoteMessage.data["sound"] = "false"
-    return remoteMessage
-  }
-
   private fun mutateWithDefaultSound(remoteMessage: RemoteMessage): RemoteMessage {
     remoteMessage.data["sound"] = "true"
     return remoteMessage
@@ -44,6 +36,13 @@ class BackgroundNotificationHandler(
 
   private fun mutateWithDmSound(remoteMessage: RemoteMessage): RemoteMessage {
     remoteMessage.data["sound"] = "blueskydm.wav"
+    return remoteMessage
+  }
+
+  // On Android, the notifications always have a sound unless we turn them off. Let's do so to
+  // prevent people from just wanting to turn it off in all cases (don't blame them honestly)
+  private fun mutateWithNoSound(remoteMessage: RemoteMessage): RemoteMessage {
+    remoteMessage.data["sound"] = "false"
     return remoteMessage
   }
 }
