@@ -77,8 +77,7 @@ function Inner() {
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
 
   const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
-  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
+  const nativeBottomBarHeight = isIOS ? 42 : 60
 
   // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
   // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
@@ -118,9 +117,7 @@ function Inner() {
       <KeyboardAvoidingView
         style={[
           a.flex_1,
-          isNative
-            ? {marginBottom: bottomInset + bottomBarHeight}
-            : {marginBottom: gtMobile ? 0 : 20},
+          isNative && {marginBottom: bottomInset + nativeBottomBarHeight},
         ]}
         keyboardVerticalOffset={isIOS ? topInset : 0}
         behavior="padding"
