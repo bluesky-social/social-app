@@ -75,6 +75,7 @@ export function MessagesList() {
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
   const contentHeight = useSharedValue(0)
+  const prevItemCount = useRef(0)
 
   // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
@@ -106,7 +107,15 @@ export function MessagesList() {
       // This number _must_ be the height of the MaybeLoader component
       if (height > 50 && isAtBottom.value) {
         let newOffset = height
-        if (height - contentHeight.value > layoutHeight.value - 50) {
+
+        // If the size of the content is changing by more than the height of the screen, then we should only
+        // scroll 1 screen down, and let the user scroll the rest. However, because a single message could be
+        // really large - and the normal chat behavior would be to still scroll to the end if it's only one
+        // message - we ignore this rule if there's only one additional message
+        if (
+          height - contentHeight.value > layoutHeight.value - 50 &&
+          convo.items.length - prevItemCount.current > 1
+        ) {
           newOffset = contentHeight.value - 50
         }
 
@@ -117,6 +126,7 @@ export function MessagesList() {
         isMomentumScrolling.value = true
       }
       contentHeight.value = height
+      prevItemCount.current = convo.items.length
     },
     [
       contentHeight,
@@ -125,6 +135,7 @@ export function MessagesList() {
       isAtTop.value,
       isMomentumScrolling,
       layoutHeight.value,
+      convo.items.length,
     ],
   )
 
