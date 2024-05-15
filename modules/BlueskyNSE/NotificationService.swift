@@ -3,15 +3,13 @@ import UserNotifications
 let APP_GROUP = "group.app.bsky"
 
 class NotificationService: UNNotificationServiceExtension {
-  var contentHandler: ((UNNotificationContent) -> Void)?
   var prefs = UserDefaults(suiteName: APP_GROUP)
 
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-    self.contentHandler = contentHandler
-    
     guard var bestAttempt = createCopy(request.content),
           let reason = request.content.userInfo["reason"] as? String
     else {
+      contentHandler(request.content)
       return
     }
     
