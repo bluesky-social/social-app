@@ -11,10 +11,10 @@ index 97bf4f4..6e9d427 100644
    if (project.findProject(':expo-modules-test-core')) {
      testImplementation project(':expo-modules-test-core')
 diff --git a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
-index 55b3a8d..1b99d5b 100644
+index 55b3a8d..8e8520b 100644
 --- a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
 +++ b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/service/delegates/FirebaseMessagingDelegate.kt
-@@ -12,11 +12,14 @@ import expo.modules.notifications.notifications.model.triggers.FirebaseNotificat
+@@ -12,11 +14,14 @@ import expo.modules.notifications.notifications.model.triggers.FirebaseNotificat
  import expo.modules.notifications.service.NotificationsService
  import expo.modules.notifications.service.interfaces.FirebaseMessagingDelegate
  import expo.modules.notifications.tokens.interfaces.FirebaseTokenListener
@@ -30,7 +30,7 @@ index 55b3a8d..1b99d5b 100644
    companion object {
      // Unfortunately we cannot save state between instances of a service other way
      // than by static properties. Fortunately, using weak references we can
-@@ -89,12 +92,21 @@ open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseM
+@@ -89,12 +94,21 @@ open class FirebaseMessagingDelegate(protected val context: Context) : FirebaseM
    fun getBackgroundTasks() = sBackgroundTaskConsumerReferences.values.mapNotNull { it.get() }
 
    override fun onMessageReceived(remoteMessage: RemoteMessage) {
