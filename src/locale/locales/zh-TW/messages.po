@@ -100,7 +100,7 @@ msgstr "{numUnreadNotifications} 個未讀通知"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-msgstr "{value, plural, =0 {顯示所有回覆} one {顯示的喜歡數不低於 # 個} other {顯示的喜歡數不低於 # 個}}"
+msgstr "{value, plural, =0 {顯示所有回覆} one {顯示至少 # 個喜歡的回覆} other {顯示至少 # 個喜歡的回覆}}"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:159
 msgid "<0/> members"
