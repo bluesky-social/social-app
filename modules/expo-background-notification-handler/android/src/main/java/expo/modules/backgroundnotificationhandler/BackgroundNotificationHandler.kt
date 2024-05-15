@@ -35,7 +35,7 @@ class BackgroundNotificationHandler(
   }
 
   private fun mutateWithDmSound(remoteMessage: RemoteMessage): RemoteMessage {
-    remoteMessage.data["sound"] = "blueskydm.wav"
+    remoteMessage.data["sound"] = "dm.mp3"
     return remoteMessage
   }
 
