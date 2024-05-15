@@ -943,7 +943,7 @@ msgstr "為 {name} 配置內容過濾設定"
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
-msgstr "已在 <0> 內容管理設定 </0> 中配置。"
+msgstr "已在<0>內容管理設定</0>中配置。"
 
 #: src/components/Prompt.tsx:159
 #: src/components/Prompt.tsx:162
