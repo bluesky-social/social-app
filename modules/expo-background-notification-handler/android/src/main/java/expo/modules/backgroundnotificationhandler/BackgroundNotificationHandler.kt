@@ -22,9 +22,9 @@ class BackgroundNotificationHandler(
 
   private fun mutateWithChatMessage(remoteMessage: RemoteMessage) {
     if (NotificationPrefs(context).getBoolean("playSoundChat")) {
-      remoteMessage.data["channelId"] = "chat-messages-sound"
-    } else {
       remoteMessage.data["channelId"] = "chat-messages"
+    } else {
+      remoteMessage.data["channelId"] = "chat-messages-muted"
       remoteMessage.data["sound"] = null
     }
   }
