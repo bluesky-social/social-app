@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-15 09:10+0800\n"
+"PO-Revision-Date: 2024-05-15 09:20+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -438,7 +438,7 @@ msgstr "您確定要刪除這個應用程式專用密碼「{name}」嗎？"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
 msgstr "你確定要刪除這則訊息嗎？該訊息將為您刪除，但不會為其他參與者刪除。"
 
-#: src/components/dms/ConvoMenu.tsx:189
+#: src/components/dms/ConvoMenu.tsx:225
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
 msgstr "您確定要離開此對話嗎？您的訊息將為您刪除，但不會為其他參與者刪除。"
 
@@ -480,7 +480,7 @@ msgstr "至少 3 個字元"
 #: src/screens/Login/LoginForm.tsx:278
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:184
+#: src/screens/Messages/Conversation/index.tsx:185
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -508,8 +508,8 @@ msgstr "生日："
 msgid "Block"
 msgstr "封鎖"
 
-#: src/components/dms/ConvoMenu.tsx:152
-#: src/components/dms/ConvoMenu.tsx:156
+#: src/components/dms/ConvoMenu.tsx:190
+#: src/components/dms/ConvoMenu.tsx:194
 msgid "Block account"
 msgstr "封鎖帳戶"
 
@@ -751,17 +751,17 @@ msgstr "變更您的電子郵件地址"
 msgid "Chat"
 msgstr "對話"
 
-#: src/components/dms/ConvoMenu.tsx:63
+#: src/components/dms/ConvoMenu.tsx:86
 msgid "Chat muted"
 msgstr "對話已靜音"
 
-#: src/components/dms/ConvoMenu.tsx:89
+#: src/components/dms/ConvoMenu.tsx:127
 #: src/components/dms/MessageMenu.tsx:69
 #: src/Navigation.tsx:307
 msgid "Chat settings"
 msgstr "對話設定"
 
-#: src/components/dms/ConvoMenu.tsx:65
+#: src/components/dms/ConvoMenu.tsx:88
 msgid "Chat unmuted"
 msgstr "對話已解除靜音"
 
@@ -1133,7 +1133,7 @@ msgstr "複製貼文文字"
 msgid "Copyright Policy"
 msgstr "著作權政策"
 
-#: src/components/dms/ConvoMenu.tsx:80
+#: src/components/dms/ConvoMenu.tsx:118
 msgid "Could not leave chat"
 msgstr "無法離開對話"
 
@@ -1149,7 +1149,7 @@ msgstr "無法載入列表"
 msgid "Could not load profiles. Please try again later."
 msgstr "無法載入用戶個人檔案。請稍後再試。"
 
-#: src/components/dms/ConvoMenu.tsx:69
+#: src/components/dms/ConvoMenu.tsx:92
 msgid "Could not mute chat"
 msgstr "無法靜音對話"
 
@@ -2096,11 +2096,11 @@ msgstr "前往首頁"
 msgid "Go to next"
 msgstr "前往下一步"
 
-#: src/components/dms/ConvoMenu.tsx:131
+#: src/components/dms/ConvoMenu.tsx:169
 msgid "Go to profile"
 msgstr "前往個人頁面"
 
-#: src/components/dms/ConvoMenu.tsx:128
+#: src/components/dms/ConvoMenu.tsx:166
 msgid "Go to user's profile"
 msgstr "前往用戶個人頁面"
 
@@ -2258,7 +2258,8 @@ msgstr "我有驗證碼"
 msgid "I have my own domain"
 msgstr "我擁有自己的網域"
 
-#: src/components/dms/ConvoMenu.tsx:202
+#: src/components/dms/ConvoMenu.tsx:238
+#: src/components/dms/ConvoMenu.tsx:272
 msgid "I understand"
 msgstr "我了解"
 
@@ -2463,13 +2464,13 @@ msgstr "瞭解有關 Bluesky 上公開內容的更多資訊。"
 msgid "Learn more."
 msgstr "瞭解詳情。"
 
-#: src/components/dms/ConvoMenu.tsx:191
+#: src/components/dms/ConvoMenu.tsx:227
 msgid "Leave"
 msgstr "離開"
 
-#: src/components/dms/ConvoMenu.tsx:174
-#: src/components/dms/ConvoMenu.tsx:177
-#: src/components/dms/ConvoMenu.tsx:187
+#: src/components/dms/ConvoMenu.tsx:210
+#: src/components/dms/ConvoMenu.tsx:213
+#: src/components/dms/ConvoMenu.tsx:223
 msgid "Leave conversation"
 msgstr "離開對話"
 
@@ -2580,6 +2581,10 @@ msgstr "已解除靜音的列表"
 msgid "Lists"
 msgstr "列表"
 
+#: src/components/dms/ConvoMenu.tsx:255
+msgid "Lists blocking this user:"
+msgstr "列表已封鎖這個用戶："
+
 #: src/view/screens/Notifications.tsx:159
 msgid "Load new notifications"
 msgstr "載入新的通知"
@@ -2642,8 +2647,8 @@ msgstr "請確認這是您想要去的的地方！"
 msgid "Manage your muted words and tags"
 msgstr "管理您靜音的文字和標籤"
 
-#: src/components/dms/ConvoMenu.tsx:115
-#: src/components/dms/ConvoMenu.tsx:122
+#: src/components/dms/ConvoMenu.tsx:153
+#: src/components/dms/ConvoMenu.tsx:160
 msgid "Mark as read"
 msgstr "標記為已讀"
 
@@ -2666,7 +2671,7 @@ msgid "Menu"
 msgstr "選單"
 
 #: src/components/dms/MessageMenu.tsx:60
-#: src/screens/Messages/List/ChatListItem.tsx:51
+#: src/screens/Messages/List/ChatListItem.tsx:87
 msgid "Message deleted"
 msgstr "訊息已刪除"
 
@@ -2683,15 +2688,15 @@ msgstr "訊息輸入欄位"
 msgid "Message is too long"
 msgstr "訊息太長了"
 
-#: src/screens/Messages/List/index.tsx:70
-#: src/screens/Messages/List/index.tsx:241
+#: src/screens/Messages/List/index.tsx:64
+#: src/screens/Messages/List/index.tsx:237
 msgid "Message settings"
 msgstr "訊息設定"
 
 #: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:145
-#: src/screens/Messages/List/index.tsx:172
-#: src/screens/Messages/List/index.tsx:237
+#: src/screens/Messages/List/index.tsx:139
+#: src/screens/Messages/List/index.tsx:166
+#: src/screens/Messages/List/index.tsx:233
 msgid "Messages"
 msgstr "訊息"
 
@@ -2807,8 +2812,8 @@ msgstr "靜音文字和標籤"
 msgid "Mute list"
 msgstr "靜音列表"
 
-#: src/components/dms/ConvoMenu.tsx:136
-#: src/components/dms/ConvoMenu.tsx:142
+#: src/components/dms/ConvoMenu.tsx:174
+#: src/components/dms/ConvoMenu.tsx:180
 msgid "Mute notifications"
 msgstr "靜音通知"
 
@@ -2935,8 +2940,8 @@ msgid "New"
 msgstr "新增"
 
 #: src/components/dms/NewChat.tsx:60
-#: src/screens/Messages/List/index.tsx:251
-#: src/screens/Messages/List/index.tsx:259
+#: src/screens/Messages/List/index.tsx:247
+#: src/screens/Messages/List/index.tsx:255
 msgid "New chat"
 msgstr "新對話"
 
@@ -3009,7 +3014,7 @@ msgstr "下一張圖片"
 msgid "No"
 msgstr "關"
 
-#: src/screens/Messages/List/index.tsx:156
+#: src/screens/Messages/List/index.tsx:150
 msgid "No chats yet"
 msgstr "還沒有對話"
 
@@ -3034,7 +3039,7 @@ msgstr "不再跟隨 {0}"
 msgid "No longer than 253 characters"
 msgstr "不超過 253 個字符"
 
-#: src/screens/Messages/List/ChatListItem.tsx:40
+#: src/screens/Messages/List/ChatListItem.tsx:76
 msgid "No messages yet"
 msgstr "還沒有訊息"
 
@@ -3338,7 +3343,7 @@ msgstr "開啟「Following」動態源偏好"
 msgid "Opens the linked website"
 msgstr "開啟網站連結"
 
-#: src/screens/Messages/List/index.tsx:71
+#: src/screens/Messages/List/index.tsx:65
 msgid "Opens the message settings page"
 msgstr "打開私訊設定頁面"
 
@@ -3844,9 +3849,9 @@ msgstr "檢舉"
 msgid "Report Account"
 msgstr "檢舉帳號"
 
-#: src/components/dms/ConvoMenu.tsx:163
-#: src/components/dms/ConvoMenu.tsx:166
-#: src/components/dms/ConvoMenu.tsx:198
+#: src/components/dms/ConvoMenu.tsx:199
+#: src/components/dms/ConvoMenu.tsx:202
+#: src/components/dms/ConvoMenu.tsx:234
 msgid "Report conversation"
 msgstr "檢舉對話"
 
@@ -4650,7 +4655,7 @@ msgstr "跳過此流程"
 msgid "Software Dev"
 msgstr "軟體開發"
 
-#: src/screens/Messages/Conversation/index.tsx:89
+#: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
 msgstr "發生了一些問題"
 
@@ -5002,6 +5007,10 @@ msgstr "{screenDescription} 已被標記："
 msgid "This account has requested that users sign in to view their profile."
 msgstr "此帳號要求使用者登入後才能查看其個人資料。"
 
+#: src/components/dms/ConvoMenu.tsx:250
+msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
+msgstr "此帳戶已被一個或多個內容管理清單封鎖。若要解除封禁，請直接瀏覽這些清單並刪除此使用者。"
+
 #: src/components/moderation/LabelsOnMeDialog.tsx:231
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "此申訴將被提交至 <0>{0}</0>。"
@@ -5168,7 +5177,7 @@ msgstr "討論串偏好"
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "若要關閉電子郵件雙重驗證，請驗證您的電子郵件地址。"
 
-#: src/components/dms/ConvoMenu.tsx:200
+#: src/components/dms/ConvoMenu.tsx:236
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "若要檢舉對話，請透過對話畫面檢舉其中一則訊息。這可以讓我們的內容管理者了解問題的背景資訊。"
 
@@ -5243,12 +5252,17 @@ msgstr "無法連線到服務，請檢查您的網路連線。"
 #: src/view/com/profile/ProfileMenu.tsx:361
 #: src/view/screens/ProfileList.tsx:621
 msgid "Unblock"
-msgstr "取消封鎖"
+msgstr "解除封鎖"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
 msgctxt "action"
 msgid "Unblock"
-msgstr "取消封鎖"
+msgstr "解除封鎖"
+
+#: src/components/dms/ConvoMenu.tsx:190
+#: src/components/dms/ConvoMenu.tsx:194
+msgid "Unblock account"
+msgstr "解除封鎖帳戶"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:305
@@ -5307,7 +5321,7 @@ msgstr "取消靜音帳號"
 msgid "Unmute all {displayTag} posts"
 msgstr "取消對所有 {displayTag} 貼文的靜音"
 
-#: src/components/dms/ConvoMenu.tsx:140
+#: src/components/dms/ConvoMenu.tsx:178
 msgid "Unmute notifications"
 msgstr "取消通知靜音"
 
@@ -5431,6 +5445,10 @@ msgstr "用戶被封鎖"
 #: src/lib/moderation/useModerationCauseDescription.ts:48
 msgid "User Blocked by \"{0}\""
 msgstr "用戶被「{0}」封鎖"
+
+#: src/components/dms/ConvoMenu.tsx:243
+msgid "User blocked by list"
+msgstr "用戶椅背列表封鎖"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:53
 msgid "User Blocked by List"
@@ -5598,7 +5616,7 @@ msgstr "警告內容並從動態源中過濾"
 msgid "We couldn't find any results for that hashtag."
 msgstr "我們找不到任何與該標籤相關的結果。"
 
-#: src/screens/Messages/Conversation/index.tsx:90
+#: src/screens/Messages/Conversation/index.tsx:95
 msgid "We couldn't load this conversation"
 msgstr "我們無法載入這個對話"
 
@@ -5826,7 +5844,7 @@ msgstr "您已隱藏這個帳號。"
 msgid "You have muted this user"
 msgstr "您已靜音這個用戶"
 
-#: src/screens/Messages/List/index.tsx:158
+#: src/screens/Messages/List/index.tsx:152
 msgid "You have no chats yet. Start a conversation with someone!"
 msgstr "您還沒有對話，與其他用戶開始對話！"
 
@@ -5887,7 +5905,7 @@ msgstr "您將收到這條討論串的通知"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "您將收到一封包含重設碼的電子郵件。請在此輸入該「重設碼」，然後輸入您的新密碼。"
 
-#: src/screens/Messages/List/ChatListItem.tsx:44
+#: src/screens/Messages/List/ChatListItem.tsx:80
 msgid "You: {0}"
 msgstr "你：{0}"
 
