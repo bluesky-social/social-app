@@ -283,7 +283,11 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
             pinned,
           },
         ])
-        Toast.show(_(msg`${pinned ? 'Pinned to' : 'Unpinned from'} your feeds`))
+        Toast.show(
+          pinned
+            ? _(msg`Pinned to your feeds`)
+            : _(msg`Unpinned from your feeds`),
+        )
       } else {
         await addSavedFeeds([
           {
