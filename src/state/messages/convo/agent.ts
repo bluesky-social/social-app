@@ -749,14 +749,9 @@ export class Convo {
       id: tempId,
       message,
     })
-    // remove on each send, it might go through now without user having to click
-    // TODO do need htis?
-    this.footerItems.delete(ConvoItemError.PendingFailed)
     this.commit()
 
-    // TODO maybe ignore if failed?
-
-    if (!this.isProcessingPendingMessages) {
+    if (!this.isProcessingPendingMessages && !this.pendingFailed) {
       this.processPendingMessages()
     }
   }

@@ -35,10 +35,6 @@ export enum ConvoItemError {
    * Error fetching past messages
    */
   HistoryFailed = 'historyFailed',
-  /**
-   * Error sending new message
-   */
-  PendingFailed = 'pendingFailed',
 }
 
 export enum ConvoErrorCode {
