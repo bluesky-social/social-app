@@ -18,9 +18,10 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {BACK_HITSLOP} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isIOS, isWeb} from 'platform/detection'
+import {isIOS, isNative, isWeb} from 'platform/detection'
 import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
+import {useSetMinimalShellMode} from 'state/shell'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
@@ -38,16 +39,25 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {gtMobile} = useBreakpoints()
+
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
+
+      if (isWeb && !gtMobile) {
+        setMinimalShellMode(true)
+      }
+
       return () => {
         setCurrentConvoId(undefined)
+        setMinimalShellMode(false)
       }
-    }, [convoId, setCurrentConvoId]),
+    }, [convoId, gtMobile, setCurrentConvoId, setMinimalShellMode]),
   )
 
   if (!gate('dms')) return <ClipClopGate />
@@ -67,8 +77,7 @@ function Inner() {
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
 
   const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
-  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
+  const nativeBottomBarHeight = isIOS ? 42 : 60
 
   // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
   // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
@@ -106,7 +115,10 @@ function Inner() {
   return (
     <KeyboardProvider>
       <KeyboardAvoidingView
-        style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
+        style={[
+          a.flex_1,
+          isNative && {marginBottom: bottomInset + nativeBottomBarHeight},
+        ]}
         keyboardVerticalOffset={isIOS ? topInset : 0}
         behavior="padding"
         contentContainerStyle={a.flex_1}>

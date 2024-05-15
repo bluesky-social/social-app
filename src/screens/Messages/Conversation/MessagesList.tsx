@@ -15,6 +15,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
+import {atoms as a} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -208,9 +209,7 @@ export function MessagesList() {
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           containWeb={true}
-          contentContainerStyle={{
-            paddingHorizontal: 10,
-          }}
+          contentContainerStyle={[a.px_md]}
           disableVirtualization={true}
           initialNumToRender={isNative ? 30 : 60}
           maxToRenderPerBatch={isWeb ? 30 : 60}

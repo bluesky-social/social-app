@@ -78,7 +78,7 @@ export function MessageInput({
   useSaveMessageDraft(message)
 
   return (
-    <View style={a.p_sm}>
+    <View style={a.p_md}>
       <View
         style={[
           a.w_full,
