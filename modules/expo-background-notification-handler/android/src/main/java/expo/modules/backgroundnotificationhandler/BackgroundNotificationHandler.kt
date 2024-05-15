@@ -13,7 +13,7 @@ class BackgroundNotificationHandler(
       return
     }
 
-    if (remoteMessage.data.getValue("reason") == "chat-message") {
+    if (remoteMessage.data["reason"] == "chat-message") {
       mutateWithChatMessage(remoteMessage)
     }
 
