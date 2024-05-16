@@ -113,6 +113,12 @@ export function MessagesList() {
         return
       }
 
+      console.log(
+        hasInitiallyScrolled.value && !keyboardIsOpening.value,
+        hasInitiallyScrolled.value,
+        keyboardIsOpening.value,
+      )
+
       flatListRef.current?.scrollToOffset({
         animated: hasInitiallyScrolled.value && !keyboardIsOpening.value,
         offset: height,
@@ -210,7 +216,12 @@ export function MessagesList() {
   useAnimatedReaction(
     () => animatedKeyboard.height.value,
     (now, prev) => {
-      keyboardIsOpening.value = now !== prev
+      // This never applies on web
+      if (isWeb) {
+        keyboardIsOpening.value = false
+      } else {
+        keyboardIsOpening.value = now !== prev
+      }
     },
   )
 
