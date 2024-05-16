@@ -26,9 +26,9 @@ export function MessageInput({
   const {getDraft, clearDraft} = useMessageDraft()
   const [message, setMessage] = React.useState(getDraft)
 
+  const inputStyles = useSharedInputStyles()
   const [isFocused, setIsFocused] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
-  const inputStyles = useSharedInputStyles()
 
   const onSubmit = React.useCallback(() => {
     if (message.trim() === '') {
