@@ -18,27 +18,27 @@ export function NewMessagesPill() {
   return (
     <Animated.View
       style={[
-        a.py_md,
+        a.py_sm,
         a.rounded_full,
         a.shadow_sm,
         a.border,
-        t.atoms.border_contrast_low,
+        t.atoms.bg_contrast_50,
+        t.atoms.border_contrast_medium,
         {
           position: 'absolute',
-          bottom: 80,
-          width: '50%',
-          left: '25%',
+          bottom: 70,
+          width: '40%',
+          left: '30%',
           alignItems: 'center',
-          shadowOpacity: 0.2,
+          shadowOpacity: 0.125,
           shadowRadius: 12,
           shadowOffset: {width: 0, height: 5},
-          backgroundColor: t.palette.positive_700,
         },
       ]}
       entering={ScaleAndFadeIn}
       exiting={ScaleAndFadeOut}>
       <View style={{flex: 1}}>
-        <Text style={[a.text_md, a.font_bold, {color: t.palette.white}]}>
+        <Text style={[a.font_bold]}>
           <Trans>New messages</Trans>
         </Text>
       </View>
