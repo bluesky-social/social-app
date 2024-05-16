@@ -61,6 +61,11 @@ export function Component({}: {}) {
     const token = confirmCode.replace(/\s/g, '')
 
     try {
+      // inform chat service of intent to delete account
+      const {success} = await getAgent().api.chat.bsky.actor.deleteAccount()
+      if (!success) {
+        throw new Error('Failed to inform chat service of account deletion')
+      }
       await getAgent().com.atproto.server.deleteAccount({
         did: currentAccount.did,
         password,
