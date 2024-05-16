@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {Keyboard, View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {Keyboard, TextInput, View} from 'react-native'
+import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -15,18 +15,31 @@ import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web, native, useBreakpoints} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import * as TextField from '#/components/forms/TextField'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Button} from '../Button'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
-import {ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
 import {canBeMessaged} from './util'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+
+type Item =
+  | {
+      type: 'profile'
+      key: string
+      profile: AppBskyActorDefs.ProfileView
+    }
+  | {
+      type: 'empty'
+      key: string
+    }
+  | {
+      type: 'error'
+      key: string
+    }
 
 export function NewChat({
   control,
@@ -75,6 +88,145 @@ export function NewChat({
   )
 }
 
+function ProfileCard({
+  profile,
+  moderationOpts,
+  onPress,
+}: {
+  profile: AppBskyActorDefs.ProfileView
+  moderationOpts: ModerationOpts
+  onPress: (did: string) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const moderation = moderateProfile(profile, moderationOpts)
+  const disabled = !canBeMessaged(profile)
+  const handle = sanitizeHandle(profile.handle, '@')
+  const displayName = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+    moderation.ui('displayName'),
+  )
+
+  const handleOnPress = useCallback(() => {
+    onPress(profile.did)
+  }, [onPress, profile.did])
+
+  return (
+    <Button
+      disabled={disabled}
+      label={_(msg`Start chat with ${displayName}`)}
+      onPress={handleOnPress}>
+      {({hovered, pressed, focused}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.py_md,
+            a.px_lg,
+            a.gap_md,
+            a.align_center,
+            a.flex_row,
+            disabled
+              ? {opacity: 0.5}
+              : pressed || focused
+              ? t.atoms.bg_contrast_25
+              : hovered
+              ? t.atoms.bg_contrast_50
+              : t.atoms.bg,
+          ]}>
+          <UserAvatar
+            size={42}
+            avatar={profile.avatar}
+            moderation={moderation.ui('avatar')}
+            type={profile.associated?.labeler ? 'labeler' : 'user'}
+          />
+          <View style={[a.flex_1, a.gap_2xs]}>
+            <Text
+              style={[t.atoms.text, a.font_bold, a.leading_snug]}
+              numberOfLines={1}>
+              {displayName}
+            </Text>
+            <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
+              {disabled ? <Trans>{handle} can't be messaged</Trans> : handle}
+            </Text>
+          </View>
+        </View>
+      )}
+    </Button>
+  )
+}
+
+function Empty() {
+  const t = useTheme()
+  return (
+    <View style={[a.p_lg, a.py_xl, a.align_center, a.gap_md]}>
+      <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_high]}>
+        No results
+      </Text>
+
+      <Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
+    </View>
+  )
+}
+
+function SearchInput({
+  value,
+  onChangeText,
+  onEscape,
+}: {
+  value: string
+  onChangeText: (text: string) => void
+  onEscape: () => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
+  } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const interacted = hovered || focused
+
+  return (
+    <View
+      {...web({
+        onMouseEnter,
+        onMouseLeave,
+      })}
+      style={[a.flex_row, a.align_center, a.gap_sm]}>
+      <Search
+        size="md"
+        fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
+      />
+
+      <TextInput
+        placeholder={_(msg`Search`)}
+        value={value}
+        onChangeText={onChangeText}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        style={[a.flex_1, a.py_md, a.text_md, t.atoms.text]}
+        placeholderTextColor={t.palette.contrast_500}
+        keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
+        returnKeyType="search"
+        clearButtonMode="while-editing"
+        maxLength={50}
+        onKeyPress={({nativeEvent}) => {
+          if (nativeEvent.key === 'Escape') {
+            onEscape()
+          }
+        }}
+        autoCorrect={false}
+        autoComplete="off"
+        autoCapitalize="none"
+        autoFocus
+        accessibilityLabel={_(msg`Search profiles`)}
+        accessibilityHint={_(msg`Search profiles`)}
+      />
+    </View>
+  )
+}
+
 function SearchablePeopleList({
   onCreateChat,
 }: {
@@ -82,7 +234,6 @@ function SearchablePeopleList({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {gtMobile } = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
@@ -90,184 +241,136 @@ function SearchablePeopleList({
 
   const [searchText, setSearchText] = useState('')
 
-  const {
-    data: actorAutocompleteData,
-    isFetching,
-    isError,
-    refetch,
-  } = useActorAutocompleteQuery(searchText, true)
+  const {data: results, isError} = useActorAutocompleteQuery(searchText, true)
 
-  const renderItem = useCallback(
-    ({item: profile}: {item: AppBskyActorDefs.ProfileView}) => {
-      if (!moderationOpts) return null
+  const items = React.useMemo(() => {
+    const i: Item[] = []
 
-      const moderation = moderateProfile(profile, moderationOpts)
+    if (isError) {
+      i.push({type: 'error', key: 'error'})
+    } else if (searchText.length) {
+      if (results?.length) {
+        for (const profile of results) {
+          if (profile.did === currentAccount?.did) continue
+          i.push({type: 'profile', key: profile.did, profile})
+        }
+      } else {
+        i.push({type: 'empty', key: 'empty'})
+      }
+    } else {
+      console.log('empty')
+    }
 
-      const disabled = !canBeMessaged(profile)
-      const handle = sanitizeHandle(profile.handle, '@')
+    return i
+  }, [searchText, results, isError, currentAccount?.did])
 
-      return (
-        <Button
-          label={profile.displayName || sanitizeHandle(profile.handle)}
-          onPress={() => !disabled && onCreateChat(profile.did)}>
-          {({hovered, pressed, focused}) => (
-            <View
-              style={[
-                a.flex_1,
-                a.px_md,
-                a.py_sm,
-                a.gap_md,
-                a.align_center,
-                a.flex_row,
-                a.rounded_sm,
-                disabled
-                  ? {opacity: 0.5}
-                  : pressed || focused
-                  ? t.atoms.bg_contrast_25
-                  : hovered
-                  ? t.atoms.bg_contrast_50
-                  : t.atoms.bg,
-              ]}>
-              <UserAvatar
-                size={40}
-                avatar={profile.avatar}
-                moderation={moderation.ui('avatar')}
-                type={profile.associated?.labeler ? 'labeler' : 'user'}
-              />
-              <View style={{flex: 1}}>
-                <Text
-                  style={[t.atoms.text, a.font_bold, a.leading_snug]}
-                  numberOfLines={1}>
-                  {sanitizeDisplayName(
-                    profile.displayName || sanitizeHandle(profile.handle),
-                    moderation.ui('displayName'),
-                  )}
-                </Text>
-                <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
-                  {disabled ? (
-                    <Trans>{handle} can't be messaged</Trans>
-                  ) : (
-                    handle
-                  )}
-                </Text>
-              </View>
-            </View>
-          )}
-        </Button>
-      )
+  const renderItems = React.useCallback(
+    ({item}: {item: Item}) => {
+      switch (item.type) {
+        case 'profile': {
+          return (
+            <ProfileCard
+              key={item.key}
+              profile={item.profile}
+              moderationOpts={moderationOpts!}
+              onPress={onCreateChat}
+            />
+          )
+        }
+        case 'empty': {
+          return <Empty key={item.key} />
+        }
+        default:
+          return null
+      }
     },
-    [
-      moderationOpts,
-      onCreateChat,
-      t.atoms.bg_contrast_25,
-      t.atoms.bg_contrast_50,
-      t.atoms.bg,
-      t.atoms.text,
-      t.atoms.text_contrast_high,
-    ],
+    [moderationOpts, onCreateChat],
   )
 
   const listHeader = useMemo(() => {
     return (
-      <View style={[a.relative, a.mb_lg]}>
-        <View style={[a.relative, native(a.align_center), a.justify_center, { height: 32 }]}>
-          <Button
-            label={_(msg`Close`)}
-            size='small'
-            shape='round'
-            variant='ghost'
-            color='secondary'
-            style={[
-              a.absolute,
-              a.z_20,
-              native({
-                left: -4,
-              }),
-              web({
-                right: -4,
-              })
-            ]}
-          >
-            {isWeb ? (
-              <X size="lg" fill={t.palette.contrast_500} />
-            ) : (
-              <ChevronLeft size="lg" fill={t.palette.contrast_500} />
-            )}
-          </Button>
-
+      <View
+        style={[
+          a.relative,
+          a.px_lg,
+          a.border_b,
+          t.atoms.border_contrast_low,
+          t.atoms.bg,
+        ]}>
+        <View
+          style={[
+            a.relative,
+            native(a.align_center),
+            a.justify_center,
+            {height: 32},
+          ]}>
           <Text
             style={[
               a.z_10,
-              a.text_md,
+              a.text_lg,
               a.font_bold,
               a.leading_tight,
-              t.atoms.text_contrast_medium,
+              t.atoms.text_contrast_high,
             ]}>
             <Trans>Start a new chat</Trans>
           </Text>
         </View>
 
-        <View style={[a.pt_sm]}>
-          <TextField.Root>
-            <TextField.Icon icon={Search} />
-            <Dialog.Input
-              label={_(msg`Search profiles`)}
-              placeholder={_(msg`Search`)}
-              value={searchText}
-              onChangeText={text => {
-                setSearchText(text)
-                listRef.current?.scrollToOffset({offset: 0, animated: false})
-              }}
-              returnKeyType="search"
-              clearButtonMode="while-editing"
-              maxLength={50}
-              onKeyPress={({nativeEvent}) => {
-                if (nativeEvent.key === 'Escape') {
-                  control.close()
-                }
-              }}
-              autoCorrect={false}
-              autoComplete="off"
-              autoCapitalize="none"
-              autoFocus
-            />
-          </TextField.Root>
+        <View style={[native([a.pt_md])]}>
+          <SearchInput
+            value={searchText}
+            onChangeText={text => {
+              setSearchText(text)
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
+            onEscape={control.close}
+          />
         </View>
+
+        <Button
+          label={_(msg`Close`)}
+          size="small"
+          shape="round"
+          variant="ghost"
+          color="secondary"
+          style={[
+            a.absolute,
+            a.z_20,
+            native({
+              left: a.px_lg.paddingLeft - 4,
+            }),
+            web({
+              right: a.px_lg.paddingLeft - 4,
+            }),
+          ]}
+          onPress={() => control.close()}>
+          {isWeb ? (
+            <X size="md" fill={t.palette.contrast_500} />
+          ) : (
+            <ChevronLeft size="md" fill={t.palette.contrast_500} />
+          )}
+        </Button>
       </View>
     )
-  }, [t.atoms.bg, _, control, searchText])
-
-  const dataWithoutSelf = useMemo(() => {
-    return (
-      actorAutocompleteData?.filter(
-        profile => profile.did !== currentAccount?.did,
-      ) ?? []
-    )
-  }, [actorAutocompleteData, currentAccount?.did])
+  }, [t, _, control, searchText])
 
   return (
     <Dialog.InnerFlatList
       ref={listRef}
-      data={dataWithoutSelf}
-      renderItem={renderItem}
+      data={items}
+      renderItem={renderItems}
       ListHeaderComponent={listHeader}
       stickyHeaderIndices={[0]}
       keyExtractor={(item: AppBskyActorDefs.ProfileView) => item.did}
       style={[
-        web([
-          a.py_md,
-          {height: '100vh', maxHeight: 600 },
-          gtMobile ? a.px_xl : a.px_lg,
-        ]),
+        web([a.py_md, {height: '100vh', maxHeight: 600}, a.px_0]),
         native({
+          paddingHorizontal: 0,
           marginTop: 0,
           paddingTop: 20,
-        })
+        }),
       ]}
-      webInnerStyle={[
-        a.py_0,
-        {maxWidth: 500, minWidth: 200},
-      ]}
+      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       onScrollBeginDrag={() => Keyboard.dismiss()}
     />
   )
