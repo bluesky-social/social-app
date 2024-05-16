@@ -95,7 +95,6 @@ export function MessagesList() {
   // Since we are using the native web methods for scrolling on `List`, we only use the reanimated `scrollTo` on native
   const scrollToOffset = React.useCallback(
     (offset: number, animated: boolean) => {
-      console.log('scroll in offset')
       if (isWeb) {
         flatListRef.current?.scrollToOffset({offset, animated})
       } else {
@@ -262,10 +261,9 @@ export function MessagesList() {
       // We only need to scroll to end while the keyboard is _opening_. During close, the position changes as we
       // "expand" the view.
       if (prev && now > prev) {
-        console.log('or this one')
         scrollTo(flatListRef, 0, contentHeight.value + now, false)
       }
-      keyboardIsAnimating.value = now !== prev
+      keyboardIsAnimating.value = Boolean(prev) && now !== prev
     },
   )
 
