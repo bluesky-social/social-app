@@ -16,6 +16,7 @@ import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {MessageItem} from '#/components/dms/MessageItem'
+import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -63,6 +64,8 @@ export function MessagesList() {
   const convo = useConvoActive()
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
+
+  const [showNewMessagesPill, setShowNewMessagesPill] = React.useState(false)
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -118,6 +121,7 @@ export function MessagesList() {
           convo.items.length - prevItemCount.current > 1
         ) {
           newOffset = contentHeight.value - 50
+          setShowNewMessagesPill(true)
         }
 
         flatListRef.current?.scrollToOffset({
@@ -180,6 +184,16 @@ export function MessagesList() {
 
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
+      console.log(e.contentSize.height - e.layoutMeasurement.height / 10)
+      console.log({offset: bottomOffset})
+
+      if (
+        showNewMessagesPill &&
+        e.contentSize.height - e.layoutMeasurement.height / 3 < bottomOffset
+      ) {
+        runOnJS(setShowNewMessagesPill)(false)
+      }
+
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
       // when a new message is added, hence the 100 pixel offset
       isAtBottom.value = e.contentSize.height - 100 < bottomOffset
@@ -194,10 +208,11 @@ export function MessagesList() {
     },
     [
       layoutHeight,
-      contentHeight.value,
-      hasInitiallyScrolled,
+      showNewMessagesPill,
       isAtBottom,
       isAtTop,
+      contentHeight.value,
+      hasInitiallyScrolled,
     ],
   )
 
@@ -259,6 +274,7 @@ export function MessagesList() {
           }
         />
       </ScrollProvider>
+      {showNewMessagesPill && <NewMessagesPill />}
       <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
     </>
   )
