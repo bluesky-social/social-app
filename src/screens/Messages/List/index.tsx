@@ -67,14 +67,7 @@ export function MessagesScreen({navigation, route}: Props) {
         color="secondary"
         shape="square"
         style={[a.justify_center]}>
-        <SettingsSlider
-          size="md"
-          style={[
-            {
-              color: t.palette.contrast_700,
-            },
-          ]}
-        />
+        <SettingsSlider size="md" style={[t.atoms.text_contrast_medium]} />
       </Link>
     )
   }, [_, t])
@@ -252,7 +245,7 @@ function DesktopHeader({
           variant="ghost"
           shape="square"
           onPress={onNavigateToSettings}>
-          <ButtonIcon icon={SettingsSlider} />
+          <SettingsSlider size="md" style={[t.atoms.text_contrast_medium]} />
         </Button>
         {gtTablet && (
           <Button
