@@ -5,27 +5,25 @@ import {useLingui} from '@lingui/react'
 
 import {ConvoItem, ConvoItemError} from '#/state/messages/convo/types'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/components/icons/ArrowRotateCounterClockwise'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function MessageListError({
-  item,
-}: {
-  item: ConvoItem & {type: 'error-recoverable'}
-}) {
+export function MessageListError({item}: {item: ConvoItem & {type: 'error'}}) {
   const t = useTheme()
   const {_} = useLingui()
-  const message = React.useMemo(() => {
+  const {description, help, cta} = React.useMemo(() => {
     return {
-      [ConvoItemError.Network]: _(
-        msg`There was an issue connecting to the chat.`,
-      ),
-      [ConvoItemError.FirehoseFailed]: _(
-        msg`This chat was disconnected due to a network error.`,
-      ),
-      [ConvoItemError.HistoryFailed]: _(msg`Failed to load past messages.`),
+      [ConvoItemError.FirehoseFailed]: {
+        description: _(msg`This chat was disconnected`),
+        help: _(msg`Press to attempt reconnection`),
+        cta: _(msg`Reconnect`),
+      },
+      [ConvoItemError.HistoryFailed]: {
+        description: _(msg`Failed to load past messages`),
+        help: _(msg`Press to retry`),
+        cta: _(msg`Retry`),
+      },
     }[item.code]
   }, [_, item.code])
 
@@ -36,37 +34,31 @@ export function MessageListError({
           a.flex_row,
           a.align_center,
           a.justify_between,
-          a.gap_lg,
-          a.py_md,
-          a.px_lg,
-          a.rounded_md,
-          t.atoms.bg_contrast_25,
+          a.gap_sm,
+          a.pb_lg,
           {maxWidth: 400},
         ]}>
-        <View style={[a.flex_row, a.align_start, a.justify_between, a.gap_sm]}>
-          <CircleInfo
-            size="sm"
-            fill={t.palette.negative_400}
-            style={[{top: 3}]}
-          />
-          <View style={[a.flex_1, {maxWidth: 200}]}>
-            <Text style={[a.leading_snug]}>{message}</Text>
-          </View>
-        </View>
+        <CircleInfo
+          size="sm"
+          fill={t.palette.negative_400}
+          style={[{top: 3}]}
+        />
 
-        <Button
-          label={_(msg`Press to retry`)}
-          size="small"
-          variant="ghost"
-          color="secondary"
-          onPress={e => {
-            e.preventDefault()
-            item.retry()
-            return false
-          }}>
-          <ButtonText>{_(msg`Retry`)}</ButtonText>
-          <ButtonIcon icon={Refresh} position="right" />
-        </Button>
+        <Text style={[a.leading_snug, a.flex_1, t.atoms.text_contrast_medium]}>
+          {description} &middot;{' '}
+          {item.retry && (
+            <InlineLinkText
+              to="#"
+              label={help}
+              onPress={e => {
+                e.preventDefault()
+                item.retry?.()
+                return false
+              }}>
+              {cta}
+            </InlineLinkText>
+          )}
+        </Text>
       </View>
     </View>
   )

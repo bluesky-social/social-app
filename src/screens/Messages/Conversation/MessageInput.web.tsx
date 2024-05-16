@@ -63,7 +63,6 @@ export function MessageInput({
       <View
         style={[
           a.flex_row,
-          a.py_sm,
           a.px_sm,
           a.pl_md,
           t.atoms.bg_contrast_25,
@@ -76,9 +75,10 @@ export function MessageInput({
             a.border_0,
             t.atoms.text,
             {
+              paddingTop: 10,
+              paddingBottom: 12,
               backgroundColor: 'transparent',
               resize: 'none',
-              paddingTop: 4,
             },
           ])}
           maxRows={12}
@@ -98,7 +98,12 @@ export function MessageInput({
             a.rounded_full,
             a.align_center,
             a.justify_center,
-            {height: 30, width: 30, backgroundColor: t.palette.primary_500},
+            {
+              height: 30,
+              width: 30,
+              marginTop: 6,
+              backgroundColor: t.palette.primary_500,
+            },
           ]}
           onPress={onSubmit}>
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />

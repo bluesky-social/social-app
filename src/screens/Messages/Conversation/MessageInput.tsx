@@ -19,6 +19,7 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
+import {isIOS} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
@@ -64,7 +65,7 @@ export function MessageInput({
       const keyboardHeight = Keyboard.metrics()?.height ?? 0
       const windowHeight = Dimensions.get('window').height
 
-      const max = windowHeight - keyboardHeight - topInset - 100
+      const max = windowHeight - keyboardHeight - topInset - 150
       const availableSpace = max - e.nativeEvent.contentSize.height
 
       setMaxHeight(max)
@@ -97,13 +98,19 @@ export function MessageInput({
           value={message}
           multiline={true}
           onChangeText={setMessage}
-          style={[a.flex_1, a.text_md, a.px_sm, t.atoms.text, {maxHeight}]}
+          style={[
+            a.flex_1,
+            a.text_md,
+            a.px_sm,
+            t.atoms.text,
+            {maxHeight, paddingBottom: isIOS ? 5 : 0},
+          ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
-          onFocus={scrollToEnd}
           onContentSizeChange={onInputLayout}
           ref={inputRef}
+          hitSlop={HITSLOP_10}
         />
         <Pressable
           accessibilityRole="button"
