@@ -15,8 +15,8 @@ import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
+import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
-import {RadioGroup} from '#/components/RadioGroup'
 import {Text} from '#/components/Typography'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {ClipClopGate} from './gate'
@@ -39,7 +39,9 @@ export function MessagesSettingsScreen({}: Props) {
   })
 
   const onSelectItem = useCallback(
-    (key: string) => {
+    (keys: string[]) => {
+      const key = keys[0]
+      if (!key) return
       updateDeclaration(key as AllowIncoming)
     },
     [updateDeclaration],
@@ -48,36 +50,65 @@ export function MessagesSettingsScreen({}: Props) {
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
 
+  console.log(profile?.associated?.chat?.allowIncoming)
+
   return (
     <CenteredView sideBorders style={a.h_full_vh}>
       <ViewHeader title={_(msg`Settings`)} showOnDesktop showBorder />
-      <View style={[a.px_md, a.py_lg, a.gap_md]}>
-        <Text style={[a.text_xl, a.font_bold, a.px_sm]}>
+      <View style={[a.p_lg, a.gap_lg]}>
+        <Text style={[a.text_lg, a.font_bold]}>
           <Trans>Allow messages from</Trans>
         </Text>
-        <RadioGroup<AllowIncoming>
-          value={
+        <Toggle.Group
+          label={_(msg`Allow messages from`)}
+          type="radio"
+          values={[
             (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
-            'following'
-          }
-          items={[
-            {label: _(msg`Everyone`), value: 'all'},
-            {label: _(msg`Users I follow`), value: 'following'},
-            {label: _(msg`No one`), value: 'none'},
+              'following',
           ]}
-          onSelect={onSelectItem}
-        />
-      </View>
-      <View style={[a.px_md, a.py_lg, a.gap_md]}>
+          onChange={onSelectItem}>
+          <View style={[a.gap_md]}>
+            <Toggle.Item
+              name="all"
+              label={_(msg`All`)}
+              style={a.justify_between}>
+              <Toggle.LabelText>
+                <Trans>All</Trans>
+              </Toggle.LabelText>
+              <Toggle.Radio />
+            </Toggle.Item>
+            <Toggle.Item
+              name="following"
+              label={_(msg`Users I follow`)}
+              style={a.justify_between}>
+              <Toggle.LabelText>
+                <Trans>Users I follow</Trans>
+              </Toggle.LabelText>
+              <Toggle.Radio />
+            </Toggle.Item>
+            <Toggle.Item
+              name="none"
+              label={_(msg`No one`)}
+              style={a.justify_between}>
+              <Toggle.LabelText>
+                <Trans>No one</Trans>
+              </Toggle.LabelText>
+              <Toggle.Radio />
+            </Toggle.Item>
+          </View>
+        </Toggle.Group>
+        <Divider style={[a.mt_lg, a.mb_md]} />
         <Toggle.Item
-          name="a"
-          label="Click me"
+          name="playSoundChat"
+          label={_(msg`Play notification sounds`)}
           value={preferences.playSoundChat}
           onChange={() => {
             setPref('playSoundChat', !preferences.playSoundChat)
           }}>
           <Toggle.Checkbox />
-          <Toggle.LabelText>Notification Sounds</Toggle.LabelText>
+          <Toggle.LabelText>
+            <Trans>Play notification sounds</Trans>
+          </Toggle.LabelText>
         </Toggle.Item>
       </View>
     </CenteredView>
