@@ -74,7 +74,6 @@ export class Convo {
     {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
   private deletedMessages: Set<string> = new Set()
-  private headerItems: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
 
@@ -380,9 +379,10 @@ export class Convo {
     this.newMessages = new Map()
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
-    this.headerItems = new Map()
 
     this.pendingMessageFailure = null
+    this.fetchMessageHistoryError = undefined
+    this.firehoseError = undefined
 
     this.dispatch({event: ConvoDispatchEvent.Init})
   }
@@ -394,6 +394,12 @@ export class Convo {
       this.commit()
     } else {
       this.batchRetryPendingMessages()
+    }
+
+    if (this.fetchMessageHistoryError) {
+      this.fetchMessageHistoryError.retry()
+      this.fetchMessageHistoryError = undefined
+      this.commit()
     }
   }
 
@@ -532,6 +538,11 @@ export class Convo {
     }
   }
 
+  private fetchMessageHistoryError:
+    | {
+        retry: () => void
+      }
+    | undefined
   async fetchMessageHistory() {
     logger.debug('Convo: fetch message history', {}, logger.DebugContext.convo)
 
@@ -549,7 +560,7 @@ export class Convo {
      * If we've rendered a retry state for history fetching, exit. Upon retry,
      * this will be removed and we'll try again.
      */
-    if (this.headerItems.has(ConvoItemError.HistoryFailed)) return
+    if (this.fetchMessageHistoryError) return
 
     try {
       this.isFetchingHistory = true
@@ -598,15 +609,11 @@ export class Convo {
     } catch (e: any) {
       logger.error('Convo: failed to fetch message history')
 
-      this.headerItems.set(ConvoItemError.HistoryFailed, {
-        type: 'error',
-        key: ConvoItemError.HistoryFailed,
-        code: ConvoItemError.HistoryFailed,
+      this.fetchMessageHistoryError = {
         retry: () => {
-          this.headerItems.delete(ConvoItemError.HistoryFailed)
           this.fetchMessageHistory()
         },
-      })
+      }
     } finally {
       this.isFetchingHistory = false
       this.commit()
@@ -956,9 +963,16 @@ export class Convo {
       }
     })
 
-    this.headerItems.forEach(item => {
-      items.unshift(item)
-    })
+    if (this.fetchMessageHistoryError) {
+      items.unshift({
+        type: 'error',
+        code: ConvoItemError.HistoryFailed,
+        key: ConvoItemError.HistoryFailed,
+        retry: () => {
+          this.maybeRecoverFromNetworkError()
+        },
+      })
+    }
 
     this.newMessages.forEach(m => {
       if (ChatBskyConvoDefs.isMessageView(m)) {
