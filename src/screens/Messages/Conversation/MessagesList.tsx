@@ -131,6 +131,7 @@ export function MessagesList() {
         // really large - and the normal chat behavior would be to still scroll to the end if it's only one
         // message - we ignore this rule if there's only one additional message
         if (
+          !keyboardIsOpening.value &&
           hasInitiallyScrolled.value &&
           height - contentHeight.value > layoutHeight.value - 50 &&
           convo.items.length - prevItemCount.current > 1
@@ -139,10 +140,7 @@ export function MessagesList() {
           setShowNewMessagesPill(true)
         }
 
-        scrollToOffset(
-          newOffset,
-          hasInitiallyScrolled.value && !keyboardIsOpening.value,
-        )
+        scrollToOffset(newOffset, hasInitiallyScrolled.value)
         isMomentumScrolling.value = true
       }
       contentHeight.value = height
@@ -252,18 +250,20 @@ export function MessagesList() {
   const bottomOffset =
     isWeb && gtMobile ? 0 : bottomInset + nativeBottomBarHeight
 
-  // We need to keep track of when the keyboard is animating and when it isn't, since we want our `onContentSizeChanged`
-  // callback to animate the scroll _only_ when the keyboard isn't animating. Any time the previous value of kb height
-  // is different, we know that it is animating. When it finally settles, now will be equal to prev.
+  // On web, we don't want to do anything.
+  // On native, we want to scroll the list to the bottom every frame that the keyboard is opening. `scrollTo` runs
+  // on the UI thread - directly calling `scrollTo` on the underlying native component, so we achieve 60 FPS.
   useAnimatedReaction(
     () => animatedKeyboard.height.value,
     (now, prev) => {
       // This never applies on web
       if (isWeb) {
         keyboardIsOpening.value = false
-      } else {
-        keyboardIsOpening.value = now !== prev
+        return
       }
+
+      keyboardIsOpening.value = now !== prev
+      scrollTo(flatListRef, 0, contentHeight.value + now, false)
     },
   )
 
