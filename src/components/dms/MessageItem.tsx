@@ -202,7 +202,7 @@ let MessageItemMetadata = ({
         )}
       </TimeElapsed>
 
-      {item.type === 'pending-message' && item.retry && (
+      {item.type === 'pending-message' && item.failed && (
         <>
           {' '}
           &middot;{' '}
@@ -214,15 +214,20 @@ let MessageItemMetadata = ({
               },
             ]}>
             {_(msg`Failed to send`)}
-          </Text>{' '}
-          &middot;{' '}
-          <InlineLinkText
-            label={_(msg`Click to retry failed message`)}
-            to="#"
-            onPress={handleRetry}
-            style={[a.text_xs]}>
-            {_(msg`Retry`)}
-          </InlineLinkText>
+          </Text>
+          {item.retry && (
+            <>
+              {' '}
+              &middot;{' '}
+              <InlineLinkText
+                label={_(msg`Click to retry failed message`)}
+                to="#"
+                onPress={handleRetry}
+                style={[a.text_xs]}>
+                {_(msg`Retry`)}
+              </InlineLinkText>
+            </>
+          )}
         </>
       )}
     </Text>

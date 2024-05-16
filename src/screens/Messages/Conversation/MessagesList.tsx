@@ -46,7 +46,7 @@ function renderItem({item}: {item: ConvoItem}) {
     return <MessageItem item={item} />
   } else if (item.type === 'deleted-message') {
     return <Text>Deleted message</Text>
-  } else if (item.type === 'error-recoverable') {
+  } else if (item.type === 'error') {
     return <MessageListError item={item} />
   }
 
