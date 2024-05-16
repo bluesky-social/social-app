@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-08 09:37+0900\n"
+"PO-Revision-Date: 2024-05-16 20:04+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -87,6 +87,10 @@ msgstr "분"
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
+
+#: src/components/dms/NewChat.tsx:146
+msgid "{handle} can't be messaged"
+msgstr "{handle}에게 메시지를 보낼 수 없습니다"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
@@ -294,7 +298,7 @@ msgstr "고급"
 msgid "All the feeds you've saved, right in one place."
 msgstr "저장한 모든 피드를 한 곳에서 확인하세요."
 
-#: src/screens/Messages/Settings.tsx:53
+#: src/screens/Messages/Settings.tsx:56
 msgid "Allow messages from"
 msgstr "메시지를 허용할 대상"
 
@@ -336,11 +340,11 @@ msgstr "{0}(으)로 이메일을 보냈습니다. 이 이메일에는 아래에 
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일에는 아래에 입력하는 인증 코드가 포함되어 있습니다."
 
-#: src/components/dialogs/GifSelect.tsx:284
+#: src/components/dialogs/GifSelect.tsx:285
 msgid "An error occured"
 msgstr "오류 발생"
 
-#: src/components/dms/MessageMenu.tsx:134
+#: src/components/dms/MessageMenu.tsx:133
 msgid "An error occurred while trying to delete the message. Please try again."
 msgstr "메시지를 삭제하는 동안 오류가 발생했습니다. 다시 시도해 주세요."
 
@@ -430,7 +434,7 @@ msgstr "기본 추천 피드 적용하기"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "앱 비밀번호 \"{name}\"을(를) 삭제하시겠습니까?"
 
-#: src/components/dms/MessageMenu.tsx:123
+#: src/components/dms/MessageMenu.tsx:122
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
 msgstr "정말 이 메시지를 삭제하시겠습니까? 나에게 보이는 메시지는 삭제되지만 상대방에게는 삭제되지 않습니다."
 
@@ -476,7 +480,7 @@ msgstr "3자 이상"
 #: src/screens/Login/LoginForm.tsx:278
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:185
+#: src/screens/Messages/Conversation/index.tsx:197
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -752,7 +756,7 @@ msgid "Chat muted"
 msgstr "대화 뮤트됨"
 
 #: src/components/dms/ConvoMenu.tsx:127
-#: src/components/dms/MessageMenu.tsx:69
+#: src/components/dms/MessageMenu.tsx:68
 #: src/Navigation.tsx:307
 msgid "Chat settings"
 msgstr "대화 설정"
@@ -835,11 +839,15 @@ msgstr "이곳을 클릭"
 msgid "Click here to open tag menu for {tag}"
 msgstr "이곳을 클릭하여 {tag}의 태그 메뉴 열기"
 
+#: src/components/dms/MessageItem.tsx:220
+msgid "Click to retry failed message"
+msgstr "클릭하여 메시지를 다시 보내기"
+
 #: src/screens/Onboarding/index.tsx:47
 msgid "Climate"
 msgstr "기후"
 
-#: src/components/dialogs/GifSelect.tsx:300
+#: src/components/dialogs/GifSelect.tsx:301
 #: src/view/com/modals/ChangePassword.tsx:269
 #: src/view/com/modals/ChangePassword.tsx:272
 #: src/view/com/util/post-embeds/GifEmbed.tsx:185
@@ -859,7 +867,7 @@ msgstr "알림 닫기"
 msgid "Close bottom drawer"
 msgstr "하단 서랍 닫기"
 
-#: src/components/dialogs/GifSelect.tsx:294
+#: src/components/dialogs/GifSelect.tsx:295
 msgid "Close dialog"
 msgstr "대화 상자 닫기"
 
@@ -1072,7 +1080,7 @@ msgstr "복사됨"
 msgid "Copied build version to clipboard"
 msgstr "빌드 버전 클립보드에 복사됨"
 
-#: src/components/dms/MessageMenu.tsx:53
+#: src/components/dms/MessageMenu.tsx:52
 #: src/view/com/modals/AddAppPasswords.tsx:77
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
@@ -1110,8 +1118,8 @@ msgstr "리스트 링크 복사"
 msgid "Copy link to post"
 msgstr "게시물 링크 복사"
 
-#: src/components/dms/MessageMenu.tsx:89
-#: src/components/dms/MessageMenu.tsx:91
+#: src/components/dms/MessageMenu.tsx:88
+#: src/components/dms/MessageMenu.tsx:90
 msgid "Copy message text"
 msgstr "메시지 텍스트 복사"
 
@@ -1137,7 +1145,7 @@ msgstr "피드를 불러올 수 없습니다"
 msgid "Could not load list"
 msgstr "리스트를 불러올 수 없습니다"
 
-#: src/components/dms/NewChat.tsx:241
+#: src/components/dms/NewChat.tsx:264
 msgid "Could not load profiles. Please try again later."
 msgstr "프로필을 불러올 수 없습니다. 나중에 다시 시도하세요."
 
@@ -1231,7 +1239,7 @@ msgstr "검토 디버그"
 msgid "Debug panel"
 msgstr "디버그 패널"
 
-#: src/components/dms/MessageMenu.tsx:125
+#: src/components/dms/MessageMenu.tsx:124
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #: src/view/screens/AppPasswords.tsx:268
 #: src/view/screens/ProfileList.tsx:666
@@ -1254,7 +1262,7 @@ msgstr "앱 비밀번호 삭제"
 msgid "Delete app password?"
 msgstr "앱 비밀번호를 삭제하시겠습니까?"
 
-#: src/components/dms/MessageMenu.tsx:101
+#: src/components/dms/MessageMenu.tsx:100
 msgid "Delete for me"
 msgstr "내게서 삭제"
 
@@ -1262,11 +1270,11 @@ msgstr "내게서 삭제"
 msgid "Delete List"
 msgstr "리스트 삭제"
 
-#: src/components/dms/MessageMenu.tsx:121
+#: src/components/dms/MessageMenu.tsx:120
 msgid "Delete message"
 msgstr "메시지 삭제"
 
-#: src/components/dms/MessageMenu.tsx:99
+#: src/components/dms/MessageMenu.tsx:98
 msgid "Delete message for me"
 msgstr "내게 보이는 메시지 삭제"
 
@@ -1691,7 +1699,7 @@ msgstr "오류:"
 msgid "Everybody"
 msgstr "모두"
 
-#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Everyone"
 msgstr "모두"
 
@@ -1779,7 +1787,7 @@ msgstr "앱 비밀번호를 만들지 못했습니다."
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "리스트를 만들지 못했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
-#: src/components/dms/MessageMenu.tsx:132
+#: src/components/dms/MessageMenu.tsx:131
 msgid "Failed to delete message"
 msgstr "메시지를 삭제하지 못했습니다"
 
@@ -1787,7 +1795,7 @@ msgstr "메시지를 삭제하지 못했습니다"
 msgid "Failed to delete post, please try again"
 msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 
-#: src/components/dialogs/GifSelect.tsx:200
+#: src/components/dialogs/GifSelect.tsx:201
 msgid "Failed to load GIFs"
 msgstr "GIF 불러오기 실패"
 
@@ -1799,11 +1807,11 @@ msgstr "지난 메시지를 불러오지 못했습니다."
 msgid "Failed to save image: {0}"
 msgstr "이미지를 저장하지 못함: {0}"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:29
-msgid "Failed to send message(s)."
-msgstr "메시지를 보내지 못했습니다."
+#: src/components/dms/MessageItem.tsx:216
+msgid "Failed to send"
+msgstr "전송 실패"
 
-#: src/screens/Messages/Settings.tsx:34
+#: src/screens/Messages/Settings.tsx:37
 msgid "Failed to update settings"
 msgstr "설정을 업데이트하지 못했습니다"
 
@@ -2658,7 +2666,7 @@ msgstr "멘션한 사용자"
 msgid "Menu"
 msgstr "메뉴"
 
-#: src/components/dms/MessageMenu.tsx:60
+#: src/components/dms/MessageMenu.tsx:59
 #: src/screens/Messages/List/ChatListItem.tsx:87
 msgid "Message deleted"
 msgstr "메시지 삭제됨"
@@ -2927,7 +2935,7 @@ msgstr "새로 만들기"
 msgid "New"
 msgstr "새로 만들기"
 
-#: src/components/dms/NewChat.tsx:60
+#: src/components/dms/NewChat.tsx:62
 #: src/screens/Messages/List/index.tsx:247
 #: src/screens/Messages/List/index.tsx:255
 msgid "New chat"
@@ -3015,7 +3023,7 @@ msgstr "설명 없음"
 msgid "No DNS Panel"
 msgstr "DNS 패널 없음"
 
-#: src/components/dialogs/GifSelect.tsx:206
+#: src/components/dialogs/GifSelect.tsx:207
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있습니다."
 
@@ -3035,7 +3043,7 @@ msgstr "아직 메시지가 없습니다"
 msgid "No notifications yet!"
 msgstr "아직 알림이 없습니다."
 
-#: src/screens/Messages/Settings.tsx:63
+#: src/screens/Messages/Settings.tsx:66
 msgid "No one"
 msgstr "없음"
 
@@ -3044,7 +3052,7 @@ msgstr "없음"
 msgid "No result"
 msgstr "결과 없음"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:197
 msgid "No results found"
 msgstr "결과를 찾을 수 없음"
 
@@ -3058,11 +3066,11 @@ msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
-#: src/components/dialogs/GifSelect.tsx:204
+#: src/components/dialogs/GifSelect.tsx:205
 msgid "No search results found for \"{search}\"."
 msgstr "\"{search}\"에 대한 검색 결과를 찾을 수 없습니다."
 
-#: src/components/dms/NewChat.tsx:240
+#: src/components/dms/NewChat.tsx:263
 msgid "No search results found for \"{searchText}\"."
 msgstr "\"{searchText}\"에 대한 검색 결과를 찾을 수 없습니다."
 
@@ -3114,7 +3122,7 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 msgid "Notifications"
 msgstr "알림"
 
-#: src/components/dms/MessageItem.tsx:145
+#: src/components/dms/MessageItem.tsx:161
 msgid "Now"
 msgstr "지금"
 
@@ -3130,7 +3138,7 @@ msgstr "누드 또는 성인 콘텐츠로 설정되지 않은 콘텐츠"
 msgid "Off"
 msgstr "끄기"
 
-#: src/components/dialogs/GifSelect.tsx:287
+#: src/components/dialogs/GifSelect.tsx:288
 #: src/view/com/util/ErrorBoundary.tsx:55
 msgid "Oh no!"
 msgstr "이런!"
@@ -3176,7 +3184,7 @@ msgstr "문자, 숫자, 하이픈만 포함"
 msgid "Oops, something went wrong!"
 msgstr "이런, 뭔가 잘못되었습니다!"
 
-#: src/components/Lists.tsx:179
+#: src/components/Lists.tsx:181
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3373,7 +3381,7 @@ msgstr "다른 계정"
 msgid "Other..."
 msgstr "기타…"
 
-#: src/components/Lists.tsx:196
+#: src/components/Lists.tsx:198
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "페이지를 찾을 수 없음"
@@ -3417,7 +3425,7 @@ msgstr "@{0} 님이 팔로우한 사람들"
 msgid "People following @{0}"
 msgstr "@{0} 님을 팔로우하는 사람들"
 
-#: src/screens/Messages/Settings.tsx:62
+#: src/screens/Messages/Settings.tsx:65
 msgid "People I Follow"
 msgstr "내가 팔로우하는 사람들"
 
@@ -3613,7 +3621,7 @@ msgstr "호스팅 제공자를 변경하려면 누릅니다"
 
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:83
-#: src/screens/Messages/Conversation/MessageListError.tsx:59
+#: src/screens/Messages/Conversation/MessageListError.tsx:58
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
 msgstr "다시 시도하려면 누르기"
@@ -3836,7 +3844,7 @@ msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0> 님에게 보내는 답글"
 
-#: src/components/dms/MessageMenu.tsx:109
+#: src/components/dms/MessageMenu.tsx:108
 msgid "Report"
 msgstr "신고"
 
@@ -3864,7 +3872,7 @@ msgstr "피드 신고"
 msgid "Report List"
 msgstr "리스트 신고"
 
-#: src/components/dms/MessageMenu.tsx:107
+#: src/components/dms/MessageMenu.tsx:106
 msgid "Report message"
 msgstr "메시지 신고"
 
@@ -4002,12 +4010,13 @@ msgstr "로그인을 다시 시도합니다"
 msgid "Retries the last action, which errored out"
 msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 
-#: src/components/dms/MessageMenu.tsx:136
+#: src/components/dms/MessageItem.tsx:224
+#: src/components/dms/MessageMenu.tsx:135
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:94
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
-#: src/screens/Messages/Conversation/MessageListError.tsx:68
+#: src/screens/Messages/Conversation/MessageListError.tsx:67
 #: src/screens/Onboarding/StepInterests/index.tsx:236
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Signup/index.tsx:207
@@ -4103,7 +4112,7 @@ msgstr "과학"
 msgid "Scroll to top"
 msgstr "맨 위로 스크롤"
 
-#: src/components/dms/NewChat.tsx:184
+#: src/components/dms/NewChat.tsx:197
 #: src/Navigation.tsx:502
 #: src/view/com/auth/LoggedOut.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
@@ -4137,7 +4146,7 @@ msgstr "{displayTag} 태그를 사용한 @{authorHandle} 님의 모든 게시물
 msgid "Search for all posts with tag {displayTag}"
 msgstr "{displayTag} 태그를 사용한 모든 게시물 검색"
 
-#: src/components/dms/NewChat.tsx:226
+#: src/components/dms/NewChat.tsx:248
 msgid "Search for someone to start a conversation with."
 msgstr "대화를 시작할 사람을 검색하세요."
 
@@ -4151,7 +4160,7 @@ msgstr "사용자 검색하기"
 msgid "Search GIFs"
 msgstr "GIF 검색하기"
 
-#: src/components/dms/NewChat.tsx:183
+#: src/components/dms/NewChat.tsx:196
 msgid "Search profiles"
 msgstr "프로필 검색"
 
@@ -4216,7 +4225,7 @@ msgstr "기존 계정에서 선택"
 msgid "Select GIF"
 msgstr "GIF 선택"
 
-#: src/components/dialogs/GifSelect.tsx:253
+#: src/components/dialogs/GifSelect.tsx:254
 msgid "Select GIF \"{0}\""
 msgstr "GIF \"{0}\" 선택"
 
@@ -4405,7 +4414,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "이미지 비율을 가로로 길게 설정합니다"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:50
+#: src/screens/Messages/Settings.tsx:53
 #: src/view/screens/Settings/index.tsx:322
 #: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:558
@@ -4651,7 +4660,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/screens/Messages/Conversation/index.tsx:94
+#: src/screens/Messages/Conversation/index.tsx:103
 msgid "Something went wrong"
 msgstr "알 수 없는 오류가 발생했습니다"
 
@@ -4661,8 +4670,8 @@ msgstr "알 수 없는 오류가 발생했습니다"
 msgid "Something went wrong, please try again."
 msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요."
 
-#: src/App.native.tsx:83
-#: src/App.web.tsx:72
+#: src/App.native.tsx:84
+#: src/App.web.tsx:73
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
@@ -4695,7 +4704,7 @@ msgstr "스포츠"
 msgid "Square"
 msgstr "정사각형"
 
-#: src/components/dms/NewChat.tsx:178
+#: src/components/dms/NewChat.tsx:191
 msgid "Start a new chat"
 msgstr "새 대화 시작하기"
 
@@ -4909,7 +4918,7 @@ msgstr "이 피드를 삭제하는 동안 문제가 발생했습니다. 인터�
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
-#: src/components/dialogs/GifSelect.tsx:201
+#: src/components/dialogs/GifSelect.tsx:202
 msgid "There was an issue connecting to Tenor."
 msgstr "Tenor에 연결하는 동안 문제가 발생했습니다."
 
@@ -4982,7 +4991,7 @@ msgstr "문제가 발생했습니다! {0}"
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
-#: src/components/dialogs/GifSelect.tsx:289
+#: src/components/dialogs/GifSelect.tsx:290
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "애플리케이션에 예기치 않은 문제가 발생했습니다. 이런 일이 발생하면 저희에게 알려주세요!"
@@ -5616,7 +5625,7 @@ msgstr "콘텐츠 경고 및 피드에서 필터링"
 msgid "We couldn't find any results for that hashtag."
 msgstr "해당 해시태그에 대한 결과를 찾을 수 없습니다."
 
-#: src/screens/Messages/Conversation/index.tsx:95
+#: src/screens/Messages/Conversation/index.tsx:104
 msgid "We couldn't load this conversation"
 msgstr "이 대화를 불러올 수 없습니다"
 
@@ -5676,7 +5685,7 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/components/Lists.tsx:200
+#: src/components/Lists.tsx:202
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "죄송합니다. 페이지를 찾을 수 없습니다."
@@ -5768,7 +5777,7 @@ msgstr "작가"
 msgid "Yes"
 msgstr "예"
 
-#: src/components/dms/MessageItem.tsx:158
+#: src/components/dms/MessageItem.tsx:174
 msgid "Yesterday, {time}"
 msgstr "어제 {time}"
 
