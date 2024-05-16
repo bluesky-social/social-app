@@ -245,7 +245,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-native-a11y": "^3.3.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
-    "generate-license-file": "^3.4.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
