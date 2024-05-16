@@ -147,15 +147,16 @@ export function MessagesList() {
       prevItemCount.current = convo.items.length
     },
     [
-      isAtTop.value,
-      hasInitiallyScrolled.value,
-      isAtBottom.value,
-      keyboardIsOpening.value,
       contentHeight,
-      convo.items.length,
-      layoutHeight.value,
       scrollToOffset,
       isMomentumScrolling,
+      convo.items.length,
+      // All of these are stable
+      isAtBottom.value,
+      keyboardIsOpening.value,
+      layoutHeight.value,
+      hasInitiallyScrolled.value,
+      isAtTop.value,
     ],
   )
 
@@ -223,8 +224,8 @@ export function MessagesList() {
       showNewMessagesPill,
       isAtBottom,
       isAtTop,
-      contentHeight.value,
       hasInitiallyScrolled,
+      contentHeight.value,
     ],
   )
 
