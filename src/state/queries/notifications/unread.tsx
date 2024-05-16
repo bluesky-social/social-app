@@ -11,6 +11,7 @@ import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent, useSession} from '#/state/session'
+import {decrementBadgeCount} from 'lib/notifications/notifications'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -118,6 +119,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
+
+        if (cacheRef.current.unreadCount >= 30) {
+          decrementBadgeCount(30)
+        } else {
+          decrementBadgeCount(cacheRef.current.unreadCount)
+        }
       },
 
       async checkUnread({
