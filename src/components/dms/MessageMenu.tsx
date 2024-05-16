@@ -25,7 +25,6 @@ export let MessageMenu = ({
   control,
   triggerOpacity,
 }: {
-  hideTrigger?: boolean
   triggerOpacity?: number
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps

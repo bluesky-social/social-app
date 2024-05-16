@@ -39,6 +39,7 @@ import {Shell} from 'view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
 
@@ -92,9 +93,11 @@ function InnerApp() {
                       <LoggedOutViewProvider>
                         <SelectedFeedProvider>
                           <UnreadNotifsProvider>
-                            <SafeAreaProvider>
-                              <Shell />
-                            </SafeAreaProvider>
+                            <BackgroundNotificationPreferencesProvider>
+                              <SafeAreaProvider>
+                                <Shell />
+                              </SafeAreaProvider>
+                            </BackgroundNotificationPreferencesProvider>
                           </UnreadNotifsProvider>
                         </SelectedFeedProvider>
                       </LoggedOutViewProvider>
