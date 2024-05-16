@@ -13,6 +13,7 @@ import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
+  INACTIVE_TIMEOUT,
 } from '#/state/messages/convo/const'
 import {
   ConvoDispatch,
@@ -78,6 +79,8 @@ export class Convo {
   private headerItems: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
+
+  private lastActiveTimestamp: number | undefined
 
   convoId: string
   convo: ChatBskyConvoDefs.ConvoView | undefined
@@ -272,16 +275,19 @@ export class Convo {
       }
       case ConvoStatus.Backgrounded: {
         switch (action.event) {
-          // TODO truncate history if needed
           case ConvoDispatchEvent.Resume: {
-            if (this.convo) {
-              this.status = ConvoStatus.Ready
-              this.refreshConvo()
+            if (this.wasChatInactive()) {
+              this.reset()
             } else {
-              this.status = ConvoStatus.Initializing
-              this.setup()
+              if (this.convo) {
+                this.status = ConvoStatus.Ready
+                this.refreshConvo()
+              } else {
+                this.status = ConvoStatus.Initializing
+                this.setup()
+              }
+              this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             }
-            this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
           case ConvoDispatchEvent.Suspend: {
@@ -354,6 +360,7 @@ export class Convo {
       logger.DebugContext.convo,
     )
 
+    this.updateLastActiveTimestamp()
     this.commit()
   }
 
@@ -436,6 +443,18 @@ export class Convo {
     DEBUG_ACTIVE_CHAT = undefined
   }
 
+  /**
+   * Called on any state transition, like when the chat is backgrounded. This
+   * value is then checked on background -> foreground transitions.
+   */
+  private updateLastActiveTimestamp() {
+    this.lastActiveTimestamp = Date.now()
+  }
+  private wasChatInactive() {
+    if (!this.lastActiveTimestamp) return true
+    return Date.now() - this.lastActiveTimestamp > INACTIVE_TIMEOUT
+  }
+
   private requestedPollInterval: (() => void) | undefined
   private requestPollInterval(interval: number) {
     this.withdrawRequestedPollInterval()
@@ -498,17 +517,6 @@ export class Convo {
       this.recipients = recipients || this.recipients
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to refresh convo`})
-
-      this.footerItems.set(ConvoItemError.Network, {
-        type: 'error-recoverable',
-        key: ConvoItemError.Network,
-        code: ConvoItemError.Network,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.Network)
-          this.resume()
-        },
-      })
-      this.commit()
     }
   }
 
@@ -716,6 +724,8 @@ export class Convo {
     }
   }
 
+  private pendingFailed = false
+
   async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim()) return
@@ -728,11 +738,9 @@ export class Convo {
       id: tempId,
       message,
     })
-    // remove on each send, it might go through now without user having to click
-    this.footerItems.delete(ConvoItemError.PendingFailed)
     this.commit()
 
-    if (!this.isProcessingPendingMessages) {
+    if (!this.isProcessingPendingMessages && !this.pendingFailed) {
       this.processPendingMessages()
     }
   }
@@ -786,16 +794,7 @@ export class Convo {
       this.commit()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     } finally {
       this.isProcessingPendingMessages = false
@@ -849,16 +848,7 @@ export class Convo {
       )
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to batch retry messages`})
-      this.footerItems.set(ConvoItemError.PendingFailed, {
-        type: 'error-recoverable',
-        key: ConvoItemError.PendingFailed,
-        code: ConvoItemError.PendingFailed,
-        retry: () => {
-          this.footerItems.delete(ConvoItemError.PendingFailed)
-          this.commit()
-          this.batchRetryPendingMessages()
-        },
-      })
+      this.pendingFailed = true
       this.commit()
     }
   }
@@ -939,6 +929,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
@@ -949,6 +940,13 @@ export class Convo {
           sender: this.sender!,
         },
         nextMessage: null,
+        retry: this.pendingFailed
+          ? () => {
+              this.pendingFailed = false
+              this.commit()
+              this.batchRetryPendingMessages()
+            }
+          : undefined,
       })
     })
 

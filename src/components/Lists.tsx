@@ -136,6 +136,7 @@ let ListMaybePlaceholder = ({
   onGoBack,
   hideBackButton,
   sideBorders,
+  topBorder = true,
 }: {
   isLoading: boolean
   noEmpty?: boolean
@@ -149,6 +150,7 @@ let ListMaybePlaceholder = ({
   onGoBack?: () => void
   hideBackButton?: boolean
   sideBorders?: boolean
+  topBorder?: boolean
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -165,7 +167,7 @@ let ListMaybePlaceholder = ({
           {paddingTop: 175, paddingBottom: 110},
         ]}
         sideBorders={sideBorders ?? gtMobile}
-        topBorder={!gtTablet}>
+        topBorder={topBorder && !gtTablet}>
         <View style={[a.w_full, a.align_center, {top: 100}]}>
           <Loader size="xl" />
         </View>

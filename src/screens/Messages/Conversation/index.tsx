@@ -1,8 +1,5 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -18,9 +15,10 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {BACK_HITSLOP} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isIOS, isWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
+import {useSetMinimalShellMode} from 'state/shell'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
@@ -38,16 +36,25 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
+  const {gtMobile} = useBreakpoints()
+  const setMinimalShellMode = useSetMinimalShellMode()
+
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
+
+      if (isWeb && !gtMobile) {
+        setMinimalShellMode(true)
+      }
+
       return () => {
         setCurrentConvoId(undefined)
+        setMinimalShellMode(false)
       }
-    }, [convoId, setCurrentConvoId]),
+    }, [gtMobile, convoId, setCurrentConvoId, setMinimalShellMode]),
   )
 
   if (!gate('dms')) return <ClipClopGate />
@@ -65,10 +72,6 @@ function Inner() {
   const {_} = useLingui()
 
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
-
-  const {bottom: bottomInset, top: topInset} = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
-  const bottomBarHeight = gtMobile ? 0 : isIOS ? 40 : 60
 
   // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
   // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
@@ -102,42 +105,33 @@ function Inner() {
   /*
    * Any other convo states (atm) are "ready" states
    */
-
   return (
-    <KeyboardProvider>
-      <KeyboardAvoidingView
-        style={[a.flex_1, {marginBottom: bottomInset + bottomBarHeight}]}
-        keyboardVerticalOffset={isIOS ? topInset : 0}
-        behavior="padding"
-        contentContainerStyle={a.flex_1}>
-        <CenteredView style={a.flex_1} sideBorders>
-          <Header profile={convoState.recipients?.[0]} />
-          <View style={[a.flex_1]}>
-            {isConvoActive(convoState) ? (
-              <MessagesList />
-            ) : (
-              <ListMaybePlaceholder isLoading />
-            )}
-            {!hasInitiallyRendered && (
-              <View
-                style={[
-                  a.absolute,
-                  a.z_10,
-                  a.w_full,
-                  a.h_full,
-                  a.justify_center,
-                  a.align_center,
-                  t.atoms.bg,
-                ]}>
-                <View style={[{marginBottom: 75}]}>
-                  <Loader size="xl" />
-                </View>
-              </View>
-            )}
+    <CenteredView style={[a.flex_1]} sideBorders>
+      <Header profile={convoState.recipients?.[0]} />
+      <View style={[a.flex_1]}>
+        {isConvoActive(convoState) ? (
+          <MessagesList />
+        ) : (
+          <ListMaybePlaceholder isLoading />
+        )}
+        {!hasInitiallyRendered && (
+          <View
+            style={[
+              a.absolute,
+              a.z_10,
+              a.w_full,
+              a.h_full,
+              a.justify_center,
+              a.align_center,
+              t.atoms.bg,
+            ]}>
+            <View style={[{marginBottom: 75}]}>
+              <Loader size="xl" />
+            </View>
           </View>
-        </CenteredView>
-      </KeyboardAvoidingView>
-    </KeyboardProvider>
+        )}
+      </View>
+    </CenteredView>
   )
 }
 
@@ -265,6 +259,7 @@ function HeaderReady({
             size={32}
             profile={profile}
             moderation={moderation.ui('avatar')}
+            disableHoverCard={moderation.blocked}
           />
           <Text
             style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
