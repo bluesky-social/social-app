@@ -253,6 +253,7 @@ export function MessagesList() {
   useAnimatedReaction(
     () => animatedKeyboard.height.value,
     (now, prev) => {
+      'worklet'
       // This never applies on web
       if (isWeb) {
         keyboardIsOpening.value = false
