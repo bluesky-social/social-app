@@ -1,6 +1,7 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
 import Animated, {
+  runOnJS,
   useAnimatedKeyboard,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -22,6 +23,7 @@ import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
+import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -65,6 +67,8 @@ export function MessagesList() {
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
 
+  const [showNewMessagesPill, setShowNewMessagesPill] = React.useState(false)
+
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
   // the bottom.
@@ -76,12 +80,14 @@ export function MessagesList() {
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
   const contentHeight = useSharedValue(0)
+  const prevItemCount = useRef(0)
 
   // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
   const hasInitiallyScrolled = useSharedValue(false)
   const keyboardIsOpening = useSharedValue(false)
+  const layoutHeight = useSharedValue(0)
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -96,7 +102,7 @@ export function MessagesList() {
   const onContentSizeChange = useCallback(
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
-      // previous offset whenever we add new content to the previous offset whenever we add new content to the list.
+      // previous off whenever we add new content to the previous offset whenever we add new content to the list.
       if (isWeb && isAtTop.value && hasInitiallyScrolled.value) {
         flatListRef.current?.scrollToOffset({
           animated: false,
@@ -104,18 +110,31 @@ export function MessagesList() {
         })
       }
 
-      contentHeight.value = height
-
       // This number _must_ be the height of the MaybeLoader component
-      if (height <= 50 || (!isAtBottom.value && !keyboardIsOpening.value)) {
-        return
-      }
+      if (height > 50 && (isAtBottom.value || keyboardIsOpening.value)) {
+        let newOffset = height
 
-      flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled.value && !keyboardIsOpening.value,
-        offset: height,
-      })
-      isMomentumScrolling.value = true
+        // If the size of the content is changing by more than the height of the screen, then we should only
+        // scroll 1 screen down, and let the user scroll the rest. However, because a single message could be
+        // really large - and the normal chat behavior would be to still scroll to the end if it's only one
+        // message - we ignore this rule if there's only one additional message
+        if (
+          hasInitiallyScrolled.value &&
+          height - contentHeight.value > layoutHeight.value - 50 &&
+          convo.items.length - prevItemCount.current > 1
+        ) {
+          newOffset = contentHeight.value - 50
+          setShowNewMessagesPill(true)
+        }
+
+        flatListRef.current?.scrollToOffset({
+          animated: hasInitiallyScrolled.value && !keyboardIsOpening.value,
+          offset: newOffset,
+        })
+        isMomentumScrolling.value = true
+      }
+      contentHeight.value = height
+      prevItemCount.current = convo.items.length
     },
     [
       contentHeight,
@@ -123,6 +142,8 @@ export function MessagesList() {
       isAtBottom.value,
       isAtTop.value,
       isMomentumScrolling,
+      layoutHeight.value,
+      convo.items.length,
       keyboardIsOpening.value,
     ],
   )
@@ -163,7 +184,16 @@ export function MessagesList() {
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
+      layoutHeight.value = e.layoutMeasurement.height
+
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
+
+      if (
+        showNewMessagesPill &&
+        e.contentSize.height - e.layoutMeasurement.height / 3 < bottomOffset
+      ) {
+        runOnJS(setShowNewMessagesPill)(false)
+      }
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
       // when a new message is added, hence the 100 pixel offset
@@ -177,7 +207,14 @@ export function MessagesList() {
         hasInitiallyScrolled.value = true
       }
     },
-    [contentHeight.value, hasInitiallyScrolled, isAtBottom, isAtTop],
+    [
+      layoutHeight,
+      showNewMessagesPill,
+      isAtBottom,
+      isAtTop,
+      contentHeight.value,
+      hasInitiallyScrolled,
+    ],
   )
 
   const onMomentumEnd = React.useCallback(() => {
@@ -267,6 +304,7 @@ export function MessagesList() {
           ListFooterComponent={<Animated.View style={[animatedFooterStyle]} />}
         />
       </ScrollProvider>
+      {showNewMessagesPill && <NewMessagesPill />}
       <Animated.View style={[a.relative, t.atoms.bg, animatedInputStyle]}>
         <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
       </Animated.View>
