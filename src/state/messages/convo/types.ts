@@ -24,10 +24,6 @@ export enum ConvoStatus {
 
 export enum ConvoItemError {
   /**
-   * Generic error
-   */
-  Unknown = 'unknown',
-  /**
    * Error connecting to event firehose
    */
   FirehoseFailed = 'firehoseFailed',
@@ -35,10 +31,6 @@ export enum ConvoItemError {
    * Error fetching past messages
    */
   HistoryFailed = 'historyFailed',
-  /**
-   * Recipient is blocking the user
-   */
-  UserBlocked = 'userBlocked',
 }
 
 export enum ConvoErrorCode {
@@ -118,14 +110,6 @@ export type ConvoItem =
       type: 'error'
       key: string
       code: ConvoItemError
-      /**
-       * If present, error is recoverable.
-       */
-      retry?: () => void
-    }
-  | {
-      type: 'firehose-error'
-      key: string
       /**
        * If present, error is recoverable.
        */

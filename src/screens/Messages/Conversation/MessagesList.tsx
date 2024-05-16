@@ -15,7 +15,6 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {MessageListFirehoseError} from '#/screens/Messages/Conversation/MessageListFirehoseError'
 import {atoms as a} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
@@ -42,8 +41,6 @@ function renderItem({item}: {item: ConvoItem}) {
     return <Text>Deleted message</Text>
   } else if (item.type === 'error') {
     return <MessageListError item={item} />
-  } else if (item.type === 'firehose-error') {
-    return <MessageListFirehoseError item={item} />
   }
 
   return null

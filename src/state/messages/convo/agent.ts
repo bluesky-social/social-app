@@ -1007,8 +1007,9 @@ export class Convo {
 
     if (this.firehoseError) {
       items.push({
-        type: 'firehose-error',
-        key: 'firehose-error',
+        type: 'error',
+        code: ConvoItemError.FirehoseFailed,
+        key: ConvoItemError.FirehoseFailed,
         retry: () => {
           this.firehoseError?.retry()
         },
