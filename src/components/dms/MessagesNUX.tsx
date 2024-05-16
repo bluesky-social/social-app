@@ -71,22 +71,24 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner label={_(msg`Introducing Direct Messages`)}>
       <View style={a.gap_md}>
-        <View style={[a.gap_sm, a.align_center]}>
-          <Message_Stroke2_Corner0_Rounded size="xl" />
-          <Text style={[a.text_lg, a.font_bold, a.text_center, a.mt_md]}>
+        <View style={[a.gap_xs, a.align_center, a.my_lg]}>
+          <Message_Stroke2_Corner0_Rounded width={64} />
+          <Text style={[a.text_2xl, a.font_bold, a.text_center, a.mt_2xl]}>
             <Trans>Direct Messages are here!</Trans>
           </Text>
-          <Text style={[a.text_center]}>
+          <Text style={[a.text_md, a.text_center]}>
             <Trans>Chat with other users, privately.</Trans>
           </Text>
         </View>
-        <View style={[a.p_lg, a.gap_md]}>
-          <Text style={[a.text_sm]}>
-            <Trans>
-              You are in control of who can start chats with you. Before you get
-              started, make sure that the settings below are to your liking. You
-              can change these settings at any time.
-            </Trans>
+        <Text style={a.text_sm}>
+          <Trans>
+            You are in control of who can start chats with you. You can change
+            these settings at any time.
+          </Trans>
+        </Text>
+        <View style={a.gap_xs}>
+          <Text style={a.text_sm}>
+            <Trans>Allow messages from:</Trans>
           </Text>
           <Toggle.Group
             label={_(msg`Allow messages from`)}
@@ -127,10 +129,11 @@ function DialogInner({
         <Button
           label={_(msg`Start chatting`)}
           accessibilityHint={_(msg`Close modal`)}
-          size="large"
+          size="medium"
           color="primary"
           variant="solid"
-          onPress={() => control.close()}>
+          onPress={() => control.close()}
+          style={a.mt_md}>
           <ButtonText>Start chatting!</ButtonText>
         </Button>
       </View>
