@@ -277,7 +277,7 @@ function HeaderReady({
             size={32}
             profile={profile}
             moderation={moderation.ui('avatar')}
-            disable={moderation.blocked}
+            disableHoverCard={moderation.blocked}
           />
           <Text
             style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
