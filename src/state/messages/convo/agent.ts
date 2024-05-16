@@ -843,13 +843,8 @@ export class Convo {
         }
       }
     } else {
-      logger.warn(`Convo handleSendMessageFailure received unknown error`, {
-        message: e.message,
-      })
-      this.footerItems.set(ConvoItemError.Unknown, {
-        type: 'error',
-        key: ConvoItemError.Unknown,
-        code: ConvoItemError.Unknown,
+      logger.error(e, {
+        context: `Convo handleSendMessageFailure received unknown error`,
       })
     }
 
