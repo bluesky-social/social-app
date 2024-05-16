@@ -1,48 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
-import Animated, {withTiming} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 import {Trans} from '@lingui/macro'
 
+import {
+  ScaleAndFadeIn,
+  ScaleAndFadeOut,
+} from 'lib/custom-animations/ScaleAndFade'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-
-function EnteringAnimation() {
-  'worklet'
-
-  const animations = {
-    opacity: withTiming(1),
-    transform: [{scale: withTiming(1)}],
-  }
-
-  const initialValues = {
-    opacity: 0,
-    transform: [{scale: 0.7}],
-  }
-
-  return {
-    animations,
-    initialValues,
-  }
-}
-
-function ExitingAnimation() {
-  'worklet'
-
-  const animations = {
-    opacity: withTiming(0),
-    transform: [{scale: withTiming(0.7)}],
-  }
-
-  const initialValues = {
-    opacity: 1,
-    transform: [{scale: 1}],
-  }
-
-  return {
-    animations,
-    initialValues,
-  }
-}
 
 export function NewMessagesPill() {
   const t = useTheme()
@@ -69,8 +35,8 @@ export function NewMessagesPill() {
           backgroundColor: t.palette.positive_700,
         },
       ]}
-      entering={EnteringAnimation}
-      exiting={ExitingAnimation}>
+      entering={ScaleAndFadeIn}
+      exiting={ScaleAndFadeOut}>
       <View style={{flex: 1}}>
         <Text style={[a.text_md, a.font_bold, {color: t.palette.white}]}>
           <Trans>New messages</Trans>
