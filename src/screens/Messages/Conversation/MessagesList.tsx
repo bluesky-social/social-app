@@ -219,21 +219,18 @@ export function MessagesList() {
 
   // This changes the size of the `ListFooterComponent`. Whenever this changes, the content size will change and our
   // `onContentSizeChange` function will handle scrolling to the appropriate offset.
-  const animatedFooterStyle = useAnimatedStyle(() => {
-    let height = bottomOffset
-    if (animatedKeyboard.height.value > height) {
-      height = animatedKeyboard.height.value
-    }
-    return {
-      marginBottom: height,
-    }
-  })
+  const animatedFooterStyle = useAnimatedStyle(() => ({
+    marginBottom:
+      animatedKeyboard.height.value > bottomOffset
+        ? animatedKeyboard.height.value
+        : bottomOffset,
+  }))
 
   // At a minimum we want the bottom to be whatever the height of our insets and bottom bar is. If the keyboard's height
   // is greater than that however, we use that value.
   const animatedInputStyle = useAnimatedStyle(() => ({
     bottom:
-      animatedKeyboard.height.value >= bottomOffset
+      animatedKeyboard.height.value > bottomOffset
         ? animatedKeyboard.height.value
         : bottomOffset,
   }))
