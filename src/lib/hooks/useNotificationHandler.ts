@@ -171,9 +171,9 @@ export function useNotificationsHandler() {
         ) {
           const isCurrentConvo = payload.convoId === currentConvoId
           return {
-            shouldShowAlert: isCurrentConvo,
+            shouldShowAlert: !isCurrentConvo,
             shouldPlaySound: false,
-            shouldSetBadge: isCurrentConvo,
+            shouldSetBadge: !isCurrentConvo,
           }
         }
 
