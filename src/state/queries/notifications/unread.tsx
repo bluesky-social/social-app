@@ -119,12 +119,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-
-        if (cacheRef.current.unreadCount >= 30) {
-          decrementBadgeCount(30)
-        } else {
-          decrementBadgeCount(cacheRef.current.unreadCount)
-        }
+        decrementBadgeCount(Math.min(cacheRef.current.unreadCount, 30))
       },
 
       async checkUnread({
