@@ -6,6 +6,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {track} from 'lib/analytics/analytics'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
+import {decrementBadgeCount} from 'lib/notifications/notifications'
 import {NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
 import {isAndroid} from 'platform/detection'
@@ -88,6 +89,7 @@ export function useNotificationsHandler() {
       if (!payload) return
 
       if (payload.reason === 'chat-message') {
+        decrementBadgeCount(1)
         if (payload.recipientDid !== currentAccount?.did && !storedPayload) {
           storedPayload = payload
           closeAllActiveElements()
@@ -169,10 +171,11 @@ export function useNotificationsHandler() {
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
         ) {
+          const isCurrentConvo = payload.convoId === currentConvoId
           return {
-            shouldShowAlert: payload.convoId !== currentConvoId,
+            shouldShowAlert: isCurrentConvo,
             shouldPlaySound: false,
-            shouldSetBadge: false,
+            shouldSetBadge: isCurrentConvo,
           }
         }
 
