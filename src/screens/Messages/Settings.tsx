@@ -15,8 +15,10 @@ import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
+import * as Toggle from '#/components/forms/Toggle'
 import {RadioGroup} from '#/components/RadioGroup'
 import {Text} from '#/components/Typography'
+import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {ClipClopGate} from './gate'
 
 type AllowIncoming = 'all' | 'none' | 'following'
@@ -28,6 +30,7 @@ export function MessagesSettingsScreen({}: Props) {
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
   }) as UseQueryResult<AppBskyActorDefs.ProfileViewDetailed, Error>
+  const {preferences, setPref} = useBackgroundNotificationPreferences()
 
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
@@ -64,6 +67,18 @@ export function MessagesSettingsScreen({}: Props) {
           ]}
           onSelect={onSelectItem}
         />
+      </View>
+      <View style={[a.px_md, a.py_lg, a.gap_md]}>
+        <Toggle.Item
+          name="a"
+          label="Click me"
+          value={preferences.playSoundChat}
+          onChange={() => {
+            setPref('playSoundChat', !preferences.playSoundChat)
+          }}>
+          <Toggle.Checkbox />
+          <Toggle.LabelText>Notification Sounds</Toggle.LabelText>
+        </Toggle.Item>
       </View>
     </CenteredView>
   )

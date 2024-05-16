@@ -79,7 +79,7 @@ export function ActionsWrapper({
         hitSlop={HITSLOP_10}>
         {children}
       </AnimatedPressable>
-      <MessageMenu message={message} control={menuControl} hideTrigger={true} />
+      <MessageMenu message={message} control={menuControl} />
     </View>
   )
 }

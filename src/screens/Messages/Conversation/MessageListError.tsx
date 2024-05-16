@@ -26,7 +26,6 @@ export function MessageListError({
         msg`This chat was disconnected due to a network error.`,
       ),
       [ConvoItemError.HistoryFailed]: _(msg`Failed to load past messages.`),
-      [ConvoItemError.PendingFailed]: _(msg`Failed to send message(s).`),
     }[item.code]
   }, [_, item.code])
 
