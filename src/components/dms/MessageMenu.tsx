@@ -34,7 +34,6 @@ export let MessageMenu = ({
   const {currentAccount} = useSession()
   const convo = useConvoActive()
   const deleteControl = usePromptControl()
-  const retryDeleteControl = usePromptControl()
   const reportControl = usePromptControl()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
@@ -57,8 +56,8 @@ export let MessageMenu = ({
     convo
       .deleteMessage(message.id)
       .then(() => Toast.show(_(msg`Message deleted`)))
-      .catch(() => retryDeleteControl.open())
-  }, [_, convo, message.id, retryDeleteControl])
+      .catch(() => Toast.show(_(msg`Failed to delete message`)))
+  }, [_, convo, message.id])
 
   return (
     <>
@@ -122,17 +121,6 @@ export let MessageMenu = ({
           msg`Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant.`,
         )}
         confirmButtonCta={_(msg`Delete`)}
-        confirmButtonColor="negative"
-        onConfirm={onDelete}
-      />
-
-      <Prompt.Basic
-        control={retryDeleteControl}
-        title={_(msg`Failed to delete message`)}
-        description={_(
-          msg`An error occurred while trying to delete the message. Please try again.`,
-        )}
-        confirmButtonCta={_(msg`Retry`)}
         confirmButtonColor="negative"
         onConfirm={onDelete}
       />
