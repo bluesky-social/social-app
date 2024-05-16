@@ -251,8 +251,8 @@ export function MessagesList() {
           contentContainerStyle={[a.px_md]}
           disableVirtualization={true}
           // The extra two items account for the header and the footer components
-          initialNumToRender={isNative ? 32 : 61}
-          maxToRenderPerBatch={isWeb ? 32 : 61}
+          initialNumToRender={isNative ? 32 : 62}
+          maxToRenderPerBatch={isWeb ? 32 : 62}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
