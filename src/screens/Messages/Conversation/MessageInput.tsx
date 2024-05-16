@@ -64,7 +64,7 @@ export function MessageInput({
       const keyboardHeight = Keyboard.metrics()?.height ?? 0
       const windowHeight = Dimensions.get('window').height
 
-      const max = windowHeight - keyboardHeight - topInset - 100
+      const max = windowHeight - keyboardHeight - topInset - 200
       const availableSpace = max - e.nativeEvent.contentSize.height
 
       setMaxHeight(max)

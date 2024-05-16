@@ -1,11 +1,17 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
-import {useSharedValue} from 'react-native-reanimated'
+import Animated, {
+  useAnimatedKeyboard,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
@@ -14,7 +20,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -54,6 +60,7 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
+  const t = useTheme()
   const convo = useConvoActive()
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
@@ -75,6 +82,8 @@ export function MessagesList() {
   const isMomentumScrolling = useSharedValue(false)
 
   const hasInitiallyScrolled = useSharedValue(false)
+
+  const keyboardIsOpening = useSharedValue(false)
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -105,17 +114,18 @@ export function MessagesList() {
       }
 
       flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled.value,
+        animated: hasInitiallyScrolled.value && !keyboardIsOpening.value,
         offset: height,
       })
       isMomentumScrolling.value = true
     },
     [
       contentHeight,
-      hasInitiallyScrolled,
+      hasInitiallyScrolled.value,
       isAtBottom.value,
       isAtTop.value,
       isMomentumScrolling,
+      keyboardIsOpening.value,
     ],
   )
 
@@ -181,10 +191,49 @@ export function MessagesList() {
     requestAnimationFrame(() => {
       if (isMomentumScrolling.value) return
 
-      flatListRef.current?.scrollToEnd({animated: true})
+      // flatListRef.current?.scrollToEnd({animated: true})
       isMomentumScrolling.value = true
     })
   }, [isMomentumScrolling])
+
+  // -- Keyboard animation handling
+  const animatedKeyboard = useAnimatedKeyboard()
+  const {gtMobile} = useBreakpoints()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const nativeBottomBarHeight = isIOS ? 42 : 60
+  const bottomOffset =
+    isWeb && gtMobile ? 0 : bottomInset + nativeBottomBarHeight
+
+  // We need to keep track of when the keyboard is animating and when it isn't, since we want our `onContentSizeChanged`
+  // callback to animate the scroll _only_ when the keyboard isn't animating. Any time the previous value of kb height
+  // is different, we know that it is animating. When it finally settles, now will be equal to prev.
+  useAnimatedReaction(
+    () => animatedKeyboard.height.value,
+    (now, prev) => {
+      keyboardIsOpening.value = now !== prev
+    },
+  )
+
+  // This changes the size of the `ListFooterComponent`. Whenever this changes, the content size will change and our
+  // `onContentSizeChange` function will handle scrolling to the appropriate offset.
+  const animatedFooterStyle = useAnimatedStyle(() => {
+    let height = bottomOffset
+    if (animatedKeyboard.height.value > height) {
+      height = animatedKeyboard.height.value
+    }
+    return {
+      marginBottom: height,
+    }
+  })
+
+  // At a minimum we want the bottom to be whatever the height of our insets and bottom bar is. If the keyboard's height
+  // is greater than that however, we use that value.
+  const animatedInputStyle = useAnimatedStyle(() => ({
+    bottom:
+      animatedKeyboard.height.value >= bottomOffset
+        ? animatedKeyboard.height.value
+        : bottomOffset,
+  }))
 
   return (
     <>
@@ -214,9 +263,12 @@ export function MessagesList() {
           ListHeaderComponent={
             <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
+          ListFooterComponent={<Animated.View style={[animatedFooterStyle]} />}
         />
       </ScrollProvider>
-      <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
+      <Animated.View style={[a.relative, t.atoms.bg, animatedInputStyle]}>
+        <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
+      </Animated.View>
     </>
   )
 }

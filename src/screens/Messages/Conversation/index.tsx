@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -16,7 +15,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {BACK_HITSLOP} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isIOS, isNative, isWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
 import {useSetMinimalShellMode} from 'state/shell'
@@ -38,7 +37,6 @@ type Props = NativeStackScreenProps<
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {gtMobile} = useBreakpoints()
 
   const convoId = route.params.conversation
   const {setCurrentConvoId} = useCurrentConvoId()
@@ -46,16 +44,12 @@ export function MessagesConversationScreen({route}: Props) {
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
-
-      if (isWeb && !gtMobile) {
-        setMinimalShellMode(true)
-      }
-
+      // setMinimalShellMode(true)
       return () => {
         setCurrentConvoId(undefined)
         setMinimalShellMode(false)
       }
-    }, [convoId, gtMobile, setCurrentConvoId, setMinimalShellMode]),
+    }, [convoId, setCurrentConvoId, setMinimalShellMode]),
   )
 
   if (!gate('dms')) return <ClipClopGate />
@@ -73,9 +67,6 @@ function Inner() {
   const {_} = useLingui()
 
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
-
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const nativeBottomBarHeight = isIOS ? 42 : 60
 
   // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
   // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
@@ -109,40 +100,33 @@ function Inner() {
   /*
    * Any other convo states (atm) are "ready" states
    */
-
   return (
-    <View
-      style={[
-        a.flex_1,
-        isNative && {marginBottom: bottomInset + nativeBottomBarHeight},
-      ]}>
-      <CenteredView style={a.flex_1} sideBorders>
-        <Header profile={convoState.recipients?.[0]} />
-        <View style={[a.flex_1]}>
-          {isConvoActive(convoState) ? (
-            <MessagesList />
-          ) : (
-            <ListMaybePlaceholder isLoading />
-          )}
-          {!hasInitiallyRendered && (
-            <View
-              style={[
-                a.absolute,
-                a.z_10,
-                a.w_full,
-                a.h_full,
-                a.justify_center,
-                a.align_center,
-                t.atoms.bg,
-              ]}>
-              <View style={[{marginBottom: 75}]}>
-                <Loader size="xl" />
-              </View>
+    <CenteredView style={[a.flex_1]} sideBorders>
+      <Header profile={convoState.recipients?.[0]} />
+      <View style={[a.flex_1]}>
+        {isConvoActive(convoState) ? (
+          <MessagesList />
+        ) : (
+          <ListMaybePlaceholder isLoading />
+        )}
+        {!hasInitiallyRendered && (
+          <View
+            style={[
+              a.absolute,
+              a.z_10,
+              a.w_full,
+              a.h_full,
+              a.justify_center,
+              a.align_center,
+              t.atoms.bg,
+            ]}>
+            <View style={[{marginBottom: 75}]}>
+              <Loader size="xl" />
             </View>
-          )}
-        </View>
-      </CenteredView>
-    </View>
+          </View>
+        )}
+      </View>
+    </CenteredView>
   )
 }
 
