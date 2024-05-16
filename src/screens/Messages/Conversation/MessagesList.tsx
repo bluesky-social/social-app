@@ -89,7 +89,7 @@ export function MessagesList() {
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
   const hasInitiallyScrolled = useSharedValue(false)
-  const keyboardIsOpening = useSharedValue(false)
+  const keyboardIsAnimating = useSharedValue(false)
   const layoutHeight = useSharedValue(0)
 
   // Since we are using the native web methods for scrolling on `List`, we only use the reanimated `scrollTo` on native
@@ -123,7 +123,7 @@ export function MessagesList() {
       }
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height > 50 && (isAtBottom.value || keyboardIsOpening.value)) {
+      if (height > 50 && (isAtBottom.value || keyboardIsAnimating.value)) {
         let newOffset = height
 
         // If the size of the content is changing by more than the height of the screen, then we should only
@@ -131,7 +131,7 @@ export function MessagesList() {
         // really large - and the normal chat behavior would be to still scroll to the end if it's only one
         // message - we ignore this rule if there's only one additional message
         if (
-          !keyboardIsOpening.value &&
+          !keyboardIsAnimating.value &&
           hasInitiallyScrolled.value &&
           height - contentHeight.value > layoutHeight.value - 50 &&
           convo.items.length - prevItemCount.current > 1
@@ -153,7 +153,7 @@ export function MessagesList() {
       convo.items.length,
       // All of these are stable
       isAtBottom.value,
-      keyboardIsOpening.value,
+      keyboardIsAnimating.value,
       layoutHeight.value,
       hasInitiallyScrolled.value,
       isAtTop.value,
@@ -257,12 +257,16 @@ export function MessagesList() {
       'worklet'
       // This never applies on web
       if (isWeb) {
-        keyboardIsOpening.value = false
+        keyboardIsAnimating.value = false
         return
       }
 
-      keyboardIsOpening.value = now !== prev
-      scrollTo(flatListRef, 0, contentHeight.value + now, false)
+      // We only need to scroll to end while the keyboard is _opening_. During close, the position changes as we
+      // "expand" the view.
+      if (prev && now > prev) {
+        scrollTo(flatListRef, 0, contentHeight.value + now, false)
+      }
+      keyboardIsAnimating.value = now !== prev
     },
   )
 
