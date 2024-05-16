@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-16 10:06+0800\n"
+"PO-Revision-Date: 2024-05-17 02:23+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -33,12 +33,12 @@ msgstr "{0, plural, one {該帳戶有 # 個標籤} other {該帳戶有 # 個標�
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 個轉貼} other {# 個轉貼}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:373
+#: src/components/ProfileHoverCard/index.web.tsx:377
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural,one {個跟隨者}  other {個跟隨者}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:377
+#: src/components/ProfileHoverCard/index.web.tsx:381
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
@@ -83,7 +83,7 @@ msgstr "{estimatedTimeHrs, plural, one {時} other {時}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:454
+#: src/components/ProfileHoverCard/index.web.tsx:458
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 個跟隨中"
@@ -298,7 +298,8 @@ msgstr "進階設定"
 msgid "All the feeds you've saved, right in one place."
 msgstr "以下是您保存的動態源。"
 
-#: src/screens/Messages/Settings.tsx:56
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr "允許傳送訊息："
 
@@ -435,11 +436,11 @@ msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "您確定要刪除這個應用程式專用密碼「{name}」嗎？"
 
 #: src/components/dms/MessageMenu.tsx:122
-msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
+msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "你確定要刪除這則訊息嗎？該訊息將為您刪除，但不會為其他參與者刪除。"
 
 #: src/components/dms/ConvoMenu.tsx:225
-msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
+msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "您確定要離開此對話嗎？您的訊息將為您刪除，但不會為其他參與者刪除。"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
@@ -480,7 +481,7 @@ msgstr "至少 3 個字元"
 #: src/screens/Login/LoginForm.tsx:278
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:197
+#: src/screens/Messages/Conversation/index.tsx:179
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -1487,7 +1488,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "編輯"
 
-#: src/view/com/util/UserAvatar.tsx:310
+#: src/view/com/util/UserAvatar.tsx:311
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "編輯頭像"
@@ -1699,7 +1700,8 @@ msgstr "錯誤："
 msgid "Everybody"
 msgstr "所有人"
 
-#: src/screens/Messages/Settings.tsx:64
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr "所有人"
 
@@ -1811,7 +1813,7 @@ msgstr "無法儲存圖片：{0}"
 msgid "Failed to send"
 msgstr "無法傳送"
 
-#: src/screens/Messages/Settings.tsx:37
+#: src/screens/Messages/Settings.tsx:38
 msgid "Failed to update settings"
 msgstr "無法更新設定"
 
@@ -1902,8 +1904,8 @@ msgstr "水平翻轉"
 msgid "Flip vertically"
 msgstr "垂直翻轉"
 
-#: src/components/ProfileHoverCard/index.web.tsx:409
-#: src/components/ProfileHoverCard/index.web.tsx:420
+#: src/components/ProfileHoverCard/index.web.tsx:413
+#: src/components/ProfileHoverCard/index.web.tsx:424
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:189
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:235
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
@@ -1960,8 +1962,8 @@ msgstr "已跟隨您"
 msgid "Followers"
 msgstr "跟隨者"
 
-#: src/components/ProfileHoverCard/index.web.tsx:408
-#: src/components/ProfileHoverCard/index.web.tsx:419
+#: src/components/ProfileHoverCard/index.web.tsx:412
+#: src/components/ProfileHoverCard/index.web.tsx:423
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:233
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
@@ -2675,11 +2677,11 @@ msgstr "訊息已刪除"
 msgid "Message from server: {0}"
 msgstr "來自伺服器的訊息：{0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:93
+#: src/screens/Messages/Conversation/MessageInput.tsx:94
 msgid "Message input field"
 msgstr "訊息輸入欄位"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:50
+#: src/screens/Messages/Conversation/MessageInput.tsx:51
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:33
 msgid "Message is too long"
 msgstr "訊息太長了"
@@ -2796,6 +2798,11 @@ msgstr "靜音帳號"
 msgid "Mute all {displayTag} posts"
 msgstr "將所有 {displayTag} 貼文靜音"
 
+#: src/components/dms/ConvoMenu.tsx:174
+#: src/components/dms/ConvoMenu.tsx:180
+msgid "Mute conversation"
+msgstr "靜音對話"
+
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
 msgstr "僅靜音標籤"
@@ -2807,11 +2814,6 @@ msgstr "靜音文字和標籤"
 #: src/view/screens/ProfileList.tsx:677
 msgid "Mute list"
 msgstr "靜音列表"
-
-#: src/components/dms/ConvoMenu.tsx:174
-#: src/components/dms/ConvoMenu.tsx:180
-msgid "Mute notifications"
-msgstr "靜音通知"
 
 #: src/view/screens/ProfileList.tsx:672
 msgid "Mute these accounts?"
@@ -2941,6 +2943,10 @@ msgstr "新增"
 msgid "New chat"
 msgstr "新對話"
 
+#: src/components/dms/NewMessagesPill.tsx:42
+msgid "New messages"
+msgstr "新訊息"
+
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "New Moderation List"
 msgstr "新的內容管理列表"
@@ -3043,7 +3049,8 @@ msgstr "還沒有訊息"
 msgid "No notifications yet!"
 msgstr "還沒有通知！"
 
-#: src/screens/Messages/Settings.tsx:66
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr "沒有人"
 
@@ -3425,10 +3432,6 @@ msgstr "被 @{0} 跟隨的人"
 msgid "People following @{0}"
 msgstr "跟隨 @{0} 的人"
 
-#: src/screens/Messages/Settings.tsx:65
-msgid "People I Follow"
-msgstr "我跟隨的用戶"
-
 #: src/view/com/lightbox/Lightbox.tsx:67
 msgid "Permission to access camera roll is required."
 msgstr "需要相簿權限。"
@@ -3469,6 +3472,11 @@ msgstr "播放"
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
 msgstr "播放 {0}"
+
+#: src/screens/Messages/Settings.tsx:106
+#: src/screens/Messages/Settings.tsx:113
+msgid "Play notification sounds"
+msgstr "播放通知音效"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -3524,6 +3532,7 @@ msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "請解釋您認為 {0} 不正確套用此標記的原因"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
+#: src/lib/hooks/useAccountSwitcher.ts:58
 msgid "Please sign in as @{0}"
 msgstr "請以 @{0} 的身分登入"
 
@@ -3739,7 +3748,7 @@ msgstr "移除"
 msgid "Remove account"
 msgstr "刪除帳號"
 
-#: src/view/com/util/UserAvatar.tsx:369
+#: src/view/com/util/UserAvatar.tsx:370
 msgid "Remove Avatar"
 msgstr "刪除頭像"
 
@@ -4189,7 +4198,7 @@ msgid "See <0>{displayTag}</0> posts by this user"
 msgstr "查看該用戶包含 <0>{displayTag}</0> 的貼文"
 
 #: src/view/com/notifications/FeedItem.tsx:411
-#: src/view/com/util/UserAvatar.tsx:400
+#: src/view/com/util/UserAvatar.tsx:402
 msgid "See profile"
 msgstr "查看個人檔案"
 
@@ -4312,7 +4321,7 @@ msgstr "發送電子郵件"
 msgid "Send feedback"
 msgstr "提交意見"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:110
+#: src/screens/Messages/Conversation/MessageInput.tsx:117
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:95
 msgid "Send message"
 msgstr "重送訊息"
@@ -4414,7 +4423,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "將圖像的寬高比設定為寬"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:53
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:322
 #: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:558
@@ -4660,7 +4669,7 @@ msgstr "跳過此流程"
 msgid "Software Dev"
 msgstr "軟體開發"
 
-#: src/screens/Messages/Conversation/index.tsx:103
+#: src/screens/Messages/Conversation/index.tsx:97
 msgid "Something went wrong"
 msgstr "發生了一些問題"
 
@@ -5227,7 +5236,7 @@ msgstr "重試"
 msgid "Two-factor authentication"
 msgstr "雙重驗證"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:94
+#: src/screens/Messages/Conversation/MessageInput.tsx:95
 msgid "Type your message here"
 msgstr "在此輸入訊息"
 
@@ -5327,8 +5336,8 @@ msgid "Unmute all {displayTag} posts"
 msgstr "取消對所有 {displayTag} 貼文的靜音"
 
 #: src/components/dms/ConvoMenu.tsx:178
-msgid "Unmute notifications"
-msgstr "取消通知靜音"
+msgid "Unmute conversation"
+msgstr "取消靜音對話"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:321
 #: src/view/com/util/forms/PostDropdownBtn.tsx:326
@@ -5385,20 +5394,20 @@ msgstr "或是上傳圖片"
 msgid "Upload a text file to:"
 msgstr "上傳文字檔案至："
 
-#: src/view/com/util/UserAvatar.tsx:337
-#: src/view/com/util/UserAvatar.tsx:340
+#: src/view/com/util/UserAvatar.tsx:338
+#: src/view/com/util/UserAvatar.tsx:341
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "從相機上傳"
 
-#: src/view/com/util/UserAvatar.tsx:354
+#: src/view/com/util/UserAvatar.tsx:355
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "從檔案上傳"
 
-#: src/view/com/util/UserAvatar.tsx:348
-#: src/view/com/util/UserAvatar.tsx:352
+#: src/view/com/util/UserAvatar.tsx:349
+#: src/view/com/util/UserAvatar.tsx:353
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -5510,6 +5519,11 @@ msgstr "用戶"
 msgid "users followed by <0/>"
 msgstr "跟隨 <0/> 的用戶"
 
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
+msgid "Users I follow"
+msgstr "我跟隨的用戶"
+
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
 msgstr "「{0}」中的用戶"
@@ -5583,8 +5597,8 @@ msgstr "查看整個討論串"
 msgid "View information about these labels"
 msgstr "查看有關這些標記的資訊"
 
-#: src/components/ProfileHoverCard/index.web.tsx:393
-#: src/components/ProfileHoverCard/index.web.tsx:426
+#: src/components/ProfileHoverCard/index.web.tsx:397
+#: src/components/ProfileHoverCard/index.web.tsx:430
 #: src/view/com/posts/FeedErrorMessage.tsx:175
 msgid "View profile"
 msgstr "查看資料"
@@ -5625,7 +5639,7 @@ msgstr "警告內容並從動態源中過濾"
 msgid "We couldn't find any results for that hashtag."
 msgstr "我們找不到任何與該標籤相關的結果。"
 
-#: src/screens/Messages/Conversation/index.tsx:104
+#: src/screens/Messages/Conversation/index.tsx:98
 msgid "We couldn't load this conversation"
 msgstr "我們無法載入這個對話"
 
@@ -5749,7 +5763,7 @@ msgstr "為什麼應該審查這個用戶？"
 msgid "Wide"
 msgstr "寬"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:95
+#: src/screens/Messages/Conversation/MessageInput.tsx:96
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:85
 msgid "Write a message"
 msgstr "撰寫訊息"
