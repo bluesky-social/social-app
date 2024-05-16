@@ -65,7 +65,7 @@ export function MessageInput({
       const keyboardHeight = Keyboard.metrics()?.height ?? 0
       const windowHeight = Dimensions.get('window').height
 
-      const max = windowHeight - keyboardHeight - topInset - 100
+      const max = windowHeight - keyboardHeight - topInset - 150
       const availableSpace = max - e.nativeEvent.contentSize.height
 
       setMaxHeight(max)
@@ -108,7 +108,6 @@ export function MessageInput({
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
-          onFocus={scrollToEnd}
           onContentSizeChange={onInputLayout}
           ref={inputRef}
           hitSlop={HITSLOP_10}

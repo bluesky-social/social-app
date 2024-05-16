@@ -1,12 +1,17 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
-import {useKeyboardHandler} from 'react-native-keyboard-controller'
-import {runOnJS, useSharedValue} from 'react-native-reanimated'
+import Animated, {
+  useAnimatedKeyboard,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
 import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
@@ -15,7 +20,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -55,6 +60,7 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
+  const t = useTheme()
   const convo = useConvoActive()
   const {getAgent} = useAgent()
   const flatListRef = useRef<FlatList>(null)
@@ -74,8 +80,8 @@ export function MessagesList() {
   // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
-
   const hasInitiallyScrolled = useSharedValue(false)
+  const keyboardIsOpening = useSharedValue(false)
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -101,22 +107,23 @@ export function MessagesList() {
       contentHeight.value = height
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height <= 50 || !isAtBottom.value) {
+      if (height <= 50 || (!isAtBottom.value && !keyboardIsOpening.value)) {
         return
       }
 
       flatListRef.current?.scrollToOffset({
-        animated: hasInitiallyScrolled.value,
+        animated: hasInitiallyScrolled.value && !keyboardIsOpening.value,
         offset: height,
       })
       isMomentumScrolling.value = true
     },
     [
       contentHeight,
-      hasInitiallyScrolled,
+      hasInitiallyScrolled.value,
       isAtBottom.value,
       isAtTop.value,
       isMomentumScrolling,
+      keyboardIsOpening.value,
     ],
   )
 
@@ -187,17 +194,46 @@ export function MessagesList() {
     })
   }, [isMomentumScrolling])
 
-  // This is only used inside the useKeyboardHandler because the worklet won't work with a ref directly.
-  const scrollToEndNow = React.useCallback(() => {
-    flatListRef.current?.scrollToEnd({animated: false})
-  }, [])
+  // -- Keyboard animation handling
+  const animatedKeyboard = useAnimatedKeyboard()
+  const {gtMobile} = useBreakpoints()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const nativeBottomBarHeight = isIOS ? 42 : 60
+  const bottomOffset =
+    isWeb && gtMobile ? 0 : bottomInset + nativeBottomBarHeight
 
-  useKeyboardHandler({
-    onMove: () => {
-      'worklet'
-      runOnJS(scrollToEndNow)()
+  // We need to keep track of when the keyboard is animating and when it isn't, since we want our `onContentSizeChanged`
+  // callback to animate the scroll _only_ when the keyboard isn't animating. Any time the previous value of kb height
+  // is different, we know that it is animating. When it finally settles, now will be equal to prev.
+  useAnimatedReaction(
+    () => animatedKeyboard.height.value,
+    (now, prev) => {
+      // This never applies on web
+      if (isWeb) {
+        keyboardIsOpening.value = false
+      } else {
+        keyboardIsOpening.value = now !== prev
+      }
     },
-  })
+  )
+
+  // This changes the size of the `ListFooterComponent`. Whenever this changes, the content size will change and our
+  // `onContentSizeChange` function will handle scrolling to the appropriate offset.
+  const animatedFooterStyle = useAnimatedStyle(() => ({
+    marginBottom:
+      animatedKeyboard.height.value > bottomOffset
+        ? animatedKeyboard.height.value
+        : bottomOffset,
+  }))
+
+  // At a minimum we want the bottom to be whatever the height of our insets and bottom bar is. If the keyboard's height
+  // is greater than that however, we use that value.
+  const animatedInputStyle = useAnimatedStyle(() => ({
+    bottom:
+      animatedKeyboard.height.value > bottomOffset
+        ? animatedKeyboard.height.value
+        : bottomOffset,
+  }))
 
   return (
     <>
@@ -211,8 +247,9 @@ export function MessagesList() {
           containWeb={true}
           contentContainerStyle={[a.px_md]}
           disableVirtualization={true}
-          initialNumToRender={isNative ? 30 : 60}
-          maxToRenderPerBatch={isWeb ? 30 : 60}
+          // The extra two items account for the header and the footer components
+          initialNumToRender={isNative ? 32 : 62}
+          maxToRenderPerBatch={isWeb ? 32 : 62}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
@@ -227,9 +264,12 @@ export function MessagesList() {
           ListHeaderComponent={
             <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
+          ListFooterComponent={<Animated.View style={[animatedFooterStyle]} />}
         />
       </ScrollProvider>
-      <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
+      <Animated.View style={[a.relative, t.atoms.bg, animatedInputStyle]}>
+        <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
+      </Animated.View>
     </>
   )
 }
