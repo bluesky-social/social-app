@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {Dimensions, Pressable, View} from 'react-native'
+import {Dimensions, Pressable, View, ViewStyle, StyleProp} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
@@ -257,13 +257,14 @@ export const ScrollableInner = React.forwardRef<
 
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,
-  BottomSheetFlatListProps<any>
->(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
+  BottomSheetFlatListProps<any> & { webInnerStyle?: StyleProp<ViewStyle> }
+>(function InnerFlatList(props, ref) {
   const insets = useSafeAreaInsets()
+
   return (
     <BottomSheetFlatList
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={[a.pb_4xl, flatten(contentContainerStyle)]}
+      contentContainerStyle={[a.pb_4xl, flatten(props.contentContainerStyle)]}
       ListFooterComponent={
         <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
       }
@@ -277,7 +278,7 @@ export const InnerFlatList = React.forwardRef<
         {
           marginTop: 40,
         },
-        flatten(style),
+        flatten(props.style),
       ]}
     />
   )

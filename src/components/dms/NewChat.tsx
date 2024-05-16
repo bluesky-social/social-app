@@ -15,7 +15,7 @@ import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web, native, useBreakpoints} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
@@ -25,6 +25,8 @@ import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '../icons/Envelope'
 import {ListMaybePlaceholder} from '../Lists'
 import {Text} from '../Typography'
 import {canBeMessaged} from './util'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 export function NewChat({
   control,
@@ -67,7 +69,6 @@ export function NewChat({
         control={control}
         testID="newChatDialog"
         nativeOptions={{sheet: {snapPoints: ['100%']}}}>
-        <Dialog.Handle />
         <SearchablePeopleList onCreateChat={onCreateChat} />
       </Dialog.Outer>
     </>
@@ -81,6 +82,7 @@ function SearchablePeopleList({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {gtMobile } = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
@@ -168,53 +170,69 @@ function SearchablePeopleList({
   const listHeader = useMemo(() => {
     return (
       <View style={[a.relative, a.mb_lg]}>
-        {/* cover top corners */}
-        <View
-          style={[
-            a.absolute,
-            a.inset_0,
-            {
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
-            },
-            t.atoms.bg,
-          ]}
-        />
-        <Text
-          style={[
-            a.text_2xl,
-            a.font_bold,
-            a.leading_tight,
-            a.pb_lg,
-            web(a.pt_lg),
-          ]}>
-          <Trans>Start a new chat</Trans>
-        </Text>
-        <TextField.Root>
-          <TextField.Icon icon={Search} />
-          <Dialog.Input
-            label={_(msg`Search profiles`)}
-            placeholder={_(msg`Search`)}
-            value={searchText}
-            onChangeText={text => {
-              setSearchText(text)
-              listRef.current?.scrollToOffset({offset: 0, animated: false})
-            }}
-            returnKeyType="search"
-            clearButtonMode="while-editing"
-            maxLength={50}
-            onKeyPress={({nativeEvent}) => {
-              if (nativeEvent.key === 'Escape') {
-                control.close()
-              }
-            }}
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-            autoFocus
-          />
-        </TextField.Root>
-        <Dialog.Close />
+        <View style={[a.relative, native(a.align_center), a.justify_center, { height: 32 }]}>
+          <Button
+            label={_(msg`Close`)}
+            size='small'
+            shape='round'
+            variant='ghost'
+            color='secondary'
+            style={[
+              a.absolute,
+              a.z_20,
+              native({
+                left: -4,
+              }),
+              web({
+                right: -4,
+              })
+            ]}
+          >
+            {isWeb ? (
+              <X size="lg" fill={t.palette.contrast_500} />
+            ) : (
+              <ChevronLeft size="lg" fill={t.palette.contrast_500} />
+            )}
+          </Button>
+
+          <Text
+            style={[
+              a.z_10,
+              a.text_md,
+              a.font_bold,
+              a.leading_tight,
+              t.atoms.text_contrast_medium,
+            ]}>
+            <Trans>Start a new chat</Trans>
+          </Text>
+        </View>
+
+        <View style={[a.pt_sm]}>
+          <TextField.Root>
+            <TextField.Icon icon={Search} />
+            <Dialog.Input
+              label={_(msg`Search profiles`)}
+              placeholder={_(msg`Search`)}
+              value={searchText}
+              onChangeText={text => {
+                setSearchText(text)
+                listRef.current?.scrollToOffset({offset: 0, animated: false})
+              }}
+              returnKeyType="search"
+              clearButtonMode="while-editing"
+              maxLength={50}
+              onKeyPress={({nativeEvent}) => {
+                if (nativeEvent.key === 'Escape') {
+                  control.close()
+                }
+              }}
+              autoCorrect={false}
+              autoComplete="off"
+              autoCapitalize="none"
+              autoFocus
+            />
+          </TextField.Root>
+        </View>
       </View>
     )
   }, [t.atoms.bg, _, control, searchText])
@@ -232,46 +250,24 @@ function SearchablePeopleList({
       ref={listRef}
       data={dataWithoutSelf}
       renderItem={renderItem}
-      ListHeaderComponent={
-        <>
-          {listHeader}
-          {searchText.length === 0 ? (
-            <View style={[a.pt_4xl, a.align_center, a.px_lg]}>
-              <Envelope width={64} fill={t.palette.contrast_200} />
-              <Text
-                style={[
-                  a.text_lg,
-                  a.text_center,
-                  a.mt_md,
-                  t.atoms.text_contrast_low,
-                ]}>
-                <Trans>Search for someone to start a conversation with.</Trans>
-              </Text>
-            </View>
-          ) : (
-            !actorAutocompleteData?.length && (
-              <ListMaybePlaceholder
-                isLoading={isFetching}
-                isError={isError}
-                onRetry={refetch}
-                hideBackButton={true}
-                emptyType="results"
-                sideBorders={false}
-                topBorder={false}
-                emptyMessage={
-                  isError
-                    ? _(msg`No search results found for "${searchText}".`)
-                    : _(msg`Could not load profiles. Please try again later.`)
-                }
-              />
-            )
-          )}
-        </>
-      }
+      ListHeaderComponent={listHeader}
       stickyHeaderIndices={[0]}
       keyExtractor={(item: AppBskyActorDefs.ProfileView) => item.did}
-      // @ts-expect-error web only
-      style={isWeb && {minHeight: '100vh'}}
+      style={[
+        web([
+          a.py_md,
+          {height: '100vh', maxHeight: 600 },
+          gtMobile ? a.px_xl : a.px_lg,
+        ]),
+        native({
+          marginTop: 0,
+          paddingTop: 20,
+        })
+      ]}
+      webInnerStyle={[
+        a.py_0,
+        {maxWidth: 500, minWidth: 200},
+      ]}
       onScrollBeginDrag={() => Keyboard.dismiss()}
     />
   )
