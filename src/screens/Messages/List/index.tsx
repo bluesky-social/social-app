@@ -61,12 +61,23 @@ export function MessagesScreen({navigation, route}: Props) {
     return (
       <Link
         to="/messages/settings"
-        accessibilityLabel={_(msg`Message settings`)}
-        accessibilityHint={_(msg`Opens the message settings page`)}>
-        <SettingsSlider size="lg" style={t.atoms.text} />
+        label={_(msg`Chat settings`)}
+        size="small"
+        variant="ghost"
+        color="secondary"
+        shape="square"
+        style={[a.justify_center]}>
+        <SettingsSlider
+          size="md"
+          style={[
+            {
+              color: t.palette.contrast_700,
+            },
+          ]}
+        />
       </Link>
     )
-  }, [_, t.atoms.text])
+  }, [_, t])
 
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -165,7 +176,7 @@ export function MessagesScreen({navigation, route}: Props) {
         <ViewHeader
           title={_(msg`Messages`)}
           renderButton={renderButton}
-          showBorder={false}
+          showBorder
           canGoBack={false}
         />
       )}
