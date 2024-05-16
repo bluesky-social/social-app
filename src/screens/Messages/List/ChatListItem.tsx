@@ -103,7 +103,7 @@ function ChatListItemReady({
     setShowActions(true)
   }, [])
 
-  const onPress = useCallback(async () => {
+  const onPress = useCallback(() => {
     navigation.push('MessagesConversation', {
       conversation: convo.id,
     })
