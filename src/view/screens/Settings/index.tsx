@@ -24,6 +24,7 @@ import {clearLegacyStorage} from '#/state/persisted/legacy'
 import {clear as clearStorage} from '#/state/persisted/store'
 import {
   useInAppBrowser,
+  useOpenLink,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
@@ -169,6 +170,7 @@ export function SettingsScreen({}: Props) {
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const openLink = useOpenLink()
   const setMinimalShellMode = useSetMinimalShellMode()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
@@ -872,29 +874,38 @@ export function SettingsScreen({}: Props) {
           </TouchableOpacity>
         </View>
 
-        <View
-          style={[
-            {flexWrap: 'wrap', gap: 12, paddingHorizontal: 18},
-            s.flexRow,
-          ]}>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href="https://bsky.social/about/support/tos"
-            text={_(msg`Terms of Service`)}
-          />
-          <TextLink
-            type="md"
-            style={pal.link}
-            href="https://bsky.social/about/support/privacy-policy"
-            text={_(msg`Privacy Policy`)}
-          />
-          <TextLink
-            type="md"
-            style={pal.link}
-            href={STATUS_PAGE_URL}
-            text={_(msg`Status Page`)}
-          />
+        <View style={[{gap: 12, paddingHorizontal: 18, paddingTop: 8}]}>
+          <View style={{flexDirection: 'row', gap: 24}}>
+            <TextLink
+              type="md"
+              style={[s.flex1, pal.link]}
+              href="https://bsky.social/about/support/tos"
+              text={_(msg`Terms of Service`)}
+            />
+            <TextLink
+              type="md"
+              style={[s.flex1, pal.link]}
+              href="https://bsky.social/about/support/privacy-policy"
+              text={_(msg`Privacy Policy`)}
+            />
+          </View>
+          <View style={{flexDirection: 'row', gap: 24}}>
+            <TextLink
+              type="md"
+              style={[s.flex1, pal.link]}
+              href="https://bsky.app/ACKNOWLEDGEMENTS.txt"
+              onPress={() => {
+                openLink('https://bsky.app/ACKNOWLEDGEMENTS.txt')
+              }}
+              text={_(msg`Acknowledgements`)}
+            />
+            <TextLink
+              type="md"
+              style={[s.flex1, pal.link]}
+              href={STATUS_PAGE_URL}
+              text={_(msg`Status Page`)}
+            />
+          </View>
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>
