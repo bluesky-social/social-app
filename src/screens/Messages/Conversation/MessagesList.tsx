@@ -95,6 +95,7 @@ export function MessagesList() {
   // Since we are using the native web methods for scrolling on `List`, we only use the reanimated `scrollTo` on native
   const scrollToOffset = React.useCallback(
     (offset: number, animated: boolean) => {
+      console.log('scroll in offset')
       if (isWeb) {
         flatListRef.current?.scrollToOffset({offset, animated})
       } else {
@@ -123,15 +124,13 @@ export function MessagesList() {
       }
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height > 50 && (isAtBottom.value || keyboardIsAnimating.value)) {
+      if (height > 50 && isAtBottom.value && !keyboardIsAnimating.value) {
         let newOffset = height
-
         // If the size of the content is changing by more than the height of the screen, then we should only
         // scroll 1 screen down, and let the user scroll the rest. However, because a single message could be
         // really large - and the normal chat behavior would be to still scroll to the end if it's only one
         // message - we ignore this rule if there's only one additional message
         if (
-          !keyboardIsAnimating.value &&
           hasInitiallyScrolled.value &&
           height - contentHeight.value > layoutHeight.value - 50 &&
           convo.items.length - prevItemCount.current > 1
@@ -139,7 +138,6 @@ export function MessagesList() {
           newOffset = contentHeight.value - 50
           setShowNewMessagesPill(true)
         }
-
         scrollToOffset(newOffset, hasInitiallyScrolled.value)
         isMomentumScrolling.value = true
       }
@@ -264,6 +262,7 @@ export function MessagesList() {
       // We only need to scroll to end while the keyboard is _opening_. During close, the position changes as we
       // "expand" the view.
       if (prev && now > prev) {
+        console.log('or this one')
         scrollTo(flatListRef, 0, contentHeight.value + now, false)
       }
       keyboardIsAnimating.value = now !== prev
