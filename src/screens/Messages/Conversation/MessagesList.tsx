@@ -234,12 +234,9 @@ export function MessagesList() {
   }, [isMomentumScrolling])
 
   const scrollToEnd = React.useCallback(() => {
-    requestAnimationFrame(() => {
-      if (isMomentumScrolling.value) return
-
-      scrollToOffset(contentHeight.value, true)
-      isMomentumScrolling.value = true
-    })
+    if (isMomentumScrolling.value) return
+    scrollToOffset(contentHeight.value, true)
+    isMomentumScrolling.value = true
   }, [contentHeight.value, isMomentumScrolling, scrollToOffset])
 
   // -- Keyboard animation handling
