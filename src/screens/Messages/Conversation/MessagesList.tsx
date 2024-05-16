@@ -2,8 +2,11 @@ import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
 import Animated, {
   runOnJS,
+  runOnUI,
+  scrollTo,
   useAnimatedKeyboard,
   useAnimatedReaction,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -65,7 +68,7 @@ export function MessagesList() {
   const t = useTheme()
   const convo = useConvoActive()
   const {getAgent} = useAgent()
-  const flatListRef = useRef<FlatList>(null)
+  const flatListRef = useAnimatedRef<FlatList>()
 
   const [showNewMessagesPill, setShowNewMessagesPill] = React.useState(false)
 
@@ -89,6 +92,18 @@ export function MessagesList() {
   const keyboardIsOpening = useSharedValue(false)
   const layoutHeight = useSharedValue(0)
 
+  // Since we are using the native web methods for scrolling on `List`, we only use the reanimated `scrollTo` on native
+  const scrollToOffset = React.useCallback(
+    (offset: number, animated: boolean) => {
+      if (isWeb) {
+        flatListRef.current?.scrollToOffset({offset, animated})
+      } else {
+        runOnUI(scrollTo)(flatListRef, 0, offset, animated)
+      }
+    },
+    [flatListRef],
+  )
+
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
   // 2. Old messages are being prepended to the top
@@ -104,10 +119,7 @@ export function MessagesList() {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
       if (isWeb && isAtTop.value && hasInitiallyScrolled.value) {
-        flatListRef.current?.scrollToOffset({
-          animated: false,
-          offset: height - contentHeight.value,
-        })
+        scrollToOffset(height - contentHeight.value, false)
       }
 
       // This number _must_ be the height of the MaybeLoader component
@@ -127,24 +139,25 @@ export function MessagesList() {
           setShowNewMessagesPill(true)
         }
 
-        flatListRef.current?.scrollToOffset({
-          animated: hasInitiallyScrolled.value && !keyboardIsOpening.value,
-          offset: newOffset,
-        })
+        scrollToOffset(
+          newOffset,
+          hasInitiallyScrolled.value && !keyboardIsOpening.value,
+        )
         isMomentumScrolling.value = true
       }
       contentHeight.value = height
       prevItemCount.current = convo.items.length
     },
     [
-      contentHeight,
+      isAtTop.value,
       hasInitiallyScrolled.value,
       isAtBottom.value,
-      isAtTop.value,
-      isMomentumScrolling,
-      layoutHeight.value,
-      convo.items.length,
       keyboardIsOpening.value,
+      contentHeight,
+      convo.items.length,
+      layoutHeight.value,
+      scrollToOffset,
+      isMomentumScrolling,
     ],
   )
 
@@ -226,10 +239,10 @@ export function MessagesList() {
     requestAnimationFrame(() => {
       if (isMomentumScrolling.value) return
 
-      flatListRef.current?.scrollToEnd({animated: true})
+      scrollToOffset(contentHeight.value, true)
       isMomentumScrolling.value = true
     })
-  }, [isMomentumScrolling])
+  }, [contentHeight.value, isMomentumScrolling, scrollToOffset])
 
   // -- Keyboard animation handling
   const animatedKeyboard = useAnimatedKeyboard()
