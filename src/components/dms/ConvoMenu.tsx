@@ -222,7 +222,7 @@ let ConvoMenu = ({
         control={leaveConvoControl}
         title={_(msg`Leave conversation`)}
         description={_(
-          msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants.`,
+          msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`,
         )}
         confirmButtonCta={_(msg`Leave`)}
         confirmButtonColor="negative"
