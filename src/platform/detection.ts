@@ -1,5 +1,5 @@
 import {Platform} from 'react-native'
-import {isReducedMotion} from 'react-native-reanimated/src/reanimated2/PlatformChecker'
+import {isReducedMotion} from 'react-native-reanimated'
 import {getLocales} from 'expo-localization'
 
 import {dedupArray} from 'lib/functions'
