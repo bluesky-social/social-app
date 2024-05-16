@@ -36,6 +36,7 @@ type Props = NativeStackScreenProps<
 >
 export function MessagesConversationScreen({route}: Props) {
   const gate = useGate()
+  const {gtMobile} = useBreakpoints()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   const convoId = route.params.conversation
@@ -44,12 +45,16 @@ export function MessagesConversationScreen({route}: Props) {
   useFocusEffect(
     useCallback(() => {
       setCurrentConvoId(convoId)
-      // setMinimalShellMode(true)
+
+      if (isWeb && !gtMobile) {
+        setMinimalShellMode(true)
+      }
+
       return () => {
         setCurrentConvoId(undefined)
         setMinimalShellMode(false)
       }
-    }, [convoId, setCurrentConvoId, setMinimalShellMode]),
+    }, [gtMobile, convoId, setCurrentConvoId, setMinimalShellMode]),
   )
 
   if (!gate('dms')) return <ClipClopGate />
