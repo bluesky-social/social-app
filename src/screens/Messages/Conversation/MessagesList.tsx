@@ -197,7 +197,7 @@ export function MessagesList() {
     requestAnimationFrame(() => {
       if (isMomentumScrolling.value) return
 
-      // flatListRef.current?.scrollToEnd({animated: true})
+      flatListRef.current?.scrollToEnd({animated: true})
       isMomentumScrolling.value = true
     })
   }, [isMomentumScrolling])
