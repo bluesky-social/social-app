@@ -766,12 +766,12 @@ export class Convo {
       logger.DebugContext.convo,
     )
 
-    const pendingMessage = Array.from(this.pendingMessages.values()).shift()
+    const pendingMessages = Array.from(this.pendingMessages.values())
 
     /*
      * If there are no pending messages, we're done.
      */
-    if (!pendingMessage) {
+    if (pendingMessages.length === 0) {
       this.isProcessingPendingMessages = false
       return
     }
@@ -779,28 +779,34 @@ export class Convo {
     try {
       this.isProcessingPendingMessages = true
 
-      const {id, message} = pendingMessage
-
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.sendMessage(
+        return this.agent.api.chat.bsky.convo.sendMessageBatch(
           {
-            convoId: this.convoId,
-            message,
+            items: pendingMessages.map(({message}) => ({
+              convoId: this.convoId,
+              message,
+            })),
           },
           {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
         )
       })
-      const res = response.data
 
-      /*
-       * Insert into `newMessages` as soon as we have a real ID. That way, when
-       * we get an event log back, we can replace in situ.
-       */
-      this.newMessages.set(res.id, {
-        ...res,
-        $type: 'chat.bsky.convo.defs#messageView',
-      })
-      this.pendingMessages.delete(id)
+      const {items} = response.data
+
+      for (let i = 0; i < items.length; i++) {
+        const msg = items[i]
+        const tempId = pendingMessages[i].id
+
+        /*
+         * Insert into `newMessages` as soon as we have a real ID. That way, when
+         * we get an event log back, we can replace in situ.
+         */
+        this.newMessages.set(msg.id, {
+          ...msg,
+          $type: 'chat.bsky.convo.defs#messageView',
+        })
+        this.pendingMessages.delete(tempId)
+      }
 
       await this.processPendingMessages()
 
