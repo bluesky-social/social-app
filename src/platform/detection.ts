@@ -1,4 +1,5 @@
 import {Platform} from 'react-native'
+import {isReducedMotion} from 'react-native-reanimated/src/reanimated2/PlatformChecker'
 import {getLocales} from 'expo-localization'
 
 import {dedupArray} from 'lib/functions'
@@ -20,12 +21,4 @@ export const deviceLocales = dedupArray(
     .filter(code => typeof code === 'string'),
 ) as string[]
 
-export const prefersReducedMotion = isWeb
-  ? // @ts-ignore we know window exists -prf
-    !global.window.matchMedia('(prefers-reduced-motion: no-preference)')
-      ?.matches
-  : // @ts-expect-error this comes from reanimated but is obviously not typed
-    // this is how `useReducedMotion` is implemented, see:
-    // https://github.com/software-mansion/react-native-reanimated/blob/44d55dd3b6b92759fa820538d4f7c420bc8c2fa0/src/reanimated2/PlatformChecker.ts#L49
-    // -sfn
-    !!global._REANIMATED_IS_REDUCED_MOTION
+export const prefersReducedMotion = isReducedMotion()
