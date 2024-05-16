@@ -15,7 +15,6 @@ import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {decrementBadgeCount} from 'lib/notifications/notifications'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -105,15 +104,10 @@ function ChatListItemReady({
   }, [])
 
   const onPress = useCallback(async () => {
-    if (convo.unreadCount > 0) {
-      // We only increment the badge once per conversation, so even if there are multiple unreads
-      // we only want to decrement by one.
-      decrementBadgeCount(1)
-    }
     navigation.push('MessagesConversation', {
       conversation: convo.id,
     })
-  }, [convo.id, convo.unreadCount, navigation])
+  }, [convo.id, navigation])
 
   return (
     <View
