@@ -77,7 +77,9 @@ export function MessagesSettingsScreen({}: Props) {
             setPref('playSoundChat', !preferences.playSoundChat)
           }}>
           <Toggle.Checkbox />
-          <Toggle.LabelText>Notification Sounds</Toggle.LabelText>
+          <Toggle.LabelText>
+            <Trans>Notification Sounds</Trans>
+          </Toggle.LabelText>
         </Toggle.Item>
       </View>
     </CenteredView>
