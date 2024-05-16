@@ -123,6 +123,14 @@ export type ConvoItem =
        */
       retry?: () => void
     }
+  | {
+      type: 'firehose-error'
+      key: string
+      /**
+       * If present, error is recoverable.
+       */
+      retry?: () => void
+    }
 
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
@@ -194,7 +202,7 @@ export type ConvoStateError = {
   status: ConvoStatus.Error
   items: []
   convo: undefined
-  error: any
+  error: ConvoError
   sender: undefined
   recipients: undefined
   isFetchingHistory: false

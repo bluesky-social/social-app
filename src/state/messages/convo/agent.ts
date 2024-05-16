@@ -21,6 +21,7 @@ import {
 import {
   ConvoDispatch,
   ConvoDispatchEvent,
+  ConvoError,
   ConvoErrorCode,
   ConvoEvent,
   ConvoItem,
@@ -55,13 +56,7 @@ export class Convo {
   private senderUserDid: string
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
-  private error:
-    | {
-        code: ConvoErrorCode
-        exception?: Error
-        retry: () => void
-      }
-    | undefined
+  private error: ConvoError | undefined
   private oldestRev: string | undefined | null = undefined
   private isFetchingHistory = false
   private latestRev: string | undefined = undefined
@@ -79,7 +74,6 @@ export class Convo {
     {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
   > = new Map()
   private deletedMessages: Set<string> = new Set()
-  private footerItems: Map<string, ConvoItem> = new Map()
   private headerItems: Map<string, ConvoItem> = new Map()
 
   private isProcessingPendingMessages = false
@@ -180,7 +174,7 @@ export class Convo {
           status: ConvoStatus.Error,
           items: [],
           convo: undefined,
-          error: this.error,
+          error: this.error!,
           sender: undefined,
           recipients: undefined,
           isFetchingHistory: false,
@@ -288,7 +282,7 @@ export class Convo {
               if (this.convo) {
                 this.status = ConvoStatus.Ready
                 this.refreshConvo()
-                this.attemptCleanup()
+                this.maybeRecoverFromNetworkError()
               } else {
                 this.status = ConvoStatus.Initializing
                 this.setup()
@@ -386,7 +380,6 @@ export class Convo {
     this.newMessages = new Map()
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
-    this.footerItems = new Map()
     this.headerItems = new Map()
 
     this.pendingMessageFailure = null
@@ -394,10 +387,14 @@ export class Convo {
     this.dispatch({event: ConvoDispatchEvent.Init})
   }
 
-  private attemptCleanup() {
-    // override what's here in case remote convo state has changed
-    this.pendingMessageFailure = 'recoverable'
-    this.batchRetryPendingMessages()
+  maybeRecoverFromNetworkError() {
+    if (this.firehoseError) {
+      this.firehoseError.retry()
+      this.firehoseError = undefined
+      this.commit()
+    } else {
+      this.batchRetryPendingMessages()
+    }
   }
 
   private async setup() {
@@ -643,22 +640,16 @@ export class Convo {
     )
   }
 
+  private firehoseError: MessagesEventBusError | undefined
+
   onFirehoseConnect() {
-    this.footerItems.delete(ConvoItemError.FirehoseFailed)
+    this.firehoseError = undefined
+    this.batchRetryPendingMessages()
     this.commit()
   }
 
   onFirehoseError(error?: MessagesEventBusError) {
-    this.footerItems.set(ConvoItemError.FirehoseFailed, {
-      type: 'error',
-      key: ConvoItemError.FirehoseFailed,
-      code: ConvoItemError.FirehoseFailed,
-      retry: () => {
-        this.footerItems.delete(ConvoItemError.FirehoseFailed)
-        this.commit()
-        error?.retry()
-      },
-    })
+    this.firehoseError = error
     this.commit()
   }
 
@@ -852,17 +843,13 @@ export class Convo {
   }
 
   async batchRetryPendingMessages() {
-    if (this.pendingMessageFailure === 'unrecoverable') return
-
-    // reset if present, and recoverable
-    if (this.pendingMessageFailure === 'recoverable') {
-      this.pendingMessageFailure = null
-      this.commit()
-    }
+    if (this.pendingMessageFailure === null) return
 
     const messageArray = Array.from(this.pendingMessages.values())
-
     if (messageArray.length === 0) return
+
+    this.pendingMessageFailure = null
+    this.commit()
 
     logger.debug(
       `Convo: batch retrying ${this.pendingMessages.size} pending messages`,
@@ -1012,15 +999,21 @@ export class Convo {
         retry:
           this.pendingMessageFailure === 'recoverable'
             ? () => {
-                this.batchRetryPendingMessages()
+                this.maybeRecoverFromNetworkError()
               }
             : undefined,
       })
     })
 
-    this.footerItems.forEach(item => {
-      items.push(item)
-    })
+    if (this.firehoseError) {
+      items.push({
+        type: 'firehose-error',
+        key: 'firehose-error',
+        retry: () => {
+          this.firehoseError?.retry()
+        },
+      })
+    }
 
     return items
       .filter(item => {
