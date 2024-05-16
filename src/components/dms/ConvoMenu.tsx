@@ -171,13 +171,13 @@ let ConvoMenu = ({
               <Menu.ItemIcon icon={Person} />
             </Menu.Item>
             <Menu.Item
-              label={_(msg`Mute notifications`)}
+              label={_(msg`Mute conversation`)}
               onPress={() => muteConvo({mute: !convo?.muted})}>
               <Menu.ItemText>
                 {convo?.muted ? (
-                  <Trans>Unmute notifications</Trans>
+                  <Trans>Unmute conversation</Trans>
                 ) : (
-                  <Trans>Mute notifications</Trans>
+                  <Trans>Mute conversation</Trans>
                 )}
               </Menu.ItemText>
               <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
