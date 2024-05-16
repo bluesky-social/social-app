@@ -389,6 +389,8 @@ export class Convo {
     this.footerItems = new Map()
     this.headerItems = new Map()
 
+    this.pendingMessageFailure = null
+
     this.dispatch({event: ConvoDispatchEvent.Init})
   }
 
