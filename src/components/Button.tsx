@@ -291,7 +291,6 @@ export function Button({
         } else {
           baseStyles.push({height: 50, width: 50})
         }
-      } else if (size === 'medium') {
       } else if (size === 'small') {
         baseStyles.push({height: 34, width: 34})
       } else if (size === 'tiny') {
