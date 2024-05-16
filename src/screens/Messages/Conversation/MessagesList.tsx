@@ -184,9 +184,6 @@ export function MessagesList() {
 
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
-      console.log(e.contentSize.height - e.layoutMeasurement.height / 10)
-      console.log({offset: bottomOffset})
-
       if (
         showNewMessagesPill &&
         e.contentSize.height - e.layoutMeasurement.height / 3 < bottomOffset
