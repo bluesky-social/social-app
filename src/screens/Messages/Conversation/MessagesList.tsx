@@ -80,9 +80,7 @@ export function MessagesList() {
   // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
   // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
   const isMomentumScrolling = useSharedValue(false)
-
   const hasInitiallyScrolled = useSharedValue(false)
-
   const keyboardIsOpening = useSharedValue(false)
 
   // Every time the content size changes, that means one of two things is happening:
@@ -109,15 +107,9 @@ export function MessagesList() {
       contentHeight.value = height
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height <= 50 || !isAtBottom.value) {
+      if (height <= 50 || (!isAtBottom.value && !keyboardIsOpening.value)) {
         return
       }
-
-      console.log(
-        hasInitiallyScrolled.value && !keyboardIsOpening.value,
-        hasInitiallyScrolled.value,
-        keyboardIsOpening.value,
-      )
 
       flatListRef.current?.scrollToOffset({
         animated: hasInitiallyScrolled.value && !keyboardIsOpening.value,
