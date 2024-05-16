@@ -46,7 +46,8 @@
     "export": "npx expo export",
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 yarn build-web",
-    "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
+    "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web",
+    "generate-acknowledgements-file": "npx generate-license-file --input ./package.json --output ./bskyweb/static/ACKNOWLEDGEMENTS.txt"
   },
   "dependencies": {
     "@atproto/api": "^0.12.10",
@@ -244,6 +245,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-native-a11y": "^3.3.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
+    "generate-license-file": "^3.4.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",

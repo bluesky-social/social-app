@@ -144,6 +144,7 @@ func serve(cctx *cli.Context) error {
 	}())
 
 	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
+	e.GET("/ACKNOWLEDGEMENTS.txt", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v4", echo.WrapHandler(staticHandler))
 	e.GET("/ips-v6", echo.WrapHandler(staticHandler))
 	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
