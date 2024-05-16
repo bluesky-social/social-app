@@ -25,6 +25,15 @@ export class Router {
   matchPath(path: string): [string, RouteParams] {
     let name = 'NotFound'
     let params: RouteParams = {}
+    if (
+      path.length >= 3 &&
+      path.charAt(0) === '/' &&
+      path.charAt(1) === '?' &&
+      path.charAt(2) === '/'
+    ) {
+      // convert the query string to a path!
+      path = path.slice(2)
+    }
     for (const [screenName, route] of this.routes) {
       const res = route.match(path)
       if (res) {

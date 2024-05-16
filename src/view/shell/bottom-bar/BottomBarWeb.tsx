@@ -91,7 +91,7 @@ export function BottomBarWeb() {
               )
             }}
           </NavItem>
-          <NavItem routeName="Search" href="/search">
+          <NavItem routeName="Search" href="/?/search">
             {({isActive}) => {
               const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
@@ -106,7 +106,7 @@ export function BottomBarWeb() {
           {hasSession && (
             <>
               {gate('dms') ? (
-                <NavItem routeName="Messages" href="/messages">
+                <NavItem routeName="Messages" href="/?/messages">
                   {({isActive}) => {
                     const Icon = isActive ? MessageFilled : Message
                     return (
@@ -118,7 +118,7 @@ export function BottomBarWeb() {
                   }}
                 </NavItem>
               ) : (
-                <NavItem routeName="Feeds" href="/feeds">
+                <NavItem routeName="Feeds" href="/?/feeds">
                   {({isActive}) => {
                     const Icon = isActive ? HashtagFilled : Hashtag
                     return (
@@ -130,7 +130,7 @@ export function BottomBarWeb() {
                   }}
                 </NavItem>
               )}
-              <NavItem routeName="Notifications" href="/notifications">
+              <NavItem routeName="Notifications" href="/?/notifications">
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (

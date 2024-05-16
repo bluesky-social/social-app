@@ -841,7 +841,7 @@ let AutocompleteResults = ({
             to={
               isNative
                 ? undefined
-                : `/search?q=${encodeURIComponent(searchText)}`
+                : `/?/search?q=${encodeURIComponent(searchText)}`
             }
             style={{borderBottomWidth: 1}}
           />

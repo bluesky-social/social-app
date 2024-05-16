@@ -11,7 +11,7 @@ export function makeProfileLink(
   if (info.handle && !isInvalidHandle(info.handle)) {
     handleSegment = info.handle
   }
-  return [`/profile`, handleSegment, ...segments].join('/')
+  return [`/?/profile`, handleSegment, ...segments].join('/')
 }
 
 export function makeCustomFeedLink(
@@ -19,19 +19,19 @@ export function makeCustomFeedLink(
   rkey: string,
   ...segments: string[]
 ) {
-  return [`/profile`, did, 'feed', rkey, ...segments].join('/')
+  return [`/?/profile`, did, 'feed', rkey, ...segments].join('/')
 }
 
 export function makeListLink(did: string, rkey: string, ...segments: string[]) {
-  return [`/profile`, did, 'lists', rkey, ...segments].join('/')
+  return [`/?/profile`, did, 'lists', rkey, ...segments].join('/')
 }
 
 export function makeTagLink(did: string) {
-  return `/search?q=${encodeURIComponent(did)}`
+  return `/?/search?q=${encodeURIComponent(did)}`
 }
 
 export function makeSearchLink(props: {query: string; from?: 'me' | string}) {
-  return `/search?q=${encodeURIComponent(
+  return `/?/search?q=${encodeURIComponent(
     props.query + (props.from ? ` from:${props.from}` : ''),
   )}`
 }
