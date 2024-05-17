@@ -37,6 +37,7 @@ type Item =
   | {
       type: 'empty'
       key: string
+      message: string
     }
   | {
       type: 'placeholder'
@@ -203,12 +204,12 @@ function ProfileCardSkeleton() {
   )
 }
 
-function Empty() {
+function Empty({message}: {message: string}) {
   const t = useTheme()
   return (
     <View style={[a.p_lg, a.py_xl, a.align_center, a.gap_md]}>
       <Text style={[a.text_sm, a.italic, t.atoms.text_contrast_high]}>
-        No results
+        {message}
       </Text>
 
       <Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
@@ -293,14 +294,20 @@ function SearchablePeopleList({
     data: results,
     isError,
     isFetching,
-  } = useActorAutocompleteQuery(searchText, true)
-  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
+  } = useActorAutocompleteQuery(searchText, true, 12)
+  const {data: follows} = useProfileFollowsQuery(currentAccount?.did, {
+    limit: 12,
+  })
 
   const items = React.useMemo(() => {
     let _items: Item[] = []
 
     if (isError) {
-      _items.push({type: 'error', key: 'error'})
+      _items.push({
+        type: 'empty',
+        key: 'empty',
+        message: _(msg`We're having network issues, try again`),
+      })
     } else if (searchText.length) {
       if (results?.length) {
         for (const profile of results) {
@@ -321,16 +328,20 @@ function SearchablePeopleList({
     } else {
       if (follows) {
         for (const page of follows.pages) {
-          const enabled = page.follows.filter(canBeMessaged)
-          for (const profile of enabled) {
+          for (const profile of page.follows) {
             _items.push({
               type: 'profile',
               key: profile.did,
-              enabled: true,
+              enabled: canBeMessaged(profile),
               profile,
             })
           }
         }
+
+        _items = _items.sort(a => {
+          // @ts-ignore
+          return a.enabled ? -1 : 1
+        })
       } else {
         Array(10)
           .fill(0)
@@ -344,10 +355,10 @@ function SearchablePeopleList({
     }
 
     return _items
-  }, [searchText, results, isError, currentAccount?.did, follows])
+  }, [_, searchText, results, isError, currentAccount?.did, follows])
 
-  if (searchText && !isFetching && !items.length) {
-    items.push({type: 'empty', key: 'empty'})
+  if (searchText && !isFetching && !items.length && !isError) {
+    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
   }
 
   const renderItems = React.useCallback(
@@ -368,7 +379,7 @@ function SearchablePeopleList({
           return <ProfileCardSkeleton key={item.key} />
         }
         case 'empty': {
-          return <Empty key={item.key} />
+          return <Empty key={item.key} message={item.message} />
         }
         default:
           return null
@@ -453,7 +464,7 @@ function SearchablePeopleList({
       renderItem={renderItems}
       ListHeaderComponent={listHeader}
       stickyHeaderIndices={[0]}
-      keyExtractor={(item: AppBskyActorDefs.ProfileView) => item.did}
+      keyExtractor={(item: Item) => item.key}
       style={[
         web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
         native({
