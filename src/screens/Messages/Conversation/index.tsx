@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -22,9 +23,10 @@ import {useSetMinimalShellMode} from 'state/shell'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Error} from '#/components/Error'
+import {Link} from '#/components/Link'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -71,23 +73,15 @@ function Inner() {
   const convoState = useConvo()
   const {_} = useLingui()
 
-  const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
-
-  // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
-  // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
-  // a little flicker when the items are first renedered at the top and immediately scrolled to the bottom. to prevent
-  // this, we will wait until the first render has completed to remove the loading overlay.
-  React.useEffect(() => {
-    if (
-      !hasInitiallyRendered &&
-      isConvoActive(convoState) &&
-      !convoState.isFetchingHistory
-    ) {
-      setTimeout(() => {
-        setHasInitiallyRendered(true)
-      }, 15)
-    }
-  }, [convoState, hasInitiallyRendered])
+  // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
+  // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
+  // empty. So, we also check for that possible state as well and render once we can.
+  const [hasScrolled, setHasScrolled] = React.useState(false)
+  const readyToShow =
+    hasScrolled ||
+    (convoState.status === ConvoStatus.Ready &&
+      !convoState.isFetchingHistory &&
+      convoState.items.length === 0)
 
   if (convoState.status === ConvoStatus.Error) {
     return (
@@ -110,11 +104,14 @@ function Inner() {
       <Header profile={convoState.recipients?.[0]} />
       <View style={[a.flex_1]}>
         {isConvoActive(convoState) ? (
-          <MessagesList />
+          <MessagesList
+            hasScrolled={hasScrolled}
+            setHasScrolled={setHasScrolled}
+          />
         ) : (
           <ListMaybePlaceholder isLoading />
         )}
-        {!hasInitiallyRendered && (
+        {!readyToShow && (
           <View
             style={[
               a.absolute,
@@ -134,6 +131,8 @@ function Inner() {
     </CenteredView>
   )
 }
+
+const PFP_SIZE = isWeb ? 40 : 34
 
 let Header = ({
   profile: initialProfile,
@@ -162,14 +161,13 @@ let Header = ({
         t.atoms.border_contrast_low,
         a.border_b,
         a.flex_row,
-        a.justify_between,
-        a.align_start,
-        a.gap_lg,
-        a.pl_xl,
+        a.align_center,
+        a.gap_sm,
+        gtTablet ? a.pl_lg : a.pl_xl,
         a.pr_lg,
-        a.py_md,
+        a.py_sm,
       ]}>
-      {!gtTablet ? (
+      {!gtTablet && (
         <TouchableOpacity
           testID="conversationHeaderBackBtn"
           onPress={onPressBack}
@@ -187,37 +185,37 @@ let Header = ({
             color={t.atoms.text.color}
           />
         </TouchableOpacity>
-      ) : (
-        <View style={{width: 30}} />
       )}
 
       {profile && moderationOpts ? (
         <HeaderReady profile={profile} moderationOpts={moderationOpts} />
       ) : (
         <>
-          <View style={[a.align_center, a.gap_sm, a.flex_1]}>
+          <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
             <View
               style={[
-                {width: 32, height: 32},
+                {width: PFP_SIZE, height: PFP_SIZE},
                 a.rounded_full,
                 t.atoms.bg_contrast_25,
               ]}
             />
-            <View
-              style={[
-                {width: 120, height: 16},
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
-                a.mt_xs,
-              ]}
-            />
-            <View
-              style={[
-                {width: 175, height: 12},
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
-              ]}
-            />
+            <View style={a.gap_xs}>
+              <View
+                style={[
+                  {width: 120, height: 16},
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
+                  a.mt_xs,
+                ]}
+              />
+              <View
+                style={[
+                  {width: 175, height: 12},
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
+                ]}
+              />
+            </View>
           </View>
 
           <View style={{width: 30}} />
@@ -253,26 +251,34 @@ function HeaderReady({
 
   return (
     <>
-      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-        <View style={[a.align_center]}>
-          <PreviewableUserAvatar
-            size={32}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
+      <Link
+        style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}
+        to={makeProfileLink(profile)}>
+        <PreviewableUserAvatar
+          size={PFP_SIZE}
+          profile={profile}
+          moderation={moderation.ui('avatar')}
+          disableHoverCard={moderation.blocked}
+        />
+        <View style={a.flex_1}>
           <Text
-            style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
+            style={[a.text_md, a.font_bold, web(a.leading_normal)]}
             numberOfLines={1}>
             {displayName}
           </Text>
           {!isDeletedAccount && (
-            <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
+            <Text
+              style={[
+                t.atoms.text_contrast_medium,
+                a.text_sm,
+                web([a.leading_normal, {marginTop: -2}]),
+              ]}
+              numberOfLines={1}>
               @{profile.handle}
             </Text>
           )}
         </View>
-      </View>
+      </Link>
 
       {isConvoActive(convoState) && (
         <ConvoMenu

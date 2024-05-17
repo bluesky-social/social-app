@@ -71,12 +71,14 @@ export function useNotificationsRegistration() {
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
+  const {currentAccount} = useSession()
 
   return React.useCallback(
     async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
       const permissions = await Notifications.getPermissionsAsync()
 
       if (
+        !currentAccount ||
         !isNative ||
         permissions?.status === 'granted' ||
         (permissions?.status === 'denied' && !permissions?.canAskAgain)
@@ -107,7 +109,7 @@ export function useRequestNotificationsPermission() {
         getPushToken(true)
       }
     },
-    [gate],
+    [gate, currentAccount],
   )
 }
 
