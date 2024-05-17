@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
+import type {TextInput as TextInputType} from 'react-native'
 import {Keyboard, View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
@@ -227,7 +228,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<TextInputType>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -252,6 +253,7 @@ function SearchInput({
       />
 
       <TextInput
+        // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
         placeholder={_(msg`Search`)}
         value={value}
@@ -291,7 +293,7 @@ function SearchablePeopleList({
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = React.useRef<TextInput>(null)
+  const inputRef = React.useRef<TextInputType>(null)
 
   const [searchText, setSearchText] = useState('')
 
