@@ -52,11 +52,7 @@ export function MessagesListBlockedFooter({
 
   return (
     <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
-      {hasMessages && (
-        <>
-          <Divider />
-        </>
-      )}
+      <Divider />
       <Text style={[a.text_md, a.font_bold, a.text_center]}>
         {isBlocking ? (
           <Trans>You have blocked this user</Trans>
