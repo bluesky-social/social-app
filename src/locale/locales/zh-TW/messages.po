@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-17 12:02+0800\n"
+"PO-Revision-Date: 2024-05-17 20:37+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -2521,7 +2521,7 @@ msgstr "對您的自訂動態源表示喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:153
 msgid "liked your post"
-msgstr "已按喜歡您的貼文"
+msgstr "已喜歡您的貼文"
 
 #: src/view/screens/Profile.tsx:196
 msgid "Likes"
