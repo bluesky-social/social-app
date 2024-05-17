@@ -31,6 +31,7 @@ export function useLeaveConvo(
       return data
     },
     onMutate: () => {
+      let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
       queryClient.setQueryData(
         CONVO_LIST_KEY,
         (old?: {
@@ -38,6 +39,7 @@ export function useLeaveConvo(
           pages: Array<ChatBskyConvoListConvos.OutputSchema>
         }) => {
           if (!old) return old
+          prevPages = old.pages
           return {
             ...old,
             pages: old.pages.map(page => {
@@ -49,13 +51,27 @@ export function useLeaveConvo(
           }
         },
       )
+      return {prevPages}
     },
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       onSuccess?.(data)
     },
-    onError: error => {
+    onError: (error, _, context) => {
       logger.error(error)
+      queryClient.setQueryData(
+        CONVO_LIST_KEY,
+        (old?: {
+          pageParams: Array<string | undefined>
+          pages: Array<ChatBskyConvoListConvos.OutputSchema>
+        }) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: context?.prevPages || old.pages,
+          }
+        },
+      )
       queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       onError?.(error)
     },

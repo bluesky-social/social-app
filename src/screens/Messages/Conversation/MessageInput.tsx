@@ -19,8 +19,10 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
+import {isIOS} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
 export function MessageInput({
@@ -40,7 +42,11 @@ export function MessageInput({
 
   const {top: topInset} = useSafeAreaInsets()
 
+  const inputStyles = useSharedInputStyles()
+  const [isFocused, setIsFocused] = React.useState(false)
   const inputRef = React.useRef<TextInput>(null)
+
+  useSaveMessageDraft(message)
 
   const onSubmit = React.useCallback(() => {
     if (message.trim() === '') {
@@ -64,7 +70,7 @@ export function MessageInput({
       const keyboardHeight = Keyboard.metrics()?.height ?? 0
       const windowHeight = Dimensions.get('window').height
 
-      const max = windowHeight - keyboardHeight - topInset - 100
+      const max = windowHeight - keyboardHeight - topInset - 150
       const availableSpace = max - e.nativeEvent.contentSize.height
 
       setMaxHeight(max)
@@ -75,19 +81,21 @@ export function MessageInput({
     [scrollToEnd, topInset],
   )
 
-  useSaveMessageDraft(message)
-
   return (
     <View style={a.p_md}>
       <View
         style={[
           a.w_full,
           a.flex_row,
-          a.py_sm,
-          a.px_sm,
-          a.pl_md,
           t.atoms.bg_contrast_25,
-          {borderRadius: 23},
+          {
+            padding: a.p_sm.padding - 2,
+            paddingLeft: a.p_md.padding - 2,
+            borderWidth: 2,
+            borderRadius: 23,
+            borderColor: 'transparent',
+          },
+          isFocused && inputStyles.chromeFocus,
         ]}>
         <TextInput
           accessibilityLabel={_(msg`Message input field`)}
@@ -97,13 +105,21 @@ export function MessageInput({
           value={message}
           multiline={true}
           onChangeText={setMessage}
-          style={[a.flex_1, a.text_md, a.px_sm, t.atoms.text, {maxHeight}]}
+          style={[
+            a.flex_1,
+            a.text_md,
+            a.px_sm,
+            t.atoms.text,
+            {maxHeight, paddingBottom: isIOS ? 5 : 0},
+          ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
-          onFocus={scrollToEnd}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           onContentSizeChange={onInputLayout}
           ref={inputRef}
+          hitSlop={HITSLOP_10}
         />
         <Pressable
           accessibilityRole="button"
