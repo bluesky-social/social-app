@@ -140,7 +140,7 @@ class NotificationPrefs (private val context: Context?) {
   }
 
   private fun mapToString(map: Any): String {
-    return map.toString()
+    return JSONObject(map as Map<*, *>).toString()
   }
 
   private fun stringToMap(string: String): Map<String, Boolean> {
