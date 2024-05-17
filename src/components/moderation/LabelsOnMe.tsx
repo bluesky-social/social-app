@@ -55,13 +55,13 @@ export function LabelsOnMe({
             <Plural
               value={labels.length}
               one="# label has been placed on this account"
-              other="# labels has been placed on this account"
+              other="# labels have been placed on this account"
             />
           ) : (
             <Plural
               value={labels.length}
               one="# label has been placed on this content"
-              other="# labels has been placed on this content"
+              other="# labels have been placed on this content"
             />
           )}
         </ButtonText>
