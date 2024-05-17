@@ -12,8 +12,6 @@ import Animated, {
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, AppBskyRichtextFacet, RichText} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
@@ -22,19 +20,14 @@ import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
-import {Shadow, useProfileShadow} from 'state/cache/profile-shadow'
-import {useProfileBlockMutationQueue} from 'state/queries/profile'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
-import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
+import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
-import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -317,7 +310,7 @@ export function MessagesList({
           scrollToEnd={scrollToEndNow}
         />
       ) : (
-        <BlockedFooter
+        <MessagesListBlockedFooter
           recipient={recipient}
           convoId={convoState.convo.id}
           hasMessages={convoState.items.length > 0}
@@ -327,107 +320,5 @@ export function MessagesList({
       )}
       {showNewMessagesPill && <NewMessagesPill />}
     </Animated.View>
-  )
-}
-
-function BlockedFooter({
-  recipient,
-  convoId,
-  hasMessages,
-  isBlocking,
-  isBlockedBy,
-}: {
-  recipient: Shadow<AppBskyActorDefs.ProfileViewBasic>
-  convoId: string
-  hasMessages: boolean
-  isBlocking: boolean
-  isBlockedBy: boolean
-}) {
-  const t = useTheme()
-  const {gtMobile} = useBreakpoints()
-  const {_} = useLingui()
-  const [__, queueUnblock] = useProfileBlockMutationQueue(recipient)
-
-  const leaveConvoControl = useDialogControl()
-  const reportControl = useDialogControl()
-
-  if (!isBlocking && !isBlockedBy) return null
-
-  return (
-    <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
-      {hasMessages && (
-        <>
-          <Divider />
-        </>
-      )}
-      <Text style={[a.text_md, a.font_bold, a.text_center]}>
-        {isBlockedBy ? (
-          <Trans>This user has blocked you</Trans>
-        ) : (
-          <Trans>You have blocked this user</Trans>
-        )}
-      </Text>
-
-      <View style={[a.flex_row, a.justify_between, a.gap_lg, a.px_md]}>
-        <Button
-          label={_(msg`Leave chat`)}
-          color="secondary"
-          variant="solid"
-          size="small"
-          style={[a.flex_1]}
-          onPress={leaveConvoControl.open}>
-          <ButtonText style={{color: t.palette.negative_500}}>
-            <Trans>Leave chat</Trans>
-          </ButtonText>
-        </Button>
-        <Button
-          label={_(msg`Report`)}
-          color="secondary"
-          variant="solid"
-          size="small"
-          style={[a.flex_1]}
-          onPress={reportControl.open}>
-          <ButtonText style={{color: t.palette.negative_500}}>
-            <Trans>Report</Trans>
-          </ButtonText>
-        </Button>
-        {isBlocking && gtMobile && (
-          <Button
-            label={_(msg`Unblock`)}
-            color="secondary"
-            variant="solid"
-            size="small"
-            style={[a.flex_1]}
-            onPress={queueUnblock}>
-            <ButtonText style={{color: t.palette.primary_500}}>
-              <Trans>Unblock</Trans>
-            </ButtonText>
-          </Button>
-        )}
-      </View>
-      {isBlocking && !gtMobile && (
-        <View style={[a.flex_row, a.justify_center, a.px_md]}>
-          <Button
-            label={_(msg`Unblock`)}
-            color="secondary"
-            variant="solid"
-            size="small"
-            style={[a.flex_1]}
-            onPress={queueUnblock}>
-            <ButtonText style={{color: t.palette.primary_500}}>
-              <Trans>Unblock</Trans>
-            </ButtonText>
-          </Button>
-        </View>
-      )}
-
-      <LeaveConvoPrompt
-        control={leaveConvoControl}
-        currentScreen="conversation"
-        convoId={convoId}
-      />
-
-      <ReportConversationPrompt control={reportControl} />
-    </View>
   )
 }
