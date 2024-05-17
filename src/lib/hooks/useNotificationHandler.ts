@@ -169,11 +169,10 @@ export function useNotificationsHandler() {
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
         ) {
-          const isCurrentConvo = payload.convoId === currentConvoId
           return {
-            shouldShowAlert: !isCurrentConvo,
+            shouldShowAlert: payload.convoId !== currentConvoId,
             shouldPlaySound: false,
-            shouldSetBadge: !isCurrentConvo,
+            shouldSetBadge: false,
           }
         }
 

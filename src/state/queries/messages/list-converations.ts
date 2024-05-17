@@ -15,7 +15,6 @@ import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession} from '#/state/session'
-import {decrementBadgeCount} from 'lib/notifications/notifications'
 
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
@@ -135,18 +134,10 @@ export function useOnMarkAsRead() {
   return useCallback(
     (chatId: string) => {
       queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
-        return optimisticUpdate(chatId, old, convo => {
-          // We only want to decrement the badge by one no matter the unread count, since we only increment once per
-          // sender regardless of message count
-          if (convo.unreadCount > 0) {
-            decrementBadgeCount(1)
-          }
-
-          return {
-            ...convo,
-            unreadCount: 0,
-          }
-        })
+        return optimisticUpdate(chatId, old, convo => ({
+          ...convo,
+          unreadCount: 0,
+        }))
       })
     },
     [queryClient],
