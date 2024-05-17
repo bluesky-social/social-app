@@ -433,7 +433,7 @@ function SearchablePeopleList({
               a.absolute,
               a.z_20,
               native({
-                left: -4,
+                left: -7,
               }),
               web({
                 right: -4,
