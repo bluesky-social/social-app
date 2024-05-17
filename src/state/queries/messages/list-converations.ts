@@ -9,7 +9,7 @@ import {
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {decrementBadgeCount} from 'lib/notifications/notifications'
 
 export const RQKEY = ['convo-list']
@@ -36,6 +36,7 @@ export function useListConvos({refetchInterval}: {refetchInterval: number}) {
 
 export function useUnreadMessageCount() {
   const {currentConvoId} = useCurrentConvoId()
+  const {currentAccount} = useSession()
   const convos = useListConvos({
     refetchInterval: 30_000,
   })
@@ -45,7 +46,12 @@ export function useUnreadMessageCount() {
       .flatMap(page => page.convos)
       .filter(convo => convo.id !== currentConvoId)
       .reduce((acc, convo) => {
-        return acc + (!convo.muted && convo.unreadCount > 0 ? 1 : 0)
+        const otherMember = convo.members.find(
+          member => member.did !== currentAccount?.did,
+        )
+        const blocked =
+          otherMember?.viewer?.blockedBy || otherMember?.viewer?.blocking
+        return acc + (!convo.muted && !blocked && convo.unreadCount > 0 ? 1 : 0)
       }, 0) ?? 0
 
   return useMemo(() => {
