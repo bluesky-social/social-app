@@ -71,23 +71,15 @@ function Inner() {
   const convoState = useConvo()
   const {_} = useLingui()
 
-  const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
-
-  // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
-  // to take into account that scrolling to the end of the list on native will happen asynchronously. This will cause
-  // a little flicker when the items are first renedered at the top and immediately scrolled to the bottom. to prevent
-  // this, we will wait until the first render has completed to remove the loading overlay.
-  React.useEffect(() => {
-    if (
-      !hasInitiallyRendered &&
-      isConvoActive(convoState) &&
-      !convoState.isFetchingHistory
-    ) {
-      setTimeout(() => {
-        setHasInitiallyRendered(true)
-      }, 15)
-    }
-  }, [convoState, hasInitiallyRendered])
+  // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
+  // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
+  // empty. So, we also check for that possible state as well and render once we can.
+  const [hasScrolled, setHasScrolled] = React.useState(false)
+  const readyToShow =
+    hasScrolled ||
+    (convoState.status === ConvoStatus.Ready &&
+      !convoState.isFetchingHistory &&
+      convoState.items.length === 0)
 
   if (convoState.status === ConvoStatus.Error) {
     return (
@@ -110,11 +102,14 @@ function Inner() {
       <Header profile={convoState.recipients?.[0]} />
       <View style={[a.flex_1]}>
         {isConvoActive(convoState) ? (
-          <MessagesList />
+          <MessagesList
+            hasScrolled={hasScrolled}
+            setHasScrolled={setHasScrolled}
+          />
         ) : (
           <ListMaybePlaceholder isLoading />
         )}
-        {!hasInitiallyRendered && (
+        {!readyToShow && (
           <View
             style={[
               a.absolute,
