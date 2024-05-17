@@ -65,6 +65,17 @@ function ChatListItemReady({
     [profile, moderationOpts],
   )
 
+  const blockInfo = React.useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? 'Deleted Account'
@@ -241,7 +252,7 @@ function ChatListItemReady({
                 triggerOpacity={
                   !gtMobile || showActions || menuControl.isOpen ? 1 : 0
                 }
-                moderation={moderation}
+                blockInfo={blockInfo}
               />
             </View>
           </View>

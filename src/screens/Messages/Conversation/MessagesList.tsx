@@ -23,7 +23,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -66,12 +66,17 @@ function onScrollToIndexFailed() {
 export function MessagesList({
   hasScrolled,
   setHasScrolled,
+  blocked,
+  footer,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
+  blocked?: boolean
+  footer?: React.ReactNode
 }) {
-  const convo = useConvoActive()
+  const convoState = useConvoActive()
   const {getAgent} = useAgent()
+
   const flatListRef = useAnimatedRef<FlatList>()
 
   const [showNewMessagesPill, setShowNewMessagesPill] = React.useState(false)
@@ -81,7 +86,7 @@ export function MessagesList({
   // the bottom.
   const isAtBottom = useSharedValue(true)
 
-  // This will be used on web to assist in determing if we need to maintain the content offset
+  // This will be used on web to assist in determining if we need to maintain the content offset
   const isAtTop = useSharedValue(true)
 
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
@@ -126,11 +131,11 @@ export function MessagesList({
         if (
           hasScrolled &&
           height - contentHeight.value > layoutHeight.value - 50 &&
-          convo.items.length - prevItemCount.current > 1
+          convoState.items.length - prevItemCount.current > 1
         ) {
           newOffset = contentHeight.value - 50
           setShowNewMessagesPill(true)
-        } else if (!hasScrolled && !convo.isFetchingHistory) {
+        } else if (!hasScrolled && !convoState.isFetchingHistory) {
           setHasScrolled(true)
         }
 
@@ -141,12 +146,12 @@ export function MessagesList({
         isMomentumScrolling.value = true
       }
       contentHeight.value = height
-      prevItemCount.current = convo.items.length
+      prevItemCount.current = convoState.items.length
     },
     [
       hasScrolled,
-      convo.items.length,
-      convo.isFetchingHistory,
+      convoState.items.length,
+      convoState.isFetchingHistory,
       setHasScrolled,
       // all of these are stable
       contentHeight,
@@ -161,9 +166,9 @@ export function MessagesList({
 
   const onStartReached = useCallback(() => {
     if (hasScrolled) {
-      convo.fetchMessageHistory()
+      convoState.fetchMessageHistory()
     }
-  }, [convo, hasScrolled])
+  }, [convoState, hasScrolled])
 
   const onSendMessage = useCallback(
     async (text: string) => {
@@ -182,12 +187,12 @@ export function MessagesList({
         return true
       })
 
-      convo.sendMessage({
+      convoState.sendMessage({
         text: rt.text,
         facets: rt.facets,
       })
     },
-    [convo, getAgent],
+    [convoState, getAgent],
   )
 
   const onScroll = React.useCallback(
@@ -225,11 +230,9 @@ export function MessagesList({
 
   // -- Keyboard animation handling
   const animatedKeyboard = useAnimatedKeyboard()
-  const {gtMobile} = useBreakpoints()
   const {bottom: bottomInset} = useSafeAreaInsets()
   const nativeBottomBarHeight = isIOS ? 42 : 60
-  const bottomOffset =
-    isWeb && gtMobile ? 0 : bottomInset + nativeBottomBarHeight
+  const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
 
   // On web, we don't want to do anything.
   // On native, we want to scroll the list to the bottom every frame that the keyboard is opening. `scrollTo` runs
@@ -268,11 +271,10 @@ export function MessagesList({
       <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
         <List
           ref={flatListRef}
-          data={convo.items}
+          data={convoState.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           containWeb={true}
-          contentContainerStyle={[a.px_md]}
           disableVirtualization={true}
           // The extra two items account for the header and the footer components
           initialNumToRender={isNative ? 32 : 62}
@@ -289,14 +291,18 @@ export function MessagesList({
           onScrollToIndexFailed={onScrollToIndexFailed}
           scrollEventThrottle={100}
           ListHeaderComponent={
-            <MaybeLoader isLoading={convo.isFetchingHistory} />
+            <MaybeLoader isLoading={convoState.isFetchingHistory} />
           }
         />
       </ScrollProvider>
-      <MessageInput
-        onSendMessage={onSendMessage}
-        scrollToEnd={scrollToEndNow}
-      />
+      {!blocked ? (
+        <MessageInput
+          onSendMessage={onSendMessage}
+          scrollToEnd={scrollToEndNow}
+        />
+      ) : (
+        footer
+      )}
       {showNewMessagesPill && <NewMessagesPill />}
     </Animated.View>
   )
