@@ -172,6 +172,7 @@ export function Basic({
   confirmButtonCta,
   onConfirm,
   confirmButtonColor,
+  showCancel = true,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
@@ -187,6 +188,7 @@ export function Basic({
    */
   onConfirm: () => void
   confirmButtonColor?: ButtonColor
+  showCancel?: boolean
 }>) {
   return (
     <Outer control={control} testID="confirmModal">
@@ -199,7 +201,7 @@ export function Basic({
           color={confirmButtonColor}
           testID="confirmBtn"
         />
-        <Cancel cta={cancelButtonCta} />
+        {showCancel && <Cancel cta={cancelButtonCta} />}
       </Actions>
     </Outer>
   )
