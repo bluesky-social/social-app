@@ -177,8 +177,7 @@ function InnerReady({
               recipient={recipient}
               convoId={convoState.convo.id}
               hasMessages={convoState.items.length > 0}
-              listBlocks={blockInfo.listBlocks}
-              userBlock={blockInfo.userBlock}
+              blockInfo={blockInfo}
             />
           }
         />

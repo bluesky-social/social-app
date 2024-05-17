@@ -19,14 +19,15 @@ export function MessagesListBlockedFooter({
   recipient: initialRecipient,
   convoId,
   hasMessages,
-  listBlocks,
-  userBlock,
+  blockInfo,
 }: {
   recipient: AppBskyActorDefs.ProfileViewBasic
   convoId: string
   hasMessages: boolean
-  listBlocks: ModerationCause[]
-  userBlock: ModerationCause | undefined
+  blockInfo: {
+    listBlocks: ModerationCause[]
+    userBlock: ModerationCause | undefined
+  }
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -36,8 +37,18 @@ export function MessagesListBlockedFooter({
 
   const leaveConvoControl = useDialogControl()
   const reportControl = useDialogControl()
+  const blockedByListControl = useDialogControl()
 
-  const isBlocking = userBlock?.type === 'blocking'
+  const {listBlocks, userBlock} = blockInfo
+  const isBlocking = !!userBlock || !!listBlocks.length
+
+  const onUnblockPress = React.useCallback(() => {
+    if (listBlocks.length) {
+      blockedByListControl.open()
+    } else {
+      queueUnblock()
+    }
+  }, [blockedByListControl, listBlocks, queueUnblock])
 
   return (
     <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
@@ -84,7 +95,7 @@ export function MessagesListBlockedFooter({
             variant="solid"
             size="small"
             style={[a.flex_1]}
-            onPress={queueUnblock}>
+            onPress={onUnblockPress}>
             <ButtonText style={{color: t.palette.primary_500}}>
               <Trans>Unblock</Trans>
             </ButtonText>
@@ -99,7 +110,7 @@ export function MessagesListBlockedFooter({
             variant="solid"
             size="small"
             style={[a.flex_1]}
-            onPress={queueUnblock}>
+            onPress={onUnblockPress}>
             <ButtonText style={{color: t.palette.primary_500}}>
               <Trans>Unblock</Trans>
             </ButtonText>
@@ -115,7 +126,10 @@ export function MessagesListBlockedFooter({
 
       <ReportConversationPrompt control={reportControl} />
 
-      <BlockedByListDialog control={reportControl} listBlocks={listBlocks} />
+      <BlockedByListDialog
+        control={blockedByListControl}
+        listBlocks={listBlocks}
+      />
     </View>
   )
 }

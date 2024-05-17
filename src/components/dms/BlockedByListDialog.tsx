@@ -53,7 +53,7 @@ export function BlockedByListDialog({
       </View>
 
       <Prompt.Actions>
-        <Prompt.Cancel cta={_(msg`I understand`)} />
+        <Prompt.Action cta={_(msg`I understand`)} onPress={() => {}} />
       </Prompt.Actions>
 
       <Dialog.Close />
