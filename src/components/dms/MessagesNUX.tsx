@@ -77,12 +77,12 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`Introducing Direct Messages`)}
-      style={web({maxWidth: 500})}>
+      style={web({maxWidth: 440})}>
       <View style={a.gap_xl}>
-        <View style={[a.align_center, a.my_lg]}>
+        <View style={[a.align_center, a.pt_sm, a.pb_xs]}>
           <Message_Stroke2_Corner0_Rounded width={64} />
-          <Text style={[a.text_2xl, a.font_bold, a.text_center, a.mt_2xl]}>
-            <Trans>Direct Messages are here!</Trans>
+          <Text style={[a.text_2xl, a.font_bold, a.text_center, a.mt_md]}>
+            <Trans>Direct messages are here!</Trans>
           </Text>
           <Text style={[a.text_md, a.text_center, a.mt_sm]}>
             <Trans>Privately chat with other users.</Trans>
@@ -96,12 +96,27 @@ function DialogInner({
             a.rounded_sm,
             t.atoms.border_contrast_low,
           ]}>
-          <View style={[a.p_sm, a.border_b, t.atoms.border_contrast_low]}>
-            <Text style={[a.text_sm, a.text_center]}>
+          <View
+            style={[
+              a.p_md,
+              a.border_b,
+              t.atoms.bg_contrast_25,
+              t.atoms.border_contrast_low,
+            ]}>
+            <Text style={[a.text_sm, a.font_bold]}>
               <Trans>Who can message you?</Trans>
             </Text>
+            <Text
+              style={[
+                a.mt_xs,
+                a.text_sm,
+                a.italic,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>You can change this at any time.</Trans>
+            </Text>
           </View>
-          <View style={[a.pb_md, a.pt_2xs, a.px_xs]}>
+          <View style={[a.px_md, a.py_xs]}>
             <Toggle.Group
               label={_(msg`Who can message you?`)}
               type="radio"
@@ -111,7 +126,7 @@ function DialogInner({
                 <Toggle.Item
                   name="all"
                   label={_(msg`Everyone`)}
-                  style={[a.justify_between, a.p_sm, a.rounded_2xs]}>
+                  style={[a.justify_between, a.py_sm, a.rounded_2xs]}>
                   <Toggle.LabelText>
                     <Trans>Everyone</Trans>
                   </Toggle.LabelText>
@@ -120,7 +135,7 @@ function DialogInner({
                 <Toggle.Item
                   name="following"
                   label={_(msg`Users I follow`)}
-                  style={[a.justify_between, a.p_sm, a.rounded_2xs]}>
+                  style={[a.justify_between, a.py_sm, a.rounded_2xs]}>
                   <Toggle.LabelText>
                     <Trans>Users I follow</Trans>
                   </Toggle.LabelText>
@@ -129,7 +144,7 @@ function DialogInner({
                 <Toggle.Item
                   name="none"
                   label={_(msg`No one`)}
-                  style={[a.justify_between, a.p_sm, a.rounded_2xs]}>
+                  style={[a.justify_between, a.py_sm, a.rounded_2xs]}>
                   <Toggle.LabelText>
                     <Trans>No one</Trans>
                   </Toggle.LabelText>
@@ -137,9 +152,6 @@ function DialogInner({
                 </Toggle.Item>
               </View>
             </Toggle.Group>
-            <Text style={[a.mx_sm, a.mt_sm, a.text_xs]}>
-              <Trans>You can change this at any time.</Trans>
-            </Text>
           </View>
         </View>
         <Button
@@ -149,7 +161,9 @@ function DialogInner({
           color="primary"
           variant="solid"
           onPress={() => control.close()}>
-          <ButtonText>Start chatting!</ButtonText>
+          <ButtonText>
+            <Trans>Get started</Trans>
+          </ButtonText>
         </Button>
       </View>
       <Dialog.Close />
