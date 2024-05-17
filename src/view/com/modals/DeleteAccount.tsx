@@ -11,6 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -62,7 +63,12 @@ export function Component({}: {}) {
 
     try {
       // inform chat service of intent to delete account
-      const {success} = await getAgent().api.chat.bsky.actor.deleteAccount()
+      const {success} = await getAgent().api.chat.bsky.actor.deleteAccount(
+        undefined,
+        {
+          headers: DM_SERVICE_HEADERS,
+        },
+      )
       if (!success) {
         throw new Error('Failed to inform chat service of account deletion')
       }
