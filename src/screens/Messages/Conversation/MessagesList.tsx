@@ -16,11 +16,12 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
-import {ConvoItem} from '#/state/messages/convo/types'
+import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
+import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {atoms as a} from '#/alf'
@@ -296,10 +297,16 @@ export function MessagesList({
         />
       </ScrollProvider>
       {!blocked ? (
-        <MessageInput
-          onSendMessage={onSendMessage}
-          scrollToEnd={scrollToEndNow}
-        />
+        <>
+          {convoState.status === ConvoStatus.Disabled ? (
+            <ChatDisabled />
+          ) : (
+            <MessageInput
+              onSendMessage={onSendMessage}
+              scrollToEnd={scrollToEndNow}
+            />
+          )}
+        </>
       ) : (
         footer
       )}
