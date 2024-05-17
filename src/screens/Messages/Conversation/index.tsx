@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -25,6 +26,7 @@ import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Error} from '#/components/Error'
+import {Link} from '#/components/Link'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -162,12 +164,11 @@ let Header = ({
         t.atoms.border_contrast_low,
         a.border_b,
         a.flex_row,
-        a.justify_between,
-        a.align_start,
-        a.gap_lg,
+        a.align_center,
+        a.gap_sm,
         a.pl_xl,
         a.pr_lg,
-        a.py_md,
+        a.py_sm,
       ]}>
       {!gtTablet ? (
         <TouchableOpacity
@@ -195,7 +196,7 @@ let Header = ({
         <HeaderReady profile={profile} moderationOpts={moderationOpts} />
       ) : (
         <>
-          <View style={[a.align_center, a.gap_sm, a.flex_1]}>
+          <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
             <View
               style={[
                 {width: 32, height: 32},
@@ -203,21 +204,23 @@ let Header = ({
                 t.atoms.bg_contrast_25,
               ]}
             />
-            <View
-              style={[
-                {width: 120, height: 16},
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
-                a.mt_xs,
-              ]}
-            />
-            <View
-              style={[
-                {width: 175, height: 12},
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
-              ]}
-            />
+            <View style={a.gap_xs}>
+              <View
+                style={[
+                  {width: 120, height: 16},
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
+                  a.mt_xs,
+                ]}
+              />
+              <View
+                style={[
+                  {width: 175, height: 12},
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
+                ]}
+              />
+            </View>
           </View>
 
           <View style={{width: 30}} />
@@ -253,26 +256,28 @@ function HeaderReady({
 
   return (
     <>
-      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-        <View style={[a.align_center]}>
-          <PreviewableUserAvatar
-            size={32}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
-          <Text
-            style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
-            numberOfLines={1}>
+      <Link
+        style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}
+        to={makeProfileLink(profile)}>
+        <PreviewableUserAvatar
+          size={32}
+          profile={profile}
+          moderation={moderation.ui('avatar')}
+          disableHoverCard={moderation.blocked}
+        />
+        <View style={a.flex_1}>
+          <Text style={[a.text_md, a.font_bold]} numberOfLines={1}>
             {displayName}
           </Text>
           {!isDeletedAccount && (
-            <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
+            <Text
+              style={[t.atoms.text_contrast_medium, a.text_sm]}
+              numberOfLines={1}>
               @{profile.handle}
             </Text>
           )}
         </View>
-      </View>
+      </Link>
 
       {isConvoActive(convoState) && (
         <ConvoMenu
