@@ -169,21 +169,22 @@ function ChatListItemReady({
                       )}
                     </TimeElapsed>
                   )}
-                  {convo.muted && (
-                    <Text
-                      style={[
-                        a.text_sm,
-                        web([a.leading_normal, {whiteSpace: 'pre'}]),
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      {' '}
-                      &middot;{' '}
-                      <BellStroke
-                        size="xs"
-                        style={t.atoms.text_contrast_medium}
-                      />
-                    </Text>
-                  )}
+                  {convo.muted ||
+                    (moderation.blocked && (
+                      <Text
+                        style={[
+                          a.text_sm,
+                          web([a.leading_normal, {whiteSpace: 'pre'}]),
+                          t.atoms.text_contrast_medium,
+                        ]}>
+                        {' '}
+                        &middot;{' '}
+                        <BellStroke
+                          size="xs"
+                          style={t.atoms.text_contrast_medium}
+                        />
+                      </Text>
+                    ))}
                 </View>
                 {!isDeletedAccount && (
                   <Text
@@ -211,9 +212,10 @@ function ChatListItemReady({
                     a.absolute,
                     a.rounded_full,
                     {
-                      backgroundColor: convo.muted
-                        ? t.palette.contrast_200
-                        : t.palette.primary_500,
+                      backgroundColor:
+                        convo.muted || moderation.blocked
+                          ? t.palette.contrast_200
+                          : t.palette.primary_500,
                       height: 7,
                       width: 7,
                     },
