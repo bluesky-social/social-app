@@ -82,7 +82,7 @@ export function MessageInput({
   )
 
   return (
-    <View style={a.p_md}>
+    <View style={[a.px_md, a.py_sm]}>
       <View
         style={[
           a.w_full,
