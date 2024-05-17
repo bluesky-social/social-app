@@ -169,7 +169,7 @@ function ChatListItemReady({
                       )}
                     </TimeElapsed>
                   )}
-                  {convo.muted && (
+                  {(convo.muted || moderation.blocked) && (
                     <Text
                       style={[
                         a.text_sm,
@@ -200,7 +200,8 @@ function ChatListItemReady({
                     convo.unreadCount > 0
                       ? a.font_bold
                       : t.atoms.text_contrast_high,
-                    convo.muted && t.atoms.text_contrast_medium,
+                    (convo.muted || moderation.blocked) &&
+                      t.atoms.text_contrast_medium,
                   ]}>
                   {lastMessage}
                 </Text>
@@ -211,9 +212,10 @@ function ChatListItemReady({
                     a.absolute,
                     a.rounded_full,
                     {
-                      backgroundColor: convo.muted
-                        ? t.palette.contrast_200
-                        : t.palette.primary_500,
+                      backgroundColor:
+                        convo.muted || moderation.blocked
+                          ? t.palette.contrast_200
+                          : t.palette.primary_500,
                       height: 7,
                       width: 7,
                     },
