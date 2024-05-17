@@ -25,7 +25,13 @@ export function MessagesNUX() {
 
   useEffect(() => {
     if (profile && typeof profile.associated?.chat === 'undefined') {
-      control.open()
+      const timeout = setTimeout(() => {
+        control.open()
+      }, 1000)
+
+      return () => {
+        clearTimeout(timeout)
+      }
     }
   }, [profile, control])
 
