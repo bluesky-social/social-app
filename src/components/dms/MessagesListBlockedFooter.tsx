@@ -1,39 +1,43 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Shadow} from 'state/cache/types'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 import {useProfileBlockMutationQueue} from 'state/queries/profile'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Text} from '#/components/Typography'
 
 export function MessagesListBlockedFooter({
-  recipient,
+  recipient: initialRecipient,
   convoId,
   hasMessages,
-  isBlocking,
-  isBlockedBy,
+  listBlocks,
+  userBlock,
 }: {
-  recipient: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  recipient: AppBskyActorDefs.ProfileViewBasic
   convoId: string
   hasMessages: boolean
-  isBlocking: boolean
-  isBlockedBy: boolean
+  listBlocks: ModerationCause[]
+  userBlock: ModerationCause | undefined
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
+  const recipient = useProfileShadow(initialRecipient)
   const [__, queueUnblock] = useProfileBlockMutationQueue(recipient)
 
   const leaveConvoControl = useDialogControl()
   const reportControl = useDialogControl()
+
+  const isBlocking = userBlock?.type === 'blocking'
 
   return (
     <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
@@ -43,10 +47,10 @@ export function MessagesListBlockedFooter({
         </>
       )}
       <Text style={[a.text_md, a.font_bold, a.text_center]}>
-        {isBlockedBy ? (
-          <Trans>This user has blocked you</Trans>
-        ) : (
+        {isBlocking ? (
           <Trans>You have blocked this user</Trans>
+        ) : (
+          <Trans>This user has blocked you</Trans>
         )}
       </Text>
 
@@ -110,6 +114,8 @@ export function MessagesListBlockedFooter({
       />
 
       <ReportConversationPrompt control={reportControl} />
+
+      <BlockedByListDialog control={reportControl} listBlocks={listBlocks} />
     </View>
   )
 }

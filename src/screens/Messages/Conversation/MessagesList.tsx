@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyActorDefs, AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
@@ -20,13 +20,11 @@ import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
-import {useProfileShadow} from 'state/cache/profile-shadow'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
-import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -68,21 +66,14 @@ function onScrollToIndexFailed() {
 export function MessagesList({
   hasScrolled,
   setHasScrolled,
-  recipient: recipientUnshadowed,
+  blocked,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
-  recipient: AppBskyActorDefs.ProfileViewBasic
+  blocked?: boolean
 }) {
   const convoState = useConvoActive()
   const {getAgent} = useAgent()
-
-  // -- Profile and block info
-  const recipient = useProfileShadow(recipientUnshadowed)
-  const isBlockedBy = Boolean(recipient.viewer?.blockedBy)
-  const isBlocking = Boolean(
-    recipient.viewer?.blocking || recipient.viewer?.blockingByList,
-  )
 
   const flatListRef = useAnimatedRef<FlatList>()
 
@@ -304,18 +295,10 @@ export function MessagesList({
           }
         />
       </ScrollProvider>
-      {!isBlocking && !isBlockedBy ? (
+      {!blocked && (
         <MessageInput
           onSendMessage={onSendMessage}
           scrollToEnd={scrollToEndNow}
-        />
-      ) : (
-        <MessagesListBlockedFooter
-          recipient={recipient}
-          convoId={convoState.convo.id}
-          hasMessages={convoState.items.length > 0}
-          isBlocking={isBlocking}
-          isBlockedBy={isBlockedBy}
         />
       )}
       {showNewMessagesPill && <NewMessagesPill />}

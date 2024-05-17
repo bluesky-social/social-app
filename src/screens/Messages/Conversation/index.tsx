@@ -1,6 +1,11 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationCause,
+  ModerationDecision,
+} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,6 +29,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
+import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {Error} from '#/components/Error'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -76,6 +82,24 @@ function Inner() {
     did: convoState.recipients?.[0].did,
   })
 
+  const moderation = React.useMemo(() => {
+    if (!recipient || !moderationOpts) return
+    return moderateProfile(recipient, moderationOpts)
+  }, [recipient, moderationOpts])
+
+  const blockInfo = React.useMemo(() => {
+    if (!moderation) return
+
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
   // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
   // empty. So, we also check for that possible state as well and render once we can.
@@ -105,14 +129,28 @@ function Inner() {
    */
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
-      <Header profile={recipient} moderationOpts={moderationOpts} />
+      <Header
+        profile={recipient}
+        moderation={moderation}
+        listBlocks={blockInfo?.listBlocks}
+        userBlock={blockInfo?.userBlock}
+      />
       <View style={[a.flex_1]}>
-        {recipient && isConvoActive(convoState) ? (
-          <MessagesList
-            hasScrolled={hasScrolled}
-            setHasScrolled={setHasScrolled}
-            recipient={recipient}
-          />
+        {blockInfo && recipient && isConvoActive(convoState) ? (
+          <>
+            <MessagesList
+              hasScrolled={hasScrolled}
+              setHasScrolled={setHasScrolled}
+              blocked={moderation?.blocked}
+            />
+            <MessagesListBlockedFooter
+              recipient={recipient}
+              convoId={convoState.convo.id}
+              hasMessages={convoState.items.length > 0}
+              listBlocks={blockInfo.listBlocks}
+              userBlock={blockInfo.userBlock}
+            />
+          </>
         ) : (
           <ListMaybePlaceholder isLoading />
         )}
@@ -139,10 +177,14 @@ function Inner() {
 
 let Header = ({
   profile,
-  moderationOpts,
+  moderation,
+  listBlocks,
+  userBlock,
 }: {
   profile?: AppBskyActorDefs.ProfileViewBasic
-  moderationOpts?: ModerationOpts
+  moderation?: ModerationDecision
+  listBlocks?: ModerationCause[]
+  userBlock?: ModerationCause
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -193,8 +235,13 @@ let Header = ({
         <View style={{width: 30}} />
       )}
 
-      {profile && moderationOpts ? (
-        <HeaderReady profile={profile} moderationOpts={moderationOpts} />
+      {profile && moderation && listBlocks ? (
+        <HeaderReady
+          profile={profile}
+          moderation={moderation}
+          listBlocks={listBlocks}
+          userBlock={userBlock}
+        />
       ) : (
         <>
           <View style={[a.align_center, a.gap_sm, a.flex_1]}>
@@ -232,18 +279,18 @@ Header = React.memo(Header)
 
 function HeaderReady({
   profile: profileUnshadowed,
-  moderationOpts,
+  moderation,
+  listBlocks,
+  userBlock,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderationOpts: ModerationOpts
+  moderation: ModerationDecision
+  listBlocks: ModerationCause[]
+  userBlock: ModerationCause | undefined
 }) {
   const t = useTheme()
   const convoState = useConvo()
   const profile = useProfileShadow(profileUnshadowed)
-  const moderation = React.useMemo(
-    () => moderateProfile(profile, moderationOpts),
-    [profile, moderationOpts],
-  )
 
   const isDeletedAccount = profile?.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -281,7 +328,8 @@ function HeaderReady({
           convo={convoState.convo}
           profile={profile}
           currentScreen="conversation"
-          moderation={moderation}
+          listBlocks={listBlocks}
+          userBlock={userBlock}
         />
       )}
     </>
