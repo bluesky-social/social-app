@@ -71,6 +71,11 @@ function Inner() {
   const convoState = useConvo()
   const {_} = useLingui()
 
+  const moderationOpts = useModerationOpts()
+  const {data: recipient} = useProfileQuery({
+    did: convoState.recipients?.[0].did,
+  })
+
   const [hasInitiallyRendered, setHasInitiallyRendered] = React.useState(false)
 
   // HACK: Because we need to scroll to the bottom of the list once initial items are added to the list, we also have
@@ -107,10 +112,10 @@ function Inner() {
    */
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
-      <Header profile={convoState.recipients?.[0]} />
+      <Header profile={recipient} moderationOpts={moderationOpts} />
       <View style={[a.flex_1]}>
         {isConvoActive(convoState) ? (
-          <MessagesList />
+          <MessagesList recipient={recipient} moderationOpts={moderationOpts} />
         ) : (
           <ListMaybePlaceholder isLoading />
         )}
@@ -136,16 +141,16 @@ function Inner() {
 }
 
 let Header = ({
-  profile: initialProfile,
+  profile,
+  moderationOpts,
 }: {
   profile?: AppBskyActorDefs.ProfileViewBasic
+  moderationOpts?: ModerationOpts
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
-  const moderationOpts = useModerationOpts()
-  const {data: profile} = useProfileQuery({did: initialProfile?.did})
 
   const onPressBack = useCallback(() => {
     if (isWeb) {

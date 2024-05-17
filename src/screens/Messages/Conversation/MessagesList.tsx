@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, StyleProp, View, ViewStyle} from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedKeyboard,
@@ -9,7 +9,15 @@ import Animated, {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyRichtextFacet,
+  moderateProfile,
+  ModerationOpts,
+  RichText,
+} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
@@ -18,6 +26,7 @@ import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
@@ -61,7 +70,13 @@ function onScrollToIndexFailed() {
   // Placeholder function. You have to give FlatList something or else it will error.
 }
 
-export function MessagesList() {
+export function MessagesList({
+  recipient,
+  moderationOpts,
+}: {
+  recipient?: AppBskyActorDefs.ProfileViewBasic
+  moderationOpts?: ModerationOpts
+}) {
   const t = useTheme()
   const convo = useConvoActive()
   const {getAgent} = useAgent()
@@ -301,7 +316,13 @@ export function MessagesList() {
           ListHeaderComponent={
             <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
-          ListFooterComponent={<Animated.View style={[animatedFooterStyle]} />}
+          ListFooterComponent={
+            <FooterComponent
+              style={animatedFooterStyle}
+              recipient={recipient}
+              moderationOpts={moderationOpts}
+            />
+          }
         />
       </ScrollProvider>
       {showNewMessagesPill && <NewMessagesPill />}
@@ -309,5 +330,51 @@ export function MessagesList() {
         <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
       </Animated.View>
     </>
+  )
+}
+
+function FooterComponent({
+  style,
+  recipient,
+  moderationOpts,
+}: {
+  style: StyleProp<ViewStyle>
+  recipient?: AppBskyActorDefs.ProfileViewBasic
+  moderationOpts?: ModerationOpts
+}) {
+  return (
+    <Animated.View style={[{}, style]}>
+      {recipient && moderationOpts && (
+        <FooterBlockedInfo
+          profile={recipient}
+          moderationOpts={moderationOpts}
+        />
+      )}
+    </Animated.View>
+  )
+}
+
+function FooterBlockedInfo({
+  profile: initialProfile,
+  moderationOpts,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  moderationOpts: ModerationOpts
+}) {
+  const {_} = useLingui()
+  const profile = useProfileShadow(initialProfile)
+  const moderation = React.useMemo(
+    () => moderateProfile(profile, moderationOpts),
+    [profile, moderationOpts],
+  )
+
+  if (!moderation.blocked) return null
+
+  return (
+    <View style={[a.flex_row, a.justify_center, a.px_md]}>
+      <Text style={[a.text_center, a.text_sm]}>
+        {_(msg`You have blocked this user`)}
+      </Text>
+    </View>
   )
 }
