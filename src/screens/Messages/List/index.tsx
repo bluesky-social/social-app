@@ -61,12 +61,16 @@ export function MessagesScreen({navigation, route}: Props) {
     return (
       <Link
         to="/messages/settings"
-        accessibilityLabel={_(msg`Message settings`)}
-        accessibilityHint={_(msg`Opens the message settings page`)}>
-        <SettingsSlider size="lg" style={t.atoms.text} />
+        label={_(msg`Chat settings`)}
+        size="small"
+        variant="ghost"
+        color="secondary"
+        shape="square"
+        style={[a.justify_center]}>
+        <SettingsSlider size="md" style={[t.atoms.text_contrast_medium]} />
       </Link>
     )
-  }, [_, t.atoms.text])
+  }, [_, t])
 
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -165,7 +169,7 @@ export function MessagesScreen({navigation, route}: Props) {
         <ViewHeader
           title={_(msg`Messages`)}
           renderButton={renderButton}
-          showBorder={false}
+          showBorder
           canGoBack={false}
         />
       )}
@@ -225,32 +229,32 @@ function DesktopHeader({
         a.justify_between,
         a.gap_lg,
         a.px_lg,
-        a.py_sm,
+        a.pr_md,
+        a.py_md,
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>
       <Text style={[a.text_2xl, a.font_bold]}>
         <Trans>Messages</Trans>
       </Text>
-      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
         <Button
           label={_(msg`Message settings`)}
           color="secondary"
-          size="large"
+          size="small"
           variant="ghost"
-          style={[{height: 'auto', width: 'auto'}, a.px_sm, a.py_sm]}
+          shape="square"
           onPress={onNavigateToSettings}>
-          <ButtonIcon icon={SettingsSlider} />
+          <SettingsSlider size="md" style={[t.atoms.text_contrast_medium]} />
         </Button>
         {gtTablet && (
           <Button
             label={_(msg`New chat`)}
             color="primary"
-            size="large"
+            size="small"
             variant="solid"
-            style={[{height: 'auto', width: 'auto'}, a.px_md, a.py_sm]}
             onPress={newChatControl.open}>
-            <ButtonIcon icon={Plus} position="right" />
+            <ButtonIcon icon={Plus} position="left" />
             <ButtonText>
               <Trans>New chat</Trans>
             </ButtonText>

@@ -4,6 +4,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-converations'
 import {useAgent} from '#/state/session'
+import {STALE} from 'state/queries'
 import {RQKEY as LIST_CONVOS_KEY} from './list-converations'
 
 const RQKEY_ROOT = 'convo'
@@ -22,6 +23,7 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
       return data.convo
     },
     initialData: convo,
+    staleTime: STALE.INFINITY,
   })
 }
 
