@@ -1,39 +1,28 @@
 import React, {useCallback} from 'react'
-import {TouchableOpacity, View} from 'react-native'
-import {
-  AppBskyActorDefs,
-  moderateProfile,
-  ModerationCause,
-  ModerationDecision,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {View} from 'react-native'
+import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
-import {BACK_HITSLOP} from 'lib/constants'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {isWeb} from 'platform/detection'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ConvoProvider, isConvoActive, useConvo} from 'state/messages/convo'
 import {ConvoStatus} from 'state/messages/convo/types'
 import {useSetMinimalShellMode} from 'state/shell'
-import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
+import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
-import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 import {ClipClopGate} from '../gate'
 
 type Props = NativeStackScreenProps<
@@ -72,24 +61,22 @@ export function MessagesConversationScreen({route}: Props) {
   )
 }
 
-function Inner() {
+function InnerReady({
+  moderationOpts,
+  recipient: recipientUnshadowed,
+}: {
+  moderationOpts: ModerationOpts
+  recipient: AppBskyActorDefs.ProfileViewBasic
+}) {
   const t = useTheme()
   const convoState = useConvo()
-  const {_} = useLingui()
-
-  const moderationOpts = useModerationOpts()
-  const {data: recipient} = useProfileQuery({
-    did: convoState.recipients?.[0].did,
-  })
+  const recipient = useProfileShadow(recipientUnshadowed)
 
   const moderation = React.useMemo(() => {
-    if (!recipient || !moderationOpts) return
     return moderateProfile(recipient, moderationOpts)
   }, [recipient, moderationOpts])
 
   const blockInfo = React.useMemo(() => {
-    if (!moderation) return
-
     const modui = moderation.ui('profileView')
     const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
     const listBlocks = blocks.filter(alert => alert.source.type === 'list')
@@ -105,38 +92,20 @@ function Inner() {
   // empty. So, we also check for that possible state as well and render once we can.
   const [hasScrolled, setHasScrolled] = React.useState(false)
   const readyToShow =
-    blockInfo &&
-    recipient &&
-    (hasScrolled ||
-      (convoState.status === ConvoStatus.Ready &&
-        !convoState.isFetchingHistory &&
-        convoState.items.length === 0))
+    hasScrolled ||
+    (convoState.status === ConvoStatus.Ready &&
+      !convoState.isFetchingHistory &&
+      convoState.items.length === 0)
 
-  if (convoState.status === ConvoStatus.Error) {
-    return (
-      <CenteredView style={a.flex_1} sideBorders>
-        <Header />
-        <Error
-          title={_(msg`Something went wrong`)}
-          message={_(msg`We couldn't load this conversation`)}
-          onRetry={() => convoState.error.retry()}
-        />
-      </CenteredView>
-    )
-  }
-
-  /*
-   * Any other convo states (atm) are "ready" states
-   */
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
-      <Header
+      <MessagesListHeader
         profile={recipient}
         moderation={moderation}
         blockInfo={blockInfo}
       />
       <View style={[a.flex_1]}>
-        {blockInfo && recipient && isConvoActive(convoState) ? (
+        {isConvoActive(convoState) && (
           <>
             <MessagesList
               hasScrolled={hasScrolled}
@@ -151,8 +120,6 @@ function Inner() {
               userBlock={blockInfo.userBlock}
             />
           </>
-        ) : (
-          <ListMaybePlaceholder isLoading />
         )}
         {!readyToShow && (
           <View
@@ -175,163 +142,50 @@ function Inner() {
   )
 }
 
-let Header = ({
-  profile,
-  moderation,
-  blockInfo,
-}: {
-  profile?: AppBskyActorDefs.ProfileViewBasic
-  moderation?: ModerationDecision
-  blockInfo?: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
-}): React.ReactNode => {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {gtTablet} = useBreakpoints()
-  const navigation = useNavigation<NavigationProp>()
-
-  const onPressBack = useCallback(() => {
-    if (isWeb) {
-      navigation.replace('Messages', {})
-    } else {
-      navigation.goBack()
-    }
-  }, [navigation])
-
-  return (
-    <View
-      style={[
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.border_b,
-        a.flex_row,
-        a.justify_between,
-        a.align_start,
-        a.gap_lg,
-        a.pl_xl,
-        a.pr_lg,
-        a.py_md,
-      ]}>
-      {!gtTablet ? (
-        <TouchableOpacity
-          testID="conversationHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          style={{width: 30, height: 30}}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <FontAwesomeIcon
-            size={18}
-            icon="angle-left"
-            style={{
-              marginTop: 6,
-            }}
-            color={t.atoms.text.color}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View style={{width: 30}} />
-      )}
-
-      {profile && moderation && blockInfo ? (
-        <HeaderReady
-          profile={profile}
-          moderation={moderation}
-          blockInfo={blockInfo}
-        />
-      ) : (
-        <>
-          <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-            <View
-              style={[
-                {width: 32, height: 32},
-                a.rounded_full,
-                t.atoms.bg_contrast_25,
-              ]}
-            />
-            <View
-              style={[
-                {width: 120, height: 16},
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
-                a.mt_xs,
-              ]}
-            />
-            <View
-              style={[
-                {width: 175, height: 12},
-                a.rounded_xs,
-                t.atoms.bg_contrast_25,
-              ]}
-            />
-          </View>
-
-          <View style={{width: 30}} />
-        </>
-      )}
-    </View>
-  )
-}
-Header = React.memo(Header)
-
-function HeaderReady({
-  profile: profileUnshadowed,
-  moderation,
-  blockInfo,
-}: {
-  profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ModerationDecision
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
-}) {
+function Inner() {
   const t = useTheme()
   const convoState = useConvo()
-  const profile = useProfileShadow(profileUnshadowed)
+  const {_} = useLingui()
 
-  const isDeletedAccount = profile?.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? 'Deleted Account'
-    : sanitizeDisplayName(
-        profile.displayName || profile.handle,
-        moderation.ui('displayName'),
-      )
+  const moderationOpts = useModerationOpts()
+  const {data: recipient} = useProfileQuery({
+    did: convoState.recipients?.[0].did,
+  })
 
-  return (
-    <>
-      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-        <View style={[a.align_center]}>
-          <PreviewableUserAvatar
-            size={32}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
-          <Text
-            style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
-            numberOfLines={1}>
-            {displayName}
-          </Text>
-          {!isDeletedAccount && (
-            <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
-              @{profile.handle}
-            </Text>
-          )}
-        </View>
-      </View>
-
-      {isConvoActive(convoState) && (
-        <ConvoMenu
-          convo={convoState.convo}
-          profile={profile}
-          currentScreen="conversation"
-          blockInfo={blockInfo}
+  if (convoState.status === ConvoStatus.Error) {
+    return (
+      <CenteredView style={a.flex_1} sideBorders>
+        <MessagesListHeader />
+        <Error
+          title={_(msg`Something went wrong`)}
+          message={_(msg`We couldn't load this conversation`)}
+          onRetry={() => convoState.error.retry()}
         />
-      )}
-    </>
-  )
+      </CenteredView>
+    )
+  }
+
+  if (!moderationOpts || !recipient) {
+    return (
+      <CenteredView style={[a.flex_1]} sideBorders>
+        <MessagesListHeader />
+        <View
+          style={[
+            a.absolute,
+            a.z_10,
+            a.w_full,
+            a.h_full,
+            a.justify_center,
+            a.align_center,
+            t.atoms.bg,
+          ]}>
+          <View style={[{marginBottom: 75}]}>
+            <Loader size="xl" />
+          </View>
+        </View>
+      </CenteredView>
+    )
+  }
+
+  return <InnerReady moderationOpts={moderationOpts} recipient={recipient} />
 }
