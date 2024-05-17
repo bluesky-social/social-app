@@ -169,22 +169,21 @@ function ChatListItemReady({
                       )}
                     </TimeElapsed>
                   )}
-                  {convo.muted ||
-                    (moderation.blocked && (
-                      <Text
-                        style={[
-                          a.text_sm,
-                          web([a.leading_normal, {whiteSpace: 'pre'}]),
-                          t.atoms.text_contrast_medium,
-                        ]}>
-                        {' '}
-                        &middot;{' '}
-                        <BellStroke
-                          size="xs"
-                          style={t.atoms.text_contrast_medium}
-                        />
-                      </Text>
-                    ))}
+                  {(convo.muted || moderation.blocked) && (
+                    <Text
+                      style={[
+                        a.text_sm,
+                        web([a.leading_normal, {whiteSpace: 'pre'}]),
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {' '}
+                      &middot;{' '}
+                      <BellStroke
+                        size="xs"
+                        style={t.atoms.text_contrast_medium}
+                      />
+                    </Text>
+                  )}
                 </View>
                 {!isDeletedAccount && (
                   <Text
@@ -201,7 +200,8 @@ function ChatListItemReady({
                     convo.unreadCount > 0
                       ? a.font_bold
                       : t.atoms.text_contrast_high,
-                    convo.muted && t.atoms.text_contrast_medium,
+                    (convo.muted || moderation.blocked) &&
+                      t.atoms.text_contrast_medium,
                   ]}>
                   {lastMessage}
                 </Text>

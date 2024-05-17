@@ -58,6 +58,7 @@ export function useUnreadMessageCount() {
 
         if (!otherMember || !moderationOpts) return acc
 
+        // TODO could shadow this outside this hook and get optimistic block state
         const moderation = moderateProfile(otherMember, moderationOpts)
         const shouldIgnore = convo.muted || moderation.blocked
         const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
