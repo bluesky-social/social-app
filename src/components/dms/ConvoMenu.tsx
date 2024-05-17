@@ -42,8 +42,7 @@ let ConvoMenu = ({
   showMarkAsRead,
   hideTrigger,
   triggerOpacity,
-  listBlocks,
-  userBlock,
+  blockInfo,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
@@ -52,8 +51,10 @@ let ConvoMenu = ({
   showMarkAsRead?: boolean
   hideTrigger?: boolean
   triggerOpacity?: number
-  listBlocks: ModerationCause[]
-  userBlock: ModerationCause | undefined
+  blockInfo: {
+    listBlocks: ModerationCause[]
+    userBlock?: ModerationCause
+  }
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -63,7 +64,8 @@ let ConvoMenu = ({
   const blockedByListControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
-  const isBlocking = !!userBlock || !!listBlocks.length
+  const {listBlocks, userBlock} = blockInfo
+  const isBlocking = userBlock || !!listBlocks.length
 
   const {data: convo} = useConvoQuery(initialConvo)
 

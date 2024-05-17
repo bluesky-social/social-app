@@ -105,6 +105,7 @@ function Inner() {
   // empty. So, we also check for that possible state as well and render once we can.
   const [hasScrolled, setHasScrolled] = React.useState(false)
   const readyToShow =
+    blockInfo &&
     recipient &&
     (hasScrolled ||
       (convoState.status === ConvoStatus.Ready &&
@@ -132,8 +133,7 @@ function Inner() {
       <Header
         profile={recipient}
         moderation={moderation}
-        listBlocks={blockInfo?.listBlocks}
-        userBlock={blockInfo?.userBlock}
+        blockInfo={blockInfo}
       />
       <View style={[a.flex_1]}>
         {blockInfo && recipient && isConvoActive(convoState) ? (
@@ -178,13 +178,14 @@ function Inner() {
 let Header = ({
   profile,
   moderation,
-  listBlocks,
-  userBlock,
+  blockInfo,
 }: {
   profile?: AppBskyActorDefs.ProfileViewBasic
   moderation?: ModerationDecision
-  listBlocks?: ModerationCause[]
-  userBlock?: ModerationCause
+  blockInfo?: {
+    listBlocks: ModerationCause[]
+    userBlock?: ModerationCause
+  }
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -235,12 +236,11 @@ let Header = ({
         <View style={{width: 30}} />
       )}
 
-      {profile && moderation && listBlocks ? (
+      {profile && moderation && blockInfo ? (
         <HeaderReady
           profile={profile}
           moderation={moderation}
-          listBlocks={listBlocks}
-          userBlock={userBlock}
+          blockInfo={blockInfo}
         />
       ) : (
         <>
@@ -280,13 +280,14 @@ Header = React.memo(Header)
 function HeaderReady({
   profile: profileUnshadowed,
   moderation,
-  listBlocks,
-  userBlock,
+  blockInfo,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision
-  listBlocks: ModerationCause[]
-  userBlock: ModerationCause | undefined
+  blockInfo: {
+    listBlocks: ModerationCause[]
+    userBlock?: ModerationCause
+  }
 }) {
   const t = useTheme()
   const convoState = useConvo()
@@ -328,8 +329,7 @@ function HeaderReady({
           convo={convoState.convo}
           profile={profile}
           currentScreen="conversation"
-          listBlocks={listBlocks}
-          userBlock={userBlock}
+          blockInfo={blockInfo}
         />
       )}
     </>
