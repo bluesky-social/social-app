@@ -11,14 +11,16 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {BACK_HITSLOP} from 'lib/constants'
+import {makeProfileLink} from 'lib/routes/links'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {isWeb} from 'platform/detection'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {isConvoActive, useConvo} from 'state/messages/convo'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 const PFP_SIZE = isWeb ? 40 : 34
@@ -251,26 +253,34 @@ function HeaderReady({
 
   return (
     <>
-      <View style={[a.align_center, a.gap_sm, a.flex_1]}>
-        <View style={[a.align_center]}>
-          <PreviewableUserAvatar
-            size={32}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
+      <Link
+        style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}
+        to={makeProfileLink(profile)}>
+        <PreviewableUserAvatar
+          size={PFP_SIZE}
+          profile={profile}
+          moderation={moderation.ui('avatar')}
+          disableHoverCard={moderation.blocked}
+        />
+        <View style={a.flex_1}>
           <Text
-            style={[a.text_lg, a.font_bold, a.pt_sm, a.pb_2xs]}
+            style={[a.text_md, a.font_bold, web(a.leading_normal)]}
             numberOfLines={1}>
             {displayName}
           </Text>
           {!isDeletedAccount && (
-            <Text style={[t.atoms.text_contrast_medium]} numberOfLines={1}>
+            <Text
+              style={[
+                t.atoms.text_contrast_medium,
+                a.text_sm,
+                web([a.leading_normal, {marginTop: -2}]),
+              ]}
+              numberOfLines={1}>
               @{profile.handle}
             </Text>
           )}
         </View>
-      </View>
+      </Link>
 
       {isConvoActive(convoState) && (
         <ConvoMenu
