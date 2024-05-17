@@ -10,6 +10,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
+import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
@@ -30,6 +31,7 @@ type Item =
   | {
       type: 'profile'
       key: string
+      enabled: boolean
       profile: AppBskyActorDefs.ProfileView
     }
   | {
@@ -89,10 +91,12 @@ export function NewChat({
 }
 
 function ProfileCard({
+  enabled,
   profile,
   moderationOpts,
   onPress,
 }: {
+  enabled: boolean
   profile: AppBskyActorDefs.ProfileView
   moderationOpts: ModerationOpts
   onPress: (did: string) => void
@@ -100,7 +104,6 @@ function ProfileCard({
   const t = useTheme()
   const {_} = useLingui()
   const moderation = moderateProfile(profile, moderationOpts)
-  const disabled = !canBeMessaged(profile)
   const handle = sanitizeHandle(profile.handle, '@')
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
@@ -113,7 +116,7 @@ function ProfileCard({
 
   return (
     <Button
-      disabled={disabled}
+      disabled={!enabled}
       label={_(msg`Start chat with ${displayName}`)}
       onPress={handleOnPress}>
       {({hovered, pressed, focused}) => (
@@ -125,7 +128,7 @@ function ProfileCard({
             a.gap_md,
             a.align_center,
             a.flex_row,
-            disabled
+            !enabled
               ? {opacity: 0.5}
               : pressed || focused
               ? t.atoms.bg_contrast_25
@@ -146,7 +149,7 @@ function ProfileCard({
               {displayName}
             </Text>
             <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
-              {disabled ? <Trans>{handle} can't be messaged</Trans> : handle}
+              {!enabled ? <Trans>{handle} can't be messaged</Trans> : handle}
             </Text>
           </View>
         </View>
@@ -241,10 +244,15 @@ function SearchablePeopleList({
 
   const [searchText, setSearchText] = useState('')
 
-  const {data: results, isError} = useActorAutocompleteQuery(searchText, true)
+  const {
+    data: results,
+    isError,
+    isFetching,
+  } = useActorAutocompleteQuery(searchText, true)
+  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
 
   const items = React.useMemo(() => {
-    const i: Item[] = []
+    let i: Item[] = []
 
     if (isError) {
       i.push({type: 'error', key: 'error'})
@@ -252,17 +260,38 @@ function SearchablePeopleList({
       if (results?.length) {
         for (const profile of results) {
           if (profile.did === currentAccount?.did) continue
-          i.push({type: 'profile', key: profile.did, profile})
+          i.push({
+            type: 'profile',
+            key: profile.did,
+            enabled: canBeMessaged(profile),
+            profile,
+          })
         }
-      } else {
-        i.push({type: 'empty', key: 'empty'})
+
+        i = i.sort(a => {
+          // @ts-ignore
+          return a.enabled ? -1 : 1
+        })
       }
     } else {
-      console.log('empty')
+      if (follows) {
+        for (const page of follows.pages) {
+          const enabled = page.follows.filter(canBeMessaged)
+          for (const profile of enabled) {
+            i.push({type: 'profile', key: profile.did, enabled: true, profile})
+          }
+        }
+      } else {
+        // placeholder
+      }
     }
 
     return i
-  }, [searchText, results, isError, currentAccount?.did])
+  }, [searchText, results, isError, currentAccount?.did, follows])
+
+  if (searchText && !isFetching && !items.length) {
+    items.push({type: 'empty', key: 'empty'})
+  }
 
   const renderItems = React.useCallback(
     ({item}: {item: Item}) => {
@@ -271,6 +300,7 @@ function SearchablePeopleList({
           return (
             <ProfileCard
               key={item.key}
+              enabled={item.enabled}
               profile={item.profile}
               moderationOpts={moderationOpts!}
               onPress={onCreateChat}
@@ -292,10 +322,13 @@ function SearchablePeopleList({
       <View
         style={[
           a.relative,
+          a.pt_md,
+          a.pb_xs,
           a.px_lg,
           a.border_b,
           t.atoms.border_contrast_low,
           t.atoms.bg,
+          native([a.pt_lg]),
         ]}>
         <View
           style={[
@@ -304,6 +337,29 @@ function SearchablePeopleList({
             a.justify_center,
             {height: 32},
           ]}>
+          <Button
+            label={_(msg`Close`)}
+            size="small"
+            shape="round"
+            variant="ghost"
+            color="secondary"
+            style={[
+              a.absolute,
+              a.z_20,
+              native({
+                left: -4,
+              }),
+              web({
+                right: -4,
+              }),
+            ]}
+            onPress={() => control.close()}>
+            {isWeb ? (
+              <X size="md" fill={t.palette.contrast_500} />
+            ) : (
+              <ChevronLeft size="md" fill={t.palette.contrast_500} />
+            )}
+          </Button>
           <Text
             style={[
               a.z_10,
@@ -316,7 +372,7 @@ function SearchablePeopleList({
           </Text>
         </View>
 
-        <View style={[native([a.pt_md])]}>
+        <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
           <SearchInput
             value={searchText}
             onChangeText={text => {
@@ -326,30 +382,6 @@ function SearchablePeopleList({
             onEscape={control.close}
           />
         </View>
-
-        <Button
-          label={_(msg`Close`)}
-          size="small"
-          shape="round"
-          variant="ghost"
-          color="secondary"
-          style={[
-            a.absolute,
-            a.z_20,
-            native({
-              left: a.px_lg.paddingLeft - 4,
-            }),
-            web({
-              right: a.px_lg.paddingLeft - 4,
-            }),
-          ]}
-          onPress={() => control.close()}>
-          {isWeb ? (
-            <X size="md" fill={t.palette.contrast_500} />
-          ) : (
-            <ChevronLeft size="md" fill={t.palette.contrast_500} />
-          )}
-        </Button>
       </View>
     )
   }, [t, _, control, searchText])
@@ -363,11 +395,11 @@ function SearchablePeopleList({
       stickyHeaderIndices={[0]}
       keyExtractor={(item: AppBskyActorDefs.ProfileView) => item.did}
       style={[
-        web([a.py_md, {height: '100vh', maxHeight: 600}, a.px_0]),
+        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
         native({
           paddingHorizontal: 0,
           marginTop: 0,
-          paddingTop: 20,
+          paddingTop: 0,
         }),
       ]}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}

@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {Dimensions, Pressable, View, ViewStyle, StyleProp} from 'react-native'
+import {Dimensions, Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
@@ -257,7 +257,7 @@ export const ScrollableInner = React.forwardRef<
 
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,
-  BottomSheetFlatListProps<any> & { webInnerStyle?: StyleProp<ViewStyle> }
+  BottomSheetFlatListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList(props, ref) {
   const insets = useSafeAreaInsets()
 
@@ -277,6 +277,8 @@ export const InnerFlatList = React.forwardRef<
         a.h_full,
         {
           marginTop: 40,
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
         },
         flatten(props.style),
       ]}
