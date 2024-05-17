@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
 import type {TextInput as TextInputType} from 'react-native'
-import {Keyboard, View} from 'react-native'
+import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
@@ -490,7 +490,7 @@ function SearchablePeopleList({
         }),
       ]}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
-      onScrollBeginDrag={() => Keyboard.dismiss()}
+      keyboardDismissMode="on-drag"
     />
   )
 }
