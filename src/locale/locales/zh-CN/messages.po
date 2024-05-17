@@ -4156,7 +4156,7 @@ msgstr "搜索所有带有 {displayTag} 的帖子"
 
 #: src/components/dms/NewChat.tsx:248
 msgid "Search for someone to start a conversation with."
-msgstr "寻找可以与之开始对话的人。"
+msgstr "寻找其他人开始对话吧。"
 
 #: src/view/com/auth/LoggedOut.tsx:105
 #: src/view/com/auth/LoggedOut.tsx:106
@@ -5761,7 +5761,7 @@ msgstr "宽"
 #: src/screens/Messages/Conversation/MessageInput.tsx:103
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:99
 msgid "Write a message"
-msgstr "编写一个信息"
+msgstr "编写信息"
 
 #: src/view/com/composer/Composer.tsx:505
 msgid "Write post"
