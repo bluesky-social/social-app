@@ -29,6 +29,7 @@ import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {useProfileShadow} from 'state/cache/profile-shadow'
+import {useProfileBlockMutationQueue} from 'state/queries/profile'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
@@ -348,16 +349,17 @@ function FooterComponent({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
+  const [__, queueUnblock] = useProfileBlockMutationQueue(profile)
 
   if (!moderation.blocked) return null
 
   return (
-    <View style={[a.py_lg, a.gap_lg, {backgroundColor: 'red'}]}>
-      <Divider style={[a.pb_sm]} />
+    <View style={[a.py_lg, a.gap_lg]}>
+      <Divider />
       <Text style={[a.text_md, a.font_bold, a.text_center]}>
         {_(msg`You have blocked this user`)}
       </Text>
-      <View style={[a.flex_row, a.justify_between, a.gap_lg]}>
+      <View style={[a.flex_row, a.justify_between, a.gap_lg, a.px_md]}>
         <Button
           label={_(msg`Delete`)}
           color="secondary"
@@ -386,7 +388,7 @@ function FooterComponent({
           variant="solid"
           size="small"
           style={[a.flex_1]}
-          onPress={() => {}}>
+          onPress={queueUnblock}>
           <ButtonText style={{color: t.palette.primary_500}}>
             <Trans>Unblock</Trans>
           </ButtonText>
