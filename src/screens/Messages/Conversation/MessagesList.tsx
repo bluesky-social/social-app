@@ -39,8 +39,8 @@ import {Divider} from '#/components/Divider'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
+import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Loader} from '#/components/Loader'
-import {ReportDialog} from '#/components/ReportDialog'
 import {Text} from '#/components/Typography'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
@@ -350,35 +350,40 @@ function BlockedFooter({
   isBlockedBy: boolean
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const [__, queueUnblock] = useProfileBlockMutationQueue(recipient)
 
   const leaveConvoControl = useDialogControl()
-  const reportDialogControl = useDialogControl()
+  const reportControl = useDialogControl()
 
   if (!isBlocking && !isBlockedBy) return null
 
   return (
-    <View style={[hasMessages && a.py_md, a.gap_lg]}>
+    <View style={[hasMessages && a.pt_md, a.pb_xl, a.gap_lg]}>
       {hasMessages && (
         <>
           <Divider />
         </>
       )}
       <Text style={[a.text_md, a.font_bold, a.text_center]}>
-        {_(msg`You have blocked this user`)}
+        {isBlockedBy ? (
+          <Trans>This user has blocked you</Trans>
+        ) : (
+          <Trans>You have blocked this user</Trans>
+        )}
       </Text>
 
       <View style={[a.flex_row, a.justify_between, a.gap_lg, a.px_md]}>
         <Button
-          label={_(msg`Delete`)}
+          label={_(msg`Leave chat`)}
           color="secondary"
           variant="solid"
           size="small"
           style={[a.flex_1]}
           onPress={leaveConvoControl.open}>
           <ButtonText style={{color: t.palette.negative_500}}>
-            <Trans>Delete</Trans>
+            <Trans>Leave chat</Trans>
           </ButtonText>
         </Button>
         <Button
@@ -387,12 +392,12 @@ function BlockedFooter({
           variant="solid"
           size="small"
           style={[a.flex_1]}
-          onPress={reportDialogControl.open}>
+          onPress={reportControl.open}>
           <ButtonText style={{color: t.palette.negative_500}}>
             <Trans>Report</Trans>
           </ButtonText>
         </Button>
-        {isBlocking && (
+        {isBlocking && gtMobile && (
           <Button
             label={_(msg`Unblock`)}
             color="secondary"
@@ -406,6 +411,21 @@ function BlockedFooter({
           </Button>
         )}
       </View>
+      {isBlocking && !gtMobile && (
+        <View style={[a.flex_row, a.justify_center, a.px_md]}>
+          <Button
+            label={_(msg`Unblock`)}
+            color="secondary"
+            variant="solid"
+            size="small"
+            style={[a.flex_1]}
+            onPress={queueUnblock}>
+            <ButtonText style={{color: t.palette.primary_500}}>
+              <Trans>Unblock</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+      )}
 
       <LeaveConvoPrompt
         control={leaveConvoControl}
@@ -413,10 +433,7 @@ function BlockedFooter({
         convoId={convoId}
       />
 
-      <ReportDialog
-        control={reportDialogControl}
-        params={{type: 'account', did: recipient.did}}
-      />
+      <ReportConversationPrompt control={reportControl} />
     </View>
   )
 }

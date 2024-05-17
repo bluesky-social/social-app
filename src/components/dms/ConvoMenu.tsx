@@ -22,6 +22,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
+import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
@@ -213,15 +214,7 @@ let ConvoMenu = ({
         currentScreen={currentScreen}
       />
 
-      <Prompt.Basic
-        control={reportControl}
-        title={_(msg`Report conversation`)}
-        description={_(
-          msg`To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue.`,
-        )}
-        confirmButtonCta={_(msg`I understand`)}
-        onConfirm={noop}
-      />
+      <ReportConversationPrompt control={reportControl} />
 
       <Prompt.Outer control={blockedByListControl} testID="blockedByListDialog">
         <Prompt.TitleText>{_(msg`User blocked by list`)}</Prompt.TitleText>
@@ -264,5 +257,3 @@ let ConvoMenu = ({
 ConvoMenu = React.memo(ConvoMenu)
 
 export {ConvoMenu}
-
-function noop() {}
