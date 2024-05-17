@@ -11,12 +11,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  AppBskyActorDefs,
-  AppBskyRichtextFacet,
-  ModerationOpts,
-  RichText,
-} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -85,7 +80,6 @@ export function MessagesList({
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   recipient: AppBskyActorDefs.ProfileViewBasic
-  moderationOpts?: ModerationOpts
 }) {
   const convoState = useConvoActive()
   const {getAgent} = useAgent()
