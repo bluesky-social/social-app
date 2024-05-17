@@ -22,6 +22,7 @@ import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
@@ -218,16 +219,7 @@ let ConvoMenu = ({
         </Menu.Outer>
       </Menu.Root>
 
-      <Prompt.Basic
-        control={leaveConvoControl}
-        title={_(msg`Leave conversation`)}
-        description={_(
-          msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`,
-        )}
-        confirmButtonCta={_(msg`Leave`)}
-        confirmButtonColor="negative"
-        onConfirm={() => leaveConvo()}
-      />
+      <LeaveConvoPrompt control={leaveConvoControl} onLeaveConvo={leaveConvo} />
 
       <Prompt.Basic
         control={reportControl}
