@@ -304,7 +304,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
-        options={{title: title(msg`Messaging settings`), requireAuth: true}}
+        options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
     </>
   )

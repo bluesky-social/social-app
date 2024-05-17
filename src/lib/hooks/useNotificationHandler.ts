@@ -8,6 +8,7 @@ import {track} from 'lib/analytics/analytics'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
+import {isAndroid} from 'platform/detection'
 import {useCurrentConvoId} from 'state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from 'state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from 'state/queries/notifications/unread'
@@ -40,7 +41,7 @@ type NotificationPayload =
     }
 
 const DEFAULT_HANDLER_OPTIONS = {
-  shouldShowAlert: false,
+  shouldShowAlert: true,
   shouldPlaySound: false,
   shouldSetBadge: true,
 }
@@ -58,7 +59,29 @@ export function useNotificationsHandler() {
   const closeAllActiveElements = useCloseAllActiveElements()
 
   // Safety to prevent double handling of the same notification
-  const prevIdentifier = React.useRef('')
+  const prevDate = React.useRef(0)
+
+  React.useEffect(() => {
+    if (!isAndroid) return
+
+    Notifications.setNotificationChannelAsync('chat-messages', {
+      name: 'Chat',
+      importance: Notifications.AndroidImportance.MAX,
+      sound: 'dm.mp3',
+      showBadge: true,
+      vibrationPattern: [250],
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
+    })
+
+    Notifications.setNotificationChannelAsync('chat-messages-muted', {
+      name: 'Chat - Muted',
+      importance: Notifications.AndroidImportance.MAX,
+      sound: null,
+      showBadge: true,
+      vibrationPattern: [250],
+      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
+    })
+  }, [])
 
   React.useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {
@@ -146,10 +169,11 @@ export function useNotificationsHandler() {
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
         ) {
+          const isCurrentConvo = payload.convoId === currentConvoId
           return {
-            shouldShowAlert: payload.convoId !== currentConvoId,
+            shouldShowAlert: !isCurrentConvo,
             shouldPlaySound: false,
-            shouldSetBadge: false,
+            shouldSetBadge: !isCurrentConvo,
           }
         }
 
@@ -161,10 +185,10 @@ export function useNotificationsHandler() {
 
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
-        if (e.notification.request.identifier === prevIdentifier.current) {
+        if (e.notification.date === prevDate.current) {
           return
         }
-        prevIdentifier.current = e.notification.request.identifier
+        prevDate.current = e.notification.date
 
         logger.debug(
           'Notifications: response received',

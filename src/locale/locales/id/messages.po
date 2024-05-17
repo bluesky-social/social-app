@@ -18,7 +18,7 @@ msgstr ""
 "X-Crowdin-File: /main/src/locale/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 12\n"
 
-#: src/view/com/modals/VerifyEmail.tsx:151
+#: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
 msgstr "(tidak ada email)"
 
@@ -26,15 +26,15 @@ msgstr "(tidak ada email)"
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMe.tsx:57
+#: src/components/moderation/LabelsOnMe.tsx:55
 msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMe.tsx:63
+#: src/components/moderation/LabelsOnMe.tsx:61
 msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:61
+#: src/view/com/util/post-ctrls/RepostButton.tsx:62
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr ""
 
@@ -56,7 +56,7 @@ msgstr ""
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:267
+#: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr ""
 
@@ -74,6 +74,10 @@ msgstr ""
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:286
+msgid "{0} your feeds"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:71
@@ -95,15 +99,15 @@ msgstr "{following} mengikuti"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
-#: src/view/screens/ProfileFeed.tsx:604
+#: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:464
+#: src/view/shell/Drawer.tsx:461
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications} belum dibaca"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:66
+#: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
 msgstr ""
 
@@ -111,11 +115,11 @@ msgstr ""
 msgid "<0/> members"
 msgstr "<0/> anggota"
 
-#: src/view/shell/Drawer.tsx:92
+#: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:103
+#: src/view/shell/Drawer.tsx:112
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
 
@@ -140,7 +144,7 @@ msgstr ""
 #~ msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
 #~ msgstr ""
 
-#: src/view/com/modals/SelfLabel.tsx:134
+#: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
 msgstr ""
 
@@ -152,7 +156,7 @@ msgstr ""
 msgid "⚠Invalid Handle"
 msgstr "⚠Handle Tidak Valid"
 
-#: src/screens/Login/LoginForm.tsx:238
+#: src/screens/Login/LoginForm.tsx:241
 msgid "2FA Confirmation"
 msgstr "Konfirmasi 2FA"
 
@@ -183,7 +187,7 @@ msgstr "Pengaturan Aksesibilitas"
 #~ msgid "account"
 #~ msgstr "akun"
 
-#: src/screens/Login/LoginForm.tsx:161
+#: src/screens/Login/LoginForm.tsx:164
 #: src/view/screens/Settings/index.tsx:336
 #: src/view/screens/Settings/index.tsx:718
 msgid "Account"
@@ -234,15 +238,15 @@ msgstr "Akun batal dibisukan"
 #: src/components/dialogs/MutedWords.tsx:164
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
-#: src/view/screens/ProfileList.tsx:823
+#: src/view/screens/ProfileList.tsx:876
 msgid "Add"
 msgstr "Tambah"
 
-#: src/view/com/modals/SelfLabel.tsx:56
+#: src/view/com/modals/SelfLabel.tsx:57
 msgid "Add a content warning"
 msgstr "Tambahkan peringatan konten"
 
-#: src/view/screens/ProfileList.tsx:813
+#: src/view/screens/ProfileList.tsx:866
 msgid "Add a user to this list"
 msgstr "Tambahkan pengguna ke daftar ini"
 
@@ -254,6 +258,7 @@ msgstr "Tambahkan akun"
 
 #: src/view/com/composer/GifAltText.tsx:69
 #: src/view/com/composer/GifAltText.tsx:135
+#: src/view/com/composer/GifAltText.tsx:175
 #: src/view/com/composer/photos/Gallery.tsx:120
 #: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/modals/AltImage.tsx:117
@@ -261,8 +266,8 @@ msgid "Add alt text"
 msgstr "Tambahkan teks alt"
 
 #: src/view/com/composer/GifAltText.tsx:175
-msgid "Add ALT text"
-msgstr ""
+#~ msgid "Add ALT text"
+#~ msgstr ""
 
 #: src/view/screens/AppPasswords.tsx:104
 #: src/view/screens/AppPasswords.tsx:145
@@ -286,7 +291,15 @@ msgstr "Tambahkan kata yang akan dibisukan ke pengaturan terpilih"
 msgid "Add muted words and tags"
 msgstr "Tambah kata dan tagar untuk dibisukan"
 
-#: src/view/com/modals/ChangeHandle.tsx:417
+#: src/screens/Home/NoFeedsPinned.tsx:112
+msgid "Add recommended feeds"
+msgstr ""
+
+#: src/screens/Feeds/NoFollowingFeed.tsx:43
+msgid "Add the default feed of only people you follow"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:410
 msgid "Add the following DNS record to your domain:"
 msgstr "Tambahkan catatan DNS berikut ke domain Anda:"
 
@@ -295,7 +308,7 @@ msgstr "Tambahkan catatan DNS berikut ke domain Anda:"
 msgid "Add to Lists"
 msgstr "Tambahkan ke Daftar"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:233
+#: src/view/com/feeds/FeedSourceCard.tsx:235
 msgid "Add to my feeds"
 msgstr "Tambakan ke feed saya"
 
@@ -308,17 +321,17 @@ msgstr "Tambakan ke feed saya"
 msgid "Added to list"
 msgstr "Ditambahkan ke daftar"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:107
+#: src/view/com/feeds/FeedSourceCard.tsx:112
 msgid "Added to my feeds"
 msgstr "Ditambahkan ke feed saya"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:171
+#: src/view/screens/PreferencesFollowingFeed.tsx:172
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
 msgstr "Atur jumlah suka dari balasan yang akan ditampilkan di feed Anda."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:117
-#: src/view/com/modals/SelfLabel.tsx:75
+#: src/view/com/modals/SelfLabel.tsx:76
 msgid "Adult Content"
 msgstr "Konten Dewasa"
 
@@ -331,7 +344,7 @@ msgstr "Konten dewasa dinonaktifkan."
 msgid "Advanced"
 msgstr "Lanjutan"
 
-#: src/view/screens/Feeds.tsx:691
+#: src/view/screens/Feeds.tsx:797
 msgid "All the feeds you've saved, right in one place."
 msgstr "Berisi semua feed yang telah Anda simpan dalam satu tempat."
 
@@ -364,12 +377,12 @@ msgstr ""
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "Teks alt menjelaskan gambar untuk pengguna tunanetra dan pengguna dengan penglihatan rendah, serta membantu memberikan konteks kepada semua orang."
 
-#: src/view/com/modals/VerifyEmail.tsx:133
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:97
+#: src/view/com/modals/VerifyEmail.tsx:132
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Email telah dikirim ke {0}. Email tersebut berisi kode konfirmasi yang dapat Anda masukkan di bawah ini."
 
-#: src/view/com/modals/ChangeEmail.tsx:121
+#: src/view/com/modals/ChangeEmail.tsx:114
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "Email telah dikirim ke alamat Anda sebelumnya, {0}. Email tersebut berisi kode konfirmasi yang dapat Anda masukkan di bawah ini."
 
@@ -377,11 +390,11 @@ msgstr "Email telah dikirim ke alamat Anda sebelumnya, {0}. Email tersebut beris
 msgid "An error occured"
 msgstr "Terjadi kesalahan"
 
-#: src/components/dms/MessageMenu.tsx:132
+#: src/components/dms/MessageMenu.tsx:134
 msgid "An error occurred while trying to delete the message. Please try again."
 msgstr ""
 
-#: src/lib/moderation/useReportOptions.ts:26
+#: src/lib/moderation/useReportOptions.ts:27
 msgid "An issue not included in these options"
 msgstr "Masalah yang tidak termasuk dalam pilihan"
 
@@ -394,7 +407,7 @@ msgstr "Masalah yang tidak termasuk dalam pilihan"
 msgid "An issue occurred, please try again."
 msgstr "Terjadi masalah, silakan coba lagi."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:194
+#: src/screens/Onboarding/StepInterests/index.tsx:204
 msgid "an unknown error occurred"
 msgstr ""
 
@@ -403,7 +416,7 @@ msgstr ""
 msgid "and"
 msgstr "dan"
 
-#: src/screens/Onboarding/index.tsx:32
+#: src/screens/Onboarding/index.tsx:44
 msgid "Animals"
 msgstr "Hewan"
 
@@ -411,7 +424,7 @@ msgstr "Hewan"
 msgid "Animated GIF"
 msgstr "Animasi GIF"
 
-#: src/lib/moderation/useReportOptions.ts:31
+#: src/lib/moderation/useReportOptions.ts:32
 msgid "Anti-Social Behavior"
 msgstr "Perilaku Anti-Sosial"
 
@@ -441,16 +454,16 @@ msgstr "Pengaturan kata sandi aplikasi"
 msgid "App Passwords"
 msgstr "Kata sandi Aplikasi"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:133
-#: src/components/moderation/LabelsOnMeDialog.tsx:136
+#: src/components/moderation/LabelsOnMeDialog.tsx:150
+#: src/components/moderation/LabelsOnMeDialog.tsx:153
 msgid "Appeal"
 msgstr "Ajukan Banding"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:202
+#: src/components/moderation/LabelsOnMeDialog.tsx:228
 msgid "Appeal \"{0}\" label"
 msgstr "Banding label \"{0}\""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:193
+#: src/components/moderation/LabelsOnMeDialog.tsx:219
 msgid "Appeal submitted"
 msgstr ""
 
@@ -462,19 +475,24 @@ msgstr ""
 msgid "Appearance"
 msgstr "Tampilan"
 
+#: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
+#: src/screens/Home/NoFeedsPinned.tsx:106
+msgid "Apply default recommended feeds"
+msgstr ""
+
 #: src/view/screens/AppPasswords.tsx:265
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "Anda yakin untuk menghapus kata sandi aplikasi \"{name}\"?"
 
-#: src/components/dms/MessageMenu.tsx:121
+#: src/components/dms/MessageMenu.tsx:123
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:173
+#: src/components/dms/ConvoMenu.tsx:189
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:280
+#: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "Apakah Anda yakin ingin menghapus {0} dari daftar feed Anda?"
 
@@ -490,11 +508,11 @@ msgstr "Anda yakin?"
 msgid "Are you writing in <0>{0}</0>?"
 msgstr "Apakah Anda menulis dalam <0>{0}</0>?"
 
-#: src/screens/Onboarding/index.tsx:26
+#: src/screens/Onboarding/index.tsx:38
 msgid "Art"
 msgstr "Seni"
 
-#: src/view/com/modals/SelfLabel.tsx:123
+#: src/view/com/modals/SelfLabel.tsx:124
 msgid "Artistic or non-erotic nudity."
 msgstr "Ketelanjangan artistik atau non-erotis."
 
@@ -502,17 +520,17 @@ msgstr "Ketelanjangan artistik atau non-erotis."
 msgid "At least 3 characters"
 msgstr "Sedikitnya 3 karakter"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:247
-#: src/components/moderation/LabelsOnMeDialog.tsx:248
+#: src/components/moderation/LabelsOnMeDialog.tsx:273
+#: src/components/moderation/LabelsOnMeDialog.tsx:274
 #: src/screens/Login/ChooseAccountForm.tsx:98
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/ForgotPasswordForm.tsx:135
-#: src/screens/Login/LoginForm.tsx:269
-#: src/screens/Login/LoginForm.tsx:275
+#: src/screens/Login/LoginForm.tsx:272
+#: src/screens/Login/LoginForm.tsx:278
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:115
+#: src/screens/Messages/Conversation/index.tsx:179
 #: src/screens/Profile/Header/Shell.tsx:99
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
@@ -540,8 +558,8 @@ msgstr "Tanggal lahir:"
 msgid "Block"
 msgstr "Blokir"
 
-#: src/components/dms/ConvoMenu.tsx:135
-#: src/components/dms/ConvoMenu.tsx:139
+#: src/components/dms/ConvoMenu.tsx:152
+#: src/components/dms/ConvoMenu.tsx:156
 msgid "Block account"
 msgstr ""
 
@@ -554,15 +572,15 @@ msgstr "Blokir Akun"
 msgid "Block Account?"
 msgstr "Blokir Akun?"
 
-#: src/view/screens/ProfileList.tsx:526
+#: src/view/screens/ProfileList.tsx:579
 msgid "Block accounts"
 msgstr "Blokir akun"
 
-#: src/view/screens/ProfileList.tsx:630
+#: src/view/screens/ProfileList.tsx:683
 msgid "Block list"
 msgstr "Blokir daftar"
 
-#: src/view/screens/ProfileList.tsx:625
+#: src/view/screens/ProfileList.tsx:678
 msgid "Block these accounts?"
 msgstr "Blokir akun ini?"
 
@@ -596,7 +614,7 @@ msgstr "Postingan yang diblokir."
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "Pemblokiran tidak menghalangi pelabel ini menerapkan label pada akun Anda."
 
-#: src/view/screens/ProfileList.tsx:627
+#: src/view/screens/ProfileList.tsx:680
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Pemblokiran bersifat publik. Akun yang diblokir tidak dapat membalas postingan Anda, menyebut Anda, atau berinteraksi dengan Anda."
 
@@ -644,9 +662,14 @@ msgstr "Buramkan gambar"
 msgid "Blur images and filter from feeds"
 msgstr "Buramkan gambar dan saring dari feed"
 
-#: src/screens/Onboarding/index.tsx:33
+#: src/screens/Onboarding/index.tsx:45
 msgid "Books"
 msgstr "Buku"
+
+#: src/screens/Home/NoFeedsPinned.tsx:116
+#: src/screens/Home/NoFeedsPinned.tsx:123
+msgid "Browse other feeds"
+msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:151
 msgid "Business"
@@ -694,9 +717,9 @@ msgstr "Hanya dapat terdiri dari huruf, angka, spasi, tanda hubung dan garis baw
 #: src/components/TagMenu/index.tsx:268
 #: src/view/com/composer/Composer.tsx:387
 #: src/view/com/composer/Composer.tsx:392
-#: src/view/com/modals/ChangeEmail.tsx:220
-#: src/view/com/modals/ChangeEmail.tsx:222
-#: src/view/com/modals/ChangeHandle.tsx:155
+#: src/view/com/modals/ChangeEmail.tsx:213
+#: src/view/com/modals/ChangeEmail.tsx:215
+#: src/view/com/modals/ChangeHandle.tsx:148
 #: src/view/com/modals/ChangePassword.tsx:269
 #: src/view/com/modals/ChangePassword.tsx:272
 #: src/view/com/modals/CreateOrEditList.tsx:358
@@ -708,26 +731,26 @@ msgstr "Hanya dapat terdiri dari huruf, angka, spasi, tanda hubung dan garis baw
 #: src/view/com/modals/LinkWarning.tsx:105
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/Repost.tsx:88
-#: src/view/com/modals/VerifyEmail.tsx:256
-#: src/view/com/modals/VerifyEmail.tsx:262
+#: src/view/com/modals/VerifyEmail.tsx:255
+#: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/screens/Search/Search.tsx:674
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
 msgstr "Batal"
 
 #: src/view/com/modals/CreateOrEditList.tsx:363
-#: src/view/com/modals/DeleteAccount.tsx:156
-#: src/view/com/modals/DeleteAccount.tsx:234
+#: src/view/com/modals/DeleteAccount.tsx:155
+#: src/view/com/modals/DeleteAccount.tsx:233
 msgctxt "action"
 msgid "Cancel"
 msgstr "Batal"
 
-#: src/view/com/modals/DeleteAccount.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:230
+#: src/view/com/modals/DeleteAccount.tsx:151
+#: src/view/com/modals/DeleteAccount.tsx:229
 msgid "Cancel account deletion"
 msgstr "Batal menghapus akun"
 
-#: src/view/com/modals/ChangeHandle.tsx:151
+#: src/view/com/modals/ChangeHandle.tsx:144
 msgid "Cancel change handle"
 msgstr "Batal mengubah handle"
 
@@ -752,7 +775,7 @@ msgstr "Batal mencari"
 msgid "Cancels opening the linked website"
 msgstr "Membatalkan membuka situs web tertaut"
 
-#: src/view/com/modals/VerifyEmail.tsx:161
+#: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
 msgstr "Ubah"
 
@@ -765,12 +788,12 @@ msgstr "Ubah"
 msgid "Change handle"
 msgstr "Ubah handle"
 
-#: src/view/com/modals/ChangeHandle.tsx:163
+#: src/view/com/modals/ChangeHandle.tsx:156
 #: src/view/screens/Settings/index.tsx:695
 msgid "Change Handle"
 msgstr "Ubah Handle"
 
-#: src/view/com/modals/VerifyEmail.tsx:156
+#: src/view/com/modals/VerifyEmail.tsx:155
 msgid "Change my email"
 msgstr "Ubah email saya"
 
@@ -787,7 +810,7 @@ msgstr "Ubah Kata Sandi"
 msgid "Change post language to {0}"
 msgstr "Ubah bahasa postingan menjadi {0}"
 
-#: src/view/com/modals/ChangeEmail.tsx:111
+#: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
 msgstr "Ubah Email Anda"
 
@@ -795,11 +818,11 @@ msgstr "Ubah Email Anda"
 msgid "Chat"
 msgstr "Chat"
 
-#: src/components/dms/ConvoMenu.tsx:55
+#: src/components/dms/ConvoMenu.tsx:63
 msgid "Chat muted"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:87
+#: src/components/dms/ConvoMenu.tsx:89
 #: src/components/dms/MessageMenu.tsx:69
 msgid "Chat settings"
 msgstr ""
@@ -825,11 +848,11 @@ msgstr "Periksa status saya"
 #~ msgid "Check out some recommended users. Follow them to see similar users."
 #~ msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:262
+#: src/screens/Login/LoginForm.tsx:265
 msgid "Check your email for a login code and enter it here."
 msgstr "Periksa email Anda untuk mendapatkan kode login dan masukkan di sini."
 
-#: src/view/com/modals/DeleteAccount.tsx:169
+#: src/view/com/modals/DeleteAccount.tsx:168
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Periksa kotak masuk email Anda untuk kode konfirmasi dan masukkan di bawah ini:"
 
@@ -841,7 +864,7 @@ msgstr "Pilih \"Semua Orang\" atau \"Tidak Ada\""
 msgid "Choose Service"
 msgstr "Pilih Layanan"
 
-#: src/screens/Onboarding/StepFinished.tsx:141
+#: src/screens/Onboarding/StepFinished.tsx:238
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Pilih algoritma yang akan digunakan untuk feed khusus Anda."
 
@@ -849,6 +872,10 @@ msgstr "Pilih algoritma yang akan digunakan untuk feed khusus Anda."
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
 #~ msgid "Choose the algorithms that power your experience with custom feeds."
 #~ msgstr ""
+
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
+msgid "Choose this color as your avatar"
+msgstr ""
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 msgid "Choose your main feeds"
@@ -891,6 +918,10 @@ msgstr "Hapus semua data penyimpanan"
 msgid "click here"
 msgstr "klik di sini"
 
+#: src/screens/Feeds/NoFollowingFeed.tsx:46
+msgid "Click here to add one."
+msgstr ""
+
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
 msgstr "Klik di sini untuk membuka menu tagar dari {tag}"
@@ -899,7 +930,7 @@ msgstr "Klik di sini untuk membuka menu tagar dari {tag}"
 #~ msgid "Click here to open tag menu for #{tag}"
 #~ msgstr ""
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:47
 msgid "Climate"
 msgstr "Iklim"
 
@@ -968,11 +999,11 @@ msgstr "Menutup penampil untuk gambar header"
 msgid "Collapses list of users for a given notification"
 msgstr "Menciutkan daftar pengguna untuk notifikasi tertentu"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:53
 msgid "Comedy"
 msgstr "Komedi"
 
-#: src/screens/Onboarding/index.tsx:27
+#: src/screens/Onboarding/index.tsx:39
 msgid "Comics"
 msgstr "Komik"
 
@@ -981,7 +1012,7 @@ msgstr "Komik"
 msgid "Community Guidelines"
 msgstr "Panduan Komunitas"
 
-#: src/screens/Onboarding/StepFinished.tsx:154
+#: src/screens/Onboarding/StepFinished.tsx:251
 msgid "Complete onboarding and start using your account"
 msgstr "Selesaikan onboarding dan mulai menggunakan akun Anda"
 
@@ -1011,18 +1042,18 @@ msgstr "Diatur pada <0>pengaturan moderasi</0>."
 
 #: src/components/Prompt.tsx:159
 #: src/components/Prompt.tsx:162
-#: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:240
-#: src/view/com/modals/VerifyEmail.tsx:242
-#: src/view/screens/PreferencesFollowingFeed.tsx:306
+#: src/view/com/modals/SelfLabel.tsx:155
+#: src/view/com/modals/VerifyEmail.tsx:239
+#: src/view/com/modals/VerifyEmail.tsx:241
+#: src/view/screens/PreferencesFollowingFeed.tsx:307
 #: src/view/screens/PreferencesThreads.tsx:159
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:181
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:184
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:180
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:183
 msgid "Confirm"
 msgstr "Konfirmasi"
 
-#: src/view/com/modals/ChangeEmail.tsx:195
-#: src/view/com/modals/ChangeEmail.tsx:197
+#: src/view/com/modals/ChangeEmail.tsx:188
+#: src/view/com/modals/ChangeEmail.tsx:190
 msgid "Confirm Change"
 msgstr "Konfirmasi Perubahan"
 
@@ -1030,7 +1061,7 @@ msgstr "Konfirmasi Perubahan"
 msgid "Confirm content language settings"
 msgstr "Konfirmasi pengaturan bahasa konten"
 
-#: src/view/com/modals/DeleteAccount.tsx:220
+#: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Confirm delete account"
 msgstr "Konfirmasi hapus akun"
 
@@ -1042,17 +1073,17 @@ msgstr "Konfirmasikan usia Anda:"
 msgid "Confirm your birthdate"
 msgstr "Konfirmasi tanggal lahir Anda"
 
-#: src/screens/Login/LoginForm.tsx:244
-#: src/view/com/modals/ChangeEmail.tsx:159
-#: src/view/com/modals/DeleteAccount.tsx:176
-#: src/view/com/modals/DeleteAccount.tsx:182
-#: src/view/com/modals/VerifyEmail.tsx:174
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:144
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:150
+#: src/screens/Login/LoginForm.tsx:247
+#: src/view/com/modals/ChangeEmail.tsx:152
+#: src/view/com/modals/DeleteAccount.tsx:175
+#: src/view/com/modals/DeleteAccount.tsx:181
+#: src/view/com/modals/VerifyEmail.tsx:173
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:143
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:149
 msgid "Confirmation code"
 msgstr "Kode konfirmasi"
 
-#: src/screens/Login/LoginForm.tsx:296
+#: src/screens/Login/LoginForm.tsx:299
 msgid "Connecting..."
 msgstr "Menghubungkan..."
 
@@ -1099,8 +1130,9 @@ msgstr "Latar belakang menu konteks, klik untuk menutup menu."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:161
 #: src/screens/Onboarding/StepFollowingFeed.tsx:154
-#: src/screens/Onboarding/StepInterests/index.tsx:253
+#: src/screens/Onboarding/StepInterests/index.tsx:263
 #: src/screens/Onboarding/StepModeration/index.tsx:103
+#: src/screens/Onboarding/StepProfile/index.tsx:272
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:118
 msgid "Continue"
 msgstr "Lanjutkan"
@@ -1110,8 +1142,9 @@ msgid "Continue as {0} (currently signed in)"
 msgstr "Lanjutkan sebagai {0} (saat ini masuk)"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:151
-#: src/screens/Onboarding/StepInterests/index.tsx:250
+#: src/screens/Onboarding/StepInterests/index.tsx:260
 #: src/screens/Onboarding/StepModeration/index.tsx:100
+#: src/screens/Onboarding/StepProfile/index.tsx:269
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:115
 #: src/screens/Signup/index.tsx:213
 msgid "Continue to next step"
@@ -1125,7 +1158,7 @@ msgstr "Lanjutkan ke langkah berikutnya"
 msgid "Continue to the next step without following any accounts"
 msgstr "Lanjutkan ke langkah berikutnya tanpa mengikuti akun apa pun"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:56
 msgid "Cooking"
 msgstr "Memasak"
 
@@ -1138,9 +1171,9 @@ msgstr "Disalin"
 msgid "Copied build version to clipboard"
 msgstr "Menyalin versi build ke papan klip"
 
-#: src/components/dms/MessageMenu.tsx:47
+#: src/components/dms/MessageMenu.tsx:53
 #: src/view/com/modals/AddAppPasswords.tsx:77
-#: src/view/com/modals/ChangeHandle.tsx:327
+#: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:172
 msgid "Copied to clipboard"
@@ -1158,7 +1191,7 @@ msgstr "Menyalin kata sandi aplikasi"
 msgid "Copy"
 msgstr "Salin"
 
-#: src/view/com/modals/ChangeHandle.tsx:481
+#: src/view/com/modals/ChangeHandle.tsx:474
 msgid "Copy {0}"
 msgstr "Salin {0}"
 
@@ -1167,7 +1200,7 @@ msgstr "Salin {0}"
 msgid "Copy code"
 msgstr "Salin kode"
 
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:423
 msgid "Copy link to list"
 msgstr "Salin tautan daftar"
 
@@ -1191,15 +1224,15 @@ msgstr "Salin teks postingan"
 msgid "Copyright Policy"
 msgstr "Kebijakan Hak Cipta"
 
-#: src/components/dms/ConvoMenu.tsx:79
+#: src/components/dms/ConvoMenu.tsx:80
 msgid "Could not leave chat"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:103
+#: src/view/screens/ProfileFeed.tsx:102
 msgid "Could not load feed"
 msgstr "Tidak dapat memuat feed"
 
-#: src/view/screens/ProfileList.tsx:903
+#: src/view/screens/ProfileList.tsx:956
 msgid "Could not load list"
 msgstr "Tidak dapat memuat daftar"
 
@@ -1207,13 +1240,13 @@ msgstr "Tidak dapat memuat daftar"
 msgid "Could not load profiles. Please try again later."
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:58
+#: src/components/dms/ConvoMenu.tsx:69
 msgid "Could not mute chat"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:68
-msgid "Could not unmute chat"
-msgstr ""
+#~ msgid "Could not unmute chat"
+#~ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
@@ -1233,6 +1266,10 @@ msgstr "Buat Akun"
 msgid "Create an account"
 msgstr "Buat akun"
 
+#: src/screens/Onboarding/StepProfile/index.tsx:286
+msgid "Create an avatar instead"
+msgstr ""
+
 #: src/view/com/modals/AddAppPasswords.tsx:227
 msgid "Create App Password"
 msgstr "Buat Kata Sandi Aplikasi"
@@ -1242,7 +1279,7 @@ msgstr "Buat Kata Sandi Aplikasi"
 msgid "Create new account"
 msgstr "Buat akun baru"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:94
+#: src/components/ReportDialog/SelectReportOptionView.tsx:100
 msgid "Create report for {0}"
 msgstr "Buat laporan untuk {0}"
 
@@ -1254,7 +1291,7 @@ msgstr "Dibuat {0}"
 #~ msgid "Creates a card with a thumbnail. The card links to {url}"
 #~ msgstr ""
 
-#: src/screens/Onboarding/index.tsx:29
+#: src/screens/Onboarding/index.tsx:41
 msgid "Culture"
 msgstr "Budaya"
 
@@ -1263,12 +1300,12 @@ msgstr "Budaya"
 msgid "Custom"
 msgstr "Kustom"
 
-#: src/view/com/modals/ChangeHandle.tsx:389
+#: src/view/com/modals/ChangeHandle.tsx:382
 msgid "Custom domain"
 msgstr "Domain kustom"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:107
-#: src/view/screens/Feeds.tsx:717
+#: src/view/screens/Feeds.tsx:823
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "Feed khusus yang dibuat oleh komunitas memberikan pengalaman baru dan membantu Anda menemukan konten yang Anda sukai."
 
@@ -1301,10 +1338,10 @@ msgstr "Debug Moderasi"
 msgid "Debug panel"
 msgstr "Panel awakutu"
 
-#: src/components/dms/MessageMenu.tsx:123
+#: src/components/dms/MessageMenu.tsx:125
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #: src/view/screens/AppPasswords.tsx:268
-#: src/view/screens/ProfileList.tsx:609
+#: src/view/screens/ProfileList.tsx:662
 msgid "Delete"
 msgstr "Hapus"
 
@@ -1316,7 +1353,7 @@ msgstr "Hapus akun"
 #~ msgid "Delete Account"
 #~ msgstr "Hapus Akun"
 
-#: src/view/com/modals/DeleteAccount.tsx:87
+#: src/view/com/modals/DeleteAccount.tsx:86
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
 msgstr ""
 
@@ -1332,11 +1369,11 @@ msgstr "Hapus kata sandi aplikasi?"
 msgid "Delete for me"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:417
+#: src/view/screens/ProfileList.tsx:466
 msgid "Delete List"
 msgstr "Hapus Daftar"
 
-#: src/components/dms/MessageMenu.tsx:119
+#: src/components/dms/MessageMenu.tsx:121
 msgid "Delete message"
 msgstr ""
 
@@ -1344,7 +1381,7 @@ msgstr ""
 msgid "Delete message for me"
 msgstr ""
 
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:222
 msgid "Delete my account"
 msgstr "Hapus akun saya"
 
@@ -1357,7 +1394,7 @@ msgstr "Hapus Akun Saya…"
 msgid "Delete post"
 msgstr "Hapus postingan"
 
-#: src/view/screens/ProfileList.tsx:604
+#: src/view/screens/ProfileList.tsx:657
 msgid "Delete this list?"
 msgstr "Hapus daftar ini?"
 
@@ -1396,7 +1433,7 @@ msgstr "Redup"
 msgid "Disable autoplay for GIFs"
 msgstr "Nonaktifkan pemutaran otomatis untuk GIF"
 
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:91
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
 msgstr "Nonaktfikan Email 2FA"
 
@@ -1437,7 +1474,7 @@ msgstr "Cegah aplikasi untuk menampilkan akun saya ke pengguna yang tidak login"
 msgid "Discover new custom feeds"
 msgstr "Temukan feed khusus baru"
 
-#: src/view/screens/Feeds.tsx:714
+#: src/view/screens/Feeds.tsx:820
 msgid "Discover New Feeds"
 msgstr "Temukan Feed Baru"
 
@@ -1449,7 +1486,7 @@ msgstr "Nama tampilan"
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
-#: src/view/com/modals/ChangeHandle.tsx:398
+#: src/view/com/modals/ChangeHandle.tsx:391
 msgid "DNS Panel"
 msgstr "Panel DNS"
 
@@ -1461,11 +1498,11 @@ msgstr "Tidak termasuk ketelanjangan."
 msgid "Doesn't begin or end with a hyphen"
 msgstr "Tidak diawali atau diakhiri dengan tanda hubung"
 
-#: src/view/com/modals/ChangeHandle.tsx:482
+#: src/view/com/modals/ChangeHandle.tsx:475
 msgid "Domain Value"
 msgstr "Nilai Domain"
 
-#: src/view/com/modals/ChangeHandle.tsx:489
+#: src/view/com/modals/ChangeHandle.tsx:482
 msgid "Domain verified!"
 msgstr "Domain terverifikasi!"
 
@@ -1473,6 +1510,8 @@ msgstr "Domain terverifikasi!"
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/components/forms/DateField/index.tsx:74
 #: src/components/forms/DateField/index.tsx:80
+#: src/screens/Onboarding/StepProfile/index.tsx:325
+#: src/screens/Onboarding/StepProfile/index.tsx:328
 #: src/view/com/auth/server-input/index.tsx:169
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/modals/AddAppPasswords.tsx:227
@@ -1481,15 +1520,13 @@ msgstr "Domain terverifikasi!"
 #: src/view/com/modals/InviteCodes.tsx:81
 #: src/view/com/modals/InviteCodes.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
-#: src/view/screens/PreferencesFollowingFeed.tsx:309
-#: src/view/screens/Settings/ExportCarDialog.tsx:95
-#: src/view/screens/Settings/ExportCarDialog.tsx:97
+#: src/view/screens/PreferencesFollowingFeed.tsx:310
 msgid "Done"
 msgstr "Selesai"
 
 #: src/view/com/modals/EditImage.tsx:334
 #: src/view/com/modals/ListAddRemoveUsers.tsx:144
-#: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/SelfLabel.tsx:158
 #: src/view/com/modals/Threadgate.tsx:129
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:95
@@ -1503,8 +1540,8 @@ msgstr "Selesai"
 msgid "Done{extraText}"
 msgstr "Selesai{extraText}"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:60
-#: src/view/screens/Settings/ExportCarDialog.tsx:64
+#: src/view/screens/Settings/ExportCarDialog.tsx:78
+#: src/view/screens/Settings/ExportCarDialog.tsx:82
 msgid "Download CAR file"
 msgstr "Unduh berkas CAR"
 
@@ -1516,7 +1553,7 @@ msgstr "Lepaskan untuk menambahkan gambar"
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
 msgstr "Sesuai dengan kebijakan Apple, konten dewasa hanya dapat diaktifkan di web setelah menyelesaikan pendaftaran."
 
-#: src/view/com/modals/ChangeHandle.tsx:259
+#: src/view/com/modals/ChangeHandle.tsx:252
 msgid "e.g. alice"
 msgstr "contoh: alice"
 
@@ -1524,7 +1561,7 @@ msgstr "contoh: alice"
 msgid "e.g. Alice Roberts"
 msgstr "contoh: Alice Roberts"
 
-#: src/view/com/modals/ChangeHandle.tsx:381
+#: src/view/com/modals/ChangeHandle.tsx:374
 msgid "e.g. alice.com"
 msgstr "contoh: alice.com"
 
@@ -1571,7 +1608,7 @@ msgstr "Edit avatar"
 msgid "Edit image"
 msgstr "Edit gambar"
 
-#: src/view/screens/ProfileList.tsx:405
+#: src/view/screens/ProfileList.tsx:454
 msgid "Edit list details"
 msgstr "Edit detail daftar"
 
@@ -1580,8 +1617,8 @@ msgid "Edit Moderation List"
 msgstr "Ubah Daftar Moderasi"
 
 #: src/Navigation.tsx:263
-#: src/view/screens/Feeds.tsx:459
-#: src/view/screens/SavedFeeds.tsx:85
+#: src/view/screens/Feeds.tsx:494
+#: src/view/screens/SavedFeeds.tsx:92
 msgid "Edit My Feeds"
 msgstr "Edit Feed Saya"
 
@@ -1600,7 +1637,7 @@ msgid "Edit Profile"
 msgstr "Edit Profil"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:76
-#: src/view/screens/Feeds.tsx:380
+#: src/view/screens/Feeds.tsx:415
 msgid "Edit Saved Feeds"
 msgstr "Edit Feed Tersimpan"
 
@@ -1616,16 +1653,16 @@ msgstr "Ubah nama tampilan Anda"
 msgid "Edit your profile description"
 msgstr "Ubah deskripsi profil Anda"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:46
 msgid "Education"
 msgstr "Pendidikan"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
-#: src/view/com/modals/ChangeEmail.tsx:143
+#: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
 msgstr "Email"
 
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:65
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:64
 msgid "Email 2FA disabled"
 msgstr "Email 2FA dinonaktifkan"
 
@@ -1633,16 +1670,16 @@ msgstr "Email 2FA dinonaktifkan"
 msgid "Email address"
 msgstr "Alamat email"
 
-#: src/view/com/modals/ChangeEmail.tsx:58
-#: src/view/com/modals/ChangeEmail.tsx:90
+#: src/view/com/modals/ChangeEmail.tsx:54
+#: src/view/com/modals/ChangeEmail.tsx:83
 msgid "Email updated"
 msgstr "Email diperbarui"
 
-#: src/view/com/modals/ChangeEmail.tsx:113
+#: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
 msgstr "Email Diupdate"
 
-#: src/view/com/modals/VerifyEmail.tsx:86
+#: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
 msgstr "Email terverifikasi"
 
@@ -1690,7 +1727,7 @@ msgstr "Aktifkan media eksternal"
 msgid "Enable media players for"
 msgstr "Aktifkan pemutar media untuk"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:145
+#: src/view/screens/PreferencesFollowingFeed.tsx:146
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Aktifkan opsi ini untuk hanya menampilkan balasan dari akun yang Anda ikuti."
 
@@ -1719,7 +1756,7 @@ msgstr "Masukkan kata sandi"
 msgid "Enter a word or tag"
 msgstr "Masukkan kata atau tag"
 
-#: src/view/com/modals/VerifyEmail.tsx:114
+#: src/view/com/modals/VerifyEmail.tsx:113
 msgid "Enter Confirmation Code"
 msgstr "Masukkan Kode Konfirmasi"
 
@@ -1727,7 +1764,7 @@ msgstr "Masukkan Kode Konfirmasi"
 msgid "Enter the code you received to change your password."
 msgstr "Masukkan kode yang Anda terima untuk mengubah kata sandi Anda."
 
-#: src/view/com/modals/ChangeHandle.tsx:371
+#: src/view/com/modals/ChangeHandle.tsx:364
 msgid "Enter the domain you want to use"
 msgstr "Masukkan domain yang ingin Anda gunakan"
 
@@ -1744,11 +1781,11 @@ msgstr "Masukkan tanggal lahir Anda"
 msgid "Enter your email address"
 msgstr "Masukkan alamat email Anda"
 
-#: src/view/com/modals/ChangeEmail.tsx:43
+#: src/view/com/modals/ChangeEmail.tsx:42
 msgid "Enter your new email above"
 msgstr "Masukkan email baru Anda di atas"
 
-#: src/view/com/modals/ChangeEmail.tsx:119
+#: src/view/com/modals/ChangeEmail.tsx:112
 msgid "Enter your new email address below."
 msgstr "Masukkan alamat email baru Anda di bawah ini."
 
@@ -1756,11 +1793,15 @@ msgstr "Masukkan alamat email baru Anda di bawah ini."
 msgid "Enter your username and password"
 msgstr "Masukkan nama pengguna dan kata sandi Anda"
 
+#: src/view/screens/Settings/ExportCarDialog.tsx:47
+msgid "Error occurred while saving file"
+msgstr ""
+
 #: src/screens/Signup/StepCaptcha/index.tsx:51
 msgid "Error receiving captcha response."
 msgstr "Gagal menerima respons captcha."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:192
+#: src/screens/Onboarding/StepInterests/index.tsx:202
 #: src/view/screens/Search/Search.tsx:108
 msgid "Error:"
 msgstr "Eror:"
@@ -1769,15 +1810,19 @@ msgstr "Eror:"
 msgid "Everybody"
 msgstr "Semua orang"
 
-#: src/lib/moderation/useReportOptions.ts:66
+#: src/lib/moderation/useReportOptions.ts:67
 msgid "Excessive mentions or replies"
 msgstr "Menyebut atau membalas secara berlebihan"
 
-#: src/view/com/modals/DeleteAccount.tsx:231
+#: src/lib/moderation/useReportOptions.ts:80
+msgid "Excessive or unwanted messages"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Exits account deletion process"
 msgstr "Keluar dari proses penghapusan akun"
 
-#: src/view/com/modals/ChangeHandle.tsx:152
+#: src/view/com/modals/ChangeHandle.tsx:145
 msgid "Exits handle change process"
 msgstr "Keluar dari proses perubahan handle"
 
@@ -1815,7 +1860,7 @@ msgstr "Gambar seksual eksplisit."
 msgid "Export my data"
 msgstr "Ekspor data saya"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:45
+#: src/view/screens/Settings/ExportCarDialog.tsx:63
 #: src/view/screens/Settings/index.tsx:763
 msgid "Export My Data"
 msgstr "Ekspor Data Saya"
@@ -1849,7 +1894,7 @@ msgstr "Gagal membuat kata sandi aplikasi."
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "Gagal membuat daftar. Periksa koneksi internet Anda dan coba lagi."
 
-#: src/components/dms/MessageMenu.tsx:130
+#: src/components/dms/MessageMenu.tsx:132
 msgid "Failed to delete message"
 msgstr ""
 
@@ -1861,7 +1906,7 @@ msgstr "Gagal menghapus postingan, silakan coba lagi"
 msgid "Failed to load GIFs"
 msgstr "Gagal memuat GIF"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:21
+#: src/screens/Messages/Conversation/MessageListError.tsx:28
 msgid "Failed to load past messages."
 msgstr ""
 
@@ -1870,35 +1915,39 @@ msgstr ""
 #~ msgid "Failed to load recommended feeds"
 #~ msgstr ""
 
-#: src/view/com/lightbox/Lightbox.tsx:83
+#: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
 msgstr "Gagal menyimpan gambar: {0}"
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:29
+msgid "Failed to send message(s)."
+msgstr ""
 
 #: src/Navigation.tsx:203
 msgid "Feed"
 msgstr "Feed"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:217
+#: src/view/com/feeds/FeedSourceCard.tsx:219
 msgid "Feed by {0}"
 msgstr "Feed oleh {0}"
 
-#: src/view/screens/Feeds.tsx:630
+#: src/view/screens/Feeds.tsx:735
 msgid "Feed offline"
 msgstr "Feed offline"
 
 #: src/view/shell/desktop/RightNav.tsx:65
-#: src/view/shell/Drawer.tsx:335
+#: src/view/shell/Drawer.tsx:344
 msgid "Feedback"
 msgstr "Masukan"
 
 #: src/Navigation.tsx:507
-#: src/view/screens/Feeds.tsx:444
-#: src/view/screens/Feeds.tsx:549
+#: src/view/screens/Feeds.tsx:479
+#: src/view/screens/Feeds.tsx:595
 #: src/view/screens/Profile.tsx:197
-#: src/view/shell/bottom-bar/BottomBar.tsx:212
-#: src/view/shell/desktop/LeftNav.tsx:379
-#: src/view/shell/Drawer.tsx:500
-#: src/view/shell/Drawer.tsx:501
+#: src/view/shell/bottom-bar/BottomBar.tsx:245
+#: src/view/shell/desktop/LeftNav.tsx:361
+#: src/view/shell/Drawer.tsx:492
+#: src/view/shell/Drawer.tsx:493
 msgid "Feeds"
 msgstr "Feed"
 
@@ -1906,7 +1955,7 @@ msgstr "Feed"
 #~ msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 #~ msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:157
+#: src/view/screens/SavedFeeds.tsx:179
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "Feed adalah algoritma khusus yang dibuat oleh pengguna dengan sedikit keahlian pengkodean. <0/> untuk informasi lebih lanjut."
 
@@ -1914,15 +1963,19 @@ msgstr "Feed adalah algoritma khusus yang dibuat oleh pengguna dengan sedikit ke
 msgid "Feeds can be topical as well!"
 msgstr "Feed juga bisa berdasarkan topik!"
 
-#: src/view/com/modals/ChangeHandle.tsx:482
+#: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
 msgstr "Isi Berkas"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:43
+msgid "File saved successfully!"
+msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
 msgstr "Saring dari feed"
 
-#: src/screens/Onboarding/StepFinished.tsx:157
+#: src/screens/Onboarding/StepFinished.tsx:254
 msgid "Finalizing"
 msgstr "Menyelesaikan"
 
@@ -1948,7 +2001,7 @@ msgstr "Temukan postingan dan pengguna di Bluesky"
 #~ msgid "Finding similar accounts..."
 #~ msgstr ""
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:109
+#: src/view/screens/PreferencesFollowingFeed.tsx:110
 msgid "Fine-tune the content you see on your Following feed."
 msgstr "Sesuaikan konten yang ingin Anda lihat di feed Following."
 
@@ -1956,11 +2009,11 @@ msgstr "Sesuaikan konten yang ingin Anda lihat di feed Following."
 msgid "Fine-tune the discussion threads."
 msgstr "Atur utasan diskusi."
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:50
 msgid "Fitness"
 msgstr "Kebugaran"
 
-#: src/screens/Onboarding/StepFinished.tsx:137
+#: src/screens/Onboarding/StepFinished.tsx:234
 msgid "Flexible"
 msgstr "Fleksibel"
 
@@ -2022,7 +2075,7 @@ msgstr "Diikuti oleh {0}"
 msgid "Followed users"
 msgstr "Pengguna yang diikuti"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:152
+#: src/view/screens/PreferencesFollowingFeed.tsx:153
 msgid "Followed users only"
 msgstr "Hanya pengguna yang diikuti"
 
@@ -2040,7 +2093,9 @@ msgstr "Pengikut"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:233
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
+#: src/view/screens/Feeds.tsx:682
 #: src/view/screens/ProfileFollows.tsx:25
+#: src/view/screens/SavedFeeds.tsx:413
 msgid "Following"
 msgstr "Mengikuti"
 
@@ -2055,7 +2110,7 @@ msgstr "Preferensi feed Following"
 #: src/Navigation.tsx:269
 #: src/view/com/home/HomeHeaderLayout.web.tsx:64
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:87
-#: src/view/screens/PreferencesFollowingFeed.tsx:102
+#: src/view/screens/PreferencesFollowingFeed.tsx:103
 #: src/view/screens/Settings/index.tsx:573
 msgid "Following Feed Preferences"
 msgstr "Preferensi Feed Following"
@@ -2068,11 +2123,11 @@ msgstr "Mengikuti Anda"
 msgid "Follows You"
 msgstr "Mengikuti Anda"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:55
 msgid "Food"
 msgstr "Makanan"
 
-#: src/view/com/modals/DeleteAccount.tsx:111
+#: src/view/com/modals/DeleteAccount.tsx:110
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "Untuk alasan keamanan, kami akan mengirimkan kode konfirmasi ke alamat email Anda."
 
@@ -2085,15 +2140,15 @@ msgstr "Untuk alasan keamanan, Anda tidak akan dapat melihat ini lagi. Jika Anda
 msgid "Forgot Password"
 msgstr "Lupa Kata Sandi"
 
-#: src/screens/Login/LoginForm.tsx:218
+#: src/screens/Login/LoginForm.tsx:221
 msgid "Forgot password?"
 msgstr "Lupa kata sandi?"
 
-#: src/screens/Login/LoginForm.tsx:229
+#: src/screens/Login/LoginForm.tsx:232
 msgid "Forgot?"
 msgstr "Lupa?"
 
-#: src/lib/moderation/useReportOptions.ts:52
+#: src/lib/moderation/useReportOptions.ts:53
 msgid "Frequently Posts Unwanted Content"
 msgstr "Sering Memposting Konten yang Tidak Diinginkan"
 
@@ -2110,12 +2165,16 @@ msgstr "Dari <0/>"
 msgid "Gallery"
 msgstr "Galeri"
 
-#: src/view/com/modals/VerifyEmail.tsx:198
-#: src/view/com/modals/VerifyEmail.tsx:200
+#: src/view/com/modals/VerifyEmail.tsx:197
+#: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
 msgstr "Memulai"
 
-#: src/lib/moderation/useReportOptions.ts:37
+#: src/screens/Onboarding/StepProfile/index.tsx:228
+msgid "Give your profile a face"
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:38
 msgid "Glaring violations of law or terms of service"
 msgstr "Pelanggaran hukum atau ketentuan layanan secara terang-terangan"
 
@@ -2124,9 +2183,9 @@ msgstr "Pelanggaran hukum atau ketentuan layanan secara terang-terangan"
 #: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/auth/LoggedOut.tsx:83
 #: src/view/screens/NotFound.tsx:55
-#: src/view/screens/ProfileFeed.tsx:112
-#: src/view/screens/ProfileList.tsx:912
-#: src/view/shell/desktop/LeftNav.tsx:111
+#: src/view/screens/ProfileFeed.tsx:111
+#: src/view/screens/ProfileList.tsx:965
+#: src/view/shell/desktop/LeftNav.tsx:126
 msgid "Go back"
 msgstr "Kembali"
 
@@ -2134,12 +2193,13 @@ msgstr "Kembali"
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/view/screens/NotFound.tsx:54
-#: src/view/screens/ProfileFeed.tsx:117
-#: src/view/screens/ProfileList.tsx:917
+#: src/view/screens/ProfileFeed.tsx:116
+#: src/view/screens/ProfileList.tsx:970
 msgid "Go Back"
 msgstr "Kembali"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:73
+#: src/components/dms/MessageReportDialog.tsx:130
+#: src/components/ReportDialog/SelectReportOptionView.tsx:79
 #: src/components/ReportDialog/SubmitView.tsx:104
 #: src/screens/Onboarding/Layout.tsx:102
 #: src/screens/Onboarding/Layout.tsx:191
@@ -2165,11 +2225,11 @@ msgstr "Ke Beranda"
 msgid "Go to next"
 msgstr "Berikutnya"
 
-#: src/components/dms/ConvoMenu.tsx:114
+#: src/components/dms/ConvoMenu.tsx:131
 msgid "Go to profile"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:111
+#: src/components/dms/ConvoMenu.tsx:128
 msgid "Go to user's profile"
 msgstr ""
 
@@ -2177,7 +2237,7 @@ msgstr ""
 msgid "Graphic Media"
 msgstr "Media Sensitif"
 
-#: src/view/com/modals/ChangeHandle.tsx:267
+#: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
 msgstr "Handle"
 
@@ -2185,7 +2245,7 @@ msgstr "Handle"
 msgid "Haptics"
 msgstr "Haptik"
 
-#: src/lib/moderation/useReportOptions.ts:32
+#: src/lib/moderation/useReportOptions.ts:33
 msgid "Harassment, trolling, or intolerance"
 msgstr "Pelecehan, unggah sulut, atau intoleransi"
 
@@ -2193,7 +2253,7 @@ msgstr "Pelecehan, unggah sulut, atau intoleransi"
 msgid "Hashtag"
 msgstr "Tagar"
 
-#: src/components/RichText.tsx:206
+#: src/components/RichText.tsx:217
 msgid "Hashtag: #{tag}"
 msgstr "Tagar: #{tag}"
 
@@ -2202,9 +2262,13 @@ msgid "Having trouble?"
 msgstr "Mengalami masalah?"
 
 #: src/view/shell/desktop/RightNav.tsx:94
-#: src/view/shell/Drawer.tsx:345
+#: src/view/shell/Drawer.tsx:354
 msgid "Help"
 msgstr "Bantuan"
+
+#: src/screens/Onboarding/StepProfile/index.tsx:231
+msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
+msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 msgid "Here are some accounts for you to follow"
@@ -2258,23 +2322,23 @@ msgstr "Sembunyikan postingan ini?"
 msgid "Hide user list"
 msgstr "Sembunyikan daftar pengguna"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:111
+#: src/view/com/posts/FeedErrorMessage.tsx:118
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr "Hmm, ada masalah yang terjadi saat menghubungi server feed. Harap beri tahu pemilik feed tentang masalah ini."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:99
+#: src/view/com/posts/FeedErrorMessage.tsx:106
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr "Hmm, server feed tampaknya salah konfigurasi. Harap beri tahu pemilik feed tentang masalah ini."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:105
+#: src/view/com/posts/FeedErrorMessage.tsx:112
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr "Hmm, server feed tampaknya sedang offline. Harap beri tahu pemilik feed tentang masalah ini."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:102
+#: src/view/com/posts/FeedErrorMessage.tsx:109
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr "Hmm, server feed memberikan respons yang buruk. Harap beri tahu pemilik feed tentang masalah ini."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:96
+#: src/view/com/posts/FeedErrorMessage.tsx:103
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "Hmm, kami kesulitan menemukan feed ini. Mungkin sudah dihapus."
 
@@ -2287,21 +2351,21 @@ msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmmmm, kami tidak dapat memuat layanan moderasi."
 
 #: src/Navigation.tsx:497
-#: src/view/shell/bottom-bar/BottomBar.tsx:168
-#: src/view/shell/desktop/LeftNav.tsx:314
-#: src/view/shell/Drawer.tsx:422
-#: src/view/shell/Drawer.tsx:423
+#: src/view/shell/bottom-bar/BottomBar.tsx:176
+#: src/view/shell/desktop/LeftNav.tsx:321
+#: src/view/shell/Drawer.tsx:424
+#: src/view/shell/Drawer.tsx:425
 msgid "Home"
 msgstr "Beranda"
 
-#: src/view/com/modals/ChangeHandle.tsx:421
+#: src/view/com/modals/ChangeHandle.tsx:414
 msgid "Host:"
 msgstr "Host:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
-#: src/screens/Login/LoginForm.tsx:151
+#: src/screens/Login/LoginForm.tsx:154
 #: src/screens/Signup/StepInfo/index.tsx:40
-#: src/view/com/modals/ChangeHandle.tsx:282
+#: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
 msgstr "Provider hosting"
 
@@ -2309,25 +2373,29 @@ msgstr "Provider hosting"
 msgid "How should we open this link?"
 msgstr "Bagaimana kami harus membuka tautan ini?"
 
-#: src/view/com/modals/VerifyEmail.tsx:223
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:133
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:136
+#: src/view/com/modals/VerifyEmail.tsx:222
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:132
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:135
 msgid "I have a code"
 msgstr "Saya punya kode"
 
-#: src/view/com/modals/VerifyEmail.tsx:225
+#: src/view/com/modals/VerifyEmail.tsx:224
 msgid "I have a confirmation code"
 msgstr "Saya punya kode konfirmasi"
 
-#: src/view/com/modals/ChangeHandle.tsx:285
+#: src/view/com/modals/ChangeHandle.tsx:278
 msgid "I have my own domain"
 msgstr "Saya punya domain sendiri"
+
+#: src/components/dms/ConvoMenu.tsx:202
+msgid "I understand"
+msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "Jika teks alt panjang, alihkan status teks alt yang diperluas"
 
-#: src/view/com/modals/SelfLabel.tsx:127
+#: src/view/com/modals/SelfLabel.tsx:128
 msgid "If none are selected, suitable for all ages."
 msgstr "Jika tidak ada yang dipilih, cocok untuk semua umur."
 
@@ -2335,7 +2403,7 @@ msgstr "Jika tidak ada yang dipilih, cocok untuk semua umur."
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Jika Anda belum berusia dewasa menurut hukum negara Anda, orang tua atau wali sah Anda harus membaca Ketentuan ini atas nama Anda."
 
-#: src/view/screens/ProfileList.tsx:606
+#: src/view/screens/ProfileList.tsx:659
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Jika Anda menghapus daftar ini, Anda tidak dapat memulihkannya lagi."
 
@@ -2347,7 +2415,7 @@ msgstr "Jika Anda menghapus postingan ini, Anda tidak dapat memulihkannya lagi."
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "Jika Anda ingin mengubah kata sandi, kami akan mengirimkan kode untuk memverifikasi bahwa ini adalah akun Anda."
 
-#: src/lib/moderation/useReportOptions.ts:36
+#: src/lib/moderation/useReportOptions.ts:37
 msgid "Illegal and Urgent"
 msgstr "Ilegal dan Urgen"
 
@@ -2359,7 +2427,7 @@ msgstr "Gambar"
 msgid "Image alt text"
 msgstr "Teks alt gambar"
 
-#: src/lib/moderation/useReportOptions.ts:47
+#: src/lib/moderation/useReportOptions.ts:48
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr "Impersonasi atau klaim palsu tentang identitas atau afiliasi"
 
@@ -2367,7 +2435,7 @@ msgstr "Impersonasi atau klaim palsu tentang identitas atau afiliasi"
 msgid "Input code sent to your email for password reset"
 msgstr "Masukkan kode yang dikirim ke email Anda untuk pengaturan ulang kata sandi"
 
-#: src/view/com/modals/DeleteAccount.tsx:184
+#: src/view/com/modals/DeleteAccount.tsx:183
 msgid "Input confirmation code for account deletion"
 msgstr "Masukkan kode konfirmasi untuk penghapusan akun"
 
@@ -2379,27 +2447,27 @@ msgstr "Masukkan nama untuk kata sandi aplikasi"
 msgid "Input new password"
 msgstr "Masukkan kata sandi baru"
 
-#: src/view/com/modals/DeleteAccount.tsx:203
+#: src/view/com/modals/DeleteAccount.tsx:202
 msgid "Input password for account deletion"
 msgstr "Masukkan kata sandi untuk penghapusan akun"
 
-#: src/screens/Login/LoginForm.tsx:257
+#: src/screens/Login/LoginForm.tsx:260
 msgid "Input the code which has been emailed to you"
 msgstr "Masukkan kode yang telah dikirim ke email Anda"
 
-#: src/screens/Login/LoginForm.tsx:212
+#: src/screens/Login/LoginForm.tsx:215
 msgid "Input the password tied to {identifier}"
 msgstr "Masukkan kata sandi yang terkait dengan {identifier}"
 
-#: src/screens/Login/LoginForm.tsx:185
+#: src/screens/Login/LoginForm.tsx:188
 msgid "Input the username or email address you used at signup"
 msgstr "Masukkan nama pengguna atau alamat email yang Anda gunakan saat mendaftar"
 
-#: src/screens/Login/LoginForm.tsx:211
+#: src/screens/Login/LoginForm.tsx:214
 msgid "Input your password"
 msgstr "Masukkan kata sandi Anda"
 
-#: src/view/com/modals/ChangeHandle.tsx:390
+#: src/view/com/modals/ChangeHandle.tsx:383
 msgid "Input your preferred hosting provider"
 msgstr "Masukkan penyedia hosting pilihan Anda"
 
@@ -2407,8 +2475,8 @@ msgstr "Masukkan penyedia hosting pilihan Anda"
 msgid "Input your user handle"
 msgstr "Masukkan handle pengguna Anda"
 
-#: src/screens/Login/LoginForm.tsx:126
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:71
+#: src/screens/Login/LoginForm.tsx:129
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "Kode konfirmasi 2FA tidak valid."
 
@@ -2416,7 +2484,7 @@ msgstr "Kode konfirmasi 2FA tidak valid."
 msgid "Invalid or unsupported post record"
 msgstr "Catatan posting tidak valid atau tidak didukung"
 
-#: src/screens/Login/LoginForm.tsx:131
+#: src/screens/Login/LoginForm.tsx:134
 msgid "Invalid username or password"
 msgstr "Username atau kata sandi salah"
 
@@ -2428,7 +2496,7 @@ msgstr "Undang Teman"
 msgid "Invite code"
 msgstr "Kode Undangan"
 
-#: src/screens/Signup/state.ts:282
+#: src/screens/Signup/state.ts:272
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Kode undangan salah. Periksa bahwa Anda memasukkannya dengan benar dan coba lagi."
 
@@ -2448,7 +2516,7 @@ msgstr "Feed ini menampilkan postingan secara langsung dari orang yang Anda ikut
 msgid "Jobs"
 msgstr "Karir"
 
-#: src/screens/Onboarding/index.tsx:24
+#: src/screens/Onboarding/index.tsx:36
 msgid "Journalism"
 msgstr "Jurnalisme"
 
@@ -2476,11 +2544,11 @@ msgstr "Label adalah anotasi pada pengguna dan konten. Label dapat digunakan unt
 #~ msgid "labels have been placed on this {labelTarget}"
 #~ msgstr "label telah diterapkan pada {labelTarget} ini"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:62
+#: src/components/moderation/LabelsOnMeDialog.tsx:77
 msgid "Labels on your account"
 msgstr "Label pada akun Anda"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:64
+#: src/components/moderation/LabelsOnMeDialog.tsx:79
 msgid "Labels on your content"
 msgstr "Label pada konten Anda"
 
@@ -2528,13 +2596,13 @@ msgstr "Pelajari lebih lanjut tentang apa yang publik di Bluesky."
 msgid "Learn more."
 msgstr "Pelajari lebih lanjut."
 
-#: src/components/dms/ConvoMenu.tsx:175
+#: src/components/dms/ConvoMenu.tsx:191
 msgid "Leave"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:158
-#: src/components/dms/ConvoMenu.tsx:161
-#: src/components/dms/ConvoMenu.tsx:171
+#: src/components/dms/ConvoMenu.tsx:174
+#: src/components/dms/ConvoMenu.tsx:177
+#: src/components/dms/ConvoMenu.tsx:187
 msgid "Leave conversation"
 msgstr ""
 
@@ -2559,7 +2627,7 @@ msgstr "Penyimpanan lama dihapus, Anda perlu memulai ulang aplikasi sekarang."
 msgid "Let's get your password reset!"
 msgstr "Reset kata sandi Anda!"
 
-#: src/screens/Onboarding/StepFinished.tsx:157
+#: src/screens/Onboarding/StepFinished.tsx:254
 msgid "Let's go!"
 msgstr "Ayo!"
 
@@ -2572,7 +2640,7 @@ msgstr "Terang"
 #~ msgstr "Suka"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:266
-#: src/view/screens/ProfileFeed.tsx:589
+#: src/view/screens/ProfileFeed.tsx:570
 msgid "Like this feed"
 msgstr "Suka feed ini"
 
@@ -2626,19 +2694,19 @@ msgstr "Daftar"
 msgid "List Avatar"
 msgstr "Avatar Daftar"
 
-#: src/view/screens/ProfileList.tsx:313
+#: src/view/screens/ProfileList.tsx:353
 msgid "List blocked"
 msgstr "Daftar diblokir"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:219
+#: src/view/com/feeds/FeedSourceCard.tsx:221
 msgid "List by {0}"
 msgstr "Daftar oleh {0}"
 
-#: src/view/screens/ProfileList.tsx:357
+#: src/view/screens/ProfileList.tsx:392
 msgid "List deleted"
 msgstr "Daftar dihapus"
 
-#: src/view/screens/ProfileList.tsx:285
+#: src/view/screens/ProfileList.tsx:325
 msgid "List muted"
 msgstr "Daftar dibisukan"
 
@@ -2646,20 +2714,20 @@ msgstr "Daftar dibisukan"
 msgid "List Name"
 msgstr "Nama Daftar"
 
-#: src/view/screens/ProfileList.tsx:327
+#: src/view/screens/ProfileList.tsx:367
 msgid "List unblocked"
 msgstr "Daftar tidak diblokir"
 
-#: src/view/screens/ProfileList.tsx:299
+#: src/view/screens/ProfileList.tsx:339
 msgid "List unmuted"
 msgstr "Daftar tidak dibisukan"
 
 #: src/Navigation.tsx:121
 #: src/view/screens/Profile.tsx:192
 #: src/view/screens/Profile.tsx:198
-#: src/view/shell/desktop/LeftNav.tsx:397
-#: src/view/shell/Drawer.tsx:516
-#: src/view/shell/Drawer.tsx:517
+#: src/view/shell/desktop/LeftNav.tsx:367
+#: src/view/shell/Drawer.tsx:508
+#: src/view/shell/Drawer.tsx:509
 msgid "Lists"
 msgstr "Daftar"
 
@@ -2668,9 +2736,9 @@ msgid "Load new notifications"
 msgstr "Muat notifikasi baru"
 
 #: src/screens/Profile/Sections/Feed.tsx:86
-#: src/view/com/feeds/FeedPage.tsx:138
-#: src/view/screens/ProfileFeed.tsx:511
-#: src/view/screens/ProfileList.tsx:691
+#: src/view/com/feeds/FeedPage.tsx:142
+#: src/view/screens/ProfileFeed.tsx:492
+#: src/view/screens/ProfileList.tsx:744
 msgid "Load new posts"
 msgstr "Muat postingan baru"
 
@@ -2697,13 +2765,25 @@ msgstr "Visibilitas pengguna yang tidak login"
 msgid "Login to account that is not listed"
 msgstr "Masuk ke akun yang tidak ada di daftar"
 
-#: src/components/RichText.tsx:207
+#: src/components/RichText.tsx:218
 msgid "Long press to open tag menu for #{tag}"
 msgstr "Tekan lama untuk membuka menu tagar untuk #{tag}"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Seperti XXXXX-XXXXX"
+
+#: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
+msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
+msgstr ""
+
+#: src/screens/Home/NoFeedsPinned.tsx:96
+msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
+msgstr ""
+
+#: src/screens/Feeds/NoFollowingFeed.tsx:38
+msgid "Looks like you're missing a following feed."
+msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2712,6 +2792,11 @@ msgstr "Pastikan ini adalah website yang Anda tuju!"
 #: src/components/dialogs/MutedWords.tsx:82
 msgid "Manage your muted words and tags"
 msgstr "Kelola kata dan tagar yang dibisukan"
+
+#: src/components/dms/ConvoMenu.tsx:115
+#: src/components/dms/ConvoMenu.tsx:122
+msgid "Mark as read"
+msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:89
 #: src/view/screens/Profile.tsx:195
@@ -2731,30 +2816,35 @@ msgstr "Pengguna yang disebutkan"
 msgid "Menu"
 msgstr "Menu"
 
-#: src/components/dms/MessageMenu.tsx:56
-#: src/screens/Messages/List/index.tsx:245
+#: src/components/dms/MessageMenu.tsx:60
+#: src/screens/Messages/List/ChatListItem.tsx:44
 msgid "Message deleted"
 msgstr ""
 
-#: src/view/com/posts/FeedErrorMessage.tsx:192
+#: src/view/com/posts/FeedErrorMessage.tsx:201
 msgid "Message from server: {0}"
 msgstr "Pesan dari server: {0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:79
+#: src/screens/Messages/Conversation/MessageInput.tsx:93
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/List/index.tsx:62
-#: src/screens/Messages/List/index.tsx:374
+#: src/screens/Messages/Conversation/MessageInput.tsx:50
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:33
+msgid "Message is too long"
+msgstr ""
+
+#: src/screens/Messages/List/index.tsx:85
+#: src/screens/Messages/List/index.tsx:283
 msgid "Message settings"
 msgstr "Pengaturan pesan"
 
 #: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:163
-#: src/screens/Messages/List/index.tsx:190
-#: src/screens/Messages/List/index.tsx:370
-#: src/view/shell/bottom-bar/BottomBar.tsx:261
-#: src/view/shell/desktop/LeftNav.tsx:360
+#: src/screens/Messages/List/index.tsx:187
+#: src/screens/Messages/List/index.tsx:214
+#: src/screens/Messages/List/index.tsx:279
+#: src/view/shell/bottom-bar/BottomBar.tsx:219
+#: src/view/shell/desktop/LeftNav.tsx:344
 msgid "Messages"
 msgstr "Pesan"
 
@@ -2762,7 +2852,7 @@ msgstr "Pesan"
 msgid "Messaging settings"
 msgstr "Pengaturan perpesanan"
 
-#: src/lib/moderation/useReportOptions.ts:45
+#: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
 msgstr "Akun Menyesatkan"
 
@@ -2781,13 +2871,13 @@ msgstr "Detail moderasi"
 msgid "Moderation list by {0}"
 msgstr "Daftar moderasi oleh {0}"
 
-#: src/view/screens/ProfileList.tsx:785
+#: src/view/screens/ProfileList.tsx:838
 msgid "Moderation list by <0/>"
 msgstr "Daftar moderasi oleh <0/>"
 
 #: src/view/com/lists/ListCard.tsx:91
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
-#: src/view/screens/ProfileList.tsx:783
+#: src/view/screens/ProfileList.tsx:836
 msgid "Moderation list by you"
 msgstr "Daftar moderasi Anda"
 
@@ -2829,11 +2919,11 @@ msgstr "Moderator telah memilih untuk menetapkan peringatan umum pada konten."
 msgid "More"
 msgstr "Lainnya"
 
-#: src/view/shell/desktop/Feeds.tsx:65
+#: src/view/shell/desktop/Feeds.tsx:55
 msgid "More feeds"
 msgstr "Feed lainnya"
 
-#: src/view/screens/ProfileList.tsx:595
+#: src/view/screens/ProfileList.tsx:648
 msgid "More options"
 msgstr "Pilihan lainnya"
 
@@ -2854,7 +2944,7 @@ msgstr "Bisukan {truncatedTag}"
 msgid "Mute Account"
 msgstr "Bisukan Akun"
 
-#: src/view/screens/ProfileList.tsx:514
+#: src/view/screens/ProfileList.tsx:567
 msgid "Mute accounts"
 msgstr "Bisukan akun"
 
@@ -2870,16 +2960,16 @@ msgstr "Bisukan di tagar saja"
 msgid "Mute in text & tags"
 msgstr "Bisukan di teks & tagar"
 
-#: src/view/screens/ProfileList.tsx:620
+#: src/view/screens/ProfileList.tsx:673
 msgid "Mute list"
 msgstr "Bisukan daftar"
 
-#: src/components/dms/ConvoMenu.tsx:119
-#: src/components/dms/ConvoMenu.tsx:125
+#: src/components/dms/ConvoMenu.tsx:136
+#: src/components/dms/ConvoMenu.tsx:142
 msgid "Mute notifications"
 msgstr ""
 
-#: src/view/screens/ProfileList.tsx:615
+#: src/view/screens/ProfileList.tsx:668
 msgid "Mute these accounts?"
 msgstr "Bisukan akun ini?"
 
@@ -2926,7 +3016,7 @@ msgstr "Dibisukan oleh \"{0}\""
 msgid "Muted words & tags"
 msgstr "Kata & tagar yang dibisukan"
 
-#: src/view/screens/ProfileList.tsx:617
+#: src/view/screens/ProfileList.tsx:670
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Pembisuan akun bersifat privat. Akun yang dibisukan tetap dapat berinteraksi dengan Anda, namun Anda tidak akan melihat postingan atau notifikasi dari mereka."
 
@@ -2935,11 +3025,11 @@ msgstr "Pembisuan akun bersifat privat. Akun yang dibisukan tetap dapat berinter
 msgid "My Birthday"
 msgstr "Tanggal Lahir Saya"
 
-#: src/view/screens/Feeds.tsx:688
+#: src/view/screens/Feeds.tsx:794
 msgid "My Feeds"
 msgstr "Feed Saya"
 
-#: src/view/shell/desktop/LeftNav.tsx:68
+#: src/view/shell/desktop/LeftNav.tsx:83
 msgid "My Profile"
 msgstr "Profil Saya"
 
@@ -2960,27 +3050,27 @@ msgstr "Nama"
 msgid "Name is required"
 msgstr "Nama harus diisi"
 
-#: src/lib/moderation/useReportOptions.ts:57
-#: src/lib/moderation/useReportOptions.ts:78
-#: src/lib/moderation/useReportOptions.ts:86
+#: src/lib/moderation/useReportOptions.ts:58
+#: src/lib/moderation/useReportOptions.ts:92
+#: src/lib/moderation/useReportOptions.ts:100
 msgid "Name or Description Violates Community Standards"
 msgstr "Nama atau Deskripsi Melanggar Standar Komunitas"
 
-#: src/screens/Onboarding/index.tsx:25
+#: src/screens/Onboarding/index.tsx:37
 msgid "Nature"
 msgstr "Alam"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:303
+#: src/screens/Login/LoginForm.tsx:306
 #: src/view/com/modals/ChangePassword.tsx:170
 msgid "Navigates to the next screen"
 msgstr "Menuju ke layar berikutnya"
 
-#: src/view/shell/Drawer.tsx:70
+#: src/view/shell/Drawer.tsx:79
 msgid "Navigates to your profile"
 msgstr "Menuju ke profil Anda"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:123
+#: src/components/ReportDialog/SelectReportOptionView.tsx:129
 msgid "Need to report a copyright violation?"
 msgstr "Perlu melaporkan pelanggaran hak cipta?"
 
@@ -2989,11 +3079,11 @@ msgstr "Perlu melaporkan pelanggaran hak cipta?"
 #~ msgid "Never lose access to your followers and data."
 #~ msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:125
+#: src/screens/Onboarding/StepFinished.tsx:222
 msgid "Never lose access to your followers or data."
 msgstr "Tidak akan lagi kehilangan akses ke data dan pengikut Anda."
 
-#: src/view/com/modals/ChangeHandle.tsx:522
+#: src/view/com/modals/ChangeHandle.tsx:515
 msgid "Nevermind, create a handle for me"
 msgstr "Tidak usah, buatkan handle untuk saya"
 
@@ -3007,8 +3097,8 @@ msgid "New"
 msgstr "Baru"
 
 #: src/components/dms/NewChat.tsx:60
-#: src/screens/Messages/List/index.tsx:384
-#: src/screens/Messages/List/index.tsx:392
+#: src/screens/Messages/List/index.tsx:293
+#: src/screens/Messages/List/index.tsx:301
 msgid "New chat"
 msgstr ""
 
@@ -3024,22 +3114,22 @@ msgstr "Kata sandi baru"
 msgid "New Password"
 msgstr "Kata Sandi Baru"
 
-#: src/view/com/feeds/FeedPage.tsx:149
+#: src/view/com/feeds/FeedPage.tsx:153
 msgctxt "action"
 msgid "New post"
 msgstr "Postingan baru"
 
-#: src/view/screens/Feeds.tsx:580
+#: src/view/screens/Feeds.tsx:626
 #: src/view/screens/Notifications.tsx:168
 #: src/view/screens/Profile.tsx:464
-#: src/view/screens/ProfileFeed.tsx:445
+#: src/view/screens/ProfileFeed.tsx:426
 #: src/view/screens/ProfileList.tsx:200
 #: src/view/screens/ProfileList.tsx:228
-#: src/view/shell/desktop/LeftNav.tsx:255
+#: src/view/shell/desktop/LeftNav.tsx:270
 msgid "New post"
 msgstr "Postingan baru"
 
-#: src/view/shell/desktop/LeftNav.tsx:265
+#: src/view/shell/desktop/LeftNav.tsx:276
 msgctxt "action"
 msgid "New Post"
 msgstr "Postingan baru"
@@ -3052,14 +3142,14 @@ msgstr "Daftar Pengguna Baru"
 msgid "Newest replies first"
 msgstr "Balasan terbaru terlebih dahulu"
 
-#: src/screens/Onboarding/index.tsx:23
+#: src/screens/Onboarding/index.tsx:35
 msgid "News"
 msgstr "Berita"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/ForgotPasswordForm.tsx:150
-#: src/screens/Login/LoginForm.tsx:302
-#: src/screens/Login/LoginForm.tsx:309
+#: src/screens/Login/LoginForm.tsx:305
+#: src/screens/Login/LoginForm.tsx:312
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Signup/index.tsx:220
@@ -3077,21 +3167,21 @@ msgstr "Berikutnya"
 msgid "Next image"
 msgstr "Gambar berikutnya"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:127
-#: src/view/screens/PreferencesFollowingFeed.tsx:198
-#: src/view/screens/PreferencesFollowingFeed.tsx:233
-#: src/view/screens/PreferencesFollowingFeed.tsx:270
+#: src/view/screens/PreferencesFollowingFeed.tsx:128
+#: src/view/screens/PreferencesFollowingFeed.tsx:199
+#: src/view/screens/PreferencesFollowingFeed.tsx:234
+#: src/view/screens/PreferencesFollowingFeed.tsx:271
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "Tidak"
 
-#: src/view/screens/ProfileFeed.tsx:578
-#: src/view/screens/ProfileList.tsx:765
+#: src/view/screens/ProfileFeed.tsx:559
+#: src/view/screens/ProfileList.tsx:818
 msgid "No description"
 msgstr "Tidak ada deskripsi"
 
-#: src/view/com/modals/ChangeHandle.tsx:406
+#: src/view/com/modals/ChangeHandle.tsx:399
 msgid "No DNS Panel"
 msgstr "Tanpa Panel DNS"
 
@@ -3107,8 +3197,8 @@ msgstr "Tidak lagi mengikuti {0}"
 msgid "No longer than 253 characters"
 msgstr "Tidak lebih dari 253 karakter"
 
-#: src/screens/Messages/List/index.tsx:174
-#: src/screens/Messages/List/index.tsx:234
+#: src/screens/Messages/List/ChatListItem.tsx:33
+#: src/screens/Messages/List/index.tsx:198
 msgid "No messages yet"
 msgstr ""
 
@@ -3125,7 +3215,7 @@ msgstr "Tidak ada hasil"
 msgid "No results found"
 msgstr "Tidak ada hasil yang ditemukan"
 
-#: src/view/screens/Feeds.tsx:520
+#: src/view/screens/Feeds.tsx:555
 msgid "No results found for \"{query}\""
 msgstr "Tidak ada hasil ditemukan untuk \"{query}\""
 
@@ -3170,8 +3260,8 @@ msgstr "Ketelanjangan Non-Seksual"
 msgid "Not Found"
 msgstr "Tidak ditemukan"
 
-#: src/view/com/modals/VerifyEmail.tsx:255
-#: src/view/com/modals/VerifyEmail.tsx:261
+#: src/view/com/modals/VerifyEmail.tsx:254
+#: src/view/com/modals/VerifyEmail.tsx:260
 msgid "Not right now"
 msgstr "Jangan sekarang"
 
@@ -3188,22 +3278,22 @@ msgstr "Catatan: Bluesky merupakan jaringan terbuka dan publik. Pengaturan ini h
 #: src/Navigation.tsx:512
 #: src/view/screens/Notifications.tsx:124
 #: src/view/screens/Notifications.tsx:148
-#: src/view/shell/bottom-bar/BottomBar.tsx:236
-#: src/view/shell/desktop/LeftNav.tsx:351
-#: src/view/shell/Drawer.tsx:459
-#: src/view/shell/Drawer.tsx:460
+#: src/view/shell/bottom-bar/BottomBar.tsx:268
+#: src/view/shell/desktop/LeftNav.tsx:336
+#: src/view/shell/Drawer.tsx:456
+#: src/view/shell/Drawer.tsx:457
 msgid "Notifications"
 msgstr "Notifikasi"
 
-#: src/components/dms/MessageItem.tsx:139
+#: src/components/dms/MessageItem.tsx:145
 msgid "Now"
 msgstr ""
 
-#: src/view/com/modals/SelfLabel.tsx:103
+#: src/view/com/modals/SelfLabel.tsx:104
 msgid "Nudity"
 msgstr "Ketelanjangan"
 
-#: src/lib/moderation/useReportOptions.ts:71
+#: src/lib/moderation/useReportOptions.ts:72
 msgid "Nudity or adult content not labeled as such"
 msgstr "Ketelanjangan atau konten dewasa yang tidak dilabeli sedemikian rupa"
 
@@ -3220,7 +3310,7 @@ msgstr "Matikan"
 msgid "Oh no!"
 msgstr "Oh tidak!"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:133
+#: src/screens/Onboarding/StepInterests/index.tsx:143
 msgid "Oh no! Something went wrong."
 msgstr "Oh tidak! Sepertinya ada yang salah."
 
@@ -3245,6 +3335,10 @@ msgstr "Atur ulang orientasi"
 msgid "One or more images is missing alt text."
 msgstr "Satu atau lebih gambar belum ada teks alt."
 
+#: src/screens/Onboarding/StepProfile/index.tsx:120
+msgid "Only .jpg and .png files are supported"
+msgstr ""
+
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
 msgstr "Hanya {0} dapat membalas."
@@ -3263,16 +3357,20 @@ msgstr "Oops, sepertinya ada yang salah!"
 msgid "Oops!"
 msgstr "Uups!"
 
-#: src/screens/Onboarding/StepFinished.tsx:121
+#: src/screens/Onboarding/StepFinished.tsx:218
 msgid "Open"
 msgstr "Buka"
+
+#: src/screens/Onboarding/StepProfile/index.tsx:280
+msgid "Open avatar creator"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:555
 #: src/view/com/composer/Composer.tsx:556
 msgid "Open emoji picker"
 msgstr "Buka pemilih emoji"
 
-#: src/view/screens/ProfileFeed.tsx:311
+#: src/view/screens/ProfileFeed.tsx:295
 msgid "Open feed options menu"
 msgstr "Buka menu opsi feed"
 
@@ -3375,7 +3473,7 @@ msgstr "Membuka modal untuk mengunduh data akun (repositori) Bluesky Anda"
 msgid "Opens modal for email verification"
 msgstr "Membuka modal untuk verifikasi email"
 
-#: src/view/com/modals/ChangeHandle.tsx:283
+#: src/view/com/modals/ChangeHandle.tsx:276
 msgid "Opens modal for using custom domain"
 msgstr "Buka modal untuk menggunakan domain kustom"
 
@@ -3383,12 +3481,12 @@ msgstr "Buka modal untuk menggunakan domain kustom"
 msgid "Opens moderation settings"
 msgstr "Buka pengaturan moderasi"
 
-#: src/screens/Login/LoginForm.tsx:219
+#: src/screens/Login/LoginForm.tsx:222
 msgid "Opens password reset form"
 msgstr "Membuka formulir pengaturan ulang kata sandi"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:77
-#: src/view/screens/Feeds.tsx:381
+#: src/view/screens/Feeds.tsx:416
 msgid "Opens screen to edit Saved Feeds"
 msgstr "Membuka layar untuk mengedit Feed Tersimpan"
 
@@ -3408,7 +3506,7 @@ msgstr "Membuka preferensi feed Following"
 msgid "Opens the linked website"
 msgstr "Membuka situs web tertaut"
 
-#: src/screens/Messages/List/index.tsx:63
+#: src/screens/Messages/List/index.tsx:86
 msgid "Opens the message settings page"
 msgstr "Membuka halaman pengaturan perpesanan"
 
@@ -3429,6 +3527,7 @@ msgstr "Buka preferensi utasan"
 msgid "Option {0} of {numItems}"
 msgstr "Opsi {0} dari {numItems}"
 
+#: src/components/dms/MessageReportDialog.tsx:156
 #: src/components/ReportDialog/SubmitView.tsx:162
 msgid "Optionally provide additional information below:"
 msgstr "Jika perlu, berikan informasi tambahan di bawah ini:"
@@ -3437,7 +3536,7 @@ msgstr "Jika perlu, berikan informasi tambahan di bawah ini:"
 msgid "Or combine these options:"
 msgstr "Atau gabungkan opsi-opsi berikut:"
 
-#: src/lib/moderation/useReportOptions.ts:25
+#: src/lib/moderation/useReportOptions.ts:26
 msgid "Other"
 msgstr "Lainnya"
 
@@ -3458,10 +3557,10 @@ msgstr "Halaman tidak ditemukan"
 msgid "Page Not Found"
 msgstr "Halaman Tidak Ditemukan"
 
-#: src/screens/Login/LoginForm.tsx:195
+#: src/screens/Login/LoginForm.tsx:198
 #: src/screens/Signup/StepInfo/index.tsx:102
-#: src/view/com/modals/DeleteAccount.tsx:195
-#: src/view/com/modals/DeleteAccount.tsx:202
+#: src/view/com/modals/DeleteAccount.tsx:194
+#: src/view/com/modals/DeleteAccount.tsx:201
 msgid "Password"
 msgstr "Kata sandi"
 
@@ -3493,32 +3592,32 @@ msgstr "Orang yang diikuti oleh @{0}"
 msgid "People following @{0}"
 msgstr "Orang yang mengikuti @{0}"
 
-#: src/view/com/lightbox/Lightbox.tsx:66
+#: src/view/com/lightbox/Lightbox.tsx:67
 msgid "Permission to access camera roll is required."
 msgstr "Diperlukan izin untuk mengakses rol kamera."
 
-#: src/view/com/lightbox/Lightbox.tsx:72
+#: src/view/com/lightbox/Lightbox.tsx:73
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "Izin untuk mengakses rol kamera ditolak. Silakan aktifkan di pengaturan sistem Anda."
 
-#: src/screens/Onboarding/index.tsx:31
+#: src/screens/Onboarding/index.tsx:43
 msgid "Pets"
 msgstr "Hewan Peliharaan"
 
-#: src/view/com/modals/SelfLabel.tsx:121
+#: src/view/com/modals/SelfLabel.tsx:122
 msgid "Pictures meant for adults."
 msgstr "Gambar yang ditujukan untuk orang dewasa."
 
-#: src/view/screens/ProfileFeed.tsx:303
-#: src/view/screens/ProfileList.tsx:559
+#: src/view/screens/ProfileFeed.tsx:287
+#: src/view/screens/ProfileList.tsx:612
 msgid "Pin to home"
 msgstr "Sematkan ke beranda"
 
-#: src/view/screens/ProfileFeed.tsx:306
+#: src/view/screens/ProfileFeed.tsx:290
 msgid "Pin to Home"
 msgstr "Sematkan ke Beranda"
 
-#: src/view/screens/SavedFeeds.tsx:89
+#: src/view/screens/SavedFeeds.tsx:102
 msgid "Pinned Feeds"
 msgstr "Feed Tersemat"
 
@@ -3543,19 +3642,19 @@ msgstr "Putar Video"
 msgid "Plays the GIF"
 msgstr "Putar GIF"
 
-#: src/screens/Signup/state.ts:241
+#: src/screens/Signup/state.ts:234
 msgid "Please choose your handle."
 msgstr "Silakan pilih handle Anda."
 
-#: src/screens/Signup/state.ts:234
+#: src/screens/Signup/state.ts:227
 msgid "Please choose your password."
 msgstr "Masukkan kata sandi Anda."
 
-#: src/screens/Signup/state.ts:255
+#: src/screens/Signup/state.ts:248
 msgid "Please complete the verification captcha."
 msgstr "Mohon selesaikan verifikasi captcha."
 
-#: src/view/com/modals/ChangeEmail.tsx:69
+#: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
 msgstr "Harap konfirmasi email Anda sebelum mengubahnya. Ini adalah persyaratan sementara selama alat pembaruan email ditambahkan, dan akan segera dihapus."
 
@@ -3571,15 +3670,15 @@ msgstr "Masukkan nama unik untuk Kata Sandi Aplikasi ini atau gunakan nama yang 
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "Silakan masukkan kata, tagar, atau frasa yang valid untuk dibisukan"
 
-#: src/screens/Signup/state.ts:220
+#: src/screens/Signup/state.ts:213
 msgid "Please enter your email."
 msgstr "Masukkan email Anda."
 
-#: src/view/com/modals/DeleteAccount.tsx:191
+#: src/view/com/modals/DeleteAccount.tsx:190
 msgid "Please enter your password as well:"
 msgstr "Masukkan juga kata sandi Anda:"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:222
+#: src/components/moderation/LabelsOnMeDialog.tsx:248
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "Jelaskan menurut Anda mengapa {0} salah menerapkan label ini"
 
@@ -3587,7 +3686,7 @@ msgstr "Jelaskan menurut Anda mengapa {0} salah menerapkan label ini"
 msgid "Please sign in as @{0}"
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:110
+#: src/view/com/modals/VerifyEmail.tsx:109
 msgid "Please Verify Your Email"
 msgstr "Mohon Verifikasi Email Anda"
 
@@ -3595,11 +3694,11 @@ msgstr "Mohon Verifikasi Email Anda"
 msgid "Please wait for your link card to finish loading"
 msgstr "Harap tunggu hingga kartu tautan Anda selesai dimuat"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:49
 msgid "Politics"
 msgstr "Politik"
 
-#: src/view/com/modals/SelfLabel.tsx:111
+#: src/view/com/modals/SelfLabel.tsx:112
 msgid "Porn"
 msgstr "Pornografi"
 
@@ -3667,7 +3766,7 @@ msgstr "Postingan"
 msgid "Posts can be muted based on their text, their tags, or both."
 msgstr "Postingan dapat dibisukan berdasarkan teks, tagar mereka, atau keduanya."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:64
+#: src/view/com/posts/FeedErrorMessage.tsx:69
 msgid "Posts hidden"
 msgstr "Postingan disembunyikan"
 
@@ -3681,15 +3780,15 @@ msgstr "Tekan untuk mengganti penyedia hosting"
 
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:83
-#: src/screens/Messages/Conversation/MessageListError.tsx:48
+#: src/screens/Messages/Conversation/MessageListError.tsx:59
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
 msgstr "Tekan untuk mengulangi"
 
 #: src/screens/Messages/Conversation/MessagesList.tsx:47
 #: src/screens/Messages/Conversation/MessagesList.tsx:53
-msgid "Press to Retry"
-msgstr ""
+#~ msgid "Press to Retry"
+#~ msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -3712,7 +3811,7 @@ msgstr "Privasi"
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings/index.tsx:890
-#: src/view/shell/Drawer.tsx:275
+#: src/view/shell/Drawer.tsx:284
 msgid "Privacy Policy"
 msgstr "Kebijakan Privasi"
 
@@ -3725,11 +3824,11 @@ msgstr "Memproses..."
 msgid "profile"
 msgstr "profil"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:303
-#: src/view/shell/desktop/LeftNav.tsx:415
-#: src/view/shell/Drawer.tsx:69
-#: src/view/shell/Drawer.tsx:551
-#: src/view/shell/Drawer.tsx:552
+#: src/view/shell/bottom-bar/BottomBar.tsx:313
+#: src/view/shell/desktop/LeftNav.tsx:373
+#: src/view/shell/Drawer.tsx:78
+#: src/view/shell/Drawer.tsx:541
+#: src/view/shell/Drawer.tsx:542
 msgid "Profile"
 msgstr "Profil"
 
@@ -3741,7 +3840,7 @@ msgstr "Profil diperbarui"
 msgid "Protect your account by verifying your email."
 msgstr "Amankan akun Anda dengan memverifikasi email Anda."
 
-#: src/screens/Onboarding/StepFinished.tsx:107
+#: src/screens/Onboarding/StepFinished.tsx:204
 msgid "Public"
 msgstr "Publik"
 
@@ -3783,6 +3882,10 @@ msgstr "Acak (alias \"Rolet Poster\")"
 msgid "Ratios"
 msgstr "Rasio"
 
+#: src/components/dms/MessageReportDialog.tsx:149
+msgid "Reason: {0}"
+msgstr ""
+
 #: src/view/screens/Search/Search.tsx:886
 msgid "Recent Searches"
 msgstr "Pencarian terakhir"
@@ -3796,11 +3899,11 @@ msgstr "Pencarian terakhir"
 #~ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:286
-#: src/view/com/feeds/FeedSourceCard.tsx:283
+#: src/view/com/feeds/FeedSourceCard.tsx:285
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
-#: src/view/com/modals/SelfLabel.tsx:83
+#: src/view/com/modals/SelfLabel.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
-#: src/view/com/posts/FeedErrorMessage.tsx:204
+#: src/view/com/posts/FeedErrorMessage.tsx:213
 msgid "Remove"
 msgstr "Hapus"
 
@@ -3816,22 +3919,25 @@ msgstr "Hapus Avatar"
 msgid "Remove Banner"
 msgstr "Hapus Banner"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:160
+#: src/view/com/posts/FeedErrorMessage.tsx:169
+#: src/view/com/posts/FeedShutdownMsg.tsx:113
+#: src/view/com/posts/FeedShutdownMsg.tsx:117
 msgid "Remove feed"
 msgstr "Hapus feed"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:201
+#: src/view/com/posts/FeedErrorMessage.tsx:210
 msgid "Remove feed?"
 msgstr "Hapus feed?"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:172
-#: src/view/com/feeds/FeedSourceCard.tsx:232
-#: src/view/screens/ProfileFeed.tsx:346
-#: src/view/screens/ProfileFeed.tsx:352
+#: src/view/com/feeds/FeedSourceCard.tsx:174
+#: src/view/com/feeds/FeedSourceCard.tsx:234
+#: src/view/screens/ProfileFeed.tsx:330
+#: src/view/screens/ProfileFeed.tsx:336
+#: src/view/screens/ProfileList.tsx:438
 msgid "Remove from my feeds"
 msgstr "Hapus dari feed saya"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:278
+#: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Remove from my feeds?"
 msgstr "Hapus dari feed saya?"
 
@@ -3855,7 +3961,7 @@ msgstr "Hapus kutipan"
 msgid "Remove repost"
 msgstr "Hapus postingan ulang"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:202
+#: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
 msgstr "Hapus feed ini dari feed tersimpan Anda"
 
@@ -3864,11 +3970,13 @@ msgstr "Hapus feed ini dari feed tersimpan Anda"
 msgid "Removed from list"
 msgstr "Dihapus dari daftar"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:120
+#: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Removed from my feeds"
 msgstr "Dihapus dari feed saya"
 
-#: src/view/screens/ProfileFeed.tsx:210
+#: src/view/com/posts/FeedShutdownMsg.tsx:44
+#: src/view/screens/ProfileFeed.tsx:191
+#: src/view/screens/ProfileList.tsx:315
 msgid "Removed from your feeds"
 msgstr "Dihapus dari feed Anda"
 
@@ -3879,6 +3987,11 @@ msgstr "Menghapus gambar pra tinjau bawaan dari {0}"
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:224
 msgid "Removes quoted post"
 msgstr "Hapus kutipan postingan"
+
+#: src/view/com/posts/FeedShutdownMsg.tsx:126
+#: src/view/com/posts/FeedShutdownMsg.tsx:130
+msgid "Replace with Discover"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:194
 msgid "Replies"
@@ -3893,7 +4006,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr "Balas"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:142
+#: src/view/screens/PreferencesFollowingFeed.tsx:143
 msgid "Reply Filters"
 msgstr "Penyaring Balasan"
 
@@ -3915,24 +4028,30 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:146
 #: src/components/dms/ConvoMenu.tsx:150
-msgid "Report account"
-msgstr ""
+#~ msgid "Report account"
+#~ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
 msgstr "Laporkan Akun"
 
+#: src/components/dms/ConvoMenu.tsx:163
+#: src/components/dms/ConvoMenu.tsx:166
+#: src/components/dms/ConvoMenu.tsx:198
+msgid "Report conversation"
+msgstr ""
+
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
 msgstr "Dialog laporan"
 
-#: src/view/screens/ProfileFeed.tsx:363
-#: src/view/screens/ProfileFeed.tsx:365
+#: src/view/screens/ProfileFeed.tsx:347
+#: src/view/screens/ProfileFeed.tsx:349
 msgid "Report feed"
 msgstr "Laporkan feed"
 
-#: src/view/screens/ProfileList.tsx:431
+#: src/view/screens/ProfileList.tsx:480
 msgid "Report List"
 msgstr "Laporkan Daftar"
 
@@ -3945,30 +4064,36 @@ msgstr ""
 msgid "Report post"
 msgstr "Laporkan postingan"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:42
+#: src/components/ReportDialog/SelectReportOptionView.tsx:45
 msgid "Report this content"
 msgstr "Laporkan konten ini"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:55
+#: src/components/ReportDialog/SelectReportOptionView.tsx:58
 msgid "Report this feed"
 msgstr "Laporkan feed ini"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:52
+#: src/components/ReportDialog/SelectReportOptionView.tsx:55
 msgid "Report this list"
 msgstr "Laporkan daftar ini"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:49
+#: src/components/dms/MessageReportDialog.tsx:41
+#: src/components/dms/MessageReportDialog.tsx:137
+#: src/components/ReportDialog/SelectReportOptionView.tsx:61
+msgid "Report this message"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:52
 msgid "Report this post"
 msgstr "Laporkan postingan ini"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:46
+#: src/components/ReportDialog/SelectReportOptionView.tsx:49
 msgid "Report this user"
 msgstr "Laporkan pengguna ini"
 
 #: src/view/com/modals/Repost.tsx:44
 #: src/view/com/modals/Repost.tsx:49
 #: src/view/com/modals/Repost.tsx:54
-#: src/view/com/util/post-ctrls/RepostButton.tsx:60
+#: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgctxt "action"
 msgid "Repost"
 msgstr "Posting ulang"
@@ -4006,8 +4131,8 @@ msgstr "memposting ulang postingan Anda"
 msgid "Reposts of this post"
 msgstr "Posting ulang postingan ini"
 
-#: src/view/com/modals/ChangeEmail.tsx:183
-#: src/view/com/modals/ChangeEmail.tsx:185
+#: src/view/com/modals/ChangeEmail.tsx:176
+#: src/view/com/modals/ChangeEmail.tsx:178
 msgid "Request Change"
 msgstr "Ajukan Perubahan"
 
@@ -4020,7 +4145,7 @@ msgstr "Minta Kode"
 msgid "Require alt text before posting"
 msgstr "Wajibkan teks alt sebelum memposting"
 
-#: src/view/screens/Settings/Email2FAToggle.tsx:54
+#: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
 msgstr "Gunakan kode email untuk masuk ke akun Anda"
 
@@ -4028,8 +4153,8 @@ msgstr "Gunakan kode email untuk masuk ke akun Anda"
 msgid "Required for this provider"
 msgstr "Diwajibkan untuk provider ini"
 
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:169
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:172
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
 msgid "Resend email"
 msgstr "Kirim ulang email"
 
@@ -4063,7 +4188,7 @@ msgstr "Reset status onboarding"
 msgid "Resets the preferences state"
 msgstr "Reset status preferensi"
 
-#: src/screens/Login/LoginForm.tsx:283
+#: src/screens/Login/LoginForm.tsx:286
 msgid "Retries login"
 msgstr "Mencoba masuk kembali"
 
@@ -4072,13 +4197,14 @@ msgstr "Mencoba masuk kembali"
 msgid "Retries the last action, which errored out"
 msgstr "Coba kembali tindakan terakhir, yang gagal"
 
-#: src/components/dms/MessageMenu.tsx:134
+#: src/components/dms/MessageMenu.tsx:136
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:94
-#: src/screens/Login/LoginForm.tsx:282
-#: src/screens/Login/LoginForm.tsx:289
-#: src/screens/Onboarding/StepInterests/index.tsx:226
-#: src/screens/Onboarding/StepInterests/index.tsx:229
+#: src/screens/Login/LoginForm.tsx:285
+#: src/screens/Login/LoginForm.tsx:292
+#: src/screens/Messages/Conversation/MessageListError.tsx:68
+#: src/screens/Onboarding/StepInterests/index.tsx:236
+#: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Signup/index.tsx:207
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
@@ -4086,11 +4212,11 @@ msgid "Retry"
 msgstr "Ulangi"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:54
-msgid "Retry."
-msgstr ""
+#~ msgid "Retry."
+#~ msgstr ""
 
 #: src/components/Error.tsx:98
-#: src/view/screens/ProfileList.tsx:913
+#: src/view/screens/ProfileList.tsx:966
 msgid "Return to previous page"
 msgstr "Kembali ke halaman sebelumnya"
 
@@ -4099,20 +4225,20 @@ msgid "Returns to home page"
 msgstr "Kembali ke beranda"
 
 #: src/view/screens/NotFound.tsx:58
-#: src/view/screens/ProfileFeed.tsx:113
+#: src/view/screens/ProfileFeed.tsx:112
 msgid "Returns to previous page"
 msgstr "Kembali ke halaman sebelumnya"
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/composer/GifAltText.tsx:162
 #: src/view/com/composer/GifAltText.tsx:168
-#: src/view/com/modals/ChangeHandle.tsx:175
+#: src/view/com/modals/ChangeHandle.tsx:168
 #: src/view/com/modals/CreateOrEditList.tsx:340
 #: src/view/com/modals/EditProfile.tsx:225
 msgid "Save"
 msgstr "Simpan"
 
-#: src/view/com/lightbox/Lightbox.tsx:132
+#: src/view/com/lightbox/Lightbox.tsx:133
 #: src/view/com/modals/CreateOrEditList.tsx:348
 msgctxt "action"
 msgid "Save"
@@ -4130,7 +4256,7 @@ msgstr "Simpan tanggal lahir"
 msgid "Save Changes"
 msgstr "Simpan Perubahan"
 
-#: src/view/com/modals/ChangeHandle.tsx:172
+#: src/view/com/modals/ChangeHandle.tsx:165
 msgid "Save handle change"
 msgstr "Simpan perubahan handle"
 
@@ -4138,16 +4264,16 @@ msgstr "Simpan perubahan handle"
 msgid "Save image crop"
 msgstr "Simpan potongan gambar"
 
-#: src/view/screens/ProfileFeed.tsx:347
-#: src/view/screens/ProfileFeed.tsx:353
+#: src/view/screens/ProfileFeed.tsx:331
+#: src/view/screens/ProfileFeed.tsx:337
 msgid "Save to my feeds"
 msgstr "Tambakan ke feed saya"
 
-#: src/view/screens/SavedFeeds.tsx:123
+#: src/view/screens/SavedFeeds.tsx:144
 msgid "Saved Feeds"
 msgstr "Feed Tersimpan"
 
-#: src/view/com/lightbox/Lightbox.tsx:81
+#: src/view/com/lightbox/Lightbox.tsx:82
 msgid "Saved to your camera roll"
 msgstr ""
 
@@ -4155,7 +4281,8 @@ msgstr ""
 #~ msgid "Saved to your camera roll."
 #~ msgstr "Disimpan ke rol kamera Anda."
 
-#: src/view/screens/ProfileFeed.tsx:214
+#: src/view/screens/ProfileFeed.tsx:200
+#: src/view/screens/ProfileList.tsx:295
 msgid "Saved to your feeds"
 msgstr "Disimpan ke feed Anda"
 
@@ -4163,7 +4290,7 @@ msgstr "Disimpan ke feed Anda"
 msgid "Saves any changes to your profile"
 msgstr "Simpan setiap perubahan pada profil Anda"
 
-#: src/view/com/modals/ChangeHandle.tsx:173
+#: src/view/com/modals/ChangeHandle.tsx:166
 msgid "Saves handle change to {handle}"
 msgstr "Simpan perubahan handle ke {handle}"
 
@@ -4171,11 +4298,11 @@ msgstr "Simpan perubahan handle ke {handle}"
 msgid "Saves image crop settings"
 msgstr "Menyimpan pengaturan pemangkasan gambar"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:48
 msgid "Science"
 msgstr "Sains"
 
-#: src/view/screens/ProfileList.tsx:869
+#: src/view/screens/ProfileList.tsx:922
 msgid "Scroll to top"
 msgstr "Gulir ke atas"
 
@@ -4188,12 +4315,12 @@ msgstr "Gulir ke atas"
 #: src/view/screens/Search/Search.tsx:444
 #: src/view/screens/Search/Search.tsx:757
 #: src/view/screens/Search/Search.tsx:785
-#: src/view/shell/bottom-bar/BottomBar.tsx:190
-#: src/view/shell/desktop/LeftNav.tsx:332
+#: src/view/shell/bottom-bar/BottomBar.tsx:196
+#: src/view/shell/desktop/LeftNav.tsx:329
 #: src/view/shell/desktop/Search.tsx:194
 #: src/view/shell/desktop/Search.tsx:203
-#: src/view/shell/Drawer.tsx:386
-#: src/view/shell/Drawer.tsx:387
+#: src/view/shell/Drawer.tsx:393
+#: src/view/shell/Drawer.tsx:394
 msgid "Search"
 msgstr "Cari"
 
@@ -4235,7 +4362,7 @@ msgstr ""
 msgid "Search Tenor"
 msgstr "Cari di Tenor"
 
-#: src/view/com/modals/ChangeEmail.tsx:112
+#: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
 msgstr "Langkah Keamanan Diperlukan"
 
@@ -4260,7 +4387,7 @@ msgstr "Lihat postingan <0>{displayTag}</0> oleh pengguna ini"
 msgid "See profile"
 msgstr "Lihat profil"
 
-#: src/view/screens/SavedFeeds.tsx:164
+#: src/view/screens/SavedFeeds.tsx:186
 msgid "See this guide"
 msgstr "Lihat panduan ini"
 
@@ -4272,9 +4399,21 @@ msgstr "Lihat panduan ini"
 msgid "Select {item}"
 msgstr "Pilih {item}"
 
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
+msgid "Select a color"
+msgstr ""
+
 #: src/screens/Login/ChooseAccountForm.tsx:85
 msgid "Select account"
 msgstr "Pilih akun"
+
+#: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
+msgid "Select an avatar"
+msgstr ""
+
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
+msgid "Select an emoji"
+msgstr ""
 
 #: src/screens/Login/index.tsx:120
 msgid "Select from an existing account"
@@ -4304,6 +4443,10 @@ msgstr "Pilih opsi {i} dari {numItems}"
 msgid "Select some accounts below to follow"
 msgstr "Pilih beberapa akun di bawah ini untuk diikuti"
 
+#: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
+msgid "Select the {emojiName} emoji as your avatar"
+msgstr ""
+
 #: src/components/ReportDialog/SubmitView.tsx:135
 msgid "Select the moderation service(s) to report to"
 msgstr "Pilih layanan moderasi untuk melaporkan"
@@ -4332,7 +4475,7 @@ msgstr "Pilih bahasa untuk teks yang akan ditampilkan dalam aplikasi."
 msgid "Select your date of birth"
 msgstr "Pilih tanggal lahir Anda"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:201
+#: src/screens/Onboarding/StepInterests/index.tsx:211
 msgid "Select your interests from the options below"
 msgstr "Pilih minat Anda dari opsi di bawah ini"
 
@@ -4348,30 +4491,32 @@ msgstr "Pilih feed algoritma utama Anda"
 msgid "Select your secondary algorithmic feeds"
 msgstr "Pilih feed algoritma sekunder Anda"
 
-#: src/view/com/modals/VerifyEmail.tsx:211
-#: src/view/com/modals/VerifyEmail.tsx:213
+#: src/view/com/modals/VerifyEmail.tsx:210
+#: src/view/com/modals/VerifyEmail.tsx:212
 msgid "Send Confirmation Email"
 msgstr "Kirim Email Konfirmasi"
 
-#: src/view/com/modals/DeleteAccount.tsx:131
+#: src/view/com/modals/DeleteAccount.tsx:130
 msgid "Send email"
 msgstr "Kirim email"
 
-#: src/view/com/modals/DeleteAccount.tsx:144
+#: src/view/com/modals/DeleteAccount.tsx:143
 msgctxt "action"
 msgid "Send Email"
 msgstr "Kirim Email"
 
-#: src/view/shell/Drawer.tsx:319
-#: src/view/shell/Drawer.tsx:340
+#: src/view/shell/Drawer.tsx:328
+#: src/view/shell/Drawer.tsx:349
 msgid "Send feedback"
 msgstr "Kirim masukan"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:96
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:80
+#: src/screens/Messages/Conversation/MessageInput.tsx:110
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:95
 msgid "Send message"
 msgstr ""
 
+#: src/components/dms/MessageReportDialog.tsx:207
+#: src/components/dms/MessageReportDialog.tsx:210
 #: src/components/ReportDialog/SubmitView.tsx:215
 #: src/components/ReportDialog/SubmitView.tsx:219
 msgid "Send report"
@@ -4381,12 +4526,12 @@ msgstr "Kirim laporan"
 msgid "Send report to {0}"
 msgstr "Kirim laporan ke {0}"
 
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:120
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:123
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
 msgid "Send verification email"
 msgstr "Kirim email verifikasi"
 
-#: src/view/com/modals/DeleteAccount.tsx:133
+#: src/view/com/modals/DeleteAccount.tsx:132
 msgid "Sends email with confirmation code for account deletion"
 msgstr "Kirim email dengan kode konfirmasi untuk penghapusan akun"
 
@@ -4402,15 +4547,15 @@ msgstr "Atur tanggal lahir"
 msgid "Set new password"
 msgstr "Buat kata sandi baru"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:223
+#: src/view/screens/PreferencesFollowingFeed.tsx:224
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr "Pilih \"Tidak\" untuk menyembunyikan semua kutipan postingan dari feed Anda. Posting ulang tetap akan terlihat."
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:120
+#: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all replies from your feed."
 msgstr "Pilih \"Tidak\" untuk menyembunyikan semua balasan dari feed Anda."
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:189
+#: src/view/screens/PreferencesFollowingFeed.tsx:190
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Pilih \"Tidak\" untuk menyembunyikan semua posting ulang dari feed Anda."
 
@@ -4418,7 +4563,7 @@ msgstr "Pilih \"Tidak\" untuk menyembunyikan semua posting ulang dari feed Anda.
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Pilih \"Ya\" untuk menampilkan balasan dalam bentuk utasan. Ini merupakan fitur eksperimental."
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:259
+#: src/view/screens/PreferencesFollowingFeed.tsx:260
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
 msgstr "Pilih \"Ya\" untuk menampilkan beberapa sampel dari feed tersimpan di feed Mengikuti Anda. Ini merupakan fitur eksperimental"
 
@@ -4426,7 +4571,7 @@ msgstr "Pilih \"Ya\" untuk menampilkan beberapa sampel dari feed tersimpan di fe
 msgid "Set up your account"
 msgstr "Atur akun Anda"
 
-#: src/view/com/modals/ChangeHandle.tsx:268
+#: src/view/com/modals/ChangeHandle.tsx:261
 msgid "Sets Bluesky username"
 msgstr "Atur nama pengguna Bluesky"
 
@@ -4469,13 +4614,13 @@ msgstr "Mengatur aspek rasio gambar menjadi lebar"
 #: src/Navigation.tsx:146
 #: src/screens/Messages/Settings/index.tsx:21
 #: src/view/screens/Settings/index.tsx:322
-#: src/view/shell/desktop/LeftNav.tsx:433
-#: src/view/shell/Drawer.tsx:572
-#: src/view/shell/Drawer.tsx:573
+#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/Drawer.tsx:558
+#: src/view/shell/Drawer.tsx:559
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: src/view/com/modals/SelfLabel.tsx:125
+#: src/view/com/modals/SelfLabel.tsx:126
 msgid "Sexual activity or erotic nudity."
 msgstr "Aktivitas seksual atau ketelanjangan erotis."
 
@@ -4483,7 +4628,7 @@ msgstr "Aktivitas seksual atau ketelanjangan erotis."
 msgid "Sexually Suggestive"
 msgstr "Mengarah ke Seksualitas"
 
-#: src/view/com/lightbox/Lightbox.tsx:141
+#: src/view/com/lightbox/Lightbox.tsx:142
 msgctxt "action"
 msgid "Share"
 msgstr "Bagikan"
@@ -4493,7 +4638,7 @@ msgstr "Bagikan"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:266
 #: src/view/com/util/forms/PostDropdownBtn.tsx:275
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:288
-#: src/view/screens/ProfileList.tsx:390
+#: src/view/screens/ProfileList.tsx:423
 msgid "Share"
 msgstr "Bagikan"
 
@@ -4503,8 +4648,8 @@ msgstr "Bagikan"
 msgid "Share anyway"
 msgstr "Tetap bagikan"
 
-#: src/view/screens/ProfileFeed.tsx:373
-#: src/view/screens/ProfileFeed.tsx:375
+#: src/view/screens/ProfileFeed.tsx:357
+#: src/view/screens/ProfileFeed.tsx:359
 msgid "Share feed"
 msgstr "Bagikan feed"
 
@@ -4567,11 +4712,11 @@ msgstr "Tampilkan Lebih Lanjut"
 msgid "Show more like this"
 msgstr ""
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:256
+#: src/view/screens/PreferencesFollowingFeed.tsx:257
 msgid "Show Posts from My Feeds"
 msgstr "Tampilkan Postingan dari Feed Saya"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:220
+#: src/view/screens/PreferencesFollowingFeed.tsx:221
 msgid "Show Quote Posts"
 msgstr "Tampilkan Kutipan Postingan"
 
@@ -4587,7 +4732,7 @@ msgstr "Tampilkan kutipan di Mengikuti"
 msgid "Show re-posts in Following feed"
 msgstr "Tampilkan posting ulang di feed Mengikuti"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:117
+#: src/view/screens/PreferencesFollowingFeed.tsx:118
 msgid "Show Replies"
 msgstr "Tampilkan Balasan"
 
@@ -4607,7 +4752,7 @@ msgstr "Tampilkan balasan di feed Mengikuti"
 #~ msgid "Show replies with at least {value} {0}"
 #~ msgstr "Tampilkan balasan dengan setidaknya {value} {0}"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:186
+#: src/view/screens/PreferencesFollowingFeed.tsx:187
 msgid "Show Reposts"
 msgstr "Tampilkan Posting Ulang"
 
@@ -4640,17 +4785,17 @@ msgstr "Tampilkan postingan dari {0} di feed Anda"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
 #: src/screens/Login/index.tsx:119
-#: src/screens/Login/LoginForm.tsx:148
+#: src/screens/Login/LoginForm.tsx:151
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
 #: src/view/com/auth/SplashScreen.web.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:343
-#: src/view/shell/bottom-bar/BottomBar.tsx:344
-#: src/view/shell/bottom-bar/BottomBar.tsx:346
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:196
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:199
+#: src/view/shell/bottom-bar/BottomBar.tsx:353
+#: src/view/shell/bottom-bar/BottomBar.tsx:354
+#: src/view/shell/bottom-bar/BottomBar.tsx:356
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:201
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
 #: src/view/shell/NavSignupCard.tsx:69
 #: src/view/shell/NavSignupCard.tsx:70
 #: src/view/shell/NavSignupCard.tsx:72
@@ -4678,12 +4823,12 @@ msgstr "Masuk ke Bluesky atau buat akun baru"
 msgid "Sign out"
 msgstr "Keluar"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:333
-#: src/view/shell/bottom-bar/BottomBar.tsx:334
-#: src/view/shell/bottom-bar/BottomBar.tsx:336
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:186
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:187
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:189
+#: src/view/shell/bottom-bar/BottomBar.tsx:343
+#: src/view/shell/bottom-bar/BottomBar.tsx:344
+#: src/view/shell/bottom-bar/BottomBar.tsx:346
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:191
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:192
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
 #: src/view/shell/NavSignupCard.tsx:60
 #: src/view/shell/NavSignupCard.tsx:61
 #: src/view/shell/NavSignupCard.tsx:63
@@ -4708,18 +4853,22 @@ msgstr "Masuk sebagai"
 msgid "Signed in as @{0}"
 msgstr "Masuk sebagai @{0}"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:240
+#: src/screens/Onboarding/StepInterests/index.tsx:250
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
 msgid "Skip"
 msgstr "Lewati"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:237
+#: src/screens/Onboarding/StepInterests/index.tsx:247
 msgid "Skip this flow"
 msgstr "Lewati tahap ini"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:52
 msgid "Software Dev"
 msgstr "Pengembang Perangkat Lunak"
+
+#: src/screens/Messages/Conversation/index.tsx:89
+msgid "Something went wrong"
+msgstr ""
 
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:114
@@ -4727,8 +4876,8 @@ msgstr "Pengembang Perangkat Lunak"
 msgid "Something went wrong, please try again."
 msgstr "Terjadi kesalahan, silakan coba lagi."
 
-#: src/App.native.tsx:84
-#: src/App.web.tsx:71
+#: src/App.native.tsx:83
+#: src/App.web.tsx:72
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Maaf! Sesi Anda telah berakhir. Silakan masuk lagi."
 
@@ -4740,19 +4889,20 @@ msgstr "Urutkan Balasan"
 msgid "Sort replies to the same post by:"
 msgstr "Urutkan balasan ke postingan yang sama berdasarkan:"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:146
+#: src/components/moderation/LabelsOnMeDialog.tsx:168
 msgid "Source:"
 msgstr "Asal:"
 
-#: src/lib/moderation/useReportOptions.ts:65
+#: src/lib/moderation/useReportOptions.ts:66
+#: src/lib/moderation/useReportOptions.ts:79
 msgid "Spam"
 msgstr "Spam"
 
-#: src/lib/moderation/useReportOptions.ts:53
+#: src/lib/moderation/useReportOptions.ts:54
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; menyebut atau membalas secara berlebihan"
 
-#: src/screens/Onboarding/index.tsx:30
+#: src/screens/Onboarding/index.tsx:42
 msgid "Sports"
 msgstr "Olahraga"
 
@@ -4789,12 +4939,12 @@ msgstr "Penyimpanan dihapus, Anda perlu memulai ulang aplikasi sekarang."
 msgid "Storybook"
 msgstr "Storybook"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:256
-#: src/components/moderation/LabelsOnMeDialog.tsx:257
+#: src/components/moderation/LabelsOnMeDialog.tsx:282
+#: src/components/moderation/LabelsOnMeDialog.tsx:283
 msgid "Submit"
 msgstr "Kirim"
 
-#: src/view/screens/ProfileList.tsx:586
+#: src/view/screens/ProfileList.tsx:639
 msgid "Subscribe"
 msgstr "Langganan"
 
@@ -4815,7 +4965,7 @@ msgstr "Langganan ke feed {0}"
 msgid "Subscribe to this labeler"
 msgstr "Berlangganan pelabel ini"
 
-#: src/view/screens/ProfileList.tsx:582
+#: src/view/screens/ProfileList.tsx:635
 msgid "Subscribe to this list"
 msgstr "Langganan ke daftar ini"
 
@@ -4827,7 +4977,7 @@ msgstr "Saran untuk Diikuti"
 msgid "Suggested for you"
 msgstr "Disarankan untuk Anda"
 
-#: src/view/com/modals/SelfLabel.tsx:95
+#: src/view/com/modals/SelfLabel.tsx:96
 msgid "Suggestive"
 msgstr "Sugestif"
 
@@ -4874,7 +5024,7 @@ msgstr "Tinggi"
 msgid "Tap to view fully"
 msgstr "Ketuk untuk melihat sepenuhnya"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:51
 msgid "Tech"
 msgstr "Teknologi"
 
@@ -4886,13 +5036,13 @@ msgstr "Ketentuan"
 #: src/screens/Signup/StepInfo/Policies.tsx:49
 #: src/view/screens/Settings/index.tsx:884
 #: src/view/screens/TermsOfService.tsx:29
-#: src/view/shell/Drawer.tsx:269
+#: src/view/shell/Drawer.tsx:278
 msgid "Terms of Service"
 msgstr "Ketentuan Layanan"
 
-#: src/lib/moderation/useReportOptions.ts:58
-#: src/lib/moderation/useReportOptions.ts:79
-#: src/lib/moderation/useReportOptions.ts:87
+#: src/lib/moderation/useReportOptions.ts:59
+#: src/lib/moderation/useReportOptions.ts:93
+#: src/lib/moderation/useReportOptions.ts:101
 msgid "Terms used violate community standards"
 msgstr "Istilah yang digunakan melanggar standar komunitas"
 
@@ -4900,15 +5050,16 @@ msgstr "Istilah yang digunakan melanggar standar komunitas"
 msgid "text"
 msgstr "teks"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:220
+#: src/components/moderation/LabelsOnMeDialog.tsx:246
 msgid "Text input field"
 msgstr "Area input teks"
 
+#: src/components/dms/MessageReportDialog.tsx:118
 #: src/components/ReportDialog/SubmitView.tsx:77
 msgid "Thank you. Your report has been sent."
 msgstr "Terima kasih. Laporan Anda telah terkirim."
 
-#: src/view/com/modals/ChangeHandle.tsx:466
+#: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
 msgstr "Yang berisi konten berikut:"
 
@@ -4933,11 +5084,15 @@ msgstr "Panduan Komunitas telah dipindahkan ke <0/>"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Kebijakan Hak Cipta telah dipindahkan ke <0/>"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:48
+#: src/view/com/posts/FeedShutdownMsg.tsx:66
+msgid "The feed has been replaced with Discover."
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "The following labels were applied to your account."
 msgstr "Label berikut ini telah diterapkan pada akun Anda."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:49
+#: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to your content."
 msgstr "Label berikut ini telah diterapkan pada konten Anda."
 
@@ -4967,15 +5122,17 @@ msgid "There are many feeds to try:"
 msgstr "Ada banyak feed untuk dicoba:"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:114
-#: src/view/screens/ProfileFeed.tsx:560
+#: src/view/screens/ProfileFeed.tsx:541
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "Ada masalah saat menghubungi server, silakan periksa koneksi internet Anda dan coba lagi."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:138
+#: src/view/com/posts/FeedErrorMessage.tsx:146
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
 msgstr "Ada masalah saat menghapus feed ini. Periksa koneksi internet Anda dan coba lagi."
 
-#: src/view/screens/ProfileFeed.tsx:219
+#: src/view/com/posts/FeedShutdownMsg.tsx:52
+#: src/view/com/posts/FeedShutdownMsg.tsx:70
+#: src/view/screens/ProfileFeed.tsx:205
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "Ada masalah saat memperbarui feed Anda, periksa koneksi internet Anda dan coba lagi."
 
@@ -4987,16 +5144,17 @@ msgstr "Ada masalah saat menghubungkan ke Tenor."
 msgid "There was an issue connecting to the chat."
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:247
-#: src/view/screens/ProfileList.tsx:277
-#: src/view/screens/SavedFeeds.tsx:211
-#: src/view/screens/SavedFeeds.tsx:241
+#: src/view/screens/ProfileFeed.tsx:233
+#: src/view/screens/ProfileList.tsx:298
+#: src/view/screens/ProfileList.tsx:317
+#: src/view/screens/SavedFeeds.tsx:236
 #: src/view/screens/SavedFeeds.tsx:262
+#: src/view/screens/SavedFeeds.tsx:288
 msgid "There was an issue contacting the server"
 msgstr "Ada masalah saat menghubungi server"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:109
-#: src/view/com/feeds/FeedSourceCard.tsx:122
+#: src/view/com/feeds/FeedSourceCard.tsx:114
+#: src/view/com/feeds/FeedSourceCard.tsx:127
 msgid "There was an issue contacting your server"
 msgstr "Ada masalah saat menghubungi server Anda"
 
@@ -5004,7 +5162,7 @@ msgstr "Ada masalah saat menghubungi server Anda"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Ada masalah saat mengambil notifikasi. Ketuk di sini untuk mencoba lagi."
 
-#: src/view/com/posts/Feed.tsx:289
+#: src/view/com/posts/Feed.tsx:298
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Ada masalah saat mengambil postingan. Ketuk di sini untuk mencoba lagi."
 
@@ -5017,6 +5175,7 @@ msgstr "Ada masalah saat mengambil daftar. Ketuk di sini untuk mencoba lagi."
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Ada masalah saat mengambil daftar Anda. Ketuk di sini untuk mencoba lagi."
 
+#: src/components/dms/MessageReportDialog.tsx:195
 #: src/components/ReportDialog/SubmitView.tsx:82
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "Ada masalah saat mengirimkan laporan. Silakan periksa koneksi internet Anda."
@@ -5043,10 +5202,10 @@ msgstr "Ada masalah dengan pengambilan kata sandi aplikasi Anda"
 msgid "There was an issue! {0}"
 msgstr "Ada masalah! {0}"
 
-#: src/view/screens/ProfileList.tsx:290
-#: src/view/screens/ProfileList.tsx:304
-#: src/view/screens/ProfileList.tsx:318
-#: src/view/screens/ProfileList.tsx:332
+#: src/view/screens/ProfileList.tsx:330
+#: src/view/screens/ProfileList.tsx:344
+#: src/view/screens/ProfileList.tsx:358
+#: src/view/screens/ProfileList.tsx:372
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Ada masalah. Periksa koneksi internet Anda dan coba lagi."
 
@@ -5071,7 +5230,7 @@ msgstr "Ini {screenDescription} telah ditandai:"
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Akun ini mewajibkan pengguna untuk masuk agar bisa melihat profilnya."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:205
+#: src/components/moderation/LabelsOnMeDialog.tsx:231
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "Banding ini akan dikirim ke <0>{0}</0>."
 
@@ -5096,21 +5255,21 @@ msgstr "Konten ini disediakan oleh {0}. Apakah Anda ingin mengaktifkan media eks
 msgid "This content is not available because one of the users involved has blocked the other."
 msgstr "Konten ini tidak tersedia karena salah satu pengguna yang terlibat telah memblokir pengguna lainnya."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:108
+#: src/view/com/posts/FeedErrorMessage.tsx:115
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Konten ini tidak dapat dilihat tanpa akun Bluesky."
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:76
+#: src/view/screens/Settings/ExportCarDialog.tsx:94
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Fitur ini masih dalam versi beta. Anda dapat membaca lebih lanjut tentang ekspor repositori di <0>blogpost ini</0>."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:114
+#: src/view/com/posts/FeedErrorMessage.tsx:121
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Feed ini sedang menerima terlalu banyak trafik dan sementara tidak tersedia. Silakan coba lagi nanti."
 
 #: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:490
-#: src/view/screens/ProfileList.tsx:671
+#: src/view/screens/ProfileFeed.tsx:471
+#: src/view/screens/ProfileList.tsx:724
 msgid "This feed is empty!"
 msgstr "Feed ini kosong!"
 
@@ -5118,11 +5277,15 @@ msgstr "Feed ini kosong!"
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Feed ini kosong! Anda mungkin perlu mengikuti lebih banyak pengguna atau menyesuaikan pengaturan bahasa Anda."
 
+#: src/view/com/posts/FeedShutdownMsg.tsx:97
+msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
+msgstr ""
+
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
 msgstr "Informasi ini tidak akan dibagikan ke pengguna lainnya."
 
-#: src/view/com/modals/VerifyEmail.tsx:128
+#: src/view/com/modals/VerifyEmail.tsx:127
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Ini penting jika Anda butuh untuk mengganti email atau reset kata sandi Anda nantinya."
 
@@ -5138,6 +5301,10 @@ msgstr ""
 msgid "This label was applied by the author."
 msgstr ""
 
+#: src/components/moderation/LabelsOnMeDialog.tsx:165
+msgid "This label was applied by you"
+msgstr ""
+
 #: src/screens/Profile/Sections/Labels.tsx:181
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Pelabel ini belum menyatakan label yang dia publikasikan, dan mungkin tidak aktif."
@@ -5146,7 +5313,7 @@ msgstr "Pelabel ini belum menyatakan label yang dia publikasikan, dan mungkin ti
 msgid "This link is taking you to the following website:"
 msgstr "Tautan ini akan membawa Anda ke website:"
 
-#: src/view/screens/ProfileList.tsx:849
+#: src/view/screens/ProfileList.tsx:902
 msgid "This list is empty!"
 msgstr "Daftar ini kosong!"
 
@@ -5179,7 +5346,7 @@ msgstr "Profil ini hanya dapat dilihat oleh pengguna yang masuk. Ini tidak akan 
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "Layanan ini tidak menyediakan ketentuan layanan atau kebijakan privasi."
 
-#: src/view/com/modals/ChangeHandle.tsx:446
+#: src/view/com/modals/ChangeHandle.tsx:439
 msgid "This should create a domain record at:"
 msgstr "Ini akan membuat catatan domain di:"
 
@@ -5233,9 +5400,13 @@ msgstr "Mode Utasan"
 msgid "Threads Preferences"
 msgstr "Preferensi Utas"
 
-#: src/view/screens/Settings/DisableEmail2FADialog.tsx:103
+#: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "Untuk menonaktifkan metode 2FA email, silakan verifikasi akses Anda ke alamat email."
+
+#: src/components/dms/ConvoMenu.tsx:200
+msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
+msgstr ""
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -5278,25 +5449,25 @@ msgstr "Coba lagi"
 msgid "Two-factor authentication"
 msgstr "Autentikasi dua faktor"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:80
+#: src/screens/Messages/Conversation/MessageInput.tsx:94
 msgid "Type your message here"
 msgstr ""
 
-#: src/view/com/modals/ChangeHandle.tsx:429
+#: src/view/com/modals/ChangeHandle.tsx:422
 msgid "Type:"
 msgstr "Tipe:"
 
-#: src/view/screens/ProfileList.tsx:478
+#: src/view/screens/ProfileList.tsx:530
 msgid "Un-block list"
 msgstr "Buka blokir daftar"
 
-#: src/view/screens/ProfileList.tsx:463
+#: src/view/screens/ProfileList.tsx:515
 msgid "Un-mute list"
 msgstr "Bunyikan daftar"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:74
 #: src/screens/Login/index.tsx:78
-#: src/screens/Login/LoginForm.tsx:136
+#: src/screens/Login/LoginForm.tsx:139
 #: src/screens/Login/SetNewPasswordForm.tsx:77
 #: src/screens/Signup/index.tsx:66
 #: src/view/com/modals/ChangePassword.tsx:72
@@ -5306,7 +5477,7 @@ msgstr "Tidak dapat terhubung ke layanan. Mohon periksa koneksi internet Anda."
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:181
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
 #: src/view/com/profile/ProfileMenu.tsx:361
-#: src/view/screens/ProfileList.tsx:568
+#: src/view/screens/ProfileList.tsx:621
 msgid "Unblock"
 msgstr "Buka blokir"
 
@@ -5327,7 +5498,7 @@ msgstr "Buka blokir Akun?"
 
 #: src/view/com/modals/Repost.tsx:43
 #: src/view/com/modals/Repost.tsx:56
-#: src/view/com/util/post-ctrls/RepostButton.tsx:59
+#: src/view/com/util/post-ctrls/RepostButton.tsx:60
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Undo repost"
 msgstr "Batalkan posting ulang"
@@ -5354,12 +5525,12 @@ msgstr "Batal Ikuti Akun"
 #~ msgid "Unlike"
 #~ msgstr "Tidak suka"
 
-#: src/view/screens/ProfileFeed.tsx:589
+#: src/view/screens/ProfileFeed.tsx:570
 msgid "Unlike this feed"
 msgstr "Batalkan suka feed ini"
 
 #: src/components/TagMenu/index.tsx:249
-#: src/view/screens/ProfileList.tsx:575
+#: src/view/screens/ProfileList.tsx:628
 msgid "Unmute"
 msgstr "Bunyikan"
 
@@ -5376,7 +5547,7 @@ msgstr "Bunyikan Akun"
 msgid "Unmute all {displayTag} posts"
 msgstr "Batal bisukan semua postingan {displayTag}"
 
-#: src/components/dms/ConvoMenu.tsx:123
+#: src/components/dms/ConvoMenu.tsx:140
 msgid "Unmute notifications"
 msgstr ""
 
@@ -5385,16 +5556,16 @@ msgstr ""
 msgid "Unmute thread"
 msgstr "Bunyikan utasan"
 
-#: src/view/screens/ProfileFeed.tsx:306
-#: src/view/screens/ProfileList.tsx:559
+#: src/view/screens/ProfileFeed.tsx:290
+#: src/view/screens/ProfileList.tsx:612
 msgid "Unpin"
 msgstr "Lepas sematan"
 
-#: src/view/screens/ProfileFeed.tsx:303
+#: src/view/screens/ProfileFeed.tsx:287
 msgid "Unpin from home"
 msgstr "Batal sematkan dari beranda"
 
-#: src/view/screens/ProfileList.tsx:446
+#: src/view/screens/ProfileList.tsx:495
 msgid "Unpin moderation list"
 msgstr "Lepas sematan daftar moderasi"
 
@@ -5406,7 +5577,12 @@ msgstr "Berhenti langganan"
 msgid "Unsubscribe from this labeler"
 msgstr "Berhenti langganan pelabel ini"
 
-#: src/lib/moderation/useReportOptions.ts:70
+#: src/lib/moderation/useReportOptions.ts:85
+msgid "Unwanted sexual content"
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:71
+#: src/lib/moderation/useReportOptions.ts:84
 msgid "Unwanted Sexual Content"
 msgstr "Konten Seksual yang Tidak Diinginkan"
 
@@ -5414,7 +5590,7 @@ msgstr "Konten Seksual yang Tidak Diinginkan"
 msgid "Update {displayName} in Lists"
 msgstr "Perbarui {displayName} dalam Daftar"
 
-#: src/view/com/modals/ChangeHandle.tsx:509
+#: src/view/com/modals/ChangeHandle.tsx:502
 msgid "Update to {handle}"
 msgstr "Ubah ke {handle}"
 
@@ -5422,7 +5598,11 @@ msgstr "Ubah ke {handle}"
 msgid "Updating..."
 msgstr "Memperbarui..."
 
-#: src/view/com/modals/ChangeHandle.tsx:455
+#: src/screens/Onboarding/StepProfile/index.tsx:284
+msgid "Upload a photo instead"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:448
 msgid "Upload a text file to:"
 msgstr "Unggah berkas teks ke:"
 
@@ -5445,7 +5625,7 @@ msgstr "Unggah dari Berkas"
 msgid "Upload from Library"
 msgstr "Unggah dari Pustaka"
 
-#: src/view/com/modals/ChangeHandle.tsx:409
+#: src/view/com/modals/ChangeHandle.tsx:402
 msgid "Use a file on your server"
 msgstr "Gunakan berkas di server Anda"
 
@@ -5453,11 +5633,11 @@ msgstr "Gunakan berkas di server Anda"
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr "Gunakan kata sandi aplikasi untuk masuk ke klien Bluesky lainnya tanpa memberikan akses penuh ke akun atau kata sandi Anda."
 
-#: src/view/com/modals/ChangeHandle.tsx:520
+#: src/view/com/modals/ChangeHandle.tsx:513
 msgid "Use bsky.social as hosting provider"
 msgstr "Gunakan bsky.social sebagai penyedia hosting"
 
-#: src/view/com/modals/ChangeHandle.tsx:519
+#: src/view/com/modals/ChangeHandle.tsx:512
 msgid "Use default provider"
 msgstr "Gunakan layanan bawaan"
 
@@ -5471,7 +5651,11 @@ msgstr "Gunakan peramban dalam aplikasi"
 msgid "Use my default browser"
 msgstr "Gunakan peramban bawaan saya"
 
-#: src/view/com/modals/ChangeHandle.tsx:401
+#: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
+msgid "Use recommended"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:394
 msgid "Use the DNS panel"
 msgstr "Gunakan panel DNS"
 
@@ -5509,13 +5693,13 @@ msgstr "Pengguna Memblokir Anda"
 msgid "User list by {0}"
 msgstr "Daftar pengguna oleh {0}"
 
-#: src/view/screens/ProfileList.tsx:773
+#: src/view/screens/ProfileList.tsx:826
 msgid "User list by <0/>"
 msgstr "Daftar pengguna oleh<0/>"
 
 #: src/view/com/lists/ListCard.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
-#: src/view/screens/ProfileList.tsx:771
+#: src/view/screens/ProfileList.tsx:824
 msgid "User list by you"
 msgstr "Daftar pengguna oleh Anda"
 
@@ -5531,11 +5715,11 @@ msgstr "Daftar pengguna diperbarui"
 msgid "User Lists"
 msgstr "Daftar Pengguna"
 
-#: src/screens/Login/LoginForm.tsx:168
+#: src/screens/Login/LoginForm.tsx:171
 msgid "Username or email address"
 msgstr "Nama pengguna atau alamat email"
 
-#: src/view/screens/ProfileList.tsx:807
+#: src/view/screens/ProfileList.tsx:860
 msgid "Users"
 msgstr "Pengguna"
 
@@ -5551,7 +5735,7 @@ msgstr "Pengguna di \"{0}\""
 msgid "Users that have liked this content or profile"
 msgstr "Pengguna yang telah menyukai konten atau profil"
 
-#: src/view/com/modals/ChangeHandle.tsx:437
+#: src/view/com/modals/ChangeHandle.tsx:430
 msgid "Value:"
 msgstr "Nilai:"
 
@@ -5559,7 +5743,7 @@ msgstr "Nilai:"
 #~ msgid "Verify {0}"
 #~ msgstr "Verifikasi {0}"
 
-#: src/view/com/modals/ChangeHandle.tsx:511
+#: src/view/com/modals/ChangeHandle.tsx:504
 msgid "Verify DNS Record"
 msgstr ""
 
@@ -5575,16 +5759,16 @@ msgstr "Verifikasi email saya"
 msgid "Verify My Email"
 msgstr "Verifikasi Email Saya"
 
-#: src/view/com/modals/ChangeEmail.tsx:207
-#: src/view/com/modals/ChangeEmail.tsx:209
+#: src/view/com/modals/ChangeEmail.tsx:200
+#: src/view/com/modals/ChangeEmail.tsx:202
 msgid "Verify New Email"
 msgstr "Verifikasi Email Baru"
 
-#: src/view/com/modals/ChangeHandle.tsx:512
+#: src/view/com/modals/ChangeHandle.tsx:505
 msgid "Verify Text File"
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:112
+#: src/view/com/modals/VerifyEmail.tsx:111
 msgid "Verify Your Email"
 msgstr "Verifikasi Email Anda"
 
@@ -5596,7 +5780,7 @@ msgstr "Verifikasi Email Anda"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:54
 msgid "Video Games"
 msgstr "Permainan Video"
 
@@ -5608,11 +5792,11 @@ msgstr "Lihat avatar {0}"
 msgid "View debug entry"
 msgstr "Lihat entri debug"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:132
+#: src/components/ReportDialog/SelectReportOptionView.tsx:138
 msgid "View details"
 msgstr "Lihat detail"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:127
+#: src/components/ReportDialog/SelectReportOptionView.tsx:133
 msgid "View details for reporting a copyright violation"
 msgstr "Lihat detail untuk melaporkan pelanggaran hak cipta"
 
@@ -5620,13 +5804,13 @@ msgstr "Lihat detail untuk melaporkan pelanggaran hak cipta"
 msgid "View full thread"
 msgstr "Lihat utas lengkap"
 
-#: src/components/moderation/LabelsOnMe.tsx:50
+#: src/components/moderation/LabelsOnMe.tsx:48
 msgid "View information about these labels"
 msgstr "Lihat informasi tentang label ini"
 
 #: src/components/ProfileHoverCard/index.web.tsx:393
 #: src/components/ProfileHoverCard/index.web.tsx:426
-#: src/view/com/posts/FeedErrorMessage.tsx:166
+#: src/view/com/posts/FeedErrorMessage.tsx:175
 msgid "View profile"
 msgstr "Lihat profil"
 
@@ -5638,7 +5822,7 @@ msgstr "Lihat avatar"
 msgid "View the labeling service provided by @{0}"
 msgstr "Lihat layanan pelabelan yang disediakan oleh @{0}"
 
-#: src/view/screens/ProfileFeed.tsx:601
+#: src/view/screens/ProfileFeed.tsx:582
 msgid "View users who like this feed"
 msgstr "Lihat pengguna yang menyukai feed ini"
 
@@ -5666,11 +5850,15 @@ msgstr "Peringatkan konten dan saring dari feed"
 msgid "We couldn't find any results for that hashtag."
 msgstr "Kami tidak dapat menemukan hasil apa pun untuk tagar tersebut."
 
+#: src/screens/Messages/Conversation/index.tsx:90
+msgid "We couldn't load this conversation"
+msgstr ""
+
 #: src/screens/Deactivated.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "Kami perkirakan {estimatedTime} hingga akun Anda siap."
 
-#: src/screens/Onboarding/StepFinished.tsx:99
+#: src/screens/Onboarding/StepFinished.tsx:196
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "Semoga Anda senang dan betah di sini. Ingat, Bluesky adalah:"
 
@@ -5694,7 +5882,7 @@ msgstr "Kami tidak dapat memuat preferensi tanggal lahir Anda. Silakan coba lagi
 msgid "We were unable to load your configured labelers at this time."
 msgstr "Kami tidak dapat memuat pelabel yang Anda konfigurasikan saat ini."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:138
+#: src/screens/Onboarding/StepInterests/index.tsx:148
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "Sepertinya ada masalah koneksi. Mohon coba lagi untuk melanjutkan pengaturan akun Anda. Jika terus gagal, Anda dapat melewati langkah ini."
 
@@ -5702,7 +5890,7 @@ msgstr "Sepertinya ada masalah koneksi. Mohon coba lagi untuk melanjutkan pengat
 msgid "We will let you know when your account is ready."
 msgstr "Kami akan memberi tahu Anda ketika akun Anda siap."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:143
+#: src/screens/Onboarding/StepInterests/index.tsx:153
 msgid "We'll use this to help customize your experience."
 msgstr "Kami akan menggunakan ini untuk menyesuaikan pengalaman Anda."
 
@@ -5735,7 +5923,7 @@ msgstr "Maaf, Anda hanya dapat berlangganan sepuluh pelabel dan Anda telah menca
 #~ msgid "Welcome to <0>Bluesky</0>"
 #~ msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:135
+#: src/screens/Onboarding/StepInterests/index.tsx:145
 msgid "What are your interests?"
 msgstr "Apa saja minat Anda?"
 
@@ -5758,23 +5946,31 @@ msgstr "Bahasa apa yang ingin Anda lihat di feed Anda?"
 msgid "Who can reply"
 msgstr "Siapa yang dapat membalas"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:43
+#: src/screens/Home/NoFeedsPinned.tsx:92
+msgid "Whoops!"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:46
 msgid "Why should this content be reviewed?"
 msgstr "Mengapa konten ini perlu ditinjau?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:56
+#: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Why should this feed be reviewed?"
 msgstr "Mengapa feed ini perlu ditinjau?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:53
+#: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Why should this list be reviewed?"
 msgstr "Mengapa daftar ini perlu ditinjau?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:50
+#: src/components/ReportDialog/SelectReportOptionView.tsx:62
+msgid "Why should this message be reviewed?"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Why should this post be reviewed?"
 msgstr "Mengapa postingan ini perlu ditinjau?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:47
+#: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Why should this user be reviewed?"
 msgstr "Mengapa pengguna ini perlu ditinjau?"
 
@@ -5782,8 +5978,8 @@ msgstr "Mengapa pengguna ini perlu ditinjau?"
 msgid "Wide"
 msgstr "Lebar"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:81
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:70
+#: src/screens/Messages/Conversation/MessageInput.tsx:95
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:85
 msgid "Write a message"
 msgstr ""
 
@@ -5796,21 +5992,21 @@ msgstr "Tulis postingan"
 msgid "Write your reply"
 msgstr "Tulis balasan Anda"
 
-#: src/screens/Onboarding/index.tsx:28
+#: src/screens/Onboarding/index.tsx:40
 msgid "Writers"
 msgstr "Penulis"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
-#: src/view/screens/PreferencesFollowingFeed.tsx:127
-#: src/view/screens/PreferencesFollowingFeed.tsx:199
-#: src/view/screens/PreferencesFollowingFeed.tsx:234
-#: src/view/screens/PreferencesFollowingFeed.tsx:269
+#: src/view/screens/PreferencesFollowingFeed.tsx:128
+#: src/view/screens/PreferencesFollowingFeed.tsx:200
+#: src/view/screens/PreferencesFollowingFeed.tsx:235
+#: src/view/screens/PreferencesFollowingFeed.tsx:270
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "Ya"
 
-#: src/components/dms/MessageItem.tsx:152
+#: src/components/dms/MessageItem.tsx:158
 msgid "Yesterday, {time}"
 msgstr ""
 
@@ -5844,15 +6040,15 @@ msgstr "Anda tidak memiliki pengikut."
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr "Anda belum memiliki kode undangan! Kami akan mengirimkan kode saat Anda sudah sedikit lama di Bluesky."
 
-#: src/view/screens/SavedFeeds.tsx:103
+#: src/view/screens/SavedFeeds.tsx:116
 msgid "You don't have any pinned feeds."
 msgstr "Anda tidak memiliki feed yang disematkan."
 
 #: src/view/screens/Feeds.tsx:477
-msgid "You don't have any saved feeds!"
-msgstr "Anda tidak memiliki feed yang disimpan!"
+#~ msgid "You don't have any saved feeds!"
+#~ msgstr "Anda tidak memiliki feed yang disimpan!"
 
-#: src/view/screens/SavedFeeds.tsx:136
+#: src/view/screens/SavedFeeds.tsx:157
 msgid "You don't have any saved feeds."
 msgstr "Anda tidak memiliki feed yang disimpan."
 
@@ -5899,7 +6095,7 @@ msgstr "Anda tidak punya feed."
 msgid "You have no lists."
 msgstr "Anda tidak punya daftar."
 
-#: src/screens/Messages/List/index.tsx:176
+#: src/screens/Messages/List/index.tsx:200
 msgid "You have no messages yet. Start a conversation with someone!"
 msgstr "Anda belum memiliki pesan. Mulailah percakapan dengan seseorang!"
 
@@ -5919,7 +6115,11 @@ msgstr "Anda belum membisukan akun apa pun. Untuk membisukan akun, buka profilny
 msgid "You haven't muted any words or tags yet"
 msgstr "Anda belum membisukan kata atau tag apa pun"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:68
+#: src/components/moderation/LabelsOnMeDialog.tsx:84
+msgid "You may appeal non-self labels if you feel they were placed in error."
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:89
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "Anda dapat mengajukan banding atas label ini jika Anda merasa label tersebut ditempatkan secara tidak tepat."
 
@@ -5947,7 +6147,7 @@ msgstr "Anda sekarang akan menerima notifikasi untuk utas ini"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Anda akan menerima email berisikan \"kode reset\". Masukkan kode tersebut di sini, lalu masukkan kata sandi baru."
 
-#: src/screens/Messages/List/index.tsx:238
+#: src/screens/Messages/List/ChatListItem.tsx:37
 msgid "You: {0}"
 msgstr ""
 
@@ -5961,7 +6161,7 @@ msgstr "Anda memiliki kendali"
 msgid "You're in line"
 msgstr "Anda sedang dalam antrian"
 
-#: src/screens/Onboarding/StepFinished.tsx:96
+#: src/screens/Onboarding/StepFinished.tsx:193
 msgid "You're ready to go!"
 msgstr "Anda siap untuk mulai!"
 
@@ -5982,7 +6182,7 @@ msgstr "Akun Anda"
 msgid "Your account has been deleted"
 msgstr "Akun Anda telah dihapus"
 
-#: src/view/screens/Settings/ExportCarDialog.tsx:48
+#: src/view/screens/Settings/ExportCarDialog.tsx:66
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "Semua catatan data publik dalam repositori akun Anda dapat diunduh sebagai file \"CAR\". Tidak termasuk konten media seperti gambar dan data pribadi yang harus diunduh secara terpisah."
 
@@ -5999,16 +6199,16 @@ msgid "Your default feed is \"Following\""
 msgstr "Feed bawaan Anda adalah \"Mengikuti\""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:57
-#: src/screens/Signup/state.ts:227
+#: src/screens/Signup/state.ts:220
 #: src/view/com/modals/ChangePassword.tsx:56
 msgid "Your email appears to be invalid."
 msgstr "Email Anda tidak valid."
 
-#: src/view/com/modals/ChangeEmail.tsx:127
+#: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "Alamat email Anda telah diperbarui namun belum diverifikasi. Silakan verifikasi alamat email baru Anda."
 
-#: src/view/com/modals/VerifyEmail.tsx:123
+#: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Alamat email Anda belum diverifikasi. Ini merupakan langkah keamanan penting yang kami rekomendasikan."
 
@@ -6020,7 +6220,7 @@ msgstr "Feed mengikuti Anda kosong! Ikuti lebih banyak pengguna untuk melihat ap
 msgid "Your full handle will be"
 msgstr "Handle lengkap Anda akan menjadi"
 
-#: src/view/com/modals/ChangeHandle.tsx:272
+#: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Handle lengkap Anda akan menjadi <0>@{0}</0>"
 
@@ -6036,7 +6236,7 @@ msgstr "Kata sandi Anda telah berhasil diubah!"
 msgid "Your post has been published"
 msgstr "Postingan Anda telah dipublikasikan"
 
-#: src/screens/Onboarding/StepFinished.tsx:111
+#: src/screens/Onboarding/StepFinished.tsx:208
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Postingan, suka, dan blokir Anda bersifat publik. Bisukan bersifat privat."
 
@@ -6047,6 +6247,10 @@ msgstr "Profil Anda"
 #: src/view/com/composer/Composer.tsx:313
 msgid "Your reply has been published"
 msgstr "Balasan Anda telah dipublikasikan"
+
+#: src/components/dms/MessageReportDialog.tsx:140
+msgid "Your report will be sent to the Bluesky Moderation Service"
+msgstr ""
 
 #: src/screens/Signup/index.tsx:166
 msgid "Your user handle"

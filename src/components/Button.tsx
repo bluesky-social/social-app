@@ -292,7 +292,7 @@ export function Button({
           baseStyles.push({height: 50, width: 50})
         }
       } else if (size === 'small') {
-        baseStyles.push({height: 40, width: 40})
+        baseStyles.push({height: 34, width: 34})
       } else if (size === 'tiny') {
         baseStyles.push({height: 20, width: 20})
       }

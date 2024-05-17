@@ -69,9 +69,9 @@ export function Inner({
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
-  const {gtMobile} = useBreakpoints()
   const suggestedDids = React.useMemo(() => {
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -44,8 +45,11 @@ import {
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
+import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {IconCircle} from '#/components/IconCircle'
+import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 
@@ -74,6 +78,7 @@ type FlatlistSlice =
       type: 'savedFeed'
       key: string
       feedUri: string
+      savedFeedConfig: AppBskyActorDefs.SavedFeed
     }
   | {
       type: 'savedFeedsLoadMore'
@@ -98,6 +103,10 @@ type FlatlistSlice =
     }
   | {
       type: 'popularFeedsLoadingMore'
+      key: string
+    }
+  | {
+      type: 'noFollowingFeed'
       key: string
     }
 
@@ -229,33 +238,54 @@ export function FeedsScreen(_props: Props) {
           error: cleanError(preferencesError.toString()),
         })
       } else {
-        if (isPreferencesLoading || !preferences?.feeds?.saved) {
+        if (isPreferencesLoading || !preferences?.savedFeeds) {
           slices.push({
             key: 'savedFeedsLoading',
             type: 'savedFeedsLoading',
             // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
           })
         } else {
-          if (preferences?.feeds?.saved.length !== 0) {
-            const {saved, pinned} = preferences.feeds
-
-            slices = slices.concat(
-              pinned.map(uri => ({
-                key: `savedFeed:${uri}`,
-                type: 'savedFeed',
-                feedUri: uri,
-              })),
+          if (preferences.savedFeeds?.length) {
+            const noFollowingFeed = preferences.savedFeeds.every(
+              f => f.type !== 'timeline',
             )
 
             slices = slices.concat(
-              saved
-                .filter(uri => !pinned.includes(uri))
-                .map(uri => ({
-                  key: `savedFeed:${uri}`,
+              preferences.savedFeeds
+                .filter(f => {
+                  return f.pinned
+                })
+                .map(feed => ({
+                  key: `savedFeed:${feed.value}:${feed.id}`,
                   type: 'savedFeed',
-                  feedUri: uri,
+                  feedUri: feed.value,
+                  savedFeedConfig: feed,
                 })),
             )
+            slices = slices.concat(
+              preferences.savedFeeds
+                .filter(f => {
+                  return !f.pinned
+                })
+                .map(feed => ({
+                  key: `savedFeed:${feed.value}:${feed.id}`,
+                  type: 'savedFeed',
+                  feedUri: feed.value,
+                  savedFeedConfig: feed,
+                })),
+            )
+
+            if (noFollowingFeed) {
+              slices.push({
+                key: 'noFollowingFeed',
+                type: 'noFollowingFeed',
+              })
+            }
+          } else {
+            slices.push({
+              key: 'savedFeedNoResults',
+              type: 'savedFeedNoResults',
+            })
           }
         }
       }
@@ -323,7 +353,12 @@ export function FeedsScreen(_props: Props) {
                     ) {
                       return false
                     }
-                    return !preferences?.feeds?.saved.includes(feed.uri)
+                    const alreadySaved = Boolean(
+                      preferences?.savedFeeds?.find(f => {
+                        return f.value === feed.uri
+                      }),
+                    )
+                    return !alreadySaved
                   })
                   .map(feed => ({
                     key: `popularFeed:${feed.uri}`,
@@ -463,23 +498,23 @@ export function FeedsScreen(_props: Props) {
                 </View>
               </View>
             )}
-            {preferences?.feeds?.saved?.length !== 0 && <FeedsSavedHeader />}
+            <FeedsSavedHeader />
           </>
         )
       } else if (item.type === 'savedFeedNoResults') {
         return (
           <View
-            style={{
-              paddingHorizontal: 16,
-              paddingTop: 10,
-            }}>
-            <Text type="lg" style={pal.textLight}>
-              <Trans>You don't have any saved feeds!</Trans>
-            </Text>
+            style={[
+              pal.border,
+              {
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <NoSavedFeedsOfAnyType />
           </View>
         )
       } else if (item.type === 'savedFeed') {
-        return <SavedFeed feedUri={item.feedUri} />
+        return <FeedOrFollowing savedFeedConfig={item.savedFeedConfig} />
       } else if (item.type === 'popularFeedsHeader') {
         return (
           <>
@@ -521,6 +556,18 @@ export function FeedsScreen(_props: Props) {
             </Text>
           </View>
         )
+      } else if (item.type === 'noFollowingFeed') {
+        return (
+          <View
+            style={[
+              pal.border,
+              {
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <NoFollowingFeed />
+          </View>
+        )
       }
       return null
     },
@@ -532,7 +579,6 @@ export function FeedsScreen(_props: Props) {
       pal.icon,
       pal.textLight,
       _,
-      preferences?.feeds?.saved?.length,
       query,
       onChangeQuery,
       onPressCancelSearch,
@@ -585,16 +631,75 @@ export function FeedsScreen(_props: Props) {
   )
 }
 
-function SavedFeed({feedUri}: {feedUri: string}) {
+function FeedOrFollowing({
+  savedFeedConfig: feed,
+}: {
+  savedFeedConfig: AppBskyActorDefs.SavedFeed
+}) {
+  return feed.type === 'timeline' ? (
+    <FollowingFeed />
+  ) : (
+    <SavedFeed savedFeedConfig={feed} />
+  )
+}
+
+function FollowingFeed() {
+  const pal = usePalette('default')
+  const t = useTheme()
+  const {isMobile} = useWebMediaQueries()
+  return (
+    <View
+      testID={`saved-feed-timeline`}
+      style={[
+        pal.border,
+        styles.savedFeed,
+        isMobile && styles.savedFeedMobile,
+      ]}>
+      <View
+        style={[
+          a.align_center,
+          a.justify_center,
+          {
+            width: 28,
+            height: 28,
+            borderRadius: 3,
+            backgroundColor: t.palette.primary_500,
+          },
+        ]}>
+        <FilterTimeline
+          style={[
+            {
+              width: 18,
+              height: 18,
+            },
+          ]}
+          fill={t.palette.white}
+        />
+      </View>
+      <View
+        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+        <Text type="lg-medium" style={pal.text} numberOfLines={1}>
+          <Trans>Following</Trans>
+        </Text>
+      </View>
+    </View>
+  )
+}
+
+function SavedFeed({
+  savedFeedConfig: feed,
+}: {
+  savedFeedConfig: AppBskyActorDefs.SavedFeed
+}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
-  const {data: info, error} = useFeedSourceInfoQuery({uri: feedUri})
-  const typeAvatar = getAvatarTypeFromUri(feedUri)
+  const {data: info, error} = useFeedSourceInfoQuery({uri: feed.value})
+  const typeAvatar = getAvatarTypeFromUri(feed.value)
 
   if (!info)
     return (
       <SavedFeedLoadingPlaceholder
-        key={`savedFeedLoadingPlaceholder:${feedUri}`}
+        key={`savedFeedLoadingPlaceholder:${feed.value}`}
       />
     )
 
@@ -632,6 +737,7 @@ function SavedFeed({feedUri}: {feedUri: string}) {
           </View>
         ) : null}
       </View>
+
       {isMobile && (
         <FontAwesomeIcon
           icon="chevron-right"

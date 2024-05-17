@@ -16,6 +16,7 @@ import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepModeration} from '#/screens/Onboarding/StepModeration'
+import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
 import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
 import {Portal} from '#/components/Portal'
@@ -65,6 +66,7 @@ export function Onboarding() {
             [state, dispatch, interestsDisplayNames],
           )}>
           <Layout>
+            {state.activeStep === 'profile' && <StepProfile />}
             {state.activeStep === 'interests' && <StepInterests />}
             {state.activeStep === 'suggestedAccounts' && (
               <StepSuggestedAccounts />

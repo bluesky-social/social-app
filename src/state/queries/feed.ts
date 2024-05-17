@@ -1,4 +1,5 @@
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
@@ -13,16 +14,19 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
+import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
+import {FeedDescriptor} from './post-feed'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
   uri: string
+  feedDescriptor: FeedDescriptor
   route: {
     href: string
     name: string
@@ -41,6 +45,7 @@ export type FeedSourceFeedInfo = {
 export type FeedSourceListInfo = {
   type: 'list'
   uri: string
+  feedDescriptor: FeedDescriptor
   route: {
     href: string
     name: string
@@ -79,6 +84,7 @@ export function hydrateFeedGenerator(
   return {
     type: 'feed',
     uri: view.uri,
+    feedDescriptor: `feedgen|${view.uri}`,
     cid: view.cid,
     route: {
       href,
@@ -110,6 +116,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   return {
     type: 'list',
     uri: view.uri,
+    feedDescriptor: `list|${view.uri}`,
     route: {
       href,
       name: route[0],
@@ -202,27 +209,15 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const FOLLOWING_FEED_STUB: FeedSourceInfo = {
-  type: 'feed',
-  displayName: 'Following',
-  uri: '',
-  route: {
-    href: '/',
-    name: 'Home',
-    params: {},
-  },
-  cid: '',
-  avatar: '',
-  description: new RichText({text: ''}),
-  creatorDid: '',
-  creatorHandle: '',
-  likeCount: 0,
-  likeUri: '',
+export type SavedFeedSourceInfo = FeedSourceInfo & {
+  savedFeed: AppBskyActorDefs.SavedFeed
 }
-const DISCOVER_FEED_STUB: FeedSourceInfo = {
+
+const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
-  uri: '',
+  uri: DISCOVER_FEED_URI,
+  feedDescriptor: `feedgen|${DISCOVER_FEED_URI}`,
   route: {
     href: '/',
     name: 'Home',
@@ -235,6 +230,11 @@ const DISCOVER_FEED_STUB: FeedSourceInfo = {
   creatorHandle: '',
   likeCount: 0,
   likeUri: '',
+  // ---
+  savedFeed: {
+    id: 'pwi-discover',
+    ...DISCOVER_SAVED_FEED,
+  },
 }
 
 const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
@@ -243,43 +243,45 @@ export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
   const {getAgent} = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const pinnedUris = preferences?.feeds?.pinned ?? []
+  const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 
   return useQuery({
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     queryKey: [
       pinnedFeedInfosQueryKeyRoot,
-      (hasSession ? 'authed:' : 'unauthed:') + pinnedUris.join(','),
+      (hasSession ? 'authed:' : 'unauthed:') +
+        pinnedItems.map(f => f.value).join(','),
     ],
     queryFn: async () => {
-      let resolved = new Map()
+      if (!hasSession) {
+        return [PWI_DISCOVER_FEED_STUB]
+      }
+
+      let resolved = new Map<string, FeedSourceInfo>()
 
       // Get all feeds. We can do this in a batch.
-      const feedUris = pinnedUris.filter(
-        uri => getFeedTypeFromUri(uri) === 'feed',
-      )
+      const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
       let feedsPromise = Promise.resolve()
-      if (feedUris.length > 0) {
+      if (pinnedFeeds.length > 0) {
         feedsPromise = getAgent()
           .app.bsky.feed.getFeedGenerators({
-            feeds: feedUris,
+            feeds: pinnedFeeds.map(f => f.value),
           })
           .then(res => {
-            for (let feedView of res.data.feeds) {
+            for (let i = 0; i < res.data.feeds.length; i++) {
+              const feedView = res.data.feeds[i]
               resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
             }
           })
       }
 
       // Get all lists. This currently has to be done individually.
-      const listUris = pinnedUris.filter(
-        uri => getFeedTypeFromUri(uri) === 'list',
-      )
-      const listsPromises = listUris.map(listUri =>
+      const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
+      const listsPromises = pinnedLists.map(list =>
         getAgent()
           .app.bsky.graph.getList({
-            list: listUri,
+            list: list.value,
             limit: 1,
           })
           .then(res => {
@@ -288,12 +290,37 @@ export function usePinnedFeedsInfos() {
           }),
       )
 
-      // The returned result will have the original order.
-      const result = [hasSession ? FOLLOWING_FEED_STUB : DISCOVER_FEED_STUB]
       await Promise.allSettled([feedsPromise, ...listsPromises])
-      for (let pinnedUri of pinnedUris) {
-        if (resolved.has(pinnedUri)) {
-          result.push(resolved.get(pinnedUri))
+
+      // order the feeds/lists in the order they were pinned
+      const result: SavedFeedSourceInfo[] = []
+      for (let pinnedItem of pinnedItems) {
+        const feedInfo = resolved.get(pinnedItem.value)
+        if (feedInfo) {
+          result.push({
+            ...feedInfo,
+            savedFeed: pinnedItem,
+          })
+        } else if (pinnedItem.type === 'timeline') {
+          result.push({
+            type: 'feed',
+            displayName: 'Following',
+            uri: pinnedItem.value,
+            feedDescriptor: 'following',
+            route: {
+              href: '/',
+              name: 'Home',
+              params: {},
+            },
+            cid: '',
+            avatar: '',
+            description: new RichText({text: ''}),
+            creatorDid: '',
+            creatorHandle: '',
+            likeCount: 0,
+            likeUri: '',
+            savedFeed: pinnedItem,
+          })
         }
       }
       return result

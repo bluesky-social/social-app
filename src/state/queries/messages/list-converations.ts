@@ -1,29 +1,29 @@
 import {useCallback, useMemo} from 'react'
+import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
 import {
-  BskyAgent,
-  ChatBskyConvoDefs,
-  ChatBskyConvoListConvos,
-} from '@atproto-labs/api'
-import {useInfiniteQuery, useQueryClient} from '@tanstack/react-query'
+  InfiniteData,
+  QueryClient,
+  useInfiniteQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
-import {useHeaders} from './temp-headers'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {useAgent} from '#/state/session'
+import {decrementBadgeCount} from 'lib/notifications/notifications'
 
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
 export function useListConvos({refetchInterval}: {refetchInterval: number}) {
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
+  const {getAgent} = useAgent()
 
   return useInfiniteQuery({
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
-      const agent = new BskyAgent({service: serviceUrl})
-      const {data} = await agent.api.chat.bsky.convo.listConvos(
+      const {data} = await getAgent().api.chat.bsky.convo.listConvos(
         {cursor: pageParam},
-        {headers},
+        {headers: DM_SERVICE_HEADERS},
       )
 
       return data
@@ -117,10 +117,18 @@ export function useOnMarkAsRead() {
   return useCallback(
     (chatId: string) => {
       queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
-        return optimisticUpdate(chatId, old, convo => ({
-          ...convo,
-          unreadCount: 0,
-        }))
+        return optimisticUpdate(chatId, old, convo => {
+          // We only want to decrement the badge by one no matter the unread count, since we only increment once per
+          // sender regardless of message count
+          if (convo.unreadCount > 0) {
+            decrementBadgeCount(1)
+          }
+
+          return {
+            ...convo,
+            unreadCount: 0,
+          }
+        })
       })
     },
     [queryClient],
@@ -144,5 +152,31 @@ function optimisticUpdate(
         chatId === convo.id ? updateFn(convo) : convo,
       ),
     })),
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+) {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+  >({
+    queryKey: RQKEY,
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+
+    for (const page of queryData.pages) {
+      for (const convo of page.convos) {
+        for (const member of convo.members) {
+          if (member.did === did) {
+            yield member
+          }
+        }
+      }
+    }
   }
 }

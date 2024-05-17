@@ -19,6 +19,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -65,6 +66,7 @@ export const LoginForm = ({
   const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
   const {login} = useSessionApi()
+  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
@@ -111,6 +113,7 @@ export const LoginForm = ({
         },
         'LoginForm',
       )
+      requestNotificationsPermission('Login')
     } catch (e: any) {
       const errMsg = e.toString()
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

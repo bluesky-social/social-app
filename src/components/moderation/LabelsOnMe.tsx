@@ -3,10 +3,10 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
 
+import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {Button, ButtonText, ButtonIcon, ButtonSize} from '#/components/Button'
+import {Button, ButtonIcon, ButtonSize, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
   LabelsOnMeDialog,
@@ -32,9 +32,7 @@ export function LabelsOnMe({
   if (!labels || !currentAccount) {
     return null
   }
-  labels = labels.filter(
-    l => !l.val.startsWith('!') && l.src !== currentAccount.did,
-  )
+  labels = labels.filter(l => !l.val.startsWith('!'))
   if (!labels.length) {
     return null
   }
@@ -55,13 +53,13 @@ export function LabelsOnMe({
         <ButtonText style={[a.leading_snug]}>
           {isAccount ? (
             <Trans>
-              <Plural value={labels.length} one="# label" other="# labels" />{' '}
-              has been placed on this account
+              <Plural value={labels.length} one="# label has" other="# labels have" />{' '}
+              been placed on this account
             </Trans>
           ) : (
             <Trans>
-              <Plural value={labels.length} one="# label" other="# labels" />{' '}
-              has been placed on this content
+              <Plural value={labels.length} one="# label has" other="# labels have" />{' '}
+              been placed on this content
             </Trans>
           )}
         </ButtonText>
