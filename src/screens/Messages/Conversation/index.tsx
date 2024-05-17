@@ -71,6 +71,16 @@ function Inner() {
     did: convoState.recipients?.[0].did,
   })
 
+  // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
+  // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
+  // empty. So, we also check for that possible state as well and render once we can.
+  const [hasScrolled, setHasScrolled] = React.useState(false)
+  const readyToShow =
+    hasScrolled ||
+    (convoState.status === ConvoStatus.Ready &&
+      !convoState.isFetchingHistory &&
+      convoState.items.length === 0)
+
   if (convoState.status === ConvoStatus.Error) {
     return (
       <CenteredView style={a.flex_1} sideBorders>
@@ -84,10 +94,22 @@ function Inner() {
     )
   }
 
-  if (!moderationOpts || !recipient) {
-    return (
-      <CenteredView style={[a.flex_1]} sideBorders>
-        <MessagesListHeader />
+  return (
+    <CenteredView style={[a.flex_1]} sideBorders>
+      {moderationOpts && recipient ? (
+        <InnerReady
+          moderationOpts={moderationOpts}
+          recipient={recipient}
+          hasScrolled={hasScrolled}
+          setHasScrolled={setHasScrolled}
+        />
+      ) : (
+        <>
+          <MessagesListHeader />
+          <View style={[a.align_center, a.gap_sm, a.flex_1]} />
+        </>
+      )}
+      {!readyToShow && (
         <View
           style={[
             a.absolute,
@@ -102,21 +124,22 @@ function Inner() {
             <Loader size="xl" />
           </View>
         </View>
-      </CenteredView>
-    )
-  }
-
-  return <InnerReady moderationOpts={moderationOpts} recipient={recipient} />
+      )}
+    </CenteredView>
+  )
 }
 
 function InnerReady({
   moderationOpts,
   recipient: recipientUnshadowed,
+  hasScrolled,
+  setHasScrolled,
 }: {
   moderationOpts: ModerationOpts
   recipient: AppBskyActorDefs.ProfileViewBasic
+  hasScrolled: boolean
+  setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const t = useTheme()
   const convoState = useConvo()
   const recipient = useProfileShadow(recipientUnshadowed)
 
@@ -135,55 +158,29 @@ function InnerReady({
     }
   }, [moderation])
 
-  // Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
-  // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
-  // empty. So, we also check for that possible state as well and render once we can.
-  const [hasScrolled, setHasScrolled] = React.useState(false)
-  const readyToShow =
-    hasScrolled ||
-    (convoState.status === ConvoStatus.Ready &&
-      !convoState.isFetchingHistory &&
-      convoState.items.length === 0)
-
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
-      <MessagesListHeader
-        profile={recipient}
-        moderation={moderation}
-        blockInfo={blockInfo}
-      />
       <View style={[a.flex_1]}>
+        <MessagesListHeader
+          profile={recipient}
+          moderation={moderation}
+          blockInfo={blockInfo}
+        />
         {isConvoActive(convoState) && (
-          <>
-            <MessagesList
-              hasScrolled={hasScrolled}
-              setHasScrolled={setHasScrolled}
-              blocked={moderation?.blocked}
-            />
-            <MessagesListBlockedFooter
-              recipient={recipient}
-              convoId={convoState.convo.id}
-              hasMessages={convoState.items.length > 0}
-              listBlocks={blockInfo.listBlocks}
-              userBlock={blockInfo.userBlock}
-            />
-          </>
-        )}
-        {!readyToShow && (
-          <View
-            style={[
-              a.absolute,
-              a.z_10,
-              a.w_full,
-              a.h_full,
-              a.justify_center,
-              a.align_center,
-              t.atoms.bg,
-            ]}>
-            <View style={[{marginBottom: 75}]}>
-              <Loader size="xl" />
-            </View>
-          </View>
+          <MessagesList
+            hasScrolled={hasScrolled}
+            setHasScrolled={setHasScrolled}
+            blocked={moderation?.blocked}
+            footer={
+              <MessagesListBlockedFooter
+                recipient={recipient}
+                convoId={convoState.convo.id}
+                hasMessages={convoState.items.length > 0}
+                listBlocks={blockInfo.listBlocks}
+                userBlock={blockInfo.userBlock}
+              />
+            }
+          />
         )}
       </View>
     </CenteredView>

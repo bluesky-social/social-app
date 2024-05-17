@@ -67,10 +67,12 @@ export function MessagesList({
   hasScrolled,
   setHasScrolled,
   blocked,
+  footer,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
   blocked?: boolean
+  footer?: React.ReactNode
 }) {
   const convoState = useConvoActive()
   const {getAgent} = useAgent()
@@ -293,11 +295,13 @@ export function MessagesList({
           }
         />
       </ScrollProvider>
-      {!blocked && (
+      {!blocked ? (
         <MessageInput
           onSendMessage={onSendMessage}
           scrollToEnd={scrollToEndNow}
         />
+      ) : (
+        footer
       )}
       {showNewMessagesPill && <NewMessagesPill />}
     </Animated.View>
