@@ -53,12 +53,20 @@ export function LabelsOnMe({
         <ButtonText style={[a.leading_snug]}>
           {isAccount ? (
             <Trans>
-              <Plural value={labels.length} one="# label has" other="# labels have" />{' '}
+              <Plural
+                value={labels.length}
+                one="# label has"
+                other="# labels have"
+              />{' '}
               been placed on this account
             </Trans>
           ) : (
             <Trans>
-              <Plural value={labels.length} one="# label has" other="# labels have" />{' '}
+              <Plural
+                value={labels.length}
+                one="# label has"
+                other="# labels have"
+              />{' '}
               been placed on this content
             </Trans>
           )}
