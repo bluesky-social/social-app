@@ -21,7 +21,9 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Text} from '#/components/Typography'
 
-export let MessagesListHeader = ({
+const PFP_SIZE = isWeb ? 40 : 34
+
+export let MessagesListHeaderOLD = ({
   profile,
   moderation,
   blockInfo,
@@ -113,6 +115,106 @@ export let MessagesListHeader = ({
                 t.atoms.bg_contrast_25,
               ]}
             />
+          </View>
+
+          <View style={{width: 30}} />
+        </>
+      )}
+    </View>
+  )
+}
+
+export let MessagesListHeader = ({
+  profile,
+  moderation,
+  blockInfo,
+}: {
+  profile?: AppBskyActorDefs.ProfileViewBasic
+  moderation?: ModerationDecision
+  blockInfo?: {
+    listBlocks: ModerationCause[]
+    userBlock?: ModerationCause
+  }
+}): React.ReactNode => {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {gtTablet} = useBreakpoints()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onPressBack = useCallback(() => {
+    if (isWeb) {
+      navigation.replace('Messages', {})
+    } else {
+      navigation.goBack()
+    }
+  }, [navigation])
+
+  return (
+    <View
+      style={[
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.border_b,
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        gtTablet ? a.pl_lg : a.pl_xl,
+        a.pr_lg,
+        a.py_sm,
+      ]}>
+      {!gtTablet && (
+        <TouchableOpacity
+          testID="conversationHeaderBackBtn"
+          onPress={onPressBack}
+          hitSlop={BACK_HITSLOP}
+          style={{width: 30, height: 30}}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Back`)}
+          accessibilityHint="">
+          <FontAwesomeIcon
+            size={18}
+            icon="angle-left"
+            style={{
+              marginTop: 6,
+            }}
+            color={t.atoms.text.color}
+          />
+        </TouchableOpacity>
+      )}
+
+      {profile && moderation && blockInfo ? (
+        <HeaderReady
+          profile={profile}
+          moderation={moderation}
+          blockInfo={blockInfo}
+        />
+      ) : (
+        <>
+          <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
+            <View
+              style={[
+                {width: PFP_SIZE, height: PFP_SIZE},
+                a.rounded_full,
+                t.atoms.bg_contrast_25,
+              ]}
+            />
+            <View style={a.gap_xs}>
+              <View
+                style={[
+                  {width: 120, height: 16},
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
+                  a.mt_xs,
+                ]}
+              />
+              <View
+                style={[
+                  {width: 175, height: 12},
+                  a.rounded_xs,
+                  t.atoms.bg_contrast_25,
+                ]}
+              />
+            </View>
           </View>
 
           <View style={{width: 30}} />
