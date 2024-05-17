@@ -24,7 +24,7 @@ msgstr "{following} подписок"
 
 #: src/view/shell/Drawer.tsx:441
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} непрочитанных"
+msgstr "{numUnreadNotifications} непрочитанное"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
@@ -311,7 +311,7 @@ msgstr "Пароль приложения удален"
 
 #: src/view/com/modals/AddAppPasswords.tsx:135
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "Название пароля может содержать только латинские буквы, цифры, пробелы, минусы и нижнее подчеркивание."
+msgstr "Название пароля приложения может содержать только латинские буквы, цифры, пробелы, минусы и нижнее подчеркивание."
 
 #: src/view/com/modals/AddAppPasswords.tsx:100
 msgid "App Password names must be at least 4 characters long."
@@ -346,11 +346,11 @@ msgstr "Оформление"
 
 #: src/view/screens/AppPasswords.tsx:265
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "Вы действительно хотите удалить пароль для приложения \"{name}\"?"
+msgstr "Вы действительно хотите удалить пароль приложения \"{name}\"?"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr "Вы уверены, что хотите удалить {0} из ленты?"
+msgstr "Вы уверены, что хотите удалить {0} из лент?"
 
 #: src/view/com/composer/Composer.tsx:529
 msgid "Are you sure you'd like to discard this draft?"
@@ -362,7 +362,7 @@ msgstr "Вы уверены?"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
-msgstr "Вы пишете <0>{0}</0>?"
+msgstr "Вы пишете на <0>{0}</0>?"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
@@ -467,7 +467,7 @@ msgstr "Блокировка не мешает этому маркировщик
 
 #: src/view/screens/ProfileList.tsx:633
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Блокировка - это открытая информация. Заблокированные пользователи не могут отвечать в ваших темах, упоминать вас или иным образом взаимодействовать с вами."
+msgstr "Блокировка - это открытая информация. Заблокированные пользователи не могут отвечать в ваших постах, упоминать вас или иным образом взаимодействовать с вами."
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
@@ -716,7 +716,7 @@ msgstr "Очистите все старые данные хранилища"
 
 #: src/view/screens/Settings/index.tsx:830
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "Очистите все старые данные (после этого перезагрузитесь)"
+msgstr "Очистите все старые данные (перезапуститесь после этого)"
 
 #: src/view/screens/Settings/index.tsx:839
 msgid "Clear all storage data"
@@ -858,7 +858,7 @@ msgstr "Настроить фильтрацию содержимого для к
 
 #: src/components/moderation/LabelPreference.tsx:244
 msgid "Configured in <0>moderation settings</0>."
-msgstr "Настроено <0>в настройках модерации</0>."
+msgstr "Настраивается в <0>настройках модерации</0>."
 
 #: src/components/Prompt.tsx:153
 #: src/components/Prompt.tsx:156
@@ -921,7 +921,7 @@ msgstr "Заблокированное содержимое"
 
 #: src/screens/Moderation/index.tsx:285
 msgid "Content filters"
-msgstr "Фильтры контента"
+msgstr "Фильтры содержимого"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
 #: src/view/screens/LanguageSettings.tsx:278
@@ -1029,7 +1029,7 @@ msgstr "Копировать ссылку на пост"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:230
 #: src/view/com/util/forms/PostDropdownBtn.tsx:232
 msgid "Copy post text"
-msgstr "Копировать текст сообщения"
+msgstr "Копировать текст поста"
 
 #: src/Navigation.tsx:253
 #: src/view/screens/CopyrightPolicy.tsx:29
@@ -1194,7 +1194,7 @@ msgstr "Описание"
 
 #: src/view/com/composer/Composer.tsx:229
 msgid "Did you want to say anything?"
-msgstr "Пустой пост. Вы хотели что-то написать?"
+msgstr "Вы хотели что-то написать?"
 
 #: src/view/screens/Settings/index.tsx:452
 msgid "Dim"
@@ -1202,7 +1202,7 @@ msgstr "Тусклый"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
-msgstr "Отключите автовоспроизведение для GIF-файлов"
+msgstr "Отключить автовоспроизведение для GIF-файлов"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:91
 msgid "Disable Email 2FA"
@@ -1233,12 +1233,12 @@ msgstr "Удалить"
 
 #: src/view/com/composer/Composer.tsx:528
 msgid "Discard draft?"
-msgstr "Отклонить черновик?"
+msgstr "Выбросить черновик?"
 
 #: src/screens/Moderation/index.tsx:518
 #: src/screens/Moderation/index.tsx:522
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "Попросить приложения не показывать мою учетную запись без входа"
+msgstr "Попросить приложения не показывать мою учетную запись незалогиненным пользователям"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
@@ -1322,7 +1322,7 @@ msgstr "Перетащите и отпустите, чтобы добавить 
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:120
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr "Из-за политики компании Apple просмотр контента для взрослых можно включить только в интернете после регистрации."
+msgstr "Из-за политики компании Apple просмотр контента для взрослых можно включить только в веб-версии после регистрации."
 
 #: src/view/com/modals/ChangeHandle.tsx:259
 msgid "e.g. alice"
@@ -1460,17 +1460,17 @@ msgstr "Эл. адреса:"
 
 #: src/components/dialogs/Embed.tsx:112
 msgid "Embed HTML code"
-msgstr "Встроенный HTML код"
+msgstr "Встроить HTML-код"
 
 #: src/components/dialogs/Embed.tsx:97
 #: src/view/com/util/forms/PostDropdownBtn.tsx:257
 #: src/view/com/util/forms/PostDropdownBtn.tsx:259
 msgid "Embed post"
-msgstr "Встроенный пост"
+msgstr "Встроить пост"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr "Вставьте этот пост в Ваш сайт. Просто скопируйте этот скрипт и вставьте его в HTML код вашего сайта."
+msgstr "Встройте этот пост в Ваш сайт. Просто скопируйте этот скрипт и вставьте его в HTML код вашего сайта."
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
@@ -1504,7 +1504,7 @@ msgstr "Включите этот параметр, чтобы видеть от
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
-msgstr "Включить только источник"
+msgstr "Включить только этот источник"
 
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
@@ -1729,11 +1729,11 @@ msgstr "Завершение"
 #: src/view/com/posts/FollowingEmptyState.tsx:57
 #: src/view/com/posts/FollowingEndOfFeed.tsx:58
 msgid "Find accounts to follow"
-msgstr "Найдите учетные записи для слежки"
+msgstr "Найдите учетные записи для подписки"
 
 #: src/view/screens/Search/Search.tsx:462
 msgid "Find posts and users on Bluesky"
-msgstr "Найти сообщения и пользователей в Bluesky"
+msgstr "Найти посты и пользователей в Bluesky"
 
 #: src/view/screens/Search/Search.tsx:589
 #~ msgid "Find users on Bluesky"
@@ -1782,7 +1782,7 @@ msgstr "Подписаться"
 #: src/view/com/profile/FollowButton.tsx:69
 msgctxt "action"
 msgid "Follow"
-msgstr "Подписать"
+msgstr "Подписаться"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:58
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:221
@@ -1801,15 +1801,15 @@ msgstr "Подписаться на всех"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
-msgstr "Подписаться взамен"
+msgstr "Подписаться в ответ"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 msgid "Follow selected accounts and continue to the next step"
-msgstr "Подпишитесь на выбранные учетные записи и переходите к следующему шагу"
+msgstr "Подписаться на выбранные учетные записи и переходите к следующему шагу"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
 #~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-#~ msgstr "Подпишитесь на нескольких пользователей чтобы начать их читать. Мы сможем порекомендовать вам больше пользователей, опираясь на то кто вас интересует."
+#~ msgstr "Подписаться на нескольких пользователей чтобы начать их читать. Мы можем рекомендовать вам больше пользователей, основываясь на том, кого вы считаете интересным."
 
 #: src/view/com/profile/ProfileCard.tsx:226
 msgid "Followed by {0}"
@@ -1857,11 +1857,11 @@ msgstr "Настройка ленты подписок"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
-msgstr "Подписан(-а) на вас"
+msgstr "Подписаны на вас"
 
 #: src/view/com/profile/ProfileCard.tsx:151
 msgid "Follows You"
-msgstr "Подписан(-а) на вас"
+msgstr "Подписаны на вас"
 
 #: src/screens/Onboarding/index.tsx:43
 msgid "Food"
