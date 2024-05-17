@@ -17,6 +17,7 @@ import {useSession} from 'state/session'
 import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {useCloseAllActiveElements} from 'state/util'
 import {resetToTab} from '#/Navigation'
+import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 type NotificationReason =
   | 'like'
@@ -41,7 +42,7 @@ type NotificationPayload =
     }
 
 const DEFAULT_HANDLER_OPTIONS = {
-  shouldShowAlert: true,
+  shouldShowAlert: false,
   shouldPlaySound: false,
   shouldSetBadge: true,
 }
@@ -57,9 +58,24 @@ export function useNotificationsHandler() {
   const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const {preferences} = useBackgroundNotificationPreferences()
 
   // Safety to prevent double handling of the same notification
   const prevDate = React.useRef(0)
+
+  const shouldBeFiltered = React.useCallback(
+    (payload: NotificationPayload) => {
+      if (
+        payload.reason === 'chat-message' &&
+        preferences.disabledDids[payload.recipientDid]
+      ) {
+        return true
+      }
+
+      return false
+    },
+    [preferences.disabledDids],
+  )
 
   React.useEffect(() => {
     if (!isAndroid) return
@@ -158,13 +174,22 @@ export function useNotificationsHandler() {
       handleNotification: async e => {
         if (e.request.trigger.type !== 'push') return DEFAULT_HANDLER_OPTIONS
 
+        const payload = e.request.trigger.payload as NotificationPayload
+
+        if (shouldBeFiltered(payload)) {
+          return {
+            shouldShowAlert: false,
+            shouldPlaySound: false,
+            shouldSetBadge: false,
+          }
+        }
+
         logger.debug(
           'Notifications: received',
           {e},
           logger.DebugContext.notifications,
         )
 
-        const payload = e.request.trigger.payload as NotificationPayload
         if (
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
@@ -236,6 +261,7 @@ export function useNotificationsHandler() {
       responseReceivedListener.remove()
     }
   }, [
+    shouldBeFiltered,
     queryClient,
     currentAccount,
     currentConvoId,

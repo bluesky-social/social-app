@@ -13,6 +13,10 @@ class NotificationService: UNNotificationServiceExtension {
       return
     }
     
+    if shouldBeFiltered(request.content, reason: reason) {
+      return
+    }
+    
     if reason == "chat-message" {
       mutateWithChatMessage(bestAttempt)
     }
@@ -47,5 +51,17 @@ class NotificationService: UNNotificationServiceExtension {
   
   func mutateWithDmSound(_ content: UNMutableNotificationContent) {
     content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "dm.aiff"))
+  }
+  
+  func shouldBeFiltered(_ content: UNNotificationContent, reason: String) -> Bool {
+    if reason == "chat-message",
+       let recipientDid = content.userInfo["recipientDid"] as? String,
+       let disabledDids = prefs?.stringArray(forKey: "disabledDids"),
+       disabledDids.contains(recipientDid)
+    {
+      return true
+    }
+    
+    return false
   }
 }

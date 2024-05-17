@@ -1,8 +1,9 @@
 package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
+import org.json.JSONObject
 
-val DEFAULTS = mapOf<String, Any>(
+val DEFAULTS = mapOf(
   "playSoundChat" to true,
   "playSoundFollow" to false,
   "playSoundLike" to false,
@@ -10,8 +11,12 @@ val DEFAULTS = mapOf<String, Any>(
   "playSoundQuote" to false,
   "playSoundReply" to false,
   "playSoundRepost" to false,
-  "mutedThreads" to mapOf<String, List<String>>()
+  "threadMutes" to mapOf<String, Boolean>(),
+  "disabledDids" to mapOf<String, Boolean>(),
 )
+
+val BOOL_VALS = arrayOf("playSoundChat", "playSoundFollow", "playSoundLike", "playSoundMention", "playSoundQuote", "playSoundReply", "playSoundRepost")
+val MAP_VALS = arrayOf("threadMutes", "disabledDids")
 
 class NotificationPrefs (private val context: Context?) {
   private val prefs = context?.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
@@ -33,11 +38,11 @@ class NotificationPrefs (private val context: Context?) {
             is String -> {
               putString(key, value)
             }
-            is Array<*> -> {
-              putStringSet(key, value.map { it.toString() }.toSet())
-            }
             is Map<*, *> -> {
-              putStringSet(key, value.map { it.toString() }.toSet())
+              putString(key, mapToString(value))
+            }
+            else -> {
+              throw Error("Unsupported type")
             }
           }
         }
@@ -45,8 +50,17 @@ class NotificationPrefs (private val context: Context?) {
       .apply()
   }
 
-  fun getAllPrefs(): MutableMap<String, *> {
-    return prefs.all
+  fun getAllPrefs(): MutableMap<String, Any> {
+    val map = mutableMapOf<String, Any>()
+
+    BOOL_VALS.forEach { key ->
+      prefs.getBoolean(key, false).let { map[key] = it }
+    }
+    MAP_VALS.forEach { key ->
+      prefs.getString(key, null)?.let { map[key] = stringToMap(it) }
+    }
+
+    return map
   }
 
   fun getBoolean(key: String): Boolean {
@@ -57,8 +71,9 @@ class NotificationPrefs (private val context: Context?) {
     return prefs.getString(key, null)
   }
 
-  fun getStringArray(key: String): Array<String>? {
-    return prefs.getStringSet(key, null)?.toTypedArray()
+  fun getStringStore(key: String): Map<String, Boolean>? {
+    val value = prefs.getString(key, null) ?: return null
+    return stringToMap(value)
   }
 
   fun setBoolean(key: String, value: Boolean) {
@@ -79,56 +94,71 @@ class NotificationPrefs (private val context: Context?) {
       .apply()
   }
 
-  fun setStringArray(key: String, value: Array<String>) {
+  fun setStringStore(key: String, value: Map<String, Boolean>) {
     prefs
       .edit()
       .apply {
-        putStringSet(key, value.toSet())
+        putString(key, mapToString(value))
       }
       .apply()
   }
 
-  fun addToStringArray(key: String, string: String) {
+  fun addToStringStore(key: String, string: String) {
     prefs
       .edit()
       .apply {
-        val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
-        set.add(string)
-        putStringSet(key, set)
+        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        map[string] = true
+        putString(key, mapToString(map))
       }
       .apply()
   }
 
-  fun removeFromStringArray(key: String, string: String) {
+  fun removeFromStringStore(key: String, string: String) {
     prefs
       .edit()
       .apply {
-        val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
-        set.remove(string)
-        putStringSet(key, set)
+        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        map.remove(string)
+        putString(key, mapToString(map))
       }
       .apply()
   }
 
-  fun addManyToStringArray(key: String, strings: Array<String>) {
+  fun addManyToStringStore(key: String, strings: Array<String>) {
     prefs
       .edit()
       .apply {
-        val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
-        set.addAll(strings.toSet())
-        putStringSet(key, set)
+        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        strings.forEach {
+          map[it] = true
+        }
+        putString(key, mapToString(map))
       }
       .apply()
   }
 
-  fun removeManyFromStringArray(key: String, strings: Array<String>) {
+  fun removeManyFromStringStore(key: String, strings: Array<String>) {
     prefs
       .edit()
       .apply {
-        val set = prefs.getStringSet(key, null)?.toMutableSet() ?: mutableSetOf()
-        set.removeAll(strings.toSet())
-        putStringSet(key, set)
+        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        strings.forEach {
+          map.remove(it)
+        }
+        putString(key, mapToString(map))
       }
       .apply()
+  }
+
+  private fun mapToString(map: Any): String {
+    return JSONObject(map as Map<*, *>).toString()
+  }
+
+  private fun stringToMap(string: String): Map<String, Boolean> {
+    val jsonObject = JSONObject(string)
+    return jsonObject.keys().asSequence().associateWith {
+      jsonObject.getBoolean(it)
+    }
   }
 }
