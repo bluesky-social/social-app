@@ -35,5 +35,8 @@ class BackgroundNotificationHandler(
         remoteMessage.data["sound"] = null
       }
     }
+
+    // TODO - Remove this once we have more backend capability
+    remoteMessage.data["badge"] = null
   }
 }

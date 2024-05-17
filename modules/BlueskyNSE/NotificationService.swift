@@ -6,19 +6,22 @@ class NotificationService: UNNotificationServiceExtension {
   var prefs = UserDefaults(suiteName: APP_GROUP)
 
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-    guard var bestAttempt = createCopy(request.content),
+    guard let bestAttempt = createCopy(request.content),
           let reason = request.content.userInfo["reason"] as? String
     else {
       contentHandler(request.content)
       return
     }
     
-    if reason == "chat-message" {
-      mutateWithChatMessage(bestAttempt)
+    if shouldBeFiltered(request.content, reason: reason) {
+      return
     }
     
-    // The badge should always be incremented when in the background
-    mutateWithBadge(bestAttempt)
+    if reason == "chat-message" {
+      mutateWithChatMessage(bestAttempt)
+    } else {
+      mutateWithBadge(bestAttempt)
+    }
     
     contentHandler(bestAttempt)
   }
@@ -47,5 +50,17 @@ class NotificationService: UNNotificationServiceExtension {
   
   func mutateWithDmSound(_ content: UNMutableNotificationContent) {
     content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "dm.aiff"))
+  }
+  
+  func shouldBeFiltered(_ content: UNNotificationContent, reason: String) -> Bool {
+    if reason == "chat-message",
+       let recipientDid = content.userInfo["recipientDid"] as? String,
+       let disabledDids = prefs?.object(forKey: "disabledDids") as? [String:Bool],
+       disabledDids[recipientDid] == true
+    {
+      return true
+    }
+    
+    return false
   }
 }
