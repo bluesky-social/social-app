@@ -96,35 +96,37 @@ function Inner() {
 
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
-      {moderationOpts && recipient ? (
-        <InnerReady
-          moderationOpts={moderationOpts}
-          recipient={recipient}
-          hasScrolled={hasScrolled}
-          setHasScrolled={setHasScrolled}
-        />
-      ) : (
-        <>
-          <MessagesListHeader />
-          <View style={[a.align_center, a.gap_sm, a.flex_1]} />
-        </>
-      )}
-      {!readyToShow && (
-        <View
-          style={[
-            a.absolute,
-            a.z_10,
-            a.w_full,
-            a.h_full,
-            a.justify_center,
-            a.align_center,
-            t.atoms.bg,
-          ]}>
-          <View style={[{marginBottom: 75}]}>
-            <Loader size="xl" />
+      {!readyToShow && <MessagesListHeader />}
+      <View style={[a.flex_1]}>
+        {moderationOpts && recipient ? (
+          <InnerReady
+            moderationOpts={moderationOpts}
+            recipient={recipient}
+            hasScrolled={hasScrolled}
+            setHasScrolled={setHasScrolled}
+          />
+        ) : (
+          <>
+            <View style={[a.align_center, a.gap_sm, a.flex_1]} />
+          </>
+        )}
+        {!readyToShow && (
+          <View
+            style={[
+              a.absolute,
+              a.z_10,
+              a.w_full,
+              a.h_full,
+              a.justify_center,
+              a.align_center,
+              t.atoms.bg,
+            ]}>
+            <View style={[{marginBottom: 75}]}>
+              <Loader size="xl" />
+            </View>
           </View>
-        </View>
-      )}
+        )}
+      </View>
     </CenteredView>
   )
 }
