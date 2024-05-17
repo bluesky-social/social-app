@@ -144,7 +144,10 @@ export function MessagesList({
         ) {
           newOffset = contentHeight.value - 50
           setShowNewMessagesPill(true)
+        } else if (!hasScrolled && height > 50) {
+          setHasScrolled(true)
         }
+
         flatListRef.current?.scrollToOffset({
           offset: newOffset,
           animated: hasScrolled,
@@ -159,6 +162,7 @@ export function MessagesList({
       contentHeight,
       isMomentumScrolling,
       hasScrolled,
+      setHasScrolled,
       convo.items.length,
       // All of these are stable
       isAtBottom.value,
@@ -217,22 +221,8 @@ export function MessagesList({
       // when a new message is added, hence the 100 pixel offset
       isAtBottom.value = e.contentSize.height - 100 < bottomOffset
       isAtTop.value = e.contentOffset.y <= 1
-
-      // This number _must_ be the height of the MaybeLoader component.
-      // We don't check for zero, because the `MaybeLoader` component is always present, even when not visible, which
-      // adds a 50 pixel offset.
-      if (e.contentSize.height > 50 && !hasScrolled) {
-        runOnJS(setHasScrolled)(true)
-      }
     },
-    [
-      layoutHeight,
-      showNewMessagesPill,
-      isAtBottom,
-      isAtTop,
-      hasScrolled,
-      setHasScrolled,
-    ],
+    [layoutHeight, showNewMessagesPill, isAtBottom, isAtTop],
   )
 
   // This tells us when we are no longer scrolling
