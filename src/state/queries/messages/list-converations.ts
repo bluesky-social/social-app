@@ -1,5 +1,9 @@
 import {useCallback, useMemo} from 'react'
-import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
+import {
+  ChatBskyConvoDefs,
+  ChatBskyConvoListConvos,
+  moderateProfile,
+} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -8,6 +12,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession} from '#/state/session'
 import {decrementBadgeCount} from 'lib/notifications/notifications'
@@ -40,6 +45,7 @@ export function useUnreadMessageCount() {
   const convos = useListConvos({
     refetchInterval: 30_000,
   })
+  const moderationOpts = useModerationOpts()
 
   const count =
     convos.data?.pages
@@ -49,9 +55,14 @@ export function useUnreadMessageCount() {
         const otherMember = convo.members.find(
           member => member.did !== currentAccount?.did,
         )
-        const blocked =
-          otherMember?.viewer?.blockedBy || otherMember?.viewer?.blocking
-        return acc + (!convo.muted && !blocked && convo.unreadCount > 0 ? 1 : 0)
+
+        if (!otherMember || !moderationOpts) return acc
+
+        const moderation = moderateProfile(otherMember, moderationOpts)
+        const shouldIgnore = convo.muted || moderation.blocked
+        const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+
+        return acc + unreadCount
       }, 0) ?? 0
 
   return useMemo(() => {
