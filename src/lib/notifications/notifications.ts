@@ -113,10 +113,16 @@ export function useRequestNotificationsPermission() {
   )
 }
 
-export async function decrementBadgeCount(by = 1) {
+export async function decrementBadgeCount(by: number | 'reset' = 1) {
   if (!isNative) return
 
   const currCount = await getBadgeCountAsync()
+
+  if (by === 'reset') {
+    await setBadgeCountAsync(0)
+    return
+  }
+
   let newCount = currCount - by
   if (newCount < 0) {
     newCount = 0
