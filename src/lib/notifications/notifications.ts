@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
+import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {BskyAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
@@ -70,12 +71,14 @@ export function useNotificationsRegistration() {
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
+  const {currentAccount} = useSession()
 
   return React.useCallback(
     async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
       const permissions = await Notifications.getPermissionsAsync()
 
       if (
+        !currentAccount ||
         !isNative ||
         permissions?.status === 'granted' ||
         (permissions?.status === 'denied' && !permissions?.canAskAgain)
@@ -106,6 +109,17 @@ export function useRequestNotificationsPermission() {
         getPushToken(true)
       }
     },
-    [gate],
+    [gate, currentAccount],
   )
+}
+
+export async function decrementBadgeCount(by = 1) {
+  if (!isNative) return
+
+  const currCount = await getBadgeCountAsync()
+  let newCount = currCount - by
+  if (newCount < 0) {
+    newCount = 0
+  }
+  await setBadgeCountAsync(newCount)
 }
