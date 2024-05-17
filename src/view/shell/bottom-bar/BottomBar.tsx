@@ -60,6 +60,47 @@ type TabOptions =
   | 'Feeds'
   | 'Messages'
 
+function ChatBtn({
+  isAtMessages,
+  onPressMessages,
+}: {
+  isAtMessages: boolean
+  onPressMessages: () => void
+}) {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const numUnreadMessages = useUnreadMessageCount()
+
+  return (
+    <Btn
+      testID="bottomBarMessagesBtn"
+      icon={
+        isAtMessages ? (
+          <MessageFilled
+            width={27}
+            style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+          />
+        ) : (
+          <Message
+            width={27}
+            style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+          />
+        )
+      }
+      onPress={onPressMessages}
+      notificationCount={numUnreadMessages.numUnread}
+      accessible={true}
+      accessibilityRole="tab"
+      accessibilityLabel={_(msg`Messages`)}
+      accessibilityHint={
+        numUnreadMessages.count > 0
+          ? `${numUnreadMessages.numUnread} unread`
+          : ''
+      }
+    />
+  )
+}
+
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
@@ -76,7 +117,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     isAtMessages,
   } = useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
-  const numUnreadMessages = useUnreadMessageCount()
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -197,31 +237,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityHint=""
             />
             {gate('dms') ? (
-              <Btn
-                testID="bottomBarMessagesBtn"
-                icon={
-                  isAtMessages ? (
-                    <MessageFilled
-                      width={iconWidth - 1}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    />
-                  ) : (
-                    <Message
-                      width={iconWidth - 1}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    />
-                  )
-                }
-                onPress={onPressMessages}
-                notificationCount={numUnreadMessages.numUnread}
-                accessible={true}
-                accessibilityRole="tab"
-                accessibilityLabel={_(msg`Messages`)}
-                accessibilityHint={
-                  numUnreadMessages.count > 0
-                    ? `${numUnreadMessages.numUnread} unread`
-                    : ''
-                }
+              <ChatBtn
+                isAtMessages={isAtMessages}
+                onPressMessages={onPressMessages}
               />
             ) : (
               <Btn
