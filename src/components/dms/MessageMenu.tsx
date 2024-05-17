@@ -11,6 +11,7 @@ import {useConvoActive} from 'state/messages/convo'
 import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+import {ReportDialog} from '#/components/dms/ReportDialog'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
@@ -18,7 +19,6 @@ import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '../icons/Clipboard'
-import {MessageReportDialog} from './MessageReportDialog'
 
 export let MessageMenu = ({
   message,
@@ -112,7 +112,10 @@ export let MessageMenu = ({
         </Menu.Outer>
       </Menu.Root>
 
-      <MessageReportDialog message={message} control={reportControl} />
+      <ReportDialog
+        params={{type: 'convoMessage', convoId: convo.convo.id, message}}
+        control={reportControl}
+      />
 
       <Prompt.Basic
         control={deleteControl}

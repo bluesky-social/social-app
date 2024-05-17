@@ -21,7 +21,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
+import {ReportDialog} from '#/components/dms/ReportDialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
@@ -205,7 +205,10 @@ let ConvoMenu = ({
         convoId={convo.id}
         currentScreen={currentScreen}
       />
-      <ReportConversationPrompt control={reportControl} />
+      <ReportDialog
+        control={reportControl}
+        params={{type: 'convoAccount', did: profile.did, convoId: convo.id}}
+      />
       <BlockedByListDialog
         control={blockedByListControl}
         listBlocks={listBlocks}
