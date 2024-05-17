@@ -61,6 +61,54 @@ export function MessagesConversationScreen({route}: Props) {
   )
 }
 
+function Inner() {
+  const t = useTheme()
+  const convoState = useConvo()
+  const {_} = useLingui()
+
+  const moderationOpts = useModerationOpts()
+  const {data: recipient} = useProfileQuery({
+    did: convoState.recipients?.[0].did,
+  })
+
+  if (convoState.status === ConvoStatus.Error) {
+    return (
+      <CenteredView style={a.flex_1} sideBorders>
+        <MessagesListHeader />
+        <Error
+          title={_(msg`Something went wrong`)}
+          message={_(msg`We couldn't load this conversation`)}
+          onRetry={() => convoState.error.retry()}
+        />
+      </CenteredView>
+    )
+  }
+
+  if (!moderationOpts || !recipient) {
+    return (
+      <CenteredView style={[a.flex_1]} sideBorders>
+        <MessagesListHeader />
+        <View
+          style={[
+            a.absolute,
+            a.z_10,
+            a.w_full,
+            a.h_full,
+            a.justify_center,
+            a.align_center,
+            t.atoms.bg,
+          ]}>
+          <View style={[{marginBottom: 75}]}>
+            <Loader size="xl" />
+          </View>
+        </View>
+      </CenteredView>
+    )
+  }
+
+  return <InnerReady moderationOpts={moderationOpts} recipient={recipient} />
+}
+
 function InnerReady({
   moderationOpts,
   recipient: recipientUnshadowed,
@@ -140,52 +188,4 @@ function InnerReady({
       </View>
     </CenteredView>
   )
-}
-
-function Inner() {
-  const t = useTheme()
-  const convoState = useConvo()
-  const {_} = useLingui()
-
-  const moderationOpts = useModerationOpts()
-  const {data: recipient} = useProfileQuery({
-    did: convoState.recipients?.[0].did,
-  })
-
-  if (convoState.status === ConvoStatus.Error) {
-    return (
-      <CenteredView style={a.flex_1} sideBorders>
-        <MessagesListHeader />
-        <Error
-          title={_(msg`Something went wrong`)}
-          message={_(msg`We couldn't load this conversation`)}
-          onRetry={() => convoState.error.retry()}
-        />
-      </CenteredView>
-    )
-  }
-
-  if (!moderationOpts || !recipient) {
-    return (
-      <CenteredView style={[a.flex_1]} sideBorders>
-        <MessagesListHeader />
-        <View
-          style={[
-            a.absolute,
-            a.z_10,
-            a.w_full,
-            a.h_full,
-            a.justify_center,
-            a.align_center,
-            t.atoms.bg,
-          ]}>
-          <View style={[{marginBottom: 75}]}>
-            <Loader size="xl" />
-          </View>
-        </View>
-      </CenteredView>
-    )
-  }
-
-  return <InnerReady moderationOpts={moderationOpts} recipient={recipient} />
 }
