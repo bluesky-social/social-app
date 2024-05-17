@@ -4964,7 +4964,7 @@ msgstr "Selecciona alguns d'aquests comptes per a seguir-los"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr "Selecciona el {emojiName} emoji com al teu avatar "
+msgstr "Selecciona el {emojiName} emoji com al teu avatar"
 
 #: src/components/ReportDialog/SubmitView.tsx:135
 msgid "Select the moderation service(s) to report to"
