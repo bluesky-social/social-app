@@ -5401,7 +5401,7 @@ msgstr "Para desabilitar o 2FA via e-mail, por favor verifique seu acesso a este
 
 #: src/components/dms/ConvoMenu.tsx:200
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Para denunciar um chat, por favor denuncie uma das mensagens individualmente. Isso vai permitir a análise da situação pelos nossos moderadores."
+msgstr "Para denunciar uma conversa, por favor, denuncie uma das mensagens individualmente. Isso vai permitir a análise da situação pelos nossos moderadores."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
