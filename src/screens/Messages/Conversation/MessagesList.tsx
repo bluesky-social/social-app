@@ -23,7 +23,7 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -228,11 +228,9 @@ export function MessagesList({
 
   // -- Keyboard animation handling
   const animatedKeyboard = useAnimatedKeyboard()
-  const {gtMobile} = useBreakpoints()
   const {bottom: bottomInset} = useSafeAreaInsets()
   const nativeBottomBarHeight = isIOS ? 42 : 60
-  const bottomOffset =
-    isWeb && gtMobile ? 0 : bottomInset + nativeBottomBarHeight
+  const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
 
   // On web, we don't want to do anything.
   // On native, we want to scroll the list to the bottom every frame that the keyboard is opening. `scrollTo` runs
