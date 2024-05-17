@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-17 02:23+0800\n"
+"PO-Revision-Date: 2024-05-17 10:18+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -22,12 +22,12 @@ msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}
 msgstr "{0, plural, one {其他 {formattedCount} 個人} other {其他 {formattedCount} 個人}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:55
-msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
+msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
 msgstr "{0, plural, one {該帳戶有 # 個標籤} other {該帳戶有 # 個標籤}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
-msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
-msgstr "{0, plural, one {該帳戶有 # 個標籤} other {該帳戶有 # 個標籤}}"
+msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
+msgstr "{0, plural, one {該內容有 # 個標籤} other {該內容有 # 個標籤}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:62
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -345,10 +345,6 @@ msgstr "一封電子郵件已發送至先前填寫的電子郵件地址 {0}。�
 msgid "An error occured"
 msgstr "發生錯誤"
 
-#: src/components/dms/MessageMenu.tsx:133
-msgid "An error occurred while trying to delete the message. Please try again."
-msgstr "嘗試刪除訊息時發生錯誤，請重試。"
-
 #: src/lib/moderation/useReportOptions.ts:27
 msgid "An issue not included in these options"
 msgstr "問題不在上述選項"
@@ -435,7 +431,7 @@ msgstr "使用預設推薦的動態源"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "您確定要刪除這個應用程式專用密碼「{name}」嗎？"
 
-#: src/components/dms/MessageMenu.tsx:122
+#: src/components/dms/MessageMenu.tsx:121
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "你確定要刪除這則訊息嗎？該訊息將為您刪除，但不會為其他參與者刪除。"
 
@@ -482,7 +478,7 @@ msgstr "至少 3 個字元"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/Conversation/index.tsx:179
-#: src/screens/Profile/Header/Shell.tsx:99
+#: src/screens/Profile/Header/Shell.tsx:100
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
 msgid "Back"
@@ -748,7 +744,7 @@ msgstr "變更您的電子郵件地址"
 
 #: src/Navigation.tsx:302
 #: src/view/shell/bottom-bar/BottomBar.tsx:219
-#: src/view/shell/desktop/LeftNav.tsx:344
+#: src/view/shell/desktop/LeftNav.tsx:296
 msgid "Chat"
 msgstr "對話"
 
@@ -757,8 +753,9 @@ msgid "Chat muted"
 msgstr "對話已靜音"
 
 #: src/components/dms/ConvoMenu.tsx:127
-#: src/components/dms/MessageMenu.tsx:68
+#: src/components/dms/MessageMenu.tsx:67
 #: src/Navigation.tsx:307
+#: src/screens/Messages/List/index.tsx:64
 msgid "Chat settings"
 msgstr "對話設定"
 
@@ -840,7 +837,7 @@ msgstr "點擊這裡"
 msgid "Click here to open tag menu for {tag}"
 msgstr "點擊這裡以開啟 {tag} 的標籤選單"
 
-#: src/components/dms/MessageItem.tsx:220
+#: src/components/dms/MessageItem.tsx:223
 msgid "Click to retry failed message"
 msgstr "點擊以重試傳送訊息"
 
@@ -1081,7 +1078,7 @@ msgstr "已複製"
 msgid "Copied build version to clipboard"
 msgstr "已複製建構版本號至剪貼簿"
 
-#: src/components/dms/MessageMenu.tsx:52
+#: src/components/dms/MessageMenu.tsx:51
 #: src/view/com/modals/AddAppPasswords.tsx:77
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
@@ -1119,8 +1116,8 @@ msgstr "複製列表連結"
 msgid "Copy link to post"
 msgstr "複製貼文連結"
 
-#: src/components/dms/MessageMenu.tsx:88
-#: src/components/dms/MessageMenu.tsx:90
+#: src/components/dms/MessageMenu.tsx:87
+#: src/components/dms/MessageMenu.tsx:89
 msgid "Copy message text"
 msgstr "複製訊息文字"
 
@@ -1240,7 +1237,7 @@ msgstr "內容管理偵錯"
 msgid "Debug panel"
 msgstr "偵錯面板"
 
-#: src/components/dms/MessageMenu.tsx:124
+#: src/components/dms/MessageMenu.tsx:123
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #: src/view/screens/AppPasswords.tsx:268
 #: src/view/screens/ProfileList.tsx:666
@@ -1263,7 +1260,7 @@ msgstr "刪除應用程式專用密碼"
 msgid "Delete app password?"
 msgstr "刪除應用程式專用密碼？"
 
-#: src/components/dms/MessageMenu.tsx:100
+#: src/components/dms/MessageMenu.tsx:99
 msgid "Delete for me"
 msgstr "為我刪除"
 
@@ -1271,11 +1268,11 @@ msgstr "為我刪除"
 msgid "Delete List"
 msgstr "刪除列表"
 
-#: src/components/dms/MessageMenu.tsx:120
+#: src/components/dms/MessageMenu.tsx:119
 msgid "Delete message"
 msgstr "刪除訊息"
 
-#: src/components/dms/MessageMenu.tsx:98
+#: src/components/dms/MessageMenu.tsx:97
 msgid "Delete message for me"
 msgstr "為我刪除訊息"
 
@@ -1789,7 +1786,7 @@ msgstr "建立應用程式專用密碼失敗。"
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "無法建立列表。請檢查您的網路連線並重試。"
 
-#: src/components/dms/MessageMenu.tsx:131
+#: src/components/dms/MessageMenu.tsx:59
 msgid "Failed to delete message"
 msgstr "無法刪除訊息"
 
@@ -1801,9 +1798,9 @@ msgstr "無法刪除貼文，請重試"
 msgid "Failed to load GIFs"
 msgstr "無法載入 GIF"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:28
-msgid "Failed to load past messages."
-msgstr "無法載入過去的訊息。"
+#: src/screens/Messages/Conversation/MessageListError.tsx:23
+msgid "Failed to load past messages"
+msgstr "無法載入過去的訊息"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
@@ -1839,7 +1836,7 @@ msgstr "意見回饋"
 #: src/view/screens/Feeds.tsx:595
 #: src/view/screens/Profile.tsx:197
 #: src/view/shell/bottom-bar/BottomBar.tsx:245
-#: src/view/shell/desktop/LeftNav.tsx:361
+#: src/view/shell/desktop/LeftNav.tsx:369
 #: src/view/shell/Drawer.tsx:492
 #: src/view/shell/Drawer.tsx:493
 msgid "Feeds"
@@ -2059,7 +2056,7 @@ msgstr "明顯違反法律或服務條款"
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:111
 #: src/view/screens/ProfileList.tsx:969
-#: src/view/shell/desktop/LeftNav.tsx:126
+#: src/view/shell/desktop/LeftNav.tsx:128
 msgid "Go back"
 msgstr "返回"
 
@@ -2221,7 +2218,7 @@ msgstr "唔，我們無法載入該內容管理服務。"
 
 #: src/Navigation.tsx:497
 #: src/view/shell/bottom-bar/BottomBar.tsx:176
-#: src/view/shell/desktop/LeftNav.tsx:321
+#: src/view/shell/desktop/LeftNav.tsx:337
 #: src/view/shell/Drawer.tsx:424
 #: src/view/shell/Drawer.tsx:425
 msgid "Home"
@@ -2573,7 +2570,7 @@ msgstr "已解除靜音的列表"
 #: src/Navigation.tsx:121
 #: src/view/screens/Profile.tsx:192
 #: src/view/screens/Profile.tsx:198
-#: src/view/shell/desktop/LeftNav.tsx:367
+#: src/view/shell/desktop/LeftNav.tsx:375
 #: src/view/shell/Drawer.tsx:508
 #: src/view/shell/Drawer.tsx:509
 msgid "Lists"
@@ -2668,7 +2665,7 @@ msgstr "被提及的用戶"
 msgid "Menu"
 msgstr "選單"
 
-#: src/components/dms/MessageMenu.tsx:59
+#: src/components/dms/MessageMenu.tsx:58
 #: src/screens/Messages/List/ChatListItem.tsx:87
 msgid "Message deleted"
 msgstr "訊息已刪除"
@@ -2677,24 +2674,23 @@ msgstr "訊息已刪除"
 msgid "Message from server: {0}"
 msgstr "來自伺服器的訊息：{0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:94
+#: src/screens/Messages/Conversation/MessageInput.tsx:101
 msgid "Message input field"
 msgstr "訊息輸入欄位"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:51
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:33
+#: src/screens/Messages/Conversation/MessageInput.tsx:56
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:38
 msgid "Message is too long"
 msgstr "訊息太長了"
 
-#: src/screens/Messages/List/index.tsx:64
-#: src/screens/Messages/List/index.tsx:237
+#: src/screens/Messages/List/index.tsx:242
 msgid "Message settings"
 msgstr "訊息設定"
 
 #: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:139
-#: src/screens/Messages/List/index.tsx:166
-#: src/screens/Messages/List/index.tsx:233
+#: src/screens/Messages/List/index.tsx:143
+#: src/screens/Messages/List/index.tsx:170
+#: src/screens/Messages/List/index.tsx:238
 msgid "Messages"
 msgstr "訊息"
 
@@ -2875,7 +2871,7 @@ msgstr "我的生日"
 msgid "My Feeds"
 msgstr "我的動態源"
 
-#: src/view/shell/desktop/LeftNav.tsx:83
+#: src/view/shell/desktop/LeftNav.tsx:85
 msgid "My Profile"
 msgstr "我的個人資料"
 
@@ -2938,8 +2934,8 @@ msgid "New"
 msgstr "新增"
 
 #: src/components/dms/NewChat.tsx:62
-#: src/screens/Messages/List/index.tsx:247
-#: src/screens/Messages/List/index.tsx:255
+#: src/screens/Messages/List/index.tsx:252
+#: src/screens/Messages/List/index.tsx:259
 msgid "New chat"
 msgstr "新對話"
 
@@ -2970,11 +2966,11 @@ msgstr "新貼文"
 #: src/view/screens/ProfileFeed.tsx:426
 #: src/view/screens/ProfileList.tsx:200
 #: src/view/screens/ProfileList.tsx:228
-#: src/view/shell/desktop/LeftNav.tsx:270
+#: src/view/shell/desktop/LeftNav.tsx:272
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/shell/desktop/LeftNav.tsx:276
+#: src/view/shell/desktop/LeftNav.tsx:278
 msgctxt "action"
 msgid "New Post"
 msgstr "新貼文"
@@ -3016,7 +3012,7 @@ msgstr "下一張圖片"
 msgid "No"
 msgstr "關"
 
-#: src/screens/Messages/List/index.tsx:150
+#: src/screens/Messages/List/index.tsx:154
 msgid "No chats yet"
 msgstr "還沒有對話"
 
@@ -3123,7 +3119,7 @@ msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制�
 #: src/view/screens/Notifications.tsx:124
 #: src/view/screens/Notifications.tsx:148
 #: src/view/shell/bottom-bar/BottomBar.tsx:268
-#: src/view/shell/desktop/LeftNav.tsx:336
+#: src/view/shell/desktop/LeftNav.tsx:352
 #: src/view/shell/Drawer.tsx:456
 #: src/view/shell/Drawer.tsx:457
 msgid "Notifications"
@@ -3345,10 +3341,6 @@ msgstr "開啟「Following」動態源偏好"
 #: src/view/com/modals/LinkWarning.tsx:93
 msgid "Opens the linked website"
 msgstr "開啟網站連結"
-
-#: src/screens/Messages/List/index.tsx:65
-msgid "Opens the message settings page"
-msgstr "打開私訊設定頁面"
 
 #: src/view/screens/Settings/index.tsx:804
 #: src/view/screens/Settings/index.tsx:814
@@ -3624,13 +3616,17 @@ msgstr "貼文已隱藏"
 msgid "Potentially Misleading Link"
 msgstr "潛在誤導性連結"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:19
+msgid "Press to attempt reconnection"
+msgstr "點擊以重試連線"
+
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
 msgstr "按下以更改託管服務供應商"
 
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:83
-#: src/screens/Messages/Conversation/MessageListError.tsx:58
+#: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
 msgstr "按下以重試"
@@ -3670,7 +3666,7 @@ msgid "profile"
 msgstr "個人檔案"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:313
-#: src/view/shell/desktop/LeftNav.tsx:373
+#: src/view/shell/desktop/LeftNav.tsx:383
 #: src/view/shell/Drawer.tsx:78
 #: src/view/shell/Drawer.tsx:541
 #: src/view/shell/Drawer.tsx:542
@@ -3734,6 +3730,10 @@ msgstr "原因：{0}"
 #: src/view/screens/Search/Search.tsx:886
 msgid "Recent Searches"
 msgstr "最近的搜尋結果"
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:20
+msgid "Reconnect"
+msgstr "重新連線"
 
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:285
@@ -3853,7 +3853,7 @@ msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "對 <0><1/></0> 回覆"
 
-#: src/components/dms/MessageMenu.tsx:108
+#: src/components/dms/MessageMenu.tsx:107
 msgid "Report"
 msgstr "檢舉"
 
@@ -3881,7 +3881,7 @@ msgstr "檢舉動態源"
 msgid "Report List"
 msgstr "檢舉列表"
 
-#: src/components/dms/MessageMenu.tsx:106
+#: src/components/dms/MessageMenu.tsx:105
 msgid "Report message"
 msgstr "檢舉訊息"
 
@@ -4019,13 +4019,12 @@ msgstr "重試登入"
 msgid "Retries the last action, which errored out"
 msgstr "重試上次出錯的操作"
 
-#: src/components/dms/MessageItem.tsx:224
-#: src/components/dms/MessageMenu.tsx:135
+#: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:94
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
-#: src/screens/Messages/Conversation/MessageListError.tsx:67
+#: src/screens/Messages/Conversation/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:236
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Signup/index.tsx:207
@@ -4131,7 +4130,7 @@ msgstr "滾動到頂部"
 #: src/view/screens/Search/Search.tsx:757
 #: src/view/screens/Search/Search.tsx:785
 #: src/view/shell/bottom-bar/BottomBar.tsx:196
-#: src/view/shell/desktop/LeftNav.tsx:329
+#: src/view/shell/desktop/LeftNav.tsx:345
 #: src/view/shell/desktop/Search.tsx:194
 #: src/view/shell/desktop/Search.tsx:203
 #: src/view/shell/Drawer.tsx:393
@@ -4321,8 +4320,8 @@ msgstr "發送電子郵件"
 msgid "Send feedback"
 msgstr "提交意見"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:117
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:95
+#: src/screens/Messages/Conversation/MessageInput.tsx:126
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:111
 msgid "Send message"
 msgstr "重送訊息"
 
@@ -4425,7 +4424,7 @@ msgstr "將圖像的寬高比設定為寬"
 #: src/Navigation.tsx:146
 #: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:322
-#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/desktop/LeftNav.tsx:391
 #: src/view/shell/Drawer.tsx:558
 #: src/view/shell/Drawer.tsx:559
 msgid "Settings"
@@ -4931,10 +4930,6 @@ msgstr "更新動態時出現問題，請檢查您的網路連線並重試。"
 msgid "There was an issue connecting to Tenor."
 msgstr "連線到 Tenor 時出現問題。"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:23
-msgid "There was an issue connecting to the chat."
-msgstr "連接到對話時出現了問題。"
-
 #: src/view/screens/ProfileFeed.tsx:233
 #: src/view/screens/ProfileList.tsx:302
 #: src/view/screens/ProfileList.tsx:321
@@ -5029,9 +5024,9 @@ msgstr "此帳戶已被一個或多個內容管理清單封鎖。若要解除封
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "此申訴將被提交至 <0>{0}</0>。"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:26
-msgid "This chat was disconnected due to a network error."
-msgstr "由於網路錯誤，對話已中斷。"
+#: src/screens/Messages/Conversation/MessageListError.tsx:18
+msgid "This chat was disconnected"
+msgstr "對話已中斷連線"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -5236,7 +5231,7 @@ msgstr "重試"
 msgid "Two-factor authentication"
 msgstr "雙重驗證"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:95
+#: src/screens/Messages/Conversation/MessageInput.tsx:102
 msgid "Type your message here"
 msgstr "在此輸入訊息"
 
@@ -5573,7 +5568,7 @@ msgstr "版本 {appVersion} {bundleInfo}"
 msgid "Video Games"
 msgstr "電子遊戲"
 
-#: src/screens/Profile/Header/Shell.tsx:110
+#: src/screens/Profile/Header/Shell.tsx:111
 msgid "View {0}'s avatar"
 msgstr "查看 {0} 的頭像"
 
@@ -5763,8 +5758,8 @@ msgstr "為什麼應該審查這個用戶？"
 msgid "Wide"
 msgstr "寬"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:96
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:85
+#: src/screens/Messages/Conversation/MessageInput.tsx:103
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:99
 msgid "Write a message"
 msgstr "撰寫訊息"
 
@@ -5867,7 +5862,7 @@ msgstr "您已隱藏這個帳號。"
 msgid "You have muted this user"
 msgstr "您已靜音這個用戶"
 
-#: src/screens/Messages/List/index.tsx:152
+#: src/screens/Messages/List/index.tsx:156
 msgid "You have no chats yet. Start a conversation with someone!"
 msgstr "您還沒有對話，與其他用戶開始對話！"
 
