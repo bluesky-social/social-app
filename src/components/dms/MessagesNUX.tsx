@@ -24,7 +24,6 @@ export function MessagesNUX() {
   })
 
   useEffect(() => {
-    console.log(profile?.associated?.chat)
     if (profile && typeof profile.associated?.chat === 'undefined') {
       control.open()
     }
