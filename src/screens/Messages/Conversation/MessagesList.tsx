@@ -18,7 +18,7 @@ import {
   ModerationOpts,
   RichText,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
@@ -32,7 +32,9 @@ import {useProfileShadow} from 'state/cache/profile-shadow'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -294,7 +296,6 @@ export function MessagesList({
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           containWeb={true}
-          contentContainerStyle={[a.px_md]}
           disableVirtualization={true}
           // The extra two items account for the header and the footer components
           initialNumToRender={isNative ? 32 : 62}
@@ -340,6 +341,7 @@ function FooterComponent({
   profile: AppBskyActorDefs.ProfileViewBasic
   moderationOpts: ModerationOpts
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const profile = useProfileShadow(initialProfile)
   const moderation = React.useMemo(
@@ -350,10 +352,46 @@ function FooterComponent({
   if (!moderation.blocked) return null
 
   return (
-    <View style={[a.flex_row, a.justify_center, a.px_md]}>
-      <Text style={[a.text_center, a.text_sm]}>
+    <View style={[a.py_lg, a.gap_lg, {backgroundColor: 'red'}]}>
+      <Divider style={[a.pb_sm]} />
+      <Text style={[a.text_md, a.font_bold, a.text_center]}>
         {_(msg`You have blocked this user`)}
       </Text>
+      <View style={[a.flex_row, a.justify_between, a.gap_lg]}>
+        <Button
+          label={_(msg`Delete`)}
+          color="secondary"
+          variant="solid"
+          size="small"
+          style={[a.flex_1]}
+          onPress={() => {}}>
+          <ButtonText style={{color: t.palette.negative_500}}>
+            <Trans>Delete</Trans>
+          </ButtonText>
+        </Button>
+        <Button
+          label={_(msg`Report`)}
+          color="secondary"
+          variant="solid"
+          size="small"
+          style={[a.flex_1]}
+          onPress={() => {}}>
+          <ButtonText style={{color: t.palette.negative_500}}>
+            <Trans>Report</Trans>
+          </ButtonText>
+        </Button>
+        <Button
+          label={_(msg`Unblock`)}
+          color="secondary"
+          variant="solid"
+          size="small"
+          style={[a.flex_1]}
+          onPress={() => {}}>
+          <ButtonText style={{color: t.palette.primary_500}}>
+            <Trans>Unblock</Trans>
+          </ButtonText>
+        </Button>
+      </View>
     </View>
   )
 }
