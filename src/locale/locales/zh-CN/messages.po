@@ -22,23 +22,23 @@ msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}
 msgstr "{0, plural, one {其他 {formattedCount} 人} other {其他 {formattedCount} 人}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:55
-msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
+msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
 msgstr "{0, plural, one {# 个标签已标记到这个账户} other {# 个标签已标记到这个账户}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
-msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
+msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {# 个标签已标记到此内容} other {# 个标签已标记到此内容}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:62
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 条转发} other {# 条转发}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:373
+#: src/components/ProfileHoverCard/index.web.tsx:377
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural, one {关注者} other {关注者}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:377
+#: src/components/ProfileHoverCard/index.web.tsx:381
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
@@ -83,10 +83,14 @@ msgstr "{estimatedTimeHrs, plural, one {时} other {时}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:454
+#: src/components/ProfileHoverCard/index.web.tsx:458
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 个正在关注"
+
+#: src/components/dms/NewChat.tsx:146
+msgid "{handle} can't be messaged"
+msgstr "无法给 {handle} 发送信息"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
@@ -294,7 +298,8 @@ msgstr "详细设置"
 msgid "All the feeds you've saved, right in one place."
 msgstr "你保存的所有资讯源都集中在一处。"
 
-#: src/screens/Messages/Settings.tsx:53
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr "允许接收来自以下来源的信息"
 
@@ -336,13 +341,9 @@ msgstr "一封电子邮件已发送至 {0}。请查阅邮件内容并复制验�
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "一封电子邮件已发送至先前填写的邮箱 {0}。请查阅邮件内容并复制验证码至下方。"
 
-#: src/components/dialogs/GifSelect.tsx:284
+#: src/components/dialogs/GifSelect.tsx:285
 msgid "An error occured"
 msgstr "发生错误"
-
-#: src/components/dms/MessageMenu.tsx:134
-msgid "An error occurred while trying to delete the message. Please try again."
-msgstr "尝试删除信息时发生错误，请再试一次。"
 
 #: src/lib/moderation/useReportOptions.ts:27
 msgid "An issue not included in these options"
@@ -430,12 +431,12 @@ msgstr "使用默认推荐的资讯源"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "你确定要删除这条应用专用密码 \"{name}\" 吗？"
 
-#: src/components/dms/MessageMenu.tsx:123
-msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
+#: src/components/dms/MessageMenu.tsx:121
+msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "你确定要删除这条信息吗？这条消息将从你的对话中删除，但不会在其他人的对话中删除。"
 
 #: src/components/dms/ConvoMenu.tsx:225
-msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
+msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "您确定要离开这个对话吗？你的信息将从对话列表中删除，但不会在其他人的对话列表中删除。"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
@@ -476,8 +477,8 @@ msgstr "至少 3 个字符"
 #: src/screens/Login/LoginForm.tsx:278
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:185
-#: src/screens/Profile/Header/Shell.tsx:99
+#: src/screens/Messages/Conversation/index.tsx:179
+#: src/screens/Profile/Header/Shell.tsx:100
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
 msgid "Back"
@@ -752,8 +753,9 @@ msgid "Chat muted"
 msgstr "已隐藏对话"
 
 #: src/components/dms/ConvoMenu.tsx:127
-#: src/components/dms/MessageMenu.tsx:69
+#: src/components/dms/MessageMenu.tsx:67
 #: src/Navigation.tsx:307
+#: src/screens/Messages/List/index.tsx:64
 msgid "Chat settings"
 msgstr "对话设置"
 
@@ -835,11 +837,15 @@ msgstr "点击这里"
 msgid "Click here to open tag menu for {tag}"
 msgstr "点击这里打开 {tag} 的标签菜单"
 
+#: src/components/dms/MessageItem.tsx:223
+msgid "Click to retry failed message"
+msgstr "点击以重试发送失败的信息"
+
 #: src/screens/Onboarding/index.tsx:47
 msgid "Climate"
 msgstr "气象"
 
-#: src/components/dialogs/GifSelect.tsx:300
+#: src/components/dialogs/GifSelect.tsx:301
 #: src/view/com/modals/ChangePassword.tsx:269
 #: src/view/com/modals/ChangePassword.tsx:272
 #: src/view/com/util/post-embeds/GifEmbed.tsx:185
@@ -859,7 +865,7 @@ msgstr "关闭警告"
 msgid "Close bottom drawer"
 msgstr "关闭底部抽屉"
 
-#: src/components/dialogs/GifSelect.tsx:294
+#: src/components/dialogs/GifSelect.tsx:295
 msgid "Close dialog"
 msgstr "关闭对话框"
 
@@ -1072,7 +1078,7 @@ msgstr "已复制"
 msgid "Copied build version to clipboard"
 msgstr "已复制构建版本号至剪贴板"
 
-#: src/components/dms/MessageMenu.tsx:53
+#: src/components/dms/MessageMenu.tsx:51
 #: src/view/com/modals/AddAppPasswords.tsx:77
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
@@ -1110,8 +1116,8 @@ msgstr "复制列表链接"
 msgid "Copy link to post"
 msgstr "复制帖子链接"
 
+#: src/components/dms/MessageMenu.tsx:87
 #: src/components/dms/MessageMenu.tsx:89
-#: src/components/dms/MessageMenu.tsx:91
 msgid "Copy message text"
 msgstr "复制信息文字"
 
@@ -1137,7 +1143,7 @@ msgstr "无法加载资讯源"
 msgid "Could not load list"
 msgstr "无法加载列表"
 
-#: src/components/dms/NewChat.tsx:241
+#: src/components/dms/NewChat.tsx:264
 msgid "Could not load profiles. Please try again later."
 msgstr "无法加载用户个人资料，请稍后再试。"
 
@@ -1231,7 +1237,7 @@ msgstr "调试内容审核"
 msgid "Debug panel"
 msgstr "调试面板"
 
-#: src/components/dms/MessageMenu.tsx:125
+#: src/components/dms/MessageMenu.tsx:123
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
 #: src/view/screens/AppPasswords.tsx:268
 #: src/view/screens/ProfileList.tsx:666
@@ -1254,7 +1260,7 @@ msgstr "删除应用专用密码"
 msgid "Delete app password?"
 msgstr "删除应用专用密码？"
 
-#: src/components/dms/MessageMenu.tsx:101
+#: src/components/dms/MessageMenu.tsx:99
 msgid "Delete for me"
 msgstr "为我删除"
 
@@ -1262,11 +1268,11 @@ msgstr "为我删除"
 msgid "Delete List"
 msgstr "删除列表"
 
-#: src/components/dms/MessageMenu.tsx:121
+#: src/components/dms/MessageMenu.tsx:119
 msgid "Delete message"
 msgstr "删除信息"
 
-#: src/components/dms/MessageMenu.tsx:99
+#: src/components/dms/MessageMenu.tsx:97
 msgid "Delete message for me"
 msgstr "为我删除信息"
 
@@ -1479,7 +1485,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "编辑"
 
-#: src/view/com/util/UserAvatar.tsx:310
+#: src/view/com/util/UserAvatar.tsx:311
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "编辑头像"
@@ -1691,7 +1697,8 @@ msgstr "错误："
 msgid "Everybody"
 msgstr "所有人"
 
-#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr "所有人"
 
@@ -1779,7 +1786,7 @@ msgstr "创建应用专用密码失败。"
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "无法创建列表。请检查你的互联网连接并重试。"
 
-#: src/components/dms/MessageMenu.tsx:132
+#: src/components/dms/MessageMenu.tsx:59
 msgid "Failed to delete message"
 msgstr "无法删除信息"
 
@@ -1787,23 +1794,23 @@ msgstr "无法删除信息"
 msgid "Failed to delete post, please try again"
 msgstr "无法删除帖子，请重试"
 
-#: src/components/dialogs/GifSelect.tsx:200
+#: src/components/dialogs/GifSelect.tsx:201
 msgid "Failed to load GIFs"
 msgstr "无法加载 GIF"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:28
-msgid "Failed to load past messages."
-msgstr "无法加载旧的信息。"
+#: src/screens/Messages/Conversation/MessageListError.tsx:23
+msgid "Failed to load past messages"
+msgstr "无法加载旧的信息"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
 msgstr "无法保存这张图片：{0}"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:29
-msgid "Failed to send message(s)."
-msgstr "无法发送信息。"
+#: src/components/dms/MessageItem.tsx:216
+msgid "Failed to send"
+msgstr "无法发送信息"
 
-#: src/screens/Messages/Settings.tsx:34
+#: src/screens/Messages/Settings.tsx:38
 msgid "Failed to update settings"
 msgstr "无法更新设置"
 
@@ -1894,8 +1901,8 @@ msgstr "水平翻转"
 msgid "Flip vertically"
 msgstr "垂直翻转"
 
-#: src/components/ProfileHoverCard/index.web.tsx:409
-#: src/components/ProfileHoverCard/index.web.tsx:420
+#: src/components/ProfileHoverCard/index.web.tsx:413
+#: src/components/ProfileHoverCard/index.web.tsx:424
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:189
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:235
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
@@ -1952,8 +1959,8 @@ msgstr "关注了你"
 msgid "Followers"
 msgstr "关注者"
 
-#: src/components/ProfileHoverCard/index.web.tsx:408
-#: src/components/ProfileHoverCard/index.web.tsx:419
+#: src/components/ProfileHoverCard/index.web.tsx:412
+#: src/components/ProfileHoverCard/index.web.tsx:423
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:233
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
@@ -2658,7 +2665,7 @@ msgstr "提到的用户"
 msgid "Menu"
 msgstr "菜单"
 
-#: src/components/dms/MessageMenu.tsx:60
+#: src/components/dms/MessageMenu.tsx:58
 #: src/screens/Messages/List/ChatListItem.tsx:87
 msgid "Message deleted"
 msgstr "信息已删除"
@@ -2667,24 +2674,23 @@ msgstr "信息已删除"
 msgid "Message from server: {0}"
 msgstr "来自服务器的信息：{0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:93
+#: src/screens/Messages/Conversation/MessageInput.tsx:101
 msgid "Message input field"
 msgstr "信息输入栏"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:50
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:33
+#: src/screens/Messages/Conversation/MessageInput.tsx:56
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:38
 msgid "Message is too long"
 msgstr "信息过长"
 
-#: src/screens/Messages/List/index.tsx:64
-#: src/screens/Messages/List/index.tsx:237
+#: src/screens/Messages/List/index.tsx:242
 msgid "Message settings"
 msgstr "信息设置"
 
 #: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:139
-#: src/screens/Messages/List/index.tsx:166
-#: src/screens/Messages/List/index.tsx:233
+#: src/screens/Messages/List/index.tsx:143
+#: src/screens/Messages/List/index.tsx:170
+#: src/screens/Messages/List/index.tsx:238
 msgid "Messages"
 msgstr "信息"
 
@@ -2788,6 +2794,11 @@ msgstr "隐藏账户"
 msgid "Mute all {displayTag} posts"
 msgstr "隐藏所有 {displayTag} 的帖子"
 
+#: src/components/dms/ConvoMenu.tsx:174
+#: src/components/dms/ConvoMenu.tsx:180
+msgid "Mute conversation"
+msgstr "静音对话"
+
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
 msgstr "仅隐藏标签"
@@ -2799,11 +2810,6 @@ msgstr "隐藏词汇和标签"
 #: src/view/screens/ProfileList.tsx:677
 msgid "Mute list"
 msgstr "隐藏列表"
-
-#: src/components/dms/ConvoMenu.tsx:174
-#: src/components/dms/ConvoMenu.tsx:180
-msgid "Mute notifications"
-msgstr "通知静音"
 
 #: src/view/screens/ProfileList.tsx:672
 msgid "Mute these accounts?"
@@ -2927,11 +2933,15 @@ msgstr "新建"
 msgid "New"
 msgstr "新建"
 
-#: src/components/dms/NewChat.tsx:60
-#: src/screens/Messages/List/index.tsx:247
-#: src/screens/Messages/List/index.tsx:255
+#: src/components/dms/NewChat.tsx:62
+#: src/screens/Messages/List/index.tsx:252
+#: src/screens/Messages/List/index.tsx:259
 msgid "New chat"
 msgstr "新对话"
+
+#: src/components/dms/NewMessagesPill.tsx:42
+msgid "New messages"
+msgstr "新信息"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "New Moderation List"
@@ -3002,7 +3012,7 @@ msgstr "下一张图片"
 msgid "No"
 msgstr "停用"
 
-#: src/screens/Messages/List/index.tsx:150
+#: src/screens/Messages/List/index.tsx:154
 msgid "No chats yet"
 msgstr "还没有对话哦"
 
@@ -3015,7 +3025,7 @@ msgstr "没有描述"
 msgid "No DNS Panel"
 msgstr "没有 DNS 面板"
 
-#: src/components/dialogs/GifSelect.tsx:206
+#: src/components/dialogs/GifSelect.tsx:207
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "未找到精选 GIF，Tensor 可能存在问题。"
 
@@ -3035,7 +3045,8 @@ msgstr "还没有信息"
 msgid "No notifications yet!"
 msgstr "还没有通知！"
 
-#: src/screens/Messages/Settings.tsx:63
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr "没有人"
 
@@ -3044,7 +3055,7 @@ msgstr "没有人"
 msgid "No result"
 msgstr "没有结果"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:197
 msgid "No results found"
 msgstr "未找到结果"
 
@@ -3058,11 +3069,11 @@ msgstr "未找到\"{query}\"的结果"
 msgid "No results found for {query}"
 msgstr "未找到 {query} 的结果"
 
-#: src/components/dialogs/GifSelect.tsx:204
+#: src/components/dialogs/GifSelect.tsx:205
 msgid "No search results found for \"{search}\"."
 msgstr "未找到 \"{search}\" 的搜索结果。"
 
-#: src/components/dms/NewChat.tsx:240
+#: src/components/dms/NewChat.tsx:263
 msgid "No search results found for \"{searchText}\"."
 msgstr "未找到 \"{searchText}\" 的搜索结果。"
 
@@ -3114,7 +3125,7 @@ msgstr "注意：Bluesky 是一个开放的公共网络。这个设置项仅限�
 msgid "Notifications"
 msgstr "通知"
 
-#: src/components/dms/MessageItem.tsx:145
+#: src/components/dms/MessageItem.tsx:161
 msgid "Now"
 msgstr "现在"
 
@@ -3130,7 +3141,7 @@ msgstr "未标记的裸露或成人内容"
 msgid "Off"
 msgstr "显示"
 
-#: src/components/dialogs/GifSelect.tsx:287
+#: src/components/dialogs/GifSelect.tsx:288
 #: src/view/com/util/ErrorBoundary.tsx:55
 msgid "Oh no!"
 msgstr "糟糕！"
@@ -3176,7 +3187,7 @@ msgstr "仅限字母、数字和连字符"
 msgid "Oops, something went wrong!"
 msgstr "糟糕，发生了一些错误！"
 
-#: src/components/Lists.tsx:179
+#: src/components/Lists.tsx:181
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3331,10 +3342,6 @@ msgstr "开启\"正在关注\"资讯源首选项"
 msgid "Opens the linked website"
 msgstr "开启链接的网页"
 
-#: src/screens/Messages/List/index.tsx:65
-msgid "Opens the message settings page"
-msgstr "开启信息设置界面"
-
 #: src/view/screens/Settings/index.tsx:804
 #: src/view/screens/Settings/index.tsx:814
 msgid "Opens the storybook page"
@@ -3373,7 +3380,7 @@ msgstr "其他账户"
 msgid "Other..."
 msgstr "其他..."
 
-#: src/components/Lists.tsx:196
+#: src/components/Lists.tsx:198
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "无法找到这个页面"
@@ -3417,10 +3424,6 @@ msgstr "@{0} 关注的用户"
 msgid "People following @{0}"
 msgstr "关注 @{0} 的用户"
 
-#: src/screens/Messages/Settings.tsx:62
-msgid "People I Follow"
-msgstr "我已关注的用户"
-
 #: src/view/com/lightbox/Lightbox.tsx:67
 msgid "Permission to access camera roll is required."
 msgstr "需要照片图库的访问权限。"
@@ -3461,6 +3464,11 @@ msgstr "播放"
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
 msgstr "播放 {0}"
+
+#: src/screens/Messages/Settings.tsx:106
+#: src/screens/Messages/Settings.tsx:113
+msgid "Play notification sounds"
+msgstr "播放通知提示音"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -3516,6 +3524,7 @@ msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "请解释为什么你认为这个标记是由 {0} 错误应用的"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
+#: src/lib/hooks/useAccountSwitcher.ts:58
 msgid "Please sign in as @{0}"
 msgstr "请以 @{0} 身份登录"
 
@@ -3607,13 +3616,17 @@ msgstr "帖子已隐藏"
 msgid "Potentially Misleading Link"
 msgstr "潜在误导性链接"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:19
+msgid "Press to attempt reconnection"
+msgstr "点击以重试连接"
+
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
 msgstr "点击以变更托管提供商"
 
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:83
-#: src/screens/Messages/Conversation/MessageListError.tsx:59
+#: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
 msgstr "点按重试"
@@ -3718,6 +3731,10 @@ msgstr "结果：{0}"
 msgid "Recent Searches"
 msgstr "最近的搜索"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:20
+msgid "Reconnect"
+msgstr "重新连接"
+
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:285
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
@@ -3731,7 +3748,7 @@ msgstr "移除"
 msgid "Remove account"
 msgstr "删除账户"
 
-#: src/view/com/util/UserAvatar.tsx:369
+#: src/view/com/util/UserAvatar.tsx:370
 msgid "Remove Avatar"
 msgstr "删除头像"
 
@@ -3836,7 +3853,7 @@ msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "回复 <0><1/></0>"
 
-#: src/components/dms/MessageMenu.tsx:109
+#: src/components/dms/MessageMenu.tsx:107
 msgid "Report"
 msgstr "举报"
 
@@ -3864,7 +3881,7 @@ msgstr "举报资讯源"
 msgid "Report List"
 msgstr "举报列表"
 
-#: src/components/dms/MessageMenu.tsx:107
+#: src/components/dms/MessageMenu.tsx:105
 msgid "Report message"
 msgstr "举报信息"
 
@@ -4002,12 +4019,12 @@ msgstr "重试登录"
 msgid "Retries the last action, which errored out"
 msgstr "重试上次出错的操作"
 
-#: src/components/dms/MessageMenu.tsx:136
+#: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:94
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
-#: src/screens/Messages/Conversation/MessageListError.tsx:68
+#: src/screens/Messages/Conversation/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:236
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Signup/index.tsx:207
@@ -4103,7 +4120,7 @@ msgstr "科学"
 msgid "Scroll to top"
 msgstr "滚动到顶部"
 
-#: src/components/dms/NewChat.tsx:184
+#: src/components/dms/NewChat.tsx:197
 #: src/Navigation.tsx:502
 #: src/view/com/auth/LoggedOut.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
@@ -4137,7 +4154,7 @@ msgstr "搜索 @{authorHandle} 带有 {displayTag} 的所有帖子"
 msgid "Search for all posts with tag {displayTag}"
 msgstr "搜索所有带有 {displayTag} 的帖子"
 
-#: src/components/dms/NewChat.tsx:226
+#: src/components/dms/NewChat.tsx:248
 msgid "Search for someone to start a conversation with."
 msgstr "寻找可以与之开始对话的人。"
 
@@ -4151,7 +4168,7 @@ msgstr "搜索用户"
 msgid "Search GIFs"
 msgstr "搜索 GIF"
 
-#: src/components/dms/NewChat.tsx:183
+#: src/components/dms/NewChat.tsx:196
 msgid "Search profiles"
 msgstr "搜索个人资料"
 
@@ -4180,7 +4197,7 @@ msgid "See <0>{displayTag}</0> posts by this user"
 msgstr "查看该用户 <0>{displayTag}</0> 的帖子"
 
 #: src/view/com/notifications/FeedItem.tsx:411
-#: src/view/com/util/UserAvatar.tsx:400
+#: src/view/com/util/UserAvatar.tsx:402
 msgid "See profile"
 msgstr "查看个人资料"
 
@@ -4216,7 +4233,7 @@ msgstr "从现有账户中选择"
 msgid "Select GIF"
 msgstr "选择 GIF"
 
-#: src/components/dialogs/GifSelect.tsx:253
+#: src/components/dialogs/GifSelect.tsx:254
 msgid "Select GIF \"{0}\""
 msgstr "选择 GIF \"{0}\""
 
@@ -4303,8 +4320,8 @@ msgstr "发送电子邮件"
 msgid "Send feedback"
 msgstr "提交反馈"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:110
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:95
+#: src/screens/Messages/Conversation/MessageInput.tsx:126
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:111
 msgid "Send message"
 msgstr "发送信息"
 
@@ -4405,7 +4422,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "将图片纵横比设置为宽"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:50
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:322
 #: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:558
@@ -4651,7 +4668,7 @@ msgstr "跳过这段流程"
 msgid "Software Dev"
 msgstr "程序开发"
 
-#: src/screens/Messages/Conversation/index.tsx:94
+#: src/screens/Messages/Conversation/index.tsx:97
 msgid "Something went wrong"
 msgstr "出了点问题"
 
@@ -4661,8 +4678,8 @@ msgstr "出了点问题"
 msgid "Something went wrong, please try again."
 msgstr "出了点问题，请重试。"
 
-#: src/App.native.tsx:83
-#: src/App.web.tsx:72
+#: src/App.native.tsx:84
+#: src/App.web.tsx:73
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
@@ -4695,7 +4712,7 @@ msgstr "运动"
 msgid "Square"
 msgstr "方块"
 
-#: src/components/dms/NewChat.tsx:178
+#: src/components/dms/NewChat.tsx:191
 msgid "Start a new chat"
 msgstr "开启一个新对话"
 
@@ -4909,13 +4926,9 @@ msgstr "删除资讯源时出现问题，请检查你的互联网连接并重试
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "更新资讯源时出现问题，请检查你的互联网连接并重试。"
 
-#: src/components/dialogs/GifSelect.tsx:201
+#: src/components/dialogs/GifSelect.tsx:202
 msgid "There was an issue connecting to Tenor."
 msgstr "连接 Tenor 时出现问题。"
-
-#: src/screens/Messages/Conversation/MessageListError.tsx:23
-msgid "There was an issue connecting to the chat."
-msgstr "连接对话时出现问题。"
 
 #: src/view/screens/ProfileFeed.tsx:233
 #: src/view/screens/ProfileList.tsx:302
@@ -4982,7 +4995,7 @@ msgstr "出现问题了！{0}"
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "出现问题了，请检查你的互联网连接并重试。"
 
-#: src/components/dialogs/GifSelect.tsx:289
+#: src/components/dialogs/GifSelect.tsx:290
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "应用发生意外错误，请联系我们进行错误反馈！"
@@ -5011,9 +5024,9 @@ msgstr "这个账号已被你的一个或多个内容审核列表所屏蔽。要
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "这条申诉将发送至 <0>{0}</0>。"
 
-#: src/screens/Messages/Conversation/MessageListError.tsx:26
-msgid "This chat was disconnected due to a network error."
-msgstr "由于网络错误，该对话已中断。"
+#: src/screens/Messages/Conversation/MessageListError.tsx:18
+msgid "This chat was disconnected"
+msgstr "此对话已断开"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -5218,7 +5231,7 @@ msgstr "重试"
 msgid "Two-factor authentication"
 msgstr "两步验证"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:94
+#: src/screens/Messages/Conversation/MessageInput.tsx:102
 msgid "Type your message here"
 msgstr "在这里输入你的消息"
 
@@ -5318,8 +5331,8 @@ msgid "Unmute all {displayTag} posts"
 msgstr "取消隐藏所有 {displayTag} 帖子"
 
 #: src/components/dms/ConvoMenu.tsx:178
-msgid "Unmute notifications"
-msgstr "取消静音通知"
+msgid "Unmute conversation"
+msgstr "取消静音对话"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:321
 #: src/view/com/util/forms/PostDropdownBtn.tsx:326
@@ -5376,20 +5389,20 @@ msgstr "上传图片"
 msgid "Upload a text file to:"
 msgstr "将文本文件上传至："
 
-#: src/view/com/util/UserAvatar.tsx:337
-#: src/view/com/util/UserAvatar.tsx:340
+#: src/view/com/util/UserAvatar.tsx:338
+#: src/view/com/util/UserAvatar.tsx:341
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "从相机上传"
 
-#: src/view/com/util/UserAvatar.tsx:354
+#: src/view/com/util/UserAvatar.tsx:355
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "从文件上传"
 
-#: src/view/com/util/UserAvatar.tsx:348
-#: src/view/com/util/UserAvatar.tsx:352
+#: src/view/com/util/UserAvatar.tsx:349
+#: src/view/com/util/UserAvatar.tsx:353
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -5501,6 +5514,11 @@ msgstr "用户"
 msgid "users followed by <0/>"
 msgstr "关注 <0/> 的用户"
 
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
+msgid "Users I follow"
+msgstr "我关注的用户"
+
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"中的用户"
@@ -5550,7 +5568,7 @@ msgstr "版本 {appVersion} {bundleInfo}"
 msgid "Video Games"
 msgstr "电子游戏"
 
-#: src/screens/Profile/Header/Shell.tsx:110
+#: src/screens/Profile/Header/Shell.tsx:111
 msgid "View {0}'s avatar"
 msgstr "查看{0}的头像"
 
@@ -5574,8 +5592,8 @@ msgstr "查看整个讨论串"
 msgid "View information about these labels"
 msgstr "查看这个标记的详情"
 
-#: src/components/ProfileHoverCard/index.web.tsx:393
-#: src/components/ProfileHoverCard/index.web.tsx:426
+#: src/components/ProfileHoverCard/index.web.tsx:397
+#: src/components/ProfileHoverCard/index.web.tsx:430
 #: src/view/com/posts/FeedErrorMessage.tsx:175
 msgid "View profile"
 msgstr "查看个人资料"
@@ -5616,7 +5634,7 @@ msgstr "警告内容并从资讯源中过滤"
 msgid "We couldn't find any results for that hashtag."
 msgstr "找不到任何与该标签相关的结果。"
 
-#: src/screens/Messages/Conversation/index.tsx:95
+#: src/screens/Messages/Conversation/index.tsx:98
 msgid "We couldn't load this conversation"
 msgstr "我们无法加载这个对话"
 
@@ -5676,7 +5694,7 @@ msgstr "很抱歉，我们无法加载你的隐藏词汇列表。请重试。"
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，无法完成你的搜索。请稍后再试。"
 
-#: src/components/Lists.tsx:200
+#: src/components/Lists.tsx:202
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我们找不到你正在寻找的页面。"
@@ -5740,8 +5758,8 @@ msgstr "为什么应该审核这个用户？"
 msgid "Wide"
 msgstr "宽"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:95
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:85
+#: src/screens/Messages/Conversation/MessageInput.tsx:103
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:99
 msgid "Write a message"
 msgstr "编写一个信息"
 
@@ -5768,7 +5786,7 @@ msgstr "作家"
 msgid "Yes"
 msgstr "启用"
 
-#: src/components/dms/MessageItem.tsx:158
+#: src/components/dms/MessageItem.tsx:174
 msgid "Yesterday, {time}"
 msgstr "昨天，{time}"
 
@@ -5844,7 +5862,7 @@ msgstr "你已隐藏这个账户。"
 msgid "You have muted this user"
 msgstr "你已隐藏这个用户"
 
-#: src/screens/Messages/List/index.tsx:152
+#: src/screens/Messages/List/index.tsx:156
 msgid "You have no chats yet. Start a conversation with someone!"
 msgstr "你还没有任何对话，立即与其他人展开对话吧！"
 
