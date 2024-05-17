@@ -16,7 +16,6 @@ import {
   useConvoQuery,
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
-import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
@@ -108,17 +107,6 @@ let ConvoMenu = ({
       queueBlock()
     }
   }, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock])
-
-  const {mutate: leaveConvo} = useLeaveConvo(convo?.id, {
-    onSuccess: () => {
-      if (currentScreen === 'conversation') {
-        navigation.replace('Messages')
-      }
-    },
-    onError: () => {
-      Toast.show(_(msg`Could not leave chat`))
-    },
-  })
 
   return (
     <>
@@ -219,7 +207,11 @@ let ConvoMenu = ({
         </Menu.Outer>
       </Menu.Root>
 
-      <LeaveConvoPrompt control={leaveConvoControl} onLeaveConvo={leaveConvo} />
+      <LeaveConvoPrompt
+        control={leaveConvoControl}
+        convoId={convo.id}
+        currentScreen={currentScreen}
+      />
 
       <Prompt.Basic
         control={reportControl}

@@ -27,17 +27,20 @@ import {ConvoItem} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
-import {useProfileShadow} from 'state/cache/profile-shadow'
+import {Shadow, useProfileShadow} from 'state/cache/profile-shadow'
 import {useProfileBlockMutationQueue} from 'state/queries/profile'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
+import {ReportDialog} from '#/components/ReportDialog'
 import {Text} from '#/components/Typography'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
@@ -77,15 +80,23 @@ function onScrollToIndexFailed() {
 export function MessagesList({
   hasScrolled,
   setHasScrolled,
-  recipient,
+  recipient: recipientUnshadowed,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
-  recipient?: AppBskyActorDefs.ProfileViewBasic
+  recipient: AppBskyActorDefs.ProfileViewBasic
   moderationOpts?: ModerationOpts
 }) {
-  const convo = useConvoActive()
+  const convoState = useConvoActive()
   const {getAgent} = useAgent()
+
+  // -- Profile and block info
+  const recipient = useProfileShadow(recipientUnshadowed)
+  const isBlockedBy = Boolean(recipient.viewer?.blockedBy)
+  const isBlocking = Boolean(
+    recipient.viewer?.blocking || recipient.viewer?.blockingByList,
+  )
+
   const flatListRef = useAnimatedRef<FlatList>()
 
   const [showNewMessagesPill, setShowNewMessagesPill] = React.useState(false)
@@ -95,7 +106,7 @@ export function MessagesList({
   // the bottom.
   const isAtBottom = useSharedValue(true)
 
-  // This will be used on web to assist in determing if we need to maintain the content offset
+  // This will be used on web to assist in determining if we need to maintain the content offset
   const isAtTop = useSharedValue(true)
 
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
@@ -140,11 +151,11 @@ export function MessagesList({
         if (
           hasScrolled &&
           height - contentHeight.value > layoutHeight.value - 50 &&
-          convo.items.length - prevItemCount.current > 1
+          convoState.items.length - prevItemCount.current > 1
         ) {
           newOffset = contentHeight.value - 50
           setShowNewMessagesPill(true)
-        } else if (!hasScrolled && !convo.isFetchingHistory) {
+        } else if (!hasScrolled && !convoState.isFetchingHistory) {
           setHasScrolled(true)
         }
 
@@ -155,12 +166,12 @@ export function MessagesList({
         isMomentumScrolling.value = true
       }
       contentHeight.value = height
-      prevItemCount.current = convo.items.length
+      prevItemCount.current = convoState.items.length
     },
     [
       hasScrolled,
-      convo.items.length,
-      convo.isFetchingHistory,
+      convoState.items.length,
+      convoState.isFetchingHistory,
       setHasScrolled,
       // all of these are stable
       contentHeight,
@@ -175,9 +186,9 @@ export function MessagesList({
 
   const onStartReached = useCallback(() => {
     if (hasScrolled) {
-      convo.fetchMessageHistory()
+      convoState.fetchMessageHistory()
     }
-  }, [convo, hasScrolled])
+  }, [convoState, hasScrolled])
 
   const onSendMessage = useCallback(
     async (text: string) => {
@@ -196,12 +207,12 @@ export function MessagesList({
         return true
       })
 
-      convo.sendMessage({
+      convoState.sendMessage({
         text: rt.text,
         facets: rt.facets,
       })
     },
-    [convo, getAgent],
+    [convoState, getAgent],
   )
 
   const onScroll = React.useCallback(
@@ -282,7 +293,7 @@ export function MessagesList({
       <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
         <List
           ref={flatListRef}
-          data={convo.items}
+          data={convoState.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           containWeb={true}
@@ -302,45 +313,62 @@ export function MessagesList({
           onScrollToIndexFailed={onScrollToIndexFailed}
           scrollEventThrottle={100}
           ListHeaderComponent={
-            <MaybeLoader isLoading={convo.isFetchingHistory} />
-          }
-          ListFooterComponent={
-            recipient && <FooterComponent profile={recipient} />
+            <MaybeLoader isLoading={convoState.isFetchingHistory} />
           }
         />
       </ScrollProvider>
-      <MessageInput
-        onSendMessage={onSendMessage}
-        scrollToEnd={scrollToEndNow}
-      />
+      {!isBlocking && !isBlockedBy ? (
+        <MessageInput
+          onSendMessage={onSendMessage}
+          scrollToEnd={scrollToEndNow}
+        />
+      ) : (
+        <BlockedFooter
+          recipient={recipient}
+          convoId={convoState.convo.id}
+          hasMessages={convoState.items.length > 0}
+          isBlocking={isBlocking}
+          isBlockedBy={isBlockedBy}
+        />
+      )}
       {showNewMessagesPill && <NewMessagesPill />}
     </Animated.View>
   )
 }
 
-function FooterComponent({
-  profile: initialProfile,
+function BlockedFooter({
+  recipient,
+  convoId,
+  hasMessages,
+  isBlocking,
+  isBlockedBy,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  recipient: Shadow<AppBskyActorDefs.ProfileViewBasic>
+  convoId: string
+  hasMessages: boolean
+  isBlocking: boolean
+  isBlockedBy: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const profile = useProfileShadow(initialProfile)
-  const [__, queueUnblock] = useProfileBlockMutationQueue(profile)
+  const [__, queueUnblock] = useProfileBlockMutationQueue(recipient)
 
-  const isBlockedBy = Boolean(profile.viewer?.blockedBy)
-  const isBlocking = Boolean(
-    profile.viewer?.blocking || profile.viewer?.blockingByList,
-  )
+  const leaveConvoControl = useDialogControl()
+  const reportDialogControl = useDialogControl()
 
   if (!isBlocking && !isBlockedBy) return null
 
   return (
-    <View style={[a.py_lg, a.gap_lg]}>
-      <Divider />
+    <View style={[hasMessages && a.py_md, a.gap_lg]}>
+      {hasMessages && (
+        <>
+          <Divider />
+        </>
+      )}
       <Text style={[a.text_md, a.font_bold, a.text_center]}>
         {_(msg`You have blocked this user`)}
       </Text>
+
       <View style={[a.flex_row, a.justify_between, a.gap_lg, a.px_md]}>
         <Button
           label={_(msg`Delete`)}
@@ -348,7 +376,7 @@ function FooterComponent({
           variant="solid"
           size="small"
           style={[a.flex_1]}
-          onPress={() => {}}>
+          onPress={leaveConvoControl.open}>
           <ButtonText style={{color: t.palette.negative_500}}>
             <Trans>Delete</Trans>
           </ButtonText>
@@ -359,7 +387,7 @@ function FooterComponent({
           variant="solid"
           size="small"
           style={[a.flex_1]}
-          onPress={() => {}}>
+          onPress={reportDialogControl.open}>
           <ButtonText style={{color: t.palette.negative_500}}>
             <Trans>Report</Trans>
           </ButtonText>
@@ -378,6 +406,17 @@ function FooterComponent({
           </Button>
         )}
       </View>
+
+      <LeaveConvoPrompt
+        control={leaveConvoControl}
+        currentScreen="conversation"
+        convoId={convoId}
+      />
+
+      <ReportDialog
+        control={reportDialogControl}
+        params={{type: 'account', did: recipient.did}}
+      />
     </View>
   )
 }

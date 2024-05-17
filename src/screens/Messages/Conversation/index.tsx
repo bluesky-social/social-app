@@ -81,10 +81,11 @@ function Inner() {
   // empty. So, we also check for that possible state as well and render once we can.
   const [hasScrolled, setHasScrolled] = React.useState(false)
   const readyToShow =
-    hasScrolled ||
-    (convoState.status === ConvoStatus.Ready &&
-      !convoState.isFetchingHistory &&
-      convoState.items.length === 0)
+    recipient &&
+    (hasScrolled ||
+      (convoState.status === ConvoStatus.Ready &&
+        !convoState.isFetchingHistory &&
+        convoState.items.length === 0))
 
   if (convoState.status === ConvoStatus.Error) {
     return (
@@ -106,7 +107,7 @@ function Inner() {
     <CenteredView style={[a.flex_1]} sideBorders>
       <Header profile={recipient} moderationOpts={moderationOpts} />
       <View style={[a.flex_1]}>
-        {isConvoActive(convoState) ? (
+        {recipient && isConvoActive(convoState) ? (
           <MessagesList
             hasScrolled={hasScrolled}
             setHasScrolled={setHasScrolled}
@@ -150,7 +151,7 @@ let Header = ({
 
   const onPressBack = useCallback(() => {
     if (isWeb) {
-      navigation.replace('Messages')
+      navigation.replace('Messages', {})
     } else {
       navigation.goBack()
     }
