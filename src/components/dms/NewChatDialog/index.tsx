@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {Keyboard, TextInput, View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
@@ -17,15 +17,16 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
+import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {TextInput} from '#/components/dms/NewChatDialog/TextInput'
+import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Button} from '../Button'
-import {Text} from '../Typography'
-import {canBeMessaged} from './util'
+import {Text} from '#/components/Typography'
 
 type Item =
   | {
@@ -221,10 +222,12 @@ function SearchInput({
   value,
   onChangeText,
   onEscape,
+  inputRef,
 }: {
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
+  inputRef: React.RefObject<TextInput>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -249,6 +252,7 @@ function SearchInput({
       />
 
       <TextInput
+        ref={inputRef}
         placeholder={_(msg`Search`)}
         value={value}
         onChangeText={onChangeText}
@@ -287,6 +291,7 @@ function SearchablePeopleList({
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const {currentAccount} = useSession()
+  const inputRef = React.useRef<TextInput>(null)
 
   const [searchText, setSearchText] = useState('')
 
@@ -388,6 +393,14 @@ function SearchablePeopleList({
     [moderationOpts, onCreateChat],
   )
 
+  React.useLayoutEffect(() => {
+    if (isWeb) {
+      setImmediate(() => {
+        inputRef?.current?.focus()
+      })
+    }
+  }, [])
+
   const listHeader = useMemo(() => {
     return (
       <View
@@ -445,6 +458,7 @@ function SearchablePeopleList({
 
         <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
           <SearchInput
+            inputRef={inputRef}
             value={searchText}
             onChangeText={text => {
               setSearchText(text)
