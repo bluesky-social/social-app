@@ -111,7 +111,6 @@ function Inner() {
             hasScrolled={hasScrolled}
             setHasScrolled={setHasScrolled}
             recipient={recipient}
-            moderationOpts={moderationOpts}
           />
         ) : (
           <ListMaybePlaceholder isLoading />

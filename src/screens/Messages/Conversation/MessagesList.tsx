@@ -14,7 +14,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyRichtextFacet,
-  moderateProfile,
   ModerationOpts,
   RichText,
 } from '@atproto/api'
@@ -79,7 +78,6 @@ export function MessagesList({
   hasScrolled,
   setHasScrolled,
   recipient,
-  moderationOpts,
 }: {
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
@@ -316,13 +314,7 @@ export function MessagesList({
             <MaybeLoader isLoading={convo.isFetchingHistory} />
           }
           ListFooterComponent={
-            recipient &&
-            moderationOpts && (
-              <FooterComponent
-                profile={recipient}
-                moderationOpts={moderationOpts}
-              />
-            )
+            recipient && <FooterComponent profile={recipient} />
           }
         />
       </ScrollProvider>
@@ -337,21 +329,20 @@ export function MessagesList({
 
 function FooterComponent({
   profile: initialProfile,
-  moderationOpts,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const profile = useProfileShadow(initialProfile)
-  const moderation = React.useMemo(
-    () => moderateProfile(profile, moderationOpts),
-    [profile, moderationOpts],
-  )
   const [__, queueUnblock] = useProfileBlockMutationQueue(profile)
 
-  if (!moderation.blocked) return null
+  const isBlockedBy = Boolean(profile.viewer?.blockedBy)
+  const isBlocking = Boolean(
+    profile.viewer?.blocking || profile.viewer?.blockingByList,
+  )
+
+  if (!isBlocking && !isBlockedBy) return null
 
   return (
     <View style={[a.py_lg, a.gap_lg]}>
@@ -382,17 +373,19 @@ function FooterComponent({
             <Trans>Report</Trans>
           </ButtonText>
         </Button>
-        <Button
-          label={_(msg`Unblock`)}
-          color="secondary"
-          variant="solid"
-          size="small"
-          style={[a.flex_1]}
-          onPress={queueUnblock}>
-          <ButtonText style={{color: t.palette.primary_500}}>
-            <Trans>Unblock</Trans>
-          </ButtonText>
-        </Button>
+        {isBlocking && (
+          <Button
+            label={_(msg`Unblock`)}
+            color="secondary"
+            variant="solid"
+            size="small"
+            style={[a.flex_1]}
+            onPress={queueUnblock}>
+            <ButtonText style={{color: t.palette.primary_500}}>
+              <Trans>Unblock</Trans>
+            </ButtonText>
+          </Button>
+        )}
       </View>
     </View>
   )
