@@ -24,10 +24,6 @@ export enum ConvoStatus {
 
 export enum ConvoItemError {
   /**
-   * Generic error
-   */
-  Network = 'network',
-  /**
    * Error connecting to event firehose
    */
   FirehoseFailed = 'firehoseFailed',
@@ -35,10 +31,6 @@ export enum ConvoItemError {
    * Error fetching past messages
    */
   HistoryFailed = 'historyFailed',
-  /**
-   * Error sending new message
-   */
-  PendingFailed = 'pendingFailed',
 }
 
 export enum ConvoErrorCode {
@@ -83,13 +75,27 @@ export type ConvoDispatch =
 
 export type ConvoItem =
   | {
-      type: 'message' | 'pending-message'
+      type: 'message'
       key: string
       message: ChatBskyConvoDefs.MessageView
       nextMessage:
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
+    }
+  | {
+      type: 'pending-message'
+      key: string
+      message: ChatBskyConvoDefs.MessageView
+      nextMessage:
+        | ChatBskyConvoDefs.MessageView
+        | ChatBskyConvoDefs.DeletedMessageView
+        | null
+      failed: boolean
+      /**
+       * Retry sending the message. If present, the message is in a failed state.
+       */
+      retry?: () => void
     }
   | {
       type: 'deleted-message'
@@ -101,10 +107,13 @@ export type ConvoItem =
         | null
     }
   | {
-      type: 'error-recoverable'
+      type: 'error'
       key: string
       code: ConvoItemError
-      retry: () => void
+      /**
+       * If present, error is recoverable.
+       */
+      retry?: () => void
     }
 
 type DeleteMessage = (messageId: string) => Promise<void>
@@ -177,7 +186,7 @@ export type ConvoStateError = {
   status: ConvoStatus.Error
   items: []
   convo: undefined
-  error: any
+  error: ConvoError
   sender: undefined
   recipients: undefined
   isFetchingHistory: false
@@ -192,3 +201,8 @@ export type ConvoState =
   | ConvoStateBackgrounded
   | ConvoStateSuspended
   | ConvoStateError
+
+export type ConvoEvent = {
+  type: 'invalidate-block-state'
+  accountDids: string[]
+}

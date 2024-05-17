@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
+import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {BskyAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
@@ -108,4 +109,15 @@ export function useRequestNotificationsPermission() {
     },
     [gate],
   )
+}
+
+export async function decrementBadgeCount(by = 1) {
+  if (!isNative) return
+
+  const currCount = await getBadgeCountAsync()
+  let newCount = currCount - by
+  if (newCount < 0) {
+    newCount = 0
+  }
+  await setBadgeCountAsync(newCount)
 }
