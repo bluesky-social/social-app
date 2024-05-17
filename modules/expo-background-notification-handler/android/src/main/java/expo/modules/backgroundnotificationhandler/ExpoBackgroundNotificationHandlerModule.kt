@@ -35,8 +35,8 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
       return@AsyncFunction NotificationPrefs(appContext.reactContext).getString(forKey)
     }
 
-    AsyncFunction("getStringArrayAsync") { forKey: String ->
-      return@AsyncFunction NotificationPrefs(appContext.reactContext).getStringArray(forKey)
+    AsyncFunction("getStringStoreAsync") { forKey: String ->
+      return@AsyncFunction NotificationPrefs(appContext.reactContext).getStringStore(forKey)
     }
 
     AsyncFunction("setBoolAsync") { forKey: String, value: Boolean ->
@@ -47,24 +47,24 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
       NotificationPrefs(appContext.reactContext).setString(forKey, value)
     }
 
-    AsyncFunction("setStringArrayAsync") { forKey: String, value: Array<String> ->
-      NotificationPrefs(appContext.reactContext).setStringArray(forKey, value)
+    AsyncFunction("setStringStoreAsync") { forKey: String, value: Map<String, Boolean> ->
+      NotificationPrefs(appContext.reactContext).setStringStore(forKey, value)
     }
 
-    AsyncFunction("addToStringArrayAsync") { forKey: String, string: String ->
-      NotificationPrefs(appContext.reactContext).addToStringArray(forKey, string)
+    AsyncFunction("addToStringStoreAsync") { forKey: String, string: String ->
+      NotificationPrefs(appContext.reactContext).addToStringStore(forKey, string)
     }
 
-    AsyncFunction("removeFromStringArrayAsync") { forKey: String, string: String ->
-      NotificationPrefs(appContext.reactContext).removeFromStringArray(forKey, string)
+    AsyncFunction("removeFromStringStoreAsync") { forKey: String, string: String ->
+      NotificationPrefs(appContext.reactContext).removeFromStringStore(forKey, string)
     }
 
-    AsyncFunction("addManyToStringArrayAsync") { forKey: String, strings: Array<String> ->
-      NotificationPrefs(appContext.reactContext).addManyToStringArray(forKey, strings)
+    AsyncFunction("addManyToStringStoreAsync") { forKey: String, strings: Array<String> ->
+      NotificationPrefs(appContext.reactContext).addManyToStringStore(forKey, strings)
     }
 
-    AsyncFunction("removeManyFromStringArrayAsync") { forKey: String, strings: Array<String> ->
-      NotificationPrefs(appContext.reactContext).removeManyFromStringArray(forKey, strings)
+    AsyncFunction("removeManyFromStringStoreAsync") { forKey: String, strings: Array<String> ->
+      NotificationPrefs(appContext.reactContext).removeManyFromStringStore(forKey, strings)
     }
   }
 }

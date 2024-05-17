@@ -13,6 +13,10 @@ class BackgroundNotificationHandler(
       return
     }
 
+    if(shouldBeFiltered(remoteMessage)) {
+      return
+    }
+
     if (remoteMessage.data["reason"] == "chat-message") {
       mutateWithChatMessage(remoteMessage)
     }
@@ -35,5 +39,19 @@ class BackgroundNotificationHandler(
         remoteMessage.data["sound"] = null
       }
     }
+  }
+
+  private fun shouldBeFiltered(remoteMessage: RemoteMessage): Boolean {
+    if (remoteMessage.data["reason"] == "chat-message") {
+      if (
+        NotificationPrefs(context)
+          .getStringStore("disabledDids")
+          ?.contains(remoteMessage.data["recipientDid"]) == true
+      ) {
+        return true
+      }
+    }
+
+    return false
   }
 }

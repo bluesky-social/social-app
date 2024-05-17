@@ -10,7 +10,8 @@ let DEFAULTS: [String:Any] = [
   "playSoundQuote": false,
   "playSoundReply": false,
   "playSoundRepost": false,
-  "mutedThreads": [:] as! [String:[String]]
+  "threadMutes": [:] as! [String:Bool],
+  "disabledDids": [:] as! [String:Bool],
 ]
 
 /*
@@ -56,8 +57,8 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       return nil
     }
     
-    AsyncFunction("getStringArrayAsync") { (forKey: String) -> [String]? in
-      if let pref = userDefaults?.stringArray(forKey: forKey) {
+    AsyncFunction("getStringStoreAsync") { (forKey: String) -> [String:Bool]? in
+      if let pref = userDefaults?.object(forKey: forKey) as? [String:Bool] {
         return pref
       }
       return nil
@@ -71,43 +72,37 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       userDefaults?.setValue(value, forKey: forKey)
     }
     
-    AsyncFunction("setStringArrayAsync") { (forKey: String, value: [String]) -> Void in
+    AsyncFunction("setStringStoreAsync") { (forKey: String, value: [String:Bool]) -> Void in
       userDefaults?.setValue(value, forKey: forKey)
     }
     
-    AsyncFunction("addToStringArrayAsync") { (forKey: String, string: String) in
-      if var curr = userDefaults?.stringArray(forKey: forKey),
-         !curr.contains(string)
-      {
-        curr.append(string)
+    AsyncFunction("addToStringStoreAsync") { (forKey: String, string: String) in
+      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+        curr[string] = true
         userDefaults?.setValue(curr, forKey: forKey)
       }
     }
     
-    AsyncFunction("removeFromStringArrayAsync") { (forKey: String, string: String) in
-      if var curr = userDefaults?.stringArray(forKey: forKey) {
-        curr.removeAll { s in
-          return s == string
+    AsyncFunction("removeFromStringStoreAsync") { (forKey: String, string: String) in
+      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+        curr.removeValue(forKey: string)
+        userDefaults?.setValue(curr, forKey: forKey)
+      }
+    }
+    
+    AsyncFunction("addManyToStringStoreAsync") { (forKey: String, strings: [String]) in
+      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+        strings.forEach { s in
+          curr[s] = true
         }
         userDefaults?.setValue(curr, forKey: forKey)
       }
     }
     
-    AsyncFunction("addManyToStringArrayAsync") { (forKey: String, strings: [String]) in
-      if var curr = userDefaults?.stringArray(forKey: forKey) {
+    AsyncFunction("removeManyFromStringStoreAsync") { (forKey: String, strings: [String]) in
+      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
         strings.forEach { s in
-          if !curr.contains(s) {
-            curr.append(s)
-          }
-        }
-        userDefaults?.setValue(curr, forKey: forKey)
-      }
-    }
-    
-    AsyncFunction("removeManyFromStringArrayAsync") { (forKey: String, strings: [String]) in
-      if var curr = userDefaults?.stringArray(forKey: forKey) {
-        strings.forEach { s in
-          curr.removeAll(where: { $0 == s })
+          curr.removeValue(forKey: s)
         }
         userDefaults?.setValue(curr, forKey: forKey)
       }

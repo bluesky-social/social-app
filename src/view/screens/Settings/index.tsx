@@ -63,6 +63,7 @@ import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
+import {useBackgroundNotificationPreferences} from '../../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -85,6 +86,7 @@ function SettingsAccountCard({
   const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
+  const {addToStringStore} = useBackgroundNotificationPreferences()
 
   const contents = (
     <View
@@ -113,6 +115,7 @@ function SettingsAccountCard({
         <TouchableOpacity
           testID="signOutBtn"
           onPress={() => {
+            addToStringStore('disabledDids', account.did)
             if (isNative) {
               logout('Settings')
               resetToTab('HomeTab')

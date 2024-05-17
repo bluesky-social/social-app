@@ -2,7 +2,7 @@ export type ExpoBackgroundNotificationHandlerModule = {
   getAllPrefsAsync: () => Promise<BackgroundNotificationHandlerPreferences>
   getBoolAsync: (forKey: string) => Promise<boolean>
   getStringAsync: (forKey: string) => Promise<string>
-  getStringArrayAsync: (forKey: string) => Promise<string[]>
+  getStringStoreAsync: (forKey: string) => Promise<Record<string, boolean>>
   setBoolAsync: (
     forKey: keyof BackgroundNotificationHandlerPreferences,
     value: boolean,
@@ -11,23 +11,23 @@ export type ExpoBackgroundNotificationHandlerModule = {
     forKey: keyof BackgroundNotificationHandlerPreferences,
     value: string,
   ) => Promise<void>
-  setStringArrayAsync: (
+  setStringStoreAsync: (
     forKey: keyof BackgroundNotificationHandlerPreferences,
-    value: string[],
+    value: Record<string, boolean>,
   ) => Promise<void>
-  addToStringArrayAsync: (
-    forKey: keyof BackgroundNotificationHandlerPreferences,
-    value: string,
-  ) => Promise<void>
-  removeFromStringArrayAsync: (
+  addToStringStoreAsync: (
     forKey: keyof BackgroundNotificationHandlerPreferences,
     value: string,
   ) => Promise<void>
-  addManyToStringArrayAsync: (
+  removeFromStringStoreAsync: (
+    forKey: keyof BackgroundNotificationHandlerPreferences,
+    value: string,
+  ) => Promise<void>
+  addManyToStringStoreAsync: (
     forKey: keyof BackgroundNotificationHandlerPreferences,
     value: string[],
   ) => Promise<void>
-  removeManyFromStringArrayAsync: (
+  removeManyFromStringStoreAsync: (
     forKey: keyof BackgroundNotificationHandlerPreferences,
     value: string[],
   ) => Promise<void>
@@ -37,4 +37,5 @@ export type ExpoBackgroundNotificationHandlerModule = {
 // Don't add them until the native logic also handles the notifications for those preference types.
 export type BackgroundNotificationHandlerPreferences = {
   playSoundChat: boolean
+  disabledDids: Record<string, boolean>
 }
