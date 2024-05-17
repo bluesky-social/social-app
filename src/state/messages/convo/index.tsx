@@ -8,6 +8,7 @@ import {
   ConvoParams,
   ConvoState,
   ConvoStateBackgrounded,
+  ConvoStateDisabled,
   ConvoStateReady,
   ConvoStateSuspended,
 } from '#/state/messages/convo/types'
@@ -40,6 +41,7 @@ export function useConvoActive() {
     | ConvoStateReady
     | ConvoStateBackgrounded
     | ConvoStateSuspended
+    | ConvoStateDisabled
   if (!ctx) {
     throw new Error('useConvo must be used within a ConvoProvider')
   }
