@@ -829,6 +829,9 @@ export class Convo {
               ],
             })
             break
+          case 'Account is disabled':
+            this.pendingMessageFailure = 'unrecoverable'
+            break
           default:
             logger.warn(
               `Convo handleSendMessageFailure could not handle error`,
