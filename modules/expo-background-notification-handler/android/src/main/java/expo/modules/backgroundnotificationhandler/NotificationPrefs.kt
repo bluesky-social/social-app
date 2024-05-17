@@ -15,6 +15,9 @@ val DEFAULTS = mapOf(
   "disabledDids" to mapOf<String, Boolean>(),
 )
 
+val BOOL_VALS = arrayOf("playSoundChat", "playSoundFollow", "playSoundLike", "playSoundMention", "playSoundQuote", "playSoundReply", "playSoundRepost")
+val MAP_VALS = arrayOf("threadMutes", "disabledDids")
+
 class NotificationPrefs (private val context: Context?) {
   private val prefs = context?.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
     ?: throw Error("Context is null")
@@ -47,8 +50,17 @@ class NotificationPrefs (private val context: Context?) {
       .apply()
   }
 
-  fun getAllPrefs(): MutableMap<String, *> {
-    return prefs.all
+  fun getAllPrefs(): MutableMap<String, Any> {
+    val map = mutableMapOf<String, Any>()
+
+    BOOL_VALS.forEach { key ->
+      prefs.getBoolean(key, false).let { map[key] = it }
+    }
+    MAP_VALS.forEach { key ->
+      prefs.getString(key, null)?.let { map[key] = stringToMap(it) }
+    }
+
+    return map
   }
 
   fun getBoolean(key: String): Boolean {

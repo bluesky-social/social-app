@@ -1,5 +1,6 @@
 package expo.modules.backgroundnotificationhandler
 
+import android.util.Log
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
@@ -52,6 +53,7 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
     }
 
     AsyncFunction("addToStringStoreAsync") { forKey: String, string: String ->
+      Log.d("ExpoBackgroundNotificationHandler", "addToStringStoreAsync $forKey $string")
       NotificationPrefs(appContext.reactContext).addToStringStore(forKey, string)
     }
 
