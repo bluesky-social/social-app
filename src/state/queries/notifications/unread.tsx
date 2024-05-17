@@ -4,15 +4,14 @@
 
 import React from 'react'
 import {AppState} from 'react-native'
-import * as Notifications from 'expo-notifications'
 import {useQueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent, useSession} from '#/state/session'
+import {decrementBadgeCount} from 'lib/notifications/notifications'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -120,9 +119,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-        if (isNative) {
-          Notifications.setBadgeCountAsync(0)
-        }
+        decrementBadgeCount(Math.min(cacheRef.current.unreadCount, 30))
       },
 
       async checkUnread({
@@ -163,9 +160,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               : unreadCount === 0
               ? ''
               : String(unreadCount)
-          if (isNative) {
-            Notifications.setBadgeCountAsync(Math.min(unreadCount, 30))
-          }
 
           // track last sync
           const now = new Date()
