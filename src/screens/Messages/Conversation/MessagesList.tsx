@@ -130,7 +130,7 @@ export function MessagesList({
         ) {
           newOffset = contentHeight.value - 50
           setShowNewMessagesPill(true)
-        } else if (!hasScrolled && height > 50) {
+        } else if (!hasScrolled && !convo.isFetchingHistory) {
           setHasScrolled(true)
         }
 
@@ -144,17 +144,18 @@ export function MessagesList({
       prevItemCount.current = convo.items.length
     },
     [
-      flatListRef,
-      contentHeight,
-      isMomentumScrolling,
       hasScrolled,
-      setHasScrolled,
       convo.items.length,
-      // All of these are stable
+      convo.isFetchingHistory,
+      setHasScrolled,
+      // all of these are stable
+      contentHeight,
+      flatListRef,
       isAtBottom.value,
+      isAtTop.value,
+      isMomentumScrolling,
       keyboardIsAnimating.value,
       layoutHeight.value,
-      isAtTop.value,
     ],
   )
 
