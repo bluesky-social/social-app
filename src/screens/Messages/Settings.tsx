@@ -49,8 +49,6 @@ export function MessagesSettingsScreen({}: Props) {
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
 
-  console.log(profile?.associated?.chat?.allowIncoming)
-
   return (
     <CenteredView sideBorders style={a.h_full_vh}>
       <ViewHeader title={_(msg`Settings`)} showOnDesktop showBorder />

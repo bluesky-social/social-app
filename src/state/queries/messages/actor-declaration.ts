@@ -19,12 +19,10 @@ export function useUpdateActorDeclaration({
   return useMutation({
     mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
       if (!currentAccount) throw new Error('Not logged in')
-      // TODO(sam): remove validate: false once PDSes have the new lexicon
       const result = await getAgent().api.com.atproto.repo.putRecord({
         repo: currentAccount.did,
         collection: 'chat.bsky.actor.declaration',
         rkey: 'self',
-        validate: false,
         record: {
           $type: 'chat.bsky.actor.declaration',
           allowIncoming,
