@@ -25,10 +25,7 @@ export class FeedViewPostsSlice {
   }
 
   get uri() {
-    if (this.isFlattenedReply) {
-      return this.items[1].post.uri
-    }
-    return this.items[0].post.uri
+    return this.rootItem.post.uri
   }
 
   get ts() {
