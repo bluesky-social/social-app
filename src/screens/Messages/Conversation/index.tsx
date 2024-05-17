@@ -23,7 +23,7 @@ import {useSetMinimalShellMode} from 'state/shell'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {MessagesList} from '#/screens/Messages/Conversation/MessagesList'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Error} from '#/components/Error'
 import {Link} from '#/components/Link'
@@ -137,6 +137,8 @@ function Inner() {
   )
 }
 
+const PFP_SIZE = isWeb ? 40 : 34
+
 let Header = ({
   profile: initialProfile,
 }: {
@@ -166,11 +168,11 @@ let Header = ({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        a.pl_xl,
+        gtTablet ? a.pl_lg : a.pl_xl,
         a.pr_lg,
         a.py_sm,
       ]}>
-      {!gtTablet ? (
+      {!gtTablet && (
         <TouchableOpacity
           testID="conversationHeaderBackBtn"
           onPress={onPressBack}
@@ -188,8 +190,6 @@ let Header = ({
             color={t.atoms.text.color}
           />
         </TouchableOpacity>
-      ) : (
-        <View style={{width: 30}} />
       )}
 
       {profile && moderationOpts ? (
@@ -199,7 +199,7 @@ let Header = ({
           <View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
             <View
               style={[
-                {width: 32, height: 32},
+                {width: PFP_SIZE, height: PFP_SIZE},
                 a.rounded_full,
                 t.atoms.bg_contrast_25,
               ]}
@@ -260,18 +260,24 @@ function HeaderReady({
         style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}
         to={makeProfileLink(profile)}>
         <PreviewableUserAvatar
-          size={32}
+          size={PFP_SIZE}
           profile={profile}
           moderation={moderation.ui('avatar')}
           disableHoverCard={moderation.blocked}
         />
         <View style={a.flex_1}>
-          <Text style={[a.text_md, a.font_bold]} numberOfLines={1}>
+          <Text
+            style={[a.text_md, a.font_bold, web(a.leading_normal)]}
+            numberOfLines={1}>
             {displayName}
           </Text>
           {!isDeletedAccount && (
             <Text
-              style={[t.atoms.text_contrast_medium, a.text_sm]}
+              style={[
+                t.atoms.text_contrast_medium,
+                a.text_sm,
+                web([a.leading_normal, {marginTop: -2}]),
+              ]}
               numberOfLines={1}>
               @{profile.handle}
             </Text>
