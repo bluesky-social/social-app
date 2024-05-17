@@ -207,8 +207,8 @@ export const InnerFlatList = React.forwardRef<
   return (
     <Inner
       label={label}
-      // @ts-ignore web only -sfn
       style={[
+        // @ts-ignore web only -sfn
         {
           paddingHorizontal: 0,
           maxHeight: 'calc(-36px + 100vh)',
