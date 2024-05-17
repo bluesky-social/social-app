@@ -24,11 +24,12 @@ import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {InputContainer} from './MessageInputElements'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -65,7 +66,6 @@ function onScrollToIndexFailed() {
 }
 
 export function MessagesList() {
-  const t = useTheme()
   const convo = useConvoActive()
   const {getAgent} = useAgent()
   const flatListRef = useAnimatedRef<FlatList>()
@@ -318,9 +318,9 @@ export function MessagesList() {
         />
       </ScrollProvider>
       {showNewMessagesPill && <NewMessagesPill />}
-      <Animated.View style={[a.relative, t.atoms.bg, animatedInputStyle]}>
+      <InputContainer style={[a.relative, animatedInputStyle]}>
         <MessageInput onSendMessage={onSendMessage} scrollToEnd={scrollToEnd} />
-      </Animated.View>
+      </InputContainer>
     </>
   )
 }

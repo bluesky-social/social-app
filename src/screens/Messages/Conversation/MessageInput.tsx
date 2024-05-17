@@ -24,6 +24,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {InputPill} from './MessageInputElements'
 
 export function MessageInput({
   onSendMessage,
@@ -82,17 +83,14 @@ export function MessageInput({
   )
 
   return (
-    <View style={a.p_md}>
-      <View
+    <View style={[a.px_md, a.py_sm]}>
+      <InputPill
         style={[
           a.w_full,
-          a.flex_row,
-          t.atoms.bg_contrast_25,
+          a.overflow_hidden,
           {
-            padding: a.p_sm.padding - 2,
-            paddingLeft: a.p_md.padding - 2,
-            borderWidth: 2,
             borderRadius: 23,
+            borderWidth: 2,
             borderColor: 'transparent',
           },
           isFocused && inputStyles.chromeFocus,
@@ -135,7 +133,7 @@ export function MessageInput({
           onPress={onSubmit}>
           <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
         </Pressable>
-      </View>
+      </InputPill>
     </View>
   )
 }

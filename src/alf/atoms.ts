@@ -1,4 +1,4 @@
-import {Platform} from 'react-native'
+import {Platform, StyleSheet} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
@@ -283,6 +283,21 @@ export const atoms = {
   },
   border_r: {
     borderRightWidth: 1,
+  },
+  border_hairline: {
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  border_t_hairline: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  border_b_hairline: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  border_l_hairline: {
+    borderLeftWidth: StyleSheet.hairlineWidth,
+  },
+  border_r_hairline: {
+    borderRightWidth: StyleSheet.hairlineWidth,
   },
 
   /*
