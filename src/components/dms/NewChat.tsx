@@ -39,6 +39,10 @@ type Item =
       key: string
     }
   | {
+      type: 'placeholder'
+      key: string
+    }
+  | {
       type: 'error'
       key: string
     }
@@ -158,6 +162,47 @@ function ProfileCard({
   )
 }
 
+function ProfileCardSkeleton() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.py_md,
+        a.px_lg,
+        a.gap_md,
+        a.align_center,
+        a.flex_row,
+      ]}>
+      <View
+        style={[
+          a.rounded_full,
+          {width: 42, height: 42},
+          t.atoms.bg_contrast_25,
+        ]}
+      />
+
+      <View style={[a.flex_1, a.gap_sm]}>
+        <View
+          style={[
+            a.rounded_xs,
+            {width: 80, height: 14},
+            t.atoms.bg_contrast_25,
+          ]}
+        />
+        <View
+          style={[
+            a.rounded_xs,
+            {width: 120, height: 10},
+            t.atoms.bg_contrast_25,
+          ]}
+        />
+      </View>
+    </View>
+  )
+}
+
 function Empty() {
   const t = useTheme()
   return (
@@ -252,15 +297,15 @@ function SearchablePeopleList({
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
 
   const items = React.useMemo(() => {
-    let i: Item[] = []
+    let _items: Item[] = []
 
     if (isError) {
-      i.push({type: 'error', key: 'error'})
+      _items.push({type: 'error', key: 'error'})
     } else if (searchText.length) {
       if (results?.length) {
         for (const profile of results) {
           if (profile.did === currentAccount?.did) continue
-          i.push({
+          _items.push({
             type: 'profile',
             key: profile.did,
             enabled: canBeMessaged(profile),
@@ -268,7 +313,7 @@ function SearchablePeopleList({
           })
         }
 
-        i = i.sort(a => {
+        _items = _items.sort(a => {
           // @ts-ignore
           return a.enabled ? -1 : 1
         })
@@ -278,15 +323,27 @@ function SearchablePeopleList({
         for (const page of follows.pages) {
           const enabled = page.follows.filter(canBeMessaged)
           for (const profile of enabled) {
-            i.push({type: 'profile', key: profile.did, enabled: true, profile})
+            _items.push({
+              type: 'profile',
+              key: profile.did,
+              enabled: true,
+              profile,
+            })
           }
         }
       } else {
-        // placeholder
+        Array(10)
+          .fill(0)
+          .forEach((_, i) => {
+            _items.push({
+              type: 'placeholder',
+              key: i + '',
+            })
+          })
       }
     }
 
-    return i
+    return _items
   }, [searchText, results, isError, currentAccount?.did, follows])
 
   if (searchText && !isFetching && !items.length) {
@@ -306,6 +363,9 @@ function SearchablePeopleList({
               onPress={onCreateChat}
             />
           )
+        }
+        case 'placeholder': {
+          return <ProfileCardSkeleton key={item.key} />
         }
         case 'empty': {
           return <Empty key={item.key} />
