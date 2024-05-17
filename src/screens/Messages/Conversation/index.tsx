@@ -159,30 +159,28 @@ function InnerReady({
   }, [moderation])
 
   return (
-    <CenteredView style={[a.flex_1]} sideBorders>
-      <View style={[a.flex_1]}>
-        <MessagesListHeader
-          profile={recipient}
-          moderation={moderation}
-          blockInfo={blockInfo}
+    <>
+      <MessagesListHeader
+        profile={recipient}
+        moderation={moderation}
+        blockInfo={blockInfo}
+      />
+      {isConvoActive(convoState) && (
+        <MessagesList
+          hasScrolled={hasScrolled}
+          setHasScrolled={setHasScrolled}
+          blocked={moderation?.blocked}
+          footer={
+            <MessagesListBlockedFooter
+              recipient={recipient}
+              convoId={convoState.convo.id}
+              hasMessages={convoState.items.length > 0}
+              listBlocks={blockInfo.listBlocks}
+              userBlock={blockInfo.userBlock}
+            />
+          }
         />
-        {isConvoActive(convoState) && (
-          <MessagesList
-            hasScrolled={hasScrolled}
-            setHasScrolled={setHasScrolled}
-            blocked={moderation?.blocked}
-            footer={
-              <MessagesListBlockedFooter
-                recipient={recipient}
-                convoId={convoState.convo.id}
-                hasMessages={convoState.items.length > 0}
-                listBlocks={blockInfo.listBlocks}
-                userBlock={blockInfo.userBlock}
-              />
-            }
-          />
-        )}
-      </View>
-    </CenteredView>
+      )}
+    </>
   )
 }
