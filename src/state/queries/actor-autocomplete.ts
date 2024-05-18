@@ -20,6 +20,7 @@ export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 export function useActorAutocompleteQuery(
   prefix: string,
   maintainData?: boolean,
+  limit?: number,
 ) {
   const moderationOpts = useModerationOpts()
   const {getAgent} = useAgent()
@@ -37,7 +38,7 @@ export function useActorAutocompleteQuery(
       const res = prefix
         ? await getAgent().searchActorsTypeahead({
             q: prefix,
-            limit: 8,
+            limit: limit || 8,
           })
         : undefined
       return res?.data.actors || []

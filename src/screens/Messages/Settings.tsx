@@ -1,10 +1,8 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {UseQueryResult} from '@tanstack/react-query'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
@@ -30,7 +28,7 @@ export function MessagesSettingsScreen({}: Props) {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
-  }) as UseQueryResult<AppBskyActorDefs.ProfileViewDetailed, Error>
+  })
   const {preferences, setPref} = useBackgroundNotificationPreferences()
 
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
@@ -50,8 +48,6 @@ export function MessagesSettingsScreen({}: Props) {
 
   const gate = useGate()
   if (!gate('dms')) return <ClipClopGate />
-
-  console.log(profile?.associated?.chat?.allowIncoming)
 
   return (
     <CenteredView sideBorders style={a.h_full_vh}>

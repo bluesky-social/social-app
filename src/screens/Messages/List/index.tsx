@@ -17,7 +17,8 @@ import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
-import {NewChat} from '#/components/dms/NewChat'
+import {MessagesNUX} from '#/components/dms/MessagesNUX'
+import {NewChat} from '#/components/dms/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
@@ -131,6 +132,7 @@ export function MessagesScreen({navigation, route}: Props) {
   if (conversations.length < 1) {
     return (
       <View style={a.flex_1}>
+        <MessagesNUX />
         {gtMobile ? (
           <CenteredView sideBorders>
             <DesktopHeader
@@ -165,6 +167,7 @@ export function MessagesScreen({navigation, route}: Props) {
 
   return (
     <View style={a.flex_1}>
+      <MessagesNUX />
       {!gtMobile && (
         <ViewHeader
           title={_(msg`Messages`)}

@@ -1,6 +1,7 @@
 import {
   ConvoState,
   ConvoStateBackgrounded,
+  ConvoStateDisabled,
   ConvoStateReady,
   ConvoStateSuspended,
   ConvoStatus,
@@ -13,10 +14,15 @@ import {
  */
 export function isConvoActive(
   convo: ConvoState,
-): convo is ConvoStateReady | ConvoStateBackgrounded | ConvoStateSuspended {
+): convo is
+  | ConvoStateReady
+  | ConvoStateBackgrounded
+  | ConvoStateSuspended
+  | ConvoStateDisabled {
   return (
     convo.status === ConvoStatus.Ready ||
     convo.status === ConvoStatus.Backgrounded ||
-    convo.status === ConvoStatus.Suspended
+    convo.status === ConvoStatus.Suspended ||
+    convo.status === ConvoStatus.Disabled
   )
 }

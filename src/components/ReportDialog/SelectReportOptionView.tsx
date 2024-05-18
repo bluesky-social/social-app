@@ -25,12 +25,10 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from
 import {Text} from '#/components/Typography'
 import {ReportDialogProps} from './types'
 
-type ParamsWithMessages = ReportDialogProps['params'] | {type: 'message'}
-
 export function SelectReportOptionView({
   ...props
 }: {
-  params: ParamsWithMessages
+  params: ReportDialogProps['params']
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
   onSelectReportOption: (reportOption: ReportOption) => void
   goBack: () => void
@@ -57,9 +55,12 @@ export function SelectReportOptionView({
     } else if (props.params.type === 'feedgen') {
       title = _(msg`Report this feed`)
       description = _(msg`Why should this feed be reviewed?`)
-    } else if (props.params.type === 'message') {
+    } else if (props.params.type === 'convoMessage') {
       title = _(msg`Report this message`)
       description = _(msg`Why should this message be reviewed?`)
+    } else if (props.params.type === 'convoAccount') {
+      title = _(msg`Report this account`)
+      description = _(msg`Why should this account be reviewed?`)
     }
 
     return {
