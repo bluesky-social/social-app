@@ -33,9 +33,9 @@ export let ChatListItem = ({
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
-  const otherUser = React.useMemo(() => {
-    return convo.members.find(member => member.did !== currentAccount?.did)
-  }, [convo.members, currentAccount?.did])
+  const otherUser = convo.members.find(
+    member => member.did !== currentAccount?.did,
+  )
 
   if (!otherUser || !moderationOpts) {
     return null
