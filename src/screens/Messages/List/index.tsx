@@ -73,7 +73,7 @@ export function MessagesScreen({navigation, route}: Props) {
     )
   }, [_, t])
 
-  const initialNumToRender = useInitialNumToRender()
+  const initialNumToRender = useInitialNumToRender(80)
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
