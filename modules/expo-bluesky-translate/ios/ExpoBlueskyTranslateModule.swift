@@ -6,7 +6,8 @@ public class ExpoBlueskyTranslateModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoBlueskyTranslate")
     View(ExpoBlueskyTranslateView.self) {
-      Events("onEvent")
+      Events("onClose")
+      Events("onReplacementAction")
       Prop("text") { (view: ExpoBlueskyTranslateView, text: String) in
         view.props.text = text
       }
