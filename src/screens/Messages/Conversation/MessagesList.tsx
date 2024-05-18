@@ -105,8 +105,11 @@ export function MessagesList({
   const scrollToSync = useCallback(
     (offset: number) => {
       'worklet'
+      // On web we will always use the `scrollToOffset` on the `FlatList` component,
+      // since we know it is already sync
       if (isWeb) {
         flatListRef.current?.scrollToOffset({offset, animated: true})
+        return
       }
 
       scrollTo(flatListRef, 0, offset, hasScrolled)
