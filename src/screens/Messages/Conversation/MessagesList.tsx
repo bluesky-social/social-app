@@ -1,8 +1,8 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
 import Animated, {
-  dispatchCommand,
   runOnJS,
+  scrollTo,
   useAnimatedKeyboard,
   useAnimatedReaction,
   useAnimatedRef,
@@ -229,9 +229,14 @@ export function MessagesList({
         return
       }
 
-      // Only call this on every frame while _opening_ the keyboard
+      // We are setting some arbitrarily high number here to ensure that we end up scrolling to the bottom. There is not
+      // any other way to synchronously scroll to the bottom of the list, since we cannot get the content size of the
+      // scrollview synchronously.
+      // On iOS we could have used `dispatchCommand('scrollToEnd', [])` since the underlying view has a `scrollToEnd`
+      // method. It doesn't exist on Android though. That's probably why `scrollTo` which is implemented in Reanimated
+      // doesn't support a `scrollToEnd`.
       if (prev && now > 0 && now >= prev) {
-        dispatchCommand(flatListRef, 'scrollToEnd', [false])
+        scrollTo(flatListRef, 0, 1e7, false)
       }
 
       // We want to store the full keyboard height after it fully opens so we can make some
