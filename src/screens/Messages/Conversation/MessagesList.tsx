@@ -95,6 +95,7 @@ export function MessagesList({
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
 
+  const isDragging = useSharedValue(false)
   const layoutHeight = useSharedValue(0)
 
   // -- Scroll handling
@@ -170,6 +171,16 @@ export function MessagesList({
       layoutHeight.value,
     ],
   )
+
+  const onBeginDrag = React.useCallback(() => {
+    'worklet'
+    isDragging.value = true
+  }, [isDragging])
+
+  const onEndDrag = React.useCallback(() => {
+    'worklet'
+    isDragging.value = true
+  }, [isDragging])
 
   const onStartReached = useCallback(() => {
     if (hasScrolled) {
@@ -270,19 +281,27 @@ export function MessagesList({
   // the _lists_ size changes, _not_ the content size which is handled by `onContentSizeChange`.
   // This accounts for things like the emoji keyboard opening, changes in block state, etc.
   const onListLayout = React.useCallback(() => {
-    if (
-      isWeb ||
-      animatedKeyboard.height.value === 0 ||
-      finalKeyboardHeight.value > 0
-    ) {
+    if (isDragging.value) return
+
+    const kh = animatedKeyboard.height.value
+    const fkh = finalKeyboardHeight.value
+    if (isWeb || kh === 0 || kh >= fkh) {
       flatListRef.current?.scrollToEnd({animated: true})
     }
-  }, [flatListRef, finalKeyboardHeight.value, animatedKeyboard.height.value])
+  }, [
+    flatListRef,
+    finalKeyboardHeight.value,
+    animatedKeyboard.height.value,
+    isDragging.value,
+  ])
 
   return (
     <Animated.View style={[a.flex_1, animatedStyle]}>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-      <ScrollProvider onScroll={onScroll}>
+      <ScrollProvider
+        onScroll={onScroll}
+        onBeginDrag={onBeginDrag}
+        onEndDrag={onEndDrag}>
         <List
           ref={flatListRef}
           data={convoState.items}
