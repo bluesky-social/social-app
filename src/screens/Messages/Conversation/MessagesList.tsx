@@ -266,11 +266,18 @@ export function MessagesList({
     [convoState, getAgent],
   )
 
+  // Any time the List layout changes, we want to scroll to the bottom. This only happens whenever
+  // the _lists_ size changes, _not_ the content size which is handled by `onContentSizeChange`.
+  // This accounts for things like the emoji keyboard opening, changes in block state, etc.
   const onListLayout = React.useCallback(() => {
-    if (isWeb || finalKeyboardHeight.value > 0) {
+    if (
+      isWeb ||
+      animatedKeyboard.height.value === 0 ||
+      finalKeyboardHeight.value > 0
+    ) {
       flatListRef.current?.scrollToEnd({animated: true})
     }
-  }, [flatListRef, finalKeyboardHeight.value])
+  }, [flatListRef, finalKeyboardHeight.value, animatedKeyboard.height.value])
 
   return (
     <Animated.View style={[a.flex_1, animatedStyle]}>
