@@ -217,7 +217,11 @@ export function MessagesList({
       if (isWeb) {
         return
       }
-      dispatchCommand(flatListRef, 'scrollToEnd', [false])
+
+      // Only call this on every frame while _opening_ the keyboard
+      if (prev && now > 0 && now >= prev) {
+        dispatchCommand(flatListRef, 'scrollToEnd', [false])
+      }
 
       // We want to store the full keyboard height after it fully opens so we can make some
       // assumptions in onLayout
