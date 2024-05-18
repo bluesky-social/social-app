@@ -27,10 +27,8 @@ import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/ico
 
 export function MessageInput({
   onSendMessage,
-  scrollToEnd,
 }: {
   onSendMessage: (message: string) => void
-  scrollToEnd: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -75,14 +73,12 @@ export function MessageInput({
 
       setMaxHeight(max)
       setIsInputScrollable(availableSpace < 30)
-
-      scrollToEnd()
     },
-    [scrollToEnd, topInset],
+    [topInset],
   )
 
   return (
-    <View style={[a.px_md, a.py_sm]}>
+    <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
       <View
         style={[
           a.w_full,

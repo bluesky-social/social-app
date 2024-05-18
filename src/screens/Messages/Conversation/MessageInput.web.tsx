@@ -19,7 +19,6 @@ export function MessageInput({
   onSendMessage,
 }: {
   onSendMessage: (message: string) => void
-  scrollToEnd: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()

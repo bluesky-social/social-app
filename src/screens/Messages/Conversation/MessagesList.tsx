@@ -1,8 +1,8 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
 import Animated, {
+  dispatchCommand,
   runOnJS,
-  scrollTo,
   useAnimatedKeyboard,
   useAnimatedReaction,
   useAnimatedRef,
@@ -92,14 +92,13 @@ export function MessagesList({
 
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
-  const contentHeight = useSharedValue(0)
+  const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
 
-  // We don't want to call `scrollToEnd` again if we are already scolling to the end, because this creates a bit of jank
-  // Instead, we use `onMomentumScrollEnd` and this value to determine if we need to start scrolling or not.
-  const isMomentumScrolling = useSharedValue(false)
-  const keyboardIsAnimating = useSharedValue(false)
+  const isDragging = useSharedValue(false)
   const layoutHeight = useSharedValue(0)
+
+  // -- Scroll handling
 
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
@@ -117,53 +116,71 @@ export function MessagesList({
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
       if (isWeb && isAtTop.value && hasScrolled) {
         flatListRef.current?.scrollToOffset({
-          offset: height - contentHeight.value,
+          offset: height - prevContentHeight.current,
           animated: false,
         })
       }
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height > 50 && isAtBottom.value && !keyboardIsAnimating.value) {
-        let newOffset = height
+      if (height > 50 && isAtBottom.value) {
         // If the size of the content is changing by more than the height of the screen, then we should only
         // scroll 1 screen down, and let the user scroll the rest. However, because a single message could be
         // really large - and the normal chat behavior would be to still scroll to the end if it's only one
         // message - we ignore this rule if there's only one additional message
         if (
           hasScrolled &&
-          height - contentHeight.value > layoutHeight.value - 50 &&
+          height - prevContentHeight.current > layoutHeight.value - 50 &&
           convoState.items.length - prevItemCount.current > 1
         ) {
-          newOffset = contentHeight.value - 50
+          flatListRef.current?.scrollToOffset({
+            offset: height - layoutHeight.value + 50,
+            animated: hasScrolled,
+          })
           setShowNewMessagesPill(true)
-        } else if (!hasScrolled && !convoState.isFetchingHistory) {
-          setHasScrolled(true)
-        }
+        } else {
+          flatListRef.current?.scrollToOffset({
+            offset: height,
+            animated: hasScrolled,
+          })
 
-        flatListRef.current?.scrollToOffset({
-          offset: newOffset,
-          animated: hasScrolled,
-        })
-        isMomentumScrolling.value = true
+          // HACK Unfortunately, we need to call `setHasScrolled` after a brief delay,
+          // because otherwise there is too much of a delay between the time the content
+          // scrolls and the time the screen appears, causing a flicker.
+          // We cannot actually use a synchronous scroll here, because `onContentSizeChange`
+          // is actually async itself - all the info has to come across the bridge first.
+          if (!hasScrolled && !convoState.isFetchingHistory) {
+            setTimeout(() => {
+              setHasScrolled(true)
+            }, 100)
+          }
+        }
       }
-      contentHeight.value = height
+
+      prevContentHeight.current = height
       prevItemCount.current = convoState.items.length
     },
     [
       hasScrolled,
-      convoState.items.length,
-      convoState.isFetchingHistory,
       setHasScrolled,
-      // all of these are stable
-      contentHeight,
+      convoState.isFetchingHistory,
+      convoState.items.length,
+      // these are stable
       flatListRef,
-      isAtBottom.value,
       isAtTop.value,
-      isMomentumScrolling,
-      keyboardIsAnimating.value,
+      isAtBottom.value,
       layoutHeight.value,
     ],
   )
+
+  const onBeginDrag = React.useCallback(() => {
+    'worklet'
+    isDragging.value = true
+  }, [isDragging])
+
+  const onEndDrag = React.useCallback(() => {
+    'worklet'
+    isDragging.value = false
+  }, [isDragging])
 
   const onStartReached = useCallback(() => {
     if (hasScrolled) {
@@ -171,6 +188,70 @@ export function MessagesList({
     }
   }, [convoState, hasScrolled])
 
+  const onScroll = React.useCallback(
+    (e: ReanimatedScrollEvent) => {
+      'worklet'
+      layoutHeight.value = e.layoutMeasurement.height
+
+      const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
+
+      if (
+        showNewMessagesPill &&
+        e.contentSize.height - e.layoutMeasurement.height / 3 < bottomOffset
+      ) {
+        runOnJS(setShowNewMessagesPill)(false)
+      }
+
+      // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
+      // when a new message is added, hence the 100 pixel offset
+      isAtBottom.value = e.contentSize.height - 100 < bottomOffset
+      isAtTop.value = e.contentOffset.y <= 1
+    },
+    [layoutHeight, showNewMessagesPill, isAtBottom, isAtTop],
+  )
+
+  // -- Keyboard animation handling
+  const animatedKeyboard = useAnimatedKeyboard()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const nativeBottomBarHeight = isIOS ? 42 : 60
+  const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
+  const finalKeyboardHeight = useSharedValue(0)
+
+  // On web, we don't want to do anything.
+  // On native, we want to scroll the list to the bottom every frame that the keyboard is opening. `scrollTo` runs
+  // on the UI thread - directly calling `scrollTo` on the underlying native component, so we achieve 60 FPS.
+  useAnimatedReaction(
+    () => animatedKeyboard.height.value,
+    (now, prev) => {
+      'worklet'
+      // This never applies on web
+      if (isWeb) {
+        return
+      }
+
+      // Only call this on every frame while _opening_ the keyboard
+      if (prev && now > 0 && now >= prev) {
+        dispatchCommand(flatListRef, 'scrollToEnd', [false])
+      }
+
+      // We want to store the full keyboard height after it fully opens so we can make some
+      // assumptions in onLayout
+      if (finalKeyboardHeight.value === 0 && prev && now > 0 && now === prev) {
+        finalKeyboardHeight.value = now
+      }
+    },
+  )
+
+  // This changes the size of the `ListFooterComponent`. Whenever this changes, the content size will change and our
+  // `onContentSizeChange` function will handle scrolling to the appropriate offset.
+  const animatedStyle = useAnimatedStyle(() => ({
+    marginBottom:
+      animatedKeyboard.height.value > bottomOffset
+        ? animatedKeyboard.height.value
+        : bottomOffset,
+  }))
+
+  // -- Message sending
   const onSendMessage = useCallback(
     async (text: string) => {
       let rt = new RichText({text}, {cleanNewlines: true})
@@ -196,80 +277,36 @@ export function MessagesList({
     [convoState, getAgent],
   )
 
-  const onScroll = React.useCallback(
-    (e: ReanimatedScrollEvent) => {
-      'worklet'
-      layoutHeight.value = e.layoutMeasurement.height
+  // Any time the List layout changes, we want to scroll to the bottom. This only happens whenever
+  // the _lists_ size changes, _not_ the content size which is handled by `onContentSizeChange`.
+  // This accounts for things like the emoji keyboard opening, changes in block state, etc.
+  const onListLayout = React.useCallback(() => {
+    if (isDragging.value) return
 
-      const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
+    const kh = animatedKeyboard.height.value
+    const fkh = finalKeyboardHeight.value
 
-      if (
-        showNewMessagesPill &&
-        e.contentSize.height - e.layoutMeasurement.height / 3 < bottomOffset
-      ) {
-        runOnJS(setShowNewMessagesPill)(false)
-      }
-
-      // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
-      // when a new message is added, hence the 100 pixel offset
-      isAtBottom.value = e.contentSize.height - 100 < bottomOffset
-      isAtTop.value = e.contentOffset.y <= 1
-    },
-    [layoutHeight, showNewMessagesPill, isAtBottom, isAtTop],
-  )
-
-  // This tells us when we are no longer scrolling
-  const onMomentumEnd = React.useCallback(() => {
-    'worklet'
-    isMomentumScrolling.value = false
-  }, [isMomentumScrolling])
-
-  const scrollToEndNow = React.useCallback(() => {
-    if (isMomentumScrolling.value) return
-    flatListRef.current?.scrollToEnd({animated: false})
-  }, [flatListRef, isMomentumScrolling.value])
-
-  // -- Keyboard animation handling
-  const animatedKeyboard = useAnimatedKeyboard()
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const nativeBottomBarHeight = isIOS ? 42 : 60
-  const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
-
-  // On web, we don't want to do anything.
-  // On native, we want to scroll the list to the bottom every frame that the keyboard is opening. `scrollTo` runs
-  // on the UI thread - directly calling `scrollTo` on the underlying native component, so we achieve 60 FPS.
-  useAnimatedReaction(
-    () => animatedKeyboard.height.value,
-    (now, prev) => {
-      'worklet'
-      // This never applies on web
-      if (isWeb) {
-        keyboardIsAnimating.value = false
-        return
-      }
-
-      // We only need to scroll to end while the keyboard is _opening_. During close, the position changes as we
-      // "expand" the view.
-      if (prev && now > prev) {
-        scrollTo(flatListRef, 0, contentHeight.value + now, false)
-      }
-      keyboardIsAnimating.value = Boolean(prev) && now !== prev
-    },
-  )
-
-  // This changes the size of the `ListFooterComponent`. Whenever this changes, the content size will change and our
-  // `onContentSizeChange` function will handle scrolling to the appropriate offset.
-  const animatedStyle = useAnimatedStyle(() => ({
-    marginBottom:
-      animatedKeyboard.height.value > bottomOffset
-        ? animatedKeyboard.height.value
-        : bottomOffset,
-  }))
+    // We only run the layout scroll if:
+    // - We're on web
+    // - The keyboard is not open. This accounts for changing block states
+    // - The final keyboard height has been initially set and the keyboard height is greater than that
+    if (isWeb || kh === 0 || (fkh > 0 && kh >= fkh)) {
+      flatListRef.current?.scrollToEnd({animated: true})
+    }
+  }, [
+    flatListRef,
+    finalKeyboardHeight.value,
+    animatedKeyboard.height.value,
+    isDragging.value,
+  ])
 
   return (
     <Animated.View style={[a.flex_1, animatedStyle]}>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-      <ScrollProvider onScroll={onScroll} onMomentumEnd={onMomentumEnd}>
+      <ScrollProvider
+        onScroll={onScroll}
+        onBeginDrag={onBeginDrag}
+        onEndDrag={onEndDrag}>
         <List
           ref={flatListRef}
           data={convoState.items}
@@ -288,6 +325,7 @@ export function MessagesList({
           removeClippedSubviews={false}
           sideBorders={false}
           onContentSizeChange={onContentSizeChange}
+          onLayout={onListLayout}
           onStartReached={onStartReached}
           onScrollToIndexFailed={onScrollToIndexFailed}
           scrollEventThrottle={100}
@@ -301,10 +339,7 @@ export function MessagesList({
           {convoState.status === ConvoStatus.Disabled ? (
             <ChatDisabled />
           ) : (
-            <MessageInput
-              onSendMessage={onSendMessage}
-              scrollToEnd={scrollToEndNow}
-            />
+            <MessageInput onSendMessage={onSendMessage} />
           )}
         </>
       ) : (
