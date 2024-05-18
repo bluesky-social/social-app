@@ -9,15 +9,12 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
-import {useMaybeConvoForUser} from '#/state/queries/messages/get-convo-for-members'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -31,8 +28,8 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -75,9 +72,6 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
-  const navigation = useNavigation<NavigationProp>()
-
-  const {data: convoId} = useMaybeConvoForUser(profile.did)
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -148,11 +142,6 @@ let ProfileHeaderStandard = ({
     }
   }, [_, queueUnblock, track])
 
-  const onPressDm = React.useCallback(() => {
-    if (!convoId) return
-    navigation.navigate('MessagesConversation', {conversation: convoId})
-  }, [navigation, convoId])
-
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
@@ -210,19 +199,7 @@ let ProfileHeaderStandard = ({
             <>
               {hasSession && (
                 <>
-                  {convoId && (
-                    <Button
-                      testID="dmBtn"
-                      size="small"
-                      color="secondary"
-                      variant="solid"
-                      shape="round"
-                      onPress={onPressDm}
-                      label={_(msg`Message ${profile.handle}`)}
-                      style={{width: 36, height: 36}}>
-                      <Envelope style={t.atoms.text} size="md" />
-                    </Button>
-                  )}
+                  <MessageProfileButton profile={profile} />
                   <Button
                     testID="suggestedFollowsBtn"
                     size="small"
