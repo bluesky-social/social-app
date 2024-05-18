@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-18 12:02+0800\n"
+"PO-Revision-Date: 2024-05-18 21:45+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -301,7 +301,7 @@ msgstr "以下是您保存的動態源。"
 #: src/screens/Messages/Settings.tsx:57
 #: src/screens/Messages/Settings.tsx:60
 msgid "Allow messages from"
-msgstr "允許誰傳送訊息："
+msgstr "允許來自這些人的訊息："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -1336,7 +1336,7 @@ msgstr "昏暗"
 
 #: src/components/dms/MessagesNUX.tsx:85
 msgid "Direct messages are here!"
-msgstr "隆重推出私人訊息！"
+msgstr "私人訊息已推出！"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
@@ -2123,7 +2123,7 @@ msgstr "前往用戶個人頁面"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 msgid "Graphic Media"
-msgstr "成人影像媒體"
+msgstr "不適宜圖像媒體"
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -2370,7 +2370,7 @@ msgstr "輸入您的帳號代碼"
 
 #: src/components/dms/MessagesNUX.tsx:79
 msgid "Introducing Direct Messages"
-msgstr "私人訊息已推出"
+msgstr "為您隆重介紹「私人訊息」"
 
 #: src/screens/Login/LoginForm.tsx:129
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -3415,7 +3415,7 @@ msgstr "其他…"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:18
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "我們的內容管理者已審核檢舉，並決定禁止您進入在 Bluesky 上的對話。"
+msgstr "我們的內容管理者已審核檢舉，並決定停用您在 Bluesky 上的對話功能。"
 
 #: src/components/Lists.tsx:198
 #: src/view/screens/NotFound.tsx:45
@@ -4016,7 +4016,7 @@ msgstr "要求發佈前提供替代文字"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
-msgstr "需要電子郵件驗證碼才能登入您的帳號"
+msgstr "登入時要求電子郵件驗證碼"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
