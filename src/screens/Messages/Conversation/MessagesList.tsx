@@ -3,8 +3,6 @@ import {FlatList, View} from 'react-native'
 import Animated, {
   dispatchCommand,
   runOnJS,
-  runOnUI,
-  scrollTo,
   useAnimatedKeyboard,
   useAnimatedReaction,
   useAnimatedRef,
@@ -102,24 +100,6 @@ export function MessagesList({
 
   // -- Scroll handling
 
-  const scrollToSync = useCallback(
-    (offset: number) => {
-      'worklet'
-      // On web we will always use the `scrollToOffset` on the `FlatList` component,
-      // since we know it is already sync
-      if (isWeb) {
-        flatListRef.current?.scrollToOffset({offset, animated: hasScrolled})
-      } else {
-        scrollTo(flatListRef, 0, offset, hasScrolled)
-      }
-
-      if (!hasScrolled && !convoState.isFetchingHistory) {
-        runOnJS(setHasScrolled)(true)
-      }
-    },
-    [flatListRef, hasScrolled, convoState.isFetchingHistory, setHasScrolled],
-  )
-
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
   // 2. Old messages are being prepended to the top
@@ -152,10 +132,27 @@ export function MessagesList({
           height - prevContentHeight.current > layoutHeight.value - 50 &&
           convoState.items.length - prevItemCount.current > 1
         ) {
+          flatListRef.current?.scrollToOffset({
+            offset: height - layoutHeight.value + 50,
+            animated: hasScrolled,
+          })
           setShowNewMessagesPill(true)
-          runOnUI(scrollToSync)(height - layoutHeight.value + 50)
         } else {
-          runOnUI(scrollToSync)(height)
+          flatListRef.current?.scrollToOffset({
+            offset: height,
+            animated: hasScrolled,
+          })
+
+          // HACK Unfortunately, we need to call `setHasScrolled` after a brief delay,
+          // because otherwise there is too much of a delay between the time the content
+          // scrolls and the time the screen appears, causing a flicker.
+          // We cannot actually use a synchronous scroll here, because `onContentSizeChange`
+          // is actually async itself - all the info has to come across the bridge first.
+          if (!hasScrolled && !convoState.isFetchingHistory) {
+            setTimeout(() => {
+              setHasScrolled(true)
+            }, 100)
+          }
         }
       }
 
@@ -163,8 +160,9 @@ export function MessagesList({
       prevItemCount.current = convoState.items.length
     },
     [
-      scrollToSync,
       hasScrolled,
+      setHasScrolled,
+      convoState.isFetchingHistory,
       convoState.items.length,
       // these are stable
       flatListRef,
@@ -266,6 +264,11 @@ export function MessagesList({
     [convoState, getAgent],
   )
 
+  const onListLayout = React.useCallback(() => {
+    if (keyboardIsAnimating.value) return
+    flatListRef.current?.scrollToEnd({animated: false})
+  }, [flatListRef, keyboardIsAnimating.value])
+
   return (
     <Animated.View style={[a.flex_1, animatedStyle]}>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
@@ -288,6 +291,7 @@ export function MessagesList({
           removeClippedSubviews={false}
           sideBorders={false}
           onContentSizeChange={onContentSizeChange}
+          onLayout={onListLayout}
           onStartReached={onStartReached}
           onScrollToIndexFailed={onScrollToIndexFailed}
           scrollEventThrottle={100}
