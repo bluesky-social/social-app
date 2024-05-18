@@ -285,6 +285,11 @@ export function MessagesList({
 
     const kh = animatedKeyboard.height.value
     const fkh = finalKeyboardHeight.value
+
+    // We only run the layout scroll if:
+    // - We're on web
+    // - The keyboard is not open. This accounts for changing block states
+    // - The final keyboard height has been initially set and the keyboard height is greater than that
     if (isWeb || kh === 0 || (fkh > 0 && kh >= fkh)) {
       flatListRef.current?.scrollToEnd({animated: true})
     }
