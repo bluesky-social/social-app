@@ -285,7 +285,7 @@ export function MessagesList({
 
     const kh = animatedKeyboard.height.value
     const fkh = finalKeyboardHeight.value
-    if (isWeb || kh === 0 || kh >= fkh) {
+    if (isWeb || kh === 0 || (fkh > 0 && kh >= fkh)) {
       flatListRef.current?.scrollToEnd({animated: true})
     }
   }, [
