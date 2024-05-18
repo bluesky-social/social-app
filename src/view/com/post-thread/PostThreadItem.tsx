@@ -32,6 +32,10 @@ import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
+import {
+  ExpoBlueskyTranslateView,
+  isAvailable as isNativeTranslateAvailable,
+} from '../../../../modules/expo-bluesky-translate'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -318,6 +322,7 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
+              text={record?.text || ''}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
@@ -620,32 +625,40 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
+  text,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
+  text: string
   needsTranslation: boolean
   translatorUrl: string
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
-  const onTranslatePress = React.useCallback(
-    () => openLink(translatorUrl),
-    [openLink, translatorUrl],
-  )
+  const [presented, setPresented] = React.useState(false)
+  const onTranslatePress = React.useCallback(() => {
+    if (isNativeTranslateAvailable) {
+      setPresented(true)
+    } else {
+      openLink(translatorUrl)
+    }
+  }, [openLink, translatorUrl])
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
           <Text style={pal.textLight}> &middot; </Text>
-          <Text
-            style={pal.link}
-            title={_(msg`Translate`)}
-            onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
-          </Text>
+          <ExpoBlueskyTranslateView text={text} isPresented={presented}>
+            <Text
+              style={pal.link}
+              title={_(msg`Translate`)}
+              onPress={onTranslatePress}>
+              <Trans>Translate</Trans>
+            </Text>
+          </ExpoBlueskyTranslateView>
         </>
       )}
     </View>
