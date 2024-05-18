@@ -26,6 +26,7 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -304,6 +305,8 @@ export function SettingsScreen({}: Props) {
     await clearLegacyStorage()
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
   }, [_])
+
+  const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
@@ -824,6 +827,16 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Resets the preferences state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset preferences state</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => onPressDeleteChatDeclaration()}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Delete chat declaration record`)}
+              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Delete chat declaration record</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

@@ -9,6 +9,7 @@ import {
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
+import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {
   configureModerationForAccount,
@@ -153,6 +154,15 @@ export async function createAgentAndCreateAccount(
             id: TID.nextStr(),
           },
         ])
+        await agent.api.com.atproto.repo.putRecord({
+          repo: account.did,
+          collection: 'chat.bsky.actor.declaration',
+          rkey: 'self',
+          record: {
+            $type: 'chat.bsky.actor.declaration',
+            allowIncoming: getAge(birthDate) < 18 ? 'none' : 'following',
+          },
+        })
       })
     } catch (e: any) {
       logger.error(e, {

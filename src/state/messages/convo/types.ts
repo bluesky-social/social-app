@@ -20,6 +20,7 @@ export enum ConvoStatus {
   Error = 'error',
   Backgrounded = 'backgrounded',
   Suspended = 'suspended',
+  Disabled = 'disabled',
 }
 
 export enum ConvoItemError {
@@ -50,6 +51,7 @@ export enum ConvoDispatchEvent {
   Background = 'background',
   Suspend = 'suspend',
   Error = 'error',
+  Disable = 'disable',
 }
 
 export type ConvoDispatch =
@@ -71,6 +73,9 @@ export type ConvoDispatch =
   | {
       event: ConvoDispatchEvent.Error
       payload: ConvoError
+    }
+  | {
+      event: ConvoDispatchEvent.Disable
     }
 
 export type ConvoItem =
@@ -194,6 +199,18 @@ export type ConvoStateError = {
   sendMessage: undefined
   fetchMessageHistory: undefined
 }
+export type ConvoStateDisabled = {
+  status: ConvoStatus.Disabled
+  items: ConvoItem[]
+  convo: ChatBskyConvoDefs.ConvoView
+  error: undefined
+  sender: AppBskyActorDefs.ProfileViewBasic
+  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  isFetchingHistory: boolean
+  deleteMessage: DeleteMessage
+  sendMessage: SendMessage
+  fetchMessageHistory: FetchMessageHistory
+}
 export type ConvoState =
   | ConvoStateUninitialized
   | ConvoStateInitializing
@@ -201,6 +218,7 @@ export type ConvoState =
   | ConvoStateBackgrounded
   | ConvoStateSuspended
   | ConvoStateError
+  | ConvoStateDisabled
 
 export type ConvoEvent = {
   type: 'invalidate-block-state'

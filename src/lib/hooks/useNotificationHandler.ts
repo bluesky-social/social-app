@@ -41,13 +41,14 @@ type NotificationPayload =
     }
 
 const DEFAULT_HANDLER_OPTIONS = {
-  shouldShowAlert: true,
+  shouldShowAlert: false,
   shouldPlaySound: false,
   shouldSetBadge: true,
 }
 
-// This needs to stay outside the hook to persist between account switches
+// These need to stay outside the hook to persist between account switches
 let storedPayload: NotificationPayload | undefined
+let prevDate = 0
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
@@ -57,9 +58,6 @@ export function useNotificationsHandler() {
   const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-
-  // Safety to prevent double handling of the same notification
-  const prevDate = React.useRef(0)
 
   React.useEffect(() => {
     if (!isAndroid) return
@@ -169,11 +167,10 @@ export function useNotificationsHandler() {
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
         ) {
-          const isCurrentConvo = payload.convoId === currentConvoId
           return {
-            shouldShowAlert: !isCurrentConvo,
+            shouldShowAlert: payload.convoId !== currentConvoId,
             shouldPlaySound: false,
-            shouldSetBadge: !isCurrentConvo,
+            shouldSetBadge: false,
           }
         }
 
@@ -185,10 +182,10 @@ export function useNotificationsHandler() {
 
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
-        if (e.notification.date === prevDate.current) {
+        if (e.notification.date === prevDate) {
           return
         }
-        prevDate.current = e.notification.date
+        prevDate = e.notification.date
 
         logger.debug(
           'Notifications: response received',
