@@ -59,9 +59,13 @@ export function useNotificationsHandler() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
+  // On Android, we cannot control which sound is used for a notification on Android
+  // 28 or higher. Instead, we have to configure a notification channel ahead of time
+  // which has the sounds we want in the configuration for that channel. These two
+  // channels allow for the mute/unmute functionality we want for the background
+  // handler.
   React.useEffect(() => {
     if (!isAndroid) return
-
     Notifications.setNotificationChannelAsync('chat-messages', {
       name: 'Chat',
       importance: Notifications.AndroidImportance.MAX,
