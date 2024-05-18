@@ -95,7 +95,6 @@ export function MessagesList({
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
 
-  const keyboardIsAnimating = useSharedValue(false)
   const layoutHeight = useSharedValue(0)
 
   // -- Scroll handling
@@ -122,7 +121,7 @@ export function MessagesList({
       }
 
       // This number _must_ be the height of the MaybeLoader component
-      if (height > 50 && isAtBottom.value && !keyboardIsAnimating.value) {
+      if (height > 50 && isAtBottom.value) {
         // If the size of the content is changing by more than the height of the screen, then we should only
         // scroll 1 screen down, and let the user scroll the rest. However, because a single message could be
         // really large - and the normal chat behavior would be to still scroll to the end if it's only one
@@ -168,7 +167,6 @@ export function MessagesList({
       flatListRef,
       isAtTop.value,
       isAtBottom.value,
-      keyboardIsAnimating.value,
       layoutHeight.value,
     ],
   )
@@ -206,6 +204,7 @@ export function MessagesList({
   const {bottom: bottomInset} = useSafeAreaInsets()
   const nativeBottomBarHeight = isIOS ? 42 : 60
   const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
+  const finalKeyboardHeight = useSharedValue(0)
 
   // On web, we don't want to do anything.
   // On native, we want to scroll the list to the bottom every frame that the keyboard is opening. `scrollTo` runs
@@ -216,16 +215,15 @@ export function MessagesList({
       'worklet'
       // This never applies on web
       if (isWeb) {
-        keyboardIsAnimating.value = false
         return
       }
+      dispatchCommand(flatListRef, 'scrollToEnd', [false])
 
-      // We only need to scroll to end while the keyboard is _opening_. During close, the position changes as we
-      // "expand" the view.
-      if (prev && now > prev) {
-        dispatchCommand(flatListRef, 'scrollToEnd', [false])
+      // We want to store the full keyboard height after it fully opens so we can make some
+      // assumptions in onLayout
+      if (finalKeyboardHeight.value === 0 && prev && now > 0 && now === prev) {
+        finalKeyboardHeight.value = now
       }
-      keyboardIsAnimating.value = Boolean(prev) && now !== prev
     },
   )
 
@@ -265,9 +263,10 @@ export function MessagesList({
   )
 
   const onListLayout = React.useCallback(() => {
-    if (keyboardIsAnimating.value) return
-    flatListRef.current?.scrollToEnd({animated: false})
-  }, [flatListRef, keyboardIsAnimating.value])
+    if (isWeb || finalKeyboardHeight.value > 0) {
+      flatListRef.current?.scrollToEnd({animated: true})
+    }
+  }, [flatListRef, finalKeyboardHeight.value])
 
   return (
     <Animated.View style={[a.flex_1, animatedStyle]}>
