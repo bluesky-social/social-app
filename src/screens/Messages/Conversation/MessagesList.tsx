@@ -179,7 +179,7 @@ export function MessagesList({
 
   const onEndDrag = React.useCallback(() => {
     'worklet'
-    isDragging.value = true
+    isDragging.value = false
   }, [isDragging])
 
   const onStartReached = useCallback(() => {
