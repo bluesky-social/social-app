@@ -108,11 +108,10 @@ export function MessagesList({
       // On web we will always use the `scrollToOffset` on the `FlatList` component,
       // since we know it is already sync
       if (isWeb) {
-        flatListRef.current?.scrollToOffset({offset, animated: true})
-        return
+        flatListRef.current?.scrollToOffset({offset, animated: hasScrolled})
+      } else {
+        scrollTo(flatListRef, 0, offset, hasScrolled)
       }
-
-      scrollTo(flatListRef, 0, offset, hasScrolled)
 
       if (!hasScrolled && !convoState.isFetchingHistory) {
         runOnJS(setHasScrolled)(true)
