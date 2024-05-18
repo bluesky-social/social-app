@@ -3,6 +3,8 @@ import {FlatList, View} from 'react-native'
 import Animated, {
   dispatchCommand,
   runOnJS,
+  runOnUI,
+  scrollTo,
   useAnimatedKeyboard,
   useAnimatedReaction,
   useAnimatedRef,
@@ -100,6 +102,22 @@ export function MessagesList({
 
   // -- Scroll handling
 
+  const scrollToSync = useCallback(
+    (offset: number) => {
+      'worklet'
+      if (isWeb) {
+        flatListRef.current?.scrollToOffset({offset, animated: true})
+      }
+
+      scrollTo(flatListRef, 0, offset, hasScrolled)
+
+      if (!hasScrolled && !convoState.isFetchingHistory) {
+        runOnJS(setHasScrolled)(true)
+      }
+    },
+    [flatListRef, hasScrolled, convoState.isFetchingHistory, setHasScrolled],
+  )
+
   // Every time the content size changes, that means one of two things is happening:
   // 1. New messages are being added from the log or from a message you have sent
   // 2. Old messages are being prepended to the top
@@ -133,15 +151,9 @@ export function MessagesList({
           convoState.items.length - prevItemCount.current > 1
         ) {
           setShowNewMessagesPill(true)
-          flatListRef.current?.scrollToOffset({
-            offset: prevContentHeight.current - 50,
-            animated: false,
-          })
+          runOnUI(scrollToSync)(height - layoutHeight.value + 50)
         } else {
-          flatListRef.current?.scrollToEnd({animated: hasScrolled})
-          if (!hasScrolled && !convoState.isFetchingHistory) {
-            setHasScrolled(true)
-          }
+          runOnUI(scrollToSync)(height)
         }
       }
 
@@ -149,14 +161,13 @@ export function MessagesList({
       prevItemCount.current = convoState.items.length
     },
     [
-      convoState.items.length,
-      convoState.isFetchingHistory,
+      scrollToSync,
       hasScrolled,
-      setHasScrolled,
-      // all of these are stable
+      convoState.items.length,
+      // these are stable
       flatListRef,
-      isAtBottom.value,
       isAtTop.value,
+      isAtBottom.value,
       keyboardIsAnimating.value,
       layoutHeight.value,
     ],
