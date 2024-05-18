@@ -25,12 +25,24 @@ import {RichText} from '../RichText'
 import {Text} from '../Typography'
 import {MessageItemMetadata} from './MessageItem'
 
-let MessageReportDialog = ({
+type ReportDialogParams =
+  | {
+      type: 'convoAccount'
+      did: string
+      convoId: string
+    }
+  | {
+      type: 'convoMessage'
+      convoId: string
+      message: ChatBskyConvoDefs.MessageView
+    }
+
+let ReportDialog = ({
   control,
-  message,
+  params,
 }: {
   control: Dialog.DialogControlProps
-  message: ChatBskyConvoDefs.MessageView
+  params: ReportDialogParams
 }): React.ReactNode => {
   const {_} = useLingui()
   return (
@@ -39,33 +51,35 @@ let MessageReportDialog = ({
       nativeOptions={isAndroid ? {sheet: {snapPoints: ['100%']}} : {}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
-        <DialogInner message={message} />
+        <DialogInner params={params} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
 }
-MessageReportDialog = memo(MessageReportDialog)
-export {MessageReportDialog}
+ReportDialog = memo(ReportDialog)
+export {ReportDialog}
 
-function DialogInner({message}: {message: ChatBskyConvoDefs.MessageView}) {
+function DialogInner({params}: {params: ReportDialogParams}) {
   const [reportOption, setReportOption] = useState<ReportOption | null>(null)
 
   return reportOption ? (
     <SubmitStep
-      message={message}
+      params={params}
       reportOption={reportOption}
       goBack={() => setReportOption(null)}
     />
   ) : (
-    <ReasonStep setReportOption={setReportOption} />
+    <ReasonStep params={params} setReportOption={setReportOption} />
   )
 }
 
 function ReasonStep({
   setReportOption,
+  params,
 }: {
   setReportOption: (reportOption: ReportOption) => void
+  params: ReportDialogParams
 }) {
   const control = Dialog.useDialogContext()
 
@@ -73,18 +87,26 @@ function ReasonStep({
     <SelectReportOptionView
       labelers={[]}
       goBack={control.close}
-      params={{type: 'message'}}
+      params={
+        params.type === 'convoMessage'
+          ? {
+              type: 'convoMessage',
+            }
+          : {
+              type: 'convoAccount',
+            }
+      }
       onSelectReportOption={setReportOption}
     />
   )
 }
 
 function SubmitStep({
-  message,
+  params,
   reportOption,
   goBack,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  params: ReportDialogParams
   reportOption: ReportOption
   goBack: () => void
 }) {
@@ -101,17 +123,33 @@ function SubmitStep({
     isPending: submitting,
   } = useMutation({
     mutationFn: async () => {
-      const report = {
-        reasonType: reportOption.reason,
-        subject: {
-          $type: 'chat.bsky.convo.defs#messageRef',
-          messageId: message.id,
-          did: message.sender!.did,
-        } satisfies ChatBskyConvoDefs.MessageRef,
-        reason: details,
-      } satisfies ComAtprotoModerationCreateReport.InputSchema
+      if (params.type === 'convoMessage') {
+        const {convoId, message} = params
 
-      await getAgent().createModerationReport(report)
+        const report = {
+          reasonType: reportOption.reason,
+          subject: {
+            $type: 'chat.bsky.convo.defs#messageRef',
+            messageId: message.id,
+            convoId,
+            did: message.sender.did,
+          } satisfies ChatBskyConvoDefs.MessageRef,
+          reason: details,
+        } satisfies ComAtprotoModerationCreateReport.InputSchema
+
+        await getAgent().createModerationReport(report)
+      } else if (params.type === 'convoAccount') {
+        const {convoId, did} = params
+
+        await getAgent().createModerationReport({
+          reasonType: reportOption.reason,
+          subject: {
+            $type: 'com.atproto.admin.defs#repoRef',
+            did,
+          },
+          reason: details + ` — from:dms:${convoId}`,
+        })
+      }
     },
     onSuccess: () => {
       control.close(() => {
@@ -119,6 +157,17 @@ function SubmitStep({
       })
     },
   })
+
+  const copy = useMemo(() => {
+    return {
+      convoMessage: {
+        title: _(msg`Report this message`),
+      },
+      convoAccount: {
+        title: _(msg`Report this account`),
+      },
+    }[params.type]
+  }, [_, params])
 
   return (
     <View style={a.gap_lg}>
@@ -133,9 +182,7 @@ function SubmitStep({
       </Button>
 
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-        <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Report this message</Trans>
-        </Text>
+        <Text style={[a.text_2xl, a.font_bold]}>{copy.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           <Trans>
             Your report will be sent to the Bluesky Moderation Service
@@ -143,10 +190,15 @@ function SubmitStep({
         </Text>
       </View>
 
-      <PreviewMessage message={message} />
+      {params.type === 'convoMessage' && (
+        <PreviewMessage message={params.message} />
+      )}
 
       <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-        <Trans>Reason: {reportOption.title}</Trans>
+        <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+          <Trans>Reason:</Trans>
+        </Text>{' '}
+        <Text style={[a.font_bold, a.text_md]}>{reportOption.title}</Text>
       </Text>
 
       <Divider />

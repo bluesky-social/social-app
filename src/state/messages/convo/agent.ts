@@ -152,6 +152,7 @@ export class Convo {
           fetchMessageHistory: undefined,
         }
       }
+      case ConvoStatus.Disabled:
       case ConvoStatus.Suspended:
       case ConvoStatus.Backgrounded:
       case ConvoStatus.Ready: {
@@ -241,6 +242,13 @@ export class Convo {
             this.withdrawRequestedPollInterval()
             break
           }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
+            this.fetchMessageHistory() // finish init
+            this.cleanupFirehoseConnection?.()
+            this.withdrawRequestedPollInterval()
+            break
+          }
         }
         break
       }
@@ -265,6 +273,12 @@ export class Convo {
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
+            this.withdrawRequestedPollInterval()
+            break
+          }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
             this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
@@ -303,6 +317,12 @@ export class Convo {
             this.withdrawRequestedPollInterval()
             break
           }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
+            this.cleanupFirehoseConnection?.()
+            this.withdrawRequestedPollInterval()
+            break
+          }
         }
         break
       }
@@ -319,6 +339,10 @@ export class Convo {
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            break
+          }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
             break
           }
         }
@@ -343,7 +367,15 @@ export class Convo {
             this.error = action.payload
             break
           }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
+            break
+          }
         }
+        break
+      }
+      case ConvoStatus.Disabled: {
+        // can't do anything
         break
       }
       default:
@@ -424,9 +456,13 @@ export class Convo {
         throw new Error('Convo: could not find recipients in convo')
       }
 
-      // await new Promise(y => setTimeout(y, 2000))
-      // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
-      this.dispatch({event: ConvoDispatchEvent.Ready})
+      const userIsDisabled = this.sender.chatDisabled as boolean
+
+      if (userIsDisabled) {
+        this.dispatch({event: ConvoDispatchEvent.Disable})
+      } else {
+        this.dispatch({event: ConvoDispatchEvent.Ready})
+      }
     } catch (e: any) {
       logger.error(e, {context: 'Convo: setup failed'})
 
@@ -828,6 +864,10 @@ export class Convo {
                 ...this.recipients!.map(r => r.did),
               ],
             })
+            break
+          case 'Account is disabled':
+            this.pendingMessageFailure = 'unrecoverable'
+            this.dispatch({event: ConvoDispatchEvent.Disable})
             break
           default:
             logger.warn(

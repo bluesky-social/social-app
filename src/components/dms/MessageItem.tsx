@@ -75,7 +75,7 @@ let MessageItem = ({
   }, [message.text, message.facets])
 
   return (
-    <View>
+    <View style={[isFromSelf ? a.mr_md : a.ml_md]}>
       <ActionsWrapper isFromSelf={isFromSelf} message={message}>
         <View
           style={[

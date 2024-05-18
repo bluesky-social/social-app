@@ -65,6 +65,17 @@ function ChatListItemReady({
     [profile, moderationOpts],
   )
 
+  const blockInfo = React.useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
+
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
     ? 'Deleted Account'
@@ -169,7 +180,7 @@ function ChatListItemReady({
                       )}
                     </TimeElapsed>
                   )}
-                  {convo.muted && (
+                  {(convo.muted || moderation.blocked) && (
                     <Text
                       style={[
                         a.text_sm,
@@ -200,7 +211,8 @@ function ChatListItemReady({
                     convo.unreadCount > 0
                       ? a.font_bold
                       : t.atoms.text_contrast_high,
-                    convo.muted && t.atoms.text_contrast_medium,
+                    (convo.muted || moderation.blocked) &&
+                      t.atoms.text_contrast_medium,
                   ]}>
                   {lastMessage}
                 </Text>
@@ -211,9 +223,10 @@ function ChatListItemReady({
                     a.absolute,
                     a.rounded_full,
                     {
-                      backgroundColor: convo.muted
-                        ? t.palette.contrast_200
-                        : t.palette.primary_500,
+                      backgroundColor:
+                        convo.muted || moderation.blocked
+                          ? t.palette.contrast_200
+                          : t.palette.primary_500,
                       height: 7,
                       width: 7,
                     },
@@ -239,7 +252,7 @@ function ChatListItemReady({
                 triggerOpacity={
                   !gtMobile || showActions || menuControl.isOpen ? 1 : 0
                 }
-                moderation={moderation}
+                blockInfo={blockInfo}
               />
             </View>
           </View>

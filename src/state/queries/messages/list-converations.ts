@@ -1,5 +1,9 @@
 import {useCallback, useMemo} from 'react'
-import {ChatBskyConvoDefs, ChatBskyConvoListConvos} from '@atproto/api'
+import {
+  ChatBskyConvoDefs,
+  ChatBskyConvoListConvos,
+  moderateProfile,
+} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -8,9 +12,9 @@ import {
 } from '@tanstack/react-query'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useAgent} from '#/state/session'
-import {decrementBadgeCount} from 'lib/notifications/notifications'
+import {useAgent, useSession} from '#/state/session'
 
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
@@ -36,16 +40,29 @@ export function useListConvos({refetchInterval}: {refetchInterval: number}) {
 
 export function useUnreadMessageCount() {
   const {currentConvoId} = useCurrentConvoId()
+  const {currentAccount} = useSession()
   const convos = useListConvos({
     refetchInterval: 30_000,
   })
+  const moderationOpts = useModerationOpts()
 
   const count =
     convos.data?.pages
       .flatMap(page => page.convos)
       .filter(convo => convo.id !== currentConvoId)
       .reduce((acc, convo) => {
-        return acc + (!convo.muted && convo.unreadCount > 0 ? 1 : 0)
+        const otherMember = convo.members.find(
+          member => member.did !== currentAccount?.did,
+        )
+
+        if (!otherMember || !moderationOpts) return acc
+
+        // TODO could shadow this outside this hook and get optimistic block state
+        const moderation = moderateProfile(otherMember, moderationOpts)
+        const shouldIgnore = convo.muted || moderation.blocked
+        const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+
+        return acc + unreadCount
       }, 0) ?? 0
 
   return useMemo(() => {
@@ -117,18 +134,10 @@ export function useOnMarkAsRead() {
   return useCallback(
     (chatId: string) => {
       queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
-        return optimisticUpdate(chatId, old, convo => {
-          // We only want to decrement the badge by one no matter the unread count, since we only increment once per
-          // sender regardless of message count
-          if (convo.unreadCount > 0) {
-            decrementBadgeCount(1)
-          }
-
-          return {
-            ...convo,
-            unreadCount: 0,
-          }
-        })
+        return optimisticUpdate(chatId, old, convo => ({
+          ...convo,
+          unreadCount: 0,
+        }))
       })
     },
     [queryClient],
