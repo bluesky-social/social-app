@@ -9,12 +9,15 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
+import {useMaybeConvoForUser} from '#/state/queries/messages/get-convo-for-members'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -29,6 +32,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -71,6 +75,9 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
+  const navigation = useNavigation<NavigationProp>()
+
+  const {data: convoId} = useMaybeConvoForUser(profile.did)
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -141,6 +148,11 @@ let ProfileHeaderStandard = ({
     }
   }, [_, queueUnblock, track])
 
+  const onPressDm = React.useCallback(() => {
+    if (!convoId) return
+    navigation.navigate('MessagesConversation', {conversation: convoId})
+  }, [navigation, convoId])
+
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
@@ -156,7 +168,14 @@ let ProfileHeaderStandard = ({
         style={[a.px_lg, a.pt_md, a.pb_sm]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
-          style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_sm]}
+          style={[
+            {paddingLeft: 90},
+            a.flex_row,
+            a.justify_end,
+            a.gap_sm,
+            a.pb_sm,
+            a.flex_wrap,
+          ]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <Button
@@ -166,7 +185,7 @@ let ProfileHeaderStandard = ({
               variant="solid"
               onPress={onPressEditProfile}
               label={_(msg`Edit profile`)}
-              style={a.rounded_full}>
+              style={[a.rounded_full, a.py_sm]}>
               <ButtonText>
                 <Trans>Edit Profile</Trans>
               </ButtonText>
@@ -181,7 +200,7 @@ let ProfileHeaderStandard = ({
                 label={_(msg`Unblock`)}
                 disabled={!hasSession}
                 onPress={() => unblockPromptControl.open()}
-                style={a.rounded_full}>
+                style={[a.rounded_full, a.py_sm]}>
                 <ButtonText>
                   <Trans context="action">Unblock</Trans>
                 </ButtonText>
@@ -190,24 +209,42 @@ let ProfileHeaderStandard = ({
           ) : !profile.viewer?.blockedBy ? (
             <>
               {hasSession && (
-                <Button
-                  testID="suggestedFollowsBtn"
-                  size="small"
-                  color={showSuggestedFollows ? 'primary' : 'secondary'}
-                  variant="solid"
-                  shape="round"
-                  onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
-                  label={_(msg`Show follows similar to ${profile.handle}`)}>
-                  <FontAwesomeIcon
-                    icon="user-plus"
-                    style={
-                      showSuggestedFollows
-                        ? {color: t.palette.white}
-                        : t.atoms.text
+                <>
+                  {convoId && (
+                    <Button
+                      testID="dmBtn"
+                      size="small"
+                      color="secondary"
+                      variant="solid"
+                      shape="round"
+                      onPress={onPressDm}
+                      label={_(msg`Message ${profile.handle}`)}
+                      style={{width: 36, height: 36}}>
+                      <Envelope style={t.atoms.text} size="md" />
+                    </Button>
+                  )}
+                  <Button
+                    testID="suggestedFollowsBtn"
+                    size="small"
+                    color={showSuggestedFollows ? 'primary' : 'secondary'}
+                    variant="solid"
+                    shape="round"
+                    onPress={() =>
+                      setShowSuggestedFollows(!showSuggestedFollows)
                     }
-                    size={14}
-                  />
-                </Button>
+                    label={_(msg`Show follows similar to ${profile.handle}`)}
+                    style={{width: 36, height: 36}}>
+                    <FontAwesomeIcon
+                      icon="user-plus"
+                      style={
+                        showSuggestedFollows
+                          ? {color: t.palette.white}
+                          : t.atoms.text
+                      }
+                      size={14}
+                    />
+                  </Button>
+                </>
               )}
 
               <Button
@@ -223,7 +260,7 @@ let ProfileHeaderStandard = ({
                 onPress={
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }
-                style={[a.rounded_full, a.gap_xs]}>
+                style={[a.rounded_full, a.gap_xs, a.py_sm]}>
                 <ButtonIcon
                   position="left"
                   icon={profile.viewer?.following ? Check : Plus}
