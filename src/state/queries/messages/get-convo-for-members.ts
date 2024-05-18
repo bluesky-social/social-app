@@ -4,6 +4,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent} from '#/state/session'
+import {STALE} from '..'
 import {RQKEY as CONVO_KEY} from './conversation'
 
 const RQKEY_ROOT = 'convo-for-user'
@@ -61,5 +62,6 @@ export function useMaybeConvoForUser(did: string) {
         return null
       }
     },
+    staleTime: STALE.INFINITY,
   })
 }
