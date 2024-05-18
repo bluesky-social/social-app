@@ -645,13 +645,17 @@ function ExpandedPostDetails({
       openLink(translatorUrl)
     }
   }, [openLink, translatorUrl])
+
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
           <Text style={pal.textLight}> &middot; </Text>
-          <ExpoBlueskyTranslateView text={text} isPresented={presented}>
+          <ExpoBlueskyTranslateView
+            text={text}
+            isPresented={presented}
+            onClose={() => setPresented(false)}>
             <Text
               style={pal.link}
               title={_(msg`Translate`)}
