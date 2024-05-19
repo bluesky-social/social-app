@@ -772,7 +772,7 @@ export class Convo {
 
   private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null
 
-  async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
+  sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim()) return
 
@@ -825,6 +825,9 @@ export class Convo {
       })
       const res = response.data
 
+      // remove from queue
+      this.pendingMessages.delete(id)
+
       /*
        * Insert into `newMessages` as soon as we have a real ID. That way, when
        * we get an event log back, we can replace in situ.
@@ -833,15 +836,14 @@ export class Convo {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
       })
-      this.pendingMessages.delete(id)
-
-      await this.processPendingMessages()
-
+      // render new message state, prior to firehose
       this.commit()
+
+      // continue queue processing
+      await this.processPendingMessages()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
-    } finally {
       this.isProcessingPendingMessages = false
     }
   }
