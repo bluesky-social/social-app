@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-18 15:00+0900\n"
+"PO-Revision-Date: 2024-05-19 14:27+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -467,7 +467,7 @@ msgstr "선정적이지 않거나 예술적인 노출."
 msgid "At least 3 characters"
 msgstr "3자 이상"
 
-#: src/components/dms/MessagesListHeader.tsx:73
+#: src/components/dms/MessagesListHeader.tsx:74
 #: src/components/moderation/LabelsOnMeDialog.tsx:273
 #: src/components/moderation/LabelsOnMeDialog.tsx:274
 #: src/screens/Login/ChooseAccountForm.tsx:98
@@ -2701,7 +2701,7 @@ msgid "Menu"
 msgstr "메뉴"
 
 #: src/components/dms/MessageMenu.tsx:58
-#: src/screens/Messages/List/ChatListItem.tsx:98
+#: src/screens/Messages/List/ChatListItem.tsx:105
 msgid "Message deleted"
 msgstr "메시지 삭제됨"
 
@@ -2709,12 +2709,12 @@ msgstr "메시지 삭제됨"
 msgid "Message from server: {0}"
 msgstr "서버에서 보낸 메시지: {0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:101
+#: src/screens/Messages/Conversation/MessageInput.tsx:97
 msgid "Message input field"
 msgstr "메시지 입력 필드"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:56
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:38
+#: src/screens/Messages/Conversation/MessageInput.tsx:54
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:37
 msgid "Message is too long"
 msgstr "메시지가 너무 깁니다"
 
@@ -3072,7 +3072,7 @@ msgstr "더 이상 {0} 님을 팔로우하지 않음"
 msgid "No longer than 253 characters"
 msgstr "253자를 초과하지 않음"
 
-#: src/screens/Messages/List/ChatListItem.tsx:87
+#: src/screens/Messages/List/ChatListItem.tsx:94
 msgid "No messages yet"
 msgstr "아직 메시지가 없습니다"
 
@@ -4376,8 +4376,8 @@ msgstr "이메일 보내기"
 msgid "Send feedback"
 msgstr "피드백 보내기"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:126
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:111
+#: src/screens/Messages/Conversation/MessageInput.tsx:122
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:110
 msgid "Send message"
 msgstr "메시지 보내기"
 
@@ -4724,7 +4724,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/screens/Messages/Conversation/index.tsx:89
+#: src/screens/Messages/Conversation/index.tsx:91
 msgid "Something went wrong"
 msgstr "알 수 없는 오류가 발생했습니다"
 
@@ -5300,7 +5300,7 @@ msgstr "다시 시도"
 msgid "Two-factor authentication"
 msgstr "2단계 인증"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:102
+#: src/screens/Messages/Conversation/MessageInput.tsx:98
 msgid "Type your message here"
 msgstr "메시지를 입력하세요"
 
@@ -5710,7 +5710,7 @@ msgstr "콘텐츠 경고 및 피드에서 필터링"
 msgid "We couldn't find any results for that hashtag."
 msgstr "해당 해시태그에 대한 결과를 찾을 수 없습니다."
 
-#: src/screens/Messages/Conversation/index.tsx:90
+#: src/screens/Messages/Conversation/index.tsx:92
 msgid "We couldn't load this conversation"
 msgstr "이 대화를 불러올 수 없습니다"
 
@@ -5847,8 +5847,8 @@ msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 msgid "Wide"
 msgstr "가로"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:103
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:99
+#: src/screens/Messages/Conversation/MessageInput.tsx:99
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:98
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
@@ -6020,7 +6020,7 @@ msgstr "이제 이 스레드에 대한 알림을 받습니다"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력합니다."
 
-#: src/screens/Messages/List/ChatListItem.tsx:91
+#: src/screens/Messages/List/ChatListItem.tsx:98
 msgid "You: {0}"
 msgstr "나: {0}"
 
