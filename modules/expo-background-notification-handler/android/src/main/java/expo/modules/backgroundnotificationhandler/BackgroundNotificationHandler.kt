@@ -45,7 +45,7 @@ class BackgroundNotificationHandler(
     if (remoteMessage.data["reason"] == "chat-message") {
       if (
         NotificationPrefs(context)
-          .getStringStore("disabledDids")
+          .getStringStore("disabledChatDids")
           ?.contains(remoteMessage.data["recipientDid"]) == true
       ) {
         return true

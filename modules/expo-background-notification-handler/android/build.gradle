@@ -88,6 +88,5 @@ repositories {
 
 dependencies {
   implementation project(':expo-modules-core')
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${getKotlinVersion()}"
   implementation 'com.google.firebase:firebase-messaging-ktx:24.0.0'
 }

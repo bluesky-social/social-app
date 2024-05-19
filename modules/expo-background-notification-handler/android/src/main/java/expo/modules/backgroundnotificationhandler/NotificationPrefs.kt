@@ -1,7 +1,6 @@
 package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
-import org.json.JSONObject
 
 val DEFAULTS = mapOf(
   "playSoundChat" to true,
@@ -11,8 +10,8 @@ val DEFAULTS = mapOf(
   "playSoundQuote" to false,
   "playSoundReply" to false,
   "playSoundRepost" to false,
-  "threadMutes" to mapOf<String, Boolean>(),
-  "disabledDids" to mapOf<String, Boolean>(),
+  "threadMutes" to setOf<String>(),
+  "disabledDids" to setOf<String>(),
 )
 
 val BOOL_VALS = arrayOf("playSoundChat", "playSoundFollow", "playSoundLike", "playSoundMention", "playSoundQuote", "playSoundReply", "playSoundRepost")
@@ -38,8 +37,8 @@ class NotificationPrefs (private val context: Context?) {
             is String -> {
               putString(key, value)
             }
-            is Map<*, *> -> {
-              putString(key, mapToString(value))
+            is Set<*> -> {
+              putStringSet(key, value as Set<String>)
             }
             else -> {
               throw Error("Unsupported type")
@@ -57,7 +56,7 @@ class NotificationPrefs (private val context: Context?) {
       prefs.getBoolean(key, false).let { map[key] = it }
     }
     MAP_VALS.forEach { key ->
-      prefs.getString(key, null)?.let { map[key] = stringToMap(it) }
+      prefs.getStringSet(key, setOf()).let { map[key] = stringSetToMap(it) }
     }
 
     return map
@@ -72,8 +71,8 @@ class NotificationPrefs (private val context: Context?) {
   }
 
   fun getStringStore(key: String): Map<String, Boolean>? {
-    val value = prefs.getString(key, null) ?: return null
-    return stringToMap(value)
+    val value = prefs.getStringSet(key, null) ?: return null
+    return stringSetToMap(value)
   }
 
   fun setBoolean(key: String, value: Boolean) {
@@ -98,7 +97,7 @@ class NotificationPrefs (private val context: Context?) {
     prefs
       .edit()
       .apply {
-        putString(key, mapToString(value))
+        putStringSet(key, mapToStringSet(value))
       }
       .apply()
   }
@@ -107,9 +106,9 @@ class NotificationPrefs (private val context: Context?) {
     prefs
       .edit()
       .apply {
-        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        val map = stringSetToMap(prefs.getStringSet(key, setOf())).toMutableMap()
         map[string] = true
-        putString(key, mapToString(map))
+        putStringSet(key, mapToStringSet(map))
       }
       .apply()
   }
@@ -118,9 +117,9 @@ class NotificationPrefs (private val context: Context?) {
     prefs
       .edit()
       .apply {
-        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        val map = stringSetToMap(prefs.getStringSet(key, setOf())).toMutableMap()
         map.remove(string)
-        putString(key, mapToString(map))
+        putStringSet(key, mapToStringSet(map))
       }
       .apply()
   }
@@ -129,11 +128,11 @@ class NotificationPrefs (private val context: Context?) {
     prefs
       .edit()
       .apply {
-        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        val map = stringSetToMap(prefs.getStringSet(key, setOf())).toMutableMap()
         strings.forEach {
           map[it] = true
         }
-        putString(key, mapToString(map))
+        putStringSet(key, mapToStringSet(map))
       }
       .apply()
   }
@@ -142,23 +141,24 @@ class NotificationPrefs (private val context: Context?) {
     prefs
       .edit()
       .apply {
-        val map = stringToMap(prefs.getString(key, null) ?: "{}").toMutableMap()
+        val map = stringSetToMap(prefs.getStringSet(key, setOf())).toMutableMap()
         strings.forEach {
           map.remove(it)
         }
-        putString(key, mapToString(map))
+        putStringSet(key, mapToStringSet(map))
       }
       .apply()
   }
 
-  private fun mapToString(map: Any): String {
-    return JSONObject(map as Map<*, *>).toString()
+  private fun mapToStringSet(map: Map<String, Boolean>): Set<String> {
+    // Only if the value is true
+    return map.filterValues { it }.keys
   }
 
-  private fun stringToMap(string: String): Map<String, Boolean> {
-    val jsonObject = JSONObject(string)
-    return jsonObject.keys().asSequence().associateWith {
-      jsonObject.getBoolean(it)
+  private fun stringSetToMap(set: MutableSet<String>?): Map<String, Boolean> {
+    if (set == null) {
+      return mapOf()
     }
+    return set.associateWith { true }
   }
 }
