@@ -4,6 +4,7 @@ import 'view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
@@ -87,41 +88,43 @@ function InnerApp() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <Splash isReady={isReady}>
-            <RootSiblingParent>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <UnreadNotifsProvider>
-                                <BackgroundNotificationPreferencesProvider>
-                                  <GestureHandlerRootView style={s.h100pct}>
-                                    <TestCtrls />
-                                    <Shell />
-                                  </GestureHandlerRootView>
-                                </BackgroundNotificationPreferencesProvider>
-                              </UnreadNotifsProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
-                  </StatsigProvider>
-                </QueryProvider>
-              </React.Fragment>
-            </RootSiblingParent>
-          </Splash>
-        </ThemeProvider>
-      </Alf>
+      <KeyboardProvider enabled={false} statusBarTranslucent={false}>
+        <Alf theme={theme}>
+          <ThemeProvider theme={theme}>
+            <Splash isReady={isReady}>
+              <RootSiblingParent>
+                <React.Fragment
+                  // Resets the entire tree below when it changes:
+                  key={currentAccount?.did}>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <StatsigProvider>
+                      <MessagesProvider>
+                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                        <LabelDefsProvider>
+                          <ModerationOptsProvider>
+                            <LoggedOutViewProvider>
+                              <SelectedFeedProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <GestureHandlerRootView style={s.h100pct}>
+                                      <TestCtrls />
+                                      <Shell />
+                                    </GestureHandlerRootView>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </SelectedFeedProvider>
+                            </LoggedOutViewProvider>
+                          </ModerationOptsProvider>
+                        </LabelDefsProvider>
+                      </MessagesProvider>
+                    </StatsigProvider>
+                  </QueryProvider>
+                </React.Fragment>
+              </RootSiblingParent>
+            </Splash>
+          </ThemeProvider>
+        </Alf>
+      </KeyboardProvider>
     </SafeAreaProvider>
   )
 }

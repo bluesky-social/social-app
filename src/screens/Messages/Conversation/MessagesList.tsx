@@ -1,10 +1,14 @@
 import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
-import Animated, {
+import {
+  KeyboardStickyView,
+  useKeyboardContext,
+  useKeyboardHandler,
+} from 'react-native-keyboard-controller'
+import {
   runOnJS,
   scrollTo,
   useAnimatedKeyboard,
-  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +16,7 @@ import Animated, {
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {useFocusEffect} from '@react-navigation/native'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
@@ -24,7 +29,6 @@ import {List} from 'view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
-import {atoms as a} from '#/alf'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -75,6 +79,17 @@ export function MessagesList({
   blocked?: boolean
   footer?: React.ReactNode
 }) {
+  const kbContext = useKeyboardContext()
+  useFocusEffect(
+    useCallback(() => {
+      kbContext.setEnabled(true)
+
+      return () => {
+        kbContext.setEnabled(false)
+      }
+    }, [kbContext]),
+  )
+
   const convoState = useConvoActive()
   const {getAgent} = useAgent()
 
@@ -211,49 +226,39 @@ export function MessagesList({
   )
 
   // -- Keyboard animation handling
-  const animatedKeyboard = useAnimatedKeyboard()
   const {bottom: bottomInset} = useSafeAreaInsets()
   const nativeBottomBarHeight = isIOS ? 42 : 60
   const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
+
   const finalKeyboardHeight = useSharedValue(0)
+  const keyboardIsOpening = useSharedValue(false)
 
-  // On web, we don't want to do anything.
-  // On native, we want to scroll the list to the bottom every frame that the keyboard is opening. `scrollTo` runs
-  // on the UI thread - directly calling `scrollTo` on the underlying native component, so we achieve 60 FPS.
-  useAnimatedReaction(
-    () => animatedKeyboard.height.value,
-    (now, prev) => {
+  const kb = useAnimatedKeyboard()
+
+  useKeyboardHandler({
+    onStart: () => {
       'worklet'
-      // This never applies on web
-      if (isWeb) {
-        return
-      }
-
-      // We are setting some arbitrarily high number here to ensure that we end up scrolling to the bottom. There is not
-      // any other way to synchronously scroll to the bottom of the list, since we cannot get the content size of the
-      // scrollview synchronously.
-      // On iOS we could have used `dispatchCommand('scrollToEnd', [])` since the underlying view has a `scrollToEnd`
-      // method. It doesn't exist on Android though. That's probably why `scrollTo` which is implemented in Reanimated
-      // doesn't support a `scrollToEnd`.
-      if (prev && now > 0 && now >= prev) {
+      keyboardIsOpening.value = true
+    },
+    onMove: e => {
+      'worklet'
+      if (e.height > bottomOffset) {
+        console.log('move')
         scrollTo(flatListRef, 0, 1e7, false)
       }
-
-      // We want to store the full keyboard height after it fully opens so we can make some
-      // assumptions in onLayout
-      if (finalKeyboardHeight.value === 0 && prev && now > 0 && now === prev) {
-        finalKeyboardHeight.value = now
-      }
     },
-  )
+    onEnd: e => {
+      'worklet'
+      finalKeyboardHeight.value = e.height
+      keyboardIsOpening.value = false
+    },
+  })
 
   // This changes the size of the `ListFooterComponent`. Whenever this changes, the content size will change and our
   // `onContentSizeChange` function will handle scrolling to the appropriate offset.
-  const animatedStyle = useAnimatedStyle(() => ({
+  const animatedListStyle = useAnimatedStyle(() => ({
     marginBottom:
-      animatedKeyboard.height.value > bottomOffset
-        ? animatedKeyboard.height.value
-        : bottomOffset,
+      kb.height.value > bottomOffset ? kb.height.value : bottomOffset,
   }))
 
   // -- Message sending
@@ -288,7 +293,7 @@ export function MessagesList({
   const onListLayout = React.useCallback(() => {
     if (isDragging.value) return
 
-    const kh = animatedKeyboard.height.value
+    const kh = kb.height.value
     const fkh = finalKeyboardHeight.value
 
     // We only run the layout scroll if:
@@ -301,12 +306,12 @@ export function MessagesList({
   }, [
     flatListRef,
     finalKeyboardHeight.value,
-    animatedKeyboard.height.value,
     isDragging.value,
+    kb.height.value,
   ])
 
   return (
-    <Animated.View style={[a.flex_1, animatedStyle]}>
+    <>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
       <ScrollProvider
         onScroll={onScroll}
@@ -319,6 +324,7 @@ export function MessagesList({
           keyExtractor={keyExtractor}
           containWeb={true}
           disableVirtualization={true}
+          style={animatedListStyle}
           // The extra two items account for the header and the footer components
           initialNumToRender={isNative ? 32 : 62}
           maxToRenderPerBatch={isWeb ? 32 : 62}
@@ -339,18 +345,21 @@ export function MessagesList({
           }
         />
       </ScrollProvider>
-      {!blocked ? (
-        <>
-          {convoState.status === ConvoStatus.Disabled ? (
-            <ChatDisabled />
-          ) : (
-            <MessageInput onSendMessage={onSendMessage} />
-          )}
-        </>
-      ) : (
-        footer
-      )}
+
+      <KeyboardStickyView offset={{closed: -bottomOffset, opened: 0}}>
+        {!blocked ? (
+          <>
+            {convoState.status === ConvoStatus.Disabled ? (
+              <ChatDisabled />
+            ) : (
+              <MessageInput onSendMessage={onSendMessage} />
+            )}
+          </>
+        ) : (
+          footer
+        )}
+      </KeyboardStickyView>
       {showNewMessagesPill && <NewMessagesPill />}
-    </Animated.View>
+    </>
   )
 }
