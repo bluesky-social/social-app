@@ -10,8 +10,8 @@ let DEFAULTS: [String:Any] = [
   "playSoundQuote": false,
   "playSoundReply": false,
   "playSoundRepost": false,
-  "threadMutes": [:] as! [String:Bool],
-  "disabledDids": [:] as! [String:Bool],
+  "threadMutes": [:] as [String:Bool],
+  "disabledChatDids": [:] as [String:Bool],
 ]
 
 /*
@@ -58,7 +58,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
     }
     
     AsyncFunction("getStringStoreAsync") { (forKey: String) -> [String:Bool]? in
-      if let pref = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+      if let pref = userDefaults?.dictionary(forKey: forKey) as? [String:Bool] {
         return pref
       }
       return nil
@@ -77,21 +77,21 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
     }
     
     AsyncFunction("addToStringStoreAsync") { (forKey: String, string: String) in
-      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+      if var curr = userDefaults?.dictionary(forKey: forKey) as? [String:Bool] {
         curr[string] = true
         userDefaults?.setValue(curr, forKey: forKey)
       }
     }
     
     AsyncFunction("removeFromStringStoreAsync") { (forKey: String, string: String) in
-      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+      if var curr = userDefaults?.dictionary(forKey: forKey) as? [String:Bool] {
         curr.removeValue(forKey: string)
         userDefaults?.setValue(curr, forKey: forKey)
       }
     }
     
     AsyncFunction("addManyToStringStoreAsync") { (forKey: String, strings: [String]) in
-      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+      if var curr = userDefaults?.dictionary(forKey: forKey) as? [String:Bool] {
         strings.forEach { s in
           curr[s] = true
         }
@@ -100,7 +100,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
     }
     
     AsyncFunction("removeManyFromStringStoreAsync") { (forKey: String, strings: [String]) in
-      if var curr = userDefaults?.object(forKey: forKey) as? [String:Bool] {
+      if var curr = userDefaults?.dictionary(forKey: forKey) as? [String:Bool] {
         strings.forEach { s in
           curr.removeValue(forKey: s)
         }
