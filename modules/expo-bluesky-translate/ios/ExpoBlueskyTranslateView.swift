@@ -13,17 +13,14 @@ class TranslateViewProps: ObservableObject {
   }
   var children: [UIView]?
   var onClose: EventDispatcher
-  var onReplacementAction: EventDispatcher
-  init(onClose: EventDispatcher, onReplacementAction: EventDispatcher) {
+  init(onClose: EventDispatcher) {
     self.onClose = onClose
-    self.onReplacementAction = onReplacementAction
   }
 }
 
 class ExpoBlueskyTranslateView: ExpoView {
   let props: TranslateViewProps
   let onClose = EventDispatcher()
-  let onReplacementAction = EventDispatcher()
 
   override func didUpdateReactSubviews() {
     let subChildren = self.reactSubviews()
@@ -31,7 +28,7 @@ class ExpoBlueskyTranslateView: ExpoView {
   }
 
   required init(appContext: AppContext? = nil) {
-    props = TranslateViewProps(onClose: onClose, onReplacementAction: onReplacementAction)
+    props = TranslateViewProps(onClose: onClose)
     let hostingController = UIHostingController(rootView: TranslateView(props: props))
     super.init(appContext: appContext)
     setupHostingController(hostingController)

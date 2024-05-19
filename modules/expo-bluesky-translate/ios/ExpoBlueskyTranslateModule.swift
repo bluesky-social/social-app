@@ -7,7 +7,6 @@ public class ExpoBlueskyTranslateModule: Module {
     Name("ExpoBlueskyTranslate")
     View(ExpoBlueskyTranslateView.self) {
       Events("onClose")
-      Events("onReplacementAction")
       Prop("text") { (view: ExpoBlueskyTranslateView, text: String) in
         view.props.text = text
       }

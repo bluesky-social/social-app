@@ -17,9 +17,7 @@ struct TranslateView: View {
       .translationPresentation(
         isPresented: $props.isPresented,
         text: props.text
-      ) { translation in
-        props.onReplacementAction(["text": translation])
-      }
+      )
     }
   }
 }
