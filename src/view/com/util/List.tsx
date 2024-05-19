@@ -51,15 +51,22 @@ function ListImpl<ItemT>(
     onScrolledDownChange?.(didScrollDown)
   }
 
+  const {
+    onBeginDrag: onBeginDragFromContext,
+    onEndDrag: onEndDragFromContext,
+    onScroll: onScrollFromContext,
+    onMomentumEnd: onMomentumEndFromContext,
+  } = contextScrollHandlers
+
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag(e, ctx) {
-      contextScrollHandlers.onBeginDrag?.(e, ctx)
+      onBeginDragFromContext?.(e, ctx)
     },
     onEndDrag(e, ctx) {
-      contextScrollHandlers.onEndDrag?.(e, ctx)
+      onEndDragFromContext?.(e, ctx)
     },
     onScroll(e, ctx) {
-      contextScrollHandlers.onScroll?.(e, ctx)
+      onScrollFromContext?.(e, ctx)
 
       const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
       if (isScrolledDown.value !== didScrollDown) {
@@ -72,7 +79,7 @@ function ListImpl<ItemT>(
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.
     onMomentumEnd(e, ctx) {
-      contextScrollHandlers.onMomentumEnd?.(e, ctx)
+      onMomentumEndFromContext?.(e, ctx)
     },
   })
 
