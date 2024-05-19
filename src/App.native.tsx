@@ -88,43 +88,41 @@ function InnerApp() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <KeyboardProvider enabled={false} statusBarTranslucent={false}>
-        <Alf theme={theme}>
-          <ThemeProvider theme={theme}>
-            <Splash isReady={isReady}>
-              <RootSiblingParent>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
-                  <QueryProvider currentDid={currentAccount?.did}>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <GestureHandlerRootView style={s.h100pct}>
-                                      <TestCtrls />
-                                      <Shell />
-                                    </GestureHandlerRootView>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </QueryProvider>
-                </React.Fragment>
-              </RootSiblingParent>
-            </Splash>
-          </ThemeProvider>
-        </Alf>
-      </KeyboardProvider>
+      <Alf theme={theme}>
+        <ThemeProvider theme={theme}>
+          <Splash isReady={isReady}>
+            <RootSiblingParent>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <GestureHandlerRootView style={s.h100pct}>
+                                    <TestCtrls />
+                                    <Shell />
+                                  </GestureHandlerRootView>
+                                </BackgroundNotificationPreferencesProvider>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </StatsigProvider>
+                </QueryProvider>
+              </React.Fragment>
+            </RootSiblingParent>
+          </Splash>
+        </ThemeProvider>
+      </Alf>
     </SafeAreaProvider>
   )
 }
@@ -145,27 +143,29 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <SessionProvider>
-      <ShellStateProvider>
-        <PrefsStateProvider>
-          <MutedThreadsProvider>
-            <InvitesStateProvider>
-              <ModalStateProvider>
-                <DialogStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
-                      <PortalProvider>
-                        <InnerApp />
-                      </PortalProvider>
-                    </I18nProvider>
-                  </LightboxStateProvider>
-                </DialogStateProvider>
-              </ModalStateProvider>
-            </InvitesStateProvider>
-          </MutedThreadsProvider>
-        </PrefsStateProvider>
-      </ShellStateProvider>
-    </SessionProvider>
+    <KeyboardProvider enabled={true}>
+      <SessionProvider>
+        <ShellStateProvider>
+          <PrefsStateProvider>
+            <MutedThreadsProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <I18nProvider>
+                        <PortalProvider>
+                          <InnerApp />
+                        </PortalProvider>
+                      </I18nProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </MutedThreadsProvider>
+          </PrefsStateProvider>
+        </ShellStateProvider>
+      </SessionProvider>
+    </KeyboardProvider>
   )
 }
 

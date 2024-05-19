@@ -2,13 +2,11 @@ import React, {useCallback, useRef} from 'react'
 import {FlatList, View} from 'react-native'
 import {
   KeyboardStickyView,
-  useKeyboardContext,
   useKeyboardHandler,
 } from 'react-native-keyboard-controller'
 import {
   runOnJS,
   scrollTo,
-  useAnimatedKeyboard,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
@@ -16,7 +14,6 @@ import {
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
@@ -79,17 +76,6 @@ export function MessagesList({
   blocked?: boolean
   footer?: React.ReactNode
 }) {
-  const kbContext = useKeyboardContext()
-  useFocusEffect(
-    useCallback(() => {
-      kbContext.setEnabled(true)
-
-      return () => {
-        kbContext.setEnabled(false)
-      }
-    }, [kbContext]),
-  )
-
   const convoState = useConvoActive()
   const {getAgent} = useAgent()
 
@@ -219,7 +205,7 @@ export function MessagesList({
   const nativeBottomBarHeight = isIOS ? 42 : 60
   const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
 
-  const kb = useAnimatedKeyboard()
+  const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
 
   useKeyboardHandler({
@@ -229,6 +215,8 @@ export function MessagesList({
     },
     onMove: e => {
       'worklet'
+      keyboardHeight.value = e.height
+
       if (e.height > bottomOffset) {
         console.log('move')
         scrollTo(flatListRef, 0, 1e7, false)
@@ -242,7 +230,7 @@ export function MessagesList({
 
   const animatedListStyle = useAnimatedStyle(() => ({
     marginBottom:
-      kb.height.value > bottomOffset ? kb.height.value : bottomOffset,
+      keyboardHeight.value > bottomOffset ? keyboardHeight.value : bottomOffset,
   }))
 
   // -- Message sending
