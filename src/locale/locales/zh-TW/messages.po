@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-18 21:45+0800\n"
+"PO-Revision-Date: 2024-05-19 11:24+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -2697,7 +2697,7 @@ msgid "Menu"
 msgstr "選單"
 
 #: src/components/dms/MessageMenu.tsx:58
-#: src/screens/Messages/List/ChatListItem.tsx:98
+#: src/screens/Messages/List/ChatListItem.tsx:105
 msgid "Message deleted"
 msgstr "訊息已刪除"
 
@@ -2705,12 +2705,12 @@ msgstr "訊息已刪除"
 msgid "Message from server: {0}"
 msgstr "來自伺服器的訊息：{0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:101
+#: src/screens/Messages/Conversation/MessageInput.tsx:97
 msgid "Message input field"
 msgstr "訊息輸入欄位"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:56
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:38
+#: src/screens/Messages/Conversation/MessageInput.tsx:54
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:37
 msgid "Message is too long"
 msgstr "訊息太長了"
 
@@ -3068,7 +3068,7 @@ msgstr "不再跟隨 {0}"
 msgid "No longer than 253 characters"
 msgstr "不超過 253 個字符"
 
-#: src/screens/Messages/List/ChatListItem.tsx:87
+#: src/screens/Messages/List/ChatListItem.tsx:94
 msgid "No messages yet"
 msgstr "還沒有訊息"
 
@@ -4364,8 +4364,8 @@ msgstr "發送電子郵件"
 msgid "Send feedback"
 msgstr "提交意見"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:126
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:111
+#: src/screens/Messages/Conversation/MessageInput.tsx:122
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:110
 msgid "Send message"
 msgstr "重送訊息"
 
@@ -4712,7 +4712,7 @@ msgstr "跳過此流程"
 msgid "Software Dev"
 msgstr "軟體開發"
 
-#: src/screens/Messages/Conversation/index.tsx:89
+#: src/screens/Messages/Conversation/index.tsx:91
 msgid "Something went wrong"
 msgstr "發生了一些問題"
 
@@ -5284,7 +5284,7 @@ msgstr "重試"
 msgid "Two-factor authentication"
 msgstr "雙重驗證"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:102
+#: src/screens/Messages/Conversation/MessageInput.tsx:98
 msgid "Type your message here"
 msgstr "在此輸入訊息"
 
@@ -5570,7 +5570,7 @@ msgstr "用戶"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:143
 msgid "users followed by <0/>"
-msgstr "跟隨 <0/> 的用戶"
+msgstr "被 <0/> 跟隨的用戶"
 
 #: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
@@ -5694,7 +5694,7 @@ msgstr "警告內容並從動態源中過濾"
 msgid "We couldn't find any results for that hashtag."
 msgstr "我們找不到任何與該標籤相關的結果。"
 
-#: src/screens/Messages/Conversation/index.tsx:90
+#: src/screens/Messages/Conversation/index.tsx:92
 msgid "We couldn't load this conversation"
 msgstr "我們無法載入這個對話"
 
@@ -5831,8 +5831,8 @@ msgstr "為什麼應該審查這個用戶？"
 msgid "Wide"
 msgstr "寬"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:103
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:99
+#: src/screens/Messages/Conversation/MessageInput.tsx:99
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:98
 msgid "Write a message"
 msgstr "撰寫訊息"
 
@@ -6004,7 +6004,7 @@ msgstr "您將收到這條討論串的通知"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "您將收到一封包含重設碼的電子郵件。請在此輸入該「重設碼」，然後輸入您的新密碼。"
 
-#: src/screens/Messages/List/ChatListItem.tsx:91
+#: src/screens/Messages/List/ChatListItem.tsx:98
 msgid "You: {0}"
 msgstr "您：{0}"
 
