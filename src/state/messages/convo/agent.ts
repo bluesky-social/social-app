@@ -34,9 +34,6 @@ import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
-// TODO temporary
-let DEBUG_ACTIVE_CHAT: string | undefined
-
 export function isConvoItemMessage(
   item: ConvoItem,
 ): item is ConvoItem & {type: 'message'} {
@@ -102,14 +99,6 @@ export class Convo {
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
-
-    if (DEBUG_ACTIVE_CHAT) {
-      logger.error(`Convo: another chat was already active`, {
-        convoId: this.convoId,
-      })
-    } else {
-      DEBUG_ACTIVE_CHAT = this.convoId
-    }
   }
 
   private commit() {
@@ -494,7 +483,6 @@ export class Convo {
 
   suspend() {
     this.dispatch({event: ConvoDispatchEvent.Suspend})
-    DEBUG_ACTIVE_CHAT = undefined
   }
 
   /**
