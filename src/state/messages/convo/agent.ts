@@ -602,15 +602,6 @@ export class Convo {
       this.isFetchingHistory = true
       this.commit()
 
-      /*
-       * Delay if paginating while scrolled to prevent momentum scrolling from
-       * jerking the list around, plus makes it feel a little more human.
-       */
-      if (this.pastMessages.size > 0) {
-        await new Promise(y => setTimeout(y, 500))
-        // throw new Error('UNCOMMENT TO TEST RETRY')
-      }
-
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
         return this.agent.api.chat.bsky.convo.getMessages(
