@@ -3,7 +3,9 @@ import Foundation
 import SwiftUI
 
 class TranslateViewProps: ObservableObject {
-  var text: String = ""
+  @Published var text: String = ""
+  @Published var children: [UIView]?
+  @Published var onClose: EventDispatcher
   @Published var isPresented: Bool = false {
     didSet {
       if !isPresented {
@@ -11,8 +13,7 @@ class TranslateViewProps: ObservableObject {
       }
     }
   }
-  var children: [UIView]?
-  var onClose: EventDispatcher
+
   init(onClose: EventDispatcher) {
     self.onClose = onClose
   }
