@@ -679,6 +679,9 @@ export class Convo {
           }
         }
       },
+      /*
+       * This is VERY important — we only want events for this convo.
+       */
       {convoId: this.convoId},
     )
   }
@@ -724,12 +727,6 @@ export class Convo {
            * Update rev regardless of if it's a ev type we care about or not
            */
           this.latestRev = ev.rev
-
-          /*
-           * This is VERY important. We don't want to insert any messages from
-           * your other chats.
-           */
-          if (ev.convoId !== this.convoId) continue
 
           if (
             ChatBskyConvoDefs.isLogCreateMessage(ev) &&
