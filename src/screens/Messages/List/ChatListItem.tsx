@@ -25,12 +25,17 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
-export function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+export let ChatListItem = ({
+  convo,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+}): React.ReactNode => {
   const {currentAccount} = useSession()
+  const moderationOpts = useModerationOpts()
+
   const otherUser = convo.members.find(
     member => member.did !== currentAccount?.did,
   )
-  const moderationOpts = useModerationOpts()
 
   if (!otherUser || !moderationOpts) {
     return null
@@ -44,6 +49,8 @@ export function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
     />
   )
 }
+
+ChatListItem = React.memo(ChatListItem)
 
 function ChatListItemReady({
   convo,

@@ -43,6 +43,8 @@ export function MessagesConversationScreen({route}: Props) {
 
       if (isWeb && !gtMobile) {
         setMinimalShellMode(true)
+      } else {
+        setMinimalShellMode(false)
       }
 
       return () => {
