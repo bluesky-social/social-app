@@ -5,5 +5,4 @@ export type ExpoBlueskyTranslateProps = {
   isPresented?: boolean
   children: React.ReactNode
   onClose?: () => void
-  onReplacementAction?: (event: {nativeEvent: {text: string}}) => void
 }
