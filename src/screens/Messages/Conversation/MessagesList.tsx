@@ -30,6 +30,8 @@ import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
+const MAX_TO_RENDER = isNative ? 30 : 60
+
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
     <View
@@ -183,7 +185,7 @@ export function MessagesList({
   }, [isDragging])
 
   const onStartReached = useCallback(() => {
-    if (hasScrolled) {
+    if (hasScrolled && convoState.items.length >= MAX_TO_RENDER) {
       convoState.fetchMessageHistory()
     }
   }, [convoState, hasScrolled])
