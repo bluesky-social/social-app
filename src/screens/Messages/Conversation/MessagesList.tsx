@@ -110,7 +110,6 @@ export function MessagesList({
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
 
-  const isDragging = useSharedValue(false)
   const layoutHeight = useSharedValue(0)
 
   // -- Scroll handling
@@ -187,16 +186,6 @@ export function MessagesList({
     ],
   )
 
-  const onBeginDrag = React.useCallback(() => {
-    'worklet'
-    isDragging.value = true
-  }, [isDragging])
-
-  const onEndDrag = React.useCallback(() => {
-    'worklet'
-    isDragging.value = false
-  }, [isDragging])
-
   const onStartReached = useCallback(() => {
     if (hasScrolled) {
       convoState.fetchMessageHistory()
@@ -230,10 +219,8 @@ export function MessagesList({
   const nativeBottomBarHeight = isIOS ? 42 : 60
   const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
 
-  const finalKeyboardHeight = useSharedValue(0)
-  const keyboardIsOpening = useSharedValue(false)
-
   const kb = useAnimatedKeyboard()
+  const keyboardIsOpening = useSharedValue(false)
 
   useKeyboardHandler({
     onStart: () => {
@@ -247,15 +234,12 @@ export function MessagesList({
         scrollTo(flatListRef, 0, 1e7, false)
       }
     },
-    onEnd: e => {
+    onEnd: () => {
       'worklet'
-      finalKeyboardHeight.value = e.height
       keyboardIsOpening.value = false
     },
   })
 
-  // This changes the size of the `ListFooterComponent`. Whenever this changes, the content size will change and our
-  // `onContentSizeChange` function will handle scrolling to the appropriate offset.
   const animatedListStyle = useAnimatedStyle(() => ({
     marginBottom:
       kb.height.value > bottomOffset ? kb.height.value : bottomOffset,
@@ -287,36 +271,18 @@ export function MessagesList({
     [convoState, getAgent],
   )
 
-  // Any time the List layout changes, we want to scroll to the bottom. This only happens whenever
-  // the _lists_ size changes, _not_ the content size which is handled by `onContentSizeChange`.
-  // This accounts for things like the emoji keyboard opening, changes in block state, etc.
+  // -- List layout changes (opening emoji keyboard, etc.)
   const onListLayout = React.useCallback(() => {
-    if (isDragging.value) return
-
-    const kh = kb.height.value
-    const fkh = finalKeyboardHeight.value
-
-    // We only run the layout scroll if:
-    // - We're on web
-    // - The keyboard is not open. This accounts for changing block states
-    // - The final keyboard height has been initially set and the keyboard height is greater than that
-    if (isWeb || kh === 0 || (fkh > 0 && kh >= fkh)) {
+    if (keyboardIsOpening.value) return
+    if (isWeb || !keyboardIsOpening.value) {
       flatListRef.current?.scrollToEnd({animated: true})
     }
-  }, [
-    flatListRef,
-    finalKeyboardHeight.value,
-    isDragging.value,
-    kb.height.value,
-  ])
+  }, [flatListRef, keyboardIsOpening.value])
 
   return (
     <>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-      <ScrollProvider
-        onScroll={onScroll}
-        onBeginDrag={onBeginDrag}
-        onEndDrag={onEndDrag}>
+      <ScrollProvider onScroll={onScroll}>
         <List
           ref={flatListRef}
           data={convoState.items}
@@ -345,7 +311,6 @@ export function MessagesList({
           }
         />
       </ScrollProvider>
-
       <KeyboardStickyView offset={{closed: -bottomOffset, opened: 0}}>
         {!blocked ? (
           <>
