@@ -16,7 +16,16 @@ type RQPageParam = string | undefined
 const RQKEY_ROOT = 'profile-follows'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
-export function useProfileFollowsQuery(did: string | undefined) {
+export function useProfileFollowsQuery(
+  did: string | undefined,
+  {
+    limit,
+  }: {
+    limit?: number
+  } = {
+    limit: PAGE_SIZE,
+  },
+) {
   const {getAgent} = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetFollows.OutputSchema,
@@ -30,7 +39,7 @@ export function useProfileFollowsQuery(did: string | undefined) {
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().app.bsky.graph.getFollows({
         actor: did || '',
-        limit: PAGE_SIZE,
+        limit: limit || PAGE_SIZE,
         cursor: pageParam,
       })
       return res.data

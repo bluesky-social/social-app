@@ -25,12 +25,17 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
-export function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+export let ChatListItem = ({
+  convo,
+}: {
+  convo: ChatBskyConvoDefs.ConvoView
+}): React.ReactNode => {
   const {currentAccount} = useSession()
+  const moderationOpts = useModerationOpts()
+
   const otherUser = convo.members.find(
     member => member.did !== currentAccount?.did,
   )
-  const moderationOpts = useModerationOpts()
 
   if (!otherUser || !moderationOpts) {
     return null
@@ -44,6 +49,8 @@ export function ChatListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
     />
   )
 }
+
+ChatListItem = React.memo(ChatListItem)
 
 function ChatListItemReady({
   convo,
@@ -64,6 +71,17 @@ function ChatListItemReady({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
+
+  const blockInfo = React.useMemo(() => {
+    const modui = moderation.ui('profileView')
+    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
+    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
+    const userBlock = blocks.find(alert => alert.source.type === 'user')
+    return {
+      listBlocks,
+      userBlock,
+    }
+  }, [moderation])
 
   const isDeletedAccount = profile.handle === 'missing.invalid'
   const displayName = isDeletedAccount
@@ -169,7 +187,7 @@ function ChatListItemReady({
                       )}
                     </TimeElapsed>
                   )}
-                  {convo.muted && (
+                  {(convo.muted || moderation.blocked) && (
                     <Text
                       style={[
                         a.text_sm,
@@ -200,7 +218,8 @@ function ChatListItemReady({
                     convo.unreadCount > 0
                       ? a.font_bold
                       : t.atoms.text_contrast_high,
-                    convo.muted && t.atoms.text_contrast_medium,
+                    (convo.muted || moderation.blocked) &&
+                      t.atoms.text_contrast_medium,
                   ]}>
                   {lastMessage}
                 </Text>
@@ -211,9 +230,10 @@ function ChatListItemReady({
                     a.absolute,
                     a.rounded_full,
                     {
-                      backgroundColor: convo.muted
-                        ? t.palette.contrast_200
-                        : t.palette.primary_500,
+                      backgroundColor:
+                        convo.muted || moderation.blocked
+                          ? t.palette.contrast_200
+                          : t.palette.primary_500,
                       height: 7,
                       width: 7,
                     },
@@ -239,7 +259,7 @@ function ChatListItemReady({
                 triggerOpacity={
                   !gtMobile || showActions || menuControl.isOpen ? 1 : 0
                 }
-                moderation={moderation}
+                blockInfo={blockInfo}
               />
             </View>
           </View>
