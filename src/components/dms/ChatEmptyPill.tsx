@@ -6,7 +6,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,7 +14,7 @@ import {
   ScaleAndFadeOut,
 } from 'lib/custom-animations/ScaleAndFade'
 import {useHaptics} from 'lib/haptics'
-import {isAndroid, isIOS, isWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
@@ -27,9 +26,6 @@ export function ChatEmptyPill() {
   const t = useTheme()
   const {_} = useLingui()
   const playHaptic = useHaptics()
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomBarHeight = isIOS ? 42 : isAndroid ? 60 : 0
-  const bottomOffset = isWeb ? 0 : bottomInset + bottomBarHeight
   const [promptIndex, setPromptIndex] = React.useState(lastIndex)
 
   const scale = useSharedValue(1)
