@@ -124,7 +124,7 @@ export type ConvoItem =
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
   message: ChatBskyConvoSendMessage.InputSchema['message'],
-) => Promise<void>
+) => void
 type FetchMessageHistory = () => Promise<void>
 
 export type ConvoStateUninitialized = {
