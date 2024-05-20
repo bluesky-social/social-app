@@ -108,20 +108,29 @@ export function logEvent<E extends keyof LogEvents>(
 // Our own cache ensures consistent evaluation within a single session.
 const GateCache = React.createContext<Map<string, boolean> | null>(null)
 
-export function useGate(): (gateName: Gate) => boolean {
+type GateOptions = {
+  dangerouslyDisableExposureLogging?: boolean
+}
+
+export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
   const cache = React.useContext(GateCache)
   if (!cache) {
     throw Error('useGate() cannot be called outside StatsigProvider.')
   }
   const gate = React.useCallback(
-    (gateName: Gate): boolean => {
+    (gateName: Gate, options: GateOptions = {}): boolean => {
       const cachedValue = cache.get(gateName)
       if (cachedValue !== undefined) {
         return cachedValue
       }
-      const value = Statsig.initializeCalled()
-        ? Statsig.checkGate(gateName)
-        : false
+      let value = false
+      if (Statsig.initializeCalled()) {
+        if (options.dangerouslyDisableExposureLogging) {
+          value = Statsig.checkGateWithExposureLoggingDisabled(gateName)
+        } else {
+          value = Statsig.checkGate(gateName)
+        }
+      }
       cache.set(gateName, value)
       return value
     },
