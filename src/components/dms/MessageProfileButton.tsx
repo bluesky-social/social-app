@@ -5,6 +5,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useMaybeConvoForUser} from '#/state/queries/messages/get-convo-for-members'
+import {logEvent} from 'lib/statsig/statsig'
 import {atoms as a, useTheme} from '#/alf'
 import {Message_Stroke2_Corner0_Rounded as Message} from '../icons/Message'
 import {Link} from '../Link'
@@ -18,7 +19,14 @@ export function MessageProfileButton({
   const {_} = useLingui()
   const t = useTheme()
 
-  const {data: convoId, isPending} = useMaybeConvoForUser(profile.did)
+  const {data: convo, isPending} = useMaybeConvoForUser(profile.did)
+
+  const onPress = React.useCallback(() => {
+    if (convo && !convo.lastMessage) {
+      logEvent('chat:create', {logContext: 'ProfileHeader'})
+    }
+    logEvent('chat:open', {logContext: 'ProfileHeader'})
+  }, [convo])
 
   if (isPending) {
     // show pending state based on declaration
@@ -48,7 +56,7 @@ export function MessageProfileButton({
     }
   }
 
-  if (convoId) {
+  if (convo) {
     return (
       <Link
         testID="dmBtn"
@@ -57,8 +65,9 @@ export function MessageProfileButton({
         variant="solid"
         shape="round"
         label={_(msg`Message ${profile.handle}`)}
-        to={`/messages/${convoId}`}
-        style={[a.justify_center, {width: 36, height: 36}]}>
+        to={`/messages/${convo.id}`}
+        style={[a.justify_center, {width: 36, height: 36}]}
+        onPress={onPress}>
         <Message
           style={[t.atoms.text, {marginLeft: 1, marginBottom: 1}]}
           size="md"

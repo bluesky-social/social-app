@@ -125,6 +125,13 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'Chat'
+  }
+  'chat:create': {
+    logContext: 'ProfileHeader' | 'NewChatDialog'
+  }
+  'chat:open': {
+    logContext: 'ProfileHeader' | 'NewChatDialog' | 'ChatsList'
   }
 
   'test:all:always': {}

@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
   ChatBskyConvoDefs,
@@ -13,6 +13,7 @@ import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
+import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -120,6 +121,18 @@ function ChatListItemReady({
     setShowActions(true)
   }, [])
 
+  const onPress = useCallback(
+    (e: GestureResponderEvent) => {
+      if (isDeletedAccount) {
+        e.preventDefault()
+        return false
+      } else {
+        logEvent('chat:open', {logContext: 'ChatsList'})
+      }
+    },
+    [isDeletedAccount],
+  )
+
   const onLongPress = useCallback(() => {
     menuControl.open()
   }, [menuControl])
@@ -148,21 +161,14 @@ function ChatListItemReady({
               ]
             : undefined
         }
+        onPress={onPress}
+        onLongPress={isNative ? menuControl.open : undefined}
         onAccessibilityAction={onLongPress}
-        onPress={
-          isDeletedAccount
-            ? e => {
-                e.preventDefault()
-                return false
-              }
-            : undefined
-        }
         style={[
           web({
             cursor: isDeletedAccount ? 'default' : 'pointer',
           }),
-        ]}
-        onLongPress={isNative ? menuControl.open : undefined}>
+        ]}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
