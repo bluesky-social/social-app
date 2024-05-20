@@ -18,7 +18,8 @@ export function ChatDisabled() {
   const t = useTheme()
   return (
     <View style={[a.p_md]}>
-      <View style={[a.p_xl, a.rounded_md, t.atoms.bg_contrast_25]}>
+      <View
+        style={[a.align_start, a.p_xl, a.rounded_md, t.atoms.bg_contrast_25]}>
         <Text
           style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
           <Trans>Your chats have been disabled</Trans>
@@ -43,7 +44,7 @@ function AppealDialog() {
     <>
       <Button
         testID="appealDisabledChatBtn"
-        variant="solid"
+        variant="ghost"
         color="secondary"
         size="small"
         onPress={control.open}
@@ -100,9 +101,7 @@ function DialogInner() {
         <Trans>Appeal this decision</Trans>
       </Text>
       <Text style={[a.text_md, a.leading_snug]}>
-        <Trans>
-          This appeal will be sent to the Bluesky moderation service.
-        </Trans>
+        <Trans>This appeal will be sent to Bluesky's moderation service.</Trans>
       </Text>
       <View style={[a.my_md]}>
         <Dialog.Input
