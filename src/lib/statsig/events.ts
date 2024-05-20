@@ -131,6 +131,9 @@ export type LogEvents = {
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog'
   }
+  'chat:open': {
+    logContext: 'ProfileHeader' | 'NewChatDialog'
+  }
 
   'test:all:always': {}
   'test:all:sometimes': {}

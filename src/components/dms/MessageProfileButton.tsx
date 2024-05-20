@@ -22,9 +22,10 @@ export function MessageProfileButton({
   const {data: convo, isPending} = useMaybeConvoForUser(profile.did)
 
   const onPress = React.useCallback(() => {
-    if (convo && convo.lastMessage?.id) {
+    if (convo && !convo.lastMessage) {
       logEvent('chat:create', {logContext: 'ProfileHeader'})
     }
+    logEvent('chat:open', {logContext: 'ProfileHeader'})
   }, [convo])
 
   if (isPending) {

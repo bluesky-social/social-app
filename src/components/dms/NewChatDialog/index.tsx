@@ -19,6 +19,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
+import {logEvent} from 'lib/statsig/statsig'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
@@ -69,6 +70,11 @@ export function NewChat({
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
       onNewChat(data.convo.id)
+
+      if (!data.convo.lastMessage) {
+        logEvent('chat:create', {logContext: 'NewChatDialog'})
+      }
+      logEvent('chat:open', {logContext: 'NewChatDialog'})
     },
     onError: error => {
       Toast.show(error.message)
