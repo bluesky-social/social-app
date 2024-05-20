@@ -112,7 +112,7 @@ export function TestCtrls() {
         testID="e2eStartOnboarding"
         onPress={() => {
           // TODO remove when experiment is over
-          setGate('reduced_onboarding_and_home_algo', true)
+          setGate('reduced_onboarding_and_home_algo_v2', true)
           onboardingDispatch({type: 'start'})
         }}
         accessibilityRole="button"
@@ -123,7 +123,7 @@ export function TestCtrls() {
         testID="e2eStartLongboarding"
         onPress={() => {
           // TODO remove when experiment is over
-          setGate('reduced_onboarding_and_home_algo', false)
+          setGate('reduced_onboarding_and_home_algo_v2', false)
           onboardingDispatch({type: 'start'})
         }}
         accessibilityRole="button"

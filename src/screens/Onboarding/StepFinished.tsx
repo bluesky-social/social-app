@@ -83,7 +83,7 @@ export function StepFinished() {
            * selected in onboarding and therefore we don't need to run this
            * code (which would overwrite the other feeds already set).
            */
-          if (!gate('reduced_onboarding_and_home_algo')) {
+          if (!gate('reduced_onboarding_and_home_algo_v2')) {
             const otherFeeds = selectedFeeds.length
               ? selectedFeeds.map(f => ({
                   type: 'feed',
@@ -120,7 +120,7 @@ export function StepFinished() {
         })(),
 
         (async () => {
-          if (!gate('reduced_onboarding_and_home_algo')) return
+          if (!gate('reduced_onboarding_and_home_algo_v2')) return
 
           const {imageUri, imageMime} = profileStepResults
           if (imageUri && imageMime) {
