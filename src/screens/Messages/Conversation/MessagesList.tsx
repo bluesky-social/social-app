@@ -197,7 +197,6 @@ export function MessagesList({
     (e: ReanimatedScrollEvent) => {
       'worklet'
       layoutHeight.value = e.layoutMeasurement.height
-
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
@@ -235,7 +234,6 @@ export function MessagesList({
     onMove: e => {
       'worklet'
       keyboardHeight.value = e.height
-
       if (e.height > bottomOffset) {
         scrollTo(flatListRef, 0, 1e7, false)
       }
