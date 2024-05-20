@@ -135,10 +135,16 @@ function ChatListItemReady({
       onFocus={onFocus}
       onBlur={onMouseLeave}>
       <Button
-        label={profile.displayName || profile.handle}
         onPress={onPress}
         style={[a.flex_1]}
-        onLongPress={isNative ? menuControl.open : undefined}>
+        onLongPress={isNative ? menuControl.open : undefined}
+        label={profile.displayName || profile.handle}
+        accessibilityHint={_(msg`Go to conversation with ${profile.handle}`)}
+        accessibilityActions={[
+          {name: 'magicTap', label: 'Open conversation menu'},
+          {name: 'longpress', label: 'Open conversation menu'},
+        ]}
+        onAccessibilityAction={menuControl.open}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
