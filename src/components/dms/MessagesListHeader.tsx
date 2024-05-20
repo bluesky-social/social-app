@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {Keyboard, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {
   AppBskyActorDefs,
   ModerationCause,
@@ -46,7 +46,6 @@ export let MessagesListHeader = ({
     if (isWeb) {
       navigation.replace('Messages', {})
     } else {
-      Keyboard.dismiss()
       navigation.goBack()
     }
   }, [navigation])

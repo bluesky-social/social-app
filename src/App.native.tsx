@@ -4,6 +4,7 @@ import 'view/icons'
 
 import React, {useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {
   initialWindowMetrics,
@@ -142,27 +143,29 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <SessionProvider>
-      <ShellStateProvider>
-        <PrefsStateProvider>
-          <MutedThreadsProvider>
-            <InvitesStateProvider>
-              <ModalStateProvider>
-                <DialogStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
-                      <PortalProvider>
-                        <InnerApp />
-                      </PortalProvider>
-                    </I18nProvider>
-                  </LightboxStateProvider>
-                </DialogStateProvider>
-              </ModalStateProvider>
-            </InvitesStateProvider>
-          </MutedThreadsProvider>
-        </PrefsStateProvider>
-      </ShellStateProvider>
-    </SessionProvider>
+    <KeyboardProvider enabled={true}>
+      <SessionProvider>
+        <ShellStateProvider>
+          <PrefsStateProvider>
+            <MutedThreadsProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <I18nProvider>
+                        <PortalProvider>
+                          <InnerApp />
+                        </PortalProvider>
+                      </I18nProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </MutedThreadsProvider>
+          </PrefsStateProvider>
+        </ShellStateProvider>
+      </SessionProvider>
+    </KeyboardProvider>
   )
 }
 
