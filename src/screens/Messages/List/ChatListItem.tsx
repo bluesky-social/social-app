@@ -136,7 +136,7 @@ function ChatListItemReady({
         to={`/messages/${convo.id}`}
         label={displayName}
         accessibilityHint={
-          profile.handle !== 'missing.invalid'
+          !isDeletedAccount
             ? _(msg`Go to conversation with ${profile.handle}`)
             : undefined
         }
