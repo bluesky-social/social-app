@@ -20,6 +20,7 @@ import {isConvoActive, useConvo} from 'state/messages/convo'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
+import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -176,6 +177,13 @@ function HeaderReady({
               ]}
               numberOfLines={1}>
               @{profile.handle}
+              {convoState.convo?.muted && (
+                <>
+                  {' '}
+                  &middot;{' '}
+                  <BellStroke size="xs" style={t.atoms.text_contrast_medium} />
+                </>
+              )}
             </Text>
           )}
         </View>
