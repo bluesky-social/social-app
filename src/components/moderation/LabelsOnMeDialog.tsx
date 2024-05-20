@@ -3,19 +3,21 @@ import {View} from 'react-native'
 import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useMutation} from '@tanstack/react-query'
 
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
-
+import {Loader} from '../Loader'
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
 type Subject =
@@ -100,7 +102,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
                 label={label}
                 isSelfLabel={label.src === currentAccount?.did}
                 control={props.control}
-                onPressAppeal={label => setAppealingLabel(label)}
+                onPressAppeal={setAppealingLabel}
               />
             ))}
           </View>
@@ -201,8 +203,8 @@ function AppealForm({
   const isAccountReport = 'did' in subject
   const {getAgent} = useAgent()
 
-  const onSubmit = async () => {
-    try {
+  const {mutate, isPending} = useMutation({
+    mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
@@ -216,11 +218,18 @@ function AppealForm({
           },
           reason: details,
         })
-      Toast.show(_(msg`Appeal submitted`))
-    } finally {
+    },
+    onError: err => {
+      logger.error('Failed to submit label appeal', {message: err})
+      Toast.show(_(msg`Failed to submit appeal, please try again.`))
+    },
+    onSuccess: () => {
       control.close()
-    }
-  }
+      Toast.show(_(msg`Appeal submitted`))
+    },
+  })
+
+  const onSubmit = React.useCallback(() => mutate(), [mutate])
 
   return (
     <>
@@ -281,6 +290,7 @@ function AppealForm({
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>
+          {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
     </>

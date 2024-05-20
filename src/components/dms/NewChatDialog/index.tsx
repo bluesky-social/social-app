@@ -1,4 +1,10 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import type {TextInput as TextInputType} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
@@ -293,7 +299,7 @@ function SearchablePeopleList({
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = React.useRef<TextInputType>(null)
+  const inputRef = useRef<TextInputType>(null)
 
   const [searchText, setSearchText] = useState('')
 
@@ -306,7 +312,7 @@ function SearchablePeopleList({
     limit: 12,
   })
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let _items: Item[] = []
 
     if (isError) {
@@ -368,7 +374,7 @@ function SearchablePeopleList({
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
   }
 
-  const renderItems = React.useCallback(
+  const renderItems = useCallback(
     ({item}: {item: Item}) => {
       switch (item.type) {
         case 'profile': {
@@ -395,7 +401,7 @@ function SearchablePeopleList({
     [moderationOpts, onCreateChat],
   )
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (isWeb) {
       setImmediate(() => {
         inputRef?.current?.focus()
