@@ -156,7 +156,7 @@ export function MessagesList({
         } else {
           flatListRef.current?.scrollToOffset({
             offset: height,
-            animated: hasScrolled,
+            animated: hasScrolled && height > prevContentHeight.current,
           })
 
           // HACK Unfortunately, we need to call `setHasScrolled` after a brief delay,
@@ -239,7 +239,6 @@ export function MessagesList({
       keyboardHeight.value = e.height
 
       if (e.height > bottomOffset) {
-        console.log('move')
         scrollTo(flatListRef, 0, 1e7, false)
       }
     },
@@ -313,7 +312,7 @@ export function MessagesList({
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
           maintainVisibleContentPosition={{
-            minIndexForVisible: 1,
+            minIndexForVisible: 0,
           }}
           removeClippedSubviews={false}
           sideBorders={false}
