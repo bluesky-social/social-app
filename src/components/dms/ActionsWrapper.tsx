@@ -1,5 +1,6 @@
 import React from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   cancelAnimation,
   runOnJS,
@@ -53,33 +54,45 @@ export function ActionsWrapper({
 
   const grow = React.useCallback(() => {
     'worklet'
-    scale.value = withTiming(1.05, {duration: 450}, finished => {
+    scale.value = withTiming(1.05, {duration: 300}, finished => {
       if (!finished) return
       animationDidComplete.value = true
       runOnJS(playHaptic)()
       runOnJS(open)()
-
       shrink()
     })
   }, [scale, animationDidComplete, playHaptic, shrink, open])
 
+  const gesture = Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd(() => {
+      playHaptic()
+      open()
+    })
+    .runOnJS(true)
+
+  const onPress = React.useCallback(() => {}, [])
+
   return (
-    <View
-      style={[
-        {
-          maxWidth: '80%',
-        },
-        isFromSelf ? a.self_end : a.self_start,
-      ]}>
-      <AnimatedPressable
-        style={animatedStyle}
-        unstable_pressDelay={200}
-        onPressIn={grow}
-        onTouchEnd={shrink}
-        hitSlop={HITSLOP_10}>
-        {children}
-      </AnimatedPressable>
-      <MessageMenu message={message} control={menuControl} />
-    </View>
+    <GestureDetector gesture={gesture}>
+      <View
+        style={[
+          {
+            maxWidth: '80%',
+          },
+          isFromSelf ? a.self_end : a.self_start,
+        ]}>
+        <AnimatedPressable
+          style={animatedStyle}
+          unstable_pressDelay={200}
+          onPressIn={grow}
+          onTouchEnd={shrink}
+          hitSlop={HITSLOP_10}
+          onPress={onPress}>
+          {children}
+        </AnimatedPressable>
+        <MessageMenu message={message} control={menuControl} />
+      </View>
+    </GestureDetector>
   )
 }
