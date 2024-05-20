@@ -6,7 +6,6 @@ import {
 } from 'react-native-keyboard-controller'
 import Animated, {
   measure,
-  runOnJS,
   useAnimatedProps,
   useAnimatedRef,
   useAnimatedStyle,
