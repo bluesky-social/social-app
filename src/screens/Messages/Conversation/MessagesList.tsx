@@ -125,10 +125,10 @@ export function MessagesList({
 
       // This number _must_ be the height of the MaybeLoader component
       if (height > 50 && isAtBottom.value) {
-        // If the size of the content is changing by more than the height of the screen, then we should only
-        // scroll 1 screen down, and let the user scroll the rest. However, because a single message could be
-        // really large - and the normal chat behavior would be to still scroll to the end if it's only one
-        // message - we ignore this rule if there's only one additional message
+        // If the size of the content is changing by more than the height of the screen, then we don't
+        // want to scroll further than the start of all the new content. Since we are storing the previous offset,
+        // we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
+        // that can be pressed to immediately scroll to the end.
         if (
           hasScrolled &&
           height - prevContentHeight.current > layoutHeight.value - 50 &&
