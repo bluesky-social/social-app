@@ -79,7 +79,7 @@ function Inner() {
   const [hasScrolled, setHasScrolled] = React.useState(false)
   const readyToShow =
     hasScrolled ||
-    (convoState.status === ConvoStatus.Ready &&
+    (isConvoActive(convoState) &&
       !convoState.isFetchingHistory &&
       convoState.items.length === 0)
 
