@@ -125,6 +125,7 @@ function ChatListItemReady({
     (e: GestureResponderEvent) => {
       if (isDeletedAccount) {
         e.preventDefault()
+        return false
       } else {
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
