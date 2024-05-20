@@ -13,6 +13,7 @@ import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
+import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -120,6 +121,10 @@ function ChatListItemReady({
     setShowActions(true)
   }, [])
 
+  const onPress = useCallback(() => {
+    logEvent('chat:open', {logContext: 'ChatsList'})
+  }, [])
+
   const onLongPress = useCallback(() => {
     menuControl.open()
   }, [menuControl])
@@ -162,6 +167,7 @@ function ChatListItemReady({
             cursor: isDeletedAccount ? 'default' : 'pointer',
           }),
         ]}
+        onPress={onPress}
         onLongPress={isNative ? menuControl.open : undefined}>
         {({hovered, pressed, focused}) => (
           <View

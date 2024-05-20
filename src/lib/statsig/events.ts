@@ -132,7 +132,7 @@ export type LogEvents = {
     logContext: 'ProfileHeader' | 'NewChatDialog'
   }
   'chat:open': {
-    logContext: 'ProfileHeader' | 'NewChatDialog'
+    logContext: 'ProfileHeader' | 'NewChatDialog' | 'ChatsList'
   }
 
   'test:all:always': {}
