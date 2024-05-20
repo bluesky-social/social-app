@@ -279,12 +279,16 @@ export function MessagesList({
         return true
       })
 
+      if (!hasScrolled) {
+        setHasScrolled(true)
+      }
+
       convoState.sendMessage({
         text: rt.text,
         facets: rt.facets,
       })
     },
-    [convoState, getAgent],
+    [convoState, getAgent, hasScrolled, setHasScrolled],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
