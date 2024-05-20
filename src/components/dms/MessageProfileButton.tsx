@@ -30,7 +30,10 @@ export function MessageProfileButton({
       label={_(msg`Message ${profile.handle}`)}
       to={`/messages/${convoId}`}
       style={[a.justify_center, {width: 36, height: 36}]}>
-      <Message style={t.atoms.text} size="md" />
+      <Message
+        style={[t.atoms.text, {marginLeft: 1, marginBottom: 1}]}
+        size="md"
+      />
     </Link>
   )
 }
