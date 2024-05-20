@@ -77,11 +77,7 @@ function Inner() {
   // we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
   // empty. So, we also check for that possible state as well and render once we can.
   const [hasScrolled, setHasScrolled] = React.useState(false)
-  const readyToShow =
-    hasScrolled ||
-    (isConvoActive(convoState) &&
-      !convoState.isFetchingHistory &&
-      convoState.items.length === 0)
+  const readyToShow = hasScrolled || isConvoActive(convoState)
 
   // Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
   // state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
