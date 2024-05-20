@@ -287,7 +287,7 @@ export function MessagesList({
         facets: rt.facets,
       })
     },
-    [convoState, getAgent, hasScrolled],
+    [convoState, getAgent, hasScrolled, setHasScrolled],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
