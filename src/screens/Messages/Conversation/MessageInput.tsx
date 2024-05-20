@@ -58,6 +58,9 @@ export function MessageInput({
     onSendMessage(message.trimEnd())
     playHaptic()
     setMessage('')
+
+    // Pressing the send button causes the text input to lose focus, so we need to
+    // re-focus it after sending
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)

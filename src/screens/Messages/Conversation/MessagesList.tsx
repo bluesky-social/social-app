@@ -83,7 +83,10 @@ export function MessagesList({
 
   const flatListRef = useAnimatedRef<FlatList>()
 
-  const [showNewMessagesPill, setShowNewMessagesPill] = React.useState(false)
+  const [newMessagesPill, setNewMessagesPill] = React.useState({
+    show: false,
+    startContentOffset: 0,
+  })
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -138,7 +141,10 @@ export function MessagesList({
             offset: prevContentHeight.current - 65,
             animated: true,
           })
-          setShowNewMessagesPill(true)
+          setNewMessagesPill({
+            show: true,
+            startContentOffset: prevContentHeight.current - 65,
+          })
         } else {
           flatListRef.current?.scrollToOffset({
             offset: height,
@@ -187,19 +193,23 @@ export function MessagesList({
 
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
-      if (
-        showNewMessagesPill &&
-        e.contentSize.height - e.layoutMeasurement.height / 3 < bottomOffset
-      ) {
-        runOnJS(setShowNewMessagesPill)(false)
-      }
-
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
       // when a new message is added, hence the 100 pixel offset
       isAtBottom.value = e.contentSize.height - 100 < bottomOffset
       isAtTop.value = e.contentOffset.y <= 1
+
+      if (
+        newMessagesPill.show &&
+        (e.contentOffset.y > newMessagesPill.startContentOffset + 200 ||
+          isAtBottom.value)
+      ) {
+        runOnJS(setNewMessagesPill)({
+          show: false,
+          startContentOffset: 0,
+        })
+      }
     },
-    [layoutHeight, showNewMessagesPill, isAtBottom, isAtTop],
+    [layoutHeight, newMessagesPill, isAtBottom, isAtTop],
   )
 
   // -- Keyboard animation handling
@@ -321,7 +331,7 @@ export function MessagesList({
           footer
         )}
       </KeyboardStickyView>
-      {showNewMessagesPill && <NewMessagesPill onPress={scrollToEndOnPress} />}
+      {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
 }
