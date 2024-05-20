@@ -9,6 +9,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {ChatBskyConvoDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from 'lib/constants'
 import {useHaptics} from 'lib/haptics'
@@ -25,6 +27,7 @@ export function ActionsWrapper({
   isFromSelf: boolean
   children: React.ReactNode
 }) {
+  const {_} = useLingui()
   const playHaptic = useHaptics()
   const menuControl = useMenuControl()
 
@@ -81,7 +84,7 @@ export function ActionsWrapper({
         ]}
         accessible={true}
         accessibilityActions={[
-          {name: 'activate', label: 'Open message options'},
+          {name: 'activate', label: _(msg`Open message options`)},
         ]}
         onAccessibilityAction={open}>
         {children}
