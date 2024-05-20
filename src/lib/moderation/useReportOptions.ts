@@ -16,7 +16,6 @@ interface ReportOptions {
   feedgen: ReportOption[]
   other: ReportOption[]
   convoMessage: ReportOption[]
-  convoAccount: ReportOption[]
 }
 
 export function useReportOptions(): ReportOptions {
@@ -75,19 +74,6 @@ export function useReportOptions(): ReportOptions {
         ...common,
       ],
       convoMessage: [
-        {
-          reason: ComAtprotoModerationDefs.REASONSPAM,
-          title: _(msg`Spam`),
-          description: _(msg`Excessive or unwanted messages`),
-        },
-        {
-          reason: ComAtprotoModerationDefs.REASONSEXUAL,
-          title: _(msg`Unwanted Sexual Content`),
-          description: _(msg`Inappropriate messages or explicit links`),
-        },
-        ...common,
-      ],
-      convoAccount: [
         {
           reason: ComAtprotoModerationDefs.REASONSPAM,
           title: _(msg`Spam`),
