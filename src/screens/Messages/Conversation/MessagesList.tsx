@@ -31,8 +31,6 @@ import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-const MAX_ITEMS = isNative ? 30 : 60
-
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
     <View
@@ -190,10 +188,10 @@ export function MessagesList({
   )
 
   const onStartReached = useCallback(() => {
-    if (hasScrolled && convoState.items.length >= MAX_ITEMS) {
+    if (hasScrolled && prevContentHeight.current > layoutHeight.value) {
       convoState.fetchMessageHistory()
     }
-  }, [convoState, hasScrolled])
+  }, [convoState, hasScrolled, layoutHeight.value])
 
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
