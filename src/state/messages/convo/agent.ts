@@ -34,9 +34,6 @@ import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
-// TODO temporary
-let DEBUG_ACTIVE_CHAT: string | undefined
-
 export function isConvoItemMessage(
   item: ConvoItem,
 ): item is ConvoItem & {type: 'message'} {
@@ -102,14 +99,6 @@ export class Convo {
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
-
-    if (DEBUG_ACTIVE_CHAT) {
-      logger.error(`Convo: another chat was already active`, {
-        convoId: this.convoId,
-      })
-    } else {
-      DEBUG_ACTIVE_CHAT = this.convoId
-    }
   }
 
   private commit() {
@@ -494,7 +483,6 @@ export class Convo {
 
   suspend() {
     this.dispatch({event: ConvoDispatchEvent.Suspend})
-    DEBUG_ACTIVE_CHAT = undefined
   }
 
   /**
@@ -602,15 +590,6 @@ export class Convo {
       this.isFetchingHistory = true
       this.commit()
 
-      /*
-       * Delay if paginating while scrolled to prevent momentum scrolling from
-       * jerking the list around, plus makes it feel a little more human.
-       */
-      if (this.pastMessages.size > 0) {
-        await new Promise(y => setTimeout(y, 500))
-        // throw new Error('UNCOMMENT TO TEST RETRY')
-      }
-
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
         return this.agent.api.chat.bsky.convo.getMessages(
@@ -679,6 +658,9 @@ export class Convo {
           }
         }
       },
+      /*
+       * This is VERY important — we only want events for this convo.
+       */
       {convoId: this.convoId},
     )
   }
@@ -725,12 +707,6 @@ export class Convo {
            */
           this.latestRev = ev.rev
 
-          /*
-           * This is VERY important. We don't want to insert any messages from
-           * your other chats.
-           */
-          if (ev.convoId !== this.convoId) continue
-
           if (
             ChatBskyConvoDefs.isLogCreateMessage(ev) &&
             ChatBskyConvoDefs.isMessageView(ev.message)
@@ -775,7 +751,7 @@ export class Convo {
 
   private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null
 
-  async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
+  sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim()) return
 
@@ -828,6 +804,9 @@ export class Convo {
       })
       const res = response.data
 
+      // remove from queue
+      this.pendingMessages.delete(id)
+
       /*
        * Insert into `newMessages` as soon as we have a real ID. That way, when
        * we get an event log back, we can replace in situ.
@@ -836,15 +815,14 @@ export class Convo {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
       })
-      this.pendingMessages.delete(id)
-
-      await this.processPendingMessages()
-
+      // render new message state, prior to firehose
       this.commit()
+
+      // continue queue processing
+      await this.processPendingMessages()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
-    } finally {
       this.isProcessingPendingMessages = false
     }
   }
