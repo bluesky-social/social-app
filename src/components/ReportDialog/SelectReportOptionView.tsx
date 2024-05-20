@@ -58,9 +58,6 @@ export function SelectReportOptionView({
     } else if (props.params.type === 'convoMessage') {
       title = _(msg`Report this message`)
       description = _(msg`Why should this message be reviewed?`)
-    } else if (props.params.type === 'convoAccount') {
-      title = _(msg`Report this account`)
-      description = _(msg`Why should this account be reviewed?`)
     }
 
     return {

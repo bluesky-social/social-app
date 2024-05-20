@@ -25,17 +25,11 @@ import {RichText} from '../RichText'
 import {Text} from '../Typography'
 import {MessageItemMetadata} from './MessageItem'
 
-type ReportDialogParams =
-  | {
-      type: 'convoAccount'
-      did: string
-      convoId: string
-    }
-  | {
-      type: 'convoMessage'
-      convoId: string
-      message: ChatBskyConvoDefs.MessageView
-    }
+type ReportDialogParams = {
+  type: 'convoMessage'
+  convoId: string
+  message: ChatBskyConvoDefs.MessageView
+}
 
 let ReportDialog = ({
   control,
@@ -76,7 +70,6 @@ function DialogInner({params}: {params: ReportDialogParams}) {
 
 function ReasonStep({
   setReportOption,
-  params,
 }: {
   setReportOption: (reportOption: ReportOption) => void
   params: ReportDialogParams
@@ -87,15 +80,9 @@ function ReasonStep({
     <SelectReportOptionView
       labelers={[]}
       goBack={control.close}
-      params={
-        params.type === 'convoMessage'
-          ? {
-              type: 'convoMessage',
-            }
-          : {
-              type: 'convoAccount',
-            }
-      }
+      params={{
+        type: 'convoMessage',
+      }}
       onSelectReportOption={setReportOption}
     />
   )
@@ -138,17 +125,6 @@ function SubmitStep({
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
         await getAgent().createModerationReport(report)
-      } else if (params.type === 'convoAccount') {
-        const {convoId, did} = params
-
-        await getAgent().createModerationReport({
-          reasonType: reportOption.reason,
-          subject: {
-            $type: 'com.atproto.admin.defs#repoRef',
-            did,
-          },
-          reason: details + ` — from:dms:${convoId}`,
-        })
       }
     },
     onSuccess: () => {
@@ -162,9 +138,6 @@ function SubmitStep({
     return {
       convoMessage: {
         title: _(msg`Report this message`),
-      },
-      convoAccount: {
-        title: _(msg`Report this account`),
       },
     }[params.type]
   }, [_, params])
