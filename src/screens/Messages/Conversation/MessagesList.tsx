@@ -226,10 +226,21 @@ export function MessagesList({
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
 
+  // In some cases - like when the emoji piker opens - we don't want to animate the scroll in the list onLayout event.
+  // We use this value to keep track of when we want to disable the animation.
+  const layoutScrollWithoutAnimation = useSharedValue(false)
+
   useKeyboardHandler({
-    onStart: () => {
+    onStart: e => {
       'worklet'
-      keyboardIsOpening.value = true
+      // Immediate updates - like opening the emoji picker - will have a duration of zero. In those cases, we should
+      // just update the height here instead of having the `onMove` event do it (that event will not fire!)
+      if (e.duration === 0) {
+        layoutScrollWithoutAnimation.value = true
+        keyboardHeight.value = e.height
+      } else {
+        keyboardIsOpening.value = true
+      }
     },
     onMove: e => {
       'worklet'
@@ -277,11 +288,13 @@ export function MessagesList({
 
   // -- List layout changes (opening emoji keyboard, etc.)
   const onListLayout = React.useCallback(() => {
-    if (keyboardIsOpening.value) return
     if (isWeb || !keyboardIsOpening.value) {
-      flatListRef.current?.scrollToEnd({animated: true})
+      flatListRef.current?.scrollToEnd({
+        animated: !layoutScrollWithoutAnimation.value,
+      })
+      layoutScrollWithoutAnimation.value = false
     }
-  }, [flatListRef, keyboardIsOpening.value])
+  }, [flatListRef, keyboardIsOpening.value, layoutScrollWithoutAnimation])
 
   const scrollToEndOnPress = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({
