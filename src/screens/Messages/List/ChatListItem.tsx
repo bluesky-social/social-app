@@ -284,7 +284,6 @@ function ChatListItemReady({
         currentScreen="list"
         showMarkAsRead={convo.unreadCount > 0}
         hideTrigger={isNative}
-        triggerOpacity={!gtMobile || showActions || menuControl.isOpen ? 1 : 0}
         blockInfo={blockInfo}
         style={[
           a.absolute,
@@ -293,6 +292,7 @@ function ChatListItemReady({
           a.justify_center,
           {
             right: a.px_lg.paddingRight,
+            opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
           },
         ]}
       />

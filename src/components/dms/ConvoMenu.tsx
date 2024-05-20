@@ -41,7 +41,6 @@ let ConvoMenu = ({
   currentScreen,
   showMarkAsRead,
   hideTrigger,
-  triggerOpacity,
   blockInfo,
   style,
 }: {
@@ -51,7 +50,6 @@ let ConvoMenu = ({
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
   hideTrigger?: boolean
-  triggerOpacity?: number
   blockInfo: {
     listBlocks: ModerationCause[]
     userBlock?: ModerationCause
@@ -108,7 +106,7 @@ let ConvoMenu = ({
     <>
       <Menu.Root control={control}>
         {!hideTrigger && (
-          <View style={[style, {opacity: triggerOpacity}]}>
+          <View style={[style]}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
               {({props, state}) => (
                 <Pressable
