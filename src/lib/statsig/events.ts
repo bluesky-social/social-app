@@ -115,7 +115,6 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
-      | 'Chat'
   }
   'profile:unfollow': {
     logContext:
