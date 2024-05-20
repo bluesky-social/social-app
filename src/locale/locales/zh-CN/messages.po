@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-13 09:25+0800\n"
+"PO-Revision-Date: 2024-05-20 09:30+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -433,11 +433,11 @@ msgstr "你确定要删除这条应用专用密码 \"{name}\" 吗？"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
-msgstr "你确定要删除这条信息吗？这条消息将从你的对话中删除，但不会在其他人的对话中删除。"
+msgstr "你确定要删除这条信息吗？这条消息仅会在你的对话中删除，而不会在其他人的对话中删除。"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "您确定要离开这个对话吗？你的信息将从对话列表中删除，但不会在其他人的对话列表中删除。"
+msgstr "您确定要离开这个对话吗？你的信息仅会在私信列表中删除，而不会在其他人的私信列表中删除。"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -746,7 +746,7 @@ msgstr "更改你的邮箱地址"
 #: src/view/shell/bottom-bar/BottomBar.tsx:219
 #: src/view/shell/desktop/LeftNav.tsx:296
 msgid "Chat"
-msgstr "对话"
+msgstr "私信"
 
 #: src/components/dms/ConvoMenu.tsx:79
 msgid "Chat muted"
@@ -757,7 +757,7 @@ msgstr "已隐藏对话"
 #: src/Navigation.tsx:307
 #: src/screens/Messages/List/index.tsx:65
 msgid "Chat settings"
-msgstr "对话设置"
+msgstr "私信设置"
 
 #: src/components/dms/ConvoMenu.tsx:81
 msgid "Chat unmuted"
@@ -1148,10 +1148,6 @@ msgstr "无法加载资讯源"
 msgid "Could not load list"
 msgstr "无法加载列表"
 
-#: src/components/dms/NewChat.tsx:264
-#~ msgid "Could not load profiles. Please try again later."
-#~ msgstr "无法加载用户个人资料，请稍后再试。"
-
 #: src/components/dms/ConvoMenu.tsx:85
 msgid "Could not mute chat"
 msgstr "无法隐藏对话"
@@ -1340,7 +1336,7 @@ msgstr "暗淡"
 
 #: src/components/dms/MessagesNUX.tsx:85
 msgid "Direct messages are here!"
-msgstr "隆重介绍对话功能！"
+msgstr "隆重介绍私信功能！"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
@@ -2374,7 +2370,7 @@ msgstr "输入你的用户识别符"
 
 #: src/components/dms/MessagesNUX.tsx:79
 msgid "Introducing Direct Messages"
-msgstr "介绍对话"
+msgstr "介绍私信"
 
 #: src/screens/Login/LoginForm.tsx:129
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -2972,7 +2968,7 @@ msgstr "新建"
 #: src/screens/Messages/List/index.tsx:255
 #: src/screens/Messages/List/index.tsx:262
 msgid "New chat"
-msgstr "新对话"
+msgstr "新私信"
 
 #: src/components/dms/NewMessagesPill.tsx:42
 msgid "New messages"
@@ -3049,7 +3045,7 @@ msgstr "停用"
 
 #: src/screens/Messages/List/index.tsx:156
 msgid "No chats yet"
-msgstr "目前还没有任何对话"
+msgstr "目前还没有任何私信"
 
 #: src/view/screens/ProfileFeed.tsx:559
 #: src/view/screens/ProfileList.tsx:822
@@ -3113,10 +3109,6 @@ msgstr "未找到 {query} 的结果"
 #: src/components/dialogs/GifSelect.tsx:205
 msgid "No search results found for \"{search}\"."
 msgstr "未找到 \"{search}\" 的搜索结果。"
-
-#: src/components/dms/NewChat.tsx:263
-#~ msgid "No search results found for \"{searchText}\"."
-#~ msgstr "未找到 \"{searchText}\" 的搜索结果。"
 
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
@@ -3423,7 +3415,7 @@ msgstr "其他..."
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:18
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "内容审核服务提供方已收到举报，并决定停用你的 Bluesky 对话功能。"
+msgstr "内容审核服务提供方已收到举报，并决定停用你的 Bluesky 私信功能。"
 
 #: src/components/Lists.tsx:198
 #: src/view/screens/NotFound.tsx:45
@@ -3703,7 +3695,7 @@ msgstr "隐私政策"
 
 #: src/components/dms/MessagesNUX.tsx:88
 msgid "Privately chat with other users."
-msgstr "与其他用户进行私人对话。"
+msgstr "与其他用户开始私信。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:156
 msgid "Processing..."
@@ -3775,10 +3767,6 @@ msgstr "比率"
 #: src/components/dms/ReportDialog.tsx:199
 msgid "Reason:"
 msgstr "结果："
-
-#: src/components/dms/MessageReportDialog.tsx:149
-#~ msgid "Reason: {0}"
-#~ msgstr "结果：{0}"
 
 #: src/view/screens/Search/Search.tsx:886
 msgid "Recent Searches"
@@ -4212,10 +4200,6 @@ msgstr "搜索 @{authorHandle} 带有 {displayTag} 的所有帖子"
 #: src/components/TagMenu/index.tsx:94
 msgid "Search for all posts with tag {displayTag}"
 msgstr "搜索所有带有 {displayTag} 的帖子"
-
-#: src/components/dms/NewChat.tsx:248
-#~ msgid "Search for someone to start a conversation with."
-#~ msgstr "寻找其他人开始对话吧。"
 
 #: src/view/com/auth/LoggedOut.tsx:105
 #: src/view/com/auth/LoggedOut.tsx:106
@@ -4674,11 +4658,11 @@ msgstr "登录为..."
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr "登录或创建你的帐户以加入对话！"
+msgstr "登录或创建你的账户以加入对话！"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
-msgstr "登录 Bluesky 或创建新帐户"
+msgstr "登录 Bluesky 或创建新账户"
 
 #: src/view/screens/Settings/index.tsx:127
 #: src/view/screens/Settings/index.tsx:131
@@ -4775,15 +4759,15 @@ msgstr "方块"
 
 #: src/components/dms/NewChatDialog/index.tsx:457
 msgid "Start a new chat"
-msgstr "开始一个新对话"
+msgstr "开始一个新私信"
 
 #: src/components/dms/NewChatDialog/index.tsx:127
 msgid "Start chat with {displayName}"
-msgstr "与 {displayName} 开始对话"
+msgstr "与 {displayName} 开始私信"
 
 #: src/components/dms/MessagesNUX.tsx:158
 msgid "Start chatting"
-msgstr "开始对话"
+msgstr "开始私信"
 
 #: src/view/screens/Settings/index.tsx:909
 msgid "Status Page"
@@ -5095,7 +5079,7 @@ msgstr "这条申诉将发送至 <0>{0}</0>。"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "此对话已断开"
+msgstr "此私信已被断开"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -5258,10 +5242,6 @@ msgstr "讨论串首选项"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "在关闭电子邮件两步验证前，请先验证你的电子邮箱地址。"
-
-#: src/components/dms/ConvoMenu.tsx:236
-#~ msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-#~ msgstr "要举报对话，请在对话界面选择举报其中收到的消息。这样可以让我们的内容审核服务提供方了解你问题的相关背景。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -5965,7 +5945,7 @@ msgstr "你已隐藏这个用户"
 
 #: src/screens/Messages/List/index.tsx:158
 msgid "You have no chats yet. Start a conversation with someone!"
-msgstr "你还没有任何对话，立即与其他人展开对话吧！"
+msgstr "你还没有任何私信，立即与其他人展开对话吧！"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
@@ -6061,7 +6041,7 @@ msgstr "你的账户已删除"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:66
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "你的帐户数据库包含所有公共数据记录，它们将被导出为“CAR”文件。这个文件不包括帖子中的媒体，例如图像或你的隐私数据，这些数据需要另外获取。"
+msgstr "你的账户数据库包含所有公共数据记录，它们将被导出为“CAR”文件。这个文件不包括帖子中的媒体，例如图像或你的隐私数据，这些数据需要另外获取。"
 
 #: src/screens/Signup/StepInfo/index.tsx:123
 msgid "Your birth date"
@@ -6069,7 +6049,7 @@ msgstr "你的生日"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:15
 msgid "Your chats have been disabled"
-msgstr "你的对话已被停用"
+msgstr "你的私信功能已被停用"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:47
 msgid "Your choice will be saved, but can be changed later in settings."
