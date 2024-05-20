@@ -4,7 +4,7 @@ export type Gate =
   | 'disable_min_shell_on_foregrounding_v3'
   | 'disable_poll_on_discover_v2'
   | 'dms'
-  | 'reduced_onboarding_and_home_algo'
+  | 'reduced_onboarding_and_home_algo_v2'
   | 'request_notifications_permission_after_onboarding'
   | 'show_follow_back_label_v2'
   | 'start_session_with_following_v2'

@@ -152,7 +152,13 @@ export function usePostFeedQuery(
               feedTuners,
               userInterests, // Not in the query key because they don't change.
               getAgent,
-              useBaseFollowingFeed: gate('reduced_onboarding_and_home_algo'),
+              useBaseFollowingFeed: gate(
+                'reduced_onboarding_and_home_algo_v2',
+                {
+                  // If you're not already in this experiment, we don't want to expose you to it now.
+                  dangerouslyDisableExposureLogging: true,
+                },
+              ),
             }),
             cursor: undefined,
           }

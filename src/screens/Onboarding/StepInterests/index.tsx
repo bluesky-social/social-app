@@ -134,7 +134,7 @@ export function StepInterests() {
   }, [track])
 
   React.useEffect(() => {
-    if (!gate('reduced_onboarding_and_home_algo')) {
+    if (!gate('reduced_onboarding_and_home_algo_v2')) {
       requestNotificationsPermission('StartOnboarding')
     }
   }, [gate, requestNotificationsPermission])
