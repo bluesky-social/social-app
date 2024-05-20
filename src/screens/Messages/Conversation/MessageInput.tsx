@@ -44,7 +44,7 @@ export function MessageInput({
   const {top: topInset} = useSafeAreaInsets()
   const {height: windowHeight} = useWindowDimensions()
   const {height: keyboardHeight} = useReanimatedKeyboardAnimation()
-  const maxHeight = useSharedValue(0)
+  const maxHeight = useSharedValue<undefined | number>(undefined)
   const isInputScrollable = useSharedValue(false)
   // const [isInputScrollable, setIsInputScrollable] = React.useState(false)
 
