@@ -71,7 +71,11 @@ export function StepFinished() {
       await Promise.all([
         bulkWriteFollows(
           getAgent,
-          suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
+          suggestedAccountsStepResults.accountDids.concat(
+            gate('reduced_onboarding_and_home_algo_v2')
+              ? []
+              : BSKY_APP_ACCOUNT_DID,
+          ),
         ),
         // these must be serial
         (async () => {
