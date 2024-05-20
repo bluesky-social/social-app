@@ -127,6 +127,10 @@ function ChatListItemReady({
     })
   }, [convo.id, navigation])
 
+  const onLongPress = useCallback(() => {
+    menuControl.open()
+  }, [menuControl])
+
   return (
     <View
       // @ts-expect-error web only
@@ -135,10 +139,20 @@ function ChatListItemReady({
       onFocus={onFocus}
       onBlur={onMouseLeave}>
       <Button
-        label={profile.displayName || profile.handle}
         onPress={onPress}
         style={[a.flex_1]}
-        onLongPress={isNative ? menuControl.open : undefined}>
+        onLongPress={isNative ? onLongPress : undefined}
+        label={profile.displayName || profile.handle}
+        accessibilityHint={_(msg`Go to conversation with ${profile.handle}`)}
+        accessibilityActions={
+          isNative
+            ? [
+                {name: 'magicTap', label: _(msg`Open conversation options`)},
+                {name: 'longpress', label: _(msg`Open conversation options`)},
+              ]
+            : undefined
+        }
+        onAccessibilityAction={onLongPress}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
