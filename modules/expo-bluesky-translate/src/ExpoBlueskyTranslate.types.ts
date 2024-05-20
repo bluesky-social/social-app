@@ -1,8 +1,3 @@
-import React from 'react'
-
-export type ExpoBlueskyTranslateProps = {
-  text: string
-  isPresented?: boolean
-  children: React.ReactNode
-  onClose?: () => void
+export type ExpoBlueskyTranslateModule = {
+  presentAsync: (text: string) => Promise<void>
 }
