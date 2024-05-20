@@ -81,13 +81,6 @@ export function MessageInput({
         const measurement = measure(inputRef)
         if (!measurement) return
 
-        console.log({
-          windowHeight,
-          keyboardHeight: keyboardHeight.value,
-          topInset,
-          measurement,
-        })
-
         const max = windowHeight - -keyboardHeight.value - topInset - 150
         const availableSpace = max - measurement.height
 
