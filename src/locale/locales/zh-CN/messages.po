@@ -90,7 +90,7 @@ msgstr "{following} 个正在关注"
 
 #: src/components/dms/NewChatDialog/index.tsx:159
 msgid "{handle} can't be messaged"
-msgstr "无法给 {handle} 发送信息"
+msgstr "无法给 {handle} 发送私信"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
@@ -301,7 +301,7 @@ msgstr "你保存的所有资讯源都集中在一处。"
 #: src/screens/Messages/Settings.tsx:57
 #: src/screens/Messages/Settings.tsx:60
 msgid "Allow messages from"
-msgstr "允许接收来自以下来源的信息"
+msgstr "允许接收来自以下来源的私信"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -433,11 +433,11 @@ msgstr "你确定要删除这条应用专用密码 \"{name}\" 吗？"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
-msgstr "你确定要删除这条信息吗？这条消息仅会在你的对话中删除，而不会在其他人的对话中删除。"
+msgstr "你确定要删除这条私信吗？此操作仅会在你的对话中删除私信，而不会在其他人的对话中删除。"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "您确定要离开这个对话吗？你的信息仅会在私信列表中删除，而不会在其他人的私信列表中删除。"
+msgstr "您确定要离开这个对话吗？此操作仅会在你的私信列表中删除对话，而不会在其他人的私信列表中删除。"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -839,7 +839,7 @@ msgstr "点击这里打开 {tag} 的标签菜单"
 
 #: src/components/dms/MessageItem.tsx:223
 msgid "Click to retry failed message"
-msgstr "点击以重试发送失败的信息"
+msgstr "点击以重试发送失败的私信"
 
 #: src/screens/Onboarding/index.tsx:47
 msgid "Climate"
@@ -1124,7 +1124,7 @@ msgstr "复制帖子链接"
 #: src/components/dms/MessageMenu.tsx:87
 #: src/components/dms/MessageMenu.tsx:89
 msgid "Copy message text"
-msgstr "复制信息文字"
+msgstr "复制私信文字"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:256
 #: src/view/com/util/forms/PostDropdownBtn.tsx:258
@@ -1276,11 +1276,11 @@ msgstr "删除列表"
 
 #: src/components/dms/MessageMenu.tsx:122
 msgid "Delete message"
-msgstr "删除信息"
+msgstr "删除私信"
 
 #: src/components/dms/MessageMenu.tsx:97
 msgid "Delete message for me"
-msgstr "为我删除信息"
+msgstr "为我删除私信"
 
 #: src/view/com/modals/DeleteAccount.tsx:233
 msgid "Delete my account"
@@ -1805,7 +1805,7 @@ msgstr "无法创建列表。请检查你的互联网连接并重试。"
 
 #: src/components/dms/MessageMenu.tsx:59
 msgid "Failed to delete message"
-msgstr "无法删除信息"
+msgstr "无法删除私信"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Failed to delete post, please try again"
@@ -1817,7 +1817,7 @@ msgstr "无法加载 GIF"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "Failed to load past messages"
-msgstr "无法加载旧的信息"
+msgstr "无法加载旧的私信"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
@@ -1825,7 +1825,7 @@ msgstr "无法保存这张图片：{0}"
 
 #: src/components/dms/MessageItem.tsx:216
 msgid "Failed to send"
-msgstr "无法发送信息"
+msgstr "无法发送私信"
 
 #: src/components/dms/MessagesNUX.tsx:58
 #: src/screens/Messages/Settings.tsx:36
@@ -2699,7 +2699,7 @@ msgstr "菜单"
 #: src/components/dms/MessageMenu.tsx:58
 #: src/screens/Messages/List/ChatListItem.tsx:105
 msgid "Message deleted"
-msgstr "信息已删除"
+msgstr "私信已删除"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:201
 msgid "Message from server: {0}"
@@ -2707,23 +2707,23 @@ msgstr "来自服务器的信息：{0}"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:97
 msgid "Message input field"
-msgstr "信息输入栏"
+msgstr "私信输入栏"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:54
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:37
 msgid "Message is too long"
-msgstr "信息过长"
+msgstr "私信过长"
 
 #: src/screens/Messages/List/index.tsx:245
 msgid "Message settings"
-msgstr "信息设置"
+msgstr "私信设置"
 
 #: src/Navigation.tsx:520
 #: src/screens/Messages/List/index.tsx:145
 #: src/screens/Messages/List/index.tsx:173
 #: src/screens/Messages/List/index.tsx:241
 msgid "Messages"
-msgstr "信息"
+msgstr "私信"
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
@@ -2972,7 +2972,7 @@ msgstr "新私信"
 
 #: src/components/dms/NewMessagesPill.tsx:42
 msgid "New messages"
-msgstr "新信息"
+msgstr "新私信"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "New Moderation List"
@@ -3070,7 +3070,7 @@ msgstr "不超过 253 个字符"
 
 #: src/screens/Messages/List/ChatListItem.tsx:94
 msgid "No messages yet"
-msgstr "还没有信息"
+msgstr "目前还没有任何私信"
 
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
@@ -3925,7 +3925,7 @@ msgstr "举报列表"
 
 #: src/components/dms/MessageMenu.tsx:105
 msgid "Report message"
-msgstr "举报信息"
+msgstr "举报私信"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:363
 #: src/view/com/util/forms/PostDropdownBtn.tsx:365
@@ -3953,7 +3953,7 @@ msgstr "举报这个列表"
 #: src/components/dms/ReportDialog.tsx:164
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this message"
-msgstr "举报这条信息"
+msgstr "举报这条私信"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
@@ -4367,7 +4367,7 @@ msgstr "提交反馈"
 #: src/screens/Messages/Conversation/MessageInput.tsx:122
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:110
 msgid "Send message"
-msgstr "发送信息"
+msgstr "发送私信"
 
 #: src/components/dms/ReportDialog.tsx:259
 #: src/components/dms/ReportDialog.tsx:262
@@ -5788,7 +5788,7 @@ msgstr "你想在算法资讯源中看到哪些语言？"
 #: src/components/dms/MessagesNUX.tsx:107
 #: src/components/dms/MessagesNUX.tsx:121
 msgid "Who can message you?"
-msgstr "谁可以给你发送信息？"
+msgstr "谁可以给你发送私信？"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
@@ -5817,7 +5817,7 @@ msgstr "为什么应该审核这个列表？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this message be reviewed?"
-msgstr "为什么应该审核这条信息？"
+msgstr "为什么应该审核这条私信？"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Why should this post be reviewed?"
@@ -5834,7 +5834,7 @@ msgstr "宽"
 #: src/screens/Messages/Conversation/MessageInput.tsx:99
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:98
 msgid "Write a message"
-msgstr "编写信息"
+msgstr "编写私信"
 
 #: src/view/com/composer/Composer.tsx:505
 msgid "Write post"
