@@ -269,6 +269,13 @@ export function MessagesList({
     }
   }, [flatListRef, keyboardIsOpening.value])
 
+  const scrollToEndOnPress = React.useCallback(() => {
+    flatListRef.current?.scrollToOffset({
+      offset: prevContentHeight.current,
+      animated: true,
+    })
+  }, [flatListRef])
+
   return (
     <>
       {/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
@@ -315,7 +322,7 @@ export function MessagesList({
         )}
       </KeyboardStickyView>
       {/*{showNewMessagesPill && <NewMessagesPill />}*/}
-      <NewMessagesPill />
+      <NewMessagesPill onPress={scrollToEndOnPress} />
     </>
   )
 }
