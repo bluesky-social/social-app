@@ -8,9 +8,7 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -19,9 +17,9 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {Button} from '#/components/Button'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {Text} from '#/components/Typography'
 
@@ -91,6 +89,8 @@ function ChatListItemReady({
         moderation.ui('displayName'),
       )
 
+  const isDimStyle = convo.muted || moderation.blocked || isDeletedAccount
+
   let lastMessage = _(msg`No messages yet`)
   let lastMessageSentAt: string | null = null
   if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
@@ -102,10 +102,9 @@ function ChatListItemReady({
     lastMessageSentAt = convo.lastMessage.sentAt
   }
   if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-    lastMessage = _(msg`Message deleted`)
+    lastMessage = _(msg`Conversation deleted`)
   }
 
-  const navigation = useNavigation<NavigationProp>()
   const [showActions, setShowActions] = useState(false)
 
   const onMouseEnter = useCallback(() => {
@@ -121,12 +120,6 @@ function ChatListItemReady({
     setShowActions(true)
   }, [])
 
-  const onPress = useCallback(() => {
-    navigation.push('MessagesConversation', {
-      conversation: convo.id,
-    })
-  }, [convo.id, navigation])
-
   const onLongPress = useCallback(() => {
     menuControl.open()
   }, [menuControl])
@@ -137,13 +130,16 @@ function ChatListItemReady({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
-      onBlur={onMouseLeave}>
-      <Button
-        onPress={onPress}
-        style={[a.flex_1]}
-        onLongPress={isNative ? onLongPress : undefined}
-        label={profile.displayName || profile.handle}
-        accessibilityHint={_(msg`Go to conversation with ${profile.handle}`)}
+      onBlur={onMouseLeave}
+      style={[a.relative]}>
+      <Link
+        to={`/messages/${convo.id}`}
+        label={displayName}
+        accessibilityHint={
+          !isDeletedAccount
+            ? _(msg`Go to conversation with ${profile.handle}`)
+            : undefined
+        }
         accessibilityActions={
           isNative
             ? [
@@ -152,16 +148,33 @@ function ChatListItemReady({
               ]
             : undefined
         }
-        onAccessibilityAction={onLongPress}>
+        onAccessibilityAction={onLongPress}
+        onPress={
+          isDeletedAccount
+            ? e => {
+                e.preventDefault()
+                return false
+              }
+            : undefined
+        }
+        style={[
+          web({
+            cursor: isDeletedAccount ? 'default' : 'pointer',
+          }),
+        ]}
+        onLongPress={isNative ? menuControl.open : undefined}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
               a.flex_row,
+              isDeletedAccount ? a.align_center : a.align_start,
               a.flex_1,
               a.px_lg,
               a.py_md,
               a.gap_md,
-              (hovered || pressed || focused) && t.atoms.bg_contrast_25,
+              (hovered || pressed || focused) &&
+                !isDeletedAccount &&
+                t.atoms.bg_contrast_25,
               t.atoms.border_contrast_low,
             ]}>
             <UserAvatar
@@ -169,85 +182,85 @@ function ChatListItemReady({
               size={52}
               moderation={moderation.ui('avatar')}
             />
-            <View style={[a.flex_1, a.flex_row, a.align_center]}>
-              <View style={[a.flex_1]}>
-                <View
-                  style={[
-                    a.flex_1,
-                    a.flex_row,
-                    a.align_end,
-                    a.pb_2xs,
-                    web([{marginTop: -2}]),
-                  ]}>
+
+            <View style={[a.flex_1, a.justify_center]}>
+              <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
+                <Text
+                  numberOfLines={1}
+                  style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
                   <Text
-                    numberOfLines={1}
-                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
-                    <Text style={[a.text_md, t.atoms.text, a.font_bold]}>
-                      {displayName}
-                    </Text>
+                    style={[
+                      a.text_md,
+                      t.atoms.text,
+                      a.font_bold,
+                      {lineHeight: 21},
+                      isDimStyle && t.atoms.text_contrast_medium,
+                    ]}>
+                    {displayName}
                   </Text>
-                  {lastMessageSentAt && (
-                    <TimeElapsed timestamp={lastMessageSentAt}>
-                      {({timeElapsed}) => (
-                        <Text
-                          style={[
-                            a.text_sm,
-                            web([a.leading_normal, {whiteSpace: 'pre'}]),
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          {' '}
-                          &middot; {timeElapsed}
-                        </Text>
-                      )}
-                    </TimeElapsed>
-                  )}
-                  {(convo.muted || moderation.blocked) && (
-                    <Text
-                      style={[
-                        a.text_sm,
-                        web([a.leading_normal, {whiteSpace: 'pre'}]),
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      {' '}
-                      &middot;{' '}
-                      <BellStroke
-                        size="xs"
-                        style={t.atoms.text_contrast_medium}
-                      />
-                    </Text>
-                  )}
-                </View>
-                {!isDeletedAccount && (
+                </Text>
+                {lastMessageSentAt && (
+                  <TimeElapsed timestamp={lastMessageSentAt}>
+                    {({timeElapsed}) => (
+                      <Text
+                        style={[
+                          a.text_sm,
+                          {lineHeight: 21},
+                          t.atoms.text_contrast_medium,
+                        ]}>
+                        {' '}
+                        &middot; {timeElapsed}
+                      </Text>
+                    )}
+                  </TimeElapsed>
+                )}
+                {(convo.muted || moderation.blocked) && (
                   <Text
-                    numberOfLines={1}
-                    style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
-                    @{profile.handle}
+                    style={[
+                      a.text_sm,
+                      {lineHeight: 21},
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    {' '}
+                    &middot;{' '}
+                    <BellStroke
+                      size="xs"
+                      style={[t.atoms.text_contrast_medium]}
+                    />
                   </Text>
                 )}
-                <Text
-                  numberOfLines={2}
-                  style={[
-                    a.text_sm,
-                    a.leading_snug,
-                    convo.unreadCount > 0
-                      ? a.font_bold
-                      : t.atoms.text_contrast_high,
-                    (convo.muted || moderation.blocked) &&
-                      t.atoms.text_contrast_medium,
-                  ]}>
-                  {lastMessage}
-                </Text>
               </View>
+
+              {!isDeletedAccount && (
+                <Text
+                  numberOfLines={1}
+                  style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}>
+                  @{profile.handle}
+                </Text>
+              )}
+
+              <Text
+                numberOfLines={2}
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  convo.unreadCount > 0
+                    ? a.font_bold
+                    : t.atoms.text_contrast_high,
+                  isDimStyle && t.atoms.text_contrast_medium,
+                ]}>
+                {lastMessage}
+              </Text>
+
               {convo.unreadCount > 0 && (
                 <View
                   style={[
                     a.absolute,
                     a.rounded_full,
                     {
-                      backgroundColor:
-                        convo.muted || moderation.blocked
-                          ? t.palette.contrast_200
-                          : t.palette.primary_500,
+                      backgroundColor: isDimStyle
+                        ? t.palette.contrast_200
+                        : t.palette.primary_500,
                       height: 7,
                       width: 7,
                     },
@@ -263,22 +276,30 @@ function ChatListItemReady({
                   ]}
                 />
               )}
-              <ConvoMenu
-                convo={convo}
-                profile={profile}
-                control={menuControl}
-                currentScreen="list"
-                showMarkAsRead={convo.unreadCount > 0}
-                hideTrigger={isNative}
-                triggerOpacity={
-                  !gtMobile || showActions || menuControl.isOpen ? 1 : 0
-                }
-                blockInfo={blockInfo}
-              />
             </View>
           </View>
         )}
-      </Button>
+      </Link>
+
+      <ConvoMenu
+        convo={convo}
+        profile={profile}
+        control={menuControl}
+        currentScreen="list"
+        showMarkAsRead={convo.unreadCount > 0}
+        hideTrigger={isNative}
+        blockInfo={blockInfo}
+        style={[
+          a.absolute,
+          a.h_full,
+          a.self_end,
+          a.justify_center,
+          {
+            right: a.px_lg.paddingRight,
+            opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+          },
+        ]}
+      />
     </View>
   )
 }

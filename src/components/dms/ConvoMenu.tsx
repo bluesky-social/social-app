@@ -18,7 +18,7 @@ import {
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
@@ -41,8 +41,8 @@ let ConvoMenu = ({
   currentScreen,
   showMarkAsRead,
   hideTrigger,
-  triggerOpacity,
   blockInfo,
+  style,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
@@ -50,11 +50,11 @@ let ConvoMenu = ({
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
   hideTrigger?: boolean
-  triggerOpacity?: number
   blockInfo: {
     listBlocks: ModerationCause[]
     userBlock?: ModerationCause
   }
+  style?: ViewStyleProp['style']
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -66,6 +66,7 @@ let ConvoMenu = ({
 
   const {listBlocks, userBlock} = blockInfo
   const isBlocking = userBlock || !!listBlocks.length
+  const isDeletedAccount = profile.handle === 'missing.invalid'
 
   const {data: convo} = useConvoQuery(initialConvo)
 
@@ -105,7 +106,7 @@ let ConvoMenu = ({
     <>
       <Menu.Root control={control}>
         {!hideTrigger && (
-          <View style={{opacity: triggerOpacity}}>
+          <View style={[style]}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
               {({props, state}) => (
                 <Pressable
@@ -128,66 +129,9 @@ let ConvoMenu = ({
             </Menu.Trigger>
           </View>
         )}
-        <Menu.Outer>
-          <Menu.Group>
-            {showMarkAsRead && (
-              <Menu.Item
-                label={_(msg`Mark as read`)}
-                onPress={() =>
-                  markAsRead({
-                    convoId: convo?.id,
-                  })
-                }>
-                <Menu.ItemText>
-                  <Trans>Mark as read</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={Bubble} />
-              </Menu.Item>
-            )}
-            <Menu.Item
-              label={_(msg`Go to user's profile`)}
-              onPress={onNavigateToProfile}>
-              <Menu.ItemText>
-                <Trans>Go to profile</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Person} />
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Mute conversation`)}
-              onPress={() => muteConvo({mute: !convo?.muted})}>
-              <Menu.ItemText>
-                {convo?.muted ? (
-                  <Trans>Unmute conversation</Trans>
-                ) : (
-                  <Trans>Mute conversation</Trans>
-                )}
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
-            </Menu.Item>
-          </Menu.Group>
-          <Menu.Divider />
-          <Menu.Group>
-            <Menu.Item
-              label={
-                isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)
-              }
-              onPress={toggleBlock}>
-              <Menu.ItemText>
-                {isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)}
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={isBlocking ? PersonX : PersonCheck} />
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Report conversation`)}
-              onPress={reportControl.open}>
-              <Menu.ItemText>
-                <Trans>Report conversation</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Flag} />
-            </Menu.Item>
-          </Menu.Group>
-          <Menu.Divider />
-          <Menu.Group>
+
+        {isDeletedAccount ? (
+          <Menu.Outer>
             <Menu.Item
               label={_(msg`Leave conversation`)}
               onPress={leaveConvoControl.open}>
@@ -196,8 +140,79 @@ let ConvoMenu = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={ArrowBoxLeft} />
             </Menu.Item>
-          </Menu.Group>
-        </Menu.Outer>
+          </Menu.Outer>
+        ) : (
+          <Menu.Outer>
+            <Menu.Group>
+              {showMarkAsRead && (
+                <Menu.Item
+                  label={_(msg`Mark as read`)}
+                  onPress={() =>
+                    markAsRead({
+                      convoId: convo?.id,
+                    })
+                  }>
+                  <Menu.ItemText>
+                    <Trans>Mark as read</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Bubble} />
+                </Menu.Item>
+              )}
+              <Menu.Item
+                label={_(msg`Go to user's profile`)}
+                onPress={onNavigateToProfile}>
+                <Menu.ItemText>
+                  <Trans>Go to profile</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Person} />
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Mute conversation`)}
+                onPress={() => muteConvo({mute: !convo?.muted})}>
+                <Menu.ItemText>
+                  {convo?.muted ? (
+                    <Trans>Unmute conversation</Trans>
+                  ) : (
+                    <Trans>Mute conversation</Trans>
+                  )}
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
+              </Menu.Item>
+            </Menu.Group>
+            <Menu.Divider />
+            <Menu.Group>
+              <Menu.Item
+                label={
+                  isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)
+                }
+                onPress={toggleBlock}>
+                <Menu.ItemText>
+                  {isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)}
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={isBlocking ? PersonX : PersonCheck} />
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Report conversation`)}
+                onPress={reportControl.open}>
+                <Menu.ItemText>
+                  <Trans>Report conversation</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Flag} />
+              </Menu.Item>
+            </Menu.Group>
+            <Menu.Divider />
+            <Menu.Group>
+              <Menu.Item
+                label={_(msg`Leave conversation`)}
+                onPress={leaveConvoControl.open}>
+                <Menu.ItemText>
+                  <Trans>Leave conversation</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ArrowBoxLeft} />
+              </Menu.Item>
+            </Menu.Group>
+          </Menu.Outer>
+        )}
       </Menu.Root>
 
       <LeaveConvoPrompt
