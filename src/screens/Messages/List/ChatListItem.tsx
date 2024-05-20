@@ -134,8 +134,12 @@ function ChatListItemReady({
       style={[a.relative]}>
       <Link
         to={`/messages/${convo.id}`}
-        label={profile.displayName || profile.handle}
-        accessibilityHint={_(msg`Go to conversation with ${profile.handle}`)}
+        label={displayName}
+        accessibilityHint={
+          profile.handle !== 'missing.invalid'
+            ? _(msg`Go to conversation with ${profile.handle}`)
+            : undefined
+        }
         accessibilityActions={
           isNative
             ? [
