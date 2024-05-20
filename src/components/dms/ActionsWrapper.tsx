@@ -71,8 +71,6 @@ export function ActionsWrapper({
     })
     .runOnJS(true)
 
-  const onPress = React.useCallback(() => {}, [])
-
   return (
     <GestureDetector gesture={gesture}>
       <View
@@ -87,8 +85,7 @@ export function ActionsWrapper({
           unstable_pressDelay={200}
           onPressIn={grow}
           onTouchEnd={shrink}
-          hitSlop={HITSLOP_10}
-          onPress={onPress}>
+          hitSlop={HITSLOP_10}>
           {children}
         </AnimatedPressable>
         <MessageMenu message={message} control={menuControl} />
