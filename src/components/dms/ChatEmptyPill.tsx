@@ -9,10 +9,8 @@ import Animated, {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {
-  ScaleAndFadeIn,
-  ScaleAndFadeOut,
-} from 'lib/custom-animations/ScaleAndFade'
+import {ScaleAndFadeIn} from 'lib/custom-animations/ScaleAndFade'
+import {ShrinkAndPop} from 'lib/custom-animations/ShrinkAndPop'
 import {useHaptics} from 'lib/haptics'
 import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
@@ -87,7 +85,7 @@ export function ChatEmptyPill() {
           animatedStyle,
         ]}
         entering={ScaleAndFadeIn}
-        exiting={ScaleAndFadeOut}
+        exiting={ShrinkAndPop}
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}>
