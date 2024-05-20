@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -18,7 +17,6 @@ import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import {ClipClopGate} from './gate'
 
 type AllowIncoming = 'all' | 'none' | 'following'
 
@@ -45,9 +43,6 @@ export function MessagesSettingsScreen({}: Props) {
     },
     [updateDeclaration],
   )
-
-  const gate = useGate()
-  if (!gate('dms')) return <ClipClopGate />
 
   return (
     <CenteredView sideBorders style={a.h_full_vh}>
