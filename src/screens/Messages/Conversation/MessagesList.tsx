@@ -17,13 +17,14 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
-import {useConvoActive} from '#/state/messages/convo'
+import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
+import {ChatEmpty} from '#/screens/Messages/Conversation/ChatEmpty'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
 import {MessageItem} from '#/components/dms/MessageItem'
@@ -348,6 +349,9 @@ export function MessagesList({
           footer
         )}
       </KeyboardStickyView>
+      {isConvoActive(convoState) && convoState.items.length === 0 && (
+        <ChatEmpty />
+      )}
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
