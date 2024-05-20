@@ -23,7 +23,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 let lastIndex = 0
 
-export function ChatEmpty() {
+export function ChatEmptyPill() {
   const t = useTheme()
   const {_} = useLingui()
   const playHaptic = useHaptics()
@@ -78,9 +78,7 @@ export function ChatEmpty() {
         a.z_10,
         a.align_center,
         {
-          bottom: bottomOffset + 70,
-          // Don't prevent scrolling in this area _except_ for in the pill itself
-          pointerEvents: 'box-none',
+          bottom: 70,
         },
       ]}>
       <AnimatedPressable
@@ -89,10 +87,7 @@ export function ChatEmpty() {
           a.py_md,
           a.rounded_full,
           t.atoms.bg_contrast_25,
-          {
-            alignItems: 'center',
-            pointerEvents: 'box-only',
-          },
+          a.align_center,
           animatedStyle,
         ]}
         entering={ScaleAndFadeIn}

@@ -24,9 +24,9 @@ import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
-import {ChatEmpty} from '#/screens/Messages/Conversation/ChatEmpty'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
+import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -337,21 +337,20 @@ export function MessagesList({
         />
       </ScrollProvider>
       <KeyboardStickyView offset={{closed: -bottomOffset, opened: 0}}>
-        {!blocked ? (
-          <>
-            {convoState.status === ConvoStatus.Disabled ? (
-              <ChatDisabled />
-            ) : (
-              <MessageInput onSendMessage={onSendMessage} />
-            )}
-          </>
-        ) : (
+        {convoState.status === ConvoStatus.Disabled ? (
+          <ChatDisabled />
+        ) : blocked ? (
           footer
+        ) : (
+          <>
+            {isConvoActive(convoState) && convoState.items.length === 0 && (
+              <ChatEmptyPill />
+            )}
+            <MessageInput onSendMessage={onSendMessage} />
+          </>
         )}
       </KeyboardStickyView>
-      {isConvoActive(convoState) && convoState.items.length === 0 && (
-        <ChatEmpty />
-      )}
+
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
