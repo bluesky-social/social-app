@@ -38,7 +38,6 @@ export function ChatEmpty() {
     return [
       _(msg`Say hello!`),
       _(msg`Share your favorite feed!`),
-      _(msg`Share a funny post!`),
       _(msg`Tell a joke!`),
       _(msg`Share a fun fact!`),
       _(msg`Share a cool story!`),
@@ -86,8 +85,8 @@ export function ChatEmpty() {
       ]}>
       <AnimatedPressable
         style={[
-          a.px_lg,
-          a.py_sm,
+          a.px_xl,
+          a.py_md,
           a.rounded_full,
           t.atoms.bg_contrast_25,
           {
