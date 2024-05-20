@@ -147,8 +147,8 @@ function ChatListItemReady({
         accessibilityActions={
           isNative
             ? [
-                {name: 'magicTap', label: 'Open conversation menu'},
-                {name: 'longpress', label: 'Open conversation menu'},
+                {name: 'magicTap', label: 'Open conversation options'},
+                {name: 'longpress', label: 'Open conversation options'},
               ]
             : undefined
         }
