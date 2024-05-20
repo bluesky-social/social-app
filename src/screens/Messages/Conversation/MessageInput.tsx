@@ -1,13 +1,16 @@
 import React from 'react'
+import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
 import {
-  Dimensions,
-  Keyboard,
-  NativeSyntheticEvent,
-  Pressable,
-  TextInput,
-  TextInputContentSizeChangeEventData,
-  View,
-} from 'react-native'
+  useFocusedInputHandler,
+  useReanimatedKeyboardAnimation,
+} from 'react-native-keyboard-controller'
+import Animated, {
+  measure,
+  useAnimatedProps,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,6 +28,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
+
 export function MessageInput({
   onSendMessage,
 }: {
@@ -34,15 +39,19 @@ export function MessageInput({
   const t = useTheme()
   const playHaptic = useHaptics()
   const {getDraft, clearDraft} = useMessageDraft()
-  const [message, setMessage] = React.useState(getDraft)
-  const [maxHeight, setMaxHeight] = React.useState<number | undefined>()
-  const [isInputScrollable, setIsInputScrollable] = React.useState(false)
 
+  // Input layout
   const {top: topInset} = useSafeAreaInsets()
+  const {height: windowHeight} = useWindowDimensions()
+  const {height: keyboardHeight} = useReanimatedKeyboardAnimation()
+  const maxHeight = useSharedValue<undefined | number>(undefined)
+  const isInputScrollable = useSharedValue(false)
+  // const [isInputScrollable, setIsInputScrollable] = React.useState(false)
 
   const inputStyles = useSharedInputStyles()
   const [isFocused, setIsFocused] = React.useState(false)
-  const inputRef = React.useRef<TextInput>(null)
+  const [message, setMessage] = React.useState(getDraft)
+  const inputRef = useAnimatedRef<TextInput>()
 
   useSaveMessageDraft(message)
 
@@ -64,21 +73,32 @@ export function MessageInput({
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [message, onSendMessage, playHaptic, _, clearDraft])
+  }, [message, clearDraft, onSendMessage, playHaptic, _, inputRef])
 
-  const onInputLayout = React.useCallback(
-    (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-      const keyboardHeight = Keyboard.metrics()?.height ?? 0
-      const windowHeight = Dimensions.get('window').height
+  useFocusedInputHandler(
+    {
+      onChangeText: () => {
+        'worklet'
+        const measurement = measure(inputRef)
+        if (!measurement) return
 
-      const max = windowHeight - keyboardHeight - topInset - 150
-      const availableSpace = max - e.nativeEvent.contentSize.height
+        const max = windowHeight - -keyboardHeight.value - topInset - 150
+        const availableSpace = max - measurement.height
 
-      setMaxHeight(max)
-      setIsInputScrollable(availableSpace < 30)
+        maxHeight.value = max
+        isInputScrollable.value = availableSpace < 30
+      },
     },
-    [topInset],
+    [windowHeight, topInset],
   )
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    maxHeight: maxHeight.value,
+  }))
+
+  const animatedProps = useAnimatedProps(() => ({
+    scrollEnabled: isInputScrollable.value,
+  }))
 
   return (
     <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
@@ -96,7 +116,7 @@ export function MessageInput({
           },
           isFocused && inputStyles.chromeFocus,
         ]}>
-        <TextInput
+        <AnimatedTextInput
           accessibilityLabel={_(msg`Message input field`)}
           accessibilityHint={_(msg`Type your message here`)}
           placeholder={_(msg`Write a message`)}
@@ -109,16 +129,16 @@ export function MessageInput({
             a.text_md,
             a.px_sm,
             t.atoms.text,
-            {maxHeight, paddingBottom: isIOS ? 5 : 0},
+            {paddingBottom: isIOS ? 5 : 0},
+            animatedStyle,
           ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          onContentSizeChange={onInputLayout}
           ref={inputRef}
           hitSlop={HITSLOP_10}
+          animatedProps={animatedProps}
         />
         <Pressable
           accessibilityRole="button"
