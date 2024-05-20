@@ -314,7 +314,8 @@ export function MessagesList({
           footer
         )}
       </KeyboardStickyView>
-      {showNewMessagesPill && <NewMessagesPill />}
+      {/*{showNewMessagesPill && <NewMessagesPill />}*/}
+      <NewMessagesPill />
     </>
   )
 }
