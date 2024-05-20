@@ -8,10 +8,9 @@ import {useMutation} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
@@ -38,33 +37,20 @@ export function ChatDisabled() {
 
 function AppealDialog() {
   const control = Dialog.useDialogControl()
-  const t = useTheme()
-
-  const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
-  } = useInteractionState()
+  const {_} = useLingui()
 
   return (
     <>
-      <Text
-        style={[
-          a.mt_sm,
-          a.text_sm,
-          a.leading_snug,
-          {color: t.palette.primary_500},
-          pressed && {
-            ...web({outline: 0}),
-            textDecorationLine: 'underline',
-            textDecorationColor: t.palette.primary_500,
-          },
-        ]}
+      <Button
+        testID="appealDisabledChatBtn"
+        variant="solid"
+        color="secondary"
+        size="small"
         onPress={control.open}
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}>
-        <Trans>Appeal this decision</Trans>
-      </Text>
+        label={_(msg`Appeal this decision`)}
+        style={a.mt_sm}>
+        <ButtonText>{_(msg`Appeal this decision`)}</ButtonText>
+      </Button>
 
       <Dialog.Outer control={control}>
         <Dialog.Handle />
