@@ -484,6 +484,7 @@ function SearchablePeopleList({
       style={[
         web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
         native({
+          height: '100%',
           paddingHorizontal: 0,
           marginTop: 0,
           paddingTop: 0,
