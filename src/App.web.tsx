@@ -9,6 +9,7 @@ import {useLingui} from '@lingui/react'
 
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {MessagesProvider} from '#/state/messages'
 import {init as initPersistedState} from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
@@ -38,23 +39,24 @@ import {Shell} from 'view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
-  const {initSession} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
 
   // init
   useEffect(() => {
-    async function resumeSession(account?: SessionAccount) {
+    async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
-          await initSession(account)
+          await resumeSession(account)
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -63,8 +65,8 @@ function InnerApp() {
       }
     }
     const account = readLastActiveAccount()
-    resumeSession(account)
-  }, [initSession])
+    onLaunch(account)
+  }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -84,20 +86,24 @@ function InnerApp() {
             key={currentAccount?.did}>
             <QueryProvider currentDid={currentAccount?.did}>
               <StatsigProvider>
-                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                <LabelDefsProvider>
-                  <ModerationOptsProvider>
-                    <LoggedOutViewProvider>
-                      <SelectedFeedProvider>
-                        <UnreadNotifsProvider>
-                          <SafeAreaProvider>
-                            <Shell />
-                          </SafeAreaProvider>
-                        </UnreadNotifsProvider>
-                      </SelectedFeedProvider>
-                    </LoggedOutViewProvider>
-                  </ModerationOptsProvider>
-                </LabelDefsProvider>
+                <MessagesProvider>
+                  {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                  <LabelDefsProvider>
+                    <ModerationOptsProvider>
+                      <LoggedOutViewProvider>
+                        <SelectedFeedProvider>
+                          <UnreadNotifsProvider>
+                            <BackgroundNotificationPreferencesProvider>
+                              <SafeAreaProvider>
+                                <Shell />
+                              </SafeAreaProvider>
+                            </BackgroundNotificationPreferencesProvider>
+                          </UnreadNotifsProvider>
+                        </SelectedFeedProvider>
+                      </LoggedOutViewProvider>
+                    </ModerationOptsProvider>
+                  </LabelDefsProvider>
+                </MessagesProvider>
               </StatsigProvider>
             </QueryProvider>
           </React.Fragment>

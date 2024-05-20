@@ -11,6 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -31,7 +32,7 @@ export function Component({}: {}) {
   const theme = useTheme()
   const {currentAccount} = useSession()
   const {getAgent} = useAgent()
-  const {clearCurrentAccount, removeAccount} = useSessionApi()
+  const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -61,6 +62,16 @@ export function Component({}: {}) {
     const token = confirmCode.replace(/\s/g, '')
 
     try {
+      // inform chat service of intent to delete account
+      const {success} = await getAgent().api.chat.bsky.actor.deleteAccount(
+        undefined,
+        {
+          headers: DM_SERVICE_HEADERS,
+        },
+      )
+      if (!success) {
+        throw new Error('Failed to inform chat service of account deletion')
+      }
       await getAgent().com.atproto.server.deleteAccount({
         did: currentAccount.did,
         password,
@@ -69,7 +80,6 @@ export function Component({}: {}) {
       Toast.show(_(msg`Your account has been deleted`))
       resetToTab('HomeTab')
       removeAccount(currentAccount)
-      clearCurrentAccount()
       closeModal()
     } catch (e: any) {
       setError(cleanError(e))

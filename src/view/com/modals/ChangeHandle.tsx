@@ -15,12 +15,7 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {useServiceQuery} from '#/state/queries/service'
-import {
-  SessionAccount,
-  useAgent,
-  useSession,
-  useSessionApi,
-} from '#/state/session'
+import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {cleanError} from 'lib/strings/errors'
@@ -73,10 +68,10 @@ export function Inner({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const {updateCurrentAccount} = useSessionApi()
   const {closeModal} = useModalControls()
   const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
     useUpdateHandleMutation()
+  const {getAgent} = useAgent()
 
   const [error, setError] = useState<string>('')
 
@@ -116,9 +111,7 @@ export function Inner({
       await updateHandle({
         handle: newHandle,
       })
-      updateCurrentAccount({
-        handle: newHandle,
-      })
+      await getAgent().resumeSession(getAgent().session!)
       closeModal()
       onChanged()
     } catch (err: any) {
@@ -134,9 +127,9 @@ export function Inner({
     onChanged,
     track,
     closeModal,
-    updateCurrentAccount,
     updateHandle,
     serviceInfo,
+    getAgent,
   ])
 
   // rendering

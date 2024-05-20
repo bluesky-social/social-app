@@ -8,12 +8,14 @@ export type SessionStateContext = {
   currentAccount: SessionAccount | undefined
   hasSession: boolean
 }
+
 export type SessionApiContext = {
   createAccount: (props: {
     service: string
     email: string
     password: string
     handle: string
+    birthDate: Date
     inviteCode?: string
     verificationPhone?: string
     verificationCode?: string
@@ -32,25 +34,7 @@ export type SessionApiContext = {
    * access tokens from all accounts, so that returning as any user will
    * require a full login.
    */
-  logout: (
-    logContext: LogEvents['account:loggedOut']['logContext'],
-  ) => Promise<void>
-  /**
-   * A partial logout. Clears the `currentAccount` from session, but DOES NOT
-   * clear access tokens from accounts, allowing the user to return to their
-   * other accounts without logging in.
-   *
-   * Used when adding a new account, deleting an account.
-   */
-  clearCurrentAccount: () => void
-  initSession: (account: SessionAccount) => Promise<void>
+  logout: (logContext: LogEvents['account:loggedOut']['logContext']) => void
+  resumeSession: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
-  updateCurrentAccount: (
-    account: Partial<
-      Pick<
-        SessionAccount,
-        'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
-      >
-    >,
-  ) => void
 }

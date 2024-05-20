@@ -304,7 +304,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
-        options={{title: title(msg`Messaging settings`), requireAuth: true}}
+        options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
     </>
   )
@@ -464,7 +464,10 @@ function MessagesTabNavigator() {
       <MessagesTab.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
-        options={{requireAuth: true}}
+        options={({route}) => ({
+          requireAuth: true,
+          animationTypeForReplace: route.params?.animation ?? 'push',
+        })}
       />
       {commonScreens(MessagesTab as typeof HomeTab)}
     </MessagesTab.Navigator>

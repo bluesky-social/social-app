@@ -1,9 +1,10 @@
 import {useMemo} from 'react'
+
 import {FeedTuner} from '#/lib/api/feed-manip'
 import {FeedDescriptor} from '../queries/post-feed'
-import {useLanguagePrefs} from './languages'
 import {usePreferencesQuery} from '../queries/preferences'
 import {useSession} from '../session'
+import {useLanguagePrefs} from './languages'
 
 export function useFeedTuners(feedDesc: FeedDescriptor) {
   const langPrefs = useLanguagePrefs()
@@ -20,7 +21,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
     if (feedDesc.startsWith('list')) {
       return [FeedTuner.dedupReposts]
     }
-    if (feedDesc === 'home' || feedDesc === 'following') {
+    if (feedDesc === 'following') {
       const feedTuners = []
 
       if (preferences?.feedViewPrefs.hideReposts) {

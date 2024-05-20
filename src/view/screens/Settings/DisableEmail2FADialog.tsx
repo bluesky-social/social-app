@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -30,7 +30,6 @@ export function DisableEmail2FADialog({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
-  const {updateCurrentAccount} = useSessionApi()
   const {getAgent} = useAgent()
 
   const [stage, setStage] = useState<Stages>(Stages.Email)
@@ -61,7 +60,7 @@ export function DisableEmail2FADialog({
           token: confirmationCode.trim(),
           emailAuthFactor: false,
         })
-        updateCurrentAccount({emailAuthFactor: false})
+        await getAgent().resumeSession(getAgent().session!)
         Toast.show(_(msg`Email 2FA disabled`))
       }
       control.close()

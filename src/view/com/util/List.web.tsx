@@ -23,10 +23,11 @@ export type ListProps<ItemT> = Omit<
   onItemSeen?: (item: ItemT) => void
   desktopFixedHeight: any // TODO: Better types.
   containWeb?: boolean
+  sideBorders?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
-const ON_ITEM_SEEN_WAIT_DURATION = 2e3 // post must be "seen" 2 seconds before capturing
+const ON_ITEM_SEEN_WAIT_DURATION = 1.5e3 // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
   rootMargin: '-200px 0px -200px 0px',
 } // post must be 200px visible to be "seen"
@@ -53,6 +54,7 @@ function ListImpl<ItemT>(
     renderItem,
     extraData,
     style,
+    sideBorders = true,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -308,7 +310,7 @@ function ListImpl<ItemT>(
       <View
         ref={containerRef}
         style={[
-          !isMobile && styles.sideBorders,
+          !isMobile && sideBorders && styles.sideBorders,
           contentContainerStyle,
           desktopFixedHeight ? styles.minHeightViewport : null,
           pal.border,

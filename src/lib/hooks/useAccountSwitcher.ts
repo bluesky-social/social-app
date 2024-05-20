@@ -15,7 +15,7 @@ export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {initSession} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
@@ -39,7 +39,7 @@ export function useAccountSwitcher() {
             // So we change the URL ourselves. The navigator will pick it up on remount.
             history.pushState(null, '', '/')
           }
-          await initSession(account)
+          await resumeSession(account)
           logEvent('account:loggedIn', {logContext, withPassword: false})
           Toast.show(_(msg`Signed in as @${account.handle}`))
         } else {
@@ -53,11 +53,16 @@ export function useAccountSwitcher() {
         logger.error(`switch account: selectAccount failed`, {
           message: e.message,
         })
+        requestSwitchToAccount({requestedAccount: account.did})
+        Toast.show(
+          _(msg`Please sign in as @${account.handle}`),
+          'circle-exclamation',
+        )
       } finally {
         setPendingDid(null)
       }
     },
-    [_, track, initSession, requestSwitchToAccount, pendingDid],
+    [_, track, resumeSession, requestSwitchToAccount, pendingDid],
   )
 
   return {onPressSwitchAccount, pendingDid}

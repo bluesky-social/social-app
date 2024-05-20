@@ -15,6 +15,8 @@ interface ReportOptions {
   list: ReportOption[]
   feedgen: ReportOption[]
   other: ReportOption[]
+  convoMessage: ReportOption[]
+  convoAccount: ReportOption[]
 }
 
 export function useReportOptions(): ReportOptions {
@@ -69,6 +71,32 @@ export function useReportOptions(): ReportOptions {
           reason: ComAtprotoModerationDefs.REASONSEXUAL,
           title: _(msg`Unwanted Sexual Content`),
           description: _(msg`Nudity or adult content not labeled as such`),
+        },
+        ...common,
+      ],
+      convoMessage: [
+        {
+          reason: ComAtprotoModerationDefs.REASONSPAM,
+          title: _(msg`Spam`),
+          description: _(msg`Excessive or unwanted messages`),
+        },
+        {
+          reason: ComAtprotoModerationDefs.REASONSEXUAL,
+          title: _(msg`Unwanted Sexual Content`),
+          description: _(msg`Inappropriate messages or explicit links`),
+        },
+        ...common,
+      ],
+      convoAccount: [
+        {
+          reason: ComAtprotoModerationDefs.REASONSPAM,
+          title: _(msg`Spam`),
+          description: _(msg`Excessive or unwanted messages`),
+        },
+        {
+          reason: ComAtprotoModerationDefs.REASONSEXUAL,
+          title: _(msg`Unwanted Sexual Content`),
+          description: _(msg`Inappropriate messages or explicit links`),
         },
         ...common,
       ],

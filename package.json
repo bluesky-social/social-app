@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.81.0",
+  "version": "1.83.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -31,11 +31,10 @@
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx src",
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
-    "e2e:metro": "NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
-    "e2e:build": "NODE_ENV=test detox build -c ios.sim.debug",
-    "e2e:run": "NODE_ENV=test detox test --configuration ios.sim.debug --take-screenshots all",
+    "e2e:metro": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
+    "e2e:run": "maestro test __e2e__",
     "perf:test": "NODE_ENV=test maestro test",
-    "perf:test:run": "NODE_ENV=test maestro test __e2e__/maestro/scroll.yaml",
+    "perf:test:run": "NODE_ENV=test maestro test __e2e__/perf-test.yml",
     "perf:test:measure": "NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand \"yarn perf:test\" --duration 150000 --resultsFilePath .perf/results.json",
     "perf:test:results": "NODE_ENV=test flashlight report .perf/results.json",
     "perf:measure": "NODE_ENV=test flashlight measure",
@@ -50,8 +49,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto-labs/api": "^0.12.8-clipclops.0",
-    "@atproto/api": "^0.12.5",
+    "@atproto/api": "^0.12.10",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -173,7 +171,7 @@
     "react-native-get-random-values": "~1.11.0",
     "react-native-image-crop-picker": "^0.38.1",
     "react-native-ios-context-menu": "^1.15.3",
-    "react-native-keyboard-controller": "^1.11.7",
+    "react-native-keyboard-controller": "^1.12.1",
     "react-native-pager-view": "6.2.3",
     "react-native-picker-select": "^8.1.0",
     "react-native-progress": "bluesky-social/react-native-progress",
@@ -185,6 +183,7 @@
     "react-native-uitextview": "^1.1.6",
     "react-native-url-polyfill": "^1.3.0",
     "react-native-uuid": "^2.0.1",
+    "react-native-view-shot": "^3.8.0",
     "react-native-web": "~0.19.6",
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "13.6.4",
@@ -238,10 +237,8 @@
     "babel-plugin-module-resolver": "^5.0.0",
     "babel-plugin-react-native-web": "^0.18.12",
     "babel-preset-expo": "^10.0.0",
-    "detox": "^20.14.8",
     "eslint": "^8.19.0",
     "eslint-plugin-bsky-internal": "link:./eslint",
-    "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-ft-flow": "^2.0.3",
     "eslint-plugin-lingui": "^0.2.0",
     "eslint-plugin-react": "^7.33.2",
@@ -290,7 +287,7 @@
       "\\.[jt]sx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|@discord|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",
