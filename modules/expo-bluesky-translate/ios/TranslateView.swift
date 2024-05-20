@@ -2,21 +2,16 @@ import SwiftUI
 import Translation
 
 struct TranslateView: View {
-  @ObservedObject var props: TranslateViewProps
+  @ObservedObject var state = TranslateViewState.shared
 
   var body: some View {
     if #available(iOS 17.4, *) {
       VStack {
-        ForEach(props.children?.indices ?? 0..<0, id: \.self) { index in
-          UIViewRepresentableWrapper(view: props.children?[index] ?? UIView())
-            .frame(
-              width: props.children?[index].frame.width,
-              height: props.children?[index].frame.height)
-        }
+        UIViewRepresentableWrapper(view: UIView(frame: .zero))
       }
       .translationPresentation(
-        isPresented: $props.isPresented,
-        text: props.text
+        isPresented: $state.isPresented,
+        text: state.text
       )
     }
   }

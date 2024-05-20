@@ -31,8 +31,8 @@ import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {
-  ExpoBlueskyTranslateView,
   isAvailable as isNativeTranslateAvailable,
+  NativeTranslationModule,
 } from '../../../../modules/expo-bluesky-translate'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -637,14 +637,13 @@ function ExpandedPostDetails({
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
-  const [presented, setPresented] = React.useState(false)
   const onTranslatePress = React.useCallback(() => {
     if (isNativeTranslateAvailable) {
-      setPresented(true)
+      NativeTranslationModule.presentAsync(text)
     } else {
       openLink(translatorUrl)
     }
-  }, [openLink, translatorUrl])
+  }, [openLink, text, translatorUrl])
 
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
@@ -652,17 +651,13 @@ function ExpandedPostDetails({
       {needsTranslation && (
         <>
           <Text style={pal.textLight}> &middot; </Text>
-          <ExpoBlueskyTranslateView
-            text={text}
-            isPresented={presented}
-            onClose={() => setPresented(false)}>
-            <Text
-              style={pal.link}
-              title={_(msg`Translate`)}
-              onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
-            </Text>
-          </ExpoBlueskyTranslateView>
+
+          <Text
+            style={pal.link}
+            title={_(msg`Translate`)}
+            onPress={onTranslatePress}>
+            <Trans>Translate</Trans>
+          </Text>
         </>
       )}
     </View>

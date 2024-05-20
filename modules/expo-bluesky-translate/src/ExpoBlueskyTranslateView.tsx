@@ -1,6 +1,8 @@
-import {ExpoBlueskyTranslateProps} from './ExpoBlueskyTranslate.types'
+export const NativeTranslationModule = {
+  presentAsync: async (_: string) => {},
+}
 
-export function ExpoBlueskyTranslateView(_: ExpoBlueskyTranslateProps) {
+export function NativeTranslationView() {
   return null
 }
 

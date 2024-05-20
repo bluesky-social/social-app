@@ -1,4 +1,5 @@
 export {
-  ExpoBlueskyTranslateView,
   isAvailable,
+  NativeTranslationModule,
+  NativeTranslationView,
 } from './src/ExpoBlueskyTranslateView'
