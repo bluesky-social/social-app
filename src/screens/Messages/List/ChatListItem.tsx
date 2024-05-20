@@ -13,6 +13,7 @@ import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
+import {useHaptics} from 'lib/haptics'
 import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -70,6 +71,7 @@ function ChatListItemReady({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
+  const playHaptic = useHaptics()
 
   const blockInfo = React.useMemo(() => {
     const modui = moderation.ui('profileView')
@@ -134,8 +136,9 @@ function ChatListItemReady({
   )
 
   const onLongPress = useCallback(() => {
+    playHaptic()
     menuControl.open()
-  }, [menuControl])
+  }, [playHaptic, menuControl])
 
   return (
     <View
@@ -162,7 +165,7 @@ function ChatListItemReady({
             : undefined
         }
         onPress={onPress}
-        onLongPress={isNative ? menuControl.open : undefined}
+        onLongPress={isNative ? onLongPress : undefined}
         onAccessibilityAction={onLongPress}
         style={[
           web({

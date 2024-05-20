@@ -17,7 +17,7 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isIOS, isNative} from '#/platform/detection'
-import {useConvoActive} from '#/state/messages/convo'
+import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
 import {ScrollProvider} from 'lib/ScrollContext'
@@ -26,6 +26,7 @@ import {List} from 'view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
+import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -340,18 +341,20 @@ export function MessagesList({
         />
       </ScrollProvider>
       <KeyboardStickyView offset={{closed: -bottomOffset, opened: 0}}>
-        {!blocked ? (
-          <>
-            {convoState.status === ConvoStatus.Disabled ? (
-              <ChatDisabled />
-            ) : (
-              <MessageInput onSendMessage={onSendMessage} />
-            )}
-          </>
-        ) : (
+        {convoState.status === ConvoStatus.Disabled ? (
+          <ChatDisabled />
+        ) : blocked ? (
           footer
+        ) : (
+          <>
+            {isConvoActive(convoState) && convoState.items.length === 0 && (
+              <ChatEmptyPill />
+            )}
+            <MessageInput onSendMessage={onSendMessage} />
+          </>
         )}
       </KeyboardStickyView>
+
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
