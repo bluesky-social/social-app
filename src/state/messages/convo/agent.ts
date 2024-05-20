@@ -793,15 +793,13 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.sendMessage(
-          {
-            convoId: this.convoId,
-            message,
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
-      })
+      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+        {
+          convoId: this.convoId,
+          message,
+        },
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
       const res = response.data
 
       // remove from queue
@@ -883,18 +881,15 @@ export class Convo {
     )
 
     try {
-      // throw new Error('UNCOMMENT TO TEST RETRY')
-      const {data} = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.sendMessageBatch(
-          {
-            items: messageArray.map(({message}) => ({
-              convoId: this.convoId,
-              message,
-            })),
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
-      })
+      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+        {
+          items: messageArray.map(({message}) => ({
+            convoId: this.convoId,
+            message,
+          })),
+        },
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
       const {items} = data
 
       /*
