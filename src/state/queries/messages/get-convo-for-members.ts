@@ -57,7 +57,7 @@ export function useMaybeConvoForUser(did: string) {
         .catch(() => ({success: null}))
 
       if (convo.success) {
-        return convo.data.convo.id
+        return convo.data.convo
       } else {
         return null
       }
