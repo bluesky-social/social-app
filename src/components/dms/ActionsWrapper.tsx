@@ -79,8 +79,11 @@ export function ActionsWrapper({
           isFromSelf ? a.self_end : a.self_start,
           animatedStyle,
         ]}
-        onAccessibilityTap={open}
-        accessible={true}>
+        accessible={true}
+        accessibilityActions={[
+          {name: 'activate', label: 'Open message options'},
+        ]}
+        onAccessibilityAction={open}>
         {children}
         <MessageMenu message={message} control={menuControl} />
       </Animated.View>
