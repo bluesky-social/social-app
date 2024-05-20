@@ -101,7 +101,14 @@ export function MessagesList({
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
 
+  // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
+  const didBackground = React.useRef(false)
+  React.useEffect(() => {
+    if (convoState.status === ConvoStatus.Backgrounded) {
+      didBackground.current = true
+    }
+  }, [convoState.status])
 
   // -- Scroll handling
 
@@ -133,6 +140,7 @@ export function MessagesList({
         // we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
         // that can be pressed to immediately scroll to the end.
         if (
+          didBackground.current &&
           hasScrolled &&
           height - prevContentHeight.current > layoutHeight.value - 50 &&
           convoState.items.length - prevItemCount.current > 1
@@ -166,6 +174,7 @@ export function MessagesList({
 
       prevContentHeight.current = height
       prevItemCount.current = convoState.items.length
+      didBackground.current = false
     },
     [
       hasScrolled,
