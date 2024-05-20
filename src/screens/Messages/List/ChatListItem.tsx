@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
   ChatBskyConvoDefs,
@@ -121,9 +121,16 @@ function ChatListItemReady({
     setShowActions(true)
   }, [])
 
-  const onPress = useCallback(() => {
-    logEvent('chat:open', {logContext: 'ChatsList'})
-  }, [])
+  const onPress = useCallback(
+    (e: GestureResponderEvent) => {
+      if (isDeletedAccount) {
+        e.preventDefault()
+      } else {
+        logEvent('chat:open', {logContext: 'ChatsList'})
+      }
+    },
+    [isDeletedAccount],
+  )
 
   const onLongPress = useCallback(() => {
     menuControl.open()
@@ -153,22 +160,14 @@ function ChatListItemReady({
               ]
             : undefined
         }
+        onPress={onPress}
+        onLongPress={isNative ? menuControl.open : undefined}
         onAccessibilityAction={onLongPress}
-        onPress={
-          isDeletedAccount
-            ? e => {
-                e.preventDefault()
-                return false
-              }
-            : undefined
-        }
         style={[
           web({
             cursor: isDeletedAccount ? 'default' : 'pointer',
           }),
-        ]}
-        onPress={onPress}
-        onLongPress={isNative ? menuControl.open : undefined}>
+        ]}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
