@@ -65,6 +65,7 @@ export function ActionsWrapper({
 
   const gesture = Gesture.Tap()
     .numberOfTaps(2)
+    .hitSlop(HITSLOP_10)
     .onEnd(() => {
       playHaptic()
       open()
