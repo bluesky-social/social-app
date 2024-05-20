@@ -135,8 +135,8 @@ export function MessagesList({
           convoState.items.length - prevItemCount.current > 1
         ) {
           flatListRef.current?.scrollToOffset({
-            offset: height - layoutHeight.value + 50,
-            animated: hasScrolled,
+            offset: prevContentHeight.current - 65,
+            animated: true,
           })
           setShowNewMessagesPill(true)
         } else {
@@ -321,8 +321,7 @@ export function MessagesList({
           footer
         )}
       </KeyboardStickyView>
-      {/*{showNewMessagesPill && <NewMessagesPill />}*/}
-      <NewMessagesPill onPress={scrollToEndOnPress} />
+      {showNewMessagesPill && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
 }
