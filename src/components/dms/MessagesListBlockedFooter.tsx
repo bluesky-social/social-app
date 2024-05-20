@@ -12,7 +12,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {ReportDialog} from '#/components/dms/ReportDialog'
+import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {Text} from '#/components/Typography'
 
 export function MessagesListBlockedFooter({
@@ -120,10 +120,7 @@ export function MessagesListBlockedFooter({
         convoId={convoId}
       />
 
-      <ReportDialog
-        control={reportControl}
-        params={{type: 'convoAccount', did: recipient.did, convoId}}
-      />
+      <ReportConversationPrompt control={reportControl} />
 
       <BlockedByListDialog
         control={blockedByListControl}

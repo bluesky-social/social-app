@@ -120,6 +120,10 @@ function ChatListItemReady({
     setShowActions(true)
   }, [])
 
+  const onLongPress = useCallback(() => {
+    menuControl.open()
+  }, [menuControl])
+
   return (
     <View
       // @ts-expect-error web only
@@ -131,6 +135,16 @@ function ChatListItemReady({
       <Link
         to={`/messages/${convo.id}`}
         label={profile.displayName || profile.handle}
+        accessibilityHint={_(msg`Go to conversation with ${profile.handle}`)}
+        accessibilityActions={
+          isNative
+            ? [
+                {name: 'magicTap', label: _(msg`Open conversation options`)},
+                {name: 'longpress', label: _(msg`Open conversation options`)},
+              ]
+            : undefined
+        }
+        onAccessibilityAction={onLongPress}
         onPress={
           isDeletedAccount
             ? e => {

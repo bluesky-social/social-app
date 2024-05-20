@@ -128,7 +128,7 @@ let ProfileHeaderLabeler = ({
 
   const onPressSubscribe = React.useCallback(
     () =>
-      requireAuth(async () => {
+      requireAuth(async (): Promise<void> => {
         if (!canSubscribe) {
           cantSubscribePrompt.open()
           return
@@ -197,7 +197,6 @@ let ProfileHeaderLabeler = ({
                   <View
                     style={[
                       {
-                        paddingVertical: 12,
                         backgroundColor:
                           isSubscribed || !canSubscribe
                             ? state.hovered || state.pressed
@@ -207,7 +206,8 @@ let ProfileHeaderLabeler = ({
                             ? tokens.color.temp_purple_dark
                             : tokens.color.temp_purple,
                       },
-                      a.px_lg,
+                      a.py_sm,
+                      a.px_md,
                       a.rounded_sm,
                       a.gap_sm,
                     ]}>
