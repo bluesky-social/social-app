@@ -7,6 +7,7 @@ import {
 import Animated, {
   measure,
   runOnJS,
+  useAnimatedProps,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
@@ -45,7 +46,8 @@ export function MessageInput({
   const {height: windowHeight} = useWindowDimensions()
   const {height: keyboardHeight} = useReanimatedKeyboardAnimation()
   const maxHeight = useSharedValue(0)
-  const [isInputScrollable, setIsInputScrollable] = React.useState(false)
+  const isInputScrollable = useSharedValue(false)
+  // const [isInputScrollable, setIsInputScrollable] = React.useState(false)
 
   const inputStyles = useSharedInputStyles()
   const [isFocused, setIsFocused] = React.useState(false)
@@ -85,7 +87,7 @@ export function MessageInput({
         const availableSpace = max - measurement.height
 
         maxHeight.value = max
-        runOnJS(setIsInputScrollable)(availableSpace < 30)
+        isInputScrollable.value = availableSpace < 30
       },
     },
     [windowHeight, topInset],
@@ -93,6 +95,10 @@ export function MessageInput({
 
   const animatedStyle = useAnimatedStyle(() => ({
     maxHeight: maxHeight.value,
+  }))
+
+  const animatedProps = useAnimatedProps(() => ({
+    scrollEnabled: isInputScrollable.value,
   }))
 
   return (
@@ -128,12 +134,12 @@ export function MessageInput({
             animatedStyle,
           ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           ref={inputRef}
           hitSlop={HITSLOP_10}
+          animatedProps={animatedProps}
         />
         <Pressable
           accessibilityRole="button"
