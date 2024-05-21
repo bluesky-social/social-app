@@ -9,6 +9,7 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
 import {useListConvos} from '#/state/queries/messages/list-converations'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
@@ -248,9 +249,10 @@ export function MessagesScreen({navigation, route}: Props) {
             error={cleanError(error)}
             onRetry={fetchNextPage}
             style={{borderColor: 'transparent'}}
+            hasNextPage={hasNextPage}
           />
         }
-        onEndReachedThreshold={3}
+        onEndReachedThreshold={isNative ? 1.5 : 0}
         initialNumToRender={initialNumToRender}
         windowSize={11}
         // @ts-ignore our .web version only -sfn
