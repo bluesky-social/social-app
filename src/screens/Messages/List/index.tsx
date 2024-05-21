@@ -248,6 +248,7 @@ export function MessagesScreen({navigation, route}: Props) {
             error={cleanError(error)}
             onRetry={fetchNextPage}
             style={{borderColor: 'transparent'}}
+            hasNextPage={hasNextPage}
           />
         }
         onEndReachedThreshold={3}
