@@ -58,6 +58,7 @@ function DialogInner({
       Toast.show(_(msg`Failed to update settings`))
     },
   })
+  const [initialized, setInitialzed] = React.useState(false)
 
   const onSelectItem = useCallback(
     (keys: string[]) => {
@@ -69,10 +70,11 @@ function DialogInner({
   )
 
   useEffect(() => {
-    if (!chatDeclation) {
+    if (!chatDeclation && !initialized) {
       updateDeclaration('following')
+      setInitialzed(true)
     }
-  }, [chatDeclation, updateDeclaration])
+  }, [chatDeclation, updateDeclaration, initialized])
 
   return (
     <Dialog.ScrollableInner
