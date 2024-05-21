@@ -47,7 +47,6 @@ export function MessageInput({
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       // Don't submit the form when the Japanese or any other IME is composing
       if (isComposing.current) return
-
       if (e.key === 'Enter') {
         if (e.shiftKey) return
         e.preventDefault()
