@@ -298,8 +298,8 @@ msgstr "고급"
 msgid "All the feeds you've saved, right in one place."
 msgstr "저장한 모든 피드를 한 곳에서 확인하세요."
 
-#: src/screens/Messages/Settings.tsx:52
-#: src/screens/Messages/Settings.tsx:55
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr "메시지를 허용할 대상"
 
@@ -1375,6 +1375,8 @@ msgstr "햅틱 피드백 끄기"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Messages/Settings.tsx:124
+#: src/screens/Messages/Settings.tsx:127
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "비활성화됨"
@@ -1658,6 +1660,8 @@ msgstr "내가 팔로우하는 사람들 간의 답글만 표시합니다."
 msgid "Enable this source only"
 msgstr "이 소스에서만 사용"
 
+#: src/screens/Messages/Settings.tsx:115
+#: src/screens/Messages/Settings.tsx:118
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "활성화됨"
@@ -1743,8 +1747,8 @@ msgstr ""
 
 #: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
-#: src/screens/Messages/Settings.tsx:65
-#: src/screens/Messages/Settings.tsx:68
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr "모두"
 
@@ -3120,8 +3124,8 @@ msgstr "아직 알림이 없습니다."
 
 #: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr "없음"
 
@@ -3200,6 +3204,14 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:108
+msgid "Notification sounds"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:105
+msgid "Notification Sounds"
 msgstr ""
 
 #: src/Navigation.tsx:515
@@ -3567,8 +3579,8 @@ msgstr "{0} 재생"
 
 #: src/screens/Messages/Settings.tsx:97
 #: src/screens/Messages/Settings.tsx:104
-msgid "Play notification sounds"
-msgstr "알림 소리 재생"
+#~ msgid "Play notification sounds"
+#~ msgstr "알림 소리 재생"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -4550,7 +4562,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "이미지 비율을 가로로 길게 설정합니다"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:49
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -5687,8 +5699,8 @@ msgstr "<0/> 님이 팔로우한 사용자"
 
 #: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
 msgstr "내가 팔로우하는 사용자"
 

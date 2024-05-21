@@ -298,8 +298,8 @@ msgstr "高度な設定"
 msgid "All the feeds you've saved, right in one place."
 msgstr "保存したすべてのフィードを１箇所にまとめます。"
 
-#: src/screens/Messages/Settings.tsx:52
-#: src/screens/Messages/Settings.tsx:55
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr "誰からのメッセージを許可するか："
 
@@ -1371,6 +1371,8 @@ msgstr "触覚フィードバックを無効化"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Messages/Settings.tsx:124
+#: src/screens/Messages/Settings.tsx:127
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "無効"
@@ -1654,6 +1656,8 @@ msgstr "この設定を有効にすると、自分がフォローしているユ
 msgid "Enable this source only"
 msgstr "このソースのみ有効にする"
 
+#: src/screens/Messages/Settings.tsx:115
+#: src/screens/Messages/Settings.tsx:118
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "有効"
@@ -1739,8 +1743,8 @@ msgstr ""
 
 #: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
-#: src/screens/Messages/Settings.tsx:65
-#: src/screens/Messages/Settings.tsx:68
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr "全員"
 
@@ -3116,8 +3120,8 @@ msgstr "お知らせはありません！"
 
 #: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr "誰からも受け取らない"
 
@@ -3192,6 +3196,14 @@ msgstr "注記：Blueskyはオープンでパブリックなネットワーク�
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:108
+msgid "Notification sounds"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:105
+msgid "Notification Sounds"
 msgstr ""
 
 #: src/Navigation.tsx:515
@@ -3559,8 +3571,8 @@ msgstr "{0}を再生"
 
 #: src/screens/Messages/Settings.tsx:97
 #: src/screens/Messages/Settings.tsx:104
-msgid "Play notification sounds"
-msgstr "通知音を再生"
+#~ msgid "Play notification sounds"
+#~ msgstr "通知音を再生"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -4538,7 +4550,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "画像のアスペクト比をワイドに設定"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:49
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -5675,8 +5687,8 @@ msgstr "<0/>にフォローされているユーザー"
 
 #: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
 msgstr "フォローしているユーザー"
 
