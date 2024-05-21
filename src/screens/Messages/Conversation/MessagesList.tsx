@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, LayoutChangeEvent, View} from 'react-native'
 import {
   KeyboardStickyView,
   useKeyboardHandler,
@@ -197,7 +197,6 @@ export function MessagesList({
   const onScroll = React.useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
-      layoutHeight.value = e.layoutMeasurement.height
       const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height
 
       // Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
@@ -216,7 +215,7 @@ export function MessagesList({
         })
       }
     },
-    [layoutHeight, newMessagesPill, isAtBottom, isAtTop],
+    [newMessagesPill, isAtBottom, isAtTop],
   )
 
   // -- Keyboard animation handling
@@ -292,14 +291,24 @@ export function MessagesList({
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
-  const onListLayout = React.useCallback(() => {
-    if (isWeb || !keyboardIsOpening.value) {
-      flatListRef.current?.scrollToEnd({
-        animated: !layoutScrollWithoutAnimation.value,
-      })
-      layoutScrollWithoutAnimation.value = false
-    }
-  }, [flatListRef, keyboardIsOpening.value, layoutScrollWithoutAnimation])
+  const onListLayout = React.useCallback(
+    (e: LayoutChangeEvent) => {
+      layoutHeight.value = e.nativeEvent.layout.height
+
+      if (isWeb || !keyboardIsOpening.value) {
+        flatListRef.current?.scrollToEnd({
+          animated: !layoutScrollWithoutAnimation.value,
+        })
+        layoutScrollWithoutAnimation.value = false
+      }
+    },
+    [
+      flatListRef,
+      keyboardIsOpening.value,
+      layoutScrollWithoutAnimation,
+      layoutHeight,
+    ],
+  )
 
   const scrollToEndOnPress = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({
@@ -347,9 +356,9 @@ export function MessagesList({
           footer
         ) : (
           <>
-            {isConvoActive(convoState) && convoState.items.length === 0 && (
-              <ChatEmptyPill />
-            )}
+            {isConvoActive(convoState) &&
+              !convoState.isFetchingHistory &&
+              convoState.items.length === 0 && <ChatEmptyPill />}
             <MessageInput onSendMessage={onSendMessage} />
           </>
         )}
