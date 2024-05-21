@@ -3565,11 +3565,6 @@ msgstr "재생"
 msgid "Play {0}"
 msgstr "{0} 재생"
 
-#: src/screens/Messages/Settings.tsx:97
-#: src/screens/Messages/Settings.tsx:104
-#~ msgid "Play notification sounds"
-#~ msgstr "알림 소리 재생"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
