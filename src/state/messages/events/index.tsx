@@ -1,7 +1,6 @@
 import React from 'react'
 import {AppState} from 'react-native'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {useAgent} from '#/state/session'
@@ -19,7 +18,7 @@ export function useMessagesEventBus() {
   return ctx
 }
 
-export function Temp_MessagesEventBusProvider({
+export function MessagesEventBusProvider({
   children,
 }: {
   children: React.ReactNode
@@ -60,18 +59,4 @@ export function Temp_MessagesEventBusProvider({
       {children}
     </MessagesEventBusContext.Provider>
   )
-}
-
-export function MessagesEventBusProvider({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const gate = useGate()
-  if (gate('dms')) {
-    return (
-      <Temp_MessagesEventBusProvider>{children}</Temp_MessagesEventBusProvider>
-    )
-  }
-  return children
 }

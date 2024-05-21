@@ -7,7 +7,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useListConvos} from '#/state/queries/messages/list-converations'
@@ -29,7 +28,6 @@ import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {ClipClopGate} from '../gate'
 import {ChatListItem} from './ChatListItem'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
@@ -128,9 +126,6 @@ export function MessagesScreen({navigation, route}: Props) {
   const onNavigateToSettings = useCallback(() => {
     navigation.navigate('MessagesSettings')
   }, [navigation])
-
-  const gate = useGate()
-  if (!gate('dms')) return <ClipClopGate />
 
   if (conversations.length < 1) {
     return (
