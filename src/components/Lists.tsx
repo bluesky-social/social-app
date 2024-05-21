@@ -44,15 +44,13 @@ export function ListFooter({
         flatten(style),
       ]}>
       {isFetchingNextPage ? (
-        <Loader size="xl" /> ? (
-          error
-        ) : <ListFooterMaybeError error={error} onRetry={onRetry} /> ? (
-          !hasNextPage && showEndMessage
-        ) : (
-          <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
-            {endMessageText ?? <Trans>You have reached the end</Trans>}
-          </Text>
-        )
+        <Loader size="xl" />
+      ) : error ? (
+        <ListFooterMaybeError error={error} onRetry={onRetry} />
+      ) : !hasNextPage && showEndMessage ? (
+        <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+          {endMessageText ?? <Trans>You have reached the end</Trans>}
+        </Text>
       ) : null}
     </View>
   )
