@@ -896,7 +896,7 @@ msgstr "Fermer l’image"
 msgid "Close image viewer"
 msgstr "Fermer la visionneuse d’images"
 
-#: src/components/dms/MessagesNUX.tsx:159
+#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr "Fermer la modale"
 
@@ -1352,7 +1352,7 @@ msgstr "Vous vouliez dire quelque chose ?"
 msgid "Dim"
 msgstr "Atténué"
 
-#: src/components/dms/MessagesNUX.tsx:85
+#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr "Les messages privés sont arrivés !"
 
@@ -1667,8 +1667,8 @@ msgid "End of feed"
 msgstr "Fin du fil d’actu"
 
 #: src/components/Lists.tsx:52
-msgid "End of list"
-msgstr ""
+#~ msgid "End of list"
+#~ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1741,8 +1741,8 @@ msgstr "Tout le monde"
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
+#: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:74
 #: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
@@ -1861,7 +1861,7 @@ msgstr "Échec de l’envoi"
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:58
+#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
 msgstr "Échec de la mise à jour des paramètres"
@@ -2087,7 +2087,7 @@ msgstr "Tiré de <0/>"
 msgid "Gallery"
 msgstr "Galerie"
 
-#: src/components/dms/MessagesNUX.tsx:165
+#: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "C’est parti"
 
@@ -2405,7 +2405,7 @@ msgstr "Entrez votre hébergeur préféré"
 msgid "Input your user handle"
 msgstr "Entrez votre pseudo"
 
-#: src/components/dms/MessagesNUX.tsx:79
+#: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr "Et voici les Messages Privés"
 
@@ -2756,14 +2756,14 @@ msgstr "Champ d’écriture du message"
 msgid "Message is too long"
 msgstr "Le message est trop long"
 
-#: src/screens/Messages/List/index.tsx:299
+#: src/screens/Messages/List/index.tsx:301
 msgid "Message settings"
 msgstr "Paramètres des messages"
 
 #: src/Navigation.tsx:520
 #: src/screens/Messages/List/index.tsx:144
 #: src/screens/Messages/List/index.tsx:226
-#: src/screens/Messages/List/index.tsx:295
+#: src/screens/Messages/List/index.tsx:297
 msgid "Messages"
 msgstr "Messages"
 
@@ -3007,8 +3007,8 @@ msgid "New"
 msgstr "Nouveau"
 
 #: src/components/dms/NewChatDialog/index.tsx:98
-#: src/screens/Messages/List/index.tsx:309
-#: src/screens/Messages/List/index.tsx:316
+#: src/screens/Messages/List/index.tsx:311
+#: src/screens/Messages/List/index.tsx:318
 msgid "New chat"
 msgstr "Nouvelle discussion"
 
@@ -3114,12 +3114,16 @@ msgstr "Pas plus de 253 caractères"
 msgid "No messages yet"
 msgstr "Pas encore de messages"
 
+#: src/screens/Messages/List/index.tsx:254
+msgid "No more conversations to show"
+msgstr ""
+
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "Pas encore de notifications !"
 
-#: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
+#: src/components/dms/MessagesNUX.tsx:152
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "No one"
@@ -3134,7 +3138,7 @@ msgstr "Aucun résultat"
 msgid "No results"
 msgstr "Aucun résultat"
 
-#: src/components/Lists.tsx:211
+#: src/components/Lists.tsx:207
 msgid "No results found"
 msgstr "Aucun résultat trouvé"
 
@@ -3274,11 +3278,11 @@ msgstr "Seul {0} peut répondre."
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "Ne contient que des lettres, des chiffres et des traits d’union"
 
-#: src/components/Lists.tsx:92
+#: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
 msgstr "Oups, quelque chose n’a pas marché !"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:191
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3484,7 +3488,7 @@ msgstr "Autre…"
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "Notre modération a examiné les signalements qu’elle a reçu et a décidé de désactiver vos accès aux discussion sur Bluesky."
 
-#: src/components/Lists.tsx:212
+#: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "Page introuvable"
@@ -3733,7 +3737,7 @@ msgid "Press to change hosting provider"
 msgstr "Appuyer pour changer d’hébergeur"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:97
+#: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
@@ -3764,7 +3768,7 @@ msgstr "Vie privée"
 msgid "Privacy Policy"
 msgstr "Charte de confidentialité"
 
-#: src/components/dms/MessagesNUX.tsx:88
+#: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr "Discuter en privé avec d’autres comptes."
 
@@ -4144,7 +4148,7 @@ msgstr "Réessaye la dernière action, qui a échoué"
 
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:108
+#: src/components/Lists.tsx:104
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
@@ -4864,7 +4868,7 @@ msgstr "Démarrer une nouvelle discussion"
 msgid "Start chat with {displayName}"
 msgstr "Démarrer une discussion avec {displayName}"
 
-#: src/components/dms/MessagesNUX.tsx:158
+#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr "Démarrer les discussions"
 
@@ -5685,8 +5689,8 @@ msgstr "Comptes"
 msgid "users followed by <0/>"
 msgstr "comptes suivis par <0/>"
 
-#: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
+#: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
@@ -5871,7 +5875,7 @@ msgstr "Nous sommes désolés, mais nous n’avons pas pu charger vos mots masqu
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Nous sommes désolés, mais votre recherche a été annulée. Veuillez réessayer dans quelques minutes."
 
-#: src/components/Lists.tsx:216
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Nous sommes désolés ! La page que vous recherchez est introuvable."
@@ -5898,8 +5902,8 @@ msgstr "Quelles sont les langues utilisées dans ce post ?"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Quelles langues aimeriez-vous voir apparaître dans vos fils d’actu algorithmiques ?"
 
-#: src/components/dms/MessagesNUX.tsx:107
-#: src/components/dms/MessagesNUX.tsx:121
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr "Qui peut discuter avec vous ?"
 
@@ -5993,7 +5997,7 @@ msgstr "Vous pouvez aussi découvrir de nouveaux fils d’actu personnalisés à
 msgid "You can change these settings later."
 msgstr "Vous pouvez modifier ces paramètres ultérieurement."
 
-#: src/components/dms/MessagesNUX.tsx:116
+#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "Vous pouvez changer cela à tout moment."
 
@@ -6084,6 +6088,10 @@ msgstr "Vous n’avez encore créé aucun mot de passe pour l’appli. Vous pouv
 #: src/view/screens/ModerationMutedAccounts.tsx:133
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "Vous n’avez encore masqué aucun compte. Pour masquer un compte, allez sur son profil et sélectionnez « Masquer le compte » dans le menu de son compte."
+
+#: src/components/Lists.tsx:52
+msgid "You have reached the end"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"

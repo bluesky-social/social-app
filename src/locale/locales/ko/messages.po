@@ -896,7 +896,7 @@ msgstr "이미지 닫기"
 msgid "Close image viewer"
 msgstr "이미지 뷰어 닫기"
 
-#: src/components/dms/MessagesNUX.tsx:159
+#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr "대화 상자 닫기"
 
@@ -1356,7 +1356,7 @@ msgstr "하고 싶은 말이 있나요?"
 msgid "Dim"
 msgstr "어둑함"
 
-#: src/components/dms/MessagesNUX.tsx:85
+#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr "다이렉트 메시지가 생겼습니다!"
 
@@ -1671,8 +1671,8 @@ msgid "End of feed"
 msgstr "피드 끝"
 
 #: src/components/Lists.tsx:52
-msgid "End of list"
-msgstr ""
+#~ msgid "End of list"
+#~ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1745,8 +1745,8 @@ msgstr "모두"
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
+#: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:74
 #: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
@@ -1865,7 +1865,7 @@ msgstr "전송 실패"
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:58
+#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
 msgstr "설정을 업데이트하지 못했습니다"
@@ -2091,7 +2091,7 @@ msgstr "<0/>에서"
 msgid "Gallery"
 msgstr "갤러리"
 
-#: src/components/dms/MessagesNUX.tsx:165
+#: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "시작하기"
 
@@ -2409,7 +2409,7 @@ msgstr "선호하는 호스팅 제공자를 입력합니다"
 msgid "Input your user handle"
 msgstr "사용자 핸들을 입력합니다"
 
-#: src/components/dms/MessagesNUX.tsx:79
+#: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr "다이렉트 메시지 소개"
 
@@ -2760,14 +2760,14 @@ msgstr "메시지 입력 필드"
 msgid "Message is too long"
 msgstr "메시지가 너무 깁니다"
 
-#: src/screens/Messages/List/index.tsx:299
+#: src/screens/Messages/List/index.tsx:301
 msgid "Message settings"
 msgstr "메시지 설정"
 
 #: src/Navigation.tsx:520
 #: src/screens/Messages/List/index.tsx:144
 #: src/screens/Messages/List/index.tsx:226
-#: src/screens/Messages/List/index.tsx:295
+#: src/screens/Messages/List/index.tsx:297
 msgid "Messages"
 msgstr "메시지"
 
@@ -3011,8 +3011,8 @@ msgid "New"
 msgstr "새로 만들기"
 
 #: src/components/dms/NewChatDialog/index.tsx:98
-#: src/screens/Messages/List/index.tsx:309
-#: src/screens/Messages/List/index.tsx:316
+#: src/screens/Messages/List/index.tsx:311
+#: src/screens/Messages/List/index.tsx:318
 msgid "New chat"
 msgstr "새 대화"
 
@@ -3118,12 +3118,16 @@ msgstr "253자를 초과하지 않음"
 msgid "No messages yet"
 msgstr "아직 메시지가 없습니다"
 
+#: src/screens/Messages/List/index.tsx:254
+msgid "No more conversations to show"
+msgstr ""
+
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "아직 알림이 없습니다."
 
-#: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
+#: src/components/dms/MessagesNUX.tsx:152
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "No one"
@@ -3138,7 +3142,7 @@ msgstr "결과 없음"
 msgid "No results"
 msgstr "결과 없음"
 
-#: src/components/Lists.tsx:211
+#: src/components/Lists.tsx:207
 msgid "No results found"
 msgstr "결과를 찾을 수 없음"
 
@@ -3282,11 +3286,11 @@ msgstr "{0}만 답글을 달 수 있습니다."
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "문자, 숫자, 하이픈만 포함"
 
-#: src/components/Lists.tsx:92
+#: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
 msgstr "이런, 뭔가 잘못되었습니다!"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:191
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3492,7 +3496,7 @@ msgstr "기타…"
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "Bluesky 운영진이 신고를 검토한 결과, 귀하의 Bluesky 대화 접속을 비활성화하기로 결정했습니다."
 
-#: src/components/Lists.tsx:212
+#: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "페이지를 찾을 수 없음"
@@ -3741,7 +3745,7 @@ msgid "Press to change hosting provider"
 msgstr "호스팅 제공자를 변경하려면 누릅니다"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:97
+#: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
@@ -3772,7 +3776,7 @@ msgstr "개인정보"
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
-#: src/components/dms/MessagesNUX.tsx:88
+#: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr "다른 사용자와 비공개로 채팅하세요."
 
@@ -4152,7 +4156,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:108
+#: src/components/Lists.tsx:104
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
@@ -4876,7 +4880,7 @@ msgstr "새 대화 시작하기"
 msgid "Start chat with {displayName}"
 msgstr "{displayName} 님과 대화 시작하기"
 
-#: src/components/dms/MessagesNUX.tsx:158
+#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr "대화 시작하기"
 
@@ -5697,8 +5701,8 @@ msgstr "사용자"
 msgid "users followed by <0/>"
 msgstr "<0/> 님이 팔로우한 사용자"
 
-#: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
+#: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
@@ -5883,7 +5887,7 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/components/Lists.tsx:216
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "죄송합니다. 페이지를 찾을 수 없습니다."
@@ -5910,8 +5914,8 @@ msgstr "이 게시물에 어떤 언어가 사용되나요?"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "알고리즘 피드에 어떤 언어를 표시하시겠습니까?"
 
-#: src/components/dms/MessagesNUX.tsx:107
-#: src/components/dms/MessagesNUX.tsx:121
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr "누구의 메시지를 허용할까요?"
 
@@ -6005,7 +6009,7 @@ msgstr "팔로우할 새로운 맞춤 피드를 찾을 수도 있습니다."
 msgid "You can change these settings later."
 msgstr "이 설정은 나중에 변경할 수 있습니다."
 
-#: src/components/dms/MessagesNUX.tsx:116
+#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "언제든지 변경할 수 있습니다."
 
@@ -6096,6 +6100,10 @@ msgstr "아직 앱 비밀번호를 생성하지 않았습니다. 아래 버튼�
 #: src/view/screens/ModerationMutedAccounts.tsx:133
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 뮤트\"를 선택하세요."
+
+#: src/components/Lists.tsx:52
+msgid "You have reached the end"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"

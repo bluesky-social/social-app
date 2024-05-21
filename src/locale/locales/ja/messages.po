@@ -896,7 +896,7 @@ msgstr "画像を閉じる"
 msgid "Close image viewer"
 msgstr "画像ビューアを閉じる"
 
-#: src/components/dms/MessagesNUX.tsx:159
+#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr "モーダルを閉じる"
 
@@ -1352,7 +1352,7 @@ msgstr "なにか言いたいことはあった？"
 msgid "Dim"
 msgstr "グレー"
 
-#: src/components/dms/MessagesNUX.tsx:85
+#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr "ダイレクトメッセージはこちら！"
 
@@ -1667,8 +1667,8 @@ msgid "End of feed"
 msgstr "フィードの終わり"
 
 #: src/components/Lists.tsx:52
-msgid "End of list"
-msgstr ""
+#~ msgid "End of list"
+#~ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1741,8 +1741,8 @@ msgstr "全員"
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
+#: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:74
 #: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
@@ -1861,7 +1861,7 @@ msgstr "送信に失敗"
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:58
+#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
 msgstr "設定の更新に失敗しました"
@@ -2087,7 +2087,7 @@ msgstr "<0/>から"
 msgid "Gallery"
 msgstr "ギャラリー"
 
-#: src/components/dms/MessagesNUX.tsx:165
+#: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "始める"
 
@@ -2405,7 +2405,7 @@ msgstr "ご希望のホスティングプロバイダーを入力"
 msgid "Input your user handle"
 msgstr "あなたのユーザーハンドルを入力"
 
-#: src/components/dms/MessagesNUX.tsx:79
+#: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr "ダイレクトメッセージの紹介"
 
@@ -2756,14 +2756,14 @@ msgstr "メッセージを入力するフィールド"
 msgid "Message is too long"
 msgstr "メッセージが長すぎます"
 
-#: src/screens/Messages/List/index.tsx:299
+#: src/screens/Messages/List/index.tsx:301
 msgid "Message settings"
 msgstr "メッセージの設定"
 
 #: src/Navigation.tsx:520
 #: src/screens/Messages/List/index.tsx:144
 #: src/screens/Messages/List/index.tsx:226
-#: src/screens/Messages/List/index.tsx:295
+#: src/screens/Messages/List/index.tsx:297
 msgid "Messages"
 msgstr "メッセージ"
 
@@ -3007,8 +3007,8 @@ msgid "New"
 msgstr "新規"
 
 #: src/components/dms/NewChatDialog/index.tsx:98
-#: src/screens/Messages/List/index.tsx:309
-#: src/screens/Messages/List/index.tsx:316
+#: src/screens/Messages/List/index.tsx:311
+#: src/screens/Messages/List/index.tsx:318
 msgid "New chat"
 msgstr "新しいチャット"
 
@@ -3114,12 +3114,16 @@ msgstr "253文字まで"
 msgid "No messages yet"
 msgstr "メッセージはありません"
 
+#: src/screens/Messages/List/index.tsx:254
+msgid "No more conversations to show"
+msgstr ""
+
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "お知らせはありません！"
 
-#: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
+#: src/components/dms/MessagesNUX.tsx:152
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "No one"
@@ -3134,7 +3138,7 @@ msgstr "結果はありません"
 msgid "No results"
 msgstr "結果はありません"
 
-#: src/components/Lists.tsx:211
+#: src/components/Lists.tsx:207
 msgid "No results found"
 msgstr "結果は見つかりません"
 
@@ -3274,11 +3278,11 @@ msgstr "{0}のみ返信可能"
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "英数字とハイフンのみ"
 
-#: src/components/Lists.tsx:92
+#: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
 msgstr "おっと、なにかが間違っているようです！"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:191
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3484,7 +3488,7 @@ msgstr "その他..."
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "モデレーターが報告をレビューし、Blueskyであなたがチャットにアクセスできないようにしました。"
 
-#: src/components/Lists.tsx:212
+#: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "ページが見つかりません"
@@ -3733,7 +3737,7 @@ msgid "Press to change hosting provider"
 msgstr "ホスティングプロバイダーを変える"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:97
+#: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
@@ -3764,7 +3768,7 @@ msgstr "プライバシー"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
-#: src/components/dms/MessagesNUX.tsx:88
+#: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr "他のユーザーとプライベートにチャットします。"
 
@@ -4144,7 +4148,7 @@ msgstr "エラーになった最後のアクションをやり直す"
 
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:108
+#: src/components/Lists.tsx:104
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
@@ -4864,7 +4868,7 @@ msgstr "新しいチャットを開始"
 msgid "Start chat with {displayName}"
 msgstr "{displayName}とのチャットを開始"
 
-#: src/components/dms/MessagesNUX.tsx:158
+#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr "チャットを開始"
 
@@ -5685,8 +5689,8 @@ msgstr "ユーザー"
 msgid "users followed by <0/>"
 msgstr "<0/>にフォローされているユーザー"
 
-#: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
+#: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
@@ -5871,7 +5875,7 @@ msgstr "大変申し訳ありませんが、現在ミュートされたワード
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
 
-#: src/components/Lists.tsx:216
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "大変申し訳ありません！お探しのページは見つかりません。"
@@ -5898,8 +5902,8 @@ msgstr "この投稿ではどの言語が使われていますか？"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "アルゴリズムによるフィードにはどの言語を使用しますか？"
 
-#: src/components/dms/MessagesNUX.tsx:107
-#: src/components/dms/MessagesNUX.tsx:121
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr "誰があなたへメッセージを送れるか？"
 
@@ -5993,7 +5997,7 @@ msgstr "また、あなたはフォローすべき新しいカスタムフィー
 msgid "You can change these settings later."
 msgstr "これらの設定はあとで変更できます。"
 
-#: src/components/dms/MessagesNUX.tsx:116
+#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "これはいつでも変更できます。"
 
@@ -6084,6 +6088,10 @@ msgstr "アプリパスワードはまだ作成されていません。下のボ
 #: src/view/screens/ModerationMutedAccounts.tsx:133
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "ミュートしているアカウントはまだありません。アカウントをミュートするには、プロフィールに移動し、アカウントメニューから「アカウントをミュート」を選択します。"
+
+#: src/components/Lists.tsx:52
+msgid "You have reached the end"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"

@@ -1018,7 +1018,7 @@ msgstr "Tutup gambar"
 msgid "Close image viewer"
 msgstr "Tutup penampil gambar"
 
-#: src/components/dms/MessagesNUX.tsx:159
+#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr ""
 
@@ -1494,7 +1494,7 @@ msgstr "Apakah Anda ingin mengatakan sesuatu?"
 msgid "Dim"
 msgstr "Redup"
 
-#: src/components/dms/MessagesNUX.tsx:85
+#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr ""
 
@@ -1817,8 +1817,8 @@ msgid "End of feed"
 msgstr "Akhir feed"
 
 #: src/components/Lists.tsx:52
-msgid "End of list"
-msgstr ""
+#~ msgid "End of list"
+#~ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1891,8 +1891,8 @@ msgstr "Semua orang"
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
+#: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:74
 #: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
@@ -2024,7 +2024,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:58
+#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
 msgstr ""
@@ -2270,7 +2270,7 @@ msgstr "Dari <0/>"
 msgid "Gallery"
 msgstr "Galeri"
 
-#: src/components/dms/MessagesNUX.tsx:165
+#: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr ""
 
@@ -2593,7 +2593,7 @@ msgstr "Masukkan penyedia hosting pilihan Anda"
 msgid "Input your user handle"
 msgstr "Masukkan handle pengguna Anda"
 
-#: src/components/dms/MessagesNUX.tsx:79
+#: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr ""
 
@@ -2974,14 +2974,14 @@ msgstr ""
 msgid "Message is too long"
 msgstr ""
 
-#: src/screens/Messages/List/index.tsx:299
+#: src/screens/Messages/List/index.tsx:301
 msgid "Message settings"
 msgstr "Pengaturan pesan"
 
 #: src/Navigation.tsx:520
 #: src/screens/Messages/List/index.tsx:144
 #: src/screens/Messages/List/index.tsx:226
-#: src/screens/Messages/List/index.tsx:295
+#: src/screens/Messages/List/index.tsx:297
 msgid "Messages"
 msgstr "Pesan"
 
@@ -3239,8 +3239,8 @@ msgid "New"
 msgstr "Baru"
 
 #: src/components/dms/NewChatDialog/index.tsx:98
-#: src/screens/Messages/List/index.tsx:309
-#: src/screens/Messages/List/index.tsx:316
+#: src/screens/Messages/List/index.tsx:311
+#: src/screens/Messages/List/index.tsx:318
 msgid "New chat"
 msgstr ""
 
@@ -3347,12 +3347,16 @@ msgstr "Tidak lebih dari 253 karakter"
 msgid "No messages yet"
 msgstr ""
 
+#: src/screens/Messages/List/index.tsx:254
+msgid "No more conversations to show"
+msgstr ""
+
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "Belum ada notifikasi!"
 
-#: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
+#: src/components/dms/MessagesNUX.tsx:152
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "No one"
@@ -3367,7 +3371,7 @@ msgstr "Tidak ada hasil"
 msgid "No results"
 msgstr ""
 
-#: src/components/Lists.tsx:211
+#: src/components/Lists.tsx:207
 msgid "No results found"
 msgstr "Tidak ada hasil yang ditemukan"
 
@@ -3519,11 +3523,11 @@ msgstr "Hanya {0} dapat membalas."
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "Hanya berisi huruf, angka, dan tanda hubung"
 
-#: src/components/Lists.tsx:92
+#: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
 msgstr "Oops, sepertinya ada yang salah!"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:191
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3733,7 +3737,7 @@ msgstr "Lainnya..."
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr ""
 
-#: src/components/Lists.tsx:212
+#: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "Halaman tidak ditemukan"
@@ -3982,7 +3986,7 @@ msgid "Press to change hosting provider"
 msgstr "Tekan untuk mengganti penyedia hosting"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:97
+#: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
@@ -4018,7 +4022,7 @@ msgstr "Privasi"
 msgid "Privacy Policy"
 msgstr "Kebijakan Privasi"
 
-#: src/components/dms/MessagesNUX.tsx:88
+#: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr ""
 
@@ -4420,7 +4424,7 @@ msgstr "Coba kembali tindakan terakhir, yang gagal"
 
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:108
+#: src/components/Lists.tsx:104
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
@@ -5168,7 +5172,7 @@ msgstr ""
 msgid "Start chat with {displayName}"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:158
+#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr ""
 
@@ -6033,8 +6037,8 @@ msgstr "Pengguna"
 msgid "users followed by <0/>"
 msgstr "pengguna yang diikuti <0/>"
 
-#: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
+#: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
@@ -6227,7 +6231,7 @@ msgstr "Mohon maaf, untuk saat ini kami tidak dapat memuat kata yang Anda dibisu
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Maaf, pencarian Anda tidak dapat dilakukan. Mohon coba lagi dalam beberapa menit."
 
-#: src/components/Lists.tsx:216
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Maaf! Kami tidak dapat menemukan halaman yang Anda cari."
@@ -6258,8 +6262,8 @@ msgstr "Bahasa apa yang digunakan di postingan ini?"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Bahasa apa yang ingin Anda lihat di feed Anda?"
 
-#: src/components/dms/MessagesNUX.tsx:107
-#: src/components/dms/MessagesNUX.tsx:121
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr ""
 
@@ -6349,7 +6353,7 @@ msgstr "Anda juga dapat menemukan Feed Khusus baru untuk diikuti."
 msgid "You can change these settings later."
 msgstr "Anda dapat mengubah pengaturan ini nanti."
 
-#: src/components/dms/MessagesNUX.tsx:116
+#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr ""
 
@@ -6444,6 +6448,10 @@ msgstr "Anda belum membuat kata sandi aplikasi. Anda dapat membuatnya dengan men
 #: src/view/screens/ModerationMutedAccounts.tsx:133
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "Anda belum membisukan akun apa pun. Untuk membisukan akun, buka profilnya dan pilih \"Bisukan akun\" dari menu di akunnya."
+
+#: src/components/Lists.tsx:52
+msgid "You have reached the end"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
