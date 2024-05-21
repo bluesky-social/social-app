@@ -1,8 +1,7 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto-labs/api'
+import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
 
 export type MessagesEventBusParams = {
   agent: BskyAgent
-  __tempFromUserDid: string
 }
 
 export enum MessagesEventBusStatus {
@@ -55,18 +54,15 @@ export type MessagesEventBusDispatch =
       event: MessagesEventBusDispatchEvent.UpdatePoll
     }
 
-export type TrailHandler = (
-  events: ChatBskyConvoGetLog.OutputSchema['logs'],
-) => void
-
-export type RequestPollIntervalHandler = (interval: number) => () => void
-export type OnConnectHandler = (handler: () => void) => () => void
-export type OnDisconnectHandler = (
-  handler: (error?: MessagesEventBusError) => void,
-) => () => void
-
-export type MessagesEventBusEvents = {
-  events: [ChatBskyConvoGetLog.OutputSchema['logs']]
-  connect: undefined
-  error: [MessagesEventBusError] | undefined
-}
+export type MessagesEventBusEvent =
+  | {
+      type: 'connect'
+    }
+  | {
+      type: 'error'
+      error: MessagesEventBusError
+    }
+  | {
+      type: 'logs'
+      logs: ChatBskyConvoGetLog.OutputSchema['logs']
+    }

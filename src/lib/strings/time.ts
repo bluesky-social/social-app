@@ -2,8 +2,8 @@ const NOW = 5
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
-const MONTH = DAY * 28
-const YEAR = DAY * 365
+const MONTH_30 = DAY * 30
+const MONTH = DAY * 30.41675 // This results in 365.001 days in a year, which is close enough for nearly all cases
 export function ago(date: number | string | Date): string {
   let ts: number
   if (typeof date === 'string') {
@@ -22,12 +22,21 @@ export function ago(date: number | string | Date): string {
     return `${Math.floor(diffSeconds / MINUTE)}m`
   } else if (diffSeconds < DAY) {
     return `${Math.floor(diffSeconds / HOUR)}h`
-  } else if (diffSeconds < MONTH) {
+  } else if (diffSeconds < MONTH_30) {
     return `${Math.round(diffSeconds / DAY)}d`
-  } else if (diffSeconds < YEAR) {
-    return `${Math.floor(diffSeconds / MONTH)}mo`
   } else {
-    return new Date(ts).toLocaleDateString()
+    let months = diffSeconds / MONTH
+    if (months % 1 >= 0.9) {
+      months = Math.ceil(months)
+    } else {
+      months = Math.floor(months)
+    }
+
+    if (months < 12) {
+      return `${months}mo`
+    } else {
+      return new Date(ts).toLocaleDateString()
+    }
   }
 }
 

@@ -13,12 +13,14 @@ import {Text} from '#/components/Typography'
 
 export function ListFooter({
   isFetchingNextPage,
+  hasNextPage,
   error,
   onRetry,
   height,
   style,
 }: {
   isFetchingNextPage?: boolean
+  hasNextPage?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
   height?: number
@@ -40,7 +42,19 @@ export function ListFooter({
       {isFetchingNextPage ? (
         <Loader size="xl" />
       ) : (
-        <ListFooterMaybeError error={error} onRetry={onRetry} />
+        <>
+          {error ? (
+            <ListFooterMaybeError error={error} onRetry={onRetry} />
+          ) : (
+            <>
+              {!hasNextPage && (
+                <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+                  <Trans>End of list</Trans>
+                </Text>
+              )}
+            </>
+          )}
+        </>
       )}
     </View>
   )
@@ -136,6 +150,7 @@ let ListMaybePlaceholder = ({
   onGoBack,
   hideBackButton,
   sideBorders,
+  topBorder = true,
 }: {
   isLoading: boolean
   noEmpty?: boolean
@@ -149,6 +164,7 @@ let ListMaybePlaceholder = ({
   onGoBack?: () => void
   hideBackButton?: boolean
   sideBorders?: boolean
+  topBorder?: boolean
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -165,7 +181,7 @@ let ListMaybePlaceholder = ({
           {paddingTop: 175, paddingBottom: 110},
         ]}
         sideBorders={sideBorders ?? gtMobile}
-        topBorder={!gtTablet}>
+        topBorder={topBorder && !gtTablet}>
         <View style={[a.w_full, a.align_center, {top: 100}]}>
           <Loader size="xl" />
         </View>

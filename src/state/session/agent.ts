@@ -1,17 +1,22 @@
-import {BskyAgent} from '@atproto/api'
-import {AtpSessionEvent} from '@atproto-labs/api'
+import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
-import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {
+  DISCOVER_SAVED_FEED,
+  IS_PROD_SERVICE,
+  PUBLIC_BSKY_SERVICE,
+  TIMELINE_SAVED_FEED,
+} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
+import {getAge} from '#/lib/strings/time'
+import {logger} from '#/logger'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
 import {SessionAccount} from './types'
 import {isSessionDeactivated, isSessionExpired} from './util'
-import {IS_PROD_SERVICE} from '#/lib/constants'
-import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
@@ -32,11 +37,15 @@ export async function createAgentAndResume(
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
-  const prevSession = {
+  const prevSession: AtpSessionData = {
+    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
     accessJwt: storedAccount.accessJwt ?? '',
-    refreshJwt: storedAccount.refreshJwt ?? '',
     did: storedAccount.did,
+    email: storedAccount.email,
+    emailAuthFactor: storedAccount.emailAuthFactor,
+    emailConfirmed: storedAccount.emailConfirmed,
     handle: storedAccount.handle,
+    refreshJwt: storedAccount.refreshJwt ?? '',
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
@@ -131,9 +140,40 @@ export async function createAgentAndCreateAccount(
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
-  agent.setPersonalDetails({birthDate: birthDate.toISOString()})
   if (IS_PROD_SERVICE(service)) {
-    agent.setSavedFeeds(DEFAULT_PROD_FEEDS.saved, DEFAULT_PROD_FEEDS.pinned)
+    try {
+      networkRetry(1, async () => {
+        await agent.setPersonalDetails({birthDate: birthDate.toISOString()})
+        await agent.overwriteSavedFeeds([
+          {
+            ...DISCOVER_SAVED_FEED,
+            id: TID.nextStr(),
+          },
+          {
+            ...TIMELINE_SAVED_FEED,
+            id: TID.nextStr(),
+          },
+        ])
+
+        if (getAge(birthDate) < 18) {
+          await agent.api.com.atproto.repo.putRecord({
+            repo: account.did,
+            collection: 'chat.bsky.actor.declaration',
+            rkey: 'self',
+            record: {
+              $type: 'chat.bsky.actor.declaration',
+              allowIncoming: 'none',
+            },
+          })
+        }
+      })
+    } catch (e: any) {
+      logger.error(e, {
+        context: `session: createAgentAndCreateAccount failed to save personal details and feeds`,
+      })
+    }
+  } else {
+    agent.setPersonalDetails({birthDate: birthDate.toISOString()})
   }
 
   return prepareAgent(agent, gates, moderation, onSessionChange)
