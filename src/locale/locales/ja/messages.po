@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-19 01:48+0900\n"
+"PO-Revision-Date: 2024-05-21 10:51+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -424,7 +424,7 @@ msgstr "異議申し立てを提出しました"
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:99
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:101
 msgid "Appeal this decision"
-msgstr ""
+msgstr "この決定に異議を申し立てる"
 
 #: src/view/screens/Settings/index.tsx:433
 msgid "Appearance"
@@ -857,7 +857,7 @@ msgstr "気象"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr ""
+msgstr "クリップ 🐴 クロップ 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:301
 #: src/components/dms/NewChatDialog/index.tsx:439
@@ -1086,7 +1086,7 @@ msgstr "アカウントをフォローせずに次のステップへ進む"
 
 #: src/screens/Messages/List/ChatListItem.tsx:108
 msgid "Conversation deleted"
-msgstr ""
+msgstr "会話が削除されました"
 
 #: src/screens/Onboarding/index.tsx:56
 msgid "Cooking"
@@ -1847,7 +1847,7 @@ msgstr "送信に失敗"
 #: src/components/moderation/LabelsOnMeDialog.tsx:224
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr ""
+msgstr "異議申し立ての送信に失敗しました。再度試してください。"
 
 #: src/components/dms/MessagesNUX.tsx:58
 #: src/screens/Messages/Settings.tsx:34
@@ -2131,7 +2131,7 @@ msgstr "ホームへ"
 
 #: src/screens/Messages/List/ChatListItem.tsx:156
 msgid "Go to conversation with {0}"
-msgstr ""
+msgstr "{0}との会話へ"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -2725,7 +2725,7 @@ msgstr "メニュー"
 
 #: src/components/dms/MessageProfileButton.tsx:67
 msgid "Message {0}"
-msgstr ""
+msgstr "{0}へメッセージを送る"
 
 #: src/components/dms/MessageMenu.tsx:58
 msgid "Message deleted"
@@ -3180,7 +3180,7 @@ msgstr "注記：Blueskyはオープンでパブリックなネットワーク�
 
 #: src/screens/Messages/List/index.tsx:194
 msgid "Nothing here"
-msgstr ""
+msgstr "何もありません"
 
 #: src/Navigation.tsx:515
 #: src/view/screens/Notifications.tsx:124
@@ -3271,7 +3271,7 @@ msgstr "アバター・クリエイターを開く"
 #: src/screens/Messages/List/ChatListItem.tsx:162
 #: src/screens/Messages/List/ChatListItem.tsx:163
 msgid "Open conversation options"
-msgstr ""
+msgstr "会話のオプションを開く"
 
 #: src/view/com/composer/Composer.tsx:563
 #: src/view/com/composer/Composer.tsx:564
@@ -3288,7 +3288,7 @@ msgstr "アプリ内ブラウザーでリンクを開く"
 
 #: src/components/dms/ActionsWrapper.tsx:87
 msgid "Open message options"
-msgstr ""
+msgstr "メッセージのオプションを開く"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
@@ -3605,7 +3605,7 @@ msgstr "{0}によって適用されたこのラベルが誤りであると思わ
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr ""
+msgstr "チャットが間違って無効化されたと考える理由を説明してください"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -3825,7 +3825,7 @@ msgstr "再接続"
 
 #: src/screens/Messages/List/index.tsx:179
 msgid "Reload conversations"
-msgstr ""
+msgstr "会話を再読み込み"
 
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:285
@@ -4213,7 +4213,7 @@ msgstr "画像の切り抜き設定を保存"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 msgid "Say hello!"
-msgstr ""
+msgstr "よろしく！"
 
 #: src/screens/Onboarding/index.tsx:48
 msgid "Science"
@@ -4403,7 +4403,7 @@ msgstr "２番目のフィードのアルゴリズムを選択してください
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
+msgstr "素敵なウェブサイトを送って！"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -4558,11 +4558,11 @@ msgstr "共有"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr ""
+msgstr "クールなストーリーをシェアして！"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr ""
+msgstr "面白いことをシェアして！"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:420
@@ -4582,7 +4582,7 @@ msgstr "リンクを共有"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr ""
+msgstr "お気に入りのフィードをシェアして！"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -4950,7 +4950,7 @@ msgstr "テクノロジー"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
-msgstr ""
+msgstr "ジョークを言って！"
 
 #: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
@@ -5157,7 +5157,7 @@ msgstr "この申し立ては<0>{0}</0>に送られます。"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr ""
+msgstr "この異議申し立てはBlueskyのモデレーション・サービスに送られます。"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -5327,7 +5327,7 @@ msgstr "メールでの２要素認証を無効にするには、メールアド
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr ""
+msgstr "会話を報告するには、会話の画面からメッセージのうちの一つを報告してください。それによって問題の文脈をモデレーターが理解できるようになります。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -6029,13 +6029,9 @@ msgstr "このアカウントをミュートしました。"
 msgid "You have muted this user"
 msgstr "このユーザーをミュートしました"
 
-#: src/screens/Messages/List/index.tsx:152
-#~ msgid "You have no chats yet. Start a conversation with someone!"
-#~ msgstr "まだチャットしていません。誰かと会話を初めましょう！"
-
 #: src/screens/Messages/List/index.tsx:204
 msgid "You have no conversations yet. Start one!"
-msgstr ""
+msgstr "まだ会話していません。始めましょう！"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
