@@ -49,7 +49,7 @@ export function ListFooter({
             <>
               {!hasNextPage && (
                 <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
-                  <Trans>End of list</Trans>
+                  <Trans>You have reached the end</Trans>
                 </Text>
               )}
             </>
