@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-21 12:38+0900\n"
+"PO-Revision-Date: 2024-05-21 15:29+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1666,10 +1666,6 @@ msgstr "有効"
 msgid "End of feed"
 msgstr "フィードの終わり"
 
-#: src/components/Lists.tsx:52
-#~ msgid "End of list"
-#~ msgstr "リストの最後"
-
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
 msgstr "このアプリパスワードの名前を入力"
@@ -3116,7 +3112,7 @@ msgstr "メッセージはありません"
 
 #: src/screens/Messages/List/index.tsx:254
 msgid "No more conversations to show"
-msgstr ""
+msgstr "これ以上表示できる会話はありません"
 
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
@@ -6087,7 +6083,7 @@ msgstr "ミュートしているアカウントはまだありません。アカ
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr ""
+msgstr "最後まで到達しました"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
