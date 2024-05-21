@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-21 12:18+0800\n"
+"PO-Revision-Date: 2024-05-21 12:34+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -897,7 +897,6 @@ msgid "Close image viewer"
 msgstr "關閉圖片檢視器"
 
 #: src/components/dms/MessagesNUX.tsx:162
-#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr "關閉視窗"
 
@@ -1354,7 +1353,6 @@ msgid "Dim"
 msgstr "昏暗"
 
 #: src/components/dms/MessagesNUX.tsx:88
-#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr "私人訊息已推出！"
 
@@ -1669,8 +1667,8 @@ msgid "End of feed"
 msgstr "已經到底部啦！"
 
 #: src/components/Lists.tsx:52
-msgid "End of list"
-msgstr "已經到底部啦！"
+#~ msgid "End of list"
+#~ msgstr "已經到底部啦！"
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1744,7 +1742,6 @@ msgid "Everybody can reply"
 msgstr "所有人都可以回覆"
 
 #: src/components/dms/MessagesNUX.tsx:131
-#: src/components/dms/MessagesNUX.tsx:134
 #: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:74
 #: src/screens/Messages/Settings.tsx:77
@@ -1864,7 +1861,6 @@ msgstr "無法傳送"
 msgid "Failed to submit appeal, please try again."
 msgstr "無法提交申訴，請重試。"
 
-#: src/components/dms/MessagesNUX.tsx:60
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -2091,7 +2087,6 @@ msgstr "來自 <0/>"
 msgid "Gallery"
 msgstr "相簿"
 
-#: src/components/dms/MessagesNUX.tsx:168
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "開始"
@@ -2410,7 +2405,6 @@ msgstr "輸入您的託管服務供應商"
 msgid "Input your user handle"
 msgstr "輸入您的帳號代碼"
 
-#: src/components/dms/MessagesNUX.tsx:82
 #: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr "為您隆重介紹「私人訊息」"
@@ -3118,14 +3112,13 @@ msgstr "還沒有訊息"
 
 #: src/screens/Messages/List/index.tsx:254
 msgid "No more conversations to show"
-msgstr ""
+msgstr "沒有對話啦"
 
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "還沒有通知！"
 
 #: src/components/dms/MessagesNUX.tsx:149
-#: src/components/dms/MessagesNUX.tsx:152
 #: src/components/dms/MessagesNUX.tsx:152
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
@@ -3766,7 +3759,6 @@ msgstr "隱私"
 msgid "Privacy Policy"
 msgstr "隱私政策"
 
-#: src/components/dms/MessagesNUX.tsx:91
 #: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr "和其他用戶進行私人對話。"
@@ -4863,7 +4855,6 @@ msgid "Start chat with {displayName}"
 msgstr "與 {displayName} 開始對話"
 
 #: src/components/dms/MessagesNUX.tsx:161
-#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr "開始對話"
 
@@ -5686,7 +5677,6 @@ msgstr "被 <0/> 跟隨的用戶"
 
 #: src/components/dms/MessagesNUX.tsx:140
 #: src/components/dms/MessagesNUX.tsx:143
-#: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
@@ -5900,8 +5890,6 @@ msgstr "您想在演算法動態源中看到哪些語言？"
 
 #: src/components/dms/MessagesNUX.tsx:110
 #: src/components/dms/MessagesNUX.tsx:124
-#: src/components/dms/MessagesNUX.tsx:110
-#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr "誰可以傳送訊息給您？"
 
@@ -5992,7 +5980,6 @@ msgid "You can change these settings later."
 msgstr "您可以往後在設定中更改。"
 
 #: src/components/dms/MessagesNUX.tsx:119
-#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "您可以隨時變更該設定。"
 
@@ -6082,7 +6069,7 @@ msgstr "您還沒有靜音任何帳號。要靜音帳號，請前往其個人資
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr ""
+msgstr "已經到底部啦！"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
