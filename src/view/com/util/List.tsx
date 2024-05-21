@@ -44,7 +44,6 @@ function ListImpl<ItemT>(
   ref: React.Ref<ListMethods>,
 ) {
   const isScrolledDown = useSharedValue(false)
-  const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
 
   function handleScrolledDownChange(didScrollDown: boolean) {
@@ -58,8 +57,7 @@ function ListImpl<ItemT>(
     onEndDrag: onEndDragFromContext,
     onScroll: onScrollFromContext,
     onMomentumEnd: onMomentumEndFromContext,
-  } = contextScrollHandlers
-
+  } = useScrollHandlers()
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag(e, ctx) {
       onBeginDragFromContext?.(e, ctx)
