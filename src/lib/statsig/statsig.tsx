@@ -85,11 +85,17 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
+const DOWNSAMPLED_EVENTS = new Set(['router:navigate:sampled'])
+const isDownsampledSession = Math.random() < 0.9 // 90% likely
+
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
+    if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
+      return
+    }
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
