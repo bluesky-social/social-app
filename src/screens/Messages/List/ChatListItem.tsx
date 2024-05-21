@@ -192,7 +192,7 @@ function ChatListItemReady({
               moderation={moderation.ui('avatar')}
             />
 
-            <View style={[a.flex_1, a.justify_center]}>
+            <View style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
               <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                 <Text
                   numberOfLines={1}
@@ -260,32 +260,25 @@ function ChatListItemReady({
                 ]}>
                 {lastMessage}
               </Text>
-
-              {convo.unreadCount > 0 && (
-                <View
-                  style={[
-                    a.absolute,
-                    a.rounded_full,
-                    {
-                      backgroundColor: isDimStyle
-                        ? t.palette.contrast_200
-                        : t.palette.primary_500,
-                      height: 7,
-                      width: 7,
-                    },
-                    isNative
-                      ? {
-                          top: 15,
-                          right: 12,
-                        }
-                      : {
-                          top: 0,
-                          right: 0,
-                        },
-                  ]}
-                />
-              )}
             </View>
+
+            {convo.unreadCount > 0 && (
+              <View
+                style={[
+                  a.absolute,
+                  a.rounded_full,
+                  {
+                    backgroundColor: isDimStyle
+                      ? t.palette.contrast_200
+                      : t.palette.primary_500,
+                    height: 7,
+                    width: 7,
+                    top: 15,
+                    right: 12,
+                  },
+                ]}
+              />
+            )}
           </View>
         )}
       </Link>
