@@ -35,13 +35,22 @@ export function MessagesSettingsScreen({}: Props) {
     },
   })
 
-  const onSelectItem = useCallback(
+  const onSelectMessagesFrom = useCallback(
     (keys: string[]) => {
       const key = keys[0]
       if (!key) return
       updateDeclaration(key as AllowIncoming)
     },
     [updateDeclaration],
+  )
+
+  const onSelectSoundSetting = useCallback(
+    (keys: string[]) => {
+      const key = keys[0]
+      if (!key) return
+      setPref('playSoundChat', key === 'enabled')
+    },
+    [setPref],
   )
 
   return (
@@ -58,7 +67,7 @@ export function MessagesSettingsScreen({}: Props) {
             (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
               'following',
           ]}
-          onChange={onSelectItem}>
+          onChange={onSelectMessagesFrom}>
           <View>
             <Toggle.Item
               name="all"
@@ -91,19 +100,36 @@ export function MessagesSettingsScreen({}: Props) {
         </Toggle.Group>
         {isNative && (
           <>
-            <Divider style={[a.my_lg]} />
-            <Toggle.Item
-              name="playSoundChat"
-              label={_(msg`Play notification sounds`)}
-              value={preferences.playSoundChat}
-              onChange={() => {
-                setPref('playSoundChat', !preferences.playSoundChat)
-              }}>
-              <Toggle.Checkbox />
-              <Toggle.LabelText>
-                <Trans>Play notification sounds</Trans>
-              </Toggle.LabelText>
-            </Toggle.Item>
+            <Divider />
+            <Text style={[a.text_lg, a.font_bold]}>
+              <Trans>Notification Sounds</Trans>
+            </Text>
+            <Toggle.Group
+              label={_(msg`Notification sounds`)}
+              type="radio"
+              values={[preferences.playSoundChat ? 'enabled' : 'disabled']}
+              onChange={onSelectSoundSetting}>
+              <View>
+                <Toggle.Item
+                  name="enabled"
+                  label={_(msg`Enabled`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Enabled</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+                <Toggle.Item
+                  name="disabled"
+                  label={_(msg`Disabled`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Disabled</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+              </View>
+            </Toggle.Group>
           </>
         )}
       </View>
