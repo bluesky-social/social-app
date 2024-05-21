@@ -250,6 +250,8 @@ export function MessagesScreen({navigation, route}: Props) {
             onRetry={fetchNextPage}
             style={{borderColor: 'transparent'}}
             hasNextPage={hasNextPage}
+            showEndMessage={true}
+            endMessageText={_(msg`No more conversations to show`)}
           />
         }
         onEndReachedThreshold={isNative ? 1.5 : 0}

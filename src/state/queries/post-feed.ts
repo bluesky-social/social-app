@@ -17,7 +17,6 @@ import {
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -111,6 +110,11 @@ export function usePostFeedQuery(
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
+  const followingPinnedIndex =
+    preferences?.savedFeeds?.findIndex(
+      f => f.pinned && f.value === 'following',
+    ) ?? -1
+  const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
   const {getAgent} = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
@@ -118,7 +122,6 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const lastPageCountRef = useRef(0)
-  const gate = useGate()
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -150,15 +153,11 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              userInterests, // Not in the query key because they don't change.
               getAgent,
-              useBaseFollowingFeed: gate(
-                'reduced_onboarding_and_home_algo_v2',
-                {
-                  // If you're not already in this experiment, we don't want to expose you to it now.
-                  dangerouslyDisableExposureLogging: true,
-                },
-              ),
+              // Not in the query key because they don't change:
+              userInterests,
+              // Not in the query key. Reacting to it switching isn't important:
+              enableFollowingToDiscoverFallback,
             }),
             cursor: undefined,
           }
@@ -392,14 +391,14 @@ function createApi({
   feedTuners,
   userInterests,
   getAgent,
-  useBaseFollowingFeed,
+  enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
   getAgent: () => BskyAgent
-  useBaseFollowingFeed: boolean
+  enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
@@ -410,10 +409,10 @@ function createApi({
         userInterests,
       })
     } else {
-      if (useBaseFollowingFeed) {
-        return new FollowingFeedAPI({getAgent})
-      } else {
+      if (enableFollowingToDiscoverFallback) {
         return new HomeFeedAPI({getAgent, userInterests})
+      } else {
+        return new FollowingFeedAPI({getAgent})
       }
     }
   } else if (feedDesc.startsWith('author')) {
