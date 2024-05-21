@@ -14,6 +14,7 @@ import {
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -273,52 +274,7 @@ export function MessagesList({
       await rt.detectFacets(getAgent())
       rt = shortenLinks(rt)
 
-      // filter out any mention facets that didn't map to a user
-      rt.facets = rt.facets?.filter(facet => {
-        const mention = facet.features.find(feature =>
-          AppBskyRichtextFacet.isMention(feature),
-        )
-        if (mention && !mention.did) {
-          return false
-        }
-        return true
-      })
-
-      const facets: AppBskyRichtextFacet.Main[] = []
-      let embed: AppBskyEmbedRecord.Main | undefined
-      if (rt.facets) {
-        for (const facet of rt.facets) {
-          if (AppBskyRichtextFacet.isMention(facet)) {
-            if (facet.did) {
-              facets.push(facet)
-            }
-          } else {
-            if (
-              AppBskyRichtextFacet.isLink(facet) &&
-              isBskyPostUrl(facet.uri) &&
-              !embed
-            ) {
-              getPostAsQuote(getPost, facet.uri).then(
-                post => {
-                  embed = {
-                    $type: 'app.bsky.embed.record',
-                    record: {
-                      uri: post.uri,
-                      cid: post.cid,
-                    },
-                  }
-                },
-                err => {
-                  logger.error('Failed to fetch post for quote embedding', {
-                    message: err.toString(),
-                  })
-                },
-              )
-            }
-            facets.push(facet)
-          }
-        }
-      }
+      const {facets, embed} = handleFacets(rt, getPost)
 
       if (!hasScrolled) {
         setHasScrolled(true)
@@ -326,7 +282,7 @@ export function MessagesList({
 
       convoState.sendMessage({
         text: rt.text,
-        facets: rt.facets,
+        facets,
         embed,
       })
     },
@@ -410,4 +366,50 @@ export function MessagesList({
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
+}
+
+function handleFacets(
+  rt: RichText,
+  getPost: ({uri}: {uri: string}) => Promise<PostView>,
+) {
+  const facets: AppBskyRichtextFacet.Main[] = []
+  let embed: AppBskyEmbedRecord.Main | undefined
+  if (rt.facets) {
+    for (const facet of rt.facets) {
+      if (AppBskyRichtextFacet.isMention(facet)) {
+        if (facet.did) {
+          facets.push(facet)
+        }
+      } else {
+        if (
+          AppBskyRichtextFacet.isLink(facet) &&
+          isBskyPostUrl(facet.uri) &&
+          !embed
+        ) {
+          getPostAsQuote(getPost, facet.uri).then(
+            post => {
+              embed = {
+                $type: 'app.bsky.embed.record',
+                record: {
+                  uri: post.uri,
+                  cid: post.cid,
+                },
+              }
+            },
+            err => {
+              logger.error('Failed to fetch post for quote embedding', {
+                message: err.toString(),
+              })
+            },
+          )
+        }
+        facets.push(facet)
+      }
+    }
+  }
+
+  return {
+    facets,
+    embed,
+  }
 }
