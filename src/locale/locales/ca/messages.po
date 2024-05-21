@@ -42,7 +42,7 @@ msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest compte} other {# etiqu
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest compte} other {# etiquetes s'han aplicat a aquest compte}}"
+msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest contingut} other {# etiquetes s'han aplicat a aquest contingut}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:62
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -580,7 +580,7 @@ msgstr "Confirmes que vols eliminar la contrasenya de l'aplicació \"{name}\"?"
 
 #: src/components/dms/MessageMenu.tsx:123
 #~ msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
-#~ msgstr "Estàs segur que vols esborrar aquest missatge? El missatge s'esborrarà per a tu, però no per als altres participants."
+#~ msgstr "Estàs segur que vols esborrar aquest missatge? El missatge s'esborrarà per a tu, però no per a l'altre participant."
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
@@ -592,7 +592,7 @@ msgstr "Estàs segur que vols esborrar aquest missatge? El missatge s'esborrarà
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Estàs segur que vols abandonar aquesta conversa? Els missatge s'esborraran per a tu, però no per als altres participants."
+msgstr "Estàs segur que vols abandonar aquesta conversa? Els missatge s'esborraran per a tu, però no per a l'altre participant."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -2230,7 +2230,7 @@ msgstr "No s'ha pogut enviar"
 #: src/components/moderation/LabelsOnMeDialog.tsx:224
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr "No s'ha pogut enviar l'apel·lació, torna-ho a provar"
+msgstr "No s'ha pogut enviar l'apel·lació, torna-ho a provar."
 
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
@@ -3173,7 +3173,7 @@ msgstr "Llistes"
 
 #: src/components/dms/BlockedByListDialog.tsx:39
 msgid "Lists blocking this user:"
-msgstr "Llistes que bloquegen aquest usuari"
+msgstr "Llistes que bloquegen aquest usuari:"
 
 #: src/view/com/post-thread/PostThread.tsx:333
 #: src/view/com/post-thread/PostThread.tsx:341
