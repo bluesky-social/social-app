@@ -354,8 +354,8 @@ msgstr "Ardleibhéal"
 msgid "All the feeds you've saved, right in one place."
 msgstr "Na fothaí go léir a shábháil tú, in áit amháin."
 
-#: src/screens/Messages/Settings.tsx:52
-#: src/screens/Messages/Settings.tsx:55
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr ""
 
@@ -1507,6 +1507,8 @@ msgstr "Ná húsáid aiseolas haptach"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Messages/Settings.tsx:124
+#: src/screens/Messages/Settings.tsx:127
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "Díchumasaithe"
@@ -1790,6 +1792,8 @@ msgstr "Cuir an socrú seo ar siúl le gan ach freagraí i measc na ndaoine a le
 msgid "Enable this source only"
 msgstr "Cuir an foinse seo amháin ar fáil"
 
+#: src/screens/Messages/Settings.tsx:115
+#: src/screens/Messages/Settings.tsx:118
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "Cumasaithe"
@@ -1875,8 +1879,8 @@ msgstr ""
 
 #: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
-#: src/screens/Messages/Settings.tsx:65
-#: src/screens/Messages/Settings.tsx:68
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr ""
 
@@ -3332,8 +3336,8 @@ msgstr "Níl aon fhógra ann fós!"
 
 #: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr ""
 
@@ -3416,6 +3420,14 @@ msgstr "Nod leat: is gréasán oscailte poiblí Bluesky. Ní chuireann an socrú
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:108
+msgid "Notification sounds"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:105
+msgid "Notification Sounds"
 msgstr ""
 
 #: src/Navigation.tsx:515
@@ -3791,8 +3803,8 @@ msgstr "Seinn {0}"
 
 #: src/screens/Messages/Settings.tsx:97
 #: src/screens/Messages/Settings.tsx:104
-msgid "Play notification sounds"
-msgstr ""
+#~ msgid "Play notification sounds"
+#~ msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -4812,7 +4824,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "Socraíonn sé seo cóimheas treoíochta na híomhá go leathan"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:49
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -6005,8 +6017,8 @@ msgstr "Úsáideoirí a bhfuil <0/> á leanúint"
 
 #: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
 msgstr ""
 

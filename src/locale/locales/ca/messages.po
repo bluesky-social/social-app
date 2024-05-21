@@ -409,8 +409,8 @@ msgstr "Avançat"
 msgid "All the feeds you've saved, right in one place."
 msgstr "Tots els canals que has desat, en un sol lloc."
 
-#: src/screens/Messages/Settings.tsx:52
-#: src/screens/Messages/Settings.tsx:55
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr ""
 
@@ -1689,6 +1689,8 @@ msgstr "Desactiva la retroalimentació hàptica"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Messages/Settings.tsx:124
+#: src/screens/Messages/Settings.tsx:127
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "Deshabilitat"
@@ -1996,6 +1998,8 @@ msgstr "Activa aquesta opció per a veure només les respostes entre els comptes
 msgid "Enable this source only"
 msgstr "Habilita només per aquesta font"
 
+#: src/screens/Messages/Settings.tsx:115
+#: src/screens/Messages/Settings.tsx:118
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "Habilitat"
@@ -2093,8 +2097,8 @@ msgstr ""
 
 #: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
-#: src/screens/Messages/Settings.tsx:65
-#: src/screens/Messages/Settings.tsx:68
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr ""
 
@@ -3717,8 +3721,8 @@ msgstr "Encara no tens cap notificació"
 
 #: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr ""
 
@@ -3801,6 +3805,14 @@ msgstr "Nota: Bluesky és una xarxa oberta i pública. Aquesta configuració tan
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:108
+msgid "Notification sounds"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:105
+msgid "Notification Sounds"
 msgstr ""
 
 #: src/Navigation.tsx:515
@@ -4224,8 +4236,8 @@ msgstr "Reprodueix {0}"
 
 #: src/screens/Messages/Settings.tsx:97
 #: src/screens/Messages/Settings.tsx:104
-msgid "Play notification sounds"
-msgstr ""
+#~ msgid "Play notification sounds"
+#~ msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -5408,7 +5420,7 @@ msgstr "Estableix la relació d'aspecte de la imatge com a ampla"
 #~ msgstr "Estableix el servidor pel cient de Bluesky"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:49
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -6718,8 +6730,8 @@ msgstr "usuaris seguits per <0/>"
 
 #: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
 msgstr ""
 
