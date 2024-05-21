@@ -380,7 +380,7 @@ export const ComposePost = observer(function ComposePost({
         testID="composePostView"
         behavior="padding"
         style={s.flex1}
-        keyboardVerticalOffset={60}>
+        keyboardVerticalOffset={replyTo ? 60 : isAndroid ? 120 : 100}>
         <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
           <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
             <TouchableOpacity
