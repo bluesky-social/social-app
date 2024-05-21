@@ -500,6 +500,8 @@ function SearchablePeopleList({
           paddingHorizontal: 0,
           marginTop: 0,
           paddingTop: 0,
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
         }),
       ]}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}

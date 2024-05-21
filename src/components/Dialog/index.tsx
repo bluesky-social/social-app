@@ -277,8 +277,6 @@ export const InnerFlatList = React.forwardRef<
         a.h_full,
         {
           marginTop: 40,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
         },
         flatten(style),
       ]}
