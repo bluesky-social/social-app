@@ -536,14 +536,14 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : undefined}
           </ScrollView>
-          {replyTo ? null : (
-            <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
-          )}
           <SuggestedLanguage text={richtext.text} />
         </View>
       </KeyboardAvoidingView>
       <KeyboardStickyView
         offset={{closed: isIOS ? -insets.bottom : 0, opened: 0}}>
+        {replyTo ? null : (
+          <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
+        )}
         <View style={[pal.border, styles.bottomBar]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
