@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-21 12:34+0800\n"
+"PO-Revision-Date: 2024-05-21 14:06+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -1665,10 +1665,6 @@ msgstr "啟用"
 #: src/screens/Profile/Sections/Feed.tsx:104
 msgid "End of feed"
 msgstr "已經到底部啦！"
-
-#: src/components/Lists.tsx:52
-#~ msgid "End of list"
-#~ msgstr "已經到底部啦！"
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
