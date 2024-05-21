@@ -24,7 +24,7 @@ export type LogEvents = {
     secondsActive: number
   }
   'state:foreground': {}
-  'router:navigate': {}
+  'router:navigate:sampled': {}
 
   // Screen events
   'splash:signInPressed': {}
