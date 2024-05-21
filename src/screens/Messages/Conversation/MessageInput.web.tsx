@@ -45,7 +45,7 @@ export function MessageInput({
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      // Don't submit the form
+      // Don't submit the form when the Japanese or any other IME is composing
       if (isComposing.current) return
 
       if (e.key === 'Enter') {
