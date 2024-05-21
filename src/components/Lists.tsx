@@ -18,6 +18,8 @@ export function ListFooter({
   onRetry,
   height,
   style,
+  showEndMessage = false,
+  endMessageText,
 }: {
   isFetchingNextPage?: boolean
   hasNextPage?: boolean
@@ -25,6 +27,8 @@ export function ListFooter({
   onRetry?: () => Promise<unknown>
   height?: number
   style?: StyleProp<ViewStyle>
+  showEndMessage?: boolean
+  endMessageText?: string
 }) {
   const t = useTheme()
 
@@ -40,22 +44,16 @@ export function ListFooter({
         flatten(style),
       ]}>
       {isFetchingNextPage ? (
-        <Loader size="xl" />
-      ) : (
-        <>
-          {error ? (
-            <ListFooterMaybeError error={error} onRetry={onRetry} />
-          ) : (
-            <>
-              {!hasNextPage && (
-                <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
-                  <Trans>You have reached the end</Trans>
-                </Text>
-              )}
-            </>
-          )}
-        </>
-      )}
+        <Loader size="xl" /> ? (
+          error
+        ) : <ListFooterMaybeError error={error} onRetry={onRetry} /> ? (
+          !hasNextPage && showEndMessage
+        ) : (
+          <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+            {endMessageText ?? <Trans>You have reached the end</Trans>}
+          </Text>
+        )
+      ) : null}
     </View>
   )
 }
