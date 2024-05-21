@@ -92,8 +92,8 @@ msgstr "{following} 个正在关注"
 msgid "{handle} can't be messaged"
 msgstr "无法给 {handle} 发送私信"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:286
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:299
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
@@ -140,11 +140,11 @@ msgid "Access profile and other navigation links"
 msgstr "访问个人资料及其他导航链接"
 
 #: src/view/com/modals/EditImage.tsx:300
-#: src/view/screens/Settings/index.tsx:512
+#: src/view/screens/Settings/index.tsx:511
 msgid "Accessibility"
 msgstr "无障碍"
 
-#: src/view/screens/Settings/index.tsx:503
+#: src/view/screens/Settings/index.tsx:502
 msgid "Accessibility settings"
 msgstr "无障碍设置"
 
@@ -154,8 +154,8 @@ msgid "Accessibility Settings"
 msgstr "无障碍设置"
 
 #: src/screens/Login/LoginForm.tsx:164
-#: src/view/screens/Settings/index.tsx:339
-#: src/view/screens/Settings/index.tsx:721
+#: src/view/screens/Settings/index.tsx:338
+#: src/view/screens/Settings/index.tsx:720
 msgid "Account"
 msgstr "账户"
 
@@ -217,8 +217,8 @@ msgid "Add a user to this list"
 msgstr "将用户添加至列表"
 
 #: src/components/dialogs/SwitchAccount.tsx:56
-#: src/view/screens/Settings/index.tsx:416
-#: src/view/screens/Settings/index.tsx:425
+#: src/view/screens/Settings/index.tsx:415
+#: src/view/screens/Settings/index.tsx:424
 msgid "Add account"
 msgstr "添加账户"
 
@@ -290,7 +290,7 @@ msgid "Adult content is disabled."
 msgstr "成人内容显示已被禁用。"
 
 #: src/screens/Moderation/index.tsx:375
-#: src/view/screens/Settings/index.tsx:655
+#: src/view/screens/Settings/index.tsx:654
 msgid "Advanced"
 msgstr "详细设置"
 
@@ -395,13 +395,13 @@ msgstr "应用专用密码只能包含字母、数字、空格、破折号及下
 msgid "App Password names must be at least 4 characters long."
 msgstr "应用专用密码必须至少为 4 个字符。"
 
-#: src/view/screens/Settings/index.tsx:666
+#: src/view/screens/Settings/index.tsx:665
 msgid "App password settings"
 msgstr "应用专用密码设置"
 
 #: src/Navigation.tsx:258
 #: src/view/screens/AppPasswords.tsx:189
-#: src/view/screens/Settings/index.tsx:675
+#: src/view/screens/Settings/index.tsx:674
 msgid "App Passwords"
 msgstr "应用专用密码"
 
@@ -426,7 +426,7 @@ msgstr "申诉已提交"
 msgid "Appeal this decision"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:433
+#: src/view/screens/Settings/index.tsx:432
 msgid "Appearance"
 msgstr "外观"
 
@@ -451,7 +451,7 @@ msgstr "您确定要离开这个对话吗？此操作仅会在你的私信列表
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "你确定要从你的资讯源中删除 {0} 吗？"
 
-#: src/view/com/composer/Composer.tsx:580
+#: src/view/com/composer/Composer.tsx:577
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你确定要丢弃这段草稿吗？"
 
@@ -498,7 +498,7 @@ msgstr "返回"
 msgid "Based on your interest in {interestsText}"
 msgstr "基于你对 {interestsText} 感兴趣"
 
-#: src/view/screens/Settings/index.tsx:490
+#: src/view/screens/Settings/index.tsx:489
 msgid "Basics"
 msgstr "基础信息"
 
@@ -506,7 +506,7 @@ msgstr "基础信息"
 msgid "Birthday"
 msgstr "生日"
 
-#: src/view/screens/Settings/index.tsx:371
+#: src/view/screens/Settings/index.tsx:370
 msgid "Birthday:"
 msgstr "生日："
 
@@ -717,17 +717,17 @@ msgstr "取消打开链接的网站"
 msgid "Change"
 msgstr "更改"
 
-#: src/view/screens/Settings/index.tsx:365
+#: src/view/screens/Settings/index.tsx:364
 msgctxt "action"
 msgid "Change"
 msgstr "更改"
 
-#: src/view/screens/Settings/index.tsx:687
+#: src/view/screens/Settings/index.tsx:686
 msgid "Change handle"
 msgstr "更改用户识别符"
 
 #: src/view/com/modals/ChangeHandle.tsx:156
-#: src/view/screens/Settings/index.tsx:698
+#: src/view/screens/Settings/index.tsx:697
 msgid "Change Handle"
 msgstr "更改用户识别符"
 
@@ -735,12 +735,12 @@ msgstr "更改用户识别符"
 msgid "Change my email"
 msgstr "更改我的邮箱地址"
 
-#: src/view/screens/Settings/index.tsx:732
+#: src/view/screens/Settings/index.tsx:731
 msgid "Change password"
 msgstr "更改密码"
 
 #: src/view/com/modals/ChangePassword.tsx:143
-#: src/view/screens/Settings/index.tsx:743
+#: src/view/screens/Settings/index.tsx:742
 msgid "Change Password"
 msgstr "更改密码"
 
@@ -765,7 +765,7 @@ msgstr "已隐藏对话"
 #: src/components/dms/ConvoMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:67
 #: src/Navigation.tsx:307
-#: src/screens/Messages/List/index.tsx:67
+#: src/screens/Messages/List/index.tsx:68
 msgid "Chat settings"
 msgstr "私信设置"
 
@@ -810,19 +810,19 @@ msgstr "选择你的主要资讯源"
 msgid "Choose your password"
 msgstr "选择你的密码"
 
-#: src/view/screens/Settings/index.tsx:856
+#: src/view/screens/Settings/index.tsx:855
 msgid "Clear all legacy storage data"
 msgstr "清除所有旧存储数据"
 
-#: src/view/screens/Settings/index.tsx:859
+#: src/view/screens/Settings/index.tsx:858
 msgid "Clear all legacy storage data (restart after this)"
 msgstr "清除所有旧存储数据（并重启）"
 
-#: src/view/screens/Settings/index.tsx:868
+#: src/view/screens/Settings/index.tsx:867
 msgid "Clear all storage data"
 msgstr "清除所有数据"
 
-#: src/view/screens/Settings/index.tsx:871
+#: src/view/screens/Settings/index.tsx:870
 msgid "Clear all storage data (restart after this)"
 msgstr "清除所有数据（并重启）"
 
@@ -831,11 +831,11 @@ msgstr "清除所有数据（并重启）"
 msgid "Clear search query"
 msgstr "清除搜索历史记录"
 
-#: src/view/screens/Settings/index.tsx:857
+#: src/view/screens/Settings/index.tsx:856
 msgid "Clears all legacy storage data"
 msgstr "清除所有旧版存储数据"
 
-#: src/view/screens/Settings/index.tsx:869
+#: src/view/screens/Settings/index.tsx:868
 msgid "Clears all storage data"
 msgstr "清除所有数据"
 
@@ -950,7 +950,7 @@ msgstr "完成引导并开始使用你的账户"
 msgid "Complete the challenge"
 msgstr "完成验证"
 
-#: src/view/com/composer/Composer.tsx:511
+#: src/view/com/composer/Composer.tsx:505
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰写帖子的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 
@@ -1175,7 +1175,7 @@ msgstr "无法隐藏对话"
 msgid "Create a new account"
 msgstr "创建新的账户"
 
-#: src/view/screens/Settings/index.tsx:417
+#: src/view/screens/Settings/index.tsx:416
 msgid "Create a new Bluesky account"
 msgstr "创建新的 Bluesky 账户"
 
@@ -1231,8 +1231,8 @@ msgstr "由社群构建的自定义资讯源能为你带来新的体验，并帮
 msgid "Customize media from external sites."
 msgstr "自定义外部站点的媒体。"
 
-#: src/view/screens/Settings/index.tsx:452
-#: src/view/screens/Settings/index.tsx:478
+#: src/view/screens/Settings/index.tsx:451
+#: src/view/screens/Settings/index.tsx:477
 msgid "Dark"
 msgstr "暗色"
 
@@ -1240,7 +1240,7 @@ msgstr "暗色"
 msgid "Dark mode"
 msgstr "深色模式"
 
-#: src/view/screens/Settings/index.tsx:465
+#: src/view/screens/Settings/index.tsx:464
 msgid "Dark Theme"
 msgstr "深色模式"
 
@@ -1248,7 +1248,7 @@ msgstr "深色模式"
 msgid "Date of birth"
 msgstr "生日"
 
-#: src/view/screens/Settings/index.tsx:819
+#: src/view/screens/Settings/index.tsx:818
 msgid "Debug Moderation"
 msgstr "调试内容审核"
 
@@ -1263,7 +1263,7 @@ msgstr "调试面板"
 msgid "Delete"
 msgstr "删除"
 
-#: src/view/screens/Settings/index.tsx:774
+#: src/view/screens/Settings/index.tsx:773
 msgid "Delete account"
 msgstr "删除账户"
 
@@ -1279,8 +1279,8 @@ msgstr "删除应用专用密码"
 msgid "Delete app password?"
 msgstr "删除应用专用密码？"
 
-#: src/view/screens/Settings/index.tsx:836
-#: src/view/screens/Settings/index.tsx:839
+#: src/view/screens/Settings/index.tsx:835
+#: src/view/screens/Settings/index.tsx:838
 msgid "Delete chat declaration record"
 msgstr "删除聊天记录"
 
@@ -1304,7 +1304,7 @@ msgstr "为我删除私信"
 msgid "Delete my account"
 msgstr "删除我的账户"
 
-#: src/view/screens/Settings/index.tsx:786
+#: src/view/screens/Settings/index.tsx:785
 msgid "Delete My Account…"
 msgstr "删除我的账户…"
 
@@ -1329,7 +1329,7 @@ msgstr "已删除"
 msgid "Deleted post."
 msgstr "已删除帖子。"
 
-#: src/view/screens/Settings/index.tsx:837
+#: src/view/screens/Settings/index.tsx:836
 msgid "Deletes the chat declaration record"
 msgstr "删除聊天记录"
 
@@ -1348,7 +1348,7 @@ msgstr "描述替代文字"
 msgid "Did you want to say anything?"
 msgstr "有什么想说的吗？"
 
-#: src/view/screens/Settings/index.tsx:471
+#: src/view/screens/Settings/index.tsx:470
 msgid "Dim"
 msgstr "暗淡"
 
@@ -1375,11 +1375,11 @@ msgstr "关闭触感反馈"
 msgid "Disabled"
 msgstr "关闭"
 
-#: src/view/com/composer/Composer.tsx:582
+#: src/view/com/composer/Composer.tsx:579
 msgid "Discard"
 msgstr "丢弃"
 
-#: src/view/com/composer/Composer.tsx:579
+#: src/view/com/composer/Composer.tsx:576
 msgid "Discard draft?"
 msgstr "丢弃草稿？"
 
@@ -1545,12 +1545,12 @@ msgstr "编辑自定义资讯源"
 msgid "Edit my profile"
 msgstr "编辑个人资料"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:180
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:176
 msgid "Edit profile"
 msgstr "编辑个人资料"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
 msgid "Edit Profile"
 msgstr "编辑个人资料"
@@ -1602,7 +1602,7 @@ msgstr "电子邮箱已更新"
 msgid "Email verified"
 msgstr "电子邮箱已验证"
 
-#: src/view/screens/Settings/index.tsx:343
+#: src/view/screens/Settings/index.tsx:342
 msgid "Email:"
 msgstr "电子邮箱："
 
@@ -1661,6 +1661,10 @@ msgstr "已启用"
 #: src/screens/Profile/Sections/Feed.tsx:104
 msgid "End of feed"
 msgstr "已到末尾"
+
+#: src/components/Lists.tsx:52
+msgid "End of list"
+msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1729,6 +1733,10 @@ msgstr "错误："
 msgid "Everybody"
 msgstr "所有人"
 
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:42
+msgid "Everybody can reply"
+msgstr ""
+
 #: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/screens/Messages/Settings.tsx:65
@@ -1782,12 +1790,12 @@ msgstr "明确或潜在引起不适的媒体内容。"
 msgid "Explicit sexual images."
 msgstr "明确的性暗示图片。"
 
-#: src/view/screens/Settings/index.tsx:755
+#: src/view/screens/Settings/index.tsx:754
 msgid "Export my data"
 msgstr "导出账户数据"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
-#: src/view/screens/Settings/index.tsx:766
+#: src/view/screens/Settings/index.tsx:765
 msgid "Export My Data"
 msgstr "导出账户数据"
 
@@ -1803,11 +1811,11 @@ msgstr "外部媒体可能允许网站收集有关你和你设备的有关信息
 
 #: src/Navigation.tsx:282
 #: src/view/screens/PreferencesExternalEmbeds.tsx:53
-#: src/view/screens/Settings/index.tsx:648
+#: src/view/screens/Settings/index.tsx:647
 msgid "External Media Preferences"
 msgstr "外部媒体首选项"
 
-#: src/view/screens/Settings/index.tsx:639
+#: src/view/screens/Settings/index.tsx:638
 msgid "External media settings"
 msgstr "外部媒体设置"
 
@@ -2013,7 +2021,7 @@ msgstr "正在关注"
 msgid "Following {0}"
 msgstr "正在关注 {0}"
 
-#: src/view/screens/Settings/index.tsx:567
+#: src/view/screens/Settings/index.tsx:566
 msgid "Following feed preferences"
 msgstr "\"正在关注\"资讯源首选项"
 
@@ -2021,7 +2029,7 @@ msgstr "\"正在关注\"资讯源首选项"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:64
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:87
 #: src/view/screens/PreferencesFollowingFeed.tsx:103
-#: src/view/screens/Settings/index.tsx:576
+#: src/view/screens/Settings/index.tsx:575
 msgid "Following Feed Preferences"
 msgstr "\"正在关注\"资讯源首选项"
 
@@ -2470,7 +2478,7 @@ msgstr "你内容上的标记"
 msgid "Language selection"
 msgstr "选择语言"
 
-#: src/view/screens/Settings/index.tsx:524
+#: src/view/screens/Settings/index.tsx:523
 msgid "Language settings"
 msgstr "语言设置"
 
@@ -2479,7 +2487,7 @@ msgstr "语言设置"
 msgid "Language Settings"
 msgstr "语言设置"
 
-#: src/view/screens/Settings/index.tsx:533
+#: src/view/screens/Settings/index.tsx:532
 msgid "Languages"
 msgstr "语言"
 
@@ -2552,11 +2560,11 @@ msgstr "让我们来重置你的密码！"
 msgid "Let's go!"
 msgstr "让我们开始！"
 
-#: src/view/screens/Settings/index.tsx:446
+#: src/view/screens/Settings/index.tsx:445
 msgid "Light"
 msgstr "亮色"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:266
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:570
 msgid "Like this feed"
 msgstr "喜欢这个资讯源"
@@ -2744,14 +2752,14 @@ msgstr "私信输入栏"
 msgid "Message is too long"
 msgstr "私信过长"
 
-#: src/screens/Messages/List/index.tsx:297
+#: src/screens/Messages/List/index.tsx:299
 msgid "Message settings"
 msgstr "私信设置"
 
 #: src/Navigation.tsx:520
-#: src/screens/Messages/List/index.tsx:143
-#: src/screens/Messages/List/index.tsx:225
-#: src/screens/Messages/List/index.tsx:293
+#: src/screens/Messages/List/index.tsx:144
+#: src/screens/Messages/List/index.tsx:226
+#: src/screens/Messages/List/index.tsx:295
 msgid "Messages"
 msgstr "私信"
 
@@ -2761,7 +2769,7 @@ msgstr "误导性账户"
 
 #: src/Navigation.tsx:126
 #: src/screens/Moderation/index.tsx:104
-#: src/view/screens/Settings/index.tsx:555
+#: src/view/screens/Settings/index.tsx:554
 msgid "Moderation"
 msgstr "内容审核"
 
@@ -2801,7 +2809,7 @@ msgstr "内容审核列表"
 msgid "Moderation Lists"
 msgstr "内容审核列表"
 
-#: src/view/screens/Settings/index.tsx:549
+#: src/view/screens/Settings/index.tsx:548
 msgid "Moderation settings"
 msgstr "内容审核设置"
 
@@ -2936,11 +2944,11 @@ msgstr "自定义资讯源"
 msgid "My Profile"
 msgstr "我的个人资料"
 
-#: src/view/screens/Settings/index.tsx:610
+#: src/view/screens/Settings/index.tsx:609
 msgid "My saved feeds"
 msgstr "我保存的资讯源"
 
-#: src/view/screens/Settings/index.tsx:616
+#: src/view/screens/Settings/index.tsx:615
 msgid "My Saved Feeds"
 msgstr "我保存的资讯源"
 
@@ -2995,8 +3003,8 @@ msgid "New"
 msgstr "新建"
 
 #: src/components/dms/NewChatDialog/index.tsx:98
-#: src/screens/Messages/List/index.tsx:307
-#: src/screens/Messages/List/index.tsx:314
+#: src/screens/Messages/List/index.tsx:309
+#: src/screens/Messages/List/index.tsx:316
 msgid "New chat"
 msgstr "新私信"
 
@@ -3122,7 +3130,7 @@ msgstr "没有结果"
 msgid "No results"
 msgstr "没有结果"
 
-#: src/components/Lists.tsx:197
+#: src/components/Lists.tsx:211
 msgid "No results found"
 msgstr "未找到结果"
 
@@ -3148,6 +3156,10 @@ msgstr "不，谢谢"
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
 msgstr "没有人"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
+msgid "Nobody can reply"
+msgstr ""
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -3178,7 +3190,7 @@ msgstr "分享注意事项"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "注意：Bluesky 是一个开放的公共网络。这个设置项仅限制你发布的内容在 Bluesky 应用和网站上的可见性，其他应用可能不遵从这个设置项，仍可能会向未登录的用户显示你的动态。"
 
-#: src/screens/Messages/List/index.tsx:194
+#: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
 msgstr ""
 
@@ -3218,7 +3230,7 @@ msgid "Oh no! Something went wrong."
 msgstr "糟糕！发生了一些错误。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:126
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:335
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:336
 msgid "OK"
 msgstr "好的"
 
@@ -3234,7 +3246,7 @@ msgstr "优先显示最旧的回复"
 msgid "Onboarding reset"
 msgstr "重新开始引导流程"
 
-#: src/view/com/composer/Composer.tsx:466
+#: src/view/com/composer/Composer.tsx:460
 msgid "One or more images is missing alt text."
 msgstr "至少有一张图片缺失了替代文字。"
 
@@ -3250,11 +3262,11 @@ msgstr "只有{0}可以回复。"
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "仅限字母、数字和连字符"
 
-#: src/components/Lists.tsx:78
+#: src/components/Lists.tsx:92
 msgid "Oops, something went wrong!"
 msgstr "糟糕，发生了一些错误！"
 
-#: src/components/Lists.tsx:181
+#: src/components/Lists.tsx:195
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3273,8 +3285,8 @@ msgstr "开启头像创建工具"
 msgid "Open conversation options"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:563
-#: src/view/com/composer/Composer.tsx:564
+#: src/view/com/composer/Composer.tsx:560
+#: src/view/com/composer/Composer.tsx:561
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -3282,7 +3294,7 @@ msgstr "开启表情符号选择器"
 msgid "Open feed options menu"
 msgstr "开启资讯源选项菜单"
 
-#: src/view/screens/Settings/index.tsx:705
+#: src/view/screens/Settings/index.tsx:704
 msgid "Open links with in-app browser"
 msgstr "在内置浏览器中打开链接"
 
@@ -3302,12 +3314,12 @@ msgstr "打开导航"
 msgid "Open post options menu"
 msgstr "开启帖子选项菜单"
 
-#: src/view/screens/Settings/index.tsx:806
-#: src/view/screens/Settings/index.tsx:816
+#: src/view/screens/Settings/index.tsx:805
+#: src/view/screens/Settings/index.tsx:815
 msgid "Open storybook page"
 msgstr "开启 Storybook 界面"
 
-#: src/view/screens/Settings/index.tsx:794
+#: src/view/screens/Settings/index.tsx:793
 msgid "Open system log"
 msgstr "开启系统日志"
 
@@ -3315,7 +3327,7 @@ msgstr "开启系统日志"
 msgid "Opens {numItems} options"
 msgstr "开启 {numItems} 个选项"
 
-#: src/view/screens/Settings/index.tsx:504
+#: src/view/screens/Settings/index.tsx:503
 msgid "Opens accessibility settings"
 msgstr "开启无障碍设置"
 
@@ -3335,7 +3347,7 @@ msgstr "开启设备相机"
 msgid "Opens composer"
 msgstr "开启编辑器"
 
-#: src/view/screens/Settings/index.tsx:525
+#: src/view/screens/Settings/index.tsx:524
 msgid "Opens configurable language settings"
 msgstr "开启可配置的语言设置"
 
@@ -3343,7 +3355,7 @@ msgstr "开启可配置的语言设置"
 msgid "Opens device photo gallery"
 msgstr "开启设备相册"
 
-#: src/view/screens/Settings/index.tsx:640
+#: src/view/screens/Settings/index.tsx:639
 msgid "Opens external embeds settings"
 msgstr "开启外部嵌入设置"
 
@@ -3365,23 +3377,23 @@ msgstr "开启 GIF 选择对话框"
 msgid "Opens list of invite codes"
 msgstr "开启邀请码列表"
 
-#: src/view/screens/Settings/index.tsx:776
+#: src/view/screens/Settings/index.tsx:775
 msgid "Opens modal for account deletion confirmation. Requires email code"
 msgstr "需要邮件验证以继续进行账户删除操作"
 
-#: src/view/screens/Settings/index.tsx:734
+#: src/view/screens/Settings/index.tsx:733
 msgid "Opens modal for changing your Bluesky password"
 msgstr "开启密码修改界面"
 
-#: src/view/screens/Settings/index.tsx:689
+#: src/view/screens/Settings/index.tsx:688
 msgid "Opens modal for choosing a new Bluesky handle"
 msgstr "开启创建新的用户识别符界面"
 
-#: src/view/screens/Settings/index.tsx:757
+#: src/view/screens/Settings/index.tsx:756
 msgid "Opens modal for downloading your Bluesky account data (repository)"
 msgstr "开启你的 Bluesky 用户资料（存储库）下载页面"
 
-#: src/view/screens/Settings/index.tsx:954
+#: src/view/screens/Settings/index.tsx:953
 msgid "Opens modal for email verification"
 msgstr "开启电子邮箱确认界面"
 
@@ -3389,7 +3401,7 @@ msgstr "开启电子邮箱确认界面"
 msgid "Opens modal for using custom domain"
 msgstr "开启使用自定义域名的模式"
 
-#: src/view/screens/Settings/index.tsx:550
+#: src/view/screens/Settings/index.tsx:549
 msgid "Opens moderation settings"
 msgstr "开启内容审核设置"
 
@@ -3402,15 +3414,15 @@ msgstr "开启密码重置申请"
 msgid "Opens screen to edit Saved Feeds"
 msgstr "开启用于编辑已保存资讯源的界面"
 
-#: src/view/screens/Settings/index.tsx:611
+#: src/view/screens/Settings/index.tsx:610
 msgid "Opens screen with all saved feeds"
 msgstr "开启包含所有已保存资讯源的界面"
 
-#: src/view/screens/Settings/index.tsx:667
+#: src/view/screens/Settings/index.tsx:666
 msgid "Opens the app password settings"
 msgstr "开启应用专用密码设置界面"
 
-#: src/view/screens/Settings/index.tsx:568
+#: src/view/screens/Settings/index.tsx:567
 msgid "Opens the Following feed preferences"
 msgstr "开启\"正在关注\"资讯源首选项"
 
@@ -3418,16 +3430,16 @@ msgstr "开启\"正在关注\"资讯源首选项"
 msgid "Opens the linked website"
 msgstr "开启链接的网页"
 
-#: src/view/screens/Settings/index.tsx:807
-#: src/view/screens/Settings/index.tsx:817
+#: src/view/screens/Settings/index.tsx:806
+#: src/view/screens/Settings/index.tsx:816
 msgid "Opens the storybook page"
 msgstr "开启 Storybook 界面"
 
-#: src/view/screens/Settings/index.tsx:795
+#: src/view/screens/Settings/index.tsx:794
 msgid "Opens the system log page"
 msgstr "开启系统日志界面"
 
-#: src/view/screens/Settings/index.tsx:589
+#: src/view/screens/Settings/index.tsx:588
 msgid "Opens the threads preferences"
 msgstr "开启讨论串首选项"
 
@@ -3460,7 +3472,7 @@ msgstr "其他..."
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "内容审核服务提供方已收到举报，并决定停用你的 Bluesky 私信功能。"
 
-#: src/components/Lists.tsx:198
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "无法找到这个页面"
@@ -3628,8 +3640,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情内容"
 
-#: src/view/com/composer/Composer.tsx:441
-#: src/view/com/composer/Composer.tsx:449
+#: src/view/com/composer/Composer.tsx:435
+#: src/view/com/composer/Composer.tsx:443
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -3709,7 +3721,7 @@ msgid "Press to change hosting provider"
 msgstr "点击以变更托管提供商"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:83
+#: src/components/Lists.tsx:97
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
@@ -3727,7 +3739,7 @@ msgstr "首选语言"
 msgid "Prioritize Your Follows"
 msgstr "优先显示关注者"
 
-#: src/view/screens/Settings/index.tsx:623
+#: src/view/screens/Settings/index.tsx:622
 #: src/view/shell/desktop/RightNav.tsx:76
 msgid "Privacy"
 msgstr "隐私"
@@ -3735,7 +3747,7 @@ msgstr "隐私"
 #: src/Navigation.tsx:238
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings/index.tsx:903
+#: src/view/screens/Settings/index.tsx:902
 #: src/view/shell/Drawer.tsx:284
 msgid "Privacy Policy"
 msgstr "隐私政策"
@@ -3765,7 +3777,7 @@ msgstr "个人资料"
 msgid "Profile updated"
 msgstr "个人资料已更新"
 
-#: src/view/screens/Settings/index.tsx:967
+#: src/view/screens/Settings/index.tsx:966
 msgid "Protect your account by verifying your email."
 msgstr "通过验证电子邮箱来保护你的账户。"
 
@@ -3781,11 +3793,11 @@ msgstr "公开且可共享的批量隐藏或屏蔽列表。"
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公开且可共享的列表，可作为资讯源使用。"
 
-#: src/view/com/composer/Composer.tsx:426
+#: src/view/com/composer/Composer.tsx:420
 msgid "Publish post"
 msgstr "发布帖子"
 
-#: src/view/com/composer/Composer.tsx:426
+#: src/view/com/composer/Composer.tsx:420
 msgid "Publish reply"
 msgstr "发布回复"
 
@@ -3823,7 +3835,7 @@ msgstr "最近的搜索"
 msgid "Reconnect"
 msgstr "重新连接"
 
-#: src/screens/Messages/List/index.tsx:179
+#: src/screens/Messages/List/index.tsx:180
 msgid "Reload conversations"
 msgstr ""
 
@@ -3930,7 +3942,7 @@ msgstr "回复"
 msgid "Replies to this thread are disabled"
 msgstr "对这条讨论串的回复已被禁用"
 
-#: src/view/com/composer/Composer.tsx:439
+#: src/view/com/composer/Composer.tsx:433
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -4087,8 +4099,8 @@ msgstr "确认码"
 msgid "Reset Code"
 msgstr "确认码"
 
-#: src/view/screens/Settings/index.tsx:846
-#: src/view/screens/Settings/index.tsx:849
+#: src/view/screens/Settings/index.tsx:845
+#: src/view/screens/Settings/index.tsx:848
 msgid "Reset onboarding state"
 msgstr "重置引导流程状态"
 
@@ -4096,16 +4108,16 @@ msgstr "重置引导流程状态"
 msgid "Reset password"
 msgstr "重置密码"
 
-#: src/view/screens/Settings/index.tsx:826
-#: src/view/screens/Settings/index.tsx:829
+#: src/view/screens/Settings/index.tsx:825
+#: src/view/screens/Settings/index.tsx:828
 msgid "Reset preferences state"
 msgstr "重置首选项状态"
 
-#: src/view/screens/Settings/index.tsx:847
+#: src/view/screens/Settings/index.tsx:846
 msgid "Resets the onboarding state"
 msgstr "重置引导流程状态"
 
-#: src/view/screens/Settings/index.tsx:827
+#: src/view/screens/Settings/index.tsx:826
 msgid "Resets the preferences state"
 msgstr "重置首选项状态"
 
@@ -4120,7 +4132,7 @@ msgstr "重试上次出错的操作"
 
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:94
+#: src/components/Lists.tsx:108
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
@@ -4489,23 +4501,23 @@ msgstr "设置你的账户"
 msgid "Sets Bluesky username"
 msgstr "设置 Bluesky 用户名"
 
-#: src/view/screens/Settings/index.tsx:455
+#: src/view/screens/Settings/index.tsx:454
 msgid "Sets color theme to dark"
 msgstr "设置主题为深色模式"
 
-#: src/view/screens/Settings/index.tsx:448
+#: src/view/screens/Settings/index.tsx:447
 msgid "Sets color theme to light"
 msgstr "设置主题为亮色模式"
 
-#: src/view/screens/Settings/index.tsx:442
+#: src/view/screens/Settings/index.tsx:441
 msgid "Sets color theme to system setting"
 msgstr "设置主题跟随系统设置"
 
-#: src/view/screens/Settings/index.tsx:481
+#: src/view/screens/Settings/index.tsx:480
 msgid "Sets dark theme to the dark theme"
 msgstr "设置深色模式至深黑"
 
-#: src/view/screens/Settings/index.tsx:474
+#: src/view/screens/Settings/index.tsx:473
 msgid "Sets dark theme to the dim theme"
 msgstr "设置深色模式至暗淡"
 
@@ -4592,7 +4604,7 @@ msgstr "分享链接的网站"
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/components/moderation/PostHider.tsx:116
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:54
-#: src/view/screens/Settings/index.tsx:375
+#: src/view/screens/Settings/index.tsx:374
 msgid "Show"
 msgstr "显示"
 
@@ -4762,7 +4774,7 @@ msgstr "注册或登录以加入对话"
 msgid "Sign-in Required"
 msgstr "需要登录"
 
-#: src/view/screens/Settings/index.tsx:385
+#: src/view/screens/Settings/index.tsx:384
 msgid "Signed in as"
 msgstr "登录身份"
 
@@ -4783,6 +4795,10 @@ msgstr "跳过这段流程"
 #: src/screens/Onboarding/index.tsx:52
 msgid "Software Dev"
 msgstr "程序开发"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
+msgid "Some people can reply"
+msgstr ""
 
 #: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
@@ -4840,7 +4856,7 @@ msgstr "与 {displayName} 开始私信"
 msgid "Start chatting"
 msgstr "开始私信"
 
-#: src/view/screens/Settings/index.tsx:909
+#: src/view/screens/Settings/index.tsx:908
 msgid "Status Page"
 msgstr "状态页"
 
@@ -4853,7 +4869,7 @@ msgid "Storage cleared, you need to restart the app now."
 msgstr "已清除存储，请立即重启应用。"
 
 #: src/Navigation.tsx:218
-#: src/view/screens/Settings/index.tsx:809
+#: src/view/screens/Settings/index.tsx:808
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -4872,7 +4888,7 @@ msgstr "订阅"
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "订阅 @{0} 以使用这些标记："
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:229
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:230
 msgid "Subscribe to Labeler"
 msgstr "订阅标记者"
 
@@ -4881,7 +4897,7 @@ msgstr "订阅标记者"
 msgid "Subscribe to the {0} feed"
 msgstr "订阅 {0} 资讯源"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:194
 msgid "Subscribe to this labeler"
 msgstr "订阅这个标记者"
 
@@ -4920,11 +4936,11 @@ msgstr "切换到 {0}"
 msgid "Switches the account you are logged in to"
 msgstr "切换你登录的账户"
 
-#: src/view/screens/Settings/index.tsx:439
+#: src/view/screens/Settings/index.tsx:438
 msgid "System"
 msgstr "系统"
 
-#: src/view/screens/Settings/index.tsx:797
+#: src/view/screens/Settings/index.tsx:796
 msgid "System log"
 msgstr "系统日志"
 
@@ -4958,7 +4974,7 @@ msgstr "条款"
 
 #: src/Navigation.tsx:243
 #: src/screens/Signup/StepInfo/Policies.tsx:49
-#: src/view/screens/Settings/index.tsx:897
+#: src/view/screens/Settings/index.tsx:896
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:278
 msgid "Terms of Service"
@@ -5042,7 +5058,7 @@ msgstr "服务条款已迁移至"
 msgid "There are many feeds to try:"
 msgstr "这里有些资讯源你可以尝试："
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:114
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "连接至服务器时出现问题，请检查你的互联网连接并重试。"
@@ -5304,12 +5320,12 @@ msgstr "这个账户目前没有关注任何人。"
 msgid "This will delete {0} from your muted words. You can always add it back later."
 msgstr "这将从你的隐藏词汇中删除 {0}。你随时可以重新添加。"
 
-#: src/view/screens/Settings/index.tsx:588
+#: src/view/screens/Settings/index.tsx:587
 msgid "Thread preferences"
 msgstr "讨论串首选项"
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings/index.tsx:598
+#: src/view/screens/Settings/index.tsx:597
 msgid "Thread Preferences"
 msgstr "讨论串首选项"
 
@@ -5366,7 +5382,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr "重试"
 
-#: src/view/screens/Settings/index.tsx:714
+#: src/view/screens/Settings/index.tsx:713
 msgid "Two-factor authentication"
 msgstr "两步验证"
 
@@ -5499,11 +5515,11 @@ msgstr "取消固定限制列表"
 msgid "Unpinned from your feeds"
 msgstr "从你的资讯源中取消固定"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:228
 msgid "Unsubscribe"
 msgstr "取消订阅"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:192
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
 msgid "Unsubscribe from this labeler"
 msgstr "取消订阅这个标记者"
 
@@ -5680,15 +5696,15 @@ msgstr "值："
 msgid "Verify DNS Record"
 msgstr "验证 DNS 记录"
 
-#: src/view/screens/Settings/index.tsx:928
+#: src/view/screens/Settings/index.tsx:927
 msgid "Verify email"
 msgstr "验证邮箱"
 
-#: src/view/screens/Settings/index.tsx:953
+#: src/view/screens/Settings/index.tsx:952
 msgid "Verify my email"
 msgstr "验证我的邮箱"
 
-#: src/view/screens/Settings/index.tsx:962
+#: src/view/screens/Settings/index.tsx:961
 msgid "Verify My Email"
 msgstr "验证我的邮箱"
 
@@ -5705,7 +5721,7 @@ msgstr "验证文本文件"
 msgid "Verify Your Email"
 msgstr "验证你的邮箱"
 
-#: src/view/screens/Settings/index.tsx:881
+#: src/view/screens/Settings/index.tsx:880
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "版本 {appVersion} {bundleInfo}"
 
@@ -5843,12 +5859,12 @@ msgstr "很抱歉，我们无法加载你的隐藏词汇列表。请重试。"
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，无法完成你的搜索。请稍后再试。"
 
-#: src/components/Lists.tsx:202
+#: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我们找不到你正在寻找的页面。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:329
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "很抱歉！你目前只能订阅 10 个标记者，你已达到 10 个的限制。"
 
@@ -5875,13 +5891,12 @@ msgstr "你想在算法资讯源中看到哪些语言？"
 msgid "Who can message you?"
 msgstr "谁可以给你发送私信？"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
 msgstr "谁可以回复"
 
 #: src/screens/Home/NoFeedsPinned.tsx:92
-#: src/screens/Messages/List/index.tsx:164
+#: src/screens/Messages/List/index.tsx:165
 msgid "Whoops!"
 msgstr "糟糕！"
 
@@ -5922,7 +5937,7 @@ msgstr "宽"
 msgid "Write a message"
 msgstr "编写私信"
 
-#: src/view/com/composer/Composer.tsx:509
+#: src/view/com/composer/Composer.tsx:503
 msgid "Write post"
 msgstr "撰写帖子"
 
@@ -6033,7 +6048,7 @@ msgstr "你已隐藏这个用户"
 #~ msgid "You have no chats yet. Start a conversation with someone!"
 #~ msgstr "你还没有任何私信，立即与其他人展开对话吧！"
 
-#: src/screens/Messages/List/index.tsx:204
+#: src/screens/Messages/List/index.tsx:205
 msgid "You have no conversations yet. Start one!"
 msgstr ""
 
