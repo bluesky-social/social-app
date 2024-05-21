@@ -3920,7 +3920,7 @@ msgstr "Obre el creador d'avatars"
 #: src/screens/Messages/List/ChatListItem.tsx:162
 #: src/screens/Messages/List/ChatListItem.tsx:163
 msgid "Open conversation options"
-msgstr "Obre les opcions de les conmverses"
+msgstr "Obre les opcions de les converses"
 
 #: src/view/com/composer/Composer.tsx:560
 #: src/view/com/composer/Composer.tsx:561
@@ -4310,7 +4310,7 @@ msgstr "Explica per què creieu que aquesta etiqueta ha estat aplicada incorrect
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "Expliqueu per què creus que els teus xats s'han desactivat incorrectament"
+msgstr "Expliqueu perquè creus que els teus xats s'han desactivat incorrectament"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
