@@ -411,12 +411,6 @@ export const ComposePost = observer(function ComposePost({
                   onChange={setLabels}
                   hasMedia={hasMedia}
                 />
-                {replyTo ? null : (
-                  <ThreadgateBtn
-                    threadgate={threadgate}
-                    onChange={setThreadgate}
-                  />
-                )}
                 {canPost ? (
                   <TouchableOpacity
                     testID="composerPublishBtn"
@@ -542,6 +536,9 @@ export const ComposePost = observer(function ComposePost({
               </View>
             ) : undefined}
           </ScrollView>
+          {replyTo ? null : (
+            <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
+          )}
           <SuggestedLanguage text={richtext.text} />
         </View>
       </KeyboardAvoidingView>
