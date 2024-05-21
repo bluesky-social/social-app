@@ -2,7 +2,7 @@ import React from 'react'
 import {ColorSchemeName, useColorScheme} from 'react-native'
 import * as SystemUI from 'expo-system-ui'
 
-import {isIOS, isWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {useThemePrefs} from 'state/shell'
 import {dark, dim, light, ThemeName} from '#/alf/themes'
 
@@ -15,9 +15,8 @@ export function useColorModeTheme(): ThemeName {
     updateDocument(theme)
 
     // must be default on iOS due to the formSheet modal presentation style
-    if (!isIOS) {
-      SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
-    }
+    console.log(getBackgroundColor(theme))
+    SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
   }, [colorMode, colorScheme, darkTheme])
 
   return React.useMemo(

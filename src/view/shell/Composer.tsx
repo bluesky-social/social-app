@@ -1,10 +1,11 @@
 import React from 'react'
-import {Modal} from 'react-native'
+import {Modal, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
 
 import {Provider as LegacyModalProvider} from '#/state/modals'
 import {useComposerState} from 'state/shell/composer'
 import {ModalsContainer as LegacyModalsContainer} from '#/view/com/modals/Modal'
+import {useTheme} from '#/alf'
 import {
   Outlet as PortalOutlet,
   Provider as PortalProvider,
@@ -14,6 +15,7 @@ import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 export const Composer = observer(function ComposerImpl({}: {
   winHeight: number
 }) {
+  const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
 
@@ -22,24 +24,26 @@ export const Composer = observer(function ComposerImpl({}: {
       aria-modal
       accessibilityViewIsModal
       visible={!!state}
-      presentationStyle="fullScreen"
+      presentationStyle="overFullScreen"
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}>
-      <LegacyModalProvider>
-        <PortalProvider>
-          <ComposePost
-            cancelRef={ref}
-            replyTo={state?.replyTo}
-            onPost={state?.onPost}
-            quote={state?.quote}
-            mention={state?.mention}
-            text={state?.text}
-            imageUris={state?.imageUris}
-          />
-          <LegacyModalsContainer />
-          <PortalOutlet />
-        </PortalProvider>
-      </LegacyModalProvider>
+      <View style={[t.atoms.bg, {flex: 1}]}>
+        <LegacyModalProvider>
+          <PortalProvider>
+            <ComposePost
+              cancelRef={ref}
+              replyTo={state?.replyTo}
+              onPost={state?.onPost}
+              quote={state?.quote}
+              mention={state?.mention}
+              text={state?.text}
+              imageUris={state?.imageUris}
+            />
+            <LegacyModalsContainer />
+            <PortalOutlet />
+          </PortalProvider>
+        </LegacyModalProvider>
+      </View>
     </Modal>
   )
 })
