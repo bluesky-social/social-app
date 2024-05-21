@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-20 09:30+0800\n"
+"PO-Revision-Date: 2024-05-21 13:50+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -424,7 +424,7 @@ msgstr "申诉已提交"
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:99
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:101
 msgid "Appeal this decision"
-msgstr ""
+msgstr "对此结果提出申诉"
 
 #: src/view/screens/Settings/index.tsx:432
 msgid "Appearance"
@@ -857,7 +857,7 @@ msgstr "气象"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr ""
+msgstr "哒哒🐴哒哒🐴"
 
 #: src/components/dialogs/GifSelect.tsx:301
 #: src/components/dms/NewChatDialog/index.tsx:439
@@ -1086,7 +1086,7 @@ msgstr "继续下一步，不关注任何账户"
 
 #: src/screens/Messages/List/ChatListItem.tsx:108
 msgid "Conversation deleted"
-msgstr ""
+msgstr "对话已删除"
 
 #: src/screens/Onboarding/index.tsx:56
 msgid "Cooking"
@@ -1666,10 +1666,6 @@ msgstr "已启用"
 msgid "End of feed"
 msgstr "已到末尾"
 
-#: src/components/Lists.tsx:52
-#~ msgid "End of list"
-#~ msgstr ""
-
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
 msgstr "为这个应用专用密码命名"
@@ -1739,7 +1735,7 @@ msgstr "所有人"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:42
 msgid "Everybody can reply"
-msgstr ""
+msgstr "所有人都可以回复"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -1859,7 +1855,7 @@ msgstr "无法发送私信"
 #: src/components/moderation/LabelsOnMeDialog.tsx:224
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr ""
+msgstr "无法提交申诉，请再试一次。"
 
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
@@ -2143,7 +2139,7 @@ msgstr "返回主页"
 
 #: src/screens/Messages/List/ChatListItem.tsx:156
 msgid "Go to conversation with {0}"
-msgstr ""
+msgstr "转到与 {0} 的对话"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -2737,7 +2733,7 @@ msgstr "菜单"
 
 #: src/components/dms/MessageProfileButton.tsx:67
 msgid "Message {0}"
-msgstr ""
+msgstr "私信 {0}"
 
 #: src/components/dms/MessageMenu.tsx:58
 msgid "Message deleted"
@@ -3085,10 +3081,6 @@ msgstr "下一张图片"
 msgid "No"
 msgstr "停用"
 
-#: src/screens/Messages/List/index.tsx:156
-#~ msgid "No chats yet"
-#~ msgstr "目前还没有任何私信"
-
 #: src/view/screens/ProfileFeed.tsx:559
 #: src/view/screens/ProfileList.tsx:822
 msgid "No description"
@@ -3116,7 +3108,7 @@ msgstr "目前还没有任何私信"
 
 #: src/screens/Messages/List/index.tsx:254
 msgid "No more conversations to show"
-msgstr ""
+msgstr "没有更多对话可显示"
 
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
@@ -3167,7 +3159,7 @@ msgstr "没有人"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
 msgid "Nobody can reply"
-msgstr ""
+msgstr "没有人可以回复"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -3200,15 +3192,15 @@ msgstr "注意：Bluesky 是一个开放的公共网络。这个设置项仅限�
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
-msgstr ""
+msgstr "这里什么也没有"
 
 #: src/screens/Messages/Settings.tsx:108
 msgid "Notification sounds"
-msgstr ""
+msgstr "通知提示音"
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "Notification Sounds"
-msgstr ""
+msgstr "通知提示音"
 
 #: src/Navigation.tsx:515
 #: src/view/screens/Notifications.tsx:124
@@ -3299,7 +3291,7 @@ msgstr "开启头像创建工具"
 #: src/screens/Messages/List/ChatListItem.tsx:162
 #: src/screens/Messages/List/ChatListItem.tsx:163
 msgid "Open conversation options"
-msgstr ""
+msgstr "开启对话选项"
 
 #: src/view/com/composer/Composer.tsx:560
 #: src/view/com/composer/Composer.tsx:561
@@ -3316,7 +3308,7 @@ msgstr "在内置浏览器中打开链接"
 
 #: src/components/dms/ActionsWrapper.tsx:87
 msgid "Open message options"
-msgstr ""
+msgstr "开启私信选项"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
@@ -3573,11 +3565,6 @@ msgstr "播放"
 msgid "Play {0}"
 msgstr "播放 {0}"
 
-#: src/screens/Messages/Settings.tsx:97
-#: src/screens/Messages/Settings.tsx:104
-#~ msgid "Play notification sounds"
-#~ msgstr "播放通知提示音"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
 msgstr "播放或暂停 GIF"
@@ -3633,7 +3620,7 @@ msgstr "请解释为什么你认为这个标记是由 {0} 错误应用的"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr ""
+msgstr "请解释为什么你认为你的私信被错误禁用"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -3853,7 +3840,7 @@ msgstr "重新连接"
 
 #: src/screens/Messages/List/index.tsx:180
 msgid "Reload conversations"
-msgstr ""
+msgstr "重新加载对话"
 
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:285
@@ -4011,11 +3998,6 @@ msgstr "举报私信"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:365
 msgid "Report post"
 msgstr "举报帖子"
-
-#: src/components/dms/ReportDialog.tsx:167
-#: src/components/ReportDialog/SelectReportOptionView.tsx:62
-#~ msgid "Report this account"
-#~ msgstr "举报这个账号"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -4241,7 +4223,7 @@ msgstr "保存图片裁剪设置"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 msgid "Say hello!"
-msgstr ""
+msgstr "说嗨！"
 
 #: src/screens/Onboarding/index.tsx:48
 msgid "Science"
@@ -4431,7 +4413,7 @@ msgstr "选择你的资讯源次要算法"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
+msgstr "发送一个你认为很有趣的网站！"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -4586,11 +4568,11 @@ msgstr "分享"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr ""
+msgstr "分享一个很酷的事！"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr ""
+msgstr "分享一个有趣的事实！"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:420
@@ -4610,7 +4592,7 @@ msgstr "分享链接"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr ""
+msgstr "分享你最喜欢的资讯源！"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -4814,7 +4796,7 @@ msgstr "程序开发"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
 msgid "Some people can reply"
-msgstr ""
+msgstr "一些人可以回复"
 
 #: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
@@ -4982,7 +4964,7 @@ msgstr "科技"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
-msgstr ""
+msgstr "讲个笑话！"
 
 #: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
@@ -5189,7 +5171,7 @@ msgstr "这条申诉将发送至 <0>{0}</0>。"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr ""
+msgstr "此申诉将提交给 Bluesky 内容审核服务。"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -5359,7 +5341,7 @@ msgstr "在关闭电子邮件两步验证前，请先验证你的电子邮箱地
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr ""
+msgstr "要举报对话，请在会话中选择一条私信并举报。这有助于使内容审核服务提供方了解有关问题的背景信息。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -5916,10 +5898,6 @@ msgstr "谁可以回复"
 msgid "Whoops!"
 msgstr "糟糕！"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:63
-#~ msgid "Why should this account be reviewed?"
-#~ msgstr "为什么应该审核此账户？"
-
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
 msgstr "为什么应该审核此内容？"
@@ -6060,13 +6038,9 @@ msgstr "你已隐藏这个账户。"
 msgid "You have muted this user"
 msgstr "你已隐藏这个用户"
 
-#: src/screens/Messages/List/index.tsx:158
-#~ msgid "You have no chats yet. Start a conversation with someone!"
-#~ msgstr "你还没有任何私信，立即与其他人展开对话吧！"
-
 #: src/screens/Messages/List/index.tsx:205
 msgid "You have no conversations yet. Start one!"
-msgstr ""
+msgstr "你还没有任何私信，立即与其他人展开对话吧！"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
@@ -6091,7 +6065,7 @@ msgstr "你还没有隐藏任何账户。要隐藏账户，请转到其个人资
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr ""
+msgstr "你已经到末尾了"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
