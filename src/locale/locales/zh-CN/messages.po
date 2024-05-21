@@ -1666,10 +1666,6 @@ msgstr "已启用"
 msgid "End of feed"
 msgstr "已到末尾"
 
-#: src/components/Lists.tsx:52
-#~ msgid "End of list"
-#~ msgstr ""
-
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
 msgstr "为这个应用专用密码命名"
@@ -3085,10 +3081,6 @@ msgstr "下一张图片"
 msgid "No"
 msgstr "停用"
 
-#: src/screens/Messages/List/index.tsx:156
-#~ msgid "No chats yet"
-#~ msgstr "目前还没有任何私信"
-
 #: src/view/screens/ProfileFeed.tsx:559
 #: src/view/screens/ProfileList.tsx:822
 msgid "No description"
@@ -3573,11 +3565,6 @@ msgstr "播放"
 msgid "Play {0}"
 msgstr "播放 {0}"
 
-#: src/screens/Messages/Settings.tsx:97
-#: src/screens/Messages/Settings.tsx:104
-#~ msgid "Play notification sounds"
-#~ msgstr "播放通知提示音"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
 msgstr "播放或暂停 GIF"
@@ -4011,11 +3998,6 @@ msgstr "举报私信"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:365
 msgid "Report post"
 msgstr "举报帖子"
-
-#: src/components/dms/ReportDialog.tsx:167
-#: src/components/ReportDialog/SelectReportOptionView.tsx:62
-#~ msgid "Report this account"
-#~ msgstr "举报这个账号"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -5916,10 +5898,6 @@ msgstr "谁可以回复"
 msgid "Whoops!"
 msgstr "糟糕！"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:63
-#~ msgid "Why should this account be reviewed?"
-#~ msgstr "为什么应该审核此账户？"
-
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
 msgstr "为什么应该审核此内容？"
@@ -6059,10 +6037,6 @@ msgstr "你已隐藏这个账户。"
 #: src/lib/moderation/useModerationCauseDescription.ts:86
 msgid "You have muted this user"
 msgstr "你已隐藏这个用户"
-
-#: src/screens/Messages/List/index.tsx:158
-#~ msgid "You have no chats yet. Start a conversation with someone!"
-#~ msgstr "你还没有任何私信，立即与其他人展开对话吧！"
 
 #: src/screens/Messages/List/index.tsx:205
 msgid "You have no conversations yet. Start one!"
