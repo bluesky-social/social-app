@@ -13,16 +13,22 @@ import {Text} from '#/components/Typography'
 
 export function ListFooter({
   isFetchingNextPage,
+  hasNextPage,
   error,
   onRetry,
   height,
   style,
+  showEndMessage = false,
+  endMessageText,
 }: {
   isFetchingNextPage?: boolean
+  hasNextPage?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
   height?: number
   style?: StyleProp<ViewStyle>
+  showEndMessage?: boolean
+  endMessageText?: string
 }) {
   const t = useTheme()
 
@@ -39,9 +45,13 @@ export function ListFooter({
       ]}>
       {isFetchingNextPage ? (
         <Loader size="xl" />
-      ) : (
+      ) : error ? (
         <ListFooterMaybeError error={error} onRetry={onRetry} />
-      )}
+      ) : !hasNextPage && showEndMessage ? (
+        <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+          {endMessageText ?? <Trans>You have reached the end</Trans>}
+        </Text>
+      ) : null}
     </View>
   )
 }
