@@ -79,8 +79,8 @@ export const TextInput = forwardRef(function TextInputImpl(
     getCursorPosition: () => undefined, // Not implemented on native
   }))
 
-  const pastSuggestedUris = useRef(new Set<string>())
-  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
+  const pastSuggestedUris = useRef<Set<string>>()
+  const prevDetectedUris = useRef<Map<string, LinkFacetMatch>>()
   const onChangeText = useCallback(
     (newText: string) => {
       /*
@@ -139,7 +139,7 @@ export const TextInput = forwardRef(function TextInputImpl(
           mayBePaste,
           nextDetectedUris,
           prevDetectedUris.current,
-          pastSuggestedUris.current,
+          (pastSuggestedUris.current ||= new Set()),
         )
         prevDetectedUris.current = nextDetectedUris
         if (suggestedUri) {

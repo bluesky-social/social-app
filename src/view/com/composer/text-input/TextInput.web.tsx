@@ -130,8 +130,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [setIsDropping])
 
-  const pastSuggestedUris = useRef(new Set<string>())
-  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
+  const pastSuggestedUris = useRef<Set<string>>()
+  const prevDetectedUris = useRef<Map<string, LinkFacetMatch>>()
   const editor = useEditor(
     {
       extensions,
@@ -200,7 +200,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           isPaste,
           nextDetectedUris,
           prevDetectedUris.current,
-          pastSuggestedUris.current,
+          (pastSuggestedUris.current ||= new Set()),
         )
         prevDetectedUris.current = nextDetectedUris
         if (suggestedUri) {
