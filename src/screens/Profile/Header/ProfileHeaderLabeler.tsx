@@ -197,6 +197,7 @@ let ProfileHeaderLabeler = ({
                   <View
                     style={[
                       {
+                        paddingVertical: 12,
                         backgroundColor:
                           isSubscribed || !canSubscribe
                             ? state.hovered || state.pressed
@@ -206,8 +207,7 @@ let ProfileHeaderLabeler = ({
                             ? tokens.color.temp_purple_dark
                             : tokens.color.temp_purple,
                       },
-                      a.py_sm,
-                      a.px_md,
+                      a.px_lg,
                       a.rounded_sm,
                       a.gap_sm,
                     ]}>
