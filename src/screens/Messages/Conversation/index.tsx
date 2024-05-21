@@ -52,7 +52,7 @@ export function MessagesConversationScreen({route}: Props) {
   )
 
   return (
-    <ConvoProvider convoId={convoId}>
+    <ConvoProvider key={convoId} convoId={convoId}>
       <Inner />
     </ConvoProvider>
   )

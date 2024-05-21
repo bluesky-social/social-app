@@ -380,7 +380,7 @@ export const ComposePost = observer(function ComposePost({
         testID="composePostView"
         behavior="padding"
         style={s.flex1}
-        keyboardVerticalOffset={60}>
+        keyboardVerticalOffset={replyTo ? 60 : isAndroid ? 120 : 100}>
         <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
           <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
             <TouchableOpacity
@@ -411,12 +411,6 @@ export const ComposePost = observer(function ComposePost({
                   onChange={setLabels}
                   hasMedia={hasMedia}
                 />
-                {replyTo ? null : (
-                  <ThreadgateBtn
-                    threadgate={threadgate}
-                    onChange={setThreadgate}
-                  />
-                )}
                 {canPost ? (
                   <TouchableOpacity
                     testID="composerPublishBtn"
@@ -547,6 +541,9 @@ export const ComposePost = observer(function ComposePost({
       </KeyboardAvoidingView>
       <KeyboardStickyView
         offset={{closed: isIOS ? -insets.bottom : 0, opened: 0}}>
+        {replyTo ? null : (
+          <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
+        )}
         <View style={[pal.border, styles.bottomBar]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />

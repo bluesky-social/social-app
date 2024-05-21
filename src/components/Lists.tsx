@@ -13,12 +13,14 @@ import {Text} from '#/components/Typography'
 
 export function ListFooter({
   isFetchingNextPage,
+  hasNextPage,
   error,
   onRetry,
   height,
   style,
 }: {
   isFetchingNextPage?: boolean
+  hasNextPage?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
   height?: number
@@ -40,7 +42,19 @@ export function ListFooter({
       {isFetchingNextPage ? (
         <Loader size="xl" />
       ) : (
-        <ListFooterMaybeError error={error} onRetry={onRetry} />
+        <>
+          {error ? (
+            <ListFooterMaybeError error={error} onRetry={onRetry} />
+          ) : (
+            <>
+              {!hasNextPage && (
+                <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+                  <Trans>End of list</Trans>
+                </Text>
+              )}
+            </>
+          )}
+        </>
       )}
     </View>
   )
