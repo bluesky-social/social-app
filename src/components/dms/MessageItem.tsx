@@ -6,12 +6,17 @@ import {
   TextStyle,
   View,
 } from 'react-native'
-import {ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  ChatBskyConvoDefs,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
+import {PostEmbeds} from 'view/com/util/post-embeds'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
@@ -107,6 +112,11 @@ let MessageItem = ({
             interactiveStyle={a.underline}
             enableTags
           />
+
+          {item.message.embed &&
+            AppBskyEmbedRecord.isView(item.message.embed) && (
+              <PostEmbeds embed={item.message.embed} moderation={undefined} />
+            )}
         </View>
       </ActionsWrapper>
 

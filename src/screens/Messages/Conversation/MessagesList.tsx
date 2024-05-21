@@ -17,7 +17,6 @@ import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {logger} from '#/logger'
 import {isIOS, isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
@@ -274,7 +273,7 @@ export function MessagesList({
       await rt.detectFacets(getAgent())
       rt = shortenLinks(rt)
 
-      const {facets, embed} = handleFacets(rt, getPost)
+      const {facets, embed} = await handleFacets(rt, getPost)
 
       if (!hasScrolled) {
         setHasScrolled(true)
@@ -368,7 +367,7 @@ export function MessagesList({
   )
 }
 
-function handleFacets(
+async function handleFacets(
   rt: RichText,
   getPost: ({uri}: {uri: string}) => Promise<PostView>,
 ) {
@@ -376,18 +375,17 @@ function handleFacets(
   let embed: AppBskyEmbedRecord.Main | undefined
   if (rt.facets) {
     for (const facet of rt.facets) {
-      if (AppBskyRichtextFacet.isMention(facet)) {
-        if (facet.did) {
-          facets.push(facet)
-        }
-      } else {
-        if (
-          AppBskyRichtextFacet.isLink(facet) &&
-          isBskyPostUrl(facet.uri) &&
-          !embed
-        ) {
-          getPostAsQuote(getPost, facet.uri).then(
-            post => {
+      let skip = false
+      for (const feature of facet.features) {
+        if (AppBskyRichtextFacet.isMention(feature)) {
+          if (!feature.did) {
+            skip = true
+            break
+          }
+        } else if (AppBskyRichtextFacet.isLink(feature)) {
+          if (isBskyPostUrl(feature.uri)) {
+            const post = await getPostAsQuote(getPost, feature.uri)
+            if (post) {
               embed = {
                 $type: 'app.bsky.embed.record',
                 record: {
@@ -395,14 +393,12 @@ function handleFacets(
                   cid: post.cid,
                 },
               }
-            },
-            err => {
-              logger.error('Failed to fetch post for quote embedding', {
-                message: err.toString(),
-              })
-            },
-          )
+            }
+          }
         }
+      }
+
+      if (!skip) {
         facets.push(facet)
       }
     }
