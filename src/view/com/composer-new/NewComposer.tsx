@@ -108,8 +108,6 @@ export const PostComposer = ({
 
           <View style={[a.flex_row, a.gap_xs]}>
             <SelectLabelsBtn />
-
-            {state.replyTo === undefined && <SelectThreadgateBtn />}
           </View>
 
           <Button
@@ -139,6 +137,12 @@ export const PostComposer = ({
             />
           ))}
         </ScrollView>
+
+        <View>
+          {state.replyTo === undefined && (
+            <SelectThreadgateBtn threadgate={[]} onChange={() => {}} />
+          )}
+        </View>
 
         <Actions
           activePost={activePost}
