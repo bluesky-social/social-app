@@ -20,6 +20,12 @@ module.exports = function (api) {
     ],
     plugins: [
       [
+        'babel-plugin-react-compiler',
+        {
+          runtimeModule: 'react-compiler-runtime',
+        },
+      ],
+      [
         'module:react-native-dotenv',
         {
           envName: 'APP_ENV',

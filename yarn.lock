@@ -18653,6 +18653,9 @@ react-avatar-editor@^13.0.0:
     "@babel/runtime" "^7.12.5"
     prop-types "^15.7.2"
 
+"react-compiler-runtime@file:./lib/react-compiler-runtime":
+  version "0.0.1"
+
 react-dev-utils@^12.0.1:
   version "12.0.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-12.0.1.tgz#ba92edb4a1f379bd46ccd6bcd4e7bc398df33e73"
