@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-21 10:51+0900\n"
+"PO-Revision-Date: 2024-05-21 12:38+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1668,7 +1668,7 @@ msgstr "フィードの終わり"
 
 #: src/components/Lists.tsx:52
 msgid "End of list"
-msgstr ""
+msgstr "リストの最後"
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1739,7 +1739,7 @@ msgstr "全員"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:42
 msgid "Everybody can reply"
-msgstr ""
+msgstr "誰でも返信可能"
 
 #: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
@@ -3163,7 +3163,7 @@ msgstr "返信不可"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
 msgid "Nobody can reply"
-msgstr ""
+msgstr "誰も返信できない"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -3200,11 +3200,11 @@ msgstr "何もありません"
 
 #: src/screens/Messages/Settings.tsx:108
 msgid "Notification sounds"
-msgstr ""
+msgstr "通知音"
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "Notification Sounds"
-msgstr ""
+msgstr "通知音"
 
 #: src/Navigation.tsx:515
 #: src/view/screens/Notifications.tsx:124
@@ -4810,7 +4810,7 @@ msgstr "ソフトウェア開発"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
 msgid "Some people can reply"
-msgstr ""
+msgstr "一部の人が返信可能"
 
 #: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
