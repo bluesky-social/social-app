@@ -72,7 +72,7 @@ export function ChatEmptyPill() {
         a.z_10,
         a.align_center,
         {
-          bottom: 70,
+          top: -50,
         },
       ]}>
       <AnimatedPressable
