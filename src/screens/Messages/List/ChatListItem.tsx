@@ -192,7 +192,7 @@ function ChatListItemReady({
               moderation={moderation.ui('avatar')}
             />
 
-            <View style={[a.flex_1, a.justify_center, web({paddingRight: 60})]}>
+            <View style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
               <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                 <Text
                   numberOfLines={1}
