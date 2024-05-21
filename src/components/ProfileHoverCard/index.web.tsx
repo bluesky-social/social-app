@@ -43,7 +43,7 @@ const floatingMiddlewares = [
   }),
 ]
 
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 1
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
   if (props.disable || isTouchDevice) {
