@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-19 11:24+0800\n"
+"PO-Revision-Date: 2024-05-21 12:08+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -424,7 +424,7 @@ msgstr "已提交申訴"
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:99
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:101
 msgid "Appeal this decision"
-msgstr ""
+msgstr "對此決定提出上訴"
 
 #: src/view/screens/Settings/index.tsx:432
 msgid "Appearance"
@@ -857,7 +857,7 @@ msgstr "氣象"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr ""
+msgstr "達達的馬蹄🐴是美麗的錯誤🐴"
 
 #: src/components/dialogs/GifSelect.tsx:301
 #: src/components/dms/NewChatDialog/index.tsx:439
@@ -896,7 +896,7 @@ msgstr "關閉圖片"
 msgid "Close image viewer"
 msgstr "關閉圖片檢視器"
 
-#: src/components/dms/MessagesNUX.tsx:159
+#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr "關閉視窗"
 
@@ -1086,7 +1086,7 @@ msgstr "繼續下一步，不跟隨任何帳號"
 
 #: src/screens/Messages/List/ChatListItem.tsx:108
 msgid "Conversation deleted"
-msgstr ""
+msgstr "對話已刪除"
 
 #: src/screens/Onboarding/index.tsx:56
 msgid "Cooking"
@@ -1352,7 +1352,7 @@ msgstr "有什麼想說的嗎？"
 msgid "Dim"
 msgstr "昏暗"
 
-#: src/components/dms/MessagesNUX.tsx:85
+#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr "私人訊息已推出！"
 
@@ -1668,7 +1668,7 @@ msgstr "已經到底部啦！"
 
 #: src/components/Lists.tsx:52
 msgid "End of list"
-msgstr ""
+msgstr "已經到底部啦！"
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1739,10 +1739,10 @@ msgstr "所有人"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:42
 msgid "Everybody can reply"
-msgstr ""
+msgstr "所有人都可以回覆"
 
-#: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
+#: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:74
 #: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
@@ -1859,9 +1859,9 @@ msgstr "無法傳送"
 #: src/components/moderation/LabelsOnMeDialog.tsx:224
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr ""
+msgstr "無法提交申訴，請重試。"
 
-#: src/components/dms/MessagesNUX.tsx:58
+#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
 msgstr "無法更新設定"
@@ -2087,7 +2087,7 @@ msgstr "來自 <0/>"
 msgid "Gallery"
 msgstr "相簿"
 
-#: src/components/dms/MessagesNUX.tsx:165
+#: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "開始"
 
@@ -2143,7 +2143,7 @@ msgstr "前往首頁"
 
 #: src/screens/Messages/List/ChatListItem.tsx:156
 msgid "Go to conversation with {0}"
-msgstr ""
+msgstr "與 {0} 對話"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -2405,7 +2405,7 @@ msgstr "輸入您的託管服務供應商"
 msgid "Input your user handle"
 msgstr "輸入您的帳號代碼"
 
-#: src/components/dms/MessagesNUX.tsx:79
+#: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr "為您隆重介紹「私人訊息」"
 
@@ -2737,7 +2737,7 @@ msgstr "選單"
 
 #: src/components/dms/MessageProfileButton.tsx:67
 msgid "Message {0}"
-msgstr ""
+msgstr "給 {0} 傳送訊息"
 
 #: src/components/dms/MessageMenu.tsx:58
 msgid "Message deleted"
@@ -3085,10 +3085,6 @@ msgstr "下一張圖片"
 msgid "No"
 msgstr "關"
 
-#: src/screens/Messages/List/index.tsx:156
-#~ msgid "No chats yet"
-#~ msgstr "還沒有對話"
-
 #: src/view/screens/ProfileFeed.tsx:559
 #: src/view/screens/ProfileList.tsx:822
 msgid "No description"
@@ -3118,8 +3114,8 @@ msgstr "還沒有訊息"
 msgid "No notifications yet!"
 msgstr "還沒有通知！"
 
-#: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
+#: src/components/dms/MessagesNUX.tsx:152
 #: src/screens/Messages/Settings.tsx:92
 #: src/screens/Messages/Settings.tsx:95
 msgid "No one"
@@ -3163,7 +3159,7 @@ msgstr "沒有人"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
 msgid "Nobody can reply"
-msgstr ""
+msgstr "沒有人可以回覆"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -3196,15 +3192,15 @@ msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制�
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
-msgstr ""
+msgstr "這裡什麼也沒有"
 
 #: src/screens/Messages/Settings.tsx:108
 msgid "Notification sounds"
-msgstr ""
+msgstr "通知音效"
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "Notification Sounds"
-msgstr ""
+msgstr "通知音效"
 
 #: src/Navigation.tsx:515
 #: src/view/screens/Notifications.tsx:124
@@ -3295,7 +3291,7 @@ msgstr "開啟頭像創建工具"
 #: src/screens/Messages/List/ChatListItem.tsx:162
 #: src/screens/Messages/List/ChatListItem.tsx:163
 msgid "Open conversation options"
-msgstr ""
+msgstr "開啟對話選項"
 
 #: src/view/com/composer/Composer.tsx:560
 #: src/view/com/composer/Composer.tsx:561
@@ -3312,7 +3308,7 @@ msgstr "在內建瀏覽器中開啟連結"
 
 #: src/components/dms/ActionsWrapper.tsx:87
 msgid "Open message options"
-msgstr ""
+msgstr "開啟訊息選項"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
@@ -3569,11 +3565,6 @@ msgstr "播放"
 msgid "Play {0}"
 msgstr "播放 {0}"
 
-#: src/screens/Messages/Settings.tsx:97
-#: src/screens/Messages/Settings.tsx:104
-#~ msgid "Play notification sounds"
-#~ msgstr "播放通知音效"
-
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
 msgstr "播放或暫停 GIF"
@@ -3629,7 +3620,7 @@ msgstr "請解釋您認為 {0} 不正確套用此標記的原因"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr ""
+msgstr "請解釋您認為您的聊天功能被禁用是不正確的原因"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -3764,7 +3755,7 @@ msgstr "隱私"
 msgid "Privacy Policy"
 msgstr "隱私政策"
 
-#: src/components/dms/MessagesNUX.tsx:88
+#: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr "和其他用戶進行私人對話。"
 
@@ -3849,7 +3840,7 @@ msgstr "重新連線"
 
 #: src/screens/Messages/List/index.tsx:180
 msgid "Reload conversations"
-msgstr ""
+msgstr "重新載入對話"
 
 #: src/components/dialogs/MutedWords.tsx:286
 #: src/view/com/feeds/FeedSourceCard.tsx:285
@@ -4007,11 +3998,6 @@ msgstr "檢舉訊息"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:365
 msgid "Report post"
 msgstr "檢舉貼文"
-
-#: src/components/dms/ReportDialog.tsx:167
-#: src/components/ReportDialog/SelectReportOptionView.tsx:62
-#~ msgid "Report this account"
-#~ msgstr "檢舉這個用戶"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -4237,7 +4223,7 @@ msgstr "保存圖片裁剪設定"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 msgid "Say hello!"
-msgstr ""
+msgstr "說句「你好！👋」"
 
 #: src/screens/Onboarding/index.tsx:48
 msgid "Science"
@@ -4427,7 +4413,7 @@ msgstr "選擇您的動態的次要算法"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
+msgstr "發送一個妙趣的網站！"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -4582,11 +4568,11 @@ msgstr "分享"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr ""
+msgstr "分享個有趣的故事！"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr ""
+msgstr "分享件趣事！"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:420
@@ -4606,7 +4592,7 @@ msgstr "分享連結"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr ""
+msgstr "分享你喜愛的動態！"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -4810,7 +4796,7 @@ msgstr "軟體開發"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
 msgid "Some people can reply"
-msgstr ""
+msgstr "有些人能回覆"
 
 #: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
@@ -4864,7 +4850,7 @@ msgstr "開始新對話"
 msgid "Start chat with {displayName}"
 msgstr "與 {displayName} 開始對話"
 
-#: src/components/dms/MessagesNUX.tsx:158
+#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr "開始對話"
 
@@ -4978,7 +4964,7 @@ msgstr "科技"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
-msgstr ""
+msgstr "說個笑話！🤡"
 
 #: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
@@ -5185,7 +5171,7 @@ msgstr "此申訴將被提交至 <0>{0}</0>。"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr ""
+msgstr "此申訴將發送至 Bluesky 的內容管理服務。"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -5355,7 +5341,7 @@ msgstr "若要關閉電子郵件雙重驗證，請驗證您的電子郵件地址
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr ""
+msgstr "若要檢舉對話，請透過對話畫面檢舉其中一則訊息。這可以讓我們的內容管理者了解您的問題的來龍去脈。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -5685,8 +5671,8 @@ msgstr "用戶"
 msgid "users followed by <0/>"
 msgstr "被 <0/> 跟隨的用戶"
 
-#: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
+#: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
@@ -5898,8 +5884,8 @@ msgstr "這個貼文使用了哪些語言？"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "您想在演算法動態源中看到哪些語言？"
 
-#: src/components/dms/MessagesNUX.tsx:107
-#: src/components/dms/MessagesNUX.tsx:121
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr "誰可以傳送訊息給您？"
 
@@ -5911,10 +5897,6 @@ msgstr "誰可以回覆"
 #: src/screens/Messages/List/index.tsx:165
 msgid "Whoops!"
 msgstr "哎呀！"
-
-#: src/components/ReportDialog/SelectReportOptionView.tsx:63
-#~ msgid "Why should this account be reviewed?"
-#~ msgstr "為什麼應該審查這個帳號?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
@@ -5993,7 +5975,7 @@ msgstr "您也可以探索並跟隨新的自訂動態源。"
 msgid "You can change these settings later."
 msgstr "您可以往後在設定中更改。"
 
-#: src/components/dms/MessagesNUX.tsx:116
+#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "您可以隨時變更該設定。"
 
@@ -6056,13 +6038,9 @@ msgstr "您已隱藏這個帳號。"
 msgid "You have muted this user"
 msgstr "您已靜音這個用戶"
 
-#: src/screens/Messages/List/index.tsx:158
-#~ msgid "You have no chats yet. Start a conversation with someone!"
-#~ msgstr "您還沒有對話，與其他用戶開始對話！"
-
 #: src/screens/Messages/List/index.tsx:205
 msgid "You have no conversations yet. Start one!"
-msgstr ""
+msgstr "您還沒有對話，與其他用戶開始對話吧！"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
