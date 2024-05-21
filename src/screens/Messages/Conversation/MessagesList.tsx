@@ -13,15 +13,19 @@ import {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
+import {logger} from '#/logger'
 import {isIOS, isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
+import {getPostAsQuote} from 'lib/link-meta/bsky'
 import {ScrollProvider} from 'lib/ScrollContext'
+import {isBskyPostUrl} from 'lib/strings/url-helpers'
 import {isWeb} from 'platform/detection'
+import {useGetPost} from 'state/queries/post'
 import {List} from 'view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
@@ -79,6 +83,7 @@ export function MessagesList({
 }) {
   const convoState = useConvoActive()
   const {getAgent} = useAgent()
+  const getPost = useGetPost()
 
   const flatListRef = useAnimatedRef<FlatList>()
 
@@ -279,6 +284,42 @@ export function MessagesList({
         return true
       })
 
+      const facets: AppBskyRichtextFacet.Main[] = []
+      let embed: AppBskyEmbedRecord.Main | undefined
+      if (rt.facets) {
+        for (const facet of rt.facets) {
+          if (AppBskyRichtextFacet.isMention(facet)) {
+            if (facet.did) {
+              facets.push(facet)
+            }
+          } else {
+            if (
+              AppBskyRichtextFacet.isLink(facet) &&
+              isBskyPostUrl(facet.uri) &&
+              !embed
+            ) {
+              getPostAsQuote(getPost, facet.uri).then(
+                post => {
+                  embed = {
+                    $type: 'app.bsky.embed.record',
+                    record: {
+                      uri: post.uri,
+                      cid: post.cid,
+                    },
+                  }
+                },
+                err => {
+                  logger.error('Failed to fetch post for quote embedding', {
+                    message: err.toString(),
+                  })
+                },
+              )
+            }
+            facets.push(facet)
+          }
+        }
+      }
+
       if (!hasScrolled) {
         setHasScrolled(true)
       }
@@ -286,9 +327,10 @@ export function MessagesList({
       convoState.sendMessage({
         text: rt.text,
         facets: rt.facets,
+        embed,
       })
     },
-    [convoState, getAgent, hasScrolled, setHasScrolled],
+    [convoState, getAgent, hasScrolled, setHasScrolled, getPost],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
