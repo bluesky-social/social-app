@@ -52,8 +52,8 @@ export function useUnreadMessageCount() {
   }, [query.data])
 
   const unshadowedProfiles = useMemo(() => {
-    return getProfilesFromConvoMembers(convos)
-  }, [convos])
+    return getProfilesFromConvoMembers(convos, currentAccount?.did)
+  }, [convos, currentAccount?.did])
 
   const getShadow = useProfileShadowGetter(unshadowedProfiles)
 
