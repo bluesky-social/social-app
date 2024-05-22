@@ -1134,7 +1134,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     paddingVertical: 20,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
   },
   profileItem: {
     alignItems: 'center',
