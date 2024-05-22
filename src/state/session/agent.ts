@@ -56,7 +56,7 @@ export async function createAgentAndResume(
         // Intentionally not awaited to unblock the UI:
         networkRetry(3, () => agent.resumeSession(prevSession))
       } catch (e: any) {
-        logger.error(`networkRetry failed`, {
+        logger.error(`networkRetry failed to resume session`, {
           status: e?.status || 'unknown',
           // this field name is ignored by Sentry scrubbers
           safeMessage: e?.message || 'unknown',
