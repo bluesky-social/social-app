@@ -67,13 +67,14 @@ export function useUnreadMessageCount() {
 
       if (
         !otherMemberUnshadowed ||
-        !moderationOpts ||
         otherMemberUnshadowed.did === 'missing.invalid'
       ) {
         return acc
       }
 
       const otherMember = getShadow(otherMemberUnshadowed)
+
+      if (!moderationOpts) return acc
 
       const moderation = moderateProfile(otherMember, moderationOpts)
       const shouldIgnore = convo.muted || moderation.blocked
