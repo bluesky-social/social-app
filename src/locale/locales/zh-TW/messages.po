@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-21 15:27+0800\n"
+"PO-Revision-Date: 2024-05-23 00:12+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -3620,7 +3620,7 @@ msgstr "請解釋您認為 {0} 不正確套用此標記的原因"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "請解釋您認為您的聊天功能被禁用是不正確的原因"
+msgstr "請解釋您認為我們不該停用您對話功能的原因"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -4568,11 +4568,11 @@ msgstr "分享"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr "分享個有趣的故事！"
+msgstr "分享一個有趣的故事！"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr "分享件趣事！"
+msgstr "分享一個趣聞！📰"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:420
@@ -4796,7 +4796,7 @@ msgstr "軟體開發"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
 msgid "Some people can reply"
-msgstr "有些人能回覆"
+msgstr "僅部分人可以回覆"
 
 #: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
@@ -5341,7 +5341,7 @@ msgstr "若要關閉電子郵件雙重驗證，請驗證您的電子郵件地址
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "若要檢舉對話，請透過對話畫面檢舉其中一則訊息。這可以讓我們的內容管理者了解您的問題的來龍去脈。"
+msgstr "若要檢舉對話，請透過對話畫面檢舉其中一則訊息。這可以讓我們的內容管理者了解問題的來龍去脈。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
