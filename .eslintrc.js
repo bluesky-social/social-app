@@ -68,7 +68,8 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'warn',
-    'react-compiler/react-compiler': 'error',
+    // TODO: Reenable when we figure out why it gets stuck on CI.
+    // 'react-compiler/react-compiler': 'error',
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',
