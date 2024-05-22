@@ -301,7 +301,7 @@ msgstr "你保存的所有资讯源都集中在一处。"
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr "允许接收来自以下来源的新私信"
+msgstr "允许以下来源发起新对话"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
