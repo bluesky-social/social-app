@@ -85,13 +85,13 @@ export async function retry<P>(
 export async function networkRetry<P>(
   retries: number,
   fn: () => Promise<P>,
-  options: {
+  options?: {
     backoff?: boolean
   },
 ): Promise<P> {
   return retry(fn, {
     retries,
-    backoff: options.backoff,
+    backoff: options?.backoff,
   })
 }
 
