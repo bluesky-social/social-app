@@ -1,5 +1,6 @@
 import React, {useImperativeHandle} from 'react'
 import {Dimensions, Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
@@ -17,6 +18,7 @@ import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bot
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {isIOS} from 'platform/detection'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -163,7 +165,8 @@ export function Outer({
   return (
     isOpen && (
       <Portal>
-        <View
+        <KeyboardAvoidingView
+          behavior={isIOS ? 'padding' : 'height'}
           // iOS
           accessibilityViewIsModal
           // Android
@@ -202,7 +205,7 @@ export function Outer({
               {children}
             </Context.Provider>
           </BottomSheet>
-        </View>
+        </KeyboardAvoidingView>
       </Portal>
     )
   )
