@@ -965,7 +965,7 @@ function SearchHistory({
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }) {
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
 
   return (
@@ -976,20 +976,30 @@ function SearchHistory({
         height: isWeb ? '100vh' : undefined,
       }}>
       <View style={styles.searchHistoryContainer}>
+        {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
+          <Text style={[pal.text, styles.searchHistoryTitle]}>
+            <Trans>Recent Searches</Trans>
+          </Text>
+        )}
         {selectedProfiles.length > 0 && (
-          <View style={styles.selectedProfilesContainer}>
-            <Text style={[pal.text, styles.searchHistoryTitle]}>
-              <Trans>Recent Profiles</Trans>
-            </Text>
+          <View
+            style={[
+              styles.selectedProfilesContainer,
+              isMobile && styles.selectedProfilesContainerMobile,
+            ]}>
             <ScrollView
               horizontal={true}
               style={styles.profilesRow}
               contentContainerStyle={{
                 borderWidth: 0,
-                justifyContent: 'space-between',
               }}>
               {selectedProfiles.slice(0, 5).map((profile, index) => (
-                <View key={index} style={styles.profileItem}>
+                <View
+                  key={index}
+                  style={[
+                    styles.profileItem,
+                    isMobile && styles.profileItemMobile,
+                  ]}>
                   <Pressable
                     accessibilityRole="button"
                     onPress={() => onProfileClick(profile)}
@@ -1025,9 +1035,6 @@ function SearchHistory({
         )}
         {searchHistory.length > 0 && (
           <View style={styles.searchHistoryContent}>
-            <Text style={[pal.text, styles.searchHistoryTitle]}>
-              <Trans>Recent Searches</Trans>
-            </Text>
             {searchHistory.slice(0, 5).map((historyItem, index) => (
               <View
                 key={index}
@@ -1126,28 +1133,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   selectedProfilesContainer: {
-    marginTop: 20,
+    marginTop: 10,
     paddingHorizontal: 12,
-    height: 140,
+    height: 120,
+  },
+  selectedProfilesContainerMobile: {
+    height: 125,
   },
   profilesRow: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    paddingVertical: 20,
-    paddingHorizontal: 10,
   },
   profileItem: {
     alignItems: 'center',
     marginRight: 15,
-    width: 70,
+    width: 98,
+  },
+  profileItemMobile: {
+    marginRight: 10,
+    width: 90,
   },
   profilePressable: {
     alignItems: 'center',
   },
   profileAvatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 80,
+    height: 80,
+    borderRadius: 45,
   },
   profileName: {
     fontSize: 12,
@@ -1161,8 +1173,8 @@ const styles = StyleSheet.create({
   },
   profileRemoveBtn: {
     position: 'absolute',
-    top: -5,
-    right: -5,
+    top: 0,
+    right: 5,
     backgroundColor: 'white',
     borderRadius: 10,
     width: 20,
@@ -1171,10 +1183,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   searchHistoryContent: {
-    padding: 10,
+    paddingHorizontal: 10,
     borderRadius: 8,
   },
   searchHistoryTitle: {
     fontWeight: 'bold',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
   },
 })
