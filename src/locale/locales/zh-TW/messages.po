@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-23 00:12+0800\n"
+"PO-Revision-Date: 2024-05-23 00:34+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -126,7 +126,7 @@ msgstr "<0>不適用。</0> 此警告只適用於附帶媒體的貼文。"
 msgid "⚠Invalid Handle"
 msgstr "⚠無效的帳號代碼"
 
-#: src/screens/Login/LoginForm.tsx:241
+#: src/screens/Login/LoginForm.tsx:244
 msgid "2FA Confirmation"
 msgstr "雙重驗證"
 
@@ -153,7 +153,7 @@ msgstr "無障礙設定"
 msgid "Accessibility Settings"
 msgstr "無障礙設定"
 
-#: src/screens/Login/LoginForm.tsx:164
+#: src/screens/Login/LoginForm.tsx:167
 #: src/view/screens/Settings/index.tsx:338
 #: src/view/screens/Settings/index.tsx:720
 msgid "Account"
@@ -298,10 +298,10 @@ msgstr "進階設定"
 msgid "All the feeds you've saved, right in one place."
 msgstr "以下是您保存的動態源。"
 
-#: src/screens/Messages/Settings.tsx:61
-#: src/screens/Messages/Settings.tsx:64
-msgid "Allow messages from"
-msgstr "允許來自這些人的訊息："
+#: src/screens/Messages/Settings.tsx:62
+#: src/screens/Messages/Settings.tsx:65
+msgid "Allow new messages from"
+msgstr "允許這些人發起新對話："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -482,8 +482,8 @@ msgstr "至少 3 個字元"
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/ForgotPasswordForm.tsx:135
-#: src/screens/Login/LoginForm.tsx:272
-#: src/screens/Login/LoginForm.tsx:278
+#: src/screens/Login/LoginForm.tsx:275
+#: src/screens/Login/LoginForm.tsx:281
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:133
@@ -778,7 +778,7 @@ msgstr "對話已解除靜音"
 msgid "Check my status"
 msgstr "檢查我的狀態"
 
-#: src/screens/Login/LoginForm.tsx:265
+#: src/screens/Login/LoginForm.tsx:268
 msgid "Check your email for a login code and enter it here."
 msgstr "在此輸入寄送至您電子郵件地址的驗證碼。"
 
@@ -1003,7 +1003,7 @@ msgstr "確認您的年齡："
 msgid "Confirm your birthdate"
 msgstr "確認您的出生日期"
 
-#: src/screens/Login/LoginForm.tsx:247
+#: src/screens/Login/LoginForm.tsx:250
 #: src/view/com/modals/ChangeEmail.tsx:152
 #: src/view/com/modals/DeleteAccount.tsx:186
 #: src/view/com/modals/DeleteAccount.tsx:192
@@ -1013,7 +1013,7 @@ msgstr "確認您的出生日期"
 msgid "Confirmation code"
 msgstr "驗證碼"
 
-#: src/screens/Login/LoginForm.tsx:299
+#: src/screens/Login/LoginForm.tsx:302
 msgid "Connecting..."
 msgstr "連線中…"
 
@@ -1371,8 +1371,8 @@ msgstr "關閉觸覺回饋"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
-#: src/screens/Messages/Settings.tsx:124
-#: src/screens/Messages/Settings.tsx:127
+#: src/screens/Messages/Settings.tsx:140
+#: src/screens/Messages/Settings.tsx:143
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "停用"
@@ -1656,8 +1656,8 @@ msgstr "啟用此設定將只顯示您跟隨的人之間的回覆。"
 msgid "Enable this source only"
 msgstr "僅啟用此來源"
 
-#: src/screens/Messages/Settings.tsx:115
-#: src/screens/Messages/Settings.tsx:118
+#: src/screens/Messages/Settings.tsx:131
+#: src/screens/Messages/Settings.tsx:134
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "啟用"
@@ -1739,8 +1739,8 @@ msgstr "所有人都可以回覆"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/screens/Messages/Settings.tsx:75
+#: src/screens/Messages/Settings.tsx:78
 msgid "Everyone"
 msgstr "所有人"
 
@@ -1858,7 +1858,7 @@ msgid "Failed to submit appeal, please try again."
 msgstr "無法提交申訴，請重試。"
 
 #: src/components/dms/MessagesNUX.tsx:60
-#: src/screens/Messages/Settings.tsx:34
+#: src/screens/Messages/Settings.tsx:35
 msgid "Failed to update settings"
 msgstr "無法更新設定"
 
@@ -2058,11 +2058,11 @@ msgstr "為了保護您的帳號安全，您將無法再次查看此內容。如
 msgid "Forgot Password"
 msgstr "忘記密碼"
 
-#: src/screens/Login/LoginForm.tsx:221
+#: src/screens/Login/LoginForm.tsx:224
 msgid "Forgot password?"
 msgstr "忘記密碼？"
 
-#: src/screens/Login/LoginForm.tsx:232
+#: src/screens/Login/LoginForm.tsx:235
 msgid "Forgot?"
 msgstr "忘記？"
 
@@ -2284,7 +2284,7 @@ msgid "Host:"
 msgstr "主機："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
-#: src/screens/Login/LoginForm.tsx:154
+#: src/screens/Login/LoginForm.tsx:157
 #: src/screens/Signup/StepInfo/index.tsx:40
 #: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
@@ -2377,19 +2377,19 @@ msgstr "輸入新密碼"
 msgid "Input password for account deletion"
 msgstr "輸入密碼以刪除帳號"
 
-#: src/screens/Login/LoginForm.tsx:260
+#: src/screens/Login/LoginForm.tsx:263
 msgid "Input the code which has been emailed to you"
 msgstr "輸入寄送至您電子郵件地址的驗證碼"
 
-#: src/screens/Login/LoginForm.tsx:215
+#: src/screens/Login/LoginForm.tsx:218
 msgid "Input the password tied to {identifier}"
 msgstr "輸入與 {identifier} 關聯的密碼"
 
-#: src/screens/Login/LoginForm.tsx:188
+#: src/screens/Login/LoginForm.tsx:191
 msgid "Input the username or email address you used at signup"
 msgstr "輸入註冊時使用的用戶名稱或電子郵件地址"
 
-#: src/screens/Login/LoginForm.tsx:214
+#: src/screens/Login/LoginForm.tsx:217
 msgid "Input your password"
 msgstr "輸入您的密碼"
 
@@ -2405,7 +2405,7 @@ msgstr "輸入您的帳號代碼"
 msgid "Introducing Direct Messages"
 msgstr "為您隆重介紹「私人訊息」"
 
-#: src/screens/Login/LoginForm.tsx:129
+#: src/screens/Login/LoginForm.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "無效的雙重驗證碼。"
@@ -2414,7 +2414,7 @@ msgstr "無效的雙重驗證碼。"
 msgid "Invalid or unsupported post record"
 msgstr "無效或不支援的貼文紀錄"
 
-#: src/screens/Login/LoginForm.tsx:134
+#: src/screens/Login/LoginForm.tsx:137
 msgid "Invalid username or password"
 msgstr "用戶名稱或密碼無效"
 
@@ -2748,7 +2748,7 @@ msgid "Message input field"
 msgstr "訊息輸入欄位"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:62
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:37
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:38
 msgid "Message is too long"
 msgstr "訊息太長了"
 
@@ -2972,7 +2972,7 @@ msgid "Nature"
 msgstr "自然"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:306
+#: src/screens/Login/LoginForm.tsx:309
 #: src/view/com/modals/ChangePassword.tsx:170
 msgid "Navigates to the next screen"
 msgstr "切換到下一畫面"
@@ -3058,8 +3058,8 @@ msgstr "新聞"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/ForgotPasswordForm.tsx:150
-#: src/screens/Login/LoginForm.tsx:305
-#: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Login/LoginForm.tsx:308
+#: src/screens/Login/LoginForm.tsx:315
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Signup/index.tsx:220
@@ -3116,8 +3116,8 @@ msgstr "還沒有通知！"
 
 #: src/components/dms/MessagesNUX.tsx:149
 #: src/components/dms/MessagesNUX.tsx:152
-#: src/screens/Messages/Settings.tsx:92
-#: src/screens/Messages/Settings.tsx:95
+#: src/screens/Messages/Settings.tsx:93
+#: src/screens/Messages/Settings.tsx:96
 msgid "No one"
 msgstr "沒有人"
 
@@ -3194,11 +3194,11 @@ msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制�
 msgid "Nothing here"
 msgstr "這裡什麼也沒有"
 
-#: src/screens/Messages/Settings.tsx:108
+#: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
 msgstr "通知音效"
 
-#: src/screens/Messages/Settings.tsx:105
+#: src/screens/Messages/Settings.tsx:121
 msgid "Notification Sounds"
 msgstr "通知音效"
 
@@ -3413,7 +3413,7 @@ msgstr "開啟使用自訂網域的彈窗"
 msgid "Opens moderation settings"
 msgstr "開啟內容管理設定"
 
-#: src/screens/Login/LoginForm.tsx:222
+#: src/screens/Login/LoginForm.tsx:225
 msgid "Opens password reset form"
 msgstr "開啟密碼重設表單"
 
@@ -3489,7 +3489,7 @@ msgstr "頁面不存在"
 msgid "Page Not Found"
 msgstr "頁面不存在"
 
-#: src/screens/Login/LoginForm.tsx:198
+#: src/screens/Login/LoginForm.tsx:201
 #: src/screens/Signup/StepInfo/index.tsx:102
 #: src/view/com/modals/DeleteAccount.tsx:205
 #: src/view/com/modals/DeleteAccount.tsx:212
@@ -4119,7 +4119,7 @@ msgstr "重設初始設定狀態"
 msgid "Resets the preferences state"
 msgstr "重設偏好狀態"
 
-#: src/screens/Login/LoginForm.tsx:286
+#: src/screens/Login/LoginForm.tsx:289
 msgid "Retries login"
 msgstr "重試登入"
 
@@ -4131,8 +4131,8 @@ msgstr "重試上次出錯的操作"
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:104
-#: src/screens/Login/LoginForm.tsx:285
-#: src/screens/Login/LoginForm.tsx:292
+#: src/screens/Login/LoginForm.tsx:288
+#: src/screens/Login/LoginForm.tsx:295
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:236
 #: src/screens/Onboarding/StepInterests/index.tsx:239
@@ -4435,7 +4435,7 @@ msgid "Send feedback"
 msgstr "提交意見"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:144
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:110
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:119
 msgid "Send message"
 msgstr "重送訊息"
 
@@ -4536,7 +4536,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "將圖像的寬高比設定為寬"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:58
+#: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -4713,7 +4713,7 @@ msgstr "在您的動態中顯示來自 {0} 的貼文"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
 #: src/screens/Login/index.tsx:119
-#: src/screens/Login/LoginForm.tsx:151
+#: src/screens/Login/LoginForm.tsx:154
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
@@ -5402,7 +5402,7 @@ msgstr "取消靜音列表"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:74
 #: src/screens/Login/index.tsx:78
-#: src/screens/Login/LoginForm.tsx:139
+#: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Login/SetNewPasswordForm.tsx:77
 #: src/screens/Signup/index.tsx:66
 #: src/view/com/modals/ChangePassword.tsx:72
@@ -5659,7 +5659,7 @@ msgstr "已更新用戶列表"
 msgid "User Lists"
 msgstr "用戶列表"
 
-#: src/screens/Login/LoginForm.tsx:171
+#: src/screens/Login/LoginForm.tsx:174
 msgid "Username or email address"
 msgstr "帳號代碼或電子郵件地址"
 
@@ -5673,8 +5673,8 @@ msgstr "被 <0/> 跟隨的用戶"
 
 #: src/components/dms/MessagesNUX.tsx:140
 #: src/components/dms/MessagesNUX.tsx:143
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/screens/Messages/Settings.tsx:84
+#: src/screens/Messages/Settings.tsx:87
 msgid "Users I follow"
 msgstr "我跟隨的用戶"
 
@@ -5927,7 +5927,7 @@ msgid "Wide"
 msgstr "寬"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:121
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:98
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:101
 msgid "Write a message"
 msgstr "撰寫訊息"
 
@@ -5978,6 +5978,10 @@ msgstr "您可以往後在設定中更改。"
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "您可以隨時變更該設定。"
+
+#: src/screens/Messages/Settings.tsx:111
+msgid "You can continue ongoing conversations regardless of which setting you choose."
+msgstr "無論選擇哪種設定，您都可以繼續進行對話。"
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
