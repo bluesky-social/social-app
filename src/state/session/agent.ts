@@ -52,8 +52,17 @@ export async function createAgentAndResume(
   } else {
     agent.session = prevSession
     if (!storedAccount.deactivated) {
-      // Intentionally not awaited to unblock the UI:
-      networkRetry(3, () => agent.resumeSession(prevSession))
+      try {
+        // Intentionally not awaited to unblock the UI:
+        networkRetry(3, () => agent.resumeSession(prevSession))
+      } catch (e: any) {
+        logger.error(`networkRetry failed`, {
+          status: e?.status || 'unknown',
+          message: e?.message || 'unknown',
+        })
+
+        throw e
+      }
     }
   }
 
