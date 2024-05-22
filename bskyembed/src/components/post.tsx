@@ -1,4 +1,9 @@
-import {AppBskyFeedDefs, AppBskyFeedPost, RichText} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyRichtextFacet,
+  RichText,
+} from '@atproto/api'
 import {h} from 'preact'
 
 import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
@@ -118,7 +123,10 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
 
   let counter = 0
   for (const segment of rt.segments()) {
-    if (segment.isLink() && segment.link) {
+    if (
+      segment.link &&
+      AppBskyRichtextFacet.validateLink(segment.link).success
+    ) {
       richText.push(
         <Link
           key={counter}
@@ -128,7 +136,10 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
           {segment.text}
         </Link>,
       )
-    } else if (segment.isMention() && segment.mention) {
+    } else if (
+      segment.mention &&
+      AppBskyRichtextFacet.validateMention(segment.mention).success
+    ) {
       richText.push(
         <Link
           key={counter}
@@ -137,7 +148,10 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
           {segment.text}
         </Link>,
       )
-    } else if (segment.isTag() && segment.tag) {
+    } else if (
+      segment.tag &&
+      AppBskyRichtextFacet.validateTag(segment.tag).success
+    ) {
       richText.push(
         <Link
           key={counter}
