@@ -2,13 +2,13 @@ import {XRPCError} from '@atproto/xrpc'
 
 import {isNetworkError} from 'lib/strings/errors'
 
-export const NETWORK_FAILURE_STATUSES = [
+export const RETRYABLE_NETWORK_STATUS_CODES = [
   1, 408, 425, 429, 500, 502, 503, 504, 522, 524,
 ]
 
-function isRetryable(e: unknown) {
+function isRetryableError(e: unknown) {
   if (e instanceof XRPCError) {
-    if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
+    if (RETRYABLE_NETWORK_STATUS_CODES.includes(e.status)) {
       return true
     }
   }
@@ -20,10 +20,10 @@ export async function retry<P>(
   fn: () => Promise<P>,
   {
     retries,
-    checkIsRetryable = isRetryable,
+    checkIsRetryableError = isRetryableError,
   }: {
     retries: number
-    checkIsRetryable?: (err: any) => boolean
+    checkIsRetryableError?: (err: any) => boolean
   },
 ): Promise<P> {
   let lastErr
@@ -32,7 +32,7 @@ export async function retry<P>(
       return await fn()
     } catch (e: any) {
       lastErr = e
-      if (checkIsRetryable(e)) {
+      if (checkIsRetryableError(e)) {
         retries--
         continue
       }
