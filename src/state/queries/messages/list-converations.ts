@@ -51,7 +51,11 @@ export function useUnreadMessageCount() {
     return query.data?.pages.flatMap(page => page.convos) ?? []
   }, [query.data])
 
-  const getShadow = useProfileShadowGetter(getProfilesFromConvoMembers(convos))
+  const unshadowedProfiles = useMemo(() => {
+    return getProfilesFromConvoMembers(convos)
+  }, [convos])
+
+  const getShadow = useProfileShadowGetter(unshadowedProfiles)
 
   const count =
     convos.reduce((acc, convo) => {
