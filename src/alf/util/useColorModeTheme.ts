@@ -14,8 +14,6 @@ export function useColorModeTheme(): ThemeName {
     const theme = getThemeName(colorScheme, colorMode, darkTheme)
     updateDocument(theme)
 
-    // must be default on iOS due to the formSheet modal presentation style
-    console.log(getBackgroundColor(theme))
     SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
   }, [colorMode, colorScheme, darkTheme])
 
