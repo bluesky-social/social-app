@@ -603,10 +603,10 @@ export function SearchScreen(
       updateSearchHistory(item)
 
       if (isWeb) {
-        navigation.push('Search', {q: item})
+        navigation.replace('Search', {q: item})
       } else {
         textInput.current?.blur()
-        navigation.setParams({q: item})
+        navigation.replace('Search', {q: item})
       }
     },
     [updateSearchHistory, navigation],
@@ -619,13 +619,19 @@ export function SearchScreen(
       updateSelectedProfiles(profile)
 
       if (isWeb) {
-        navigation.push('Profile', {name: profile.handle})
+        navigation.reset({
+          index: 1,
+          routes: [
+            {name: 'Search', params: {q: searchText}},
+            {name: 'Profile', params: {name: profile.handle}},
+          ],
+        })
       } else {
         textInput.current?.blur()
         navigation.navigate('Profile', {name: profile.handle})
       }
     },
-    [updateSelectedProfiles, navigation],
+    [updateSelectedProfiles, navigation, searchText],
   )
 
   const onSubmit = React.useCallback(() => {
