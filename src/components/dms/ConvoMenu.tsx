@@ -189,7 +189,7 @@ let ConvoMenu = ({
                 <Menu.ItemText>
                   {isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)}
                 </Menu.ItemText>
-                <Menu.ItemIcon icon={isBlocking ? PersonX : PersonCheck} />
+                <Menu.ItemIcon icon={isBlocking ? PersonCheck : PersonX} />
               </Menu.Item>
               <Menu.Item
                 label={_(msg`Report conversation`)}

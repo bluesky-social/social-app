@@ -26,6 +26,7 @@ export function MessageInput({
   const [message, setMessage] = React.useState(getDraft)
 
   const inputStyles = useSharedInputStyles()
+  const isComposing = React.useRef(false)
   const [isFocused, setIsFocused] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
 
@@ -44,13 +45,15 @@ export function MessageInput({
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      // Don't submit the form when the Japanese or any other IME is composing
+      if (isComposing.current) return
       if (e.key === 'Enter') {
         if (e.shiftKey) return
         e.preventDefault()
         onSubmit()
       }
     },
-    [onSubmit],
+    [onSubmit, isComposing],
   )
 
   const onChange = React.useCallback(
@@ -102,6 +105,12 @@ export function MessageInput({
           autoFocus={true}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          onCompositionStart={() => {
+            isComposing.current = true
+          }}
+          onCompositionEnd={() => {
+            isComposing.current = false
+          }}
           onChange={onChange}
           onKeyDown={onKeyDown}
         />
