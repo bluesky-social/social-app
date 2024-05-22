@@ -6,7 +6,13 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {EmojiArc_Stroke2_Corner0_Rounded as Emoji} from '#/components/icons/Emoji'
 
-export const SelectEmojiBtn = ({disabled}: {disabled?: boolean}) => {
+export const SelectEmojiBtn = ({
+  disabled,
+  onPress,
+}: {
+  disabled?: boolean
+  onPress: () => void
+}) => {
   const {_} = useLingui()
   const t = useTheme()
 
@@ -19,7 +25,8 @@ export const SelectEmojiBtn = ({disabled}: {disabled?: boolean}) => {
       variant="ghost"
       shape="round"
       color="primary"
-      disabled={disabled}>
+      disabled={disabled}
+      onPress={onPress}>
       <Emoji size="lg" style={disabled && t.atoms.text_contrast_low} />
     </Button>
   )

@@ -17,6 +17,8 @@ export interface ComposerOptsPostRef {
   embed?: AppBskyEmbedRecord.ViewRecord['embed']
   moderation?: ModerationDecision
 }
+
+/** @todo: This interface doesn't have much to do with the composer anymore */
 export interface ComposerOptsQuote {
   uri: string
   cid: string
@@ -36,6 +38,7 @@ export interface ComposerOpts {
   onPost?: () => void
   quote?: ComposerOptsQuote
   mention?: string // handle of user to mention
+  languages?: string[]
   /** @deprecated */
   openPicker?: (pos: DOMRect | undefined) => void
   text?: string

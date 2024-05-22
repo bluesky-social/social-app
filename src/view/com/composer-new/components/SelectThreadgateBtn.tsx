@@ -1,5 +1,5 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -7,7 +7,6 @@ import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
@@ -45,19 +44,17 @@ export function SelectThreadgateBtn({
     : _(msg`Some people can reply`)
 
   return (
-    <View style={[a.flex_row, a.pb_sm, a.px_sm]}>
-      <Button
-        variant="solid"
-        color="secondary"
-        size="small"
-        testID="openReplyGateButton"
-        onPress={onPress}
-        label={label}>
-        <ButtonIcon
-          icon={isEverybody ? Earth : isNobody ? CircleBanSign : Group}
-        />
-        <ButtonText>{label}</ButtonText>
-      </Button>
-    </View>
+    <Button
+      variant="solid"
+      color="secondary"
+      size="small"
+      testID="openReplyGateButton"
+      onPress={onPress}
+      label={label}>
+      <ButtonIcon
+        icon={isEverybody ? Earth : isNobody ? CircleBanSign : Group}
+      />
+      <ButtonText>{label}</ButtonText>
+    </Button>
   )
 }

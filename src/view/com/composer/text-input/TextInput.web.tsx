@@ -91,6 +91,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   }, [onPhotoPasted])
 
   React.useEffect(() => {
+    if (disabled) {
+      return
+    }
+
     const handleDrop = (event: DragEvent) => {
       const transfer = event.dataTransfer
       if (transfer) {
@@ -128,7 +132,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       document.body.removeEventListener('dragover', handleDragEnter)
       document.body.removeEventListener('dragleave', handleDragLeave)
     }
-  }, [setIsDropping])
+  }, [disabled, setIsDropping])
 
   const pastSuggestedUris = useRef<Set<string>>()
   const prevDetectedUris = useRef<Map<string, LinkFacetMatch>>()
