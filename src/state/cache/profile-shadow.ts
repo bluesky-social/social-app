@@ -83,7 +83,7 @@ export function useProfileShadowGetter<
 
   useEffect(() => {
     function onUpdate() {
-      // Update the getter to force a re-render
+      // Clone the getter to force a re-render
       setGetter(() => getProfileShadow.bind({}))
     }
     profiles.forEach(p => {
