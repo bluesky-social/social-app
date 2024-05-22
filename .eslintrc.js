@@ -9,7 +9,6 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: [
     '@typescript-eslint',
-    'detox',
     'react',
     'lingui',
     'simple-import-sort',

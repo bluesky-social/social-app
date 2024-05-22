@@ -5,7 +5,6 @@ import {
   cacheDirectory,
   copyAsync,
   deleteAsync,
-  documentDirectory,
   EncodingType,
   makeDirectoryAsync,
   StorageAccessFramework,
@@ -268,9 +267,9 @@ export async function saveToDevice(
 ) {
   try {
     if (isIOS) {
-      const tmpFileUrl = await withTempFile(filename, encoded)
-      await Sharing.shareAsync(tmpFileUrl, {UTI: type})
-      safeDeleteAsync(tmpFileUrl)
+      await withTempFile(filename, encoded, async tmpFileUrl => {
+        await Sharing.shareAsync(tmpFileUrl, {UTI: type})
+      })
       return true
     } else {
       const permissions =
@@ -297,18 +296,24 @@ export async function saveToDevice(
   }
 }
 
-async function withTempFile(
+async function withTempFile<T>(
   filename: string,
   encoded: string,
-): Promise<string> {
+  cb: (url: string) => T | Promise<T>,
+): Promise<T> {
+  // cacheDirectory will not ever be null so we assert as a string.
   // Using a directory so that the file name is not a random string
-  // documentDirectory will always be available on native, so we assert as a string.
-  const tmpDirUri = joinPath(documentDirectory as string, String(uuid.v4()))
+  const tmpDirUri = joinPath(cacheDirectory as string, String(uuid.v4()))
   await makeDirectoryAsync(tmpDirUri, {intermediates: true})
 
-  const tmpFileUrl = joinPath(tmpDirUri, filename)
-  await writeAsStringAsync(tmpFileUrl, encoded, {
-    encoding: EncodingType.Base64,
-  })
-  return tmpFileUrl
+  try {
+    const tmpFileUrl = joinPath(tmpDirUri, filename)
+    await writeAsStringAsync(tmpFileUrl, encoded, {
+      encoding: EncodingType.Base64,
+    })
+
+    return await cb(tmpFileUrl)
+  } finally {
+    safeDeleteAsync(tmpDirUri)
+  }
 }

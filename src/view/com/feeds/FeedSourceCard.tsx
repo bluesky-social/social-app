@@ -94,7 +94,7 @@ export function FeedSourceCardLoaded({
     useRemoveFeedMutation()
 
   const savedFeedConfig = preferences?.savedFeeds?.find(
-    f => f.value === feed?.uri,
+    f => f.value === feedUri,
   )
   const isSaved = Boolean(savedFeedConfig)
 
@@ -173,7 +173,7 @@ export function FeedSourceCardLoaded({
             accessibilityRole="button"
             accessibilityLabel={_(msg`Remove from my feeds`)}
             accessibilityHint=""
-            onPress={onToggleSaved}
+            onPress={onUnsave}
             hitSlop={15}
             style={styles.btn}>
             <FontAwesomeIcon
@@ -206,15 +206,15 @@ export function FeedSourceCardLoaded({
           }
         }}
         key={feed.uri}>
-        <View style={[styles.headerContainer, a.align_start]}>
+        <View style={[styles.headerContainer, a.align_center]}>
           <View style={[s.mr10]}>
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
-            <Text style={[pal.text, s.bold]} numberOfLines={3}>
+            <Text style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
-            <Text style={[pal.textLight]} numberOfLines={3}>
+            <Text style={[pal.textLight]} numberOfLines={1}>
               {feed.type === 'feed' ? (
                 <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
               ) : (
@@ -224,7 +224,7 @@ export function FeedSourceCardLoaded({
           </View>
 
           {showSaveBtn && (
-            <View style={[s.justifyCenter]}>
+            <View style={{alignSelf: 'center'}}>
               <Pressable
                 testID={`feed-${feed.displayName}-toggleSave`}
                 disabled={isAddSavedFeedPending || isRemovePending}

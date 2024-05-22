@@ -1,21 +1,27 @@
 import React, {useCallback} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
-import {ConvoView} from '@atproto-labs/api/dist/client/types/chat/bsky/convo/defs'
+import {
+  AppBskyActorDefs,
+  ChatBskyConvoDefs,
+  ModerationCause,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
+import {Shadow} from '#/state/cache/types'
 import {
   useConvoQuery,
   useMarkAsReadMutation,
 } from '#/state/queries/messages/conversation'
-import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
+import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
+import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
+import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
@@ -35,23 +41,32 @@ let ConvoMenu = ({
   currentScreen,
   showMarkAsRead,
   hideTrigger,
-  triggerOpacity,
+  blockInfo,
+  style,
 }: {
-  convo: ConvoView
-  profile: AppBskyActorDefs.ProfileViewBasic
-  onUpdateConvo?: (convo: ChatBskyConvoDefs.ConvoView) => void
+  convo: ChatBskyConvoDefs.ConvoView
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   control?: Menu.MenuControlProps
   currentScreen: 'list' | 'conversation'
   showMarkAsRead?: boolean
   hideTrigger?: boolean
-  triggerOpacity?: number
+  blockInfo: {
+    listBlocks: ModerationCause[]
+    userBlock?: ModerationCause
+  }
+  style?: ViewStyleProp['style']
 }): React.ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
+  const blockedByListControl = Prompt.usePromptControl()
   const {mutate: markAsRead} = useMarkAsReadMutation()
+
+  const {listBlocks, userBlock} = blockInfo
+  const isBlocking = userBlock || !!listBlocks.length
+  const isDeletedAccount = profile.handle === 'missing.invalid'
 
   const {data: convo} = useConvoQuery(initialConvo)
 
@@ -72,22 +87,26 @@ let ConvoMenu = ({
     },
   })
 
-  const {mutate: leaveConvo} = useLeaveConvo(convo?.id, {
-    onSuccess: () => {
-      if (currentScreen === 'conversation') {
-        navigation.replace('Messages')
-      }
-    },
-    onError: () => {
-      Toast.show(_(msg`Could not leave chat`))
-    },
-  })
+  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+
+  const toggleBlock = React.useCallback(() => {
+    if (listBlocks.length) {
+      blockedByListControl.open()
+      return
+    }
+
+    if (userBlock) {
+      queueUnblock()
+    } else {
+      queueBlock()
+    }
+  }, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock])
 
   return (
     <>
       <Menu.Root control={control}>
         {!hideTrigger && (
-          <View style={{opacity: triggerOpacity}}>
+          <View style={[style]}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
               {({props, state}) => (
                 <Pressable
@@ -110,68 +129,9 @@ let ConvoMenu = ({
             </Menu.Trigger>
           </View>
         )}
-        <Menu.Outer>
-          <Menu.Group>
-            {showMarkAsRead && (
-              <Menu.Item
-                label={_(msg`Mark as read`)}
-                onPress={() =>
-                  markAsRead({
-                    convoId: convo?.id,
-                  })
-                }>
-                <Menu.ItemText>
-                  <Trans>Mark as read</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={Bubble} />
-              </Menu.Item>
-            )}
-            <Menu.Item
-              label={_(msg`Go to user's profile`)}
-              onPress={onNavigateToProfile}>
-              <Menu.ItemText>
-                <Trans>Go to profile</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Person} />
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Mute notifications`)}
-              onPress={() => muteConvo({mute: !convo?.muted})}>
-              <Menu.ItemText>
-                {convo?.muted ? (
-                  <Trans>Unmute notifications</Trans>
-                ) : (
-                  <Trans>Mute notifications</Trans>
-                )}
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
-            </Menu.Item>
-          </Menu.Group>
-          <Menu.Divider />
-          {/* TODO(samuel): implement this */}
-          <Menu.Group>
-            <Menu.Item
-              label={_(msg`Block account`)}
-              onPress={() => {}}
-              disabled>
-              <Menu.ItemText>
-                <Trans>Block account</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon
-                icon={profile.viewer?.blocking ? PersonCheck : PersonX}
-              />
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Report conversation`)}
-              onPress={reportControl.open}>
-              <Menu.ItemText>
-                <Trans>Report conversation</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Flag} />
-            </Menu.Item>
-          </Menu.Group>
-          <Menu.Divider />
-          <Menu.Group>
+
+        {isDeletedAccount ? (
+          <Menu.Outer>
             <Menu.Item
               label={_(msg`Leave conversation`)}
               onPress={leaveConvoControl.open}>
@@ -180,29 +140,90 @@ let ConvoMenu = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={ArrowBoxLeft} />
             </Menu.Item>
-          </Menu.Group>
-        </Menu.Outer>
+          </Menu.Outer>
+        ) : (
+          <Menu.Outer>
+            <Menu.Group>
+              {showMarkAsRead && (
+                <Menu.Item
+                  label={_(msg`Mark as read`)}
+                  onPress={() =>
+                    markAsRead({
+                      convoId: convo?.id,
+                    })
+                  }>
+                  <Menu.ItemText>
+                    <Trans>Mark as read</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={Bubble} />
+                </Menu.Item>
+              )}
+              <Menu.Item
+                label={_(msg`Go to user's profile`)}
+                onPress={onNavigateToProfile}>
+                <Menu.ItemText>
+                  <Trans>Go to profile</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Person} />
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Mute conversation`)}
+                onPress={() => muteConvo({mute: !convo?.muted})}>
+                <Menu.ItemText>
+                  {convo?.muted ? (
+                    <Trans>Unmute conversation</Trans>
+                  ) : (
+                    <Trans>Mute conversation</Trans>
+                  )}
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
+              </Menu.Item>
+            </Menu.Group>
+            <Menu.Divider />
+            <Menu.Group>
+              <Menu.Item
+                label={
+                  isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)
+                }
+                onPress={toggleBlock}>
+                <Menu.ItemText>
+                  {isBlocking ? _(msg`Unblock account`) : _(msg`Block account`)}
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={isBlocking ? PersonCheck : PersonX} />
+              </Menu.Item>
+              <Menu.Item
+                label={_(msg`Report conversation`)}
+                onPress={reportControl.open}>
+                <Menu.ItemText>
+                  <Trans>Report conversation</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Flag} />
+              </Menu.Item>
+            </Menu.Group>
+            <Menu.Divider />
+            <Menu.Group>
+              <Menu.Item
+                label={_(msg`Leave conversation`)}
+                onPress={leaveConvoControl.open}>
+                <Menu.ItemText>
+                  <Trans>Leave conversation</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ArrowBoxLeft} />
+              </Menu.Item>
+            </Menu.Group>
+          </Menu.Outer>
+        )}
       </Menu.Root>
 
-      <Prompt.Basic
+      <LeaveConvoPrompt
         control={leaveConvoControl}
-        title={_(msg`Leave conversation`)}
-        description={_(
-          msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants.`,
-        )}
-        confirmButtonCta={_(msg`Leave`)}
-        confirmButtonColor="negative"
-        onConfirm={() => leaveConvo()}
+        convoId={convo.id}
+        currentScreen={currentScreen}
       />
-
-      <Prompt.Basic
-        control={reportControl}
-        title={_(msg`Report conversation`)}
-        description={_(
-          msg`To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue.`,
-        )}
-        confirmButtonCta={_(msg`I understand`)}
-        onConfirm={noop}
+      <ReportConversationPrompt control={reportControl} />
+      <BlockedByListDialog
+        control={blockedByListControl}
+        listBlocks={listBlocks}
       />
     </>
   )
@@ -210,5 +231,3 @@ let ConvoMenu = ({
 ConvoMenu = React.memo(ConvoMenu)
 
 export {ConvoMenu}
-
-function noop() {}

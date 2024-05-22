@@ -85,11 +85,17 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
+const DOWNSAMPLED_EVENTS = new Set(['router:navigate:sampled'])
+const isDownsampledSession = Math.random() < 0.9 // 90% likely
+
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
+    if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
+      return
+    }
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
@@ -108,26 +114,57 @@ export function logEvent<E extends keyof LogEvents>(
 // Our own cache ensures consistent evaluation within a single session.
 const GateCache = React.createContext<Map<string, boolean> | null>(null)
 
-export function useGate(): (gateName: Gate) => boolean {
+type GateOptions = {
+  dangerouslyDisableExposureLogging?: boolean
+}
+
+export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
   const cache = React.useContext(GateCache)
   if (!cache) {
     throw Error('useGate() cannot be called outside StatsigProvider.')
   }
   const gate = React.useCallback(
-    (gateName: Gate): boolean => {
+    (gateName: Gate, options: GateOptions = {}): boolean => {
       const cachedValue = cache.get(gateName)
       if (cachedValue !== undefined) {
         return cachedValue
       }
-      const value = Statsig.initializeCalled()
-        ? Statsig.checkGate(gateName)
-        : false
+      let value = false
+      if (Statsig.initializeCalled()) {
+        if (options.dangerouslyDisableExposureLogging) {
+          value = Statsig.checkGateWithExposureLoggingDisabled(gateName)
+        } else {
+          value = Statsig.checkGate(gateName)
+        }
+      }
       cache.set(gateName, value)
       return value
     },
     [cache],
   )
   return gate
+}
+
+/**
+ * Debugging tool to override a gate. USE ONLY IN E2E TESTS!
+ */
+export function useDangerousSetGate(): (
+  gateName: Gate,
+  value: boolean,
+) => void {
+  const cache = React.useContext(GateCache)
+  if (!cache) {
+    throw Error(
+      'useDangerousSetGate() cannot be called outside StatsigProvider.',
+    )
+  }
+  const dangerousSetGate = React.useCallback(
+    (gateName: Gate, value: boolean) => {
+      cache.set(gateName, value)
+    },
+    [cache],
+  )
+  return dangerousSetGate
 }
 
 function toStatsigUser(did: string | undefined): StatsigUser {

@@ -110,6 +110,11 @@ export function usePostFeedQuery(
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
+  const followingPinnedIndex =
+    preferences?.savedFeeds?.findIndex(
+      f => f.pinned && f.value === 'following',
+    ) ?? -1
+  const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
   const {getAgent} = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
@@ -148,8 +153,11 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              userInterests, // Not in the query key because they don't change.
               getAgent,
+              // Not in the query key because they don't change:
+              userInterests,
+              // Not in the query key. Reacting to it switching isn't important:
+              enableFollowingToDiscoverFallback,
             }),
             cursor: undefined,
           }
@@ -383,12 +391,14 @@ function createApi({
   feedTuners,
   userInterests,
   getAgent,
+  enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
   getAgent: () => BskyAgent
+  enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
@@ -399,7 +409,11 @@ function createApi({
         userInterests,
       })
     } else {
-      return new HomeFeedAPI({getAgent, userInterests})
+      if (enableFollowingToDiscoverFallback) {
+        return new HomeFeedAPI({getAgent, userInterests})
+      } else {
+        return new FollowingFeedAPI({getAgent})
+      }
     }
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')

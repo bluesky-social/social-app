@@ -1,4 +1,4 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto-labs/api'
+import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -13,6 +13,7 @@ import {
   MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const LOGGER_CONTEXT = 'MessagesEventBus'
 
@@ -20,7 +21,6 @@ export class MessagesEventBus {
   private id: string
 
   private agent: BskyAgent
-  private __tempFromUserDid: string
   private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
@@ -31,7 +31,6 @@ export class MessagesEventBus {
   constructor(params: MessagesEventBusParams) {
     this.id = nanoid(3)
     this.agent = params.agent
-    this.__tempFromUserDid = params.__tempFromUserDid
 
     this.init()
   }
@@ -242,11 +241,7 @@ export class MessagesEventBus {
           {
             limit: 1,
           },
-          {
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {headers: DM_SERVICE_HEADERS},
         )
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
@@ -337,11 +332,7 @@ export class MessagesEventBus {
           {
             cursor: this.latestRev,
           },
-          {
-            headers: {
-              Authorization: this.__tempFromUserDid,
-            },
-          },
+          {headers: DM_SERVICE_HEADERS},
         )
       })
 

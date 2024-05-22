@@ -24,7 +24,7 @@ import {Portal} from '#/components/Portal'
 export function Onboarding() {
   const {_} = useLingui()
   const gate = useGate()
-  const isReducedOnboardingEnabled = gate('reduced_onboarding_and_home_algo')
+  const isReducedOnboardingEnabled = gate('reduced_onboarding_and_home_algo_v2')
   const [state, dispatch] = React.useReducer(
     isReducedOnboardingEnabled ? reducerReduced : reducer,
     isReducedOnboardingEnabled ? {...initialStateReduced} : {...initialState},
