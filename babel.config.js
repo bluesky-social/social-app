@@ -19,6 +19,7 @@ module.exports = function (api) {
       ],
     ],
     plugins: [
+      'macros',
       [
         'babel-plugin-react-compiler',
         {
@@ -52,7 +53,6 @@ module.exports = function (api) {
           },
         },
       ],
-      'macros',
       'react-native-reanimated/plugin', // NOTE: this plugin MUST be last
     ],
     env: {
