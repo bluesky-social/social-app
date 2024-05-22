@@ -58,7 +58,8 @@ export async function createAgentAndResume(
       } catch (e: any) {
         logger.error(`networkRetry failed`, {
           status: e?.status || 'unknown',
-          message: e?.message || 'unknown',
+          // this field name is ignored by Sentry scrubbers
+          safeMessage: e?.message || 'unknown',
         })
 
         throw e
