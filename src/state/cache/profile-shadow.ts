@@ -59,6 +59,46 @@ export function useProfileShadow<
   }, [profile, shadow])
 }
 
+function getProfileShadow<TProfileView extends AppBskyActorDefs.ProfileView>(
+  profile: TProfileView,
+) {
+  const shadow = shadows.get(profile)
+  if (shadow) {
+    return mergeShadow(profile, shadow)
+  } else {
+    return castAsShadow(profile)
+  }
+}
+
+/**
+ * Watches a set of profiles for changes and returns a function that returns the shadow for a given profile
+ *
+ * @param profiles Profiles to watch for changes
+ * @returns Function that returns the shadow for a given profile
+ */
+export function useProfileShadowGetter<
+  TProfileView extends AppBskyActorDefs.ProfileView,
+>(profiles: TProfileView[]): (profile: TProfileView) => Shadow<TProfileView> {
+  const [getter, setGetter] = useState(() => getProfileShadow)
+
+  useEffect(() => {
+    function onUpdate() {
+      // Update the getter to force a re-render
+      setGetter(() => getProfileShadow.bind({}))
+    }
+    profiles.forEach(p => {
+      emitter.addListener(p.did, onUpdate)
+    })
+    return () => {
+      profiles.forEach(p => {
+        emitter.removeListener(p.did, onUpdate)
+      })
+    }
+  }, [profiles])
+
+  return getter
+}
+
 export function updateProfileShadow(
   queryClient: QueryClient,
   did: string,

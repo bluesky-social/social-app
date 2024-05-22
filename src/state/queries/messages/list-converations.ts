@@ -11,6 +11,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {useProfileShadowGetter} from '#/state/cache/profile-shadow'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
@@ -41,32 +42,41 @@ export function useListConvos({refetchInterval}: {refetchInterval: number}) {
 export function useUnreadMessageCount() {
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
-  const convos = useListConvos({
+  const query = useListConvos({
     refetchInterval: 30_000,
   })
   const moderationOpts = useModerationOpts()
 
+  const convos = useMemo(() => {
+    return query.data?.pages.flatMap(page => page.convos) ?? []
+  }, [query.data])
+
+  const getShadow = useProfileShadowGetter(getProfilesFromConvoMembers(convos))
+
   const count =
-    convos.data?.pages
-      .flatMap(page => page.convos)
-      .filter(convo => convo.id !== currentConvoId)
-      .reduce((acc, convo) => {
-        const otherMember = convo.members.find(
-          member => member.did !== currentAccount?.did,
-        )
+    convos.reduce((acc, convo) => {
+      if (convo.id === currentConvoId) return acc
 
-        if (!otherMember || !moderationOpts) return acc
+      const otherMemberUnshadowed = convo.members.find(
+        member => member.did !== currentAccount?.did,
+      )
 
-        // TODO could shadow this outside this hook and get optimistic block state
-        const moderation = moderateProfile(otherMember, moderationOpts)
-        const shouldIgnore =
-          convo.muted ||
-          moderation.blocked ||
-          otherMember.did === 'missing.invalid'
-        const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+      if (
+        !otherMemberUnshadowed ||
+        !moderationOpts ||
+        otherMemberUnshadowed.did === 'missing.invalid'
+      ) {
+        return acc
+      }
 
-        return acc + unreadCount
-      }, 0) ?? 0
+      const otherMember = getShadow(otherMemberUnshadowed)
+
+      const moderation = moderateProfile(otherMember, moderationOpts)
+      const shouldIgnore = convo.muted || moderation.blocked
+      const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+
+      return acc + unreadCount
+    }, 0) ?? 0
 
   return useMemo(() => {
     return {
@@ -74,6 +84,21 @@ export function useUnreadMessageCount() {
       numUnread: count > 0 ? (count > 30 ? '30+' : String(count)) : undefined,
     }
   }, [count])
+}
+
+function getProfilesFromConvoMembers(
+  convos: ChatBskyConvoDefs.ConvoView[],
+  currentAccountDid?: string,
+) {
+  if (!convos) {
+    return []
+  }
+
+  return convos
+    .flatMap(
+      convo => convo.members.find(member => member.did !== currentAccountDid)!,
+    )
+    .filter(Boolean)
 }
 
 type ConvoListQueryData = {
