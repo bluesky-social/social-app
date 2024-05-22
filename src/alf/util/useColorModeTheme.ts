@@ -13,7 +13,6 @@ export function useColorModeTheme(): ThemeName {
   React.useLayoutEffect(() => {
     const theme = getThemeName(colorScheme, colorMode, darkTheme)
     updateDocument(theme)
-
     SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
   }, [colorMode, colorScheme, darkTheme])
 
