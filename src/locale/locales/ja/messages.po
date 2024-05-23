@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-23 12:35+0900\n"
+"PO-Revision-Date: 2024-05-24 07:34+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -767,6 +767,11 @@ msgstr "チャットをミュートしました"
 #: src/Navigation.tsx:307
 #: src/screens/Messages/List/index.tsx:68
 msgid "Chat settings"
+msgstr "チャットの設定"
+
+#: src/screens/Messages/Settings.tsx:59
+#: src/view/screens/Settings/index.tsx:640
+msgid "Chat Settings"
 msgstr "チャットの設定"
 
 #: src/components/dms/ConvoMenu.tsx:82
@@ -3354,6 +3359,10 @@ msgstr "この通知内のユーザーの拡張リストを開く"
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:74
 msgid "Opens camera on device"
 msgstr "デバイスのカメラを開く"
+
+#: src/view/screens/Settings/index.tsx:632
+msgid "Opens chat settings"
+msgstr "チャットの設定を開く"
 
 #: src/view/com/composer/Prompt.tsx:25
 msgid "Opens composer"
