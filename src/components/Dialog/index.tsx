@@ -25,6 +25,7 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
@@ -250,6 +251,7 @@ export const ScrollableInner = React.forwardRef<
       contentContainerStyle={a.pb_4xl}
       ref={ref}>
       {children}
+      <KeyboardPadding />
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
   )
