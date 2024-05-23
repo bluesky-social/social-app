@@ -1,10 +1,8 @@
 import React from 'react'
 import {AppState} from 'react-native'
 
-import {isWeb} from '#/platform/detection'
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {useAgent} from '#/state/session'
-import {IS_DEV} from '#/env'
 
 const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
   null,
@@ -32,9 +30,10 @@ export function MessagesEventBusProvider({
   )
 
   React.useEffect(() => {
-    if (isWeb && IS_DEV) {
-      // @ts-ignore
-      window.bus = bus
+    bus.resume()
+
+    return () => {
+      bus.suspend()
     }
   }, [bus])
 
