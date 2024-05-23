@@ -2,7 +2,7 @@ import React from 'react'
 import {AppState} from 'react-native'
 
 import {MessagesEventBus} from '#/state/messages/events/agent'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 
 const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
   null,
@@ -11,12 +11,34 @@ const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
 export function useMessagesEventBus() {
   const ctx = React.useContext(MessagesEventBusContext)
   if (!ctx) {
-    throw new Error('useChat must be used within a ChatProvider')
+    throw new Error(
+      'useMessagesEventBus must be used within a MessagesEventBusProvider',
+    )
   }
   return ctx
 }
 
 export function MessagesEventBusProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const {currentAccount} = useSession()
+
+  if (!currentAccount) {
+    return (
+      <MessagesEventBusContext.Provider value={null}>
+        {children}
+      </MessagesEventBusContext.Provider>
+    )
+  }
+
+  return (
+    <MessagesEventBusProviderInner>{children}</MessagesEventBusProviderInner>
+  )
+}
+
+export function MessagesEventBusProviderInner({
   children,
 }: {
   children: React.ReactNode
