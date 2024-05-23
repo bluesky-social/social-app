@@ -9,7 +9,7 @@ import {useLingui} from '@lingui/react'
 import {ComposerImage, cropImage} from '#/state/gallery'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Dimensions} from 'lib/media/types'
-import {colors} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import {isNative} from 'platform/detection'
 import {Text} from 'view/com/util/text/Text'
 import {useTheme} from '#/alf'
@@ -94,22 +94,25 @@ const ImageEmbedInner = ({
     }, [images.length, layout, isMobile])
 
   return (
-    <View style={styles.gallery}>
-      {images.map(image => {
-        return (
-          <GalleryItem
-            key={image.source.id}
-            active={active}
-            postId={postId}
-            image={image}
-            altTextControlStyle={altTextControlStyle}
-            imageControlsStyle={imageControlsStyle}
-            imageStyle={imageStyle}
-            dispatch={dispatch}
-          />
-        )
-      })}
-    </View>
+    <>
+      <View style={styles.gallery}>
+        {images.map(image => {
+          return (
+            <GalleryItem
+              key={image.source.id}
+              active={active}
+              postId={postId}
+              image={image}
+              altTextControlStyle={altTextControlStyle}
+              imageControlsStyle={imageControlsStyle}
+              imageStyle={imageStyle}
+              dispatch={dispatch}
+            />
+          )
+        })}
+      </View>
+      <AltTextReminder />
+    </>
   )
 }
 
@@ -241,6 +244,23 @@ const GalleryItem = ({
         image={image}
         onChange={onChange}
       />
+    </View>
+  )
+}
+
+export const AltTextReminder = () => {
+  const t = useTheme()
+  return (
+    <View style={[styles.reminder]}>
+      <View style={[styles.infoIcon, t.atoms.bg_contrast_25]}>
+        <FontAwesomeIcon icon="info" size={12} color={t.atoms.text.color} />
+      </View>
+      <Text type="sm" style={[t.atoms.text_contrast_medium, s.flex1]}>
+        <Trans>
+          Alt text describes images for blind and low-vision users, and helps
+          give context to everyone.
+        </Trans>
+      </Text>
     </View>
   )
 }

@@ -20,6 +20,7 @@ import {
   PostGifEmbed,
 } from '../state'
 import {ExternalEmbed, ExternalEmbedContent} from './ExternalEmbed'
+import {AltTextReminder} from './ImageEmbed'
 
 export const GifEmbed = ({
   active,
@@ -113,6 +114,8 @@ export const GifEmbed = ({
         dispatch={dispatch}
         isGif
       />
+
+      <AltTextReminder />
     </View>
   )
 }
