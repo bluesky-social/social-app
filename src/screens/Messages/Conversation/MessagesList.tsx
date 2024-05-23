@@ -16,10 +16,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isIOS, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
+import {clamp} from 'lib/numbers'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
@@ -221,8 +222,7 @@ export function MessagesList({
 
   // -- Keyboard animation handling
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const nativeBottomBarHeight = isIOS ? 42 : 60
-  const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
+  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 75)
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
