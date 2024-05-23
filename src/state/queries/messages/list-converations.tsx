@@ -26,7 +26,7 @@ import {useAgent, useSession} from '#/state/session'
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
-export function useListConvosQuery() {
+export function useListConvosQuery(args?: {enabled: boolean}) {
   const {getAgent} = useAgent()
 
   return useInfiniteQuery({
@@ -44,6 +44,7 @@ export function useListConvosQuery() {
     // refetch every 20 seconds since we can't get *all* info from the logs
     // i.e. reading chats on another device won't update the unread count
     refetchInterval: 20_000,
+    enabled: args?.enabled,
   })
 }
 
@@ -60,7 +61,8 @@ export function useListConvos() {
 }
 
 export function ListConvosProvider({children}: {children: React.ReactNode}) {
-  const {refetch, data} = useListConvosQuery()
+  const {hasSession} = useSession()
+  const {refetch, data} = useListConvosQuery({enabled: hasSession})
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
