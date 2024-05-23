@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-21 23:20+0900\n"
+"PO-Revision-Date: 2024-05-23 12:35+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -300,8 +300,8 @@ msgstr "保存したすべてのフィードを１箇所にまとめます。"
 
 #: src/screens/Messages/Settings.tsx:61
 #: src/screens/Messages/Settings.tsx:64
-msgid "Allow messages from"
-msgstr "誰からのメッセージを許可するか："
+msgid "Allow new messages from"
+msgstr "新しいメッセージを誰から受け取れるか："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -5996,6 +5996,10 @@ msgstr "これらの設定はあとで変更できます。"
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "これはいつでも変更できます。"
+
+#: src/screens/Messages/Settings.tsx:111
+msgid "You can continue ongoing conversations regardless of which setting you choose."
+msgstr "どの設定を選択しても進行中の会話は続けることができます。"
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
