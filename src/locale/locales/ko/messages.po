@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-22 11:37+0900\n"
+"PO-Revision-Date: 2024-05-23 09:06+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -188,7 +188,7 @@ msgstr "계정 옵션"
 msgid "Account removed from quick access"
 msgstr "빠른 액세스에서 계정 제거"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:136
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:131
 #: src/view/com/profile/ProfileMenu.tsx:129
 msgid "Account unblocked"
 msgstr "계정 차단 해제됨"
@@ -298,10 +298,10 @@ msgstr "고급"
 msgid "All the feeds you've saved, right in one place."
 msgstr "저장한 모든 피드를 한 곳에서 확인하세요."
 
-#: src/screens/Messages/Settings.tsx:61
-#: src/screens/Messages/Settings.tsx:64
-msgid "Allow messages from"
-msgstr "메시지를 허용할 대상"
+#: src/screens/Messages/Settings.tsx:62
+#: src/screens/Messages/Settings.tsx:65
+msgid "Allow new messages from"
+msgstr "새 메시지를 허용할 대상"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -445,7 +445,7 @@ msgstr "정말 이 메시지를 삭제하시겠습니까? 나에게 보이는 �
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "정말 이 대화를 종료하시겠습니까? 나에게 보이는 메시지는 삭제되지만 상대방에게는 삭제되지 않습니다."
+msgstr "정말 이 대화에서 나가시겠습니까? 나에게 보이는 메시지는 삭제되지만 상대방에게는 삭제되지 않습니다."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -510,7 +510,7 @@ msgstr "생년월일"
 msgid "Birthday:"
 msgstr "생년월일:"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:295
 #: src/view/com/profile/ProfileMenu.tsx:361
 msgid "Block"
 msgstr "차단"
@@ -1156,7 +1156,7 @@ msgstr "저작권 정책"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
-msgstr "대화를 종료할 수 없습니다"
+msgstr "대화에서 나갈 수 없습니다"
 
 #: src/view/screens/ProfileFeed.tsx:102
 msgid "Could not load feed"
@@ -1371,11 +1371,11 @@ msgstr "햅틱 피드백 끄기"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
-#: src/screens/Messages/Settings.tsx:124
-#: src/screens/Messages/Settings.tsx:127
+#: src/screens/Messages/Settings.tsx:140
+#: src/screens/Messages/Settings.tsx:143
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
-msgstr "비활성화됨"
+msgstr "사용 안 함"
 
 #: src/view/com/composer/Composer.tsx:579
 msgid "Discard"
@@ -1548,12 +1548,12 @@ msgid "Edit my profile"
 msgstr "내 프로필 편집"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:176
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:171
 msgid "Edit profile"
 msgstr "프로필 편집"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:174
 msgid "Edit Profile"
 msgstr "프로필 편집"
 
@@ -1656,11 +1656,11 @@ msgstr "내가 팔로우하는 사람들 간의 답글만 표시합니다."
 msgid "Enable this source only"
 msgstr "이 소스에서만 사용"
 
-#: src/screens/Messages/Settings.tsx:115
-#: src/screens/Messages/Settings.tsx:118
+#: src/screens/Messages/Settings.tsx:131
+#: src/screens/Messages/Settings.tsx:134
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
-msgstr "활성화됨"
+msgstr "사용"
 
 #: src/screens/Profile/Sections/Feed.tsx:104
 msgid "End of feed"
@@ -1739,8 +1739,8 @@ msgstr "누구나 답글을 달 수 있음"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/screens/Messages/Settings.tsx:75
+#: src/screens/Messages/Settings.tsx:78
 msgid "Everyone"
 msgstr "모두"
 
@@ -1858,7 +1858,7 @@ msgid "Failed to submit appeal, please try again."
 msgstr "이의신청을 제출하지 못했습니다. 다시 시도하세요."
 
 #: src/components/dms/MessagesNUX.tsx:60
-#: src/screens/Messages/Settings.tsx:34
+#: src/screens/Messages/Settings.tsx:35
 msgid "Failed to update settings"
 msgstr "설정을 업데이트하지 못했습니다"
 
@@ -1951,7 +1951,7 @@ msgstr "세로로 뒤집기"
 #: src/components/ProfileHoverCard/index.web.tsx:413
 #: src/components/ProfileHoverCard/index.web.tsx:424
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:189
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:249
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:244
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
 msgid "Follow"
@@ -1963,7 +1963,7 @@ msgid "Follow"
 msgstr "팔로우"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:58
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:235
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
 msgid "Follow {0}"
 msgstr "{0} 님을 팔로우"
@@ -2008,7 +2008,7 @@ msgstr "팔로워"
 
 #: src/components/ProfileHoverCard/index.web.tsx:412
 #: src/components/ProfileHoverCard/index.web.tsx:423
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:247
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:242
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
 #: src/view/screens/Feeds.tsx:682
@@ -2017,7 +2017,7 @@ msgstr "팔로워"
 msgid "Following"
 msgstr "팔로우 중"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:92
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:90
 msgid "Following {0}"
 msgstr "{0} 님을 팔로우했습니다"
 
@@ -2520,7 +2520,7 @@ msgstr "더 알아보기"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave"
-msgstr "종료"
+msgstr "나가기"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
@@ -2533,7 +2533,7 @@ msgstr "대화 떠나기"
 #: src/components/dms/ConvoMenu.tsx:209
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
-msgstr "대화 종료"
+msgstr "대화 나가기"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -2651,7 +2651,7 @@ msgid "Load new notifications"
 msgstr "새 알림 불러오기"
 
 #: src/screens/Profile/Sections/Feed.tsx:86
-#: src/view/com/feeds/FeedPage.tsx:142
+#: src/view/com/feeds/FeedPage.tsx:135
 #: src/view/screens/ProfileFeed.tsx:492
 #: src/view/screens/ProfileList.tsx:748
 msgid "Load new posts"
@@ -3024,7 +3024,7 @@ msgstr "새 비밀번호"
 msgid "New Password"
 msgstr "새 비밀번호"
 
-#: src/view/com/feeds/FeedPage.tsx:153
+#: src/view/com/feeds/FeedPage.tsx:146
 msgctxt "action"
 msgid "New post"
 msgstr "새 게시물"
@@ -3094,7 +3094,7 @@ msgstr "DNS 패널 없음"
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있습니다."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:117
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:112
 msgid "No longer following {0}"
 msgstr "더 이상 {0} 님을 팔로우하지 않음"
 
@@ -3116,8 +3116,8 @@ msgstr "아직 알림이 없습니다."
 
 #: src/components/dms/MessagesNUX.tsx:149
 #: src/components/dms/MessagesNUX.tsx:152
-#: src/screens/Messages/Settings.tsx:92
-#: src/screens/Messages/Settings.tsx:95
+#: src/screens/Messages/Settings.tsx:93
+#: src/screens/Messages/Settings.tsx:96
 msgid "No one"
 msgstr "없음"
 
@@ -3194,11 +3194,11 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 msgid "Nothing here"
 msgstr "빈 페이지"
 
-#: src/screens/Messages/Settings.tsx:108
+#: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
 msgstr "알림음"
 
-#: src/screens/Messages/Settings.tsx:105
+#: src/screens/Messages/Settings.tsx:121
 msgid "Notification Sounds"
 msgstr "알림음"
 
@@ -4015,7 +4015,7 @@ msgstr "이 리스트 신고하기"
 #: src/components/dms/ReportDialog.tsx:140
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this message"
-msgstr "이 메시지 신고"
+msgstr "이 메시지 신고하기"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
@@ -4536,7 +4536,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "이미지 비율을 가로로 길게 설정합니다"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:58
+#: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -4624,7 +4624,7 @@ msgstr "배지 표시"
 msgid "Show badge and filter from feeds"
 msgstr "배지 표시 및 피드에서 필터링"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:212
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
 msgid "Show follows similar to {0}"
 msgstr "{0} 님과 비슷한 팔로우 표시"
 
@@ -4809,7 +4809,7 @@ msgid "Something went wrong, please try again."
 msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요."
 
 #: src/App.native.tsx:85
-#: src/App.web.tsx:73
+#: src/App.web.tsx:74
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
@@ -5006,7 +5006,7 @@ msgstr "텍스트 파일 내용:"
 msgid "That handle is already taken."
 msgstr "이 핸들은 이미 사용 중입니다."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:296
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:291
 #: src/view/com/profile/ProfileMenu.tsx:349
 msgid "The account will be able to interact with you after unblocking."
 msgstr "차단을 해제하면 이 계정이 나와 상호작용할 수 있게 됩니다."
@@ -5119,9 +5119,9 @@ msgstr "설정을 서버와 동기화하는 동안 문제가 발생했습니다"
 msgid "There was an issue with fetching your app passwords"
 msgstr "앱 비밀번호를 가져오는 동안 문제가 발생했습니다"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:104
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:126
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:140
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:99
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:121
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:135
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:99
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:111
 #: src/view/com/profile/ProfileMenu.tsx:107
@@ -5413,14 +5413,14 @@ msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하�
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:189
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:295
 #: src/view/com/profile/ProfileMenu.tsx:361
 #: src/view/screens/ProfileList.tsx:625
 msgid "Unblock"
 msgstr "차단 해제"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:194
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:189
 msgctxt "action"
 msgid "Unblock"
 msgstr "차단 해제"
@@ -5435,7 +5435,7 @@ msgstr "계정 차단 해제"
 msgid "Unblock Account"
 msgstr "계정 차단 해제"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:294
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:289
 #: src/view/com/profile/ProfileMenu.tsx:343
 msgid "Unblock Account?"
 msgstr "계정을 차단 해제하시겠습니까?"
@@ -5456,7 +5456,7 @@ msgstr "언팔로우"
 msgid "Unfollow"
 msgstr "언팔로우"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:229
 msgid "Unfollow {0}"
 msgstr "{0} 님을 언팔로우"
 
@@ -5673,8 +5673,8 @@ msgstr "<0/> 님이 팔로우한 사용자"
 
 #: src/components/dms/MessagesNUX.tsx:140
 #: src/components/dms/MessagesNUX.tsx:143
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/screens/Messages/Settings.tsx:84
+#: src/screens/Messages/Settings.tsx:87
 msgid "Users I follow"
 msgstr "내가 팔로우하는 사용자"
 
@@ -5887,7 +5887,7 @@ msgstr "알고리즘 피드에 어떤 언어를 표시하시겠습니까?"
 #: src/components/dms/MessagesNUX.tsx:110
 #: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
-msgstr "누구의 메시지를 허용할까요?"
+msgstr "누구의 메시지를 허용하시겠습니까?"
 
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
@@ -5978,6 +5978,10 @@ msgstr "이 설정은 나중에 변경할 수 있습니다."
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "언제든지 변경할 수 있습니다."
+
+#: src/screens/Messages/Settings.tsx:111
+msgid "You can continue ongoing conversations regardless of which setting you choose."
+msgstr "어떤 설정을 선택하든 진행 중인 대화를 계속할 수 있습니다."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
