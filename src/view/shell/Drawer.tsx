@@ -246,8 +246,8 @@ let DrawerContent = ({}: {}): React.ReactNode => {
           {hasSession ? (
             <>
               <View style={{height: 16}} />
-              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
               <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+              <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
               <NotificationsMenuItem
                 isActive={isAtNotifications}
                 onPress={onPressNotifications}
