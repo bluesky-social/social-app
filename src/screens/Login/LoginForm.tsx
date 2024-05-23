@@ -19,6 +19,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -67,6 +68,7 @@ export const LoginForm = ({
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
@@ -113,6 +115,7 @@ export const LoginForm = ({
         },
         'LoginForm',
       )
+      setShowLoggedOut(false)
       requestNotificationsPermission('Login')
     } catch (e: any) {
       const errMsg = e.toString()
