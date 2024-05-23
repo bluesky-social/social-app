@@ -4,20 +4,15 @@ import {AppState} from 'react-native'
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {useAgent, useSession} from '#/state/session'
 
-const MessagesEventBusContext = React.createContext<
-  MessagesEventBus | null | undefined
->(undefined)
+const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
+  null,
+)
 
 export function useMessagesEventBus() {
   const ctx = React.useContext(MessagesEventBusContext)
-  if (ctx === undefined) {
+  if (!ctx) {
     throw new Error(
       'useMessagesEventBus must be used within a MessagesEventBusProvider',
-    )
-  }
-  if (ctx === null) {
-    throw new Error(
-      'MessagesEventBusProvider was not initialized because there is no active session.',
     )
   }
   return ctx
