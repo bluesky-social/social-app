@@ -15,7 +15,9 @@ Internal OTA deployments should be performed automatically upon all merges into 
 - Remove any internal client from your device and download the client from the App Store/Google Play. This will help for testing as well as retrieving the build number.
 - You should have signed in to EAS locally through npx eas login. You will need to modify the build number in a subsequent step.
 - Identify the build number of the production app you want to deploy an update for. iOS and Android build numbers are divergent, so you will need to find both
+
   ![app-build-number](./img/app-build-number.jpg)
+
 - Ensure that the commit the initial client was cut from is properly tagged. The tag should be in the format of 1.X.0
 
 ### Preparation
@@ -35,13 +37,19 @@ Internal OTA deployments should be performed automatically upon all merges into 
 - Run the deployment
   - Navigate to https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml
   - Select the “Run Workflow” dropdown
+  
     ![run-workflow](./img/run-workflow.png)
+  
   - Select the branch for the deployment you are releasing.
+  
     ![branch-selection](./img/branch-selection.png)
+  
   - Double check the branch selection.
   - Select the production channel
   - Enter the version for the client you are releasing to, i.e. 1.80.0
+  
     ![other-ota-options](./img/other-ota-options.png)
+  
   - Triple check the branch selection.
   - Press “Run Workflow”
 
