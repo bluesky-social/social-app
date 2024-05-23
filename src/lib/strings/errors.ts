@@ -12,7 +12,7 @@ export function cleanError(str: any): string {
     return 'The server appears to be experiencing issues. Please try again in a few moments.'
   }
   if (str.includes('Bad token scope')) {
-    return 'This feature is not available while using an App Password. Please log in with your main password.'
+    return 'This feature is not available while using an App Password. Please sign in with your main password.'
   }
   if (str.startsWith('Error: ')) {
     return str.slice('Error: '.length)
