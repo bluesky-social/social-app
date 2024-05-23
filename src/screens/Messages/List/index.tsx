@@ -10,7 +10,7 @@ import {MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {useListConvos} from '#/state/queries/messages/list-converations'
+import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
@@ -88,7 +88,7 @@ export function MessagesScreen({navigation, route}: Props) {
     isError,
     error,
     refetch,
-  } = useListConvos({refetchInterval: 15_000})
+  } = useListConvosQuery()
 
   useRefreshOnFocus(refetch)
 
