@@ -190,6 +190,7 @@ export async function publish({agent, queryClient, state, onLog}: PostOptions) {
       }
 
       writes.push({
+        $type: 'com.atproto.repo.applyWrites#create',
         collection: 'app.bsky.feed.threadgate',
         rkey: rkey,
         value: threadgateRecord,
