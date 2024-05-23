@@ -1,5 +1,5 @@
-export const ACTIVE_POLL_INTERVAL = 1.5e3
-export const BACKGROUND_POLL_INTERVAL = 20e3
+export const ACTIVE_POLL_INTERVAL = 2e3
+export const BACKGROUND_POLL_INTERVAL = 60e3
 export const INACTIVE_TIMEOUT = 60e3 * 5
 
 export const NETWORK_FAILURE_STATUSES = [
