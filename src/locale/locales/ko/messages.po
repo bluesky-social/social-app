@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-23 09:14+0900\n"
+"PO-Revision-Date: 2024-05-23 10:31+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -857,7 +857,7 @@ msgstr "기후"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr "Clip 🐴 clop 🐴"
+msgstr "다그닥 🐴 다그닥 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:301
 #: src/components/dms/NewChatDialog/index.tsx:439
