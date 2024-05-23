@@ -2,7 +2,7 @@ import React from 'react'
 import {AppState} from 'react-native'
 
 import {MessagesEventBus} from '#/state/messages/events/agent'
-import {useAgent} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 
 const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
   null,
@@ -17,6 +17,22 @@ export function useMessagesEventBus() {
 }
 
 export function MessagesEventBusProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const {currentAccount} = useSession()
+
+  if (!currentAccount) {
+    return children
+  }
+
+  return (
+    <MessagesEventBusProviderInner>{children}</MessagesEventBusProviderInner>
+  )
+}
+
+export function MessagesEventBusProviderInner({
   children,
 }: {
   children: React.ReactNode
