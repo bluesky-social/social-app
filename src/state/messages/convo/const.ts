@@ -24,7 +24,7 @@ export const INACTIVE_TIMEOUT = 60e3
 /**
  * Timeout after which we consider the chat stale and in need of a full reset.
  */
-export const EXPIRED_TIMEOUT = 60e3 * 5
+export const STALE_TIMEOUT = 60e3 * 5
 
 /**
  * Retryable error statuses

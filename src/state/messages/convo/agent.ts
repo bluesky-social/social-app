@@ -15,10 +15,10 @@ import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
-  EXPIRED_TIMEOUT,
   INACTIVE_POLL_INTERVAL,
   INACTIVE_TIMEOUT,
   NETWORK_FAILURE_STATUSES,
+  STALE_TIMEOUT,
 } from '#/state/messages/convo/const'
 import {
   ConvoDispatch,
@@ -76,7 +76,7 @@ export class Convo {
 
   private isProcessingPendingMessages = false
 
-  private lastActiveTimestamp: number | undefined
+  private lastCommitTimestamp: number | undefined
 
   private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
@@ -104,8 +104,8 @@ export class Convo {
   }
 
   private commit() {
-    this.refreshInactiveTimeout()
-    this.updateLastActiveTimestamp()
+    this.refreshInactivityTimer()
+    this.lastCommitTimestamp = Date.now()
     this.snapshot = undefined
     this.subscribers.forEach(subscriber => subscriber())
   }
@@ -282,7 +282,7 @@ export class Convo {
       case ConvoStatus.Backgrounded: {
         switch (action.event) {
           case ConvoDispatchEvent.Resume: {
-            if (this.wasChatInactive()) {
+            if (this.isChatStale()) {
               this.reset()
             } else {
               if (this.convo) {
@@ -498,7 +498,7 @@ export class Convo {
    * active polling, and sets up a timeout to back-off polling after a period
    * of inactivity.
    */
-  private refreshInactiveTimeout() {
+  private refreshInactivityTimer() {
     // clears either primary or secondary timeout
     if (this.inactiveTimeout) {
       clearTimeout(this.inactiveTimeout)
@@ -519,16 +519,9 @@ export class Convo {
     }
   }
 
-  /**
-   * Called on any commit, like when the chat is backgrounded. This
-   * value is then checked on background -> foreground transitions.
-   */
-  private updateLastActiveTimestamp() {
-    this.lastActiveTimestamp = Date.now()
-  }
-  private wasChatInactive() {
-    if (!this.lastActiveTimestamp) return true
-    return Date.now() - this.lastActiveTimestamp > EXPIRED_TIMEOUT
+  private isChatStale() {
+    if (!this.lastCommitTimestamp) return true
+    return Date.now() - this.lastCommitTimestamp > STALE_TIMEOUT
   }
 
   private requestedPollInterval: (() => void) | undefined
