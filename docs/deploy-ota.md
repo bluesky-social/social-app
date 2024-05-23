@@ -21,7 +21,7 @@ subsequent step.
 - Identify the build number of the production app you want to deploy an update for. iOS and Android build numbers are 
 divergent, so you will need to find both
 
-  ![app-build-number](./img/app-build-number.jpg)
+  ![app-build-number](./img/app-build-number.png)
 
 - Ensure that the commit the initial client was cut from is properly tagged in git. The tag should be in the format of 1.X.0
   - Note: If the commit is not properly tagged, then the OTA deployment will simply fail since the GitHub Action will 
