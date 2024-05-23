@@ -237,6 +237,7 @@ export const ScrollableInner = React.forwardRef<
   return (
     <BottomSheetScrollView
       keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
