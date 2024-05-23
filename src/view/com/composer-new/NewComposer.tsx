@@ -402,7 +402,6 @@ let Post = ({
       </View>
 
       <View style={[a.flex_1, a.relative, !active && opacityStyle]}>
-        {}
         <TextInput
           ref={textInputRef}
           disabled={!active}

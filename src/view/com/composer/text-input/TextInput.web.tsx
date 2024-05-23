@@ -168,7 +168,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         extensions,
       ),
       autofocus: 'end',
-      editable: !disabled,
+      editable: true,
       injectCSS: true,
       onCreate({editor: editorProp}) {
         // HACK
@@ -212,7 +212,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         }
       },
     },
-    [modeClass, disabled, extensions],
+    [modeClass, extensions],
   )
 
   const onEmojiInserted = React.useCallback(
@@ -230,6 +230,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 
   React.useLayoutEffect(() => {
     if (editor) {
+      editor.setEditable(!disabled)
       // `editable` doesn't control whether it can be tabbed-into or not
       editor.view.dom.tabIndex = !disabled ? 0 : -1
     }
