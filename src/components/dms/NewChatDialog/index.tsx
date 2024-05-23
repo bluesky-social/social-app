@@ -314,9 +314,7 @@ function SearchablePeopleList({
     isError,
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
-  const {data: follows} = useProfileFollowsQuery(currentAccount?.did, {
-    limit: 12,
-  })
+  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
 
   const items = useMemo(() => {
     let _items: Item[] = []
