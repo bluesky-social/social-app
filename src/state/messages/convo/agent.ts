@@ -15,6 +15,8 @@ import {isNative} from '#/platform/detection'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
+  EXPIRED_TIMEOUT,
+  INACTIVE_POLL_INTERVAL,
   INACTIVE_TIMEOUT,
   NETWORK_FAILURE_STATUSES,
 } from '#/state/messages/convo/const'
@@ -102,6 +104,8 @@ export class Convo {
   }
 
   private commit() {
+    this.refreshInactiveTimeout()
+    this.updateLastActiveTimestamp()
     this.snapshot = undefined
     this.subscribers.forEach(subscriber => subscriber())
   }
@@ -381,7 +385,6 @@ export class Convo {
       logger.DebugContext.convo,
     )
 
-    this.updateLastActiveTimestamp()
     this.commit()
   }
 
@@ -486,7 +489,38 @@ export class Convo {
   }
 
   /**
-   * Called on any state transition, like when the chat is backgrounded. This
+   * In `Ready` status, marks the chat as inactive and reduces polling.
+   */
+  private inactiveTimeout: NodeJS.Timeout | undefined
+
+  /**
+   * Called on every commit. If we're in ready state, it ensures we continue
+   * active polling, and sets up a timeout to back-off polling after a period
+   * of inactivity.
+   */
+  private refreshInactiveTimeout() {
+    // clears either primary or secondary timeout
+    if (this.inactiveTimeout) {
+      clearTimeout(this.inactiveTimeout)
+    }
+
+    if (this.status === ConvoStatus.Ready) {
+      this.requestPollInterval(ACTIVE_POLL_INTERVAL)
+
+      // initial timeout, move to inactive
+      this.inactiveTimeout = setTimeout(() => {
+        this.requestPollInterval(INACTIVE_POLL_INTERVAL)
+
+        // secondary timeout, move to background
+        this.inactiveTimeout = setTimeout(() => {
+          this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
+        }, INACTIVE_TIMEOUT)
+      }, INACTIVE_TIMEOUT)
+    }
+  }
+
+  /**
+   * Called on any commit, like when the chat is backgrounded. This
    * value is then checked on background -> foreground transitions.
    */
   private updateLastActiveTimestamp() {
@@ -494,7 +528,7 @@ export class Convo {
   }
   private wasChatInactive() {
     if (!this.lastActiveTimestamp) return true
-    return Date.now() - this.lastActiveTimestamp > INACTIVE_TIMEOUT
+    return Date.now() - this.lastActiveTimestamp > EXPIRED_TIMEOUT
   }
 
   private requestedPollInterval: (() => void) | undefined
