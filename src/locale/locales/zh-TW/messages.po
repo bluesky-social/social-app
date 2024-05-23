@@ -298,8 +298,8 @@ msgstr "進階設定"
 msgid "All the feeds you've saved, right in one place."
 msgstr "以下是您保存的動態源。"
 
-#: src/screens/Messages/Settings.tsx:52
-#: src/screens/Messages/Settings.tsx:55
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr "允許來自這些人的訊息："
 
@@ -896,7 +896,7 @@ msgstr "關閉圖片"
 msgid "Close image viewer"
 msgstr "關閉圖片檢視器"
 
-#: src/components/dms/MessagesNUX.tsx:159
+#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr "關閉視窗"
 
@@ -1352,7 +1352,7 @@ msgstr "有什麼想說的嗎？"
 msgid "Dim"
 msgstr "昏暗"
 
-#: src/components/dms/MessagesNUX.tsx:85
+#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr "私人訊息已推出！"
 
@@ -1371,6 +1371,8 @@ msgstr "關閉觸覺回饋"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Messages/Settings.tsx:124
+#: src/screens/Messages/Settings.tsx:127
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "停用"
@@ -1654,6 +1656,8 @@ msgstr "啟用此設定將只顯示您跟隨的人之間的回覆。"
 msgid "Enable this source only"
 msgstr "僅啟用此來源"
 
+#: src/screens/Messages/Settings.tsx:115
+#: src/screens/Messages/Settings.tsx:118
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "啟用"
@@ -1663,8 +1667,8 @@ msgid "End of feed"
 msgstr "已經到底部啦！"
 
 #: src/components/Lists.tsx:52
-msgid "End of list"
-msgstr ""
+#~ msgid "End of list"
+#~ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -1737,10 +1741,10 @@ msgstr "所有人"
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
-#: src/screens/Messages/Settings.tsx:65
-#: src/screens/Messages/Settings.tsx:68
+#: src/components/dms/MessagesNUX.tsx:134
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr "所有人"
 
@@ -1857,7 +1861,7 @@ msgstr "無法傳送"
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:58
+#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
 msgstr "無法更新設定"
@@ -2083,7 +2087,7 @@ msgstr "來自 <0/>"
 msgid "Gallery"
 msgstr "相簿"
 
-#: src/components/dms/MessagesNUX.tsx:165
+#: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "開始"
 
@@ -2401,7 +2405,7 @@ msgstr "輸入您的託管服務供應商"
 msgid "Input your user handle"
 msgstr "輸入您的帳號代碼"
 
-#: src/components/dms/MessagesNUX.tsx:79
+#: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr "為您隆重介紹「私人訊息」"
 
@@ -2752,14 +2756,14 @@ msgstr "訊息輸入欄位"
 msgid "Message is too long"
 msgstr "訊息太長了"
 
-#: src/screens/Messages/List/index.tsx:299
+#: src/screens/Messages/List/index.tsx:301
 msgid "Message settings"
 msgstr "訊息設定"
 
 #: src/Navigation.tsx:520
 #: src/screens/Messages/List/index.tsx:144
 #: src/screens/Messages/List/index.tsx:226
-#: src/screens/Messages/List/index.tsx:295
+#: src/screens/Messages/List/index.tsx:297
 msgid "Messages"
 msgstr "訊息"
 
@@ -3003,8 +3007,8 @@ msgid "New"
 msgstr "新增"
 
 #: src/components/dms/NewChatDialog/index.tsx:98
-#: src/screens/Messages/List/index.tsx:309
-#: src/screens/Messages/List/index.tsx:316
+#: src/screens/Messages/List/index.tsx:311
+#: src/screens/Messages/List/index.tsx:318
 msgid "New chat"
 msgstr "新對話"
 
@@ -3110,14 +3114,18 @@ msgstr "不超過 253 個字符"
 msgid "No messages yet"
 msgstr "還沒有訊息"
 
+#: src/screens/Messages/List/index.tsx:254
+msgid "No more conversations to show"
+msgstr ""
+
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "還沒有通知！"
 
-#: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/components/dms/MessagesNUX.tsx:152
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr "沒有人"
 
@@ -3130,7 +3138,7 @@ msgstr "沒有結果"
 msgid "No results"
 msgstr "沒有結果"
 
-#: src/components/Lists.tsx:211
+#: src/components/Lists.tsx:207
 msgid "No results found"
 msgstr "未找到結果"
 
@@ -3192,6 +3200,14 @@ msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制�
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:108
+msgid "Notification sounds"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:105
+msgid "Notification Sounds"
 msgstr ""
 
 #: src/Navigation.tsx:515
@@ -3262,11 +3278,11 @@ msgstr "只有{0}可以回覆。"
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "只包含字母、數字和連字符"
 
-#: src/components/Lists.tsx:92
+#: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
 msgstr "糟糕，發生了錯誤！"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:191
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3472,7 +3488,7 @@ msgstr "其他…"
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "我們的內容管理者已審核檢舉，並決定停用您在 Bluesky 上的對話功能。"
 
-#: src/components/Lists.tsx:212
+#: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "頁面不存在"
@@ -3559,8 +3575,8 @@ msgstr "播放 {0}"
 
 #: src/screens/Messages/Settings.tsx:97
 #: src/screens/Messages/Settings.tsx:104
-msgid "Play notification sounds"
-msgstr "播放通知音效"
+#~ msgid "Play notification sounds"
+#~ msgstr "播放通知音效"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -3721,7 +3737,7 @@ msgid "Press to change hosting provider"
 msgstr "按下以更改託管服務供應商"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:97
+#: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
@@ -3752,7 +3768,7 @@ msgstr "隱私"
 msgid "Privacy Policy"
 msgstr "隱私政策"
 
-#: src/components/dms/MessagesNUX.tsx:88
+#: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr "和其他用戶進行私人對話。"
 
@@ -4132,7 +4148,7 @@ msgstr "重試上次出錯的操作"
 
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:108
+#: src/components/Lists.tsx:104
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
@@ -4538,7 +4554,7 @@ msgid "Sets image aspect ratio to wide"
 msgstr "將圖像的寬高比設定為寬"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:49
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -4852,7 +4868,7 @@ msgstr "開始新對話"
 msgid "Start chat with {displayName}"
 msgstr "與 {displayName} 開始對話"
 
-#: src/components/dms/MessagesNUX.tsx:158
+#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr "開始對話"
 
@@ -5673,10 +5689,10 @@ msgstr "用戶"
 msgid "users followed by <0/>"
 msgstr "被 <0/> 跟隨的用戶"
 
-#: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/components/dms/MessagesNUX.tsx:143
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
 msgstr "我跟隨的用戶"
 
@@ -5859,7 +5875,7 @@ msgstr "很抱歉，我們目前無法載入您的靜音文字。請稍後再試
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成您的搜尋請求。請稍後再試。"
 
-#: src/components/Lists.tsx:216
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我們找不到您正在尋找的頁面。"
@@ -5886,8 +5902,8 @@ msgstr "這個貼文使用了哪些語言？"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "您想在演算法動態源中看到哪些語言？"
 
-#: src/components/dms/MessagesNUX.tsx:107
-#: src/components/dms/MessagesNUX.tsx:121
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr "誰可以傳送訊息給您？"
 
@@ -5981,7 +5997,7 @@ msgstr "您也可以探索並跟隨新的自訂動態源。"
 msgid "You can change these settings later."
 msgstr "您可以往後在設定中更改。"
 
-#: src/components/dms/MessagesNUX.tsx:116
+#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "您可以隨時變更該設定。"
 
@@ -6072,6 +6088,10 @@ msgstr "您還沒有建立任何應用程式專用密碼，如您想建立一個
 #: src/view/screens/ModerationMutedAccounts.tsx:133
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "您還沒有靜音任何帳號。要靜音帳號，請前往其個人資料並在其帳號上的選單中選擇「靜音帳號」。"
+
+#: src/components/Lists.tsx:52
+msgid "You have reached the end"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"

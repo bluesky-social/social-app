@@ -390,8 +390,8 @@ msgstr "Avanzato"
 msgid "All the feeds you've saved, right in one place."
 msgstr "Tutti i feed che hai salvato, in un unico posto."
 
-#: src/screens/Messages/Settings.tsx:52
-#: src/screens/Messages/Settings.tsx:55
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
 msgstr ""
 
@@ -1096,7 +1096,7 @@ msgstr "Chiudi l'immagine"
 msgid "Close image viewer"
 msgstr "Chiudi il visualizzatore di immagini"
 
-#: src/components/dms/MessagesNUX.tsx:159
+#: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
 msgstr ""
 
@@ -1611,7 +1611,7 @@ msgstr "Volevi dire qualcosa?"
 msgid "Dim"
 msgstr "Fioco"
 
-#: src/components/dms/MessagesNUX.tsx:85
+#: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr ""
 
@@ -1630,6 +1630,8 @@ msgstr "Disattiva il feedback tattile"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Messages/Settings.tsx:124
+#: src/screens/Messages/Settings.tsx:127
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "Disabilitato"
@@ -1931,6 +1933,8 @@ msgstr "Abilita questa impostazione per vedere solo le risposte delle persone ch
 msgid "Enable this source only"
 msgstr "Abilita solo questa fonte"
 
+#: src/screens/Messages/Settings.tsx:115
+#: src/screens/Messages/Settings.tsx:118
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "Abilitato"
@@ -1940,8 +1944,8 @@ msgid "End of feed"
 msgstr "Fine del feed"
 
 #: src/components/Lists.tsx:52
-msgid "End of list"
-msgstr ""
+#~ msgid "End of list"
+#~ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:167
 msgid "Enter a name for this App Password"
@@ -2023,10 +2027,10 @@ msgstr "Tutti"
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:128
 #: src/components/dms/MessagesNUX.tsx:131
-#: src/screens/Messages/Settings.tsx:65
-#: src/screens/Messages/Settings.tsx:68
+#: src/components/dms/MessagesNUX.tsx:134
+#: src/screens/Messages/Settings.tsx:74
+#: src/screens/Messages/Settings.tsx:77
 msgid "Everyone"
 msgstr ""
 
@@ -2159,7 +2163,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:58
+#: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
 msgstr ""
@@ -2418,7 +2422,7 @@ msgstr "Da <0/>"
 msgid "Gallery"
 msgstr "Galleria"
 
-#: src/components/dms/MessagesNUX.tsx:165
+#: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr ""
 
@@ -2767,7 +2771,7 @@ msgstr "Inserisci il tuo provider di hosting preferito"
 msgid "Input your user handle"
 msgstr "Inserisci il tuo identificatore"
 
-#: src/components/dms/MessagesNUX.tsx:79
+#: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
 msgstr ""
 
@@ -3193,14 +3197,14 @@ msgstr ""
 msgid "Message is too long"
 msgstr ""
 
-#: src/screens/Messages/List/index.tsx:299
+#: src/screens/Messages/List/index.tsx:301
 msgid "Message settings"
 msgstr ""
 
 #: src/Navigation.tsx:520
 #: src/screens/Messages/List/index.tsx:144
 #: src/screens/Messages/List/index.tsx:226
-#: src/screens/Messages/List/index.tsx:295
+#: src/screens/Messages/List/index.tsx:297
 msgid "Messages"
 msgstr ""
 
@@ -3473,8 +3477,8 @@ msgid "New"
 msgstr "Nuova"
 
 #: src/components/dms/NewChatDialog/index.tsx:98
-#: src/screens/Messages/List/index.tsx:309
-#: src/screens/Messages/List/index.tsx:316
+#: src/screens/Messages/List/index.tsx:311
+#: src/screens/Messages/List/index.tsx:318
 msgid "New chat"
 msgstr ""
 
@@ -3584,14 +3588,18 @@ msgstr "Non più di 253 caratteri"
 msgid "No messages yet"
 msgstr ""
 
+#: src/screens/Messages/List/index.tsx:254
+msgid "No more conversations to show"
+msgstr ""
+
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "Ancora nessuna notifica!"
 
-#: src/components/dms/MessagesNUX.tsx:146
 #: src/components/dms/MessagesNUX.tsx:149
-#: src/screens/Messages/Settings.tsx:83
-#: src/screens/Messages/Settings.tsx:86
+#: src/components/dms/MessagesNUX.tsx:152
+#: src/screens/Messages/Settings.tsx:92
+#: src/screens/Messages/Settings.tsx:95
 msgid "No one"
 msgstr ""
 
@@ -3604,7 +3612,7 @@ msgstr "Nessun risultato"
 msgid "No results"
 msgstr ""
 
-#: src/components/Lists.tsx:211
+#: src/components/Lists.tsx:207
 msgid "No results found"
 msgstr "Non si è trovato nessun risultato"
 
@@ -3674,6 +3682,14 @@ msgstr "Nota: Bluesky è una rete aperta e pubblica. Questa impostazione limita 
 
 #: src/screens/Messages/List/index.tsx:195
 msgid "Nothing here"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:108
+msgid "Notification sounds"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:105
+msgid "Notification Sounds"
 msgstr ""
 
 #: src/Navigation.tsx:515
@@ -3751,11 +3767,11 @@ msgstr "Solo {0} può rispondere."
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "Contiene solo lettere, numeri e trattini"
 
-#: src/components/Lists.tsx:92
+#: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
 msgstr "Ops! Qualcosa è andato male!"
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:191
 #: src/view/screens/AppPasswords.tsx:67
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
@@ -3989,7 +4005,7 @@ msgstr "Altro..."
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr ""
 
-#: src/components/Lists.tsx:212
+#: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "Pagina non trovata"
@@ -4079,8 +4095,8 @@ msgstr "Riproduci {0}"
 
 #: src/screens/Messages/Settings.tsx:97
 #: src/screens/Messages/Settings.tsx:104
-msgid "Play notification sounds"
-msgstr ""
+#~ msgid "Play notification sounds"
+#~ msgstr ""
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -4262,7 +4278,7 @@ msgid "Press to change hosting provider"
 msgstr "Premi per cambiare provider di hosting"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:97
+#: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
@@ -4298,7 +4314,7 @@ msgstr "Privacy"
 msgid "Privacy Policy"
 msgstr "Informativa sulla privacy"
 
-#: src/components/dms/MessagesNUX.tsx:88
+#: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
 msgstr ""
 
@@ -4727,7 +4743,7 @@ msgstr "Ritenta l'ultima azione che ha generato un errore"
 
 #: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:108
+#: src/components/Lists.tsx:104
 #: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Login/LoginForm.tsx:292
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
@@ -5203,7 +5219,7 @@ msgstr "Imposta l'amplio sulle proporzioni dell'immagine"
 #~ msgstr "Imposta il server per il client Bluesky"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings.tsx:49
+#: src/screens/Messages/Settings.tsx:58
 #: src/view/screens/Settings/index.tsx:325
 #: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
@@ -5556,7 +5572,7 @@ msgstr ""
 msgid "Start chat with {displayName}"
 msgstr ""
 
-#: src/components/dms/MessagesNUX.tsx:158
+#: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr ""
 
@@ -6472,10 +6488,10 @@ msgstr "Utenti"
 msgid "users followed by <0/>"
 msgstr "utenti seguiti da <0/>"
 
-#: src/components/dms/MessagesNUX.tsx:137
 #: src/components/dms/MessagesNUX.tsx:140
-#: src/screens/Messages/Settings.tsx:74
-#: src/screens/Messages/Settings.tsx:77
+#: src/components/dms/MessagesNUX.tsx:143
+#: src/screens/Messages/Settings.tsx:83
+#: src/screens/Messages/Settings.tsx:86
 msgid "Users I follow"
 msgstr ""
 
@@ -6675,7 +6691,7 @@ msgstr "Siamo spiacenti, ma al momento non siamo riusciti a caricare le parole s
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Siamo spiacenti, ma non è stato possibile completare la ricerca. Riprova tra qualche minuto."
 
-#: src/components/Lists.tsx:216
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Ci dispiace! Non riusciamo a trovare la pagina che stavi cercando."
@@ -6712,8 +6728,8 @@ msgstr "Che lingue sono utilizzate in questo post?"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Quali lingue vorresti vedere negli algoritmi dei tuoi feeds?"
 
-#: src/components/dms/MessagesNUX.tsx:107
-#: src/components/dms/MessagesNUX.tsx:121
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
 msgstr ""
 
@@ -6809,7 +6825,7 @@ msgstr "Puoi anche scoprire nuovi feed personalizzati da seguire."
 msgid "You can change these settings later."
 msgstr "Potrai modificare queste impostazioni in seguito."
 
-#: src/components/dms/MessagesNUX.tsx:116
+#: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr ""
 
@@ -6913,6 +6929,10 @@ msgstr "Non hai ancora silenziato nessun account. Per silenziare un account, vai
 
 #~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 #~ msgstr "Non hai ancora disattivato alcun account. Per disattivare un account, vai al suo profilo e seleziona \"Disattiva account\" dal menu del account."
+
+#: src/components/Lists.tsx:52
+msgid "You have reached the end"
+msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"

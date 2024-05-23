@@ -46,27 +46,29 @@ export function useUnreadMessageCount() {
   })
   const moderationOpts = useModerationOpts()
 
-  const count =
-    convos.data?.pages
-      .flatMap(page => page.convos)
-      .filter(convo => convo.id !== currentConvoId)
-      .reduce((acc, convo) => {
-        const otherMember = convo.members.find(
-          member => member.did !== currentAccount?.did,
-        )
+  const count = useMemo(() => {
+    return (
+      convos.data?.pages
+        .flatMap(page => page.convos)
+        .filter(convo => convo.id !== currentConvoId)
+        .reduce((acc, convo) => {
+          const otherMember = convo.members.find(
+            member => member.did !== currentAccount?.did,
+          )
 
-        if (!otherMember || !moderationOpts) return acc
+          if (!otherMember || !moderationOpts) return acc
 
-        // TODO could shadow this outside this hook and get optimistic block state
-        const moderation = moderateProfile(otherMember, moderationOpts)
-        const shouldIgnore =
-          convo.muted ||
-          moderation.blocked ||
-          otherMember.did === 'missing.invalid'
-        const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
+          const moderation = moderateProfile(otherMember, moderationOpts)
+          const shouldIgnore =
+            convo.muted ||
+            moderation.blocked ||
+            otherMember.did === 'missing.invalid'
+          const unreadCount = !shouldIgnore && convo.unreadCount > 0 ? 1 : 0
 
-        return acc + unreadCount
-      }, 0) ?? 0
+          return acc + unreadCount
+        }, 0) ?? 0
+    )
+  }, [convos.data, currentAccount?.did, currentConvoId, moderationOpts])
 
   return useMemo(() => {
     return {

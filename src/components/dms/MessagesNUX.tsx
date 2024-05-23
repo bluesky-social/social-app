@@ -53,6 +53,8 @@ function DialogInner({
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const t = useTheme()
+
+  const [initialized, setInitialzed] = React.useState(false)
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
       Toast.show(_(msg`Failed to update settings`))
@@ -69,10 +71,11 @@ function DialogInner({
   )
 
   useEffect(() => {
-    if (!chatDeclation) {
+    if (!chatDeclation && !initialized) {
       updateDeclaration('following')
+      setInitialzed(true)
     }
-  }, [chatDeclation, updateDeclaration])
+  }, [chatDeclation, updateDeclaration, initialized])
 
   return (
     <Dialog.ScrollableInner

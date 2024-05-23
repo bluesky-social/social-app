@@ -10,9 +10,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
@@ -81,7 +80,6 @@ let ProfileHeaderStandard = ({
     })
   }, [track, openModal, profile])
 
-  const gate = useGate()
   const onPressFollow = () => {
     requireAuth(async () => {
       try {
@@ -95,9 +93,6 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
-        if (isWeb && gate('autoexpand_suggestions_on_profile_follow_v2')) {
-          setShowSuggestedFollows(true)
-        }
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
