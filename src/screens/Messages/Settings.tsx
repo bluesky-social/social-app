@@ -56,7 +56,7 @@ export function MessagesSettingsScreen({}: Props) {
 
   return (
     <CenteredView sideBorders style={a.h_full_vh}>
-      <ViewHeader title={_(msg`Settings`)} showOnDesktop showBorder />
+      <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
       <View style={[a.p_lg, a.gap_md]}>
         <Text style={[a.text_lg, a.font_bold]}>
           <Trans>Allow new messages from</Trans>
