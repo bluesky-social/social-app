@@ -90,7 +90,6 @@ export function MessageInput({
       <View
         style={[
           a.flex_row,
-          a.align_center,
           t.atoms.bg_contrast_25,
           {
             paddingHorizontal: a.p_sm.padding - 2,
@@ -146,6 +145,7 @@ export function MessageInput({
             {
               height: 30,
               width: 30,
+              marginTop: 5,
               backgroundColor: t.palette.primary_500,
             },
           ]}
