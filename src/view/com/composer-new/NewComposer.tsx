@@ -4,7 +4,7 @@ import React from 'react'
 import {KeyboardAvoidingView, Pressable, ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, RichText} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
@@ -12,6 +12,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {ComposerImage, pasteImage} from '#/state/gallery'
+import {useRequireAltTextEnabled} from '#/state/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
@@ -19,6 +20,8 @@ import {useSession} from '#/state/session'
 import {ComposerOpts, useComposerControls} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {Text} from '#/components/Typography'
 import {TextInput, TextInputRef} from '../composer/text-input/TextInput'
 import {UserAvatar} from '../util/UserAvatar'
 import {AddPostBtn} from './components/AddPostBtn'
@@ -53,6 +56,7 @@ export const PostComposer = ({
   openEmojiPicker?: (rect: DOMRect | undefined) => void
 }) => {
   const {closeComposer} = useComposerControls()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
 
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -109,6 +113,11 @@ export const PostComposer = ({
     openEmojiPicker?.(rect)
   }, [activeInputRef, openEmojiPicker])
 
+  const isAltTextMissingAndRequired =
+    requireAltTextEnabled && state.isAltTextMissing
+
+  const canPublish = !isAltTextMissingAndRequired && state.canPublish
+
   return (
     <KeyboardAvoidingView
       behavior={isIOS ? 'padding' : 'height'}
@@ -139,7 +148,7 @@ export const PostComposer = ({
 
             <Button
               label={_(msg`Post`)}
-              disabled={true}
+              disabled={!canPublish}
               size="small"
               variant="solid"
               color="primary"
@@ -148,6 +157,26 @@ export const PostComposer = ({
             </Button>
           </View>
         </View>
+
+        {isAltTextMissingAndRequired && (
+          <View
+            style={[
+              {backgroundColor: t.palette.negative_100},
+              a.mx_lg,
+              a.mt_lg,
+              a.px_sm,
+              a.py_sm,
+              a.rounded_sm,
+              a.flex_row,
+              a.gap_sm,
+              a.align_center,
+            ]}>
+            <Warning fill={t.palette.negative_700} />
+            <Text style={[{color: t.palette.negative_700}]}>
+              <Trans>One or more images are missing alt text</Trans>
+            </Text>
+          </View>
+        )}
 
         <ScrollView style={[a.flex_1]}>
           {state.reply !== undefined && <ComposerReply reply={state.reply} />}

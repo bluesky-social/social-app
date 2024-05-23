@@ -1,6 +1,7 @@
 import {RichText} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
+import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {
   convertBskyAppUrlIfNeeded,
@@ -97,6 +98,13 @@ export interface ComposerState {
   threadgates: ThreadgateSetting[]
 }
 
+export interface ComposerStateWithDerivation extends ComposerState {
+  /** Whether these posts can be published, this only checks for rtLength */
+  canPublish: boolean
+  /** Whether one of the post is missing an alt text */
+  isAltTextMissing: boolean
+}
+
 export type ComposerAction =
   /** Add a new post, starting after `postId` */
   | {type: 'add_post'; postId: string}
@@ -130,9 +138,9 @@ export type ComposerAction =
   | {type: 'embed_update_image'; postId: string; image: ComposerImage}
 
 export function reducer(
-  state: ComposerState,
+  state: ComposerStateWithDerivation,
   action: ComposerAction,
-): ComposerState {
+): ComposerStateWithDerivation {
   switch (action.type) {
     case 'add_post': {
       const index = state.posts.findIndex(p => p.id === action.postId)
@@ -150,11 +158,11 @@ export function reducer(
 
       const newPost = createPostState(previous)
 
-      return {
+      return deriveComposerState({
         ...state,
         active: targetIndex + 1,
         posts: filtered.toSpliced(targetIndex + 1, 0, newPost),
-      }
+      })
     }
     case 'remove_post': {
       const index = state.posts.findIndex(p => p.id === action.postId)
@@ -173,11 +181,11 @@ export function reducer(
         return state
       }
 
-      return {
+      return deriveComposerState({
         ...state,
         active: nextIndex,
         posts: state.posts.toSpliced(index, 1),
-      }
+      })
     }
     case 'set_active': {
       const index = state.posts.findIndex(p => p.id === action.postId)
@@ -186,19 +194,19 @@ export function reducer(
         return state
       }
 
-      return {
+      return deriveComposerState({
         ...state,
         active: index,
-      }
+      })
     }
     case 'set_error': {
-      return {
+      return deriveComposerState({
         ...state,
         error: action.error,
-      }
+      })
     }
     case 'set_languages': {
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -210,10 +218,10 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'set_richtext': {
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -226,16 +234,16 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'set_threadgates': {
-      return {
+      return deriveComposerState({
         ...state,
         threadgates: action.threadgates,
-      }
+      })
     }
     case 'embed_add_images': {
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId && p.canEmbed.includes('image')) {
@@ -286,12 +294,12 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'embed_remove_image': {
       const imageId = action.image.source.id
 
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -340,10 +348,10 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'embed_remove_media': {
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -367,10 +375,10 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'embed_remove_record': {
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -394,10 +402,10 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'embed_set_gif': {
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -429,12 +437,12 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'embed_set_labels': {
       const labels = action.labels
 
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -463,12 +471,12 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'embed_set_link': {
       const embed = detectLink(action.uri)
 
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId && p.canEmbed.includes(embed.type)) {
@@ -505,13 +513,13 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
     case 'embed_update_image': {
       const image = action.image
       const imageId = image.source.id
 
-      return {
+      return deriveComposerState({
         ...state,
         posts: state.posts.map(p => {
           if (p.id === action.postId) {
@@ -559,11 +567,23 @@ export function reducer(
 
           return p
         }),
-      }
+      })
     }
   }
 
   return state
+}
+
+function deriveComposerState(
+  state: ComposerState,
+): ComposerStateWithDerivation {
+  return {
+    ...state,
+    canPublish: state.posts.every(
+      p => p.rtLength > 0 && p.rtLength <= MAX_GRAPHEME_LENGTH,
+    ),
+    isAltTextMissing: state.posts.some(p => p.isAltTextMissing),
+  }
 }
 
 function createPostState(previous: PostState): PostStateWithDerivation {
@@ -579,7 +599,9 @@ function createPostState(previous: PostState): PostStateWithDerivation {
   }
 }
 
-export function createComposerState(opts: ComposerOpts): ComposerState {
+export function createComposerState(
+  opts: ComposerOpts,
+): ComposerStateWithDerivation {
   const richtext = new RichText({text: opts.text ?? ''})
   if (opts.text) {
     richtext.detectFacetsWithoutResolution()
@@ -596,7 +618,7 @@ export function createComposerState(opts: ComposerOpts): ComposerState {
     }
   }
 
-  return {
+  return deriveComposerState({
     reply: opts.replyTo,
     active: 0,
     posts: [
@@ -612,7 +634,7 @@ export function createComposerState(opts: ComposerOpts): ComposerState {
       },
     ],
     threadgates: [],
-  }
+  })
 }
 
 /** Determines what we can embed next based on the current embed state */
