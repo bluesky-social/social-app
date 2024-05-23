@@ -18,12 +18,12 @@ type StatsigUser = {
   userID: string | undefined
   // TODO: Remove when enough users have custom.platform:
   platform: 'ios' | 'android' | 'web'
-  bundleIdentifier: string
-  bundleDate: number
   custom: {
     // This is the place where we can add our own stuff.
     // Fields here have to be non-optional to be visible in the UI.
     platform: 'ios' | 'android' | 'web'
+    bundleIdentifier: string
+    bundleDate: number
     refSrc: string
     refUrl: string
     appLanguage: string
@@ -178,12 +178,12 @@ function toStatsigUser(did: string | undefined): StatsigUser {
   return {
     userID,
     platform: Platform.OS as 'ios' | 'android' | 'web',
-    bundleIdentifier: BUNDLE_IDENTIFIER,
-    bundleDate: BUNDLE_DATE,
     custom: {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
+      bundleIdentifier: BUNDLE_IDENTIFIER,
+      bundleDate: BUNDLE_DATE,
       appLanguage: languagePrefs.appLanguage,
       contentLanguages: languagePrefs.contentLanguages,
     },
