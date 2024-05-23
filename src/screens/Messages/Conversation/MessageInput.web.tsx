@@ -30,6 +30,7 @@ export function MessageInput({
   const isComposing = React.useRef(false)
   const [isFocused, setIsFocused] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
+  const [textAreaHeight, setTextAreaHeight] = React.useState(38)
 
   const onSubmit = React.useCallback(() => {
     if (message.trim() === '') {
@@ -92,11 +93,12 @@ export function MessageInput({
           a.flex_row,
           t.atoms.bg_contrast_25,
           {
-            paddingHorizontal: a.p_sm.padding - 2,
+            paddingRight: a.p_sm.padding - 2,
             paddingLeft: a.p_md.padding - 2,
             borderWidth: 1,
             borderRadius: 23,
             borderColor: 'transparent',
+            height: textAreaHeight + 23,
           },
           isHovered && inputStyles.chromeHover,
           isFocused && inputStyles.chromeFocus,
@@ -112,7 +114,6 @@ export function MessageInput({
             t.atoms.text,
             {
               paddingTop: 10,
-              paddingBottom: 12,
               backgroundColor: 'transparent',
               resize: 'none',
             },
@@ -131,6 +132,7 @@ export function MessageInput({
           onCompositionEnd={() => {
             isComposing.current = false
           }}
+          onHeightChange={height => setTextAreaHeight(height)}
           onChange={onChange}
           onKeyDown={onKeyDown}
         />
