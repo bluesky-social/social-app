@@ -215,12 +215,14 @@ export const TextInput = forwardRef(function TextInputImpl(
   const splitter = useMemo(() => new Graphemer(), [])
   const textDecorated = useMemo(() => {
     let excess
+    let rt = richtext
     if (richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
+      rt = richtext.clone()
       const split = splitter.splitGraphemes(richtext.text)
       const validText = split.slice(0, MAX_GRAPHEME_LENGTH).join('')
       const validUnicode = new UnicodeString(validText)
       const excessText = split.slice(MAX_GRAPHEME_LENGTH).join('')
-      richtext.delete(validUnicode.utf8.byteLength, richtext.length)
+      rt.delete(validUnicode.utf8.byteLength, richtext.length)
       excess = (
         <RNText
           key="excess"
@@ -235,7 +237,7 @@ export const TextInput = forwardRef(function TextInputImpl(
     }
     let i = 0
 
-    const segments = Array.from(richtext.segments()).map(segment => {
+    const segments = Array.from(rt.segments()).map(segment => {
       return (
         <RNText
           key={i++}
