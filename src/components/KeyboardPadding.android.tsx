@@ -5,15 +5,23 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 
-export function KeyboardPadding() {
+export function KeyboardPadding({maxHeight}: {maxHeight?: number}) {
   const keyboardHeight = useSharedValue(0)
 
-  useKeyboardHandler({
-    onMove: e => {
-      'worklet'
-      keyboardHeight.value = e.height
+  useKeyboardHandler(
+    {
+      onMove: e => {
+        'worklet'
+
+        if (maxHeight && e.height > maxHeight) {
+          keyboardHeight.value = maxHeight
+        } else {
+          keyboardHeight.value = e.height
+        }
+      },
     },
-  })
+    [maxHeight],
+  )
 
   const animatedStyle = useAnimatedStyle(() => ({
     height: keyboardHeight.value,

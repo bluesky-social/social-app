@@ -15,6 +15,7 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ReportDialogProps} from './types'
@@ -221,6 +222,7 @@ export function SubmitView({
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
+      <KeyboardPadding />
     </View>
   )
 }
