@@ -8,7 +8,7 @@ export type LinkFacetMatch = {
 export function suggestLinkCardUri(
   mayBePaste: boolean,
   nextDetectedUris: Map<string, LinkFacetMatch>,
-  prevDetectedUris: Map<string, LinkFacetMatch>,
+  prevDetectedUris: Map<string, LinkFacetMatch> | undefined,
   pastSuggestedUris: Set<string>,
 ): string | undefined {
   const suggestedUris = new Set<string>()
@@ -25,7 +25,7 @@ export function suggestLinkCardUri(
       suggestedUris.add(uri)
       continue
     }
-    const prevMatch = prevDetectedUris.get(uri)
+    const prevMatch = prevDetectedUris?.get(uri)
     if (!prevMatch) {
       // If the same exact link wasn't already detected during the last keystroke,
       // it means you're probably still typing it. Disregard until it stabilizes.

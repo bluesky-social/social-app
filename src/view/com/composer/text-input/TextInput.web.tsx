@@ -24,32 +24,18 @@ import {
 } from 'view/com/composer/text-input/text-input-util'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
+import type {TextInputProps} from './TextInput'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
-export interface TextInputRef {
-  focus: () => void
-  blur: () => void
-  getCursorPosition: () => DOMRect | undefined
-}
-
-interface TextInputProps {
-  richtext: RichText
-  placeholder: string
-  suggestedLinks: Set<string>
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
-  onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
-  onNewLink: (uri: string) => void
-  onError: (err: string) => void
-}
-
 export const textInputWebEmitter = new EventEmitter()
 
 export const TextInput = React.forwardRef(function TextInputImpl(
   {
+    grow,
+    disabled,
     richtext,
     placeholder,
     setRichText,
@@ -80,6 +66,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       Paragraph,
       Placeholder.configure({
         placeholder,
+        showOnlyWhenEditable: false,
       }),
       TiptapText,
       History,
@@ -89,9 +76,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 
   React.useEffect(() => {
-    textInputWebEmitter.addListener('publish', onPressPublish)
-    return () => {
-      textInputWebEmitter.removeListener('publish', onPressPublish)
+    if (onPressPublish) {
+      textInputWebEmitter.addListener('publish', onPressPublish)
+      return () => {
+        textInputWebEmitter.removeListener('publish', onPressPublish)
+      }
     }
   }, [onPressPublish])
   React.useEffect(() => {
@@ -102,6 +91,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   }, [onPhotoPasted])
 
   React.useEffect(() => {
+    if (disabled) {
+      return
+    }
+
     const handleDrop = (event: DragEvent) => {
       const transfer = event.dataTransfer
       if (transfer) {
@@ -139,10 +132,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       document.body.removeEventListener('dragover', handleDragEnter)
       document.body.removeEventListener('dragleave', handleDragLeave)
     }
-  }, [setIsDropping])
+  }, [disabled, setIsDropping])
 
-  const pastSuggestedUris = useRef(new Set<string>())
-  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
+  const pastSuggestedUris = useRef<Set<string>>()
+  const prevDetectedUris = useRef<Map<string, LinkFacetMatch>>()
   const editor = useEditor(
     {
       extensions,
@@ -168,7 +161,12 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions),
+      content: generateJSON(
+        richtext.text
+          .toString()
+          .replace(/^[^\n]*$/gm, line => `<p>${escapeHTML(line)}</p>`),
+        extensions,
+      ),
       autofocus: 'end',
       editable: true,
       injectCSS: true,
@@ -206,7 +204,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           isPaste,
           nextDetectedUris,
           prevDetectedUris.current,
-          pastSuggestedUris.current,
+          (pastSuggestedUris.current ||= new Set()),
         )
         prevDetectedUris.current = nextDetectedUris
         if (suggestedUri) {
@@ -214,7 +212,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         }
       },
     },
-    [modeClass],
+    [modeClass, extensions],
   )
 
   const onEmojiInserted = React.useCallback(
@@ -230,8 +228,18 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [onEmojiInserted])
 
+  React.useLayoutEffect(() => {
+    if (editor) {
+      editor.setEditable(!disabled)
+      // `editable` doesn't control whether it can be tabbed-into or not
+      editor.view.dom.tabIndex = !disabled ? 0 : -1
+    }
+  }, [editor, disabled])
+
   React.useImperativeHandle(ref, () => ({
-    focus: () => {}, // TODO
+    focus: () => {
+      editor?.view.focus()
+    },
     blur: () => {}, // TODO
     getCursorPosition: () => {
       const pos = editor?.state.selection.$anchor.pos
@@ -244,6 +252,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       <View style={styles.container}>
         <EditorContent
           editor={editor}
+          className={'post-composer' + (grow ? ' can-grow' : '')}
           style={{color: pal.text.color as string}}
         />
       </View>
@@ -304,10 +313,7 @@ function editorJsonToText(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignSelf: 'flex-start',
-    padding: 5,
-    marginLeft: 8,
-    marginBottom: 10,
+    alignSelf: 'stretch',
   },
   dropContainer: {
     backgroundColor: '#0007',
@@ -365,4 +371,10 @@ function getImageFromUri(
       }
     }
   }
+}
+
+// generateJSON expects HTML content
+const escapeHTML = (str: string) => {
+  // We're only escaping text content, so we only need to deal with these 2
+  return str.replace(/[&<]/g, c => `&#${c.charCodeAt(0)};`)
 }

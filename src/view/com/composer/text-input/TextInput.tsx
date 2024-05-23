@@ -1,15 +1,7 @@
-import React, {
-  ComponentProps,
-  forwardRef,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, {forwardRef, useCallback, useMemo, useRef, useState} from 'react'
 import {
   NativeSyntheticEvent,
   StyleSheet,
-  TextInput as RNTextInput,
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
@@ -40,12 +32,17 @@ export interface TextInputRef {
   getCursorPosition: () => DOMRect | undefined
 }
 
-interface TextInputProps extends ComponentProps<typeof RNTextInput> {
+export interface TextInputProps {
+  /** Web-only */
+  grow?: boolean
+  disabled?: boolean
   richtext: RichText
   placeholder: string
-  setRichText: (v: RichText | ((v: RichText) => RichText)) => void
+  autoFocus?: boolean
+  setRichText: (v: RichText) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
+  /** Web-only */
+  onPressPublish?: () => void
   onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
@@ -82,8 +79,8 @@ export const TextInput = forwardRef(function TextInputImpl(
     getCursorPosition: () => undefined, // Not implemented on native
   }))
 
-  const pastSuggestedUris = useRef(new Set<string>())
-  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
+  const pastSuggestedUris = useRef<Set<string>>()
+  const prevDetectedUris = useRef<Map<string, LinkFacetMatch>>()
   const onChangeText = useCallback(
     (newText: string) => {
       /*
@@ -142,7 +139,7 @@ export const TextInput = forwardRef(function TextInputImpl(
           mayBePaste,
           nextDetectedUris,
           prevDetectedUris.current,
-          pastSuggestedUris.current,
+          (pastSuggestedUris.current ||= new Set()),
         )
         prevDetectedUris.current = nextDetectedUris
         if (suggestedUri) {

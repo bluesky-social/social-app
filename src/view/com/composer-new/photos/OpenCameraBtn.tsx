@@ -8,18 +8,18 @@ import {POST_IMG_MAX} from '#/lib/constants'
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
-import {isMobileWeb, isNative} from '#/platform/detection'
 import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 
-type Props = {
+export const OpenCameraBtn = ({
+  disabled,
+  onAdd,
+}: {
   disabled?: boolean
   onAdd: (next: ComposerImage[]) => void
-}
-
-export function OpenCameraBtn({disabled, onAdd}: Props) {
+}) => {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -64,22 +64,17 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
     requestMediaPermission,
   ])
 
-  const shouldShowCameraButton = isNative || isMobileWeb
-  if (!shouldShowCameraButton) {
-    return null
-  }
-
   return (
     <Button
       testID="openCameraButton"
-      onPress={onPressTakePicture}
       label={_(msg`Camera`)}
       accessibilityHint={_(msg`Opens camera on device`)}
       style={a.p_sm}
       variant="ghost"
       shape="round"
       color="primary"
-      disabled={disabled}>
+      disabled={disabled}
+      onPress={onPressTakePicture}>
       <Camera size="lg" style={disabled && t.atoms.text_contrast_low} />
     </Button>
   )

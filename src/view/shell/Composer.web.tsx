@@ -1,21 +1,19 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeInDown, FadeOut} from 'react-native-reanimated'
-import {ComposePost} from '../com/composer/Composer'
-import {useComposerState} from 'state/shell/composer'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {usePalette} from 'lib/hooks/usePalette'
+// import {ComposePost} from '../com/composer/Composer'
+import {useComposerState} from 'state/shell/composer'
 import {
   EmojiPicker,
   EmojiPickerState,
 } from 'view/com/composer/text-input/web/EmojiPicker.web'
-
-const BOTTOM_BAR_HEIGHT = 61
+import {PostComposer} from '../com/composer-new/NewComposer'
 
 export function Composer({}: {winHeight: number}) {
   const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
   const state = useComposerState()
   const isActive = !!state
   useWebBodyScrollLock(isActive)
@@ -57,21 +55,19 @@ export function Composer({}: {winHeight: number}) {
       <Animated.View
         entering={FadeInDown.duration(150)}
         exiting={FadeOut}
-        style={[
-          styles.container,
-          isMobile && styles.containerMobile,
-          pal.view,
-          pal.border,
-        ]}>
-        <ComposePost
+        style={[styles.container, pal.view, pal.border]}>
+        {/* <ComposePost
           replyTo={state.replyTo}
           quote={state.quote}
           onPost={state.onPost}
           mention={state.mention}
           openPicker={onOpenPicker}
           text={state.text}
-        />
+        /> */}
+
+        <PostComposer data={state} openEmojiPicker={onOpenPicker} />
       </Animated.View>
+
       <EmojiPicker state={pickerState} close={onClosePicker} />
     </Animated.View>
   )
@@ -92,18 +88,10 @@ const styles = StyleSheet.create({
     marginTop: 50,
     maxWidth: 600,
     width: '100%',
-    paddingVertical: 0,
-    paddingHorizontal: 2,
     borderRadius: 8,
     marginBottom: 0,
     borderWidth: 1,
     // @ts-ignore web only
     maxHeight: 'calc(100% - (40px * 2))',
-  },
-  containerMobile: {
-    borderRadius: 0,
-    marginBottom: BOTTOM_BAR_HEIGHT,
-    // @ts-ignore web only
-    maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
   },
 })

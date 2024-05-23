@@ -43,7 +43,7 @@ export function GifAltText({
         title: linkProp.meta?.title ?? linkProp.uri,
         uri: linkProp.uri,
         description: linkProp.meta?.description ?? '',
-        thumb: linkProp.localThumb?.path,
+        thumb: linkProp.localThumb?.source.path,
       },
       params: parseEmbedPlayerFromUrl(linkProp.uri),
     }

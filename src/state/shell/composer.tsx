@@ -1,11 +1,13 @@
 import React from 'react'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   ModerationDecision,
-  AppBskyActorDefs,
 } from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {purgeTemporaryImageFiles} from '../gallery'
 
 export interface ComposerOptsPostRef {
   uri: string
@@ -15,6 +17,8 @@ export interface ComposerOptsPostRef {
   embed?: AppBskyEmbedRecord.ViewRecord['embed']
   moderation?: ModerationDecision
 }
+
+/** @todo: This interface doesn't have much to do with the composer anymore */
 export interface ComposerOptsQuote {
   uri: string
   cid: string
@@ -34,6 +38,8 @@ export interface ComposerOpts {
   onPost?: () => void
   quote?: ComposerOptsQuote
   mention?: string // handle of user to mention
+  languages?: string[]
+  /** @deprecated */
   openPicker?: (pos: DOMRect | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number}[]
@@ -62,6 +68,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const closeComposer = useNonReactiveCallback(() => {
     let wasOpen = !!state
+
+    purgeTemporaryImageFiles()
     setState(undefined)
     return wasOpen
   })
