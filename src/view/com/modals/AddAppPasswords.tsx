@@ -185,14 +185,14 @@ export function Component({}: {}) {
           </Text>
           <Toggle.Item
             type="checkbox"
-            label={_(msg`Allow access to your Direct Messages`)}
+            label={_(msg`Allow access to your direct messages`)}
             value={privileged}
             onChange={val => setPrivileged(val)}
             name="privileged"
             style={a.my_md}>
             <Toggle.Checkbox />
             <Toggle.LabelText>
-              <Trans>Allow access to your Direct Messages</Trans>
+              <Trans>Allow access to your direct messages</Trans>
             </Toggle.LabelText>
           </Toggle.Item>
         </>
