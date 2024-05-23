@@ -5,6 +5,7 @@ import BottomSheet from '@discord/bottom-sheet/src'
 
 import {useModalControls, useModals} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as AddAppPassword from './AddAppPasswords'
 import * as AltImageModal from './AltImage'
@@ -146,6 +147,7 @@ export function ModalsContainer() {
       handleStyle={[styles.handle, pal.view]}
       onChange={onBottomSheetChange}>
       {element}
+      <KeyboardPadding />
     </BottomSheet>
   )
 }

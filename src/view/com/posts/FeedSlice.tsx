@@ -22,6 +22,8 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           record={slice.items[0].record}
           reason={slice.items[0].reason}
           feedContext={slice.items[0].feedContext}
+          parentAuthor={slice.items[0].parentAuthor}
+          showReplyTo={true}
           moderation={slice.items[0].moderation}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
@@ -32,6 +34,8 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           record={slice.items[1].record}
           reason={slice.items[1].reason}
           feedContext={slice.items[1].feedContext}
+          parentAuthor={slice.items[1].parentAuthor}
+          showReplyTo={false}
           moderation={slice.items[1].moderation}
           isThreadParent={isThreadParentAt(slice.items, 1)}
           isThreadChild={isThreadChildAt(slice.items, 1)}
@@ -43,6 +47,8 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           record={slice.items[last].record}
           reason={slice.items[last].reason}
           feedContext={slice.items[last].feedContext}
+          parentAuthor={slice.items[2].parentAuthor}
+          showReplyTo={false}
           moderation={slice.items[last].moderation}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
@@ -62,6 +68,8 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           reason={slice.items[i].reason}
           feedContext={slice.items[i].feedContext}
           moderation={slice.items[i].moderation}
+          parentAuthor={slice.items[i].parentAuthor}
+          showReplyTo={i === 0}
           isThreadParent={isThreadParentAt(slice.items, i)}
           isThreadChild={isThreadChildAt(slice.items, i)}
           isThreadLastChild={

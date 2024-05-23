@@ -216,6 +216,7 @@ function ChatListItemReady({
                           a.text_sm,
                           {lineHeight: 21},
                           t.atoms.text_contrast_medium,
+                          web({whiteSpace: 'preserve nowrap'}),
                         ]}>
                         {' '}
                         &middot; {timeElapsed}
@@ -229,6 +230,7 @@ function ChatListItemReady({
                       a.text_sm,
                       {lineHeight: 21},
                       t.atoms.text_contrast_medium,
+                      web({whiteSpace: 'preserve nowrap'}),
                     ]}>
                     {' '}
                     &middot;{' '}

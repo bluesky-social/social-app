@@ -53,7 +53,17 @@ export async function createAgentAndResume(
     agent.session = prevSession
     if (!storedAccount.deactivated) {
       // Intentionally not awaited to unblock the UI:
-      networkRetry(3, () => agent.resumeSession(prevSession))
+      networkRetry(3, () => agent.resumeSession(prevSession)).catch(
+        (e: any) => {
+          logger.error(`networkRetry failed to resume session`, {
+            status: e?.status || 'unknown',
+            // this field name is ignored by Sentry scrubbers
+            safeMessage: e?.message || 'unknown',
+          })
+
+          throw e
+        },
+      )
     }
   }
 
