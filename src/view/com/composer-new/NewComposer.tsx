@@ -192,7 +192,7 @@ export const PostComposer = ({
   )
 }
 
-let Actions = ({
+const Actions = ({
   active,
   activePost,
   dispatch,
@@ -301,7 +301,6 @@ let Actions = ({
     </View>
   )
 }
-Actions = React.memo(Actions)
 
 const opacityStyle = {opacity: 0.5}
 const borderNextStyle = {borderLeftWidth: 2}
