@@ -47,7 +47,7 @@ export function Component({image}: Props) {
     if (isAndroid) return
     setTimeout(() => {
       inputRef.current?.focus()
-    }, 1000)
+    }, 500)
   }, [])
 
   // We'd rather be at the bottom here so that we can easily dismiss the modal instead of having to scroll
