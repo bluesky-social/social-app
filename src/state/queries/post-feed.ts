@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -72,6 +73,7 @@ export interface FeedPostSliceItem {
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
   feedContext: string | undefined
   moderation: ModerationDecision
+  parentAuthor?: AppBskyActorDefs.ProfileViewBasic
 }
 
 export interface FeedPostSlice {
@@ -302,6 +304,10 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
+                          const parentAuthor =
+                            item.reply?.parent?.author ??
+                            slice.items[i + 1]?.reply?.grandparentAuthor
+
                           return {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
@@ -313,6 +319,7 @@ export function usePostFeedQuery(
                                 : item.reason,
                             feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
+                            parentAuthor,
                           }
                         }
                         return undefined

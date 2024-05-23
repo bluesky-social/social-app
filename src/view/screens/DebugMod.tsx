@@ -803,6 +803,8 @@ function MockPostFeedItem({
       post={post}
       record={post.record as AppBskyFeedPost.Record}
       moderation={moderation}
+      parentAuthor={undefined}
+      showReplyTo={false}
       reason={undefined}
       feedContext={''}
     />

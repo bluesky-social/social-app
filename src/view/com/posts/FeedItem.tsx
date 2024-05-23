@@ -1,6 +1,7 @@
 import React, {memo, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -40,7 +41,18 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserInfoText} from '../util/UserInfoText'
+
+interface FeedItemProps {
+  record: AppBskyFeedPost.Record
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  moderation: ModerationDecision
+  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  showReplyTo: boolean
+  isThreadChild?: boolean
+  isThreadLastChild?: boolean
+  isThreadParent?: boolean
+  feedContext: string | undefined
+}
 
 export function FeedItem({
   post,
@@ -48,19 +60,12 @@ export function FeedItem({
   reason,
   feedContext,
   moderation,
+  parentAuthor,
+  showReplyTo,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
-}: {
-  post: AppBskyFeedDefs.PostView
-  record: AppBskyFeedPost.Record
-  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
-  feedContext: string | undefined
-  moderation: ModerationDecision
-  isThreadChild?: boolean
-  isThreadLastChild?: boolean
-  isThreadParent?: boolean
-}) {
+}: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -83,6 +88,8 @@ export function FeedItem({
         reason={reason}
         feedContext={feedContext}
         richText={richText}
+        parentAuthor={parentAuthor}
+        showReplyTo={showReplyTo}
         moderation={moderation}
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
@@ -100,19 +107,14 @@ let FeedItemInner = ({
   feedContext,
   richText,
   moderation,
+  parentAuthor,
+  showReplyTo,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
-}: {
-  post: Shadow<AppBskyFeedDefs.PostView>
-  record: AppBskyFeedPost.Record
-  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
-  feedContext: string | undefined
+}: FeedItemProps & {
   richText: RichTextAPI
-  moderation: ModerationDecision
-  isThreadChild?: boolean
-  isThreadLastChild?: boolean
-  isThreadParent?: boolean
+  post: Shadow<AppBskyFeedDefs.PostView>
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -123,14 +125,6 @@ let FeedItemInner = ({
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const {sendInteraction} = useFeedFeedbackContext()
-
-  const replyAuthorDid = useMemo(() => {
-    if (!record?.reply) {
-      return ''
-    }
-    const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
-    return urip.hostname
-  }, [record?.reply])
 
   const onPressReply = React.useCallback(() => {
     sendInteraction({
@@ -318,34 +312,8 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild && replyAuthorDid !== '' && (
-            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-              <FontAwesomeIcon
-                icon="reply"
-                size={9}
-                style={[
-                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
-                  s.mr5,
-                ]}
-              />
-              <Text
-                type="md"
-                style={[pal.textLight, s.mr2]}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                <Trans context="description">
-                  Reply to{' '}
-                  <ProfileHoverCard inline did={replyAuthorDid}>
-                    <UserInfoText
-                      type="md"
-                      did={replyAuthorDid}
-                      attr="displayName"
-                      style={[pal.textLight]}
-                    />
-                  </ProfileHoverCard>
-                </Trans>
-              </Text>
-            </View>
+          {!isThreadChild && showReplyTo && parentAuthor && (
+            <ReplyToLabel profile={parentAuthor} />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
@@ -433,6 +401,43 @@ let PostContent = ({
   )
 }
 PostContent = memo(PostContent)
+
+function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+  const pal = usePalette('default')
+
+  return (
+    <View style={[s.flexRow, s.mb2, s.alignCenter]}>
+      <FontAwesomeIcon
+        icon="reply"
+        size={9}
+        style={[{color: pal.colors.textLight} as FontAwesomeIconStyle, s.mr5]}
+      />
+      <Text
+        type="md"
+        style={[pal.textLight, s.mr2]}
+        lineHeight={1.2}
+        numberOfLines={1}>
+        <Trans context="description">
+          Reply to{' '}
+          <ProfileHoverCard inline did={profile.did}>
+            <TextLinkOnWebOnly
+              type="md"
+              style={pal.textLight}
+              lineHeight={1.2}
+              numberOfLines={1}
+              href={makeProfileLink(profile)}
+              text={
+                profile.displayName
+                  ? sanitizeDisplayName(profile.displayName)
+                  : sanitizeHandle(profile.handle)
+              }
+            />
+          </ProfileHoverCard>
+        </Trans>
+      </Text>
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   outer: {
