@@ -61,6 +61,7 @@ export function ListConvosProvider({children}: {children: React.ReactNode}) {
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
+  const {currentAccount} = useSession()
 
   useEffect(() => {
     const unsub = messagesBus.on(
@@ -91,12 +92,27 @@ export function ListConvosProvider({children}: {children: React.ReactNode}) {
               if (!old) return old
 
               function updateConvo(convo: ChatBskyConvoDefs.ConvoView) {
+                if (!ChatBskyConvoDefs.isLogCreateMessage(log)) return convo
+
+                let unreadCount = convo.unreadCount
+                if (convo.id !== currentConvoId) {
+                  if (
+                    ChatBskyConvoDefs.isMessageView(log.message) ||
+                    ChatBskyConvoDefs.isDeletedMessageView(log.message)
+                  ) {
+                    if (log.message.sender.did !== currentAccount?.did) {
+                      unreadCount++
+                    }
+                  }
+                } else {
+                  unreadCount = 0
+                }
+
                 return {
                   ...convo,
                   rev: log.rev,
                   lastMessage: log.message,
-                  unreadCount:
-                    convo.id === currentConvoId ? 0 : convo.unreadCount + 1,
+                  unreadCount,
                 }
               }
 
@@ -141,7 +157,7 @@ export function ListConvosProvider({children}: {children: React.ReactNode}) {
     )
 
     return () => unsub()
-  }, [messagesBus, currentConvoId, refetch, queryClient])
+  }, [messagesBus, currentConvoId, refetch, queryClient, currentAccount?.did])
 
   const ctx = useMemo(() => {
     return data?.pages.flatMap(page => page.convos) ?? []
