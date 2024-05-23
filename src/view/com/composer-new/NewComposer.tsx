@@ -1,22 +1,30 @@
 /* eslint-disable */
 
 import React from 'react'
-import {KeyboardAvoidingView, Pressable, ScrollView, View} from 'react-native'
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Pressable,
+  ScrollView,
+  View,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyActorDefs, RichText} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isAndroid, isIOS} from '#/platform/detection'
+import {emitPostCreated} from '#/state/events'
 import {ComposerImage, pasteImage} from '#/state/gallery'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {ComposerOpts, useComposerControls} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -30,6 +38,7 @@ import {RemovePostBtn} from './components/RemovePostBtn'
 import {SelectEmojiBtn} from './components/SelectEmojiBtn'
 import {SelectLabelsBtn} from './components/SelectLabelsBtn'
 import {SelectThreadgateBtn} from './components/SelectThreadgateBtn'
+import {publish} from './compose'
 import {ComposerReply} from './ComposerReply'
 import {ExternalEmbed} from './embeds/ExternalEmbed'
 import {GifEmbed} from './embeds/GifEmbed'
@@ -47,6 +56,7 @@ import {
   PostStateWithDerivation,
   reducer,
 } from './state'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 
 export const PostComposer = ({
   data,
@@ -58,17 +68,24 @@ export const PostComposer = ({
   const {closeComposer} = useComposerControls()
   const requireAltTextEnabled = useRequireAltTextEnabled()
 
+  const {_} = useLingui()
+
+  const t = useTheme()
+  const {isDesktop, isMobile} = useWebMediaQueries()
+
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
+
+  const queryClient = useQueryClient()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
 
   const [state, dispatch] = React.useReducer(reducer, data, createComposerState)
   const activePost = state.posts[state.active]
   const activePostLabels = getEmbedLabels(activePost.embed)
 
-  const {_} = useLingui()
-
-  const t = useTheme()
-  const {isDesktop, isMobile} = useWebMediaQueries()
+  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [processingState, setProcessingState] = React.useState('')
+  const [error, setError] = React.useState('')
 
   const insets = useSafeAreaInsets()
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
@@ -84,7 +101,48 @@ export const PostComposer = ({
   const activeInputRef =
     React.useRef<React.MutableRefObject<TextInputRef | undefined>>()
 
-  const publishPost = useNonReactiveCallback(async () => {})
+  const publishPost = useNonReactiveCallback(async () => {
+    if (!canPublish || isProcessing) {
+      return
+    }
+
+    setError('')
+    setIsProcessing(true)
+
+    let success = false
+
+    try {
+      await publish({
+        agent: getAgent(),
+        queryClient: queryClient,
+        state: state,
+        onLog(msg) {
+          setProcessingState(_(msg))
+        },
+      })
+
+      success = true
+    } catch (err) {
+      if (isNetworkError(err)) {
+        setError(
+          _(
+            msg`Failed to post. Please check your internet connection and try again.`,
+          ),
+        )
+      } else {
+        setError(cleanError(err))
+      }
+    } finally {
+      setIsProcessing(false)
+    }
+
+    if (success) {
+      closeComposer()
+
+      emitPostCreated()
+      data.onPost?.()
+    }
+  })
 
   const onPressCancel = React.useCallback(() => {
     closeComposer()
@@ -143,19 +201,37 @@ export const PostComposer = ({
             <ButtonText>{_(msg`Cancel`)}</ButtonText>
           </Button>
 
-          <View style={[a.flex_row, a.align_center, a.gap_md]}>
-            {activePostLabels !== undefined && <SelectLabelsBtn />}
+          {!isProcessing ? (
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              {activePostLabels !== undefined && <SelectLabelsBtn />}
 
-            <Button
-              label={_(msg`Post`)}
-              disabled={!canPublish}
-              size="small"
-              variant="solid"
-              color="primary"
-              style={[a.my_xs]}>
-              <ButtonText>{_(msg`Post`)}</ButtonText>
-            </Button>
-          </View>
+              <Button
+                label={_(msg`Post`)}
+                disabled={!canPublish}
+                onPress={publishPost}
+                size="small"
+                variant="solid"
+                color="primary"
+                style={[a.my_xs]}>
+                <ButtonText>{_(msg`Post`)}</ButtonText>
+              </Button>
+            </View>
+          ) : (
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {processingState}
+              </Text>
+
+              <View
+                style={[
+                  {height: 40, width: 40},
+                  a.align_center,
+                  a.justify_center,
+                ]}>
+                <ActivityIndicator />
+              </View>
+            </View>
+          )}
         </View>
 
         {isAltTextMissingAndRequired && (
@@ -174,6 +250,25 @@ export const PostComposer = ({
             <Warning fill={t.palette.negative_700} />
             <Text style={[{color: t.palette.negative_700}]}>
               <Trans>One or more images are missing alt text</Trans>
+            </Text>
+          </View>
+        )}
+        {error !== '' && (
+          <View
+            style={[
+              {backgroundColor: t.palette.negative_100},
+              a.mx_lg,
+              a.mt_lg,
+              a.px_sm,
+              a.py_sm,
+              a.rounded_sm,
+              a.flex_row,
+              a.gap_sm,
+              a.align_center,
+            ]}>
+            <Warning fill={t.palette.negative_700} />
+            <Text style={[{color: t.palette.negative_700}]}>
+              <Trans>{error}</Trans>
             </Text>
           </View>
         )}

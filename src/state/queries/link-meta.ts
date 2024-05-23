@@ -15,16 +15,18 @@ const TIMEOUT = 15e3
 const RQKEY_ROOT = 'link-meta'
 export const RQKEY = (url: string) => [RQKEY_ROOT, url]
 
+export type LinkMetaReturn = {
+  meta: LinkMeta
+  thumb?: ComposerImage
+}
+
 export function useLinkMetaQuery(url: string) {
   const {getAgent} = useAgent()
 
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(url),
-    async queryFn(): Promise<{
-      meta: LinkMeta
-      thumb?: ComposerImage
-    }> {
+    async queryFn(): Promise<LinkMetaReturn> {
       if (isBskyAppUrl(url)) {
         const meta = await extractBskyMeta(getAgent(), url)
         return {meta: meta}

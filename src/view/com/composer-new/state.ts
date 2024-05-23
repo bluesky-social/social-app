@@ -579,9 +579,15 @@ function deriveComposerState(
 ): ComposerStateWithDerivation {
   return {
     ...state,
-    canPublish: state.posts.every(
-      p => p.rtLength > 0 && p.rtLength <= MAX_GRAPHEME_LENGTH,
-    ),
+    canPublish: state.posts.every(p => {
+      const embed = p.embed
+      const record = getRecordEmbed(embed)
+
+      return (
+        ((embed && (!record || record.kind !== 'post')) || p.rtLength > 0) &&
+        p.rtLength <= MAX_GRAPHEME_LENGTH
+      )
+    }),
     isAltTextMissing: state.posts.some(p => p.isAltTextMissing),
   }
 }
@@ -706,6 +712,18 @@ export function getMediaEmbed(embed: PostEmbed | undefined, type: string): any {
 
     if (embed.type === 'recordWithMedia' && embed.media.type === type) {
       return embed.media
+    }
+  }
+}
+
+export function getRecordEmbed(embed: PostEmbed | undefined) {
+  if (embed) {
+    if (embed.type === 'record') {
+      return embed
+    }
+
+    if (embed.type === 'recordWithMedia') {
+      return embed.record
     }
   }
 }
