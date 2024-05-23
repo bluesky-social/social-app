@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-23 09:06+0900\n"
+"PO-Revision-Date: 2024-05-23 09:14+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -90,7 +90,7 @@ msgstr "{following} 팔로우 중"
 
 #: src/components/dms/NewChatDialog/index.tsx:171
 msgid "{handle} can't be messaged"
-msgstr "{handle}에게 메시지를 보낼 수 없습니다"
+msgstr "{handle} 님에게 메시지를 보낼 수 없습니다"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:286
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:299
