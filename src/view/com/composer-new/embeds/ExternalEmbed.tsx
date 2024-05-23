@@ -29,6 +29,51 @@ export const ExternalEmbed = ({
   const t = useTheme()
   const {_} = useLingui()
 
+  const onRemove = () => {
+    dispatch({type: 'embed_remove_media', postId})
+  }
+
+  return (
+    <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
+      {active && (
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 16,
+            right: 10,
+            height: 36,
+            width: 36,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            borderRadius: 18,
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2,
+          }}
+          onPress={onRemove}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Remove link`)}
+          accessibilityHint={_(msg`Remove link embed pointing to ${embed.uri}`)}
+          onAccessibilityEscape={onRemove}>
+          <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
+        </TouchableOpacity>
+      )}
+
+      <ExternalEmbedContent active={active} embed={embed} isGif={isGif} />
+    </View>
+  )
+}
+
+export const ExternalEmbedContent = ({
+  active,
+  embed,
+  isGif,
+}: {
+  active: boolean
+  embed: PostExternalEmbed
+  isGif?: boolean
+}) => {
+  const t = useTheme()
+
   const {data: link} = useLinkMetaQuery(embed.uri)
 
   const linkInfo = React.useMemo(
@@ -42,12 +87,8 @@ export const ExternalEmbed = ({
     [link, embed],
   )
 
-  const onRemove = () => {
-    dispatch({type: 'embed_remove_media', postId})
-  }
-
   return (
-    <View style={[a.overflow_hidden, t.atoms.border_contrast_medium]}>
+    <>
       {!link ? (
         <Container>
           <Loader size="xl" />
@@ -67,29 +108,7 @@ export const ExternalEmbed = ({
           <ExternalLinkEmbed link={linkInfo} hideAlt />
         </InertContents>
       ) : null}
-
-      {active && (
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 10,
-            height: 36,
-            width: 36,
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-            borderRadius: 18,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={onRemove}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Remove link`)}
-          accessibilityHint={_(msg`Remove link embed pointing to ${embed.uri}`)}
-          onAccessibilityEscape={onRemove}>
-          <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
-        </TouchableOpacity>
-      )}
-    </View>
+    </>
   )
 }
 
