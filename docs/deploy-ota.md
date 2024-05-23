@@ -67,6 +67,9 @@ to create your branch from, this should be properly set.
         ![other-ota-options](./img/other-ota-options.png)
   
   - Triple check the branch selection.
+    - You selected the correct branch
+    - You selected the "Production" channel
+    - You entered the correct version in the format of `1.X.0`.
   - Press “Run Workflow”
 
 In about five minutes, the new deployment should be available for download. To test:
