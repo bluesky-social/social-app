@@ -558,13 +558,15 @@ function* flattenThreadReplies(
     }
 
     // handle blurred items
-    const modui = modCache.get(node)?.ui('contentList')
-    if (modui?.blur) {
-      if (!showHiddenReplies || node.ctx.depth > 1) {
-        if (modui.blurs[0].type === 'muted') {
-          return HiddenReplyType.Muted
+    if (node.ctx.depth > 0) {
+      const modui = modCache.get(node)?.ui('contentList')
+      if (modui?.blur) {
+        if (!showHiddenReplies || node.ctx.depth > 1) {
+          if (modui.blurs[0].type === 'muted') {
+            return HiddenReplyType.Muted
+          }
+          return HiddenReplyType.Hidden
         }
-        return HiddenReplyType.Hidden
       }
     }
 
