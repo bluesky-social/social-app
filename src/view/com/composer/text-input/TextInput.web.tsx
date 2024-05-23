@@ -76,19 +76,21 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   )
 
   React.useEffect(() => {
-    if (onPressPublish) {
+    if (!disabled && onPressPublish) {
       textInputWebEmitter.addListener('publish', onPressPublish)
       return () => {
         textInputWebEmitter.removeListener('publish', onPressPublish)
       }
     }
-  }, [onPressPublish])
+  }, [disabled, onPressPublish])
   React.useEffect(() => {
-    textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
-    return () => {
-      textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+    if (!disabled) {
+      textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
+      return () => {
+        textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+      }
     }
-  }, [onPhotoPasted])
+  }, [disabled, onPhotoPasted])
 
   React.useEffect(() => {
     if (disabled) {
