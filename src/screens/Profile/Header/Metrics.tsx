@@ -1,10 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {pluralize} from '#/lib/strings/helpers'
 import {Shadow} from '#/state/cache/types'
 import {makeProfileLink} from 'lib/routes/links'
 import {formatCount} from 'view/com/util/numeric/format'
@@ -21,7 +20,14 @@ export function ProfileHeaderMetrics({
   const {_} = useLingui()
   const following = formatCount(profile.followsCount || 0)
   const followers = formatCount(profile.followersCount || 0)
-  const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
+  const pluralizedFollowers = plural(profile.followersCount || 0, {
+    one: 'follower',
+    other: 'followers',
+  })
+  const pluralizedFollowings = plural(profile.followsCount || 0, {
+    one: 'following',
+    other: 'following',
+  })
 
   return (
     <View
@@ -42,17 +48,15 @@ export function ProfileHeaderMetrics({
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'follows')}
         label={_(msg`${following} following`)}>
-        <Trans>
-          <Text style={[a.font_bold, a.text_md]}>{following} </Text>
-          <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            following
-          </Text>
-        </Trans>
+        <Text style={[a.font_bold, a.text_md]}>{following} </Text>
+        <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+          {pluralizedFollowings}
+        </Text>
       </InlineLinkText>
       <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
         {formatCount(profile.postsCount || 0)}{' '}
         <Text style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
-          {pluralize(profile.postsCount || 0, 'post')}
+          {plural(profile.postsCount || 0, {one: 'post', other: 'posts'})}
         </Text>
       </Text>
     </View>

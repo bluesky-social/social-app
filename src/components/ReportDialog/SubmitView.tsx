@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, native, useTheme} from '#/alf'
@@ -15,6 +15,7 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ReportDialogProps} from './types'
@@ -35,6 +36,7 @@ export function SubmitView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {getAgent} = useAgent()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
   const [selectedServices, setSelectedServices] = React.useState<string[]>([
@@ -90,6 +92,7 @@ export function SubmitView({
     selectedServices,
     onSubmitComplete,
     setError,
+    getAgent,
   ])
 
   return (
@@ -219,6 +222,7 @@ export function SubmitView({
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
+      <KeyboardPadding />
     </View>
   )
 }

@@ -2,18 +2,35 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetFeed as GetCustomFeed,
   AtpAgent,
+  BskyAgent,
 } from '@atproto/api'
 
 import {getContentLanguages} from '#/state/preferences/languages'
-import {getAgent} from '#/state/session'
 import {FeedAPI, FeedAPIResponse} from './types'
+import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
-  constructor(public params: GetCustomFeed.QueryParams) {}
+  getAgent: () => BskyAgent
+  params: GetCustomFeed.QueryParams
+  userInterests?: string
+
+  constructor({
+    getAgent,
+    feedParams,
+    userInterests,
+  }: {
+    getAgent: () => BskyAgent
+    feedParams: GetCustomFeed.QueryParams
+    userInterests?: string
+  }) {
+    this.getAgent = getAgent
+    this.params = feedParams
+    this.userInterests = userInterests
+  }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await getAgent().app.bsky.feed.getFeed(
+    const res = await this.getAgent().app.bsky.feed.getFeed(
       {
         ...this.params,
         limit: 1,
@@ -31,15 +48,24 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-    const agent = getAgent()
+    const agent = this.getAgent()
+    const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
+
     const res = agent.session
-      ? await getAgent().app.bsky.feed.getFeed(
+      ? await this.getAgent().app.bsky.feed.getFeed(
           {
             ...this.params,
             cursor,
             limit,
           },
-          {headers: {'Accept-Language': contentLangs}},
+          {
+            headers: {
+              ...(isBlueskyOwned
+                ? createBskyTopicsHeader(this.userInterests)
+                : {}),
+              'Accept-Language': contentLangs,
+            },
+          },
         )
       : await loggedOutFetch({...this.params, cursor, limit})
     if (res.success) {

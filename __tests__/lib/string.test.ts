@@ -3,7 +3,7 @@ import {RichText} from '@atproto/api'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
-import {enforceLen, pluralize} from '../../src/lib/strings/helpers'
+import {enforceLen} from '../../src/lib/strings/helpers'
 import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
 import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
 import {ago} from '../../src/lib/strings/time'
@@ -127,35 +127,6 @@ describe('detectLinkables', () => {
   })
 })
 
-describe('pluralize', () => {
-  const inputs: [number, string, string?][] = [
-    [1, 'follower'],
-    [1, 'member'],
-    [100, 'post'],
-    [1000, 'repost'],
-    [10000, 'upvote'],
-    [100000, 'other'],
-    [2, 'man', 'men'],
-  ]
-  const outputs = [
-    'follower',
-    'member',
-    'posts',
-    'reposts',
-    'upvotes',
-    'others',
-    'men',
-  ]
-
-  it('correctly pluralizes a set of words', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i]
-      const output = pluralize(...input)
-      expect(output).toEqual(outputs[i])
-    }
-  })
-})
-
 describe('makeRecordUri', () => {
   const inputs: [string, string, string][] = [
     ['alice.test', 'app.bsky.feed.post', '3jk7x4irgv52r'],
@@ -172,6 +143,10 @@ describe('makeRecordUri', () => {
 })
 
 describe('ago', () => {
+  const oneYearDate = new Date(
+    new Date().setMonth(new Date().getMonth() - 11),
+  ).setDate(new Date().getDate() - 28)
+
   const inputs = [
     1671461038,
     '04 Dec 1995 00:12:00 GMT',
@@ -180,7 +155,32 @@ describe('ago', () => {
     new Date().setMinutes(new Date().getMinutes() - 10),
     new Date().setHours(new Date().getHours() - 1),
     new Date().setDate(new Date().getDate() - 1),
+    new Date().setDate(new Date().getDate() - 20),
+    new Date().setDate(new Date().getDate() - 25),
+    new Date().setDate(new Date().getDate() - 28),
+    new Date().setDate(new Date().getDate() - 29),
+    new Date().setDate(new Date().getDate() - 30),
     new Date().setMonth(new Date().getMonth() - 1),
+    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+      new Date().getDate() - 20,
+    ),
+    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+      new Date().getDate() - 25,
+    ),
+    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+      new Date().getDate() - 28,
+    ),
+    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+      new Date().getDate() - 29,
+    ),
+    new Date().setMonth(new Date().getMonth() - 11),
+    new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
+      new Date().getDate() - 20,
+    ),
+    new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
+      new Date().getDate() - 25,
+    ),
+    oneYearDate,
   ]
   const outputs = [
     new Date(1671461038).toLocaleDateString(),
@@ -190,7 +190,20 @@ describe('ago', () => {
     '10m',
     '1h',
     '1d',
+    '20d',
+    '25d',
+    '28d',
+    '29d',
     '1mo',
+    '1mo',
+    '1mo',
+    '1mo',
+    '2mo',
+    '2mo',
+    '11mo',
+    '11mo',
+    '11mo',
+    new Date(oneYearDate).toLocaleDateString(),
   ]
 
   it('correctly calculates how much time passed, in a string', () => {
@@ -396,6 +409,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://youtube.com/watch?v=videoId&feature=share',
     'https://youtube.com/shorts/videoId',
     'https://m.youtube.com/watch?v=videoId',
+    'https://music.youtube.com/watch?v=videoId',
 
     'https://youtube.com/shorts/',
     'https://youtube.com/',
@@ -497,6 +511,11 @@ describe('parseEmbedPlayerFromUrl', () => {
       type: 'youtube_short',
       source: 'youtubeShorts',
       hideDetails: true,
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+    },
+    {
+      type: 'youtube_video',
+      source: 'youtube',
       playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {

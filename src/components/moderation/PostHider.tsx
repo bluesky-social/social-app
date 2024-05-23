@@ -1,11 +1,13 @@
 import React, {ComponentProps} from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {addStyle} from 'lib/styles'
+import {precacheProfile} from 'state/queries/profile'
 // import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
 import {Link} from '#/view/com/util/Link'
 import {atoms as a, useTheme} from '#/alf'
@@ -20,6 +22,7 @@ interface Props extends ComponentProps<typeof Link> {
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
+  profile: AppBskyActorDefs.ProfileViewBasic
 }
 
 export function PostHider({
@@ -31,14 +34,20 @@ export function PostHider({
   children,
   iconSize,
   iconStyles,
+  profile,
   ...props
 }: Props) {
+  const queryClient = useQueryClient()
   const t = useTheme()
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const control = useModerationDetailsDialogControl()
   const blur = modui.blurs[0]
   const desc = useModerationCauseDescription(blur)
+
+  const onBeforePress = React.useCallback(() => {
+    precacheProfile(queryClient, profile)
+  }, [queryClient, profile])
 
   if (!blur || (disabled && !modui.noOverride)) {
     return (
@@ -47,6 +56,7 @@ export function PostHider({
         style={style}
         href={href}
         accessible={false}
+        onBeforePress={onBeforePress}
         {...props}>
         {children}
       </Link>

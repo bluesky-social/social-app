@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react'
-import {Keyboard, TextInput, View} from 'react-native'
+import {TextInput, View} from 'react-native'
 import {Image} from 'expo-image'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
@@ -197,6 +197,7 @@ function GifList({
                 onGoBack={onGoBack}
                 emptyType="results"
                 sideBorders={false}
+                topBorder={false}
                 errorTitle={_(msg`Failed to load GIFs`)}
                 errorMessage={_(msg`There was an issue connecting to Tenor.`)}
                 emptyMessage={
@@ -216,7 +217,7 @@ function GifList({
         keyExtractor={(item: Gif) => item.id}
         // @ts-expect-error web only
         style={isWeb && {minHeight: '100vh'}}
-        onScrollBeginDrag={() => Keyboard.dismiss()}
+        keyboardDismissMode="on-drag"
         ListFooterComponent={
           hasData ? (
             <ListFooter

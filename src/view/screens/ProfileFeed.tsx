@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -10,17 +10,17 @@ import {HITSLOP_20} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {FeedSourceFeedInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
-  usePinFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
-  useSaveFeedMutation,
-  useUnpinFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -35,7 +35,6 @@ import {makeCustomFeedLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
-import {pluralize} from 'lib/strings/helpers'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
@@ -163,37 +162,20 @@ export function ProfileFeedScreenInner({
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
-  const {
-    mutateAsync: saveFeed,
-    variables: savedFeed,
-    reset: resetSaveFeed,
-    isPending: isSavePending,
-  } = useSaveFeedMutation()
-  const {
-    mutateAsync: removeFeed,
-    variables: removedFeed,
-    reset: resetRemoveFeed,
-    isPending: isRemovePending,
-  } = useRemoveFeedMutation()
-  const {
-    mutateAsync: pinFeed,
-    variables: pinnedFeed,
-    reset: resetPinFeed,
-    isPending: isPinPending,
-  } = usePinFeedMutation()
-  const {
-    mutateAsync: unpinFeed,
-    variables: unpinnedFeed,
-    reset: resetUnpinFeed,
-    isPending: isUnpinPending,
-  } = useUnpinFeedMutation()
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
+  const {mutateAsync: removeFeed, isPending: isRemovePending} =
+    useRemoveFeedMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
+    useUpdateSavedFeedsMutation()
 
-  const isSaved =
-    !removedFeed &&
-    (!!savedFeed || preferences.feeds.saved.includes(feedInfo.uri))
-  const isPinned =
-    !unpinnedFeed &&
-    (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
+  const isPending =
+    isAddSavedFeedPending || isRemovePending || isUpdateFeedPending
+  const savedFeedConfig = preferences.savedFeeds.find(
+    f => f.value === feedInfo.uri,
+  )
+  const isSaved = Boolean(savedFeedConfig)
+  const isPinned = Boolean(savedFeedConfig?.pinned)
 
   useSetTitle(feedInfo?.displayName)
 
@@ -204,13 +186,17 @@ export function ProfileFeedScreenInner({
     try {
       playHaptic()
 
-      if (isSaved) {
-        await removeFeed({uri: feedInfo.uri})
-        resetRemoveFeed()
+      if (savedFeedConfig) {
+        await removeFeed(savedFeedConfig)
         Toast.show(_(msg`Removed from your feeds`))
       } else {
-        await saveFeed({uri: feedInfo.uri})
-        resetSaveFeed()
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: false,
+          },
+        ])
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (err) {
@@ -221,27 +207,27 @@ export function ProfileFeedScreenInner({
       )
       logger.error('Failed up update feeds', {message: err})
     }
-  }, [
-    playHaptic,
-    isSaved,
-    removeFeed,
-    feedInfo,
-    resetRemoveFeed,
-    _,
-    saveFeed,
-    resetSaveFeed,
-  ])
+  }, [_, playHaptic, feedInfo, removeFeed, addSavedFeeds, savedFeedConfig])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
       playHaptic()
 
-      if (isPinned) {
-        await unpinFeed({uri: feedInfo.uri})
-        resetUnpinFeed()
+      if (savedFeedConfig) {
+        await updateSavedFeeds([
+          {
+            ...savedFeedConfig,
+            pinned: !savedFeedConfig.pinned,
+          },
+        ])
       } else {
-        await pinFeed({uri: feedInfo.uri})
-        resetPinFeed()
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: true,
+          },
+        ])
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
@@ -249,13 +235,11 @@ export function ProfileFeedScreenInner({
     }
   }, [
     playHaptic,
-    isPinned,
-    unpinFeed,
     feedInfo,
-    resetUnpinFeed,
-    pinFeed,
-    resetPinFeed,
     _,
+    savedFeedConfig,
+    updateSavedFeeds,
+    addSavedFeeds,
   ])
 
   const onPressShare = React.useCallback(() => {
@@ -296,7 +280,7 @@ export function ProfileFeedScreenInner({
             {feedInfo && hasSession && (
               <NewButton
                 testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-                disabled={isPinPending || isUnpinPending}
+                disabled={isPending}
                 size="small"
                 variant="solid"
                 color={isPinned ? 'secondary' : 'primary'}
@@ -339,7 +323,7 @@ export function ProfileFeedScreenInner({
                   {hasSession && (
                     <>
                       <Menu.Item
-                        disabled={isSavePending || isRemovePending}
+                        disabled={isPending}
                         testID="feedHeaderDropdownToggleSavedBtn"
                         label={
                           isSaved
@@ -395,14 +379,11 @@ export function ProfileFeedScreenInner({
     onTogglePinned,
     onToggleSaved,
     currentAccount?.did,
-    isPinPending,
-    isRemovePending,
-    isSavePending,
     isSaved,
-    isUnpinPending,
     onPressReport,
     onPressShare,
     t,
+    isPending,
   ])
 
   return (
@@ -463,6 +444,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
     const isScreenFocused = useIsFocused()
+    const {hasSession} = useSession()
+    const feedFeedback = useFeedFeedback(feed, hasSession)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -490,17 +473,19 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     return (
       <View>
-        <Feed
-          enabled={isFocused}
-          feed={feed}
-          pollInterval={60e3}
-          disablePoll={hasNew}
-          scrollElRef={scrollElRef}
-          onHasNew={setHasNew}
-          onScrolledDownChange={setIsScrolledDown}
-          renderEmptyState={renderPostsEmpty}
-          headerOffset={headerHeight}
-        />
+        <FeedFeedbackProvider value={feedFeedback}>
+          <Feed
+            enabled={isFocused}
+            feed={feed}
+            pollInterval={60e3}
+            disablePoll={hasNew}
+            scrollElRef={scrollElRef}
+            onHasNew={setHasNew}
+            onScrolledDownChange={setIsScrolledDown}
+            renderEmptyState={renderPostsEmpty}
+            headerOffset={headerHeight}
+          />
+        </FeedFeedbackProvider>
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
@@ -597,7 +582,11 @@ function AboutSection({
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             style={[t.atoms.text_contrast_medium, a.font_bold]}>
-            {_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
+            <Plural
+              value={likeCount}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
           </InlineLinkText>
         )}
       </View>

@@ -95,7 +95,6 @@ web-build/
 /ios/
 
 # environment variables
-.env
 .env.*
 
 # Firebase (Android) Google services

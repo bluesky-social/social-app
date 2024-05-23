@@ -19,7 +19,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000
@@ -40,6 +40,7 @@ export interface ListMembersip {
  */
 export function useDangerousListMembershipsQuery() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   return useQuery<ListMembersip[]>({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
@@ -91,6 +92,7 @@ export function getMembership(
 
 export function useListMembershipAddMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -149,6 +151,7 @@ export function useListMembershipAddMutation() {
 
 export function useListMembershipRemoveMutation() {
   const {currentAccount} = useSession()
+  const {getAgent} = useAgent()
   const queryClient = useQueryClient()
   return useMutation<
     void,

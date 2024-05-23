@@ -1,9 +1,3 @@
-import {BskyAgent} from '@atproto/api'
-
-export const PUBLIC_BSKY_AGENT = new BskyAgent({
-  service: 'https://public.api.bsky.app',
-})
-
 export const STALE = {
   SECONDS: {
     FIFTEEN: 1e3 * 15,

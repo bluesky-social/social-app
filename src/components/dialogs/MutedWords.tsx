@@ -28,6 +28,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -37,12 +38,12 @@ export function MutedWordsDialog() {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <MutedWordsInner control={control} />
+      <MutedWordsInner />
     </Dialog.Outer>
   )
 }
 
-function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
+function MutedWordsInner() {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -256,6 +257,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
       </View>
 
       <Dialog.Close />
+      <KeyboardPadding maxHeight={100} />
     </Dialog.ScrollableInner>
   )
 }

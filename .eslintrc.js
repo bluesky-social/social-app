@@ -9,11 +9,11 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: [
     '@typescript-eslint',
-    'detox',
     'react',
     'lingui',
     'simple-import-sort',
     'bsky-internal',
+    'eslint-plugin-react-compiler',
   ],
   rules: {
     // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
@@ -68,6 +68,8 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'warn',
+    // TODO: Reenable when we figure out why it gets stuck on CI.
+    // 'react-compiler/react-compiler': 'error',
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',

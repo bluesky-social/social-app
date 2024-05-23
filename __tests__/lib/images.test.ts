@@ -1,9 +1,10 @@
+import ImageResizer from '@bam.tech/react-native-image-resizer'
+import RNFetchBlob from 'rn-fetch-blob'
+
 import {
   downloadAndResize,
   DownloadAndResizeOpts,
 } from '../../src/lib/media/manip'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
-import RNFetchBlob from 'rn-fetch-blob'
 
 describe('downloadAndResize', () => {
   const errorSpy = jest.spyOn(global.console, 'error')
@@ -30,6 +31,7 @@ describe('downloadAndResize', () => {
     const mockedFetch = RNFetchBlob.fetch as jest.Mock
     mockedFetch.mockResolvedValueOnce({
       path: jest.fn().mockReturnValue('file://downloaded-image.jpg'),
+      info: jest.fn().mockReturnValue({status: 200}),
       flush: jest.fn(),
     })
 
@@ -84,6 +86,7 @@ describe('downloadAndResize', () => {
     const mockedFetch = RNFetchBlob.fetch as jest.Mock
     mockedFetch.mockResolvedValueOnce({
       path: jest.fn().mockReturnValue('file://downloaded-image'),
+      info: jest.fn().mockReturnValue({status: 200}),
       flush: jest.fn(),
     })
 
@@ -117,5 +120,27 @@ describe('downloadAndResize', () => {
       undefined,
       {mode: 'cover'},
     )
+  })
+
+  it('should return undefined for non-200 response', async () => {
+    const mockedFetch = RNFetchBlob.fetch as jest.Mock
+    mockedFetch.mockResolvedValueOnce({
+      path: jest.fn().mockReturnValue('file://downloaded-image'),
+      info: jest.fn().mockReturnValue({status: 400}),
+      flush: jest.fn(),
+    })
+
+    const opts: DownloadAndResizeOpts = {
+      uri: 'https://example.com/image',
+      width: 100,
+      height: 100,
+      maxSize: 500000,
+      mode: 'cover',
+      timeout: 10000,
+    }
+
+    const result = await downloadAndResize(opts)
+    expect(errorSpy).not.toHaveBeenCalled()
+    expect(result).toBeUndefined()
   })
 })

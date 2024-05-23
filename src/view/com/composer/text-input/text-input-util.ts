@@ -1,41 +1,85 @@
-export function addLinkCardIfNecessary({
-  uri,
-  newText,
-  cursorLocation,
-  mayBePaste,
-  onNewLink,
-  prevAddedLinks,
-}: {
-  uri: string
-  newText: string
-  cursorLocation: number
-  mayBePaste: boolean
-  onNewLink: (uri: string) => void
-  prevAddedLinks: Set<string>
-}) {
-  // It would be cool if we could just use facet.index.byteEnd, but you know... *upside down smiley*
-  const lastCharacterPosition = findIndexInText(uri, newText) + uri.length
+import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
-  // If the text being added is not from a paste, then we should only check if the cursor is one
-  // position ahead of the last character. However, if it is a paste we need to check both if it's
-  // the same position _or_ one position ahead. That is because iOS will add a space after a paste if
-  // pasting into the middle of a sentence!
-  const cursorLocationIsOkay =
-    cursorLocation === lastCharacterPosition + 1 || mayBePaste
+export type LinkFacetMatch = {
+  rt: RichText
+  facet: AppBskyRichtextFacet.Main
+}
 
-  // Checking previouslyAddedLinks keeps a card from getting added over and over i.e.
-  // Link card added -> Remove link card -> Press back space -> Press space -> Link card added -> and so on
-
-  // We use the isValidUrl regex below because we don't want to add embeds only if the url is valid, i.e.
-  // http://facebook is a valid url, but that doesn't mean we want to embed it. We should only embed if
-  // the url is a valid url _and_ domain. new URL() won't work for this check.
-  const shouldCheck =
-    cursorLocationIsOkay && !prevAddedLinks.has(uri) && isValidUrlAndDomain(uri)
-
-  if (shouldCheck) {
-    onNewLink(uri)
-    prevAddedLinks.add(uri)
+export function suggestLinkCardUri(
+  mayBePaste: boolean,
+  nextDetectedUris: Map<string, LinkFacetMatch>,
+  prevDetectedUris: Map<string, LinkFacetMatch>,
+  pastSuggestedUris: Set<string>,
+): string | undefined {
+  const suggestedUris = new Set<string>()
+  for (const [uri, nextMatch] of nextDetectedUris) {
+    if (!isValidUrlAndDomain(uri)) {
+      continue
+    }
+    if (pastSuggestedUris.has(uri)) {
+      // Don't suggest already added or already dismissed link cards.
+      continue
+    }
+    if (mayBePaste) {
+      // Immediately add the pasted link without waiting to type more.
+      suggestedUris.add(uri)
+      continue
+    }
+    const prevMatch = prevDetectedUris.get(uri)
+    if (!prevMatch) {
+      // If the same exact link wasn't already detected during the last keystroke,
+      // it means you're probably still typing it. Disregard until it stabilizes.
+      continue
+    }
+    const prevTextAfterUri = prevMatch.rt.unicodeText.slice(
+      prevMatch.facet.index.byteEnd,
+    )
+    const nextTextAfterUri = nextMatch.rt.unicodeText.slice(
+      nextMatch.facet.index.byteEnd,
+    )
+    if (prevTextAfterUri === nextTextAfterUri) {
+      // The text you're editing is before the link, e.g.
+      // "abc google.com" -> "abcd google.com".
+      // This is a good time to add the link.
+      suggestedUris.add(uri)
+      continue
+    }
+    if (/^\s/m.test(nextTextAfterUri)) {
+      // The link is followed by a space, e.g.
+      // "google.com" -> "google.com " or
+      // "google.com." -> "google.com ".
+      // This is a clear indicator we can linkify it.
+      suggestedUris.add(uri)
+      continue
+    }
+    if (
+      /^[)]?[.,:;!?)](\s|$)/m.test(prevTextAfterUri) &&
+      /^[)]?[.,:;!?)]\s/m.test(nextTextAfterUri)
+    ) {
+      // The link was *already* being followed by punctuation,
+      // and now it's followed both by punctuation and a space.
+      // This means you're typing after punctuation, e.g.
+      // "google.com." -> "google.com. " or
+      // "google.com.foo" -> "google.com. foo".
+      // This means you're not typing the link anymore, so we can linkify it.
+      suggestedUris.add(uri)
+      continue
+    }
   }
+  for (const uri of pastSuggestedUris) {
+    if (!nextDetectedUris.has(uri)) {
+      // If a link is no longer detected, it's eligible for suggestions next time.
+      pastSuggestedUris.delete(uri)
+    }
+  }
+
+  let suggestedUri: string | undefined
+  if (suggestedUris.size > 0) {
+    suggestedUri = Array.from(suggestedUris)[0]
+    pastSuggestedUris.add(suggestedUri)
+  }
+
+  return suggestedUri
 }
 
 // https://stackoverflow.com/questions/8667070/javascript-regular-expression-to-validate-url
@@ -45,15 +89,4 @@ function isValidUrlAndDomain(value: string) {
   return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
     value,
   )
-}
-
-export function findIndexInText(term: string, text: string) {
-  // This should find patterns like:
-  // HELLO SENTENCE http://google.com/ HELLO
-  // HELLO SENTENCE http://google.com HELLO
-  // http://google.com/ HELLO.
-  // http://google.com/.
-  const pattern = new RegExp(`\\b(${term})(?![/w])`, 'i')
-  const match = pattern.exec(text)
-  return match ? match.index : -1
 }

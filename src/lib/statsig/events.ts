@@ -4,18 +4,27 @@ export type LogEvents = {
     initMs: number
   }
   'account:loggedIn': {
-    logContext: 'LoginForm' | 'SwitchAccount' | 'ChooseAccountForm' | 'Settings'
+    logContext:
+      | 'LoginForm'
+      | 'SwitchAccount'
+      | 'ChooseAccountForm'
+      | 'Settings'
+      | 'Notification'
     withPassword: boolean
   }
   'account:loggedOut': {
     logContext: 'SwitchAccount' | 'Settings' | 'Deactivated'
   }
   'notifications:openApp': {}
+  'notifications:request': {
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
+    status: 'granted' | 'denied' | 'undetermined'
+  }
   'state:background': {
     secondsActive: number
   }
   'state:foreground': {}
-  'router:navigate': {}
+  'router:navigate:sampled': {}
 
   // Screen events
   'splash:signInPressed': {}
@@ -43,7 +52,11 @@ export type LogEvents = {
     selectedFeedsLength: number
   }
   'onboarding:moderation:nextPressed': {}
+  'onboarding:profile:nextPressed': {}
   'onboarding:finished:nextPressed': {}
+  'onboarding:finished:avatarResult': {
+    avatarResult: 'default' | 'created' | 'uploaded'
+  }
   'home:feedDisplayed': {
     feedUrl: string
     feedType: string
@@ -112,6 +125,13 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'Chat'
+  }
+  'chat:create': {
+    logContext: 'ProfileHeader' | 'NewChatDialog'
+  }
+  'chat:open': {
+    logContext: 'ProfileHeader' | 'NewChatDialog' | 'ChatsList'
   }
 
   'test:all:always': {}

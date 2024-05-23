@@ -15,6 +15,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
+import {useKawaiiMode} from '../../../state/preferences/kawaii'
 import {Link} from '../util/Link'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
@@ -43,10 +44,19 @@ function HomeHeaderLayoutDesktopAndTablet({
   const {hasSession} = useSession()
   const {_} = useLingui()
 
+  const kawaii = useKawaiiMode()
+
   return (
     <>
       {hasSession && (
-        <View style={[pal.view, pal.border, styles.bar, styles.topBar]}>
+        <View
+          style={[
+            pal.view,
+            pal.border,
+            styles.bar,
+            styles.topBar,
+            kawaii && {paddingTop: 4, paddingBottom: 0},
+          ]}>
           <Link
             href="/settings/following-feed"
             hitSlop={10}
@@ -58,7 +68,7 @@ function HomeHeaderLayoutDesktopAndTablet({
               style={pal.textLight as FontAwesomeIconStyle}
             />
           </Link>
-          <Logo width={28} />
+          <Logo width={kawaii ? 60 : 28} />
           <Link
             href="/settings/saved-feeds"
             hitSlop={10}

@@ -10,11 +10,10 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
-import {precacheThreadPostProfiles} from './profile'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const RQKEY_ROOT = 'post-thread'
@@ -69,15 +68,14 @@ export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
 
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useQuery<ThreadNode, Error>({
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const res = await getAgent().getPostThread({uri: uri!})
       if (res.success) {
-        const nodes = responseToThreadNodes(res.data.thread)
-        precacheThreadPostProfiles(queryClient, nodes)
-        return nodes
+        return responseToThreadNodes(res.data.thread)
       }
       return {type: 'unknown', uri: uri!}
     },

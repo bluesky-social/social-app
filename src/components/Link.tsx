@@ -3,10 +3,12 @@ import {GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
+import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
+  isBskyDownloadUrl,
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
@@ -125,7 +127,9 @@ export function useLink({
             (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
           const shouldOpenInNewTab = isMetaKey || isMiddleClick
 
-          if (
+          if (isBskyDownloadUrl(href)) {
+            shareUrl(BSKY_DOWNLOAD_URL)
+          } else if (
             shouldOpenInNewTab ||
             href.startsWith('http') ||
             href.startsWith('mailto')

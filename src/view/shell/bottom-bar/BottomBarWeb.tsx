@@ -1,37 +1,45 @@
 import React from 'react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useNavigationState} from '@react-navigation/native'
+import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
-import {styles} from './BottomBarStyles'
-import {clamp} from 'lib/numbers'
-import {
-  BellIcon,
-  BellIconSolid,
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  HashtagIcon,
-  UserIcon,
-  UserIconSolid,
-} from 'lib/icons'
-import {Link} from 'view/com/util/Link'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams} from 'lib/routes/types'
+import {useNavigationState} from '@react-navigation/native'
+
+import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {clamp} from '#/lib/numbers'
+import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
+import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
-import {s} from 'lib/styles'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {Link} from 'view/com/util/Link'
+import {
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
+import {
+  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
+  HomeOpen_Stoke2_Corner0_Rounded as Home,
+} from '#/components/icons/HomeOpen'
+import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
+import {
+  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
+  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
+} from '#/components/icons/UserCircle'
+import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
   const {_} = useLingui()
@@ -41,6 +49,7 @@ export function BottomBarWeb() {
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const iconWidth = 26
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -67,11 +76,10 @@ export function BottomBarWeb() {
         <>
           <NavItem routeName="Home" href="/">
             {({isActive}) => {
-              const Icon = isActive ? HomeIconSolid : HomeIcon
+              const Icon = isActive ? HomeFilled : Home
               return (
                 <Icon
-                  strokeWidth={4}
-                  size={24}
+                  width={iconWidth + 1}
                   style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                 />
               )
@@ -79,14 +87,11 @@ export function BottomBarWeb() {
           </NavItem>
           <NavItem routeName="Search" href="/search">
             {({isActive}) => {
-              const Icon = isActive
-                ? MagnifyingGlassIcon2Solid
-                : MagnifyingGlassIcon2
+              const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
                 <Icon
-                  size={25}
+                  width={iconWidth + 2}
                   style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  strokeWidth={1.8}
                 />
               )
             }}
@@ -94,24 +99,23 @@ export function BottomBarWeb() {
 
           {hasSession && (
             <>
-              <NavItem routeName="Feeds" href="/feeds">
+              <NavItem routeName="Messages" href="/messages">
                 {({isActive}) => {
+                  const Icon = isActive ? MessageFilled : Message
                   return (
-                    <HashtagIcon
-                      size={22}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                      strokeWidth={isActive ? 4 : 2.5}
+                    <Icon
+                      width={iconWidth - 1}
+                      style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
                     />
                   )
                 }}
               </NavItem>
               <NavItem routeName="Notifications" href="/notifications">
                 {({isActive}) => {
-                  const Icon = isActive ? BellIconSolid : BellIcon
+                  const Icon = isActive ? BellFilled : Bell
                   return (
                     <Icon
-                      size={24}
-                      strokeWidth={1.9}
+                      width={iconWidth}
                       style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
                     />
                   )
@@ -128,11 +132,10 @@ export function BottomBarWeb() {
                     : '/'
                 }>
                 {({isActive}) => {
-                  const Icon = isActive ? UserIconSolid : UserIcon
+                  const Icon = isActive ? UserCircleFilled : UserCircle
                   return (
                     <Icon
-                      size={28}
-                      strokeWidth={1.5}
+                      width={iconWidth}
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
                     />
                   )

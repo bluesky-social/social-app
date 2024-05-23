@@ -13,7 +13,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {getAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
@@ -41,8 +41,8 @@ export function Component({
   onSuccess?: () => void
 }) {
   const pal = usePalette('default')
+  const {getAgent} = useAgent()
   const {currentAccount} = useSession()
-  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
     showReminder ? Stages.Reminder : Stages.Email,
@@ -81,7 +81,7 @@ export function Component({
         email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })
-      updateCurrentAccount({emailConfirmed: true})
+      await getAgent().resumeSession(getAgent().session!)
       Toast.show(_(msg`Email verified`))
       closeModal()
       onSuccess?.()

@@ -3,7 +3,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
-import {getAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {useDialogControl} from '#/components/Dialog'
 import {DisableEmail2FADialog} from './DisableEmail2FADialog'
@@ -11,9 +11,9 @@ import {DisableEmail2FADialog} from './DisableEmail2FADialog'
 export function Email2FAToggle() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {updateCurrentAccount} = useSessionApi()
   const {openModal} = useModalControls()
   const disableDialogCtrl = useDialogControl()
+  const {getAgent} = useAgent()
 
   const enableEmailAuthFactor = React.useCallback(async () => {
     if (currentAccount?.email) {
@@ -21,11 +21,9 @@ export function Email2FAToggle() {
         email: currentAccount.email,
         emailAuthFactor: true,
       })
-      updateCurrentAccount({
-        emailAuthFactor: true,
-      })
+      await getAgent().resumeSession(getAgent().session!)
     }
-  }, [currentAccount, updateCurrentAccount])
+  }, [currentAccount, getAgent])
 
   const onToggle = React.useCallback(() => {
     if (!currentAccount) {

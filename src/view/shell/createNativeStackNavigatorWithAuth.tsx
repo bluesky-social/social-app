@@ -1,11 +1,8 @@
 import * as React from 'react'
 import {View} from 'react-native'
-import {PWI_ENABLED, NEW_ONBOARDING_ENABLED} from '#/lib/build-flags'
-
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
 // Copyright (c) 2017 React Navigation Contributors
-
 import {
   createNavigatorFactory,
   EventArg,
@@ -21,24 +18,24 @@ import type {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
 } from '@react-navigation/native-stack'
-import type {NativeStackNavigatorProps} from '@react-navigation/native-stack/src/types'
 import {NativeStackView} from '@react-navigation/native-stack'
+import type {NativeStackNavigatorProps} from '@react-navigation/native-stack/src/types'
 
-import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
-import {DesktopLeftNav} from './desktop/LeftNav'
-import {DesktopRightNav} from './desktop/RightNav'
+import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {useSession} from '#/state/session'
 import {isWeb} from 'platform/detection'
 import {Deactivated} from '#/screens/Deactivated'
+import {Onboarding} from '#/screens/Onboarding'
 import {LoggedOut} from '../com/auth/LoggedOut'
-import {Onboarding} from '../com/auth/Onboarding'
-import {Onboarding as NewOnboarding} from '#/screens/Onboarding'
+import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
+import {DesktopLeftNav} from './desktop/LeftNav'
+import {DesktopRightNav} from './desktop/RightNav'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean
@@ -112,11 +109,7 @@ function NativeStackNavigator({
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
   }
   if (onboardingState.isActive) {
-    if (NEW_ONBOARDING_ENABLED) {
-      return <NewOnboarding />
-    } else {
-      return <Onboarding />
-    }
+    return <Onboarding />
   }
   const newDescriptors: typeof descriptors = {}
   for (let key in descriptors) {

@@ -1,5 +1,6 @@
 import {Dimensions, Platform} from 'react-native'
 
+import {isSafari} from 'lib/browser'
 import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -95,7 +96,8 @@ export function parseEmbedPlayerFromUrl(
   if (
     urlp.hostname === 'www.youtube.com' ||
     urlp.hostname === 'youtube.com' ||
-    urlp.hostname === 'm.youtube.com'
+    urlp.hostname === 'm.youtube.com' ||
+    urlp.hostname === 'music.youtube.com'
   ) {
     const [_, page, shortVideoId] = urlp.pathname.split('/')
     const videoId =
@@ -352,8 +354,13 @@ export function parseEmbedPlayerFromUrl(
 
     if (id && filename && dimensions && id.includes('AAAAC')) {
       if (Platform.OS === 'web') {
-        id = id.replace('AAAAC', 'AAAP3')
-        filename = filename.replace('.gif', '.webm')
+        if (isSafari) {
+          id = id.replace('AAAAC', 'AAAP1')
+          filename = filename.replace('.gif', '.mp4')
+        } else {
+          id = id.replace('AAAAC', 'AAAP3')
+          filename = filename.replace('.gif', '.webm')
+        }
       } else {
         id = id.replace('AAAAC', 'AAAAM')
       }

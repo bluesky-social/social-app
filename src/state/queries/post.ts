@@ -7,13 +7,14 @@ import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {Shadow} from '#/state/cache/types'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {findProfileQueryData} from './profile'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
+  const {getAgent} = useAgent()
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     async queryFn() {
@@ -30,6 +31,7 @@ export function usePostQuery(uri: string | undefined) {
 
 export function useGetPost() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
@@ -56,7 +58,7 @@ export function useGetPost() {
         },
       })
     },
-    [queryClient],
+    [queryClient, getAgent],
   )
 }
 
@@ -125,6 +127,7 @@ function usePostLikeMutation(
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const postAuthor = post.author
+  const {getAgent} = useAgent()
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
@@ -162,6 +165,7 @@ function usePostLikeMutation(
 function usePostUnlikeMutation(
   logContext: LogEvents['post:unlike']['logContext'],
 ) {
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({likeUri}) => {
       logEvent('post:unlike', {logContext})
@@ -234,6 +238,7 @@ export function usePostRepostMutationQueue(
 function usePostRepostMutation(
   logContext: LogEvents['post:repost']['logContext'],
 ) {
+  const {getAgent} = useAgent()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
@@ -252,6 +257,7 @@ function usePostRepostMutation(
 function usePostUnrepostMutation(
   logContext: LogEvents['post:unrepost']['logContext'],
 ) {
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({repostUri}) => {
       logEvent('post:unrepost', {logContext})
@@ -265,6 +271,7 @@ function usePostUnrepostMutation(
 
 export function usePostDeleteMutation() {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
       await getAgent().deletePost(uri)

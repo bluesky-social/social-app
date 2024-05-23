@@ -1,13 +1,24 @@
-import RNFetchBlob from 'rn-fetch-blob'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Image as RNImage, Share as RNShare} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
-import * as RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
-import * as Sharing from 'expo-sharing'
+import {
+  cacheDirectory,
+  copyAsync,
+  deleteAsync,
+  EncodingType,
+  makeDirectoryAsync,
+  StorageAccessFramework,
+  writeAsStringAsync,
+} from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
-import {Dimensions} from './types'
+import * as Sharing from 'expo-sharing'
+import ImageResizer from '@bam.tech/react-native-image-resizer'
+import {Buffer} from 'buffer'
+import RNFetchBlob from 'rn-fetch-blob'
+
+import {logger} from '#/logger'
 import {isAndroid, isIOS} from 'platform/detection'
+import {Dimensions} from './types'
 
 export async function compressIfNeeded(
   img: Image,
@@ -23,7 +34,10 @@ export async function compressIfNeeded(
     mode: 'stretch',
     maxSize,
   })
-  const finalImageMovedPath = await moveToPermanentPath(resizedImage.path)
+  const finalImageMovedPath = await moveToPermanentPath(
+    resizedImage.path,
+    '.jpg',
+  )
   const finalImg = {
     ...resizedImage,
     path: finalImageMovedPath,
@@ -63,13 +77,15 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
     downloadRes = await downloadResPromise
     clearTimeout(to1)
 
-    let localUri = downloadRes.path()
-    if (!localUri.startsWith('file://')) {
-      localUri = `file://${localUri}`
+    const status = downloadRes.info().status
+    if (status !== 200) {
+      return
     }
 
+    const localUri = normalizePath(downloadRes.path(), true)
     return await doResize(localUri, opts)
   } finally {
+    // TODO Whenever we remove `rn-fetch-blob`, we will need to replace this `flush()` with a `deleteAsync()` -hailey
     if (downloadRes) {
       downloadRes.flush()
     }
@@ -105,7 +121,8 @@ export async function shareImageModal({uri}: {uri: string}) {
       UTI: 'image/png',
     })
   }
-  RNFS.unlink(imagePath)
+
+  safeDeleteAsync(imagePath)
 }
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
@@ -122,6 +139,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
 
   // save
   await MediaLibrary.createAssetAsync(imagePath)
+  safeDeleteAsync(imagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
@@ -168,6 +186,8 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
         width: resizeRes.width,
         height: resizeRes.height,
       }
+    } else {
+      safeDeleteAsync(resizeRes.path)
     }
   }
   throw new Error(
@@ -175,7 +195,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   )
 }
 
-async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
+async function moveToPermanentPath(path: string, ext = 'jpg'): Promise<string> {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
@@ -183,12 +203,31 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
   */
   const filename = uuid.v4()
 
-  const destinationPath = joinPath(
-    RNFS.TemporaryDirectoryPath,
-    `${filename}${ext}`,
-  )
-  await RNFS.moveFile(path, destinationPath)
+  // cacheDirectory will not ever be null on native, but it could be on web. This function only ever gets called on
+  // native so we assert as a string.
+  const destinationPath = joinPath(cacheDirectory as string, filename + ext)
+  await copyAsync({
+    from: normalizePath(path),
+    to: normalizePath(destinationPath),
+  })
+  safeDeleteAsync(path)
   return normalizePath(destinationPath)
+}
+
+export async function safeDeleteAsync(path: string) {
+  // Normalize is necessary for Android, otherwise it doesn't delete.
+  const normalizedPath = normalizePath(path)
+  try {
+    await Promise.allSettled([
+      deleteAsync(normalizedPath, {idempotent: true}),
+      // HACK: Try this one too. Might exist due to api-polyfill hack.
+      deleteAsync(normalizedPath.replace(/\.jpe?g$/, '.bin'), {
+        idempotent: true,
+      }),
+    ])
+  } catch (e) {
+    console.error('Failed to delete file', e)
+  }
 }
 
 function joinPath(a: string, b: string) {
@@ -210,4 +249,71 @@ function normalizePath(str: string, allPlatforms = false): string {
     }
   }
   return str
+}
+
+export async function saveBytesToDisk(
+  filename: string,
+  bytes: Uint8Array,
+  type: string,
+) {
+  const encoded = Buffer.from(bytes).toString('base64')
+  return await saveToDevice(filename, encoded, type)
+}
+
+export async function saveToDevice(
+  filename: string,
+  encoded: string,
+  type: string,
+) {
+  try {
+    if (isIOS) {
+      await withTempFile(filename, encoded, async tmpFileUrl => {
+        await Sharing.shareAsync(tmpFileUrl, {UTI: type})
+      })
+      return true
+    } else {
+      const permissions =
+        await StorageAccessFramework.requestDirectoryPermissionsAsync()
+
+      if (!permissions.granted) {
+        return false
+      }
+
+      const fileUrl = await StorageAccessFramework.createFileAsync(
+        permissions.directoryUri,
+        filename,
+        type,
+      )
+
+      await writeAsStringAsync(fileUrl, encoded, {
+        encoding: EncodingType.Base64,
+      })
+      return true
+    }
+  } catch (e) {
+    logger.error('Error occurred while saving file', {message: e})
+    return false
+  }
+}
+
+async function withTempFile<T>(
+  filename: string,
+  encoded: string,
+  cb: (url: string) => T | Promise<T>,
+): Promise<T> {
+  // cacheDirectory will not ever be null so we assert as a string.
+  // Using a directory so that the file name is not a random string
+  const tmpDirUri = joinPath(cacheDirectory as string, String(uuid.v4()))
+  await makeDirectoryAsync(tmpDirUri, {intermediates: true})
+
+  try {
+    const tmpFileUrl = joinPath(tmpDirUri, filename)
+    await writeAsStringAsync(tmpFileUrl, encoded, {
+      encoding: EncodingType.Base64,
+    })
+
+    return await cb(tmpFileUrl)
+  } finally {
+    safeDeleteAsync(tmpDirUri)
+  }
 }

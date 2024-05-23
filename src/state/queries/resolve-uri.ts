@@ -2,7 +2,7 @@ import {AppBskyActorDefs, AtUri} from '@atproto/api'
 import {useQuery, useQueryClient, UseQueryResult} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from './profile'
 
 const RQKEY_ROOT = 'resolved-did'
@@ -24,6 +24,7 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
   const queryClient = useQueryClient()
+  const {getAgent} = useAgent()
 
   return useQuery<string, Error>({
     staleTime: STALE.HOURS.ONE,

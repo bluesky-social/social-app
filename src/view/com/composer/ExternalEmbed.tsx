@@ -46,7 +46,12 @@ export const ExternalEmbed = ({
     : undefined
 
   return (
-    <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
+    <View
+      style={[
+        !gif && a.mb_xl,
+        a.overflow_hidden,
+        t.atoms.border_contrast_medium,
+      ]}>
       {link.isLoading ? (
         <Container style={loadingStyle}>
           <Loader size="xl" />
@@ -62,7 +67,7 @@ export const ExternalEmbed = ({
         </Container>
       ) : linkInfo ? (
         <View style={{pointerEvents: !gif ? 'none' : 'auto'}}>
-          <ExternalLinkEmbed link={linkInfo} />
+          <ExternalLinkEmbed link={linkInfo} hideAlt />
         </View>
       ) : null}
       <TouchableOpacity

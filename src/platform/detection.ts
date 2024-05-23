@@ -1,5 +1,7 @@
 import {Platform} from 'react-native'
+import {isReducedMotion} from 'react-native-reanimated'
 import {getLocales} from 'expo-localization'
+
 import {dedupArray} from 'lib/functions'
 
 export const isIOS = Platform.OS === 'ios'
@@ -18,3 +20,5 @@ export const deviceLocales = dedupArray(
     .map?.(locale => locale.languageCode)
     .filter(code => typeof code === 'string'),
 ) as string[]
+
+export const prefersReducedMotion = isReducedMotion()

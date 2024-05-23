@@ -1,7 +1,7 @@
 import {AppBskyFeedGetActorFeeds} from '@atproto/api'
 import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -15,6 +15,7 @@ export function useProfileFeedgensQuery(
   opts?: {enabled?: boolean},
 ) {
   const enabled = opts?.enabled !== false
+  const {getAgent} = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetActorFeeds.OutputSchema,
     Error,

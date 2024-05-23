@@ -18,7 +18,7 @@ export function SwitchAccountDialog({
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {onPressSwitchAccount} = useAccountSwitcher()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
   const onSelectAccount = useCallback(
@@ -54,6 +54,7 @@ export function SwitchAccountDialog({
             onSelectAccount={onSelectAccount}
             onSelectOther={onPressAddAccount}
             otherLabel={_(msg`Add account`)}
+            pendingDid={pendingDid}
           />
         </View>
       </Dialog.ScrollableInner>

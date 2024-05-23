@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {
   DescriptionText,
@@ -69,9 +69,9 @@ export function Inner({
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
-  const {gtMobile} = useBreakpoints()
   const suggestedDids = React.useMemo(() => {
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
