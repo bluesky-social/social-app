@@ -222,7 +222,7 @@ export function MessagesList({
 
   // -- Keyboard animation handling
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 76)
+  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 75)
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
