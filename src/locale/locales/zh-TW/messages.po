@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-23 00:34+0800\n"
+"PO-Revision-Date: 2024-05-23 13:59+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -2019,7 +2019,7 @@ msgstr "跟隨中"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:92
 msgid "Following {0}"
-msgstr "跟隨中： {0}"
+msgstr "已跟隨 {0}"
 
 #: src/view/screens/Settings/index.tsx:566
 msgid "Following feed preferences"
