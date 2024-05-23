@@ -22,8 +22,9 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 
-export const snapPoints = ['70%']
+export const snapPoints = ['90%']
 
 const shadesOfBlue: string[] = [
   'AliceBlue',
@@ -245,6 +246,7 @@ export function Component({}: {}) {
           onPress={!appPassword ? createAppPassword : onDone}
         />
       </View>
+      <KeyboardPadding />
     </View>
   )
 }
