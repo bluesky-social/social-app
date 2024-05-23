@@ -105,7 +105,9 @@ function ChatListItemReady({
     lastMessageSentAt = convo.lastMessage.sentAt
   }
   if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-    lastMessage = _(msg`Conversation deleted`)
+    lastMessage = isDeletedAccount
+      ? _(msg`Conversation deleted`)
+      : _(msg`Message deleted`)
   }
 
   const [showActions, setShowActions] = useState(false)
