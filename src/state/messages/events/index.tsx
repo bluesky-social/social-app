@@ -36,6 +36,10 @@ export function MessagesEventBusProvider({
       // @ts-ignore
       window.bus = bus
     }
+
+    return () => {
+      bus.suspend()
+    }
   }, [bus])
 
   React.useEffect(() => {
