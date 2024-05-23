@@ -341,7 +341,9 @@ export function PostThread({
         return (
           <PostThreadShowHiddenReplies
             type="hidden"
-            onPress={() => setHiddenRepliesState(HiddenRepliesState.Show)}
+            onPress={() =>
+              setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
+            }
           />
         )
       } else if (item === SHOW_MUTED_REPLIES) {
