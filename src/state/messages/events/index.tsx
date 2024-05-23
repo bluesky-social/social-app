@@ -4,14 +4,21 @@ import {AppState} from 'react-native'
 import {MessagesEventBus} from '#/state/messages/events/agent'
 import {useAgent, useSession} from '#/state/session'
 
-const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
-  null,
-)
+const MessagesEventBusContext = React.createContext<
+  MessagesEventBus | null | undefined
+>(undefined)
 
 export function useMessagesEventBus() {
   const ctx = React.useContext(MessagesEventBusContext)
-  if (!ctx) {
-    throw new Error('useChat must be used within a ChatProvider')
+  if (ctx === undefined) {
+    throw new Error(
+      'useMessagesEventBus must be used within a MessagesEventBusProvider',
+    )
+  }
+  if (ctx === null) {
+    throw new Error(
+      'MessagesEventBusProvider was not initialized because there is no active session.',
+    )
   }
   return ctx
 }
@@ -24,7 +31,11 @@ export function MessagesEventBusProvider({
   const {currentAccount} = useSession()
 
   if (!currentAccount) {
-    return children
+    return (
+      <MessagesEventBusContext.Provider value={null}>
+        {children}
+      </MessagesEventBusContext.Provider>
+    )
   }
 
   return (
