@@ -12,6 +12,7 @@ import {
 
 import {logger} from '#/logger'
 import {IS_TESTFLIGHT} from 'lib/app-info'
+import {logEvent} from 'lib/statsig/statsig'
 import {isIOS} from 'platform/detection'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
@@ -49,6 +50,7 @@ export function useOTAUpdates() {
         if (res.isAvailable) {
           logger.debug('Attempting to fetch update...')
           await fetchUpdateAsync()
+          logEvent('update:fetched', {'update-id': res.manifest.id})
         } else {
           logger.debug('No update available.')
         }

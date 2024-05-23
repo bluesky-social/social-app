@@ -3,6 +3,9 @@ export type LogEvents = {
   init: {
     initMs: number
   }
+  'update:fetched': {
+    'update-id': string
+  }
   'account:loggedIn': {
     logContext:
       | 'LoginForm'
