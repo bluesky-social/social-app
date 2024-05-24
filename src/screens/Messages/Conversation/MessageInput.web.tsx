@@ -10,7 +10,8 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {isSafari} from 'lib/browser'
+import {isSafari, isTouchDevice} from 'lib/browser'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
@@ -21,6 +22,7 @@ export function MessageInput({
 }: {
   onSendMessage: (message: string) => void
 }) {
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const {_} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
@@ -74,7 +76,7 @@ export function MessageInput({
         onSubmit()
       }
     },
-    [onSubmit, isComposing],
+    [onSubmit],
   )
 
   const onChange = React.useCallback(
@@ -134,7 +136,9 @@ export function MessageInput({
           }}
           onHeightChange={height => setTextAreaHeight(height)}
           onChange={onChange}
-          onKeyDown={onKeyDown}
+          // On mobile web phones, we want to keep the same behavior as the native app. Do not submit the message
+          // in these cases.
+          onKeyDown={isTouchDevice && isTabletOrDesktop ? undefined : onKeyDown}
         />
         <Pressable
           accessibilityRole="button"
