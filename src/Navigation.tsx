@@ -355,6 +355,7 @@ function HomeTabNavigator() {
       screenOptions={{
         animation: 'ios',
         gestureEnabled: true,
+        fullScreenGestureEnabled: true,
         headerShown: false,
         contentStyle: pal.view,
       }}>
@@ -371,6 +372,7 @@ function SearchTabNavigator() {
       screenOptions={{
         animation: 'ios',
         gestureEnabled: true,
+        fullScreenGestureEnabled: true,
         headerShown: false,
         contentStyle: pal.view,
       }}>
@@ -387,6 +389,7 @@ function FeedsTabNavigator() {
       screenOptions={{
         animation: 'ios',
         gestureEnabled: true,
+        fullScreenGestureEnabled: true,
         headerShown: false,
         contentStyle: pal.view,
       }}>
@@ -403,6 +406,7 @@ function NotificationsTabNavigator() {
       screenOptions={{
         animation: 'ios',
         gestureEnabled: true,
+        fullScreenGestureEnabled: true,
         headerShown: false,
         contentStyle: pal.view,
       }}>
@@ -423,6 +427,7 @@ function MyProfileTabNavigator() {
       screenOptions={{
         animation: 'ios',
         gestureEnabled: true,
+        fullScreenGestureEnabled: true,
         headerShown: false,
         contentStyle: pal.view,
       }}>
@@ -446,6 +451,7 @@ function MessagesTabNavigator() {
       screenOptions={{
         animation: 'ios',
         gestureEnabled: true,
+        fullScreenGestureEnabled: true,
         headerShown: false,
         contentStyle: pal.view,
       }}>
@@ -476,10 +482,10 @@ const FlatNavigator = () => {
     <Flat.Navigator
       screenListeners={screenListeners}
       screenOptions={{
+        animation: 'ios',
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <Flat.Screen
