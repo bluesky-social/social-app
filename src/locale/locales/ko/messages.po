@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-24 09:50+0900\n"
+"PO-Revision-Date: 2024-05-24 16:50+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -33,12 +33,12 @@ msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}}개"
 
-#: src/components/ProfileHoverCard/index.web.tsx:377
+#: src/components/ProfileHoverCard/index.web.tsx:376
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "팔로워"
 
-#: src/components/ProfileHoverCard/index.web.tsx:381
+#: src/components/ProfileHoverCard/index.web.tsx:380
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
@@ -83,7 +83,7 @@ msgstr "시간"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "분"
 
-#: src/components/ProfileHoverCard/index.web.tsx:458
+#: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
@@ -1959,8 +1959,8 @@ msgstr "가로로 뒤집기"
 msgid "Flip vertically"
 msgstr "세로로 뒤집기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:413
-#: src/components/ProfileHoverCard/index.web.tsx:424
+#: src/components/ProfileHoverCard/index.web.tsx:412
+#: src/components/ProfileHoverCard/index.web.tsx:423
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:189
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:244
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
@@ -2017,8 +2017,8 @@ msgstr "이(가) 나를 팔로우했습니다"
 msgid "Followers"
 msgstr "팔로워"
 
-#: src/components/ProfileHoverCard/index.web.tsx:412
-#: src/components/ProfileHoverCard/index.web.tsx:423
+#: src/components/ProfileHoverCard/index.web.tsx:411
+#: src/components/ProfileHoverCard/index.web.tsx:422
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:242
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
@@ -2759,7 +2759,7 @@ msgid "Message input field"
 msgstr "메시지 입력 필드"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:62
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:40
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:42
 msgid "Message is too long"
 msgstr "메시지가 너무 깁니다"
 
@@ -4450,7 +4450,7 @@ msgid "Send feedback"
 msgstr "피드백 보내기"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:144
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:141
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:145
 msgid "Send message"
 msgstr "메시지 보내기"
 
@@ -5773,8 +5773,8 @@ msgstr "전체 스레드 보기"
 msgid "View information about these labels"
 msgstr "이 라벨에 대한 정보 보기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:397
-#: src/components/ProfileHoverCard/index.web.tsx:430
+#: src/components/ProfileHoverCard/index.web.tsx:396
+#: src/components/ProfileHoverCard/index.web.tsx:429
 #: src/view/com/posts/FeedErrorMessage.tsx:175
 msgid "View profile"
 msgstr "프로필 보기"
@@ -5949,7 +5949,7 @@ msgid "Wide"
 msgstr "가로"
 
 #: src/screens/Messages/Conversation/MessageInput.tsx:121
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:122
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:124
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
