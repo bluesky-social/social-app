@@ -356,7 +356,6 @@ function HomeTabNavigator() {
         animation: 'ios',
         gestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
@@ -373,7 +372,6 @@ function SearchTabNavigator() {
         animation: 'ios',
         gestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
@@ -390,7 +388,6 @@ function FeedsTabNavigator() {
         animation: 'ios',
         gestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
@@ -407,7 +404,6 @@ function NotificationsTabNavigator() {
         animation: 'ios',
         gestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <NotificationsTab.Screen
@@ -428,7 +424,6 @@ function MyProfileTabNavigator() {
         animation: 'ios',
         gestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <MyProfileTab.Screen
@@ -452,7 +447,6 @@ function MessagesTabNavigator() {
         animation: 'ios',
         gestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <MessagesTab.Screen
