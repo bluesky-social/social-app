@@ -25,12 +25,13 @@ export function useAppPasswordCreateMutation() {
   return useMutation<
     ComAtprotoServerCreateAppPassword.OutputSchema,
     Error,
-    {name: string}
+    {name: string; privileged: boolean}
   >({
-    mutationFn: async ({name}) => {
+    mutationFn: async ({name, privileged}) => {
       return (
         await getAgent().com.atproto.server.createAppPassword({
           name,
+          privileged,
         })
       ).data
     },
