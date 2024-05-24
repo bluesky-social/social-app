@@ -1,8 +1,13 @@
-import React, {useContext, useState, useSyncExternalStore} from 'react'
-import {AppState} from 'react-native'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useSyncExternalStore,
+} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAppState} from '#/lib/hooks/useAppState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   ConvoParams,
@@ -58,7 +63,6 @@ export function ConvoProvider({
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const queryClient = useQueryClient()
-  const isScreenFocused = useIsFocused()
   const {getAgent} = useAgent()
   const events = useMessagesEventBus()
   const [convo] = useState(
@@ -101,25 +105,19 @@ export function ConvoProvider({
     })
   }, [convo, queryClient])
 
-  React.useEffect(() => {
-    const handleAppStateChange = (nextAppState: string) => {
-      if (isScreenFocused) {
-        if (nextAppState === 'active') {
-          convo.resume()
-        } else {
-          convo.background()
-        }
-
-        markAsRead({convoId})
+  const appState = useAppState()
+  const isActive = appState === 'active'
+  useFocusEffect(
+    useCallback(() => {
+      if (isActive) {
+        convo.resume()
+      } else {
+        convo.background()
       }
-    }
 
-    const sub = AppState.addEventListener('change', handleAppStateChange)
-
-    return () => {
-      sub.remove()
-    }
-  }, [convoId, convo, isScreenFocused, markAsRead])
+      markAsRead({convoId})
+    }, [isActive, convo, convoId, markAsRead]),
+  )
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }
