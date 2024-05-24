@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useFetchDid} from '#/state/queries/handle'
@@ -26,6 +27,7 @@ export function useExternalLinkFetch({
 }: {
   setQuote: (opts: ComposerOpts['quote']) => void
 }) {
+  const {i18n} = useLingui()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
@@ -95,7 +97,7 @@ export function useExternalLinkFetch({
           },
         )
       } else {
-        getLinkMeta(getAgent(), extLink.uri).then(meta => {
+        getLinkMeta(getAgent(), extLink.uri, 15e3, i18n).then(meta => {
           if (aborted) {
             return
           }
@@ -137,7 +139,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost, fetchDid, getAgent])
+  }, [extLink, setQuote, getPost, fetchDid, getAgent, i18n])
 
   return {extLink, setExtLink}
 }
