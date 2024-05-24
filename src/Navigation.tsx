@@ -354,6 +354,7 @@ function HomeTabNavigator() {
     <HomeTab.Navigator
       screenOptions={{
         animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 300,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -371,6 +372,7 @@ function SearchTabNavigator() {
     <SearchTab.Navigator
       screenOptions={{
         animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 300,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -388,6 +390,7 @@ function FeedsTabNavigator() {
     <FeedsTab.Navigator
       screenOptions={{
         animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 300,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -405,6 +408,7 @@ function NotificationsTabNavigator() {
     <NotificationsTab.Navigator
       screenOptions={{
         animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 300,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -426,6 +430,7 @@ function MyProfileTabNavigator() {
     <MyProfileTab.Navigator
       screenOptions={{
         animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 300,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -450,6 +455,7 @@ function MessagesTabNavigator() {
     <MessagesTab.Navigator
       screenOptions={{
         animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 300,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -483,6 +489,7 @@ const FlatNavigator = () => {
       screenListeners={screenListeners}
       screenOptions={{
         animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 300,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
