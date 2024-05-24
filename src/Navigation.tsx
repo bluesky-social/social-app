@@ -32,7 +32,7 @@ import {
 } from 'lib/routes/types'
 import {RouteParams, State} from 'lib/routes/types'
 import {bskyTitle} from 'lib/strings/headings'
-import {isAndroid, isNative} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
@@ -353,9 +353,8 @@ function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: 'ios',
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
         contentStyle: pal.view,
@@ -371,9 +370,8 @@ function SearchTabNavigator() {
   return (
     <SearchTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: 'ios',
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
         contentStyle: pal.view,
@@ -389,9 +387,8 @@ function FeedsTabNavigator() {
   return (
     <FeedsTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: 'ios',
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
         contentStyle: pal.view,
@@ -407,9 +404,8 @@ function NotificationsTabNavigator() {
   return (
     <NotificationsTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: 'ios',
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
         contentStyle: pal.view,
@@ -429,9 +425,8 @@ function MyProfileTabNavigator() {
   return (
     <MyProfileTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: 'ios',
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
         contentStyle: pal.view,
@@ -454,9 +449,8 @@ function MessagesTabNavigator() {
   return (
     <MessagesTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: 'ios',
         gestureEnabled: true,
-        fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
         contentStyle: pal.view,
