@@ -32,7 +32,7 @@ import {
 } from 'lib/routes/types'
 import {RouteParams, State} from 'lib/routes/types'
 import {bskyTitle} from 'lib/strings/headings'
-import {isNative} from 'platform/detection'
+import {isAndroid, isNative} from 'platform/detection'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
@@ -353,7 +353,7 @@ function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
       screenOptions={{
-        animation: 'ios',
+        animation: isAndroid ? 'ios' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -370,7 +370,7 @@ function SearchTabNavigator() {
   return (
     <SearchTab.Navigator
       screenOptions={{
-        animation: 'ios',
+        animation: isAndroid ? 'ios' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -387,7 +387,7 @@ function FeedsTabNavigator() {
   return (
     <FeedsTab.Navigator
       screenOptions={{
-        animation: 'ios',
+        animation: isAndroid ? 'ios' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -404,7 +404,7 @@ function NotificationsTabNavigator() {
   return (
     <NotificationsTab.Navigator
       screenOptions={{
-        animation: 'ios',
+        animation: isAndroid ? 'ios' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -425,7 +425,7 @@ function MyProfileTabNavigator() {
   return (
     <MyProfileTab.Navigator
       screenOptions={{
-        animation: 'ios',
+        animation: isAndroid ? 'ios' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -449,7 +449,7 @@ function MessagesTabNavigator() {
   return (
     <MessagesTab.Navigator
       screenOptions={{
-        animation: 'ios',
+        animation: isAndroid ? 'ios' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -482,7 +482,7 @@ const FlatNavigator = () => {
     <Flat.Navigator
       screenListeners={screenListeners}
       screenOptions={{
-        animation: 'ios',
+        animation: isAndroid ? 'ios' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
