@@ -78,15 +78,13 @@ export function ConvoProvider({
       if (isActive) {
         convo.resume()
         markAsRead({convoId})
-      } else {
-        convo.background()
-      }
 
-      return () => {
-        convo.background()
-        markAsRead({convoId})
+        return () => {
+          convo.background()
+          markAsRead({convoId})
+        }
       }
-    }, [convo, convoId, markAsRead, isActive]),
+    }, [isActive, convo, convoId, markAsRead]),
   )
 
   React.useEffect(() => {
