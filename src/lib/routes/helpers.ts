@@ -13,7 +13,7 @@ export function getRootNavigation<T extends {}>(
 
 export function getCurrentRoute(state?: State) {
   if (!state) {
-    return {name: ''}
+    return {name: 'Home'}
   }
 
   let node = state.routes[state.index || 0]
