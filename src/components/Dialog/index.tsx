@@ -1,5 +1,12 @@
 import React, {useImperativeHandle} from 'react'
-import {Dimensions, Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {
+  Dimensions,
+  Keyboard,
+  Pressable,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
@@ -169,7 +176,8 @@ export function Outer({
           // Android
           importantForAccessibility="yes"
           style={[a.absolute, a.inset_0]}
-          testID={testID}>
+          testID={testID}
+          onTouchMove={() => Keyboard.dismiss()}>
           <BottomSheet
             enableDynamicSizing={!hasSnapPoints}
             enablePanDownToClose
