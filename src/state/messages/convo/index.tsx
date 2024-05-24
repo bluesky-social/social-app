@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useState,
-  useSyncExternalStore,
-} from 'react'
+import React, {useContext, useState, useSyncExternalStore} from 'react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -76,16 +71,22 @@ export function ConvoProvider({
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
+  const appState = useAppState()
+  const isActive = appState === 'active'
   useFocusEffect(
     React.useCallback(() => {
-      convo.resume()
-      markAsRead({convoId})
+      if (isActive) {
+        convo.resume()
+        markAsRead({convoId})
+      } else {
+        convo.background()
+      }
 
       return () => {
         convo.background()
         markAsRead({convoId})
       }
-    }, [convo, convoId, markAsRead]),
+    }, [convo, convoId, markAsRead, isActive]),
   )
 
   React.useEffect(() => {
@@ -104,20 +105,6 @@ export function ConvoProvider({
       }
     })
   }, [convo, queryClient])
-
-  const appState = useAppState()
-  const isActive = appState === 'active'
-  useFocusEffect(
-    useCallback(() => {
-      if (isActive) {
-        convo.resume()
-      } else {
-        convo.background()
-      }
-
-      markAsRead({convoId})
-    }, [isActive, convo, convoId, markAsRead]),
-  )
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }
