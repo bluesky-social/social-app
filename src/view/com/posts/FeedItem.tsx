@@ -196,7 +196,8 @@ let FeedItemInner = ({
       href={href}
       noFeedback
       accessible={false}
-      onBeforePress={onBeforePress}>
+      onBeforePress={onBeforePress}
+      dataSet={{feedContext}}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
