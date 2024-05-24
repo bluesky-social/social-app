@@ -11,11 +11,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -50,6 +48,7 @@ import {PreviewableUserAvatar} from '../util/UserAvatar'
 export function PostThreadItem({
   post,
   record,
+  moderation,
   treeView,
   depth,
   prevPost,
@@ -59,10 +58,12 @@ export function PostThreadItem({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
+  moderation: ModerationDecision | undefined
   treeView: boolean
   depth: number
   prevPost: ThreadPost | undefined
@@ -72,9 +73,9 @@ export function PostThreadItem({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }) {
-  const moderationOpts = useModerationOpts()
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -83,11 +84,6 @@ export function PostThreadItem({
         facets: record.facets,
       }),
     [record],
-  )
-  const moderation = useMemo(
-    () =>
-      post && moderationOpts ? moderatePost(post, moderationOpts) : undefined,
-    [post, moderationOpts],
   )
   if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted />
@@ -110,6 +106,7 @@ export function PostThreadItem({
         showChildReplyLine={showChildReplyLine}
         showParentReplyLine={showParentReplyLine}
         hasPrecedingItem={hasPrecedingItem}
+        overrideBlur={overrideBlur}
         onPostReply={onPostReply}
       />
     )
@@ -143,6 +140,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -158,6 +156,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }): React.ReactNode => {
   const pal = usePalette('default')
@@ -394,6 +393,7 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
+            disabled={overrideBlur}
             style={[pal.view]}
             modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 26 : 38}
