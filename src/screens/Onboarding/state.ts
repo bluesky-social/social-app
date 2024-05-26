@@ -98,37 +98,6 @@ export type ApiResponseMap = {
   }
 }
 
-export const initialState: OnboardingState = {
-  hasPrev: false,
-  totalSteps: 7,
-  activeStep: 'interests',
-  activeStepIndex: 1,
-
-  interestsStepResults: {
-    selectedInterests: [],
-    apiResponse: {
-      interests: [],
-      suggestedAccountDids: {},
-      suggestedFeedUris: {},
-    },
-  },
-  suggestedAccountsStepResults: {
-    accountDids: [],
-  },
-  algoFeedsStepResults: {
-    feedUris: [],
-  },
-  topicalFeedsStepResults: {
-    feedUris: [],
-  },
-  profileStepResults: {
-    isCreatedAvatar: false,
-    image: undefined,
-    imageUri: '',
-    imageMime: '',
-  },
-}
-
 export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
   [key: string]: string
 } = {
@@ -155,17 +124,6 @@ export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
   food: 'Food',
   cooking: 'Cooking',
 }
-
-export const Context = React.createContext<{
-  state: OnboardingState
-  dispatch: React.Dispatch<OnboardingAction>
-  interestsDisplayNames: {[key: string]: string}
-}>({
-  // TODO: Should this use initialStateReducer? Or null altogether.
-  state: {...initialState},
-  dispatch: () => {},
-  interestsDisplayNames: INTEREST_TO_DISPLAY_NAME_DEFAULTS,
-})
 
 export const initialStateReduced: OnboardingState = {
   hasPrev: false,
@@ -197,6 +155,16 @@ export const initialStateReduced: OnboardingState = {
     imageMime: '',
   },
 }
+
+export const Context = React.createContext<{
+  state: OnboardingState
+  dispatch: React.Dispatch<OnboardingAction>
+  interestsDisplayNames: {[key: string]: string}
+}>({
+  state: {...initialStateReduced},
+  dispatch: () => {},
+  interestsDisplayNames: INTEREST_TO_DISPLAY_NAME_DEFAULTS,
+})
 
 export function reducerReduced(
   s: OnboardingState,
