@@ -2,13 +2,10 @@ import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
 import {
   Context,
-  initialState,
   initialStateReduced,
-  reducer,
   reducerReduced,
 } from '#/screens/Onboarding/state'
 import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
@@ -23,12 +20,9 @@ import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const gate = useGate()
-  const isReducedOnboardingEnabled = gate('reduced_onboarding_and_home_algo_v2')
-  const [state, dispatch] = React.useReducer(
-    isReducedOnboardingEnabled ? reducerReduced : reducer,
-    isReducedOnboardingEnabled ? {...initialStateReduced} : {...initialState},
-  )
+  const [state, dispatch] = React.useReducer(reducerReduced, {
+    ...initialStateReduced,
+  })
 
   const interestsDisplayNames = React.useMemo(() => {
     return {

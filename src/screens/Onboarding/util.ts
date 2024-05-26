@@ -5,7 +5,6 @@ import {
 } from '@atproto/api'
 
 import {until} from '#/lib/async/until'
-import {PRIMARY_FEEDS} from './StepAlgoFeeds'
 
 function shuffle(array: any) {
   let currentIndex = array.length,
@@ -108,20 +107,4 @@ async function whenFollowsIndexed(
         limit: 1,
       }),
   )
-}
-
-/**
- * Kinda hacky, but we want Discover to appear as the first pinned
- * feed after Following
- */
-export function sortPrimaryAlgorithmFeeds(uris: string[]) {
-  return uris.sort((a, b) => {
-    if (a === PRIMARY_FEEDS[0]?.uri) {
-      return -1
-    }
-    if (b === PRIMARY_FEEDS[0]?.uri) {
-      return 1
-    }
-    return a.localeCompare(b)
-  })
 }
