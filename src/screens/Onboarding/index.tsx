@@ -3,11 +3,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
-import {
-  Context,
-  initialStateReduced,
-  reducerReduced,
-} from '#/screens/Onboarding/state'
+import {Context, initialState, reducer} from '#/screens/Onboarding/state'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
@@ -15,8 +11,8 @@ import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducerReduced, {
-    ...initialStateReduced,
+  const [state, dispatch] = React.useReducer(reducer, {
+    ...initialState,
   })
 
   const interestsDisplayNames = React.useMemo(() => {

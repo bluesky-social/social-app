@@ -95,7 +95,7 @@ export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
   cooking: 'Cooking',
 }
 
-export const initialStateReduced: OnboardingState = {
+export const initialState: OnboardingState = {
   hasPrev: false,
   totalSteps: 3,
   activeStep: 'profile',
@@ -122,12 +122,12 @@ export const Context = React.createContext<{
   dispatch: React.Dispatch<OnboardingAction>
   interestsDisplayNames: {[key: string]: string}
 }>({
-  state: {...initialStateReduced},
+  state: {...initialState},
   dispatch: () => {},
   interestsDisplayNames: INTEREST_TO_DISPLAY_NAME_DEFAULTS,
 })
 
-export function reducerReduced(
+export function reducer(
   s: OnboardingState,
   a: OnboardingAction,
 ): OnboardingState {
@@ -155,7 +155,7 @@ export function reducerReduced(
       break
     }
     case 'finish': {
-      next = initialStateReduced
+      next = initialState
       break
     }
     case 'setInterestsStepResults': {
