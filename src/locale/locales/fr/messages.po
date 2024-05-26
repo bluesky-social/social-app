@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-04-22 15:00+0100\n"
+"PO-Revision-Date: 2024-05-26 21:29+0200\n"
 "Last-Translator: Stanislas Signoud (@signez.fr)\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -301,17 +301,12 @@ msgstr "Tous les fils d’actu que vous avez enregistrés, au même endroit."
 #: src/view/com/modals/AddAppPasswords.tsx:188
 #: src/view/com/modals/AddAppPasswords.tsx:195
 msgid "Allow access to your direct messages"
-msgstr ""
-
-#: src/screens/Messages/Settings.tsx:61
-#: src/screens/Messages/Settings.tsx:64
-#~ msgid "Allow messages from"
-#~ msgstr "Autoriser les messages de"
+msgstr "Autoriser l’accès à vos messages privés"
 
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr ""
+msgstr "Autoriser les nouveaux messages de"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -434,7 +429,7 @@ msgstr "Appel soumis"
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:99
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:101
 msgid "Appeal this decision"
-msgstr ""
+msgstr "Faire appel de cette décision"
 
 #: src/view/screens/Settings/index.tsx:432
 msgid "Appearance"
@@ -783,7 +778,7 @@ msgstr "Paramètres de discussion"
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:640
 msgid "Chat Settings"
-msgstr ""
+msgstr "Paramètres de discussion"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat unmuted"
@@ -873,7 +868,7 @@ msgstr "Climat"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr ""
+msgstr "Cataclop 🐴 cataclop 🐴"
 
 #: src/components/dialogs/GifSelect.tsx:301
 #: src/components/dms/NewChatDialog/index.tsx:437
@@ -1102,7 +1097,7 @@ msgstr "Passer à l’étape suivante sans suivre aucun compte"
 
 #: src/screens/Messages/List/ChatListItem.tsx:109
 msgid "Conversation deleted"
-msgstr ""
+msgstr "Conversation supprimée"
 
 #: src/screens/Onboarding/index.tsx:56
 msgid "Cooking"
@@ -1682,10 +1677,6 @@ msgstr "Activé"
 msgid "End of feed"
 msgstr "Fin du fil d’actu"
 
-#: src/components/Lists.tsx:52
-#~ msgid "End of list"
-#~ msgstr ""
-
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
 msgstr "Entrer un nom pour ce mot de passe d’application"
@@ -1755,7 +1746,7 @@ msgstr "Tout le monde"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:42
 msgid "Everybody can reply"
-msgstr ""
+msgstr "Tout le monde peut répondre"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -1875,7 +1866,7 @@ msgstr "Échec de l’envoi"
 #: src/components/moderation/LabelsOnMeDialog.tsx:225
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr ""
+msgstr "Échec de l’envoi de l’appel, veuillez réessayer."
 
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
@@ -2159,7 +2150,7 @@ msgstr "Accéder à l’accueil"
 
 #: src/screens/Messages/List/ChatListItem.tsx:158
 msgid "Go to conversation with {0}"
-msgstr ""
+msgstr "Aller à la conversation avec {0}"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -2753,7 +2744,7 @@ msgstr "Menu"
 
 #: src/components/dms/MessageProfileButton.tsx:67
 msgid "Message {0}"
-msgstr ""
+msgstr "Envoyer un message à {0}"
 
 #: src/components/dms/MessageMenu.tsx:58
 #: src/screens/Messages/List/ChatListItem.tsx:110
@@ -3133,7 +3124,7 @@ msgstr "Pas encore de messages"
 
 #: src/screens/Messages/List/index.tsx:274
 msgid "No more conversations to show"
-msgstr ""
+msgstr "Plus aucune conversation à afficher"
 
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
@@ -3184,7 +3175,7 @@ msgstr "Personne"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
 msgid "Nobody can reply"
-msgstr ""
+msgstr "Personne ne peut répondre"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -3217,15 +3208,15 @@ msgstr "Remarque : Bluesky est un réseau ouvert et public. Ce paramètre limit
 
 #: src/screens/Messages/List/index.tsx:215
 msgid "Nothing here"
-msgstr ""
+msgstr "Rien ici"
 
 #: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
-msgstr ""
+msgstr "Sons de notification"
 
 #: src/screens/Messages/Settings.tsx:121
 msgid "Notification Sounds"
-msgstr ""
+msgstr "Sons de notification"
 
 #: src/Navigation.tsx:515
 #: src/view/screens/Notifications.tsx:124
@@ -3316,7 +3307,7 @@ msgstr "Ouvre le créateur d’avatar"
 #: src/screens/Messages/List/ChatListItem.tsx:164
 #: src/screens/Messages/List/ChatListItem.tsx:165
 msgid "Open conversation options"
-msgstr ""
+msgstr "Ouvrir les options de conversation"
 
 #: src/view/com/composer/Composer.tsx:560
 #: src/view/com/composer/Composer.tsx:561
@@ -3333,7 +3324,7 @@ msgstr "Ouvrir des liens avec le navigateur interne à l’appli"
 
 #: src/components/dms/ActionsWrapper.tsx:87
 msgid "Open message options"
-msgstr ""
+msgstr "Ouvrir les options de message"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
@@ -3378,7 +3369,7 @@ msgstr "Ouvre l’appareil photo de l’appareil"
 
 #: src/view/screens/Settings/index.tsx:632
 msgid "Opens chat settings"
-msgstr ""
+msgstr "Ouvre les paramètres de discussion"
 
 #: src/view/com/composer/Prompt.tsx:25
 msgid "Opens composer"
@@ -3654,7 +3645,7 @@ msgstr "Veuillez expliquer pourquoi vous pensez que cette étiquette a été app
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr ""
+msgstr "Veuillez expliquer pourquoi vous pensez que vos discussions ont été désactivées de manière indûe"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -3874,7 +3865,7 @@ msgstr "Se reconnecter"
 
 #: src/screens/Messages/List/index.tsx:200
 msgid "Reload conversations"
-msgstr ""
+msgstr "Rafraîchir les conversations"
 
 #: src/components/dialogs/MutedWords.tsx:288
 #: src/view/com/feeds/FeedSourceCard.tsx:285
@@ -4262,7 +4253,7 @@ msgstr "Enregistre les paramètres de recadrage de l’image"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 msgid "Say hello!"
-msgstr ""
+msgstr "Dites bonjour !"
 
 #: src/screens/Onboarding/index.tsx:48
 msgid "Science"
@@ -4452,7 +4443,7 @@ msgstr "Sélectionnez vos fils d’actu algorithmiques secondaires"
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
+msgstr "Envoyez un site chouette !"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -4606,11 +4597,11 @@ msgstr "Partager"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
-msgstr ""
+msgstr "Partagez une histoire sympa !"
 
 #: src/components/dms/ChatEmptyPill.tsx:36
 msgid "Share a fun fact!"
-msgstr ""
+msgstr "Partagez une anecdote insolite !"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:420
@@ -4630,7 +4621,7 @@ msgstr "Partager le lien"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr ""
+msgstr "Partagez votre fil d’actu favori !"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -4668,7 +4659,7 @@ msgstr "Afficher les suivis similaires à {0}"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:21
 msgid "Show hidden replies"
-msgstr ""
+msgstr "Afficher les réponses cachées"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:305
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -4688,7 +4679,7 @@ msgstr "En montrer plus comme ça"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:21
 msgid "Show muted replies"
-msgstr ""
+msgstr "Afficher les réponses masquées"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:257
 msgid "Show Posts from My Feeds"
@@ -4842,7 +4833,7 @@ msgstr "Développement de logiciels"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
 msgid "Some people can reply"
-msgstr ""
+msgstr "Quelques comptes peuvent répondre"
 
 #: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
@@ -5010,7 +5001,7 @@ msgstr "Technologie"
 
 #: src/components/dms/ChatEmptyPill.tsx:35
 msgid "Tell a joke!"
-msgstr ""
+msgstr "Racontez une blague !"
 
 #: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
@@ -5217,7 +5208,7 @@ msgstr "Cet appel sera envoyé à <0>{0}</0>."
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr ""
+msgstr "Cet appel sera envoyé aux services de modération de Bluesky."
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -5387,7 +5378,7 @@ msgstr "Pour désactiver le 2FA par e-mail, veuillez vérifier votre accès à l
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr ""
+msgstr "Pour signaler une conversation, veuillez signaler un de ses messages via l’écran de conversation. Cela permettra à nos modérateurs de comprendre le contexte du problème."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -6031,7 +6022,7 @@ msgstr "Vous pouvez changer cela à tout moment."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
+msgstr "Vous pouvez poursuivre les conversations en cours quel que soit le paramètre que vous choisissez."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
@@ -6092,13 +6083,9 @@ msgstr "Vous avez masqué ce compte."
 msgid "You have muted this user"
 msgstr "Vous avez masqué ce compte"
 
-#: src/screens/Messages/List/index.tsx:158
-#~ msgid "You have no chats yet. Start a conversation with someone!"
-#~ msgstr "Vous n’avez pas de discussions pour l’instant. Démarrez une conversation avec quelqu’un !"
-
 #: src/screens/Messages/List/index.tsx:225
 msgid "You have no conversations yet. Start one!"
-msgstr ""
+msgstr "Vous n’avez pas encore de conversations. Démarrez en une !"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
@@ -6123,7 +6110,7 @@ msgstr "Vous n’avez encore masqué aucun compte. Pour masquer un compte, allez
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr ""
+msgstr "Vous avez atteint la fin"
 
 #: src/components/dialogs/MutedWords.tsx:250
 msgid "You haven't muted any words or tags yet"
