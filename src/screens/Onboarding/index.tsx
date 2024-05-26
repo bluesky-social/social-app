@@ -8,14 +8,9 @@ import {
   initialStateReduced,
   reducerReduced,
 } from '#/screens/Onboarding/state'
-import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
-import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
-import {StepModeration} from '#/screens/Onboarding/StepModeration'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
-import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
-import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
 import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
@@ -62,13 +57,6 @@ export function Onboarding() {
           <Layout>
             {state.activeStep === 'profile' && <StepProfile />}
             {state.activeStep === 'interests' && <StepInterests />}
-            {state.activeStep === 'suggestedAccounts' && (
-              <StepSuggestedAccounts />
-            )}
-            {state.activeStep === 'followingFeed' && <StepFollowingFeed />}
-            {state.activeStep === 'algoFeeds' && <StepAlgoFeeds />}
-            {state.activeStep === 'topicalFeeds' && <StepTopicalFeeds />}
-            {state.activeStep === 'moderation' && <StepModeration />}
             {state.activeStep === 'finished' && <StepFinished />}
           </Layout>
         </Context.Provider>

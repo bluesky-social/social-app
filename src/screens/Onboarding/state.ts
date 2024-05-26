@@ -6,30 +6,12 @@ import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
 export type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
-  activeStep:
-    | 'profile'
-    | 'interests'
-    | 'suggestedAccounts'
-    | 'followingFeed'
-    | 'algoFeeds'
-    | 'topicalFeeds'
-    | 'moderation'
-    | 'profile'
-    | 'finished'
+  activeStep: 'profile' | 'interests' | 'finished'
   activeStepIndex: number
 
   interestsStepResults: {
     selectedInterests: string[]
     apiResponse: ApiResponseMap
-  }
-  suggestedAccountsStepResults: {
-    accountDids: string[]
-  }
-  algoFeedsStepResults: {
-    feedUris: string[]
-  }
-  topicalFeedsStepResults: {
-    feedUris: string[]
   }
   profileStepResults: {
     isCreatedAvatar: boolean
@@ -63,18 +45,6 @@ export type OnboardingAction =
       type: 'setInterestsStepResults'
       selectedInterests: string[]
       apiResponse: ApiResponseMap
-    }
-  | {
-      type: 'setSuggestedAccountsStepResults'
-      accountDids: string[]
-    }
-  | {
-      type: 'setAlgoFeedsStepResults'
-      feedUris: string[]
-    }
-  | {
-      type: 'setTopicalFeedsStepResults'
-      feedUris: string[]
     }
   | {
       type: 'setProfileStepResults'
@@ -139,15 +109,6 @@ export const initialStateReduced: OnboardingState = {
       suggestedFeedUris: {},
     },
   },
-  suggestedAccountsStepResults: {
-    accountDids: [],
-  },
-  algoFeedsStepResults: {
-    feedUris: [],
-  },
-  topicalFeedsStepResults: {
-    feedUris: [],
-  },
   profileStepResults: {
     isCreatedAvatar: false,
     image: undefined,
@@ -204,15 +165,6 @@ export function reducerReduced(
       }
       break
     }
-    case 'setSuggestedAccountsStepResults': {
-      break
-    }
-    case 'setAlgoFeedsStepResults': {
-      break
-    }
-    case 'setTopicalFeedsStepResults': {
-      break
-    }
     case 'setProfileStepResults': {
       next.profileStepResults = {
         isCreatedAvatar: a.isCreatedAvatar,
@@ -237,9 +189,6 @@ export function reducerReduced(
     interestsStepResults: {
       selectedInterests: state.interestsStepResults.selectedInterests,
     },
-    suggestedAccountsStepResults: state.suggestedAccountsStepResults,
-    algoFeedsStepResults: state.algoFeedsStepResults,
-    topicalFeedsStepResults: state.topicalFeedsStepResults,
     profileStepResults: state.profileStepResults,
   })
 

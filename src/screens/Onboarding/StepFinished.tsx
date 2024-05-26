@@ -43,18 +43,11 @@ export function StepFinished() {
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
-    const {
-      interestsStepResults,
-      suggestedAccountsStepResults,
-      profileStepResults,
-    } = state
+    const {interestsStepResults, profileStepResults} = state
     const {selectedInterests} = interestsStepResults
     try {
       await Promise.all([
-        bulkWriteFollows(
-          agent,
-          suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
-        ),
+        bulkWriteFollows(agent, [BSKY_APP_ACCOUNT_DID]),
         (async () => {
           await agent.setInterestsPref({tags: selectedInterests})
         })(),
