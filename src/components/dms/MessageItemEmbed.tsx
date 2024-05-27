@@ -95,7 +95,7 @@ let MessageItemEmbed = ({
             <PostEmbeds
               embed={post.embed}
               moderation={moderation}
-              style={a.mt_2xs}
+              style={a.mt_xs}
               quoteTextStyle={[a.text_sm, t.atoms.text_contrast_high]}
             />
           )}
