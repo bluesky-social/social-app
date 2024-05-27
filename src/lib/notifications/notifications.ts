@@ -117,19 +117,17 @@ export function useRequestNotificationsPermission() {
 export async function decrementBadgeCount(by: number | 'reset' = 1) {
   if (!isNative) return
 
-  const currCount = await getBadgeCountAsync()
-
-  let newCount = currCount
+  let count = await getBadgeCountAsync()
 
   if (by === 'reset') {
-    newCount = 0
+    count = 0
   } else {
-    newCount -= by
-    if (newCount < 0) {
-      newCount = 0
+    count -= by
+    if (count < 0) {
+      count = 0
     }
   }
 
-  await BackgroundNotificationHandler.setBadgeCountAsync(newCount)
-  await setBadgeCountAsync(newCount)
+  await BackgroundNotificationHandler.setBadgeCountAsync(count)
+  await setBadgeCountAsync(count)
 }
