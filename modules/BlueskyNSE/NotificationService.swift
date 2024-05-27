@@ -1,4 +1,5 @@
 import UserNotifications
+import UIKit
 
 let APP_GROUP = "group.app.bsky"
 
@@ -31,7 +32,10 @@ class NotificationService: UNNotificationServiceExtension {
   }
   
   func mutateWithBadge(_ content: UNMutableNotificationContent) {
-    content.badge = 1
+    let currentCount = prefs?.integer(forKey: "badgeCount") ?? 0
+    
+    content.badge = NSNumber(value: currentCount + 1)
+    prefs?.setValue(currentCount + 1, forKey: "badgeCount")
   }
   
   func mutateWithChatMessage(_ content: UNMutableNotificationContent) {

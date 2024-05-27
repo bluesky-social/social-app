@@ -7,6 +7,7 @@ import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {logEvent, useGate} from 'lib/statsig/statsig'
 import {devicePlatform, isNative} from 'platform/detection'
+import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -118,14 +119,17 @@ export async function decrementBadgeCount(by: number | 'reset' = 1) {
 
   const currCount = await getBadgeCountAsync()
 
+  let newCount = currCount
+
   if (by === 'reset') {
-    await setBadgeCountAsync(0)
-    return
+    newCount = 0
+  } else {
+    newCount -= by
+    if (newCount < 0) {
+      newCount = 0
+    }
   }
 
-  let newCount = currCount - by
-  if (newCount < 0) {
-    newCount = 0
-  }
+  await BackgroundNotificationHandler.setBadgeCountAsync(newCount)
   await setBadgeCountAsync(newCount)
 }
