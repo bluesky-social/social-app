@@ -340,6 +340,7 @@ export function MessagesList({
           }}
           removeClippedSubviews={false}
           sideBorders={false}
+          useContentVisibility={false}
           onContentSizeChange={onContentSizeChange}
           onLayout={onListLayout}
           onStartReached={onStartReached}
