@@ -13,12 +13,16 @@ import {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
+import {getPostAsQuote} from '#/lib/link-meta/bsky'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
+import {isBskyPostUrl} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
+import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
 import {clamp} from 'lib/numbers'
 import {ScrollProvider} from 'lib/ScrollContext'
@@ -80,6 +84,7 @@ export function MessagesList({
 }) {
   const convoState = useConvoActive()
   const agent = useAgent()
+  const getPost = useGetPost()
 
   const flatListRef = useAnimatedRef<FlatList>()
 
@@ -264,7 +269,7 @@ export function MessagesList({
   // -- Message sending
   const onSendMessage = useCallback(
     async (text: string) => {
-      let rt = new RichText({text}, {cleanNewlines: true})
+      let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
       await rt.detectFacets(agent)
       rt = shortenLinks(rt)
 
@@ -279,6 +284,46 @@ export function MessagesList({
         return true
       })
 
+      let embed: AppBskyEmbedRecord.Main | undefined
+      // find the first link facet that is a link to a post
+      const postLinkFacet = rt.facets?.find(facet => {
+        return facet.features.find(feature => {
+          if (AppBskyRichtextFacet.isLink(feature)) {
+            return isBskyPostUrl(feature.uri)
+          }
+          return false
+        })
+      })
+
+      if (postLinkFacet) {
+        const postLink = postLinkFacet.features.find(
+          AppBskyRichtextFacet.isLink,
+        )
+        if (!postLink) return
+
+        try {
+          const post = await getPostAsQuote(getPost, postLink.uri)
+          if (post) {
+            embed = {
+              $type: 'app.bsky.embed.record',
+              record: {
+                uri: post.uri,
+                cid: post.cid,
+              },
+            }
+
+            // remove the post link from the text
+            rt.delete(
+              postLinkFacet.index.byteStart,
+              postLinkFacet.index.byteEnd,
+            )
+            rt.facets = rt.facets?.filter(facet => facet !== postLinkFacet)
+          }
+        } catch (error) {
+          logger.error('Failed to get post as quote for DM', {error})
+        }
+      }
+
       if (!hasScrolled) {
         setHasScrolled(true)
       }
@@ -286,9 +331,10 @@ export function MessagesList({
       convoState.sendMessage({
         text: rt.text,
         facets: rt.facets,
+        embed,
       })
     },
-    [convoState, agent, hasScrolled, setHasScrolled],
+    [agent, convoState, getPost, hasScrolled, setHasScrolled],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
