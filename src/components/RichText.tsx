@@ -59,7 +59,7 @@ export function RichText({
   const {text, facets} = richText
 
   if (!facets?.length) {
-    if (text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)) {
+    if (isOnlyEmoji(text)) {
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
@@ -245,4 +245,8 @@ function RichTextTag({
       </TagMenu>
     </React.Fragment>
   )
+}
+
+export function isOnlyEmoji(text: string) {
+  return text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)
 }

@@ -17,7 +17,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {RichText} from '../RichText'
+import {isOnlyEmoji, RichText} from '../RichText'
 
 let MessageItem = ({
   item,
@@ -78,24 +78,27 @@ let MessageItem = ({
     <View style={[isFromSelf ? a.mr_md : a.ml_md]}>
       <ActionsWrapper isFromSelf={isFromSelf} message={message}>
         <View
-          style={[
-            a.py_sm,
-            a.my_2xs,
-            a.rounded_md,
-            {
-              paddingLeft: 14,
-              paddingRight: 14,
-              backgroundColor: isFromSelf
-                ? isPending
-                  ? pendingColor
-                  : t.palette.primary_500
-                : t.palette.contrast_50,
-              borderRadius: 17,
-            },
-            isFromSelf
-              ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-              : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
-          ]}>
+          style={
+            !message.facets &&
+            !isOnlyEmoji(message.text) && [
+              a.py_sm,
+              a.my_2xs,
+              a.rounded_md,
+              {
+                paddingLeft: 14,
+                paddingRight: 14,
+                backgroundColor: isFromSelf
+                  ? isPending
+                    ? pendingColor
+                    : t.palette.primary_500
+                  : t.palette.contrast_50,
+                borderRadius: 17,
+              },
+              isFromSelf
+                ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+                : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+            ]
+          }>
           <RichText
             value={rt}
             style={[
