@@ -1,7 +1,7 @@
 # Credit for fingerprint action https://github.com/expo/expo
 # https://github.com/expo/expo/blob/main/.github/workflows/pr-labeler.yml
 ---
-name: PR labeler
+name: PR Tests
 
 on:
   push:
@@ -94,7 +94,7 @@ jobs:
             | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}%) |
             ---
 
-  test-suite-fingerprint:
+  fingerprint-native:
     runs-on: ubuntu-22.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     steps:
