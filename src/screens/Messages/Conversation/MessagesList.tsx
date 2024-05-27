@@ -16,7 +16,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {getPostAsQuote} from '#/lib/link-meta/bsky'
-import {shortenLinks} from '#/lib/strings/rich-text-manip'
+import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {isBskyPostUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
@@ -270,19 +270,11 @@ export function MessagesList({
   const onSendMessage = useCallback(
     async (text: string) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
-      await rt.detectFacets(agent)
-      rt = shortenLinks(rt)
 
-      // filter out any mention facets that didn't map to a user
-      rt.facets = rt.facets?.filter(facet => {
-        const mention = facet.features.find(feature =>
-          AppBskyRichtextFacet.isMention(feature),
-        )
-        if (mention && !mention.did) {
-          return false
-        }
-        return true
-      })
+      // detect facets without resolution first - this is used to see if there's
+      // any post links in the text that we can embed. We do this first because
+      // we want to remove the post link from the text, re-trim, then detect facets
+      rt.detectFacetsWithoutResolution()
 
       let embed: AppBskyEmbedRecord.Main | undefined
       // find the first link facet that is a link to a post
@@ -295,6 +287,7 @@ export function MessagesList({
         })
       })
 
+      // if we found a post link, get the post and embed it
       if (postLinkFacet) {
         const postLink = postLinkFacet.features.find(
           AppBskyRichtextFacet.isLink,
@@ -317,12 +310,30 @@ export function MessagesList({
               postLinkFacet.index.byteStart,
               postLinkFacet.index.byteEnd,
             )
-            rt.facets = rt.facets?.filter(facet => facet !== postLinkFacet)
+
+            // re-trim the text, now that we've removed the post link
+            //
+            // if the post link is at the start of the text, we don't want to leave a leading space
+            // so trim on both sides
+            if (postLinkFacet.index.byteStart === 0) {
+              rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
+            } else {
+              // otherwise just trim the end
+              rt = new RichText(
+                {text: rt.text.trimEnd()},
+                {cleanNewlines: true},
+              )
+            }
           }
         } catch (error) {
           logger.error('Failed to get post as quote for DM', {error})
         }
       }
+
+      await rt.detectFacets(agent)
+
+      rt = shortenLinks(rt)
+      rt = stripInvalidMentions(rt)
 
       if (!hasScrolled) {
         setHasScrolled(true)
