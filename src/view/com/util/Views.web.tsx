@@ -68,7 +68,7 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
     desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<FlatList<any>>,
+  ref: React.Ref<FlatList<ItemT>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
