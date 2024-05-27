@@ -100,12 +100,12 @@ let MessageItem = ({
             value={rt}
             style={[
               a.text_md,
-              a.leading_snug,
               isFromSelf && {color: t.palette.white},
               isPending && t.name !== 'light' && {color: t.palette.primary_300},
             ]}
             interactiveStyle={a.underline}
             enableTags
+            emojiMultiplier={3}
           />
         </View>
       </ActionsWrapper>
