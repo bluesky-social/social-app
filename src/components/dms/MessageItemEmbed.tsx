@@ -68,7 +68,7 @@ let MessageItemEmbed = ({
           t.atoms.border_contrast_low,
           a.rounded_md,
           a.border,
-          a.p_md,
+          a.p_sm,
         ]}>
         <PostMeta
           showAvatar
@@ -95,7 +95,7 @@ let MessageItemEmbed = ({
             <PostEmbeds
               embed={post.embed}
               moderation={moderation}
-              style={a.mt_sm}
+              style={a.mt_2xs}
               quoteTextStyle={[a.text_sm, t.atoms.text_contrast_high]}
             />
           )}
