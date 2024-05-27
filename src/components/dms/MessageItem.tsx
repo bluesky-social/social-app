@@ -38,9 +38,12 @@ let MessageItem = ({
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
+  const nextIsMessage = ChatBskyConvoDefs.isMessageView(nextMessage)
+
   const isNextFromSelf =
-    ChatBskyConvoDefs.isMessageView(nextMessage) &&
-    nextMessage.sender?.did === currentAccount?.did
+    nextIsMessage && nextMessage.sender?.did === currentAccount?.did
+
+  const isNextFromSameSender = isNextFromSelf === isFromSelf
 
   const isLastInGroup = useMemo(() => {
     // if this message is pending, it means the next message is pending too
@@ -48,24 +51,19 @@ let MessageItem = ({
       return false
     }
 
-    // if the next message is from a different sender, then it's the last in the group
-    if (isFromSelf ? !isNextFromSelf : isNextFromSelf) {
-      return true
-    }
-
-    // or, if there's a 3 minute gap between this message and the next
+    // or, if there's a 5 minute gap between this message and the next
     if (ChatBskyConvoDefs.isMessageView(nextMessage)) {
       const thisDate = new Date(message.sentAt)
       const nextDate = new Date(nextMessage.sentAt)
 
       const diff = nextDate.getTime() - thisDate.getTime()
 
-      // 3 minutes
-      return diff > 3 * 60 * 1000
+      // 5 minutes
+      return diff > 5 * 60 * 1000
     }
 
     return true
-  }, [message, nextMessage, isFromSelf, isNextFromSelf, isPending])
+  }, [message, nextMessage, isPending])
 
   const lastInGroupRef = useRef(isLastInGroup)
   if (lastInGroupRef.current !== isLastInGroup) {
@@ -80,7 +78,11 @@ let MessageItem = ({
   }, [message.text, message.facets])
 
   return (
-    <View style={[isFromSelf ? a.mr_md : a.ml_md]}>
+    <View
+      style={[
+        isFromSelf ? a.mr_md : a.ml_md,
+        nextIsMessage && !isNextFromSameSender && a.mb_md,
+      ]}>
       <ActionsWrapper isFromSelf={isFromSelf} message={message}>
         {AppBskyEmbedRecord.isView(message.embed) && (
           <MessageItemEmbed embed={message.embed} />
