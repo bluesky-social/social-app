@@ -328,6 +328,7 @@ export function MessagesList({
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           containWeb={true}
+          disableContentVisibility={true}
           disableVirtualization={true}
           style={animatedListStyle}
           // The extra two items account for the header and the footer components
@@ -340,7 +341,6 @@ export function MessagesList({
           }}
           removeClippedSubviews={false}
           sideBorders={false}
-          useContentVisibility={false}
           onContentSizeChange={onContentSizeChange}
           onLayout={onListLayout}
           onStartReached={onStartReached}

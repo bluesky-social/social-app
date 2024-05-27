@@ -25,7 +25,7 @@ export type ListProps<ItemT> = Omit<
   desktopFixedHeight: any // TODO: Better types.
   containWeb?: boolean
   sideBorders?: boolean
-  useContentVisibility?: boolean
+  disableContentVisibility?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -57,7 +57,7 @@ function ListImpl<ItemT>(
     extraData,
     style,
     sideBorders = true,
-    useContentVisibility = true,
+    disableContentVisibility,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -341,7 +341,7 @@ function ListImpl<ItemT>(
               renderItem={renderItem}
               extraData={extraData}
               onItemSeen={onItemSeen}
-              useContentVisibility={useContentVisibility}
+              disableContentVisibility={disableContentVisibility}
             />
           )
         })}
@@ -390,7 +390,7 @@ let Row = function RowImpl<ItemT>({
   renderItem,
   extraData: _unused,
   onItemSeen,
-  useContentVisibility,
+  disableContentVisibility,
 }: {
   item: ItemT
   index: number
@@ -400,7 +400,7 @@ let Row = function RowImpl<ItemT>({
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
-  useContentVisibility: boolean
+  disableContentVisibility: boolean
 }): React.ReactNode {
   const rowRef = React.useRef(null)
   const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
@@ -450,7 +450,9 @@ let Row = function RowImpl<ItemT>({
   }
 
   return (
-    <View style={useContentVisibility ? styles.row : undefined} ref={rowRef}>
+    <View
+      style={disableContentVisibility ? undefined : styles.row}
+      ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
   )

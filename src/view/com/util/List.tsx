@@ -27,7 +27,7 @@ export type ListProps<ItemT> = Omit<
   containWeb?: boolean
   sideBorders?: boolean
   // Web only prop for performance optimizing style. Default is true.
-  useContentVisibility?: boolean
+  disableContentVisibility?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
