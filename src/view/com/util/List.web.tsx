@@ -400,7 +400,7 @@ let Row = function RowImpl<ItemT>({
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
-  disableContentVisibility: boolean
+  disableContentVisibility?: boolean
 }): React.ReactNode {
   const rowRef = React.useRef(null)
   const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
