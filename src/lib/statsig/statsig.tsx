@@ -7,7 +7,7 @@ import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {IS_TESTFLIGHT} from 'lib/app-info'
+import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
@@ -22,6 +22,8 @@ type StatsigUser = {
     // This is the place where we can add our own stuff.
     // Fields here have to be non-optional to be visible in the UI.
     platform: 'ios' | 'android' | 'web'
+    bundleIdentifier: string
+    bundleDate: number
     refSrc: string
     refUrl: string
     appLanguage: string
@@ -180,6 +182,8 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
+      bundleIdentifier: BUNDLE_IDENTIFIER,
+      bundleDate: BUNDLE_DATE,
       appLanguage: languagePrefs.appLanguage,
       contentLanguages: languagePrefs.contentLanguages,
     },

@@ -178,12 +178,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    left: 6,
+    right: 6,
     bottom: 6,
   },
   alt: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 6,
     fontWeight: 'bold',
   },
   customFeedOuter: {

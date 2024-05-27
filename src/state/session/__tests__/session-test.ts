@@ -872,7 +872,7 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-3')
   })
 
-  it('ignores updates from a stale agent', () => {
+  it('accepts updates from a stale agent', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
@@ -928,10 +928,10 @@ describe('session', () => {
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.accounts[1].did).toBe('alice-did')
-    // Should retain the old values because Alice is not active.
-    expect(state.accounts[1].handle).toBe('alice.test')
-    expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-1')
-    expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-1')
+    // Should update Alice's tokens because otherwise they'll be stale.
+    expect(state.accounts[1].handle).toBe('alice-updated.test')
+    expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-2')
+    expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-2')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -948,15 +948,15 @@ describe('session', () => {
             "service": "https://bob.com/",
           },
           {
-            "accessJwt": "alice-access-jwt-1",
+            "accessJwt": "alice-access-jwt-2",
             "deactivated": false,
             "did": "alice-did",
-            "email": undefined,
+            "email": "alice@foo.bar",
             "emailAuthFactor": false,
             "emailConfirmed": false,
-            "handle": "alice.test",
+            "handle": "alice-updated.test",
             "pdsUrl": undefined,
-            "refreshJwt": "alice-refresh-jwt-1",
+            "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
           },
         ],
@@ -988,7 +988,7 @@ describe('session', () => {
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.accounts[0].did).toBe('bob-did')
-    // Should update the values because Bob is active.
+    // Should update Bob's tokens because otherwise they'll be stale.
     expect(state.accounts[0].handle).toBe('bob-updated.test')
     expect(state.accounts[0].accessJwt).toBe('bob-access-jwt-2')
     expect(state.accounts[0].refreshJwt).toBe('bob-refresh-jwt-2')
@@ -1008,15 +1008,15 @@ describe('session', () => {
             "service": "https://bob.com/",
           },
           {
-            "accessJwt": "alice-access-jwt-1",
+            "accessJwt": "alice-access-jwt-2",
             "deactivated": false,
             "did": "alice-did",
-            "email": undefined,
+            "email": "alice@foo.bar",
             "emailAuthFactor": false,
             "emailConfirmed": false,
-            "handle": "alice.test",
+            "handle": "alice-updated.test",
             "pdsUrl": undefined,
-            "refreshJwt": "alice-refresh-jwt-1",
+            "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
           },
         ],
@@ -1030,7 +1030,7 @@ describe('session', () => {
       }
     `)
 
-    // Ignore other events for inactive agent too.
+    // Ignore other events for inactive agent.
     const lastState = state
     agent1.session = undefined
     state = run(state, [

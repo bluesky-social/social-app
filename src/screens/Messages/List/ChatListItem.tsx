@@ -105,7 +105,9 @@ function ChatListItemReady({
     lastMessageSentAt = convo.lastMessage.sentAt
   }
   if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-    lastMessage = _(msg`Conversation deleted`)
+    lastMessage = isDeletedAccount
+      ? _(msg`Conversation deleted`)
+      : _(msg`Message deleted`)
   }
 
   const [showActions, setShowActions] = useState(false)
@@ -216,6 +218,7 @@ function ChatListItemReady({
                           a.text_sm,
                           {lineHeight: 21},
                           t.atoms.text_contrast_medium,
+                          web({whiteSpace: 'preserve nowrap'}),
                         ]}>
                         {' '}
                         &middot; {timeElapsed}
@@ -229,6 +232,7 @@ function ChatListItemReady({
                       a.text_sm,
                       {lineHeight: 21},
                       t.atoms.text_contrast_medium,
+                      web({whiteSpace: 'preserve nowrap'}),
                     ]}>
                     {' '}
                     &middot;{' '}

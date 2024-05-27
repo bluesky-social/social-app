@@ -25,6 +25,7 @@ import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
+import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-converations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 
@@ -414,6 +415,7 @@ export function useProfileBlockMutationQueue(
       updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
+      queryClient.invalidateQueries({queryKey: RQKEY_LIST_CONVOS})
     },
   })
 

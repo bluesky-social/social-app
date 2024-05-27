@@ -11,6 +11,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {isTouchDevice} from 'lib/browser'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -42,8 +43,6 @@ const floatingMiddlewares = [
     },
   }),
 ]
-
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 1
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
   if (props.disable || isTouchDevice) {
