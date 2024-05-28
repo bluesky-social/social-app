@@ -66,11 +66,8 @@ export function aggregateInterestItems(
   return Array.from(new Set(results)).slice(0, 20)
 }
 
-export async function bulkWriteFollows(
-  getAgent: () => BskyAgent,
-  dids: string[],
-) {
-  const session = getAgent().session
+export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
+  const session = agent.session
 
   if (!session) {
     throw new Error(`bulkWriteFollows failed: no session`)
@@ -89,19 +86,15 @@ export async function bulkWriteFollows(
     value: r,
   }))
 
-  await getAgent().com.atproto.repo.applyWrites({
+  await agent.com.atproto.repo.applyWrites({
     repo: session.did,
     writes: followWrites,
   })
-  await whenFollowsIndexed(
-    getAgent,
-    session.did,
-    res => !!res.data.follows.length,
-  )
+  await whenFollowsIndexed(agent, session.did, res => !!res.data.follows.length)
 }
 
 async function whenFollowsIndexed(
-  getAgent: () => BskyAgent,
+  agent: BskyAgent,
   actor: string,
   fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {
@@ -110,7 +103,7 @@ async function whenFollowsIndexed(
     1e3, // 1s delay between tries
     fn,
     () =>
-      getAgent().app.bsky.graph.getFollows({
+      agent.app.bsky.graph.getFollows({
         actor,
         limit: 1,
       }),
