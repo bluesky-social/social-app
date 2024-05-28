@@ -43,7 +43,7 @@ export function useMessageEmbed() {
     setEmbed: useCallback(
       (embedUrl: string | undefined) => {
         if (!embedUrl) {
-          navigation.setParams({embed: undefined})
+          navigation.setParams({embed: ''})
           setEmbed(undefined)
           return
         }
