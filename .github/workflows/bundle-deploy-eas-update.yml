@@ -12,13 +12,12 @@ on:
         type: choice
         description: Deployment channel to use
         options:
-          - production
           - testflight
+          - production
       runtimeVersion:
         type: string
         description: Runtime version (in x.x.x format) that this update is for
         required: true
-        default: 1.72.0
 
 jobs:
   bundleDeploy:
@@ -53,7 +52,7 @@ jobs:
 
       - name: ⬇️ Fetch commits from base branch
         if: ${{ github.ref != 'refs/heads/main' }}
-        run: git fetch origin main:main --depth 2000
+        run: git fetch origin main:main --depth 100
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -65,8 +64,8 @@ jobs:
         id: fingerprint
         uses: bluesky-social/github-actions/fingerprint-native@main
         with:
-          profile: ${{ inputs.channel || 'production' }}
-          previous-commit-tag: 1.72.0
+          profile: ${{ inputs.channel || 'testflight' }}
+          previous-commit-tag: ${{ inputs.runtimeVersion }}
 
       - name: Lint check
         run: yarn lint
