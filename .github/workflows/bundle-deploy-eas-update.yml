@@ -59,11 +59,7 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
-      - name: ⚙️ Install Dependencies
-        run: yarn install
-
-      # Run the fingerprint
-      - name: 📷 Check fingerprint
+      - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
         uses: bluesky-social/github-actions/fingerprint-native@main
         with:
