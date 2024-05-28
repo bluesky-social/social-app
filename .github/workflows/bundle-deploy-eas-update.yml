@@ -54,7 +54,7 @@ jobs:
 
       - name: ⬇️ Fetch commits from base branch
         if: ${{ github.ref != 'refs/heads/main' }}
-        run: git fetch origin main:main --depth 100
+        run: git fetch origin main:main --depth 2000
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
