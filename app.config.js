@@ -183,7 +183,7 @@ module.exports = function (config) {
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '13.4',
+              deploymentTarget: '14.0',
               newArchEnabled: false,
             },
             android: {
