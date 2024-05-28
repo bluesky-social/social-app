@@ -67,7 +67,7 @@ jobs:
         uses: bluesky-social/github-actions/fingerprint-native@main
         with:
           profile: ${{ inputs.channel }}
-          previous-commit-tag: ${{ inputs.runtimeVersion }}
+          previous-commit-tag: 1.72.0
 
       - name: Lint check
         run: yarn lint
