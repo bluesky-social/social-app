@@ -8,15 +8,13 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -24,7 +22,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {countLines, pluralize} from 'lib/strings/helpers'
+import {countLines} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
@@ -51,6 +49,7 @@ import {PreviewableUserAvatar} from '../util/UserAvatar'
 export function PostThreadItem({
   post,
   record,
+  moderation,
   treeView,
   depth,
   prevPost,
@@ -60,10 +59,12 @@ export function PostThreadItem({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
+  moderation: ModerationDecision | undefined
   treeView: boolean
   depth: number
   prevPost: ThreadPost | undefined
@@ -73,9 +74,9 @@ export function PostThreadItem({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }) {
-  const moderationOpts = useModerationOpts()
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -84,11 +85,6 @@ export function PostThreadItem({
         facets: record.facets,
       }),
     [record],
-  )
-  const moderation = useMemo(
-    () =>
-      post && moderationOpts ? moderatePost(post, moderationOpts) : undefined,
-    [post, moderationOpts],
   )
   if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted />
@@ -111,6 +107,7 @@ export function PostThreadItem({
         showChildReplyLine={showChildReplyLine}
         showParentReplyLine={showParentReplyLine}
         hasPrecedingItem={hasPrecedingItem}
+        overrideBlur={overrideBlur}
         onPostReply={onPostReply}
       />
     )
@@ -144,6 +141,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -159,6 +157,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }): React.ReactNode => {
   const pal = usePalette('default')
@@ -250,9 +249,7 @@ let PostThreadItemLoaded = ({
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
                 size={42}
-                did={post.author.did}
-                handle={post.author.handle}
-                avatar={post.author.avatar}
+                profile={post.author}
                 moderation={moderation.ui('avatar')}
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
               />
@@ -339,7 +336,11 @@ let PostThreadItemLoaded = ({
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.repostCount)}
                       </Text>{' '}
-                      {pluralize(post.repostCount, 'repost')}
+                      <Plural
+                        value={post.repostCount}
+                        one="repost"
+                        other="reposts"
+                      />
                     </Text>
                   </Link>
                 ) : null}
@@ -355,7 +356,7 @@ let PostThreadItemLoaded = ({
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.likeCount)}
                       </Text>{' '}
-                      {pluralize(post.likeCount, 'like')}
+                      <Plural value={post.likeCount} one="like" other="likes" />
                     </Text>
                   </Link>
                 ) : null}
@@ -393,6 +394,7 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
+            disabled={overrideBlur}
             style={[pal.view]}
             modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 26 : 38}
@@ -400,7 +402,8 @@ let PostThreadItemLoaded = ({
               isThreadedChild
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
-            }>
+            }
+            profile={post.author}>
             <View
               style={{
                 flexDirection: 'row',
@@ -442,9 +445,7 @@ let PostThreadItemLoaded = ({
                   <AviFollowButton author={post.author}>
                     <PreviewableUserAvatar
                       size={38}
-                      did={post.author.did}
-                      handle={post.author.handle}
-                      avatar={post.author.avatar}
+                      profile={post.author}
                       moderation={moderation.ui('avatar')}
                       type={
                         post.author.associated?.labeler ? 'labeler' : 'user'

@@ -840,4 +840,22 @@ export const atoms = {
   mr_auto: {
     marginRight: 'auto',
   },
+  /*
+   * Pointer events
+   */
+  pointer_events_none: {
+    pointerEvents: 'none',
+  },
+  pointer_events_auto: {
+    pointerEvents: 'auto',
+  },
+  /*
+   * Text decoration
+   */
+  underline: {
+    textDecorationLine: 'underline',
+  },
+  strike_through: {
+    textDecorationLine: 'line-through',
+  },
 } as const

@@ -1,7 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
-  Linking,
   Platform,
   Pressable,
   StyleSheet,
@@ -28,6 +26,7 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -41,7 +40,7 @@ import {
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
-import * as AppInfo from 'lib/app-info'
+import {appVersion, BUNDLE_DATE, bundleInfo} from 'lib/app-info'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
@@ -61,23 +60,40 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
-function SettingsAccountCard({account}: {account: SessionAccount}) {
+function SettingsAccountCard({
+  account,
+  pendingDid,
+  onPressSwitchAccount,
+}: {
+  account: SessionAccount
+  pendingDid: string | null
+  onPressSwitchAccount: (
+    account: SessionAccount,
+    logContext: 'Settings',
+  ) => void
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isSwitchingAccounts, currentAccount} = useSession()
+  const t = useTheme()
+  const {currentAccount} = useSession()
   const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
-  const {onPressSwitchAccount} = useAccountSwitcher()
 
   const contents = (
-    <View style={[pal.view, styles.linkCard]}>
+    <View
+      style={[
+        pal.view,
+        styles.linkCard,
+        account.did === pendingDid && t.atoms.bg_contrast_25,
+      ]}>
       <View style={styles.avi}>
         <UserAvatar
           size={40}
@@ -109,7 +125,8 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
           }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
-          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
+          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}
+          activeOpacity={0.8}>
           <Text type="lg" style={pal.link}>
             <Trans>Sign out</Trans>
           </Text>
@@ -135,13 +152,12 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       testID={`switchToAccountBtn-${account.handle}`}
       key={account.did}
       onPress={
-        isSwitchingAccounts
-          ? undefined
-          : () => onPressSwitchAccount(account, 'Settings')
+        pendingDid ? undefined : () => onPressSwitchAccount(account, 'Settings')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}
-      accessibilityHint={_(msg`Switches the account you are logged in to`)}>
+      accessibilityHint={_(msg`Switches the account you are logged in to`)}
+      activeOpacity={0.8}>
       {contents}
     </TouchableOpacity>
   )
@@ -162,12 +178,14 @@ export function SettingsScreen({}: Props) {
   const {isMobile} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
-  const {isSwitchingAccounts, accounts, currentAccount} = useSession()
+  const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
+  const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
+  const isSwitchingAccounts = !!pendingDid
 
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
@@ -238,7 +256,7 @@ export function SettingsScreen({}: Props) {
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
-      `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
+      `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
   }, [_])
@@ -275,10 +293,6 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('AccessibilitySettings')
   }, [navigation])
 
-  const onPressStatusPage = React.useCallback(() => {
-    Linking.openURL(STATUS_PAGE_URL)
-  }, [])
-
   const onPressBirthday = React.useCallback(() => {
     birthdayControl.open()
   }, [birthdayControl])
@@ -291,6 +305,8 @@ export function SettingsScreen({}: Props) {
     await clearLegacyStorage()
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
   }, [_])
+
+  const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
@@ -311,8 +327,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={s.hContentRegion}
-        contentContainerStyle={isMobile && pal.viewLight}
+        style={[s.hContentRegion, isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
@@ -363,50 +378,53 @@ export function SettingsScreen({}: Props) {
             <View style={styles.spacer20} />
 
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
+
+            <View style={[s.flexRow, styles.heading]}>
+              <Text type="xl-bold" style={pal.text}>
+                <Trans>Signed in as</Trans>
+              </Text>
+              <View style={s.flex1} />
+            </View>
+            <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+              <SettingsAccountCard
+                account={currentAccount}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            </View>
           </>
         ) : null}
-        <View style={[s.flexRow, styles.heading]}>
-          <Text type="xl-bold" style={pal.text}>
-            <Trans>Signed in as</Trans>
-          </Text>
-          <View style={s.flex1} />
+
+        <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+          {accounts
+            .filter(a => a.did !== currentAccount?.did)
+            .map(account => (
+              <SettingsAccountCard
+                key={account.did}
+                account={account}
+                onPressSwitchAccount={onPressSwitchAccount}
+                pendingDid={pendingDid}
+              />
+            ))}
+
+          <TouchableOpacity
+            testID="switchToNewAccountBtn"
+            style={[styles.linkCard, pal.view]}
+            onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Add account`)}
+            accessibilityHint={_(msg`Create a new Bluesky account`)}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="plus"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              <Trans>Add account</Trans>
+            </Text>
+          </TouchableOpacity>
         </View>
-
-        {isSwitchingAccounts ? (
-          <View style={[pal.view, styles.linkCard]}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <SettingsAccountCard account={currentAccount!} />
-        )}
-
-        {accounts
-          .filter(a => a.did !== currentAccount?.did)
-          .map(account => (
-            <SettingsAccountCard key={account.did} account={account} />
-          ))}
-
-        <TouchableOpacity
-          testID="switchToNewAccountBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Add account`)}
-          accessibilityHint={_(msg`Create a new Bluesky account`)}>
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="plus"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Add account</Trans>
-          </Text>
-        </TouchableOpacity>
 
         <View style={styles.spacer20} />
 
@@ -595,6 +613,31 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>My Saved Feeds</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="linkToChatSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('MessagesSettings')
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Chat settings`)}
+          accessibilityHint={_(msg`Opens chat settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon={['far', 'comment-dots']}
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Chat Settings</Trans>
           </Text>
         </TouchableOpacity>
 
@@ -812,6 +855,16 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => onPressDeleteChatDeclaration()}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Delete chat declaration record`)}
+              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Delete chat declaration record</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Reset onboarding state`)}
@@ -849,17 +902,9 @@ export function SettingsScreen({}: Props) {
             accessibilityRole="button"
             onPress={onPressBuildInfo}>
             <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Version {AppInfo.appVersion}</Trans>
-            </Text>
-          </TouchableOpacity>
-          <Text type="sm" style={[pal.textLight]}>
-            &nbsp; &middot; &nbsp;
-          </Text>
-          <TouchableOpacity
-            accessibilityRole="button"
-            onPress={onPressStatusPage}>
-            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>Status page</Trans>
+              <Trans>
+                Version {appVersion} {bundleInfo}
+              </Trans>
             </Text>
           </TouchableOpacity>
         </View>
@@ -880,6 +925,12 @@ export function SettingsScreen({}: Props) {
             style={pal.link}
             href="https://bsky.social/about/support/privacy-policy"
             text={_(msg`Privacy Policy`)}
+          />
+          <TextLink
+            type="md"
+            style={pal.link}
+            href={STATUS_PAGE_URL}
+            text={_(msg`Status Page`)}
           />
         </View>
         <View style={s.footerSpacer} />
@@ -1026,7 +1077,6 @@ const styles = StyleSheet.create({
   footer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
     paddingLeft: 18,
   },
 })

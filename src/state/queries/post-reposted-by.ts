@@ -6,7 +6,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -16,6 +16,7 @@ const RQKEY_ROOT = 'post-reposted-by'
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetRepostedBy.OutputSchema,
     Error,
@@ -25,7 +26,7 @@ export function usePostRepostedByQuery(resolvedUri: string | undefined) {
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().getRepostedBy({
+      const res = await agent.getRepostedBy({
         uri: resolvedUri || '',
         limit: PAGE_SIZE,
         cursor: pageParam,

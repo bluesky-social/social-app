@@ -25,6 +25,7 @@ import {
   FeedsTabNavigatorParams,
   FlatNavigatorParams,
   HomeTabNavigatorParams,
+  MessagesTabNavigatorParams,
   MyProfileTabNavigatorParams,
   NotificationsTabNavigatorParams,
   SearchTabNavigatorParams,
@@ -46,6 +47,9 @@ import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
 import {router} from './routes'
+import {MessagesConversationScreen} from './screens/Messages/Conversation'
+import {MessagesScreen} from './screens/Messages/List'
+import {MessagesSettingsScreen} from './screens/Messages/Settings'
 import {useModalControls} from './state/modals'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
@@ -92,6 +96,8 @@ const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
 const MyProfileTab =
   createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
+const MessagesTab =
+  createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
@@ -290,6 +296,16 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
       />
+      <Stack.Screen
+        name="MessagesConversation"
+        getComponent={() => MessagesConversationScreen}
+        options={{title: title(msg`Chat`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="MessagesSettings"
+        getComponent={() => MessagesSettingsScreen}
+        options={{title: title(msg`Chat settings`), requireAuth: true}}
+      />
     </>
   )
 }
@@ -322,6 +338,10 @@ function TabsNavigator() {
       <Tab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
+      />
+      <Tab.Screen
+        name="MessagesTab"
+        getComponent={() => MessagesTabNavigator}
       />
     </Tab.Navigator>
   )
@@ -429,6 +449,31 @@ function MyProfileTabNavigator() {
   )
 }
 
+function MessagesTabNavigator() {
+  const pal = usePalette('default')
+  return (
+    <MessagesTab.Navigator
+      screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        animationDuration: 250,
+        contentStyle: pal.view,
+      }}>
+      <MessagesTab.Screen
+        name="Messages"
+        getComponent={() => MessagesScreen}
+        options={({route}) => ({
+          requireAuth: true,
+          animationTypeForReplace: route.params?.animation ?? 'push',
+        })}
+      />
+      {commonScreens(MessagesTab as typeof HomeTab)}
+    </MessagesTab.Navigator>
+  )
+}
+
 /**
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
@@ -468,6 +513,11 @@ const FlatNavigator = () => {
         name="Notifications"
         getComponent={() => NotificationsScreen}
         options={{title: title(msg`Notifications`), requireAuth: true}}
+      />
+      <Flat.Screen
+        name="Messages"
+        getComponent={() => MessagesScreen}
+        options={{title: title(msg`Messages`), requireAuth: true}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
@@ -522,6 +572,9 @@ const LINKING = {
       if (name === 'Home') {
         return buildStateObject('HomeTab', 'Home', params)
       }
+      if (name === 'Messages') {
+        return buildStateObject('MessagesTab', 'Messages', params)
+      }
       // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
       return buildStateObject('HomeTab', name, params, [
         {
@@ -558,7 +611,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate', {
+        logEvent('router:navigate:sampled', {
           from: prevLoggedRouteName.current,
         })
         prevLoggedRouteName.current = getCurrentRouteName()
@@ -567,7 +620,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
-        logEvent('router:navigate', {})
+        logEvent('router:navigate:sampled', {})
       }}>
       {children}
     </NavigationContainer>

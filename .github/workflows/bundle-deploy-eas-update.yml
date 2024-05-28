@@ -54,7 +54,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: last-successful-commit-hash.txt
-          key: last-successful-deployment-commit-${{ github.ref_name }}
+          key: last-successful-deployment-commit-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            last-successful-deployment-commit-${{ github.ref_name }}-
 
       - name: Add the last successful deployment commit to the output
         id: last-successful-commit
@@ -68,7 +70,7 @@ jobs:
       - name: 🕵️ Get the base commit
         id: base-commit
         run: |
-          if [ -z "${{ inputs.channel == 'production' }}" ]; then
+          if ${{ inputs.channel == 'production' }}; then
             echo base-commit=$(git show-ref -s ${{ inputs.runtimeVersion }}) >> "$GITHUB_OUTPUT"
           else
             echo base-commit=${{ steps.last-successful-commit.base-commit }} >> "$GITHUB_OUTPUT"
@@ -144,6 +146,8 @@ jobs:
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ Create Bundle
@@ -182,6 +186,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -222,6 +228,8 @@ jobs:
       - name: ✏️ Write environment variables
         run: |
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
       - name: 🏗️ EAS Build
@@ -251,6 +259,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -283,6 +293,8 @@ jobs:
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build

@@ -1,4 +1,5 @@
 import {RichText, UnicodeString} from '@atproto/api'
+
 import {toShortUrl} from './url-helpers'
 
 export function shortenLinks(rt: RichText): RichText {

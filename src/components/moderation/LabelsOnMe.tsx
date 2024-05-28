@@ -1,12 +1,12 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
 
+import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {Button, ButtonText, ButtonIcon, ButtonSize} from '#/components/Button'
+import {Button, ButtonIcon, ButtonSize, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
   LabelsOnMeDialog,
@@ -32,14 +32,11 @@ export function LabelsOnMe({
   if (!labels || !currentAccount) {
     return null
   }
-  labels = labels.filter(
-    l => !l.val.startsWith('!') && l.src !== currentAccount.did,
-  )
+  labels = labels.filter(l => !l.val.startsWith('!'))
   if (!labels.length) {
     return null
   }
 
-  const labelTarget = isAccount ? _(msg`account`) : _(msg`content`)
   return (
     <View style={[a.flex_row, style]}>
       <LabelsOnMeDialog control={control} subject={details} labels={labels} />
@@ -54,11 +51,18 @@ export function LabelsOnMe({
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />
         <ButtonText style={[a.leading_snug]}>
-          {labels.length}{' '}
-          {labels.length === 1 ? (
-            <Trans>label has been placed on this {labelTarget}</Trans>
+          {isAccount ? (
+            <Plural
+              value={labels.length}
+              one="# label has been placed on this account"
+              other="# labels have been placed on this account"
+            />
           ) : (
-            <Trans>labels have been placed on this {labelTarget}</Trans>
+            <Plural
+              value={labels.length}
+              one="# label has been placed on this content"
+              other="# labels have been placed on this content"
+            />
           )}
         </ButtonText>
       </Button>

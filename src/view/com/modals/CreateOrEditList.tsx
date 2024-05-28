@@ -25,7 +25,7 @@ import {
   useListCreateMutation,
   useListMetadataMutation,
 } from '#/state/queries/list'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -62,6 +62,7 @@ export function Component({
   const {_} = useLingui()
   const listCreateMutation = useListCreateMutation()
   const listMetadataMutation = useListMetadataMutation()
+  const agent = useAgent()
 
   const activePurpose = useMemo(() => {
     if (list?.purpose) {
@@ -156,7 +157,7 @@ export function Component({
         {cleanNewlines: true},
       )
 
-      await richText.detectFacets(getAgent())
+      await richText.detectFacets(agent)
       richText = shortenLinks(richText)
 
       // filter out any mention facets that didn't map to a user
@@ -228,6 +229,7 @@ export function Component({
     listMetadataMutation,
     listCreateMutation,
     _,
+    agent,
   ])
 
   return (

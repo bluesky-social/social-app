@@ -6,16 +6,16 @@ import {
   AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {Text} from '../util/text/Text'
-import {TextLink} from '../util/Link'
-import {makeProfileLink, makeListLink} from '#/lib/routes/links'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {Trans} from '@lingui/macro'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {colors} from '#/lib/styles'
+import {TextLink} from '../util/Link'
+import {Text} from '../util/text/Text'
 
 export function WhoCanReply({
   post,
@@ -143,6 +143,7 @@ function Rule({
       <Trans>
         users followed by{' '}
         <TextLink
+          type="sm"
           href={makeProfileLink(post.author)}
           text={`@${post.author.handle}`}
           style={pal.link}
@@ -157,6 +158,7 @@ function Rule({
       return (
         <Trans>
           <TextLink
+            type="sm"
             href={makeListLink(listUrip.hostname, listUrip.rkey)}
             text={list.name}
             style={pal.link}

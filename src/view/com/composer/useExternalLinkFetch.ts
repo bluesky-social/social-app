@@ -1,24 +1,25 @@
-import {useState, useEffect} from 'react'
-import {ImageModel} from 'state/models/media/image'
+import {useEffect, useState} from 'react'
+
+import {logger} from '#/logger'
+import {useFetchDid} from '#/state/queries/handle'
+import {useGetPost} from '#/state/queries/post'
+import {useAgent} from '#/state/session'
 import * as apilib from 'lib/api/index'
-import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {POST_IMG_MAX} from 'lib/constants'
 import {
-  getPostAsQuote,
   getFeedAsEmbed,
   getListAsEmbed,
+  getPostAsQuote,
 } from 'lib/link-meta/bsky'
+import {getLinkMeta} from 'lib/link-meta/link-meta'
 import {downloadAndResize} from 'lib/media/manip'
 import {
-  isBskyPostUrl,
   isBskyCustomFeedUrl,
   isBskyListUrl,
+  isBskyPostUrl,
 } from 'lib/strings/url-helpers'
+import {ImageModel} from 'state/models/media/image'
 import {ComposerOpts} from 'state/shell/composer'
-import {POST_IMG_MAX} from 'lib/constants'
-import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
-import {useGetPost} from '#/state/queries/post'
-import {useFetchDid} from '#/state/queries/handle'
 
 export function useExternalLinkFetch({
   setQuote,
@@ -30,6 +31,7 @@ export function useExternalLinkFetch({
   )
   const getPost = useGetPost()
   const fetchDid = useFetchDid()
+  const agent = useAgent()
 
   useEffect(() => {
     let aborted = false
@@ -57,7 +59,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getFeedAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -75,7 +77,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getListAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -93,7 +95,7 @@ export function useExternalLinkFetch({
           },
         )
       } else {
-        getLinkMeta(getAgent(), extLink.uri).then(meta => {
+        getLinkMeta(agent, extLink.uri).then(meta => {
           if (aborted) {
             return
           }
@@ -135,7 +137,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost, fetchDid])
+  }, [extLink, setQuote, getPost, fetchDid, agent])
 
   return {extLink, setExtLink}
 }

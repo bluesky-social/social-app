@@ -1,27 +1,26 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react'
-import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
+import {atoms as a, flatten, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {atoms as a, useTheme, flatten, web} from '#/alf'
-import {Text} from '#/components/Typography'
-
+import {Context} from '#/components/Menu/context'
 import {
   ContextType,
-  TriggerProps,
-  ItemProps,
   GroupProps,
-  ItemTextProps,
   ItemIconProps,
+  ItemProps,
+  ItemTextProps,
   RadixPassThroughTriggerProps,
+  TriggerProps,
 } from '#/components/Menu/types'
-import {Context} from '#/components/Menu/context'
 import {Portal} from '#/components/Portal'
+import {Text} from '#/components/Typography'
 
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = React.useId()
@@ -135,10 +134,22 @@ export function Trigger({children, label}: TriggerProps) {
             },
             props: {
               ...props,
-              // disable on web, use `onPress`
-              onPointerDown: () => false,
-              onPress: () =>
-                control.isOpen ? control.close() : control.open(),
+              // No-op override to prevent false positive that interprets mobile scroll as a tap.
+              // This requires the custom onPress handler below to compensate.
+              // https://github.com/radix-ui/primitives/issues/1912
+              onPointerDown: undefined,
+              onPress: () => {
+                if (window.event instanceof KeyboardEvent) {
+                  // The onPointerDown hack above is not relevant to this press, so don't do anything.
+                  return
+                }
+                // Compensate for the disabled onPointerDown above by triggering it manually.
+                if (control.isOpen) {
+                  control.close()
+                } else {
+                  control.open()
+                }
+              },
               onFocus: onFocus,
               onBlur: onBlur,
               onMouseEnter,

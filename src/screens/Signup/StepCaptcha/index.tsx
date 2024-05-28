@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
@@ -43,12 +44,19 @@ export function StepCaptcha() {
     [submit],
   )
 
-  const onError = React.useCallback(() => {
-    dispatch({
-      type: 'setError',
-      value: _(msg`Error receiving captcha response.`),
-    })
-  }, [_, dispatch])
+  const onError = React.useCallback(
+    (error?: unknown) => {
+      dispatch({
+        type: 'setError',
+        value: _(msg`Error receiving captcha response.`),
+      })
+      logger.error('Signup Flow Error', {
+        registrationHandle: state.handle,
+        error,
+      })
+    },
+    [_, dispatch, state.handle],
+  )
 
   return (
     <ScreenTransition>

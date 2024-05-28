@@ -15,12 +15,7 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {useServiceQuery} from '#/state/queries/service'
-import {
-  getAgent,
-  SessionAccount,
-  useSession,
-  useSessionApi,
-} from '#/state/session'
+import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {cleanError} from 'lib/strings/errors'
@@ -40,11 +35,12 @@ export type Props = {onChanged: () => void}
 
 export function Component(props: Props) {
   const {currentAccount} = useSession()
+  const agent = useAgent()
   const {
     isLoading,
     data: serviceInfo,
     error: serviceInfoError,
-  } = useServiceQuery(getAgent().service.toString())
+  } = useServiceQuery(agent.service.toString())
 
   return isLoading || !currentAccount ? (
     <View style={{padding: 18}}>
@@ -72,10 +68,10 @@ export function Inner({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const {updateCurrentAccount} = useSessionApi()
   const {closeModal} = useModalControls()
   const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
     useUpdateHandleMutation()
+  const agent = useAgent()
 
   const [error, setError] = useState<string>('')
 
@@ -115,9 +111,7 @@ export function Inner({
       await updateHandle({
         handle: newHandle,
       })
-      updateCurrentAccount({
-        handle: newHandle,
-      })
+      await agent.resumeSession(agent.session!)
       closeModal()
       onChanged()
     } catch (err: any) {
@@ -133,9 +127,9 @@ export function Inner({
     onChanged,
     track,
     closeModal,
-    updateCurrentAccount,
     updateHandle,
     serviceInfo,
+    agent,
   ])
 
   // rendering
@@ -506,7 +500,9 @@ function CustomHandleForm({
           <Text type="xl-medium" style={[s.white, s.textCenter]}>
             {canSave
               ? _(msg`Update to ${handle}`)
-              : _(msg`Verify ${isDNSForm ? 'DNS Record' : 'Text File'}`)}
+              : isDNSForm
+              ? _(msg`Verify DNS Record`)
+              : _(msg`Verify Text File`)}
           </Text>
         )}
       </Button>

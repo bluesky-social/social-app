@@ -1,8 +1,9 @@
-import {AppBskyFeedDefs} from '@atproto/api'
-import {FeedAPI, FeedAPIResponse} from './types'
-import {FollowingFeedAPI} from './following'
-import {CustomFeedAPI} from './custom'
+import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
+
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {CustomFeedAPI} from './custom'
+import {FollowingFeedAPI} from './following'
+import {FeedAPI, FeedAPIResponse} from './types'
 
 // HACK
 // the feed API does not include any facilities for passing down
@@ -26,19 +27,36 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 }
 
 export class HomeFeedAPI implements FeedAPI {
+  agent: BskyAgent
   following: FollowingFeedAPI
   discover: CustomFeedAPI
   usingDiscover = false
   itemCursor = 0
+  userInterests?: string
 
-  constructor() {
-    this.following = new FollowingFeedAPI()
-    this.discover = new CustomFeedAPI({feed: PROD_DEFAULT_FEED('whats-hot')})
+  constructor({
+    userInterests,
+    agent,
+  }: {
+    userInterests?: string
+    agent: BskyAgent
+  }) {
+    this.agent = agent
+    this.following = new FollowingFeedAPI({agent})
+    this.discover = new CustomFeedAPI({
+      agent,
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+    })
+    this.userInterests = userInterests
   }
 
   reset() {
-    this.following = new FollowingFeedAPI()
-    this.discover = new CustomFeedAPI({feed: PROD_DEFAULT_FEED('whats-hot')})
+    this.following = new FollowingFeedAPI({agent: this.agent})
+    this.discover = new CustomFeedAPI({
+      agent: this.agent,
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      userInterests: this.userInterests,
+    })
     this.usingDiscover = false
     this.itemCursor = 0
   }

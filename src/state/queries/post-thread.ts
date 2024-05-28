@@ -3,15 +3,17 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
+  ModerationDecision,
+  ModerationOpts,
 } from '@atproto/api'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
-import {precacheThreadPostProfiles} from './profile'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const RQKEY_ROOT = 'post-thread'
@@ -22,8 +24,6 @@ export interface ThreadCtx {
   depth: number
   isHighlightedPost?: boolean
   hasMore?: boolean
-  showChildReplyLine?: boolean
-  showParentReplyLine?: boolean
   isParentLoading?: boolean
   isChildLoading?: boolean
 }
@@ -64,17 +64,18 @@ export type ThreadNode =
   | ThreadBlocked
   | ThreadUnknown
 
+export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
+
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useQuery<ThreadNode, Error>({
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await getAgent().getPostThread({uri: uri!})
+      const res = await agent.getPostThread({uri: uri!})
       if (res.success) {
-        const nodes = responseToThreadNodes(res.data.thread)
-        precacheThreadPostProfiles(queryClient, nodes)
-        return nodes
+        return responseToThreadNodes(res.data.thread)
       }
       return {type: 'unknown', uri: uri!}
     },
@@ -94,9 +95,28 @@ export function usePostThreadQuery(uri: string | undefined) {
   })
 }
 
+export function fillThreadModerationCache(
+  cache: ThreadModerationCache,
+  node: ThreadNode,
+  moderationOpts: ModerationOpts,
+) {
+  if (node.type === 'post') {
+    cache.set(node, moderatePost(node.post, moderationOpts))
+    if (node.parent) {
+      fillThreadModerationCache(cache, node.parent, moderationOpts)
+    }
+    if (node.replies) {
+      for (const reply of node.replies) {
+        fillThreadModerationCache(cache, reply, moderationOpts)
+      }
+    }
+  }
+}
+
 export function sortThread(
   node: ThreadNode,
   opts: UsePreferencesQueryResponse['threadViewPrefs'],
+  modCache: ThreadModerationCache,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -119,6 +139,18 @@ export function sortThread(
       } else if (bIsByOp) {
         return 1 // op's own reply
       }
+
+      const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
+      const bBlur = Boolean(modCache.get(b)?.ui('contentList').blur)
+      if (aBlur !== bBlur) {
+        if (aBlur) {
+          return 1
+        }
+        if (bBlur) {
+          return -1
+        }
+      }
+
       if (opts.prioritizeFollowedUsers) {
         const af = a.post.author.viewer?.following
         const bf = b.post.author.viewer?.following
@@ -128,6 +160,7 @@ export function sortThread(
           return 1
         }
       }
+
       if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
       } else if (opts.sort === 'newest') {
@@ -143,7 +176,7 @@ export function sortThread(
       }
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
-    node.replies.forEach(reply => sortThread(reply, opts))
+    node.replies.forEach(reply => sortThread(reply, opts, modCache))
   }
   return node
 }
@@ -190,12 +223,6 @@ function responseToThreadNodes(
         isHighlightedPost: depth === 0,
         hasMore:
           direction === 'down' && !node.replies?.length && !!node.replyCount,
-        showChildReplyLine:
-          direction === 'up' ||
-          (direction === 'down' && !!node.replies?.length),
-        showParentReplyLine:
-          (direction === 'up' && !!node.parent) ||
-          (direction === 'down' && depth !== 1),
       },
     }
   } else if (AppBskyFeedDefs.isBlockedPost(node)) {
@@ -298,8 +325,6 @@ function threadNodeToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!node.record.reply,
       isChildLoading: !!node.post.replyCount,
     },
@@ -321,8 +346,6 @@ function postViewToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // assume yes (show the spinner) just in case
     },
@@ -344,8 +367,6 @@ function embedViewRecordToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!(record.value as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // not available, so assume yes (to show the spinner)
     },

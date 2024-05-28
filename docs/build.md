@@ -16,10 +16,6 @@
     - Add `eval "$(rbenv init - zsh)"` to your `~/.zshrc`
   - From inside the project directory:
     - `bundler install` (this will install Cocoapods)
-- Setup your environment [for e2e testing using detox](https://wix.github.io/Detox/docs/introduction/getting-started):
-  - `yarn global add detox-cli`
-  - `brew tap wix/brew`
-  - `brew install applesimutils`
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
@@ -120,10 +116,7 @@ To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-me
 
 ### Running E2E Tests
 
-- Make sure you've set your environment following the above
-- Make sure Metro and the dev server are running
-- Run `yarn e2e`
-- Find the artifacts in the `artifact` folder
+See [testing.md](./testing.md).
 
 ### Polyfills
 

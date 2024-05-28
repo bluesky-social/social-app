@@ -4,10 +4,9 @@ import {
   AppBskyActorDefs,
   AppBskyActorGetProfile,
   AppBskyActorProfile,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
   AtUri,
+  BskyAgent,
+  ComAtprotoRepoUploadBlob,
 } from '@atproto/api'
 import {
   QueryClient,
@@ -25,10 +24,10 @@ import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {updateProfileShadow} from '../cache/profile-shadow'
-import {getAgent, useSession} from '../session'
+import {useAgent, useSession} from '../session'
+import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-converations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
-import {ThreadNode} from './post-thread'
 
 const RQKEY_ROOT = 'profile'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
@@ -53,6 +52,7 @@ export function useProfileQuery({
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -62,7 +62,7 @@ export function useProfileQuery({
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did ?? ''),
     queryFn: async () => {
-      const res = await getAgent().getProfile({actor: did ?? ''})
+      const res = await agent.getProfile({actor: did ?? ''})
       return res.data
     },
     placeholderData: () => {
@@ -77,29 +77,31 @@ export function useProfileQuery({
 }
 
 export function useProfilesQuery({handles}: {handles: string[]}) {
+  const agent = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: profilesQueryKey(handles),
     queryFn: async () => {
-      const res = await getAgent().getProfiles({actors: handles})
+      const res = await agent.getProfiles({actors: handles})
       return res.data
     },
   })
 }
 
 export function usePrefetchProfileQuery() {
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
       await queryClient.prefetchQuery({
         queryKey: RQKEY(did),
         queryFn: async () => {
-          const res = await getAgent().getProfile({actor: did || ''})
+          const res = await agent.getProfile({actor: did || ''})
           return res.data
         },
       })
     },
-    [queryClient],
+    [queryClient, agent],
   )
   return prefetchProfileQuery
 }
@@ -115,6 +117,7 @@ interface ProfileUpdateParams {
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -123,7 +126,27 @@ export function useProfileUpdateMutation() {
       newUserBanner,
       checkCommitted,
     }) => {
-      await getAgent().upsertProfile(async existing => {
+      let newUserAvatarPromise:
+        | Promise<ComAtprotoRepoUploadBlob.Response>
+        | undefined
+      if (newUserAvatar) {
+        newUserAvatarPromise = uploadBlob(
+          agent,
+          newUserAvatar.path,
+          newUserAvatar.mime,
+        )
+      }
+      let newUserBannerPromise:
+        | Promise<ComAtprotoRepoUploadBlob.Response>
+        | undefined
+      if (newUserBanner) {
+        newUserBannerPromise = uploadBlob(
+          agent,
+          newUserBanner.path,
+          newUserBanner.mime,
+        )
+      }
+      await agent.upsertProfile(async existing => {
         existing = existing || {}
         if (typeof updates === 'function') {
           existing = updates(existing)
@@ -131,22 +154,14 @@ export function useProfileUpdateMutation() {
           existing.displayName = updates.displayName
           existing.description = updates.description
         }
-        if (newUserAvatar) {
-          const res = await uploadBlob(
-            getAgent(),
-            newUserAvatar.path,
-            newUserAvatar.mime,
-          )
+        if (newUserAvatarPromise) {
+          const res = await newUserAvatarPromise
           existing.avatar = res.data.blob
         } else if (newUserAvatar === null) {
           existing.avatar = undefined
         }
-        if (newUserBanner) {
-          const res = await uploadBlob(
-            getAgent(),
-            newUserBanner.path,
-            newUserBanner.mime,
-          )
+        if (newUserBannerPromise) {
+          const res = await newUserBannerPromise
           existing.banner = res.data.blob
         } else if (newUserBanner === null) {
           existing.banner = undefined
@@ -154,6 +169,7 @@ export function useProfileUpdateMutation() {
         return existing
       })
       await whenAppViewReady(
+        agent,
         profile.did,
         checkCommitted ||
           (res => {
@@ -255,6 +271,7 @@ function useProfileFollowMutation(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
   const {currentAccount} = useSession()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -270,7 +287,7 @@ function useProfileFollowMutation(
         followeeClout: toClout(profile.followersCount),
         followerClout: toClout(ownProfile?.followersCount),
       })
-      return await getAgent().follow(did)
+      return await agent.follow(did)
     },
     onSuccess(data, variables) {
       track('Profile:Follow', {username: variables.did})
@@ -281,11 +298,12 @@ function useProfileFollowMutation(
 function useProfileUnfollowMutation(
   logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
+  const agent = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       logEvent('profile:unfollow', {logContext})
       track('Profile:Unfollow', {username: followUri})
-      return await getAgent().deleteFollow(followUri)
+      return await agent.deleteFollow(followUri)
     },
   })
 }
@@ -341,9 +359,10 @@ export function useProfileMuteMutationQueue(
 
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      await getAgent().mute(did)
+      await agent.mute(did)
     },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
@@ -353,9 +372,10 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
+  const agent = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      await getAgent().unmute(did)
+      await agent.unmute(did)
     },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
@@ -395,6 +415,7 @@ export function useProfileBlockMutationQueue(
       updateProfileShadow(queryClient, did, {
         blockingUri: finalBlockingUri,
       })
+      queryClient.invalidateQueries({queryKey: RQKEY_LIST_CONVOS})
     },
   })
 
@@ -419,13 +440,14 @@ export function useProfileBlockMutationQueue(
 
 function useProfileBlockMutation() {
   const {currentAccount} = useSession()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      return await getAgent().app.bsky.graph.block.create(
+      return await agent.app.bsky.graph.block.create(
         {repo: currentAccount.did},
         {subject: did, createdAt: new Date().toISOString()},
       )
@@ -439,6 +461,7 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
   const {currentAccount} = useSession()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {
@@ -446,7 +469,7 @@ function useProfileUnblockMutation() {
         throw new Error('Not signed in')
       }
       const {rkey} = new AtUri(blockUri)
-      await getAgent().app.bsky.graph.block.delete({
+      await agent.app.bsky.graph.block.delete({
         repo: currentAccount.did,
         rkey,
       })
@@ -465,57 +488,8 @@ export function precacheProfile(
   queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
 }
 
-export function precacheFeedPostProfiles(
-  queryClient: QueryClient,
-  posts: AppBskyFeedDefs.FeedViewPost[],
-) {
-  for (const post of posts) {
-    // Save the author of the post every time
-    precacheProfile(queryClient, post.post.author)
-    precachePostEmbedProfile(queryClient, post.post.embed)
-
-    // Cache parent author and embeds
-    const parent = post.reply?.parent
-    if (AppBskyFeedDefs.isPostView(parent)) {
-      precacheProfile(queryClient, parent.author)
-      precachePostEmbedProfile(queryClient, parent.embed)
-    }
-  }
-}
-
-function precachePostEmbedProfile(
-  queryClient: QueryClient,
-  embed: AppBskyFeedDefs.PostView['embed'],
-) {
-  if (AppBskyEmbedRecord.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
-      precacheProfile(queryClient, embed.record.author)
-    }
-  } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
-    if (AppBskyEmbedRecord.isViewRecord(embed.record.record)) {
-      precacheProfile(queryClient, embed.record.record.author)
-    }
-  }
-}
-
-export function precacheThreadPostProfiles(
-  queryClient: QueryClient,
-  node: ThreadNode,
-) {
-  if (node.type === 'post') {
-    precacheProfile(queryClient, node.post.author)
-    if (node.parent) {
-      precacheThreadPostProfiles(queryClient, node.parent)
-    }
-    if (node.replies?.length) {
-      for (const reply of node.replies) {
-        precacheThreadPostProfiles(queryClient, reply)
-      }
-    }
-  }
-}
-
 async function whenAppViewReady(
+  agent: BskyAgent,
   actor: string,
   fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {
@@ -523,7 +497,7 @@ async function whenAppViewReady(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => getAgent().app.bsky.actor.getProfile({actor}),
+    () => agent.app.bsky.actor.getProfile({actor}),
   )
 }
 

@@ -2,24 +2,24 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
-import {getAgent} from '#/state/session'
+import {preferencesQueryKey} from '#/state/queries/preferences'
+import {RQKEY as profileRQKey} from '#/state/queries/profile'
+import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {uploadBlob} from 'lib/api'
 import {
   DescriptionText,
   OnboardingControls,
   TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
-import {
-  bulkWriteFollows,
-  sortPrimaryAlgorithmFeeds,
-} from '#/screens/Onboarding/util'
+import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
@@ -37,34 +37,39 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
-    const {
-      interestsStepResults,
-      suggestedAccountsStepResults,
-      algoFeedsStepResults,
-      topicalFeedsStepResults,
-    } = state
+    const {interestsStepResults, profileStepResults} = state
     const {selectedInterests} = interestsStepResults
-    const selectedFeeds = [
-      ...sortPrimaryAlgorithmFeeds(algoFeedsStepResults.feedUris),
-      ...topicalFeedsStepResults.feedUris,
-    ]
-
     try {
       await Promise.all([
-        bulkWriteFollows(
-          suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
-        ),
-        // these must be serial
+        bulkWriteFollows(agent, [BSKY_APP_ACCOUNT_DID]),
         (async () => {
-          await getAgent().setInterestsPref({tags: selectedInterests})
-          await saveFeeds({
-            saved: selectedFeeds,
-            pinned: selectedFeeds,
+          await agent.setInterestsPref({tags: selectedInterests})
+        })(),
+        (async () => {
+          const {imageUri, imageMime} = profileStepResults
+          if (imageUri && imageMime) {
+            const blobPromise = uploadBlob(agent, imageUri, imageMime)
+            await agent.upsertProfile(async existing => {
+              existing = existing ?? {}
+              const res = await blobPromise
+              if (res.data.blob) {
+                existing.avatar = res.data.blob
+              }
+              return existing
+            })
+          }
+          logEvent('onboarding:finished:avatarResult', {
+            avatarResult: profileStepResults.isCreatedAvatar
+              ? 'created'
+              : profileStepResults.image
+              ? 'uploaded'
+              : 'default',
           })
         })(),
       ])
@@ -74,13 +79,26 @@ export function StepFinished() {
       // don't alert the user, just let them into their account
     }
 
+    // Try to ensure that prefs and profile are up-to-date by the time we render Home.
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      }),
+      queryClient.invalidateQueries({
+        queryKey: profileRQKey(agent.session?.did ?? ''),
+      }),
+    ]).catch(e => {
+      logger.error(e)
+      // Keep going.
+    })
+
     setSaving(false)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
+  }, [state, dispatch, onboardDispatch, setSaving, track, agent, queryClient])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')

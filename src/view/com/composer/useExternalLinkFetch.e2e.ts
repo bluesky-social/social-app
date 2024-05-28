@@ -1,12 +1,14 @@
-import {useState, useEffect} from 'react'
+import {useEffect, useState} from 'react'
+
+import {useAgent} from '#/state/session'
 import * as apilib from 'lib/api/index'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
 import {ComposerOpts} from 'state/shell/composer'
-import {getAgent} from '#/state/session'
 
 export function useExternalLinkFetch({}: {
   setQuote: (opts: ComposerOpts['quote']) => void
 }) {
+  const agent = useAgent()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
@@ -20,7 +22,7 @@ export function useExternalLinkFetch({}: {
       return cleanup
     }
     if (!extLink.meta) {
-      getLinkMeta(getAgent(), extLink.uri).then(meta => {
+      getLinkMeta(agent, extLink.uri).then(meta => {
         if (aborted) {
           return
         }
@@ -39,7 +41,7 @@ export function useExternalLinkFetch({}: {
       })
     }
     return cleanup
-  }, [extLink])
+  }, [extLink, agent])
 
   return {extLink, setExtLink}
 }

@@ -12,18 +12,18 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {CommentBottomArrow, HeartIcon, HeartIconSolid} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
-import {pluralize} from '#/lib/strings/helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
 import {Shadow} from '#/state/cache/types'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useModalControls} from '#/state/modals'
 import {
   usePostLikeMutationQueue,
@@ -44,6 +44,7 @@ let PostCtrls = ({
   post,
   record,
   richText,
+  feedContext,
   style,
   onPressReply,
   logContext,
@@ -52,6 +53,7 @@ let PostCtrls = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
+  feedContext?: string | undefined
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
@@ -67,6 +69,7 @@ let PostCtrls = ({
   )
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
+  const {sendInteraction} = useFeedFeedbackContext()
   const playHaptic = useHaptics()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
@@ -86,6 +89,11 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.like) {
         playHaptic()
+        sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionLike',
+          feedContext,
+        })
         await queueLike()
       } else {
         await queueUnlike()
@@ -95,13 +103,26 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [playHaptic, post.viewer?.like, queueLike, queueUnlike])
+  }, [
+    playHaptic,
+    post.uri,
+    post.viewer?.like,
+    queueLike,
+    queueUnlike,
+    sendInteraction,
+    feedContext,
+  ])
 
   const onRepost = useCallback(async () => {
     closeModal()
     try {
       if (!post.viewer?.repost) {
         playHaptic()
+        sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionRepost',
+          feedContext,
+        })
         await queueRepost()
       } else {
         await queueUnrepost()
@@ -111,10 +132,24 @@ let PostCtrls = ({
         throw e
       }
     }
-  }, [closeModal, post.viewer?.repost, playHaptic, queueRepost, queueUnrepost])
+  }, [
+    closeModal,
+    post.uri,
+    post.viewer?.repost,
+    playHaptic,
+    queueRepost,
+    queueUnrepost,
+    sendInteraction,
+    feedContext,
+  ])
 
   const onQuote = useCallback(() => {
     closeModal()
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionQuote',
+      feedContext,
+    })
     openComposer({
       quote: {
         uri: post.uri,
@@ -134,6 +169,8 @@ let PostCtrls = ({
     post.indexedAt,
     record.text,
     playHaptic,
+    sendInteraction,
+    feedContext,
   ])
 
   const onShare = useCallback(() => {
@@ -141,7 +178,12 @@ let PostCtrls = ({
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
     shareUrl(url)
-  }, [post.uri, post.author])
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionShare',
+      feedContext,
+    })
+  }, [post.uri, post.author, sendInteraction, feedContext])
 
   return (
     <View style={[styles.ctrls, style]}>
@@ -159,9 +201,10 @@ let PostCtrls = ({
             }
           }}
           accessibilityRole="button"
-          accessibilityLabel={`Reply (${post.replyCount} ${
-            post.replyCount === 1 ? 'reply' : 'replies'
-          })`}
+          accessibilityLabel={plural(post.replyCount || 0, {
+            one: 'Reply (# reply)',
+            other: 'Reply (# replies)',
+          })}
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           <CommentBottomArrow
@@ -193,9 +236,17 @@ let PostCtrls = ({
             requireAuth(() => onPressToggleLike())
           }}
           accessibilityRole="button"
-          accessibilityLabel={`${
-            post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-          } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+          accessibilityLabel={
+            post.viewer?.like
+              ? plural(post.likeCount || 0, {
+                  one: 'Unlike (# like)',
+                  other: 'Unlike (# likes)',
+                })
+              : plural(post.likeCount || 0, {
+                  one: 'Like (# like)',
+                  other: 'Like (# likes)',
+                })
+          }
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           {post.viewer?.like ? (
@@ -260,6 +311,7 @@ let PostCtrls = ({
           postAuthor={post.author}
           postCid={post.cid}
           postUri={post.uri}
+          postFeedContext={feedContext}
           record={record}
           richText={richText}
           style={styles.btnPad}

@@ -11,7 +11,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
-import {getAgent, useSession, useSessionApi} from '#/state/session'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
@@ -30,7 +31,8 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {currentAccount} = useSession()
-  const {clearCurrentAccount, removeAccount} = useSessionApi()
+  const agent = useAgent()
+  const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -43,7 +45,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestAccountDelete()
+      await agent.com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -60,7 +62,17 @@ export function Component({}: {}) {
     const token = confirmCode.replace(/\s/g, '')
 
     try {
-      await getAgent().com.atproto.server.deleteAccount({
+      // inform chat service of intent to delete account
+      const {success} = await agent.api.chat.bsky.actor.deleteAccount(
+        undefined,
+        {
+          headers: DM_SERVICE_HEADERS,
+        },
+      )
+      if (!success) {
+        throw new Error('Failed to inform chat service of account deletion')
+      }
+      await agent.com.atproto.server.deleteAccount({
         did: currentAccount.did,
         password,
         token,
@@ -68,7 +80,6 @@ export function Component({}: {}) {
       Toast.show(_(msg`Your account has been deleted`))
       resetToTab('HomeTab')
       removeAccount(currentAccount)
-      clearCurrentAccount()
       closeModal()
     } catch (e: any) {
       setError(cleanError(e))
@@ -83,26 +94,26 @@ export function Component({}: {}) {
       <ScrollView style={[pal.view]} keyboardShouldPersistTaps="handled">
         <View style={[styles.titleContainer, pal.view]}>
           <Text type="title-xl" style={[s.textCenter, pal.text]}>
-            <Trans>Delete Account</Trans>
+            <Trans>
+              Delete Account{' '}
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                "
+              </Text>
+              <Text
+                type="title-xl"
+                numberOfLines={1}
+                style={[
+                  isMobile ? styles.titleMobile : styles.titleDesktop,
+                  pal.text,
+                  s.bold,
+                ]}>
+                {currentAccount?.handle}
+              </Text>
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                "
+              </Text>
+            </Trans>
           </Text>
-          <View style={[pal.view, s.flexRow]}>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {' "'}
-            </Text>
-            <Text
-              type="title-xl"
-              numberOfLines={1}
-              style={[
-                isMobile ? styles.titleMobile : styles.titleDesktop,
-                pal.text,
-                s.bold,
-              ]}>
-              {currentAccount?.handle}
-            </Text>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {'"'}
-            </Text>
-          </View>
         </View>
         {!isEmailSent ? (
           <>

@@ -1,5 +1,12 @@
 import React, {useImperativeHandle} from 'react'
-import {Dimensions, Pressable, View} from 'react-native'
+import {
+  Dimensions,
+  Keyboard,
+  Pressable,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
@@ -152,6 +159,12 @@ export function Outer({
     [open, close],
   )
 
+  React.useEffect(() => {
+    return () => {
+      setDialogIsOpen(control.id, false)
+    }
+  }, [control.id, setDialogIsOpen])
+
   const context = React.useMemo(() => ({close}), [close])
 
   return (
@@ -163,7 +176,8 @@ export function Outer({
           // Android
           importantForAccessibility="yes"
           style={[a.absolute, a.inset_0]}
-          testID={testID}>
+          testID={testID}
+          onTouchMove={() => Keyboard.dismiss()}>
           <BottomSheet
             enableDynamicSizing={!hasSnapPoints}
             enablePanDownToClose
@@ -207,7 +221,8 @@ export function Inner({children, style}: DialogInnerProps) {
   return (
     <BottomSheetView
       style={[
-        a.p_xl,
+        a.py_xl,
+        a.px_xl,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,
@@ -250,9 +265,10 @@ export const ScrollableInner = React.forwardRef<
 
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,
-  BottomSheetFlatListProps<any>
+  BottomSheetFlatListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
   const insets = useSafeAreaInsets()
+
   return (
     <BottomSheetFlatList
       keyboardShouldPersistTaps="handled"

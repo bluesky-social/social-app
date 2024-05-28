@@ -1,5 +1,5 @@
-import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
 import RNFS from 'react-native-fs'
+import {BskyAgent, jsonToLex, stringifyLex} from '@atproto/api'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
@@ -68,8 +68,10 @@ async function fetchHandler(
       resBody = jsonToLex(await res.json())
     } else if (resMimeType.startsWith('text/')) {
       resBody = await res.text()
+    } else if (resMimeType === 'application/vnd.ipld.car') {
+      resBody = await res.arrayBuffer()
     } else {
-      throw new Error('TODO: non-textual response body')
+      throw new Error('Non-supported mime type')
     }
   }
 

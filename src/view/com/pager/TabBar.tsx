@@ -1,11 +1,12 @@
-import React, {useRef, useMemo, useEffect, useState, useCallback} from 'react'
-import {StyleSheet, View, ScrollView, LayoutChangeEvent} from 'react-native'
-import {Text} from '../util/text/Text'
-import {PressableWithHover} from '../util/PressableWithHover'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+
+import {isNative} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {PressableWithHover} from '../util/PressableWithHover'
+import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
-import {isNative} from '#/platform/detection'
 
 export interface TabBarProps {
   testID?: string
@@ -139,7 +140,10 @@ export function TabBar({
                 <Text
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
-                  style={selected ? pal.text : pal.textLight}>
+                  style={[
+                    selected ? pal.text : pal.textLight,
+                    {lineHeight: 20},
+                  ]}>
                   {item}
                 </Text>
               </View>

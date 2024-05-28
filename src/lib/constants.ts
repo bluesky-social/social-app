@@ -1,14 +1,17 @@
 import {Insets, Platform} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const BSKY_SERVICE = 'https://bsky.social'
+export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
+export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -33,6 +36,8 @@ export const MAX_DESCRIPTION = 256
 
 export const MAX_GRAPHEME_LENGTH = 300
 
+export const MAX_DM_GRAPHEME_LENGTH = 1000
+
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 1000
@@ -42,7 +47,7 @@ export function IS_TEST_USER(handle?: string) {
 }
 
 export function IS_PROD_SERVICE(url?: string) {
-  return url && url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
+  return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
 }
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
@@ -88,6 +93,28 @@ export const BSKY_FEED_OWNER_DIDS = [
   BSKY_APP_ACCOUNT_DID,
   'did:plc:vpkhqolt662uhesyj6nxm7ys',
   'did:plc:q6gjnaw2blty4crticxkmujt',
+]
+
+export const DISCOVER_FEED_URI =
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+export const DISCOVER_SAVED_FEED = {
+  type: 'feed',
+  value: DISCOVER_FEED_URI,
+  pinned: true,
+}
+export const TIMELINE_SAVED_FEED = {
+  type: 'timeline',
+  value: 'following',
+  pinned: true,
+}
+
+export const RECOMMENDED_SAVED_FEEDS: Pick<
+  AppBskyActorDefs.SavedFeed,
+  'type' | 'value' | 'pinned'
+>[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
+
+export const KNOWN_SHUTDOWN_FEEDS = [
+  'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm', // for you by skygaze
 ]
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'

@@ -195,9 +195,8 @@ let ProfileMenu = ({
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    paddingVertical: 10,
+                    padding: 8,
                     borderRadius: 50,
-                    paddingHorizontal: 16,
                   },
                   pal.btn,
                 ]}>

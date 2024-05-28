@@ -95,7 +95,11 @@ function ProfileEndOfFeed() {
   const pal = usePalette('default')
 
   return (
-    <View style={[pal.border, {paddingTop: 32, borderTopWidth: 1}]}>
+    <View
+      style={[
+        pal.border,
+        {paddingTop: 32, paddingBottom: 32, borderTopWidth: 1},
+      ]}>
       <Text style={[pal.textLight, pal.border, {textAlign: 'center'}]}>
         <Trans>End of feed</Trans>
       </Text>

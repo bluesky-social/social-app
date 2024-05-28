@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	"github.com/bluesky-social/indigo/atproto/syntax"
 
 	"github.com/labstack/echo/v4"
 )
+
+// time.RFC822Z, but with four digit year. used for RSS pubData.
+var FullYearRFC822Z = "02 Jan 2006 15:04 -0700"
 
 type ItemGUID struct {
 	XMLName xml.Name `xml:"guid"`
@@ -107,7 +109,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		pubDate := ""
 		createdAt, err := syntax.ParseDatetimeLenient(rec.CreatedAt)
 		if nil == err {
-			pubDate = createdAt.Time().Format(time.RFC822Z)
+			pubDate = createdAt.Time().Format(FullYearRFC822Z)
 		}
 		posts = append(posts, Item{
 			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),

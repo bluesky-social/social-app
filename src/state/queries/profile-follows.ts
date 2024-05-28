@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -16,7 +16,17 @@ type RQPageParam = string | undefined
 const RQKEY_ROOT = 'profile-follows'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
-export function useProfileFollowsQuery(did: string | undefined) {
+export function useProfileFollowsQuery(
+  did: string | undefined,
+  {
+    limit,
+  }: {
+    limit?: number
+  } = {
+    limit: PAGE_SIZE,
+  },
+) {
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetFollows.OutputSchema,
     Error,
@@ -27,9 +37,9 @@ export function useProfileFollowsQuery(did: string | undefined) {
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getFollows({
+      const res = await agent.app.bsky.graph.getFollows({
         actor: did || '',
-        limit: PAGE_SIZE,
+        limit: limit || PAGE_SIZE,
         cursor: pageParam,
       })
       return res.data

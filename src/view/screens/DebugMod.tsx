@@ -20,12 +20,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
+import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
 import {FeedNotification} from '#/state/queries/notifications/types'
 import {
   groupNotifications,
   shouldFilterNotif,
 } from '#/state/queries/notifications/util'
-import {moderationOptsOverrideContext} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -803,13 +803,17 @@ function MockPostFeedItem({
       post={post}
       record={post.record as AppBskyFeedPost.Record}
       moderation={moderation}
+      parentAuthor={undefined}
+      showReplyTo={false}
       reason={undefined}
+      feedContext={''}
     />
   )
 }
 
 function MockPostThreadItem({
   post,
+  moderation,
   reply,
 }: {
   post: AppBskyFeedDefs.PostView
@@ -821,12 +825,14 @@ function MockPostThreadItem({
       // @ts-ignore
       post={post}
       record={post.record as AppBskyFeedPost.Record}
+      moderation={moderation}
       depth={reply ? 1 : 0}
       isHighlightedPost={!reply}
       treeView={false}
       prevPost={undefined}
       nextPost={undefined}
       hasPrecedingItem={false}
+      overrideBlur={false}
       onPostReply={() => {}}
     />
   )

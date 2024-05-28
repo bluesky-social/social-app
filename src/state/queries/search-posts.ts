@@ -6,7 +6,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
+import {useAgent} from '#/state/session'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
@@ -25,6 +25,7 @@ export function useSearchPostsQuery({
   sort?: 'top' | 'latest'
   enabled?: boolean
 }) {
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,
@@ -34,7 +35,7 @@ export function useSearchPostsQuery({
   >({
     queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.feed.searchPosts({
+      const res = await agent.app.bsky.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,

@@ -1,4 +1,5 @@
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
@@ -13,16 +14,19 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
+import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {getAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
+import {FeedDescriptor} from './post-feed'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
   uri: string
+  feedDescriptor: FeedDescriptor
   route: {
     href: string
     name: string
@@ -41,6 +45,7 @@ export type FeedSourceFeedInfo = {
 export type FeedSourceListInfo = {
   type: 'list'
   uri: string
+  feedDescriptor: FeedDescriptor
   route: {
     href: string
     name: string
@@ -79,6 +84,7 @@ export function hydrateFeedGenerator(
   return {
     type: 'feed',
     uri: view.uri,
+    feedDescriptor: `feedgen|${view.uri}`,
     cid: view.cid,
     route: {
       href,
@@ -110,6 +116,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
   return {
     type: 'list',
     uri: view.uri,
+    feedDescriptor: `list|${view.uri}`,
     route: {
       href,
       name: route[0],
@@ -140,6 +147,7 @@ export function getAvatarTypeFromUri(uri: string) {
 
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const type = getFeedTypeFromUri(uri)
+  const agent = useAgent()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -148,10 +156,10 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
       let view: FeedSourceInfo
 
       if (type === 'feed') {
-        const res = await getAgent().app.bsky.feed.getFeedGenerator({feed: uri})
+        const res = await agent.app.bsky.feed.getFeedGenerator({feed: uri})
         view = hydrateFeedGenerator(res.data.view)
       } else {
-        const res = await getAgent().app.bsky.graph.getList({
+        const res = await agent.app.bsky.graph.getList({
           list: uri,
           limit: 1,
         })
@@ -166,6 +174,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
 export function useGetPopularFeedsQuery() {
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
     Error,
@@ -175,7 +184,7 @@ export function useGetPopularFeedsQuery() {
   >({
     queryKey: useGetPopularFeedsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         cursor: pageParam,
       })
@@ -187,9 +196,10 @@ export function useGetPopularFeedsQuery() {
 }
 
 export function useSearchPopularFeedsMutation() {
+  const agent = useAgent()
   return useMutation({
     mutationFn: async (query: string) => {
-      const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
       })
@@ -199,27 +209,15 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const FOLLOWING_FEED_STUB: FeedSourceInfo = {
-  type: 'feed',
-  displayName: 'Following',
-  uri: '',
-  route: {
-    href: '/',
-    name: 'Home',
-    params: {},
-  },
-  cid: '',
-  avatar: '',
-  description: new RichText({text: ''}),
-  creatorDid: '',
-  creatorHandle: '',
-  likeCount: 0,
-  likeUri: '',
+export type SavedFeedSourceInfo = FeedSourceInfo & {
+  savedFeed: AppBskyActorDefs.SavedFeed
 }
-const DISCOVER_FEED_STUB: FeedSourceInfo = {
+
+const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
   type: 'feed',
   displayName: 'Discover',
-  uri: '',
+  uri: DISCOVER_FEED_URI,
+  feedDescriptor: `feedgen|${DISCOVER_FEED_URI}`,
   route: {
     href: '/',
     name: 'Home',
@@ -232,50 +230,58 @@ const DISCOVER_FEED_STUB: FeedSourceInfo = {
   creatorHandle: '',
   likeCount: 0,
   likeUri: '',
+  // ---
+  savedFeed: {
+    id: 'pwi-discover',
+    ...DISCOVER_SAVED_FEED,
+  },
 }
 
 const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
+  const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
-  const pinnedUris = preferences?.feeds?.pinned ?? []
+  const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 
   return useQuery({
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     queryKey: [
       pinnedFeedInfosQueryKeyRoot,
-      (hasSession ? 'authed:' : 'unauthed:') + pinnedUris.join(','),
+      (hasSession ? 'authed:' : 'unauthed:') +
+        pinnedItems.map(f => f.value).join(','),
     ],
     queryFn: async () => {
-      let resolved = new Map()
+      if (!hasSession) {
+        return [PWI_DISCOVER_FEED_STUB]
+      }
+
+      let resolved = new Map<string, FeedSourceInfo>()
 
       // Get all feeds. We can do this in a batch.
-      const feedUris = pinnedUris.filter(
-        uri => getFeedTypeFromUri(uri) === 'feed',
-      )
+      const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
       let feedsPromise = Promise.resolve()
-      if (feedUris.length > 0) {
-        feedsPromise = getAgent()
-          .app.bsky.feed.getFeedGenerators({
-            feeds: feedUris,
+      if (pinnedFeeds.length > 0) {
+        feedsPromise = agent.app.bsky.feed
+          .getFeedGenerators({
+            feeds: pinnedFeeds.map(f => f.value),
           })
           .then(res => {
-            for (let feedView of res.data.feeds) {
+            for (let i = 0; i < res.data.feeds.length; i++) {
+              const feedView = res.data.feeds[i]
               resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
             }
           })
       }
 
       // Get all lists. This currently has to be done individually.
-      const listUris = pinnedUris.filter(
-        uri => getFeedTypeFromUri(uri) === 'list',
-      )
-      const listsPromises = listUris.map(listUri =>
-        getAgent()
-          .app.bsky.graph.getList({
-            list: listUri,
+      const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
+      const listsPromises = pinnedLists.map(list =>
+        agent.app.bsky.graph
+          .getList({
+            list: list.value,
             limit: 1,
           })
           .then(res => {
@@ -284,12 +290,37 @@ export function usePinnedFeedsInfos() {
           }),
       )
 
-      // The returned result will have the original order.
-      const result = [hasSession ? FOLLOWING_FEED_STUB : DISCOVER_FEED_STUB]
       await Promise.allSettled([feedsPromise, ...listsPromises])
-      for (let pinnedUri of pinnedUris) {
-        if (resolved.has(pinnedUri)) {
-          result.push(resolved.get(pinnedUri))
+
+      // order the feeds/lists in the order they were pinned
+      const result: SavedFeedSourceInfo[] = []
+      for (let pinnedItem of pinnedItems) {
+        const feedInfo = resolved.get(pinnedItem.value)
+        if (feedInfo) {
+          result.push({
+            ...feedInfo,
+            savedFeed: pinnedItem,
+          })
+        } else if (pinnedItem.type === 'timeline') {
+          result.push({
+            type: 'feed',
+            displayName: 'Following',
+            uri: pinnedItem.value,
+            feedDescriptor: 'following',
+            route: {
+              href: '/',
+              name: 'Home',
+              params: {},
+            },
+            cid: '',
+            avatar: '',
+            description: new RichText({text: ''}),
+            creatorDid: '',
+            creatorHandle: '',
+            likeCount: 0,
+            likeUri: '',
+            savedFeed: pinnedItem,
+          })
         }
       }
       return result

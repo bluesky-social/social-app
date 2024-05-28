@@ -158,7 +158,7 @@ func serve(cctx *cli.Context) error {
 
 			// Cache javascript and images files for 1 week, which works because
 			// they're always versioned (e.g. /static/js/main.64c14927.js)
-			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") {
+			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/images/") || strings.HasPrefix(path, "/static/media/") {
 				maxAge = 7 * (60 * 60 * 24) // 1 week
 			}
 
@@ -200,6 +200,8 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/community-guidelines", server.WebGeneric)
 	e.GET("/support/copyright", server.WebGeneric)
 	e.GET("/intent/compose", server.WebGeneric)
+	e.GET("/messages", server.WebGeneric)
+	e.GET("/messages/:conversation", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)

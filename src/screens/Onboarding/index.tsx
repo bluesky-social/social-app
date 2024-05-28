@@ -1,22 +1,19 @@
 import React from 'react'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {Portal} from '#/components/Portal'
-
-import {Context, initialState, reducer} from '#/screens/Onboarding/state'
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
-import {StepInterests} from '#/screens/Onboarding/StepInterests'
-import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
-import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
-import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
-import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
+import {Context, initialState, reducer} from '#/screens/Onboarding/state'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
-import {StepModeration} from '#/screens/Onboarding/StepModeration'
+import {StepInterests} from '#/screens/Onboarding/StepInterests'
+import {StepProfile} from '#/screens/Onboarding/StepProfile'
+import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, {...initialState})
+  const [state, dispatch] = React.useReducer(reducer, {
+    ...initialState,
+  })
 
   const interestsDisplayNames = React.useMemo(() => {
     return {
@@ -54,14 +51,8 @@ export function Onboarding() {
             [state, dispatch, interestsDisplayNames],
           )}>
           <Layout>
+            {state.activeStep === 'profile' && <StepProfile />}
             {state.activeStep === 'interests' && <StepInterests />}
-            {state.activeStep === 'suggestedAccounts' && (
-              <StepSuggestedAccounts />
-            )}
-            {state.activeStep === 'followingFeed' && <StepFollowingFeed />}
-            {state.activeStep === 'algoFeeds' && <StepAlgoFeeds />}
-            {state.activeStep === 'topicalFeeds' && <StepTopicalFeeds />}
-            {state.activeStep === 'moderation' && <StepModeration />}
             {state.activeStep === 'finished' && <StepFinished />}
           </Layout>
         </Context.Provider>

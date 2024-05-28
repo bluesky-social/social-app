@@ -1,14 +1,15 @@
 import {AtUri} from '@atproto/api'
-import {BSKY_SERVICE} from 'lib/constants'
-import TLDs from 'tlds'
 import psl from 'psl'
+import TLDs from 'tlds'
+
+import {BSKY_SERVICE} from 'lib/constants'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
-  'bsky.app',
-  'bsky.social',
-  'blueskyweb.xyz',
-  'blueskyweb.zendesk.com',
+  'bsky\\.app',
+  'bsky\\.social',
+  'blueskyweb\\.xyz',
+  'blueskyweb\\.zendesk\\.com',
   ...(__DEV__ ? ['localhost:19006', 'localhost:8100'] : []),
 ]
 
@@ -143,6 +144,13 @@ export function isBskyListUrl(url: string): boolean {
     }
   }
   return false
+}
+
+export function isBskyDownloadUrl(url: string): boolean {
+  if (isExternalUrl(url)) {
+    return false
+  }
+  return url === '/download' || url.startsWith('/download?')
 }
 
 export function convertBskyAppUrlIfNeeded(url: string): string {

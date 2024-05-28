@@ -1,5 +1,6 @@
 import React from 'react'
-import {InterpretedLabelValueDefinition, AppBskyLabelerDefs} from '@atproto/api'
+import {AppBskyLabelerDefs, InterpretedLabelValueDefinition} from '@atproto/api'
+
 import {useLabelDefinitionsQuery} from '../queries/preferences'
 
 interface StateContext {
@@ -13,10 +14,7 @@ const stateContext = React.createContext<StateContext>({
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const {labelDefs, labelers} = useLabelDefinitionsQuery()
-
-  const state = {labelDefs, labelers}
-
+  const state = useLabelDefinitionsQuery()
   return <stateContext.Provider value={state}>{children}</stateContext.Provider>
 }
 
