@@ -7,3 +7,7 @@ export function NativeTranslationView() {
 }
 
 export const isAvailable = false
+
+export function isLanguageSupported(_lang?: string) {
+  return false
+}
