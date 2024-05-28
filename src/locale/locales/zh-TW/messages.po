@@ -3003,7 +3003,7 @@ msgstr "永遠不會失去對您的跟隨者或資料的存取權。"
 
 #: src/view/com/modals/ChangeHandle.tsx:515
 msgid "Nevermind, create a handle for me"
-msgstr "返回上一頁，為我建立一個帳號代碼"
+msgstr "不用了，為我建立一個帳號代碼"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
