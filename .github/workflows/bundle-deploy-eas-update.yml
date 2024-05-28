@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - hailey/improve-github-action-fingerprint
   workflow_dispatch:
     inputs:
       channel:
@@ -13,10 +14,12 @@ on:
         options:
           - testflight
           - production
+        default: production
       runtimeVersion:
         type: string
         description: Runtime version (in x.x.x format) that this update is for
         required: true
+        default: 1.72.0
 
 jobs:
   bundleDeploy:
