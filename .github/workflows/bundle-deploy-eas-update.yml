@@ -65,7 +65,7 @@ jobs:
         id: fingerprint
         uses: bluesky-social/github-actions/fingerprint-native@main
         with:
-          profile: ${{ inputs.channel }}
+          profile: ${{ inputs.channel || 'production' }}
           previous-commit-tag: 1.72.0
 
       - name: Lint check
