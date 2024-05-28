@@ -451,7 +451,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
     return (
       <>
         {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
-        {images && images?.length > 0 && (
+        {images && images.length > 0 && (
           <ImageHorzList images={images} style={styles.additionalPostImages} />
         )}
       </>

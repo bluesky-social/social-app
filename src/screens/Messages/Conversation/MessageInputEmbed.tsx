@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
 import {
+  AppBskyEmbedImages,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
   AppBskyRichtextFacet,
   AtUri,
@@ -20,6 +22,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuery} from '#/state/queries/post'
+import {ImageHorzList} from '#/view/com/util/images/ImageHorzList'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -155,6 +158,13 @@ export function MessageInputEmbed({
         return null
       }
 
+      const images = AppBskyEmbedImages.isView(post.embed)
+        ? post.embed.images
+        : AppBskyEmbedRecordWithMedia.isView(post.embed) &&
+          AppBskyEmbedImages.isView(post.embed.media)
+        ? post.embed.media.images
+        : undefined
+
       content = (
         <View
           style={[
@@ -189,6 +199,9 @@ export function MessageInputEmbed({
                   numberOfLines={3}
                 />
               </View>
+            )}
+            {images && images?.length > 0 && (
+              <ImageHorzList images={images} style={a.mt_xs} />
             )}
           </ContentHider>
         </View>
