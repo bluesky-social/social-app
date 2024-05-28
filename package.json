@@ -165,6 +165,7 @@
     "react-dom": "^18.2.0",
     "react-keyed-flatten-children": "^3.0.0",
     "react-native": "0.73.2",
+    "react-native-app-clip": "bluesky-social/react-native-app-clip",
     "react-native-date-picker": "^4.4.0",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-fs": "^2.20.0",
