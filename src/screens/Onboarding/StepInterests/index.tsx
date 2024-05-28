@@ -43,7 +43,7 @@ export function StepInterests() {
     state.interestsStepResults.selectedInterests.map(i => i),
   )
   const onboardDispatch = useOnboardingDispatch()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {isLoading, isError, error, data, refetch, isFetching} = useQuery({
     queryKey: ['interests'],
     queryFn: async () => {

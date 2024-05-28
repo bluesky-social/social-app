@@ -21,7 +21,7 @@ export function useMuteConvo(
   },
 ) {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({mute}: {mute: boolean}) => {

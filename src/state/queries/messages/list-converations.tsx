@@ -27,7 +27,7 @@ export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
 export function useListConvosQuery() {
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useInfiniteQuery({
     queryKey: RQKEY,

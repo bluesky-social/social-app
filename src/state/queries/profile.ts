@@ -52,7 +52,7 @@ export function useProfileQuery({
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
@@ -77,7 +77,7 @@ export function useProfileQuery({
 }
 
 export function useProfilesQuery({handles}: {handles: string[]}) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: profilesQueryKey(handles),
@@ -89,7 +89,7 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
 }
 
 export function usePrefetchProfileQuery() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
@@ -117,7 +117,7 @@ interface ProfileUpdateParams {
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, ProfileUpdateParams>({
     mutationFn: async ({
       profile,
@@ -271,7 +271,7 @@ function useProfileFollowMutation(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
 ) {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -298,7 +298,7 @@ function useProfileFollowMutation(
 function useProfileUnfollowMutation(
   logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       logEvent('profile:unfollow', {logContext})
@@ -359,7 +359,7 @@ export function useProfileMuteMutationQueue(
 
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await agent.mute(did)
@@ -372,7 +372,7 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await agent.unmute(did)
@@ -440,7 +440,7 @@ export function useProfileBlockMutationQueue(
 
 function useProfileBlockMutation() {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -461,7 +461,7 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {

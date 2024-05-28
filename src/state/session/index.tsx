@@ -268,10 +268,10 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): {agent: BskyAgent} {
+export function useAgent(): BskyAgent {
   const agent = React.useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')
   }
-  return React.useMemo(() => ({agent}), [agent])
+  return agent
 }

@@ -25,7 +25,7 @@ export function useSearchPostsQuery({
   sort?: 'top' | 'latest'
   enabled?: boolean
 }) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,

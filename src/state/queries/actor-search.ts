@@ -14,7 +14,7 @@ export function useActorSearch({
   query: string
   enabled?: boolean
 }) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyActorDefs.ProfileView[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(query || ''),

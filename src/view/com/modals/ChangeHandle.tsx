@@ -35,7 +35,7 @@ export type Props = {onChanged: () => void}
 
 export function Component(props: Props) {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {
     isLoading,
     data: serviceInfo,
@@ -71,7 +71,7 @@ export function Inner({
   const {closeModal} = useModalControls()
   const {mutateAsync: updateHandle, isPending: isUpdateHandlePending} =
     useUpdateHandleMutation()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const [error, setError] = useState<string>('')
 

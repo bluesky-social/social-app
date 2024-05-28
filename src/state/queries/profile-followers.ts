@@ -15,7 +15,7 @@ const RQKEY_ROOT = 'profile-followers'
 export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileFollowersQuery(did: string | undefined) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetFollowers.OutputSchema,
     Error,

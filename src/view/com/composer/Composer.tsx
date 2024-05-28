@@ -90,7 +90,7 @@ export const ComposePost = observer(function ComposePost({
   imageUris: initImageUris,
 }: Props) {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()

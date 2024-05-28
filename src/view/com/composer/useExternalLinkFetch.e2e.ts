@@ -8,7 +8,7 @@ import {ComposerOpts} from 'state/shell/composer'
 export function useExternalLinkFetch({}: {
   setQuote: (opts: ComposerOpts['quote']) => void
 }) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )

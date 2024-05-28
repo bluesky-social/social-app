@@ -102,7 +102,7 @@ function SubmitStep({
   const t = useTheme()
   const [details, setDetails] = useState('')
   const control = Dialog.useDialogContext()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const {
     mutate: submit,

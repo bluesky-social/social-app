@@ -24,7 +24,7 @@ export function Deactivated() {
   const {gtMobile} = useBreakpoints()
   const onboardingDispatch = useOnboardingDispatch()
   const {logout} = useSessionApi()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const [isProcessing, setProcessing] = React.useState(false)
   const [estimatedTime, setEstimatedTime] = React.useState<string | undefined>(

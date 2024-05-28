@@ -470,7 +470,7 @@ function ProfileScreenLoaded({
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
-  const {agent} = useAgent()
+  const agent = useAgent()
   const [prevText, setPrevText] = React.useState(text)
   const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)

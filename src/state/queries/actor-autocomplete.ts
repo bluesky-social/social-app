@@ -23,7 +23,7 @@ export function useActorAutocompleteQuery(
   limit?: number,
 ) {
   const moderationOpts = useModerationOpts()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   prefix = prefix.toLowerCase().trim()
   if (prefix.endsWith('.')) {
@@ -57,7 +57,7 @@ export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>
 export function useActorAutocompleteFn() {
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return React.useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {

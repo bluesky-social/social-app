@@ -66,7 +66,7 @@ function DialogInner() {
   const control = Dialog.useDialogContext()
   const [details, setDetails] = useState('')
   const {gtMobile} = useBreakpoints()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
 
   const {mutate, isPending} = useMutation({

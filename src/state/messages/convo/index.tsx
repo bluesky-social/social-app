@@ -58,7 +58,7 @@ export function ConvoProvider({
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const events = useMessagesEventBus()
   const [convo] = useState(
     () =>

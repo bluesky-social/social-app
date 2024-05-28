@@ -37,7 +37,7 @@ export const snapPoints = isAndroid ? ['90%'] : ['45%']
 export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.RequestCode)
   const [isProcessing, setIsProcessing] = useState<boolean>(false)

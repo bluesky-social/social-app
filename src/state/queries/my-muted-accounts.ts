@@ -13,7 +13,7 @@ export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyMutedAccountsQuery() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetMutes.OutputSchema,
     Error,

@@ -47,7 +47,7 @@ export function RQKEY() {
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()

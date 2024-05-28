@@ -41,7 +41,7 @@ export function Component({
   onSuccess?: () => void
 }) {
   const pal = usePalette('default')
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(

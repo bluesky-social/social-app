@@ -16,7 +16,7 @@ const RQKEY_ROOT = 'liked-by'
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function useLikedByQuery(resolvedUri: string | undefined) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetLikes.OutputSchema,
     Error,

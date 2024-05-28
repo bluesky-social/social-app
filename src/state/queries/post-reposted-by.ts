@@ -16,7 +16,7 @@ const RQKEY_ROOT = 'post-reposted-by'
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetRepostedBy.OutputSchema,
     Error,

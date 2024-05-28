@@ -62,7 +62,7 @@ export function Component({
   const {_} = useLingui()
   const listCreateMutation = useListCreateMutation()
   const listMetadataMutation = useListMetadataMutation()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const activePurpose = useMemo(() => {
     if (list?.purpose) {

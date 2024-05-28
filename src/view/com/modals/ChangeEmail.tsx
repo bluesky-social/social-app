@@ -27,7 +27,7 @@ export const snapPoints = ['90%']
 export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.InputEmail)
   const [email, setEmail] = useState<string>(currentAccount?.email || '')

@@ -31,7 +31,7 @@ export function useExternalLinkFetch({
   )
   const getPost = useGetPost()
   const fetchDid = useFetchDid()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   useEffect(() => {
     let aborted = false

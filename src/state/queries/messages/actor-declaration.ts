@@ -14,7 +14,7 @@ export function useUpdateActorDeclaration({
 }) {
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (allowIncoming: 'all' | 'none' | 'following') => {
@@ -64,7 +64,7 @@ export function useUpdateActorDeclaration({
 // for use in the settings screen for testing
 export function useDeleteActorDeclaration() {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async () => {

@@ -15,7 +15,7 @@ export function useProfileFeedgensQuery(
   opts?: {enabled?: boolean},
 ) {
   const enabled = opts?.enabled !== false
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetActorFeeds.OutputSchema,
     Error,

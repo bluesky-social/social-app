@@ -79,7 +79,7 @@ export function MessagesList({
   footer?: React.ReactNode
 }) {
   const convoState = useConvoActive()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const flatListRef = useAnimatedRef<FlatList>()
 

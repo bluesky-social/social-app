@@ -47,7 +47,7 @@ export function StepFinished() {
   const [saving, setSaving] = React.useState(false)
   const {mutateAsync: overwriteSavedFeeds} = useOverwriteSavedFeedsMutation()
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const gate = useGate()
 
   const finishOnboarding = React.useCallback(async () => {

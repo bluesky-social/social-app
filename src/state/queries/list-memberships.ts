@@ -40,7 +40,7 @@ export interface ListMembersip {
  */
 export function useDangerousListMembershipsQuery() {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery<ListMembersip[]>({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
@@ -92,7 +92,7 @@ export function getMembership(
 
 export function useListMembershipAddMutation() {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<
     {uri: string; cid: string},
@@ -151,7 +151,7 @@ export function useListMembershipAddMutation() {
 
 export function useListMembershipRemoveMutation() {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   return useMutation<
     void,

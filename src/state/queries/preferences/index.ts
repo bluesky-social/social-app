@@ -30,7 +30,7 @@ const preferencesQueryKeyRoot = 'getPreferences'
 export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: replaceEqualDeep,
@@ -73,7 +73,7 @@ export function usePreferencesQuery() {
 
 export function useClearPreferencesMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async () => {
@@ -87,7 +87,7 @@ export function useClearPreferencesMutation() {
 }
 
 export function usePreferencesSetContentLabelMutation() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
 
   return useMutation<
@@ -107,7 +107,7 @@ export function usePreferencesSetContentLabelMutation() {
 
 export function useSetContentLabelMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({
@@ -130,7 +130,7 @@ export function useSetContentLabelMutation() {
 
 export function usePreferencesSetAdultContentMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<void, unknown, {enabled: boolean}>({
     mutationFn: async ({enabled}) => {
@@ -145,7 +145,7 @@ export function usePreferencesSetAdultContentMutation() {
 
 export function usePreferencesSetBirthDateMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<void, unknown, {birthDate: Date}>({
     mutationFn: async ({birthDate}: {birthDate: Date}) => {
@@ -160,7 +160,7 @@ export function usePreferencesSetBirthDateMutation() {
 
 export function useSetFeedViewPreferencesMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
     mutationFn: async prefs => {
@@ -179,7 +179,7 @@ export function useSetFeedViewPreferencesMutation() {
 
 export function useSetThreadViewPreferencesMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<void, unknown, Partial<ThreadViewPreferences>>({
     mutationFn: async prefs => {
@@ -194,7 +194,7 @@ export function useSetThreadViewPreferencesMutation() {
 
 export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
     mutationFn: async savedFeeds => {
@@ -209,7 +209,7 @@ export function useOverwriteSavedFeedsMutation() {
 
 export function useAddSavedFeedsMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<
     void,
@@ -229,7 +229,7 @@ export function useAddSavedFeedsMutation() {
 
 export function useRemoveFeedMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
     mutationFn: async savedFeed => {
@@ -245,7 +245,7 @@ export function useRemoveFeedMutation() {
 
 export function useReplaceForYouWithDiscoverFeedMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({
@@ -284,7 +284,7 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
 
 export function useUpdateSavedFeedsMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
     mutationFn: async feeds => {
@@ -300,7 +300,7 @@ export function useUpdateSavedFeedsMutation() {
 
 export function useUpsertMutedWordsMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
@@ -315,7 +315,7 @@ export function useUpsertMutedWordsMutation() {
 
 export function useUpdateMutedWordMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
@@ -330,7 +330,7 @@ export function useUpdateMutedWordMutation() {
 
 export function useRemoveMutedWordMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {

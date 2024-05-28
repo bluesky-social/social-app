@@ -18,7 +18,7 @@ export function useGetConvoForMembers({
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (members: string[]) => {
@@ -44,7 +44,7 @@ export function useGetConvoForMembers({
  * Gets the conversation ID for a given DID. Returns null if it's not possible to message them.
  */
 export function useMaybeConvoForUser(did: string) {
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useQuery({
     queryKey: RQKEY(did),

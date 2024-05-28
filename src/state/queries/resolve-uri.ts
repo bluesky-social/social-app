@@ -24,7 +24,7 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useQuery<string, Error>({
     staleTime: STALE.HOURS.ONE,

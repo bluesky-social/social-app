@@ -8,7 +8,7 @@ const suggestedFeedsQueryKeyRoot = 'suggestedFeeds'
 export const suggestedFeedsQueryKey = [suggestedFeedsQueryKeyRoot]
 
 export function useSuggestedFeedsQuery() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetSuggestedFeeds.OutputSchema,
     Error,

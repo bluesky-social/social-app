@@ -47,7 +47,7 @@ async function getPushToken(skipPermissionCheck = false) {
 }
 
 export function useNotificationsRegistration() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
 
   React.useEffect(() => {

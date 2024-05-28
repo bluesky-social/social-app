@@ -11,7 +11,7 @@ const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
 export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useQuery({
     queryKey: RQKEY(convo.id),
@@ -30,7 +30,7 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
 export function useMarkAsReadMutation() {
   const optimisticUpdate = useOnMarkAsRead()
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({

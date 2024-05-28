@@ -25,7 +25,7 @@ const stateContext = React.createContext<StateContext>({
 })
 
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   const enabled = isDiscoverFeed(feed) && hasSession
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<

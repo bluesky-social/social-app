@@ -36,7 +36,7 @@ export function SubmitView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
   const [selectedServices, setSelectedServices] = React.useState<string[]>([

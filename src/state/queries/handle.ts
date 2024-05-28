@@ -14,7 +14,7 @@ const fetchDidQueryKey = (handleOrDid: string) => [didQueryKeyRoot, handleOrDid]
 
 export function useFetchHandle() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return React.useCallback(
     async (handleOrDid: string) => {
@@ -34,7 +34,7 @@ export function useFetchHandle() {
 
 export function useUpdateHandleMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
@@ -50,7 +50,7 @@ export function useUpdateHandleMutation() {
 
 export function useFetchDid() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return React.useCallback(
     async (handleOrDid: string) => {

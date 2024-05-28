@@ -36,7 +36,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const {
     data: serviceInfo,

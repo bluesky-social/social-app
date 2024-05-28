@@ -26,7 +26,7 @@ export function useProfileFollowsQuery(
     limit: PAGE_SIZE,
   },
 ) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetFollows.OutputSchema,
     Error,

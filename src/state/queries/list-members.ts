@@ -16,7 +16,7 @@ const RQKEY_ROOT = 'list-members'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListMembersQuery(uri: string) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetList.OutputSchema,
     Error,

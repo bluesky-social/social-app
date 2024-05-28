@@ -117,7 +117,7 @@ export function usePostFeedQuery(
       f => f.pinned && f.value === 'following',
     ) ?? -1
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
-  const {agent} = useAgent()
+  const agent = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs

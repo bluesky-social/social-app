@@ -31,7 +31,7 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()

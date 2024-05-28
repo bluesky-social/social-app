@@ -7,7 +7,7 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
   const [prevText, setPrevText] = React.useState(text)
   const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
-  const {agent} = useAgent()
+  const agent = useAgent()
   if (text !== prevText) {
     setPrevText(text)
     setRawRT(new RichTextAPI({text}))

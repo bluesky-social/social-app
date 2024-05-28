@@ -11,7 +11,7 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const enabled = opts?.enabled !== false
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetLists.OutputSchema,
     Error,

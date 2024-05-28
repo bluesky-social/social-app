@@ -8,7 +8,7 @@ const RQKEY_ROOT = 'app-passwords'
 export const RQKEY = () => [RQKEY_ROOT]
 
 export function useAppPasswordsQuery() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(),
@@ -21,7 +21,7 @@ export function useAppPasswordsQuery() {
 
 export function useAppPasswordCreateMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<
     ComAtprotoServerCreateAppPassword.OutputSchema,
     Error,
@@ -45,7 +45,7 @@ export function useAppPasswordCreateMutation() {
 
 export function useAppPasswordDeleteMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {name: string}>({
     mutationFn: async ({name}) => {
       await agent.com.atproto.server.revokeAppPassword({

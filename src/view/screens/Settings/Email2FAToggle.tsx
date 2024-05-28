@@ -13,7 +13,7 @@ export function Email2FAToggle() {
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
   const disableDialogCtrl = useDialogControl()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const enableEmailAuthFactor = React.useCallback(async () => {
     if (currentAccount?.email) {

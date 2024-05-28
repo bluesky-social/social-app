@@ -147,7 +147,7 @@ export function getAvatarTypeFromUri(uri: string) {
 
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const type = getFeedTypeFromUri(uri)
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -174,7 +174,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
 export function useGetPopularFeedsQuery() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
     Error,
@@ -196,7 +196,7 @@ export function useGetPopularFeedsQuery() {
 }
 
 export function useSearchPopularFeedsMutation() {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation({
     mutationFn: async (query: string) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
@@ -241,7 +241,7 @@ const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 

@@ -33,7 +33,7 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
 
 export function useSuggestedFollowsQuery() {
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
 
@@ -94,7 +94,7 @@ export function useSuggestedFollowsQuery() {
 }
 
 export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {

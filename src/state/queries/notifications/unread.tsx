@@ -45,7 +45,7 @@ const apiContext = React.createContext<ApiContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()

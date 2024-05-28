@@ -30,7 +30,7 @@ export function DisableEmail2FADialog({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const [stage, setStage] = useState<Stages>(Stages.Email)
   const [confirmationCode, setConfirmationCode] = useState<string>('')

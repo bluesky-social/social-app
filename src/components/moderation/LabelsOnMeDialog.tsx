@@ -202,7 +202,7 @@ function AppealForm({
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
-  const {agent} = useAgent()
+  const agent = useAgent()
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {

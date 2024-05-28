@@ -14,7 +14,7 @@ const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     async queryFn() {
@@ -31,7 +31,7 @@ export function usePostQuery(uri: string | undefined) {
 
 export function useGetPost() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
@@ -127,7 +127,7 @@ function usePostLikeMutation(
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const postAuthor = post.author
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
@@ -165,7 +165,7 @@ function usePostLikeMutation(
 function usePostUnlikeMutation(
   logContext: LogEvents['post:unlike']['logContext'],
 ) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({likeUri}) => {
       logEvent('post:unlike', {logContext})
@@ -238,7 +238,7 @@ export function usePostRepostMutationQueue(
 function usePostRepostMutation(
   logContext: LogEvents['post:repost']['logContext'],
 ) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
@@ -257,7 +257,7 @@ function usePostRepostMutation(
 function usePostUnrepostMutation(
   logContext: LogEvents['post:unrepost']['logContext'],
 ) {
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({repostUri}) => {
       logEvent('post:unrepost', {logContext})
@@ -271,7 +271,7 @@ function usePostUnrepostMutation(
 
 export function usePostDeleteMutation() {
   const queryClient = useQueryClient()
-  const {agent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
       await agent.deletePost(uri)

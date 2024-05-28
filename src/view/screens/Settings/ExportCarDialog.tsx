@@ -21,7 +21,7 @@ export function ExportCarDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {agent} = useAgent()
+  const agent = useAgent()
   const [loading, setLoading] = React.useState(false)
 
   const download = React.useCallback(async () => {
