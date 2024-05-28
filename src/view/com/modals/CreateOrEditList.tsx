@@ -62,7 +62,7 @@ export function Component({
   const {_} = useLingui()
   const listCreateMutation = useListCreateMutation()
   const listMetadataMutation = useListMetadataMutation()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const activePurpose = useMemo(() => {
     if (list?.purpose) {
@@ -157,7 +157,7 @@ export function Component({
         {cleanNewlines: true},
       )
 
-      await richText.detectFacets(getAgent())
+      await richText.detectFacets(agent)
       richText = shortenLinks(richText)
 
       // filter out any mention facets that didn't map to a user
@@ -229,7 +229,7 @@ export function Component({
     listMetadataMutation,
     listCreateMutation,
     _,
-    getAgent,
+    agent,
   ])
 
   return (
