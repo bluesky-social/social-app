@@ -6,10 +6,7 @@ import {
 
 import {until} from '#/lib/async/until'
 
-export async function bulkWriteFollows(
-  agent: BskyAgent,
-  dids: string[],
-) {
+export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
   const session = agent.session
 
   if (!session) {

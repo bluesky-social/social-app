@@ -98,15 +98,7 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [
-    state,
-    dispatch,
-    onboardDispatch,
-    setSaving,
-    track,
-    agent,
-    queryClient,
-  ])
+  }, [state, dispatch, onboardDispatch, setSaving, track, agent, queryClient])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')
