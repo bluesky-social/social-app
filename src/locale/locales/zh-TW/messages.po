@@ -3810,7 +3810,7 @@ msgstr "公開且可共享的批量靜音或封鎖列表。"
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr "公開且可共享的列表，可供驅動動態源。"
+msgstr "公開且可共享的列表，可作為動態源使用。"
 
 #: src/view/com/composer/Composer.tsx:420
 msgid "Publish post"
