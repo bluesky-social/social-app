@@ -1,5 +1,8 @@
 import SwiftUI
+// conditionally import the Translation module
+#if canImport(Translation)
 import Translation
+#endif
 
 struct TranslateView: View {
   @ObservedObject var state = TranslateViewState.shared
