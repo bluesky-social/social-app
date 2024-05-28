@@ -116,6 +116,18 @@ jobs:
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
 
+      - name: ⬇️ Restore Cache
+        id: get-base-commit
+        uses: actions/cache@v4
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        with:
+          path: most-recent-testflight-commit.txt
+          key: most-recent-testflight-commit
+
+      - name: ✏️ Write commit hash to cache
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+
   # GitHub actions are horrible so let's just copy paste this in
   buildIfNecessaryIOS:
     name: Build and Submit iOS
