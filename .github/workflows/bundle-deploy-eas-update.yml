@@ -12,9 +12,8 @@ on:
         type: choice
         description: Deployment channel to use
         options:
-          - testflight
           - production
-        default: production
+          - testflight
       runtimeVersion:
         type: string
         description: Runtime version (in x.x.x format) that this update is for
