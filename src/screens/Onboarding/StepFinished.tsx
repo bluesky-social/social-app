@@ -47,7 +47,7 @@ export function StepFinished() {
   const [saving, setSaving] = React.useState(false)
   const {mutateAsync: overwriteSavedFeeds} = useOverwriteSavedFeedsMutation()
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const gate = useGate()
 
   const finishOnboarding = React.useCallback(async () => {
@@ -70,12 +70,12 @@ export function StepFinished() {
     try {
       await Promise.all([
         bulkWriteFollows(
-          getAgent,
+          agent,
           suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
         ),
         // these must be serial
         (async () => {
-          await getAgent().setInterestsPref({tags: selectedInterests})
+          await agent.setInterestsPref({tags: selectedInterests})
 
           /*
            * In the reduced onboading experiment, we'll rely on the default
@@ -98,7 +98,7 @@ export function StepFinished() {
              * (mimics old behavior)
              */
             if (
-              IS_PROD_SERVICE(getAgent().service.toString()) &&
+              IS_PROD_SERVICE(agent.service.toString()) &&
               !otherFeeds.length
             ) {
               otherFeeds.push({
@@ -124,8 +124,8 @@ export function StepFinished() {
 
           const {imageUri, imageMime} = profileStepResults
           if (imageUri && imageMime) {
-            const blobPromise = uploadBlob(getAgent(), imageUri, imageMime)
-            await getAgent().upsertProfile(async existing => {
+            const blobPromise = uploadBlob(agent, imageUri, imageMime)
+            await agent.upsertProfile(async existing => {
               existing = existing ?? {}
               const res = await blobPromise
               if (res.data.blob) {
@@ -156,7 +156,7 @@ export function StepFinished() {
         queryKey: preferencesQueryKey,
       }),
       queryClient.invalidateQueries({
-        queryKey: profileRQKey(getAgent().session?.did ?? ''),
+        queryKey: profileRQKey(agent.session?.did ?? ''),
       }),
     ]).catch(e => {
       logger.error(e)
@@ -176,7 +176,7 @@ export function StepFinished() {
     setSaving,
     overwriteSavedFeeds,
     track,
-    getAgent,
+    agent,
     gate,
     queryClient,
   ])

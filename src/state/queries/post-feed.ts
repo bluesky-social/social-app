@@ -117,7 +117,7 @@ export function usePostFeedQuery(
       f => f.pinned && f.value === 'following',
     ) ?? -1
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -155,7 +155,7 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              getAgent,
+              agent,
               // Not in the query key because they don't change:
               userInterests,
               // Not in the query key. Reacting to it switching isn't important:
@@ -173,7 +173,7 @@ export function usePostFeedQuery(
          * moderations happen later, which results in some posts being shown and
          * some not.
          */
-        if (!getAgent().session) {
+        if (!agent.session) {
           assertSomePostsPassModeration(res.feed)
         }
 
@@ -397,50 +397,50 @@ function createApi({
   feedParams,
   feedTuners,
   userInterests,
-  getAgent,
+  agent,
   enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  getAgent: () => BskyAgent
+  agent: BskyAgent
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
-        getAgent,
+        agent,
         feedParams,
         feedTuners,
         userInterests,
       })
     } else {
       if (enableFollowingToDiscoverFallback) {
-        return new HomeFeedAPI({getAgent, userInterests})
+        return new HomeFeedAPI({agent, userInterests})
       } else {
-        return new FollowingFeedAPI({getAgent})
+        return new FollowingFeedAPI({agent})
       }
     }
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({getAgent, feedParams: {actor, filter}})
+    return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
     const [_, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({getAgent, feedParams: {actor}})
+    return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
-      getAgent,
+      agent,
       feedParams: {feed},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
-    return new ListFeedAPI({getAgent, feedParams: {list}})
+    return new ListFeedAPI({agent, feedParams: {list}})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI({getAgent})
+    return new FollowingFeedAPI({agent})
   }
 }
 

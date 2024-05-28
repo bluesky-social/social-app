@@ -31,7 +31,7 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
@@ -45,7 +45,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestAccountDelete()
+      await agent.com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -63,7 +63,7 @@ export function Component({}: {}) {
 
     try {
       // inform chat service of intent to delete account
-      const {success} = await getAgent().api.chat.bsky.actor.deleteAccount(
+      const {success} = await agent.api.chat.bsky.actor.deleteAccount(
         undefined,
         {
           headers: DM_SERVICE_HEADERS,
@@ -72,7 +72,7 @@ export function Component({}: {}) {
       if (!success) {
         throw new Error('Failed to inform chat service of account deletion')
       }
-      await getAgent().com.atproto.server.deleteAccount({
+      await agent.com.atproto.server.deleteAccount({
         did: currentAccount.did,
         password,
         token,

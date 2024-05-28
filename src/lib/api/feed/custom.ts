@@ -10,27 +10,27 @@ import {FeedAPI, FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
-  getAgent: () => BskyAgent
+  agent: BskyAgent
   params: GetCustomFeed.QueryParams
   userInterests?: string
 
   constructor({
-    getAgent,
+    agent,
     feedParams,
     userInterests,
   }: {
-    getAgent: () => BskyAgent
+    agent: BskyAgent
     feedParams: GetCustomFeed.QueryParams
     userInterests?: string
   }) {
-    this.getAgent = getAgent
+    this.agent = agent
     this.params = feedParams
     this.userInterests = userInterests
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await this.getAgent().app.bsky.feed.getFeed(
+    const res = await this.agent.app.bsky.feed.getFeed(
       {
         ...this.params,
         limit: 1,
@@ -48,11 +48,11 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-    const agent = this.getAgent()
+    const agent = this.agent
     const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
 
     const res = agent.session
-      ? await this.getAgent().app.bsky.feed.getFeed(
+      ? await this.agent.app.bsky.feed.getFeed(
           {
             ...this.params,
             cursor,

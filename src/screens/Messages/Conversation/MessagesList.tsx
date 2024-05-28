@@ -79,7 +79,7 @@ export function MessagesList({
   footer?: React.ReactNode
 }) {
   const convoState = useConvoActive()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const flatListRef = useAnimatedRef<FlatList>()
 
@@ -265,7 +265,7 @@ export function MessagesList({
   const onSendMessage = useCallback(
     async (text: string) => {
       let rt = new RichText({text}, {cleanNewlines: true})
-      await rt.detectFacets(getAgent())
+      await rt.detectFacets(agent)
       rt = shortenLinks(rt)
 
       // filter out any mention facets that didn't map to a user
@@ -288,7 +288,7 @@ export function MessagesList({
         facets: rt.facets,
       })
     },
-    [convoState, getAgent, hasScrolled, setHasScrolled],
+    [convoState, agent, hasScrolled, setHasScrolled],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)

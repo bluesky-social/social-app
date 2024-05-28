@@ -27,12 +27,12 @@ export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
 export function useListConvosQuery() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useInfiniteQuery({
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
-      const {data} = await getAgent().api.chat.bsky.convo.listConvos(
+      const {data} = await agent.api.chat.bsky.convo.listConvos(
         {cursor: pageParam},
         {headers: DM_SERVICE_HEADERS},
       )
