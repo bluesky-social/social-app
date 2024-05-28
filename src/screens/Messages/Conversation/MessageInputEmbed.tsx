@@ -96,9 +96,9 @@ export function MessageInputEmbed({
   setEmbed: (embedUrl: string | undefined) => void
 }) {
   const t = useTheme()
-  console.log('embedUri', embedUri)
-  const {data: post, status} = usePostQuery(embedUri)
   const {_} = useLingui()
+
+  const {data: post, status} = usePostQuery(embedUri)
 
   const moderationOpts = useModerationOpts()
   const moderation = useMemo(
