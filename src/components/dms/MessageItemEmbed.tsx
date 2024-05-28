@@ -60,7 +60,7 @@ let MessageItemEmbed = ({
   const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
 
   return (
-    <Link to={itemHref}>
+    <Link to={itemHref} style={a.mt_2xs}>
       <View
         style={[
           a.w_full,
