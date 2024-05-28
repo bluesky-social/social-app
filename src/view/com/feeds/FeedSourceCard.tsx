@@ -34,6 +34,7 @@ export function FeedSourceCard({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  noBorder,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
@@ -42,6 +43,7 @@ export function FeedSourceCard({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  noBorder?: boolean
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
@@ -57,6 +59,7 @@ export function FeedSourceCard({
       showLikes={showLikes}
       pinOnSave={pinOnSave}
       showMinimalPlaceholder={showMinimalPlaceholder}
+      noBorder={noBorder}
     />
   )
 }
@@ -71,6 +74,7 @@ export function FeedSourceCardLoaded({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  noBorder,
 }: {
   feedUri: string
   feed?: FeedSourceInfo
@@ -81,6 +85,7 @@ export function FeedSourceCardLoaded({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  noBorder?: boolean
 }) {
   const t = useTheme()
   const pal = usePalette('default')
@@ -149,7 +154,7 @@ export function FeedSourceCardLoaded({
         style={[
           pal.border,
           {
-            borderTopWidth: showMinimalPlaceholder ? 0 : 1,
+            borderTopWidth: showMinimalPlaceholder || noBorder ? 0 : 1,
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,
@@ -191,7 +196,12 @@ export function FeedSourceCardLoaded({
       <Pressable
         testID={`feed-${feed.displayName}`}
         accessibilityRole="button"
-        style={[styles.container, pal.border, style]}
+        style={[
+          styles.container,
+          !noBorder && styles.border,
+          pal.border,
+          style,
+        ]}
         onPress={() => {
           if (feed.type === 'feed') {
             navigation.push('ProfileFeed', {
@@ -295,8 +305,10 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     flexDirection: 'column',
     flex: 1,
-    borderTopWidth: 1,
     gap: 14,
+  },
+  border: {
+    borderTopWidth: 1,
   },
   headerContainer: {
     flexDirection: 'row',
