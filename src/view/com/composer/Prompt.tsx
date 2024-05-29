@@ -1,58 +1,51 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
-import {UserAvatar} from '../util/UserAvatar'
-import {Text} from '../util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans, msg} from '@lingui/macro'
+import {TouchableOpacity, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
+
 import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {atoms as a, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
+import {UserAvatar} from '../util/UserAvatar'
 
 export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
+  const t = useTheme()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const {isDesktop} = useWebMediaQueries()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   return (
     <TouchableOpacity
       testID="replyPromptBtn"
-      style={[pal.view, pal.border, styles.prompt]}
+      style={[
+        isTabletOrDesktop ? a.p_md : a.p_sm,
+        a.border_t,
+        t.atoms.border_contrast_medium,
+        t.atoms.bg,
+      ]}
       onPress={() => onPressCompose()}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Compose reply`)}
-      accessibilityHint={_(msg`Opens composer`)}>
-      <UserAvatar
-        avatar={profile?.avatar}
-        size={38}
-        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-      />
-      <Text
-        type="xl"
+      accessibilityHint={_(msg`Opens composer`)}
+      activeOpacity={0.925}>
+      <View
         style={[
-          pal.text,
-          isDesktop ? styles.labelDesktopWeb : styles.labelMobile,
+          a.flex_row,
+          a.align_center,
+          a.gap_sm,
+          !isTabletOrDesktop && a.mb_xs,
         ]}>
-        <Trans>Write your reply</Trans>
-      </Text>
+        <UserAvatar
+          avatar={profile?.avatar}
+          size={isTabletOrDesktop ? 36 : 28}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        />
+        <Text style={[a.text_md, t.atoms.text_contrast_high]}>
+          <Trans>Write your reply</Trans>
+        </Text>
+      </View>
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  prompt: {
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderTopWidth: 1,
-  },
-  labelMobile: {
-    paddingLeft: 12,
-  },
-  labelDesktopWeb: {
-    paddingLeft: 12,
-  },
-})
