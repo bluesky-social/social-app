@@ -1,5 +1,5 @@
 # Remove this test when the old onboarding is deprecated
-appId: xyz.blueskyweb.app
+appId: xyz.blueskyweb.app.dev
 ---
 - runScript:
     file: ../setupServer.js
