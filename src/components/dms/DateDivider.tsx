@@ -42,7 +42,15 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
           {top: '50%', left: 0, right: 0},
         ]}
       />
-      <Text style={[a.text_center, t.atoms.bg, a.px_md]}>{display}</Text>
+      <Text
+        style={[
+          a.text_center,
+          t.atoms.bg,
+          t.atoms.text_contrast_medium,
+          a.px_md,
+        ]}>
+        {display}
+      </Text>
     </View>
   )
 }
