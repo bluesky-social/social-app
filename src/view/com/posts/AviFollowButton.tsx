@@ -15,6 +15,7 @@ import {
   DropdownItem,
   NativeDropdown,
 } from '#/view/com/util/forms/NativeDropdown'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useFollowMethods} from '#/components/hooks/useFollowMethods'
@@ -53,7 +54,8 @@ export function AviFollowButton({
   const onPress = useCallback(() => {
     follow()
     setFollowed(profile.did)
-  }, [follow, profile.did])
+    Toast.show(_(msg`Following ${name}`))
+  }, [follow, profile.did, _, name])
 
   const items: DropdownItem[] = [
     {
