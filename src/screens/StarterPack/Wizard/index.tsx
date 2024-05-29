@@ -23,11 +23,18 @@ export function Wizard() {
 function WizardInner() {
   const {_} = useLingui()
   const bottomOffset = useBottomBarOffset()
-  const [__, dispatch] = useWizardState()
+  const [state, dispatch] = useWizardState()
 
   return (
     <CenteredView style={[a.flex_1, {marginBottom: bottomOffset + 20}]}>
-      <ViewHeader title="Create a starter pack" />
+      <ViewHeader
+        title="Create a starter pack"
+        onBackPress={
+          state.currentStep !== 'Landing'
+            ? () => dispatch({type: 'Back'})
+            : undefined
+        }
+      />
       <ScrollView style={[a.flex_1]} contentContainerStyle={[a.flex_1]}>
         <Step />
       </ScrollView>
