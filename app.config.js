@@ -33,7 +33,7 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: IS_DEV ? 'Bluesky Dev' : 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
@@ -45,7 +45,9 @@ module.exports = function (_config) {
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: IS_DEV
+          ? 'xyz.blueskyweb.app.dev'
+          : 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -148,8 +150,10 @@ module.exports = function (_config) {
           backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
-        googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        googleServicesFile: IS_DEV
+          ? './google-services-dev.json'
+          : './google-services.json',
+        package: IS_DEV ? 'xyz.blueskyweb.app.dev' : 'xyz.blueskyweb.app',
         intentFilters: [
           {
             action: 'VIEW',
