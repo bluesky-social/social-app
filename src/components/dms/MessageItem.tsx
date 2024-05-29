@@ -130,7 +130,7 @@ let MessageItemMetadata = ({
   style: StyleProp<TextStyle>
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {message} = item
 
   const handleRetry = useCallback(
@@ -149,10 +149,10 @@ let MessageItemMetadata = ({
       const date = new Date(timestamp)
       const now = new Date()
 
-      const time = new Intl.DateTimeFormat(undefined, {
+      const time = i18n.date(date, {
         hour: 'numeric',
         minute: 'numeric',
-      }).format(date)
+      })
 
       const diff = now.getTime() - date.getTime()
 
@@ -174,15 +174,15 @@ let MessageItemMetadata = ({
         return _(msg`Yesterday, ${time}`)
       }
 
-      return new Intl.DateTimeFormat(undefined, {
+      return i18n.date(date, {
         hour: 'numeric',
         minute: 'numeric',
         day: 'numeric',
         month: 'numeric',
         year: 'numeric',
-      }).format(date)
+      })
     },
-    [_],
+    [_, i18n],
   )
 
   return (
