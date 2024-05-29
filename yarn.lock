@@ -18927,10 +18927,10 @@ react-native-progress@bluesky-social/react-native-progress:
   dependencies:
     prop-types "^15.7.2"
 
-react-native-reanimated@^3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.11.0.tgz#d4265d4e0232623f5958ed60e1686ca884fc3452"
-  integrity sha512-BNw/XDgUfs8UhfY1X6IniU8kWpnotWGyt8qmQviaHisTi5lvwnaOdXQKfN1KGONx6ekdFRHRP5EFwLi0UajwKA==
+react-native-reanimated@3.12.0-nightly-20240510-325bd18fb:
+  version "3.12.0-nightly-20240510-325bd18fb"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.12.0-nightly-20240510-325bd18fb.tgz#921318a5675b84ae04719e0feb1c7256a1963a26"
+  integrity sha512-MoZ/Vv6Sc5SZKJewmHuBWIZk886d7G9qU+Ac9LqqA9l5nzhoGTnnb38qbczJTAho8ZNZqOfr4U/j40Oqfd4MZg==
   dependencies:
     "@babel/plugin-transform-arrow-functions" "^7.0.0-0"
     "@babel/plugin-transform-nullish-coalescing-operator" "^7.0.0-0"
