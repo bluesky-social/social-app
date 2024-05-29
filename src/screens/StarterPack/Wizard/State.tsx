@@ -23,17 +23,14 @@ interface State {
   avatar?: string
 }
 
-interface IStateContext {
-  dispatch: (state: State, action: Action) => void
-  state: State
-}
+type TStateContext = [State, (state: State, action: Action) => void]
 
-const StateContext = React.createContext<IStateContext>({
-  dispatch: (_: State, _: Action) => {},
-  state: {
+const StateContext = React.createContext<TStateContext>([
+  {
     currentStep: 'Landing',
   },
-})
+  (_: State, _: Action) => {},
+])
 export const useWizardState = () => React.useContext(StateContext)
 
 function reducer(state: State, action: Action): State {
@@ -63,12 +60,12 @@ function reducer(state: State, action: Action): State {
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, dispatch] = React.useReducer(reducer, {
+  const stateAndReducer = React.useReducer(reducer, {
     currentStep: 'Landing',
   })
 
   return (
-    <StateContext.Provider value={{state, dispatch}}>
+    <StateContext.Provider value={stateAndReducer}>
       {children}
     </StateContext.Provider>
   )
