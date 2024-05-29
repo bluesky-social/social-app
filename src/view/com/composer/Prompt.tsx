@@ -34,15 +34,14 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
         style={[
           a.flex_row,
           a.align_center,
-          a.gap_sm,
-          !isTabletOrDesktop && a.mb_xs,
+          isTabletOrDesktop ? [a.gap_md] : [a.gap_sm, a.mb_xs],
         ]}>
         <UserAvatar
           avatar={profile?.avatar}
           size={isTabletOrDesktop ? 36 : 28}
           type={profile?.associated?.labeler ? 'labeler' : 'user'}
         />
-        <Text style={[a.text_md, t.atoms.text_contrast_high]}>
+        <Text style={[{fontSize: isTabletOrDesktop ? 18 : 16}]}>
           <Trans>Write your reply</Trans>
         </Text>
       </View>
