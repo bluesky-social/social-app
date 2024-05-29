@@ -222,9 +222,7 @@ module.exports = function (config) {
               ios: {
                 appExtensions: [
                   {
-                    targetName: IS_DEV
-                      ? 'Share-with-Bluesky-Dev'
-                      : 'Share-with-Bluesky',
+                    targetName: 'Share-with-Bluesky',
                     bundleIdentifier: IS_DEV
                       ? 'dev.xyz.blueskyweb.app.Share-with-Bluesky'
                       : 'xyz.blueskyweb.app.Share-with-Bluesky',
@@ -235,7 +233,7 @@ module.exports = function (config) {
                     },
                   },
                   {
-                    targetName: 'BlueskyNSE-Dev',
+                    targetName: 'BlueskyNSE',
                     bundleIdentifier: IS_DEV
                       ? 'dev.xyz.blueskyweb.app.BlueskyNSE'
                       : 'xyz.blueskyweb.app.BlueskyNSE',
