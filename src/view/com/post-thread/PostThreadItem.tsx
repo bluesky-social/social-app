@@ -165,7 +165,7 @@ let PostThreadItemLoaded = ({
   onPostReply: () => void
 }): React.ReactNode => {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = React.useState(
@@ -339,7 +339,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.repostCount)}
+                        {formatCount(i18n, post.repostCount)}
                       </Text>{' '}
                       <Plural
                         value={post.repostCount}
@@ -359,7 +359,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
+                        {formatCount(i18n, post.likeCount)}
                       </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
                     </Text>

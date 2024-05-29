@@ -33,7 +33,7 @@ import {colors, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {isWeb} from 'platform/detection'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {formatCountShortOnly} from 'view/com/util/numeric/format'
+import {formatCount} from 'view/com/util/numeric/format'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useTheme as useAlfTheme} from '#/alf'
@@ -68,7 +68,7 @@ let DrawerProfileCard = ({
   account: SessionAccount
   onPressProfile: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const pal = usePalette('default')
   const {data: profile} = useProfileQuery({did: account.did})
 
@@ -100,7 +100,7 @@ let DrawerProfileCard = ({
       <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
         <Trans>
           <Text type="xl-medium" style={pal.text}>
-            {formatCountShortOnly(profile?.followersCount ?? 0)}
+            {formatCount(i18n, profile?.followersCount ?? 0)}
           </Text>{' '}
           <Plural
             value={profile?.followersCount || 0}
@@ -111,7 +111,7 @@ let DrawerProfileCard = ({
         &middot;{' '}
         <Trans>
           <Text type="xl-medium" style={pal.text}>
-            {formatCountShortOnly(profile?.followsCount ?? 0)}
+            {formatCount(i18n, profile?.followsCount ?? 0)}
           </Text>{' '}
           <Plural
             value={profile?.followsCount || 0}
