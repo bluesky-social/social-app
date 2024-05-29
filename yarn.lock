@@ -3113,7 +3113,7 @@
 
 "@discord/bottom-sheet@bluesky-social/react-native-bottom-sheet":
   version "4.6.1"
-  resolved "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/3232c7cd9b966dd977c849a360fa853f88dcf3ca"
+  resolved "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908"
   dependencies:
     "@gorhom/portal" "1.0.14"
     invariant "^2.2.4"
