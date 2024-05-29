@@ -41,7 +41,7 @@ export const RepostButton = ({
   )
 
   return hasSession ? (
-    <EventStopper>
+    <EventStopper onKeyDown={false}>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Repost or quote post`)}>
           {({props, state}) => {
