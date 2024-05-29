@@ -95,9 +95,9 @@ export function AviFollowButton({
             t.atoms.bg_contrast_975,
             a.absolute,
             {
-              bottom: -4,
+              bottom: -2,
               right: -2,
-              borderWidth: 2,
+              borderWidth: 1,
               borderColor: t.atoms.bg.backgroundColor,
             },
           ]}>
