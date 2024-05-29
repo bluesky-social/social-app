@@ -204,6 +204,7 @@ module.exports = function (config) {
         ],
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
+        './plugins/withAndroidManifestLaunchModePlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
