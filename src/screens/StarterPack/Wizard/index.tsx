@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
+import {CenteredView, ScrollView} from 'view/com/util/Views'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {atoms as a} from '#/alf'
@@ -28,7 +28,9 @@ function WizardInner() {
   return (
     <CenteredView style={[a.flex_1, {marginBottom: bottomOffset + 20}]}>
       <ViewHeader title="Create a starter pack" />
-      <Step />
+      <ScrollView style={[a.flex_1]} contentContainerStyle={[a.flex_1]}>
+        <Step />
+      </ScrollView>
       <View style={a.px_md}>
         <Button
           label={_(msg`Create`)}
