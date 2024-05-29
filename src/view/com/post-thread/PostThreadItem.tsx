@@ -408,7 +408,8 @@ let PostThreadItemLoaded = ({
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
             }
-            profile={post.author}>
+            profile={post.author}
+            interpretFilterAsBlur>
             <View
               style={{
                 flexDirection: 'row',
