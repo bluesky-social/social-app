@@ -69,7 +69,7 @@ module.exports = function (config) {
       ios: {
         supportsTablet: false,
         bundleIdentifier: IS_DEV
-          ? 'xyz.blueskyweb.app.dev'
+          ? 'dev.xyz.blueskyweb.app'
           : 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
@@ -137,7 +137,7 @@ module.exports = function (config) {
         googleServicesFile: IS_DEV
           ? './google-services-dev.json'
           : './google-services.json',
-        package: IS_DEV ? 'xyz.blueskyweb.app.dev' : 'xyz.blueskyweb.app',
+        package: IS_DEV ? 'dev.xyz.blueskyweb.app' : 'xyz.blueskyweb.app',
         intentFilters: [
           {
             action: 'VIEW',
@@ -226,7 +226,7 @@ module.exports = function (config) {
                       ? 'Share-with-Bluesky-Dev'
                       : 'Share-with-Bluesky',
                     bundleIdentifier: IS_DEV
-                      ? 'xyz.blueskyweb.app.dev.Share-with-Bluesky'
+                      ? 'dev.xyz.blueskyweb.app.Share-with-Bluesky'
                       : 'xyz.blueskyweb.app.Share-with-Bluesky',
                     entitlements: {
                       'com.apple.security.application-groups': [
@@ -237,7 +237,7 @@ module.exports = function (config) {
                   {
                     targetName: 'BlueskyNSE-Dev',
                     bundleIdentifier: IS_DEV
-                      ? 'xyz.blueskyweb.app.dev.BlueskyNSE'
+                      ? 'dev.xyz.blueskyweb.app.BlueskyNSE'
                       : 'xyz.blueskyweb.app.BlueskyNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
