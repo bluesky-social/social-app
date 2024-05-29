@@ -43,11 +43,11 @@ export function MessagesEventBusProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const [bus] = React.useState(
     () =>
       new MessagesEventBus({
-        agent: getAgent(),
+        agent,
       }),
   )
 

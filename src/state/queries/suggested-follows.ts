@@ -33,7 +33,7 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
 
 export function useSuggestedFollowsQuery() {
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
 
@@ -49,7 +49,7 @@ export function useSuggestedFollowsQuery() {
     queryKey: suggestedFollowsQueryKey,
     queryFn: async ({pageParam}) => {
       const contentLangs = getContentLanguages().join(',')
-      const res = await getAgent().app.bsky.actor.getSuggestions(
+      const res = await agent.app.bsky.actor.getSuggestions(
         {
           limit: 25,
           cursor: pageParam,
@@ -94,11 +94,11 @@ export function useSuggestedFollowsQuery() {
 }
 
 export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.graph.getSuggestedFollowsByActor({
+      const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
         actor: did,
       })
       return res.data
