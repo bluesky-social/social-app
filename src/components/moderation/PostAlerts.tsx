@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationCause, ModerationUI} from '@atproto/api'
+import {BSKY_LABELER_DID, ModerationCause, ModerationUI} from '@atproto/api'
 
 import {getModerationCauseKey} from '#/lib/moderation'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
@@ -85,7 +85,8 @@ function PostLabel({
                 ? {paddingLeft: 4, paddingRight: 6, paddingVertical: 2}
                 : {paddingRight: 4, paddingVertical: 1},
             ]}>
-            {desc.sourceType === 'labeler' && !desc.sourceIsBskyModeration ? (
+            {desc.sourceType === 'labeler' &&
+            desc.sourceDid !== BSKY_LABELER_DID ? (
               <UserAvatar
                 avatar={desc.sourceAvi}
                 size={size === 'large' ? 16 : 12}

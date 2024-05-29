@@ -23,7 +23,7 @@ export interface ModerationCauseDescription {
   source?: string
   sourceType?: ModerationCauseSource['type']
   sourceAvi?: string
-  sourceIsBskyModeration?: boolean
+  sourceDid?: string
 }
 
 export function useModerationCauseDescription(
@@ -141,7 +141,7 @@ export function useModerationCauseDescription(
         source,
         sourceType: cause.source.type,
         sourceAvi: labeler?.creator.avatar,
-        sourceIsBskyModeration: cause.label.src === BSKY_LABELER_DID,
+        sourceDid: cause.label.src,
       }
     }
     // should never happen
