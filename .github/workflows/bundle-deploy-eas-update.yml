@@ -170,6 +170,10 @@ jobs:
       - name: ⚙️ Install dependencies
         run: yarn install
 
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.3'
+
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
         with:
