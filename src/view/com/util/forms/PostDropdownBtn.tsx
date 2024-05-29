@@ -50,6 +50,11 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {
+  isAvailable as isNativeTranslationAvailable,
+  isLanguageSupported,
+  NativeTranslationModule,
+} from '../../../../../modules/expo-bluesky-translate'
 import {EventStopper} from '../EventStopper'
 import * as Toast from '../Toast'
 
@@ -172,9 +177,17 @@ let PostDropdownBtn = ({
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
-  const onOpenTranslate = React.useCallback(() => {
-    openLink(translatorUrl)
-  }, [openLink, translatorUrl])
+  const onPressTranslate = React.useCallback(() => {
+    if (
+      isNativeTranslationAvailable &&
+      isLanguageSupported(record?.langs?.at(0))
+    ) {
+      const text = richTextToString(richText, true)
+      NativeTranslationModule.presentAsync(text)
+    } else {
+      openLink(translatorUrl)
+    }
+  }, [openLink, record?.langs, richText, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})
@@ -246,7 +259,7 @@ let PostDropdownBtn = ({
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
                   label={_(msg`Translate`)}
-                  onPress={onOpenTranslate}>
+                  onPress={onPressTranslate}>
                   <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
                 </Menu.Item>
