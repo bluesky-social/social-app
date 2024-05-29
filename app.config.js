@@ -175,7 +175,6 @@ module.exports = function (config) {
         checkAutomatically: 'NEVER',
         channel: UPDATES_CHANNEL,
       },
-      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
