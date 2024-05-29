@@ -40,7 +40,7 @@ export type CommonNavigatorParams = {
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string}
   MessagesSettings: undefined
-  SPWizardStepOne: undefined
+  StarterPackWizard: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -98,7 +98,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Hashtag: {tag: string; author?: string}
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
-  SPWizardStepOne: undefined
+  StarterPackWizard: undefined
 }
 
 // NOTE

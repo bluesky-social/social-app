@@ -23,13 +23,13 @@ interface State {
   avatar?: string
 }
 
-type TStateContext = [State, (state: State, action: Action) => void]
+type TStateContext = [State, (action: Action) => void]
 
 const StateContext = React.createContext<TStateContext>([
   {
     currentStep: 'Landing',
   },
-  (_: State, _: Action) => {},
+  (_: Action) => {},
 ])
 export const useWizardState = () => React.useContext(StateContext)
 
@@ -57,6 +57,8 @@ function reducer(state: State, action: Action): State {
   if (action.type === 'AddProfile') {
     return state
   }
+
+  return state
 }
 
 export function Provider({children}: {children: React.ReactNode}) {

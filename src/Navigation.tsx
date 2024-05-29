@@ -43,7 +43,7 @@ import {SavedFeeds} from 'view/screens/SavedFeeds'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
-import {WizardStepOne} from '#/screens/StarterPack/Wizard/WizardStepOne'
+import {Wizard} from '#/screens/StarterPack/Wizard'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
@@ -308,8 +308,8 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
       <Stack.Screen
-        name="SPWizardStepOne"
-        getComponent={() => WizardStepOne}
+        name="StarterPackWizard"
+        getComponent={() => Wizard}
         options={{title: title(msg`Create a starter pack`), requireAuth: true}}
       />
     </>
