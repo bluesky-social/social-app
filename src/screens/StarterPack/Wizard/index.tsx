@@ -46,7 +46,13 @@ function WizardInner() {
           size="large"
           onPress={() => dispatch({type: 'Next'})}>
           <ButtonText>
-            <Trans>Create</Trans>
+            {state.currentStep === 'Landing' ? (
+              <Trans>Create</Trans>
+            ) : state.currentStep === 'Finished' ? (
+              <Trans>Visit Starter Pack</Trans>
+            ) : (
+              <Trans>Continue</Trans>
+            )}
           </ButtonText>
         </Button>
       </View>
