@@ -17,13 +17,15 @@ import {useLingui} from '@lingui/react'
 
 import {ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
-import {TimeElapsed} from 'view/com/util/TimeElapsed'
+import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {isOnlyEmoji, RichText} from '../RichText'
+import {DateDivider} from './DateDivider'
 import {MessageItemEmbed} from './MessageItemEmbed'
+import {localDateString} from './util'
 
 let MessageItem = ({
   item,
@@ -33,7 +35,7 @@ let MessageItem = ({
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  const {message, nextMessage} = item
+  const {message, nextMessage, prevMessage} = item
   const isPending = item.type === 'pending-message'
 
   const isFromSelf = message.sender?.did === currentAccount?.did
@@ -44,6 +46,17 @@ let MessageItem = ({
     nextIsMessage && nextMessage.sender?.did === currentAccount?.did
 
   const isNextFromSameSender = isNextFromSelf === isFromSelf
+
+  const isNewDay = useMemo(() => {
+    // TODO: figure out how we can show this for when we're at the start
+    // of the conversation
+    if (!prevMessage) return false
+
+    const thisDate = new Date(message.sentAt)
+    const prevDate = new Date(prevMessage.sentAt)
+
+    return localDateString(thisDate) !== localDateString(prevDate)
+  }, [message, prevMessage])
 
   const isLastInGroup = useMemo(() => {
     // if this message is pending, it means the next message is pending too
@@ -78,56 +91,59 @@ let MessageItem = ({
   }, [message.text, message.facets])
 
   return (
-    <View
-      style={[
-        isFromSelf ? a.mr_md : a.ml_md,
-        nextIsMessage && !isNextFromSameSender && a.mb_md,
-      ]}>
-      <ActionsWrapper isFromSelf={isFromSelf} message={message}>
-        {AppBskyEmbedRecord.isView(message.embed) && (
-          <MessageItemEmbed embed={message.embed} />
-        )}
-        {rt.text.length > 0 && (
-          <View
-            style={
-              !isOnlyEmoji(message.text) && [
-                a.py_sm,
-                a.my_2xs,
-                a.rounded_md,
-                {
-                  paddingLeft: 14,
-                  paddingRight: 14,
-                  backgroundColor: isFromSelf
-                    ? isPending
-                      ? pendingColor
-                      : t.palette.primary_500
-                    : t.palette.contrast_50,
-                  borderRadius: 17,
-                },
-                isFromSelf ? a.self_end : a.self_start,
-                isFromSelf
-                  ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-                  : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
-              ]
-            }>
-            <RichText
-              value={rt}
-              style={[a.text_md, isFromSelf && {color: t.palette.white}]}
-              interactiveStyle={a.underline}
-              enableTags
-              emojiMultiplier={3}
-            />
-          </View>
-        )}
-      </ActionsWrapper>
+    <>
+      {isNewDay && <DateDivider date={message.sentAt} />}
+      <View
+        style={[
+          isFromSelf ? a.mr_md : a.ml_md,
+          nextIsMessage && !isNextFromSameSender && a.mb_md,
+        ]}>
+        <ActionsWrapper isFromSelf={isFromSelf} message={message}>
+          {AppBskyEmbedRecord.isView(message.embed) && (
+            <MessageItemEmbed embed={message.embed} />
+          )}
+          {rt.text.length > 0 && (
+            <View
+              style={
+                !isOnlyEmoji(message.text) && [
+                  a.py_sm,
+                  a.my_2xs,
+                  a.rounded_md,
+                  {
+                    paddingLeft: 14,
+                    paddingRight: 14,
+                    backgroundColor: isFromSelf
+                      ? isPending
+                        ? pendingColor
+                        : t.palette.primary_500
+                      : t.palette.contrast_50,
+                    borderRadius: 17,
+                  },
+                  isFromSelf ? a.self_end : a.self_start,
+                  isFromSelf
+                    ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+                    : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+                ]
+              }>
+              <RichText
+                value={rt}
+                style={[a.text_md, isFromSelf && {color: t.palette.white}]}
+                interactiveStyle={a.underline}
+                enableTags
+                emojiMultiplier={3}
+              />
+            </View>
+          )}
+        </ActionsWrapper>
 
-      {isLastInGroup && (
-        <MessageItemMetadata
-          item={item}
-          style={isFromSelf ? a.text_right : a.text_left}
-        />
-      )}
-    </View>
+        {isLastInGroup && (
+          <MessageItemMetadata
+            item={item}
+            style={isFromSelf ? a.text_right : a.text_left}
+          />
+        )}
+      </View>
+    </>
   )
 }
 MessageItem = React.memo(MessageItem)
@@ -167,31 +183,12 @@ let MessageItemMetadata = ({
 
       const diff = now.getTime() - date.getTime()
 
-      // if under 1 minute
-      if (diff < 1000 * 60) {
+      // if under 30 seconds
+      if (diff < 1000 * 30) {
         return _(msg`Now`)
       }
 
-      // if in the last day
-      if (localDateString(now) === localDateString(date)) {
-        return time
-      }
-
-      // if yesterday
-      const yesterday = new Date(now)
-      yesterday.setDate(yesterday.getDate() - 1)
-
-      if (localDateString(yesterday) === localDateString(date)) {
-        return _(msg`Yesterday, ${time}`)
-      }
-
-      return i18n.date(date, {
-        hour: 'numeric',
-        minute: 'numeric',
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-      })
+      return time
     },
     [_],
   )
@@ -244,15 +241,5 @@ let MessageItemMetadata = ({
     </Text>
   )
 }
-
 MessageItemMetadata = React.memo(MessageItemMetadata)
 export {MessageItemMetadata}
-
-function localDateString(date: Date) {
-  // can't use toISOString because it should be in local time
-  const mm = date.getMonth()
-  const dd = date.getDate()
-  const yyyy = date.getFullYear()
-  // not padding with 0s because it's not necessary, it's just used for comparison
-  return `${yyyy}-${mm}-${dd}`
-}
