@@ -37,7 +37,7 @@ export function AviFollowButton({
     logContext: 'AvatarButton',
   })
   const gate = useGate()
-  const self = useSession()
+  const {currentAccount, hasSession} = useSession()
   const [followed, setFollowed] = useState<string | null>(null)
   const navigation = useNavigation<NavigationProp>()
 
@@ -48,7 +48,7 @@ export function AviFollowButton({
   const isFollowing =
     profile.viewer?.following ||
     profile.did === followed ||
-    profile.did === self.currentAccount?.did
+    profile.did === currentAccount?.did
 
   const onPress = useCallback(() => {
     follow()
@@ -82,7 +82,7 @@ export function AviFollowButton({
     },
   ]
 
-  return gate('show_avi_follow_button') ? (
+  return gate('show_avi_follow_button') && hasSession ? (
     <View style={a.relative}>
       {children}
 
