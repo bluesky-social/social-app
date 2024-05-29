@@ -307,11 +307,11 @@ jobs:
       - name: ⬇️ Restore Cache
         id: get-base-commit
         uses: actions/cache@v4
-        if: ${{ inputs.channel == 'testflight' }}
+        if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         with:
           path: most-recent-testflight-commit.txt
           key: most-recent-testflight-commit
 
       - name: ✏️ Write commit hash to cache
-        if: ${{ inputs.channel == 'testflight' }}
+        if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
         run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
