@@ -222,8 +222,12 @@ module.exports = function (config) {
               ios: {
                 appExtensions: [
                   {
-                    targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    targetName: IS_DEV
+                      ? 'Share-with-Bluesky-Dev'
+                      : 'Share-with-Bluesky',
+                    bundleIdentifier: IS_DEV
+                      ? 'xyz.blueskyweb.app.dev.Share-with-Bluesky'
+                      : 'xyz.blueskyweb.app.Share-with-Bluesky',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
@@ -231,8 +235,10 @@ module.exports = function (config) {
                     },
                   },
                   {
-                    targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
+                    targetName: 'BlueskyNSE-Dev',
+                    bundleIdentifier: IS_DEV
+                      ? 'xyz.blueskyweb.app.dev.BlueskyNSE'
+                      : 'xyz.blueskyweb.app.BlueskyNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
