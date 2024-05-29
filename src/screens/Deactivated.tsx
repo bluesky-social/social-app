@@ -24,7 +24,7 @@ export function Deactivated() {
   const {gtMobile} = useBreakpoints()
   const onboardingDispatch = useOnboardingDispatch()
   const {logout} = useSessionApi()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const [isProcessing, setProcessing] = React.useState(false)
   const [estimatedTime, setEstimatedTime] = React.useState<string | undefined>(
@@ -37,11 +37,11 @@ export function Deactivated() {
   const checkStatus = React.useCallback(async () => {
     setProcessing(true)
     try {
-      const res = await getAgent().com.atproto.temp.checkSignupQueue()
+      const res = await agent.com.atproto.temp.checkSignupQueue()
       if (res.data.activated) {
         // ready to go, exchange the access token for a usable one and kick off onboarding
-        await getAgent().refreshSession()
-        if (!isSessionDeactivated(getAgent().session?.accessJwt)) {
+        await agent.refreshSession()
+        if (!isSessionDeactivated(agent.session?.accessJwt)) {
           onboardingDispatch({type: 'start'})
         }
       } else {
@@ -61,7 +61,7 @@ export function Deactivated() {
     setEstimatedTime,
     setPlaceInQueue,
     onboardingDispatch,
-    getAgent,
+    agent,
   ])
 
   React.useEffect(() => {

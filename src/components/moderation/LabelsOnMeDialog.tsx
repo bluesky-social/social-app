@@ -14,6 +14,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
@@ -108,8 +109,8 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
           </View>
         </>
       )}
-
       <Dialog.Close />
+      <KeyboardPadding />
     </Dialog.ScrollableInner>
   )
 }
@@ -201,14 +202,14 @@ function AppealForm({
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await getAgent()
+      await agent
         .withProxy('atproto_labeler', label.src)
         .createModerationReport({
           reasonType: ComAtprotoModerationDefs.REASONAPPEAL,

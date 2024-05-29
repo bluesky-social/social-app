@@ -5,6 +5,7 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
+import {isFirefox, isSafari} from 'lib/browser'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {addStyle} from 'lib/styles'
@@ -503,7 +504,6 @@ export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
 ) => React.ReactElement
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 const styles = StyleSheet.create({
   sideBorders: {
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
   },
   row: {
     // @ts-ignore web only
-    contentVisibility: isSafari ? '' : 'auto', // Safari support for this is buggy.
+    contentVisibility: isSafari || isFirefox ? '' : 'auto', // Safari support for this is buggy.
   },
   minHeightViewport: {
     // @ts-ignore web only

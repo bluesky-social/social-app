@@ -3,11 +3,11 @@ import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
@@ -19,6 +19,7 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
+import {AllNavigatorParams} from 'lib/routes/types'
 import {s} from 'lib/styles'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {Feed} from '../posts/Feed'
@@ -48,7 +49,7 @@ export function FeedPage({
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
@@ -58,7 +59,6 @@ export function FeedPage({
   const feedFeedback = useFeedFeedback(feed, hasSession)
   const scrollElRef = React.useRef<ListMethods>(null)
   const [hasNew, setHasNew] = React.useState(false)
-  const gate = useGate()
 
   const scrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -109,12 +109,6 @@ export function FeedPage({
     })
   }, [scrollToTop, feed, queryClient, setHasNew])
 
-  const isDiscoverFeed =
-    feed ===
-    'feedgen|at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
-  const adjustedHasNew =
-    hasNew && !(isDiscoverFeed && gate('disable_poll_on_discover_v2'))
-
   return (
     <View testID={testID} style={s.h100pct}>
       <MainScrollProvider>
@@ -136,11 +130,11 @@ export function FeedPage({
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
-      {(isScrolledDown || adjustedHasNew) && (
+      {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
           label={_(msg`Load new posts`)}
-          showIndicator={adjustedHasNew}
+          showIndicator={hasNew}
         />
       )}
 

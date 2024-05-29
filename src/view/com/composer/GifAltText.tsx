@@ -20,6 +20,7 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
 import {AltTextReminder} from './photos/Gallery'
@@ -180,6 +181,7 @@ function AltTextInner({
         </View>
       </View>
       <Dialog.Close />
+      <KeyboardPadding />
     </Dialog.ScrollableInner>
   )
 }

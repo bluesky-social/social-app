@@ -1,8 +1,8 @@
 diff --git a/node_modules/expo-notifications/android/build.gradle b/node_modules/expo-notifications/android/build.gradle
-index 97bf4f4..6e9d427 100644
+index d233e1f..cc2f856 100644
 --- a/node_modules/expo-notifications/android/build.gradle
 +++ b/node_modules/expo-notifications/android/build.gradle
-@@ -118,6 +118,7 @@ dependencies {
+@@ -32,6 +32,7 @@ dependencies {
    api 'com.google.firebase:firebase-messaging:22.0.0'
 
    api 'me.leolin:ShortcutBadger:1.1.22@aar'
@@ -46,7 +46,7 @@ index 0af7fe0..8f2c8d8 100644
      try {
        return payload.getString(TITLE_KEY);
 diff --git a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
-index f1fed19..1619f59 100644
+index f1fed19..80afe9e 100644
 --- a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
 +++ b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/model/NotificationContent.java
 @@ -20,6 +20,7 @@ import expo.modules.notifications.notifications.enums.NotificationPriority;
@@ -57,17 +57,19 @@ index f1fed19..1619f59 100644
    private String mTitle;
    private String mText;
    private String mSubtitle;
-@@ -50,6 +51,9 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -50,6 +51,11 @@ public class NotificationContent implements Parcelable, Serializable {
      }
    };
 
 +  @Nullable
-+  public String getChannelId() { return mChannelId; }
++  public String getChannelId() {
++    return mTitle;
++  }
 +
    @Nullable
    public String getTitle() {
      return mTitle;
-@@ -121,6 +125,7 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -121,6 +127,7 @@ public class NotificationContent implements Parcelable, Serializable {
    }
 
    protected NotificationContent(Parcel in) {
@@ -75,7 +77,7 @@ index f1fed19..1619f59 100644
      mTitle = in.readString();
      mText = in.readString();
      mSubtitle = in.readString();
-@@ -146,6 +151,7 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -146,6 +153,7 @@ public class NotificationContent implements Parcelable, Serializable {
 
    @Override
    public void writeToParcel(Parcel dest, int flags) {
@@ -83,7 +85,7 @@ index f1fed19..1619f59 100644
      dest.writeString(mTitle);
      dest.writeString(mText);
      dest.writeString(mSubtitle);
-@@ -166,6 +172,7 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -166,6 +174,7 @@ public class NotificationContent implements Parcelable, Serializable {
    private static final long serialVersionUID = 397666843266836802L;
 
    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -91,7 +93,7 @@ index f1fed19..1619f59 100644
      out.writeObject(mTitle);
      out.writeObject(mText);
      out.writeObject(mSubtitle);
-@@ -190,6 +197,7 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -190,6 +199,7 @@ public class NotificationContent implements Parcelable, Serializable {
    }
 
    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -99,7 +101,7 @@ index f1fed19..1619f59 100644
      mTitle = (String) in.readObject();
      mText = (String) in.readObject();
      mSubtitle = (String) in.readObject();
-@@ -240,6 +248,7 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -240,6 +250,7 @@ public class NotificationContent implements Parcelable, Serializable {
    }
 
    public static class Builder {
@@ -107,7 +109,7 @@ index f1fed19..1619f59 100644
      private String mTitle;
      private String mText;
      private String mSubtitle;
-@@ -260,6 +269,11 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -260,6 +271,11 @@ public class NotificationContent implements Parcelable, Serializable {
        useDefaultVibrationPattern();
      }
 
@@ -119,7 +121,7 @@ index f1fed19..1619f59 100644
      public Builder setTitle(String title) {
        mTitle = title;
        return this;
-@@ -336,6 +350,7 @@ public class NotificationContent implements Parcelable, Serializable {
+@@ -336,6 +352,7 @@ public class NotificationContent implements Parcelable, Serializable {
 
      public NotificationContent build() {
        NotificationContent content = new NotificationContent();
@@ -128,18 +130,10 @@ index f1fed19..1619f59 100644
        content.mSubtitle = mSubtitle;
        content.mText = mText;
 diff --git a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.java b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.java
-index 6bd9928..aab71ea 100644
+index 6bd9928..ee93d70 100644
 --- a/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.java
 +++ b/node_modules/expo-notifications/android/src/main/java/expo/modules/notifications/notifications/presentation/builders/ExpoNotificationBuilder.java
-@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
- import android.content.res.Resources;
- import android.graphics.Bitmap;
- import android.graphics.BitmapFactory;
--import android.os.Build;
- import android.os.Bundle;
- import android.os.Parcel;
- import android.provider.Settings;
-@@ -48,6 +47,10 @@ public class ExpoNotificationBuilder extends ChannelAwareNotificationBuilder {
+@@ -48,6 +48,10 @@ public class ExpoNotificationBuilder extends ChannelAwareNotificationBuilder {
 
      NotificationContent content = getNotificationContent();
 
