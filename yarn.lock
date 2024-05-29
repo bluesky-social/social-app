@@ -5482,10 +5482,10 @@
   resolved "https://registry.yarnpkg.com/@react-native-masked-view/masked-view/-/masked-view-0.3.0.tgz#bd29fae18d148a685331910a3c7b766ce87eafcc"
   integrity sha512-qLyoObcjzrkpNcoJjXquUePXfL1dXjHtuv+yX0zZ0Q4kG5yvVqd620+tSh7WbRoHkjpXhFBfLwvGhcWB2I0Lpw==
 
-"@react-native-menu/menu@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-0.9.1.tgz#aff9f327938dbb7dc44eeabc00da4d2d8e1a4222"
-  integrity sha512-PdZoN1P72ESQ7UTzm5YI4W+87KU5mv7vVJ3GsQVRtnrzzuVskfp5E9ds1biGClcTieXAdIZ7hvPD1HHHZPobdg==
+"@react-native-menu/menu@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-menu/menu/-/menu-1.1.0.tgz#e89c0850f7e5aa4c671c44a9c10edafadb23c35a"
+  integrity sha512-vf9zp0M4nbAFnSKz5NJYKUPM5UzXWmLyGcjtuPaKWYxxloz9C0Pp6XdZRJnoOSlfRShE8NksX3bVY8W4wGnlCQ==
 
 "@react-native-picker/picker@2.6.1":
   version "2.6.1"
@@ -12256,10 +12256,10 @@ expo-navigation-bar@~3.0.4:
     "@react-native/normalize-colors" "~0.74.83"
     debug "^4.3.2"
 
-expo-notifications@~0.28.1:
-  version "0.28.1"
-  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.28.1.tgz#9152cb17100ce72b66f2bf642fb097c3ae2d2019"
-  integrity sha512-qBVcq3lc+FIvcYt/8M+JB1c60g0hVuyGY4MVGTY56ciU6nMOCiBiz4XPc3DeiZA16jVtfriooWA26wqBkQfkHg==
+expo-notifications@~0.28.3:
+  version "0.28.3"
+  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.28.3.tgz#9076c2bd69c3de3338a2e2161c8bd5f18cb440cb"
+  integrity sha512-Xaj82eQUJzJXa8+giZr708ih86GGtkGS8N01epoiDkTKC8Z9783UJ8Pf8+PSFSfHsY3Sd8TJpQrD9n7QnGHwGQ==
   dependencies:
     "@expo/image-utils" "^0.5.0"
     "@ide/backoff" "^1.0.0"
