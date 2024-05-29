@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -22,15 +22,15 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
+import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {Text} from '#/components/Typography'
 import {ComposePrompt} from '../composer/Prompt'
 import {List, ListMethods} from '../util/List'
-import {Text} from '../util/text/Text'
 import {ViewHeader} from '../util/ViewHeader'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
@@ -89,7 +89,7 @@ export function PostThread({
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
@@ -222,13 +222,12 @@ export function PostThread({
     const {parents, highlightedPost, replies} = skeleton
     let arr: RowItem[] = []
     if (highlightedPost.type === 'post') {
-      if (highlightedPost.ctx.isParentLoading || deferParents) {
-        // We're loading parents of the highlighted post.
-        // In this case, we don't render anything above the post.
-        // If you add something here, you'll need to update both
-        // maintainVisibleContentPosition and onContentSizeChange
-        // to "hold onto" the correct row instead of the first one.
-      } else {
+      // We want to wait for parents to load before rendering.
+      // If you add something here, you'll need to update both
+      // maintainVisibleContentPosition and onContentSizeChange
+      // to "hold onto" the correct row instead of the first one.
+
+      if (!highlightedPost.ctx.isParentLoading && !deferParents) {
         // When progressively revealing parents, rendering a placeholder
         // here will cause scrolling jumps. Don't add it unless you test it.
         // QT'ing this thread is a great way to test all the scrolling hacks:
@@ -339,16 +338,30 @@ export function PostThread({
         )
       } else if (isThreadNotFound(item)) {
         return (
-          <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
-            <Text type="lg-bold" style={pal.textLight}>
+          <View
+            style={[
+              a.p_lg,
+              a.border_t,
+              t.atoms.border_contrast_low,
+              t.atoms.bg_contrast_25,
+            ]}>
+            <Text
+              style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
               <Trans>Deleted post.</Trans>
             </Text>
           </View>
         )
       } else if (isThreadBlocked(item)) {
         return (
-          <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
-            <Text type="lg-bold" style={pal.textLight}>
+          <View
+            style={[
+              a.p_lg,
+              a.border_t,
+              t.atoms.border_contrast_low,
+              t.atoms.bg_contrast_25,
+            ]}>
+            <Text
+              style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
               <Trans>Blocked post.</Trans>
             </Text>
           </View>
@@ -397,12 +410,10 @@ export function PostThread({
       return null
     },
     [
+      t,
       hasSession,
       isMobile,
       onPressReply,
-      pal.border,
-      pal.viewLight,
-      pal.textLight,
       posts,
       skeleton?.parents,
       maxParents,
@@ -443,6 +454,7 @@ export function PostThread({
           data={posts}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
+          contentContainerStyle={{marginTop: -2}}
           onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
           onStartReached={onStartReached}
           onEndReached={onEndReached}
@@ -619,11 +631,3 @@ function hasBranchingReplies(node?: ThreadNode) {
   }
   return true
 }
-
-const styles = StyleSheet.create({
-  itemContainer: {
-    borderTopWidth: 1,
-    paddingHorizontal: 18,
-    paddingVertical: 18,
-  },
-})
