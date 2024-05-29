@@ -210,6 +210,7 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
+          case MessagesEventBusDispatchEvent.UpdatePoll:
           case MessagesEventBusDispatchEvent.Resume: {
             // basically reset
             this.status = MessagesEventBusStatus.Initializing

@@ -14,12 +14,12 @@ const SERVICE_DID = (serviceUrl?: string) =>
     : 'did:web:api.bsky.app'
 
 async function registerPushToken(
-  getAgent: () => BskyAgent,
+  agent: BskyAgent,
   account: SessionAccount,
   token: Notifications.DevicePushToken,
 ) {
   try {
-    await getAgent().api.app.bsky.notification.registerPush({
+    await agent.api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
       platform: devicePlatform,
       token: token.data,
@@ -47,7 +47,7 @@ async function getPushToken(skipPermissionCheck = false) {
 }
 
 export function useNotificationsRegistration() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
 
   React.useEffect(() => {
@@ -60,13 +60,13 @@ export function useNotificationsRegistration() {
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
     const subscription = Notifications.addPushTokenListener(async newToken => {
-      registerPushToken(getAgent, currentAccount, newToken)
+      registerPushToken(agent, currentAccount, newToken)
     })
 
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, getAgent])
+  }, [currentAccount, agent])
 }
 
 export function useRequestNotificationsPermission() {

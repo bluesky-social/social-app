@@ -25,7 +25,7 @@ export function useSearchPostsQuery({
   sort?: 'top' | 'latest'
   enabled?: boolean
 }) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,
@@ -35,7 +35,7 @@ export function useSearchPostsQuery({
   >({
     queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.feed.searchPosts({
+      const res = await agent.app.bsky.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,
