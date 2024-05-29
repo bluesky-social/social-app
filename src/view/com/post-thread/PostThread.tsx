@@ -45,7 +45,6 @@ const MAINTAIN_VISIBLE_CONTENT_POSITION = {
   minIndexForVisible: 0,
 }
 
-const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
 const SHOW_HIDDEN_REPLIES = {_reactKey: '__show_hidden_replies__'}
@@ -66,7 +65,6 @@ type YieldedItem =
 type RowItem =
   | YieldedItem
   // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
-  | typeof TOP_COMPONENT
   | typeof REPLY_PROMPT
   | typeof LOAD_MORE
 
@@ -224,32 +222,22 @@ export function PostThread({
     const {parents, highlightedPost, replies} = skeleton
     let arr: RowItem[] = []
     if (highlightedPost.type === 'post') {
-      const isRoot =
-        !highlightedPost.parent && !highlightedPost.ctx.isParentLoading
-      if (isRoot) {
-        // No parents to load.
-        arr.push(TOP_COMPONENT)
+      if (highlightedPost.ctx.isParentLoading || deferParents) {
+        // We're loading parents of the highlighted post.
+        // In this case, we don't render anything above the post.
+        // If you add something here, you'll need to update both
+        // maintainVisibleContentPosition and onContentSizeChange
+        // to "hold onto" the correct row instead of the first one.
       } else {
-        if (highlightedPost.ctx.isParentLoading || deferParents) {
-          // We're loading parents of the highlighted post.
-          // In this case, we don't render anything above the post.
-          // If you add something here, you'll need to update both
-          // maintainVisibleContentPosition and onContentSizeChange
-          // to "hold onto" the correct row instead of the first one.
-        } else {
-          // Everything is loaded
-          let startIndex = Math.max(0, parents.length - maxParents)
-          if (startIndex === 0) {
-            arr.push(TOP_COMPONENT)
-          } else {
-            // When progressively revealing parents, rendering a placeholder
-            // here will cause scrolling jumps. Don't add it unless you test it.
-            // QT'ing this thread is a great way to test all the scrolling hacks:
-            // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
-          }
-          for (let i = startIndex; i < parents.length; i++) {
-            arr.push(parents[i])
-          }
+        // When progressively revealing parents, rendering a placeholder
+        // here will cause scrolling jumps. Don't add it unless you test it.
+        // QT'ing this thread is a great way to test all the scrolling hacks:
+        // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
+
+        // Everything is loaded
+        let startIndex = Math.max(0, parents.length - maxParents)
+        for (let i = startIndex; i < parents.length; i++) {
+          arr.push(parents[i])
         }
       }
       arr.push(highlightedPost)
@@ -325,13 +313,7 @@ export function PostThread({
 
   const renderItem = React.useCallback(
     ({item, index}: {item: RowItem; index: number}) => {
-      if (item === TOP_COMPONENT) {
-        return isTabletOrMobile ? (
-          <ViewHeader
-            title={_(msg({message: `Post`, context: 'description'}))}
-          />
-        ) : null
-      } else if (item === REPLY_PROMPT && hasSession) {
+      if (item === REPLY_PROMPT && hasSession) {
         return (
           <View>
             {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
@@ -416,8 +398,6 @@ export function PostThread({
     },
     [
       hasSession,
-      isTabletOrMobile,
-      _,
       isMobile,
       onPressReply,
       pal.border,
@@ -449,39 +429,48 @@ export function PostThread({
   }
 
   return (
-    <ScrollProvider onMomentumEnd={onMomentumEnd}>
-      <List
-        ref={ref}
-        data={posts}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
-        onStartReached={onStartReached}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={2}
-        onScrollToTop={onScrollToTop}
-        maintainVisibleContentPosition={
-          isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
-        }
-        // @ts-ignore our .web version only -prf
-        desktopFixedHeight
-        removeClippedSubviews={isAndroid ? false : undefined}
-        ListFooterComponent={
-          <ListFooter
-            // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
-            // initial render
-            isFetchingNextPage={isFetching}
-            error={cleanError(threadError)}
-            onRetry={refetch}
-            // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
-            // work without causing weird jumps on web or glitches on native
-            height={windowHeight - 200}
-          />
-        }
-        initialNumToRender={initialNumToRender}
-        windowSize={11}
-      />
-    </ScrollProvider>
+    <>
+      {isTabletOrMobile && (
+        <ViewHeader
+          title={_(msg({message: `Post`, context: 'description'}))}
+          showBorder
+        />
+      )}
+
+      <ScrollProvider onMomentumEnd={onMomentumEnd}>
+        <List
+          ref={ref}
+          data={posts}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+          onStartReached={onStartReached}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={2}
+          onScrollToTop={onScrollToTop}
+          maintainVisibleContentPosition={
+            isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
+          }
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+          removeClippedSubviews={isAndroid ? false : undefined}
+          ListFooterComponent={
+            <ListFooter
+              // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
+              // initial render
+              isFetchingNextPage={isFetching}
+              error={cleanError(threadError)}
+              onRetry={refetch}
+              // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
+              // work without causing weird jumps on web or glitches on native
+              height={windowHeight - 200}
+            />
+          }
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
+        />
+      </ScrollProvider>
+    </>
   )
 }
 
