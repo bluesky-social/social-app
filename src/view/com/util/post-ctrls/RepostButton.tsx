@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -37,6 +37,8 @@ let RepostButton = ({
     }),
     [t, isReposted],
   )
+
+  const close = useCallback(() => dialogControl.close(), [dialogControl])
 
   return (
     <>
@@ -98,8 +100,9 @@ let RepostButton = ({
                 style={[a.justify_start, a.px_md]}
                 label={_(msg`Quote post`)}
                 onPress={() => {
-                  dialogControl.close()
-                  onQuote()
+                  dialogControl.close(() => {
+                    onQuote()
+                  })
                 }}
                 size="large"
                 variant="ghost"
@@ -112,8 +115,8 @@ let RepostButton = ({
             </View>
             <Button
               label={_(msg`Cancel quote post`)}
-              onAccessibilityEscape={() => dialogControl.close()}
-              onPress={() => dialogControl.close()}
+              onAccessibilityEscape={close}
+              onPress={close}
               size="medium"
               variant="solid"
               color="primary">
