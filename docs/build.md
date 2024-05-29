@@ -31,7 +31,7 @@ This is NOT required when developing for web.
   - From inside the project directory:
     - `bundler install` (this will install Cocoapods)
 - After initial setup:
-  - Copy `google-services.json.example` to `google-services.json` and `google-services-dev.json.example` to `google-services-dev.json` or provide your own `google-services.json` files. (A real firebase project is NOT required)
+  - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
 
 ### Running the Native App
