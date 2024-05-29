@@ -1,11 +1,11 @@
-diff --git a/node_modules/expo-updates/ios/EXUpdates/Update/NewUpdate.swift b/node_modules/expo-updates/ios/EXUpdates/Update/NewUpdate.swift
-index 189a5f5..8d5b8e6 100644
---- a/node_modules/expo-updates/ios/EXUpdates/Update/NewUpdate.swift
-+++ b/node_modules/expo-updates/ios/EXUpdates/Update/NewUpdate.swift
-@@ -68,13 +68,20 @@ public final class NewUpdate: Update {
-       processedAssets.append(asset)
+diff --git a/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift b/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
+index b85291e..07a5d3c 100644
+--- a/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
++++ b/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
+@@ -78,13 +78,20 @@ public final class ExpoUpdatesUpdate: Update {
+       status = UpdateStatus.StatusPending
      }
-
+     
 +    // Instead of relying on various hacks to get the correct format for the specific
 +    // platform on the backend, we can just add this little patch..
 +    let dateFormatter = DateFormatter()
@@ -23,4 +23,4 @@ index 189a5f5..8d5b8e6 100644
 +      commitTime: date,
        runtimeVersion: runtimeVersion,
        keep: true,
-       status: UpdateStatus.StatusPending,
+       status: status,

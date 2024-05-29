@@ -5,12 +5,11 @@ import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
-import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {
   DescriptionText,
   OnboardingControls,
@@ -34,8 +33,6 @@ export function StepInterests() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
-  const gate = useGate()
-  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
@@ -43,13 +40,12 @@ export function StepInterests() {
     state.interestsStepResults.selectedInterests.map(i => i),
   )
   const onboardDispatch = useOnboardingDispatch()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {isLoading, isError, error, data, refetch, isFetching} = useQuery({
     queryKey: ['interests'],
     queryFn: async () => {
       try {
-        const {data} =
-          await getAgent().app.bsky.unspecced.getTaggedSuggestions()
+        const {data} = await agent.app.bsky.unspecced.getTaggedSuggestions()
         return data.suggestions.reduce(
           (agg, s) => {
             const {tag, subject, subjectType} = s
@@ -132,12 +128,6 @@ export function StepInterests() {
     track('OnboardingV2:Begin')
     track('OnboardingV2:StepInterests:Start')
   }, [track])
-
-  React.useEffect(() => {
-    if (!gate('reduced_onboarding_and_home_algo_v2')) {
-      requestNotificationsPermission('StartOnboarding')
-    }
-  }, [gate, requestNotificationsPermission])
 
   const title = isError ? (
     <Trans>Oh no! Something went wrong.</Trans>

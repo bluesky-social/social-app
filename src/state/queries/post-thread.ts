@@ -68,12 +68,12 @@ export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
 
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery<ThreadNode, Error>({
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await getAgent().getPostThread({uri: uri!})
+      const res = await agent.getPostThread({uri: uri!})
       if (res.success) {
         return responseToThreadNodes(res.data.thread)
       }

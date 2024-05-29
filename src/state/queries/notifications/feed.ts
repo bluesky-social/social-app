@@ -47,7 +47,7 @@ export function RQKEY() {
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
@@ -73,7 +73,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       if (!page) {
         page = (
           await fetchPage({
-            getAgent,
+            agent,
             limit: PAGE_SIZE,
             cursor: pageParam,
             queryClient,
