@@ -442,7 +442,7 @@ let PostThreadItemLoaded = ({
               {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
               {!isThreadedChild && (
                 <View style={styles.layoutAvi}>
-                  <AviFollowButton author={post.author}>
+                  <AviFollowButton author={post.author} moderation={moderation}>
                     <PreviewableUserAvatar
                       size={38}
                       profile={post.author}

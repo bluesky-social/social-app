@@ -1,13 +1,20 @@
 import React, {useCallback, useState} from 'react'
-import {Alert, Pressable, View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {View} from 'react-native'
+import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {createHitslop} from '#/lib/constants'
+import {NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
+import {
+  DropdownItem,
+  NativeDropdown,
+} from '#/view/com/util/forms/NativeDropdown'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useFollowMethods} from '#/components/hooks/useFollowMethods'
@@ -15,78 +22,92 @@ import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus
 
 export function AviFollowButton({
   author,
+  moderation,
   children,
 }: {
   author: AppBskyActorDefs.ProfileViewBasic
+  moderation: ModerationDecision
   children: React.ReactNode
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const profileShadow = useProfileShadow(author)
+  const profile = useProfileShadow(author)
   const {follow} = useFollowMethods({
-    profile: profileShadow,
+    profile: profile,
     logContext: 'AvatarButton',
   })
   const gate = useGate()
   const self = useSession()
   const [followed, setFollowed] = useState<string | null>(null)
+  const navigation = useNavigation<NavigationProp>()
 
-  const name = profileShadow.displayName || profileShadow.handle
+  const name = sanitizeDisplayName(
+    profile.displayName || profile.handle,
+    moderation.ui('displayName'),
+  )
+  const isFollowing =
+    profile.viewer?.following ||
+    profile.did === followed ||
+    profile.did === self.currentAccount?.did
 
   const onPress = useCallback(() => {
-    Alert.alert(_(msg`Follow ${name}`), undefined, [
-      {
-        text: _(msg`Cancel`),
-        style: 'cancel',
+    follow()
+    setFollowed(profile.did)
+  }, [follow, profile.did])
+
+  const items: DropdownItem[] = [
+    {
+      label: _(msg`View profile`),
+      onPress: () => {
+        navigation.navigate('Profile', {name: profile.did})
       },
-      {
-        text: _(msg`Follow`),
-        onPress: () => {
-          follow()
-          setFollowed(profileShadow.did)
+      icon: {
+        ios: {
+          name: 'arrow.up.right.square',
         },
+        android: '',
+        web: ['far', 'arrow-up-right-from-square'],
       },
-    ])
-  }, [follow, name, _, profileShadow.did])
+    },
+    {
+      label: _(msg`Follow user`),
+      onPress: onPress,
+      icon: {
+        ios: {
+          name: 'person.badge.plus',
+        },
+        android: '',
+        web: ['far', 'user-plus'],
+      },
+    },
+  ]
 
-  if (!gate('show_avi_follow_button')) {
-    return children
-  }
-
-  if (
-    profileShadow.viewer?.following ||
-    profileShadow.did === followed ||
-    profileShadow.did === self.currentAccount?.did
-  ) {
-    return children
-  }
-
-  return (
+  return gate('show_avi_follow_button') ? (
     <View style={a.relative}>
       {children}
 
-      <Button label={_(msg`Follow ${name}`)}>
-        {({pressed}) => (
-          <Pressable
-            accessibilityLabel={_(msg`Follow ${name}`)}
-            accessibilityHint=""
-            onPress={onPress}
-            hitSlop={createHitslop(3)}
-            style={[
-              a.rounded_full,
-              pressed ? t.atoms.bg_contrast_800 : t.atoms.bg_contrast_975,
-              a.absolute,
-              {
-                bottom: -4,
-                right: -2,
-                borderWidth: 2,
-                borderColor: t.atoms.bg.backgroundColor,
-              },
-            ]}>
+      {!isFollowing && (
+        <Button
+          label={_(msg`Open ${name} profile shortcut menu`)}
+          hitSlop={createHitslop(3)}
+          style={[
+            a.rounded_full,
+            t.atoms.bg_contrast_975,
+            a.absolute,
+            {
+              bottom: -4,
+              right: -2,
+              borderWidth: 2,
+              borderColor: t.atoms.bg.backgroundColor,
+            },
+          ]}>
+          <NativeDropdown items={items}>
             <Plus size="sm" fill={t.atoms.bg.backgroundColor} />
-          </Pressable>
-        )}
-      </Button>
+          </NativeDropdown>
+        </Button>
+      )}
     </View>
+  ) : (
+    children
   )
 }

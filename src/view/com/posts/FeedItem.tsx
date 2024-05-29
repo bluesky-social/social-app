@@ -285,7 +285,7 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <AviFollowButton author={post.author}>
+          <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
               size={52}
               profile={post.author}
@@ -473,9 +473,13 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     paddingLeft: 8,
+    position: 'relative',
+    zIndex: 999,
   },
   layoutContent: {
+    position: 'relative',
     flex: 1,
+    zIndex: 0,
   },
   alert: {
     marginTop: 6,
