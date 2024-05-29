@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {isSessionDeactivated, useAgent, useSessionApi} from '#/state/session'
+import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
@@ -17,7 +17,7 @@ import {P, Text} from '#/components/Typography'
 
 const COL_WIDTH = 400
 
-export function Deactivated() {
+export function SignupQueued() {
   const {_} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
@@ -41,7 +41,7 @@ export function Deactivated() {
       if (res.data.activated) {
         // ready to go, exchange the access token for a usable one and kick off onboarding
         await agent.refreshSession()
-        if (!isSessionDeactivated(agent.session?.accessJwt)) {
+        if (!isSignupQueued(agent.session?.accessJwt)) {
           onboardingDispatch({type: 'start'})
         }
       } else {
