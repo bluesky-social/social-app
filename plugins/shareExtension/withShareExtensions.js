@@ -6,7 +6,11 @@ const {withExtensionInfoPlist} = require('./withExtensionInfoPlist')
 const {withExtensionViewController} = require('./withExtensionViewController')
 const {withIntentFilters} = require('./withIntentFilters')
 
-const SHARE_EXTENSION_NAME = 'Share-with-Bluesky'
+const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+
+const SHARE_EXTENSION_NAME = IS_DEV
+  ? 'Share-with-Bluesky-Dev'
+  : 'Share-with-Bluesky'
 const SHARE_EXTENSION_CONTROLLER_NAME = 'ShareViewController'
 
 const withShareExtensions = config => {
