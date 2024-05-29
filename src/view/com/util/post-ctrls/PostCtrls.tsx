@@ -253,15 +253,17 @@ let PostCtrls = ({
           testID="likeBtn"
           style={btnStyle}
           onPress={() => requireAuth(() => onPressToggleLike())}
-          accessibilityLabel={post.viewer?.like
-            ? plural(post.likeCount || 0, {
-                one: 'Unlike (# like)',
-                other: 'Unlike (# likes)',
-              })
-            : plural(post.likeCount || 0, {
-                one: 'Like (# like)',
-                other: 'Like (# likes)',
-              })}
+          accessibilityLabel={
+            post.viewer?.like
+              ? plural(post.likeCount || 0, {
+                  one: 'Unlike (# like)',
+                  other: 'Unlike (# likes)',
+                })
+              : plural(post.likeCount || 0, {
+                  one: 'Like (# like)',
+                  other: 'Like (# likes)',
+                })
+          }
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           {post.viewer?.like ? (
