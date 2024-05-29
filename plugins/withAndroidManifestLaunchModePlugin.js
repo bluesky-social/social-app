@@ -8,8 +8,7 @@ module.exports = function withAndroidManifestLaunchModePlugin(appConfig) {
       const mainActivity = mainApplication.activity.find(
         elem => elem.$['android:name'] === '.MainActivity',
       )
-
-      mainActivity.$['android:launchMode'] = 'singleTop'
+      mainActivity.$['android:launchMode'] = 'standard'
     } catch (e) {
       console.error(`withAndroidManifestLaunchModePlugin failed`, e)
     }
