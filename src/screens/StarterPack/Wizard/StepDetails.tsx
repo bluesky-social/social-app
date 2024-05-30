@@ -1,9 +1,15 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
+import {
+  ImagePickerOptions,
+  launchImageLibraryAsync,
+  MediaTypeOptions,
+} from 'expo-image-picker'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {getDataUriSize} from 'lib/media/util'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -13,11 +19,39 @@ import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Ima
 export function StepDetails() {
   const {_} = useLingui()
   const t = useTheme()
-  const [state] = useWizardState()
+  const [state, dispatch] = useWizardState()
 
-  // const [avatar, setAvatar] = React.useState(state.avatar)
-  const [name, setName] = React.useState(state.name)
-  const [description, setDescription] = React.useState(state.description)
+  const openPicker = async (opts?: ImagePickerOptions) => {
+    const response = await launchImageLibraryAsync({
+      exif: false,
+      mediaTypes: MediaTypeOptions.Images,
+      quality: 1,
+      allowsEditing: true,
+      ...opts,
+    })
+
+    return (response.assets ?? [])
+      .slice(0, 1)
+      .filter(asset => {
+        if (
+          !asset.mimeType?.startsWith('image/') ||
+          (!asset.mimeType?.endsWith('jpeg') &&
+            !asset.mimeType?.endsWith('jpg') &&
+            !asset.mimeType?.endsWith('png'))
+        ) {
+          // TODO show error
+          return false
+        }
+        return true
+      })
+      .map(image => ({
+        mime: 'image/jpeg',
+        height: image.height,
+        width: image.width,
+        path: image.uri,
+        size: getDataUriSize(image.uri),
+      }))
+  }
 
   return (
     <View style={[a.flex_1, {marginTop: 30}]}>
@@ -25,7 +59,7 @@ export function StepDetails() {
         {state.avatar ? (
           <Image
             source={{uri: state.avatar}}
-            style={[{width: 150, height: 150}]}
+            style={[{width: 150, height: 150, borderRadius: 30}]}
             accessibilityIgnoresInvertColors={true}
           />
         ) : (
@@ -41,7 +75,13 @@ export function StepDetails() {
         )}
         <Button
           label={_(msg`Edit image`)}
-          onPress={() => {}}
+          onPress={async () => {
+            const image = await openPicker()
+            dispatch({
+              type: 'SetAvatar',
+              avatar: image[0]?.path ?? state.avatar,
+            })
+          }}
           variant="ghost"
           color="primary"
           size="small">
@@ -55,8 +95,8 @@ export function StepDetails() {
           <TextField.LabelText>{_(msg`Starter pack name`)}</TextField.LabelText>
           <TextField.Input
             label={_(msg`Starter pack name`)}
-            value={name}
-            onChangeText={setName}
+            value={state.name}
+            onChangeText={t => dispatch({type: 'SetName', name: t})}
           />
         </View>
         <View>
@@ -66,8 +106,10 @@ export function StepDetails() {
               label={_(
                 msg`Write a short description of your starter pack. What can new users expect?`,
               )}
-              value={description}
-              onChangeText={setDescription}
+              value={state.description}
+              onChangeText={t =>
+                dispatch({type: 'SetDescription', description: t})
+              }
               multiline
               style={{minHeight: 150}}
             />
