@@ -171,7 +171,7 @@ export function MessageInputEmbed({
         <View
           style={[
             a.flex_1,
-            t.atoms.bg_contrast_25,
+            t.atoms.bg,
             t.atoms.border_contrast_low,
             a.rounded_md,
             a.border,
@@ -212,7 +212,7 @@ export function MessageInputEmbed({
   }
 
   return (
-    <View style={[a.flex_row, a.gap_2xs]}>
+    <View style={[a.flex_row, a.gap_sm]}>
       {content}
       <Button
         label={_(msg`Remove embed`)}
@@ -220,8 +220,8 @@ export function MessageInputEmbed({
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           setEmbed(undefined)
         }}
-        size="small"
-        variant="ghost"
+        size="tiny"
+        variant="solid"
         color="secondary"
         shape="round">
         <ButtonIcon icon={X} />
