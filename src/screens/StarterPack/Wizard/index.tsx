@@ -7,6 +7,7 @@ import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
 import {Step, useWizardState} from '#/screens/StarterPack/Wizard/State'
+import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -86,5 +87,8 @@ function StepView() {
 
   if (state.currentStep === 'Landing') {
     return <StepLanding />
+  }
+  if (state.currentStep === 'Details') {
+    return <StepDetails />
   }
 }
