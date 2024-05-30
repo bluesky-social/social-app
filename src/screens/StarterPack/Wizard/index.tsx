@@ -1,6 +1,9 @@
-import React from 'react'
-import {View} from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
+import React, {Children} from 'react'
+import {Keyboard, View} from 'react-native'
+import {
+  KeyboardAwareScrollView,
+  KeyboardStickyView,
+} from 'react-native-keyboard-controller'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,6 +15,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {Step, useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
+import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Provider} from './State'
@@ -33,6 +37,7 @@ function WizardInner() {
     did: currentAccount?.did,
     staleTime: 0,
   })
+  const bottomBarOffset = useBottomBarOffset()
 
   const wizardUiStrings: Record<Step, {header: string; button: string}> = {
     Landing: {
@@ -73,7 +78,14 @@ function WizardInner() {
       })
     }
 
-    dispatch({type: 'Next'})
+    const keyboardVisible = Keyboard.isVisible()
+    Keyboard.dismiss()
+    setTimeout(
+      () => {
+        dispatch({type: 'Next'})
+      },
+      keyboardVisible ? 16 : 0,
+    )
   }
 
   return (
@@ -86,21 +98,37 @@ function WizardInner() {
             : undefined
         }
       />
-      <KeyboardAwareScrollView style={[a.flex_1]}>
+      <Container>
         <StepView />
-      </KeyboardAwareScrollView>
-      <View style={a.px_md}>
-        <Button
-          label={uiStrings.button}
-          variant="solid"
-          color="primary"
-          size="large"
-          onPress={onNext}
-          disabled={!state.canNext}>
-          <ButtonText>{uiStrings.button}</ButtonText>
-        </Button>
-      </View>
+      </Container>
+      <KeyboardStickyView offset={{opened: bottomBarOffset}}>
+        <View style={a.px_md}>
+          <Button
+            label={uiStrings.button}
+            variant="solid"
+            color="primary"
+            size="large"
+            onPress={onNext}
+            disabled={!state.canNext}>
+            <ButtonText>{uiStrings.button}</ButtonText>
+          </Button>
+        </View>
+      </KeyboardStickyView>
     </CenteredView>
+  )
+}
+
+function Container({children}: {children: React.ReactNode}) {
+  const [state] = useWizardState()
+
+  if (state.currentStep === 'Profiles') {
+    return <View style={[a.flex_1]}>{children}</View>
+  }
+
+  return (
+    <KeyboardAwareScrollView style={[a.flex_1]}>
+      {children}
+    </KeyboardAwareScrollView>
   )
 }
 
@@ -112,5 +140,8 @@ function StepView() {
   }
   if (state.currentStep === 'Details') {
     return <StepDetails />
+  }
+  if (state.currentStep === 'Profiles') {
+    return <StepProfiles />
   }
 }
