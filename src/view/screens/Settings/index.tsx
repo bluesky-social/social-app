@@ -808,7 +808,7 @@ export function SettingsScreen({}: Props) {
           )}>
           <View style={[styles.iconContainer, dangerBg]}>
             <FontAwesomeIcon
-              icon={'x'}
+              icon={'users-slash'}
               style={dangerText as FontAwesomeIconStyle}
               size={18}
             />
