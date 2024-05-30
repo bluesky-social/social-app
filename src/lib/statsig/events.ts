@@ -57,18 +57,18 @@ export type LogEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
-  'home:feedDisplayed': {
+  'home:feedDisplayed:sampled': {
     feedUrl: string
     feedType: string
     index: number
     reason: 'focus' | 'tabbar-click' | 'pager-swipe' | 'desktop-sidebar-click'
   }
-  'feed:endReached': {
+  'feed:endReached:sampled': {
     feedUrl: string
     feedType: string
     itemCount: number
   }
-  'feed:refresh': {
+  'feed:refresh:sampled': {
     feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'

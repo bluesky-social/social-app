@@ -91,6 +91,9 @@ const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'router:navigate:sampled',
   'state:background:sampled',
   'state:foreground:sampled',
+  'home:feedDisplayed:sampled',
+  'feed:endReached:sampled',
+  'feed:refresh:sampled',
 ])
 const isDownsampledSession = Math.random() < 0.9 // 90% likely
 
