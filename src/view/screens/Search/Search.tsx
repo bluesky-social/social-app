@@ -603,10 +603,10 @@ export function SearchScreen(
       updateSearchHistory(item)
 
       if (isWeb) {
-        navigation.replace('Search', {q: item})
+        navigation.push('Search', {q: item})
       } else {
         textInput.current?.blur()
-        navigation.replace('Search', {q: item})
+        navigation.setParams({q: item})
       }
     },
     [updateSearchHistory, navigation],
@@ -1025,6 +1025,8 @@ function SearchHistory({
                   </Pressable>
                   <Pressable
                     accessibilityRole="button"
+                    accessibilityLabel="Remove profile"
+                    accessibilityHint="Remove profile from search history"
                     onPress={() => onRemoveProfileClick(profile)}
                     hitSlop={HITSLOP_10}
                     style={styles.profileRemoveBtn}>
