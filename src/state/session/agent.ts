@@ -235,6 +235,8 @@ export function agentToSessionAccount(
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
     signupQueued: isSignupQueued(agent.session.accessJwt),
+    // @ts-expect-error TODO remove when backend is ready
+    status: agent.session.status || 'active',
     pdsUrl: agent.pdsUrl?.toString(),
   }
 }
