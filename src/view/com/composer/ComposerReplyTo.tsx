@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   replyToLayout: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     paddingTop: 16,
     paddingBottom: 16,
   },
