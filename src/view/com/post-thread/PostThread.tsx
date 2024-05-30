@@ -315,7 +315,8 @@ export function PostThread({
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-  const showHeader = isNative || !hasParents || !isFetching
+  const showHeader =
+    isNative || (isTabletOrMobile && (!hasParents || !isFetching))
 
   const renderItem = React.useCallback(
     ({item, index}: {item: RowItem; index: number}) => {
@@ -448,7 +449,7 @@ export function PostThread({
 
   return (
     <CenteredView style={[a.flex_1]} sideBorders={true}>
-      {isTabletOrMobile && showHeader && (
+      {showHeader && (
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
           showBorder
