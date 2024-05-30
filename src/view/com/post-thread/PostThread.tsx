@@ -26,6 +26,7 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
+import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
@@ -440,7 +441,7 @@ export function PostThread({
   }
 
   return (
-    <>
+    <CenteredView style={[a.flex_1]}>
       {isTabletOrMobile && (
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
@@ -481,7 +482,7 @@ export function PostThread({
           windowSize={11}
         />
       </ScrollProvider>
-    </>
+    </CenteredView>
   )
 }
 
