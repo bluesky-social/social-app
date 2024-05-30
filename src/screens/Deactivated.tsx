@@ -6,7 +6,8 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {type SessionAccount, useSession} from '#/state/session'
+import {isWeb} from '#/platform/detection'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {ScrollView} from '#/view/com/util/Views'
@@ -30,6 +31,7 @@ export function Deactivated() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {logout} = useSessionApi()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -49,6 +51,18 @@ export function Deactivated() {
   const onPressAddAccount = React.useCallback(() => {
     setShowLoggedOut(true)
   }, [setShowLoggedOut])
+
+  const onPressLogout = React.useCallback(() => {
+    if (isWeb) {
+      // We're switching accounts, which remounts the entire app.
+      // On mobile, this gets us Home, but on the web we also need reset the URL.
+      // We can't change the URL via a navigate() call because the navigator
+      // itself is about to unmount, and it calls pushState() too late.
+      // So we change the URL ourselves. The navigator will pick it up on remount.
+      history.pushState(null, '', '/')
+    }
+    logout('Deactivated')
+  }, [logout])
 
   return (
     <View style={[a.h_full_vh, a.flex_1, t.atoms.bg]}>
@@ -72,26 +86,43 @@ export function Deactivated() {
 
               <View style={[a.gap_xs, a.pb_3xl]}>
                 <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
-                  <Trans>Hello!</Trans>
+                  <Trans>Welcome back!</Trans>
                 </Text>
-                <Text style={[a.text_md, a.leading_snug, a.pb_md]}>
+                <Text style={[a.text_sm, a.leading_snug]}>
                   <Trans>
-                    You have deactivated your account, and can no longer access
-                    Bluesky. To reactivate, click the button below.
+                    You previously deactivated @{currentAccount?.handle}.
+                  </Trans>
+                </Text>
+                <Text style={[a.text_sm, a.leading_snug, a.pb_md]}>
+                  <Trans>
+                    You can reactivate your account to continue logging in. Your
+                    profile and posts will be visible to other users.
                   </Trans>
                 </Text>
 
-                <Button
-                  label={_(msg`Reactivate your account`)}
-                  size="large"
-                  variant="solid"
-                  color="primary"
-                  onPress={() => setShowLoggedOut(true)}>
-                  <ButtonIcon icon={Refresh} position="left" />
-                  <ButtonText>
-                    <Trans>Reactivate account</Trans>
-                  </ButtonText>
-                </Button>
+                <View style={[a.gap_sm]}>
+                  <Button
+                    label={_(msg`Reactivate your account`)}
+                    size="medium"
+                    variant="solid"
+                    color="primary"
+                    onPress={() => setShowLoggedOut(true)}>
+                    <ButtonIcon icon={Refresh} position="left" />
+                    <ButtonText>
+                      <Trans>Yes, reactivate my account</Trans>
+                    </ButtonText>
+                  </Button>
+                  <Button
+                    label={_(msg`Cancel reactivation and log out`)}
+                    size="medium"
+                    variant="solid"
+                    color="secondary"
+                    onPress={onPressLogout}>
+                    <ButtonText>
+                      <Trans>Cancel</Trans>
+                    </ButtonText>
+                  </Button>
+                </View>
               </View>
 
               <View style={[a.pb_3xl]}>
@@ -127,7 +158,7 @@ export function Deactivated() {
                   </Text>
                   <Button
                     label={_(msg`Log in or sign up`)}
-                    size="large"
+                    size="medium"
                     variant="solid"
                     color="secondary"
                     onPress={() => setShowLoggedOut(true)}>
