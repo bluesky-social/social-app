@@ -54,7 +54,7 @@ import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
-import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {HITSLOP_10, MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -421,7 +421,8 @@ export const ComposePost = observer(function ComposePost({
               accessibilityLabel={_(msg`Cancel`)}
               accessibilityHint={_(
                 msg`Closes post composer and discards post draft`,
-              )}>
+              )}
+              hitSlop={HITSLOP_10}>
               <Text style={[pal.link, s.f18]}>
                 <Trans>Cancel</Trans>
               </Text>
@@ -621,7 +622,6 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 4,
     marginHorizontal: 16,
     height: 54,
     gap: 4,
