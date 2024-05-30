@@ -223,8 +223,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    paddingTop: 16,
+    paddingTop: 4,
     paddingBottom: 16,
+    marginBottom: 12,
   },
   replyToPost: {
     flex: 1,
