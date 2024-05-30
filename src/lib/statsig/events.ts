@@ -20,10 +20,10 @@ export type LogEvents = {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
     status: 'granted' | 'denied' | 'undetermined'
   }
-  'state:background': {
+  'state:background:sampled': {
     secondsActive: number
   }
-  'state:foreground': {}
+  'state:foreground:sampled': {}
   'router:navigate:sampled': {}
 
   // Screen events

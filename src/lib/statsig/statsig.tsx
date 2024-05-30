@@ -87,7 +87,11 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-const DOWNSAMPLED_EVENTS = new Set(['router:navigate:sampled'])
+const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
+  'router:navigate:sampled',
+  'state:background:sampled',
+  'state:foreground:sampled',
+])
 const isDownsampledSession = Math.random() < 0.9 // 90% likely
 
 export function logEvent<E extends keyof LogEvents>(
@@ -199,14 +203,14 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
   lastState = state
   if (state === 'active') {
     lastActive = performance.now()
-    logEvent('state:foreground', {})
+    logEvent('state:foreground:sampled', {})
   } else {
     let secondsActive = 0
     if (lastActive != null) {
       secondsActive = Math.round((performance.now() - lastActive) / 1e3)
     }
     lastActive = null
-    logEvent('state:background', {
+    logEvent('state:background:sampled', {
       secondsActive,
     })
   }
