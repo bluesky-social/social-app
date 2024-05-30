@@ -47,8 +47,6 @@ let MessageItem = ({
 
   const isNextFromSameSender = isNextFromSelf === isFromSelf
 
-  const needsTail = !nextIsMessage || !isNextFromSameSender
-
   const isNewDay = useMemo(() => {
     // TODO: figure out how we can show this for when we're at the start
     // of the conversation
@@ -59,6 +57,17 @@ let MessageItem = ({
 
     return localDateString(thisDate) !== localDateString(prevDate)
   }, [message, prevMessage])
+
+  const isLastMessageOfDay = useMemo(() => {
+    if (!nextMessage || !nextIsMessage) return true
+
+    const thisDate = new Date(message.sentAt)
+    const prevDate = new Date(nextMessage.sentAt)
+
+    return localDateString(thisDate) !== localDateString(prevDate)
+  }, [message.sentAt, nextIsMessage, nextMessage])
+
+  const needsTail = isLastMessageOfDay || !isNextFromSameSender
 
   const isLastInGroup = useMemo(() => {
     // if this message is pending, it means the next message is pending too
