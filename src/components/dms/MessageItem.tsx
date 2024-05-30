@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native'
 import {ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
+import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -130,7 +131,7 @@ let MessageItemMetadata = ({
   style: StyleProp<TextStyle>
 }): React.ReactNode => {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const {message} = item
 
   const handleRetry = useCallback(
@@ -145,7 +146,7 @@ let MessageItemMetadata = ({
   )
 
   const relativeTimestamp = useCallback(
-    (timestamp: string) => {
+    (i18n: I18n, timestamp: string) => {
       const date = new Date(timestamp)
       const now = new Date()
 
@@ -182,7 +183,7 @@ let MessageItemMetadata = ({
         year: 'numeric',
       })
     },
-    [_, i18n],
+    [_],
   )
 
   return (

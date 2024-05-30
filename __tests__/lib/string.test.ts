@@ -1,4 +1,5 @@
 import {RichText} from '@atproto/api'
+import {I18n} from '@lingui/core'
 
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {cleanError} from '../../src/lib/strings/errors'
@@ -207,8 +208,10 @@ describe('ago', () => {
   ]
 
   it('correctly calculates how much time passed, in a string', () => {
+    const i18n = new I18n({locale: 'en'})
+
     for (let i = 0; i < inputs.length; i++) {
-      const result = ago(inputs[i])
+      const result = ago(i18n, inputs[i])
       expect(result).toEqual(outputs[i])
     }
   })

@@ -1,4 +1,6 @@
 import React from 'react'
+import {I18n} from '@lingui/core'
+import {useLingui} from '@lingui/react'
 
 import {useTickEveryMinute} from '#/state/shell'
 import {ago} from 'lib/strings/time'
@@ -10,17 +12,19 @@ export function TimeElapsed({
 }: {
   timestamp: string
   children: ({timeElapsed}: {timeElapsed: string}) => JSX.Element
-  timeToString?: (timeElapsed: string) => string
+  timeToString?: (i18n: I18n, timeElapsed: string) => string
 }) {
+  const {i18n} = useLingui()
+
   const tick = useTickEveryMinute()
   const [timeElapsed, setTimeAgo] = React.useState(() =>
-    timeToString(timestamp),
+    timeToString(i18n, timestamp),
   )
 
   const [prevTick, setPrevTick] = React.useState(tick)
   if (prevTick !== tick) {
     setPrevTick(tick)
-    setTimeAgo(timeToString(timestamp))
+    setTimeAgo(timeToString(i18n, timestamp))
   }
 
   return children({timeElapsed})
