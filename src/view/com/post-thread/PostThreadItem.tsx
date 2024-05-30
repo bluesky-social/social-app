@@ -250,7 +250,7 @@ let PostThreadItemLoaded = ({
                   styles.replyLine,
                   {
                     flexGrow: 1,
-                    backgroundColor: pal.colors.border,
+                    backgroundColor: pal.colors.replyLine,
                   },
                 ]}
               />
@@ -265,6 +265,7 @@ let PostThreadItemLoaded = ({
             styles.outerHighlighted,
             pal.border,
             pal.view,
+            rootUri === post.uri && styles.outerHighlightedRoot,
             hideTopBorder && styles.noTopBorder,
           ]}
           accessible={false}>
@@ -700,9 +701,14 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   outerHighlighted: {
-    paddingTop: 16,
+    borderTopWidth: 0,
+    paddingTop: 4,
     paddingLeft: 8,
     paddingRight: 8,
+  },
+  outerHighlightedRoot: {
+    borderTopWidth: 1,
+    paddingTop: 16,
   },
   noTopBorder: {
     borderTopWidth: 0,
