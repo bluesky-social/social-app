@@ -1,5 +1,4 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
 
 const steps = [
   'Landing',
@@ -17,7 +16,8 @@ type Action =
   | {type: 'SetCanNext'; canNext: boolean}
   | {type: 'SetName'; name: string}
   | {type: 'SetDescription'; description: string}
-  | {type: 'AddProfile'}
+  | {type: 'AddProfile'; did: string}
+  | {type: 'RemoveProfile'; did: string}
 
 interface State {
   canNext: boolean
@@ -25,7 +25,7 @@ interface State {
   name?: string
   description?: string
   avatar?: string
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
+  profileDids: string[]
 }
 
 type TStateContext = [State, (action: Action) => void]
@@ -56,6 +56,13 @@ function reducer(state: State, action: Action): State {
       updatedState = {...state, description: action.description}
       break
     case 'AddProfile':
+      updatedState = {...state, profileDids: [...state.profileDids, action.did]}
+      break
+    case 'RemoveProfile':
+      updatedState = {
+        ...state,
+        profileDids: state.profileDids.filter(did => did !== action.did),
+      }
       break
   }
 
@@ -81,7 +88,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const stateAndReducer = React.useReducer(reducer, {
     canNext: true,
     currentStep: 'Landing',
-    profiles: [],
+    profileDids: [],
   })
 
   return (

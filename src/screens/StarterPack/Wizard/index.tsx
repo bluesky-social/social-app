@@ -1,4 +1,4 @@
-import React, {Children} from 'react'
+import React from 'react'
 import {Keyboard, View} from 'react-native'
 import {
   KeyboardAwareScrollView,
@@ -97,6 +97,7 @@ function WizardInner() {
             ? () => dispatch({type: 'Back'})
             : undefined
         }
+        showBorder={true}
       />
       <Container>
         <StepView />
