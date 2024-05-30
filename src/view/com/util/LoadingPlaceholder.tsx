@@ -67,7 +67,7 @@ export function PostLoadingPlaceholder({
         <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
         <LoadingPlaceholder width="80%" height={6} style={{marginBottom: 11}} />
         <View style={styles.postCtrls}>
-          <View style={[styles.postCtrl, {marginLeft: -5}]}>
+          <View style={[styles.postCtrl, {marginLeft: -6}]}>
             <View style={styles.postBtn}>
               <Bubble
                 style={[
