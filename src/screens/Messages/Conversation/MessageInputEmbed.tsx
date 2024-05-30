@@ -41,6 +41,10 @@ export function useMessageEmbed() {
 
   const [embedUri, setEmbed] = useState(embedFromParams)
 
+  if (embedFromParams && embedUri !== embedFromParams) {
+    setEmbed(embedFromParams)
+  }
+
   return {
     embedUri,
     setEmbed: useCallback(
@@ -56,8 +60,6 @@ export function useMessageEmbed() {
         const url = convertBskyAppUrlIfNeeded(embedUrl)
         const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
         const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
-
-        console.log('setEmbed', uri)
 
         setEmbed(uri)
       },
