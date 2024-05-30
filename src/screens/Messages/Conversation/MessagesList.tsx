@@ -15,6 +15,7 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
+import {isFirefox} from '#/lib/browser'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
@@ -328,7 +329,10 @@ export function MessagesList({
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           containWeb={true}
-          disableContentVisibility={true}
+          disableContentVisibility={
+            /* Prevents jank when sending message */
+            isFirefox
+          }
           disableVirtualization={true}
           style={animatedListStyle}
           // The extra two items account for the header and the footer components

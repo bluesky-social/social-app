@@ -449,9 +449,14 @@ let Row = function RowImpl<ItemT>({
     return null
   }
 
+  const shouldDisableContentVisibility = disableContentVisibility || isSafari
   return (
     <View
-      style={disableContentVisibility ? undefined : styles.row}
+      style={
+        shouldDisableContentVisibility
+          ? undefined
+          : styles.contentVisibilityAuto
+      }
       ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
@@ -523,9 +528,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  row: {
+  contentVisibilityAuto: {
     // @ts-ignore web only
-    contentVisibility: isSafari ? '' : 'auto', // Safari support for this is buggy.
+    contentVisibility: 'auto',
   },
   minHeightViewport: {
     // @ts-ignore web only
