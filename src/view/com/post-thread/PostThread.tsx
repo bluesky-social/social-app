@@ -318,121 +318,101 @@ export function PostThread({
   const showHeader =
     isNative || (isTabletOrMobile && (!hasParents || !isFetching))
 
-  const renderItem = React.useCallback(
-    ({item, index}: {item: RowItem; index: number}) => {
-      if (item === REPLY_PROMPT && hasSession) {
-        return (
-          <View>
-            {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
-          </View>
-        )
-      } else if (item === SHOW_HIDDEN_REPLIES) {
-        return (
-          <PostThreadShowHiddenReplies
-            type="hidden"
-            onPress={() =>
-              setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
+  const renderItem = ({item, index}: {item: RowItem; index: number}) => {
+    if (item === REPLY_PROMPT && hasSession) {
+      return (
+        <View>
+          {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
+        </View>
+      )
+    } else if (item === SHOW_HIDDEN_REPLIES) {
+      return (
+        <PostThreadShowHiddenReplies
+          type="hidden"
+          onPress={() =>
+            setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
+          }
+        />
+      )
+    } else if (item === SHOW_MUTED_REPLIES) {
+      return (
+        <PostThreadShowHiddenReplies
+          type="muted"
+          onPress={() =>
+            setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
+          }
+        />
+      )
+    } else if (isThreadNotFound(item)) {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            a.border_t,
+            t.atoms.border_contrast_low,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+            <Trans>Deleted post.</Trans>
+          </Text>
+        </View>
+      )
+    } else if (isThreadBlocked(item)) {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            a.border_t,
+            t.atoms.border_contrast_low,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+            <Trans>Blocked post.</Trans>
+          </Text>
+        </View>
+      )
+    } else if (isThreadPost(item)) {
+      const prev = isThreadPost(posts[index - 1])
+        ? (posts[index - 1] as ThreadPost)
+        : undefined
+      const next = isThreadPost(posts[index + 1])
+        ? (posts[index + 1] as ThreadPost)
+        : undefined
+      const showChildReplyLine = (next?.ctx.depth || 0) > item.ctx.depth
+      const showParentReplyLine =
+        (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
+      const hasUnrevealedParents =
+        index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+      return (
+        <View
+          ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
+          onLayout={deferParents ? () => setDeferParents(false) : undefined}>
+          <PostThreadItem
+            post={item.post}
+            record={item.record}
+            moderation={threadModerationCache.get(item)}
+            treeView={treeView}
+            depth={item.ctx.depth}
+            prevPost={prev}
+            nextPost={next}
+            isHighlightedPost={item.ctx.isHighlightedPost}
+            hasMore={item.ctx.hasMore}
+            showChildReplyLine={showChildReplyLine}
+            showParentReplyLine={showParentReplyLine}
+            hasPrecedingItem={showParentReplyLine || !!hasUnrevealedParents}
+            overrideBlur={
+              hiddenRepliesState ===
+                HiddenRepliesState.ShowAndOverridePostHider &&
+              item.ctx.depth > 0
             }
+            onPostReply={refetch}
+            hideTopBorder={index === 0}
           />
-        )
-      } else if (item === SHOW_MUTED_REPLIES) {
-        return (
-          <PostThreadShowHiddenReplies
-            type="muted"
-            onPress={() =>
-              setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
-            }
-          />
-        )
-      } else if (isThreadNotFound(item)) {
-        return (
-          <View
-            style={[
-              a.p_lg,
-              a.border_t,
-              t.atoms.border_contrast_low,
-              t.atoms.bg_contrast_25,
-            ]}>
-            <Text
-              style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
-              <Trans>Deleted post.</Trans>
-            </Text>
-          </View>
-        )
-      } else if (isThreadBlocked(item)) {
-        return (
-          <View
-            style={[
-              a.p_lg,
-              a.border_t,
-              t.atoms.border_contrast_low,
-              t.atoms.bg_contrast_25,
-            ]}>
-            <Text
-              style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
-              <Trans>Blocked post.</Trans>
-            </Text>
-          </View>
-        )
-      } else if (isThreadPost(item)) {
-        const prev = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
-          : undefined
-        const next = isThreadPost(posts[index + 1])
-          ? (posts[index + 1] as ThreadPost)
-          : undefined
-        const showChildReplyLine = (next?.ctx.depth || 0) > item.ctx.depth
-        const showParentReplyLine =
-          (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
-        const hasUnrevealedParents =
-          index === 0 &&
-          skeleton?.parents &&
-          maxParents < skeleton.parents.length
-        return (
-          <View
-            ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
-            onLayout={deferParents ? () => setDeferParents(false) : undefined}>
-            <PostThreadItem
-              post={item.post}
-              record={item.record}
-              moderation={threadModerationCache.get(item)}
-              treeView={treeView}
-              depth={item.ctx.depth}
-              prevPost={prev}
-              nextPost={next}
-              isHighlightedPost={item.ctx.isHighlightedPost}
-              hasMore={item.ctx.hasMore}
-              showChildReplyLine={showChildReplyLine}
-              showParentReplyLine={showParentReplyLine}
-              hasPrecedingItem={showParentReplyLine || !!hasUnrevealedParents}
-              overrideBlur={
-                hiddenRepliesState ===
-                  HiddenRepliesState.ShowAndOverridePostHider &&
-                item.ctx.depth > 0
-              }
-              onPostReply={refetch}
-            />
-          </View>
-        )
-      }
-      return null
-    },
-    [
-      t,
-      hasSession,
-      isMobile,
-      onPressReply,
-      posts,
-      skeleton?.parents,
-      maxParents,
-      deferParents,
-      treeView,
-      refetch,
-      threadModerationCache,
-      hiddenRepliesState,
-      setHiddenRepliesState,
-    ],
-  )
+        </View>
+      )
+    }
+    return null
+  }
 
   if (!thread || !preferences || error) {
     return (
