@@ -202,14 +202,14 @@ function AppealForm({
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await getAgent()
+      await agent
         .withProxy('atproto_labeler', label.src)
         .createModerationReport({
           reasonType: ComAtprotoModerationDefs.REASONAPPEAL,

@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   alt: {
     color: 'white',
-    fontSize: 6,
+    fontSize: 7,
     fontWeight: 'bold',
   },
   customFeedOuter: {

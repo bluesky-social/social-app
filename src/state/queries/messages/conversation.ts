@@ -11,12 +11,12 @@ const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
 export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useQuery({
     queryKey: RQKEY(convo.id),
     queryFn: async () => {
-      const {data} = await getAgent().api.chat.bsky.convo.getConvo(
+      const {data} = await agent.api.chat.bsky.convo.getConvo(
         {convoId: convo.id},
         {headers: DM_SERVICE_HEADERS},
       )
@@ -30,7 +30,7 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
 export function useMarkAsReadMutation() {
   const optimisticUpdate = useOnMarkAsRead()
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({
@@ -42,7 +42,7 @@ export function useMarkAsReadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      await getAgent().api.chat.bsky.convo.updateRead(
+      await agent.api.chat.bsky.convo.updateRead(
         {
           convoId,
           messageId,

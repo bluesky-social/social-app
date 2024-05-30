@@ -25,7 +25,7 @@ const stateContext = React.createContext<StateContext>({
 })
 
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const enabled = isDiscoverFeed(feed) && hasSession
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<
@@ -35,7 +35,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   >(new WeakSet())
 
   const sendToFeedNoDelay = React.useCallback(() => {
-    const proxyAgent = getAgent().withProxy(
+    const proxyAgent = agent.withProxy(
       // @ts-ignore TODO need to update withProxy() to support this key -prf
       'bsky_fg',
       // TODO when we start sending to other feeds, we need to grab their DID -prf
@@ -50,7 +50,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       .catch((e: any) => {
         logger.warn('Failed to send feed interactions', {error: e})
       })
-  }, [getAgent])
+  }, [agent])
 
   const sendToFeed = React.useMemo(
     () =>

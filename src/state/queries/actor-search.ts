@@ -14,12 +14,12 @@ export function useActorSearch({
   query: string
   enabled?: boolean
 }) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyActorDefs.ProfileView[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(query || ''),
     async queryFn() {
-      const res = await getAgent().searchActors({
+      const res = await agent.searchActors({
         q: query,
       })
       return res.data.actors

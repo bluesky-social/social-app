@@ -7,22 +7,22 @@ import {
 import {FeedAPI, FeedAPIResponse} from './types'
 
 export class LikesFeedAPI implements FeedAPI {
-  getAgent: () => BskyAgent
+  agent: BskyAgent
   params: GetActorLikes.QueryParams
 
   constructor({
-    getAgent,
+    agent,
     feedParams,
   }: {
-    getAgent: () => BskyAgent
+    agent: BskyAgent
     feedParams: GetActorLikes.QueryParams
   }) {
-    this.getAgent = getAgent
+    this.agent = agent
     this.params = feedParams
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.getAgent().getActorLikes({
+    const res = await this.agent.getActorLikes({
       ...this.params,
       limit: 1,
     })
@@ -36,7 +36,7 @@ export class LikesFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.getAgent().getActorLikes({
+    const res = await this.agent.getActorLikes({
       ...this.params,
       cursor,
       limit,

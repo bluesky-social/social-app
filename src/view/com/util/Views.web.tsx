@@ -14,6 +14,7 @@
 
 import React from 'react'
 import {
+  FlatList,
   FlatListProps,
   ScrollViewProps,
   StyleSheet,
@@ -67,7 +68,7 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
     desktopFixedHeight,
     ...props
   }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<Animated.FlatList<ItemT>>,
+  ref: React.Ref<FlatList<ItemT>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()

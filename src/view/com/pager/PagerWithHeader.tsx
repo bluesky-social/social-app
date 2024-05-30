@@ -109,7 +109,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       ],
     )
 
-    const scrollRefs = useSharedValue<AnimatedRef<any>[]>([])
+    const scrollRefs = useSharedValue<Array<AnimatedRef<any> | null>>([])
     const registerRef = React.useCallback(
       (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
         scrollRefs.modify(refs => {
@@ -130,8 +130,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         lastForcedScrollY.value = forcedScrollY
         const refs = scrollRefs.value
         for (let i = 0; i < refs.length; i++) {
-          if (i !== currentPage && refs[i] != null) {
-            scrollTo(refs[i], 0, forcedScrollY, false)
+          const scollRef = refs[i]
+          if (i !== currentPage && scollRef != null) {
+            scrollTo(scollRef, 0, forcedScrollY, false)
           }
         }
       }

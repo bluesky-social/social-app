@@ -175,7 +175,6 @@ module.exports = function (config) {
         checkAutomatically: 'NEVER',
         channel: UPDATES_CHANNEL,
       },
-      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -183,7 +182,7 @@ module.exports = function (config) {
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '13.4',
+              deploymentTarget: '14.0',
               newArchEnabled: false,
             },
             android: {
@@ -205,6 +204,7 @@ module.exports = function (config) {
         ],
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
+        './plugins/withAndroidManifestLaunchModePlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',

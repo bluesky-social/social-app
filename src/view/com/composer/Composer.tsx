@@ -90,7 +90,7 @@ export const ComposePost = observer(function ComposePost({
   imageUris: initImageUris,
 }: Props) {
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
@@ -260,7 +260,7 @@ export const ComposePost = observer(function ComposePost({
     let postUri
     try {
       postUri = (
-        await apilib.post(getAgent(), {
+        await apilib.post(agent, {
           rawText: richtext.text,
           replyTo: replyTo?.uri,
           images: gallery.images,
