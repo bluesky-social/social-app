@@ -64,7 +64,7 @@ let MessageItemEmbed = ({
       <View
         style={[
           a.w_full,
-          t.atoms.bg_contrast_25,
+          t.atoms.bg,
           t.atoms.border_contrast_low,
           a.rounded_md,
           a.border,
