@@ -183,7 +183,9 @@ export const ComposePost = observer(function ComposePost({
         [0, 1],
         [
           'transparent',
-          isWeb ? t.palette.contrast_100 : t.palette.contrast_400,
+          isWeb
+            ? t.atoms.border_contrast_low.borderColor
+            : t.atoms.border_contrast_high.borderColor,
         ],
       ),
     }
