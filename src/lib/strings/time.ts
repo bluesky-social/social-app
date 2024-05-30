@@ -1,7 +1,5 @@
 import {I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
-
-import {MONTH_FALLBACK_LOCALES} from '#/locale/constants'
+import {defineMessage, msg} from '@lingui/macro'
 
 const NOW = 5
 const MINUTE = 60
@@ -18,33 +16,57 @@ export function ago(i18n: I18n, date: number | string | Date): string {
   } else {
     ts = date
   }
+
   const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
+
+  // We can't use `i18n.number` with a `unit` format here because ICU (which
+  // provides localization data) doesn't seem to have narrow unit display
+  // formatting for locales like Japanese, Spanish, French and Turkish.
+
+  // We'll use `defineMessage` here instead of our usual `msg` as we can pass
+  // an object with a `comment` property that better describes what these
+  // strings are supposed to be. These comments get stripped out in production.
+
+  // Intermediate variables are created to improve the interpolation keys.
+
   if (diffSeconds < NOW) {
     return i18n._(msg`now`)
   } else if (diffSeconds < MINUTE) {
-    return i18n.number(diffSeconds, {
-      style: 'unit',
-      unitDisplay: 'narrow',
-      unit: 'second',
-    })
+    const seconds = diffSeconds
+
+    return i18n._(
+      defineMessage({
+        message: `${seconds}s`,
+        comment: `How many seconds has passed, displayed in a narrow form`,
+      }),
+    )
   } else if (diffSeconds < HOUR) {
-    return i18n.number(Math.floor(diffSeconds / MINUTE), {
-      style: 'unit',
-      unitDisplay: 'narrow',
-      unit: 'minute',
-    })
+    const minutes = Math.floor(diffSeconds / MINUTE)
+
+    return i18n._(
+      defineMessage({
+        message: `${minutes}m`,
+        comment: `How many minutes has passed, displayed in a narrow form`,
+      }),
+    )
   } else if (diffSeconds < DAY) {
-    return i18n.number(Math.floor(diffSeconds / HOUR), {
-      style: 'unit',
-      unitDisplay: 'narrow',
-      unit: 'hour',
-    })
+    const hours = Math.floor(diffSeconds / HOUR)
+
+    return i18n._(
+      defineMessage({
+        message: `${hours}h`,
+        comment: `How many minutes has passed, displayed in a narrow form`,
+      }),
+    )
   } else if (diffSeconds < MONTH_30) {
-    return i18n.number(Math.round(diffSeconds / DAY), {
-      style: 'unit',
-      unitDisplay: 'narrow',
-      unit: 'day',
-    })
+    const days = Math.round(diffSeconds / DAY)
+
+    return i18n._(
+      defineMessage({
+        message: `${days}d`,
+        comment: `How many minutes has passed, displayed in a narrow form`,
+      }),
+    )
   } else {
     let months = diffSeconds / MONTH
     if (months % 1 >= 0.9) {
@@ -54,13 +76,12 @@ export function ago(i18n: I18n, date: number | string | Date): string {
     }
 
     if (months < 12) {
-      if (MONTH_FALLBACK_LOCALES.includes(i18n.locale)) return `${months}mo`
-
-      return i18n.number(months, {
-        style: 'unit',
-        unitDisplay: 'narrow',
-        unit: 'month',
-      })
+      return i18n._(
+        defineMessage({
+          message: `${months}mo`,
+          comment: `How many months has passed, displayed in a narrow form`,
+        }),
+      )
     } else {
       return i18n.date(new Date(ts))
     }
