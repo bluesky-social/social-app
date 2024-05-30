@@ -1,11 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView, ScrollView} from 'view/com/util/Views'
+import {CenteredView} from 'view/com/util/Views'
 import {Step, useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
@@ -67,9 +68,9 @@ function WizardInner() {
             : undefined
         }
       />
-      <ScrollView style={[a.flex_1]}>
+      <KeyboardAwareScrollView style={[a.flex_1]}>
         <StepView />
-      </ScrollView>
+      </KeyboardAwareScrollView>
       <View style={a.px_md}>
         <Button
           label={uiStrings.button}
