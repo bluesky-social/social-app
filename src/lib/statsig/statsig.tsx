@@ -105,6 +105,13 @@ export function logEvent<E extends keyof LogEvents>(
     if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
       return
     }
+    if (process.env.NODE_ENV === 'development') {
+      if (eventName.endsWith(':sampled')) {
+        logger.error(
+          'Did you forget to add ' + eventName + ' to DOWNSAMPLED_EVENTS?',
+        )
+      }
+    }
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
