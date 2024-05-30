@@ -13,6 +13,7 @@ type Action =
   | {type: 'RemoveProfile'; did: string}
   | {type: 'AddFeed'; uri: string}
   | {type: 'RemoveFeed'; uri: string}
+  | {type: 'SetProcessing'; processing: boolean}
 
 interface State {
   canNext: boolean
@@ -22,6 +23,7 @@ interface State {
   avatar?: string
   profileDids: string[]
   feedUris: string[]
+  processing: boolean
 }
 
 type TStateContext = [State, (action: Action) => void]
@@ -69,6 +71,9 @@ function reducer(state: State, action: Action): State {
         feedUris: state.feedUris.filter(uri => uri !== action.uri),
       }
       break
+    case 'SetProcessing':
+      updatedState = {...state, processing: action.processing}
+      break
   }
 
   switch (updatedState.currentStep) {
@@ -95,6 +100,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     currentStep: 'Landing',
     profileDids: [],
     feedUris: [],
+    processing: false,
   })
 
   return (

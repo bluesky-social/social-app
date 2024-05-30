@@ -6,8 +6,10 @@ import {
 } from 'react-native-keyboard-controller'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
+import {NavigationProp} from 'lib/routes/types'
 import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -17,8 +19,9 @@ import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {Loader} from '#/components/Loader'
 import {Provider} from './State'
 
 export function Wizard() {
@@ -30,7 +33,9 @@ export function Wizard() {
 }
 
 function WizardInner() {
+  const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
+  const t = useTheme()
   const bottomOffset = useBottomBarOffset()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
@@ -39,6 +44,12 @@ function WizardInner() {
     staleTime: 0,
   })
   const bottomBarOffset = useBottomBarOffset()
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: false,
+    })
+  }, [navigation])
 
   const wizardUiStrings: Record<Step, {header: string; button: string}> = {
     Landing: {
@@ -73,6 +84,9 @@ function WizardInner() {
           msg`${currentProfile?.displayName || currentProfile?.handle}'s`,
         ),
       })
+    } else if (state.currentStep === 'Feeds') {
+      dispatch({type: 'SetProcessing', processing: true})
+      return
     }
 
     const keyboardVisible = Keyboard.isVisible()
@@ -107,8 +121,11 @@ function WizardInner() {
             color="primary"
             size="large"
             onPress={onNext}
-            disabled={!state.canNext}>
+            disabled={!state.canNext || state.processing}>
             <ButtonText>{uiStrings.button}</ButtonText>
+            {state.processing && (
+              <Loader size="md" style={t.atoms.text_contrast_low} />
+            )}
           </Button>
         </View>
       </KeyboardStickyView>
