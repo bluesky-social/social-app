@@ -77,7 +77,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   return (
     <Pressable
       style={[
-        isWeb ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+        isWeb ? t.atoms.border_contrast_low : t.atoms.border_contrast_high,
         styles.replyToLayout,
       ]}
       onPress={onPress}
