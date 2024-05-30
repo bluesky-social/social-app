@@ -29,23 +29,31 @@ msgstr "{0, plural, one {{formattedCount} other} other {{formattedCount} others}
 #~ msgstr "{0, plural, one {# codi d'invitació disponible} other {# codis d'invitació disponibles}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:55
-msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
+#~ msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
+#~ msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest compte} other {# etiquetes s'han aplicat a aquest compte}}"
+
+#: src/components/moderation/LabelsOnMe.tsx:55
+msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
 msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest compte} other {# etiquetes s'han aplicat a aquest compte}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
-msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
+#~ msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
+#~ msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest contingut} other {# etiquetes s'han aplicat a aquest contingut}}"
+
+#: src/components/moderation/LabelsOnMe.tsx:61
+msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest contingut} other {# etiquetes s'han aplicat a aquest contingut}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:62
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# republicació} other {# republicacions}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:373
+#: src/components/ProfileHoverCard/index.web.tsx:376
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural, one {seguidor} other {seguidors}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:377
+#: src/components/ProfileHoverCard/index.web.tsx:380
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {seguint} other {seguint}}"
@@ -54,7 +62,7 @@ msgstr "{0, plural, one {seguint} other {seguint}}"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {Like (# m'agrada)} other {Like (# m'agrades)}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:359
+#: src/view/com/post-thread/PostThreadItem.tsx:358
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {m'agrada} other {m'agrades}}"
 
@@ -70,7 +78,7 @@ msgstr "{0, plural, one {publicació} other {publicacions}}"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {Resposta per (# reply)} other {Resposta per (# replies)}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:339
+#: src/view/com/post-thread/PostThreadItem.tsx:338
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {republicació} other {republicacions}}"
 
@@ -87,8 +95,8 @@ msgstr "{0, plural, one {Desmarca m'agrada (# like)} other {Desmarca m'agrada (#
 #~ msgstr "Llista {purposeLabel} {0}"
 
 #: src/view/screens/ProfileList.tsx:286
-msgid "{0} your feeds"
-msgstr ""
+#~ msgid "{0} your feeds"
+#~ msgstr "{0} els teus canals"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -102,10 +110,14 @@ msgstr "{estimatedTimeHrs, plural, one {hora} other {hores}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {minut} other {minuts}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:454
+#: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} seguint"
+
+#: src/components/dms/NewChatDialog/index.tsx:171
+msgid "{handle} can't be messaged"
+msgstr "No es poden enviar missatges a {handle}"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 #~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
@@ -121,8 +133,8 @@ msgstr "{following} seguint"
 #~ msgid "{invitesAvailable} invite codes available"
 #~ msgstr "{invitesAvailable} codis d'invitació disponibles"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:286
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:299
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, one {Li ha agradat a # user} other {Li ha agradat a # users}}"
@@ -184,7 +196,7 @@ msgstr "<0>No aplicable.</0> Aquesta advertència només està disponible per pu
 msgid "⚠Invalid Handle"
 msgstr "⚠Identificador invàlid"
 
-#: src/screens/Login/LoginForm.tsx:241
+#: src/screens/Login/LoginForm.tsx:244
 msgid "2FA Confirmation"
 msgstr "Confirmació 2FA"
 
@@ -206,11 +218,11 @@ msgid "Access profile and other navigation links"
 msgstr "Accedeix al perfil i altres enllaços de navegació"
 
 #: src/view/com/modals/EditImage.tsx:300
-#: src/view/screens/Settings/index.tsx:509
+#: src/view/screens/Settings/index.tsx:511
 msgid "Accessibility"
 msgstr "Accessibilitat"
 
-#: src/view/screens/Settings/index.tsx:500
+#: src/view/screens/Settings/index.tsx:502
 msgid "Accessibility settings"
 msgstr "Configuració d'accessibilitat"
 
@@ -223,21 +235,21 @@ msgstr "Configuració d'accessibilitat"
 #~ msgid "account"
 #~ msgstr "compte"
 
-#: src/screens/Login/LoginForm.tsx:164
-#: src/view/screens/Settings/index.tsx:336
-#: src/view/screens/Settings/index.tsx:718
+#: src/screens/Login/LoginForm.tsx:167
+#: src/view/screens/Settings/index.tsx:338
+#: src/view/screens/Settings/index.tsx:745
 msgid "Account"
 msgstr "Compte"
 
-#: src/view/com/profile/ProfileMenu.tsx:139
+#: src/view/com/profile/ProfileMenu.tsx:140
 msgid "Account blocked"
 msgstr "Compte bloquejat"
 
-#: src/view/com/profile/ProfileMenu.tsx:153
+#: src/view/com/profile/ProfileMenu.tsx:154
 msgid "Account followed"
 msgstr "Compte seguit"
 
-#: src/view/com/profile/ProfileMenu.tsx:113
+#: src/view/com/profile/ProfileMenu.tsx:114
 msgid "Account muted"
 msgstr "Compte silenciat"
 
@@ -258,23 +270,23 @@ msgstr "Opcions del compte"
 msgid "Account removed from quick access"
 msgstr "Compte eliminat de l'accés ràpid"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:135
-#: src/view/com/profile/ProfileMenu.tsx:128
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:131
+#: src/view/com/profile/ProfileMenu.tsx:129
 msgid "Account unblocked"
 msgstr "Compte desbloquejat"
 
-#: src/view/com/profile/ProfileMenu.tsx:166
+#: src/view/com/profile/ProfileMenu.tsx:167
 msgid "Account unfollowed"
 msgstr "Compte no seguit"
 
-#: src/view/com/profile/ProfileMenu.tsx:102
+#: src/view/com/profile/ProfileMenu.tsx:103
 msgid "Account unmuted"
 msgstr "Compte no silenciat"
 
-#: src/components/dialogs/MutedWords.tsx:164
+#: src/components/dialogs/MutedWords.tsx:165
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
-#: src/view/screens/ProfileList.tsx:876
+#: src/view/screens/ProfileList.tsx:880
 msgid "Add"
 msgstr "Afegeix"
 
@@ -282,22 +294,22 @@ msgstr "Afegeix"
 msgid "Add a content warning"
 msgstr "Afegeix una advertència de contingut"
 
-#: src/view/screens/ProfileList.tsx:866
+#: src/view/screens/ProfileList.tsx:870
 msgid "Add a user to this list"
 msgstr "Afegeix un usuari a aquesta llista"
 
 #: src/components/dialogs/SwitchAccount.tsx:56
-#: src/view/screens/Settings/index.tsx:413
-#: src/view/screens/Settings/index.tsx:422
+#: src/view/screens/Settings/index.tsx:415
+#: src/view/screens/Settings/index.tsx:424
 msgid "Add account"
 msgstr "Afegeix un compte"
 
-#: src/view/com/composer/GifAltText.tsx:69
-#: src/view/com/composer/GifAltText.tsx:135
-#: src/view/com/composer/GifAltText.tsx:175
+#: src/view/com/composer/GifAltText.tsx:70
+#: src/view/com/composer/GifAltText.tsx:136
+#: src/view/com/composer/GifAltText.tsx:176
 #: src/view/com/composer/photos/Gallery.tsx:120
 #: src/view/com/composer/photos/Gallery.tsx:187
-#: src/view/com/modals/AltImage.tsx:117
+#: src/view/com/modals/AltImage.tsx:118
 msgid "Add alt text"
 msgstr "Afegeix text alternatiu"
 
@@ -305,9 +317,9 @@ msgstr "Afegeix text alternatiu"
 #~ msgid "Add ALT text"
 #~ msgstr "Afegeix text alternatiu"
 
-#: src/view/screens/AppPasswords.tsx:104
-#: src/view/screens/AppPasswords.tsx:145
-#: src/view/screens/AppPasswords.tsx:158
+#: src/view/screens/AppPasswords.tsx:106
+#: src/view/screens/AppPasswords.tsx:148
+#: src/view/screens/AppPasswords.tsx:161
 msgid "Add App Password"
 msgstr "Afegeix una contrasenya d'aplicació"
 
@@ -328,21 +340,21 @@ msgstr "Afegeix una contrasenya d'aplicació"
 #~ msgid "Add link card:"
 #~ msgstr "Afegeix una targeta a l'enllaç:"
 
-#: src/components/dialogs/MutedWords.tsx:157
+#: src/components/dialogs/MutedWords.tsx:158
 msgid "Add mute word for configured settings"
 msgstr "Afegeix paraula silenciada a la configuració"
 
-#: src/components/dialogs/MutedWords.tsx:86
+#: src/components/dialogs/MutedWords.tsx:87
 msgid "Add muted words and tags"
 msgstr "Afegeix les paraules i etiquetes silenciades"
 
 #: src/screens/Home/NoFeedsPinned.tsx:112
 msgid "Add recommended feeds"
-msgstr ""
+msgstr "Afegeix els canals recomanats"
 
-#: src/screens/Feeds/NoFollowingFeed.tsx:43
+#: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr ""
+msgstr "Afegeix el canal per defecte només de la gent que segueixes"
 
 #: src/view/com/modals/ChangeHandle.tsx:410
 msgid "Add the following DNS record to your domain:"
@@ -386,16 +398,31 @@ msgstr "Contingut per a adults"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
-msgstr "El contingut per adults està deshabilitat."
+msgstr "El contingut per a adults està deshabilitat."
 
 #: src/screens/Moderation/index.tsx:375
-#: src/view/screens/Settings/index.tsx:652
+#: src/view/screens/Settings/index.tsx:679
 msgid "Advanced"
 msgstr "Avançat"
 
 #: src/view/screens/Feeds.tsx:797
 msgid "All the feeds you've saved, right in one place."
 msgstr "Tots els canals que has desat, en un sol lloc."
+
+#: src/view/com/modals/AddAppPasswords.tsx:188
+#: src/view/com/modals/AddAppPasswords.tsx:195
+msgid "Allow access to your direct messages"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:61
+#: src/screens/Messages/Settings.tsx:64
+#~ msgid "Allow messages from"
+#~ msgstr "Permet missatges de"
+
+#: src/screens/Messages/Settings.tsx:62
+#: src/screens/Messages/Settings.tsx:65
+msgid "Allow new messages from"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -406,13 +433,13 @@ msgstr "Ja tens un codi?"
 msgid "Already signed in as @{0}"
 msgstr "Ja estàs registrat com a @{0}"
 
-#: src/view/com/composer/GifAltText.tsx:93
+#: src/view/com/composer/GifAltText.tsx:94
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/util/post-embeds/GifEmbed.tsx:173
 msgid "ALT"
 msgstr "ALT"
 
-#: src/view/com/composer/GifAltText.tsx:144
+#: src/view/com/composer/GifAltText.tsx:145
 #: src/view/com/modals/EditImage.tsx:316
 #: src/view/screens/AccessibilitySettings.tsx:77
 msgid "Alt text"
@@ -435,13 +462,13 @@ msgstr "S'ha enviat un correu a {0}. Inclou un codi de confirmació que has d'en
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "S'ha enviat un correu a la teva adreça prèvia, {0}. Inclou un codi de confirmació que has d'entrar aquí sota."
 
-#: src/components/dialogs/GifSelect.tsx:284
+#: src/components/dialogs/GifSelect.tsx:285
 msgid "An error occured"
 msgstr "Hi ha hagut un error"
 
 #: src/components/dms/MessageMenu.tsx:134
-msgid "An error occurred while trying to delete the message. Please try again."
-msgstr "Hi ha hagut un error intentant esborrar el missatge. Torna-ho a provar."
+#~ msgid "An error occurred while trying to delete the message. Please try again."
+#~ msgstr "Hi ha hagut un error intentant esborrar el missatge. Torna-ho a provar."
 
 #: src/lib/moderation/useReportOptions.ts:27
 msgid "An issue not included in these options"
@@ -481,19 +508,19 @@ msgstr "Comportament antisocial"
 msgid "App Language"
 msgstr "Idioma de l'aplicació"
 
-#: src/view/screens/AppPasswords.tsx:223
+#: src/view/screens/AppPasswords.tsx:228
 msgid "App password deleted"
 msgstr "Contrasenya de l'aplicació esborrada"
 
-#: src/view/com/modals/AddAppPasswords.tsx:135
+#: src/view/com/modals/AddAppPasswords.tsx:139
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
 msgstr "La contrasenya de l'aplicació només pot estar formada per lletres, números, espais, guions i guions baixos."
 
-#: src/view/com/modals/AddAppPasswords.tsx:100
+#: src/view/com/modals/AddAppPasswords.tsx:104
 msgid "App Password names must be at least 4 characters long."
 msgstr "La contrasenya de l'aplicació ha de ser d'almenys 4 caràcters."
 
-#: src/view/screens/Settings/index.tsx:663
+#: src/view/screens/Settings/index.tsx:690
 msgid "App password settings"
 msgstr "Configuració de la contrasenya d'aplicació"
 
@@ -502,17 +529,17 @@ msgstr "Configuració de la contrasenya d'aplicació"
 #~ msgstr "Contrasenyes de l'aplicació"
 
 #: src/Navigation.tsx:258
-#: src/view/screens/AppPasswords.tsx:189
-#: src/view/screens/Settings/index.tsx:672
+#: src/view/screens/AppPasswords.tsx:192
+#: src/view/screens/Settings/index.tsx:699
 msgid "App Passwords"
 msgstr "Contrasenyes de l'aplicació"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:150
 #: src/components/moderation/LabelsOnMeDialog.tsx:153
+#: src/components/moderation/LabelsOnMeDialog.tsx:156
 msgid "Appeal"
 msgstr "Apel·la"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:228
+#: src/components/moderation/LabelsOnMeDialog.tsx:238
 msgid "Appeal \"{0}\" label"
 msgstr "Apel·la \"{0}\" etiqueta"
 
@@ -528,7 +555,8 @@ msgstr "Apel·la \"{0}\" etiqueta"
 #~ msgid "Appeal Decision"
 #~ msgstr "Decisión de apelación"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:219
+#: src/components/moderation/LabelsOnMeDialog.tsx:229
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:91
 msgid "Appeal submitted"
 msgstr "Apel·lació enviada"
 
@@ -536,44 +564,55 @@ msgstr "Apel·lació enviada"
 #~ msgid "Appeal submitted."
 #~ msgstr "Apel·lació enviada."
 
-#: src/view/com/util/moderation/LabelInfo.tsx:52
-#~ msgid "Appeal this decision"
-#~ msgstr "Apel·la aquesta decisió"
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:51
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:53
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:99
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:101
+msgid "Appeal this decision"
+msgstr "Apel·la aquesta decisió"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:56
 #~ msgid "Appeal this decision."
 #~ msgstr "Apel·la aquesta decisió."
 
-#: src/view/screens/Settings/index.tsx:430
+#: src/view/screens/Settings/index.tsx:432
 msgid "Appearance"
 msgstr "Aparença"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:106
 msgid "Apply default recommended feeds"
-msgstr ""
+msgstr "Aplica els canals recomanats per defecte"
 
-#: src/view/screens/AppPasswords.tsx:265
+#: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "Confirmes que vols eliminar la contrasenya de l'aplicació \"{name}\"?"
 
 #: src/components/dms/MessageMenu.tsx:123
-msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
+#~ msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for other participants."
+#~ msgstr "Estàs segur que vols esborrar aquest missatge? El missatge s'esborrarà per a tu, però no per a l'altre participant."
+
+#: src/components/dms/MessageMenu.tsx:124
+msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "Estàs segur que vols esborrar aquest missatge? El missatge s'esborrarà per a tu, però no per als altres participants."
 
 #: src/components/dms/ConvoMenu.tsx:189
-msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
-msgstr "Estàs segur que vols abandonar aquesta conversa? El missatge s'esborrarà per a tu, però no per als altres participants."
+#~ msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
+#~ msgstr "Estàs segur que vols abandonar aquesta conversa? Els missatges s'esborraran per a tu, però no per als altres participants."
+
+#: src/components/dms/LeaveConvoPrompt.tsx:48
+msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
+msgstr "Estàs segur que vols abandonar aquesta conversa? Els missatge s'esborraran per a tu, però no per a l'altre participant."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "Confirmes que vols eliminar {0} dels teus canals?"
 
-#: src/view/com/composer/Composer.tsx:573
+#: src/view/com/composer/Composer.tsx:577
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Confirmes que vols descartar aquest esborrany?"
 
-#: src/components/dialogs/MutedWords.tsx:281
+#: src/components/dialogs/MutedWords.tsx:283
 msgid "Are you sure?"
 msgstr "Ho confirmes?"
 
@@ -597,18 +636,20 @@ msgstr "Nuesa artística o no eròtica."
 msgid "At least 3 characters"
 msgstr "Almenys 3 caràcters"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:273
-#: src/components/moderation/LabelsOnMeDialog.tsx:274
+#: src/components/dms/MessagesListHeader.tsx:74
+#: src/components/moderation/LabelsOnMeDialog.tsx:283
+#: src/components/moderation/LabelsOnMeDialog.tsx:284
 #: src/screens/Login/ChooseAccountForm.tsx:98
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/ForgotPasswordForm.tsx:135
-#: src/screens/Login/LoginForm.tsx:272
-#: src/screens/Login/LoginForm.tsx:278
+#: src/screens/Login/LoginForm.tsx:275
+#: src/screens/Login/LoginForm.tsx:281
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
-#: src/screens/Messages/Conversation/index.tsx:179
-#: src/screens/Profile/Header/Shell.tsx:99
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:133
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:134
+#: src/screens/Profile/Header/Shell.tsx:100
 #: src/screens/Signup/index.tsx:193
 #: src/view/com/util/ViewHeader.tsx:89
 msgid "Back"
@@ -623,7 +664,7 @@ msgstr "Endarrere"
 msgid "Based on your interest in {interestsText}"
 msgstr "Segons els teus interessos en {interestsText}"
 
-#: src/view/screens/Settings/index.tsx:487
+#: src/view/screens/Settings/index.tsx:489
 msgid "Basics"
 msgstr "Conceptes bàsics"
 
@@ -631,17 +672,17 @@ msgstr "Conceptes bàsics"
 msgid "Birthday"
 msgstr "Aniversari"
 
-#: src/view/screens/Settings/index.tsx:368
+#: src/view/screens/Settings/index.tsx:370
 msgid "Birthday:"
 msgstr "Aniversari:"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:295
 #: src/view/com/profile/ProfileMenu.tsx:361
 msgid "Block"
 msgstr "Bloqueja"
 
-#: src/components/dms/ConvoMenu.tsx:152
-#: src/components/dms/ConvoMenu.tsx:156
+#: src/components/dms/ConvoMenu.tsx:186
+#: src/components/dms/ConvoMenu.tsx:190
 msgid "Block account"
 msgstr "Bloqueja el compte"
 
@@ -654,15 +695,15 @@ msgstr "Bloqueja el compte"
 msgid "Block Account?"
 msgstr "Vols bloquejar el compte?"
 
-#: src/view/screens/ProfileList.tsx:579
+#: src/view/screens/ProfileList.tsx:583
 msgid "Block accounts"
 msgstr "Bloqueja comptes"
 
-#: src/view/screens/ProfileList.tsx:683
+#: src/view/screens/ProfileList.tsx:687
 msgid "Block list"
 msgstr "Bloqueja una llista"
 
-#: src/view/screens/ProfileList.tsx:678
+#: src/view/screens/ProfileList.tsx:682
 msgid "Block these accounts?"
 msgstr "Vols bloquejar aquests comptes?"
 
@@ -692,21 +733,21 @@ msgstr "Els comptes bloquejats no poden respondre cap fil teu, ni anomenar-te ni
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Els comptes bloquejats no poden respondre a cap fil teu, ni anomenar-te ni interactuar amb tu de cap manera. No veuràs mai el seu contingut ni ells el teu."
 
-#: src/view/com/post-thread/PostThread.tsx:316
+#: src/view/com/post-thread/PostThread.tsx:370
 msgid "Blocked post."
 msgstr "Publicació bloquejada."
 
-#: src/screens/Profile/Sections/Labels.tsx:166
+#: src/screens/Profile/Sections/Labels.tsx:173
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr "El bloqueig no evita que aquest etiquetador apliqui etiquetes al teu compte."
 
-#: src/view/screens/ProfileList.tsx:680
+#: src/view/screens/ProfileList.tsx:684
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "El bloqueig és públic. Els comptes bloquejats no poden respondre els teus fils, ni mencionar-te ni interactuar amb tu de cap manera."
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr "Bloquejar no evitarà que s'apliquin etiquetes al teu compte, però no deixarà que aquest compte respongui els teus fils ni interactui amb tu."
+msgstr "Bloquejar no evitarà que s'apliquin etiquetes al teu compte, però no deixarà que aquest compte respongui els teus fils ni interactuï amb tu."
 
 #: src/view/com/auth/SplashScreen.web.tsx:154
 msgid "Blog"
@@ -763,7 +804,7 @@ msgstr "Llibres"
 #: src/screens/Home/NoFeedsPinned.tsx:116
 #: src/screens/Home/NoFeedsPinned.tsx:123
 msgid "Browse other feeds"
-msgstr ""
+msgstr "Explora altres canals"
 
 #: src/view/screens/Settings/index.tsx:893
 #~ msgid "Build version {0} {1}"
@@ -809,7 +850,7 @@ msgstr "per tu"
 msgid "Camera"
 msgstr "Càmera"
 
-#: src/view/com/modals/AddAppPasswords.tsx:217
+#: src/view/com/modals/AddAppPasswords.tsx:180
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "Només pot tenir lletres, números, espais, guions i guions baixos. Ha de tenir almenys 4 caràcters i no més de 32."
 
@@ -817,8 +858,8 @@ msgstr "Només pot tenir lletres, números, espais, guions i guions baixos. Ha d
 #: src/components/Prompt.tsx:119
 #: src/components/Prompt.tsx:121
 #: src/components/TagMenu/index.tsx:268
-#: src/view/com/composer/Composer.tsx:387
-#: src/view/com/composer/Composer.tsx:392
+#: src/view/com/composer/Composer.tsx:391
+#: src/view/com/composer/Composer.tsx:396
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -841,14 +882,14 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #: src/view/com/modals/CreateOrEditList.tsx:363
-#: src/view/com/modals/DeleteAccount.tsx:155
-#: src/view/com/modals/DeleteAccount.tsx:233
+#: src/view/com/modals/DeleteAccount.tsx:166
+#: src/view/com/modals/DeleteAccount.tsx:244
 msgctxt "action"
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: src/view/com/modals/DeleteAccount.tsx:151
-#: src/view/com/modals/DeleteAccount.tsx:229
+#: src/view/com/modals/DeleteAccount.tsx:162
+#: src/view/com/modals/DeleteAccount.tsx:240
 msgid "Cancel account deletion"
 msgstr "Cancel·la la supressió del compte"
 
@@ -889,17 +930,17 @@ msgstr "Cancel·la obrir la web enllaçada"
 msgid "Change"
 msgstr "Canvia"
 
-#: src/view/screens/Settings/index.tsx:362
+#: src/view/screens/Settings/index.tsx:364
 msgctxt "action"
 msgid "Change"
 msgstr "Canvia"
 
-#: src/view/screens/Settings/index.tsx:684
+#: src/view/screens/Settings/index.tsx:711
 msgid "Change handle"
 msgstr "Canvia l'identificador"
 
 #: src/view/com/modals/ChangeHandle.tsx:156
-#: src/view/screens/Settings/index.tsx:695
+#: src/view/screens/Settings/index.tsx:722
 msgid "Change Handle"
 msgstr "Canvia l'identificador"
 
@@ -907,12 +948,12 @@ msgstr "Canvia l'identificador"
 msgid "Change my email"
 msgstr "Canvia el meu correu"
 
-#: src/view/screens/Settings/index.tsx:729
+#: src/view/screens/Settings/index.tsx:756
 msgid "Change password"
 msgstr "Canvia la contrasenya"
 
 #: src/view/com/modals/ChangePassword.tsx:143
-#: src/view/screens/Settings/index.tsx:740
+#: src/view/screens/Settings/index.tsx:767
 msgid "Change Password"
 msgstr "Canvia la contrasenya"
 
@@ -929,19 +970,29 @@ msgid "Change Your Email"
 msgstr "Canvia el teu correu"
 
 #: src/Navigation.tsx:302
+#: src/view/shell/bottom-bar/BottomBar.tsx:201
+#: src/view/shell/desktop/LeftNav.tsx:295
 msgid "Chat"
 msgstr "Xat"
 
-#: src/components/dms/ConvoMenu.tsx:63
+#: src/components/dms/ConvoMenu.tsx:80
 msgid "Chat muted"
 msgstr "Xat silenciat"
 
-#: src/components/dms/ConvoMenu.tsx:89
-#: src/components/dms/MessageMenu.tsx:69
+#: src/components/dms/ConvoMenu.tsx:110
+#: src/components/dms/MessageMenu.tsx:67
+#: src/Navigation.tsx:307
+#: src/screens/Messages/List/index.tsx:88
+#: src/view/screens/Settings/index.tsx:631
 msgid "Chat settings"
 msgstr "Configuració del xat"
 
-#: src/components/dms/ConvoMenu.tsx:65
+#: src/screens/Messages/Settings.tsx:59
+#: src/view/screens/Settings/index.tsx:640
+msgid "Chat Settings"
+msgstr ""
+
+#: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat unmuted"
 msgstr "Xat no silenciat"
 
@@ -962,11 +1013,11 @@ msgstr "Comprova el meu estat"
 #~ msgid "Check out some recommended users. Follow them to see similar users."
 #~ msgstr "Mira alguns usuaris recomanats. Segueix-los per a veure altres usuaris similars."
 
-#: src/screens/Login/LoginForm.tsx:265
+#: src/screens/Login/LoginForm.tsx:268
 msgid "Check your email for a login code and enter it here."
-msgstr "Comprova el teu correu electrònic per obtenir un codi d'inici de sessió i introdueix-lo aquí."
+msgstr "Comprova el teu correu electrònic per a obtenir un codi d'inici de sessió i introdueix-lo aquí."
 
-#: src/view/com/modals/DeleteAccount.tsx:168
+#: src/view/com/modals/DeleteAccount.tsx:179
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Comprova el teu correu per a rebre el codi de confirmació i entra'l aquí sota:"
 
@@ -993,7 +1044,7 @@ msgstr "Tria els algoritmes que alimentaran els teus canals personalitzats."
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
-msgstr ""
+msgstr "Tria aquest color com el teu avatar"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 msgid "Choose your main feeds"
@@ -1003,19 +1054,19 @@ msgstr "Tria els teus canals principals"
 msgid "Choose your password"
 msgstr "Tria la teva contrasenya"
 
-#: src/view/screens/Settings/index.tsx:843
+#: src/view/screens/Settings/index.tsx:880
 msgid "Clear all legacy storage data"
 msgstr "Esborra totes les dades antigues emmagatzemades"
 
-#: src/view/screens/Settings/index.tsx:846
+#: src/view/screens/Settings/index.tsx:883
 msgid "Clear all legacy storage data (restart after this)"
 msgstr "Esborra totes les dades antigues emmagatzemades (i després reinicia)"
 
-#: src/view/screens/Settings/index.tsx:855
+#: src/view/screens/Settings/index.tsx:892
 msgid "Clear all storage data"
 msgstr "Esborra totes les dades emmagatzemades"
 
-#: src/view/screens/Settings/index.tsx:858
+#: src/view/screens/Settings/index.tsx:895
 msgid "Clear all storage data (restart after this)"
 msgstr "Esborra totes les dades emmagatzemades (i després reinicia)"
 
@@ -1024,11 +1075,11 @@ msgstr "Esborra totes les dades emmagatzemades (i després reinicia)"
 msgid "Clear search query"
 msgstr "Esborra la cerca"
 
-#: src/view/screens/Settings/index.tsx:844
+#: src/view/screens/Settings/index.tsx:881
 msgid "Clears all legacy storage data"
 msgstr "Esborra totes les dades antigues emmagatzemades"
 
-#: src/view/screens/Settings/index.tsx:856
+#: src/view/screens/Settings/index.tsx:893
 msgid "Clears all storage data"
 msgstr "Esborra totes les dades emmagatzemades"
 
@@ -1037,30 +1088,39 @@ msgid "click here"
 msgstr "clica aquí"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:46
-msgid "Click here to add one."
-msgstr ""
+#~ msgid "Click here to add one."
+#~ msgstr "Clica aquí per afegir-ne un."
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
-msgstr "Clica aquí per obrir el menú d'etiquetes per {tag}"
+msgstr "Clica aquí per a obrir el menú d'etiquetes per {tag}"
 
 #: src/components/RichText.tsx:198
 #~ msgid "Click here to open tag menu for #{tag}"
-#~ msgstr "Clica aquí per obrir el menú d'etiquetes per #{tag}"
+#~ msgstr "Clica aquí per a obrir el menú d'etiquetes per #{tag}"
+
+#: src/components/dms/MessageItem.tsx:223
+msgid "Click to retry failed message"
+msgstr "Clica aquí per provar d'enviar el missatge de nou"
 
 #: src/screens/Onboarding/index.tsx:47
 msgid "Climate"
 msgstr "Clima"
 
-#: src/components/dialogs/GifSelect.tsx:300
+#: src/components/dms/ChatEmptyPill.tsx:39
+msgid "Clip 🐴 clop 🐴"
+msgstr "Clip 🐴 clop 🐴"
+
+#: src/components/dialogs/GifSelect.tsx:301
+#: src/components/dms/NewChatDialog/index.tsx:437
 #: src/view/com/modals/ChangePassword.tsx:269
 #: src/view/com/modals/ChangePassword.tsx:272
 #: src/view/com/util/post-embeds/GifEmbed.tsx:185
 msgid "Close"
 msgstr "Tanca"
 
-#: src/components/Dialog/index.web.tsx:111
-#: src/components/Dialog/index.web.tsx:246
+#: src/components/Dialog/index.web.tsx:113
+#: src/components/Dialog/index.web.tsx:251
 msgid "Close active dialog"
 msgstr "Tanca el diàleg actiu"
 
@@ -1072,7 +1132,7 @@ msgstr "Tanca l'advertència"
 msgid "Close bottom drawer"
 msgstr "Tanca el calaix inferior"
 
-#: src/components/dialogs/GifSelect.tsx:294
+#: src/components/dialogs/GifSelect.tsx:295
 msgid "Close dialog"
 msgstr "Tanca el diàleg"
 
@@ -1087,6 +1147,10 @@ msgstr "Tanca la imatge"
 #: src/view/com/lightbox/Lightbox.web.tsx:129
 msgid "Close image viewer"
 msgstr "Tanca el visor d'imatges"
+
+#: src/components/dms/MessagesNUX.tsx:162
+msgid "Close modal"
+msgstr "Tanca el modal"
 
 #: src/view/shell/index.web.tsx:61
 msgid "Close navigation footer"
@@ -1105,7 +1169,7 @@ msgstr "Tanca la barra de navegació inferior"
 msgid "Closes password update alert"
 msgstr "Tanca l'alerta d'actualització de contrasenya"
 
-#: src/view/com/composer/Composer.tsx:389
+#: src/view/com/composer/Composer.tsx:393
 msgid "Closes post composer and discards post draft"
 msgstr "Tanca l'editor de la publicació i descarta l'esborrany"
 
@@ -1138,7 +1202,7 @@ msgstr "Finalitza el registre i comença a utilitzar el teu compte"
 msgid "Complete the challenge"
 msgstr "Completa la prova"
 
-#: src/view/com/composer/Composer.tsx:507
+#: src/view/com/composer/Composer.tsx:505
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Crea publicacions de fins a {MAX_GRAPHEME_LENGTH} caràcters"
 
@@ -1185,7 +1249,7 @@ msgstr "Confirma el canvi"
 msgid "Confirm content language settings"
 msgstr "Confirma la configuració de l'idioma del contingut"
 
-#: src/view/com/modals/DeleteAccount.tsx:219
+#: src/view/com/modals/DeleteAccount.tsx:230
 msgid "Confirm delete account"
 msgstr "Confirma l'eliminació del compte"
 
@@ -1201,10 +1265,10 @@ msgstr "Confirma la teva edat:"
 msgid "Confirm your birthdate"
 msgstr "Confirma la teva data de naixement"
 
-#: src/screens/Login/LoginForm.tsx:247
+#: src/screens/Login/LoginForm.tsx:250
 #: src/view/com/modals/ChangeEmail.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:175
-#: src/view/com/modals/DeleteAccount.tsx:181
+#: src/view/com/modals/DeleteAccount.tsx:186
+#: src/view/com/modals/DeleteAccount.tsx:192
 #: src/view/com/modals/VerifyEmail.tsx:173
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:143
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:149
@@ -1215,7 +1279,7 @@ msgstr "Codi de confirmació"
 #~ msgid "Confirms signing up {email} to the waitlist"
 #~ msgstr "Confirma afegir {email} a la llista d'espera"
 
-#: src/screens/Login/LoginForm.tsx:299
+#: src/screens/Login/LoginForm.tsx:302
 msgid "Connecting..."
 msgstr "Connectant…"
 
@@ -1266,7 +1330,7 @@ msgstr "Advertències del contingut"
 
 #: src/components/Menu/index.web.tsx:83
 msgid "Context menu backdrop, click to close the menu."
-msgstr "Teló de fons del menú contextual, fes clic per tancar-lo."
+msgstr "Teló de fons del menú contextual, fes clic per a tancar-lo."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:161
 #: src/screens/Onboarding/StepFollowingFeed.tsx:154
@@ -1298,21 +1362,25 @@ msgstr "Continua"
 msgid "Continue to the next step without following any accounts"
 msgstr "Continua sense seguir cap compte"
 
+#: src/screens/Messages/List/ChatListItem.tsx:109
+msgid "Conversation deleted"
+msgstr "Conversa esborrada"
+
 #: src/screens/Onboarding/index.tsx:56
 msgid "Cooking"
 msgstr "Cuina"
 
-#: src/view/com/modals/AddAppPasswords.tsx:196
+#: src/view/com/modals/AddAppPasswords.tsx:221
 #: src/view/com/modals/InviteCodes.tsx:183
 msgid "Copied"
 msgstr "Copiat"
 
-#: src/view/screens/Settings/index.tsx:260
+#: src/view/screens/Settings/index.tsx:261
 msgid "Copied build version to clipboard"
 msgstr "Número de versió copiat en memòria"
 
-#: src/components/dms/MessageMenu.tsx:53
-#: src/view/com/modals/AddAppPasswords.tsx:77
+#: src/components/dms/MessageMenu.tsx:51
+#: src/view/com/modals/AddAppPasswords.tsx:81
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:172
@@ -1323,11 +1391,11 @@ msgstr "Copiat en memòria"
 msgid "Copied!"
 msgstr "Copiat"
 
-#: src/view/com/modals/AddAppPasswords.tsx:190
+#: src/view/com/modals/AddAppPasswords.tsx:215
 msgid "Copies app password"
 msgstr "Copia la contrasenya d'aplicació"
 
-#: src/view/com/modals/AddAppPasswords.tsx:189
+#: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Copy"
 msgstr "Copia"
 
@@ -1340,7 +1408,7 @@ msgstr "Copia {0}"
 msgid "Copy code"
 msgstr "Copia el codi"
 
-#: src/view/screens/ProfileList.tsx:423
+#: src/view/screens/ProfileList.tsx:427
 msgid "Copy link to list"
 msgstr "Copia l'enllaç a la llista"
 
@@ -1353,8 +1421,8 @@ msgstr "Copia l'enllaç a la publicació"
 #~ msgid "Copy link to profile"
 #~ msgstr "Copia l'enllaç al perfil"
 
+#: src/components/dms/MessageMenu.tsx:87
 #: src/components/dms/MessageMenu.tsx:89
-#: src/components/dms/MessageMenu.tsx:91
 msgid "Copy message text"
 msgstr "Copia el text del missatge"
 
@@ -1368,7 +1436,7 @@ msgstr "Copia el text de la publicació"
 msgid "Copyright Policy"
 msgstr "Política de drets d'autor"
 
-#: src/components/dms/ConvoMenu.tsx:80
+#: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
 msgstr "No s'ha pogut sortir del xat"
 
@@ -1376,15 +1444,15 @@ msgstr "No s'ha pogut sortir del xat"
 msgid "Could not load feed"
 msgstr "No s'ha pogut carregar el canal"
 
-#: src/view/screens/ProfileList.tsx:956
+#: src/view/screens/ProfileList.tsx:960
 msgid "Could not load list"
 msgstr "No s'ha pogut carregar la llista"
 
 #: src/components/dms/NewChat.tsx:241
-msgid "Could not load profiles. Please try again later."
-msgstr "No es poden carregar el perfils. Prova-ho més tard."
+#~ msgid "Could not load profiles. Please try again later."
+#~ msgstr "No es poden carregar els perfils. Prova-ho més tard."
 
-#: src/components/dms/ConvoMenu.tsx:69
+#: src/components/dms/ConvoMenu.tsx:86
 msgid "Could not mute chat"
 msgstr "No s'ha pogut silenciar el xat"
 
@@ -1401,7 +1469,7 @@ msgstr "No s'ha pogut silenciar el xat"
 msgid "Create a new account"
 msgstr "Crea un nou compte"
 
-#: src/view/screens/Settings/index.tsx:414
+#: src/view/screens/Settings/index.tsx:416
 msgid "Create a new Bluesky account"
 msgstr "Crea un nou compte de Bluesky"
 
@@ -1416,9 +1484,9 @@ msgstr "Crea un compte"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:286
 msgid "Create an avatar instead"
-msgstr ""
+msgstr "Enlloc d'això, crea un avatar"
 
-#: src/view/com/modals/AddAppPasswords.tsx:227
+#: src/view/com/modals/AddAppPasswords.tsx:243
 msgid "Create App Password"
 msgstr "Crea una contrasenya d'aplicació"
 
@@ -1427,11 +1495,11 @@ msgstr "Crea una contrasenya d'aplicació"
 msgid "Create new account"
 msgstr "Crea un nou compte"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:100
+#: src/components/ReportDialog/SelectReportOptionView.tsx:98
 msgid "Create report for {0}"
 msgstr "Crea un informe per a {0}"
 
-#: src/view/screens/AppPasswords.tsx:246
+#: src/view/screens/AppPasswords.tsx:251
 msgid "Created {0}"
 msgstr "Creat {0}"
 
@@ -1473,8 +1541,8 @@ msgstr "Personalitza el contingut dels llocs externs."
 #~ msgid "Danger Zone"
 #~ msgstr "Zona de perill"
 
-#: src/view/screens/Settings/index.tsx:449
-#: src/view/screens/Settings/index.tsx:475
+#: src/view/screens/Settings/index.tsx:451
+#: src/view/screens/Settings/index.tsx:477
 msgid "Dark"
 msgstr "Fosc"
 
@@ -1482,7 +1550,7 @@ msgstr "Fosc"
 msgid "Dark mode"
 msgstr "Mode fosc"
 
-#: src/view/screens/Settings/index.tsx:462
+#: src/view/screens/Settings/index.tsx:464
 msgid "Dark Theme"
 msgstr "Tema fosc"
 
@@ -1490,7 +1558,7 @@ msgstr "Tema fosc"
 msgid "Date of birth"
 msgstr "Data de naixement"
 
-#: src/view/screens/Settings/index.tsx:816
+#: src/view/screens/Settings/index.tsx:843
 msgid "Debug Moderation"
 msgstr "Moderació de depuració"
 
@@ -1498,14 +1566,14 @@ msgstr "Moderació de depuració"
 msgid "Debug panel"
 msgstr "Panell de depuració"
 
-#: src/components/dms/MessageMenu.tsx:125
+#: src/components/dms/MessageMenu.tsx:126
 #: src/view/com/util/forms/PostDropdownBtn.tsx:392
-#: src/view/screens/AppPasswords.tsx:268
-#: src/view/screens/ProfileList.tsx:662
+#: src/view/screens/AppPasswords.tsx:285
+#: src/view/screens/ProfileList.tsx:666
 msgid "Delete"
 msgstr "Elimina"
 
-#: src/view/screens/Settings/index.tsx:771
+#: src/view/screens/Settings/index.tsx:798
 msgid "Delete account"
 msgstr "Elimina el compte"
 
@@ -1513,35 +1581,40 @@ msgstr "Elimina el compte"
 #~ msgid "Delete Account"
 #~ msgstr "Elimina el compte"
 
-#: src/view/com/modals/DeleteAccount.tsx:86
+#: src/view/com/modals/DeleteAccount.tsx:97
 msgid "Delete Account <0>\"</0><1>{0}</1><2>\"</2>"
 msgstr "Elimina el compte <0>\"</0><1>{0}</1><2>\"</2>"
 
-#: src/view/screens/AppPasswords.tsx:239
+#: src/view/screens/AppPasswords.tsx:244
 msgid "Delete app password"
 msgstr "Elimina la contrasenya d'aplicació"
 
-#: src/view/screens/AppPasswords.tsx:263
+#: src/view/screens/AppPasswords.tsx:280
 msgid "Delete app password?"
 msgstr "Vols eliminar la contrasenya d'aplicació?"
 
-#: src/components/dms/MessageMenu.tsx:101
+#: src/view/screens/Settings/index.tsx:860
+#: src/view/screens/Settings/index.tsx:863
+msgid "Delete chat declaration record"
+msgstr "Suprimeix el registre de declaració de xat"
+
+#: src/components/dms/MessageMenu.tsx:99
 msgid "Delete for me"
 msgstr "Elimina-ho per mi"
 
-#: src/view/screens/ProfileList.tsx:466
+#: src/view/screens/ProfileList.tsx:470
 msgid "Delete List"
 msgstr "Elimina la llista"
 
-#: src/components/dms/MessageMenu.tsx:121
+#: src/components/dms/MessageMenu.tsx:122
 msgid "Delete message"
 msgstr "Elimina el missatge"
 
-#: src/components/dms/MessageMenu.tsx:99
+#: src/components/dms/MessageMenu.tsx:97
 msgid "Delete message for me"
 msgstr "Elimina el missatge per mi"
 
-#: src/view/com/modals/DeleteAccount.tsx:222
+#: src/view/com/modals/DeleteAccount.tsx:233
 msgid "Delete my account"
 msgstr "Elimina el meu compte"
 
@@ -1549,7 +1622,7 @@ msgstr "Elimina el meu compte"
 #~ msgid "Delete my account…"
 #~ msgstr "Elimina el meu compte…"
 
-#: src/view/screens/Settings/index.tsx:783
+#: src/view/screens/Settings/index.tsx:810
 msgid "Delete My Account…"
 msgstr "Elimina el meu compte…"
 
@@ -1558,7 +1631,7 @@ msgstr "Elimina el meu compte…"
 msgid "Delete post"
 msgstr "Elimina la publicació"
 
-#: src/view/screens/ProfileList.tsx:657
+#: src/view/screens/ProfileList.tsx:661
 msgid "Delete this list?"
 msgstr "Vols eliminar aquesta llista?"
 
@@ -1570,9 +1643,13 @@ msgstr "Vols eliminar aquesta publicació?"
 msgid "Deleted"
 msgstr "Eliminat"
 
-#: src/view/com/post-thread/PostThread.tsx:308
+#: src/view/com/post-thread/PostThread.tsx:362
 msgid "Deleted post."
 msgstr "Publicació eliminada."
+
+#: src/view/screens/Settings/index.tsx:861
+msgid "Deletes the chat declaration record"
+msgstr "Suprimeix el registre de declaració de xat"
 
 #: src/view/com/modals/CreateOrEditList.tsx:303
 #: src/view/com/modals/CreateOrEditList.tsx:324
@@ -1581,7 +1658,7 @@ msgstr "Publicació eliminada."
 msgid "Description"
 msgstr "Descripció"
 
-#: src/view/com/composer/GifAltText.tsx:140
+#: src/view/com/composer/GifAltText.tsx:141
 msgid "Descriptive alt text"
 msgstr "Text alternatiu descriptiu"
 
@@ -1593,13 +1670,17 @@ msgstr "Text alternatiu descriptiu"
 #~ msgid "Developer Tools"
 #~ msgstr "Eines de desenvolupador"
 
-#: src/view/com/composer/Composer.tsx:248
+#: src/view/com/composer/Composer.tsx:250
 msgid "Did you want to say anything?"
 msgstr "Vols dir alguna cosa?"
 
-#: src/view/screens/Settings/index.tsx:468
+#: src/view/screens/Settings/index.tsx:470
 msgid "Dim"
 msgstr "Tènue"
+
+#: src/components/dms/MessagesNUX.tsx:88
+msgid "Direct messages are here!"
+msgstr "Els missatges directes són aquí!"
 
 #: src/view/screens/AccessibilitySettings.tsx:94
 msgid "Disable autoplay for GIFs"
@@ -1624,11 +1705,13 @@ msgstr "Desactiva la retroalimentació hàptica"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Messages/Settings.tsx:140
+#: src/screens/Messages/Settings.tsx:143
 #: src/screens/Moderation/index.tsx:341
 msgid "Disabled"
 msgstr "Deshabilitat"
 
-#: src/view/com/composer/Composer.tsx:575
+#: src/view/com/composer/Composer.tsx:579
 msgid "Discard"
 msgstr "Descarta"
 
@@ -1636,7 +1719,7 @@ msgstr "Descarta"
 #~ msgid "Discard draft"
 #~ msgstr "Descarta l'esborrany"
 
-#: src/view/com/composer/Composer.tsx:572
+#: src/view/com/composer/Composer.tsx:576
 msgid "Discard draft?"
 msgstr "Vols descartar l'esborrany?"
 
@@ -1698,8 +1781,8 @@ msgstr "Domini verificat!"
 #: src/screens/Onboarding/StepProfile/index.tsx:328
 #: src/view/com/auth/server-input/index.tsx:169
 #: src/view/com/auth/server-input/index.tsx:170
-#: src/view/com/modals/AddAppPasswords.tsx:227
-#: src/view/com/modals/AltImage.tsx:140
+#: src/view/com/modals/AddAppPasswords.tsx:243
+#: src/view/com/modals/AltImage.tsx:141
 #: src/view/com/modals/crop-image/CropImage.web.tsx:177
 #: src/view/com/modals/InviteCodes.tsx:81
 #: src/view/com/modals/InviteCodes.tsx:124
@@ -1790,7 +1873,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Edita"
 
-#: src/view/com/util/UserAvatar.tsx:310
+#: src/view/com/util/UserAvatar.tsx:311
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "Edita l'avatar"
@@ -1800,7 +1883,7 @@ msgstr "Edita l'avatar"
 msgid "Edit image"
 msgstr "Edita la imatge"
 
-#: src/view/screens/ProfileList.tsx:454
+#: src/view/screens/ProfileList.tsx:458
 msgid "Edit list details"
 msgstr "Edita els detalls de la llista"
 
@@ -1818,13 +1901,13 @@ msgstr "Edita els meus canals"
 msgid "Edit my profile"
 msgstr "Edita el meu perfil"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:180
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:168
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:171
 msgid "Edit profile"
 msgstr "Edita el perfil"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:171
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:174
 msgid "Edit Profile"
 msgstr "Edita el perfil"
 
@@ -1875,7 +1958,7 @@ msgstr "Correu actualitzat"
 msgid "Email verified"
 msgstr "Correu verificat"
 
-#: src/view/screens/Settings/index.tsx:340
+#: src/view/screens/Settings/index.tsx:342
 msgid "Email:"
 msgstr "Correu:"
 
@@ -1899,16 +1982,16 @@ msgstr "Habilita només {0}"
 
 #: src/screens/Moderation/index.tsx:329
 msgid "Enable adult content"
-msgstr "Habilita el contingut per adults"
+msgstr "Habilita el contingut per a adults"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:94
 msgid "Enable Adult Content"
-msgstr "Habilita el contingut per adults"
+msgstr "Habilita el contingut per a adults"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:79
 msgid "Enable adult content in your feeds"
-msgstr "Habilita veure el contingut per adults als teus canals"
+msgstr "Habilita veure el contingut per a adults als teus canals"
 
 #: src/components/dialogs/EmbedConsent.tsx:82
 #: src/components/dialogs/EmbedConsent.tsx:89
@@ -1931,6 +2014,8 @@ msgstr "Activa aquesta opció per a veure només les respostes entre els comptes
 msgid "Enable this source only"
 msgstr "Habilita només per aquesta font"
 
+#: src/screens/Messages/Settings.tsx:131
+#: src/screens/Messages/Settings.tsx:134
 #: src/screens/Moderation/index.tsx:339
 msgid "Enabled"
 msgstr "Habilitat"
@@ -1939,7 +2024,11 @@ msgstr "Habilitat"
 msgid "End of feed"
 msgstr "Fi del canal"
 
-#: src/view/com/modals/AddAppPasswords.tsx:167
+#: src/components/Lists.tsx:52
+#~ msgid "End of list"
+#~ msgstr "Fi de la llista"
+
+#: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
 msgstr "Posa un nom a aquesta contrasenya d'aplicació"
 
@@ -1947,8 +2036,8 @@ msgstr "Posa un nom a aquesta contrasenya d'aplicació"
 msgid "Enter a password"
 msgstr "Introdueix una contrasenya"
 
-#: src/components/dialogs/MutedWords.tsx:99
 #: src/components/dialogs/MutedWords.tsx:100
+#: src/components/dialogs/MutedWords.tsx:101
 msgid "Enter a word or tag"
 msgstr "Introdueix una lletra o etiqueta"
 
@@ -2003,11 +2092,11 @@ msgstr "Introdueix el teu usuari i contrasenya"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
-msgstr ""
+msgstr "Ha ocorregut un error en desar el fitxer"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:51
 msgid "Error receiving captcha response."
-msgstr "Erro en rebre la resposta al captcha."
+msgstr "Error en rebre la resposta al captcha."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:202
 #: src/view/screens/Search/Search.tsx:108
@@ -2018,15 +2107,26 @@ msgstr "Error:"
 msgid "Everybody"
 msgstr "Tothom"
 
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:42
+msgid "Everybody can reply"
+msgstr "Tothom pot respondre"
+
+#: src/components/dms/MessagesNUX.tsx:131
+#: src/components/dms/MessagesNUX.tsx:134
+#: src/screens/Messages/Settings.tsx:75
+#: src/screens/Messages/Settings.tsx:78
+msgid "Everyone"
+msgstr "Tothom"
+
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Excessive mentions or replies"
 msgstr "Mencions o respostes excessives"
 
 #: src/lib/moderation/useReportOptions.ts:80
 msgid "Excessive or unwanted messages"
-msgstr ""
+msgstr "Missatges excessius o no desitjats"
 
-#: src/view/com/modals/DeleteAccount.tsx:230
+#: src/view/com/modals/DeleteAccount.tsx:241
 msgid "Exits account deletion process"
 msgstr "Surt del procés d'eliminació del compte"
 
@@ -2036,7 +2136,7 @@ msgstr "Surt del procés de canvi d'identificador"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:160
 msgid "Exits image cropping process"
-msgstr "Surt del procés de retallar l'imatge"
+msgstr "Surt del procés de retallar la imatge"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:130
 msgid "Exits image view"
@@ -2068,12 +2168,12 @@ msgstr "Contingut explícit o potencialment pertorbador."
 msgid "Explicit sexual images."
 msgstr "Imatges sexuals explícites."
 
-#: src/view/screens/Settings/index.tsx:752
+#: src/view/screens/Settings/index.tsx:779
 msgid "Export my data"
 msgstr "Exporta les meves dades"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
-#: src/view/screens/Settings/index.tsx:763
+#: src/view/screens/Settings/index.tsx:790
 msgid "Export My Data"
 msgstr "Exporta les meves dades"
 
@@ -2089,16 +2189,16 @@ msgstr "El contingut extern pot permetre que algunes webs recullin informació s
 
 #: src/Navigation.tsx:282
 #: src/view/screens/PreferencesExternalEmbeds.tsx:53
-#: src/view/screens/Settings/index.tsx:645
+#: src/view/screens/Settings/index.tsx:672
 msgid "External Media Preferences"
 msgstr "Preferència del contingut extern"
 
-#: src/view/screens/Settings/index.tsx:636
+#: src/view/screens/Settings/index.tsx:663
 msgid "External media settings"
 msgstr "Configuració del contingut extern"
 
-#: src/view/com/modals/AddAppPasswords.tsx:116
 #: src/view/com/modals/AddAppPasswords.tsx:120
+#: src/view/com/modals/AddAppPasswords.tsx:124
 msgid "Failed to create app password."
 msgstr "No s'ha pogut crear la contrasenya d'aplicació."
 
@@ -2106,7 +2206,7 @@ msgstr "No s'ha pogut crear la contrasenya d'aplicació."
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "No s'ha pogut crear la llista. Comprova la teva connexió a internet i torna-ho a provar."
 
-#: src/components/dms/MessageMenu.tsx:132
+#: src/components/dms/MessageMenu.tsx:59
 msgid "Failed to delete message"
 msgstr "No s'ha pogut esborrar el missatge"
 
@@ -2114,13 +2214,17 @@ msgstr "No s'ha pogut esborrar el missatge"
 msgid "Failed to delete post, please try again"
 msgstr "No s'ha pogut esborrar la publicació, torna-ho a provar"
 
-#: src/components/dialogs/GifSelect.tsx:200
+#: src/components/dialogs/GifSelect.tsx:201
 msgid "Failed to load GIFs"
 msgstr "No s'han pogut carregar els GIF"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:23
+msgid "Failed to load past messages"
+msgstr "No s'han pogut carregar els missatges anteriors"
+
 #: src/screens/Messages/Conversation/MessageListError.tsx:28
-msgid "Failed to load past messages."
-msgstr "No s'han pogut carregar els missatges anteriors."
+#~ msgid "Failed to load past messages."
+#~ msgstr "No s'han pogut carregar els missatges anteriors."
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:110
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:143
@@ -2131,9 +2235,23 @@ msgstr "No s'han pogut carregar els missatges anteriors."
 msgid "Failed to save image: {0}"
 msgstr "Error en desar la imatge: {0}"
 
+#: src/components/dms/MessageItem.tsx:216
+msgid "Failed to send"
+msgstr "No s'ha pogut enviar"
+
 #: src/screens/Messages/Conversation/MessageListError.tsx:29
-msgid "Failed to send message(s)."
-msgstr ""
+#~ msgid "Failed to send message(s)."
+#~ msgstr "Error en enviar missatge(s)."
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:225
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:87
+msgid "Failed to submit appeal, please try again."
+msgstr "No s'ha pogut enviar l'apel·lació, torna-ho a provar."
+
+#: src/components/dms/MessagesNUX.tsx:60
+#: src/screens/Messages/Settings.tsx:35
+msgid "Failed to update settings"
+msgstr "No s'ha pogut actualitzar la configuració"
 
 #: src/Navigation.tsx:203
 msgid "Feed"
@@ -2156,12 +2274,11 @@ msgstr "Canal fora de línia"
 msgid "Feedback"
 msgstr "Comentaris"
 
-#: src/Navigation.tsx:507
+#: src/Navigation.tsx:510
 #: src/view/screens/Feeds.tsx:479
 #: src/view/screens/Feeds.tsx:595
 #: src/view/screens/Profile.tsx:197
-#: src/view/shell/bottom-bar/BottomBar.tsx:245
-#: src/view/shell/desktop/LeftNav.tsx:361
+#: src/view/shell/desktop/LeftNav.tsx:367
 #: src/view/shell/Drawer.tsx:492
 #: src/view/shell/Drawer.tsx:493
 msgid "Feeds"
@@ -2185,7 +2302,7 @@ msgstr "Continguts del fitxer"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:43
 msgid "File saved successfully!"
-msgstr ""
+msgstr "Fitxer desat amb èxit"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:66
 msgid "Filter from feeds"
@@ -2246,10 +2363,10 @@ msgstr "Gira horitzontalment"
 msgid "Flip vertically"
 msgstr "Gira verticalment"
 
-#: src/components/ProfileHoverCard/index.web.tsx:409
-#: src/components/ProfileHoverCard/index.web.tsx:420
+#: src/components/ProfileHoverCard/index.web.tsx:412
+#: src/components/ProfileHoverCard/index.web.tsx:423
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:189
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:235
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:244
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
 msgid "Follow"
@@ -2261,7 +2378,7 @@ msgid "Follow"
 msgstr "Segueix"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:58
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:221
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
 msgid "Follow {0}"
 msgstr "Segueix {0}"
@@ -2312,9 +2429,9 @@ msgstr "Seguidors"
 #~ msgid "following"
 #~ msgstr "seguint"
 
-#: src/components/ProfileHoverCard/index.web.tsx:408
-#: src/components/ProfileHoverCard/index.web.tsx:419
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:233
+#: src/components/ProfileHoverCard/index.web.tsx:411
+#: src/components/ProfileHoverCard/index.web.tsx:422
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:242
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
 #: src/view/screens/Feeds.tsx:682
@@ -2323,11 +2440,11 @@ msgstr "Seguidors"
 msgid "Following"
 msgstr "Seguint"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:91
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:90
 msgid "Following {0}"
 msgstr "Seguint {0}"
 
-#: src/view/screens/Settings/index.tsx:564
+#: src/view/screens/Settings/index.tsx:566
 msgid "Following feed preferences"
 msgstr "Preferències del canal Seguint"
 
@@ -2335,7 +2452,7 @@ msgstr "Preferències del canal Seguint"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:64
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:87
 #: src/view/screens/PreferencesFollowingFeed.tsx:103
-#: src/view/screens/Settings/index.tsx:573
+#: src/view/screens/Settings/index.tsx:575
 msgid "Following Feed Preferences"
 msgstr "Preferències del canal Seguint"
 
@@ -2351,11 +2468,11 @@ msgstr "Et segueix"
 msgid "Food"
 msgstr "Menjar"
 
-#: src/view/com/modals/DeleteAccount.tsx:110
+#: src/view/com/modals/DeleteAccount.tsx:121
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "Per motius de seguretat necessitem enviar-te un codi de confirmació al teu correu."
 
-#: src/view/com/modals/AddAppPasswords.tsx:210
+#: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "Per motius de seguretat no podràs tornar-la a veure. Si perds aquesta contrasenya necessitaràs generar-ne una de nova."
 
@@ -2372,23 +2489,23 @@ msgstr "Per motius de seguretat no podràs tornar-la a veure. Si perds aquesta c
 msgid "Forgot Password"
 msgstr "He oblidat la contrasenya"
 
-#: src/screens/Login/LoginForm.tsx:221
+#: src/screens/Login/LoginForm.tsx:224
 msgid "Forgot password?"
 msgstr "Has oblidat la contrasenya?"
 
-#: src/screens/Login/LoginForm.tsx:232
+#: src/screens/Login/LoginForm.tsx:235
 msgid "Forgot?"
 msgstr "Oblidada?"
 
 #: src/lib/moderation/useReportOptions.ts:53
 msgid "Frequently Posts Unwanted Content"
-msgstr "Publica contingut no dessitjat freqüentment"
+msgstr "Publica contingut no desitjat freqüentment"
 
 #: src/screens/Hashtag.tsx:118
 msgid "From @{sanitizedAuthor}"
 msgstr "De @{sanitizedAuthor}"
 
-#: src/view/com/posts/FeedItem.tsx:230
+#: src/view/com/posts/FeedItem.tsx:225
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "De <0/>"
@@ -2397,6 +2514,10 @@ msgstr "De <0/>"
 msgid "Gallery"
 msgstr "Galeria"
 
+#: src/components/dms/MessagesNUX.tsx:168
+msgid "Get started"
+msgstr "Comença"
+
 #: src/view/com/modals/VerifyEmail.tsx:197
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
@@ -2404,7 +2525,7 @@ msgstr "Comença"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:228
 msgid "Give your profile a face"
-msgstr ""
+msgstr "Posa una cara al teu perfil"
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Glaring violations of law or terms of service"
@@ -2416,8 +2537,8 @@ msgstr "Infraccions flagrants de la llei o les condicions del servei"
 #: src/view/com/auth/LoggedOut.tsx:83
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:111
-#: src/view/screens/ProfileList.tsx:965
-#: src/view/shell/desktop/LeftNav.tsx:126
+#: src/view/screens/ProfileList.tsx:969
+#: src/view/shell/desktop/LeftNav.tsx:127
 msgid "Go back"
 msgstr "Ves enrere"
 
@@ -2426,13 +2547,13 @@ msgstr "Ves enrere"
 #: src/screens/Profile/ErrorState.tsx:66
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:116
-#: src/view/screens/ProfileList.tsx:970
+#: src/view/screens/ProfileList.tsx:974
 msgid "Go Back"
 msgstr "Ves enrere"
 
-#: src/components/dms/MessageReportDialog.tsx:130
-#: src/components/ReportDialog/SelectReportOptionView.tsx:79
-#: src/components/ReportDialog/SubmitView.tsx:104
+#: src/components/dms/ReportDialog.tsx:152
+#: src/components/ReportDialog/SelectReportOptionView.tsx:77
+#: src/components/ReportDialog/SubmitView.tsx:105
 #: src/screens/Onboarding/Layout.tsx:102
 #: src/screens/Onboarding/Layout.tsx:191
 #: src/screens/Signup/index.tsx:187
@@ -2452,16 +2573,20 @@ msgstr "Ves a l'inici"
 #~ msgid "Go to @{queryMaybeHandle}"
 #~ msgstr "Ves a @{queryMaybeHandle}"
 
+#: src/screens/Messages/List/ChatListItem.tsx:158
+msgid "Go to conversation with {0}"
+msgstr "Ves a la conversa amb {0}"
+
 #: src/screens/Login/ForgotPasswordForm.tsx:172
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Go to next"
 msgstr "Ves al següent"
 
-#: src/components/dms/ConvoMenu.tsx:131
+#: src/components/dms/ConvoMenu.tsx:165
 msgid "Go to profile"
 msgstr "Ves al perfil"
 
-#: src/components/dms/ConvoMenu.tsx:128
+#: src/components/dms/ConvoMenu.tsx:162
 msgid "Go to user's profile"
 msgstr "Ves al perfil de l'usuari"
 
@@ -2504,7 +2629,7 @@ msgstr "Ajuda"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:231
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
-msgstr ""
+msgstr "Ajuda la gent a saber que no ets un bot penjant una imatge o creant un avatar."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
 msgid "Here are some accounts for you to follow"
@@ -2518,13 +2643,13 @@ msgstr "Aquí tens alguns canals d'actualitat populars. Pots seguir-ne tants com
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
 msgstr "Aquí tens uns quants canals d'actualitat basats en els teus interessos: {interestsText}. Pots seguir-ne tants com vulguis."
 
-#: src/view/com/modals/AddAppPasswords.tsx:154
+#: src/view/com/modals/AddAppPasswords.tsx:204
 msgid "Here is your app password."
 msgstr "Aquí tens la teva contrasenya d'aplicació."
 
 #: src/components/moderation/ContentHider.tsx:115
 #: src/components/moderation/LabelPreference.tsx:134
-#: src/components/moderation/PostHider.tsx:116
+#: src/components/moderation/PostHider.tsx:118
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
@@ -2546,7 +2671,7 @@ msgid "Hide post"
 msgstr "Amaga l'entrada"
 
 #: src/components/moderation/ContentHider.tsx:67
-#: src/components/moderation/PostHider.tsx:73
+#: src/components/moderation/PostHider.tsx:75
 msgid "Hide the content"
 msgstr "Amaga el contingut"
 
@@ -2584,15 +2709,15 @@ msgstr "Tenim problemes per a trobar aquest canal. Potser ha estat eliminat."
 
 #: src/screens/Moderation/index.tsx:59
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
-msgstr "Tenim problemes per a carregar aquestes dades. Mira a continuació per a veure més detalls. Contacta'ns si aquest problema continua."
+msgstr "Tenim problemes per a carregar aquestes dades. Mira a continuació per a veure més detalls. Contacta amb nosaltres si aquest problema continua."
 
 #: src/screens/Profile/ErrorState.tsx:31
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "No podem carregar el servei de moderació."
 
-#: src/Navigation.tsx:497
-#: src/view/shell/bottom-bar/BottomBar.tsx:176
-#: src/view/shell/desktop/LeftNav.tsx:321
+#: src/Navigation.tsx:500
+#: src/view/shell/bottom-bar/BottomBar.tsx:159
+#: src/view/shell/desktop/LeftNav.tsx:335
 #: src/view/shell/Drawer.tsx:424
 #: src/view/shell/Drawer.tsx:425
 msgid "Home"
@@ -2610,7 +2735,7 @@ msgid "Host:"
 msgstr "Allotjament:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
-#: src/screens/Login/LoginForm.tsx:154
+#: src/screens/Login/LoginForm.tsx:157
 #: src/screens/Signup/StepInfo/index.tsx:40
 #: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
@@ -2639,9 +2764,10 @@ msgstr "Tinc un codi de confirmació"
 msgid "I have my own domain"
 msgstr "Tinc el meu propi domini"
 
-#: src/components/dms/ConvoMenu.tsx:202
+#: src/components/dms/BlockedByListDialog.tsx:56
+#: src/components/dms/ReportConversationPrompt.tsx:22
 msgid "I understand"
-msgstr ""
+msgstr "Ho entenc"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
@@ -2655,7 +2781,7 @@ msgstr "Si no en selecciones cap, és apropiat per a totes les edats."
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "Si encara no ets un adult segons les lleis del teu país, el teu tutor legal haurà de llegir aquests Termes en el teu lloc."
 
-#: src/view/screens/ProfileList.tsx:659
+#: src/view/screens/ProfileList.tsx:663
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Si esborres aquesta llista no la podràs recuperar."
 
@@ -2675,7 +2801,7 @@ msgstr "Il·legal i urgent"
 msgid "Image"
 msgstr "Imatge"
 
-#: src/view/com/modals/AltImage.tsx:121
+#: src/view/com/modals/AltImage.tsx:122
 msgid "Image alt text"
 msgstr "Text alternatiu de la imatge"
 
@@ -2688,11 +2814,15 @@ msgstr "Text alternatiu de la imatge"
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr "Suplantació d'identitat o afirmacions falses sobre identitat o afiliació"
 
+#: src/lib/moderation/useReportOptions.ts:85
+msgid "Inappropriate messages or explicit links"
+msgstr "Missatges inapropiats o enllaços explícits"
+
 #: src/screens/Login/SetNewPasswordForm.tsx:127
 msgid "Input code sent to your email for password reset"
 msgstr "Introdueix el codi que s'ha enviat al teu correu per a restablir la contrasenya"
 
-#: src/view/com/modals/DeleteAccount.tsx:183
+#: src/view/com/modals/DeleteAccount.tsx:194
 msgid "Input confirmation code for account deletion"
 msgstr "Introdueix el codi de confirmació per a eliminar el compte"
 
@@ -2704,7 +2834,7 @@ msgstr "Introdueix el codi de confirmació per a eliminar el compte"
 #~ msgid "Input invite code to proceed"
 #~ msgstr "Introdueix el codi d'invitació per a continuar"
 
-#: src/view/com/modals/AddAppPasswords.tsx:181
+#: src/view/com/modals/AddAppPasswords.tsx:175
 msgid "Input name for app password"
 msgstr "Introdueix un nom per la contrasenya d'aplicació"
 
@@ -2712,7 +2842,7 @@ msgstr "Introdueix un nom per la contrasenya d'aplicació"
 msgid "Input new password"
 msgstr "Introdueix una nova contrasenya"
 
-#: src/view/com/modals/DeleteAccount.tsx:202
+#: src/view/com/modals/DeleteAccount.tsx:213
 msgid "Input password for account deletion"
 msgstr "Introdueix la contrasenya per a eliminar el compte"
 
@@ -2720,15 +2850,15 @@ msgstr "Introdueix la contrasenya per a eliminar el compte"
 #~ msgid "Input phone number for SMS verification"
 #~ msgstr "Introdueix el telèfon per la verificació per SMS"
 
-#: src/screens/Login/LoginForm.tsx:260
+#: src/screens/Login/LoginForm.tsx:263
 msgid "Input the code which has been emailed to you"
 msgstr "Introdueix el codi que has rebut per correu"
 
-#: src/screens/Login/LoginForm.tsx:215
+#: src/screens/Login/LoginForm.tsx:218
 msgid "Input the password tied to {identifier}"
 msgstr "Introdueix la contrasenya lligada a {identifier}"
 
-#: src/screens/Login/LoginForm.tsx:188
+#: src/screens/Login/LoginForm.tsx:191
 msgid "Input the username or email address you used at signup"
 msgstr "Introdueix el nom d'usuari o correu que vas utilitzar per a registrar-te"
 
@@ -2740,28 +2870,32 @@ msgstr "Introdueix el nom d'usuari o correu que vas utilitzar per a registrar-te
 #~ msgid "Input your email to get on the Bluesky waitlist"
 #~ msgstr "Introdueix el teu correu per a afegir-te a la llista d'espera de Bluesky"
 
-#: src/screens/Login/LoginForm.tsx:214
+#: src/screens/Login/LoginForm.tsx:217
 msgid "Input your password"
 msgstr "Introdueix la teva contrasenya"
 
 #: src/view/com/modals/ChangeHandle.tsx:383
 msgid "Input your preferred hosting provider"
-msgstr "Introdeix el teu proveïdor d'allotjament preferit"
+msgstr "Introdueix el teu proveïdor d'allotjament preferit"
 
 #: src/screens/Signup/StepHandle.tsx:63
 msgid "Input your user handle"
 msgstr "Introdueix el teu identificador d'usuari"
 
-#: src/screens/Login/LoginForm.tsx:129
+#: src/components/dms/MessagesNUX.tsx:82
+msgid "Introducing Direct Messages"
+msgstr "Presentació dels missatges directes"
+
+#: src/screens/Login/LoginForm.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "El codi de confirmació 2FA no és vàlid."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:222
+#: src/view/com/post-thread/PostThreadItem.tsx:221
 msgid "Invalid or unsupported post record"
 msgstr "Registre de publicació no vàlid o no admès"
 
-#: src/screens/Login/LoginForm.tsx:134
+#: src/screens/Login/LoginForm.tsx:137
 msgid "Invalid username or password"
 msgstr "Nom d'usuari o contrasenya incorrectes"
 
@@ -2834,19 +2968,19 @@ msgstr "Etiquetat per l'autor."
 msgid "Labels"
 msgstr "Etiquetes"
 
-#: src/screens/Profile/Sections/Labels.tsx:156
+#: src/screens/Profile/Sections/Labels.tsx:163
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "Les etiquetes son anotacions sobre els usuaris i el contingut. Poden ser utilitzades per a ocultar, advertir i categoritxar la xarxa."
+msgstr "Les etiquetes són anotacions sobre els usuaris i el contingut. Poden ser utilitzades per a ocultar, advertir i categoritzar la xarxa."
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 #~ msgid "labels have been placed on this {labelTarget}"
 #~ msgstr "S'han posat etiquetes a aquest {labelTarget}"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:77
+#: src/components/moderation/LabelsOnMeDialog.tsx:80
 msgid "Labels on your account"
 msgstr "Etiquetes al teu compte"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:79
+#: src/components/moderation/LabelsOnMeDialog.tsx:82
 msgid "Labels on your content"
 msgstr "Etiquetes al teu contingut"
 
@@ -2854,7 +2988,7 @@ msgstr "Etiquetes al teu contingut"
 msgid "Language selection"
 msgstr "Tria l'idioma"
 
-#: src/view/screens/Settings/index.tsx:521
+#: src/view/screens/Settings/index.tsx:523
 msgid "Language settings"
 msgstr "Configuració d'idioma"
 
@@ -2863,7 +2997,7 @@ msgstr "Configuració d'idioma"
 msgid "Language Settings"
 msgstr "Configuració d'idioma"
 
-#: src/view/screens/Settings/index.tsx:530
+#: src/view/screens/Settings/index.tsx:532
 msgid "Languages"
 msgstr "Idiomes"
 
@@ -2889,7 +3023,7 @@ msgstr "Més informació"
 msgid "Learn more about the moderation applied to this content."
 msgstr "Més informació sobre la moderació que s'ha aplicat a aquest contingut."
 
-#: src/components/moderation/PostHider.tsx:94
+#: src/components/moderation/PostHider.tsx:96
 #: src/components/moderation/ScreenHider.tsx:125
 msgid "Learn more about this warning"
 msgstr "Més informació d'aquesta advertència"
@@ -2902,13 +3036,20 @@ msgstr "Més informació sobre què és públic a Bluesky."
 msgid "Learn more."
 msgstr "Més informació."
 
-#: src/components/dms/ConvoMenu.tsx:191
+#: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave"
 msgstr "Surt"
 
-#: src/components/dms/ConvoMenu.tsx:174
-#: src/components/dms/ConvoMenu.tsx:177
-#: src/components/dms/ConvoMenu.tsx:187
+#: src/components/dms/MessagesListBlockedFooter.tsx:66
+#: src/components/dms/MessagesListBlockedFooter.tsx:73
+msgid "Leave chat"
+msgstr "Surt del xat"
+
+#: src/components/dms/ConvoMenu.tsx:136
+#: src/components/dms/ConvoMenu.tsx:139
+#: src/components/dms/ConvoMenu.tsx:206
+#: src/components/dms/ConvoMenu.tsx:209
+#: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
 msgstr "Surt de la conversa"
 
@@ -2924,7 +3065,7 @@ msgstr "Sortint de Bluesky"
 msgid "left to go."
 msgstr "queda."
 
-#: src/view/screens/Settings/index.tsx:305
+#: src/view/screens/Settings/index.tsx:306
 msgid "Legacy storage cleared, you need to restart the app now."
 msgstr "L'emmagatzematge heretat s'ha esborrat, cal que reinicieu l'aplicació ara."
 
@@ -2942,7 +3083,7 @@ msgstr "Som-hi!"
 #~ msgid "Library"
 #~ msgstr "Biblioteca"
 
-#: src/view/screens/Settings/index.tsx:443
+#: src/view/screens/Settings/index.tsx:445
 msgid "Light"
 msgstr "Clar"
 
@@ -2950,7 +3091,7 @@ msgstr "Clar"
 #~ msgid "Like"
 #~ msgstr "M'agrada"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:266
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:570
 msgid "Like this feed"
 msgstr "Fes m'agrada a aquest canal"
@@ -2983,7 +3124,7 @@ msgstr "Li ha agradat a"
 
 #: src/view/com/notifications/FeedItem.tsx:168
 msgid "liked your custom feed"
-msgstr "els hi ha agradat el teu canal personalitzat"
+msgstr "els ha agradat el teu canal personalitzat"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 #~ msgid "liked your custom feed{0}"
@@ -2997,7 +3138,7 @@ msgstr "li ha agradat la teva publicació"
 msgid "Likes"
 msgstr "M'agrades"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:183
+#: src/view/com/post-thread/PostThreadItem.tsx:182
 msgid "Likes on this post"
 msgstr "M'agrades a aquesta publicació"
 
@@ -3009,7 +3150,7 @@ msgstr "Llista"
 msgid "List Avatar"
 msgstr "Avatar de la llista"
 
-#: src/view/screens/ProfileList.tsx:353
+#: src/view/screens/ProfileList.tsx:357
 msgid "List blocked"
 msgstr "Llista bloquejada"
 
@@ -3017,11 +3158,11 @@ msgstr "Llista bloquejada"
 msgid "List by {0}"
 msgstr "Llista per {0}"
 
-#: src/view/screens/ProfileList.tsx:392
+#: src/view/screens/ProfileList.tsx:396
 msgid "List deleted"
 msgstr "Llista eliminada"
 
-#: src/view/screens/ProfileList.tsx:325
+#: src/view/screens/ProfileList.tsx:329
 msgid "List muted"
 msgstr "Llista silenciada"
 
@@ -3029,22 +3170,26 @@ msgstr "Llista silenciada"
 msgid "List Name"
 msgstr "Nom de la llista"
 
-#: src/view/screens/ProfileList.tsx:367
+#: src/view/screens/ProfileList.tsx:371
 msgid "List unblocked"
 msgstr "Llista desbloquejada"
 
-#: src/view/screens/ProfileList.tsx:339
+#: src/view/screens/ProfileList.tsx:343
 msgid "List unmuted"
 msgstr "Llista no silenciada"
 
 #: src/Navigation.tsx:121
 #: src/view/screens/Profile.tsx:192
 #: src/view/screens/Profile.tsx:198
-#: src/view/shell/desktop/LeftNav.tsx:367
+#: src/view/shell/desktop/LeftNav.tsx:373
 #: src/view/shell/Drawer.tsx:508
 #: src/view/shell/Drawer.tsx:509
 msgid "Lists"
 msgstr "Llistes"
+
+#: src/components/dms/BlockedByListDialog.tsx:39
+msgid "Lists blocking this user:"
+msgstr "Llistes que bloquegen aquest usuari:"
 
 #: src/view/com/post-thread/PostThread.tsx:333
 #: src/view/com/post-thread/PostThread.tsx:341
@@ -3056,9 +3201,9 @@ msgid "Load new notifications"
 msgstr "Carrega noves notificacions"
 
 #: src/screens/Profile/Sections/Feed.tsx:86
-#: src/view/com/feeds/FeedPage.tsx:142
+#: src/view/com/feeds/FeedPage.tsx:135
 #: src/view/screens/ProfileFeed.tsx:492
-#: src/view/screens/ProfileList.tsx:744
+#: src/view/screens/ProfileList.tsx:748
 msgid "Load new posts"
 msgstr "Carrega noves publicacions"
 
@@ -3091,7 +3236,7 @@ msgstr "Accedeix a un compte que no està llistat"
 
 #: src/components/RichText.tsx:218
 msgid "Long press to open tag menu for #{tag}"
-msgstr "Prem llargament per obrir el menú d'etiquetes per a #{tag}"
+msgstr "Prem llargament per a obrir el menú d'etiquetes per a #{tag}"
 
 #~ msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
 #~ msgstr "Parece que este canal de noticias sólo está disponible para usuarios con una cuenta Bluesky. Por favor, ¡regístrate o inicia sesión para ver este canal!"
@@ -3102,28 +3247,32 @@ msgstr "Té l'aspecte XXXXX-XXXXX"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:39
 msgid "Looks like you haven't saved any feeds! Use our recommendations or browse more below."
-msgstr ""
+msgstr "Sembla que no has desat cap canal encara, utilitza els que recomanem o explora'n d'altres aquí sota."
 
 #: src/screens/Home/NoFeedsPinned.tsx:96
 msgid "Looks like you unpinned all your feeds. But don't worry, you can add some below 😄"
-msgstr ""
+msgstr "Sembla que has deixat tots els teus canals sense fixar. No passa res, en pots afegir més aquí sota 😄"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:38
-msgid "Looks like you're missing a following feed."
-msgstr ""
+#~ msgid "Looks like you're missing a following feed."
+#~ msgstr "Sembla que et falta el canal del Seguits."
+
+#: src/screens/Feeds/NoFollowingFeed.tsx:37
+msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
+msgstr "Sembla que et falta el canal del Seguits. <0>Clica aquí per a afegir-ne un.</0>"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
 msgstr "Assegura't que és aquí on vols anar!"
 
-#: src/components/dialogs/MutedWords.tsx:82
+#: src/components/dialogs/MutedWords.tsx:83
 msgid "Manage your muted words and tags"
 msgstr "Gestiona les teves etiquetes i paraules silenciades"
 
-#: src/components/dms/ConvoMenu.tsx:115
-#: src/components/dms/ConvoMenu.tsx:122
+#: src/components/dms/ConvoMenu.tsx:149
+#: src/components/dms/ConvoMenu.tsx:156
 msgid "Mark as read"
-msgstr ""
+msgstr "Marca com a llegit"
 
 #: src/view/com/auth/create/Step2.tsx:118
 #~ msgid "May not be longer than 253 characters"
@@ -3151,8 +3300,12 @@ msgstr "Usuaris mencionats"
 msgid "Menu"
 msgstr "Menú"
 
-#: src/components/dms/MessageMenu.tsx:60
-#: src/screens/Messages/List/ChatListItem.tsx:44
+#: src/components/dms/MessageProfileButton.tsx:67
+msgid "Message {0}"
+msgstr "Missatge {0}"
+
+#: src/components/dms/MessageMenu.tsx:58
+#: src/screens/Messages/List/ChatListItem.tsx:110
 msgid "Message deleted"
 msgstr "Missatge esborrat"
 
@@ -3164,40 +3317,37 @@ msgstr "Missatge esborrat"
 msgid "Message from server: {0}"
 msgstr "Missatge del servidor: {0}"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:93
+#: src/screens/Messages/Conversation/MessageInput.tsx:119
 msgid "Message input field"
 msgstr "Camp d'entrada del missatge"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:50
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:33
+#: src/screens/Messages/Conversation/MessageInput.tsx:62
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:42
 msgid "Message is too long"
-msgstr ""
+msgstr "El missatge és massa llarg"
 
-#: src/screens/Messages/List/index.tsx:85
-#: src/screens/Messages/List/index.tsx:283
+#: src/screens/Messages/List/index.tsx:321
 msgid "Message settings"
 msgstr "Configuració dels missatges"
 
-#: src/Navigation.tsx:517
-#: src/screens/Messages/List/index.tsx:187
-#: src/screens/Messages/List/index.tsx:214
-#: src/screens/Messages/List/index.tsx:279
-#: src/view/shell/bottom-bar/BottomBar.tsx:219
-#: src/view/shell/desktop/LeftNav.tsx:344
+#: src/Navigation.tsx:520
+#: src/screens/Messages/List/index.tsx:164
+#: src/screens/Messages/List/index.tsx:246
+#: src/screens/Messages/List/index.tsx:317
 msgid "Messages"
 msgstr "Missatges"
 
 #: src/Navigation.tsx:307
-msgid "Messaging settings"
-msgstr "Configuració dels missatges"
+#~ msgid "Messaging settings"
+#~ msgstr "Configuració dels missatges"
 
 #: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
-msgstr "Compte enganyòs"
+msgstr "Compte enganyós"
 
 #: src/Navigation.tsx:126
 #: src/screens/Moderation/index.tsx:104
-#: src/view/screens/Settings/index.tsx:552
+#: src/view/screens/Settings/index.tsx:554
 msgid "Moderation"
 msgstr "Moderació"
 
@@ -3210,13 +3360,13 @@ msgstr "Detalls de la moderació"
 msgid "Moderation list by {0}"
 msgstr "Llista de moderació per {0}"
 
-#: src/view/screens/ProfileList.tsx:838
+#: src/view/screens/ProfileList.tsx:842
 msgid "Moderation list by <0/>"
 msgstr "Llista de moderació per <0/>"
 
 #: src/view/com/lists/ListCard.tsx:91
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
-#: src/view/screens/ProfileList.tsx:836
+#: src/view/screens/ProfileList.tsx:840
 msgid "Moderation list by you"
 msgstr "Llista de moderació teva"
 
@@ -3237,7 +3387,7 @@ msgstr "Llistes de moderació"
 msgid "Moderation Lists"
 msgstr "Llistes de moderació"
 
-#: src/view/screens/Settings/index.tsx:546
+#: src/view/screens/Settings/index.tsx:548
 msgid "Moderation settings"
 msgstr "Configuració de moderació"
 
@@ -3262,7 +3412,7 @@ msgstr "Més"
 msgid "More feeds"
 msgstr "Més canals"
 
-#: src/view/screens/ProfileList.tsx:648
+#: src/view/screens/ProfileList.tsx:652
 msgid "More options"
 msgstr "Més opcions"
 
@@ -3291,7 +3441,7 @@ msgstr "Silencia {truncatedTag}"
 msgid "Mute Account"
 msgstr "Silenciar el compte"
 
-#: src/view/screens/ProfileList.tsx:567
+#: src/view/screens/ProfileList.tsx:571
 msgid "Mute accounts"
 msgstr "Silencia els comptes"
 
@@ -3303,24 +3453,29 @@ msgstr "Silencia totes les publicacions {displayTag}"
 #~ msgid "Mute all {tag} posts"
 #~ msgstr "Silencia totes les publicacions {tag}"
 
-#: src/components/dialogs/MutedWords.tsx:148
+#: src/components/dms/ConvoMenu.tsx:170
+#: src/components/dms/ConvoMenu.tsx:176
+msgid "Mute conversation"
+msgstr "Silencia la conversa"
+
+#: src/components/dialogs/MutedWords.tsx:149
 msgid "Mute in tags only"
 msgstr "Silencia només a les etiquetes"
 
-#: src/components/dialogs/MutedWords.tsx:133
+#: src/components/dialogs/MutedWords.tsx:134
 msgid "Mute in text & tags"
 msgstr "Silencia a les etiquetes i al text"
 
-#: src/view/screens/ProfileList.tsx:673
+#: src/view/screens/ProfileList.tsx:677
 msgid "Mute list"
 msgstr "Silencia la llista"
 
 #: src/components/dms/ConvoMenu.tsx:136
 #: src/components/dms/ConvoMenu.tsx:142
-msgid "Mute notifications"
-msgstr "Silencia les notificacions"
+#~ msgid "Mute notifications"
+#~ msgstr "Silencia les notificacions"
 
-#: src/view/screens/ProfileList.tsx:668
+#: src/view/screens/ProfileList.tsx:672
 msgid "Mute these accounts?"
 msgstr "Vols silenciar aquests comptes?"
 
@@ -3328,11 +3483,11 @@ msgstr "Vols silenciar aquests comptes?"
 #~ msgid "Mute this List"
 #~ msgstr "Silencia aquesta llista"
 
-#: src/components/dialogs/MutedWords.tsx:126
+#: src/components/dialogs/MutedWords.tsx:127
 msgid "Mute this word in post text and tags"
 msgstr "Silencia aquesta paraula en el text de les publicacions i a les etiquetes"
 
-#: src/components/dialogs/MutedWords.tsx:141
+#: src/components/dialogs/MutedWords.tsx:142
 msgid "Mute this word in tags only"
 msgstr "Silencia aquesta paraula només a les etiquetes"
 
@@ -3371,7 +3526,7 @@ msgstr "Silenciat per \"{0}\""
 msgid "Muted words & tags"
 msgstr "Paraules i etiquetes silenciades"
 
-#: src/view/screens/ProfileList.tsx:670
+#: src/view/screens/ProfileList.tsx:674
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Silenciar és privat. Els comptes silenciats poden interactuar amb tu, però tu no veuràs les seves publicacions ni rebràs notificacions seves."
 
@@ -3384,15 +3539,15 @@ msgstr "El meu aniversari"
 msgid "My Feeds"
 msgstr "Els meus canals"
 
-#: src/view/shell/desktop/LeftNav.tsx:83
+#: src/view/shell/desktop/LeftNav.tsx:84
 msgid "My Profile"
 msgstr "El meu perfil"
 
-#: src/view/screens/Settings/index.tsx:607
+#: src/view/screens/Settings/index.tsx:609
 msgid "My saved feeds"
 msgstr "Els meus canals desats"
 
-#: src/view/screens/Settings/index.tsx:613
+#: src/view/screens/Settings/index.tsx:615
 msgid "My Saved Feeds"
 msgstr "Els meus canals desats"
 
@@ -3400,7 +3555,7 @@ msgstr "Els meus canals desats"
 #~ msgid "my-server.com"
 #~ msgstr "el-meu-servidor.com"
 
-#: src/view/com/modals/AddAppPasswords.tsx:180
+#: src/view/com/modals/AddAppPasswords.tsx:174
 #: src/view/com/modals/CreateOrEditList.tsx:293
 msgid "Name"
 msgstr "Nom"
@@ -3420,7 +3575,7 @@ msgid "Nature"
 msgstr "Natura"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:306
+#: src/screens/Login/LoginForm.tsx:309
 #: src/view/com/modals/ChangePassword.tsx:170
 msgid "Navigates to the next screen"
 msgstr "Navega a la pantalla següent"
@@ -3429,7 +3584,7 @@ msgstr "Navega a la pantalla següent"
 msgid "Navigates to your profile"
 msgstr "Navega al teu perfil"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:129
+#: src/components/ReportDialog/SelectReportOptionView.tsx:127
 msgid "Need to report a copyright violation?"
 msgstr "Necessites informar d'una infracció dels drets d'autor?"
 
@@ -3464,11 +3619,15 @@ msgstr "Nova"
 msgid "New"
 msgstr "Nova"
 
-#: src/components/dms/NewChat.tsx:60
-#: src/screens/Messages/List/index.tsx:293
-#: src/screens/Messages/List/index.tsx:301
+#: src/components/dms/NewChatDialog/index.tsx:98
+#: src/screens/Messages/List/index.tsx:331
+#: src/screens/Messages/List/index.tsx:338
 msgid "New chat"
 msgstr "Xat nou"
+
+#: src/components/dms/NewMessagesPill.tsx:92
+msgid "New messages"
+msgstr "Nous missatges"
 
 #: src/view/com/modals/CreateOrEditList.tsx:255
 msgid "New Moderation List"
@@ -3482,7 +3641,7 @@ msgstr "Nova contrasenya"
 msgid "New Password"
 msgstr "Nova contrasenya"
 
-#: src/view/com/feeds/FeedPage.tsx:153
+#: src/view/com/feeds/FeedPage.tsx:146
 msgctxt "action"
 msgid "New post"
 msgstr "Nova publicació"
@@ -3493,11 +3652,11 @@ msgstr "Nova publicació"
 #: src/view/screens/ProfileFeed.tsx:426
 #: src/view/screens/ProfileList.tsx:200
 #: src/view/screens/ProfileList.tsx:228
-#: src/view/shell/desktop/LeftNav.tsx:270
+#: src/view/shell/desktop/LeftNav.tsx:271
 msgid "New post"
 msgstr "Nova publicació"
 
-#: src/view/shell/desktop/LeftNav.tsx:276
+#: src/view/shell/desktop/LeftNav.tsx:277
 msgctxt "action"
 msgid "New Post"
 msgstr "Nova publicació"
@@ -3520,8 +3679,8 @@ msgstr "Notícies"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/ForgotPasswordForm.tsx:150
-#: src/screens/Login/LoginForm.tsx:305
-#: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Login/LoginForm.tsx:308
+#: src/screens/Login/LoginForm.tsx:315
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Signup/index.tsx:220
@@ -3549,7 +3708,7 @@ msgid "No"
 msgstr "No"
 
 #: src/view/screens/ProfileFeed.tsx:559
-#: src/view/screens/ProfileList.tsx:818
+#: src/view/screens/ProfileList.tsx:822
 msgid "No description"
 msgstr "Cap descripció"
 
@@ -3557,11 +3716,11 @@ msgstr "Cap descripció"
 msgid "No DNS Panel"
 msgstr "No hi ha panell de DNS"
 
-#: src/components/dialogs/GifSelect.tsx:206
+#: src/components/dialogs/GifSelect.tsx:207
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "No s'han trobat GIF destacats. Pot haver-hi un problema amb Tenor."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:112
 msgid "No longer following {0}"
 msgstr "Ja no segueixes a {0}"
 
@@ -3569,21 +3728,35 @@ msgstr "Ja no segueixes a {0}"
 msgid "No longer than 253 characters"
 msgstr "No pot tenir més de 253 caràcters"
 
-#: src/screens/Messages/List/ChatListItem.tsx:33
-#: src/screens/Messages/List/index.tsx:198
+#: src/screens/Messages/List/ChatListItem.tsx:97
 msgid "No messages yet"
 msgstr "Encara no tens cap missatge"
+
+#: src/screens/Messages/List/index.tsx:274
+msgid "No more conversations to show"
+msgstr "No hi ha més converses per a mostrar"
 
 #: src/view/com/notifications/Feed.tsx:110
 msgid "No notifications yet!"
 msgstr "Encara no tens cap notificació"
+
+#: src/components/dms/MessagesNUX.tsx:149
+#: src/components/dms/MessagesNUX.tsx:152
+#: src/screens/Messages/Settings.tsx:93
+#: src/screens/Messages/Settings.tsx:96
+msgid "No one"
+msgstr "Ningú"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
 msgid "No result"
 msgstr "Cap resultat"
 
-#: src/components/Lists.tsx:195
+#: src/components/dms/NewChatDialog/index.tsx:378
+msgid "No results"
+msgstr "Cap resultat"
+
+#: src/components/Lists.tsx:207
 msgid "No results found"
 msgstr "No s'han trobat resultats"
 
@@ -3597,13 +3770,13 @@ msgstr "No s'han trobat resultats per \"{query}\""
 msgid "No results found for {query}"
 msgstr "No s'han trobat resultats per {query}"
 
-#: src/components/dialogs/GifSelect.tsx:204
+#: src/components/dialogs/GifSelect.tsx:205
 msgid "No search results found for \"{search}\"."
 msgstr "No s'han trobat resultats de cerca per a \"{search}\"."
 
 #: src/components/dms/NewChat.tsx:240
-msgid "No search results found for \"{searchText}\"."
-msgstr "No s'han trobat resultats de cerca per a \"{searchText}\"."
+#~ msgid "No search results found for \"{searchText}\"."
+#~ msgstr "No s'han trobat resultats de cerca per a \"{searchText}\"."
 
 #: src/components/dialogs/EmbedConsent.tsx:105
 #: src/components/dialogs/EmbedConsent.tsx:112
@@ -3613,6 +3786,10 @@ msgstr "No, gràcies"
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
 msgstr "Ningú"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
+msgid "Nobody can reply"
+msgstr "Ningú pot respondre"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -3647,17 +3824,29 @@ msgstr "Nota sobre compartir"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Nota: Bluesky és una xarxa oberta i pública. Aquesta configuració tan sols limita el teu contingut a l'aplicació de Bluesky i a la web, altres aplicacions poden no respectar-ho. El teu contingut pot ser mostrat a usuaris no connectats per altres aplicacions i webs."
 
-#: src/Navigation.tsx:512
+#: src/screens/Messages/List/index.tsx:215
+msgid "Nothing here"
+msgstr "Aquí no hi ha res"
+
+#: src/screens/Messages/Settings.tsx:124
+msgid "Notification sounds"
+msgstr "Sons de les notificacions"
+
+#: src/screens/Messages/Settings.tsx:121
+msgid "Notification Sounds"
+msgstr "Sons de les notificacions"
+
+#: src/Navigation.tsx:515
 #: src/view/screens/Notifications.tsx:124
 #: src/view/screens/Notifications.tsx:148
-#: src/view/shell/bottom-bar/BottomBar.tsx:268
-#: src/view/shell/desktop/LeftNav.tsx:336
+#: src/view/shell/bottom-bar/BottomBar.tsx:227
+#: src/view/shell/desktop/LeftNav.tsx:350
 #: src/view/shell/Drawer.tsx:456
 #: src/view/shell/Drawer.tsx:457
 msgid "Notifications"
 msgstr "Notificacions"
 
-#: src/components/dms/MessageItem.tsx:145
+#: src/components/dms/MessageItem.tsx:161
 msgid "Now"
 msgstr "Ara"
 
@@ -3667,7 +3856,7 @@ msgstr "Nuesa"
 
 #: src/lib/moderation/useReportOptions.ts:72
 msgid "Nudity or adult content not labeled as such"
-msgstr "Nuesa o contingut per adults no etiquetat com a tal"
+msgstr "Nuesa o contingut per a adults no etiquetat com a tal"
 
 #: src/lib/moderation/useReportOptions.ts:71
 #~ msgid "Nudity or pornography not labeled as such"
@@ -3681,7 +3870,7 @@ msgstr "Nuesa o contingut per adults no etiquetat com a tal"
 msgid "Off"
 msgstr "Apagat"
 
-#: src/components/dialogs/GifSelect.tsx:287
+#: src/components/dialogs/GifSelect.tsx:288
 #: src/view/com/util/ErrorBoundary.tsx:55
 msgid "Oh no!"
 msgstr "Ostres!"
@@ -3691,7 +3880,7 @@ msgid "Oh no! Something went wrong."
 msgstr "Ostres! Alguna cosa ha fallat."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:126
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:335
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:336
 msgid "OK"
 msgstr "D'acord"
 
@@ -3703,17 +3892,17 @@ msgstr "D'acord"
 msgid "Oldest replies first"
 msgstr "Respostes més antigues primer"
 
-#: src/view/screens/Settings/index.tsx:253
+#: src/view/screens/Settings/index.tsx:254
 msgid "Onboarding reset"
 msgstr "Restableix la incorporació"
 
-#: src/view/com/composer/Composer.tsx:462
+#: src/view/com/composer/Composer.tsx:460
 msgid "One or more images is missing alt text."
 msgstr "Falta el text alternatiu a una o més imatges."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:120
 msgid "Only .jpg and .png files are supported"
-msgstr ""
+msgstr "Només s'accepten fitxers .jpg i .png"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
@@ -3723,12 +3912,12 @@ msgstr "Només {0} poden respondre."
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "Només pot tenir lletres, nombres i guionets"
 
-#: src/components/Lists.tsx:78
+#: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
 msgstr "Ostres, alguna cosa ha anat malament!"
 
-#: src/components/Lists.tsx:179
-#: src/view/screens/AppPasswords.tsx:67
+#: src/components/Lists.tsx:191
+#: src/view/screens/AppPasswords.tsx:69
 #: src/view/screens/Profile.tsx:100
 msgid "Oops!"
 msgstr "Ostres!"
@@ -3739,14 +3928,19 @@ msgstr "Obre"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:280
 msgid "Open avatar creator"
-msgstr ""
+msgstr "Obre el creador d'avatars"
 
 #: src/view/screens/Moderation.tsx:75
 #~ msgid "Open content filtering settings"
 #~ msgstr "Obre la configuració del filtre de contingut"
 
-#: src/view/com/composer/Composer.tsx:555
-#: src/view/com/composer/Composer.tsx:556
+#: src/screens/Messages/List/ChatListItem.tsx:164
+#: src/screens/Messages/List/ChatListItem.tsx:165
+msgid "Open conversation options"
+msgstr "Obre les opcions de les converses"
+
+#: src/view/com/composer/Composer.tsx:560
+#: src/view/com/composer/Composer.tsx:561
 msgid "Open emoji picker"
 msgstr "Obre el selector d'emojis"
 
@@ -3754,9 +3948,13 @@ msgstr "Obre el selector d'emojis"
 msgid "Open feed options menu"
 msgstr "Obre el menú de les opcions del canal"
 
-#: src/view/screens/Settings/index.tsx:702
+#: src/view/screens/Settings/index.tsx:729
 msgid "Open links with in-app browser"
 msgstr "Obre els enllaços al navegador de l'aplicació"
+
+#: src/components/dms/ActionsWrapper.tsx:87
+msgid "Open message options"
+msgstr "Obre les opcions dels missatges"
 
 #: src/screens/Moderation/index.tsx:227
 msgid "Open muted words and tags settings"
@@ -3774,12 +3972,12 @@ msgstr "Obre la navegació"
 msgid "Open post options menu"
 msgstr "Obre el menú de les opcions de publicació"
 
-#: src/view/screens/Settings/index.tsx:803
-#: src/view/screens/Settings/index.tsx:813
+#: src/view/screens/Settings/index.tsx:830
+#: src/view/screens/Settings/index.tsx:840
 msgid "Open storybook page"
 msgstr "Obre la pàgina d'historial"
 
-#: src/view/screens/Settings/index.tsx:791
+#: src/view/screens/Settings/index.tsx:818
 msgid "Open system log"
 msgstr "Obre el registre del sistema"
 
@@ -3787,7 +3985,7 @@ msgstr "Obre el registre del sistema"
 msgid "Opens {numItems} options"
 msgstr "Obre {numItems} opcions"
 
-#: src/view/screens/Settings/index.tsx:501
+#: src/view/screens/Settings/index.tsx:503
 msgid "Opens accessibility settings"
 msgstr "Obre la configuració d'accessibilitat"
 
@@ -3803,11 +4001,15 @@ msgstr "Obre una llista expandida d'usuaris en aquesta notificació"
 msgid "Opens camera on device"
 msgstr "Obre la càmera del dispositiu"
 
+#: src/view/screens/Settings/index.tsx:632
+msgid "Opens chat settings"
+msgstr ""
+
 #: src/view/com/composer/Prompt.tsx:25
 msgid "Opens composer"
 msgstr "Obre el compositor"
 
-#: src/view/screens/Settings/index.tsx:522
+#: src/view/screens/Settings/index.tsx:524
 msgid "Opens configurable language settings"
 msgstr "Obre la configuració d'idioma"
 
@@ -3819,7 +4021,7 @@ msgstr "Obre la galeria fotogràfica del dispositiu"
 #~ msgid "Opens editor for profile display name, avatar, background image, and description"
 #~ msgstr "Obre l'editor del perfil per a editar el nom, avatar, imatge de fons i descripció"
 
-#: src/view/screens/Settings/index.tsx:637
+#: src/view/screens/Settings/index.tsx:664
 msgid "Opens external embeds settings"
 msgstr "Obre la configuració per les incrustacions externes"
 
@@ -3843,7 +4045,7 @@ msgstr "Obre el procés per a iniciar sessió a un compte existent de Bluesky"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:37
 msgid "Opens GIF select dialog"
-msgstr "Obre el diàleg per triar GIF"
+msgstr "Obre el diàleg per a triar GIF"
 
 #: src/view/screens/Settings.tsx:412
 #~ msgid "Opens invite code list"
@@ -3853,7 +4055,7 @@ msgstr "Obre el diàleg per triar GIF"
 msgid "Opens list of invite codes"
 msgstr "Obre la llista de codis d'invitació"
 
-#: src/view/screens/Settings/index.tsx:773
+#: src/view/screens/Settings/index.tsx:800
 msgid "Opens modal for account deletion confirmation. Requires email code"
 msgstr "Obre el modal per a la confirmació de l'eliminació del compte. Requereix codi de correu electrònic"
 
@@ -3861,19 +4063,19 @@ msgstr "Obre el modal per a la confirmació de l'eliminació del compte. Requere
 #~ msgid "Opens modal for account deletion confirmation. Requires email code."
 #~ msgstr "Obre el modal per a confirmar l'eliminació del compte. Requereix un codi de correu"
 
-#: src/view/screens/Settings/index.tsx:731
+#: src/view/screens/Settings/index.tsx:758
 msgid "Opens modal for changing your Bluesky password"
 msgstr "Obre el modal per a canviar la contrasenya de Bluesky"
 
-#: src/view/screens/Settings/index.tsx:686
+#: src/view/screens/Settings/index.tsx:713
 msgid "Opens modal for choosing a new Bluesky handle"
 msgstr "Obre el modal per a triar un nou identificador de Bluesky"
 
-#: src/view/screens/Settings/index.tsx:754
+#: src/view/screens/Settings/index.tsx:781
 msgid "Opens modal for downloading your Bluesky account data (repository)"
 msgstr "Obre el modal per a baixar les dades del vostre compte Bluesky (repositori)"
 
-#: src/view/screens/Settings/index.tsx:941
+#: src/view/screens/Settings/index.tsx:978
 msgid "Opens modal for email verification"
 msgstr "Obre el modal per a verificar el correu"
 
@@ -3881,11 +4083,11 @@ msgstr "Obre el modal per a verificar el correu"
 msgid "Opens modal for using custom domain"
 msgstr "Obre el modal per a utilitzar un domini personalitzat"
 
-#: src/view/screens/Settings/index.tsx:547
+#: src/view/screens/Settings/index.tsx:549
 msgid "Opens moderation settings"
 msgstr "Obre la configuració de la moderació"
 
-#: src/screens/Login/LoginForm.tsx:222
+#: src/screens/Login/LoginForm.tsx:225
 msgid "Opens password reset form"
 msgstr "Obre el formulari de restabliment de la contrasenya"
 
@@ -3894,11 +4096,11 @@ msgstr "Obre el formulari de restabliment de la contrasenya"
 msgid "Opens screen to edit Saved Feeds"
 msgstr "Obre pantalla per a editar els canals desats"
 
-#: src/view/screens/Settings/index.tsx:608
+#: src/view/screens/Settings/index.tsx:610
 msgid "Opens screen with all saved feeds"
 msgstr "Obre la pantalla amb tots els canals desats"
 
-#: src/view/screens/Settings/index.tsx:664
+#: src/view/screens/Settings/index.tsx:691
 msgid "Opens the app password settings"
 msgstr "Obre la configuració de les contrasenyes d'aplicació"
 
@@ -3906,7 +4108,7 @@ msgstr "Obre la configuració de les contrasenyes d'aplicació"
 #~ msgid "Opens the app password settings page"
 #~ msgstr "Obre la pàgina de configuració de les contrasenyes d'aplicació"
 
-#: src/view/screens/Settings/index.tsx:565
+#: src/view/screens/Settings/index.tsx:567
 msgid "Opens the Following feed preferences"
 msgstr "Obre les preferències del canal de Seguint"
 
@@ -3919,19 +4121,19 @@ msgid "Opens the linked website"
 msgstr "Obre la web enllaçada"
 
 #: src/screens/Messages/List/index.tsx:86
-msgid "Opens the message settings page"
-msgstr "Obre la pàgina de configuració dels missatges"
+#~ msgid "Opens the message settings page"
+#~ msgstr "Obre la pàgina de configuració dels missatges"
 
-#: src/view/screens/Settings/index.tsx:804
-#: src/view/screens/Settings/index.tsx:814
+#: src/view/screens/Settings/index.tsx:831
+#: src/view/screens/Settings/index.tsx:841
 msgid "Opens the storybook page"
 msgstr "Obre la pàgina de l'historial"
 
-#: src/view/screens/Settings/index.tsx:792
+#: src/view/screens/Settings/index.tsx:819
 msgid "Opens the system log page"
 msgstr "Obre la pàgina de registres del sistema"
 
-#: src/view/screens/Settings/index.tsx:586
+#: src/view/screens/Settings/index.tsx:588
 msgid "Opens the threads preferences"
 msgstr "Obre les preferències dels fils de debat"
 
@@ -3939,8 +4141,8 @@ msgstr "Obre les preferències dels fils de debat"
 msgid "Option {0} of {numItems}"
 msgstr "Opció {0} de {numItems}"
 
-#: src/components/dms/MessageReportDialog.tsx:156
-#: src/components/ReportDialog/SubmitView.tsx:162
+#: src/components/dms/ReportDialog.tsx:181
+#: src/components/ReportDialog/SubmitView.tsx:163
 msgid "Optionally provide additional information below:"
 msgstr "Opcionalment, proporciona informació addicional a continuació:"
 
@@ -3964,7 +4166,11 @@ msgstr "Un altre compte"
 msgid "Other..."
 msgstr "Un altre…"
 
-#: src/components/Lists.tsx:196
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:28
+msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
+msgstr "Els nostres moderadors han revisat els informes i han decidit desactivar el teu accés als xats a Bluesky."
+
+#: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "Pàgina no trobada"
@@ -3973,10 +4179,10 @@ msgstr "Pàgina no trobada"
 msgid "Page Not Found"
 msgstr "Pàgina no trobada"
 
-#: src/screens/Login/LoginForm.tsx:198
+#: src/screens/Login/LoginForm.tsx:201
 #: src/screens/Signup/StepInfo/index.tsx:102
-#: src/view/com/modals/DeleteAccount.tsx:194
-#: src/view/com/modals/DeleteAccount.tsx:201
+#: src/view/com/modals/DeleteAccount.tsx:205
+#: src/view/com/modals/DeleteAccount.tsx:212
 msgid "Password"
 msgstr "Contrasenya"
 
@@ -4029,7 +4235,7 @@ msgid "Pictures meant for adults."
 msgstr "Imatges destinades a adults."
 
 #: src/view/screens/ProfileFeed.tsx:287
-#: src/view/screens/ProfileList.tsx:612
+#: src/view/screens/ProfileList.tsx:616
 msgid "Pin to home"
 msgstr "Fixa a l'inici"
 
@@ -4041,6 +4247,10 @@ msgstr "Fixa a l'Inici"
 msgid "Pinned Feeds"
 msgstr "Canals de notícies fixats"
 
+#: src/view/screens/ProfileList.tsx:288
+msgid "Pinned to your feeds"
+msgstr "Fixat als teus canals"
+
 #: src/view/com/util/post-embeds/GifEmbed.tsx:36
 msgid "Play"
 msgstr "Reprodueix"
@@ -4048,6 +4258,11 @@ msgstr "Reprodueix"
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
 msgid "Play {0}"
 msgstr "Reprodueix {0}"
+
+#: src/screens/Messages/Settings.tsx:97
+#: src/screens/Messages/Settings.tsx:104
+#~ msgid "Play notification sounds"
+#~ msgstr "Reprodueix els sons de notificació"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:35
 msgid "Play or pause the GIF"
@@ -4078,7 +4293,7 @@ msgstr "Completa el captcha de verificació."
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
 msgstr "Confirma el teu correu abans de canviar-lo. Aquest és un requisit temporal mentre no s'afegeixin eines per a actualitzar el correu. Aviat no serà necessari."
 
-#: src/view/com/modals/AddAppPasswords.tsx:91
+#: src/view/com/modals/AddAppPasswords.tsx:95
 msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "Introdueix un nom per a la contrasenya de la vostra aplicació. No es permeten tot en espais."
 
@@ -4086,11 +4301,11 @@ msgstr "Introdueix un nom per a la contrasenya de la vostra aplicació. No es pe
 #~ msgid "Please enter a phone number that can receive SMS text messages."
 #~ msgstr "Introdueix un telèfon que pugui rebre missatges SMS"
 
-#: src/view/com/modals/AddAppPasswords.tsx:146
+#: src/view/com/modals/AddAppPasswords.tsx:151
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "Introdueix un nom únic per aquesta contrasenya d'aplicació o fes servir un nom generat aleatòriament."
 
-#: src/components/dialogs/MutedWords.tsx:67
+#: src/components/dialogs/MutedWords.tsx:68
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "Introdueix una paraula, una etiqueta o una frase vàlida per a silenciar"
 
@@ -4106,15 +4321,20 @@ msgstr "Introdueix una paraula, una etiqueta o una frase vàlida per a silenciar
 msgid "Please enter your email."
 msgstr "Introdueix el teu correu."
 
-#: src/view/com/modals/DeleteAccount.tsx:190
+#: src/view/com/modals/DeleteAccount.tsx:201
 msgid "Please enter your password as well:"
 msgstr "Introdueix la teva contrasenya també:"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:248
+#: src/components/moderation/LabelsOnMeDialog.tsx:258
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "Explica per què creieu que aquesta etiqueta ha estat aplicada incorrectament per {0}"
 
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:110
+msgid "Please explain why you think your chats were incorrectly disabled"
+msgstr "Expliqueu perquè creus que els teus xats s'han desactivat incorrectament"
+
 #: src/lib/hooks/useAccountSwitcher.ts:48
+#: src/lib/hooks/useAccountSwitcher.ts:58
 msgid "Please sign in as @{0}"
 msgstr "Inicia sessió com a @{0}"
 
@@ -4130,7 +4350,7 @@ msgstr "Inicia sessió com a @{0}"
 msgid "Please Verify Your Email"
 msgstr "Verifica el teu correu"
 
-#: src/view/com/composer/Composer.tsx:252
+#: src/view/com/composer/Composer.tsx:254
 msgid "Please wait for your link card to finish loading"
 msgstr "Espera que es generi la targeta de l'enllaç"
 
@@ -4146,13 +4366,13 @@ msgstr "Pornografia"
 #~ msgid "Pornography"
 #~ msgstr "Pornografia"
 
-#: src/view/com/composer/Composer.tsx:437
-#: src/view/com/composer/Composer.tsx:445
+#: src/view/com/composer/Composer.tsx:435
+#: src/view/com/composer/Composer.tsx:443
 msgctxt "action"
 msgid "Post"
 msgstr "Publica"
 
-#: src/view/com/post-thread/PostThread.tsx:295
+#: src/view/com/post-thread/PostThread.tsx:331
 msgctxt "description"
 msgid "Post"
 msgstr "Publicació"
@@ -4163,7 +4383,7 @@ msgstr "Publicació"
 #~ msgid "Post"
 #~ msgstr "Publicació"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:176
+#: src/view/com/post-thread/PostThreadItem.tsx:175
 msgid "Post by {0}"
 msgstr "Publicació per {0}"
 
@@ -4177,7 +4397,7 @@ msgstr "Publicació per @{0}"
 msgid "Post deleted"
 msgstr "Publicació eliminada"
 
-#: src/view/com/post-thread/PostThread.tsx:157
+#: src/view/com/post-thread/PostThread.tsx:193
 msgid "Post hidden"
 msgstr "Publicació oculta"
 
@@ -4199,8 +4419,8 @@ msgstr "Idioma de la publicació"
 msgid "Post Languages"
 msgstr "Idiomes de les publicacions"
 
-#: src/view/com/post-thread/PostThread.tsx:152
-#: src/view/com/post-thread/PostThread.tsx:164
+#: src/view/com/post-thread/PostThread.tsx:188
+#: src/view/com/post-thread/PostThread.tsx:200
 msgid "Post not found"
 msgstr "Publicació no trobada"
 
@@ -4212,7 +4432,7 @@ msgstr "publicacions"
 msgid "Posts"
 msgstr "Publicacions"
 
-#: src/components/dialogs/MutedWords.tsx:89
+#: src/components/dialogs/MutedWords.tsx:90
 msgid "Posts can be muted based on their text, their tags, or both."
 msgstr "Les publicacions es poder silenciar segons el seu text, etiquetes o ambdues."
 
@@ -4224,13 +4444,17 @@ msgstr "Publicacions amagades"
 msgid "Potentially Misleading Link"
 msgstr "Enllaç potencialment enganyós"
 
+#: src/screens/Messages/Conversation/MessageListError.tsx:19
+msgid "Press to attempt reconnection"
+msgstr "Prem per provar de connectar de nou"
+
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
 msgstr "Prem per canviar el proveïdor d'allotjament"
 
 #: src/components/Error.tsx:85
-#: src/components/Lists.tsx:83
-#: src/screens/Messages/Conversation/MessageListError.tsx:59
+#: src/components/Lists.tsx:93
+#: src/screens/Messages/Conversation/MessageListError.tsx:24
 #: src/screens/Signup/index.tsx:200
 msgid "Press to retry"
 msgstr "Prem per a tornar-ho a provar"
@@ -4252,7 +4476,7 @@ msgstr "Idioma principal"
 msgid "Prioritize Your Follows"
 msgstr "Prioritza els usuaris que segueixes"
 
-#: src/view/screens/Settings/index.tsx:620
+#: src/view/screens/Settings/index.tsx:647
 #: src/view/shell/desktop/RightNav.tsx:76
 msgid "Privacy"
 msgstr "Privacitat"
@@ -4260,22 +4484,26 @@ msgstr "Privacitat"
 #: src/Navigation.tsx:238
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings/index.tsx:890
+#: src/view/screens/Settings/index.tsx:927
 #: src/view/shell/Drawer.tsx:284
 msgid "Privacy Policy"
 msgstr "Política de privacitat"
+
+#: src/components/dms/MessagesNUX.tsx:91
+msgid "Privately chat with other users."
+msgstr "Xateja en privat amb altres usuaris."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:156
 msgid "Processing..."
 msgstr "Processant…"
 
-#: src/view/screens/DebugMod.tsx:889
+#: src/view/screens/DebugMod.tsx:894
 #: src/view/screens/Profile.tsx:345
 msgid "profile"
 msgstr "perfil"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:313
-#: src/view/shell/desktop/LeftNav.tsx:373
+#: src/view/shell/bottom-bar/BottomBar.tsx:272
+#: src/view/shell/desktop/LeftNav.tsx:381
 #: src/view/shell/Drawer.tsx:78
 #: src/view/shell/Drawer.tsx:541
 #: src/view/shell/Drawer.tsx:542
@@ -4286,7 +4514,7 @@ msgstr "Perfil"
 msgid "Profile updated"
 msgstr "Perfil actualitzat"
 
-#: src/view/screens/Settings/index.tsx:954
+#: src/view/screens/Settings/index.tsx:991
 msgid "Protect your account by verifying your email."
 msgstr "Protegeix el teu compte verificant el teu correu."
 
@@ -4302,11 +4530,11 @@ msgstr "Llistes d'usuaris per a silenciar o bloquejar en massa, públiques i per
 msgid "Public, shareable lists which can drive feeds."
 msgstr "Llistes que poden nodrir canals, públiques i per a compartir."
 
-#: src/view/com/composer/Composer.tsx:422
+#: src/view/com/composer/Composer.tsx:420
 msgid "Publish post"
 msgstr "Publica"
 
-#: src/view/com/composer/Composer.tsx:422
+#: src/view/com/composer/Composer.tsx:420
 msgid "Publish reply"
 msgstr "Publica la resposta"
 
@@ -4336,9 +4564,13 @@ msgstr "Aleatori (també conegut com a \"Poster's Roulette\")"
 msgid "Ratios"
 msgstr "Proporcions"
 
+#: src/components/dms/ReportDialog.tsx:172
+msgid "Reason:"
+msgstr "Raó:"
+
 #: src/components/dms/MessageReportDialog.tsx:149
-msgid "Reason: {0}"
-msgstr ""
+#~ msgid "Reason: {0}"
+#~ msgstr "Raó: {0}"
 
 #: src/view/screens/Search/Search.tsx:886
 msgid "Recent Searches"
@@ -4352,7 +4584,15 @@ msgstr "Cerques recents"
 #~ msgid "Recommended Users"
 #~ msgstr "Usuaris recomanats"
 
-#: src/components/dialogs/MutedWords.tsx:286
+#: src/screens/Messages/Conversation/MessageListError.tsx:20
+msgid "Reconnect"
+msgstr "Torna a connectar"
+
+#: src/screens/Messages/List/index.tsx:200
+msgid "Reload conversations"
+msgstr "Carrega les converses de nou"
+
+#: src/components/dialogs/MutedWords.tsx:288
 #: src/view/com/feeds/FeedSourceCard.tsx:285
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/SelfLabel.tsx:84
@@ -4369,7 +4609,7 @@ msgstr "Elimina"
 msgid "Remove account"
 msgstr "Elimina el compte"
 
-#: src/view/com/util/UserAvatar.tsx:369
+#: src/view/com/util/UserAvatar.tsx:370
 msgid "Remove Avatar"
 msgstr "Elimina l'avatar"
 
@@ -4391,7 +4631,7 @@ msgstr "Vols eliminar el canal?"
 #: src/view/com/feeds/FeedSourceCard.tsx:234
 #: src/view/screens/ProfileFeed.tsx:330
 #: src/view/screens/ProfileFeed.tsx:336
-#: src/view/screens/ProfileList.tsx:438
+#: src/view/screens/ProfileList.tsx:442
 msgid "Remove from my feeds"
 msgstr "Elimina dels meus canals"
 
@@ -4407,7 +4647,7 @@ msgstr "Elimina la imatge"
 msgid "Remove image preview"
 msgstr "Elimina la visualització prèvia de la imatge"
 
-#: src/components/dialogs/MutedWords.tsx:329
+#: src/components/dialogs/MutedWords.tsx:331
 msgid "Remove mute word from your list"
 msgstr "Elimina la paraula silenciada de la teva llista"
 
@@ -4442,7 +4682,7 @@ msgstr "Eliminat dels meus canals"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
-#: src/view/screens/ProfileList.tsx:315
+#: src/view/screens/ProfileList.tsx:319
 msgid "Removed from your feeds"
 msgstr "Eliminat dels teus canals"
 
@@ -4457,7 +4697,7 @@ msgstr "Elimina la publicació amb la citació"
 #: src/view/com/posts/FeedShutdownMsg.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:130
 msgid "Replace with Discover"
-msgstr ""
+msgstr "Canvia amb Discover"
 
 #: src/view/screens/Profile.tsx:194
 msgid "Replies"
@@ -4467,7 +4707,7 @@ msgstr "Respostes"
 msgid "Replies to this thread are disabled"
 msgstr "Les respostes a aquest fil de debat estan deshabilitades"
 
-#: src/view/com/composer/Composer.tsx:435
+#: src/view/com/composer/Composer.tsx:433
 msgctxt "action"
 msgid "Reply"
 msgstr "Respon"
@@ -4483,12 +4723,14 @@ msgstr "Filtres de resposta"
 #~ msgstr "Resposta a <0/>"
 
 #: src/view/com/post/Post.tsx:176
-#: src/view/com/posts/FeedItem.tsx:336
+#: src/view/com/posts/FeedItem.tsx:421
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "Resposta a <0><1/></0>"
 
-#: src/components/dms/MessageMenu.tsx:109
+#: src/components/dms/MessageMenu.tsx:107
+#: src/components/dms/MessagesListBlockedFooter.tsx:77
+#: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
 msgstr "Informa"
 
@@ -4506,11 +4748,11 @@ msgstr "Informa"
 msgid "Report Account"
 msgstr "Informa del compte"
 
-#: src/components/dms/ConvoMenu.tsx:163
-#: src/components/dms/ConvoMenu.tsx:166
+#: src/components/dms/ConvoMenu.tsx:195
 #: src/components/dms/ConvoMenu.tsx:198
+#: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr ""
+msgstr "Informa d'aquesta conversa"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
@@ -4521,11 +4763,11 @@ msgstr "Diàleg de l'informe"
 msgid "Report feed"
 msgstr "Informa del canal"
 
-#: src/view/screens/ProfileList.tsx:480
+#: src/view/screens/ProfileList.tsx:484
 msgid "Report List"
 msgstr "Informa de la llista"
 
-#: src/components/dms/MessageMenu.tsx:107
+#: src/components/dms/MessageMenu.tsx:105
 msgid "Report message"
 msgstr "Informa del missatge"
 
@@ -4534,29 +4776,29 @@ msgstr "Informa del missatge"
 msgid "Report post"
 msgstr "Informa de la publicació"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:45
+#: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
 msgstr "Informa d'aquest contingut"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:58
+#: src/components/ReportDialog/SelectReportOptionView.tsx:56
 msgid "Report this feed"
 msgstr "Informa d'aquest canal"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:55
+#: src/components/ReportDialog/SelectReportOptionView.tsx:53
 msgid "Report this list"
 msgstr "Informa d'aquesta llista"
 
-#: src/components/dms/MessageReportDialog.tsx:41
-#: src/components/dms/MessageReportDialog.tsx:137
-#: src/components/ReportDialog/SelectReportOptionView.tsx:61
+#: src/components/dms/ReportDialog.tsx:47
+#: src/components/dms/ReportDialog.tsx:140
+#: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this message"
-msgstr ""
+msgstr "Informa d'aquest missatge"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:52
+#: src/components/ReportDialog/SelectReportOptionView.tsx:50
 msgid "Report this post"
 msgstr "Informa d'aquesta publicació"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:49
+#: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
 msgstr "Informa d'aquest usuari"
 
@@ -4585,7 +4827,7 @@ msgstr "Republica o cita la publicació"
 msgid "Reposted By"
 msgstr "Republicat per"
 
-#: src/view/com/posts/FeedItem.tsx:248
+#: src/view/com/posts/FeedItem.tsx:243
 msgid "Reposted by {0}"
 msgstr "Republicat per {0}"
 
@@ -4597,7 +4839,7 @@ msgstr "Republicat per {0}"
 #~ msgid "Reposted by <0/>"
 #~ msgstr "Republicada per <0/>"
 
-#: src/view/com/posts/FeedItem.tsx:266
+#: src/view/com/posts/FeedItem.tsx:261
 msgid "Reposted by <0><1/></0>"
 msgstr "Republicat per <0><1/></0>"
 
@@ -4605,7 +4847,7 @@ msgstr "Republicat per <0><1/></0>"
 msgid "reposted your post"
 msgstr "ha republicat la teva publicació"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:188
+#: src/view/com/post-thread/PostThreadItem.tsx:187
 msgid "Reposts of this post"
 msgstr "Republicacions d'aquesta publicació"
 
@@ -4629,7 +4871,7 @@ msgstr "Requereix un text alternatiu abans de publicar"
 
 #: src/view/screens/Settings/Email2FAToggle.tsx:51
 msgid "Require email code to log into your account"
-msgstr "Sol·licita el codi de correu per iniciar sessió al teu compte"
+msgstr "Sol·licita el codi de correu per a iniciar sessió al teu compte"
 
 #: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Required for this provider"
@@ -4652,8 +4894,8 @@ msgstr "Codi de restabliment"
 #~ msgid "Reset onboarding"
 #~ msgstr "Restableix la incorporació"
 
-#: src/view/screens/Settings/index.tsx:833
-#: src/view/screens/Settings/index.tsx:836
+#: src/view/screens/Settings/index.tsx:870
+#: src/view/screens/Settings/index.tsx:873
 msgid "Reset onboarding state"
 msgstr "Restableix l'estat de la incorporació"
 
@@ -4665,20 +4907,20 @@ msgstr "Restableix la contrasenya"
 #~ msgid "Reset preferences"
 #~ msgstr "Restableix les preferències"
 
-#: src/view/screens/Settings/index.tsx:823
-#: src/view/screens/Settings/index.tsx:826
+#: src/view/screens/Settings/index.tsx:850
+#: src/view/screens/Settings/index.tsx:853
 msgid "Reset preferences state"
 msgstr "Restableix l'estat de les preferències"
 
-#: src/view/screens/Settings/index.tsx:834
+#: src/view/screens/Settings/index.tsx:871
 msgid "Resets the onboarding state"
 msgstr "Restableix l'estat de la incorporació"
 
-#: src/view/screens/Settings/index.tsx:824
+#: src/view/screens/Settings/index.tsx:851
 msgid "Resets the preferences state"
 msgstr "Restableix l'estat de les preferències"
 
-#: src/screens/Login/LoginForm.tsx:286
+#: src/screens/Login/LoginForm.tsx:289
 msgid "Retries login"
 msgstr "Torna a intentar iniciar sessió"
 
@@ -4687,12 +4929,12 @@ msgstr "Torna a intentar iniciar sessió"
 msgid "Retries the last action, which errored out"
 msgstr "Torna a intentar l'última acció, que ha donat error"
 
-#: src/components/dms/MessageMenu.tsx:136
+#: src/components/dms/MessageItem.tsx:227
 #: src/components/Error.tsx:90
-#: src/components/Lists.tsx:94
-#: src/screens/Login/LoginForm.tsx:285
-#: src/screens/Login/LoginForm.tsx:292
-#: src/screens/Messages/Conversation/MessageListError.tsx:68
+#: src/components/Lists.tsx:104
+#: src/screens/Login/LoginForm.tsx:288
+#: src/screens/Login/LoginForm.tsx:295
+#: src/screens/Messages/Conversation/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:236
 #: src/screens/Onboarding/StepInterests/index.tsx:239
 #: src/screens/Signup/index.tsx:207
@@ -4706,7 +4948,7 @@ msgstr "Torna-ho a provar"
 #~ msgstr "Torna-ho a provar"
 
 #: src/components/Error.tsx:98
-#: src/view/screens/ProfileList.tsx:966
+#: src/view/screens/ProfileList.tsx:970
 msgid "Return to previous page"
 msgstr "Torna a la pàgina anterior"
 
@@ -4724,8 +4966,8 @@ msgstr "Torna a la pàgina anterior"
 #~ msgstr "ENTORN DE PROVES. Les publicacions i els comptes no són permanents."
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
-#: src/view/com/composer/GifAltText.tsx:162
-#: src/view/com/composer/GifAltText.tsx:168
+#: src/view/com/composer/GifAltText.tsx:163
+#: src/view/com/composer/GifAltText.tsx:169
 #: src/view/com/modals/ChangeHandle.tsx:168
 #: src/view/com/modals/CreateOrEditList.tsx:340
 #: src/view/com/modals/EditProfile.tsx:225
@@ -4738,7 +4980,7 @@ msgctxt "action"
 msgid "Save"
 msgstr "Desa"
 
-#: src/view/com/modals/AltImage.tsx:131
+#: src/view/com/modals/AltImage.tsx:132
 msgid "Save alt text"
 msgstr "Desa el text alternatiu"
 
@@ -4776,7 +5018,7 @@ msgstr "S'ha desat a la teva galeria d'imatges"
 #~ msgstr "S'ha desat a la teva galeria d'imatges."
 
 #: src/view/screens/ProfileFeed.tsx:200
-#: src/view/screens/ProfileList.tsx:295
+#: src/view/screens/ProfileList.tsx:299
 msgid "Saved to your feeds"
 msgstr "S'ha desat als teus canals."
 
@@ -4792,16 +5034,20 @@ msgstr "Desa el canvi d'identificador a {handle}"
 msgid "Saves image crop settings"
 msgstr "Desa la configuració de retall d'imatges"
 
+#: src/components/dms/ChatEmptyPill.tsx:33
+msgid "Say hello!"
+msgstr "Digues hola!"
+
 #: src/screens/Onboarding/index.tsx:48
 msgid "Science"
 msgstr "Ciència"
 
-#: src/view/screens/ProfileList.tsx:922
+#: src/view/screens/ProfileList.tsx:926
 msgid "Scroll to top"
 msgstr "Desplaça't cap a dalt"
 
-#: src/components/dms/NewChat.tsx:184
-#: src/Navigation.tsx:502
+#: src/components/dms/NewChatDialog/index.tsx:270
+#: src/Navigation.tsx:505
 #: src/view/com/auth/LoggedOut.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
@@ -4809,8 +5055,8 @@ msgstr "Desplaça't cap a dalt"
 #: src/view/screens/Search/Search.tsx:444
 #: src/view/screens/Search/Search.tsx:757
 #: src/view/screens/Search/Search.tsx:785
-#: src/view/shell/bottom-bar/BottomBar.tsx:196
-#: src/view/shell/desktop/LeftNav.tsx:329
+#: src/view/shell/bottom-bar/BottomBar.tsx:179
+#: src/view/shell/desktop/LeftNav.tsx:343
 #: src/view/shell/desktop/Search.tsx:194
 #: src/view/shell/desktop/Search.tsx:203
 #: src/view/shell/Drawer.tsx:393
@@ -4843,8 +5089,8 @@ msgstr "Cerca totes les publicacions amb l'etiqueta {displayTag}"
 #~ msgstr "Cerca totes les publicacions amb l'etiqueta {tag}"
 
 #: src/components/dms/NewChat.tsx:226
-msgid "Search for someone to start a conversation with."
-msgstr "Cerca algú amb qui començar una conversa."
+#~ msgid "Search for someone to start a conversation with."
+#~ msgstr "Cerca algú amb qui començar una conversa."
 
 #: src/view/com/auth/LoggedOut.tsx:105
 #: src/view/com/auth/LoggedOut.tsx:106
@@ -4856,7 +5102,8 @@ msgstr "Cerca usuaris"
 msgid "Search GIFs"
 msgstr "Cerca GIF"
 
-#: src/components/dms/NewChat.tsx:183
+#: src/components/dms/NewChatDialog/index.tsx:290
+#: src/components/dms/NewChatDialog/index.tsx:291
 msgid "Search profiles"
 msgstr "Cerca perfils"
 
@@ -4893,7 +5140,7 @@ msgstr "Mostra les publicacions amb <0>{displayTag}</0> d'aquest usuari"
 #~ msgstr "Mostra les publicacions amb <0>{tag}</0> d'aquest usuari"
 
 #: src/view/com/notifications/FeedItem.tsx:411
-#: src/view/com/util/UserAvatar.tsx:400
+#: src/view/com/util/UserAvatar.tsx:402
 msgid "See profile"
 msgstr "Mostra el perfil"
 
@@ -4911,7 +5158,7 @@ msgstr "Selecciona {item}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
-msgstr ""
+msgstr "Selecciona un color"
 
 #: src/screens/Login/ChooseAccountForm.tsx:85
 msgid "Select account"
@@ -4919,11 +5166,11 @@ msgstr "Selecciona el compte"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
-msgstr ""
+msgstr "Selecciona un avatar"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
-msgstr ""
+msgstr "Selecciona un emoji"
 
 #: src/view/com/modals/ServerInput.tsx:75
 #~ msgid "Select Bluesky Social"
@@ -4935,11 +5182,11 @@ msgstr "Selecciona d'un compte existent"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Select GIF"
-msgstr "Tria GIF"
+msgstr "Selecciona GIF"
 
-#: src/components/dialogs/GifSelect.tsx:253
+#: src/components/dialogs/GifSelect.tsx:254
 msgid "Select GIF \"{0}\""
-msgstr "Tria GIF \"{0}\""
+msgstr "Selecciona GIF \"{0}\""
 
 #: src/view/screens/LanguageSettings.tsx:299
 msgid "Select languages"
@@ -4964,9 +5211,9 @@ msgstr "Selecciona alguns d'aquests comptes per a seguir-los"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr ""
+msgstr "Selecciona el {emojiName} emoji com al teu avatar"
 
-#: src/components/ReportDialog/SubmitView.tsx:135
+#: src/components/ReportDialog/SubmitView.tsx:136
 msgid "Select the moderation service(s) to report to"
 msgstr "Selecciona els serveis de moderació als quals voleu informar"
 
@@ -5018,16 +5265,20 @@ msgstr "Selecciona els teus canals algorítmics primaris"
 msgid "Select your secondary algorithmic feeds"
 msgstr "Selecciona els teus canals algorítmics secundaris"
 
+#: src/components/dms/ChatEmptyPill.tsx:38
+msgid "Send a neat website!"
+msgstr "Envia un lloc web net!"
+
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
 msgid "Send Confirmation Email"
 msgstr "Envia correu de confirmació"
 
-#: src/view/com/modals/DeleteAccount.tsx:130
+#: src/view/com/modals/DeleteAccount.tsx:141
 msgid "Send email"
 msgstr "Envia correu"
 
-#: src/view/com/modals/DeleteAccount.tsx:143
+#: src/view/com/modals/DeleteAccount.tsx:154
 msgctxt "action"
 msgid "Send Email"
 msgstr "Envia correu"
@@ -5041,15 +5292,15 @@ msgstr "Envia correu"
 msgid "Send feedback"
 msgstr "Envia comentari"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:110
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:95
+#: src/screens/Messages/Conversation/MessageInput.tsx:144
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:145
 msgid "Send message"
 msgstr "Envia el missatge"
 
-#: src/components/dms/MessageReportDialog.tsx:207
-#: src/components/dms/MessageReportDialog.tsx:210
-#: src/components/ReportDialog/SubmitView.tsx:215
-#: src/components/ReportDialog/SubmitView.tsx:219
+#: src/components/dms/ReportDialog.tsx:232
+#: src/components/dms/ReportDialog.tsx:235
+#: src/components/ReportDialog/SubmitView.tsx:216
+#: src/components/ReportDialog/SubmitView.tsx:220
 msgid "Send report"
 msgstr "Envia informe"
 
@@ -5066,7 +5317,7 @@ msgstr "Envia informe a {0}"
 msgid "Send verification email"
 msgstr "Envia un correu de verificació"
 
-#: src/view/com/modals/DeleteAccount.tsx:132
+#: src/view/com/modals/DeleteAccount.tsx:143
 msgid "Sends email with confirmation code for account deletion"
 msgstr "Envia un correu amb el codi de confirmació per l'eliminació del compte"
 
@@ -5148,23 +5399,23 @@ msgstr "Configura el teu compte"
 msgid "Sets Bluesky username"
 msgstr "Estableix un nom d'usuari de Bluesky"
 
-#: src/view/screens/Settings/index.tsx:452
+#: src/view/screens/Settings/index.tsx:454
 msgid "Sets color theme to dark"
 msgstr "Estableix el tema a fosc"
 
-#: src/view/screens/Settings/index.tsx:445
+#: src/view/screens/Settings/index.tsx:447
 msgid "Sets color theme to light"
 msgstr "Estableix el tema a clar"
 
-#: src/view/screens/Settings/index.tsx:439
+#: src/view/screens/Settings/index.tsx:441
 msgid "Sets color theme to system setting"
 msgstr "Estableix el tema a la configuració del sistema"
 
-#: src/view/screens/Settings/index.tsx:478
+#: src/view/screens/Settings/index.tsx:480
 msgid "Sets dark theme to the dark theme"
 msgstr "Estableix el tema fosc al tema fosc"
 
-#: src/view/screens/Settings/index.tsx:471
+#: src/view/screens/Settings/index.tsx:473
 msgid "Sets dark theme to the dim theme"
 msgstr "Estableix el tema fosc al tema atenuat"
 
@@ -5194,9 +5445,8 @@ msgstr "Estableix la relació d'aspecte de la imatge com a ampla"
 #~ msgstr "Estableix el servidor pel cient de Bluesky"
 
 #: src/Navigation.tsx:146
-#: src/screens/Messages/Settings/index.tsx:21
-#: src/view/screens/Settings/index.tsx:322
-#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/screens/Settings/index.tsx:325
+#: src/view/shell/desktop/LeftNav.tsx:389
 #: src/view/shell/Drawer.tsx:558
 #: src/view/shell/Drawer.tsx:559
 msgid "Settings"
@@ -5220,9 +5470,17 @@ msgstr "Comparteix"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:266
 #: src/view/com/util/forms/PostDropdownBtn.tsx:275
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:288
-#: src/view/screens/ProfileList.tsx:423
+#: src/view/screens/ProfileList.tsx:427
 msgid "Share"
 msgstr "Comparteix"
+
+#: src/components/dms/ChatEmptyPill.tsx:37
+msgid "Share a cool story!"
+msgstr "Comparteix una història interessant!"
+
+#: src/components/dms/ChatEmptyPill.tsx:36
+msgid "Share a fun fact!"
+msgstr "Comparteix una dada divertida!"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:420
@@ -5240,15 +5498,19 @@ msgstr "Comparteix el canal"
 msgid "Share Link"
 msgstr "Comparteix l'enllaç"
 
+#: src/components/dms/ChatEmptyPill.tsx:34
+msgid "Share your favorite feed!"
+msgstr "Comparteix el teu canal preferit!"
+
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
 msgstr "Comparteix la web enllaçada"
 
 #: src/components/moderation/ContentHider.tsx:115
 #: src/components/moderation/LabelPreference.tsx:136
-#: src/components/moderation/PostHider.tsx:116
+#: src/components/moderation/PostHider.tsx:118
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:54
-#: src/view/screens/Settings/index.tsx:372
+#: src/view/screens/Settings/index.tsx:374
 msgid "Show"
 msgstr "Mostra"
 
@@ -5278,9 +5540,13 @@ msgstr "Mostra la insígnia i filtra-ho dels canals"
 #~ msgid "Show embeds from {0}"
 #~ msgstr "Mostra els incrustats de {0}"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:207
 msgid "Show follows similar to {0}"
 msgstr "Mostra seguidors semblants a {0}"
+
+#: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:21
+msgid "Show hidden replies"
+msgstr ""
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:305
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -5289,7 +5555,7 @@ msgstr "Mostra'n menys com aquest"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:508
 #: src/view/com/post/Post.tsx:213
-#: src/view/com/posts/FeedItem.tsx:417
+#: src/view/com/posts/FeedItem.tsx:386
 msgid "Show More"
 msgstr "Mostra més"
 
@@ -5297,6 +5563,10 @@ msgstr "Mostra més"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:299
 msgid "Show more like this"
 msgstr "Mostra'n més com aquest"
+
+#: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:21
+msgid "Show muted replies"
+msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:257
 msgid "Show Posts from My Feeds"
@@ -5347,7 +5617,7 @@ msgid "Show reposts in Following"
 msgstr "Mostra les republicacions al canal Seguint"
 
 #: src/components/moderation/ContentHider.tsx:68
-#: src/components/moderation/PostHider.tsx:73
+#: src/components/moderation/PostHider.tsx:75
 msgid "Show the content"
 msgstr "Mostra el contingut"
 
@@ -5361,7 +5631,7 @@ msgstr "Mostra l'advertiment"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:56
 msgid "Show warning and filter from feeds"
-msgstr "Mostra l'advertiment i filtra-ho del canals"
+msgstr "Mostra l'advertiment i filtra-ho dels canals"
 
 #: src/view/com/profile/ProfileHeader.tsx:462
 #~ msgid "Shows a list of users similar to this user."
@@ -5375,17 +5645,17 @@ msgstr "Mostra les publicacions de {0} al teu canal"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
 #: src/screens/Login/index.tsx:119
-#: src/screens/Login/LoginForm.tsx:151
+#: src/screens/Login/LoginForm.tsx:154
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
 #: src/view/com/auth/SplashScreen.web.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:353
-#: src/view/shell/bottom-bar/BottomBar.tsx:354
-#: src/view/shell/bottom-bar/BottomBar.tsx:356
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:201
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:202
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
+#: src/view/shell/bottom-bar/BottomBar.tsx:312
+#: src/view/shell/bottom-bar/BottomBar.tsx:313
+#: src/view/shell/bottom-bar/BottomBar.tsx:315
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:181
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:182
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:184
 #: src/view/shell/NavSignupCard.tsx:69
 #: src/view/shell/NavSignupCard.tsx:70
 #: src/view/shell/NavSignupCard.tsx:72
@@ -5408,7 +5678,7 @@ msgstr "Inicia sessió com a …"
 
 #: src/components/dialogs/Signin.tsx:75
 msgid "Sign in or create your account to join the conversation!"
-msgstr "Inicia sessió o crea el teu compte per unir-te a la conversa"
+msgstr "Inicia sessió o crea el teu compte per a unir-te a la conversa"
 
 #: src/view/com/auth/login/LoginForm.tsx:140
 #~ msgid "Sign into"
@@ -5416,19 +5686,19 @@ msgstr "Inicia sessió o crea el teu compte per unir-te a la conversa"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign into Bluesky or create a new account"
-msgstr "Inicia sessió o crea el teu compte per unir-te a la conversa"
+msgstr "Inicia sessió o crea el teu compte per a unir-te a la conversa"
 
-#: src/view/screens/Settings/index.tsx:126
-#: src/view/screens/Settings/index.tsx:130
+#: src/view/screens/Settings/index.tsx:127
+#: src/view/screens/Settings/index.tsx:131
 msgid "Sign out"
 msgstr "Tanca sessió"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:343
-#: src/view/shell/bottom-bar/BottomBar.tsx:344
-#: src/view/shell/bottom-bar/BottomBar.tsx:346
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:191
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:192
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
+#: src/view/shell/bottom-bar/BottomBar.tsx:302
+#: src/view/shell/bottom-bar/BottomBar.tsx:303
+#: src/view/shell/bottom-bar/BottomBar.tsx:305
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:171
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:172
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:174
 #: src/view/shell/NavSignupCard.tsx:60
 #: src/view/shell/NavSignupCard.tsx:61
 #: src/view/shell/NavSignupCard.tsx:63
@@ -5444,7 +5714,7 @@ msgstr "Registra't o inicia sessió per a unir-te a la conversa"
 msgid "Sign-in Required"
 msgstr "Es requereix iniciar sessió"
 
-#: src/view/screens/Settings/index.tsx:382
+#: src/view/screens/Settings/index.tsx:384
 msgid "Signed in as"
 msgstr "S'ha iniciat sessió com a"
 
@@ -5474,9 +5744,13 @@ msgstr "Salta aquest flux"
 msgid "Software Dev"
 msgstr "Desenvolupament de programari"
 
-#: src/screens/Messages/Conversation/index.tsx:89
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
+msgid "Some people can reply"
+msgstr "Algunes persones poden respondre"
+
+#: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
-msgstr ""
+msgstr "Alguna cosa ha fallat"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 #~ msgid "Something went wrong and we're not sure what."
@@ -5496,8 +5770,8 @@ msgstr "Alguna cosa ha fallat, torna-ho a provar."
 #~ msgid "Something went wrong. Check your email and try again."
 #~ msgstr "Alguna cosa ha fallat. Comprova el teu correu i torna-ho a provar."
 
-#: src/App.native.tsx:83
-#: src/App.web.tsx:72
+#: src/App.native.tsx:85
+#: src/App.web.tsx:74
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "La teva sessió ha caducat. Torna a iniciar-la."
 
@@ -5510,8 +5784,12 @@ msgid "Sort replies to the same post by:"
 msgstr "Ordena les respostes a la mateixa publicació per:"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:168
-msgid "Source:"
-msgstr "Font:"
+#~ msgid "Source:"
+#~ msgstr "Font:"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:170
+msgid "Source: <0>{0}</0>"
+msgstr "Font: <0>{0}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:66
 #: src/lib/moderation/useReportOptions.ts:79
@@ -5534,15 +5812,23 @@ msgstr "Quadrat"
 #~ msgid "Staging"
 #~ msgstr "Posada en escena"
 
-#: src/components/dms/NewChat.tsx:178
+#: src/components/dms/NewChatDialog/index.tsx:467
 msgid "Start a new chat"
 msgstr "Comença un nou xat"
+
+#: src/components/dms/NewChatDialog/index.tsx:139
+msgid "Start chat with {displayName}"
+msgstr "Comença un xat amb {displayName}"
+
+#: src/components/dms/MessagesNUX.tsx:161
+msgid "Start chatting"
+msgstr "Comença a xatejar"
 
 #: src/view/screens/Settings/index.tsx:862
 #~ msgid "Status page"
 #~ msgstr "Pàgina d'estat"
 
-#: src/view/screens/Settings/index.tsx:896
+#: src/view/screens/Settings/index.tsx:933
 msgid "Status Page"
 msgstr "Pàgina d'estat"
 
@@ -5558,42 +5844,44 @@ msgstr "Pas {0} de {1}"
 #~ msgid "Step {0} of {numSteps}"
 #~ msgstr "Pas {0} de {numSteps}"
 
-#: src/view/screens/Settings/index.tsx:301
+#: src/view/screens/Settings/index.tsx:302
 msgid "Storage cleared, you need to restart the app now."
 msgstr "L'emmagatzematge s'ha esborrat, cal que reinicieu l'aplicació ara."
 
 #: src/Navigation.tsx:218
-#: src/view/screens/Settings/index.tsx:806
+#: src/view/screens/Settings/index.tsx:833
 msgid "Storybook"
 msgstr "Historial"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:282
-#: src/components/moderation/LabelsOnMeDialog.tsx:283
+#: src/components/moderation/LabelsOnMeDialog.tsx:292
+#: src/components/moderation/LabelsOnMeDialog.tsx:293
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:142
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:143
 msgid "Submit"
 msgstr "Envia"
 
-#: src/view/screens/ProfileList.tsx:639
+#: src/view/screens/ProfileList.tsx:643
 msgid "Subscribe"
 msgstr "Subscriure's"
 
-#: src/screens/Profile/Sections/Labels.tsx:194
+#: src/screens/Profile/Sections/Labels.tsx:201
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "Subscriu-te a @{0} per a utilitzar aquestes etiquetes:"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:229
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:230
 msgid "Subscribe to Labeler"
-msgstr "Subscriu-te a l'Etiquetador"
+msgstr "Subscriu-te a l'etiquetador"
 
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:172
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
 msgid "Subscribe to the {0} feed"
 msgstr "Subscriu-te al canal {0}"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:194
 msgid "Subscribe to this labeler"
 msgstr "Subscriu-te a aquest etiquetador"
 
-#: src/view/screens/ProfileList.tsx:635
+#: src/view/screens/ProfileList.tsx:639
 msgid "Subscribe to this list"
 msgstr "Subscriure's a la llista"
 
@@ -5624,23 +5912,23 @@ msgstr "Suport"
 msgid "Switch Account"
 msgstr "Canvia el compte"
 
-#: src/view/screens/Settings/index.tsx:157
+#: src/view/screens/Settings/index.tsx:158
 msgid "Switch to {0}"
 msgstr "Canvia a {0}"
 
-#: src/view/screens/Settings/index.tsx:158
+#: src/view/screens/Settings/index.tsx:159
 msgid "Switches the account you are logged in to"
 msgstr "Canvia en compte amb el que tens iniciada la sessió"
 
-#: src/view/screens/Settings/index.tsx:436
+#: src/view/screens/Settings/index.tsx:438
 msgid "System"
 msgstr "Sistema"
 
-#: src/view/screens/Settings/index.tsx:794
+#: src/view/screens/Settings/index.tsx:821
 msgid "System log"
 msgstr "Registres del sistema"
 
-#: src/components/dialogs/MutedWords.tsx:323
+#: src/components/dialogs/MutedWords.tsx:325
 msgid "tag"
 msgstr "etiqueta"
 
@@ -5664,13 +5952,17 @@ msgstr "Toca per a veure-ho completament"
 msgid "Tech"
 msgstr "Tecnologia"
 
+#: src/components/dms/ChatEmptyPill.tsx:35
+msgid "Tell a joke!"
+msgstr "Explica un acudit!"
+
 #: src/view/shell/desktop/RightNav.tsx:85
 msgid "Terms"
 msgstr "Condicions"
 
 #: src/Navigation.tsx:243
 #: src/screens/Signup/StepInfo/Policies.tsx:49
-#: src/view/screens/Settings/index.tsx:884
+#: src/view/screens/Settings/index.tsx:921
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:278
 msgid "Terms of Service"
@@ -5682,16 +5974,17 @@ msgstr "Condicions del servei"
 msgid "Terms used violate community standards"
 msgstr "Els termes utilitzats infringeixen els estàndards de la comunitat"
 
-#: src/components/dialogs/MutedWords.tsx:323
+#: src/components/dialogs/MutedWords.tsx:325
 msgid "text"
 msgstr "text"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:246
+#: src/components/moderation/LabelsOnMeDialog.tsx:256
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:108
 msgid "Text input field"
 msgstr "Camp d'introducció de text"
 
-#: src/components/dms/MessageReportDialog.tsx:118
-#: src/components/ReportDialog/SubmitView.tsx:77
+#: src/components/dms/ReportDialog.tsx:132
+#: src/components/ReportDialog/SubmitView.tsx:78
 msgid "Thank you. Your report has been sent."
 msgstr "Gràcies. El teu informe s'ha enviat."
 
@@ -5703,7 +5996,7 @@ msgstr "Això conté els següents:"
 msgid "That handle is already taken."
 msgstr "Aquest identificador ja està agafat."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:282
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:291
 #: src/view/com/profile/ProfileMenu.tsx:349
 msgid "The account will be able to interact with you after unblocking."
 msgstr "El compte podrà interactuar amb tu després del desbloqueig."
@@ -5722,13 +6015,13 @@ msgstr "La política de drets d'autoria ha estat traslladada a <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:66
 msgid "The feed has been replaced with Discover."
-msgstr ""
+msgstr "S'ha canviat el canal per Discover."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:63
+#: src/components/moderation/LabelsOnMeDialog.tsx:66
 msgid "The following labels were applied to your account."
 msgstr "Les següents etiquetes s'han aplicat al teu compte."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:64
+#: src/components/moderation/LabelsOnMeDialog.tsx:67
 msgid "The following labels were applied to your content."
 msgstr "Les següents etiquetes s'han aplicat als teus continguts."
 
@@ -5736,8 +6029,8 @@ msgstr "Les següents etiquetes s'han aplicat als teus continguts."
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "Els següents passos t'ajudaran a personalitzar la teva experiència a Bluesky."
 
-#: src/view/com/post-thread/PostThread.tsx:153
-#: src/view/com/post-thread/PostThread.tsx:165
+#: src/view/com/post-thread/PostThread.tsx:189
+#: src/view/com/post-thread/PostThread.tsx:201
 msgid "The post may have been deleted."
 msgstr "És possible que la publicació s'hagi esborrat."
 
@@ -5761,7 +6054,7 @@ msgstr "Les condicions del servei han estat traslladades a"
 msgid "There are many feeds to try:"
 msgstr "Hi ha molts canals per a provar:"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:114
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "Hi ha hagut un problema per a contactar amb el servidor, comprova la teva connexió a internet i torna-ho a provar."
@@ -5776,17 +6069,17 @@ msgstr "Hi ha hagut un problema per a eliminar aquest canal, comprova la teva co
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "Hi ha hagut un problema per a actualitzar els teus canals, comprova la teva connexió a internet i torna-ho a provar."
 
-#: src/components/dialogs/GifSelect.tsx:201
+#: src/components/dialogs/GifSelect.tsx:202
 msgid "There was an issue connecting to Tenor."
-msgstr "Hi ha hagut un problema per connectar amb Tenor."
+msgstr "Hi ha hagut un problema per a connectar amb Tenor."
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
-msgid "There was an issue connecting to the chat."
-msgstr "Hi ha hagut un problema per connectar al xat."
+#~ msgid "There was an issue connecting to the chat."
+#~ msgstr "Hi ha hagut un problema per a connectar al xat."
 
 #: src/view/screens/ProfileFeed.tsx:233
-#: src/view/screens/ProfileList.tsx:298
-#: src/view/screens/ProfileList.tsx:317
+#: src/view/screens/ProfileList.tsx:302
+#: src/view/screens/ProfileList.tsx:321
 #: src/view/screens/SavedFeeds.tsx:236
 #: src/view/screens/SavedFeeds.tsx:262
 #: src/view/screens/SavedFeeds.tsx:288
@@ -5815,8 +6108,8 @@ msgstr "Hi ha hagut un problema en obtenir la llista. Toca aquí per a tornar-ho
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Hi ha hagut un problema en obtenir les teves llistes. Toca aquí per a tornar-ho a provar."
 
-#: src/components/dms/MessageReportDialog.tsx:195
-#: src/components/ReportDialog/SubmitView.tsx:82
+#: src/components/dms/ReportDialog.tsx:220
+#: src/components/ReportDialog/SubmitView.tsx:83
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "S'ha produït un problema en enviar el teu informe. Comprova la teva connexió a Internet."
 
@@ -5824,32 +6117,32 @@ msgstr "S'ha produït un problema en enviar el teu informe. Comprova la teva con
 msgid "There was an issue syncing your preferences with the server"
 msgstr "Hi ha hagut un problema en sincronitzar les teves preferències amb el servidor"
 
-#: src/view/screens/AppPasswords.tsx:68
+#: src/view/screens/AppPasswords.tsx:70
 msgid "There was an issue with fetching your app passwords"
 msgstr "Hi ha hagut un problema en obtenir les teves contrasenyes d'aplicació"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:103
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:125
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:139
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:99
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:121
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:135
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:99
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:111
-#: src/view/com/profile/ProfileMenu.tsx:106
-#: src/view/com/profile/ProfileMenu.tsx:117
-#: src/view/com/profile/ProfileMenu.tsx:132
-#: src/view/com/profile/ProfileMenu.tsx:143
-#: src/view/com/profile/ProfileMenu.tsx:157
-#: src/view/com/profile/ProfileMenu.tsx:170
+#: src/view/com/profile/ProfileMenu.tsx:107
+#: src/view/com/profile/ProfileMenu.tsx:118
+#: src/view/com/profile/ProfileMenu.tsx:133
+#: src/view/com/profile/ProfileMenu.tsx:144
+#: src/view/com/profile/ProfileMenu.tsx:158
+#: src/view/com/profile/ProfileMenu.tsx:171
 msgid "There was an issue! {0}"
 msgstr "Hi ha hagut un problema! {0}"
 
-#: src/view/screens/ProfileList.tsx:330
-#: src/view/screens/ProfileList.tsx:344
-#: src/view/screens/ProfileList.tsx:358
-#: src/view/screens/ProfileList.tsx:372
+#: src/view/screens/ProfileList.tsx:334
+#: src/view/screens/ProfileList.tsx:348
+#: src/view/screens/ProfileList.tsx:362
+#: src/view/screens/ProfileList.tsx:376
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Hi ha hagut un problema. Comprova la teva connexió a internet i torna-ho a provar."
 
-#: src/components/dialogs/GifSelect.tsx:289
+#: src/components/dialogs/GifSelect.tsx:290
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "S'ha produït un problema inesperat a l'aplicació. Fes-nos saber si això t'ha passat a tu!"
@@ -5877,13 +6170,25 @@ msgstr "Aquesta {screenDescription} ha estat etiquetada:"
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Aquest compte ha sol·licitat que els usuaris estiguin registrats per a veure el seu perfil."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:231
+#: src/components/dms/BlockedByListDialog.tsx:34
+msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
+msgstr "Aquest compte està bloquejat per una o més de les teves llistes de moderació. Per desbloquejar-lo, visita les llistes directament i elimina aquest usuari."
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:241
 msgid "This appeal will be sent to <0>{0}</0>."
 msgstr "Aquesta apel·lació s'enviarà a <0>{0}</0>."
 
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:104
+msgid "This appeal will be sent to Bluesky's moderation service."
+msgstr "Aquesta apel·lació s'enviarà al servei de moderació de Bluesky."
+
+#: src/screens/Messages/Conversation/MessageListError.tsx:18
+msgid "This chat was disconnected"
+msgstr "Aquest xat s'ha desconnectat"
+
 #: src/screens/Messages/Conversation/MessageListError.tsx:26
-msgid "This chat was disconnected due to a network error."
-msgstr "Aquest xat s'ha desconnectat degut a un problema de xarxa."
+#~ msgid "This chat was disconnected due to a network error."
+#~ msgstr "Aquest xat s'ha desconnectat per culpa de un problema de xarxa."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -5900,7 +6205,7 @@ msgstr "Aquest contingut està allotjat a {0}. Vols habilitat els continguts ext
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:77
 msgid "This content is not available because one of the users involved has blocked the other."
-msgstr "Aquest contingut no està disponible degut a que un dels usuaris involucrats ha bloquejat a l'altre."
+msgstr "Aquest contingut no està disponible per culpa de que un dels usuaris involucrats ha bloquejat a l'altre."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:115
 msgid "This content is not viewable without a Bluesky account."
@@ -5920,7 +6225,7 @@ msgstr "Aquest canal està rebent moltes visites actualment i està temporalment
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 #: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:724
+#: src/view/screens/ProfileList.tsx:728
 msgid "This feed is empty!"
 msgstr "Aquest canal està buit!"
 
@@ -5930,7 +6235,7 @@ msgstr "Aquest canal està buit! Necessites seguir més usuaris o modificar la t
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr ""
+msgstr "Aquest canal ja no està en línia. En el seu lloc et mostrem <0>Discover</0>."
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "This information is not shared with other users."
@@ -5957,10 +6262,14 @@ msgid "This label was applied by the author."
 msgstr "Aquesta etiqueta ha estat aplicada per l'autor."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:165
-msgid "This label was applied by you"
-msgstr ""
+#~ msgid "This label was applied by you"
+#~ msgstr "Aquesta etiqueta ha estat aplicada per tu"
 
-#: src/screens/Profile/Sections/Labels.tsx:181
+#: src/components/moderation/LabelsOnMeDialog.tsx:168
+msgid "This label was applied by you."
+msgstr "Aquesta etiqueta ha estat aplicada per tu."
+
+#: src/screens/Profile/Sections/Labels.tsx:188
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "Aquest etiquetador no ha declarat quines etiquetes publica i pot ser que no estigui actiu."
 
@@ -5968,19 +6277,19 @@ msgstr "Aquest etiquetador no ha declarat quines etiquetes publica i pot ser que
 msgid "This link is taking you to the following website:"
 msgstr "Aquest enllaç et porta a la web:"
 
-#: src/view/screens/ProfileList.tsx:902
+#: src/view/screens/ProfileList.tsx:906
 msgid "This list is empty!"
 msgstr "Aquesta llista està buida!"
 
 #: src/screens/Profile/ErrorState.tsx:40
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
-msgstr "Aquest servei de moderació no està disponible. Mira a continuació per obtenir més detalls. Si aquest problema persisteix, posa't en contacte amb nosaltres."
+msgstr "Aquest servei de moderació no està disponible. Mira a continuació per a obtenir més detalls. Si aquest problema persisteix, posa't en contacte amb nosaltres."
 
-#: src/view/com/modals/AddAppPasswords.tsx:107
+#: src/view/com/modals/AddAppPasswords.tsx:111
 msgid "This name is already in use"
 msgstr "Aquest nom ja està en ús"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:126
+#: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
 msgstr "Aquesta publicació ha estat esborrada."
 
@@ -5991,7 +6300,7 @@ msgstr "Aquesta publicació només és visible per als usuaris que han iniciat s
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:399
 msgid "This post will be hidden from feeds."
-msgstr "Aqeusta publicació no es mostrarà als canals."
+msgstr "Aquesta publicació no es mostrarà als canals."
 
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -6008,6 +6317,10 @@ msgstr "Això hauria de crear un registre de domini a:"
 #: src/view/com/profile/ProfileFollowers.tsx:87
 msgid "This user doesn't have any followers."
 msgstr "Aquest usuari no té cap seguidor."
+
+#: src/components/dms/MessagesListBlockedFooter.tsx:60
+msgid "This user has blocked you"
+msgstr "Aquest usuari t'ha bloquejat"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:72
 #: src/lib/moderation/useModerationCauseDescription.ts:68
@@ -6046,7 +6359,7 @@ msgstr "Aquest usuari no segueix a ningú."
 #~ msgid "This warning is only available for posts with media attached."
 #~ msgstr "Aquesta advertència només està disponible per publicacions amb contingut adjuntat."
 
-#: src/components/dialogs/MutedWords.tsx:283
+#: src/components/dialogs/MutedWords.tsx:285
 msgid "This will delete {0} from your muted words. You can always add it back later."
 msgstr "Això suprimirà {0} de les teves paraules silenciades. Sempre la pots tornar a afegir més tard."
 
@@ -6054,12 +6367,12 @@ msgstr "Això suprimirà {0} de les teves paraules silenciades. Sempre la pots t
 #~ msgid "This will hide this post from your feeds."
 #~ msgstr "Això amagarà aquesta publicació dels teus canals."
 
-#: src/view/screens/Settings/index.tsx:585
+#: src/view/screens/Settings/index.tsx:587
 msgid "Thread preferences"
 msgstr "Preferències dels fils de debat"
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings/index.tsx:595
+#: src/view/screens/Settings/index.tsx:597
 msgid "Thread Preferences"
 msgstr "Preferències dels fils de debat"
 
@@ -6073,17 +6386,17 @@ msgstr "Preferències dels fils de debat"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:102
 msgid "To disable the email 2FA method, please verify your access to the email address."
-msgstr "Per desactivar el mètode 2FA de correu, verifica el teu accés a l'adreça de correu."
+msgstr "per a desactivar el mètode 2FA de correu, verifica el teu accés a l'adreça de correu."
 
-#: src/components/dms/ConvoMenu.tsx:200
+#: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr ""
+msgstr "Per informar d'una conversa, informa d'un dels seus missatges a través de la pantalla de conversa. Això permet als nostres moderadors entendre el context del teu problema."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "A qui vols enviar aquest informe?"
 
-#: src/components/dialogs/MutedWords.tsx:112
+#: src/components/dialogs/MutedWords.tsx:113
 msgid "Toggle between muted word options."
 msgstr "Commuta entre les opcions de paraules silenciades."
 
@@ -6093,7 +6406,7 @@ msgstr "Commuta el menú desplegable"
 
 #: src/screens/Moderation/index.tsx:332
 msgid "Toggle to enable or disable adult content"
-msgstr "Communta per a habilitar o deshabilitar el contingut per adults"
+msgstr "Commuta per a habilitar o deshabilitar el contingut per a adults"
 
 #: src/screens/Hashtag.tsx:88
 #: src/view/screens/Search/Search.tsx:359
@@ -6120,11 +6433,11 @@ msgstr "Torna-ho a provar"
 #~ msgid "Try again"
 #~ msgstr "Torna-ho a provar"
 
-#: src/view/screens/Settings/index.tsx:711
+#: src/view/screens/Settings/index.tsx:738
 msgid "Two-factor authentication"
 msgstr "Autenticació de dos factors"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:94
+#: src/screens/Messages/Conversation/MessageInput.tsx:120
 msgid "Type your message here"
 msgstr "Escriu aquí el teu missatge"
 
@@ -6132,41 +6445,50 @@ msgstr "Escriu aquí el teu missatge"
 msgid "Type:"
 msgstr "Tipus:"
 
-#: src/view/screens/ProfileList.tsx:530
+#: src/view/screens/ProfileList.tsx:534
 msgid "Un-block list"
 msgstr "Desbloqueja la llista"
 
-#: src/view/screens/ProfileList.tsx:515
+#: src/view/screens/ProfileList.tsx:519
 msgid "Un-mute list"
 msgstr "Deixa de silenciar la llista"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:74
 #: src/screens/Login/index.tsx:78
-#: src/screens/Login/LoginForm.tsx:139
+#: src/screens/Login/LoginForm.tsx:142
 #: src/screens/Login/SetNewPasswordForm.tsx:77
 #: src/screens/Signup/index.tsx:66
 #: src/view/com/modals/ChangePassword.tsx:72
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "No es pot contactar amb el teu servei. Comprova la teva connexió a internet."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:181
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
+#: src/components/dms/MessagesListBlockedFooter.tsx:89
+#: src/components/dms/MessagesListBlockedFooter.tsx:96
+#: src/components/dms/MessagesListBlockedFooter.tsx:104
+#: src/components/dms/MessagesListBlockedFooter.tsx:111
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:295
 #: src/view/com/profile/ProfileMenu.tsx:361
-#: src/view/screens/ProfileList.tsx:621
+#: src/view/screens/ProfileList.tsx:625
 msgid "Unblock"
 msgstr "Desbloqueja"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:189
 msgctxt "action"
 msgid "Unblock"
 msgstr "Desbloqueja"
+
+#: src/components/dms/ConvoMenu.tsx:186
+#: src/components/dms/ConvoMenu.tsx:190
+msgid "Unblock account"
+msgstr "Desbloqueja el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:305
 msgid "Unblock Account"
 msgstr "Desbloqueja el compte"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:280
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:289
 #: src/view/com/profile/ProfileMenu.tsx:343
 msgid "Unblock Account?"
 msgstr "Vols desbloquejar el compte?"
@@ -6187,7 +6509,7 @@ msgstr "Deixa de seguir"
 msgid "Unfollow"
 msgstr "Deixa de seguir"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:220
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:229
 msgid "Unfollow {0}"
 msgstr "Deixa de seguir a {0}"
 
@@ -6209,7 +6531,7 @@ msgid "Unlike this feed"
 msgstr "Desfés el m'agrada a aquest canal"
 
 #: src/components/TagMenu/index.tsx:249
-#: src/view/screens/ProfileList.tsx:628
+#: src/view/screens/ProfileList.tsx:632
 msgid "Unmute"
 msgstr "Deixa de silenciar"
 
@@ -6230,9 +6552,13 @@ msgstr "Deixa de silenciar totes les publicacions amb {displayTag}"
 #~ msgid "Unmute all {tag} posts"
 #~ msgstr "Deixa de silenciar totes les publicacions amb {tag}"
 
+#: src/components/dms/ConvoMenu.tsx:174
+msgid "Unmute conversation"
+msgstr "Deixa de silenciar la conversa"
+
 #: src/components/dms/ConvoMenu.tsx:140
-msgid "Unmute notifications"
-msgstr "Deixa de silenciar les notificacions"
+#~ msgid "Unmute notifications"
+#~ msgstr "Deixa de silenciar les notificacions"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:321
 #: src/view/com/util/forms/PostDropdownBtn.tsx:326
@@ -6240,7 +6566,7 @@ msgid "Unmute thread"
 msgstr "Deixa de silenciar el fil de debat"
 
 #: src/view/screens/ProfileFeed.tsx:290
-#: src/view/screens/ProfileList.tsx:612
+#: src/view/screens/ProfileList.tsx:616
 msgid "Unpin"
 msgstr "Deixa de fixar"
 
@@ -6248,30 +6574,34 @@ msgstr "Deixa de fixar"
 msgid "Unpin from home"
 msgstr "Deixa de fixar a l'inici"
 
-#: src/view/screens/ProfileList.tsx:495
+#: src/view/screens/ProfileList.tsx:499
 msgid "Unpin moderation list"
 msgstr "Desancora la llista de moderació"
+
+#: src/view/screens/ProfileList.tsx:289
+msgid "Unpinned from your feeds"
+msgstr "Ja no està fix als teus canals"
 
 #: src/view/screens/ProfileFeed.tsx:346
 #~ msgid "Unsave"
 #~ msgstr "No desis"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:228
 msgid "Unsubscribe"
 msgstr "Dona't de baixa"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:192
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
 msgid "Unsubscribe from this labeler"
 msgstr "Dona't de baixa d'aquest etiquetador"
 
 #: src/lib/moderation/useReportOptions.ts:85
-msgid "Unwanted sexual content"
-msgstr ""
+#~ msgid "Unwanted sexual content"
+#~ msgstr "Contingut sexual no desitjat"
 
 #: src/lib/moderation/useReportOptions.ts:71
 #: src/lib/moderation/useReportOptions.ts:84
 msgid "Unwanted Sexual Content"
-msgstr "Contingut sexual no dessitjat"
+msgstr "Contingut sexual no desitjat"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:70
 msgid "Update {displayName} in Lists"
@@ -6291,26 +6621,26 @@ msgstr "Actualitzant…"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:284
 msgid "Upload a photo instead"
-msgstr ""
+msgstr "Enlloc d'això, penja una foto"
 
 #: src/view/com/modals/ChangeHandle.tsx:448
 msgid "Upload a text file to:"
 msgstr "Puja un fitxer de text a:"
 
-#: src/view/com/util/UserAvatar.tsx:337
-#: src/view/com/util/UserAvatar.tsx:340
+#: src/view/com/util/UserAvatar.tsx:338
+#: src/view/com/util/UserAvatar.tsx:341
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Puja de la càmera"
 
-#: src/view/com/util/UserAvatar.tsx:354
+#: src/view/com/util/UserAvatar.tsx:355
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Puja dels Arxius"
 
-#: src/view/com/util/UserAvatar.tsx:348
-#: src/view/com/util/UserAvatar.tsx:352
+#: src/view/com/util/UserAvatar.tsx:349
+#: src/view/com/util/UserAvatar.tsx:353
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -6320,7 +6650,7 @@ msgstr "Puja de la biblioteca"
 msgid "Use a file on your server"
 msgstr "Utilitza un fitxer del teu servidor"
 
-#: src/view/screens/AppPasswords.tsx:197
+#: src/view/screens/AppPasswords.tsx:200
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr "Utilitza les contrasenyes d'aplicació per a iniciar sessió en altres clients de Bluesky, sense haver de donar accés total al teu compte o contrasenya."
 
@@ -6344,13 +6674,13 @@ msgstr "Utilitza el meu navegador predeterminat"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:53
 msgid "Use recommended"
-msgstr ""
+msgstr "Utilitza els recomanats"
 
 #: src/view/com/modals/ChangeHandle.tsx:394
 msgid "Use the DNS panel"
 msgstr "Utilitza el panell de DNS"
 
-#: src/view/com/modals/AddAppPasswords.tsx:156
+#: src/view/com/modals/AddAppPasswords.tsx:206
 msgid "Use this to sign into the other app along with your handle."
 msgstr "Utilitza-ho per a iniciar sessió a l'altra aplicació, juntament amb el teu identificador."
 
@@ -6370,6 +6700,10 @@ msgstr "Usuari bloquejat"
 #: src/lib/moderation/useModerationCauseDescription.ts:48
 msgid "User Blocked by \"{0}\""
 msgstr "Usuari bloquejat per \"{0}\""
+
+#: src/components/dms/BlockedByListDialog.tsx:27
+msgid "User blocked by list"
+msgstr "Usuari bloquejat per una llista"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:53
 msgid "User Blocked by List"
@@ -6392,13 +6726,13 @@ msgstr "L'usuari t'ha bloquejat"
 msgid "User list by {0}"
 msgstr "Llista d'usuaris per {0}"
 
-#: src/view/screens/ProfileList.tsx:826
+#: src/view/screens/ProfileList.tsx:830
 msgid "User list by <0/>"
 msgstr "Llista d'usuaris feta per <0/>"
 
 #: src/view/com/lists/ListCard.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
-#: src/view/screens/ProfileList.tsx:824
+#: src/view/screens/ProfileList.tsx:828
 msgid "User list by you"
 msgstr "Llista d'usuaris feta per tu"
 
@@ -6414,17 +6748,24 @@ msgstr "Llista d'usuaris actualitzada"
 msgid "User Lists"
 msgstr "Llistes d'usuaris"
 
-#: src/screens/Login/LoginForm.tsx:171
+#: src/screens/Login/LoginForm.tsx:174
 msgid "Username or email address"
 msgstr "Nom d'usuari o correu"
 
-#: src/view/screens/ProfileList.tsx:860
+#: src/view/screens/ProfileList.tsx:864
 msgid "Users"
 msgstr "Usuaris"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:143
 msgid "users followed by <0/>"
 msgstr "usuaris seguits per <0/>"
+
+#: src/components/dms/MessagesNUX.tsx:140
+#: src/components/dms/MessagesNUX.tsx:143
+#: src/screens/Messages/Settings.tsx:84
+#: src/screens/Messages/Settings.tsx:87
+msgid "Users I follow"
+msgstr "Els usuaris als que segueixo"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
@@ -6450,15 +6791,15 @@ msgstr "Valor:"
 msgid "Verify DNS Record"
 msgstr "Verifica els registres de DNS"
 
-#: src/view/screens/Settings/index.tsx:915
+#: src/view/screens/Settings/index.tsx:952
 msgid "Verify email"
 msgstr "Verifica el correu"
 
-#: src/view/screens/Settings/index.tsx:940
+#: src/view/screens/Settings/index.tsx:977
 msgid "Verify my email"
 msgstr "Verifica el meu correu"
 
-#: src/view/screens/Settings/index.tsx:949
+#: src/view/screens/Settings/index.tsx:986
 msgid "Verify My Email"
 msgstr "Verifica el meu correu"
 
@@ -6479,7 +6820,7 @@ msgstr "Verifica el teu correu"
 #~ msgid "Version {0}"
 #~ msgstr "Versió {0}"
 
-#: src/view/screens/Settings/index.tsx:868
+#: src/view/screens/Settings/index.tsx:905
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "Versió {appVersion} {bundleInfo}"
 
@@ -6487,7 +6828,7 @@ msgstr "Versió {appVersion} {bundleInfo}"
 msgid "Video Games"
 msgstr "Videojocs"
 
-#: src/screens/Profile/Header/Shell.tsx:110
+#: src/screens/Profile/Header/Shell.tsx:111
 msgid "View {0}'s avatar"
 msgstr "Veure l'avatar de {0}"
 
@@ -6495,15 +6836,15 @@ msgstr "Veure l'avatar de {0}"
 msgid "View debug entry"
 msgstr "Veure el registre de depuració"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:138
+#: src/components/ReportDialog/SelectReportOptionView.tsx:136
 msgid "View details"
 msgstr "Veure els detalls"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:133
+#: src/components/ReportDialog/SelectReportOptionView.tsx:131
 msgid "View details for reporting a copyright violation"
 msgstr "Veure els detalls per a informar d'una infracció dels drets d'autor"
 
-#: src/view/com/posts/FeedSlice.tsx:104
+#: src/view/com/posts/FeedSlice.tsx:112
 msgid "View full thread"
 msgstr "Veure el fil de debat complet"
 
@@ -6511,8 +6852,8 @@ msgstr "Veure el fil de debat complet"
 msgid "View information about these labels"
 msgstr "Mostra informació sobre aquestes etiquetes"
 
-#: src/components/ProfileHoverCard/index.web.tsx:393
-#: src/components/ProfileHoverCard/index.web.tsx:426
+#: src/components/ProfileHoverCard/index.web.tsx:396
+#: src/components/ProfileHoverCard/index.web.tsx:429
 #: src/view/com/posts/FeedErrorMessage.tsx:175
 msgid "View profile"
 msgstr "Veure el perfil"
@@ -6557,9 +6898,9 @@ msgstr "Adverteix del contingut i filtra-ho dels canals"
 msgid "We couldn't find any results for that hashtag."
 msgstr "No hem trobat cap resultat per a aquest hashtag."
 
-#: src/screens/Messages/Conversation/index.tsx:90
+#: src/screens/Messages/Conversation/index.tsx:95
 msgid "We couldn't load this conversation"
-msgstr ""
+msgstr "No hem pogut carregar aquesta conversa"
 
 #: src/screens/Deactivated.tsx:139
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -6573,7 +6914,7 @@ msgstr "Esperem que t'ho passis pipa. Recorda que Bluesky és:"
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "Ja no hi ha més publicacions dels usuaris que segueixes. Aquí n'hi ha altres de <0/>."
 
-#: src/components/dialogs/MutedWords.tsx:203
+#: src/components/dialogs/MutedWords.tsx:204
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr "Recomanem evitar les paraules habituals que apareixen en moltes publicacions, ja que pot provocar que no es mostri cap publicació."
 
@@ -6605,6 +6946,10 @@ msgstr "T'informarem quan el teu compte estigui llest."
 msgid "We'll use this to help customize your experience."
 msgstr "Ho farem servir per a personalitzar la teva experiència."
 
+#: src/components/dms/NewChatDialog/index.tsx:326
+msgid "We're having network issues, try again"
+msgstr "Tenim problemes de xarxa, torna-ho a provar"
+
 #: src/screens/Signup/index.tsx:142
 msgid "We're so excited to have you join us!"
 msgstr "Ens fa molta il·lusió que t'uneixis a nosaltres!"
@@ -6613,7 +6958,7 @@ msgstr "Ens fa molta il·lusió que t'uneixis a nosaltres!"
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Ho sentim, però no hem pogut resoldre aquesta llista. Si això continua, posa't en contacte amb el creador de la llista, @{handleOrDid}."
 
-#: src/components/dialogs/MutedWords.tsx:229
+#: src/components/dialogs/MutedWords.tsx:230
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "Ho sentim, però no hem pogut carregar les teves paraules silenciades en aquest moment. Torna-ho a provar."
 
@@ -6621,12 +6966,12 @@ msgstr "Ho sentim, però no hem pogut carregar les teves paraules silenciades en
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Ens sap greu, però la teva cerca no s'ha pogut fer. Prova-ho d'aquí una estona."
 
-#: src/components/Lists.tsx:200
+#: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Ens sap greu! No podem trobar la pàgina que estàs cercant."
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:329
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "Ho sentim! Només et pots subscriure a deu etiquetadors i has arribat al teu límit de deu."
 
@@ -6636,7 +6981,7 @@ msgstr "Ho sentim! Només et pots subscriure a deu etiquetadors i has arribat al
 
 #: src/screens/Onboarding/StepInterests/index.tsx:145
 msgid "What are your interests?"
-msgstr "Quins són els teus interesos?"
+msgstr "Quins són els teus interessos?"
 
 #: src/view/com/modals/report/Modal.tsx:169
 #~ msgid "What is the issue with this {collectionName}?"
@@ -6647,7 +6992,7 @@ msgstr "Quins són els teus interesos?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:324
+#: src/view/com/composer/Composer.tsx:326
 msgid "What's up?"
 msgstr "Què hi ha de nou"
 
@@ -6659,36 +7004,41 @@ msgstr "En quins idiomes està aquesta publicació?"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "Quins idiomes t'agradaria veure en els teus canals algorítmics?"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
+#: src/components/dms/MessagesNUX.tsx:110
+#: src/components/dms/MessagesNUX.tsx:124
+msgid "Who can message you?"
+msgstr "Qui et pot enviar missatges?"
+
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
 msgstr "Qui hi pot respondre"
 
 #: src/screens/Home/NoFeedsPinned.tsx:92
+#: src/screens/Messages/List/index.tsx:185
 msgid "Whoops!"
-msgstr ""
+msgstr "Vaja!"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:46
+#: src/components/ReportDialog/SelectReportOptionView.tsx:44
 msgid "Why should this content be reviewed?"
 msgstr "Per què s'hauria de revisar aquest contingut?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:59
+#: src/components/ReportDialog/SelectReportOptionView.tsx:57
 msgid "Why should this feed be reviewed?"
 msgstr "Per què s'hauria de revisar aquest canal?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:56
+#: src/components/ReportDialog/SelectReportOptionView.tsx:54
 msgid "Why should this list be reviewed?"
 msgstr "Per què s'hauria de revisar aquesta llista?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:62
+#: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this message be reviewed?"
-msgstr ""
+msgstr "Per què s'hauria de revisar aquest missatge?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:53
+#: src/components/ReportDialog/SelectReportOptionView.tsx:51
 msgid "Why should this post be reviewed?"
 msgstr "Per què s'hauria de revisar aquesta publicació?"
 
-#: src/components/ReportDialog/SelectReportOptionView.tsx:50
+#: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
 msgstr "Per què s'hauria de revisar aquest usuari?"
 
@@ -6696,16 +7046,16 @@ msgstr "Per què s'hauria de revisar aquest usuari?"
 msgid "Wide"
 msgstr "Amplada"
 
-#: src/screens/Messages/Conversation/MessageInput.tsx:95
-#: src/screens/Messages/Conversation/MessageInput.web.tsx:85
+#: src/screens/Messages/Conversation/MessageInput.tsx:121
+#: src/screens/Messages/Conversation/MessageInput.web.tsx:124
 msgid "Write a message"
 msgstr "Escriu un missatge"
 
-#: src/view/com/composer/Composer.tsx:505
+#: src/view/com/composer/Composer.tsx:503
 msgid "Write post"
 msgstr "Escriu una publicació"
 
-#: src/view/com/composer/Composer.tsx:323
+#: src/view/com/composer/Composer.tsx:325
 #: src/view/com/composer/Prompt.tsx:37
 msgid "Write your reply"
 msgstr "Escriu la teva resposta"
@@ -6728,7 +7078,7 @@ msgstr "Escriptors"
 msgid "Yes"
 msgstr "Sí"
 
-#: src/components/dms/MessageItem.tsx:158
+#: src/components/dms/MessageItem.tsx:174
 msgid "Yesterday, {time}"
 msgstr "Ahir, {time}"
 
@@ -6752,6 +7102,14 @@ msgstr "També pots descobrir nous canals personalitzats per a seguir."
 #: src/screens/Onboarding/StepFollowingFeed.tsx:143
 msgid "You can change these settings later."
 msgstr "Pots canviar aquests paràmetres més endavant."
+
+#: src/components/dms/MessagesNUX.tsx:119
+msgid "You can change this at any time."
+msgstr "Pots canviar-ho quan vulguis."
+
+#: src/screens/Messages/Settings.tsx:111
+msgid "You can continue ongoing conversations regardless of which setting you choose."
+msgstr ""
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
@@ -6778,9 +7136,13 @@ msgstr "No tens cap canal fixat."
 msgid "You don't have any saved feeds."
 msgstr "No tens cap canal desat."
 
-#: src/view/com/post-thread/PostThread.tsx:159
+#: src/view/com/post-thread/PostThread.tsx:195
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Has bloquejat l'autor o has estat bloquejat per ell."
+
+#: src/components/dms/MessagesListBlockedFooter.tsx:58
+msgid "You have blocked this user"
+msgstr "Has bloquejat aquest usuari"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:66
 #: src/lib/moderation/useModerationCauseDescription.ts:50
@@ -6816,6 +7178,10 @@ msgstr "Has silenciat aquest usuari"
 #~ msgid "You have muted this user."
 #~ msgstr "Has silenciat aquest usuari."
 
+#: src/screens/Messages/List/index.tsx:225
+msgid "You have no conversations yet. Start one!"
+msgstr "Encara no tens cap conversa. Comença'n una!"
+
 #: src/view/com/feeds/ProfileFeedgens.tsx:144
 msgid "You have no feeds."
 msgstr "No tens canals."
@@ -6826,8 +7192,8 @@ msgid "You have no lists."
 msgstr "No tens llistes."
 
 #: src/screens/Messages/List/index.tsx:200
-msgid "You have no messages yet. Start a conversation with someone!"
-msgstr "Encara no tens missatges. Comença una conversa amb algú!"
+#~ msgid "You have no messages yet. Start a conversation with someone!"
+#~ msgstr "Encara no tens missatges. Comença una conversa amb algú!"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:134
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -6837,7 +7203,7 @@ msgstr "Encara no has bloquejat cap compte. Per a bloquejar un compte, ves al se
 #~ msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 #~ msgstr "Encara no has bloquejat cap compte. Per a fer-ho, ves al seu perfil i selecciona \"Bloqueja el compte\" en el menú del seu compte."
 
-#: src/view/screens/AppPasswords.tsx:89
+#: src/view/screens/AppPasswords.tsx:91
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "Encara no has creat cap contrasenya d'aplicació. Pots fer-ho amb el botó d'aquí sota."
 
@@ -6849,21 +7215,25 @@ msgstr "Encara no has silenciat cap compte. per a silenciar un compte, ves al se
 #~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 #~ msgstr "Encara no has silenciat cap compte. Per a fer-ho,  al seu perfil i selecciona \"Silencia compte\" en el menú del seu compte."
 
-#: src/components/dialogs/MutedWords.tsx:249
+#: src/components/Lists.tsx:52
+msgid "You have reached the end"
+msgstr "Has arribat al final"
+
+#: src/components/dialogs/MutedWords.tsx:250
 msgid "You haven't muted any words or tags yet"
 msgstr "Encara no has silenciat cap paraula ni etiqueta"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:84
+#: src/components/moderation/LabelsOnMeDialog.tsx:87
 msgid "You may appeal non-self labels if you feel they were placed in error."
-msgstr ""
+msgstr "Pots apel·lar les etiquetes que no són pròpies si creus que s'han col·locat per error."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:89
+#: src/components/moderation/LabelsOnMeDialog.tsx:92
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "Pots apel·lar aquestes etiquetes si creus que s'han col·locat per error."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
-msgstr "Has de tenir 13 anys o més per registrar-te"
+msgstr "Has de tenir 13 anys o més per a registrar-te"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 #~ msgid "You must be 18 or older to enable adult content."
@@ -6873,7 +7243,7 @@ msgstr "Has de tenir 13 anys o més per registrar-te"
 msgid "You must be 18 years or older to enable adult content"
 msgstr "Has de tenir 18 anys o més per a habilitar el contingut per a adults"
 
-#: src/components/ReportDialog/SubmitView.tsx:205
+#: src/components/ReportDialog/SubmitView.tsx:206
 msgid "You must select at least one labeler for a report"
 msgstr "Has d'escollir almenys un etiquetador per a un informe"
 
@@ -6889,7 +7259,7 @@ msgstr "Ara rebràs notificacions d'aquest debat"
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Rebràs un correu amb un \"codi de restabliment\". Introdueix aquí el codi i després la teva contrasenya nova."
 
-#: src/screens/Messages/List/ChatListItem.tsx:37
+#: src/screens/Messages/List/ChatListItem.tsx:101
 msgid "You: {0}"
 msgstr "Tu: {0}"
 
@@ -6920,7 +7290,7 @@ msgstr "Has arribat al final del vostre cabal! Cerca alguns comptes més per a s
 msgid "Your account"
 msgstr "El teu compte"
 
-#: src/view/com/modals/DeleteAccount.tsx:69
+#: src/view/com/modals/DeleteAccount.tsx:80
 msgid "Your account has been deleted"
 msgstr "El teu compte s'ha eliminat"
 
@@ -6931,6 +7301,10 @@ msgstr "El repositori del teu compte, que conté tots els registres de dades pú
 #: src/screens/Signup/StepInfo/index.tsx:123
 msgid "Your birth date"
 msgstr "La teva data de naixement"
+
+#: src/screens/Messages/Conversation/ChatDisabled.tsx:25
+msgid "Your chats have been disabled"
+msgstr "Els teus xats s'han desactivat"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:47
 msgid "Your choice will be saved, but can be changed later in settings."
@@ -6980,7 +7354,7 @@ msgstr "El teu identificador complet serà <0>@{0}</0>"
 #~ msgid "Your invite codes are hidden when logged in using an App Password"
 #~ msgstr "Els teus codis d'invitació no es mostren quan has iniciat sessió amb una contrasenya d'aplicació"
 
-#: src/components/dialogs/MutedWords.tsx:220
+#: src/components/dialogs/MutedWords.tsx:221
 msgid "Your muted words"
 msgstr "Les teves paraules silenciades"
 
@@ -6988,7 +7362,7 @@ msgstr "Les teves paraules silenciades"
 msgid "Your password has been changed successfully!"
 msgstr "S'ha canviat la teva contrasenya!"
 
-#: src/view/com/composer/Composer.tsx:314
+#: src/view/com/composer/Composer.tsx:316
 msgid "Your post has been published"
 msgstr "S'ha publicat"
 
@@ -6996,17 +7370,17 @@ msgstr "S'ha publicat"
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Les teves publicacions, m'agrades i bloquejos són públics. Els comptes silenciats són privats."
 
-#: src/view/screens/Settings/index.tsx:145
+#: src/view/screens/Settings/index.tsx:146
 msgid "Your profile"
 msgstr "El teu perfil"
 
-#: src/view/com/composer/Composer.tsx:313
+#: src/view/com/composer/Composer.tsx:315
 msgid "Your reply has been published"
 msgstr "S'ha publicat la teva resposta"
 
-#: src/components/dms/MessageReportDialog.tsx:140
+#: src/components/dms/ReportDialog.tsx:160
 msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr ""
+msgstr "El teu informe s'enviarà al servei de moderació de Bluesky"
 
 #: src/screens/Signup/index.tsx:166
 msgid "Your user handle"

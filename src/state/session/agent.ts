@@ -53,7 +53,17 @@ export async function createAgentAndResume(
     agent.session = prevSession
     if (!storedAccount.deactivated) {
       // Intentionally not awaited to unblock the UI:
-      networkRetry(1, () => agent.resumeSession(prevSession))
+      networkRetry(3, () => agent.resumeSession(prevSession)).catch(
+        (e: any) => {
+          logger.error(`networkRetry failed to resume session`, {
+            status: e?.status || 'unknown',
+            // this field name is ignored by Sentry scrubbers
+            safeMessage: e?.message || 'unknown',
+          })
+
+          throw e
+        },
+      )
     }
   }
 
@@ -154,15 +164,18 @@ export async function createAgentAndCreateAccount(
             id: TID.nextStr(),
           },
         ])
-        await agent.api.com.atproto.repo.putRecord({
-          repo: account.did,
-          collection: 'chat.bsky.actor.declaration',
-          rkey: 'self',
-          record: {
-            $type: 'chat.bsky.actor.declaration',
-            allowIncoming: getAge(birthDate) < 18 ? 'none' : 'following',
-          },
-        })
+
+        if (getAge(birthDate) < 18) {
+          await agent.api.com.atproto.repo.putRecord({
+            repo: account.did,
+            collection: 'chat.bsky.actor.declaration',
+            rkey: 'self',
+            record: {
+              $type: 'chat.bsky.actor.declaration',
+              allowIncoming: 'none',
+            },
+          })
+        }
       })
     } catch (e: any) {
       logger.error(e, {

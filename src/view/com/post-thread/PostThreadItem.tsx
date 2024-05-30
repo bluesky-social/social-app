@@ -11,11 +11,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -32,6 +30,11 @@ import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
+import {
+  isAvailable as isNativeTranslationAvailable,
+  isLanguageSupported,
+  NativeTranslationModule,
+} from '../../../../modules/expo-bluesky-translate'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -50,6 +53,7 @@ import {PreviewableUserAvatar} from '../util/UserAvatar'
 export function PostThreadItem({
   post,
   record,
+  moderation,
   treeView,
   depth,
   prevPost,
@@ -59,10 +63,12 @@ export function PostThreadItem({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
+  moderation: ModerationDecision | undefined
   treeView: boolean
   depth: number
   prevPost: ThreadPost | undefined
@@ -72,9 +78,9 @@ export function PostThreadItem({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }) {
-  const moderationOpts = useModerationOpts()
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -83,11 +89,6 @@ export function PostThreadItem({
         facets: record.facets,
       }),
     [record],
-  )
-  const moderation = useMemo(
-    () =>
-      post && moderationOpts ? moderatePost(post, moderationOpts) : undefined,
-    [post, moderationOpts],
   )
   if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted />
@@ -110,6 +111,7 @@ export function PostThreadItem({
         showChildReplyLine={showChildReplyLine}
         showParentReplyLine={showParentReplyLine}
         hasPrecedingItem={hasPrecedingItem}
+        overrideBlur={overrideBlur}
         onPostReply={onPostReply}
       />
     )
@@ -143,6 +145,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
+  overrideBlur,
   onPostReply,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -158,6 +161,7 @@ let PostThreadItemLoaded = ({
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
+  overrideBlur: boolean
   onPostReply: () => void
 }): React.ReactNode => {
   const pal = usePalette('default')
@@ -318,6 +322,7 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
+              record={record}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
@@ -362,7 +367,7 @@ let PostThreadItemLoaded = ({
                 ) : null}
               </View>
             ) : null}
-            <View style={[s.pl10, s.pr10, s.pb5]}>
+            <View style={[s.pl10, s.pr10]}>
               <PostCtrls
                 big
                 post={post}
@@ -394,6 +399,7 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
+            disabled={overrideBlur}
             style={[pal.view]}
             modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 26 : 38}
@@ -620,26 +626,39 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
+  record,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
+  record?: AppBskyFeedPost.Record
   needsTranslation: boolean
   translatorUrl: string
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
-  const onTranslatePress = React.useCallback(
-    () => openLink(translatorUrl),
-    [openLink, translatorUrl],
-  )
+
+  const text = record?.text || ''
+
+  const onTranslatePress = React.useCallback(() => {
+    if (
+      isNativeTranslationAvailable &&
+      isLanguageSupported(record?.langs?.at(0))
+    ) {
+      NativeTranslationModule.presentAsync(text)
+    } else {
+      openLink(translatorUrl)
+    }
+  }, [openLink, text, translatorUrl, record])
+
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
           <Text style={pal.textLight}> &middot; </Text>
+
           <Text
             style={pal.link}
             title={_(msg`Translate`)}
@@ -714,7 +733,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     marginTop: 5,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   expandedInfoItem: {
     marginRight: 10,

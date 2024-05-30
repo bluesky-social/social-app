@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -17,7 +18,6 @@ import {
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -73,6 +73,7 @@ export interface FeedPostSliceItem {
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
   feedContext: string | undefined
   moderation: ModerationDecision
+  parentAuthor?: AppBskyActorDefs.ProfileViewBasic
 }
 
 export interface FeedPostSlice {
@@ -111,14 +112,18 @@ export function usePostFeedQuery(
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
-  const {getAgent} = useAgent()
+  const followingPinnedIndex =
+    preferences?.savedFeeds?.findIndex(
+      f => f.pinned && f.value === 'following',
+    ) ?? -1
+  const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
+  const agent = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
     result: InfiniteData<FeedPage>
   } | null>(null)
   const lastPageCountRef = useRef(0)
-  const gate = useGate()
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -150,9 +155,11 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              userInterests, // Not in the query key because they don't change.
-              getAgent,
-              useBaseFollowingFeed: gate('reduced_onboarding_and_home_algo'),
+              agent,
+              // Not in the query key because they don't change:
+              userInterests,
+              // Not in the query key. Reacting to it switching isn't important:
+              enableFollowingToDiscoverFallback,
             }),
             cursor: undefined,
           }
@@ -166,7 +173,7 @@ export function usePostFeedQuery(
          * moderations happen later, which results in some posts being shown and
          * some not.
          */
-        if (!getAgent().session) {
+        if (!agent.session) {
           assertSomePostsPassModeration(res.feed)
         }
 
@@ -297,6 +304,10 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
+                          const parentAuthor =
+                            item.reply?.parent?.author ??
+                            slice.items[i + 1]?.reply?.grandparentAuthor
+
                           return {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
@@ -308,6 +319,7 @@ export function usePostFeedQuery(
                                 : item.reason,
                             feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
+                            parentAuthor,
                           }
                         }
                         return undefined
@@ -385,50 +397,50 @@ function createApi({
   feedParams,
   feedTuners,
   userInterests,
-  getAgent,
-  useBaseFollowingFeed,
+  agent,
+  enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  getAgent: () => BskyAgent
-  useBaseFollowingFeed: boolean
+  agent: BskyAgent
+  enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
-        getAgent,
+        agent,
         feedParams,
         feedTuners,
         userInterests,
       })
     } else {
-      if (useBaseFollowingFeed) {
-        return new FollowingFeedAPI({getAgent})
+      if (enableFollowingToDiscoverFallback) {
+        return new HomeFeedAPI({agent, userInterests})
       } else {
-        return new HomeFeedAPI({getAgent, userInterests})
+        return new FollowingFeedAPI({agent})
       }
     }
   } else if (feedDesc.startsWith('author')) {
     const [_, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({getAgent, feedParams: {actor, filter}})
+    return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
     const [_, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({getAgent, feedParams: {actor}})
+    return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
     const [_, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
-      getAgent,
+      agent,
       feedParams: {feed},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
-    return new ListFeedAPI({getAgent, feedParams: {list}})
+    return new ListFeedAPI({agent, feedParams: {list}})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI({getAgent})
+    return new FollowingFeedAPI({agent})
   }
 }
 

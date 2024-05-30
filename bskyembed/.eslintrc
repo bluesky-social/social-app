@@ -15,6 +15,6 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": "latest",
-    "project": "./tsconfig.json"
+    "project": "./bskyembed/tsconfig.json"
   }
 }

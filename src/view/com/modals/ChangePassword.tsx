@@ -37,7 +37,7 @@ export const snapPoints = isAndroid ? ['90%'] : ['45%']
 export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.RequestCode)
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -46,7 +46,6 @@ export function Component() {
   const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
   const {closeModal} = useModalControls()
-  const agent = getAgent()
 
   const onRequestCode = async () => {
     if (

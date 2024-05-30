@@ -7,7 +7,7 @@ import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {IS_TESTFLIGHT} from 'lib/app-info'
+import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from 'lib/app-info'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
@@ -22,6 +22,8 @@ type StatsigUser = {
     // This is the place where we can add our own stuff.
     // Fields here have to be non-optional to be visible in the UI.
     platform: 'ios' | 'android' | 'web'
+    bundleIdentifier: string
+    bundleDate: number
     refSrc: string
     refUrl: string
     appLanguage: string
@@ -85,11 +87,17 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
+const DOWNSAMPLED_EVENTS = new Set(['router:navigate:sampled'])
+const isDownsampledSession = Math.random() < 0.9 // 90% likely
+
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
+    if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
+      return
+    }
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
@@ -108,20 +116,29 @@ export function logEvent<E extends keyof LogEvents>(
 // Our own cache ensures consistent evaluation within a single session.
 const GateCache = React.createContext<Map<string, boolean> | null>(null)
 
-export function useGate(): (gateName: Gate) => boolean {
+type GateOptions = {
+  dangerouslyDisableExposureLogging?: boolean
+}
+
+export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
   const cache = React.useContext(GateCache)
   if (!cache) {
     throw Error('useGate() cannot be called outside StatsigProvider.')
   }
   const gate = React.useCallback(
-    (gateName: Gate): boolean => {
+    (gateName: Gate, options: GateOptions = {}): boolean => {
       const cachedValue = cache.get(gateName)
       if (cachedValue !== undefined) {
         return cachedValue
       }
-      const value = Statsig.initializeCalled()
-        ? Statsig.checkGate(gateName)
-        : false
+      let value = false
+      if (Statsig.initializeCalled()) {
+        if (options.dangerouslyDisableExposureLogging) {
+          value = Statsig.checkGateWithExposureLoggingDisabled(gateName)
+        } else {
+          value = Statsig.checkGate(gateName)
+        }
+      }
       cache.set(gateName, value)
       return value
     },
@@ -165,6 +182,8 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
+      bundleIdentifier: BUNDLE_IDENTIFIER,
+      bundleDate: BUNDLE_DATE,
       appLanguage: languagePrefs.appLanguage,
       contentLanguages: languagePrefs.contentLanguages,
     },

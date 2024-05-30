@@ -1,31 +1,38 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useAppState} from '#/lib/hooks/useAppState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {MessagesTabNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {useListConvos} from '#/state/queries/messages/list-converations'
+import {isNative} from '#/platform/detection'
+import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
+import {useMessagesEventBus} from '#/state/messages/events'
+import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {MessagesNUX} from '#/components/dms/MessagesNUX'
 import {NewChat} from '#/components/dms/NewChatDialog'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import {Link} from '#/components/Link'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {ListFooter} from '#/components/Lists'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {ClipClopGate} from '../gate'
 import {ChatListItem} from './ChatListItem'
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
@@ -49,7 +56,7 @@ export function MessagesScreen({navigation, route}: Props) {
   // this tab. We should immediately push to the conversation after pressing the notification.
   // After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
   // the conversation is the same as before
-  React.useEffect(() => {
+  useEffect(() => {
     if (pushToConversation) {
       navigation.navigate('MessagesConversation', {
         conversation: pushToConversation,
@@ -57,6 +64,22 @@ export function MessagesScreen({navigation, route}: Props) {
       navigation.setParams({pushToConversation: undefined})
     }
   }, [navigation, pushToConversation])
+
+  // Request the poll interval to be 10s (or whatever the MESSAGE_SCREEN_POLL_INTERVAL is set to in the future)
+  // but only when the screen is active
+  const messagesBus = useMessagesEventBus()
+  const state = useAppState()
+  const isActive = state === 'active'
+  useFocusEffect(
+    useCallback(() => {
+      if (isActive) {
+        const unsub = messagesBus.requestPollInterval(
+          MESSAGE_SCREEN_POLL_INTERVAL,
+        )
+        return () => unsub()
+      }
+    }, [messagesBus, isActive]),
+  )
 
   const renderButton = useCallback(() => {
     return (
@@ -82,13 +105,12 @@ export function MessagesScreen({navigation, route}: Props) {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
+    isError,
     error,
     refetch,
-  } = useListConvos({refetchInterval: 15_000})
+  } = useListConvosQuery()
 
   useRefreshOnFocus(refetch)
-
-  const isError = !!error
 
   const conversations = useMemo(() => {
     if (data?.pages) {
@@ -126,41 +148,92 @@ export function MessagesScreen({navigation, route}: Props) {
     navigation.navigate('MessagesSettings')
   }, [navigation])
 
-  const gate = useGate()
-  if (!gate('dms')) return <ClipClopGate />
-
   if (conversations.length < 1) {
     return (
       <View style={a.flex_1}>
         <MessagesNUX />
-        {gtMobile ? (
-          <CenteredView sideBorders>
+
+        <CenteredView sideBorders={gtMobile} style={[a.h_full_vh]}>
+          {gtMobile ? (
             <DesktopHeader
               newChatControl={newChatControl}
               onNavigateToSettings={onNavigateToSettings}
             />
-          </CenteredView>
-        ) : (
-          <ViewHeader
-            title={_(msg`Messages`)}
-            renderButton={renderButton}
-            showBorder
-            canGoBack={false}
-          />
-        )}
-        {!isError && <NewChat onNewChat={onNewChat} control={newChatControl} />}
-        <ListMaybePlaceholder
-          isLoading={isLoading}
-          isError={isError}
-          emptyType="results"
-          emptyTitle={_(msg`No chats yet`)}
-          emptyMessage={_(
-            msg`You have no chats yet. Start a conversation with someone!`,
+          ) : (
+            <ViewHeader
+              title={_(msg`Messages`)}
+              renderButton={renderButton}
+              showBorder
+              canGoBack={false}
+            />
           )}
-          errorMessage={cleanError(error)}
-          onRetry={isError ? refetch : undefined}
-          hideBackButton
-        />
+
+          {isLoading ? (
+            <View style={[a.align_center, a.pt_3xl, web({paddingTop: '10vh'})]}>
+              <Loader size="xl" />
+            </View>
+          ) : (
+            <>
+              {isError ? (
+                <>
+                  <View style={[a.pt_3xl, a.align_center]}>
+                    <CircleInfo
+                      width={48}
+                      fill={t.atoms.border_contrast_low.borderColor}
+                    />
+                    <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
+                      <Trans>Whoops!</Trans>
+                    </Text>
+                    <Text
+                      style={[
+                        a.text_md,
+                        a.pb_xl,
+                        a.text_center,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                        {maxWidth: 360},
+                      ]}>
+                      {cleanError(error)}
+                    </Text>
+
+                    <Button
+                      label={_(msg`Reload conversations`)}
+                      size="medium"
+                      color="secondary"
+                      variant="solid"
+                      onPress={() => refetch()}>
+                      <ButtonText>Retry</ButtonText>
+                      <ButtonIcon icon={Retry} position="right" />
+                    </Button>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <View style={[a.pt_3xl, a.align_center]}>
+                    <Message width={48} fill={t.palette.primary_500} />
+                    <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
+                      <Trans>Nothing here</Trans>
+                    </Text>
+                    <Text
+                      style={[
+                        a.text_md,
+                        a.pb_xl,
+                        a.text_center,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      <Trans>You have no conversations yet. Start one!</Trans>
+                    </Text>
+                  </View>
+                </>
+              )}
+            </>
+          )}
+        </CenteredView>
+
+        {!isLoading && !isError && (
+          <NewChat onNewChat={onNewChat} control={newChatControl} />
+        )}
       </View>
     )
   }
@@ -196,9 +269,12 @@ export function MessagesScreen({navigation, route}: Props) {
             error={cleanError(error)}
             onRetry={fetchNextPage}
             style={{borderColor: 'transparent'}}
+            hasNextPage={hasNextPage}
+            showEndMessage={true}
+            endMessageText={_(msg`No more conversations to show`)}
           />
         }
-        onEndReachedThreshold={3}
+        onEndReachedThreshold={isNative ? 1.5 : 0}
         initialNumToRender={initialNumToRender}
         windowSize={11}
         // @ts-ignore our .web version only -sfn

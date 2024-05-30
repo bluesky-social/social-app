@@ -327,8 +327,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={s.hContentRegion}
-        contentContainerStyle={isMobile && pal.viewLight}
+        style={[s.hContentRegion, isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
@@ -614,6 +613,31 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>My Saved Feeds</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="linkToChatSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('MessagesSettings')
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Chat settings`)}
+          accessibilityHint={_(msg`Opens chat settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon={['far', 'comment-dots']}
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Chat Settings</Trans>
           </Text>
         </TouchableOpacity>
 

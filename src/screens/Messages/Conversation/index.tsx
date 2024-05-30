@@ -7,7 +7,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -23,14 +22,12 @@ import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFoo
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {Error} from '#/components/Error'
 import {Loader} from '#/components/Loader'
-import {ClipClopGate} from '../gate'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'MessagesConversation'
 >
 export function MessagesConversationScreen({route}: Props) {
-  const gate = useGate()
   const {gtMobile} = useBreakpoints()
   const setMinimalShellMode = useSetMinimalShellMode()
 
@@ -54,10 +51,8 @@ export function MessagesConversationScreen({route}: Props) {
     }, [gtMobile, convoId, setCurrentConvoId, setMinimalShellMode]),
   )
 
-  if (!gate('dms')) return <ClipClopGate />
-
   return (
-    <ConvoProvider convoId={convoId}>
+    <ConvoProvider key={convoId} convoId={convoId}>
       <Inner />
     </ConvoProvider>
   )
@@ -79,7 +74,7 @@ function Inner() {
   const [hasScrolled, setHasScrolled] = React.useState(false)
   const readyToShow =
     hasScrolled ||
-    (convoState.status === ConvoStatus.Ready &&
+    (isConvoActive(convoState) &&
       !convoState.isFetchingHistory &&
       convoState.items.length === 0)
 

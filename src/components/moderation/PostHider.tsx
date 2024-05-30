@@ -18,6 +18,7 @@ import {
 import {Text} from '#/components/Typography'
 
 interface Props extends ComponentProps<typeof Link> {
+  disabled: boolean
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
@@ -27,6 +28,7 @@ interface Props extends ComponentProps<typeof Link> {
 export function PostHider({
   testID,
   href,
+  disabled,
   modui,
   style,
   children,
@@ -47,7 +49,7 @@ export function PostHider({
     precacheProfile(queryClient, profile)
   }, [queryClient, profile])
 
-  if (!blur) {
+  if (!blur || (disabled && !modui.noOverride)) {
     return (
       <Link
         testID={testID}

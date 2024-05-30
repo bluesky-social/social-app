@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -13,18 +12,18 @@ import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import {ClipClopGate} from './gate'
 
 type AllowIncoming = 'all' | 'none' | 'following'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
 export function MessagesSettingsScreen({}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
@@ -37,7 +36,7 @@ export function MessagesSettingsScreen({}: Props) {
     },
   })
 
-  const onSelectItem = useCallback(
+  const onSelectMessagesFrom = useCallback(
     (keys: string[]) => {
       const key = keys[0]
       if (!key) return
@@ -46,24 +45,30 @@ export function MessagesSettingsScreen({}: Props) {
     [updateDeclaration],
   )
 
-  const gate = useGate()
-  if (!gate('dms')) return <ClipClopGate />
+  const onSelectSoundSetting = useCallback(
+    (keys: string[]) => {
+      const key = keys[0]
+      if (!key) return
+      setPref('playSoundChat', key === 'enabled')
+    },
+    [setPref],
+  )
 
   return (
     <CenteredView sideBorders style={a.h_full_vh}>
-      <ViewHeader title={_(msg`Settings`)} showOnDesktop showBorder />
+      <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
       <View style={[a.p_lg, a.gap_md]}>
         <Text style={[a.text_lg, a.font_bold]}>
-          <Trans>Allow messages from</Trans>
+          <Trans>Allow new messages from</Trans>
         </Text>
         <Toggle.Group
-          label={_(msg`Allow messages from`)}
+          label={_(msg`Allow new messages from`)}
           type="radio"
           values={[
             (profile?.associated?.chat?.allowIncoming as AllowIncoming) ??
               'following',
           ]}
-          onChange={onSelectItem}>
+          onChange={onSelectMessagesFrom}>
           <View>
             <Toggle.Item
               name="all"
@@ -94,21 +99,53 @@ export function MessagesSettingsScreen({}: Props) {
             </Toggle.Item>
           </View>
         </Toggle.Group>
+        <View
+          style={[
+            a.mt_sm,
+            a.px_xl,
+            a.py_lg,
+            a.rounded_md,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={[t.atoms.text_contrast_high]}>
+            <Trans>
+              You can continue ongoing conversations regardless of which setting
+              you choose.
+            </Trans>
+          </Text>
+        </View>
         {isNative && (
           <>
-            <Divider style={[a.my_lg]} />
-            <Toggle.Item
-              name="playSoundChat"
-              label={_(msg`Play notification sounds`)}
-              value={preferences.playSoundChat}
-              onChange={() => {
-                setPref('playSoundChat', !preferences.playSoundChat)
-              }}>
-              <Toggle.Checkbox />
-              <Toggle.LabelText>
-                <Trans>Play notification sounds</Trans>
-              </Toggle.LabelText>
-            </Toggle.Item>
+            <Divider style={a.my_md} />
+            <Text style={[a.text_lg, a.font_bold]}>
+              <Trans>Notification Sounds</Trans>
+            </Text>
+            <Toggle.Group
+              label={_(msg`Notification sounds`)}
+              type="radio"
+              values={[preferences.playSoundChat ? 'enabled' : 'disabled']}
+              onChange={onSelectSoundSetting}>
+              <View>
+                <Toggle.Item
+                  name="enabled"
+                  label={_(msg`Enabled`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Enabled</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+                <Toggle.Item
+                  name="disabled"
+                  label={_(msg`Disabled`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Disabled</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+              </View>
+            </Toggle.Group>
           </>
         )}
       </View>

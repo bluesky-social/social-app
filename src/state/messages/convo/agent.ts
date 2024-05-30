@@ -793,15 +793,13 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.sendMessage(
-          {
-            convoId: this.convoId,
-            message,
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
-      })
+      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+        {
+          convoId: this.convoId,
+          message,
+        },
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
       const res = response.data
 
       // remove from queue
@@ -832,9 +830,10 @@ export class Convo {
       if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
         this.pendingMessageFailure = 'recoverable'
       } else {
+        this.pendingMessageFailure = 'unrecoverable'
+
         switch (e.message) {
           case 'block between recipient and sender':
-            this.pendingMessageFailure = 'unrecoverable'
             this.emitter.emit('event', {
               type: 'invalidate-block-state',
               accountDids: [
@@ -844,8 +843,13 @@ export class Convo {
             })
             break
           case 'Account is disabled':
-            this.pendingMessageFailure = 'unrecoverable'
             this.dispatch({event: ConvoDispatchEvent.Disable})
+            break
+          case 'Convo not found':
+          case 'Account does not exist':
+          case 'recipient does not exist':
+          case 'recipient requires incoming messages to come from someone they follow':
+          case 'recipient has disabled incoming messages':
             break
           default:
             logger.warn(
@@ -859,6 +863,7 @@ export class Convo {
         }
       }
     } else {
+      this.pendingMessageFailure = 'unrecoverable'
       logger.error(e, {
         context: `Convo handleSendMessageFailure received unknown error`,
       })
@@ -883,18 +888,15 @@ export class Convo {
     )
 
     try {
-      // throw new Error('UNCOMMENT TO TEST RETRY')
-      const {data} = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.sendMessageBatch(
-          {
-            items: messageArray.map(({message}) => ({
-              convoId: this.convoId,
-              message,
-            })),
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
-      })
+      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+        {
+          items: messageArray.map(({message}) => ({
+            convoId: this.convoId,
+            message,
+          })),
+        },
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
       const {items} = data
 
       /*

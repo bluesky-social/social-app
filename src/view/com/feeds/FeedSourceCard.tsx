@@ -94,7 +94,7 @@ export function FeedSourceCardLoaded({
     useRemoveFeedMutation()
 
   const savedFeedConfig = preferences?.savedFeeds?.find(
-    f => f.value === feed?.uri,
+    f => f.value === feedUri,
   )
   const isSaved = Boolean(savedFeedConfig)
 
@@ -173,7 +173,7 @@ export function FeedSourceCardLoaded({
             accessibilityRole="button"
             accessibilityLabel={_(msg`Remove from my feeds`)}
             accessibilityHint=""
-            onPress={onToggleSaved}
+            onPress={onUnsave}
             hitSlop={15}
             style={styles.btn}>
             <FontAwesomeIcon

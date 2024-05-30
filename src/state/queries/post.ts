@@ -14,11 +14,11 @@ const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await getAgent().getPosts({uris: [uri!]})
+      const res = await agent.getPosts({uris: [uri!]})
       if (res.success && res.data.posts[0]) {
         return res.data.posts[0]
       }
@@ -31,7 +31,7 @@ export function usePostQuery(uri: string | undefined) {
 
 export function useGetPost() {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
@@ -40,13 +40,13 @@ export function useGetPost() {
           const urip = new AtUri(uri)
 
           if (!urip.host.startsWith('did:')) {
-            const res = await getAgent().resolveHandle({
+            const res = await agent.resolveHandle({
               handle: urip.host,
             })
             urip.host = res.data.did
           }
 
-          const res = await getAgent().getPosts({
+          const res = await agent.getPosts({
             uris: [urip.toString()!],
           })
 
@@ -58,7 +58,7 @@ export function useGetPost() {
         },
       })
     },
-    [queryClient, getAgent],
+    [queryClient, agent],
   )
 }
 
@@ -127,7 +127,7 @@ function usePostLikeMutation(
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const postAuthor = post.author
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
@@ -154,7 +154,7 @@ function usePostLikeMutation(
             ? toClout(post.likeCount + post.repostCount + post.replyCount)
             : undefined,
       })
-      return getAgent().like(uri, cid)
+      return agent.like(uri, cid)
     },
     onSuccess() {
       track('Post:Like')
@@ -165,11 +165,11 @@ function usePostLikeMutation(
 function usePostUnlikeMutation(
   logContext: LogEvents['post:unlike']['logContext'],
 ) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({likeUri}) => {
       logEvent('post:unlike', {logContext})
-      return getAgent().deleteLike(likeUri)
+      return agent.deleteLike(likeUri)
     },
     onSuccess() {
       track('Post:Unlike')
@@ -238,7 +238,7 @@ export function usePostRepostMutationQueue(
 function usePostRepostMutation(
   logContext: LogEvents['post:repost']['logContext'],
 ) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
@@ -246,7 +246,7 @@ function usePostRepostMutation(
   >({
     mutationFn: post => {
       logEvent('post:repost', {logContext})
-      return getAgent().repost(post.uri, post.cid)
+      return agent.repost(post.uri, post.cid)
     },
     onSuccess() {
       track('Post:Repost')
@@ -257,11 +257,11 @@ function usePostRepostMutation(
 function usePostUnrepostMutation(
   logContext: LogEvents['post:unrepost']['logContext'],
 ) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({repostUri}) => {
       logEvent('post:unrepost', {logContext})
-      return getAgent().deleteRepost(repostUri)
+      return agent.deleteRepost(repostUri)
     },
     onSuccess() {
       track('Post:Unrepost')
@@ -271,10 +271,10 @@ function usePostUnrepostMutation(
 
 export function usePostDeleteMutation() {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useMutation<void, Error, {uri: string}>({
     mutationFn: async ({uri}) => {
-      await getAgent().deletePost(uri)
+      await agent.deletePost(uri)
     },
     onSuccess(data, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})

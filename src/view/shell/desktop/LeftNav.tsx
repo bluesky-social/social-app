@@ -12,7 +12,6 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -304,7 +303,6 @@ export function DesktopLeftNav() {
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnreadNotifications = useUnreadNotifications()
-  const gate = useGate()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -351,7 +349,7 @@ export function DesktopLeftNav() {
             iconFilled={<BellFilled width={NAV_ICON_WIDTH} style={pal.text} />}
             label={_(msg`Notifications`)}
           />
-          {gate('dms') && <ChatNavItem />}
+          <ChatNavItem />
           <NavItem
             href="/feeds"
             icon={

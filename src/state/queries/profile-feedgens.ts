@@ -15,7 +15,7 @@ export function useProfileFeedgensQuery(
   opts?: {enabled?: boolean},
 ) {
   const enabled = opts?.enabled !== false
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetActorFeeds.OutputSchema,
     Error,
@@ -25,7 +25,7 @@ export function useProfileFeedgensQuery(
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.feed.getActorFeeds({
+      const res = await agent.app.bsky.feed.getActorFeeds({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,

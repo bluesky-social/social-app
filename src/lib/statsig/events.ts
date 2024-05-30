@@ -24,7 +24,7 @@ export type LogEvents = {
     secondsActive: number
   }
   'state:foreground': {}
-  'router:navigate': {}
+  'router:navigate:sampled': {}
 
   // Screen events
   'splash:signInPressed': {}
@@ -125,6 +125,13 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'Chat'
+  }
+  'chat:create': {
+    logContext: 'ProfileHeader' | 'NewChatDialog'
+  }
+  'chat:open': {
+    logContext: 'ProfileHeader' | 'NewChatDialog' | 'ChatsList'
   }
 
   'test:all:always': {}

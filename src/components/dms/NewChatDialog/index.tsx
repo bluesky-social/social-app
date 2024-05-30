@@ -1,4 +1,10 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import type {TextInput as TextInputType} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
@@ -13,6 +19,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
+import {logEvent} from 'lib/statsig/statsig'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {FAB} from '#/view/com/util/fab/FAB'
 import * as Toast from '#/view/com/util/Toast'
@@ -63,6 +70,11 @@ export function NewChat({
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
       onNewChat(data.convo.id)
+
+      if (!data.convo.lastMessage) {
+        logEvent('chat:create', {logContext: 'NewChatDialog'})
+      }
+      logEvent('chat:open', {logContext: 'NewChatDialog'})
     },
     onError: error => {
       Toast.show(error.message)
@@ -293,7 +305,7 @@ function SearchablePeopleList({
   const control = Dialog.useDialogContext()
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = React.useRef<TextInputType>(null)
+  const inputRef = useRef<TextInputType>(null)
 
   const [searchText, setSearchText] = useState('')
 
@@ -302,11 +314,9 @@ function SearchablePeopleList({
     isError,
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
-  const {data: follows} = useProfileFollowsQuery(currentAccount?.did, {
-    limit: 12,
-  })
+  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let _items: Item[] = []
 
     if (isError) {
@@ -368,7 +378,7 @@ function SearchablePeopleList({
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
   }
 
-  const renderItems = React.useCallback(
+  const renderItems = useCallback(
     ({item}: {item: Item}) => {
       switch (item.type) {
         case 'profile': {
@@ -395,7 +405,7 @@ function SearchablePeopleList({
     [moderationOpts, onCreateChat],
   )
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (isWeb) {
       setImmediate(() => {
         inputRef?.current?.focus()
@@ -484,9 +494,12 @@ function SearchablePeopleList({
       style={[
         web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
         native({
+          height: '100%',
           paddingHorizontal: 0,
           marginTop: 0,
           paddingTop: 0,
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
         }),
       ]}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}

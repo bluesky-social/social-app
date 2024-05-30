@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react'
-import {FlatList, View} from 'react-native'
+import {FlatList, LayoutChangeEvent, View} from 'react-native'
 import {
   KeyboardStickyView,
   useKeyboardHandler,
@@ -16,16 +16,18 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {isIOS, isNative} from '#/platform/detection'
-import {useConvoActive} from '#/state/messages/convo'
+import {isNative} from '#/platform/detection'
+import {isConvoActive, useConvoActive} from '#/state/messages/convo'
 import {ConvoItem, ConvoStatus} from '#/state/messages/convo/types'
 import {useAgent} from '#/state/session'
+import {clamp} from 'lib/numbers'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
 import {List} from 'view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
 import {MessageListError} from '#/screens/Messages/Conversation/MessageListError'
+import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
@@ -77,7 +79,7 @@ export function MessagesList({
   footer?: React.ReactNode
 }) {
   const convoState = useConvoActive()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const flatListRef = useAnimatedRef<FlatList>()
 
@@ -220,16 +222,26 @@ export function MessagesList({
 
   // -- Keyboard animation handling
   const {bottom: bottomInset} = useSafeAreaInsets()
-  const nativeBottomBarHeight = isIOS ? 42 : 60
-  const bottomOffset = isWeb ? 0 : bottomInset + nativeBottomBarHeight
+  const bottomOffset = isWeb ? 0 : clamp(60 + bottomInset, 60, 75)
 
   const keyboardHeight = useSharedValue(0)
   const keyboardIsOpening = useSharedValue(false)
 
+  // In some cases - like when the emoji piker opens - we don't want to animate the scroll in the list onLayout event.
+  // We use this value to keep track of when we want to disable the animation.
+  const layoutScrollWithoutAnimation = useSharedValue(false)
+
   useKeyboardHandler({
-    onStart: () => {
+    onStart: e => {
       'worklet'
-      keyboardIsOpening.value = true
+      // Immediate updates - like opening the emoji picker - will have a duration of zero. In those cases, we should
+      // just update the height here instead of having the `onMove` event do it (that event will not fire!)
+      if (e.duration === 0) {
+        layoutScrollWithoutAnimation.value = true
+        keyboardHeight.value = e.height
+      } else {
+        keyboardIsOpening.value = true
+      }
     },
     onMove: e => {
       'worklet'
@@ -253,7 +265,7 @@ export function MessagesList({
   const onSendMessage = useCallback(
     async (text: string) => {
       let rt = new RichText({text}, {cleanNewlines: true})
-      await rt.detectFacets(getAgent())
+      await rt.detectFacets(agent)
       rt = shortenLinks(rt)
 
       // filter out any mention facets that didn't map to a user
@@ -267,21 +279,37 @@ export function MessagesList({
         return true
       })
 
+      if (!hasScrolled) {
+        setHasScrolled(true)
+      }
+
       convoState.sendMessage({
         text: rt.text,
         facets: rt.facets,
       })
     },
-    [convoState, getAgent],
+    [convoState, agent, hasScrolled, setHasScrolled],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
-  const onListLayout = React.useCallback(() => {
-    if (keyboardIsOpening.value) return
-    if (isWeb || !keyboardIsOpening.value) {
-      flatListRef.current?.scrollToEnd({animated: true})
-    }
-  }, [flatListRef, keyboardIsOpening.value])
+  const onListLayout = React.useCallback(
+    (e: LayoutChangeEvent) => {
+      layoutHeight.value = e.nativeEvent.layout.height
+
+      if (isWeb || !keyboardIsOpening.value) {
+        flatListRef.current?.scrollToEnd({
+          animated: !layoutScrollWithoutAnimation.value,
+        })
+        layoutScrollWithoutAnimation.value = false
+      }
+    },
+    [
+      flatListRef,
+      keyboardIsOpening.value,
+      layoutScrollWithoutAnimation,
+      layoutHeight,
+    ],
+  )
 
   const scrollToEndOnPress = React.useCallback(() => {
     flatListRef.current?.scrollToOffset({
@@ -323,18 +351,20 @@ export function MessagesList({
         />
       </ScrollProvider>
       <KeyboardStickyView offset={{closed: -bottomOffset, opened: 0}}>
-        {!blocked ? (
-          <>
-            {convoState.status === ConvoStatus.Disabled ? (
-              <ChatDisabled />
-            ) : (
-              <MessageInput onSendMessage={onSendMessage} />
-            )}
-          </>
-        ) : (
+        {convoState.status === ConvoStatus.Disabled ? (
+          <ChatDisabled />
+        ) : blocked ? (
           footer
+        ) : (
+          <>
+            {isConvoActive(convoState) &&
+              !convoState.isFetchingHistory &&
+              convoState.items.length === 0 && <ChatEmptyPill />}
+            <MessageInput onSendMessage={onSendMessage} />
+          </>
         )}
       </KeyboardStickyView>
+
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
   )
