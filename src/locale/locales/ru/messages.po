@@ -44,12 +44,12 @@ msgstr "{0, plural, one {# repost} other {# reposts}}"
 #: src/components/ProfileHoverCard/index.web.tsx:376
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {follower} other {followers}}"
+msgstr "{1, plural, one {подписчик} other {подписчиков}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:380
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {following} other {following}}"
+msgstr "{0, plural, one {подписка} other {подписок}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:245
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
@@ -57,7 +57,7 @@ msgstr "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:358
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, one {like} other {likes}}"
+msgstr "{0, plural, one {лайк} other {лайков}}"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:269
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
@@ -65,7 +65,7 @@ msgstr "{0, plural, one {Liked by # user} other {Liked by # users}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {post} other {posts}}"
+msgstr "{0, plural, one {пост} other {постов}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -73,7 +73,7 @@ msgstr "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:338
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {repost} other {reposts}}"
+msgstr "{0, plural, one {репост} other {репостов}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
@@ -125,11 +125,11 @@ msgstr "<0/> участников"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
-msgstr "<0>{0}</0> {1, plural, one {follower} other {followers}}"
+msgstr "<0>{0}</0> {1, plural, one {подписчик} other {подписчиков}}"
 
 #: src/view/shell/Drawer.tsx:112
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
-msgstr "<0>{0}</0> {1, plural, one {following} other {following}}"
+msgstr "<0>{0}</0> {1, plural, one {подписка} other {подписок}}"
 
 #: src/view/shell/Drawer.tsx:96
 msgid "<0>{0}</0> following"
@@ -530,7 +530,7 @@ msgstr "Are you sure you want to delete this message? The message will be delete
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
+msgstr "Вы уверены, что хотите прекратить этот разговор? Ваши сообщения будут удалены для вас, но не для других участников."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -604,7 +604,7 @@ msgstr "Заблокировать"
 #: src/components/dms/ConvoMenu.tsx:186
 #: src/components/dms/ConvoMenu.tsx:190
 msgid "Block account"
-msgstr "Block account"
+msgstr "Заблокировать"
 
 #: src/view/com/profile/ProfileMenu.tsx:300
 #: src/view/com/profile/ProfileMenu.tsx:307
@@ -866,7 +866,7 @@ msgstr "Чат"
 
 #: src/components/dms/ConvoMenu.tsx:80
 msgid "Chat muted"
-msgstr "Chat muted"
+msgstr "Чат заглушен"
 
 #: src/components/dms/ConvoMenu.tsx:110
 #: src/components/dms/MessageMenu.tsx:67
@@ -883,7 +883,7 @@ msgstr "Chat Settings"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat unmuted"
-msgstr "Chat unmuted"
+msgstr "Чат разглушен"
 
 #: src/screens/Messages/Conversation/index.tsx:26
 msgid "Chat with {chatId}"
@@ -1907,7 +1907,7 @@ msgstr "Все"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:42
 msgid "Everybody can reply"
-msgstr "Everybody can reply"
+msgstr "Каждый может ответить"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -2222,7 +2222,7 @@ msgstr "Подписчики"
 #: src/view/screens/ProfileFollows.tsx:25
 #: src/view/screens/SavedFeeds.tsx:413
 msgid "Following"
-msgstr "Подписаны"
+msgstr "Подписан"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:91
 msgid "Following {0}"
@@ -2360,7 +2360,7 @@ msgstr "Далее"
 
 #: src/components/dms/ConvoMenu.tsx:165
 msgid "Go to profile"
-msgstr "Go to profile"
+msgstr "В профиль"
 
 #: src/components/dms/ConvoMenu.tsx:162
 msgid "Go to user's profile"
@@ -2523,7 +2523,7 @@ msgstr "У меня есть собственный домен"
 #: src/components/dms/BlockedByListDialog.tsx:56
 #: src/components/dms/ReportConversationPrompt.tsx:22
 msgid "I understand"
-msgstr "I understand"
+msgstr "Я понял"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
@@ -2740,12 +2740,12 @@ msgstr "Узнать больше."
 
 #: src/components/dms/LeaveConvoPrompt.tsx:50
 msgid "Leave"
-msgstr "Leave"
+msgstr "Выйти"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
 msgid "Leave chat"
-msgstr "Leave chat"
+msgstr "Выйти из чата"
 
 #: src/components/dms/ConvoMenu.tsx:136
 #: src/components/dms/ConvoMenu.tsx:139
@@ -2753,7 +2753,7 @@ msgstr "Leave chat"
 #: src/components/dms/ConvoMenu.tsx:209
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
-msgstr "Leave conversation"
+msgstr "Выйти из разговора"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -3100,7 +3100,7 @@ msgstr "Игнорировать {truncatedTag}"
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:286
 msgid "Mute Account"
-msgstr "Игнорировать учетную запись"
+msgstr "Игнорировать"
 
 #: src/view/screens/ProfileList.tsx:520
 msgid "Mute accounts"
@@ -3113,7 +3113,7 @@ msgstr "Игнорировать все посты {displayTag}"
 #: src/components/dms/ConvoMenu.tsx:170
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Mute conversation"
-msgstr "Mute conversation"
+msgstr "Отключить звук"
 
 #: src/components/dialogs/MutedWords.tsx:149
 msgid "Mute in tags only"
@@ -3426,7 +3426,7 @@ msgstr "Никто"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
 msgid "Nobody can reply"
-msgstr "Nobody can reply"
+msgstr "Никто не может ответить"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -4275,7 +4275,7 @@ msgstr "Ответить на <0><1/></0>"
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
 msgid "Report"
-msgstr "Report"
+msgstr "Пожаловаться"
 
 #: src/components/dms/ConvoMenu.tsx:146
 #: src/components/dms/ConvoMenu.tsx:150
@@ -4285,13 +4285,13 @@ msgstr "Report"
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
-msgstr "Пожаловаться на учетную запись"
+msgstr "Пожаловаться"
 
 #: src/components/dms/ConvoMenu.tsx:195
 #: src/components/dms/ConvoMenu.tsx:198
 #: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr "Report conversation"
+msgstr "Пожаловаться"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
@@ -4551,7 +4551,7 @@ msgstr "Сохраняет настройки обрезки изображен�
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 msgid "Say hello!"
-msgstr "Say hello!"
+msgstr "Скажи привет!"
 
 #: src/screens/Onboarding/index.tsx:48
 msgid "Science"
@@ -4900,7 +4900,7 @@ msgstr "Поделиться"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:237
 #: src/view/screens/ProfileList.tsx:390
 msgid "Share"
-msgstr "Распространить"
+msgstr "Поделиться"
 
 #: src/components/dms/ChatEmptyPill.tsx:37
 msgid "Share a cool story!"
@@ -5148,7 +5148,7 @@ msgstr "Разработка П/З"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:45
 msgid "Some people can reply"
-msgstr "Some people can reply"
+msgstr "Некоторые люди могут ответить"
 
 #: src/screens/Messages/Conversation/index.tsx:94
 msgid "Something went wrong"
@@ -5729,7 +5729,7 @@ msgstr "Чтобы отключить метод 2FA по электронной
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
+msgstr "Чтобы сообщить о разговоре, пожалуйста, сообщите об одном из его сообщений на экране диалога. Это позволит нашим модераторам понять контекст вашей проблемы."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -5881,7 +5881,7 @@ msgstr "Перестать игнорировать все посты {displayTa
 
 #: src/components/dms/ConvoMenu.tsx:174
 msgid "Unmute conversation"
-msgstr "Unmute conversation"
+msgstr "Включить звук"
 
 #: src/components/dms/ConvoMenu.tsx:140
 #~ msgid "Unmute notifications"
@@ -6341,7 +6341,7 @@ msgstr "Широкое"
 #: src/screens/Messages/Conversation/MessageInput.tsx:121
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:124
 msgid "Write a message"
-msgstr "Write a message"
+msgstr "Написать сообщение"
 
 #: src/view/com/composer/Composer.tsx:503
 msgid "Write post"
@@ -6426,7 +6426,7 @@ msgstr "Вы заблокировали автора или автор забл�
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
-msgstr "You have blocked this user"
+msgstr "Вы заблокировали этого пользователя"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:66
 #: src/lib/moderation/useModerationCauseDescription.ts:50
