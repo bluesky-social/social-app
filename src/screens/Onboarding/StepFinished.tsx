@@ -13,6 +13,7 @@ import {RQKEY as profileRQKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {
   DescriptionText,
   OnboardingControls,
@@ -39,6 +40,7 @@ export function StepFinished() {
   const [saving, setSaving] = React.useState(false)
   const queryClient = useQueryClient()
   const agent = useAgent()
+  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -72,6 +74,7 @@ export function StepFinished() {
               : 'default',
           })
         })(),
+        requestNotificationsPermission('AfterOnboarding'),
       ])
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
@@ -98,7 +101,15 @@ export function StepFinished() {
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, track, agent, queryClient])
+  }, [
+    state,
+    queryClient,
+    agent,
+    dispatch,
+    onboardDispatch,
+    track,
+    requestNotificationsPermission,
+  ])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')
