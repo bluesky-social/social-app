@@ -5,7 +5,6 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
-import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyActorDefs,
   AppBskyFeedPost,
@@ -39,7 +38,6 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
-import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {
@@ -177,13 +175,6 @@ let PostDropdownBtn = ({
     }
   }, [rootUri, toggleThreadMute, _])
 
-  const onCopyPostText = React.useCallback(() => {
-    const str = richTextToString(richText, true)
-
-    Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`))
-  }, [_, richText])
-
   const onPressTranslate = React.useCallback(() => {
     if (
       isNativeTranslationAvailable &&
@@ -268,14 +259,6 @@ let PostDropdownBtn = ({
                   onPress={onPressTranslate}>
                   <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
-                </Menu.Item>
-
-                <Menu.Item
-                  testID="postDropdownCopyTextBtn"
-                  label={_(msg`Copy post text`)}
-                  onPress={onCopyPostText}>
-                  <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
-                  <Menu.ItemIcon icon={ClipboardIcon} position="right" />
                 </Menu.Item>
               </>
             )}
