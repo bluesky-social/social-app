@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-05-30 12:17+0800\n"
+"PO-Revision-Date: 2024-05-30 12:29+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -4281,7 +4281,7 @@ msgstr "选择一个头像"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:65
 msgid "Select an emoji"
-msgstr "选择一个 emoji"
+msgstr "选择一个表情符号"
 
 #: src/screens/Login/index.tsx:120
 msgid "Select from an existing account"
@@ -4309,7 +4309,7 @@ msgstr "选择 {numItems} 项中的第 {i} 项"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
-msgstr "选择 {emojiName} 作为你的头像"
+msgstr "选择 {emojiName} 表情符号作为你的头像"
 
 #: src/components/ReportDialog/SubmitView.tsx:136
 msgid "Select the moderation service(s) to report to"
