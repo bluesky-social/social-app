@@ -1,10 +1,15 @@
+import {I18n} from '@lingui/core'
+import {msg} from '@lingui/macro'
+
+import {MONTH_FALLBACK_LOCALES} from '#/locale/constants'
+
 const NOW = 5
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH_30 = DAY * 30
 const MONTH = DAY * 30.41675 // This results in 365.001 days in a year, which is close enough for nearly all cases
-export function ago(date: number | string | Date): string {
+export function ago(i18n: I18n, date: number | string | Date): string {
   let ts: number
   if (typeof date === 'string') {
     ts = Number(new Date(date))
@@ -15,15 +20,31 @@ export function ago(date: number | string | Date): string {
   }
   const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
   if (diffSeconds < NOW) {
-    return `now`
+    return i18n._(msg`now`)
   } else if (diffSeconds < MINUTE) {
-    return `${diffSeconds}s`
+    return i18n.number(diffSeconds, {
+      style: 'unit',
+      unitDisplay: 'narrow',
+      unit: 'second',
+    })
   } else if (diffSeconds < HOUR) {
-    return `${Math.floor(diffSeconds / MINUTE)}m`
+    return i18n.number(Math.floor(diffSeconds / MINUTE), {
+      style: 'unit',
+      unitDisplay: 'narrow',
+      unit: 'minute',
+    })
   } else if (diffSeconds < DAY) {
-    return `${Math.floor(diffSeconds / HOUR)}h`
+    return i18n.number(Math.floor(diffSeconds / HOUR), {
+      style: 'unit',
+      unitDisplay: 'narrow',
+      unit: 'hour',
+    })
   } else if (diffSeconds < MONTH_30) {
-    return `${Math.round(diffSeconds / DAY)}d`
+    return i18n.number(Math.round(diffSeconds / DAY), {
+      style: 'unit',
+      unitDisplay: 'narrow',
+      unit: 'day',
+    })
   } else {
     let months = diffSeconds / MONTH
     if (months % 1 >= 0.9) {
@@ -33,23 +54,26 @@ export function ago(date: number | string | Date): string {
     }
 
     if (months < 12) {
-      return `${months}mo`
+      if (MONTH_FALLBACK_LOCALES.includes(i18n.locale)) return `${months}mo`
+
+      return i18n.number(months, {
+        style: 'unit',
+        unitDisplay: 'narrow',
+        unit: 'month',
+      })
     } else {
-      return new Date(ts).toLocaleDateString()
+      return i18n.date(new Date(ts))
     }
   }
 }
 
-export function niceDate(date: number | string | Date) {
+export function niceDate(i18n: I18n, date: number | string | Date) {
   const d = new Date(date)
-  return `${d.toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })} at ${d.toLocaleTimeString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-  })}`
+
+  return i18n.date(d, {
+    dateStyle: 'long',
+    timeStyle: 'short',
+  })
 }
 
 export function getAge(birthDate: Date): number {
