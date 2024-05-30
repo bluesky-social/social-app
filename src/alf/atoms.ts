@@ -56,6 +56,13 @@ export const atoms = {
   }),
 
   /*
+   * Theme-independent bg colors
+   */
+  bg_transparent: {
+    backgroundColor: 'transparent',
+  },
+
+  /*
    * Border radius
    */
   rounded_2xs: {

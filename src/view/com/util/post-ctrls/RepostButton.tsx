@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -30,6 +31,7 @@ let RepostButton = ({
   const {_} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
+  const playHaptic = useHaptics()
 
   const color = React.useMemo(
     () => ({
@@ -47,7 +49,13 @@ let RepostButton = ({
         onPress={() => {
           requireAuth(() => dialogControl.open())
         }}
-        style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_xs,
+          a.bg_transparent,
+          {padding: 5},
+        ]}
         hoverStyle={t.atoms.bg_contrast_25}
         label={`${
           isReposted
@@ -83,8 +91,11 @@ let RepostButton = ({
                     : _(msg({message: `Repost`, context: 'action'}))
                 }
                 onPress={() => {
-                  dialogControl.close()
-                  onRepost()
+                  if (!isReposted) playHaptic()
+
+                  dialogControl.close(() => {
+                    onRepost()
+                  })
                 }}
                 size="large"
                 variant="ghost"
@@ -100,6 +111,7 @@ let RepostButton = ({
                 style={[a.justify_start, a.px_md]}
                 label={_(msg`Quote post`)}
                 onPress={() => {
+                  playHaptic()
                   dialogControl.close(() => {
                     onQuote()
                   })

@@ -376,10 +376,10 @@ export function Button({
         a.align_center,
         a.justify_center,
         flattenedBaseStyles,
+        flatten(style),
         ...(state.hovered || state.pressed
           ? [hoverStyles, flatten(hoverStyleProp)]
           : []),
-        flatten(style),
       ]}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
