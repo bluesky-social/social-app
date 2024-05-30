@@ -30,6 +30,7 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {isWeb} from 'platform/detection'
+import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
 import {LoggedOut} from '../com/auth/LoggedOut'
@@ -107,6 +108,9 @@ function NativeStackNavigator({
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+  }
+  if (currentAccount?.status === 'deactivated') {
+    return <Deactivated />
   }
   if (onboardingState.isActive) {
     return <Onboarding />
