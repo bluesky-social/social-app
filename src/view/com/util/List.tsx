@@ -26,7 +26,7 @@ export type ListProps<ItemT> = Omit<
   onItemSeen?: (item: ItemT) => void
   containWeb?: boolean
   sideBorders?: boolean
-  // Web only prop for performance optimizing style. Default is true.
+  // Web only prop to disable a perf optimization (which would otherwise be on).
   disableContentVisibility?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
