@@ -68,7 +68,8 @@ let MessageItemEmbed = ({
           t.atoms.border_contrast_low,
           a.rounded_md,
           a.border,
-          a.p_sm,
+          a.p_md,
+          a.my_xs,
         ]}>
         <PostMeta
           showAvatar
