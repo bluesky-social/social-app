@@ -1,6 +1,5 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,7 +12,6 @@ import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {Logo} from 'view/icons/Logo'
-import {Logotype} from 'view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
@@ -104,7 +102,7 @@ export function Landing({
     return () => {
       setMinimalShellMode(false)
     }
-  }, [setMinimalShellMode])
+  }, [gate, navigation, setMinimalShellMode])
 
   return (
     <CenteredView style={a.flex_1}>
@@ -115,31 +113,22 @@ export function Landing({
           colors={gradient}
           style={[a.align_center, a.gap_sm, a.py_2xl]}>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
-            <Logo width={28} fill="white" />
-            <View style={{paddingTop: 4}}>
-              <Logotype width={90} fill="white" />
-            </View>
+            <Logo width={76} fill="white" />
           </View>
-          <Image
-            source="https://cdn.bsky.app/img/avatar/plain/did:plc:jfhpnnst6flqway4eaeqzj2a/bafkreiexbusja2q52nwi44ov5rpyyz7d5n74kxr4ucunfigmv2e26dxrim@jpeg"
-            style={[
-              a.rounded_full,
-              a.border,
-              {width: 116, height: 116, borderColor: 'white'},
-            ]}
-            accessibilityIgnoresInvertColors={true}
-          />
           <View style={[a.align_center, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_5xl, {color: 'white'}]}>
               Science
             </Text>
             <Text style={[a.font_bold, a.text_md, {color: 'white'}]}>
-              Starter Pack
+              Starter pack by Bossett
             </Text>
           </View>
         </LinearGradient>
         <View style={[a.gap_md, a.mt_lg, a.mx_lg]}>
-          <Text style={[a.text_md, a.text_center]}>186 joined this week</Text>
+          <Text
+            style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
+            186 joined this week
+          </Text>
           <Button
             label={_(msg`Join Bluesky now`)}
             onPress={() => {}}
@@ -152,24 +141,19 @@ export function Landing({
           </Button>
           <View style={[a.gap_xl, a.mt_md]}>
             <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-              A collection of feeds and users to get you started with the
-              science community on Bluesky!
+              (This is the description) A collection of feeds and users to get
+              you started with the science community on Bluesky!
             </Text>
             <Divider />
             <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-              <Text style={[a.font_bold, a.text_md, t.atoms.text]}>
-                Bossett
-              </Text>{' '}
-              curated this Starter Pack to connect you to the{' '}
-              <Text style={[a.font_bold, a.text_md, t.atoms.text]}>
-                Science
-              </Text>{' '}
-              community.
-            </Text>
-            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
               Join Bluesky now to subscribe to these feeds:
             </Text>
-            <View style={[t.atoms.bg_contrast_25, a.rounded_sm]}>
+            <View
+              style={[
+                t.atoms.bg_contrast_25,
+                a.rounded_sm,
+                {pointerEvents: 'none'},
+              ]}>
               <FeedSourceCard
                 feedUri="at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science"
                 noBorder={true}
@@ -177,7 +161,7 @@ export function Landing({
               <FeedSourceCard feedUri="at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2" />
             </View>
             <Text style={[a.mt_sm, a.text_md, t.atoms.text_contrast_medium]}>
-              You'll also start following these people:
+              You'll also follow these people and many others!
             </Text>
             <View
               style={[
