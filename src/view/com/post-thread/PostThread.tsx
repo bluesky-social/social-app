@@ -406,7 +406,7 @@ export function PostThread({
               item.ctx.depth > 0
             }
             onPostReply={refetch}
-            hideTopBorder={index === 0}
+            hideTopBorder={index === 0 && !item.ctx.isParentLoading}
           />
         </View>
       )
