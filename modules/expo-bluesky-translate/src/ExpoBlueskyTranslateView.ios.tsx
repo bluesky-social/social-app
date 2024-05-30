@@ -15,7 +15,12 @@ export function NativeTranslationView() {
   return <NativeView />
 }
 
-export const isAvailable = Number(Platform.Version) >= 17.4
+const twoDigitVersion = String(Platform.Version)
+  .split('.')
+  .slice(0, 2)
+  .join('.')
+
+export const isAvailable = Number(twoDigitVersion) >= 17.4
 
 // https://en.wikipedia.org/wiki/Translate_(Apple)#Languages
 const SUPPORTED_LANGUAGES = [
