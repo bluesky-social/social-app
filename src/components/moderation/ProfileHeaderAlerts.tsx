@@ -1,9 +1,14 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationCause, ModerationDecision} from '@atproto/api'
+import {
+  BSKY_LABELER_DID,
+  ModerationCause,
+  ModerationDecision,
+} from '@atproto/api'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {getModerationCauseKey} from 'lib/moderation'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {
@@ -62,7 +67,12 @@ function ProfileLabel({cause}: {cause: ModerationCause}) {
                 ? t.atoms.bg_contrast_50
                 : t.atoms.bg_contrast_25,
             ]}>
-            <desc.icon size="sm" fill={t.atoms.text_contrast_medium.color} />
+            {desc.sourceType === 'labeler' &&
+            desc.sourceDid !== BSKY_LABELER_DID ? (
+              <UserAvatar avatar={desc.sourceAvi} size={16} />
+            ) : (
+              <desc.icon size="sm" fill={t.atoms.text_contrast_medium.color} />
+            )}
             <Text
               style={[
                 a.text_left,
@@ -72,7 +82,6 @@ function ProfileLabel({cause}: {cause: ModerationCause}) {
                 a.font_semibold,
               ]}>
               {desc.name}
-              {desc.source ? ` – ${desc.source}` : ''}
             </Text>
           </View>
         )}

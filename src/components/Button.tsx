@@ -71,6 +71,7 @@ export type ButtonProps = Pick<
     testID?: string
     label: string
     style?: StyleProp<ViewStyle>
+    hoverStyle?: StyleProp<ViewStyle>
     children: NonTextElements | ((context: ButtonContext) => NonTextElements)
   }
 
@@ -96,6 +97,7 @@ export function Button({
   label,
   disabled = false,
   style,
+  hoverStyle: hoverStyleProp,
   ...rest
 }: ButtonProps) {
   const t = useTheme()
@@ -374,8 +376,10 @@ export function Button({
         a.align_center,
         a.justify_center,
         flattenedBaseStyles,
-        ...(state.hovered || state.pressed ? hoverStyles : []),
         flatten(style),
+        ...(state.hovered || state.pressed
+          ? [hoverStyles, flatten(hoverStyleProp)]
+          : []),
       ]}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
