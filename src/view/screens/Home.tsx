@@ -59,6 +59,7 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
+  const {currentAccount} = useSession()
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const allFeeds = React.useMemo(
@@ -75,8 +76,10 @@ function HomeScreenReady({
   useOTAUpdates()
 
   React.useEffect(() => {
+    if (!currentAccount) return
+
     requestNotificationsPermission('AfterOnboarding')
-  }, [requestNotificationsPermission])
+  }, [currentAccount, requestNotificationsPermission])
 
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
