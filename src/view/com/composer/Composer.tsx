@@ -165,9 +165,8 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isMobile && isWeb ? 15 : insets.top,
     }),
-    [insets, isKeyboardVisible, isMobile],
+    [insets, isKeyboardVisible],
   )
 
   const hasScrolled = useSharedValue(0)
@@ -622,10 +621,9 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: -10,
     paddingHorizontal: 4,
     marginHorizontal: 16,
-    height: 44,
+    height: 54,
     gap: 4,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
@@ -633,7 +631,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     height: 50,
-    marginTop: 0,
   },
   postBtn: {
     borderRadius: 20,
@@ -676,7 +673,7 @@ const styles = StyleSheet.create({
   },
   textInputLayout: {
     flexDirection: 'row',
-    paddingTop: 16,
+    paddingTop: 4,
   },
   textInputLayoutMobile: {
     flex: 1,
