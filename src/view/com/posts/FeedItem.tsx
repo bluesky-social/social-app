@@ -390,7 +390,7 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <View style={[a.pb_sm]}>
+        <View style={[a.pb_xs]}>
           <PostEmbeds
             embed={postEmbed}
             moderation={moderation}
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   contentHiderChild: {
     marginTop: 6,
