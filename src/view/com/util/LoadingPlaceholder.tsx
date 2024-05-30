@@ -68,13 +68,13 @@ export function PostLoadingPlaceholder({
         <LoadingPlaceholder width="80%" height={6} style={{marginBottom: 11}} />
         <View style={styles.postCtrls}>
           <View style={[styles.postCtrl, {marginLeft: -5}]}>
-            <View style={[styles.postBtn]}>
+            <View style={styles.postBtn}>
               <Bubble
                 style={[
                   {
                     color: t.palette.contrast_500,
                   },
-                  {pointerEvents: 'none', padding: 5},
+                  {pointerEvents: 'none'},
                 ]}
                 width={18}
               />
@@ -87,14 +87,14 @@ export function PostLoadingPlaceholder({
                   {
                     color: t.palette.contrast_500,
                   },
-                  {pointerEvents: 'none', padding: 5},
+                  {pointerEvents: 'none'},
                 ]}
                 width={18}
               />
             </View>
           </View>
           <View style={styles.postCtrl}>
-            <View style={[styles.postBtn, {padding: 5}]}>
+            <View style={styles.postBtn}>
               <HeartIconOutline
                 style={[
                   {
@@ -107,7 +107,7 @@ export function PostLoadingPlaceholder({
             </View>
           </View>
           <View style={styles.postCtrl}>
-            <View style={[styles.postBtn, {minHeight: 30, padding: 5}]} />
+            <View style={[styles.postBtn, {minHeight: 30}]} />
           </View>
         </View>
       </View>
@@ -305,6 +305,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 5,
   },
   avatar: {
     borderRadius: 26,
