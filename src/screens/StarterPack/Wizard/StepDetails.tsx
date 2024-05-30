@@ -21,7 +21,7 @@ export function StepDetails() {
 
   return (
     <View style={[a.flex_1, {marginTop: 30}]}>
-      <View style={[a.align_center, a.gap_md]}>
+      <View style={[a.align_center, a.gap_sm]}>
         {state.avatar ? (
           <Image
             source={{uri: state.avatar}}
@@ -43,7 +43,8 @@ export function StepDetails() {
           label={_(msg`Edit image`)}
           onPress={() => {}}
           variant="ghost"
-          color="primary">
+          color="primary"
+          size="small">
           <ButtonText style={[a.text_md]}>
             <Trans>Edit image</Trans>
           </ButtonText>
