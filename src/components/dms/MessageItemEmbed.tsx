@@ -60,48 +60,51 @@ let MessageItemEmbed = ({
   const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey)
 
   return (
-    <Link to={itemHref} style={a.mt_2xs}>
-      <View
-        style={[
-          a.w_full,
-          t.atoms.bg,
-          t.atoms.border_contrast_low,
-          a.rounded_md,
-          a.border,
-          a.p_md,
-          a.my_xs,
-        ]}>
-        <PostMeta
-          showAvatar
-          author={post.author}
-          moderation={moderation}
-          authorHasWarning={!!post.author.labels?.length}
-          timestamp={post.indexedAt}
-          postHref={itemHref}
-        />
-        <ContentHider modui={moderation.ui('contentView')}>
-          <PostAlerts modui={moderation.ui('contentView')} style={a.py_xs} />
-          {rt.text && (
-            <View style={a.mt_xs}>
-              <RichText
-                enableTags
-                testID="postText"
-                value={rt}
-                style={[a.text_sm, t.atoms.text_contrast_high]}
-                authorHandle={post.author.handle}
+    <Link to={itemHref}>
+      {({hovered}) => (
+        <View
+          style={[
+            a.w_full,
+            t.atoms.bg,
+            a.rounded_md,
+            a.border,
+            a.p_md,
+            a.my_xs,
+            t.atoms.border_contrast_low,
+            hovered && t.atoms.border_contrast_high,
+          ]}>
+          <PostMeta
+            showAvatar
+            author={post.author}
+            moderation={moderation}
+            authorHasWarning={!!post.author.labels?.length}
+            timestamp={post.indexedAt}
+            postHref={itemHref}
+          />
+          <ContentHider modui={moderation.ui('contentView')}>
+            <PostAlerts modui={moderation.ui('contentView')} style={a.py_xs} />
+            {rt.text && (
+              <View style={a.mt_xs}>
+                <RichText
+                  enableTags
+                  testID="postText"
+                  value={rt}
+                  style={[a.text_sm, t.atoms.text_contrast_high]}
+                  authorHandle={post.author.handle}
+                />
+              </View>
+            )}
+            {post.embed && (
+              <PostEmbeds
+                embed={post.embed}
+                moderation={moderation}
+                style={a.mt_xs}
+                quoteTextStyle={[a.text_sm, t.atoms.text_contrast_high]}
               />
-            </View>
-          )}
-          {post.embed && (
-            <PostEmbeds
-              embed={post.embed}
-              moderation={moderation}
-              style={a.mt_xs}
-              quoteTextStyle={[a.text_sm, t.atoms.text_contrast_high]}
-            />
-          )}
-        </ContentHider>
-      </View>
+            )}
+          </ContentHider>
+        </View>
+      )}
     </Link>
   )
 }
