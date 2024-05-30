@@ -28,7 +28,7 @@ export type ButtonColor =
   | 'gradient_sunset'
   | 'gradient_nordic'
   | 'gradient_bonfire'
-export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large'
+export type ButtonSize = 'tiny' | 'xsmall' | 'small' | 'medium' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
@@ -283,6 +283,8 @@ export function Button({
         baseStyles.push({paddingVertical: 12}, a.px_2xl, a.rounded_sm, a.gap_md)
       } else if (size === 'small') {
         baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
+      } else if (size === 'xsmall') {
+        baseStyles.push({paddingVertical: 6}, a.px_sm, a.rounded_sm, a.gap_sm)
       } else if (size === 'tiny') {
         baseStyles.push({paddingVertical: 4}, a.px_sm, a.rounded_xs, a.gap_xs)
       }
@@ -295,6 +297,8 @@ export function Button({
         }
       } else if (size === 'small') {
         baseStyles.push({height: 34, width: 34})
+      } else if (size === 'xsmall') {
+        baseStyles.push({height: 28, width: 28})
       } else if (size === 'tiny') {
         baseStyles.push({height: 20, width: 20})
       }
