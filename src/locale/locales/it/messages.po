@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 11:44+0530\n"
-"PO-Revision-Date: 2024-05-29 12:25+0200\n"
+"PO-Revision-Date: 2024-05-30 11:51+0200\n"
 "Last-Translator: Gabriella Nonino <sandswimmer@gmail.com>\n"
 "Language-Team: Gabriella Nonino\n"
 "Language: it\n"
@@ -296,7 +296,7 @@ msgstr "Tutti i feed che hai salvato, in un unico posto."
 
 #: src/screens/Messages/Settings.tsx:61 src/screens/Messages/Settings.tsx:64
 msgid "Allow messages from"
-msgstr "Tutti i messaggi da"
+msgstr "Permetti tutti i messaggi di"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:172
@@ -439,7 +439,7 @@ msgstr "Sei sicuro di voler cancellare questo messaggio? Il messaggio verrà can
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "Sei sicuro di voler abbandonare questa conversazione? I messaggio verranno cancellati per te, ma non per gli altri partecipanti."
+msgstr "Sei sicuro di voler abbandonare questa conversazione? I messaggi verranno cancellati per te, ma non per gli altri partecipanti."
 
 #: src/view/com/feeds/FeedSourceCard.tsx:282
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -1118,7 +1118,7 @@ msgstr "Copia il link al post"
 
 #: src/components/dms/MessageMenu.tsx:87 src/components/dms/MessageMenu.tsx:89
 msgid "Copy message text"
-msgstr "Copia testo messaggio"
+msgstr "Copia il testo del messaggio"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:256
 #: src/view/com/util/forms/PostDropdownBtn.tsx:258
@@ -2048,7 +2048,7 @@ msgstr "Inizia"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:228
 msgid "Give your profile a face"
-msgstr "Dai al tui profilo un volto"
+msgstr "Dai un volto al tuo profilo"
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Glaring violations of law or terms of service"
@@ -2298,7 +2298,7 @@ msgstr "Furto d'identità o false affermazioni sull'identità o sull'affiliazion
 
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Inappropriate messages or explicit links"
-msgstr "Messaggio inappropriato o link espliciti"
+msgstr "Messaggi inappropriati or link espliciti"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:127
 msgid "Input code sent to your email for password reset"
@@ -2466,13 +2466,13 @@ msgstr "Abbandona"
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
 msgid "Leave chat"
-msgstr "Abbandona chat"
+msgstr "Abbandona la chat"
 
 #: src/components/dms/ConvoMenu.tsx:136 src/components/dms/ConvoMenu.tsx:139
 #: src/components/dms/ConvoMenu.tsx:206 src/components/dms/ConvoMenu.tsx:209
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
-msgstr "Abbandona conversazione"
+msgstr "Abbandona la conversazione"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -2790,7 +2790,7 @@ msgstr "Silenzia tutti i post {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:170 src/components/dms/ConvoMenu.tsx:176
 msgid "Mute conversation"
-msgstr "Silenzia conversazione"
+msgstr "Silenzia la conversazione"
 
 #: src/components/dialogs/MutedWords.tsx:148
 msgid "Mute in tags only"
@@ -3110,11 +3110,11 @@ msgstr "Nulla qui"
 
 #: src/screens/Messages/Settings.tsx:108
 msgid "Notification sounds"
-msgstr "Suoni notifica"
+msgstr "Suoni di notifica"
 
 #: src/screens/Messages/Settings.tsx:105
 msgid "Notification Sounds"
-msgstr "Suoni notifica"
+msgstr "Suoni di notifica"
 
 #: src/Navigation.tsx:515 src/view/screens/Notifications.tsx:124
 #: src/view/screens/Notifications.tsx:148
@@ -3388,7 +3388,7 @@ msgstr "Altro..."
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "I nostri moderatori hanno visionato i report e deciso di disabilitare il tuo accesso ai messaggi su Bluesky."
+msgstr "I nostri moderatori hanno revisionato i report e deciso di disabilitare il tuo accesso ai messaggi su Bluesky."
 
 #: src/components/Lists.tsx:208 src/view/screens/NotFound.tsx:45
 msgid "Page not found"
@@ -3623,7 +3623,7 @@ msgstr "Link potenzialmente fuorviante"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
-msgstr "Premi per tentare di riconnetterti"
+msgstr "Premere per tentare di riconnetterti"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
@@ -3871,7 +3871,7 @@ msgstr "Segnala l'account"
 #: src/components/dms/ConvoMenu.tsx:195 src/components/dms/ConvoMenu.tsx:198
 #: src/components/dms/ReportConversationPrompt.tsx:18
 msgid "Report conversation"
-msgstr "Segnala conversazione"
+msgstr "Segnala la conversazione"
 
 #: src/components/ReportDialog/index.tsx:49
 msgid "Report dialog"
@@ -3887,7 +3887,7 @@ msgstr "Segnala la lista"
 
 #: src/components/dms/MessageMenu.tsx:105
 msgid "Report message"
-msgstr "Segnala messaggio"
+msgstr "Segnala il messaggio"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:363
 #: src/view/com/util/forms/PostDropdownBtn.tsx:365
@@ -4716,11 +4716,11 @@ msgstr "Quadrato"
 
 #: src/components/dms/NewChatDialog/index.tsx:469
 msgid "Start a new chat"
-msgstr "Avvia una nouva conversazione"
+msgstr "Avvia una nuova conversazione"
 
 #: src/components/dms/NewChatDialog/index.tsx:139
 msgid "Start chat with {displayName}"
-msgstr "Avvio conversazione con {displayName}"
+msgstr "Avvia conversazione con {displayName}"
 
 #: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
@@ -5203,7 +5203,7 @@ msgstr "Per disabilitare il metodo 2FA via e-mail, verifica il tuo accesso all'i
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Per segnalare una conversazione, segnala uno dei messaggi nella scrhmata della conversazione. Questo permetterà ai nostri moderatori di capire il contesto del problema."
+msgstr "Per segnalare una conversazione, segnala uno dei messaggi nella schermata della conversazione. Questo permetterà ai nostri moderatori di capire il contesto del problema."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -5286,7 +5286,7 @@ msgstr "Sblocca"
 
 #: src/components/dms/ConvoMenu.tsx:186 src/components/dms/ConvoMenu.tsx:190
 msgid "Unblock account"
-msgstr "Sblocca account"
+msgstr "Sblocca l'account"
 
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:305
@@ -5395,7 +5395,7 @@ msgstr "In aggiornamento..."
 
 #: src/screens/Onboarding/StepProfile/index.tsx:284
 msgid "Upload a photo instead"
-msgstr "In alternativa carica una foto"
+msgstr "Alternativamente carica una foto"
 
 #: src/view/com/modals/ChangeHandle.tsx:448
 msgid "Upload a text file to:"
@@ -5918,7 +5918,7 @@ msgstr "Non hai ancora silenziato nessuna parola o tag"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:86
 msgid "You may appeal non-self labels if you feel they were placed in error."
-msgstr "Ti puoi appellare alle etichette se pennsi che sia stata applicata per errore."
+msgstr "Ti puoi appellare alle etichette se pensi che sia stata applicata per errore."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:91
 msgid "You may appeal these labels if you feel they were placed in error."
