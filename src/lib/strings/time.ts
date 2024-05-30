@@ -1,5 +1,7 @@
 import {t} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import * as persisted from '#/state/persisted'
 
 const NOW = 5
 const MINUTE = 60
@@ -46,13 +48,14 @@ export function ago(date: number | string | Date): string {
 
 export function niceDate(date: number | string | Date) {
   const d = new Date(date)
-  const {i18n} = useLingui()
+  const appLanguage = persisted.get('languagePrefs').appLanguage
+  const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)
 
-  return t`${i18n.date(d, {
+  return t`${d.toLocaleDateString(sanitizedLanguage, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  })} at ${i18n.date(d, {
+  })} at ${d.toLocaleTimeString(sanitizedLanguage, {
     hour: 'numeric',
     minute: '2-digit',
   })}`
