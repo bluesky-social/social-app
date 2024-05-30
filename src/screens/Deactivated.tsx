@@ -14,10 +14,8 @@ import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/components/icons/ArrowRotateCounterClockwise'
-import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {Text} from '#/components/Typography'
 
 const COL_WIDTH = 400
@@ -73,8 +71,8 @@ export function Deactivated() {
           style={[
             a.px_2xl,
             {
-              paddingTop: insets.top + a.pt_5xl.paddingTop,
-              paddingBottom: insets.bottom + a.pt_5xl.paddingTop,
+              paddingTop: isWeb ? 64 : insets.top,
+              paddingBottom: isWeb ? 64 : insets.bottom,
             },
           ]}>
           <View style={[a.flex_row, a.justify_center]}>
@@ -107,7 +105,6 @@ export function Deactivated() {
                     variant="solid"
                     color="primary"
                     onPress={() => setShowLoggedOut(true)}>
-                    <ButtonIcon icon={Refresh} position="left" />
                     <ButtonText>
                       <Trans>Yes, reactivate my account</Trans>
                     </ButtonText>
@@ -162,7 +159,6 @@ export function Deactivated() {
                     variant="solid"
                     color="secondary"
                     onPress={() => setShowLoggedOut(true)}>
-                    <ButtonIcon icon={Person} position="left" />
                     <ButtonText>
                       <Trans>Log in or sign up</Trans>
                     </ButtonText>
