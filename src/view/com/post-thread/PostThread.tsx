@@ -311,6 +311,12 @@ export function PostThread({
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
+  const hasParents =
+    skeleton?.highlightedPost?.type === 'post' &&
+    (skeleton.highlightedPost.ctx.isParentLoading ||
+      Boolean(skeleton?.parents && skeleton.parents.length > 0))
+  const showHeader = isNative || !hasParents || !isFetching
+
   const renderItem = React.useCallback(
     ({item, index}: {item: RowItem; index: number}) => {
       if (item === REPLY_PROMPT && hasSession) {
@@ -442,7 +448,7 @@ export function PostThread({
 
   return (
     <CenteredView style={[a.flex_1]} sideBorders={true}>
-      {isTabletOrMobile && (
+      {isTabletOrMobile && showHeader && (
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
           showBorder
