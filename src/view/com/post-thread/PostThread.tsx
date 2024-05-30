@@ -348,7 +348,7 @@ export function PostThread({
         <View
           style={[
             a.p_lg,
-            a.border_t,
+            index !== 0 && a.border_t,
             t.atoms.border_contrast_low,
             t.atoms.bg_contrast_25,
           ]}>
@@ -362,7 +362,7 @@ export function PostThread({
         <View
           style={[
             a.p_lg,
-            a.border_t,
+            index !== 0 && a.border_t,
             t.atoms.border_contrast_low,
             t.atoms.bg_contrast_25,
           ]}>
