@@ -47,7 +47,13 @@ let RepostButton = ({
         onPress={() => {
           requireAuth(() => dialogControl.open())
         }}
-        style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_xs,
+          a.bg_transparent,
+          {padding: 5},
+        ]}
         hoverStyle={t.atoms.bg_contrast_25}
         label={`${
           isReposted
