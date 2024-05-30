@@ -1,12 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
-import {useWizardState} from '#/screens/StarterPack/Wizard/State'
+import {Step, useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -25,10 +25,39 @@ function WizardInner() {
   const bottomOffset = useBottomBarOffset()
   const [state, dispatch] = useWizardState()
 
+  const wizardUiStrings: Record<Step, {header: string; button: string}> = {
+    Landing: {
+      header: _(msg`Create a starter pack`),
+      button: _(msg`Create`),
+    },
+    Details: {
+      header: _(msg`Details`),
+      button: _(msg`Continue`),
+    },
+    Profiles: {
+      header: _(msg`Add profiles`),
+      button: _(msg`Continue`),
+    },
+    Feeds: {
+      header: _(msg`Add feeds`),
+      button: _(msg`Continue`),
+    },
+    Review: {
+      header: _(msg`Review`),
+      button: _(msg`Continue`),
+    },
+    Finished: {
+      header: _(msg`Finished`),
+      button: _(msg`Visit Starter Pack`),
+    },
+  }
+
+  const uiStrings = wizardUiStrings[state.currentStep]
+
   return (
     <CenteredView style={[a.flex_1, {marginBottom: bottomOffset + 20}]}>
       <ViewHeader
-        title="Create a starter pack"
+        title={uiStrings.header}
         onBackPress={
           state.currentStep !== 'Landing'
             ? () => dispatch({type: 'Back'})
@@ -36,31 +65,23 @@ function WizardInner() {
         }
       />
       <ScrollView style={[a.flex_1]} contentContainerStyle={[a.flex_1]}>
-        <Step />
+        <StepView />
       </ScrollView>
       <View style={a.px_md}>
         <Button
-          label={_(msg`Create`)}
+          label={uiStrings.button}
           variant="solid"
           color="primary"
           size="large"
           onPress={() => dispatch({type: 'Next'})}>
-          <ButtonText>
-            {state.currentStep === 'Landing' ? (
-              <Trans>Create</Trans>
-            ) : state.currentStep === 'Finished' ? (
-              <Trans>Visit Starter Pack</Trans>
-            ) : (
-              <Trans>Continue</Trans>
-            )}
-          </ButtonText>
+          <ButtonText>{uiStrings.button}</ButtonText>
         </Button>
       </View>
     </CenteredView>
   )
 }
 
-function Step() {
+function StepView() {
   const [state] = useWizardState()
 
   if (state.currentStep === 'Landing') {

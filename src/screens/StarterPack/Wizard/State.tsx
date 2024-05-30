@@ -8,7 +8,7 @@ const steps = [
   'Review',
   'Finished',
 ] as const
-type Step = (typeof steps)[number]
+export type Step = (typeof steps)[number]
 
 type Action =
   | {type: 'Next'}
