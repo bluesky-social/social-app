@@ -206,7 +206,7 @@ let PostCtrls = ({
     <View style={[a.flex_row, a.justify_between, a.align_center, style]}>
       <View
         style={[
-          big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -5}],
+          big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
           post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <Pressable

@@ -1,77 +1,49 @@
-import React, {useEffect} from 'react'
+import React from 'react'
+import {Modal, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
-import {ComposePost} from '../com/composer/Composer'
-import {useComposerState} from 'state/shell/composer'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {usePalette} from 'lib/hooks/usePalette'
 
-export const Composer = observer(function ComposerImpl({
-  winHeight,
-}: {
+import {Provider as LegacyModalProvider} from '#/state/modals'
+import {useComposerState} from 'state/shell/composer'
+import {ModalsContainer as LegacyModalsContainer} from '#/view/com/modals/Modal'
+import {useTheme} from '#/alf'
+import {
+  Outlet as PortalOutlet,
+  Provider as PortalProvider,
+} from '#/components/Portal'
+import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
+
+export const Composer = observer(function ComposerImpl({}: {
   winHeight: number
 }) {
+  const t = useTheme()
   const state = useComposerState()
-  const pal = usePalette('default')
-  const initInterp = useAnimatedValue(0)
-
-  useEffect(() => {
-    if (state) {
-      Animated.timing(initInterp, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.out(Easing.exp),
-        useNativeDriver: true,
-      }).start()
-    } else {
-      initInterp.setValue(0)
-    }
-  }, [initInterp, state])
-  const wrapperAnimStyle = {
-    transform: [
-      {
-        translateY: initInterp.interpolate({
-          inputRange: [0, 1],
-          outputRange: [winHeight, 0],
-        }),
-      },
-    ],
-  }
-
-  // rendering
-  // =
-
-  if (!state) {
-    return <View />
-  }
+  const ref = useComposerCancelRef()
 
   return (
-    <Animated.View
-      style={[styles.wrapper, pal.view, wrapperAnimStyle]}
+    <Modal
       aria-modal
-      accessibilityViewIsModal>
-      <ComposePost
-        replyTo={state.replyTo}
-        onPost={state.onPost}
-        quote={state.quote}
-        mention={state.mention}
-        text={state.text}
-        imageUris={state.imageUris}
-      />
-    </Animated.View>
+      accessibilityViewIsModal
+      visible={!!state}
+      presentationStyle="overFullScreen"
+      animationType="slide"
+      onRequestClose={() => ref.current?.onPressCancel()}>
+      <View style={[t.atoms.bg, {flex: 1}]}>
+        <LegacyModalProvider>
+          <PortalProvider>
+            <ComposePost
+              cancelRef={ref}
+              replyTo={state?.replyTo}
+              onPost={state?.onPost}
+              quote={state?.quote}
+              mention={state?.mention}
+              text={state?.text}
+              imageUris={state?.imageUris}
+            />
+            <LegacyModalsContainer />
+            <PortalOutlet />
+          </PortalProvider>
+        </LegacyModalProvider>
+      </View>
+    </Modal>
   )
-})
-
-const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    width: '100%',
-    ...Platform.select({
-      ios: {
-        paddingTop: 24,
-      },
-    }),
-  },
 })
