@@ -55,6 +55,8 @@ function WizardInner() {
 
   const uiStrings = wizardUiStrings[state.currentStep]
 
+  console.log(state.canNext)
+
   return (
     <CenteredView style={[a.flex_1, {marginBottom: bottomOffset + 20}]}>
       <ViewHeader

@@ -36,16 +36,16 @@ const StateContext = React.createContext<TStateContext>([
 export const useWizardState = () => React.useContext(StateContext)
 
 function reducer(state: State, action: Action): State {
+  let updatedState = state
+
   // -- Navigation
   if (action.type === 'Next' && state.currentStep !== 'Finished') {
     const currentIndex = steps.indexOf(state.currentStep)
-    return {...state, currentStep: steps[currentIndex + 1]}
+    updatedState = {...state, currentStep: steps[currentIndex + 1]}
   } else if (action.type === 'Back' && state.currentStep !== 'Landing') {
     const currentIndex = steps.indexOf(state.currentStep)
-    return {...state, currentStep: steps[currentIndex - 1]}
+    updatedState = {...state, currentStep: steps[currentIndex - 1]}
   }
-
-  let updatedState = state
 
   switch (action.type) {
     case 'SetAvatar':
@@ -61,13 +61,21 @@ function reducer(state: State, action: Action): State {
       break
   }
 
-  if (state.currentStep === 'Details') {
-    updatedState = {
-      ...updatedState,
-      canNext: Boolean(
-        updatedState.avatar && updatedState.name && updatedState.description,
-      ),
-    }
+  switch (updatedState.currentStep) {
+    case 'Landing':
+      updatedState = {
+        ...updatedState,
+        canNext: true,
+      }
+      break
+    case 'Details':
+      updatedState = {
+        ...updatedState,
+        canNext: Boolean(
+          updatedState.avatar && updatedState.name && updatedState.description,
+        ),
+      }
+      break
   }
 
   return updatedState
