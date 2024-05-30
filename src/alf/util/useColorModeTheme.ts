@@ -7,19 +7,21 @@ import {useThemePrefs} from 'state/shell'
 import {dark, dim, light, ThemeName} from '#/alf/themes'
 
 export function useColorModeTheme(): ThemeName {
+  const theme = useThemeName()
+
+  React.useLayoutEffect(() => {
+    updateDocument(theme)
+    SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
+  }, [theme])
+
+  return theme
+}
+
+export function useThemeName(): ThemeName {
   const colorScheme = useColorScheme()
   const {colorMode, darkTheme} = useThemePrefs()
 
-  React.useLayoutEffect(() => {
-    const theme = getThemeName(colorScheme, colorMode, darkTheme)
-    updateDocument(theme)
-    SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
-  }, [colorMode, colorScheme, darkTheme])
-
-  return React.useMemo(
-    () => getThemeName(colorScheme, colorMode, darkTheme),
-    [colorScheme, colorMode, darkTheme],
-  )
+  return getThemeName(colorScheme, colorMode, darkTheme)
 }
 
 function getThemeName(
@@ -53,7 +55,7 @@ function updateDocument(theme: ThemeName) {
   }
 }
 
-function getBackgroundColor(theme: ThemeName): string {
+export function getBackgroundColor(theme: ThemeName): string {
   switch (theme) {
     case 'light':
       return light.atoms.bg.backgroundColor
