@@ -454,7 +454,6 @@ export function PostThread({
           data={posts}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          contentContainerStyle={{marginTop: -2}}
           onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
           onStartReached={onStartReached}
           onEndReached={onEndReached}
