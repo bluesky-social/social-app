@@ -1,5 +1,10 @@
 import React, {memo} from 'react'
-import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyActorDefs,
@@ -7,7 +12,6 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -37,6 +41,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
+import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
@@ -68,6 +73,7 @@ let PostDropdownBtn = ({
   richText,
   style,
   hitSlop,
+  size,
   timestamp,
 }: {
   testID: string
@@ -79,6 +85,7 @@ let PostDropdownBtn = ({
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   hitSlop?: PressableProps['hitSlop']
+  size?: 'lg' | 'md' | 'sm'
   timestamp: string
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
@@ -238,14 +245,13 @@ let PostDropdownBtn = ({
                   style,
                   a.rounded_full,
                   (state.hovered || state.pressed) && [
-                    alf.atoms.bg_contrast_50,
+                    alf.atoms.bg_contrast_25,
                   ],
                 ]}>
-                <FontAwesomeIcon
-                  icon="ellipsis"
-                  size={20}
-                  color={defaultCtrlColor}
+                <DotsHorizontal
+                  fill={defaultCtrlColor}
                   style={{pointerEvents: 'none'}}
+                  size={size}
                 />
               </Pressable>
             )
