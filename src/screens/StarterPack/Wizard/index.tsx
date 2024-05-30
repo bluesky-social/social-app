@@ -33,7 +33,7 @@ function WizardInner() {
     },
     Details: {
       header: _(msg`Details`),
-      button: _(msg`Continue`),
+      button: _(msg`Add profiles & feeds`),
     },
     Profiles: {
       header: _(msg`Add profiles`),
@@ -65,7 +65,7 @@ function WizardInner() {
             : undefined
         }
       />
-      <ScrollView style={[a.flex_1]} contentContainerStyle={[a.flex_1]}>
+      <ScrollView style={[a.flex_1]}>
         <StepView />
       </ScrollView>
       <View style={a.px_md}>
@@ -74,7 +74,8 @@ function WizardInner() {
           variant="solid"
           color="primary"
           size="large"
-          onPress={() => dispatch({type: 'Next'})}>
+          onPress={() => dispatch({type: 'Next'})}
+          disabled={!state.canNext}>
           <ButtonText>{uiStrings.button}</ButtonText>
         </Button>
       </View>

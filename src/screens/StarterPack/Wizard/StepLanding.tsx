@@ -10,7 +10,7 @@ export function StepLanding() {
   const t = useTheme()
 
   return (
-    <View style={[a.flex_1, a.justify_center, {marginTop: -100}]}>
+    <View style={[a.flex_1, a.justify_center, {marginTop: 100}]}>
       <View style={[{height: 150, marginBottom: 50}]}>
         <StarterPackIcon />
       </View>

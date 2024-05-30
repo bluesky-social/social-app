@@ -13,10 +13,14 @@ export type Step = (typeof steps)[number]
 type Action =
   | {type: 'Next'}
   | {type: 'Back'}
-  | {type: 'SetDetails'; name: string; description?: string; avatar?: string}
+  | {type: 'SetCanNext'; canNext: boolean}
+  | {type: 'SetAvatar'; avatar: string}
+  | {type: 'SetName'; name: string}
+  | {type: 'SetDescription'; description: string}
   | {type: 'AddProfile'}
 
 interface State {
+  canNext: boolean
   currentStep: Step
   name?: string
   description?: string
@@ -26,9 +30,7 @@ interface State {
 type TStateContext = [State, (action: Action) => void]
 
 const StateContext = React.createContext<TStateContext>([
-  {
-    currentStep: 'Landing',
-  },
+  {} as State,
   (_: Action) => {},
 ])
 export const useWizardState = () => React.useContext(StateContext)
@@ -43,26 +45,37 @@ function reducer(state: State, action: Action): State {
     return {...state, currentStep: steps[currentIndex - 1]}
   }
 
-  // -- Details
-  if (action.type === 'SetDetails') {
-    return {
-      ...state,
-      name: action.name,
-      description: action.description,
-      avatar: action.avatar,
+  let updatedState = state
+
+  switch (action.type) {
+    case 'SetAvatar':
+      updatedState = {...state, avatar: action.avatar}
+      break
+    case 'SetName':
+      updatedState = {...state, name: action.name}
+      break
+    case 'SetDescription':
+      updatedState = {...state, description: action.description}
+      break
+    case 'AddProfile':
+      break
+  }
+
+  if (state.currentStep === 'Details') {
+    updatedState = {
+      ...updatedState,
+      canNext: Boolean(
+        updatedState.avatar && updatedState.name && updatedState.description,
+      ),
     }
   }
 
-  // -- Profiles
-  if (action.type === 'AddProfile') {
-    return state
-  }
-
-  return state
+  return updatedState
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
   const stateAndReducer = React.useReducer(reducer, {
+    canNext: true,
     currentStep: 'Landing',
   })
 
