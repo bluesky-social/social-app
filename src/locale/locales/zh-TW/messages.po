@@ -2556,7 +2556,7 @@ msgstr "離開 Bluesky"
 
 #: src/screens/Deactivated.tsx:134
 msgid "left to go."
-msgstr " 個名額可以使用。"
+msgstr "個人在隊列中。"
 
 #: src/view/screens/Settings/index.tsx:306
 msgid "Legacy storage cleared, you need to restart the app now."
