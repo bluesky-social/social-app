@@ -20,7 +20,7 @@ export function StepDetails() {
   })
 
   return (
-    <View style={[a.px_xl, a.gap_xl]}>
+    <View style={[a.px_xl, a.gap_xl, a.mt_md]}>
       <View>
         <TextField.LabelText>{_(msg`Starter pack name`)}</TextField.LabelText>
         <TextField.Input

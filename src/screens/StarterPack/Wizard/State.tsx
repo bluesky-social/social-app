@@ -1,13 +1,6 @@
 import React from 'react'
 
-const steps = [
-  'Landing',
-  'Details',
-  'Profiles',
-  'Feeds',
-  'Review',
-  'Finished',
-] as const
+const steps = ['Landing', 'Details', 'Profiles', 'Feeds', 'Finished'] as const
 export type Step = (typeof steps)[number]
 
 type Action =
@@ -18,6 +11,8 @@ type Action =
   | {type: 'SetDescription'; description: string}
   | {type: 'AddProfile'; did: string}
   | {type: 'RemoveProfile'; did: string}
+  | {type: 'AddFeed'; uri: string}
+  | {type: 'RemoveFeed'; uri: string}
 
 interface State {
   canNext: boolean
@@ -26,6 +21,7 @@ interface State {
   description?: string
   avatar?: string
   profileDids: string[]
+  feedUris: string[]
 }
 
 type TStateContext = [State, (action: Action) => void]
@@ -64,6 +60,15 @@ function reducer(state: State, action: Action): State {
         profileDids: state.profileDids.filter(did => did !== action.did),
       }
       break
+    case 'AddFeed':
+      updatedState = {...state, feedUris: [...state.feedUris, action.uri]}
+      break
+    case 'RemoveFeed':
+      updatedState = {
+        ...state,
+        feedUris: state.feedUris.filter(uri => uri !== action.uri),
+      }
+      break
   }
 
   switch (updatedState.currentStep) {
@@ -89,6 +94,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     canNext: true,
     currentStep: 'Landing',
     profileDids: [],
+    feedUris: [],
   })
 
   return (

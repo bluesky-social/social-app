@@ -46,10 +46,14 @@ export function WizardProfileCard() {
       ]}>
       <UserAvatar size={45} avatar={profile?.avatar} />
       <View style={[a.flex_1]}>
-        <Text style={[a.font_bold, a.text_md]}>
+        <Text style={[a.flex_1, a.font_bold, a.text_md]} numberOfLines={1}>
           {profile?.displayName || profile?.handle}
         </Text>
-        <Text style={[t.atoms.text_contrast_medium]}>@{profile?.handle}</Text>
+        <Text
+          style={[a.flex_1, t.atoms.text_contrast_medium]}
+          numberOfLines={1}>
+          @{profile?.handle}
+        </Text>
       </View>
       <Button
         label={includesProfile ? _(msg`Remove`) : _(msg`Add`)}

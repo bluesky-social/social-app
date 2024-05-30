@@ -14,6 +14,7 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {Step, useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
+import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a} from '#/alf'
@@ -46,19 +47,15 @@ function WizardInner() {
     },
     Details: {
       header: _(msg`Details`),
-      button: _(msg`Add profiles & feeds`),
+      button: _(msg`Add profiles`),
     },
     Profiles: {
       header: _(msg`Add profiles`),
-      button: _(msg`Continue`),
+      button: _(msg`Add feeds`),
     },
     Feeds: {
       header: _(msg`Add feeds`),
-      button: _(msg`Continue`),
-    },
-    Review: {
-      header: _(msg`Review`),
-      button: _(msg`Continue`),
+      button: _(msg`Finish`),
     },
     Finished: {
       header: _(msg`Finished`),
@@ -122,7 +119,7 @@ function WizardInner() {
 function Container({children}: {children: React.ReactNode}) {
   const [state] = useWizardState()
 
-  if (state.currentStep === 'Profiles') {
+  if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
     return <View style={[a.flex_1]}>{children}</View>
   }
 
@@ -144,5 +141,8 @@ function StepView() {
   }
   if (state.currentStep === 'Profiles') {
     return <StepProfiles />
+  }
+  if (state.currentStep === 'Feeds') {
+    return <StepFeeds />
   }
 }
