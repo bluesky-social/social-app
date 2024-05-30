@@ -7,9 +7,10 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
-import {NavigationProp} from 'lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -24,9 +25,45 @@ import {Button, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {Provider} from './State'
 
-export function Wizard() {
+export function Wizard({
+  route,
+}: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
+  const params = route.params
+  const {mode, initialStep, id} = params
+
+  // TODO load query here
+  const starterPack = {}
+
+  // TODO use this to wait for loading the starterpack for editing
+  if (mode === 'Edit' && false) {
+    // Await here
+    return
+  }
+
   return (
-    <Provider>
+    <WizardReady
+      mode={mode}
+      id={id}
+      initialStep={initialStep}
+      starterPack={starterPack}
+    />
+  )
+}
+
+function WizardReady({
+  mode,
+  initialStep,
+  starterPack,
+}: {
+  mode: 'Create' | 'Edit'
+  id?: string
+  initialStep?: 'Details' | 'Profiles' | 'Feeds'
+  starterPack?: any
+}) {
+  return (
+    <Provider
+      initialState={mode === 'Edit' ? starterPack : undefined}
+      initialStep={initialStep}>
       <WizardInner />
     </Provider>
   )
@@ -67,10 +104,6 @@ function WizardInner() {
     Feeds: {
       header: _(msg`Add feeds`),
       button: _(msg`Finish`),
-    },
-    Finished: {
-      header: _(msg`Finished`),
-      button: _(msg`Visit Starter Pack`),
     },
   }
 

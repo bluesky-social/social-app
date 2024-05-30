@@ -1,6 +1,6 @@
 import React from 'react'
 
-const steps = ['Landing', 'Details', 'Profiles', 'Feeds', 'Finished'] as const
+const steps = ['Landing', 'Details', 'Profiles', 'Feeds'] as const
 export type Step = (typeof steps)[number]
 
 type Action =
@@ -38,7 +38,7 @@ function reducer(state: State, action: Action): State {
   let updatedState = state
 
   // -- Navigation
-  if (action.type === 'Next' && state.currentStep !== 'Finished') {
+  if (action.type === 'Next' && state.currentStep !== 'Feeds') {
     const currentIndex = steps.indexOf(state.currentStep)
     updatedState = {...state, currentStep: steps[currentIndex + 1]}
   } else if (action.type === 'Back' && state.currentStep !== 'Landing') {
@@ -94,14 +94,31 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
-export function Provider({children}: {children: React.ReactNode}) {
-  const stateAndReducer = React.useReducer(reducer, {
-    canNext: true,
-    currentStep: 'Landing',
-    profileDids: [],
-    feedUris: [],
-    processing: false,
-  })
+// TODO supply the initial state to this component
+export function Provider({
+  initialState,
+  initialStep = 'Landing',
+  children,
+}: {
+  initialState?: any // TODO update this type
+  initialStep?: Step
+  children: React.ReactNode
+}) {
+  const stateAndReducer = React.useReducer(
+    reducer,
+    initialStep
+      ? {
+          ...initialState,
+          step: initialStep,
+        }
+      : {
+          canNext: true,
+          currentStep: initialStep,
+          profileDids: [],
+          feedUris: [],
+          processing: false,
+        },
+  )
 
   return (
     <StateContext.Provider value={stateAndReducer}>
