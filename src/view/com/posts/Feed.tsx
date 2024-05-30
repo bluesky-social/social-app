@@ -226,7 +226,7 @@ let Feed = ({
 
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
-    logEvent('feed:refresh', {
+    logEvent('feed:refresh:sampled', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
@@ -244,7 +244,7 @@ let Feed = ({
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    logEvent('feed:endReached', {
+    logEvent('feed:endReached:sampled', {
       feedType: feedType,
       feedUrl: feed,
       itemCount: feedItems.length,

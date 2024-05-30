@@ -49,7 +49,7 @@ export function ThreadgateBtn({
       <Button
         variant="solid"
         color="secondary"
-        size="small"
+        size="xsmall"
         testID="openReplyGateButton"
         onPress={onPress}
         label={label}>
