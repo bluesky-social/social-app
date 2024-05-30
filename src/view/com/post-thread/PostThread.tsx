@@ -325,22 +325,14 @@ export function PostThread({
           {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
         </View>
       )
-    } else if (item === SHOW_HIDDEN_REPLIES) {
+    } else if (item === SHOW_HIDDEN_REPLIES || item === SHOW_MUTED_REPLIES) {
       return (
         <PostThreadShowHiddenReplies
-          type="hidden"
+          type={item === SHOW_HIDDEN_REPLIES ? 'hidden' : 'muted'}
           onPress={() =>
             setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
           }
-        />
-      )
-    } else if (item === SHOW_MUTED_REPLIES) {
-      return (
-        <PostThreadShowHiddenReplies
-          type="muted"
-          onPress={() =>
-            setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
-          }
+          hideTopBorder={index === 0}
         />
       )
     } else if (isThreadNotFound(item)) {
