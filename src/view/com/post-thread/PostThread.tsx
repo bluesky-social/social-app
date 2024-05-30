@@ -441,7 +441,7 @@ export function PostThread({
   }
 
   return (
-    <CenteredView style={[a.flex_1]}>
+    <CenteredView style={[a.flex_1]} sideBorders={true}>
       {isTabletOrMobile && (
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
@@ -480,6 +480,7 @@ export function PostThread({
           }
           initialNumToRender={initialNumToRender}
           windowSize={11}
+          sideBorders={false}
         />
       </ScrollProvider>
     </CenteredView>
