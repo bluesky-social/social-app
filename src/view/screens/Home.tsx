@@ -99,7 +99,7 @@ function HomeScreenReady({
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (selectedFeed) {
-        logEvent('home:feedDisplayed', {
+        logEvent('home:feedDisplayed:sampled', {
           index: selectedIndex,
           feedType: selectedFeed.split('|')[0],
           feedUrl: selectedFeed,
@@ -140,9 +140,12 @@ function HomeScreenReady({
   )
 
   const onPageSelecting = React.useCallback(
-    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
+    (
+      index: number,
+      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    ) => {
       const feed = allFeeds[index]
-      logEvent('home:feedDisplayed', {
+      logEvent('home:feedDisplayed:sampled', {
         index,
         feedType: feed.split('|')[0],
         feedUrl: feed,
