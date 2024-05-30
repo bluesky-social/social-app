@@ -1,12 +1,14 @@
 import React, {useEffect, useRef} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {runOnJS} from 'react-native-reanimated'
+import Animated, {runOnJS} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {ScrollProvider} from '#/lib/ScrollContext'
+import { useMinimalShellMode } from '#/lib/hooks/useMinimalShellMode'
+import { MainScrollProvider } from '../util/MainScrollProvider'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -254,6 +256,8 @@ export function PostThread({
     return arr
   }, [skeleton, deferParents, maxParents, maxReplies])
 
+  const {headerMinimalShellTransform} = useMinimalShellMode()
+
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
   const didAdjustScrollWeb = useRef<boolean>(false)
@@ -422,13 +426,15 @@ export function PostThread({
   return (
     <CenteredView style={[a.flex_1]} sideBorders={true}>
       {showHeader && (
-        <ViewHeader
-          title={_(msg({message: `Post`, context: 'description'}))}
-          showBorder
-        />
+        <Animated.View style={headerMinimalShellTransform}>
+          <ViewHeader
+            title={_(msg({message: `Post`, context: 'description'}))}
+            showBorder
+          />
+        </Animated.View>
       )}
 
-      <ScrollProvider onMomentumEnd={onMomentumEnd}>
+      <MainScrollProvider>
         <List
           ref={ref}
           data={posts}
@@ -461,7 +467,7 @@ export function PostThread({
           windowSize={11}
           sideBorders={false}
         />
-      </ScrollProvider>
+      </MainScrollProvider>
     </CenteredView>
   )
 }
