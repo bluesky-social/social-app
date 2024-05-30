@@ -636,7 +636,7 @@ function ExpandedPostDetails({
   translatorUrl: string
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const openLink = useOpenLink()
 
   const text = record?.text || ''
@@ -654,7 +654,7 @@ function ExpandedPostDetails({
 
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
-      <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
+      <Text style={pal.textLight}>{niceDate(i18n, post.indexedAt)}</Text>
       {needsTranslation && (
         <>
           <Text style={pal.textLight}> &middot; </Text>

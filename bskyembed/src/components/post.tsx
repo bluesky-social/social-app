@@ -15,12 +15,14 @@ import {getRkey, niceDate} from '../utils'
 import {Container} from './container'
 import {Embed} from './embed'
 import {Link} from './link'
+import {useLingui} from '@lingui/react'
 
 interface Props {
   thread: AppBskyFeedDefs.ThreadViewPost
 }
 
 export function Post({thread}: Props) {
+  const {i18n} = useLingui()
   const post = thread.post
 
   const isAuthorLabeled = post.author.labels?.some(label =>
@@ -70,7 +72,7 @@ export function Post({thread}: Props) {
           <time
             datetime={new Date(post.indexedAt).toISOString()}
             className="text-textLight mt-1 text-sm hover:underline">
-            {niceDate(post.indexedAt)}
+            {niceDate(i18n, post.indexedAt)}
           </time>
         </Link>
         <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">

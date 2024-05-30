@@ -3,6 +3,7 @@ import '../index.css'
 import {AppBskyFeedDefs, AppBskyFeedPost, AtUri, BskyAgent} from '@atproto/api'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
+import {useLingui} from '@lingui/react'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
@@ -164,6 +165,7 @@ function Skeleton() {
 }
 
 function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
+  const {i18n} = useLingui()
   const ref = useRef<HTMLInputElement>(null)
   const [copied, setCopied] = useState(false)
 
@@ -210,9 +212,9 @@ function Snippet({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
     )} (<a href="${escapeHtml(profileHref)}">@${escapeHtml(
       thread.post.author.handle,
     )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
-      niceDate(thread.post.indexedAt),
+      niceDate(i18n, thread.post.indexedAt),
     )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
-  }, [thread])
+  }, [i18n, thread])
 
   return (
     <div className="flex gap-2 w-full">

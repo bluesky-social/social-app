@@ -67,7 +67,7 @@ let FeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -248,7 +248,7 @@ let FeedItem = ({
               {({timeElapsed}) => (
                 <Text
                   style={[pal.textLight, styles.pointer]}
-                  title={niceDate(item.notification.indexedAt)}>
+                  title={niceDate(i18n, item.notification.indexedAt)}>
                   {' ' + timeElapsed}
                 </Text>
               )}
