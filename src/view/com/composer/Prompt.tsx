@@ -20,7 +20,9 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
     <TouchableOpacity
       testID="replyPromptBtn"
       style={[
-        isTabletOrDesktop ? a.p_md : a.p_sm,
+        isTabletOrDesktop
+          ? [a.p_md]
+          : {paddingHorizontal: 14, paddingVertical: 10},
         a.border_t,
         t.atoms.border_contrast_medium,
         t.atoms.bg,
@@ -34,7 +36,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
         style={[
           a.flex_row,
           a.align_center,
-          isTabletOrDesktop ? [a.gap_md] : [a.gap_sm, a.mb_xs],
+          isTabletOrDesktop ? [a.gap_md] : [{gap: 10}, a.mb_xs],
         ]}>
         <UserAvatar
           avatar={profile?.avatar}
