@@ -55,7 +55,7 @@ export function ago(i18n: I18n, date: number | string | Date): string {
     return i18n._(
       defineMessage({
         message: `${hours}h`,
-        comment: `How many minutes has passed, displayed in a narrow form`,
+        comment: `How many hours has passed, displayed in a narrow form`,
       }),
     )
   } else if (diffSeconds < MONTH_30) {
@@ -64,7 +64,7 @@ export function ago(i18n: I18n, date: number | string | Date): string {
     return i18n._(
       defineMessage({
         message: `${days}d`,
-        comment: `How many minutes has passed, displayed in a narrow form`,
+        comment: `How many days has passed, displayed in a narrow form`,
       }),
     )
   } else {
