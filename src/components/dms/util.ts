@@ -16,3 +16,12 @@ export function canBeMessaged(profile: AppBskyActorDefs.ProfileView) {
       return false
   }
 }
+
+export function localDateString(date: Date) {
+  // can't use toISOString because it should be in local time
+  const mm = date.getMonth()
+  const dd = date.getDate()
+  const yyyy = date.getFullYear()
+  // not padding with 0s because it's not necessary, it's just used for comparison
+  return `${yyyy}-${mm}-${dd}`
+}
