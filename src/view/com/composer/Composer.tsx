@@ -19,6 +19,7 @@ import {
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -170,6 +171,7 @@ export const ComposePost = observer(function ComposePost({
     [insets, isKeyboardVisible],
   )
 
+  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const hasScrolledTop = useSharedValue(0)
   const hasScrolledBottom = useSharedValue(0)
   const scrollHandler = useAnimatedScrollHandler({
@@ -181,13 +183,14 @@ export const ComposePost = observer(function ComposePost({
           ? 1
           : 0,
       )
-
-      console.log(
-        event.contentSize.height - event.contentOffset.y >=
-          event.layoutMeasurement.height,
-      )
     },
   })
+
+  const onScrollViewContentSizeChange = useCallback(() => {
+    hasScrolledBottom.value = withTiming(
+      scrollViewRef.
+    )
+  }, [])
   const topBarAnimatedStyle = useAnimatedStyle(() => {
     return {
       borderWidth: hairlineWidth,
@@ -530,9 +533,11 @@ export const ComposePost = observer(function ComposePost({
             )}
           </Animated.View>
           <Animated.ScrollView
+            ref={scrollViewRef}
             onScroll={scrollHandler}
             style={styles.scrollView}
-            keyboardShouldPersistTaps="always">
+            keyboardShouldPersistTaps="always"
+            onContentSizeChange={onScrollViewContentSizeChange}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
             <View
