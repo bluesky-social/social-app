@@ -194,10 +194,24 @@ let FeedItem = ({
       ]}
       href={itemHref}
       noFeedback
-      accessible={
-        (item.type === 'post-like' && authors.length === 1) ||
-        item.type === 'repost'
+      accessible={!isAuthorsExpanded}
+      accessibilityActions={
+        item.type === 'post-like' && authors.length > 1
+          ? [
+              {
+                name: 'toggleAuthorsExpanded',
+                label: isAuthorsExpanded
+                  ? _(msg`Expand list of users that liked this post`)
+                  : _(msg`Collapse list of users that liked this post`),
+              },
+            ]
+          : undefined
       }
+      onAccessibilityAction={e => {
+        if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
+          onToggleAuthorsExpanded()
+        }
+      }}
       onBeforePress={onBeforePress}>
       <View style={[styles.layoutIcon, a.pr_sm]}>
         {/* TODO: Prevent conditional rendering and move toward composable
@@ -338,10 +352,7 @@ function CondensedAuthorsList({
   }
   return (
     <TouchableOpacity
-      accessibilityLabel={_(msg`Show users`)}
-      accessibilityHint={_(
-        msg`Opens an expanded list of users in this notification`,
-      )}
+      accessibilityRole="none"
       onPress={onToggleAuthorsExpanded}>
       <View style={styles.avis}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
