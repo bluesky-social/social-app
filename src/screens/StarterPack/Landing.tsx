@@ -123,14 +123,14 @@ export function Landing({
           {/* TODO only display this when the total count is > 50 */}
           <Text style={[a.text_md, a.text_center]}>186 joined this week!</Text>
           <Button
-            label={_(msg`Join Bluesky now`)}
+            label={_(msg`Join Bluesky`)}
             onPress={() => {}}
             variant="solid"
             color="primary"
             size="large"
             style={[isTabletOrDesktop && {width: 200, alignSelf: 'center'}]}>
             <ButtonText style={[a.text_lg]}>
-              <Trans>Join Bluesky now</Trans>
+              <Trans>Join Bluesky</Trans>
             </ButtonText>
           </Button>
           <View style={[a.gap_xl, a.mt_md]}>
