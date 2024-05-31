@@ -53,7 +53,7 @@ module.exports = function (config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: IS_DEV ? 'Bluesky Dev' : 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
@@ -68,7 +68,9 @@ module.exports = function (config) {
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: IS_DEV
+          ? 'dev.xyz.blueskyweb.app'
+          : 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -133,7 +135,7 @@ module.exports = function (config) {
           backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: IS_DEV ? 'dev.xyz.blueskyweb.app' : 'xyz.blueskyweb.app',
         intentFilters: [
           {
             action: 'VIEW',
@@ -219,7 +221,9 @@ module.exports = function (config) {
                 appExtensions: [
                   {
                     targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.Share-with-Bluesky'
+                      : 'xyz.blueskyweb.app.Share-with-Bluesky',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
@@ -228,7 +232,9 @@ module.exports = function (config) {
                   },
                   {
                     targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.BlueskyNSE'
+                      : 'xyz.blueskyweb.app.BlueskyNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
