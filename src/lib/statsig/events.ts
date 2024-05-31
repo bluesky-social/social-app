@@ -13,7 +13,7 @@ export type LogEvents = {
     withPassword: boolean
   }
   'account:loggedOut': {
-    logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued'
+    logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
   }
   'notifications:openApp': {}
   'notifications:request': {
