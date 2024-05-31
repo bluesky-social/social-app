@@ -57,7 +57,6 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
       testID={testID}
       onPress={e => {
         playHaptic()
-
         setTimeout(
           () => {
             onPress?.(e)
