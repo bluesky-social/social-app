@@ -40,6 +40,7 @@ export type CommonNavigatorParams = {
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
+  StarterPackLanding: {id: string}
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -97,6 +98,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Hashtag: {tag: string; author?: string}
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
+  StarterPackLanding: {id: string}
 }
 
 // NOTE

@@ -308,6 +308,9 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 14,
   },
+  border: {
+    borderTopWidth: hairlineWidth,
+  },
   headerContainer: {
     flexDirection: 'row',
   },
