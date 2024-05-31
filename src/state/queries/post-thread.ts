@@ -91,14 +91,10 @@ export function usePostThreadQuery(uri: string | undefined) {
     },
     enabled: !!uri,
     placeholderData: () => {
-      if (!uri) {
-        return undefined
-      }
-      {
-        const post = findPostInQueryData(queryClient, uri)
-        if (post) {
-          return post
-        }
+      if (!uri) return
+      const post = findPostInQueryData(queryClient, uri)
+      if (post) {
+        return post
       }
       return undefined
     },

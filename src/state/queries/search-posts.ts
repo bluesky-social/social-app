@@ -2,6 +2,7 @@ import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedSearchPosts,
+  AtUri,
 } from '@atproto/api'
 import {
   InfiniteData,
@@ -62,17 +63,33 @@ export function* findAllPostsInQueryData(
   >({
     queryKey: [searchPostsQueryKeyRoot],
   })
+  const atUri = new AtUri(uri)
+  const isDid = atUri.host.startsWith('did:')
+
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
       continue
     }
     for (const page of queryData?.pages) {
       for (const post of page.posts) {
-        if (post.uri === uri) {
+        if (isDid && post.uri === uri) {
+          yield post
+        } else if (
+          !isDid &&
+          post.author.handle === atUri.host &&
+          post.uri.endsWith(atUri.rkey)
+        ) {
           yield post
         }
+
         const quotedPost = getEmbeddedPost(post.embed)
-        if (quotedPost?.uri === uri) {
+        if (isDid && quotedPost?.uri === uri) {
+          yield embedViewRecordToPostView(quotedPost)
+        } else if (
+          !isDid &&
+          quotedPost?.author.handle === atUri.host &&
+          quotedPost.uri.endsWith(atUri.rkey)
+        ) {
           yield embedViewRecordToPostView(quotedPost)
         }
       }
