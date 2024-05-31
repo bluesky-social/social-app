@@ -405,9 +405,12 @@ export const ComposePost = observer(function ComposePost({
       <KeyboardAvoidingView
         testID="composePostView"
         behavior="padding"
-        style={s.flex1}
-        keyboardVerticalOffset={replyTo ? 60 : isAndroid ? 120 : 100}>
-        <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
+        style={a.flex_1}
+        keyboardVerticalOffset={replyTo ? 120 : isAndroid ? 180 : 150}>
+        <View
+          style={[a.flex_1, viewStyles]}
+          aria-modal
+          accessibilityViewIsModal>
           <Animated.View
             style={[
               styles.topbar,
@@ -429,7 +432,7 @@ export const ComposePost = observer(function ComposePost({
                   <Trans>Cancel</Trans>
                 </Text>
               </TouchableOpacity>
-              <View style={s.flex1} />
+              <View style={a.flex_1} />
               {isProcessing ? (
                 <>
                   <Text style={pal.textLight}>{processingState}</Text>
@@ -490,7 +493,7 @@ export const ComposePost = observer(function ComposePost({
                     size={10}
                   />
                 </View>
-                <Text style={[pal.text, s.flex1]}>
+                <Text style={[pal.text, a.flex_1]}>
                   <Trans>One or more images is missing alt text.</Trans>
                 </Text>
               </View>
@@ -504,7 +507,7 @@ export const ComposePost = observer(function ComposePost({
                     size={10}
                   />
                 </View>
-                <Text style={[s.red4, s.flex1]}>{error}</Text>
+                <Text style={[s.red4, a.flex_1]}>{error}</Text>
               </View>
             )}
           </Animated.View>
@@ -579,7 +582,12 @@ export const ComposePost = observer(function ComposePost({
         {replyTo ? null : (
           <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
         )}
-        <View style={[pal.border, styles.bottomBar]}>
+        <View
+          style={[
+            t.atoms.bg,
+            t.atoms.border_contrast_medium,
+            styles.bottomBar,
+          ]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
             <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
@@ -601,7 +609,7 @@ export const ComposePost = observer(function ComposePost({
               </Button>
             ) : null}
           </View>
-          <View style={s.flex1} />
+          <View style={a.flex_1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
         </View>
@@ -695,8 +703,8 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 4,
-    paddingLeft: 15,
-    paddingRight: 20,
+    paddingLeft: 8,
+    paddingRight: 16,
     alignItems: 'center',
     borderTopWidth: hairlineWidth,
   },
