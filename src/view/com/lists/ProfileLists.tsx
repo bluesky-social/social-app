@@ -24,7 +24,6 @@ import {List, ListRef} from '../util/List'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {Text} from '../util/text/Text'
 import {ListCard} from './ListCard'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -143,12 +142,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       ({item, index}: ListRenderItemInfo<any>) => {
         if (item === EMPTY) {
           return (
-            <View
-              testID="listsEmpty"
-              style={[
-                {padding: 18, borderTopWidth: hairlineWidth},
-                pal.border,
-              ]}>
+            <View testID="listsEmpty" style={[{padding: 18}, pal.border]}>
               <Text style={pal.textLight}>
                 <Trans>You have no lists.</Trans>
               </Text>
