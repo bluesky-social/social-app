@@ -13,7 +13,7 @@ let MessageItemEmbed = ({
   const t = useTheme()
 
   return (
-    <View style={[a.my_xs, t.atoms.bg, a.rounded_md, native({flexBasis: 0})]}>
+    <View style={[a.my_xs, t.atoms.bg, native({flexBasis: 0})]}>
       <PostEmbeds embed={embed} />
     </View>
   )
