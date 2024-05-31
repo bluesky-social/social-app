@@ -41,6 +41,7 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {AviFollowButton} from './AviFollowButton'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -284,13 +285,15 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={52}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            onBeforePress={onOpenAuthor}
-          />
+          <AviFollowButton author={post.author} moderation={moderation}>
+            <PreviewableUserAvatar
+              size={52}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              onBeforePress={onOpenAuthor}
+            />
+          </AviFollowButton>
           {isThreadParent && (
             <View
               style={[
@@ -470,9 +473,13 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     paddingLeft: 8,
+    position: 'relative',
+    zIndex: 999,
   },
   layoutContent: {
+    position: 'relative',
     flex: 1,
+    zIndex: 0,
   },
   alert: {
     marginTop: 6,

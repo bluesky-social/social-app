@@ -115,6 +115,7 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'AvatarButton'
   }
   'profile:unfollow': {
     logContext:
@@ -126,6 +127,7 @@ export type LogEvents = {
       | 'ProfileMenu'
       | 'ProfileHoverCard'
       | 'Chat'
+      | 'AvatarButton'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog'
