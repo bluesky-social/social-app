@@ -8,12 +8,14 @@ import {
 } from 'react-native'
 
 import {usePalette} from 'lib/hooks/usePalette'
-import {HeartIconSolid} from 'lib/icons'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {useTheme as useTheme_NEW} from '#/alf'
+import {atoms as a, useTheme as useTheme_NEW} from '#/alf'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
-import {Heart2_Stroke2_Corner0_Rounded as HeartIconOutline} from '#/components/icons/Heart2'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
+  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
+} from '#/components/icons/Heart2'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import hairlineWidth = StyleSheet.hairlineWidth
 
@@ -139,14 +141,14 @@ export function NotificationLoadingPlaceholder({
   const pal = usePalette('default')
   return (
     <View style={[styles.notification, pal.view, style]}>
-      <View style={{paddingLeft: 30, paddingRight: 10}}>
-        <HeartIconSolid
-          style={{color: pal.colors.backgroundLight} as ViewStyle}
-          size={30}
+      <View style={[{width: 70}, a.align_end, a.pr_sm, a.pt_2xs]}>
+        <HeartIconFilled
+          size="xl"
+          style={{color: pal.colors.backgroundLight}}
         />
       </View>
       <View style={{flex: 1}}>
-        <View style={[s.flexRow, s.mb10]}>
+        <View style={[a.flex_row, s.mb10]}>
           <LoadingPlaceholder
             width={30}
             height={30}

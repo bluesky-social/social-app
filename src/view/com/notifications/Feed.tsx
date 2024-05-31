@@ -8,23 +8,23 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
-import {s} from 'lib/styles'
-import {EmptyState} from '../util/EmptyState'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {List, ListRef} from '../util/List'
-import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {CenteredView} from '../util/Views'
+import {EmptyState} from '#/view/com/util/EmptyState'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {List, ListRef} from '#/view/com/util/List'
+import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
