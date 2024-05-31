@@ -13,11 +13,8 @@ let MessageItemEmbed = ({
   const t = useTheme()
 
   return (
-    <View style={[a.my_xs, a.w_full, t.atoms.bg, a.rounded_md]}>
-      <PostEmbeds
-        embed={embed}
-        quoteTextStyle={[a.text_sm, t.atoms.text_contrast_high]}
-      />
+    <View style={[a.my_xs, t.atoms.bg, a.rounded_md, {flexBasis: 0}]}>
+      <PostEmbeds embed={embed} />
     </View>
   )
 }
