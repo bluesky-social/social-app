@@ -196,13 +196,13 @@ let FeedItem = ({
       noFeedback
       accessible={!isAuthorsExpanded}
       accessibilityActions={
-        item.type === 'post-like' && authors.length > 1
+        authors.length > 1
           ? [
               {
                 name: 'toggleAuthorsExpanded',
                 label: isAuthorsExpanded
-                  ? _(msg`Collapse list of users that liked this post`)
-                  : _(msg`Expand list of users that liked this post`),
+                  ? _(msg`Collapse list of users`)
+                  : _(msg`Expand list of users`),
               },
             ]
           : [
