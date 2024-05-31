@@ -11,9 +11,11 @@ import {Text} from '#/components/Typography'
 export function PostThreadShowHiddenReplies({
   type,
   onPress,
+  hideTopBorder,
 }: {
   type: 'hidden' | 'muted'
   onPress: () => void
+  hideTopBorder?: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -31,7 +33,7 @@ export function PostThreadShowHiddenReplies({
             a.gap_sm,
             a.py_lg,
             a.px_xl,
-            a.border_t,
+            !hideTopBorder && a.border_t,
             t.atoms.border_contrast_low,
             hovered || pressed ? t.atoms.bg_contrast_25 : t.atoms.bg,
           ]}>

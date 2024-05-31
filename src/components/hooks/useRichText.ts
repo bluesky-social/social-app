@@ -7,7 +7,7 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
   const [prevText, setPrevText] = React.useState(text)
   const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   if (text !== prevText) {
     setPrevText(text)
     setRawRT(new RichTextAPI({text}))
@@ -19,7 +19,7 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
     async function resolveRTFacets() {
       // new each time
       const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(getAgent())
+      await resolvedRT.detectFacets(agent)
       if (!ignore) {
         setResolvedRT(resolvedRT)
       }
@@ -28,7 +28,7 @@ export function useRichText(text: string): [RichTextAPI, boolean] {
     return () => {
       ignore = true
     }
-  }, [text, getAgent])
+  }, [text, agent])
   const isResolving = resolvedRT === null
   return [resolvedRT ?? rawRT, isResolving]
 }

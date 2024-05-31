@@ -1,18 +1,20 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AtUri, AppBskyGraphDefs, RichText} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {RichText as RichTextCom} from '#/components/RichText'
-import {UserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
+import {AppBskyGraphDefs, AtUri, RichText} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+
 import {useSession} from '#/state/session'
+import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {Trans} from '@lingui/macro'
+import {s} from 'lib/styles'
 import {atoms as a} from '#/alf'
+import {RichText as RichTextCom} from '#/components/RichText'
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export const ListCard = ({
   testID,
@@ -132,7 +134,7 @@ export const ListCard = ({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     paddingHorizontal: 6,
   },
   outerNoBorder: {

@@ -6,15 +6,15 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {getDefinition, getLabelStrings} from './useLabelInfo'
-import {useLabelDefinitions} from '#/state/preferences'
-import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 
-import {Props as SVGIconProps} from '#/components/icons/common'
-import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {useLabelDefinitions} from '#/state/preferences'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Props as SVGIconProps} from '#/components/icons/common'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {useGlobalLabelStrings} from './useGlobalLabelStrings'
+import {getDefinition, getLabelStrings} from './useLabelInfo'
 
 export interface ModerationCauseDescription {
   icon: React.ComponentType<SVGIconProps>
@@ -22,6 +22,8 @@ export interface ModerationCauseDescription {
   description: string
   source?: string
   sourceType?: ModerationCauseSource['type']
+  sourceAvi?: string
+  sourceDid?: string
 }
 
 export function useModerationCauseDescription(
@@ -138,6 +140,8 @@ export function useModerationCauseDescription(
         description: strings.description,
         source,
         sourceType: cause.source.type,
+        sourceAvi: labeler?.creator.avatar,
+        sourceDid: cause.label.src,
       }
     }
     // should never happen

@@ -5,7 +5,7 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {isFirefox, isSafari} from 'lib/browser'
+import {isSafari} from 'lib/browser'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {addStyle} from 'lib/styles'
@@ -25,6 +25,7 @@ export type ListProps<ItemT> = Omit<
   desktopFixedHeight: any // TODO: Better types.
   containWeb?: boolean
   sideBorders?: boolean
+  disableContentVisibility?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -56,6 +57,7 @@ function ListImpl<ItemT>(
     extraData,
     style,
     sideBorders = true,
+    disableContentVisibility,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -339,6 +341,7 @@ function ListImpl<ItemT>(
               renderItem={renderItem}
               extraData={extraData}
               onItemSeen={onItemSeen}
+              disableContentVisibility={disableContentVisibility}
             />
           )
         })}
@@ -387,6 +390,7 @@ let Row = function RowImpl<ItemT>({
   renderItem,
   extraData: _unused,
   onItemSeen,
+  disableContentVisibility,
 }: {
   item: ItemT
   index: number
@@ -396,6 +400,7 @@ let Row = function RowImpl<ItemT>({
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
+  disableContentVisibility?: boolean
 }): React.ReactNode {
   const rowRef = React.useRef(null)
   const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
@@ -444,8 +449,15 @@ let Row = function RowImpl<ItemT>({
     return null
   }
 
+  const shouldDisableContentVisibility = disableContentVisibility || isSafari
   return (
-    <View style={styles.row} ref={rowRef}>
+    <View
+      style={
+        shouldDisableContentVisibility
+          ? undefined
+          : styles.contentVisibilityAuto
+      }
+      ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
   )
@@ -516,9 +528,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  row: {
+  contentVisibilityAuto: {
     // @ts-ignore web only
-    contentVisibility: isSafari || isFirefox ? '' : 'auto', // Safari support for this is buggy.
+    contentVisibility: 'auto',
   },
   minHeightViewport: {
     // @ts-ignore web only

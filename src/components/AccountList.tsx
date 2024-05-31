@@ -37,7 +37,7 @@ export function AccountList({
       style={[
         a.rounded_md,
         a.overflow_hidden,
-        a.border,
+        {borderWidth: 1},
         t.atoms.border_contrast_low,
       ]}>
       {accounts.map(account => (
@@ -48,7 +48,7 @@ export function AccountList({
             isCurrentAccount={account.did === currentAccount?.did}
             isPendingAccount={account.did === pendingDid}
           />
-          <View style={[a.border_b, t.atoms.border_contrast_low]} />
+          <View style={[{borderBottomWidth: 1}, t.atoms.border_contrast_low]} />
         </React.Fragment>
       ))}
       <Button

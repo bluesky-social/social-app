@@ -1,9 +1,14 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
-  BackHandler,
   Keyboard,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -12,6 +17,12 @@ import {
   KeyboardAvoidingView,
   KeyboardStickyView,
 } from 'react-native-keyboard-controller'
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {RichText} from '@atproto/api'
@@ -24,6 +35,7 @@ import {
   createGIFDescription,
   parseAltFromGIFDescription,
 } from '#/lib/gif-alt-text'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -42,7 +54,7 @@ import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
-import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {HITSLOP_10, MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -55,7 +67,7 @@ import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
@@ -78,6 +90,11 @@ import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
+import hairlineWidth = StyleSheet.hairlineWidth
+
+type CancelRef = {
+  onPressCancel: () => void
+}
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -88,15 +105,18 @@ export const ComposePost = observer(function ComposePost({
   openPicker,
   text: initText,
   imageUris: initImageUris,
-}: Props) {
+  cancelRef,
+}: Props & {
+  cancelRef?: React.RefObject<CancelRef>
+}) {
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
-  const {isDesktop, isMobile} = useWebMediaQueries()
+  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -104,6 +124,7 @@ export const ComposePost = observer(function ComposePost({
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
+  const t = useTheme()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -145,10 +166,25 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isAndroid ? insets.top : isMobile ? 15 : 0,
     }),
-    [insets, isKeyboardVisible, isMobile],
+    [insets, isKeyboardVisible],
   )
+
+  const hasScrolled = useSharedValue(0)
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      hasScrolled.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+    },
+  })
+  const topBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderColor: interpolateColor(
+        hasScrolled.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
@@ -167,23 +203,8 @@ export const ComposePost = observer(function ComposePost({
     discardPromptControl,
     onClose,
   ])
-  // android back button
-  useEffect(() => {
-    if (!isAndroid) {
-      return
-    }
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        onPressCancel()
-        return true
-      },
-    )
 
-    return () => {
-      backHandler.remove()
-    }
-  }, [onPressCancel])
+  useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
@@ -260,7 +281,7 @@ export const ComposePost = observer(function ComposePost({
     let postUri
     try {
       postUri = (
-        await apilib.post(getAgent(), {
+        await apilib.post(agent, {
           rawText: richtext.text,
           replyTo: replyTo?.uri,
           images: gallery.images,
@@ -379,108 +400,120 @@ export const ComposePost = observer(function ComposePost({
       <KeyboardAvoidingView
         testID="composePostView"
         behavior="padding"
-        style={s.flex1}
-        keyboardVerticalOffset={replyTo ? 60 : isAndroid ? 120 : 100}>
-        <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
-          <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
-            <TouchableOpacity
-              testID="composerDiscardButton"
-              onPress={onPressCancel}
-              onAccessibilityEscape={onPressCancel}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Cancel`)}
-              accessibilityHint={_(
-                msg`Closes post composer and discards post draft`,
-              )}>
-              <Text style={[pal.link, s.f18]}>
-                <Trans>Cancel</Trans>
-              </Text>
-            </TouchableOpacity>
-            <View style={s.flex1} />
-            {isProcessing ? (
-              <>
-                <Text style={pal.textLight}>{processingState}</Text>
-                <View style={styles.postBtn}>
-                  <ActivityIndicator />
-                </View>
-              </>
-            ) : (
-              <>
-                <LabelsBtn
-                  labels={labels}
-                  onChange={setLabels}
-                  hasMedia={hasMedia}
-                />
-                {canPost ? (
-                  <TouchableOpacity
-                    testID="composerPublishBtn"
-                    onPress={onPressPublish}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
-                    }
-                    accessibilityHint="">
-                    <LinearGradient
-                      colors={[
-                        gradients.blueLight.start,
-                        gradients.blueLight.end,
-                      ]}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 1}}
-                      style={styles.postBtn}>
-                      <Text style={[s.white, s.f16, s.bold]}>
-                        {replyTo ? (
-                          <Trans context="action">Reply</Trans>
-                        ) : (
-                          <Trans context="action">Post</Trans>
-                        )}
-                      </Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={[styles.postBtn, pal.btn]}>
-                    <Text style={[pal.textLight, s.f16, s.bold]}>
-                      <Trans context="action">Post</Trans>
-                    </Text>
-                  </View>
+        style={a.flex_1}
+        keyboardVerticalOffset={replyTo ? 120 : isAndroid ? 180 : 150}>
+        <View
+          style={[a.flex_1, viewStyles]}
+          aria-modal
+          accessibilityViewIsModal>
+          <Animated.View
+            style={[
+              styles.topbar,
+              topBarAnimatedStyle,
+              isWeb && isTabletOrDesktop && styles.topbarDesktop,
+            ]}>
+            <View style={styles.topbarInner}>
+              <TouchableOpacity
+                testID="composerDiscardButton"
+                onPress={onPressCancel}
+                onAccessibilityEscape={onPressCancel}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Cancel`)}
+                accessibilityHint={_(
+                  msg`Closes post composer and discards post draft`,
                 )}
-              </>
+                hitSlop={HITSLOP_10}>
+                <Text style={[pal.link, s.f18]}>
+                  <Trans>Cancel</Trans>
+                </Text>
+              </TouchableOpacity>
+              <View style={a.flex_1} />
+              {isProcessing ? (
+                <>
+                  <Text style={pal.textLight}>{processingState}</Text>
+                  <View style={styles.postBtn}>
+                    <ActivityIndicator />
+                  </View>
+                </>
+              ) : (
+                <>
+                  <LabelsBtn
+                    labels={labels}
+                    onChange={setLabels}
+                    hasMedia={hasMedia}
+                  />
+                  {canPost ? (
+                    <TouchableOpacity
+                      testID="composerPublishBtn"
+                      onPress={onPressPublish}
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
+                      }
+                      accessibilityHint="">
+                      <LinearGradient
+                        colors={[
+                          gradients.blueLight.start,
+                          gradients.blueLight.end,
+                        ]}
+                        start={{x: 0, y: 0}}
+                        end={{x: 1, y: 1}}
+                        style={styles.postBtn}>
+                        <Text style={[s.white, s.f16, s.bold]}>
+                          {replyTo ? (
+                            <Trans context="action">Reply</Trans>
+                          ) : (
+                            <Trans context="action">Post</Trans>
+                          )}
+                        </Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={[styles.postBtn, pal.btn]}>
+                      <Text style={[pal.textLight, s.f16, s.bold]}>
+                        <Trans context="action">Post</Trans>
+                      </Text>
+                    </View>
+                  )}
+                </>
+              )}
+            </View>
+
+            {isAltTextRequiredAndMissing && (
+              <View style={[styles.reminderLine, pal.viewLight]}>
+                <View style={styles.errorIcon}>
+                  <FontAwesomeIcon
+                    icon="exclamation"
+                    style={{color: colors.red4}}
+                    size={10}
+                  />
+                </View>
+                <Text style={[pal.text, a.flex_1]}>
+                  <Trans>One or more images is missing alt text.</Trans>
+                </Text>
+              </View>
             )}
-          </View>
-          {isAltTextRequiredAndMissing && (
-            <View style={[styles.reminderLine, pal.viewLight]}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon
-                  icon="exclamation"
-                  style={{color: colors.red4}}
-                  size={10}
-                />
+            {error !== '' && (
+              <View style={styles.errorLine}>
+                <View style={styles.errorIcon}>
+                  <FontAwesomeIcon
+                    icon="exclamation"
+                    style={{color: colors.red4}}
+                    size={10}
+                  />
+                </View>
+                <Text style={[s.red4, a.flex_1]}>{error}</Text>
               </View>
-              <Text style={[pal.text, s.flex1]}>
-                <Trans>One or more images is missing alt text.</Trans>
-              </Text>
-            </View>
-          )}
-          {error !== '' && (
-            <View style={styles.errorLine}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon
-                  icon="exclamation"
-                  style={{color: colors.red4}}
-                  size={10}
-                />
-              </View>
-              <Text style={[s.red4, s.flex1]}>{error}</Text>
-            </View>
-          )}
-          <ScrollView
+            )}
+          </Animated.View>
+          <Animated.ScrollView
+            onScroll={scrollHandler}
             style={styles.scrollView}
             keyboardShouldPersistTaps="always">
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
             <View
               style={[
-                pal.border,
                 styles.textInputLayout,
                 isNative && styles.textInputLayoutMobile,
               ]}>
@@ -535,7 +568,7 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </View>
             ) : undefined}
-          </ScrollView>
+          </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
         </View>
       </KeyboardAvoidingView>
@@ -544,7 +577,12 @@ export const ComposePost = observer(function ComposePost({
         {replyTo ? null : (
           <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
         )}
-        <View style={[pal.border, styles.bottomBar]}>
+        <View
+          style={[
+            t.atoms.bg,
+            t.atoms.border_contrast_medium,
+            styles.bottomBar,
+          ]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
             <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
@@ -566,7 +604,7 @@ export const ComposePost = observer(function ComposePost({
               </Button>
             ) : null}
           </View>
-          <View style={s.flex1} />
+          <View style={a.flex_1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
         </View>
@@ -583,24 +621,25 @@ export const ComposePost = observer(function ComposePost({
   )
 })
 
+export function useComposerCancelRef() {
+  return useRef<CancelRef>(null)
+}
+
 const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'column',
-    flex: 1,
-    height: '100%',
-  },
   topbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 6,
-    paddingBottom: 4,
-    paddingHorizontal: 20,
-    height: 55,
-    gap: 4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   topbarDesktop: {
     paddingTop: 10,
     paddingBottom: 10,
+    height: 50,
+  },
+  topbarInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    height: 54,
+    gap: 4,
   },
   postBtn: {
     borderRadius: 20,
@@ -612,22 +651,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.red1,
     borderRadius: 6,
-    marginHorizontal: 15,
+    marginHorizontal: 16,
     paddingHorizontal: 8,
     paddingVertical: 6,
-    marginVertical: 6,
+    marginBottom: 8,
   },
   reminderLine: {
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 6,
-    marginHorizontal: 15,
+    marginHorizontal: 16,
     paddingHorizontal: 8,
     paddingVertical: 6,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   errorIcon: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
     borderColor: colors.red4,
     color: colors.red4,
     borderRadius: 30,
@@ -639,12 +678,11 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
   },
   textInputLayout: {
     flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingTop: 16,
+    paddingTop: 4,
   },
   textInputLayoutMobile: {
     flex: 1,
@@ -660,9 +698,9 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 4,
-    paddingLeft: 15,
-    paddingRight: 20,
+    paddingLeft: 8,
+    paddingRight: 16,
     alignItems: 'center',
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
   },
 })

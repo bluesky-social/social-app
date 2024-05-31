@@ -60,13 +60,6 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface RepostModal {
-  name: 'repost'
-  onRepost: () => void
-  onQuote: () => void
-  isReposted: boolean
-}
-
 export interface SelfLabelModal {
   name: 'self-label'
   labels: string[]
@@ -154,7 +147,6 @@ export type Modal =
   | AltTextImageModal
   | CropImageModal
   | EditImageModal
-  | RepostModal
   | SelfLabelModal
   | ThreadgateModal
 

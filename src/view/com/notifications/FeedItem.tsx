@@ -17,11 +17,6 @@ import {
   ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-  Props,
-} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -29,7 +24,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {FeedNotification} from '#/state/queries/notifications/feed'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
-import {HeartIconSolid} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -37,6 +31,14 @@ import {niceDate} from 'lib/strings/time'
 import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
 import {precacheProfile} from 'state/queries/profile'
+import {atoms as a, useTheme} from '#/alf'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
+} from '#/components/icons/Chevron'
+import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
+import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {Link as NewLink} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
@@ -47,6 +49,8 @@ import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
+
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const MAX_AUTHORS = 5
 
@@ -61,13 +65,16 @@ interface Author {
 let FeedItem = ({
   item,
   moderationOpts,
+  hideTopBorder,
 }: {
   item: FeedNotification
   moderationOpts: ModerationOpts
+  hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const t = useTheme()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -147,30 +154,25 @@ let FeedItem = ({
   }
 
   let action = ''
-  let icon: Props['icon'] | 'HeartIconSolid'
-  let iconStyle: Props['style'] = []
+  let icon = (
+    <HeartIconFilled
+      size="xl"
+      style={[
+        s.likeColor,
+        // {position: 'relative', top: -4}
+      ]}
+    />
+  )
   if (item.type === 'post-like') {
     action = _(msg`liked your post`)
-    icon = 'HeartIconSolid'
-    iconStyle = [
-      s.likeColor as FontAwesomeIconStyle,
-      {position: 'relative', top: -4},
-    ]
   } else if (item.type === 'repost') {
     action = _(msg`reposted your post`)
-    icon = 'retweet'
-    iconStyle = [s.green3 as FontAwesomeIconStyle]
+    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
     action = _(msg`followed you`)
-    icon = 'user-plus'
-    iconStyle = [s.blue3 as FontAwesomeIconStyle]
+    icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
-    icon = 'HeartIconSolid'
-    iconStyle = [
-      s.likeColor as FontAwesomeIconStyle,
-      {position: 'relative', top: -4},
-    ]
   } else {
     return null
   }
@@ -188,6 +190,7 @@ let FeedItem = ({
               backgroundColor: pal.colors.unreadNotifBg,
               borderColor: pal.colors.unreadNotifBorder,
             },
+        {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
       ]}
       href={itemHref}
       noFeedback
@@ -196,18 +199,10 @@ let FeedItem = ({
         item.type === 'repost'
       }
       onBeforePress={onBeforePress}>
-      <View style={styles.layoutIcon}>
+      <View style={[styles.layoutIcon, a.pr_sm]}>
         {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
-        {icon === 'HeartIconSolid' ? (
-          <HeartIconSolid size={28} style={[styles.icon, ...iconStyle]} />
-        ) : (
-          <FontAwesomeIcon
-            icon={icon}
-            size={24}
-            style={[styles.icon, ...iconStyle]}
-          />
-        )}
+        {icon}
       </View>
       <View style={styles.layoutContent}>
         <ExpandListPressable
@@ -318,9 +313,8 @@ function CondensedAuthorsList({
           accessibilityHint={_(
             msg`Collapses list of users for a given notification`,
           )}>
-          <FontAwesomeIcon
-            icon="angle-up"
-            size={18}
+          <ChevronUpIcon
+            size="md"
             style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
           />
           <Text type="sm-medium" style={pal.text}>
@@ -365,9 +359,8 @@ function CondensedAuthorsList({
             +{authors.length - MAX_AUTHORS}
           </Text>
         ) : undefined}
-        <FontAwesomeIcon
-          icon="angle-down"
-          size={18}
+        <ChevronDownIcon
+          size="md"
           style={[styles.expandedAuthorsCloseBtnIcon, pal.textLight]}
         />
       </View>
@@ -458,7 +451,7 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
     return (
       <>
         {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
-        {images && images?.length > 0 && (
+        {images && images.length > 0 && (
           <ImageHorzList images={images} style={styles.additionalPostImages} />
         )}
       </>
@@ -480,7 +473,6 @@ const styles = StyleSheet.create({
   outer: {
     padding: 10,
     paddingRight: 15,
-    borderTopWidth: 1,
     flexDirection: 'row',
   },
   layoutIcon: {

@@ -6,7 +6,11 @@ import {
   TextStyle,
   View,
 } from 'react-native'
-import {ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  ChatBskyConvoDefs,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,6 +22,7 @@ import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {isOnlyEmoji, RichText} from '../RichText'
+import {MessageItemEmbed} from './MessageItemEmbed'
 
 let MessageItem = ({
   item,
@@ -77,40 +82,46 @@ let MessageItem = ({
   return (
     <View style={[isFromSelf ? a.mr_md : a.ml_md]}>
       <ActionsWrapper isFromSelf={isFromSelf} message={message}>
-        <View
-          style={
-            !message.facets &&
-            !isOnlyEmoji(message.text) && [
-              a.py_sm,
-              a.my_2xs,
-              a.rounded_md,
-              {
-                paddingLeft: 14,
-                paddingRight: 14,
-                backgroundColor: isFromSelf
-                  ? isPending
-                    ? pendingColor
-                    : t.palette.primary_500
-                  : t.palette.contrast_50,
-                borderRadius: 17,
-              },
-              isFromSelf
-                ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-                : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
-            ]
-          }>
-          <RichText
-            value={rt}
-            style={[
-              a.text_md,
-              isFromSelf && {color: t.palette.white},
-              isPending && t.name !== 'light' && {color: t.palette.primary_300},
-            ]}
-            interactiveStyle={a.underline}
-            enableTags
-            emojiMultiplier={3}
-          />
-        </View>
+        {AppBskyEmbedRecord.isView(message.embed) && (
+          <MessageItemEmbed embed={message.embed} />
+        )}
+        {rt.text.length > 0 && (
+          <View
+            style={
+              !message.facets &&
+              !isOnlyEmoji(message.text) && [
+                a.py_sm,
+                a.my_2xs,
+                a.rounded_md,
+                {
+                  paddingLeft: 14,
+                  paddingRight: 14,
+                  backgroundColor: isFromSelf
+                    ? isPending
+                      ? pendingColor
+                      : t.palette.primary_500
+                    : t.palette.contrast_50,
+                  borderRadius: 17,
+                },
+                isFromSelf
+                  ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+                  : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+              ]
+            }>
+            <RichText
+              value={rt}
+              style={[
+                a.text_md,
+                isFromSelf && {color: t.palette.white},
+                isPending &&
+                  t.name !== 'light' && {color: t.palette.primary_300},
+              ]}
+              interactiveStyle={a.underline}
+              enableTags
+              emojiMultiplier={3}
+            />
+          </View>
+        )}
       </ActionsWrapper>
 
       {isLastInGroup && (
