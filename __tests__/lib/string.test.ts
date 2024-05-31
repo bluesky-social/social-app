@@ -147,70 +147,67 @@ describe('ago', () => {
     new Date().setMonth(new Date().getMonth() - 11),
   ).setDate(new Date().getDate() - 28)
 
-  const inputs = [
-    1671461038,
-    '04 Dec 1995 00:12:00 GMT',
-    new Date(),
-    new Date().setSeconds(new Date().getSeconds() - 10),
-    new Date().setMinutes(new Date().getMinutes() - 10),
-    new Date().setHours(new Date().getHours() - 1),
-    new Date().setDate(new Date().getDate() - 1),
-    new Date().setDate(new Date().getDate() - 20),
-    new Date().setDate(new Date().getDate() - 25),
-    new Date().setDate(new Date().getDate() - 28),
-    new Date().setDate(new Date().getDate() - 29),
-    new Date().setDate(new Date().getDate() - 30),
-    new Date().setMonth(new Date().getMonth() - 1),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 20,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 25,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 28,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 29,
-    ),
-    new Date().setMonth(new Date().getMonth() - 11),
-    new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
-      new Date().getDate() - 20,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
-      new Date().getDate() - 25,
-    ),
-    oneYearDate,
-  ]
-  const outputs = [
-    new Date(1671461038).toLocaleDateString(),
-    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
-    'now',
-    '10s',
-    '10m',
-    '1h',
-    '1d',
-    '20d',
-    '25d',
-    '28d',
-    '29d',
-    '1mo',
-    '1mo',
-    '1mo',
-    '1mo',
-    '2mo',
-    '2mo',
-    '11mo',
-    '11mo',
-    '11mo',
-    new Date(oneYearDate).toLocaleDateString(),
+  type Case = [number | string | Date, string]
+  const cases: Case[] = [
+    [1671461038, new Date(1671461038).toLocaleDateString()],
+    [
+      '04 Dec 1995 00:12:00 GMT',
+      new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
+    ],
+    [new Date(), 'now'],
+    [new Date().setSeconds(new Date().getSeconds() - 10), '10s'],
+    [new Date().setMinutes(new Date().getMinutes() - 10), '10m'],
+    [new Date().setHours(new Date().getHours() - 1), '1h'],
+    [new Date().setDate(new Date().getDate() - 1), '1d'],
+    [new Date().setDate(new Date().getDate() - 20), '20d'],
+    [new Date().setDate(new Date().getDate() - 25), '25d'],
+    [new Date().setDate(new Date().getDate() - 28), '28d'],
+    [new Date().setDate(new Date().getDate() - 29), '29d'],
+    [new Date().setDate(new Date().getDate() - 30), '1mo'],
+    [new Date().setMonth(new Date().getMonth() - 1), '1mo'],
+    [
+      new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+        new Date().getDate() - 20,
+      ),
+      '1mo',
+    ],
+    [
+      new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+        new Date().getDate() - 25,
+      ),
+      '1mo',
+    ],
+    [
+      new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+        new Date().getDate() - 28,
+      ),
+      '2mo',
+    ],
+    [
+      new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
+        new Date().getDate() - 29,
+      ),
+      '2mo',
+    ],
+    [new Date().setMonth(new Date().getMonth() - 11), '11mo'],
+    [
+      new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
+        new Date().getDate() - 20,
+      ),
+      '11mo',
+    ],
+    [
+      new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
+        new Date().getDate() - 25,
+      ),
+      '11mo',
+    ],
+    [oneYearDate, new Date(oneYearDate).toLocaleDateString()],
   ]
 
-  it('correctly calculates how much time passed, in a string', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const result = ago(inputs[i])
-      expect(result).toEqual(outputs[i])
-    }
+  it.each(cases)('given input %p returns %p', (input, expected) => {
+    const result = ago(input)
+    expect(result).toEqual(expected)
   })
 })
 
