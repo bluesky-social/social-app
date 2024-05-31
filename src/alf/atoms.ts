@@ -278,7 +278,7 @@ export const atoms = {
     borderWidth: 0,
   },
   border: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
   },
   border_t: {
     borderTopWidth: hairlineWidth,
