@@ -1390,7 +1390,7 @@ msgstr "Désactivé"
 
 #: src/view/com/composer/Composer.tsx:579
 msgid "Discard"
-msgstr "Ignorer"
+msgstr "Abandonner"
 
 #: src/view/com/composer/Composer.tsx:576
 msgid "Discard draft?"
@@ -2042,7 +2042,7 @@ msgstr "Préférences du fil d’actu « Following »"
 #: src/view/screens/PreferencesFollowingFeed.tsx:103
 #: src/view/screens/Settings/index.tsx:575
 msgid "Following Feed Preferences"
-msgstr "Préférences en matière de fil d’actu « Following »"
+msgstr "Préférences du fil d’actu « Following »"
 
 #: src/screens/Profile/Header/Handle.tsx:24
 msgid "Follows you"
@@ -5208,7 +5208,7 @@ msgstr "Cet appel sera envoyé à <0>{0}</0>."
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr "Cet appel sera envoyé aux services de modération de Bluesky."
+msgstr "Cet appel sera envoyé au service de modération de Bluesky."
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -5378,7 +5378,7 @@ msgstr "Pour désactiver le 2FA par e-mail, veuillez vérifier votre accès à l
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Pour signaler une conversation, veuillez signaler un de ses messages via l’écran de conversation. Cela permettra à nos modérateurs de comprendre le contexte du problème."
+msgstr "Pour signaler une conversation, veuillez signaler un de ses messages via l’écran de conversation. Cela permettra à la modération de comprendre le contexte du problème."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
