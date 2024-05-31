@@ -194,10 +194,36 @@ let FeedItem = ({
       ]}
       href={itemHref}
       noFeedback
-      accessible={
-        (item.type === 'post-like' && authors.length === 1) ||
-        item.type === 'repost'
+      accessible={!isAuthorsExpanded}
+      accessibilityActions={
+        authors.length > 1
+          ? [
+              {
+                name: 'toggleAuthorsExpanded',
+                label: isAuthorsExpanded
+                  ? _(msg`Collapse list of users`)
+                  : _(msg`Expand list of users`),
+              },
+            ]
+          : [
+              {
+                name: 'viewProfile',
+                label: _(
+                  msg`View ${
+                    authors[0].profile.displayName || authors[0].profile.handle
+                  }'s profile`,
+                ),
+              },
+            ]
       }
+      onAccessibilityAction={e => {
+        if (e.nativeEvent.actionName === 'activate') {
+          onBeforePress()
+        }
+        if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
+          onToggleAuthorsExpanded()
+        }
+      }}
       onBeforePress={onBeforePress}>
       <View style={[styles.layoutIcon, a.pr_sm]}>
         {/* TODO: Prevent conditional rendering and move toward composable
@@ -332,16 +358,14 @@ function CondensedAuthorsList({
           profile={authors[0].profile}
           moderation={authors[0].moderation.ui('avatar')}
           type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
+          accessible={false}
         />
       </View>
     )
   }
   return (
     <TouchableOpacity
-      accessibilityLabel={_(msg`Show users`)}
-      accessibilityHint={_(
-        msg`Opens an expanded list of users in this notification`,
-      )}
+      accessibilityRole="none"
       onPress={onToggleAuthorsExpanded}>
       <View style={styles.avis}>
         {authors.slice(0, MAX_AUTHORS).map(author => (
@@ -351,6 +375,7 @@ function CondensedAuthorsList({
               profile={author.profile}
               moderation={author.moderation.ui('avatar')}
               type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+              accessible={false}
             />
           </View>
         ))}
@@ -392,48 +417,45 @@ function ExpandedAuthorsList({
   }, [heightInterp, visible])
 
   return (
-    <Animated.View
-      style={[
-        heightStyle,
-        styles.overflowHidden,
-        visible ? s.mb10 : undefined,
-      ]}>
-      {authors.map(author => (
-        <NewLink
-          key={author.profile.did}
-          label={_(msg`See profile`)}
-          to={makeProfileLink({
-            did: author.profile.did,
-            handle: author.profile.handle,
-          })}
-          style={styles.expandedAuthor}>
-          <View style={styles.expandedAuthorAvi}>
-            <ProfileHoverCard did={author.profile.did}>
-              <UserAvatar
-                size={35}
-                avatar={author.profile.avatar}
-                moderation={author.moderation.ui('avatar')}
-                type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-              />
-            </ProfileHoverCard>
-          </View>
-          <View style={s.flex1}>
-            <Text
-              type="lg-bold"
-              numberOfLines={1}
-              style={pal.text}
-              lineHeight={1.2}>
-              {sanitizeDisplayName(
-                author.profile.displayName || author.profile.handle,
-              )}
-              &nbsp;
-              <Text style={[pal.textLight]} lineHeight={1.2}>
-                {sanitizeHandle(author.profile.handle)}
+    <Animated.View style={[heightStyle, styles.overflowHidden]}>
+      {visible &&
+        authors.map(author => (
+          <NewLink
+            key={author.profile.did}
+            label={author.profile.displayName || author.profile.handle}
+            accessibilityHint={_(msg`Opens this profile`)}
+            to={makeProfileLink({
+              did: author.profile.did,
+              handle: author.profile.handle,
+            })}
+            style={styles.expandedAuthor}>
+            <View style={styles.expandedAuthorAvi}>
+              <ProfileHoverCard did={author.profile.did}>
+                <UserAvatar
+                  size={35}
+                  avatar={author.profile.avatar}
+                  moderation={author.moderation.ui('avatar')}
+                  type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+                />
+              </ProfileHoverCard>
+            </View>
+            <View style={s.flex1}>
+              <Text
+                type="lg-bold"
+                numberOfLines={1}
+                style={pal.text}
+                lineHeight={1.2}>
+                {sanitizeDisplayName(
+                  author.profile.displayName || author.profile.handle,
+                )}
+                &nbsp;
+                <Text style={[pal.textLight]} lineHeight={1.2}>
+                  {sanitizeHandle(author.profile.handle)}
+                </Text>
               </Text>
-            </Text>
-          </View>
-        </NewLink>
-      ))}
+            </View>
+          </NewLink>
+        ))}
     </Animated.View>
   )
 }
