@@ -43,7 +43,7 @@ export function MessageInput({
       return
     }
     clearDraft()
-    onSendMessage(message.trimEnd())
+    onSendMessage(message)
     setMessage('')
   }, [message, onSendMessage, _, clearDraft])
 

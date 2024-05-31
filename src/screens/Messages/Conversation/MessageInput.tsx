@@ -63,7 +63,7 @@ export function MessageInput({
       return
     }
     clearDraft()
-    onSendMessage(message.trimEnd())
+    onSendMessage(message)
     playHaptic()
     setMessage('')
 
