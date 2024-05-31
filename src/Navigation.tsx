@@ -309,6 +309,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
       <Stack.Screen
+        name="StarterPack"
+        getComponent={() => StarterPack}
+        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+      />
+      <Stack.Screen
         name="StarterPackLanding"
         getComponent={() => Landing}
         options={{title: title(msg`Join Bluesky Today!`)}}
