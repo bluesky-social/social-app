@@ -32,18 +32,13 @@ export function truncateAndInvalidate<T = any>(
 // of the currentUri that is being checked.
 export function didOrHandleUriMatches(
   atUri: AtUri,
-  currentUri: string | undefined,
-  currentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined,
+  record: {uri: string; author: AppBskyActorDefs.ProfileViewBasic},
 ) {
-  if (!currentUri || !currentAuthor) {
-    return false
-  }
-
   if (atUri.host.startsWith('did:')) {
-    return atUri.href === currentUri
+    return atUri.href === record.uri
   }
 
-  return atUri.host === currentAuthor.handle && currentUri.endsWith(atUri.rkey)
+  return atUri.host === record.author.handle && record.uri.endsWith(atUri.rkey)
 }
 
 export function getEmbeddedPost(

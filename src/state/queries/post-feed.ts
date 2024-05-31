@@ -465,35 +465,23 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.feed) {
-        if (didOrHandleUriMatches(atUri, item.post.uri, item.post.author)) {
+        if (didOrHandleUriMatches(atUri, item.post)) {
           yield item.post
         }
 
         const quotedPost = getEmbeddedPost(item.post.embed)
-        if (didOrHandleUriMatches(atUri, quotedPost?.uri, quotedPost?.author)) {
-          yield embedViewRecordToPostView(quotedPost!)
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
+          yield embedViewRecordToPostView(quotedPost)
         }
 
         if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
-          if (
-            didOrHandleUriMatches(
-              atUri,
-              item.reply.parent.uri,
-              item.reply.parent.author,
-            )
-          ) {
-            yield item.reply?.parent
+          if (didOrHandleUriMatches(atUri, item.reply.parent)) {
+            yield item.reply.parent
           }
         }
 
         if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
-          if (
-            didOrHandleUriMatches(
-              atUri,
-              item.reply.root.uri,
-              item.reply.root.author,
-            )
-          ) {
+          if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
           }
         }
