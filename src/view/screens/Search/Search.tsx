@@ -1,8 +1,11 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Image,
+  ImageStyle,
   Platform,
   Pressable,
+  StyleProp,
   StyleSheet,
   TextInput,
   View,
@@ -488,6 +491,9 @@ export function SearchScreen(
 
   const [showAutocomplete, setShowAutocomplete] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
+  const [selectedProfiles, setSelectedProfiles] = React.useState<
+    AppBskyActorDefs.ProfileViewBasic[]
+  >([])
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -503,6 +509,10 @@ export function SearchScreen(
         const history = await AsyncStorage.getItem('searchHistory')
         if (history !== null) {
           setSearchHistory(JSON.parse(history))
+        }
+        const profiles = await AsyncStorage.getItem('selectedProfiles')
+        if (profiles !== null) {
+          setSelectedProfiles(JSON.parse(profiles))
         }
       } catch (e: any) {
         logger.error('Failed to load search history', {message: e})
@@ -562,6 +572,30 @@ export function SearchScreen(
     [searchHistory, setSearchHistory],
   )
 
+  const updateSelectedProfiles = React.useCallback(
+    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      let newProfiles = [
+        profile,
+        ...selectedProfiles.filter(p => p.did !== profile.did),
+      ]
+
+      if (newProfiles.length > 5) {
+        newProfiles = newProfiles.slice(0, 5)
+      }
+
+      setSelectedProfiles(newProfiles)
+      try {
+        await AsyncStorage.setItem(
+          'selectedProfiles',
+          JSON.stringify(newProfiles),
+        )
+      } catch (e: any) {
+        logger.error('Failed to save selected profiles', {message: e})
+      }
+    },
+    [selectedProfiles, setSelectedProfiles],
+  )
+
   const navigateToItem = React.useCallback(
     (item: string) => {
       scrollToTopWeb()
@@ -576,6 +610,28 @@ export function SearchScreen(
       }
     },
     [updateSearchHistory, navigation],
+  )
+
+  const navigateToProfile = React.useCallback(
+    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      scrollToTopWeb()
+      setShowAutocomplete(false)
+      updateSelectedProfiles(profile)
+
+      if (isWeb) {
+        navigation.reset({
+          index: 1,
+          routes: [
+            {name: 'Search', params: {q: searchText}},
+            {name: 'Profile', params: {name: profile.handle}},
+          ],
+        })
+      } else {
+        textInput.current?.blur()
+        navigation.navigate('Profile', {name: profile.handle})
+      }
+    },
+    [updateSelectedProfiles, navigation, searchText],
   )
 
   const onSubmit = React.useCallback(() => {
@@ -596,6 +652,13 @@ export function SearchScreen(
       navigateToItem(item)
     },
     [navigateToItem],
+  )
+
+  const handleProfileClick = React.useCallback(
+    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      navigateToProfile(profile)
+    },
+    [navigateToProfile],
   )
 
   const onSoftReset = React.useCallback(() => {
@@ -627,6 +690,22 @@ export function SearchScreen(
       })
     },
     [searchHistory],
+  )
+
+  const handleRemoveProfile = React.useCallback(
+    (profileToRemove: AppBskyActorDefs.ProfileViewBasic) => {
+      const updatedProfiles = selectedProfiles.filter(
+        profile => profile.did !== profileToRemove.did,
+      )
+      setSelectedProfiles(updatedProfiles)
+      AsyncStorage.setItem(
+        'selectedProfiles',
+        JSON.stringify(updatedProfiles),
+      ).catch(e => {
+        logger.error('Failed to update selected profiles', {message: e})
+      })
+    },
+    [selectedProfiles],
   )
 
   return (
@@ -689,12 +768,16 @@ export function SearchScreen(
             searchText={searchText}
             onSubmit={onSubmit}
             onResultPress={onAutocompleteResultPress}
+            onProfileClick={handleProfileClick}
           />
         ) : (
           <SearchHistory
             searchHistory={searchHistory}
+            selectedProfiles={selectedProfiles}
             onItemClick={handleHistoryItemClick}
+            onProfileClick={handleProfileClick}
             onRemoveItemClick={handleRemoveHistoryItem}
+            onRemoveProfileClick={handleRemoveProfile}
           />
         )}
       </View>
@@ -814,12 +897,14 @@ let AutocompleteResults = ({
   searchText,
   onSubmit,
   onResultPress,
+  onProfileClick,
 }: {
   isAutocompleteFetching: boolean
   autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
   searchText: string
   onSubmit: () => void
   onResultPress: () => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }): React.ReactNode => {
   const moderationOpts = useModerationOpts()
   const {_} = useLingui()
@@ -850,7 +935,10 @@ let AutocompleteResults = ({
               key={item.did}
               profile={item}
               moderation={moderateProfile(item, moderationOpts)}
-              onPress={onResultPress}
+              onPress={() => {
+                onProfileClick(item)
+                onResultPress()
+              }}
             />
           ))}
           <View style={{height: 200}} />
@@ -861,17 +949,31 @@ let AutocompleteResults = ({
 }
 AutocompleteResults = React.memo(AutocompleteResults)
 
+function truncateText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...'
+  }
+  return text
+}
+
 function SearchHistory({
   searchHistory,
+  selectedProfiles,
   onItemClick,
+  onProfileClick,
   onRemoveItemClick,
+  onRemoveProfileClick,
 }: {
   searchHistory: string[]
+  selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
   onItemClick: (item: string) => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
   onRemoveItemClick: (item: string) => void
+  onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }) {
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+
   return (
     <CenteredView
       sideBorders={isTabletOrDesktop}
@@ -880,12 +982,68 @@ function SearchHistory({
         height: isWeb ? '100vh' : undefined,
       }}>
       <View style={styles.searchHistoryContainer}>
+        {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
+          <Text style={[pal.text, styles.searchHistoryTitle]}>
+            <Trans>Recent Searches</Trans>
+          </Text>
+        )}
+        {selectedProfiles.length > 0 && (
+          <View
+            style={[
+              styles.selectedProfilesContainer,
+              isMobile && styles.selectedProfilesContainerMobile,
+            ]}>
+            <ScrollView
+              horizontal={true}
+              style={styles.profilesRow}
+              contentContainerStyle={{
+                borderWidth: 0,
+              }}>
+              {selectedProfiles.slice(0, 5).map((profile, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.profileItem,
+                    isMobile && styles.profileItemMobile,
+                  ]}>
+                  <Pressable
+                    accessibilityRole="button"
+                    onPress={() => onProfileClick(profile)}
+                    hitSlop={HITSLOP_10}
+                    style={styles.profilePressable}>
+                    <Image
+                      source={{uri: profile.avatar}}
+                      style={styles.profileAvatar as StyleProp<ImageStyle>}
+                      accessibilityIgnoresInvertColors
+                    />
+                    <Text style={[pal.text, styles.profileName]}>
+                      {truncateText(profile.displayName || '', 12)}
+                    </Text>
+                    <Text style={[pal.textLight, styles.profileHandle]}>
+                      @{truncateText(profile.handle, 12)}
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Remove profile"
+                    accessibilityHint="Remove profile from search history"
+                    onPress={() => onRemoveProfileClick(profile)}
+                    hitSlop={HITSLOP_10}
+                    style={styles.profileRemoveBtn}>
+                    <FontAwesomeIcon
+                      icon="xmark"
+                      size={16}
+                      style={pal.textLight as FontAwesomeIconStyle}
+                    />
+                  </Pressable>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
         {searchHistory.length > 0 && (
           <View style={styles.searchHistoryContent}>
-            <Text style={[pal.text, styles.searchHistoryTitle]}>
-              <Trans>Recent Searches</Trans>
-            </Text>
-            {searchHistory.map((historyItem, index) => (
+            {searchHistory.slice(0, 5).map((historyItem, index) => (
               <View
                 key={index}
                 style={[
@@ -982,11 +1140,63 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 12,
   },
+  selectedProfilesContainer: {
+    marginTop: 10,
+    paddingHorizontal: 12,
+    height: 120,
+  },
+  selectedProfilesContainerMobile: {
+    height: 125,
+  },
+  profilesRow: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+  },
+  profileItem: {
+    alignItems: 'center',
+    marginRight: 15,
+    width: 98,
+  },
+  profileItemMobile: {
+    marginRight: 10,
+    width: 90,
+  },
+  profilePressable: {
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 45,
+  },
+  profileName: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  profileHandle: {
+    fontSize: 10,
+    textAlign: 'center',
+    color: 'gray',
+  },
+  profileRemoveBtn: {
+    position: 'absolute',
+    top: 0,
+    right: 5,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   searchHistoryContent: {
-    padding: 10,
+    paddingHorizontal: 10,
     borderRadius: 8,
   },
   searchHistoryTitle: {
     fontWeight: 'bold',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
   },
 })
