@@ -67,7 +67,7 @@ let FeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -175,7 +175,8 @@ let FeedItem = ({
     return null
   }
 
-  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
+  let formattedCount =
+    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
   return (
     <Link
       testID={`feedItem-by-${item.notification.author.handle}`}
