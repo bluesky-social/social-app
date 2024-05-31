@@ -248,5 +248,5 @@ function RichTextTag({
 }
 
 export function isOnlyEmoji(text: string) {
-  return text.length <= 20 && /^[\W]+[^\s\w\p{P}]$/u.test(text)
+  return text.length <= 15 && /^[^\s\w\p{P}]+[^\s\w\p{P}]*$/u.test(text)
 }
