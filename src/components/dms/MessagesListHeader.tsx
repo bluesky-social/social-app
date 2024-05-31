@@ -157,7 +157,7 @@ function HeaderReady({
       <Link
         style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
         to={makeProfileLink(profile)}>
-        <View style={[a.pt_xs]}>
+        <View style={[a.pt_2xs]}>
           <PreviewableUserAvatar
             size={PFP_SIZE}
             profile={profile}
