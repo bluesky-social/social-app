@@ -483,6 +483,45 @@ export function* findAllPostsInQueryData(
   }
 }
 
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, undefined> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<FeedPageUnselected>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.feed) {
+        if (item.post.author.did === did) {
+          yield item.post.author
+        }
+        const quotedPost = getEmbeddedPost(item.post.embed)
+        if (quotedPost?.author.did === did) {
+          yield quotedPost.author
+        }
+        if (
+          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          item.reply?.parent?.author.did === did
+        ) {
+          yield item.reply.parent.author
+        }
+        if (
+          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          item.reply?.root?.author.did === did
+        ) {
+          yield item.reply.root.author
+        }
+      }
+    }
+  }
+}
+
 function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   // no posts in this feed
   if (feed.length === 0) return true

@@ -1,5 +1,5 @@
 import {StyleSheet, TextProps} from 'react-native'
-import type {SvgProps, PathProps} from 'react-native-svg'
+import type {PathProps, SvgProps} from 'react-native-svg'
 
 import {tokens} from '#/alf'
 

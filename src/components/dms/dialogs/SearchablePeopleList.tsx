@@ -16,23 +16,18 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
-import {logEvent} from 'lib/statsig/statsig'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
-import {FAB} from '#/view/com/util/fab/FAB'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {TextInput} from '#/components/dms/NewChatDialog/TextInput'
+import {TextInput} from '#/components/dms/dialogs/TextInput'
 import {canBeMessaged} from '#/components/dms/util'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 
@@ -57,55 +52,228 @@ type Item =
       key: string
     }
 
-export function NewChat({
-  control,
-  onNewChat,
+export function SearchablePeopleList({
+  title,
+  onSelectChat,
 }: {
-  control: Dialog.DialogControlProps
-  onNewChat: (chatId: string) => void
+  title: string
+  onSelectChat: (did: string) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
+  const control = Dialog.useDialogContext()
+  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const {currentAccount} = useSession()
+  const inputRef = useRef<TextInputType>(null)
 
-  const {mutate: createChat} = useGetConvoForMembers({
-    onSuccess: data => {
-      onNewChat(data.convo.id)
+  const [searchText, setSearchText] = useState('')
 
-      if (!data.convo.lastMessage) {
-        logEvent('chat:create', {logContext: 'NewChatDialog'})
+  const {
+    data: results,
+    isError,
+    isFetching,
+  } = useActorAutocompleteQuery(searchText, true, 12)
+  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
+
+  const items = useMemo(() => {
+    let _items: Item[] = []
+
+    if (isError) {
+      _items.push({
+        type: 'empty',
+        key: 'empty',
+        message: _(msg`We're having network issues, try again`),
+      })
+    } else if (searchText.length) {
+      if (results?.length) {
+        for (const profile of results) {
+          if (profile.did === currentAccount?.did) continue
+          _items.push({
+            type: 'profile',
+            key: profile.did,
+            enabled: canBeMessaged(profile),
+            profile,
+          })
+        }
+
+        _items = _items.sort(a => {
+          // @ts-ignore
+          return a.enabled ? -1 : 1
+        })
       }
-      logEvent('chat:open', {logContext: 'NewChatDialog'})
-    },
-    onError: error => {
-      Toast.show(error.message)
-    },
-  })
+    } else {
+      if (follows) {
+        for (const page of follows.pages) {
+          for (const profile of page.follows) {
+            _items.push({
+              type: 'profile',
+              key: profile.did,
+              enabled: canBeMessaged(profile),
+              profile,
+            })
+          }
+        }
 
-  const onCreateChat = useCallback(
-    (did: string) => {
-      control.close(() => createChat([did]))
+        _items = _items.sort(a => {
+          // @ts-ignore
+          return a.enabled ? -1 : 1
+        })
+      } else {
+        Array(10)
+          .fill(0)
+          .forEach((_, i) => {
+            _items.push({
+              type: 'placeholder',
+              key: i + '',
+            })
+          })
+      }
+    }
+
+    return _items
+  }, [_, searchText, results, isError, currentAccount?.did, follows])
+
+  if (searchText && !isFetching && !items.length && !isError) {
+    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
+  }
+
+  const renderItems = useCallback(
+    ({item}: {item: Item}) => {
+      switch (item.type) {
+        case 'profile': {
+          return (
+            <ProfileCard
+              key={item.key}
+              enabled={item.enabled}
+              profile={item.profile}
+              moderationOpts={moderationOpts!}
+              onPress={onSelectChat}
+            />
+          )
+        }
+        case 'placeholder': {
+          return <ProfileCardSkeleton key={item.key} />
+        }
+        case 'empty': {
+          return <Empty key={item.key} message={item.message} />
+        }
+        default:
+          return null
+      }
     },
-    [control, createChat],
+    [moderationOpts, onSelectChat],
   )
 
-  return (
-    <>
-      <FAB
-        testID="newChatFAB"
-        onPress={control.open}
-        icon={<Plus size="lg" fill={t.palette.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New chat`)}
-        accessibilityHint=""
-      />
+  useLayoutEffect(() => {
+    if (isWeb) {
+      setImmediate(() => {
+        inputRef?.current?.focus()
+      })
+    }
+  }, [])
 
-      <Dialog.Outer
-        control={control}
-        testID="newChatDialog"
-        nativeOptions={{sheet: {snapPoints: ['100%']}}}>
-        <SearchablePeopleList onCreateChat={onCreateChat} />
-      </Dialog.Outer>
-    </>
+  const listHeader = useMemo(() => {
+    return (
+      <View
+        style={[
+          a.relative,
+          a.pt_md,
+          a.pb_xs,
+          a.px_lg,
+          a.border_b,
+          t.atoms.border_contrast_low,
+          t.atoms.bg,
+          native([a.pt_lg]),
+        ]}>
+        <View
+          style={[
+            a.relative,
+            native(a.align_center),
+            a.justify_center,
+            {height: 32},
+          ]}>
+          <Button
+            label={_(msg`Close`)}
+            size="small"
+            shape="round"
+            variant="ghost"
+            color="secondary"
+            style={[
+              a.absolute,
+              a.z_20,
+              native({
+                left: -7,
+              }),
+              web({
+                right: -4,
+              }),
+            ]}
+            onPress={() => control.close()}>
+            {isWeb ? (
+              <X size="md" fill={t.palette.contrast_500} />
+            ) : (
+              <ChevronLeft size="md" fill={t.palette.contrast_500} />
+            )}
+          </Button>
+          <Text
+            style={[
+              a.z_10,
+              a.text_lg,
+              a.font_bold,
+              a.leading_tight,
+              t.atoms.text_contrast_high,
+            ]}>
+            {title}
+          </Text>
+        </View>
+
+        <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
+          <SearchInput
+            inputRef={inputRef}
+            value={searchText}
+            onChangeText={text => {
+              setSearchText(text)
+              listRef.current?.scrollToOffset({offset: 0, animated: false})
+            }}
+            onEscape={control.close}
+          />
+        </View>
+      </View>
+    )
+  }, [
+    t.atoms.border_contrast_low,
+    t.atoms.bg,
+    t.atoms.text_contrast_high,
+    t.palette.contrast_500,
+    _,
+    title,
+    searchText,
+    control,
+  ])
+
+  return (
+    <Dialog.InnerFlatList
+      ref={listRef}
+      data={items}
+      renderItem={renderItems}
+      ListHeaderComponent={listHeader}
+      stickyHeaderIndices={[0]}
+      keyExtractor={(item: Item) => item.key}
+      style={[
+        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
+        native({
+          height: '100%',
+          paddingHorizontal: 0,
+          marginTop: 0,
+          paddingTop: 0,
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+        }),
+      ]}
+      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
+      keyboardDismissMode="on-drag"
+    />
   )
 }
 
@@ -291,219 +459,5 @@ function SearchInput({
         accessibilityHint={_(msg`Search profiles`)}
       />
     </View>
-  )
-}
-
-function SearchablePeopleList({
-  onCreateChat,
-}: {
-  onCreateChat: (did: string) => void
-}) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const moderationOpts = useModerationOpts()
-  const control = Dialog.useDialogContext()
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
-  const {currentAccount} = useSession()
-  const inputRef = useRef<TextInputType>(null)
-
-  const [searchText, setSearchText] = useState('')
-
-  const {
-    data: results,
-    isError,
-    isFetching,
-  } = useActorAutocompleteQuery(searchText, true, 12)
-  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
-
-  const items = useMemo(() => {
-    let _items: Item[] = []
-
-    if (isError) {
-      _items.push({
-        type: 'empty',
-        key: 'empty',
-        message: _(msg`We're having network issues, try again`),
-      })
-    } else if (searchText.length) {
-      if (results?.length) {
-        for (const profile of results) {
-          if (profile.did === currentAccount?.did) continue
-          _items.push({
-            type: 'profile',
-            key: profile.did,
-            enabled: canBeMessaged(profile),
-            profile,
-          })
-        }
-
-        _items = _items.sort(a => {
-          // @ts-ignore
-          return a.enabled ? -1 : 1
-        })
-      }
-    } else {
-      if (follows) {
-        for (const page of follows.pages) {
-          for (const profile of page.follows) {
-            _items.push({
-              type: 'profile',
-              key: profile.did,
-              enabled: canBeMessaged(profile),
-              profile,
-            })
-          }
-        }
-
-        _items = _items.sort(a => {
-          // @ts-ignore
-          return a.enabled ? -1 : 1
-        })
-      } else {
-        Array(10)
-          .fill(0)
-          .forEach((_, i) => {
-            _items.push({
-              type: 'placeholder',
-              key: i + '',
-            })
-          })
-      }
-    }
-
-    return _items
-  }, [_, searchText, results, isError, currentAccount?.did, follows])
-
-  if (searchText && !isFetching && !items.length && !isError) {
-    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
-  }
-
-  const renderItems = useCallback(
-    ({item}: {item: Item}) => {
-      switch (item.type) {
-        case 'profile': {
-          return (
-            <ProfileCard
-              key={item.key}
-              enabled={item.enabled}
-              profile={item.profile}
-              moderationOpts={moderationOpts!}
-              onPress={onCreateChat}
-            />
-          )
-        }
-        case 'placeholder': {
-          return <ProfileCardSkeleton key={item.key} />
-        }
-        case 'empty': {
-          return <Empty key={item.key} message={item.message} />
-        }
-        default:
-          return null
-      }
-    },
-    [moderationOpts, onCreateChat],
-  )
-
-  useLayoutEffect(() => {
-    if (isWeb) {
-      setImmediate(() => {
-        inputRef?.current?.focus()
-      })
-    }
-  }, [])
-
-  const listHeader = useMemo(() => {
-    return (
-      <View
-        style={[
-          a.relative,
-          a.pt_md,
-          a.pb_xs,
-          a.px_lg,
-          a.border_b,
-          t.atoms.border_contrast_low,
-          t.atoms.bg,
-          native([a.pt_lg]),
-        ]}>
-        <View
-          style={[
-            a.relative,
-            native(a.align_center),
-            a.justify_center,
-            {height: 32},
-          ]}>
-          <Button
-            label={_(msg`Close`)}
-            size="small"
-            shape="round"
-            variant="ghost"
-            color="secondary"
-            style={[
-              a.absolute,
-              a.z_20,
-              native({
-                left: -7,
-              }),
-              web({
-                right: -4,
-              }),
-            ]}
-            onPress={() => control.close()}>
-            {isWeb ? (
-              <X size="md" fill={t.palette.contrast_500} />
-            ) : (
-              <ChevronLeft size="md" fill={t.palette.contrast_500} />
-            )}
-          </Button>
-          <Text
-            style={[
-              a.z_10,
-              a.text_lg,
-              a.font_bold,
-              a.leading_tight,
-              t.atoms.text_contrast_high,
-            ]}>
-            <Trans>Start a new chat</Trans>
-          </Text>
-        </View>
-
-        <View style={[native([a.pt_sm]), web([a.pt_xs])]}>
-          <SearchInput
-            inputRef={inputRef}
-            value={searchText}
-            onChangeText={text => {
-              setSearchText(text)
-              listRef.current?.scrollToOffset({offset: 0, animated: false})
-            }}
-            onEscape={control.close}
-          />
-        </View>
-      </View>
-    )
-  }, [t, _, control, searchText])
-
-  return (
-    <Dialog.InnerFlatList
-      ref={listRef}
-      data={items}
-      renderItem={renderItems}
-      ListHeaderComponent={listHeader}
-      stickyHeaderIndices={[0]}
-      keyExtractor={(item: Item) => item.key}
-      style={[
-        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-        native({
-          height: '100%',
-          paddingHorizontal: 0,
-          marginTop: 0,
-          paddingTop: 0,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-        }),
-      ]}
-      webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
-      keyboardDismissMode="on-drag"
-    />
   )
 }

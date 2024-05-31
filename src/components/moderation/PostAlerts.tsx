@@ -64,7 +64,9 @@ function PostLabel({
     <>
       <Button
         label={desc.name}
-        onPress={() => {
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
           control.open()
         }}>
         {({hovered, pressed}) => (
