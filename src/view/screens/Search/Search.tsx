@@ -1019,9 +1019,6 @@ function SearchHistory({
                     <Text style={[pal.text, styles.profileName]}>
                       {truncateText(profile.displayName || '', 12)}
                     </Text>
-                    <Text style={[pal.textLight, styles.profileHandle]}>
-                      @{truncateText(profile.handle, 12)}
-                    </Text>
                   </Pressable>
                   <Pressable
                     accessibilityRole="button"
@@ -1032,7 +1029,7 @@ function SearchHistory({
                     style={styles.profileRemoveBtn}>
                     <FontAwesomeIcon
                       icon="xmark"
-                      size={16}
+                      size={14}
                       style={pal.textLight as FontAwesomeIconStyle}
                     />
                   </Pressable>
@@ -1143,10 +1140,10 @@ const styles = StyleSheet.create({
   selectedProfilesContainer: {
     marginTop: 10,
     paddingHorizontal: 12,
-    height: 120,
+    height: 80,
   },
   selectedProfilesContainerMobile: {
-    height: 125,
+    height: 100,
   },
   profilesRow: {
     flexDirection: 'row',
@@ -1155,18 +1152,17 @@ const styles = StyleSheet.create({
   profileItem: {
     alignItems: 'center',
     marginRight: 15,
-    width: 98,
+    width: 78,
   },
   profileItemMobile: {
-    marginRight: 10,
-    width: 90,
+    width: 70,
   },
   profilePressable: {
     alignItems: 'center',
   },
   profileAvatar: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 45,
   },
   profileName: {
@@ -1174,19 +1170,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 5,
   },
-  profileHandle: {
-    fontSize: 10,
-    textAlign: 'center',
-    color: 'gray',
-  },
   profileRemoveBtn: {
     position: 'absolute',
     top: 0,
     right: 5,
     backgroundColor: 'white',
     borderRadius: 10,
-    width: 20,
-    height: 20,
+    width: 18,
+    height: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
