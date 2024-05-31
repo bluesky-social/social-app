@@ -105,7 +105,7 @@ export function logEvent<E extends keyof LogEvents>(
     if (
       process.env.NODE_ENV === 'development' &&
       eventName.endsWith(':sampled') &&
-      DOWNSAMPLED_EVENTS.has(eventName)
+      !DOWNSAMPLED_EVENTS.has(eventName)
     ) {
       logger.error(
         'Did you forget to add ' + eventName + ' to DOWNSAMPLED_EVENTS?',
