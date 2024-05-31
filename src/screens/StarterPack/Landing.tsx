@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {useGate} from 'lib/statsig/statsig'
 import {useSetMinimalShellMode} from 'state/shell'
@@ -77,6 +78,7 @@ export function Landing({
   const {_} = useLingui()
   const gate = useGate()
   const t = useTheme()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const setMinimalShellMode = useSetMinimalShellMode()
   const gradient =
     t.name === 'light'
@@ -91,14 +93,7 @@ export function Landing({
   }, [])
 
   React.useEffect(() => {
-    if (!gate('starter_packs_enabled')) {
-      // @ts-expect-error idk
-      navigation.replace('Home')
-      return
-    }
-
     setMinimalShellMode(true)
-
     return () => {
       setMinimalShellMode(false)
     }
@@ -125,22 +120,21 @@ export function Landing({
           </View>
         </LinearGradient>
         <View style={[a.gap_md, a.mt_lg, a.mx_lg]}>
-          <Text
-            style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
-            186 joined this week
-          </Text>
+          {/* TODO only display this when the total count is > 50 */}
+          <Text style={[a.text_md, a.text_center]}>186 joined this week!</Text>
           <Button
             label={_(msg`Join Bluesky now`)}
             onPress={() => {}}
             variant="solid"
             color="primary"
-            size="large">
+            size="large"
+            style={[isTabletOrDesktop && {width: 200, alignSelf: 'center'}]}>
             <ButtonText style={[a.text_lg]}>
               <Trans>Join Bluesky now</Trans>
             </ButtonText>
           </Button>
           <View style={[a.gap_xl, a.mt_md]}>
-            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+            <Text style={[a.text_md]}>
               (This is the description) A collection of feeds and users to get
               you started with the science community on Bluesky!
             </Text>
@@ -156,7 +150,7 @@ export function Landing({
               ]}>
               <FeedSourceCard
                 feedUri="at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science"
-                noBorder={true}
+                hideTopBorder={true}
               />
               <FeedSourceCard feedUri="at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2" />
             </View>
@@ -168,7 +162,7 @@ export function Landing({
                 t.atoms.bg_contrast_25,
                 a.rounded_sm,
                 a.px_xs,
-                a.py_md,
+                a.py_xl,
                 a.gap_xl,
               ]}>
               <UserSet users={userSets.first} />
@@ -180,36 +174,6 @@ export function Landing({
     </CenteredView>
   )
 }
-
-// function AvatarSet({avatars}: {avatars: string[]}) {
-//   return (
-//     <View style={[a.flex_row, a.gap_xs]}>
-//       <AvatarSetImage avatar={avatars[0]} zIndex={1} />
-//       <AvatarSetImage avatar={avatars[1]} zIndex={2} />
-//       <AvatarSetImage avatar={avatars[2]} zIndex={3} />
-//     </View>
-//   )
-// }
-
-// function AvatarSetImage({avatar, zIndex}: {avatar: string; zIndex: number}) {
-//   return (
-//     <Image
-//       source={avatar}
-//       style={[
-//         a.rounded_full,
-//         {
-//           width: 32,
-//           height: 32,
-//           borderColor: 'white',
-//           borderWidth: 2,
-//           marginRight: -16,
-//           zIndex,
-//         },
-//       ]}
-//       accessibilityIgnoresInvertColors={true}
-//     />
-//   )
-// }
 
 function User({displayName, avatar}: {displayName: string; avatar: string}) {
   return (
