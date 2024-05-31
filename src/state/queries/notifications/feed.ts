@@ -30,7 +30,11 @@ import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {STALE} from '..'
-import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from '../util'
 import {FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
 import {fetchPage} from './util'
@@ -143,7 +147,6 @@ export function* findAllPostsInQueryData(
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
   const atUri = new AtUri(uri)
-  const isDid = atUri.host.startsWith('did:')
 
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: [RQKEY_ROOT],
@@ -155,25 +158,15 @@ export function* findAllPostsInQueryData(
 
     for (const page of queryData?.pages) {
       for (const item of page.items) {
-        if (isDid && item.subject?.uri === uri) {
-          yield item.subject
-        } else if (
-          !isDid &&
-          item.subject?.author.handle === atUri.host &&
-          item.subject?.uri.endsWith(atUri.rkey)
+        if (
+          didOrHandleUriMatches(atUri, item?.subjectUri, item.subject?.author)
         ) {
-          yield item.subject
+          yield item.subject!
         }
 
         const quotedPost = getEmbeddedPost(item.subject?.embed)
-        if (isDid && quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(quotedPost)
-        } else if (
-          !isDid &&
-          quotedPost?.author.handle === atUri.host &&
-          quotedPost.uri.endsWith(atUri.rkey)
-        ) {
-          yield embedViewRecordToPostView(quotedPost)
+        if (didOrHandleUriMatches(atUri, quotedPost?.uri, quotedPost?.author)) {
+          yield embedViewRecordToPostView(quotedPost!)
         }
       }
     }

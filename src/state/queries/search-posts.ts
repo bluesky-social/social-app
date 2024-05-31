@@ -12,7 +12,11 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
 const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
@@ -64,7 +68,6 @@ export function* findAllPostsInQueryData(
     queryKey: [searchPostsQueryKeyRoot],
   })
   const atUri = new AtUri(uri)
-  const isDid = atUri.host.startsWith('did:')
 
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
@@ -72,25 +75,13 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const post of page.posts) {
-        if (isDid && post.uri === uri) {
-          yield post
-        } else if (
-          !isDid &&
-          post.author.handle === atUri.host &&
-          post.uri.endsWith(atUri.rkey)
-        ) {
+        if (didOrHandleUriMatches(atUri, post.uri, post.author)) {
           yield post
         }
 
         const quotedPost = getEmbeddedPost(post.embed)
-        if (isDid && quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(quotedPost)
-        } else if (
-          !isDid &&
-          quotedPost?.author.handle === atUri.host &&
-          quotedPost.uri.endsWith(atUri.rkey)
-        ) {
-          yield embedViewRecordToPostView(quotedPost)
+        if (didOrHandleUriMatches(atUri, quotedPost?.uri, quotedPost?.author)) {
+          yield embedViewRecordToPostView(quotedPost!)
         }
       }
     }

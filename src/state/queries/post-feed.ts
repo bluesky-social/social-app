@@ -35,7 +35,11 @@ import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from './util'
 
 type ActorDid = string
 type AuthorFilter =
@@ -449,7 +453,6 @@ export function* findAllPostsInQueryData(
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
   const atUri = new AtUri(uri)
-  const isDid = atUri.host.startsWith('did:')
 
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
@@ -462,47 +465,34 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.feed) {
-        if (isDid && item.post.uri === uri) {
-          yield item.post
-        } else if (
-          !isDid &&
-          item.post.author.handle === atUri.host &&
-          item.post.uri.endsWith(atUri.rkey)
-        ) {
+        if (didOrHandleUriMatches(atUri, item.post.uri, item.post.author)) {
           yield item.post
         }
 
         const quotedPost = getEmbeddedPost(item.post.embed)
-
-        if (isDid && quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(quotedPost)
-        } else if (
-          !isDid &&
-          quotedPost?.author.handle === atUri.host &&
-          quotedPost.uri.endsWith(atUri.rkey)
-        ) {
-          yield embedViewRecordToPostView(quotedPost)
+        if (didOrHandleUriMatches(atUri, quotedPost?.uri, quotedPost?.author)) {
+          yield embedViewRecordToPostView(quotedPost!)
         }
 
         if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
-          if (isDid && item.reply?.parent?.uri === uri) {
-            yield item.reply.parent
-          } else if (
-            !isDid &&
-            item.reply?.parent?.author.handle === atUri.host &&
-            item.reply.parent.uri.endsWith(atUri.rkey)
+          if (
+            didOrHandleUriMatches(
+              atUri,
+              item.reply.parent.uri,
+              item.reply.parent.author,
+            )
           ) {
-            yield item.reply.parent
+            yield item.reply?.parent
           }
         }
 
         if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
-          if (isDid && item.reply?.root?.uri === uri) {
-            yield item.reply.root
-          } else if (
-            !isDid &&
-            item.reply?.root?.author.handle === atUri.host &&
-            item.reply.root.uri.endsWith(atUri.rkey)
+          if (
+            didOrHandleUriMatches(
+              atUri,
+              item.reply.root.uri,
+              item.reply.root.author,
+            )
           ) {
             yield item.reply.root
           }

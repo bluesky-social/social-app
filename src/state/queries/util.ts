@@ -1,8 +1,10 @@
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AtUri,
 } from '@atproto/api'
 import {InfiniteData, QueryClient, QueryKey} from '@tanstack/react-query'
 
@@ -20,6 +22,28 @@ export function truncateAndInvalidate<T = any>(
     return data
   })
   queryClient.invalidateQueries({queryKey})
+}
+
+// Given an AtUri, this function will check if the AtUri matches a
+// hit regardless of whether the AtUri uses a DID or handle as a host.
+//
+// AtUri should be the URI that is being searched for, while currentUri
+// is the URI that is being checked. currentAuthor is the author
+// of the currentUri that is being checked.
+export function didOrHandleUriMatches(
+  atUri: AtUri,
+  currentUri: string | undefined,
+  currentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined,
+) {
+  if (!currentUri || !currentAuthor) {
+    return false
+  }
+
+  if (atUri.host.startsWith('did:')) {
+    return atUri.href === currentUri
+  }
+
+  return atUri.host === currentAuthor.handle && currentUri.endsWith(atUri.rkey)
 }
 
 export function getEmbeddedPost(
