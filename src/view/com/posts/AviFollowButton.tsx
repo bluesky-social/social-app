@@ -16,7 +16,7 @@ import {
   NativeDropdown,
 } from '#/view/com/util/forms/NativeDropdown'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useFollowMethods} from '#/components/hooks/useFollowMethods'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -90,7 +90,11 @@ export function AviFollowButton({
           hitSlop={createHitslop(3)}
           style={[
             a.rounded_full,
-            t.atoms.bg_contrast_100,
+            select(t.name, {
+              light: t.atoms.bg_contrast_100,
+              dim: t.atoms.bg_contrast_100,
+              dark: t.atoms.bg_contrast_200,
+            }),
             a.absolute,
             {
               bottom: 0,
@@ -103,9 +107,11 @@ export function AviFollowButton({
             <Plus
               size="sm"
               fill={
-                t.name === 'light'
-                  ? t.atoms.bg_contrast_600.backgroundColor
-                  : t.atoms.bg_contrast_500.backgroundColor
+                select(t.name, {
+                  light: t.atoms.bg_contrast_600,
+                  dim: t.atoms.bg_contrast_500,
+                  dark: t.atoms.bg_contrast_500,
+                }).backgroundColor
               }
             />
           </NativeDropdown>
