@@ -43,6 +43,7 @@ import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -251,13 +252,10 @@ let FeedItemInner = ({
                 )}`,
               )}
               onBeforePress={onOpenReposter}>
-              <FontAwesomeIcon
-                icon="retweet"
-                style={{
-                  marginRight: 4,
-                  color: pal.colors.textLight,
-                  minWidth: 16,
-                }}
+              <Repost
+                style={{color: pal.colors.textLight, marginRight: 2}}
+                width={16}
+                height={16}
               />
               <Text
                 type="sm-bold"
@@ -463,6 +461,7 @@ const styles = StyleSheet.create({
   },
   includeReason: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 2,
     marginBottom: 2,
     marginLeft: -20,
