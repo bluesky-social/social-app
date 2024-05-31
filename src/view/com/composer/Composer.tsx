@@ -181,12 +181,7 @@ export const ComposePost = observer(function ComposePost({
       borderColor: interpolateColor(
         hasScrolled.value,
         [0, 1],
-        [
-          'transparent',
-          isWeb
-            ? t.atoms.border_contrast_low.borderColor
-            : t.atoms.border_contrast_high.borderColor,
-        ],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
       ),
     }
   })

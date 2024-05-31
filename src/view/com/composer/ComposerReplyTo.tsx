@@ -10,7 +10,6 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {ComposerOptsPostRef} from 'state/shell/composer'
@@ -76,10 +75,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
 
   return (
     <Pressable
-      style={[
-        isWeb ? t.atoms.border_contrast_low : t.atoms.border_contrast_high,
-        styles.replyToLayout,
-      ]}
+      style={[t.atoms.border_contrast_medium, styles.replyToLayout]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(
