@@ -91,6 +91,11 @@ export const Link = memo(function Link({
     [closeModal, navigation, navigationAction, href, openLink, onBeforePress],
   )
 
+  const accessibilityActionsWithActivate = [
+    ...(accessibilityActions || []),
+    {name: 'activate', label: title},
+  ]
+
   if (noFeedback) {
     return (
       <WebAuxClickWrapper>
@@ -99,10 +104,7 @@ export const Link = memo(function Link({
           onPress={onPress}
           accessible={accessible}
           accessibilityRole="link"
-          accessibilityActions={[
-            ...(accessibilityActions || []),
-            {name: 'activate', label: title},
-          ]}
+          accessibilityActions={accessibilityActionsWithActivate}
           onAccessibilityAction={e => {
             if (e.nativeEvent.actionName === 'activate') {
               onPress()
