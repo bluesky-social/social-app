@@ -29,7 +29,7 @@ export function Wizard({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
   const params = route.params
-  const {mode, initialStep, id} = params
+  const {mode, initialStep, id} = params ?? {}
 
   // TODO load query here
   const starterPack = {}

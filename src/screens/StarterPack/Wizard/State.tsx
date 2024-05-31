@@ -106,7 +106,7 @@ export function Provider({
 }) {
   const stateAndReducer = React.useReducer(
     reducer,
-    initialStep
+    initialState
       ? {
           ...initialState,
           step: initialStep,
