@@ -1,6 +1,10 @@
 import React, {ComponentProps} from 'react'
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
-import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
@@ -36,7 +40,14 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
     : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: withTiming(isPressed ? 1.1 : 1, {duration: 150})}],
+    transform: [
+      {
+        scale: withTiming(isPressed ? 1.1 : 1, {
+          duration: 250,
+          easing: Easing.out(Easing.quad),
+        }),
+      },
+    ],
   }))
 
   return (
@@ -44,7 +55,10 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
       testID={testID}
       onPress={e => {
         playHaptic()
-        onPress?.(e)
+
+        setTimeout(() => {
+          onPress?.(e)
+        }, 75)
       }}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
