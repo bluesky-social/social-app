@@ -75,12 +75,12 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const post of page.posts) {
-        if (didOrHandleUriMatches(atUri, post.uri, post.author)) {
+        if (didOrHandleUriMatches(atUri, post)) {
           yield post
         }
 
         const quotedPost = getEmbeddedPost(post.embed)
-        if (didOrHandleUriMatches(atUri, quotedPost?.uri, quotedPost?.author)) {
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
           yield embedViewRecordToPostView(quotedPost!)
         }
       }
