@@ -1,5 +1,7 @@
 import React, {useLayoutEffect} from 'react'
 import {Modal, View} from 'react-native'
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
+import {RootSiblingParent} from 'react-native-root-siblings'
 import {StatusBar} from 'expo-status-bar'
 import * as SystemUI from 'expo-system-ui'
 import {observer} from 'mobx-react-lite'
@@ -34,26 +36,55 @@ export const Composer = observer(function ComposerImpl({}: {
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}>
       <View style={[t.atoms.bg, a.flex_1]}>
-        <LegacyModalProvider>
-          <PortalProvider>
-            <ComposePost
-              cancelRef={ref}
-              replyTo={state?.replyTo}
-              onPost={state?.onPost}
-              quote={state?.quote}
-              mention={state?.mention}
-              text={state?.text}
-              imageUris={state?.imageUris}
-            />
-            <LegacyModalsContainer />
-            <PortalOutlet />
-          </PortalProvider>
-        </LegacyModalProvider>
-        {isIOS && <IOSModalBackground active={open} />}
+        <Providers open={open}>
+          <ComposePost
+            cancelRef={ref}
+            replyTo={state?.replyTo}
+            onPost={state?.onPost}
+            quote={state?.quote}
+            mention={state?.mention}
+            text={state?.text}
+            imageUris={state?.imageUris}
+          />
+        </Providers>
       </View>
     </Modal>
   )
 })
+
+function Providers({
+  children,
+  open,
+}: {
+  children: React.ReactNode
+  open: boolean
+}) {
+  // on iOS, it's a native formSheet. We use FullWindowOverlay to make
+  // the dialogs appear over it
+  if (isIOS) {
+    return (
+      <>
+        {children}
+        <IOSModalBackground active={open} />
+      </>
+    )
+  } else {
+    // on Android we just nest the dialogs within it
+    return (
+      <GestureHandlerRootView style={a.flex_1}>
+        <RootSiblingParent>
+          <LegacyModalProvider>
+            <PortalProvider>
+              {children}
+              <LegacyModalsContainer />
+              <PortalOutlet />
+            </PortalProvider>
+          </LegacyModalProvider>
+        </RootSiblingParent>
+      </GestureHandlerRootView>
+    )
+  }
+}
 
 // Generally, the backdrop of the app is the theme color, but when this is open
 // we want it to be black due to the modal being a form sheet.
