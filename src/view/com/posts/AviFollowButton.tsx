@@ -72,7 +72,7 @@ export function AviFollowButton({
       },
     },
     {
-      label: _(msg`Follow user`),
+      label: _(msg`Follow ${name}`),
       onPress: onPress,
       icon: {
         ios: {
