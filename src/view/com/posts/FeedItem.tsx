@@ -53,6 +53,7 @@ interface FeedItemProps {
   isThreadLastChild?: boolean
   isThreadParent?: boolean
   feedContext: string | undefined
+  hideTopBorder?: boolean
 }
 
 export function FeedItem({
@@ -66,6 +67,7 @@ export function FeedItem({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -95,6 +97,7 @@ export function FeedItem({
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
+        hideTopBorder={hideTopBorder}
       />
     )
   }
@@ -113,6 +116,7 @@ let FeedItemInner = ({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -187,7 +191,9 @@ let FeedItemInner = ({
           ? 8
           : undefined,
     },
-    isThreadChild ? styles.outerSmallTop : undefined,
+    (hideTopBorder || isThreadChild) && {
+      borderTopWidth: hideTopBorder ? 0 : hairlineWidth,
+    },
   ]
 
   return (
@@ -443,15 +449,11 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
     paddingLeft: 10,
     paddingRight: 15,
     // @ts-ignore web only -prf
     cursor: 'pointer',
     overflow: 'hidden',
-  },
-  outerSmallTop: {
-    borderTopWidth: 0,
   },
   replyLine: {
     width: 2,

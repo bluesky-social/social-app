@@ -1,5 +1,10 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  ListRenderItemInfo,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -103,7 +108,7 @@ export function Feed({
   //   renderItem function renders components that follow React performance best practices
   //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return (
           <EmptyState
@@ -128,7 +133,13 @@ export function Feed({
           </View>
         )
       }
-      return <FeedItem item={item} moderationOpts={moderationOpts!} />
+      return (
+        <FeedItem
+          item={item}
+          moderationOpts={moderationOpts!}
+          hideTopBorder={index === 0}
+        />
+      )
     },
     [onPressRetryLoadMore, moderationOpts, _, pal.border],
   )
