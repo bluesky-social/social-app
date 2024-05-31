@@ -423,7 +423,7 @@ function ExpandedAuthorsList({
           <NewLink
             key={author.profile.did}
             label={author.profile.displayName || author.profile.handle}
-            accessibilityHint={_(msg`Open's profile`)}
+            accessibilityHint={_(msg`Opens this profile`)}
             to={makeProfileLink({
               did: author.profile.did,
               handle: author.profile.handle,
