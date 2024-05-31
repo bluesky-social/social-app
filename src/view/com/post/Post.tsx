@@ -251,7 +251,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   layoutAvi: {
-    // width: 70,
     paddingLeft: 8,
   },
   layoutContent: {
