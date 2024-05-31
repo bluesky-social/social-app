@@ -88,7 +88,6 @@ let MessageItem = ({
         {rt.text.length > 0 && (
           <View
             style={
-              !message.facets &&
               !isOnlyEmoji(message.text) && [
                 a.py_sm,
                 a.my_2xs,
