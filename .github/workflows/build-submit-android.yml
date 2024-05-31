@@ -119,3 +119,15 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: ⬇️ Restore Cache
+        id: get-base-commit
+        uses: actions/cache@v4
+        if: ${{ inputs.profile == 'testflight' }}
+        with:
+          path: most-recent-testflight-commit.txt
+          key: most-recent-testflight-commit
+
+      - name: ✏️ Write commit hash to cache
+        if: ${{ inputs.profile == 'testflight' }}
+        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt

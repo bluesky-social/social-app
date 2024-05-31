@@ -2,6 +2,7 @@ import React, {PropsWithChildren, useMemo, useRef} from 'react'
 import {
   Dimensions,
   GestureResponderEvent,
+  Platform,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -10,18 +11,20 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import RootSiblings from 'react-native-root-siblings'
+import {FullWindowOverlay} from 'react-native-screens'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {colors} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import {isWeb} from 'platform/detection'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
-import {colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {HITSLOP_10} from 'lib/constants'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
-import {isWeb} from 'platform/detection'
 
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16
@@ -239,7 +242,7 @@ const DropdownItems = ({
   // - (On mobile) be buttons by default, accept `label` and `nativeID`
   // props, and always have an explicit label
   return (
-    <>
+    <Wrapper>
       {/* This TouchableWithoutFeedback renders the background so if the user clicks outside, the dropdown closes */}
       <TouchableWithoutFeedback
         onPress={onOuterPress}
@@ -304,9 +307,16 @@ const DropdownItems = ({
           return null
         })}
       </View>
-    </>
+    </Wrapper>
   )
 }
+
+// on iOS, due to formSheet presentation style, we need to render the overlay
+// as a full screen overlay
+const Wrapper = Platform.select({
+  ios: FullWindowOverlay,
+  default: ({children}) => <>{children}</>,
+})
 
 function isSep(item: DropdownItem): item is DropdownItemSeparator {
   return 'sep' in item && item.sep

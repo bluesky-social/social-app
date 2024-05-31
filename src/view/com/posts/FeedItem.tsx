@@ -371,7 +371,7 @@ let PostContent = ({
       modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts modui={moderation.ui('contentList')} style={[a.pb_xs]} />
+      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_2xs]} />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
@@ -393,7 +393,7 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <View style={[a.pb_sm]}>
+        <View style={[a.pb_xs]}>
           <PostEmbeds
             embed={postEmbed}
             moderation={moderation}
@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   contentHiderChild: {
     marginTop: 6,

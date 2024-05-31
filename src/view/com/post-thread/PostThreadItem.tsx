@@ -30,6 +30,11 @@ import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
+import {
+  isAvailable as isNativeTranslationAvailable,
+  isLanguageSupported,
+  NativeTranslationModule,
+} from '../../../../modules/expo-bluesky-translate'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -61,6 +66,7 @@ export function PostThreadItem({
   hasPrecedingItem,
   overrideBlur,
   onPostReply,
+  hideTopBorder,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
@@ -76,6 +82,7 @@ export function PostThreadItem({
   hasPrecedingItem: boolean
   overrideBlur: boolean
   onPostReply: () => void
+  hideTopBorder?: boolean
 }) {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -87,7 +94,7 @@ export function PostThreadItem({
     [record],
   )
   if (postShadowed === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted />
+    return <PostThreadItemDeleted hideTopBorder={hideTopBorder} />
   }
   if (richText && moderation) {
     return (
@@ -109,16 +116,25 @@ export function PostThreadItem({
         hasPrecedingItem={hasPrecedingItem}
         overrideBlur={overrideBlur}
         onPostReply={onPostReply}
+        hideTopBorder={hideTopBorder}
       />
     )
   }
   return null
 }
 
-function PostThreadItemDeleted() {
+function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
   const pal = usePalette('default')
   return (
-    <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
+    <View
+      style={[
+        styles.outer,
+        pal.border,
+        pal.view,
+        s.p20,
+        s.flexRow,
+        hideTopBorder && styles.noTopBorder,
+      ]}>
       <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
       <Text style={[pal.textLight, s.ml10]}>
         <Trans>This post has been deleted.</Trans>
@@ -143,6 +159,7 @@ let PostThreadItemLoaded = ({
   hasPrecedingItem,
   overrideBlur,
   onPostReply,
+  hideTopBorder,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -159,6 +176,7 @@ let PostThreadItemLoaded = ({
   hasPrecedingItem: boolean
   overrideBlur: boolean
   onPostReply: () => void
+  hideTopBorder?: boolean
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -233,7 +251,7 @@ let PostThreadItemLoaded = ({
                   styles.replyLine,
                   {
                     flexGrow: 1,
-                    backgroundColor: pal.colors.border,
+                    backgroundColor: pal.colors.replyLine,
                   },
                 ]}
               />
@@ -243,7 +261,14 @@ let PostThreadItemLoaded = ({
 
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
-          style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+          style={[
+            styles.outer,
+            styles.outerHighlighted,
+            pal.border,
+            pal.view,
+            rootUri === post.uri && styles.outerHighlightedRoot,
+            hideTopBorder && styles.noTopBorder,
+          ]}
           accessible={false}>
           <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
@@ -292,6 +317,7 @@ let PostThreadItemLoaded = ({
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
                 modui={moderation.ui('contentView')}
+                size="large"
                 includeMute
                 style={[a.pt_2xs, a.pb_sm]}
               />
@@ -318,6 +344,7 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
+              record={record}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
@@ -362,7 +389,7 @@ let PostThreadItemLoaded = ({
                 ) : null}
               </View>
             ) : null}
-            <View style={[s.pl10, s.pr10, s.pb5]}>
+            <View style={[s.pl10, s.pr10]}>
               <PostCtrls
                 big
                 post={post}
@@ -390,7 +417,8 @@ let PostThreadItemLoaded = ({
           depth={depth}
           showParentReplyLine={!!showParentReplyLine}
           treeView={treeView}
-          hasPrecedingItem={hasPrecedingItem}>
+          hasPrecedingItem={hasPrecedingItem}
+          hideTopBorder={hideTopBorder}>
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
@@ -403,7 +431,8 @@ let PostThreadItemLoaded = ({
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
             }
-            profile={post.author}>
+            profile={post.author}
+            interpretFilterAsBlur>
             <View
               style={{
                 flexDirection: 'row',
@@ -495,7 +524,7 @@ let PostThreadItemLoaded = ({
                 <LabelsOnMyPost post={post} />
                 <PostAlerts
                   modui={moderation.ui('contentList')}
-                  style={[a.pt_xs, a.pb_sm]}
+                  style={[a.pt_2xs, a.pb_2xs]}
                 />
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
@@ -573,6 +602,7 @@ function PostOuterWrapper({
   depth,
   showParentReplyLine,
   hasPrecedingItem,
+  hideTopBorder,
   children,
 }: React.PropsWithChildren<{
   post: AppBskyFeedDefs.PostView
@@ -580,6 +610,7 @@ function PostOuterWrapper({
   depth: number
   showParentReplyLine: boolean
   hasPrecedingItem: boolean
+  hideTopBorder?: boolean
 }>) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -616,6 +647,7 @@ function PostOuterWrapper({
         styles.outer,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
+        hideTopBorder && styles.noTopBorder,
         styles.cursor,
       ]}>
       {children}
@@ -625,26 +657,39 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
+  record,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
+  record?: AppBskyFeedPost.Record
   needsTranslation: boolean
   translatorUrl: string
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
-  const onTranslatePress = React.useCallback(
-    () => openLink(translatorUrl),
-    [openLink, translatorUrl],
-  )
+
+  const text = record?.text || ''
+
+  const onTranslatePress = React.useCallback(() => {
+    if (
+      isNativeTranslationAvailable &&
+      isLanguageSupported(record?.langs?.at(0))
+    ) {
+      NativeTranslationModule.presentAsync(text)
+    } else {
+      openLink(translatorUrl)
+    }
+  }, [openLink, text, translatorUrl, record])
+
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
           <Text style={pal.textLight}> &middot; </Text>
+
           <Text
             style={pal.link}
             title={_(msg`Translate`)}
@@ -663,9 +708,14 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   outerHighlighted: {
-    paddingTop: 16,
+    borderTopWidth: 0,
+    paddingTop: 4,
     paddingLeft: 8,
     paddingRight: 8,
+  },
+  outerHighlightedRoot: {
+    borderTopWidth: 1,
+    paddingTop: 16,
   },
   noTopBorder: {
     borderTopWidth: 0,
@@ -719,7 +769,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     marginTop: 5,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   expandedInfoItem: {
     marginRight: 10,
