@@ -24,6 +24,7 @@ import {CenteredView} from '../util/Views'
 import {FeedItem} from './FeedItem'
 import hairlineWidth = StyleSheet.hairlineWidth
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -44,6 +45,7 @@ export function Feed({
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -136,11 +138,11 @@ export function Feed({
         <FeedItem
           item={item}
           moderationOpts={moderationOpts!}
-          hideTopBorder={index === 0}
+          hideTopBorder={index === 0 && isTabletOrMobile}
         />
       )
     },
-    [onPressRetryLoadMore, moderationOpts, _, pal.border],
+    [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
   )
 
   const FeedFooter = React.useCallback(

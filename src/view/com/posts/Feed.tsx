@@ -32,6 +32,7 @@ import {
 import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useTheme} from 'lib/ThemeContext'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -101,6 +102,7 @@ let Feed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri] = feed.split('|')
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -312,17 +314,23 @@ let Feed = ({
         // -prf
         return <DiscoverFallbackHeader />
       }
-      return <FeedSlice slice={item} hideTopBorder={index === 0} />
+      return (
+        <FeedSlice
+          slice={item}
+          hideTopBorder={index === 0 && isTabletOrMobile}
+        />
+      )
     },
     [
+      isTabletOrMobile,
+      renderEmptyState,
       feed,
-      feedUri,
       error,
       onPressTryAgain,
-      onPressRetryLoadMore,
-      renderEmptyState,
-      _,
       savedFeedConfig,
+      _,
+      onPressRetryLoadMore,
+      feedUri,
     ],
   )
 
