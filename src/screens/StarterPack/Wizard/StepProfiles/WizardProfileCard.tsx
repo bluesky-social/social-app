@@ -1,37 +1,23 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useProfileQuery} from 'state/queries/profile'
-import {useSession} from 'state/session'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
-export function WizardProfileCard() {
+export function WizardProfileCard({
+  profile,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+}) {
   const {_} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = useWizardState()
-
-  // TODO remove this
-  const {currentAccount} = useSession()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
-
-  const includesProfile =
-    profile?.did && state.profileDids.includes(profile.did)
-
-  const onAdd = () => {
-    if (!profile?.did) return
-
-    if (!includesProfile) {
-      dispatch({type: 'AddProfile', did: profile.did})
-    } else {
-      dispatch({type: 'RemoveProfile', did: profile.did})
-    }
-  }
+  const [__, dispatch] = useWizardState()
 
   return (
     <View
@@ -56,14 +42,19 @@ export function WizardProfileCard() {
         </Text>
       </View>
       <Button
-        label={includesProfile ? _(msg`Remove`) : _(msg`Add`)}
+        label={_(msg`Remove`)}
         variant="solid"
         color="primary"
         size="small"
         style={{paddingVertical: 6}}
-        onPress={onAdd}>
+        onPress={() => {
+          dispatch({
+            type: 'RemoveProfile',
+            profileDid: profile.did,
+          })
+        }}>
         <ButtonText>
-          {includesProfile ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
+          <Trans>Remove</Trans>
         </ButtonText>
       </Button>
     </View>
