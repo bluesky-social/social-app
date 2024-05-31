@@ -190,9 +190,7 @@ let FeedItemInner = ({
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
           : undefined,
-    },
-    (hideTopBorder || isThreadChild) && {
-      borderTopWidth: hideTopBorder ? 0 : hairlineWidth,
+      borderTopWidth: hideTopBorder || isThreadParent ? 0 : hairlineWidth,
     },
   ]
 
