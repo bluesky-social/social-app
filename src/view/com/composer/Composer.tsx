@@ -414,97 +414,100 @@ export const ComposePost = observer(function ComposePost({
               topBarAnimatedStyle,
               isWeb && isTabletOrDesktop && styles.topbarDesktop,
             ]}>
-            <TouchableOpacity
-              testID="composerDiscardButton"
-              onPress={onPressCancel}
-              onAccessibilityEscape={onPressCancel}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Cancel`)}
-              accessibilityHint={_(
-                msg`Closes post composer and discards post draft`,
-              )}
-              hitSlop={HITSLOP_10}>
-              <Text style={[pal.link, s.f18]}>
-                <Trans>Cancel</Trans>
-              </Text>
-            </TouchableOpacity>
-            <View style={s.flex1} />
-            {isProcessing ? (
-              <>
-                <Text style={pal.textLight}>{processingState}</Text>
-                <View style={styles.postBtn}>
-                  <ActivityIndicator />
-                </View>
-              </>
-            ) : (
-              <>
-                <LabelsBtn
-                  labels={labels}
-                  onChange={setLabels}
-                  hasMedia={hasMedia}
-                />
-                {canPost ? (
-                  <TouchableOpacity
-                    testID="composerPublishBtn"
-                    onPress={onPressPublish}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
-                    }
-                    accessibilityHint="">
-                    <LinearGradient
-                      colors={[
-                        gradients.blueLight.start,
-                        gradients.blueLight.end,
-                      ]}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 1}}
-                      style={styles.postBtn}>
-                      <Text style={[s.white, s.f16, s.bold]}>
-                        {replyTo ? (
-                          <Trans context="action">Reply</Trans>
-                        ) : (
-                          <Trans context="action">Post</Trans>
-                        )}
-                      </Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={[styles.postBtn, pal.btn]}>
-                    <Text style={[pal.textLight, s.f16, s.bold]}>
-                      <Trans context="action">Post</Trans>
-                    </Text>
-                  </View>
+            <View style={styles.topbarInner}>
+              <TouchableOpacity
+                testID="composerDiscardButton"
+                onPress={onPressCancel}
+                onAccessibilityEscape={onPressCancel}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Cancel`)}
+                accessibilityHint={_(
+                  msg`Closes post composer and discards post draft`,
                 )}
-              </>
+                hitSlop={HITSLOP_10}>
+                <Text style={[pal.link, s.f18]}>
+                  <Trans>Cancel</Trans>
+                </Text>
+              </TouchableOpacity>
+              <View style={s.flex1} />
+              {isProcessing ? (
+                <>
+                  <Text style={pal.textLight}>{processingState}</Text>
+                  <View style={styles.postBtn}>
+                    <ActivityIndicator />
+                  </View>
+                </>
+              ) : (
+                <>
+                  <LabelsBtn
+                    labels={labels}
+                    onChange={setLabels}
+                    hasMedia={hasMedia}
+                  />
+                  {canPost ? (
+                    <TouchableOpacity
+                      testID="composerPublishBtn"
+                      onPress={onPressPublish}
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
+                      }
+                      accessibilityHint="">
+                      <LinearGradient
+                        colors={[
+                          gradients.blueLight.start,
+                          gradients.blueLight.end,
+                        ]}
+                        start={{x: 0, y: 0}}
+                        end={{x: 1, y: 1}}
+                        style={styles.postBtn}>
+                        <Text style={[s.white, s.f16, s.bold]}>
+                          {replyTo ? (
+                            <Trans context="action">Reply</Trans>
+                          ) : (
+                            <Trans context="action">Post</Trans>
+                          )}
+                        </Text>
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={[styles.postBtn, pal.btn]}>
+                      <Text style={[pal.textLight, s.f16, s.bold]}>
+                        <Trans context="action">Post</Trans>
+                      </Text>
+                    </View>
+                  )}
+                </>
+              )}
+            </View>
+
+            {isAltTextRequiredAndMissing && (
+              <View style={[styles.reminderLine, pal.viewLight]}>
+                <View style={styles.errorIcon}>
+                  <FontAwesomeIcon
+                    icon="exclamation"
+                    style={{color: colors.red4}}
+                    size={10}
+                  />
+                </View>
+                <Text style={[pal.text, s.flex1]}>
+                  <Trans>One or more images is missing alt text.</Trans>
+                </Text>
+              </View>
+            )}
+            {error !== '' && (
+              <View style={styles.errorLine}>
+                <View style={styles.errorIcon}>
+                  <FontAwesomeIcon
+                    icon="exclamation"
+                    style={{color: colors.red4}}
+                    size={10}
+                  />
+                </View>
+                <Text style={[s.red4, s.flex1]}>{error}</Text>
+              </View>
             )}
           </Animated.View>
-          {isAltTextRequiredAndMissing && (
-            <View style={[styles.reminderLine, pal.viewLight]}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon
-                  icon="exclamation"
-                  style={{color: colors.red4}}
-                  size={10}
-                />
-              </View>
-              <Text style={[pal.text, s.flex1]}>
-                <Trans>One or more images is missing alt text.</Trans>
-              </Text>
-            </View>
-          )}
-          {error !== '' && (
-            <View style={styles.errorLine}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon
-                  icon="exclamation"
-                  style={{color: colors.red4}}
-                  size={10}
-                />
-              </View>
-              <Text style={[s.red4, s.flex1]}>{error}</Text>
-            </View>
-          )}
           <Animated.ScrollView
             onScroll={scrollHandler}
             style={styles.scrollView}
@@ -621,17 +624,19 @@ export function useComposerCancelRef() {
 
 const styles = StyleSheet.create({
   topbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 16,
-    height: 54,
-    gap: 4,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   topbarDesktop: {
     paddingTop: 10,
     paddingBottom: 10,
     height: 50,
+  },
+  topbarInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    height: 54,
+    gap: 4,
   },
   postBtn: {
     borderRadius: 20,
@@ -643,19 +648,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.red1,
     borderRadius: 6,
-    marginHorizontal: 15,
+    marginHorizontal: 16,
     paddingHorizontal: 8,
     paddingVertical: 6,
-    marginVertical: 6,
+    marginBottom: 8,
   },
   reminderLine: {
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 6,
-    marginHorizontal: 15,
+    marginHorizontal: 16,
     paddingHorizontal: 8,
     paddingVertical: 6,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   errorIcon: {
     borderWidth: hairlineWidth,
