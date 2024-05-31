@@ -8,6 +8,7 @@ import {useSession} from 'state/session'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
+import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
 
 export function StepDetails() {
   const {_} = useLingui()
@@ -21,6 +22,9 @@ export function StepDetails() {
 
   return (
     <View style={[a.px_xl, a.gap_xl, a.mt_md]}>
+      <View style={[{height: 65, marginTop: 20, marginBottom: 50}]}>
+        <StarterPackIcon />
+      </View>
       <View>
         <TextField.LabelText>{_(msg`Starter pack name`)}</TextField.LabelText>
         <TextField.Input
