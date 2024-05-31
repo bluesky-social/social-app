@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -39,7 +39,6 @@ export function AviFollowButton({
   })
   const gate = useGate()
   const {currentAccount, hasSession} = useSession()
-  const [followed, setFollowed] = useState<string | null>(null)
   const navigation = useNavigation<NavigationProp>()
 
   const name = sanitizeDisplayName(
@@ -47,13 +46,10 @@ export function AviFollowButton({
     moderation.ui('displayName'),
   )
   const isFollowing =
-    profile.viewer?.following ||
-    profile.did === followed ||
-    profile.did === currentAccount?.did
+    profile.viewer?.following || profile.did === currentAccount?.did
 
   function onPress() {
     follow()
-    setFollowed(profile.did)
     Toast.show(_(msg`Following ${name}`))
   }
 
