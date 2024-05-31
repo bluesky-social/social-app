@@ -22,6 +22,7 @@ import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Link} from '#/components/Link'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 
 const PFP_SIZE = isWeb ? 40 : 34
@@ -154,14 +155,16 @@ function HeaderReady({
   return (
     <>
       <Link
-        style={[a.flex_row, a.align_center, a.gap_md, a.flex_1, a.pr_md]}
+        style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
         to={makeProfileLink(profile)}>
-        <PreviewableUserAvatar
-          size={PFP_SIZE}
-          profile={profile}
-          moderation={moderation.ui('avatar')}
-          disableHoverCard={moderation.blocked}
-        />
+        <View style={[a.pt_xs]}>
+          <PreviewableUserAvatar
+            size={PFP_SIZE}
+            profile={profile}
+            moderation={moderation.ui('avatar')}
+            disableHoverCard={moderation.blocked}
+          />
+        </View>
         <View style={a.flex_1}>
           <Text
             style={[a.text_md, a.font_bold, web(a.leading_normal)]}
@@ -186,6 +189,12 @@ function HeaderReady({
               )}
             </Text>
           )}
+
+          <PostAlerts
+            modui={moderation.ui('contentList')}
+            size="large"
+            style={[a.pt_xs]}
+          />
         </View>
       </Link>
 
