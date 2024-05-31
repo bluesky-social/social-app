@@ -103,6 +103,7 @@ let MessageItem = ({
                     : t.palette.contrast_50,
                   borderRadius: 17,
                 },
+                isFromSelf ? a.self_end : a.self_start,
                 isFromSelf
                   ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
                   : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
