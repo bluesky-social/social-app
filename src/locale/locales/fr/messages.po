@@ -1929,7 +1929,7 @@ msgstr "Suivre {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:71
 msgid "Follow {name}"
-msgstr ""
+msgstr "Suivre {name}"
 
 #: src/view/com/profile/ProfileMenu.tsx:244
 #: src/view/com/profile/ProfileMenu.tsx:255
@@ -1978,7 +1978,7 @@ msgstr "Suit {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:53
 msgid "Following {name}"
-msgstr ""
+msgstr "Suit {name}"
 
 #: src/view/screens/Settings/index.tsx:567
 msgid "Following feed preferences"
@@ -3227,7 +3227,7 @@ msgstr "Ouvert"
 
 #: src/view/com/posts/AviFollowButton.tsx:89
 msgid "Open {name} profile shortcut menu"
-msgstr ""
+msgstr "Ouvre le menu de raccourci du profil de {name}"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:276
 msgid "Open avatar creator"
