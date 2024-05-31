@@ -762,8 +762,8 @@ const styles = StyleSheet.create({
   expandedInfo: {
     flexDirection: 'row',
     padding: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: hairlineWidth,
+    borderBottomWidth: hairlineWidth,
     marginTop: 5,
     marginBottom: 10,
   },
