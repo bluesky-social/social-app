@@ -46,10 +46,9 @@ export function ThreadgateBtn({
     : _(msg`Some people can reply`)
 
   return (
-    <View style={[a.flex_row, a.py_xs, a.px_sm, a.relative]}>
-      <View style={[a.absolute, a.inset_0, t.atoms.bg, {opacity: 0.95}]} />
+    <View style={[a.flex_row, a.py_xs, a.px_sm, t.atoms.bg]}>
       <Button
-        variant="ghost"
+        variant="solid"
         color="secondary"
         size="xsmall"
         testID="openReplyGateButton"
