@@ -18,7 +18,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {colors, gradients, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {atoms as a, useTheme as useNewTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -177,40 +177,43 @@ export function Component({}: {}) {
               </>
             )}
 
-            <View
-              style={[
-                a.flex_row,
-                a.gap_sm,
-                a.mt_lg,
-                a.p_lg,
-                a.rounded_sm,
-                t.atoms.bg_contrast_25,
-              ]}>
-              <CircleInfo
-                size="xl"
+            <View style={[!isWeb && a.px_xl]}>
+              <View
                 style={[
-                  a.relative,
-                  {
-                    top: -5,
-                  },
-                ]}
-              />
+                  a.w_full,
+                  a.flex_row,
+                  a.gap_sm,
+                  a.mt_lg,
+                  a.p_lg,
+                  a.rounded_sm,
+                  t.atoms.bg_contrast_25,
+                ]}>
+                <CircleInfo
+                  size="md"
+                  style={[
+                    a.relative,
+                    {
+                      top: -1,
+                    },
+                  ]}
+                />
 
-              <NewText style={[a.leading_snug]}>
-                <Trans>
-                  You can also temporarily deactivate your account instead, and
-                  reactivate it at any time.
-                </Trans>{' '}
-                <InlineLinkText
-                  to="#"
-                  onPress={e => {
-                    e.preventDefault()
-                    deactivateAccountControl.open()
-                    return false
-                  }}>
-                  <Trans>Click here for more information.</Trans>
-                </InlineLinkText>
-              </NewText>
+                <NewText style={[a.leading_snug, a.flex_1]}>
+                  <Trans>
+                    You can also temporarily deactivate your account instead,
+                    and reactivate it at any time.
+                  </Trans>{' '}
+                  <InlineLinkText
+                    to="#"
+                    onPress={e => {
+                      e.preventDefault()
+                      deactivateAccountControl.open()
+                      return false
+                    }}>
+                    <Trans>Click here for more information.</Trans>
+                  </InlineLinkText>
+                </NewText>
+              </View>
             </View>
 
             <DeactivateAccountDialog control={deactivateAccountControl} />
