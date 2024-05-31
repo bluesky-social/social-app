@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -51,11 +51,11 @@ export function AviFollowButton({
     profile.did === followed ||
     profile.did === currentAccount?.did
 
-  const onPress = useCallback(() => {
+  function onPress() {
     follow()
     setFollowed(profile.did)
     Toast.show(_(msg`Following ${name}`))
-  }, [follow, profile.did, _, name])
+  }
 
   const items: DropdownItem[] = [
     {
