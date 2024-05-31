@@ -23,6 +23,7 @@ import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
 import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 
 export let ChatListItem = ({
@@ -264,6 +265,12 @@ function ChatListItemReady({
                 ]}>
                 {lastMessage}
               </Text>
+
+              <PostAlerts
+                modui={moderation.ui('contentList')}
+                size="large"
+                style={[a.pt_xs]}
+              />
             </View>
 
             {convo.unreadCount > 0 && (
