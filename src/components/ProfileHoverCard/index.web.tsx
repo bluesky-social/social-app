@@ -358,7 +358,7 @@ function Inner({
   hide: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -371,8 +371,8 @@ function Inner({
     logContext: 'ProfileHoverCard',
   })
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
-  const following = formatCount(profile.followsCount || 0)
-  const followers = formatCount(profile.followersCount || 0)
+  const following = formatCount(i18n, profile.followsCount || 0)
+  const followers = formatCount(i18n, profile.followersCount || 0)
   const pluralizedFollowers = plural(profile.followersCount || 0, {
     one: 'follower',
     other: 'followers',

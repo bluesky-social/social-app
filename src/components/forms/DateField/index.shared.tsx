@@ -1,12 +1,12 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
+import {useLingui} from '@lingui/react'
 
 import {android, atoms as a, useTheme, web} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
 import {Text} from '#/components/Typography'
-import {localizeDate} from './utils'
 
 // looks like a TextField.Input, but is just a button. It'll do something different on each platform on press
 // iOS: open a dialog with an inline date picker
@@ -25,6 +25,7 @@ export function DateFieldButton({
   isInvalid?: boolean
   accessibilityHint?: string
 }) {
+  const {i18n} = useLingui()
   const t = useTheme()
 
   const {
@@ -91,7 +92,7 @@ export function DateFieldButton({
             t.atoms.text,
             {lineHeight: a.text_md.fontSize * 1.1875},
           ]}>
-          {localizeDate(value)}
+          {i18n.date(value, {timeZone: 'UTC'})}
         </Text>
       </Pressable>
     </View>
