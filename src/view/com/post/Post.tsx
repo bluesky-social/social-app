@@ -36,6 +36,7 @@ import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {UserInfoText} from '../util/UserInfoText'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function Post({
   post,
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingBottom: 5,
     paddingLeft: 10,
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     // @ts-ignore web only -prf
     cursor: 'pointer',
   },

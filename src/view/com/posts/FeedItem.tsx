@@ -42,6 +42,7 @@ import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -53,6 +54,7 @@ interface FeedItemProps {
   isThreadLastChild?: boolean
   isThreadParent?: boolean
   feedContext: string | undefined
+  hideTopBorder?: boolean
 }
 
 export function FeedItem({
@@ -66,6 +68,7 @@ export function FeedItem({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -95,6 +98,7 @@ export function FeedItem({
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
+        hideTopBorder={hideTopBorder}
       />
     )
   }
@@ -113,6 +117,7 @@ let FeedItemInner = ({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -186,8 +191,8 @@ let FeedItemInner = ({
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
           : undefined,
+      borderTopWidth: hideTopBorder || isThreadChild ? 0 : hairlineWidth,
     },
-    isThreadChild ? styles.outerSmallTop : undefined,
   ]
 
   return (
@@ -445,15 +450,11 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
     // @ts-ignore web only -prf
     cursor: 'pointer',
     overflow: 'hidden',
-  },
-  outerSmallTop: {
-    borderTopWidth: 0,
   },
   replyLine: {
     width: 2,

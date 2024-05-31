@@ -90,6 +90,7 @@ import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 type CancelRef = {
   onPressCancel: () => void
@@ -657,7 +658,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   errorIcon: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
     borderColor: colors.red4,
     color: colors.red4,
     borderRadius: 30,
@@ -692,6 +693,6 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 20,
     alignItems: 'center',
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
   },
 })

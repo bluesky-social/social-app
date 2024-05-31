@@ -47,6 +47,7 @@ import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const MAX_AUTHORS = 5
 
@@ -61,9 +62,11 @@ interface Author {
 let FeedItem = ({
   item,
   moderationOpts,
+  hideTopBorder,
 }: {
   item: FeedNotification
   moderationOpts: ModerationOpts
+  hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -188,6 +191,7 @@ let FeedItem = ({
               backgroundColor: pal.colors.unreadNotifBg,
               borderColor: pal.colors.unreadNotifBorder,
             },
+        {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
       ]}
       href={itemHref}
       noFeedback
@@ -480,7 +484,6 @@ const styles = StyleSheet.create({
   outer: {
     padding: 10,
     paddingRight: 15,
-    borderTopWidth: 1,
     flexDirection: 'row',
   },
   layoutIcon: {
