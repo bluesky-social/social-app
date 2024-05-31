@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   AppState,
   Dimensions,
+  ListRenderItemInfo,
   StyleProp,
   StyleSheet,
   View,
@@ -31,6 +32,7 @@ import {
 import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useTheme} from 'lib/ThemeContext'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -100,6 +102,7 @@ let Feed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri] = feed.split('|')
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -226,7 +229,7 @@ let Feed = ({
 
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
-    logEvent('feed:refresh', {
+    logEvent('feed:refresh:sampled', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
@@ -244,7 +247,7 @@ let Feed = ({
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    logEvent('feed:endReached', {
+    logEvent('feed:endReached:sampled', {
       feedType: feedType,
       feedUrl: feed,
       itemCount: feedItems.length,
@@ -279,7 +282,7 @@ let Feed = ({
   // =
 
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
@@ -311,17 +314,23 @@ let Feed = ({
         // -prf
         return <DiscoverFallbackHeader />
       }
-      return <FeedSlice slice={item} />
+      return (
+        <FeedSlice
+          slice={item}
+          hideTopBorder={index === 0 && isTabletOrMobile}
+        />
+      )
     },
     [
+      isTabletOrMobile,
+      renderEmptyState,
       feed,
-      feedUri,
       error,
       onPressTryAgain,
-      onPressRetryLoadMore,
-      renderEmptyState,
-      _,
       savedFeedConfig,
+      _,
+      onPressRetryLoadMore,
+      feedUri,
     ],
   )
 

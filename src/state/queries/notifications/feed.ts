@@ -17,7 +17,7 @@
  */
 
 import {useEffect, useRef} from 'react'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -157,6 +157,31 @@ export function* findAllPostsInQueryData(
         const quotedPost = getEmbeddedPost(item.subject?.embed)
         if (quotedPost?.uri === uri) {
           yield embedViewRecordToPostView(quotedPost)
+        }
+      }
+    }
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.items) {
+        if (item.subject?.author.did === did) {
+          yield item.subject.author
+        }
+        const quotedPost = getEmbeddedPost(item.subject?.embed)
+        if (quotedPost?.author.did === did) {
+          yield quotedPost.author
         }
       }
     }

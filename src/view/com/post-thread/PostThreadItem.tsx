@@ -40,6 +40,7 @@ import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {PostHider} from '../../../components/moderation/PostHider'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {AviFollowButton} from '../posts/AviFollowButton'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link, TextLink} from '../util/Link'
@@ -49,6 +50,7 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function PostThreadItem({
   post,
@@ -65,6 +67,7 @@ export function PostThreadItem({
   hasPrecedingItem,
   overrideBlur,
   onPostReply,
+  hideTopBorder,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
@@ -80,6 +83,7 @@ export function PostThreadItem({
   hasPrecedingItem: boolean
   overrideBlur: boolean
   onPostReply: () => void
+  hideTopBorder?: boolean
 }) {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -91,7 +95,7 @@ export function PostThreadItem({
     [record],
   )
   if (postShadowed === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted />
+    return <PostThreadItemDeleted hideTopBorder={hideTopBorder} />
   }
   if (richText && moderation) {
     return (
@@ -113,16 +117,25 @@ export function PostThreadItem({
         hasPrecedingItem={hasPrecedingItem}
         overrideBlur={overrideBlur}
         onPostReply={onPostReply}
+        hideTopBorder={hideTopBorder}
       />
     )
   }
   return null
 }
 
-function PostThreadItemDeleted() {
+function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
   const pal = usePalette('default')
   return (
-    <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
+    <View
+      style={[
+        styles.outer,
+        pal.border,
+        pal.view,
+        s.p20,
+        s.flexRow,
+        hideTopBorder && styles.noTopBorder,
+      ]}>
       <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
       <Text style={[pal.textLight, s.ml10]}>
         <Trans>This post has been deleted.</Trans>
@@ -147,6 +160,7 @@ let PostThreadItemLoaded = ({
   hasPrecedingItem,
   overrideBlur,
   onPostReply,
+  hideTopBorder,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -163,6 +177,7 @@ let PostThreadItemLoaded = ({
   hasPrecedingItem: boolean
   overrideBlur: boolean
   onPostReply: () => void
+  hideTopBorder?: boolean
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -237,7 +252,7 @@ let PostThreadItemLoaded = ({
                   styles.replyLine,
                   {
                     flexGrow: 1,
-                    backgroundColor: pal.colors.border,
+                    backgroundColor: pal.colors.replyLine,
                   },
                 ]}
               />
@@ -247,7 +262,14 @@ let PostThreadItemLoaded = ({
 
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
-          style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+          style={[
+            styles.outer,
+            styles.outerHighlighted,
+            pal.border,
+            pal.view,
+            rootUri === post.uri && styles.outerHighlightedRoot,
+            hideTopBorder && styles.noTopBorder,
+          ]}
           accessible={false}>
           <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
@@ -296,6 +318,7 @@ let PostThreadItemLoaded = ({
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
                 modui={moderation.ui('contentView')}
+                size="large"
                 includeMute
                 style={[a.pt_2xs, a.pb_sm]}
               />
@@ -367,7 +390,7 @@ let PostThreadItemLoaded = ({
                 ) : null}
               </View>
             ) : null}
-            <View style={[s.pl10, s.pr10, s.pb5]}>
+            <View style={[s.pl10, s.pr10]}>
               <PostCtrls
                 big
                 post={post}
@@ -395,7 +418,8 @@ let PostThreadItemLoaded = ({
           depth={depth}
           showParentReplyLine={!!showParentReplyLine}
           treeView={treeView}
-          hasPrecedingItem={hasPrecedingItem}>
+          hasPrecedingItem={hasPrecedingItem}
+          hideTopBorder={hideTopBorder}>
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
@@ -408,7 +432,8 @@ let PostThreadItemLoaded = ({
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
             }
-            profile={post.author}>
+            profile={post.author}
+            interpretFilterAsBlur>
             <View
               style={{
                 flexDirection: 'row',
@@ -447,12 +472,16 @@ let PostThreadItemLoaded = ({
               {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
               {!isThreadedChild && (
                 <View style={styles.layoutAvi}>
-                  <PreviewableUserAvatar
-                    size={38}
-                    profile={post.author}
-                    moderation={moderation.ui('avatar')}
-                    type={post.author.associated?.labeler ? 'labeler' : 'user'}
-                  />
+                  <AviFollowButton author={post.author} moderation={moderation}>
+                    <PreviewableUserAvatar
+                      size={38}
+                      profile={post.author}
+                      moderation={moderation.ui('avatar')}
+                      type={
+                        post.author.associated?.labeler ? 'labeler' : 'user'
+                      }
+                    />
+                  </AviFollowButton>
 
                   {showChildReplyLine && (
                     <View
@@ -496,7 +525,7 @@ let PostThreadItemLoaded = ({
                 <LabelsOnMyPost post={post} />
                 <PostAlerts
                   modui={moderation.ui('contentList')}
-                  style={[a.pt_xs, a.pb_sm]}
+                  style={[a.pt_2xs, a.pb_2xs]}
                 />
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
@@ -574,6 +603,7 @@ function PostOuterWrapper({
   depth,
   showParentReplyLine,
   hasPrecedingItem,
+  hideTopBorder,
   children,
 }: React.PropsWithChildren<{
   post: AppBskyFeedDefs.PostView
@@ -581,6 +611,7 @@ function PostOuterWrapper({
   depth: number
   showParentReplyLine: boolean
   hasPrecedingItem: boolean
+  hideTopBorder?: boolean
 }>) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
@@ -593,7 +624,7 @@ function PostOuterWrapper({
           {
             flexDirection: 'row',
             paddingHorizontal: isMobile ? 10 : 6,
-            borderTopWidth: depth === 1 ? 1 : 0,
+            borderTopWidth: depth === 1 ? hairlineWidth : 0,
           },
         ]}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
@@ -617,6 +648,7 @@ function PostOuterWrapper({
         styles.outer,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
+        hideTopBorder && styles.noTopBorder,
         styles.cursor,
       ]}>
       {children}
@@ -673,13 +705,18 @@ function ExpandedPostDetails({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     paddingLeft: 8,
   },
   outerHighlighted: {
-    paddingTop: 16,
+    borderTopWidth: 0,
+    paddingTop: 4,
     paddingLeft: 8,
     paddingRight: 8,
+  },
+  outerHighlightedRoot: {
+    borderTopWidth: hairlineWidth,
+    paddingTop: 16,
   },
   noTopBorder: {
     borderTopWidth: 0,
@@ -730,10 +767,10 @@ const styles = StyleSheet.create({
   expandedInfo: {
     flexDirection: 'row',
     padding: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: hairlineWidth,
+    borderBottomWidth: hairlineWidth,
     marginTop: 5,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   expandedInfoItem: {
     marginRight: 10,

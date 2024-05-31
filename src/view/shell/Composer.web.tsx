@@ -1,15 +1,16 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeInDown, FadeOut} from 'react-native-reanimated'
-import {ComposePost} from '../com/composer/Composer'
-import {useComposerState} from 'state/shell/composer'
+
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {useComposerState} from 'state/shell/composer'
 import {
   EmojiPicker,
   EmojiPickerState,
 } from 'view/com/composer/text-input/web/EmojiPicker.web'
+import {ComposePost} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
 
