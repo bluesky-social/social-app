@@ -406,7 +406,7 @@ let PreviewableUserAvatar = ({
             ? _(msg`${profile.displayName || profile.handle}'s avatar`)
             : undefined
         }
-        accessibilityHint={accessible ? _(msg`Opens profile`) : undefined}
+        accessibilityHint={accessible ? _(msg`Opens this profile`) : undefined}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,
