@@ -7,18 +7,19 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {Text} from '../util/text/Text'
-import {s, colors} from 'lib/styles'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import isEqual from 'lodash.isequal'
+
+import {useModalControls} from '#/state/modals'
+import {useMyListsQuery} from '#/state/queries/my-lists'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {usePalette} from 'lib/hooks/usePalette'
+import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
 import {ScrollView} from 'view/com/modals/util'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {useMyListsQuery} from '#/state/queries/my-lists'
-import isEqual from 'lodash.isequal'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Text} from '../util/text/Text'
 
 export const snapPoints = ['60%']
 
@@ -155,7 +156,7 @@ function Selectable({
       accessibilityLabel={label}
       accessibilityHint=""
       style={[styles.selectable, pal.border, pal.view, style]}>
-      <Text type="xl" style={[pal.text]}>
+      <Text type="lg" style={[pal.text]}>
         {label}
       </Text>
       {isSelected ? (
