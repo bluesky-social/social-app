@@ -1,5 +1,6 @@
 import React, {useLayoutEffect} from 'react'
 import {Modal, View} from 'react-native'
+import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {StatusBar} from 'expo-status-bar'
 import * as SystemUI from 'expo-system-ui'
@@ -70,15 +71,17 @@ function Providers({
   } else {
     // on Android we just nest the dialogs within it
     return (
-      <RootSiblingParent>
-        <LegacyModalProvider>
-          <PortalProvider>
-            {children}
-            <LegacyModalsContainer />
-            <PortalOutlet />
-          </PortalProvider>
-        </LegacyModalProvider>
-      </RootSiblingParent>
+      <GestureHandlerRootView style={a.flex_1}>
+        <RootSiblingParent>
+          <LegacyModalProvider>
+            <PortalProvider>
+              {children}
+              <LegacyModalsContainer />
+              <PortalOutlet />
+            </PortalProvider>
+          </LegacyModalProvider>
+        </RootSiblingParent>
+      </GestureHandlerRootView>
     )
   }
 }
