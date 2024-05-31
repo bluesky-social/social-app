@@ -14,6 +14,7 @@ import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {useHaptics} from 'lib/haptics'
+import {useHapticsDisabled} from 'state/preferences'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
 export interface FABProps
@@ -32,6 +33,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
     onOut: onPressOut,
   } = useInteractionState()
   const playHaptic = useHaptics()
+  const isHapticsDisabled = useHapticsDisabled()
 
   const size = isTablet ? styles.sizeLarge : styles.sizeRegular
 
@@ -56,9 +58,12 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
       onPress={e => {
         playHaptic()
 
-        setTimeout(() => {
-          onPress?.(e)
-        }, 75)
+        setTimeout(
+          () => {
+            onPress?.(e)
+          },
+          isHapticsDisabled ? 0 : 75,
+        )
       }}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
