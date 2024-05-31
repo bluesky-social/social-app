@@ -84,7 +84,7 @@ export function AviFollowButton({
     },
   ]
 
-  return gate('show_avi_follow_button') && hasSession ? (
+  return hasSession && gate('show_avi_follow_button') ? (
     <View style={a.relative}>
       {children}
 
