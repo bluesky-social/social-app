@@ -47,7 +47,7 @@ export async function createAgentAndResume(
     handle: storedAccount.handle,
     refreshJwt: storedAccount.refreshJwt ?? '',
     /**
-     * @see https://github.com/bluesky-social/atproto/blob/60b32e5c5182b20fe683112f134c73f0e79e17de/packages/api/src/agent.ts#L188
+     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
      */
     active: storedAccount.active ?? true,
   }
