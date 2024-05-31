@@ -23,6 +23,7 @@ import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {CenteredView} from '../util/Views'
 import {FeedItem} from './FeedItem'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -39,6 +40,8 @@ export function Feed({
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
 }) {
+  const initialNumToRender = useInitialNumToRender()
+
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
 
@@ -103,10 +106,6 @@ export function Feed({
     fetchNextPage()
   }, [fetchNextPage])
 
-  // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
-  //   VirtualizedList: You have a large list that is slow to update - make sure your
-  //   renderItem function renders components that follow React performance best practices
-  //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
@@ -182,6 +181,8 @@ export function Feed({
         contentContainerStyle={s.contentContainer}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
       />
     </View>
   )
