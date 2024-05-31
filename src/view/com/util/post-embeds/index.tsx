@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native'
@@ -41,11 +42,13 @@ export function PostEmbeds({
   moderation,
   onOpen,
   style,
+  quoteTextStyle,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  quoteTextStyle?: StyleProp<TextStyle>
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
@@ -60,7 +63,11 @@ export function PostEmbeds({
           moderation={moderation}
           onOpen={onOpen}
         />
-        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
+        <MaybeQuoteEmbed
+          embed={embed.record}
+          onOpen={onOpen}
+          textStyle={quoteTextStyle}
+        />
       </View>
     )
   }
@@ -87,7 +94,14 @@ export function PostEmbeds({
 
     // quote post
     // =
-    return <MaybeQuoteEmbed embed={embed} style={style} onOpen={onOpen} />
+    return (
+      <MaybeQuoteEmbed
+        embed={embed}
+        style={style}
+        textStyle={quoteTextStyle}
+        onOpen={onOpen}
+      />
+    )
   }
 
   // image embed
