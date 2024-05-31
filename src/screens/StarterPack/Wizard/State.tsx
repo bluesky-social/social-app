@@ -117,7 +117,7 @@ export function Provider({
       : {
           canNext: true,
           currentStep: initialStep,
-          profileDids: [],
+          profiles: [],
           feedUris: [],
           processing: false,
         },
