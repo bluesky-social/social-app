@@ -40,5 +40,6 @@ export const router = new Router({
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
   MessagesConversation: '/messages/:conversation',
+  StarterPackLanding: '/start/:id',
   StarterPackWizard: '/starter-pack/create',
 })

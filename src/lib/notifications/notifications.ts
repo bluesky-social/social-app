@@ -71,46 +71,41 @@ export function useNotificationsRegistration() {
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
-  const {currentAccount} = useSession()
 
-  return React.useCallback(
-    async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
-      const permissions = await Notifications.getPermissionsAsync()
+  return async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
+    const permissions = await Notifications.getPermissionsAsync()
 
-      if (
-        !currentAccount ||
-        !isNative ||
-        permissions?.status === 'granted' ||
-        (permissions?.status === 'denied' && !permissions?.canAskAgain)
-      ) {
-        return
-      }
-      if (
-        context === 'StartOnboarding' &&
-        gate('request_notifications_permission_after_onboarding')
-      ) {
-        return
-      }
-      if (
-        context === 'AfterOnboarding' &&
-        !gate('request_notifications_permission_after_onboarding')
-      ) {
-        return
-      }
+    if (
+      !isNative ||
+      permissions?.status === 'granted' ||
+      permissions?.status === 'denied'
+    ) {
+      return
+    }
+    if (
+      context === 'StartOnboarding' &&
+      gate('request_notifications_permission_after_onboarding_v2')
+    ) {
+      return
+    }
+    if (
+      context === 'AfterOnboarding' &&
+      !gate('request_notifications_permission_after_onboarding_v2')
+    ) {
+      return
+    }
 
-      const res = await Notifications.requestPermissionsAsync()
-      logEvent('notifications:request', {
-        context: context,
-        status: res.status,
-      })
+    const res = await Notifications.requestPermissionsAsync()
+    logEvent('notifications:request', {
+      context: context,
+      status: res.status,
+    })
 
-      if (res.granted) {
-        // This will fire a pushTokenEvent, which will handle registration of the token
-        getPushToken(true)
-      }
-    },
-    [gate, currentAccount],
-  )
+    if (res.granted) {
+      // This will fire a pushTokenEvent, which will handle registration of the token
+      getPushToken(true)
+    }
+  }
 }
 
 export async function decrementBadgeCount(by: number | 'reset' = 1) {

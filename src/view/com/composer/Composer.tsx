@@ -1,9 +1,14 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
-  BackHandler,
   Keyboard,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -12,6 +17,12 @@ import {
   KeyboardAvoidingView,
   KeyboardStickyView,
 } from 'react-native-keyboard-controller'
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {RichText} from '@atproto/api'
@@ -24,6 +35,7 @@ import {
   createGIFDescription,
   parseAltFromGIFDescription,
 } from '#/lib/gif-alt-text'
+import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -42,7 +54,7 @@ import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
-import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {HITSLOP_10, MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -55,7 +67,7 @@ import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
@@ -79,6 +91,10 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 
+type CancelRef = {
+  onPressCancel: () => void
+}
+
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
   replyTo,
@@ -88,7 +104,10 @@ export const ComposePost = observer(function ComposePost({
   openPicker,
   text: initText,
   imageUris: initImageUris,
-}: Props) {
+  cancelRef,
+}: Props & {
+  cancelRef?: React.RefObject<CancelRef>
+}) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -96,7 +115,7 @@ export const ComposePost = observer(function ComposePost({
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
-  const {isDesktop, isMobile} = useWebMediaQueries()
+  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -104,6 +123,7 @@ export const ComposePost = observer(function ComposePost({
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
+  const t = useTheme()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -145,10 +165,30 @@ export const ComposePost = observer(function ComposePost({
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
-      paddingTop: isAndroid ? insets.top : isMobile ? 15 : 0,
     }),
-    [insets, isKeyboardVisible, isMobile],
+    [insets, isKeyboardVisible],
   )
+
+  const hasScrolled = useSharedValue(0)
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      hasScrolled.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+    },
+  })
+  const topBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderColor: interpolateColor(
+        hasScrolled.value,
+        [0, 1],
+        [
+          'transparent',
+          isWeb
+            ? t.atoms.border_contrast_low.borderColor
+            : t.atoms.border_contrast_high.borderColor,
+        ],
+      ),
+    }
+  })
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
@@ -167,23 +207,8 @@ export const ComposePost = observer(function ComposePost({
     discardPromptControl,
     onClose,
   ])
-  // android back button
-  useEffect(() => {
-    if (!isAndroid) {
-      return
-    }
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        onPressCancel()
-        return true
-      },
-    )
 
-    return () => {
-      backHandler.remove()
-    }
-  }, [onPressCancel])
+  useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
@@ -382,7 +407,12 @@ export const ComposePost = observer(function ComposePost({
         style={s.flex1}
         keyboardVerticalOffset={replyTo ? 60 : isAndroid ? 120 : 100}>
         <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
-          <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
+          <Animated.View
+            style={[
+              styles.topbar,
+              topBarAnimatedStyle,
+              isWeb && isTabletOrDesktop && styles.topbarDesktop,
+            ]}>
             <TouchableOpacity
               testID="composerDiscardButton"
               onPress={onPressCancel}
@@ -391,7 +421,8 @@ export const ComposePost = observer(function ComposePost({
               accessibilityLabel={_(msg`Cancel`)}
               accessibilityHint={_(
                 msg`Closes post composer and discards post draft`,
-              )}>
+              )}
+              hitSlop={HITSLOP_10}>
               <Text style={[pal.link, s.f18]}>
                 <Trans>Cancel</Trans>
               </Text>
@@ -446,7 +477,7 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </>
             )}
-          </View>
+          </Animated.View>
           {isAltTextRequiredAndMissing && (
             <View style={[styles.reminderLine, pal.viewLight]}>
               <View style={styles.errorIcon}>
@@ -473,14 +504,14 @@ export const ComposePost = observer(function ComposePost({
               <Text style={[s.red4, s.flex1]}>{error}</Text>
             </View>
           )}
-          <ScrollView
+          <Animated.ScrollView
+            onScroll={scrollHandler}
             style={styles.scrollView}
             keyboardShouldPersistTaps="always">
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
             <View
               style={[
-                pal.border,
                 styles.textInputLayout,
                 isNative && styles.textInputLayoutMobile,
               ]}>
@@ -535,7 +566,7 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </View>
             ) : undefined}
-          </ScrollView>
+          </Animated.ScrollView>
           <SuggestedLanguage text={richtext.text} />
         </View>
       </KeyboardAvoidingView>
@@ -583,24 +614,23 @@ export const ComposePost = observer(function ComposePost({
   )
 })
 
+export function useComposerCancelRef() {
+  return useRef<CancelRef>(null)
+}
+
 const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'column',
-    flex: 1,
-    height: '100%',
-  },
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 6,
-    paddingBottom: 4,
-    paddingHorizontal: 20,
-    height: 55,
+    marginHorizontal: 16,
+    height: 54,
     gap: 4,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   topbarDesktop: {
     paddingTop: 10,
     paddingBottom: 10,
+    height: 50,
   },
   postBtn: {
     borderRadius: 20,
@@ -639,12 +669,11 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
   },
   textInputLayout: {
     flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingTop: 16,
+    paddingTop: 4,
   },
   textInputLayoutMobile: {
     flex: 1,

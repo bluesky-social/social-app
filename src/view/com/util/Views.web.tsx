@@ -31,7 +31,7 @@ interface AddedProps {
   desktopFixedHeight?: boolean | number
 }
 
-export function CenteredView({
+export const CenteredView = React.forwardRef(function CenteredView({
   style,
   sideBorders,
   topBorder,
@@ -58,7 +58,7 @@ export function CenteredView({
     style = addStyle(style, pal.border)
   }
   return <View style={style} {...props} />
-}
+})
 
 export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   {

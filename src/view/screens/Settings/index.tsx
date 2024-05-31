@@ -855,6 +855,18 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => {
+                navigation.navigate('StarterPackLanding', {id: '123'})
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Navigate to Starter Pack Landing`)}
+              accessibilityHint={_(msg`Navigate to Starter Pack Landing`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Navigate to Starter Pack Landing</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
               onPress={() => onPressDeleteChatDeclaration()}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Delete chat declaration record`)}
