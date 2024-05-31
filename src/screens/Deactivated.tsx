@@ -6,16 +6,24 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {
+  type SessionAccount,
+  useAgent,
+  useSession,
+  useSessionApi,
+} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 const COL_WIDTH = 400
@@ -30,6 +38,9 @@ export function Deactivated() {
   const hasOtherAccounts = accounts.length > 1
   const setMinimalShellMode = useSetMinimalShellMode()
   const {logout} = useSessionApi()
+  const agent = useAgent()
+  const [pending, setPending] = React.useState(false)
+  const [error, setError] = React.useState<string | undefined>()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -61,6 +72,20 @@ export function Deactivated() {
     }
     logout('Deactivated')
   }, [logout])
+
+  const handleActivate = React.useCallback(async () => {
+    try {
+      setPending(true)
+      await agent.com.atproto.server.activateAccount()
+    } catch (e: any) {
+      logger.error(e, {
+        context: 'Failed to activate account',
+      })
+      setError(_(msg`Something went wrong, please try again`))
+    } finally {
+      setPending(false)
+    }
+  }, [_, agent, setPending, setError])
 
   return (
     <View style={[a.h_full_vh, a.flex_1, t.atoms.bg]}>
@@ -104,10 +129,11 @@ export function Deactivated() {
                     size="medium"
                     variant="solid"
                     color="primary"
-                    onPress={() => setShowLoggedOut(true)}>
+                    onPress={handleActivate}>
                     <ButtonText>
                       <Trans>Yes, reactivate my account</Trans>
                     </ButtonText>
+                    {pending && <ButtonIcon icon={Loader} position="right" />}
                   </Button>
                   <Button
                     label={_(msg`Cancel reactivation and log out`)}
@@ -120,6 +146,21 @@ export function Deactivated() {
                     </ButtonText>
                   </Button>
                 </View>
+
+                {error && (
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.gap_sm,
+                      a.mt_md,
+                      a.p_md,
+                      a.rounded_sm,
+                      t.atoms.bg_contrast_25,
+                    ]}>
+                    <CircleInfo size="md" fill={t.palette.negative_400} />
+                    <Text style={[a.leading_snug]}>{error}</Text>
+                  </View>
+                )}
               </View>
 
               <View style={[a.pb_3xl]}>
