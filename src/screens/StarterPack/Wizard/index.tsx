@@ -133,7 +133,9 @@ function WizardInner() {
   }
 
   return (
-    <CenteredView style={[a.flex_1, {marginBottom: bottomOffset + 20}]}>
+    <CenteredView
+      style={[a.flex_1, {marginBottom: bottomOffset + 20}]}
+      sideBorders>
       <ViewHeader
         title={uiStrings.header}
         onBackPress={
@@ -142,6 +144,7 @@ function WizardInner() {
             : undefined
         }
         showBorder={true}
+        showOnDesktop={true}
       />
       <Container>
         <StepView />
