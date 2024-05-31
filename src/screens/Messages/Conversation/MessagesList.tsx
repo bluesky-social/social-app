@@ -15,9 +15,11 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
-import {getPostAsQuote} from '#/lib/link-meta/bsky'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
-import {isBskyPostUrl} from '#/lib/strings/url-helpers'
+import {
+  convertBskyAppUrlIfNeeded,
+  isBskyPostUrl,
+} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
@@ -36,6 +38,7 @@ import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -85,6 +88,7 @@ export function MessagesList({
   const convoState = useConvoActive()
   const agent = useAgent()
   const getPost = useGetPost()
+  const {embedUri, setEmbed} = useMessageEmbed()
 
   const flatListRef = useAnimatedRef<FlatList>()
 
@@ -277,25 +281,10 @@ export function MessagesList({
       rt.detectFacetsWithoutResolution()
 
       let embed: AppBskyEmbedRecord.Main | undefined
-      // find the first link facet that is a link to a post
-      const postLinkFacet = rt.facets?.find(facet => {
-        return facet.features.find(feature => {
-          if (AppBskyRichtextFacet.isLink(feature)) {
-            return isBskyPostUrl(feature.uri)
-          }
-          return false
-        })
-      })
 
-      // if we found a post link, get the post and embed it
-      if (postLinkFacet) {
-        const postLink = postLinkFacet.features.find(
-          AppBskyRichtextFacet.isLink,
-        )
-        if (!postLink) return
-
+      if (embedUri) {
         try {
-          const post = await getPostAsQuote(getPost, postLink.uri)
+          const post = await getPost({uri: embedUri})
           if (post) {
             embed = {
               $type: 'app.bsky.embed.record',
@@ -305,24 +294,43 @@ export function MessagesList({
               },
             }
 
-            // remove the post link from the text
-            rt.delete(
-              postLinkFacet.index.byteStart,
-              postLinkFacet.index.byteEnd,
-            )
+            // look for the embed uri in the facets, so we can remove it from the text
+            const postLinkFacet = rt.facets?.find(facet => {
+              return facet.features.find(feature => {
+                if (AppBskyRichtextFacet.isLink(feature)) {
+                  if (isBskyPostUrl(feature.uri)) {
+                    const url = convertBskyAppUrlIfNeeded(feature.uri)
+                    const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
 
-            // re-trim the text, now that we've removed the post link
-            //
-            // if the post link is at the start of the text, we don't want to leave a leading space
-            // so trim on both sides
-            if (postLinkFacet.index.byteStart === 0) {
-              rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
-            } else {
-              // otherwise just trim the end
-              rt = new RichText(
-                {text: rt.text.trimEnd()},
-                {cleanNewlines: true},
+                    // this might have a handle instead of a DID
+                    // so just compare the rkey - not particularly dangerous
+                    return post.uri.endsWith(rkey)
+                  }
+                }
+                return false
+              })
+            })
+
+            if (postLinkFacet) {
+              // remove the post link from the text
+              rt.delete(
+                postLinkFacet.index.byteStart,
+                postLinkFacet.index.byteEnd,
               )
+
+              // re-trim the text, now that we've removed the post link
+              //
+              // if the post link is at the start of the text, we don't want to leave a leading space
+              // so trim on both sides
+              if (postLinkFacet.index.byteStart === 0) {
+                rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
+              } else {
+                // otherwise just trim the end
+                rt = new RichText(
+                  {text: rt.text.trimEnd()},
+                  {cleanNewlines: true},
+                )
+              }
             }
           }
         } catch (error) {
@@ -345,7 +353,7 @@ export function MessagesList({
         embed,
       })
     },
-    [agent, convoState, getPost, hasScrolled, setHasScrolled],
+    [agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
@@ -420,7 +428,12 @@ export function MessagesList({
             {isConvoActive(convoState) &&
               !convoState.isFetchingHistory &&
               convoState.items.length === 0 && <ChatEmptyPill />}
-            <MessageInput onSendMessage={onSendMessage} />
+            <MessageInput
+              onSendMessage={onSendMessage}
+              hasEmbed={!!embedUri}
+              setEmbed={setEmbed}>
+              <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+            </MessageInput>
           </>
         )}
       </KeyboardStickyView>

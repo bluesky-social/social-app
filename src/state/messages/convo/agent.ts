@@ -1018,6 +1018,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          embed: undefined,
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',

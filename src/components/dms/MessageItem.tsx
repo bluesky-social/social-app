@@ -82,7 +82,7 @@ let MessageItem = ({
   return (
     <View style={[isFromSelf ? a.mr_md : a.ml_md]}>
       <ActionsWrapper isFromSelf={isFromSelf} message={message}>
-        {AppBskyEmbedRecord.isMain(message.embed) && (
+        {AppBskyEmbedRecord.isView(message.embed) && (
           <MessageItemEmbed embed={message.embed} />
         )}
         {rt.text.length > 0 && (
