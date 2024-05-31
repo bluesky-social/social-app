@@ -110,7 +110,7 @@ export function AviFollowButton({
                 select(t.name, {
                   light: t.atoms.bg_contrast_600,
                   dim: t.atoms.bg_contrast_500,
-                  dark: t.atoms.bg_contrast_500,
+                  dark: t.atoms.bg_contrast_600,
                 }).backgroundColor
               }
             />
