@@ -478,11 +478,24 @@ export function* findAllPostsInQueryData(
           if (didOrHandleUriMatches(atUri, item.reply.parent)) {
             yield item.reply.parent
           }
+
+          const parentQuotedPost = getEmbeddedPost(item.reply.parent.embed)
+          if (
+            parentQuotedPost &&
+            didOrHandleUriMatches(atUri, parentQuotedPost)
+          ) {
+            yield embedViewRecordToPostView(parentQuotedPost)
+          }
         }
 
         if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
           if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
+          }
+
+          const rootQuotedPost = getEmbeddedPost(item.reply.root.embed)
+          if (rootQuotedPost && didOrHandleUriMatches(atUri, rootQuotedPost)) {
+            yield embedViewRecordToPostView(rootQuotedPost)
           }
         }
       }

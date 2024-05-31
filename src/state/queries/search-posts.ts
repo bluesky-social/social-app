@@ -81,7 +81,7 @@ export function* findAllPostsInQueryData(
 
         const quotedPost = getEmbeddedPost(post.embed)
         if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-          yield embedViewRecordToPostView(quotedPost!)
+          yield embedViewRecordToPostView(quotedPost)
         }
       }
     }
