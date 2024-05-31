@@ -13,13 +13,9 @@ import {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppBskyEmbedRecord, RichText} from '@atproto/api'
 
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
-import {
-  convertBskyAppUrlIfNeeded,
-  isBskyPostUrl,
-} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
@@ -292,45 +288,6 @@ export function MessagesList({
                 uri: post.uri,
                 cid: post.cid,
               },
-            }
-
-            // look for the embed uri in the facets, so we can remove it from the text
-            const postLinkFacet = rt.facets?.find(facet => {
-              return facet.features.find(feature => {
-                if (AppBskyRichtextFacet.isLink(feature)) {
-                  if (isBskyPostUrl(feature.uri)) {
-                    const url = convertBskyAppUrlIfNeeded(feature.uri)
-                    const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
-
-                    // this might have a handle instead of a DID
-                    // so just compare the rkey - not particularly dangerous
-                    return post.uri.endsWith(rkey)
-                  }
-                }
-                return false
-              })
-            })
-
-            if (postLinkFacet) {
-              // remove the post link from the text
-              rt.delete(
-                postLinkFacet.index.byteStart,
-                postLinkFacet.index.byteEnd,
-              )
-
-              // re-trim the text, now that we've removed the post link
-              //
-              // if the post link is at the start of the text, we don't want to leave a leading space
-              // so trim on both sides
-              if (postLinkFacet.index.byteStart === 0) {
-                rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
-              } else {
-                // otherwise just trim the end
-                rt = new RichText(
-                  {text: rt.text.trimEnd()},
-                  {cleanNewlines: true},
-                )
-              }
             }
           }
         } catch (error) {
