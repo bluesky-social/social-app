@@ -66,6 +66,7 @@ import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 function SettingsAccountCard({
   account,
@@ -317,7 +318,7 @@ export function SettingsScreen({}: Props) {
         showBackButton={isMobile}
         style={[
           pal.border,
-          {borderBottomWidth: 1},
+          {borderBottomWidth: hairlineWidth},
           !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
         ]}>
         <View style={{flex: 1}}>

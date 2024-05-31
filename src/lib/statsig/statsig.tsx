@@ -102,15 +102,18 @@ export function logEvent<E extends keyof LogEvents>(
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
+    if (
+      process.env.NODE_ENV === 'development' &&
+      eventName.endsWith(':sampled') &&
+      !DOWNSAMPLED_EVENTS.has(eventName)
+    ) {
+      logger.error(
+        'Did you forget to add ' + eventName + ' to DOWNSAMPLED_EVENTS?',
+      )
+    }
+
     if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
       return
-    }
-    if (process.env.NODE_ENV === 'development') {
-      if (eventName.endsWith(':sampled')) {
-        logger.error(
-          'Did you forget to add ' + eventName + ' to DOWNSAMPLED_EVENTS?',
-        )
-      }
     }
     const fullMetadata = {
       ...rawMetadata,

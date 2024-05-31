@@ -40,6 +40,7 @@ import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {PostHider} from '../../../components/moderation/PostHider'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {AviFollowButton} from '../posts/AviFollowButton'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link, TextLink} from '../util/Link'
@@ -49,6 +50,7 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function PostThreadItem({
   post,
@@ -470,12 +472,16 @@ let PostThreadItemLoaded = ({
               {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
               {!isThreadedChild && (
                 <View style={styles.layoutAvi}>
-                  <PreviewableUserAvatar
-                    size={38}
-                    profile={post.author}
-                    moderation={moderation.ui('avatar')}
-                    type={post.author.associated?.labeler ? 'labeler' : 'user'}
-                  />
+                  <AviFollowButton author={post.author} moderation={moderation}>
+                    <PreviewableUserAvatar
+                      size={38}
+                      profile={post.author}
+                      moderation={moderation.ui('avatar')}
+                      type={
+                        post.author.associated?.labeler ? 'labeler' : 'user'
+                      }
+                    />
+                  </AviFollowButton>
 
                   {showChildReplyLine && (
                     <View
@@ -618,7 +624,7 @@ function PostOuterWrapper({
           {
             flexDirection: 'row',
             paddingHorizontal: isMobile ? 10 : 6,
-            borderTopWidth: depth === 1 ? 1 : 0,
+            borderTopWidth: depth === 1 ? hairlineWidth : 0,
           },
         ]}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
@@ -699,7 +705,7 @@ function ExpandedPostDetails({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     paddingLeft: 8,
   },
   outerHighlighted: {
@@ -709,7 +715,7 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   outerHighlightedRoot: {
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     paddingTop: 16,
   },
   noTopBorder: {
@@ -761,8 +767,8 @@ const styles = StyleSheet.create({
   expandedInfo: {
     flexDirection: 'row',
     padding: 10,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: hairlineWidth,
+    borderBottomWidth: hairlineWidth,
     marginTop: 5,
     marginBottom: 10,
   },
