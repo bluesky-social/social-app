@@ -90,7 +90,7 @@ export function AviFollowButton({
           hitSlop={createHitslop(3)}
           style={[
             a.rounded_full,
-            t.atoms.bg_contrast_975,
+            t.atoms.bg_contrast_100,
             a.absolute,
             {
               bottom: 0,
@@ -100,7 +100,14 @@ export function AviFollowButton({
             },
           ]}>
           <NativeDropdown items={items}>
-            <Plus size="sm" fill={t.atoms.bg.backgroundColor} />
+            <Plus
+              size="sm"
+              fill={
+                t.name === 'light'
+                  ? t.atoms.bg_contrast_600.backgroundColor
+                  : t.atoms.bg_contrast_500.backgroundColor
+              }
+            />
           </NativeDropdown>
         </Button>
       )}
