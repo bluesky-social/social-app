@@ -22,8 +22,9 @@ export function DeactivateAccountDialog({
       <Prompt.TitleText>{_(msg`Deactivate account`)}</Prompt.TitleText>
       <Prompt.DescriptionText>
         <Trans>
-          Your profile and posts will no longer be visible to other Bluesky
-          users. You can reactivate your account at any time by logging in.
+          Your profile, posts, feeds, and lists will no longer be visible to
+          other Bluesky users. You can reactivate your account at any time by
+          logging in.
         </Trans>
       </Prompt.DescriptionText>
 
