@@ -239,7 +239,7 @@ export function QuoteX({onRemove}: {onRemove: () => void}) {
   )
 }
 
-export function viewRecordToPostView(
+function viewRecordToPostView(
   viewRecord: AppBskyEmbedRecord.ViewRecord,
 ): AppBskyFeedDefs.PostView {
   const {value, embeds, ...rest} = viewRecord
