@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   findNodeHandle,
+  ListRenderItemInfo,
   StyleProp,
   StyleSheet,
   View,
@@ -138,7 +139,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     // =
 
     const renderItemInner = React.useCallback(
-      ({item}: {item: any}) => {
+      ({item, index}: ListRenderItemInfo<any>) => {
         if (item === EMPTY) {
           return (
             <View
@@ -173,6 +174,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
             list={item}
             testID={`list-${item.name}`}
             style={styles.item}
+            noBorder={index === 0}
           />
         )
       },
