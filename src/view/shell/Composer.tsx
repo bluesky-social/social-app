@@ -5,15 +5,9 @@ import * as SystemUI from 'expo-system-ui'
 import {observer} from 'mobx-react-lite'
 
 import {isIOS} from '#/platform/detection'
-import {Provider as LegacyModalProvider} from '#/state/modals'
 import {useComposerState} from '#/state/shell/composer'
-import {ModalsContainer as LegacyModalsContainer} from '#/view/com/modals/Modal'
 import {atoms as a, useTheme} from '#/alf'
 import {getBackgroundColor, useThemeName} from '#/alf/util/useColorModeTheme'
-import {
-  Outlet as PortalOutlet,
-  Provider as PortalProvider,
-} from '#/components/Portal'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 export const Composer = observer(function ComposerImpl({}: {
@@ -34,21 +28,15 @@ export const Composer = observer(function ComposerImpl({}: {
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}>
       <View style={[t.atoms.bg, a.flex_1]}>
-        <LegacyModalProvider>
-          <PortalProvider>
-            <ComposePost
-              cancelRef={ref}
-              replyTo={state?.replyTo}
-              onPost={state?.onPost}
-              quote={state?.quote}
-              mention={state?.mention}
-              text={state?.text}
-              imageUris={state?.imageUris}
-            />
-            <LegacyModalsContainer />
-            <PortalOutlet />
-          </PortalProvider>
-        </LegacyModalProvider>
+        <ComposePost
+          cancelRef={ref}
+          replyTo={state?.replyTo}
+          onPost={state?.onPost}
+          quote={state?.quote}
+          mention={state?.mention}
+          text={state?.text}
+          imageUris={state?.imageUris}
+        />
         {isIOS && <IOSModalBackground active={open} />}
       </View>
     </Modal>
