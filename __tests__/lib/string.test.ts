@@ -142,8 +142,7 @@ describe('makeRecordUri', () => {
   })
 })
 
-// FIXME: Reenable after fixing non-deterministic test.
-describe.skip('ago', () => {
+describe('ago', () => {
   const oneYearDate = new Date(
     new Date().setMonth(new Date().getMonth() - 11),
   ).setDate(new Date().getDate() - 28)
