@@ -9,17 +9,19 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {ListCard} from './ListCard'
+import {Trans} from '@lingui/macro'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {List} from '../util/List'
 import {s} from 'lib/styles'
-import {logger} from '#/logger'
-import {Trans} from '@lingui/macro'
-import {cleanError} from '#/lib/strings/errors'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List} from '../util/List'
+import {Text} from '../util/text/Text'
+import {ListCard} from './ListCard'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -84,7 +86,7 @@ export function MyLists({
           <View
             key={item._reactKey}
             testID="listsEmpty"
-            style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
+            style={[{padding: 18, borderTopWidth: hairlineWidth}, pal.border]}>
             <Text style={pal.textLight}>
               <Trans>You have no lists.</Trans>
             </Text>

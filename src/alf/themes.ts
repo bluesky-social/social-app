@@ -1,11 +1,11 @@
+import {atoms} from '#/alf/atoms'
 import * as tokens from '#/alf/tokens'
 import type {Mutable} from '#/alf/types'
-import {atoms} from '#/alf/atoms'
 import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
 
 export type ThemeName = 'light' | 'dim' | 'dark'
 export type ReadonlyTheme = typeof light
-export type Theme = Mutable<ReadonlyTheme>
+export type Theme = Mutable<ReadonlyTheme> & {name: ThemeName}
 export type ReadonlyPalette = typeof lightPalette
 export type Palette = Mutable<ReadonlyPalette>
 
@@ -193,7 +193,7 @@ export const dimPalette: Palette = {
 } as const
 
 export const light = {
-  name: 'light',
+  name: 'light' as ThemeName,
   palette: lightPalette,
   atoms: {
     text: {
@@ -278,7 +278,7 @@ export const light = {
 }
 
 export const dark: Theme = {
-  name: 'dark',
+  name: 'dark' as ThemeName,
   palette: darkPalette,
   atoms: {
     text: {
@@ -367,7 +367,7 @@ export const dark: Theme = {
 
 export const dim: Theme = {
   ...dark,
-  name: 'dim',
+  name: 'dim' as ThemeName,
   palette: dimPalette,
   atoms: {
     ...dark.atoms,

@@ -11,7 +11,13 @@ import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {FeedItem} from './FeedItem'
 
-let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
+let FeedSlice = ({
+  slice,
+  hideTopBorder,
+}: {
+  slice: FeedPostSlice
+  hideTopBorder?: boolean
+}): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
     return (
@@ -27,6 +33,7 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           moderation={slice.items[0].moderation}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
+          hideTopBorder={hideTopBorder}
         />
         <FeedItem
           key={slice.items[1]._reactKey}
@@ -75,6 +82,7 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           isThreadLastChild={
             isThreadChildAt(slice.items, i) && slice.items.length === i + 1
           }
+          hideTopBorder={hideTopBorder && i === 0}
         />
       ))}
     </>
