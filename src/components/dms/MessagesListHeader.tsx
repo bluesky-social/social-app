@@ -59,7 +59,7 @@ export let MessagesListHeader = ({
         t.atoms.border_contrast_low,
         a.border_b,
         a.flex_row,
-        a.align_center,
+        a.align_start,
         a.gap_sm,
         gtTablet ? a.pl_lg : a.pl_xl,
         a.pr_lg,
@@ -70,7 +70,7 @@ export let MessagesListHeader = ({
           testID="conversationHeaderBackBtn"
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
-          style={{width: 30, height: 30}}
+          style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
@@ -153,59 +153,71 @@ function HeaderReady({
       )
 
   return (
-    <>
-      <Link
-        style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
-        to={makeProfileLink(profile)}>
-        <View style={[a.pt_2xs]}>
-          <PreviewableUserAvatar
-            size={PFP_SIZE}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
-        </View>
-        <View style={a.flex_1}>
-          <Text
-            style={[a.text_md, a.font_bold, web(a.leading_normal)]}
-            numberOfLines={1}>
-            {displayName}
-          </Text>
-          {!isDeletedAccount && (
+    <View style={[a.flex_1]}>
+      <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
+        <Link
+          style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
+          to={makeProfileLink(profile)}>
+          <View style={[a.pt_2xs]}>
+            <PreviewableUserAvatar
+              size={PFP_SIZE}
+              profile={profile}
+              moderation={moderation.ui('avatar')}
+              disableHoverCard={moderation.blocked}
+            />
+          </View>
+          <View style={a.flex_1}>
             <Text
-              style={[
-                t.atoms.text_contrast_medium,
-                a.text_sm,
-                web([a.leading_normal, {marginTop: -2}]),
-              ]}
+              style={[a.text_md, a.font_bold, web(a.leading_normal)]}
               numberOfLines={1}>
-              @{profile.handle}
-              {convoState.convo?.muted && (
-                <>
-                  {' '}
-                  &middot;{' '}
-                  <BellStroke size="xs" style={t.atoms.text_contrast_medium} />
-                </>
-              )}
+              {displayName}
             </Text>
-          )}
+            {!isDeletedAccount && (
+              <Text
+                style={[
+                  t.atoms.text_contrast_medium,
+                  a.text_sm,
+                  web([a.leading_normal, {marginTop: -2}]),
+                ]}
+                numberOfLines={1}>
+                @{profile.handle}
+                {convoState.convo?.muted && (
+                  <>
+                    {' '}
+                    &middot;{' '}
+                    <BellStroke
+                      size="xs"
+                      style={t.atoms.text_contrast_medium}
+                    />
+                  </>
+                )}
+              </Text>
+            )}
+          </View>
+        </Link>
 
-          <PostAlerts
-            modui={moderation.ui('contentList')}
-            size="large"
-            style={[a.pt_xs]}
+        {isConvoActive(convoState) && (
+          <ConvoMenu
+            convo={convoState.convo}
+            profile={profile}
+            currentScreen="conversation"
+            blockInfo={blockInfo}
           />
-        </View>
-      </Link>
+        )}
+      </View>
 
-      {isConvoActive(convoState) && (
-        <ConvoMenu
-          convo={convoState.convo}
-          profile={profile}
-          currentScreen="conversation"
-          blockInfo={blockInfo}
+      <View
+        style={[
+          {
+            paddingLeft: PFP_SIZE + a.gap_md.gap,
+          },
+        ]}>
+        <PostAlerts
+          modui={moderation.ui('contentList')}
+          size="large"
+          style={[a.pt_xs]}
         />
-      )}
-    </>
+      </View>
+    </View>
   )
 }
