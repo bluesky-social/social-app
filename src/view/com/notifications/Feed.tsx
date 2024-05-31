@@ -1,5 +1,10 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  ListRenderItemInfo,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -17,6 +22,9 @@ import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {CenteredView} from '../util/Views'
 import {FeedItem} from './FeedItem'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -33,8 +41,11 @@ export function Feed({
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
 }) {
+  const initialNumToRender = useInitialNumToRender()
+
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -97,12 +108,8 @@ export function Feed({
     fetchNextPage()
   }, [fetchNextPage])
 
-  // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
-  //   VirtualizedList: You have a large list that is slow to update - make sure your
-  //   renderItem function renders components that follow React performance best practices
-  //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return (
           <EmptyState
@@ -122,14 +129,20 @@ export function Feed({
         )
       } else if (item === LOADING_ITEM) {
         return (
-          <View style={[pal.border, {borderTopWidth: 1}]}>
+          <View style={[pal.border, {borderTopWidth: hairlineWidth}]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
       }
-      return <FeedItem item={item} moderationOpts={moderationOpts!} />
+      return (
+        <FeedItem
+          item={item}
+          moderationOpts={moderationOpts!}
+          hideTopBorder={index === 0 && isTabletOrMobile}
+        />
+      )
     },
-    [onPressRetryLoadMore, moderationOpts, _, pal.border],
+    [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
   )
 
   const FeedFooter = React.useCallback(
@@ -170,6 +183,8 @@ export function Feed({
         contentContainerStyle={s.contentContainer}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
       />
     </View>
   )

@@ -20,10 +20,10 @@ export type LogEvents = {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
     status: 'granted' | 'denied' | 'undetermined'
   }
-  'state:background': {
+  'state:background:sampled': {
     secondsActive: number
   }
-  'state:foreground': {}
+  'state:foreground:sampled': {}
   'router:navigate:sampled': {}
 
   // Screen events
@@ -57,18 +57,18 @@ export type LogEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
-  'home:feedDisplayed': {
+  'home:feedDisplayed:sampled': {
     feedUrl: string
     feedType: string
     index: number
     reason: 'focus' | 'tabbar-click' | 'pager-swipe' | 'desktop-sidebar-click'
   }
-  'feed:endReached': {
+  'feed:endReached:sampled': {
     feedUrl: string
     feedType: string
     itemCount: number
   }
-  'feed:refresh': {
+  'feed:refresh:sampled': {
     feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
@@ -115,6 +115,7 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'AvatarButton'
   }
   'profile:unfollow': {
     logContext:
@@ -126,6 +127,7 @@ export type LogEvents = {
       | 'ProfileMenu'
       | 'ProfileHoverCard'
       | 'Chat'
+      | 'AvatarButton'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog'

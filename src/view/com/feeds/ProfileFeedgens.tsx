@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   findNodeHandle,
+  ListRenderItemInfo,
   StyleProp,
   StyleSheet,
   View,
@@ -134,7 +135,7 @@ export const ProfileFeedgens = React.forwardRef<
   // =
 
   const renderItemInner = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY) {
         return (
           <View
@@ -169,6 +170,7 @@ export const ProfileFeedgens = React.forwardRef<
             preferences={preferences}
             style={styles.item}
             showLikes
+            hideTopBorder={index === 0}
           />
         )
       }

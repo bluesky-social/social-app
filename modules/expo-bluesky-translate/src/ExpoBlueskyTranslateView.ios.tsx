@@ -15,7 +15,10 @@ export function NativeTranslationView() {
   return <NativeView />
 }
 
-export const isAvailable = Number(Platform.Version) >= 17.4
+// can be something like "17.5.1", so just take the first two parts
+const version = String(Platform.Version).split('.').slice(0, 2).join('.')
+
+export const isAvailable = Number(version) >= 17.4
 
 // https://en.wikipedia.org/wiki/Translate_(Apple)#Languages
 const SUPPORTED_LANGUAGES = [

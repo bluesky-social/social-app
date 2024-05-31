@@ -4,11 +4,11 @@ import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
+import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {clamp} from '#/lib/numbers'
+import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {clamp} from 'lib/numbers'
-import {gradients} from 'lib/styles'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
 export interface FABProps

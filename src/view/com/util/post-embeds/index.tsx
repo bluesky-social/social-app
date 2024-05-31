@@ -27,6 +27,7 @@ import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   customFeedOuter: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
     borderRadius: 8,
     marginTop: 4,
     paddingHorizontal: 12,

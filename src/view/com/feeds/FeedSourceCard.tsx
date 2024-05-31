@@ -25,6 +25,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function FeedSourceCard({
   feedUri,
@@ -34,6 +35,7 @@ export function FeedSourceCard({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  hideTopBorder,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
@@ -42,6 +44,7 @@ export function FeedSourceCard({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  hideTopBorder?: boolean
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
@@ -57,6 +60,7 @@ export function FeedSourceCard({
       showLikes={showLikes}
       pinOnSave={pinOnSave}
       showMinimalPlaceholder={showMinimalPlaceholder}
+      hideTopBorder={hideTopBorder}
     />
   )
 }
@@ -71,6 +75,7 @@ export function FeedSourceCardLoaded({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  hideTopBorder,
 }: {
   feedUri: string
   feed?: FeedSourceInfo
@@ -81,6 +86,7 @@ export function FeedSourceCardLoaded({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  hideTopBorder?: boolean
 }) {
   const t = useTheme()
   const pal = usePalette('default')
@@ -149,7 +155,7 @@ export function FeedSourceCardLoaded({
         style={[
           pal.border,
           {
-            borderTopWidth: showMinimalPlaceholder ? 0 : 1,
+            borderTopWidth: showMinimalPlaceholder || hideTopBorder ? 0 : 1,
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,
@@ -191,7 +197,12 @@ export function FeedSourceCardLoaded({
       <Pressable
         testID={`feed-${feed.displayName}`}
         accessibilityRole="button"
-        style={[styles.container, pal.border, style]}
+        style={[
+          styles.container,
+          pal.border,
+          style,
+          {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+        ]}
         onPress={() => {
           if (feed.type === 'feed') {
             navigation.push('ProfileFeed', {
@@ -295,7 +306,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     flexDirection: 'column',
     flex: 1,
-    borderTopWidth: 1,
     gap: 14,
   },
   headerContainer: {
