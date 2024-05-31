@@ -41,6 +41,7 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -442,7 +443,7 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     paddingLeft: 10,
     paddingRight: 15,
     // @ts-ignore web only -prf

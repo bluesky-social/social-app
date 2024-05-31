@@ -47,6 +47,7 @@ import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const MAX_AUTHORS = 5
 
@@ -480,7 +481,7 @@ const styles = StyleSheet.create({
   outer: {
     padding: 10,
     paddingRight: 15,
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     flexDirection: 'row',
   },
   layoutIcon: {
