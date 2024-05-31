@@ -1,13 +1,20 @@
 import React, {useLayoutEffect} from 'react'
 import {Modal, View} from 'react-native'
+import {RootSiblingParent} from 'react-native-root-siblings'
 import {StatusBar} from 'expo-status-bar'
 import * as SystemUI from 'expo-system-ui'
 import {observer} from 'mobx-react-lite'
 
 import {isIOS} from '#/platform/detection'
+import {Provider as LegacyModalProvider} from '#/state/modals'
 import {useComposerState} from '#/state/shell/composer'
+import {ModalsContainer as LegacyModalsContainer} from '#/view/com/modals/Modal'
 import {atoms as a, useTheme} from '#/alf'
 import {getBackgroundColor, useThemeName} from '#/alf/util/useColorModeTheme'
+import {
+  Outlet as PortalOutlet,
+  Provider as PortalProvider,
+} from '#/components/Portal'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 export const Composer = observer(function ComposerImpl({}: {
@@ -28,20 +35,53 @@ export const Composer = observer(function ComposerImpl({}: {
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}>
       <View style={[t.atoms.bg, a.flex_1]}>
-        <ComposePost
-          cancelRef={ref}
-          replyTo={state?.replyTo}
-          onPost={state?.onPost}
-          quote={state?.quote}
-          mention={state?.mention}
-          text={state?.text}
-          imageUris={state?.imageUris}
-        />
-        {isIOS && <IOSModalBackground active={open} />}
+        <Providers open={open}>
+          <ComposePost
+            cancelRef={ref}
+            replyTo={state?.replyTo}
+            onPost={state?.onPost}
+            quote={state?.quote}
+            mention={state?.mention}
+            text={state?.text}
+            imageUris={state?.imageUris}
+          />
+        </Providers>
       </View>
     </Modal>
   )
 })
+
+function Providers({
+  children,
+  open,
+}: {
+  children: React.ReactNode
+  open: boolean
+}) {
+  // on iOS, it's a native formSheet. We use FullWindowOverlay to make
+  // the dialogs appear over it
+  if (isIOS) {
+    return (
+      <>
+        {children}
+        <IOSModalBackground active={open} />
+      </>
+    )
+  } else {
+    // on Android we just nest the dialogs within it
+    return (
+      <RootSiblingParent>
+        <LegacyModalProvider>
+          <PortalProvider>
+            {children}
+            <LegacyModalsContainer />
+            <PortalOutlet />
+          </PortalProvider>
+        </LegacyModalProvider>
+      </RootSiblingParent>
+    )
+  }
+}
 
 // Generally, the backdrop of the app is the theme color, but when this is open
 // we want it to be black due to the modal being a form sheet.
