@@ -399,7 +399,8 @@ let PreviewableUserAvatar = ({
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={_(msg`See profile`)}
+        label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+        accessibilityHint={_(msg`Opens profile`)}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,

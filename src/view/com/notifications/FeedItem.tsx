@@ -401,7 +401,8 @@ function ExpandedAuthorsList({
       {authors.map(author => (
         <NewLink
           key={author.profile.did}
-          label={_(msg`See profile`)}
+          label={author.profile.displayName || author.profile.handle}
+          accessibilityHint={_(msg`Open's profile`)}
           to={makeProfileLink({
             did: author.profile.did,
             handle: author.profile.handle,
