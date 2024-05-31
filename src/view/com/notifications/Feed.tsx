@@ -17,6 +17,7 @@ import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {CenteredView} from '../util/Views'
 import {FeedItem} from './FeedItem'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -122,7 +123,7 @@ export function Feed({
         )
       } else if (item === LOADING_ITEM) {
         return (
-          <View style={[pal.border, {borderTopWidth: 1}]}>
+          <View style={[pal.border, {borderTopWidth: hairlineWidth}]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
         )

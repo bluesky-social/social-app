@@ -25,6 +25,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function FeedSourceCard({
   feedUri,
@@ -295,7 +296,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     flexDirection: 'column',
     flex: 1,
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     gap: 14,
   },
   headerContainer: {
