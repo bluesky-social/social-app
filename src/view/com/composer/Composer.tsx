@@ -170,16 +170,39 @@ export const ComposePost = observer(function ComposePost({
     [insets, isKeyboardVisible],
   )
 
-  const hasScrolled = useSharedValue(0)
+  const hasScrolledTop = useSharedValue(0)
+  const hasScrolledBottom = useSharedValue(0)
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
-      hasScrolled.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+      hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+      hasScrolledBottom.value = withTiming(
+        event.contentSize.height - event.contentOffset.y >=
+          event.layoutMeasurement.height
+          ? 1
+          : 0,
+      )
+
+      console.log(
+        event.contentSize.height - event.contentOffset.y >=
+          event.layoutMeasurement.height,
+      )
     },
   })
   const topBarAnimatedStyle = useAnimatedStyle(() => {
     return {
+      borderWidth: hairlineWidth,
       borderColor: interpolateColor(
-        hasScrolled.value,
+        hasScrolledTop.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
+  const bottomBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderWidth: hairlineWidth,
+      borderColor: interpolateColor(
+        hasScrolledBottom.value,
         [0, 1],
         ['transparent', t.atoms.border_contrast_medium.borderColor],
       ),
@@ -575,7 +598,11 @@ export const ComposePost = observer(function ComposePost({
       <KeyboardStickyView
         offset={{closed: isIOS ? -insets.bottom : 0, opened: 0}}>
         {replyTo ? null : (
-          <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
+          <ThreadgateBtn
+            threadgate={threadgate}
+            onChange={setThreadgate}
+            style={bottomBarAnimatedStyle}
+          />
         )}
         <View
           style={[
@@ -626,9 +653,7 @@ export function useComposerCancelRef() {
 }
 
 const styles = StyleSheet.create({
-  topbar: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
+  topbar: {},
   topbarDesktop: {
     paddingTop: 10,
     paddingBottom: 10,
