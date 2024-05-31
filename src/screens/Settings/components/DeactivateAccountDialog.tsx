@@ -3,9 +3,14 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
+import {logger} from '#/logger'
+import {useAgent, useSessionApi} from '#/state/session'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DialogOuterProps} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 
@@ -15,7 +20,29 @@ export function DeactivateAccountDialog({
   control: DialogOuterProps['control']
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
+  const agent = useAgent()
+  const {logout} = useSessionApi()
+  const [pending, setPending] = React.useState(false)
+  const [error, setError] = React.useState<string | undefined>()
+
+  const handleDeactivate = React.useCallback(async () => {
+    try {
+      setPending(true)
+      await agent.com.atproto.server.deactivateAccount({})
+      control.close(() => {
+        logout('Deactivated')
+      })
+    } catch (e: any) {
+      logger.error(e, {
+        context: 'Failed to deactivate account',
+      })
+      setError(_(msg`Something went wrong, please try again`))
+    } finally {
+      setPending(false)
+    }
+  }, [agent, control, logout, _, setPending])
 
   return (
     <Prompt.Outer control={control} testID="confirmModal">
@@ -48,13 +75,32 @@ export function DeactivateAccountDialog({
         <Divider />
       </View>
       <Prompt.Actions>
-        <Prompt.Action
-          cta={_(msg`Yes, deactivate`)}
-          onPress={() => {}}
+        <Button
+          variant="solid"
           color="negative"
-        />
+          size={gtMobile ? 'small' : 'medium'}
+          label={_(msg`Yes, deactivate`)}
+          onPress={handleDeactivate}>
+          <ButtonText>{_(msg`Yes, deactivate`)}</ButtonText>
+          {pending && <ButtonIcon icon={Loader} position="right" />}
+        </Button>
         <Prompt.Cancel />
       </Prompt.Actions>
+
+      {error && (
+        <View
+          style={[
+            a.flex_row,
+            a.gap_sm,
+            a.mt_md,
+            a.p_md,
+            a.rounded_sm,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <CircleInfo size="md" fill={t.palette.negative_400} />
+          <Text style={[a.leading_snug]}>{error}</Text>
+        </View>
+      )}
     </Prompt.Outer>
   )
 }
