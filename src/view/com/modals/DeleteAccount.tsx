@@ -204,6 +204,9 @@ export function Component({}: {}) {
                     and reactivate it at any time.
                   </Trans>{' '}
                   <InlineLinkText
+                    label={_(
+                      msg`Click here for more information on deactivating your account`,
+                    )}
                     to="#"
                     onPress={e => {
                       e.preventDefault()
