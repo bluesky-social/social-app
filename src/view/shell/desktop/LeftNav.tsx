@@ -12,7 +12,6 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -65,6 +64,8 @@ import {
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
 import {router} from '../../../routes'
+
+const NAV_ICON_WIDTH = 28
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -280,15 +281,28 @@ function ComposeBtn() {
   )
 }
 
+function ChatNavItem() {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const numUnreadMessages = useUnreadMessageCount()
+
+  return (
+    <NavItem
+      href="/messages"
+      count={numUnreadMessages.numUnread}
+      icon={<Message style={pal.text} width={NAV_ICON_WIDTH} />}
+      iconFilled={<MessageFilled style={pal.text} width={NAV_ICON_WIDTH} />}
+      label={_(msg`Chat`)}
+    />
+  )
+}
+
 export function DesktopLeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnreadNotifications = useUnreadNotifications()
-  const numUnreadMessages = useUnreadMessageCount()
-  const gate = useGate()
-  const iconWidth = 28
 
   if (!hasSession && !isDesktop) {
     return null
@@ -316,66 +330,62 @@ export function DesktopLeftNav() {
 
           <NavItem
             href="/"
-            icon={<Home width={iconWidth} style={pal.text} />}
-            iconFilled={<HomeFilled width={iconWidth} style={pal.text} />}
+            icon={<Home width={NAV_ICON_WIDTH} style={pal.text} />}
+            iconFilled={<HomeFilled width={NAV_ICON_WIDTH} style={pal.text} />}
             label={_(msg`Home`)}
           />
           <NavItem
             href="/search"
-            icon={<MagnifyingGlass style={pal.text} width={iconWidth} />}
+            icon={<MagnifyingGlass style={pal.text} width={NAV_ICON_WIDTH} />}
             iconFilled={
-              <MagnifyingGlassFilled style={pal.text} width={iconWidth} />
+              <MagnifyingGlassFilled style={pal.text} width={NAV_ICON_WIDTH} />
             }
             label={_(msg`Search`)}
           />
           <NavItem
             href="/notifications"
             count={numUnreadNotifications}
-            icon={<Bell width={iconWidth} style={pal.text} />}
-            iconFilled={<BellFilled width={iconWidth} style={pal.text} />}
+            icon={<Bell width={NAV_ICON_WIDTH} style={pal.text} />}
+            iconFilled={<BellFilled width={NAV_ICON_WIDTH} style={pal.text} />}
             label={_(msg`Notifications`)}
           />
-          {gate('dms') && (
-            <NavItem
-              href="/messages"
-              count={numUnreadMessages.numUnread}
-              icon={<Message style={pal.text} width={iconWidth} />}
-              iconFilled={<MessageFilled style={pal.text} width={iconWidth} />}
-              label={_(msg`Messages`)}
-            />
-          )}
+          <ChatNavItem />
           <NavItem
             href="/feeds"
             icon={
               <Hashtag
                 style={pal.text as FontAwesomeIconStyle}
-                width={iconWidth}
+                width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
                 style={pal.text as FontAwesomeIconStyle}
-                width={iconWidth}
+                width={NAV_ICON_WIDTH}
               />
             }
             label={_(msg`Feeds`)}
           />
           <NavItem
             href="/lists"
-            icon={<List style={pal.text} width={iconWidth} />}
-            iconFilled={<ListFilled style={pal.text} width={iconWidth} />}
+            icon={<List style={pal.text} width={NAV_ICON_WIDTH} />}
+            iconFilled={<ListFilled style={pal.text} width={NAV_ICON_WIDTH} />}
             label={_(msg`Lists`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-            icon={<UserCircle width={iconWidth} style={pal.text} />}
-            iconFilled={<UserCircleFilled width={iconWidth} style={pal.text} />}
+            icon={<UserCircle width={NAV_ICON_WIDTH} style={pal.text} />}
+            iconFilled={
+              <UserCircleFilled width={NAV_ICON_WIDTH} style={pal.text} />
+            }
             label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
-            icon={<Settings width={iconWidth} style={pal.text} />}
-            iconFilled={<SettingsFilled width={iconWidth} style={pal.text} />}
+            icon={<Settings width={NAV_ICON_WIDTH} style={pal.text} />}
+            iconFilled={
+              <SettingsFilled width={NAV_ICON_WIDTH} style={pal.text} />
+            }
             label={_(msg`Settings`)}
           />
 

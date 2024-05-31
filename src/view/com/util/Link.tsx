@@ -45,6 +45,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   hoverStyle?: StyleProp<ViewStyle>
   noFeedback?: boolean
   asAnchor?: boolean
+  dataSet?: Object | undefined
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void

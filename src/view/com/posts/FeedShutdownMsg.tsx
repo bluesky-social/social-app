@@ -6,10 +6,9 @@ import {useLingui} from '@lingui/react'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logger} from '#/logger'
 import {
-  useAddSavedFeedsMutation,
   usePreferencesQuery,
   useRemoveFeedMutation,
-  useUpdateSavedFeedsMutation,
+  useReplaceForYouWithDiscoverFeedMutation,
 } from '#/state/queries/preferences'
 import {useSetSelectedFeed} from '#/state/shell/selected-feed'
 import * as Toast from '#/view/com/util/Toast'
@@ -24,12 +23,10 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
   const {_} = useLingui()
   const setSelectedFeed = useSetSelectedFeed()
   const {data: preferences} = usePreferencesQuery()
-  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
-    useAddSavedFeedsMutation()
   const {mutateAsync: removeFeed, isPending: isRemovePending} =
     useRemoveFeedMutation()
-  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
-    useUpdateSavedFeedsMutation()
+  const {mutateAsync: replaceFeedWithDiscover, isPending: isReplacePending} =
+    useReplaceForYouWithDiscoverFeedMutation()
 
   const feedConfig = preferences?.savedFeeds?.find(
     f => f.value === feedUri && f.pinned,
@@ -46,6 +43,9 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         await removeFeed(feedConfig)
         Toast.show(_(msg`Removed from your feeds`))
       }
+      if (hasDiscoverPinned) {
+        setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
+      }
     } catch (err: any) {
       Toast.show(
         _(
@@ -54,30 +54,15 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
       )
       logger.error('Failed up update feeds', {message: err})
     }
-  }, [removeFeed, feedConfig, _])
+  }, [removeFeed, feedConfig, _, hasDiscoverPinned, setSelectedFeed])
 
   const onReplaceFeed = React.useCallback(async () => {
     try {
-      if (!discoverFeedConfig) {
-        await addSavedFeeds([
-          {
-            type: 'feed',
-            value: PROD_DEFAULT_FEED('whats-hot'),
-            pinned: true,
-          },
-        ])
-      } else {
-        await updateSavedFeeds([
-          {
-            ...discoverFeedConfig,
-            pinned: true,
-          },
-        ])
-      }
+      await replaceFeedWithDiscover({
+        forYouFeedConfig: feedConfig,
+        discoverFeedConfig,
+      })
       setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
-      if (feedConfig) {
-        await removeFeed(feedConfig)
-      }
       Toast.show(_(msg`The feed has been replaced with Discover.`))
     } catch (err: any) {
       Toast.show(
@@ -88,17 +73,14 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
       logger.error('Failed up update feeds', {message: err})
     }
   }, [
-    addSavedFeeds,
-    updateSavedFeeds,
-    removeFeed,
+    replaceFeedWithDiscover,
     discoverFeedConfig,
     feedConfig,
     setSelectedFeed,
     _,
   ])
 
-  const isProcessing =
-    isAddSavedFeedPending || isUpdateFeedPending || isRemovePending
+  const isProcessing = isReplacePending || isRemovePending
   return (
     <View
       style={[
@@ -147,9 +129,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
               <ButtonText>
                 <Trans>Replace with Discover</Trans>
               </ButtonText>
-              {(isAddSavedFeedPending || isUpdateFeedPending) && (
-                <ButtonIcon icon={Loader} />
-              )}
+              {isReplacePending && <ButtonIcon icon={Loader} />}
             </Button>
           )}
         </View>

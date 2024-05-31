@@ -11,6 +11,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePrefetchProfileQuery, useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {isTouchDevice} from 'lib/browser'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -43,10 +44,12 @@ const floatingMiddlewares = [
   }),
 ]
 
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
-  return isTouchDevice ? props.children : <ProfileHoverCardInner {...props} />
+  if (props.disable || isTouchDevice) {
+    return props.children
+  } else {
+    return <ProfileHoverCardInner {...props} />
+  }
 }
 
 type State =
@@ -285,14 +288,14 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   }
 
   return (
-    <div
+    <View
+      // @ts-ignore View is being used as div
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
+      // @ts-ignore web only prop
       onMouseUp={onPress}
-      style={{
-        display: props.inline ? 'inline' : 'block',
-      }}>
+      style={{flexShrink: 1}}>
       {props.children}
       {isVisible && (
         <Portal>
@@ -307,7 +310,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
           </div>
         </Portal>
       )}
-    </div>
+    </View>
   )
 }
 

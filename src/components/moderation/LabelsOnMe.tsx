@@ -32,9 +32,7 @@ export function LabelsOnMe({
   if (!labels || !currentAccount) {
     return null
   }
-  labels = labels.filter(
-    l => !l.val.startsWith('!') && l.src !== currentAccount.did,
-  )
+  labels = labels.filter(l => !l.val.startsWith('!'))
   if (!labels.length) {
     return null
   }
@@ -57,13 +55,13 @@ export function LabelsOnMe({
             <Plural
               value={labels.length}
               one="# label has been placed on this account"
-              other="# labels has been placed on this account"
+              other="# labels have been placed on this account"
             />
           ) : (
             <Plural
               value={labels.length}
               one="# label has been placed on this content"
-              other="# labels has been placed on this content"
+              other="# labels have been placed on this content"
             />
           )}
         </ButtonText>

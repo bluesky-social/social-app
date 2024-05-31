@@ -13,6 +13,7 @@ import {TextLink} from 'view/com/util/Link'
 import {Text} from 'view/com/util/text/Text'
 import {DesktopFeeds} from './Feeds'
 import {DesktopSearch} from './Search'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')
@@ -130,8 +131,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   desktopFeedsContainer: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: hairlineWidth,
+    borderBottomWidth: hairlineWidth,
     marginTop: 18,
     marginBottom: 18,
   },

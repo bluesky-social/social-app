@@ -111,20 +111,27 @@ export function ProfileLabelsSectionInner({
   headerHeight: number
 }) {
   const t = useTheme()
-  const contextScrollHandlers = useScrollHandlers()
 
+  // Intentionally destructured outside the main thread closure.
+  // See https://github.com/bluesky-social/social-app/pull/4108.
+  const {
+    onBeginDrag: onBeginDragFromContext,
+    onEndDrag: onEndDragFromContext,
+    onScroll: onScrollFromContext,
+    onMomentumEnd: onMomentumEndFromContext,
+  } = useScrollHandlers()
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag(e, ctx) {
-      contextScrollHandlers.onBeginDrag?.(e, ctx)
+      onBeginDragFromContext?.(e, ctx)
     },
     onEndDrag(e, ctx) {
-      contextScrollHandlers.onEndDrag?.(e, ctx)
+      onEndDragFromContext?.(e, ctx)
     },
     onScroll(e, ctx) {
-      contextScrollHandlers.onScroll?.(e, ctx)
+      onScrollFromContext?.(e, ctx)
     },
     onMomentumEnd(e, ctx) {
-      contextScrollHandlers.onMomentumEnd?.(e, ctx)
+      onMomentumEndFromContext?.(e, ctx)
     },
   })
 
