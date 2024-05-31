@@ -853,6 +853,17 @@ export function SettingsScreen({}: Props) {
                 <Trans>Reset preferences state</Trans>
               </Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => onPressDeleteChatDeclaration()}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Delete chat declaration record`)}
+              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Delete chat declaration record</Trans>
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={() => {
@@ -867,17 +878,9 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
-              onPress={() => onPressDeleteChatDeclaration()}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Delete chat declaration record`)}
-              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
-              <Text type="lg" style={pal.text}>
-                <Trans>Delete chat declaration record</Trans>
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[pal.view, styles.linkCardNoIcon]}
-              onPress={() => navigation.navigate('StarterPackWizard')}
+              onPress={() =>
+                navigation.navigate('StarterPackWizard', {mode: 'Create'})
+              }
               accessibilityRole="button"
               accessibilityLabel={_(msg`Navigate to Starter Pack Wizard`)}
               accessibilityHint={_(msg`Navigates to Starter Pack Wizard`)}>
