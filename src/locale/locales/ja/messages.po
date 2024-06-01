@@ -71,6 +71,10 @@ msgstr "{0, plural, other {リポスト}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, other {いいねを外す (#個のいいね)}}"
 
+#: src/view/com/util/UserAvatar.tsx:406
+msgid "{0}'s avatar"
+msgstr "{0}のアバター"
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#人のユーザーがいいね}}"
@@ -924,6 +928,10 @@ msgstr "投稿の編集画面を閉じて下書きを削除する"
 msgid "Closes viewer for header image"
 msgstr "ヘッダー画像のビューワーを閉じる"
 
+#: src/view/com/notifications/FeedItem.tsx:204
+msgid "Collapse list of users"
+msgstr "ユーザーリストを折りたたむ"
+
 #: src/view/com/notifications/FeedItem.tsx:319
 msgid "Collapses list of users for a given notification"
 msgstr "指定した通知のユーザーリストを折りたたむ"
@@ -1010,7 +1018,7 @@ msgstr "確認コード"
 
 #: src/screens/Login/LoginForm.tsx:302
 msgid "Connecting..."
-msgstr "接続中..."
+msgstr "接続中…"
 
 #: src/screens/Signup/index.tsx:238
 msgid "Contact support"
@@ -1751,6 +1759,10 @@ msgstr "検索クエリの入力を終了"
 msgid "Expand alt text"
 msgstr "ALTテキストを展開"
 
+#: src/view/com/notifications/FeedItem.tsx:205
+msgid "Expand list of users"
+msgstr "ユーザーリストを展開"
+
 #: src/view/com/composer/ComposerReplyTo.tsx:82
 #: src/view/com/composer/ComposerReplyTo.tsx:85
 msgid "Expand or collapse the full post you are replying to"
@@ -1938,6 +1950,10 @@ msgstr "フォロー"
 msgid "Follow {0}"
 msgstr "{0}をフォロー"
 
+#: src/view/com/posts/AviFollowButton.tsx:71
+msgid "Follow {name}"
+msgstr "{name}をフォロー"
+
 #: src/view/com/profile/ProfileMenu.tsx:242
 #: src/view/com/profile/ProfileMenu.tsx:253
 msgid "Follow Account"
@@ -1982,6 +1998,10 @@ msgstr "フォロー中"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:90
 msgid "Following {0}"
 msgstr "{0}をフォローしています"
+
+#: src/view/com/posts/AviFollowButton.tsx:53
+msgid "Following {name}"
+msgstr "{name}をフォローしています"
 
 #: src/view/screens/Settings/index.tsx:566
 msgid "Following feed preferences"
@@ -2605,7 +2625,7 @@ msgstr "最新の投稿を読み込む"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:99
 msgid "Loading..."
-msgstr "読み込み中..."
+msgstr "読み込み中…"
 
 #: src/Navigation.tsx:228
 msgid "Log"
@@ -3231,6 +3251,10 @@ msgstr "おっと！"
 msgid "Open"
 msgstr "開かれています"
 
+#: src/view/com/posts/AviFollowButton.tsx:89
+msgid "Open {name} profile shortcut menu"
+msgstr "{name}のプロフィールのショートカットメニューを開く"
+
 #: src/screens/Onboarding/StepProfile/index.tsx:280
 msgid "Open avatar creator"
 msgstr "アバター・クリエイターを開く"
@@ -3398,6 +3422,11 @@ msgstr "システムログのページを開く"
 msgid "Opens the threads preferences"
 msgstr "スレッドの設定を開く"
 
+#: src/view/com/notifications/FeedItem.tsx:426
+#: src/view/com/util/UserAvatar.tsx:409
+msgid "Opens this profile"
+msgstr "プロフィールを開く"
+
 #: src/view/com/util/forms/DropdownButton.tsx:280
 msgid "Option {0} of {numItems}"
 msgstr "{numItems}個中{0}目のオプション"
@@ -3421,7 +3450,7 @@ msgstr "その他のアカウント"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:91
 msgid "Other..."
-msgstr "その他..."
+msgstr "その他…"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
@@ -3708,7 +3737,7 @@ msgstr "他のユーザーとプライベートにチャットします。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:156
 msgid "Processing..."
-msgstr "処理中..."
+msgstr "処理中…"
 
 #: src/view/screens/DebugMod.tsx:894
 #: src/view/screens/Profile.tsx:345
@@ -3799,6 +3828,10 @@ msgstr "アバターを削除"
 #: src/view/com/util/UserBanner.tsx:155
 msgid "Remove Banner"
 msgstr "バナーを削除"
+
+#: src/screens/Messages/Conversation/MessageInputEmbed.tsx:218
+msgid "Remove embed"
+msgstr "埋め込みを削除"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:169
 #: src/view/com/posts/FeedShutdownMsg.tsx:113
@@ -4351,6 +4384,10 @@ msgstr "フィードバックを送信"
 msgid "Send message"
 msgstr "メッセージを送信"
 
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:47
+msgid "Send post to..."
+msgstr "投稿を送る…"
+
 #: src/components/dms/ReportDialog.tsx:232
 #: src/components/dms/ReportDialog.tsx:235
 #: src/components/ReportDialog/SubmitView.tsx:216
@@ -4366,6 +4403,11 @@ msgstr "{0}に報告を送信"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
 msgid "Send verification email"
 msgstr "確認メールを送信"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:299
+#: src/view/com/util/forms/PostDropdownBtn.tsx:302
+msgid "Send via direct message"
+msgstr "ダイレクトメッセージで送信"
 
 #: src/view/com/modals/DeleteAccount.tsx:143
 msgid "Sends email with confirmation code for account deletion"
@@ -5604,6 +5646,10 @@ msgstr "ビデオゲーム"
 #: src/screens/Profile/Header/Shell.tsx:111
 msgid "View {0}'s avatar"
 msgstr "{0}のアバターを表示"
+
+#: src/view/com/notifications/FeedItem.tsx:212
+msgid "View {0}'s profile"
+msgstr "{0}のプロフィールを表示"
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
