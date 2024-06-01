@@ -11,23 +11,23 @@ export const isAvailableAndroid = true
 // https://en.wikipedia.org/wiki/Translate_(Apple)#Languages
 const SUPPORTED_LANGUAGES = [
   'ar',
-  'zh',
-  'nl',
-  'en',
-  'fr',
   'de',
+  'en',
+  'es',
+  'fr',
   'id',
   'it',
   'ja',
   'ko',
+  'nl',
   'pl',
   'pt',
   'ru',
-  'es',
   'th',
   'tr',
   'uk',
   'vi',
+  'zh',
 ]
 
 export function isLanguageSupported(lang?: string) {
