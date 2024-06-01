@@ -749,14 +749,14 @@ function ExpandedPostDetails({
               isTranslating
                 ? _(msg`Translating...`)
                 : didTranslate
-                ? _(msg`See original`)
+                ? _(msg`Translated by Google`)
                 : _(msg`Translate`)
             }
             onPress={onTranslatePress}>
             {isTranslating
               ? _(msg`Translating...`)
               : didTranslate
-              ? _(msg`See original`)
+              ? _(msg`Translated by Google`)
               : _(msg`Translate`)}
           </Text>
         </>
