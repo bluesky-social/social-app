@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-01 18:46+0800\n"
+"PO-Revision-Date: 2024-06-01 19:03+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -477,7 +477,7 @@ msgstr "藝術"
 
 #: src/view/com/modals/SelfLabel.tsx:124
 msgid "Artistic or non-erotic nudity."
-msgstr "藝術作品或非情色的裸露。"
+msgstr "藝術作品或非色情的裸露。"
 
 #: src/screens/Signup/StepHandle.tsx:119
 msgid "At least 3 characters"
@@ -1765,7 +1765,7 @@ msgstr "露骨或可能令人不安的媒體內容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Explicit sexual images."
-msgstr "露骨的情色圖片。"
+msgstr "露骨的色情圖片。"
 
 #: src/view/screens/Settings/index.tsx:780
 msgid "Export my data"
@@ -3122,7 +3122,7 @@ msgstr "還沒有人按喜歡，也許您應該成為第一個！"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr "非情色內容裸體"
+msgstr "非色情內容裸體"
 
 #: src/Navigation.tsx:116
 #: src/view/screens/Profile.tsx:100
@@ -5430,7 +5430,7 @@ msgstr "取消訂閱這個標記者"
 #: src/lib/moderation/useReportOptions.ts:71
 #: src/lib/moderation/useReportOptions.ts:84
 msgid "Unwanted Sexual Content"
-msgstr "不受歡迎的情色內容"
+msgstr "不受歡迎的色情內容"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:70
 msgid "Update {displayName} in Lists"
