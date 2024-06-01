@@ -2,7 +2,6 @@ import React, {PropsWithChildren, useMemo, useRef} from 'react'
 import {
   Dimensions,
   GestureResponderEvent,
-  Platform,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -11,8 +10,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import Animated, {FadeIn, FadeInDown, FadeInUp} from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
-import {FullWindowOverlay} from 'react-native-screens'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -23,6 +22,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {isWeb} from 'platform/detection'
+import {native} from '#/alf'
+import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'
 
@@ -127,6 +128,7 @@ export function DropdownButton({
           pageY,
           menuWidth,
           items.filter(v => !!v) as DropdownItem[],
+          openUpwards,
         )
       },
     )
@@ -181,6 +183,7 @@ function createDropdownMenu(
   pageY: number,
   width: number,
   items: DropdownItem[],
+  opensUpwards = false,
 ): RootSiblings {
   const onPressItem = (index: number) => {
     sibling.destroy()
@@ -200,6 +203,7 @@ function createDropdownMenu(
         width={width}
         items={items}
         onPressItem={onPressItem}
+        openUpwards={opensUpwards}
       />
     ),
   )
@@ -214,6 +218,7 @@ type DropDownItemProps = {
   width: number
   items: DropdownItem[]
   onPressItem: (index: number) => void
+  openUpwards: boolean
 }
 
 const DropdownItems = ({
@@ -224,6 +229,7 @@ const DropdownItems = ({
   width,
   items,
   onPressItem,
+  openUpwards,
 }: DropDownItemProps) => {
   const pal = usePalette('default')
   const theme = useTheme()
@@ -242,13 +248,14 @@ const DropdownItems = ({
   // - (On mobile) be buttons by default, accept `label` and `nativeID`
   // props, and always have an explicit label
   return (
-    <Wrapper>
+    <FullWindowOverlay>
       {/* This TouchableWithoutFeedback renders the background so if the user clicks outside, the dropdown closes */}
       <TouchableWithoutFeedback
         onPress={onOuterPress}
         accessibilityLabel={_(msg`Toggle dropdown`)}
         accessibilityHint="">
-        <View
+        <Animated.View
+          entering={FadeIn}
           style={[
             styles.bg,
             // On web we need to adjust the top and bottom relative to the scroll position
@@ -264,7 +271,10 @@ const DropdownItems = ({
           ]}
         />
       </TouchableWithoutFeedback>
-      <View
+      <Animated.View
+        entering={native(
+          openUpwards ? FadeInDown.springify(1000) : FadeInUp.springify(1000),
+        )}
         style={[
           styles.menu,
           {left: x, top: y, width},
@@ -306,17 +316,10 @@ const DropdownItems = ({
           }
           return null
         })}
-      </View>
-    </Wrapper>
+      </Animated.View>
+    </FullWindowOverlay>
   )
 }
-
-// on iOS, due to formSheet presentation style, we need to render the overlay
-// as a full screen overlay
-const Wrapper = Platform.select({
-  ios: FullWindowOverlay,
-  default: ({children}) => <>{children}</>,
-})
 
 function isSep(item: DropdownItem): item is DropdownItemSeparator {
   return 'sep' in item && item.sep
@@ -333,14 +336,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     width: '100%',
-    backgroundColor: '#000',
-    opacity: 0.1,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   menu: {
     position: 'absolute',
     backgroundColor: '#fff',
     borderRadius: 14,
-    opacity: 1,
     paddingVertical: 6,
   },
   menuItem: {

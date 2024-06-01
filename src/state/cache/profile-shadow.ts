@@ -9,8 +9,10 @@ import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} fro
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '../queries/messages/list-converations'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
+import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '../queries/post-feed'
 import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '../queries/post-liked-by'
 import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '../queries/post-reposted-by'
+import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '../queries/post-thread'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '../queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
@@ -107,4 +109,6 @@ function* findProfilesInCache(
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInActorSearchQueryData(queryClient, did)
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
+  yield* findAllProfilesInFeedsQueryData(queryClient, did)
+  yield* findAllProfilesInPostThreadQueryData(queryClient, did)
 }

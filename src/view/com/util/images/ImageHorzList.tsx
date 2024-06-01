@@ -27,11 +27,14 @@ export function ImageHorzList({images, style}: Props) {
 }
 
 const styles = StyleSheet.create({
-  flexRow: {flexDirection: 'row'},
+  flexRow: {
+    flexDirection: 'row',
+    gap: 5,
+  },
   image: {
-    width: 100,
-    height: 100,
+    maxWidth: 100,
+    aspectRatio: 1,
+    flex: 1,
     borderRadius: 4,
-    marginRight: 5,
   },
 })

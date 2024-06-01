@@ -15,6 +15,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {useTheme} from '#/alf'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -156,7 +157,7 @@ function DesktopWebHeader({
         styles.desktopHeader,
         pal.border,
         {
-          borderBottomWidth: showBorder ? 1 : 0,
+          borderBottomWidth: showBorder ? hairlineWidth : 0,
         },
         {display: 'flex', flexDirection: 'column'},
       ]}>
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   border: {
-    borderBottomWidth: 1,
+    borderBottomWidth: hairlineWidth,
   },
   titleContainer: {
     marginLeft: 'auto',

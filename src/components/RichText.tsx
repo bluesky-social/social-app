@@ -28,6 +28,7 @@ export function RichText({
   authorHandle,
   onLinkPress,
   interactiveStyle,
+  emojiMultiplier = 1.85,
 }: TextStyleProp &
   Pick<TextProps, 'selectable'> & {
     value: RichTextAPI | string
@@ -38,6 +39,7 @@ export function RichText({
     authorHandle?: string
     onLinkPress?: LinkProps['onPress']
     interactiveStyle?: TextStyle
+    emojiMultiplier?: number
   }) {
   const richText = React.useMemo(
     () =>
@@ -57,17 +59,14 @@ export function RichText({
   const {text, facets} = richText
 
   if (!facets?.length) {
-    if (text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)) {
+    if (isOnlyEmoji(text)) {
+      const fontSize =
+        (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
         <Text
           selectable={selectable}
           testID={testID}
-          style={[
-            {
-              fontSize: 26,
-              lineHeight: 30,
-            },
-          ]}
+          style={[plainStyles, {fontSize}]}
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
@@ -245,5 +244,12 @@ function RichTextTag({
         </Text>
       </TagMenu>
     </React.Fragment>
+  )
+}
+
+export function isOnlyEmoji(text: string) {
+  return (
+    text.length <= 15 &&
+    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
   )
 }

@@ -1,4 +1,5 @@
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
@@ -11,9 +12,18 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
-import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
-import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
-import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
+import {
+  findAllPostsInQueryData as findAllPostsInSearchQueryData,
+  findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
+} from 'state/queries/search-posts'
+import {
+  findAllPostsInQueryData as findAllPostsInNotifsQueryData,
+  findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
+} from './notifications/feed'
+import {
+  findAllPostsInQueryData as findAllPostsInFeedQueryData,
+  findAllProfilesInQueryData as findAllProfilesInFeedQueryData,
+} from './post-feed'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const RQKEY_ROOT = 'post-thread'
@@ -290,6 +300,39 @@ export function* findAllPostsInQueryData(
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<ThreadNode>({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const item of traverseThread(queryData)) {
+      if (item.type === 'post' && item.post.author.did === did) {
+        yield item.post.author
+      }
+      const quotedPost =
+        item.type === 'post' ? getEmbeddedPost(item.post.embed) : undefined
+      if (quotedPost?.author.did === did) {
+        yield quotedPost?.author
+      }
+    }
+  }
+  for (let profile of findAllProfilesInFeedQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInNotifsQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInSearchQueryData(queryClient, did)) {
+    yield profile
   }
 }
 

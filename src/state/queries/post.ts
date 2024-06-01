@@ -18,7 +18,16 @@ export function usePostQuery(uri: string | undefined) {
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await agent.getPosts({uris: [uri!]})
+      const urip = new AtUri(uri!)
+
+      if (!urip.host.startsWith('did:')) {
+        const res = await agent.resolveHandle({
+          handle: urip.host,
+        })
+        urip.host = res.data.did
+      }
+
+      const res = await agent.getPosts({uris: [urip.toString()]})
       if (res.success && res.data.posts[0]) {
         return res.data.posts[0]
       }
@@ -47,7 +56,7 @@ export function useGetPost() {
           }
 
           const res = await agent.getPosts({
-            uris: [urip.toString()!],
+            uris: [urip.toString()],
           })
 
           if (res.success && res.data.posts[0]) {
