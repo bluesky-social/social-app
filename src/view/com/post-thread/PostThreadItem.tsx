@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import React, {memo, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -25,7 +25,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isIOS, isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
@@ -39,7 +39,11 @@ import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {PostHider} from '../../../components/moderation/PostHider'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {
+  getPostLanguage,
+  getTranslatorLink,
+  isPostInLanguage,
+} from '../../../locale/helpers'
 import {AviFollowButton} from '../posts/AviFollowButton'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -86,14 +90,18 @@ export function PostThreadItem({
   hideTopBorder?: boolean
 }) {
   const postShadowed = usePostShadow(post)
+
+  const [translatedText, setTranslatedText] = useState<string>(record.text)
+
   const richText = useMemo(
     () =>
       new RichTextAPI({
-        text: record.text,
+        text: translatedText,
         facets: record.facets,
       }),
-    [record],
+    [record, translatedText],
   )
+
   if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted hideTopBorder={hideTopBorder} />
   }
@@ -107,6 +115,7 @@ export function PostThreadItem({
         nextPost={nextPost}
         record={record}
         richText={richText}
+        setTranslatedText={setTranslatedText}
         moderation={moderation}
         treeView={treeView}
         depth={depth}
@@ -155,6 +164,7 @@ let PostThreadItemLoaded = ({
   nextPost,
   isHighlightedPost,
   hasMore,
+  setTranslatedText,
   showChildReplyLine,
   showParentReplyLine,
   hasPrecedingItem,
@@ -172,6 +182,7 @@ let PostThreadItemLoaded = ({
   nextPost: ThreadPost | undefined
   isHighlightedPost?: boolean
   hasMore?: boolean
+  setTranslatedText: React.Dispatch<React.SetStateAction<string>>
   showChildReplyLine?: boolean
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
@@ -346,6 +357,7 @@ let PostThreadItemLoaded = ({
             <ExpandedPostDetails
               post={post}
               record={record}
+              setTranslatedText={setTranslatedText}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
@@ -661,28 +673,68 @@ function ExpandedPostDetails({
   record,
   needsTranslation,
   translatorUrl,
+  setTranslatedText,
 }: {
   post: AppBskyFeedDefs.PostView
   record?: AppBskyFeedPost.Record
   needsTranslation: boolean
   translatorUrl: string
+  setTranslatedText: React.Dispatch<React.SetStateAction<string>>
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
+  const langPrefs = useLanguagePrefs()
 
   const text = record?.text || ''
 
-  const onTranslatePress = React.useCallback(() => {
+  const [didTranslate, setDidTranslate] = useState<boolean>(false)
+  const [isTranslating, setIsTranslating] = useState<boolean>(false)
+
+  const onTranslatePress = React.useCallback(async () => {
+    if (isTranslating) return
+
     if (
       isNativeTranslationAvailable &&
       isLanguageSupported(record?.langs?.at(0))
     ) {
-      NativeTranslationModule.presentAsync(text)
+      if (isIOS) {
+        NativeTranslationModule.presentAsync(text)
+      } else if (isAndroid) {
+        if (didTranslate) {
+          setTranslatedText(text)
+          setDidTranslate(false)
+        } else {
+          try {
+            setIsTranslating(true)
+            const translated = await NativeTranslationModule.translateAsync(
+              getPostLanguage(post) ?? 'en',
+              langPrefs.primaryLanguage,
+              text,
+            )
+            setIsTranslating(false)
+
+            setTranslatedText(translated)
+            setDidTranslate(true)
+          } finally {
+            setIsTranslating(false)
+          }
+        }
+      }
     } else {
       openLink(translatorUrl)
     }
-  }, [openLink, text, translatorUrl, record])
+  }, [
+    isTranslating,
+    record?.langs,
+    text,
+    didTranslate,
+    setTranslatedText,
+    post,
+    langPrefs.primaryLanguage,
+    openLink,
+    translatorUrl,
+  ])
 
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
@@ -693,9 +745,19 @@ function ExpandedPostDetails({
 
           <Text
             style={pal.link}
-            title={_(msg`Translate`)}
+            title={
+              isTranslating
+                ? _(msg`Translating...`)
+                : didTranslate
+                ? _(msg`See original`)
+                : _(msg`Translate`)
+            }
             onPress={onTranslatePress}>
-            <Trans>Translate</Trans>
+            {isTranslating
+              ? _(msg`Translating...`)
+              : didTranslate
+              ? _(msg`See original`)
+              : _(msg`Translate`)}
           </Text>
         </>
       )}
