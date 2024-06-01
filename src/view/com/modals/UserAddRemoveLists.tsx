@@ -61,7 +61,7 @@ export function Component({
       return [pal.border, {height: screenHeight / 1.5}]
     }
 
-    return [pal.border, {flex: 1}]
+    return [pal.border, {flex: 1, borderTopWidth: 1}]
   }, [pal.border, screenHeight])
 
   return (
@@ -233,11 +233,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 24,
-    marginBottom: 10,
-  },
-  list: {
-    flex: 1,
-    borderTopWidth: 1,
+    marginBottom: 12,
   },
   btns: {
     position: 'relative',
