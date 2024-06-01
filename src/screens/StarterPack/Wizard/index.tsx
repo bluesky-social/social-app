@@ -4,7 +4,7 @@ import {
   KeyboardAwareScrollView,
   KeyboardStickyView,
 } from 'react-native-keyboard-controller'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -21,7 +21,8 @@ import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {PlusSmall_Stroke2_Corner0_Rounded} from '#/components/icons/Plus'
 import {Loader} from '#/components/Loader'
 import {Provider} from './State'
 
@@ -145,6 +146,27 @@ function WizardInner() {
         }
         showBorder={true}
         showOnDesktop={true}
+        renderButton={
+          state.currentStep === 'Profiles'
+            ? () => (
+                <Button
+                  label={_(msg`Cancel`)}
+                  variant="solid"
+                  color="primary"
+                  size="xsmall"
+                  style={[a.absolute, {right: 0}]}
+                  onPress={() => {}}>
+                  <ButtonIcon
+                    position="left"
+                    icon={PlusSmall_Stroke2_Corner0_Rounded}
+                  />
+                  <ButtonText>
+                    <Trans>Add</Trans>
+                  </ButtonText>
+                </Button>
+              )
+            : undefined
+        }
       />
       <Container>
         <StepView />
