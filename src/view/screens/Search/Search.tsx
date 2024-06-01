@@ -613,11 +613,8 @@ export function SearchScreen(
   )
 
   const navigateToProfile = React.useCallback(
-    (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      scrollToTopWeb()
-      setShowAutocomplete(false)
-      updateSelectedProfiles(profile)
-
+    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      await updateSelectedProfiles(profile)
       if (isWeb) {
         navigation.reset({
           index: 1,
@@ -631,7 +628,7 @@ export function SearchScreen(
         navigation.navigate('Profile', {name: profile.handle})
       }
     },
-    [updateSelectedProfiles, navigation, searchText],
+    [navigation, searchText, updateSelectedProfiles],
   )
 
   const onSubmit = React.useCallback(() => {
