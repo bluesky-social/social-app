@@ -874,7 +874,7 @@ export function SettingsScreen({}: Props) {
               accessibilityLabel={_(msg`Navigate to Starter Pack`)}
               accessibilityHint={_(msg`Navigate to Starter Pack`)}>
               <Text type="lg" style={pal.text}>
-                <Trans>Navigate to Starter Pack Landing</Trans>
+                <Trans>Navigate to Starter Pack</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
