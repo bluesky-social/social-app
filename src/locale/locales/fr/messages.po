@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-26 21:29+0200\n"
+"PO-Revision-Date: 2024-06-03 00:18+0200\n"
 "Last-Translator: Stanislas Signoud (@signez.fr)\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -73,7 +73,7 @@ msgstr "{0, plural, one {Déliker (# like)} other {Déliker (# likes)}}"
 
 #: src/view/com/util/UserAvatar.tsx:406
 msgid "{0}'s avatar"
-msgstr ""
+msgstr "Avatar de {0}"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -929,7 +929,7 @@ msgstr "Ferme la visionneuse pour l’image d’en-tête"
 
 #: src/view/com/notifications/FeedItem.tsx:204
 msgid "Collapse list of users"
-msgstr ""
+msgstr "Fermer la liste des comptes"
 
 #: src/view/com/notifications/FeedItem.tsx:340
 msgid "Collapses list of users for a given notification"
@@ -1752,7 +1752,7 @@ msgstr "Développer le texte alt"
 
 #: src/view/com/notifications/FeedItem.tsx:205
 msgid "Expand list of users"
-msgstr ""
+msgstr "Développer la liste des comptes"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:82
 #: src/view/com/composer/ComposerReplyTo.tsx:85
@@ -3411,7 +3411,7 @@ msgstr "Ouvre les préférences relatives aux fils de discussion"
 #: src/view/com/notifications/FeedItem.tsx:426
 #: src/view/com/util/UserAvatar.tsx:409
 msgid "Opens this profile"
-msgstr ""
+msgstr "Ouvre ce profil"
 
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
@@ -3820,7 +3820,7 @@ msgstr "Supprimer l’image d’en-tête"
 
 #: src/screens/Messages/Conversation/MessageInputEmbed.tsx:218
 msgid "Remove embed"
-msgstr ""
+msgstr "Supprimer l’intégration"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:169
 #: src/view/com/posts/FeedShutdownMsg.tsx:113
@@ -4377,7 +4377,7 @@ msgstr "Envoyer le message"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:47
 msgid "Send post to..."
-msgstr ""
+msgstr "Envoyer le post à…"
 
 #: src/components/dms/ReportDialog.tsx:232
 #: src/components/dms/ReportDialog.tsx:235
@@ -4398,7 +4398,7 @@ msgstr "Envoyer l’e-mail de vérification"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:299
 #: src/view/com/util/forms/PostDropdownBtn.tsx:302
 msgid "Send via direct message"
-msgstr ""
+msgstr "Envoyer par message privé"
 
 #: src/view/com/modals/DeleteAccount.tsx:143
 msgid "Sends email with confirmation code for account deletion"
@@ -5639,7 +5639,7 @@ msgstr "Voir l’avatar de {0}"
 
 #: src/view/com/notifications/FeedItem.tsx:212
 msgid "View {0}'s profile"
-msgstr ""
+msgstr "Voir le profil de {0}"
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
