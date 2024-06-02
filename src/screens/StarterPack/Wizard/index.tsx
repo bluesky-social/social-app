@@ -22,9 +22,8 @@ import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {WizardAddProfilesDialog} from '#/screens/StarterPack/Wizard/StepProfiles/WizardAddProfilesDialog'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {PlusSmall_Stroke2_Corner0_Rounded} from '#/components/icons/Plus'
 import {Loader} from '#/components/Loader'
 import {Provider} from './State'
 
@@ -158,12 +157,8 @@ function WizardInner() {
                   variant="solid"
                   color="primary"
                   size="xsmall"
-                  style={[a.absolute, {right: 0}]}
-                  onPress={addProfilesControl.open}>
-                  <ButtonIcon
-                    position="left"
-                    icon={PlusSmall_Stroke2_Corner0_Rounded}
-                  />
+                  onPress={addProfilesControl.open}
+                  style={{marginLeft: -15}}>
                   <ButtonText>
                     <Trans>Add</Trans>
                   </ButtonText>
