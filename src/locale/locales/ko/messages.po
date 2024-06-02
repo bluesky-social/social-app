@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-30 20:22+0900\n"
+"PO-Revision-Date: 2024-06-02 12:19+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -1348,7 +1348,7 @@ msgstr "설명이 포함된 대체 텍스트"
 
 #: src/view/com/composer/Composer.tsx:274
 msgid "Did you want to say anything?"
-msgstr "하고 싶은 말이 있나요?"
+msgstr "하고 싶은 말이 없나요?"
 
 #: src/view/screens/Settings/index.tsx:470
 msgid "Dim"
