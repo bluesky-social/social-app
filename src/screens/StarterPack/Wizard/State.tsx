@@ -2,7 +2,7 @@ import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 
 const steps = ['Landing', 'Details', 'Profiles', 'Feeds'] as const
-export type Step = (typeof steps)[number]
+type Step = (typeof steps)[number]
 
 type Action =
   | {type: 'Next'}
@@ -128,4 +128,10 @@ export function Provider({
       {children}
     </StateContext.Provider>
   )
+}
+
+export {
+  type Action as WizardAction,
+  type State as WizardState,
+  type Step as WizardStep,
 }

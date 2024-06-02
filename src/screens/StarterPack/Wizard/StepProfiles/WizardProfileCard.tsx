@@ -5,19 +5,36 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useWizardState} from '#/screens/StarterPack/Wizard/State'
+import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
 export function WizardProfileCard({
+  state,
+  dispatch,
   profile,
 }: {
+  state: WizardState
+  dispatch: (action: WizardAction) => void
   profile: AppBskyActorDefs.ProfileViewBasic
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const [__, dispatch] = useWizardState()
+
+  console.log(state)
+
+  const includesProfile = state.profiles.some(p => p.did === profile.did)
+
+  const onPressAddRemove = () => {
+    if (!profile?.did) return
+
+    if (!includesProfile) {
+      dispatch({type: 'AddProfile', profile})
+    } else {
+      dispatch({type: 'RemoveProfile', profileDid: profile.did})
+    }
+  }
 
   return (
     <View
@@ -42,19 +59,14 @@ export function WizardProfileCard({
         </Text>
       </View>
       <Button
-        label={_(msg`Remove`)}
+        label={includesProfile ? _(msg`Remove`) : _(msg`Add`)}
         variant="solid"
-        color="primary"
+        color={includesProfile ? 'secondary' : 'primary'}
         size="small"
         style={{paddingVertical: 6}}
-        onPress={() => {
-          dispatch({
-            type: 'RemoveProfile',
-            profileDid: profile.did,
-          })
-        }}>
+        onPress={onPressAddRemove}>
         <ButtonText>
-          <Trans>Remove</Trans>
+          {includesProfile ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
         </ButtonText>
       </Button>
     </View>

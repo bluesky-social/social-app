@@ -15,13 +15,15 @@ import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
-import {Step, useWizardState} from '#/screens/StarterPack/Wizard/State'
+import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
+import {WizardAddProfilesDialog} from '#/screens/StarterPack/Wizard/StepProfiles/WizardAddProfilesDialog'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {PlusSmall_Stroke2_Corner0_Rounded} from '#/components/icons/Plus'
 import {Loader} from '#/components/Loader'
 import {Provider} from './State'
@@ -82,6 +84,7 @@ function WizardInner() {
     staleTime: 0,
   })
   const bottomBarOffset = useBottomBarOffset()
+  const addProfilesControl = useDialogControl()
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -89,24 +92,25 @@ function WizardInner() {
     })
   }, [navigation])
 
-  const wizardUiStrings: Record<Step, {header: string; button: string}> = {
-    Landing: {
-      header: _(msg`Create a starter pack`),
-      button: _(msg`Create`),
-    },
-    Details: {
-      header: _(msg`Details`),
-      button: _(msg`Add profiles`),
-    },
-    Profiles: {
-      header: _(msg`Add profiles`),
-      button: _(msg`Add feeds`),
-    },
-    Feeds: {
-      header: _(msg`Add feeds`),
-      button: _(msg`Finish`),
-    },
-  }
+  const wizardUiStrings: Record<WizardStep, {header: string; button: string}> =
+    {
+      Landing: {
+        header: _(msg`Create a starter pack`),
+        button: _(msg`Create`),
+      },
+      Details: {
+        header: _(msg`Details`),
+        button: _(msg`Add profiles`),
+      },
+      Profiles: {
+        header: _(msg`Add profiles`),
+        button: _(msg`Add feeds`),
+      },
+      Feeds: {
+        header: _(msg`Add feeds`),
+        button: _(msg`Finish`),
+      },
+    }
 
   const uiStrings = wizardUiStrings[state.currentStep]
 
@@ -155,7 +159,7 @@ function WizardInner() {
                   color="primary"
                   size="xsmall"
                   style={[a.absolute, {right: 0}]}
-                  onPress={() => {}}>
+                  onPress={addProfilesControl.open}>
                   <ButtonIcon
                     position="left"
                     icon={PlusSmall_Stroke2_Corner0_Rounded}
@@ -187,6 +191,12 @@ function WizardInner() {
           </Button>
         </View>
       </KeyboardStickyView>
+
+      <WizardAddProfilesDialog
+        control={addProfilesControl}
+        state={state}
+        dispatch={dispatch}
+      />
     </CenteredView>
   )
 }

@@ -2,7 +2,6 @@ import React from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
@@ -10,31 +9,35 @@ import {WizardProfileCard} from '#/screens/StarterPack/Wizard/StepProfiles/Wizar
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 
-function renderItem({
-  item,
-}: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) {
-  return <WizardProfileCard profile={item} />
-}
-
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item.did
 }
 
 export function StepProfiles() {
-  const [state] = useWizardState()
+  const [state, dispatch] = useWizardState()
+
+  const renderItem = ({
+    item,
+  }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
+    return (
+      <WizardProfileCard profile={item} state={state} dispatch={dispatch} />
+    )
+  }
 
   return (
-    <View style={[a.flex_1]}>
-      {state.profiles.length > 0 ? (
-        <List
-          data={state.profiles}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-        />
-      ) : (
-        <ListEmpty />
-      )}
-    </View>
+    <>
+      <View style={[a.flex_1]}>
+        {state.profiles.length > 0 ? (
+          <List
+            data={state.profiles}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+          />
+        ) : (
+          <ListEmpty />
+        )}
+      </View>
+    </>
   )
 }
 
