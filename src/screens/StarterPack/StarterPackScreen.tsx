@@ -156,7 +156,7 @@ export function StarterPackScreen({
               ]}>
               <FeedSourceCard
                 feedUri="at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science"
-                noBorder={true}
+                hideTopBorder={true}
               />
               <FeedSourceCard feedUri="at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2" />
             </View>
