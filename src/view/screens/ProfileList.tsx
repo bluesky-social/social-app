@@ -65,6 +65,7 @@ import {useDialogControl} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -802,7 +803,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           <View
             style={[
               {
-                borderTopWidth: 1,
+                borderTopWidth: hairlineWidth,
                 padding: isMobile ? 14 : 20,
                 gap: 12,
               },
@@ -953,7 +954,7 @@ function ErrorScreen({error}: {error: string}) {
           marginTop: 10,
           paddingHorizontal: 18,
           paddingVertical: 14,
-          borderTopWidth: 1,
+          borderTopWidth: hairlineWidth,
         },
       ]}>
       <Text type="title-lg" style={[pal.text, s.mb10]}>

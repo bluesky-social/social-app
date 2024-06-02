@@ -440,7 +440,9 @@ export function PostThread({
           onEndReachedThreshold={2}
           onScrollToTop={onScrollToTop}
           maintainVisibleContentPosition={
-            isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
+            isNative && hasParents
+              ? MAINTAIN_VISIBLE_CONTENT_POSITION
+              : undefined
           }
           // @ts-ignore our .web version only -prf
           desktopFixedHeight

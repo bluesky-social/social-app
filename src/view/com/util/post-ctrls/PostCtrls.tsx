@@ -23,7 +23,6 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {useModalControls} from '#/state/modals'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
@@ -65,7 +64,6 @@ let PostCtrls = ({
   const t = useTheme()
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
-  const {closeModal} = useModalControls()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
@@ -118,10 +116,8 @@ let PostCtrls = ({
   ])
 
   const onRepost = useCallback(async () => {
-    closeModal()
     try {
       if (!post.viewer?.repost) {
-        playHaptic()
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionRepost',
@@ -137,10 +133,8 @@ let PostCtrls = ({
       }
     }
   }, [
-    closeModal,
     post.uri,
     post.viewer?.repost,
-    playHaptic,
     queueRepost,
     queueUnrepost,
     sendInteraction,
@@ -148,7 +142,6 @@ let PostCtrls = ({
   ])
 
   const onQuote = useCallback(() => {
-    closeModal()
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionQuote',
@@ -163,16 +156,13 @@ let PostCtrls = ({
         indexedAt: post.indexedAt,
       },
     })
-    playHaptic()
   }, [
-    closeModal,
     openComposer,
     post.uri,
     post.cid,
     post.author,
     post.indexedAt,
     record.text,
-    playHaptic,
     sendInteraction,
     feedContext,
   ])
