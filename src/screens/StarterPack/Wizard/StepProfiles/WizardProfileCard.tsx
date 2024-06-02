@@ -22,8 +22,6 @@ export function WizardProfileCard({
   const {_} = useLingui()
   const t = useTheme()
 
-  console.log(state)
-
   const includesProfile = state.profiles.some(p => p.did === profile.did)
 
   const onPressAddRemove = () => {

@@ -8,6 +8,8 @@ import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
+import {useProfileFollowsQuery} from 'state/queries/profile-follows'
+import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {WizardProfileCard} from '#/screens/StarterPack/Wizard/StepProfiles/WizardProfileCard'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -30,14 +32,17 @@ export function WizardAddProfilesDialog({
   state: WizardState
   dispatch: (action: WizardAction) => void
 }) {
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
-  const inputRef = useRef<RNTextInput>(null)
-
   const [searchText, setSearchText] = useState('')
 
+  const {currentAccount} = useSession()
   const {data: results} = useActorAutocompleteQuery(searchText, true, 12)
+  const {data: followsPages, fetchNextPage} = useProfileFollowsQuery(
+    currentAccount?.did,
+  )
+  const follows = followsPages?.pages.flatMap(page => page.follows) || []
 
-  console.log(results)
+  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const inputRef = useRef<RNTextInput>(null)
 
   useLayoutEffect(() => {
     if (isWeb) {
@@ -62,7 +67,7 @@ export function WizardAddProfilesDialog({
       nativeOptions={{sheet: {snapPoints: ['100%']}}}>
       <Dialog.InnerFlatList
         ref={listRef}
-        data={results}
+        data={searchText.length > 0 ? results : follows}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={
@@ -86,6 +91,9 @@ export function WizardAddProfilesDialog({
         ]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         keyboardDismissMode="on-drag"
+        onEndReached={() => fetchNextPage()}
+        onEndReachedThreshold={2}
+        removeClippedSubviews={true}
       />
     </Dialog.Outer>
   )
