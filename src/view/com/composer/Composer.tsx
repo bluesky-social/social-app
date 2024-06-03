@@ -680,7 +680,6 @@ function useAnimatedBorders() {
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      console.log('content size change', height)
       showHideBottomBorder({
         newContentHeight: height,
       })
@@ -690,7 +689,6 @@ function useAnimatedBorders() {
 
   const onScrollViewLayout = useCallback(
     (evt: LayoutChangeEvent) => {
-      console.log('layout change', evt.nativeEvent.layout.height)
       showHideBottomBorder({
         newScrollViewHeight: evt.nativeEvent.layout.height,
       })
