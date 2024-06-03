@@ -1,5 +1,7 @@
 import React from 'react'
 import {Text, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -10,6 +12,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {FeedsList} from '#/screens/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/screens/StarterPack/Main/ProfilesList'
 import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 
 /**
  * TEMPORARY CONTENT, DO NOT TRANSLATE
@@ -100,20 +103,14 @@ export function StarterPackScreen({}: NativeStackScreenProps<
 }
 
 function StarterPackScreenInner() {
-  // const onPressShare = () => {
-  //   console.log('pressed share')
-  // }
-  //
-  // const onPressEdit = () => {
-  //   console.log('pressed edit')
-  // }
+  const isOwn = true
 
   return (
     <View style={isWeb ? {minHeight: '100%'} : {height: '100%'}}>
       <PagerWithHeader
         items={['Profiles', 'Feeds']}
         isHeaderReady={true}
-        renderHeader={() => <Header />}>
+        renderHeader={() => <Header isOwn={isOwn} />}>
         {({headerHeight, scrollElRef}) => (
           <ProfilesList
             key={0}
@@ -137,7 +134,9 @@ function StarterPackScreenInner() {
   )
 }
 
-function Header() {
+function Header({isOwn}: {isOwn: boolean}) {
+  const {_} = useLingui()
+
   return (
     <>
       <ProfileSubpageHeader
@@ -147,8 +146,32 @@ function Header() {
         isOwner={false}
         avatar={undefined}
         creator={undefined}
-        avatarType="starter-pack"
-      />
+        avatarType="starter-pack">
+        <View style={[a.flex_row, a.gap_sm]}>
+          <Button
+            label={_(msg`Share`)}
+            variant="solid"
+            color="primary"
+            size="small"
+            onPress={() => {}}>
+            <ButtonText>
+              <Trans>Share</Trans>
+            </ButtonText>
+          </Button>
+          {isOwn && (
+            <Button
+              label={_(msg`Edit`)}
+              variant="solid"
+              color="secondary"
+              size="small"
+              onPress={() => {}}>
+              <ButtonText>
+                <Trans>Edit</Trans>
+              </ButtonText>
+            </Button>
+          )}
+        </View>
+      </ProfileSubpageHeader>
       <View style={[a.px_md, a.py_lg]}>
         <Text style={[a.text_md]}>
           (This is the description) A collection of feeds and users to get you
