@@ -21,6 +21,7 @@ import {Text} from '../util/text/Text'
 import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
 import {CenteredView} from '../util/Views'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -43,7 +44,7 @@ export function ProfileSubpageHeader({
         handle: string
       }
     | undefined
-  avatarType: UserAvatarType
+  avatarType: UserAvatarType | 'starter-pack'
 }>) {
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
@@ -130,7 +131,11 @@ export function ProfileSubpageHeader({
           accessibilityLabel={_(msg`View the avatar`)}
           accessibilityHint=""
           style={{width: 58}}>
-          <UserAvatar type={avatarType} size={58} avatar={avatar} />
+          {avatarType === 'starter-pack' ? (
+            <StarterPackIcon width={58} height={58} />
+          ) : (
+            <UserAvatar type={avatarType} size={58} avatar={avatar} />
+          )}
         </Pressable>
         <View style={{flex: 1}}>
           {isLoading ? (
