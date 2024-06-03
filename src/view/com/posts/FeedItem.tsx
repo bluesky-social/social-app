@@ -41,6 +41,8 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {AviFollowButton} from './AviFollowButton'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -52,6 +54,7 @@ interface FeedItemProps {
   isThreadLastChild?: boolean
   isThreadParent?: boolean
   feedContext: string | undefined
+  hideTopBorder?: boolean
 }
 
 export function FeedItem({
@@ -65,6 +68,7 @@ export function FeedItem({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -94,6 +98,7 @@ export function FeedItem({
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
+        hideTopBorder={hideTopBorder}
       />
     )
   }
@@ -112,6 +117,7 @@ let FeedItemInner = ({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -185,8 +191,8 @@ let FeedItemInner = ({
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
           : undefined,
+      borderTopWidth: hideTopBorder || isThreadChild ? 0 : hairlineWidth,
     },
-    isThreadChild ? styles.outerSmallTop : undefined,
   ]
 
   return (
@@ -284,13 +290,15 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={52}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            onBeforePress={onOpenAuthor}
-          />
+          <AviFollowButton author={post.author} moderation={moderation}>
+            <PreviewableUserAvatar
+              size={52}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              onBeforePress={onOpenAuthor}
+            />
+          </AviFollowButton>
           {isThreadParent && (
             <View
               style={[
@@ -368,7 +376,7 @@ let PostContent = ({
       modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts modui={moderation.ui('contentList')} style={[a.pb_xs]} />
+      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_2xs]} />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
@@ -390,7 +398,7 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <View style={[a.pb_sm]}>
+        <View style={[a.pb_xs]}>
           <PostEmbeds
             embed={postEmbed}
             moderation={moderation}
@@ -442,15 +450,11 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
     // @ts-ignore web only -prf
     cursor: 'pointer',
     overflow: 'hidden',
-  },
-  outerSmallTop: {
-    borderTopWidth: 0,
   },
   replyLine: {
     width: 2,
@@ -470,9 +474,13 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     paddingLeft: 8,
+    position: 'relative',
+    zIndex: 999,
   },
   layoutContent: {
+    position: 'relative',
     flex: 1,
+    zIndex: 0,
   },
   alert: {
     marginTop: 6,
@@ -482,7 +490,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   contentHiderChild: {
     marginTop: 6,

@@ -23,6 +23,7 @@ interface Props extends ComponentProps<typeof Link> {
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
   profile: AppBskyActorDefs.ProfileViewBasic
+  interpretFilterAsBlur?: boolean
 }
 
 export function PostHider({
@@ -35,6 +36,7 @@ export function PostHider({
   iconSize,
   iconStyles,
   profile,
+  interpretFilterAsBlur,
   ...props
 }: Props) {
   const queryClient = useQueryClient()
@@ -42,7 +44,8 @@ export function PostHider({
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const control = useModerationDetailsDialogControl()
-  const blur = modui.blurs[0]
+  const blur =
+    modui.blurs[0] || (interpretFilterAsBlur ? modui.filters[0] : undefined)
   const desc = useModerationCauseDescription(blur)
 
   const onBeforePress = React.useCallback(() => {

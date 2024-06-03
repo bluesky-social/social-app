@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   View,
   ViewStyle,
 } from 'react-native'
@@ -27,6 +28,7 @@ import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -40,11 +42,13 @@ export function PostEmbeds({
   moderation,
   onOpen,
   style,
+  quoteTextStyle,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  quoteTextStyle?: StyleProp<TextStyle>
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
@@ -59,7 +63,11 @@ export function PostEmbeds({
           moderation={moderation}
           onOpen={onOpen}
         />
-        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
+        <MaybeQuoteEmbed
+          embed={embed.record}
+          onOpen={onOpen}
+          textStyle={quoteTextStyle}
+        />
       </View>
     )
   }
@@ -86,7 +94,14 @@ export function PostEmbeds({
 
     // quote post
     // =
-    return <MaybeQuoteEmbed embed={embed} style={style} onOpen={onOpen} />
+    return (
+      <MaybeQuoteEmbed
+        embed={embed}
+        style={style}
+        textStyle={quoteTextStyle}
+        onOpen={onOpen}
+      />
+    )
   }
 
   // image embed
@@ -183,11 +198,11 @@ const styles = StyleSheet.create({
   },
   alt: {
     color: 'white',
-    fontSize: 6,
+    fontSize: 7,
     fontWeight: 'bold',
   },
   customFeedOuter: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
     borderRadius: 8,
     marginTop: 4,
     paddingHorizontal: 12,

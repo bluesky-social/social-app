@@ -87,7 +87,14 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
-const DOWNSAMPLED_EVENTS = new Set(['router:navigate:sampled'])
+const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
+  'router:navigate:sampled',
+  'state:background:sampled',
+  'state:foreground:sampled',
+  'home:feedDisplayed:sampled',
+  'feed:endReached:sampled',
+  'feed:refresh:sampled',
+])
 const isDownsampledSession = Math.random() < 0.9 // 90% likely
 
 export function logEvent<E extends keyof LogEvents>(
@@ -95,6 +102,16 @@ export function logEvent<E extends keyof LogEvents>(
   rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   try {
+    if (
+      process.env.NODE_ENV === 'development' &&
+      eventName.endsWith(':sampled') &&
+      !DOWNSAMPLED_EVENTS.has(eventName)
+    ) {
+      logger.error(
+        'Did you forget to add ' + eventName + ' to DOWNSAMPLED_EVENTS?',
+      )
+    }
+
     if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
       return
     }
@@ -199,14 +216,14 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
   lastState = state
   if (state === 'active') {
     lastActive = performance.now()
-    logEvent('state:foreground', {})
+    logEvent('state:foreground:sampled', {})
   } else {
     let secondsActive = 0
     if (lastActive != null) {
       secondsActive = Math.round((performance.now() - lastActive) / 1e3)
     }
     lastActive = null
-    logEvent('state:background', {
+    logEvent('state:background:sampled', {
       secondsActive,
     })
   }

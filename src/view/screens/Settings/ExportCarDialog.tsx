@@ -21,11 +21,10 @@ export function ExportCarDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const [loading, setLoading] = React.useState(false)
 
   const download = React.useCallback(async () => {
-    const agent = getAgent()
     if (!agent.session) {
       return // shouldnt ever happen
     }
@@ -49,7 +48,7 @@ export function ExportCarDialog({
       setLoading(false)
       control.close()
     }
-  }, [_, control, getAgent])
+  }, [_, control, agent])
 
   return (
     <Dialog.Outer control={control}>

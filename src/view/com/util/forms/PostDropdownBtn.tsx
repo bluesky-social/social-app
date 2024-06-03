@@ -1,5 +1,10 @@
 import React, {memo} from 'react'
-import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyActorDefs,
@@ -7,13 +12,12 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
@@ -33,10 +37,12 @@ import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
+import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBrackets} from '#/components/icons/CodeBrackets'
+import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
@@ -44,12 +50,18 @@ import {
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {
+  isAvailable as isNativeTranslationAvailable,
+  isLanguageSupported,
+  NativeTranslationModule,
+} from '../../../../../modules/expo-bluesky-translate'
 import {EventStopper} from '../EventStopper'
 import * as Toast from '../Toast'
 
@@ -63,6 +75,7 @@ let PostDropdownBtn = ({
   richText,
   style,
   hitSlop,
+  size,
   timestamp,
 }: {
   testID: string
@@ -74,6 +87,7 @@ let PostDropdownBtn = ({
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   hitSlop?: PressableProps['hitSlop']
+  size?: 'lg' | 'md' | 'sm'
   timestamp: string
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
@@ -90,13 +104,14 @@ let PostDropdownBtn = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
+  const sendViaChatControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -172,9 +187,17 @@ let PostDropdownBtn = ({
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
-  const onOpenTranslate = React.useCallback(() => {
-    openLink(translatorUrl)
-  }, [openLink, translatorUrl])
+  const onPressTranslate = React.useCallback(() => {
+    if (
+      isNativeTranslationAvailable &&
+      isLanguageSupported(record?.langs?.at(0))
+    ) {
+      const text = richTextToString(richText, true)
+      NativeTranslationModule.presentAsync(text)
+    } else {
+      openLink(translatorUrl)
+    }
+  }, [openLink, record?.langs, richText, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})
@@ -209,6 +232,16 @@ let PostDropdownBtn = ({
     Toast.show('Feedback sent!')
   }, [feedFeedback, postUri, postFeedContext])
 
+  const onSelectChatToShareTo = React.useCallback(
+    (conversation: string) => {
+      navigation.navigate('MessagesConversation', {
+        conversation,
+        embed: postUri,
+      })
+    },
+    [navigation, postUri],
+  )
+
   const canEmbed = isWeb && gtMobile && !hideInPWI
 
   return (
@@ -225,14 +258,13 @@ let PostDropdownBtn = ({
                   style,
                   a.rounded_full,
                   (state.hovered || state.pressed) && [
-                    alf.atoms.bg_contrast_50,
+                    alf.atoms.bg_contrast_25,
                   ],
                 ]}>
-                <FontAwesomeIcon
-                  icon="ellipsis"
-                  size={20}
-                  color={defaultCtrlColor}
+                <DotsHorizontal
+                  fill={defaultCtrlColor}
                   style={{pointerEvents: 'none'}}
+                  size={size}
                 />
               </Pressable>
             )
@@ -246,7 +278,7 @@ let PostDropdownBtn = ({
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
                   label={_(msg`Translate`)}
-                  onPress={onOpenTranslate}>
+                  onPress={onPressTranslate}>
                   <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
                   <Menu.ItemIcon icon={Translate} position="right" />
                 </Menu.Item>
@@ -259,6 +291,18 @@ let PostDropdownBtn = ({
                   <Menu.ItemIcon icon={ClipboardIcon} position="right" />
                 </Menu.Item>
               </>
+            )}
+
+            {hasSession && (
+              <Menu.Item
+                testID="postDropdownSendViaDMBtn"
+                label={_(msg`Send via direct message`)}
+                onPress={sendViaChatControl.open}>
+                <Menu.ItemText>
+                  <Trans>Send via direct message</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Send} position="right" />
+              </Menu.Item>
             )}
 
             <Menu.Item
@@ -430,6 +474,11 @@ let PostDropdownBtn = ({
           timestamp={timestamp}
         />
       )}
+
+      <SendViaChatDialog
+        control={sendViaChatControl}
+        onSelectChat={onSelectChatToShareTo}
+      />
     </EventStopper>
   )
 }
