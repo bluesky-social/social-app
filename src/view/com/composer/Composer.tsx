@@ -631,8 +631,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   topbarDesktop: {
-    paddingTop: 10,
-    paddingBottom: 10,
     height: 50,
   },
   topbarInner: {
