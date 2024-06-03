@@ -4,7 +4,7 @@ import {
   KeyboardAwareScrollView,
   KeyboardStickyView,
 } from 'react-native-keyboard-controller'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -15,13 +15,15 @@ import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
-import {Step, useWizardState} from '#/screens/StarterPack/Wizard/State'
+import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
+import {WizardAddProfilesDialog} from '#/screens/StarterPack/Wizard/StepProfiles/WizardAddProfilesDialog'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import {Provider} from './State'
 
@@ -81,6 +83,7 @@ function WizardInner() {
     staleTime: 0,
   })
   const bottomBarOffset = useBottomBarOffset()
+  const addProfilesControl = useDialogControl()
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -88,24 +91,25 @@ function WizardInner() {
     })
   }, [navigation])
 
-  const wizardUiStrings: Record<Step, {header: string; button: string}> = {
-    Landing: {
-      header: _(msg`Create a starter pack`),
-      button: _(msg`Create`),
-    },
-    Details: {
-      header: _(msg`Details`),
-      button: _(msg`Add profiles`),
-    },
-    Profiles: {
-      header: _(msg`Add profiles`),
-      button: _(msg`Add feeds`),
-    },
-    Feeds: {
-      header: _(msg`Add feeds`),
-      button: _(msg`Finish`),
-    },
-  }
+  const wizardUiStrings: Record<WizardStep, {header: string; button: string}> =
+    {
+      Landing: {
+        header: _(msg`Create a starter pack`),
+        button: _(msg`Create`),
+      },
+      Details: {
+        header: _(msg`Details`),
+        button: _(msg`Add profiles`),
+      },
+      Profiles: {
+        header: _(msg`Add profiles`),
+        button: _(msg`Add feeds`),
+      },
+      Feeds: {
+        header: _(msg`Add feeds`),
+        button: _(msg`Finish`),
+      },
+    }
 
   const uiStrings = wizardUiStrings[state.currentStep]
 
@@ -133,7 +137,9 @@ function WizardInner() {
   }
 
   return (
-    <CenteredView style={[a.flex_1, {marginBottom: bottomOffset + 20}]}>
+    <CenteredView
+      style={[a.flex_1, {marginBottom: bottomOffset + 20}]}
+      sideBorders>
       <ViewHeader
         title={uiStrings.header}
         onBackPress={
@@ -142,6 +148,24 @@ function WizardInner() {
             : undefined
         }
         showBorder={true}
+        showOnDesktop={true}
+        renderButton={
+          state.currentStep === 'Profiles'
+            ? () => (
+                <Button
+                  label={_(msg`Cancel`)}
+                  variant="solid"
+                  color="primary"
+                  size="xsmall"
+                  onPress={addProfilesControl.open}
+                  style={{marginLeft: -15}}>
+                  <ButtonText>
+                    <Trans>Add</Trans>
+                  </ButtonText>
+                </Button>
+              )
+            : undefined
+        }
       />
       <Container>
         <StepView />
@@ -162,6 +186,12 @@ function WizardInner() {
           </Button>
         </View>
       </KeyboardStickyView>
+
+      <WizardAddProfilesDialog
+        control={addProfilesControl}
+        state={state}
+        dispatch={dispatch}
+      />
     </CenteredView>
   )
 }

@@ -17,12 +17,23 @@ function renderItem({item}: ListRenderItemInfo<GeneratorView>) {
   return <FeedCard generator={item} />
 }
 
+function keyExtractor(item: GeneratorView) {
+  return item.uri
+}
+
 export function StepFeeds() {
   const {currentAccount} = useSession()
   const {data} = useProfileFeedgensQuery(currentAccount!.did)
   const feeds = data?.pages.flatMap(page => page.feeds) || []
 
-  return <List data={feeds} renderItem={renderItem} style={[a.flex_1]} />
+  return (
+    <List
+      data={feeds}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      style={[a.flex_1]}
+    />
+  )
 }
 
 function FeedCard({generator}: {generator: GeneratorView}) {

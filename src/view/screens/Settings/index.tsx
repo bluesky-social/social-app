@@ -854,7 +854,6 @@ export function SettingsScreen({}: Props) {
                 <Trans>Reset preferences state</Trans>
               </Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={() => onPressDeleteChatDeclaration()}

@@ -1,7 +1,8 @@
 import React from 'react'
+import {AppBskyActorDefs} from '@atproto/api'
 
 const steps = ['Landing', 'Details', 'Profiles', 'Feeds'] as const
-export type Step = (typeof steps)[number]
+type Step = (typeof steps)[number]
 
 type Action =
   | {type: 'Next'}
@@ -9,8 +10,8 @@ type Action =
   | {type: 'SetCanNext'; canNext: boolean}
   | {type: 'SetName'; name: string}
   | {type: 'SetDescription'; description: string}
-  | {type: 'AddProfile'; did: string}
-  | {type: 'RemoveProfile'; did: string}
+  | {type: 'AddProfile'; profile: AppBskyActorDefs.ProfileViewBasic}
+  | {type: 'RemoveProfile'; profileDid: string}
   | {type: 'AddFeed'; uri: string}
   | {type: 'RemoveFeed'; uri: string}
   | {type: 'SetProcessing'; processing: boolean}
@@ -21,7 +22,7 @@ interface State {
   name?: string
   description?: string
   avatar?: string
-  profileDids: string[]
+  profiles: AppBskyActorDefs.ProfileViewBasic[]
   feedUris: string[]
   processing: boolean
 }
@@ -54,12 +55,14 @@ function reducer(state: State, action: Action): State {
       updatedState = {...state, description: action.description}
       break
     case 'AddProfile':
-      updatedState = {...state, profileDids: [...state.profileDids, action.did]}
+      updatedState = {...state, profiles: [...state.profiles, action.profile]}
       break
     case 'RemoveProfile':
       updatedState = {
         ...state,
-        profileDids: state.profileDids.filter(did => did !== action.did),
+        profiles: state.profiles.filter(
+          profile => profile.did !== action.profileDid,
+        ),
       }
       break
     case 'AddFeed':
@@ -114,7 +117,7 @@ export function Provider({
       : {
           canNext: true,
           currentStep: initialStep,
-          profileDids: [],
+          profiles: [],
           feedUris: [],
           processing: false,
         },
@@ -125,4 +128,10 @@ export function Provider({
       {children}
     </StateContext.Provider>
   )
+}
+
+export {
+  type Action as WizardAction,
+  type State as WizardState,
+  type Step as WizardStep,
 }
