@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-03 09:17+0800\n"
+"PO-Revision-Date: 2024-06-03 09:19+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -3300,10 +3300,6 @@ msgstr "开启无障碍设置"
 msgid "Opens additional details for a debug entry"
 msgstr "开启调试记录的额外详细信息"
 
-#: src/view/com/notifications/FeedItem.tsx:349
-#~ msgid "Opens an expanded list of users in this notification"
-#~ msgstr "展开这条通知中的扩展用户列表"
-
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:74
 msgid "Opens camera on device"
 msgstr "开启设备相机"
@@ -3776,16 +3772,6 @@ msgstr "发布回复"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:81
 msgid "Quote post"
 msgstr "引用帖子"
-
-#: src/view/com/modals/Repost.tsx:66
-#~ msgctxt "action"
-#~ msgid "Quote post"
-#~ msgstr "引用帖子"
-
-#: src/view/com/modals/Repost.tsx:71
-#~ msgctxt "action"
-#~ msgid "Quote Post"
-#~ msgstr "引用帖子"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
@@ -4281,11 +4267,6 @@ msgstr "查看 <0>{displayTag}</0> 的帖子"
 msgid "See <0>{displayTag}</0> posts by this user"
 msgstr "查看该用户 <0>{displayTag}</0> 的帖子"
 
-#: src/view/com/notifications/FeedItem.tsx:411
-#: src/view/com/util/UserAvatar.tsx:402
-#~ msgid "See profile"
-#~ msgstr "查看个人资料"
-
 #: src/view/screens/SavedFeeds.tsx:186
 msgid "See this guide"
 msgstr "查看指南"
@@ -4638,10 +4619,6 @@ msgstr "显示转发"
 #: src/components/moderation/PostHider.tsx:78
 msgid "Show the content"
 msgstr "显示内容"
-
-#: src/view/com/notifications/FeedItem.tsx:347
-#~ msgid "Show users"
-#~ msgstr "显示用户"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:58
 msgid "Show warning"
