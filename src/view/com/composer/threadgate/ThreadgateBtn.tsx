@@ -9,7 +9,7 @@ import {isNative} from '#/platform/detection'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -87,7 +87,6 @@ function DialogContent({
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
-  const {gtMobile} = useBreakpoints()
   const {data: lists} = useMyListsQuery('curate')
 
   const onPressEverybody = () => {
@@ -114,7 +113,7 @@ function DialogContent({
   return (
     <Dialog.ScrollableInner
       label={_(msg`Choose who can reply`)}
-      style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
+      style={[{maxWidth: 500}, a.w_full]}>
       <View style={[a.flex_1, a.gap_md]}>
         <Text style={[a.text_2xl, a.font_bold]}>
           <Trans>Chose who can reply</Trans>
@@ -206,10 +205,12 @@ function Selectable({
       accessibilityHint="Select this option"
       color="primary"
       size="medium"
-      variant={isSelected ? 'solid' : 'outline'}>
-      <ButtonText numberOfLines={1} style={a.text_left}>
-        {label}
-      </ButtonText>
+      variant={isSelected ? 'solid' : 'outline'}
+      accessibilityRole="checkbox"
+      accessibilityState={{
+        checked: isSelected,
+      }}>
+      <ButtonText style={a.text_left}>{label}</ButtonText>
       {isSelected ? <ButtonIcon icon={Check} /> : <View />}
     </Button>
   )
