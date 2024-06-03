@@ -18,6 +18,7 @@ import Graphemer from 'graphemer'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {postUriToHref} from '#/lib/strings/url-helpers'
 import {
   useMessageDraft,
   useSaveMessageDraft,
@@ -33,12 +34,12 @@ const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export function MessageInput({
   onSendMessage,
-  hasEmbed,
+  embedUri,
   setEmbed,
   children,
 }: {
   onSendMessage: (message: string) => void
-  hasEmbed: boolean
+  embedUri?: string
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
 }) {
@@ -56,14 +57,16 @@ export function MessageInput({
 
   const inputStyles = useSharedInputStyles()
   const [isFocused, setIsFocused] = React.useState(false)
-  const [message, setMessage] = React.useState(getDraft)
+  const [maybeDraft] = React.useState(getDraft)
+  const [maybeEmbedUrl] = React.useState(postUriToHref(embedUri || ''))
+  const [message, setMessage] = React.useState(maybeEmbedUrl || maybeDraft)
   const inputRef = useAnimatedRef<TextInput>()
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = React.useCallback(() => {
-    if (!hasEmbed && message.trim() === '') {
+    if (!embedUri && message.trim() === '') {
       return
     }
     if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
@@ -82,7 +85,7 @@ export function MessageInput({
       inputRef.current?.focus()
     }, 100)
   }, [
-    hasEmbed,
+    embedUri,
     message,
     clearDraft,
     onSendMessage,

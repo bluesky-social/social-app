@@ -6,6 +6,7 @@ import Graphemer from 'graphemer'
 import TextareaAutosize from 'react-textarea-autosize'
 
 import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {postUriToHref} from '#/lib/strings/url-helpers'
 import {
   useMessageDraft,
   useSaveMessageDraft,
@@ -20,12 +21,12 @@ import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 export function MessageInput({
   onSendMessage,
-  hasEmbed,
+  embedUri,
   setEmbed,
   children,
 }: {
   onSendMessage: (message: string) => void
-  hasEmbed: boolean
+  embedUri?: string
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
 }) {
@@ -33,7 +34,9 @@ export function MessageInput({
   const {_} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
-  const [message, setMessage] = React.useState(getDraft)
+  const [maybeDraft] = React.useState(getDraft)
+  const [maybeEmbedUrl] = React.useState(postUriToHref(embedUri || ''))
+  const [message, setMessage] = React.useState(maybeEmbedUrl || maybeDraft)
 
   const inputStyles = useSharedInputStyles()
   const isComposing = React.useRef(false)
@@ -42,7 +45,7 @@ export function MessageInput({
   const [textAreaHeight, setTextAreaHeight] = React.useState(38)
 
   const onSubmit = React.useCallback(() => {
-    if (!hasEmbed && message.trim() === '') {
+    if (!embedUri && message.trim() === '') {
       return
     }
     if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
@@ -53,7 +56,7 @@ export function MessageInput({
     onSendMessage(message)
     setMessage('')
     setEmbed(undefined)
-  }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
+  }, [message, onSendMessage, _, clearDraft, embedUri, setEmbed])
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

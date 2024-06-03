@@ -89,6 +89,8 @@ export function useExtractEmbedFromFacets(
   useEffect(() => {
     if (uriFromFacet) {
       setEmbed(uriFromFacet)
+    } else {
+      setEmbed(undefined)
     }
   }, [uriFromFacet, setEmbed])
 }

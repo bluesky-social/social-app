@@ -387,7 +387,7 @@ export function MessagesList({
               convoState.items.length === 0 && <ChatEmptyPill />}
             <MessageInput
               onSendMessage={onSendMessage}
-              hasEmbed={!!embedUri}
+              embedUri={embedUri}
               setEmbed={setEmbed}>
               <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
             </MessageInput>

@@ -74,6 +74,10 @@ export function toShortUrl(url: string): string {
   }
 }
 
+export function toBskyAppUrl(url: string): string {
+  return new URL(url, BSKY_APP_HOST).toString()
+}
+
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
     const urlp = new URL('https://bsky.app')
@@ -181,6 +185,20 @@ export function feedUriToHref(url: string): string {
   } catch {
     return ''
   }
+}
+
+export function postUriToRelativePath(uri: string): string | undefined {
+  try {
+    const {hostname, rkey} = new AtUri(uri)
+    return `/profile/${hostname}/post/${rkey}`
+  } catch {
+    return undefined
+  }
+}
+
+export function postUriToHref(uri: string): string {
+  const path = postUriToRelativePath(uri)
+  return path ? toBskyAppUrl(path) : ''
 }
 
 /**
