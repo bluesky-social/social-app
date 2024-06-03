@@ -103,10 +103,10 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={pal.text}>
+        <Text type="md-bold" style={pal.text} numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
-        <Text type="sm" style={pal.textLight}>
+        <Text type="sm" style={pal.textLight} numberOfLines={1}>
           {account.handle}
         </Text>
       </View>
@@ -381,7 +381,7 @@ export function SettingsScreen({}: Props) {
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
 
             <View style={[s.flexRow, styles.heading]}>
-              <Text type="xl-bold" style={pal.text}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
                 <Trans>Signed in as</Trans>
               </Text>
               <View style={s.flex1} />

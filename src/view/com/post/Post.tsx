@@ -41,10 +41,12 @@ import hairlineWidth = StyleSheet.hairlineWidth
 export function Post({
   post,
   showReplyLine,
+  hideTopBorder,
   style,
 }: {
   post: AppBskyFeedDefs.PostView
   showReplyLine?: boolean
+  hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
@@ -82,6 +84,7 @@ export function Post({
         richText={richText}
         moderation={moderation}
         showReplyLine={showReplyLine}
+        hideTopBorder={hideTopBorder}
         style={style}
       />
     )
@@ -95,6 +98,7 @@ function PostInner({
   richText,
   moderation,
   showReplyLine,
+  hideTopBorder,
   style,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -102,6 +106,7 @@ function PostInner({
   richText: RichTextAPI
   moderation: ModerationDecision
   showReplyLine?: boolean
+  hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const queryClient = useQueryClient()
@@ -143,7 +148,12 @@ function PostInner({
   return (
     <Link
       href={itemHref}
-      style={[styles.outer, pal.border, style]}
+      style={[
+        styles.outer,
+        pal.border,
+        !hideTopBorder && {borderTopWidth: hairlineWidth},
+        style,
+      ]}
       onBeforePress={onBeforePress}>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
@@ -243,7 +253,6 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingBottom: 5,
     paddingLeft: 10,
-    borderTopWidth: hairlineWidth,
     // @ts-ignore web only -prf
     cursor: 'pointer',
   },
