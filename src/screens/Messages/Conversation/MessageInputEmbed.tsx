@@ -39,11 +39,16 @@ export function useMessageEmbed() {
   const navigation = useNavigation<NavigationProp>()
   const embedFromParams = route.params.embed
 
-  const [embedUri, setEmbed] = useState(embedFromParams)
+  const [embedUri, setEmbed] = useState(() => {
+    return embedFromParams
+  })
 
-  if (embedFromParams && embedUri !== embedFromParams) {
-    setEmbed(embedFromParams)
-  }
+  React.useEffect(() => {
+    // remove from nav state, use local component state only
+    if (embedUri === embedFromParams) {
+      navigation.setParams({embed: ''})
+    }
+  }, [embedUri, embedFromParams, navigation])
 
   return {
     embedUri,
@@ -141,7 +146,16 @@ export function MessageInputEmbed({
     case 'pending':
       content = (
         <View
-          style={[a.flex_1, {minHeight: 64}, a.justify_center, a.align_center]}>
+          style={[
+            a.flex_1,
+            {minHeight: 64},
+            t.atoms.border_contrast_low,
+            a.rounded_md,
+            a.border,
+            a.mb_sm,
+            a.justify_center,
+            a.align_center,
+          ]}>
           <Loader />
         </View>
       )
@@ -149,8 +163,16 @@ export function MessageInputEmbed({
     case 'error':
       content = (
         <View
-          style={[a.flex_1, {minHeight: 64}, a.justify_center, a.align_center]}>
-          <Text style={a.text_center}>Could not fetch post</Text>
+          style={[
+            a.flex_1,
+            {minHeight: 64},
+            a.justify_center,
+            a.align_center,
+            a.mb_sm,
+            a.rounded_md,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={{}}>Could not fetch post</Text>
         </View>
       )
       break
