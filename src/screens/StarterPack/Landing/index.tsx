@@ -5,7 +5,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {useGate} from 'lib/statsig/statsig'
 import {useSetMinimalShellMode} from 'state/shell'
@@ -72,13 +71,12 @@ const PLACEHOLDER_USERS = [
   },
 ]
 
-export function Landing({
+export function LandingScreen({
   navigation,
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackLanding'>) {
   const {_} = useLingui()
   const gate = useGate()
   const t = useTheme()
-  const {isTabletOrDesktop} = useWebMediaQueries()
   const setMinimalShellMode = useSetMinimalShellMode()
   const gradient =
     t.name === 'light'
@@ -93,7 +91,14 @@ export function Landing({
   }, [])
 
   React.useEffect(() => {
+    if (!gate('starter_packs_enabled')) {
+      // @ts-expect-error idk
+      navigation.replace('Home')
+      return
+    }
+
     setMinimalShellMode(true)
+
     return () => {
       setMinimalShellMode(false)
     }
@@ -120,21 +125,22 @@ export function Landing({
           </View>
         </LinearGradient>
         <View style={[a.gap_md, a.mt_lg, a.mx_lg]}>
-          {/* TODO only display this when the total count is > 50 */}
-          <Text style={[a.text_md, a.text_center]}>186 joined this week!</Text>
+          <Text
+            style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
+            186 joined this week
+          </Text>
           <Button
-            label={_(msg`Join Bluesky`)}
+            label={_(msg`Join Bluesky now`)}
             onPress={() => {}}
             variant="solid"
             color="primary"
-            size="large"
-            style={[isTabletOrDesktop && {width: 200, alignSelf: 'center'}]}>
+            size="large">
             <ButtonText style={[a.text_lg]}>
-              <Trans>Join Bluesky</Trans>
+              <Trans>Join Bluesky now</Trans>
             </ButtonText>
           </Button>
           <View style={[a.gap_xl, a.mt_md]}>
-            <Text style={[a.text_md]}>
+            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
               (This is the description) A collection of feeds and users to get
               you started with the science community on Bluesky!
             </Text>
@@ -162,7 +168,7 @@ export function Landing({
                 t.atoms.bg_contrast_25,
                 a.rounded_sm,
                 a.px_xs,
-                a.py_xl,
+                a.py_md,
                 a.gap_xl,
               ]}>
               <UserSet users={userSets.first} />

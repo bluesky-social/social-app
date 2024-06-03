@@ -856,6 +856,28 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => onPressDeleteChatDeclaration()}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Delete chat declaration record`)}
+              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Delete chat declaration record</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => {
+                navigation.navigate('StarterPack', {id: '123'})
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Navigate to Starter Pack`)}
+              accessibilityHint={_(msg`Navigate to Starter Pack`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Navigate to Starter Pack</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
               onPress={() => {
                 navigation.navigate('StarterPackLanding', {id: '123'})
               }}
@@ -864,16 +886,6 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Navigate to Starter Pack Landing`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Navigate to Starter Pack Landing</Trans>
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[pal.view, styles.linkCardNoIcon]}
-              onPress={() => onPressDeleteChatDeclaration()}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Delete chat declaration record`)}
-              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
-              <Text type="lg" style={pal.text}>
-                <Trans>Delete chat declaration record</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

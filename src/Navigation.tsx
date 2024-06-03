@@ -43,7 +43,8 @@ import {SavedFeeds} from 'view/screens/SavedFeeds'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
-import {Landing} from '#/screens/StarterPack/Landing'
+import {LandingScreen} from '#/screens/StarterPack/Landing'
+import {StarterPackScreen} from '#/screens/StarterPack/Main'
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
@@ -309,8 +310,15 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
       <Stack.Screen
+        // TODO figure out what is up with this
+        // @ts-ignore what the absolute fuck is going on here??
+        name="StarterPack"
+        getComponent={() => StarterPackScreen}
+        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+      />
+      <Stack.Screen
         name="StarterPackLanding"
-        getComponent={() => Landing}
+        getComponent={() => LandingScreen}
         options={{title: title(msg`Join Bluesky Today!`)}}
       />
       <Stack.Screen

@@ -40,6 +40,7 @@ export type CommonNavigatorParams = {
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
+  StarterPack: {id: string}
   StarterPackLanding: {id: string}
   StarterPackWizard: {
     mode: 'Create' | 'Edit'
