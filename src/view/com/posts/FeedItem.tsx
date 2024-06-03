@@ -253,9 +253,9 @@ let FeedItemInner = ({
               )}
               onBeforePress={onOpenReposter}>
               <Repost
-                style={{color: pal.colors.textLight, marginRight: 2}}
-                width={16}
-                height={16}
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={14}
+                height={14}
               />
               <Text
                 type="sm-bold"
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 2,
     marginBottom: 2,
-    marginLeft: -20,
+    marginLeft: -18,
   },
   layout: {
     flexDirection: 'row',
