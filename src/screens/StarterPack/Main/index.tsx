@@ -7,6 +7,7 @@ import {isWeb} from 'platform/detection'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {FeedsList} from '#/screens/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/screens/StarterPack/Main/ProfilesList'
 import {atoms as a} from '#/alf'
 
@@ -80,6 +81,11 @@ const PLACEHOLDER_USERS = [
   },
 ]
 
+const PLACEHOLDER_FEEDS = [
+  'at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science',
+  'at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2',
+]
+
 export function StarterPackScreen({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'StarterPackLanding'
@@ -112,6 +118,15 @@ function StarterPackScreenInner() {
           <ProfilesList
             key={0}
             profiles={PLACEHOLDER_USERS}
+            headerHeight={headerHeight}
+            // @ts-expect-error
+            scrollElRef={scrollElRef}
+          />
+        )}
+        {({headerHeight, scrollElRef}) => (
+          <FeedsList
+            key={1}
+            feeds={PLACEHOLDER_FEEDS}
             headerHeight={headerHeight}
             // @ts-expect-error
             scrollElRef={scrollElRef}

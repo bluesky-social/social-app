@@ -156,7 +156,7 @@ export function LandingScreen({
               ]}>
               <FeedSourceCard
                 feedUri="at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science"
-                noBorder={true}
+                hideTopBorder={true}
               />
               <FeedSourceCard feedUri="at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2" />
             </View>
@@ -180,36 +180,6 @@ export function LandingScreen({
     </CenteredView>
   )
 }
-
-// function AvatarSet({avatars}: {avatars: string[]}) {
-//   return (
-//     <View style={[a.flex_row, a.gap_xs]}>
-//       <AvatarSetImage avatar={avatars[0]} zIndex={1} />
-//       <AvatarSetImage avatar={avatars[1]} zIndex={2} />
-//       <AvatarSetImage avatar={avatars[2]} zIndex={3} />
-//     </View>
-//   )
-// }
-
-// function AvatarSetImage({avatar, zIndex}: {avatar: string; zIndex: number}) {
-//   return (
-//     <Image
-//       source={avatar}
-//       style={[
-//         a.rounded_full,
-//         {
-//           width: 32,
-//           height: 32,
-//           borderColor: 'white',
-//           borderWidth: 2,
-//           marginRight: -16,
-//           zIndex,
-//         },
-//       ]}
-//       accessibilityIgnoresInvertColors={true}
-//     />
-//   )
-// }
 
 function User({displayName, avatar}: {displayName: string; avatar: string}) {
   return (

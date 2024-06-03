@@ -1,29 +1,28 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {isNative} from 'platform/detection'
-import {ProfileCardWithFollowBtn} from 'view/com/profile/ProfileCard'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 
-function renderItem({item}: {item: AppBskyActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn profile={item} />
+function renderItem({item}: {item: string}) {
+  return <FeedSourceCard feedUri={item} />
 }
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
-  return `${item.did}-${index}`
+function keyExtractor(item: string) {
+  return item
 }
 
 interface ProfilesListProps {
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
+  feeds: string[]
   headerHeight: number
   scrollElRef: ListRef
 }
 
-export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
-  function ProfilesListImpl({profiles, headerHeight, scrollElRef}, ref) {
+export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
+  function FeedsListImpl({feeds, headerHeight, scrollElRef}, ref) {
     const [initialHeaderHeight] = React.useState(headerHeight)
     const bottomBarOffset = useBottomBarOffset(20)
 
@@ -40,7 +39,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     return (
       <List
-        data={profiles}
+        data={feeds}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ref={scrollElRef}
