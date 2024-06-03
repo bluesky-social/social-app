@@ -41,6 +41,11 @@ export type CommonNavigatorParams = {
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
   StarterPackLanding: {id: string}
+  StarterPackWizard: {
+    mode: 'Create' | 'Edit'
+    id?: string
+    initialStep?: 'Details' | 'Profiles' | 'Feeds'
+  }
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -99,6 +104,11 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
   StarterPackLanding: {id: string}
+  StarterPackWizard: {
+    mode: 'Create' | 'Edit'
+    id?: string
+    initialStep?: 'Details' | 'Profiles' | 'Feeds'
+  }
 }
 
 // NOTE
