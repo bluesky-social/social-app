@@ -9,6 +9,7 @@ import React, {
 import {
   ActivityIndicator,
   Keyboard,
+  LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -19,7 +20,6 @@ import {
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
-  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -170,47 +170,6 @@ export const ComposePost = observer(function ComposePost({
     }),
     [insets, isKeyboardVisible],
   )
-
-  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
-  const hasScrolledTop = useSharedValue(0)
-  const hasScrolledBottom = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
-      hasScrolledBottom.value = withTiming(
-        event.contentSize.height - event.contentOffset.y >=
-          event.layoutMeasurement.height
-          ? 1
-          : 0,
-      )
-    },
-  })
-
-  const onScrollViewContentSizeChange = useCallback(() => {
-    hasScrolledBottom.value = withTiming(
-      scrollViewRef.
-    )
-  }, [])
-  const topBarAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      borderWidth: hairlineWidth,
-      borderColor: interpolateColor(
-        hasScrolledTop.value,
-        [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
-      ),
-    }
-  })
-  const bottomBarAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      borderWidth: hairlineWidth,
-      borderColor: interpolateColor(
-        hasScrolledBottom.value,
-        [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
-      ),
-    }
-  })
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
@@ -421,6 +380,14 @@ export const ComposePost = observer(function ComposePost({
     [setExtLink],
   )
 
+  const {
+    scrollHandler,
+    onScrollViewContentSizeChange,
+    onScrollViewLayout,
+    topBarAnimatedStyle,
+    bottomBarAnimatedStyle,
+  } = useAnimatedBorders()
+
   return (
     <>
       <KeyboardAvoidingView
@@ -533,11 +500,11 @@ export const ComposePost = observer(function ComposePost({
             )}
           </Animated.View>
           <Animated.ScrollView
-            ref={scrollViewRef}
             onScroll={scrollHandler}
             style={styles.scrollView}
             keyboardShouldPersistTaps="always"
-            onContentSizeChange={onScrollViewContentSizeChange}>
+            onContentSizeChange={onScrollViewContentSizeChange}
+            onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
             <View
@@ -655,6 +622,110 @@ export const ComposePost = observer(function ComposePost({
 
 export function useComposerCancelRef() {
   return useRef<CancelRef>(null)
+}
+
+function useAnimatedBorders() {
+  const t = useTheme()
+  const hasScrolledTop = useSharedValue(0)
+  const hasScrolledBottom = useSharedValue(0)
+  const contentOffset = useSharedValue(0)
+  const scrollViewHeight = useSharedValue(Infinity)
+  const contentHeight = useSharedValue(0)
+
+  const showHideBottomBorder = useCallback(
+    ({
+      newContentHeight,
+      newContentOffset,
+      newScrollViewHeight,
+    }: {
+      newContentHeight?: number
+      newContentOffset?: number
+      newScrollViewHeight?: number
+    }) => {
+      'worklet'
+
+      const currentContentHeight = newContentHeight ?? contentHeight.value
+      const currentContentOffset = newContentOffset ?? contentOffset.value
+      const currentScrollViewHeight =
+        newScrollViewHeight ?? scrollViewHeight.value
+
+      hasScrolledBottom.value = withTiming(
+        currentContentHeight - currentContentOffset >= currentScrollViewHeight
+          ? 1
+          : 0,
+      )
+
+      // save new values
+      if (typeof newContentHeight === 'number')
+        contentHeight.value = newContentHeight
+      if (typeof newContentOffset === 'number')
+        contentOffset.value = newContentOffset
+      if (typeof newScrollViewHeight === 'number')
+        scrollViewHeight.value = newScrollViewHeight
+    },
+    [contentHeight, contentOffset, scrollViewHeight, hasScrolledBottom],
+  )
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+
+      showHideBottomBorder({
+        newContentOffset: event.contentOffset.y,
+        newContentHeight: event.contentSize.height,
+        newScrollViewHeight: event.layoutMeasurement.height,
+      })
+    },
+  })
+
+  const onScrollViewContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      console.log('content size change', height)
+      showHideBottomBorder({
+        newContentHeight: height,
+      })
+    },
+    [showHideBottomBorder],
+  )
+
+  const onScrollViewLayout = useCallback(
+    (evt: LayoutChangeEvent) => {
+      console.log('layout change', evt.nativeEvent.layout.height)
+      showHideBottomBorder({
+        newScrollViewHeight: evt.nativeEvent.layout.height,
+      })
+    },
+    [showHideBottomBorder],
+  )
+
+  const topBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderWidth: hairlineWidth,
+      borderColor: interpolateColor(
+        hasScrolledTop.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
+  const bottomBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderWidth: hairlineWidth,
+      borderColor: interpolateColor(
+        hasScrolledBottom.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
+
+  return {
+    scrollHandler,
+    onScrollViewContentSizeChange,
+    onScrollViewLayout,
+    topBarAnimatedStyle,
+    bottomBarAnimatedStyle,
+  }
 }
 
 const styles = StyleSheet.create({
