@@ -1,5 +1,5 @@
 import React from 'react'
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -20,6 +20,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/componen
 import {QrCode_Stroke2_Corner0_Rounded as QrCode} from '#/components/icons/QrCode'
 import * as Menu from '#/components/Menu'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
+import {Text} from '#/components/Typography'
 
 /**
  * TEMPORARY CONTENT, DO NOT TRANSLATE
