@@ -30,7 +30,6 @@ import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {ViewHeader} from 'view/com/util/ViewHeader'
 
 export const snapPoints = ['fullscreen']
 
@@ -69,10 +68,20 @@ export function Component({
 
   return (
     <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
-      <ViewHeader
-        title={_(msg`Update ${displayName} in Lists`)}
-        showBackButton={false}
-      />
+      <Text
+        style={[
+          {
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: 20,
+            marginBottom: 12,
+            paddingHorizontal: 12,
+          },
+          pal.text,
+        ]}
+        numberOfLines={1}>
+        <Trans>Update {displayName} in Lists</Trans>
+      </Text>
       <MyLists
         filter="all"
         inline
