@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-02 12:30+0900\n"
+"PO-Revision-Date: 2024-06-04 07:58+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -17,7 +17,7 @@ msgstr ""
 msgid "(no email)"
 msgstr "(이메일 없음)"
 
-#: src/view/com/notifications/FeedItem.tsx:260
+#: src/view/com/notifications/FeedItem.tsx:261
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr "외 {0, plural, other {{formattedCount}}}명"
 
@@ -370,7 +370,7 @@ msgstr "문제가 발생했습니다. 다시 시도해 주세요."
 msgid "an unknown error occurred"
 msgstr "알 수 없는 오류가 발생했습니다"
 
-#: src/view/com/notifications/FeedItem.tsx:257
+#: src/view/com/notifications/FeedItem.tsx:258
 #: src/view/com/threadgate/WhoCanReply.tsx:180
 msgid "and"
 msgstr "및"
@@ -927,11 +927,11 @@ msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 msgid "Closes viewer for header image"
 msgstr "헤더 이미지 뷰어를 닫습니다"
 
-#: src/view/com/notifications/FeedItem.tsx:204
+#: src/view/com/notifications/FeedItem.tsx:205
 msgid "Collapse list of users"
 msgstr "사용자 목록 접기"
 
-#: src/view/com/notifications/FeedItem.tsx:340
+#: src/view/com/notifications/FeedItem.tsx:341
 msgid "Collapses list of users for a given notification"
 msgstr "이 알림에 대한 사용자 목록을 축소합니다"
 
@@ -1750,7 +1750,7 @@ msgstr "검색어 입력을 종료합니다"
 msgid "Expand alt text"
 msgstr "대체 텍스트 확장"
 
-#: src/view/com/notifications/FeedItem.tsx:205
+#: src/view/com/notifications/FeedItem.tsx:206
 msgid "Expand list of users"
 msgstr "사용자 목록 펼치기"
 
@@ -1964,7 +1964,7 @@ msgstr "팔로우한 사용자"
 msgid "Followed users only"
 msgstr "팔로우한 사용자만"
 
-#: src/view/com/notifications/FeedItem.tsx:172
+#: src/view/com/notifications/FeedItem.tsx:173
 msgid "followed you"
 msgstr "이(가) 나를 팔로우했습니다"
 
@@ -2045,7 +2045,7 @@ msgstr "잦은 원치 않는 콘텐츠 게시"
 msgid "From @{sanitizedAuthor}"
 msgstr "@{sanitizedAuthor} 님의 태그"
 
-#: src/view/com/posts/FeedItem.tsx:231
+#: src/view/com/posts/FeedItem.tsx:232
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
@@ -2177,7 +2177,7 @@ msgstr "앱 비밀번호입니다."
 msgid "Hide"
 msgstr "숨기기"
 
-#: src/view/com/notifications/FeedItem.tsx:347
+#: src/view/com/notifications/FeedItem.tsx:348
 msgctxt "action"
 msgid "Hide"
 msgstr "숨기기"
@@ -2196,7 +2196,7 @@ msgstr "콘텐츠 숨기기"
 msgid "Hide this post?"
 msgstr "이 게시물을 숨기시겠습니까?"
 
-#: src/view/com/notifications/FeedItem.tsx:338
+#: src/view/com/notifications/FeedItem.tsx:339
 msgid "Hide user list"
 msgstr "사용자 리스트 숨기기"
 
@@ -2534,11 +2534,11 @@ msgstr "좋아요 표시한 사용자"
 msgid "Liked By"
 msgstr "좋아요 표시한 사용자"
 
-#: src/view/com/notifications/FeedItem.tsx:175
+#: src/view/com/notifications/FeedItem.tsx:176
 msgid "liked your custom feed"
 msgstr "이(가) 내 맞춤 피드를 좋아합니다"
 
-#: src/view/com/notifications/FeedItem.tsx:167
+#: src/view/com/notifications/FeedItem.tsx:168
 msgid "liked your post"
 msgstr "이(가) 내 게시물을 좋아합니다"
 
@@ -3408,7 +3408,7 @@ msgstr "시스템 로그 페이지를 엽니다"
 msgid "Opens the threads preferences"
 msgstr "스레드 설정을 엽니다"
 
-#: src/view/com/notifications/FeedItem.tsx:426
+#: src/view/com/notifications/FeedItem.tsx:427
 #: src/view/com/util/UserAvatar.tsx:409
 msgid "Opens this profile"
 msgstr "이 프로필을 엽니다"
@@ -3914,8 +3914,8 @@ msgstr "답글"
 msgid "Reply Filters"
 msgstr "답글 필터"
 
-#: src/view/com/post/Post.tsx:180
-#: src/view/com/posts/FeedItem.tsx:429
+#: src/view/com/post/Post.tsx:190
+#: src/view/com/posts/FeedItem.tsx:427
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0> 님에게 보내는 답글"
@@ -4007,15 +4007,15 @@ msgstr "재게시 또는 게시물 인용"
 msgid "Reposted By"
 msgstr "재게시한 사용자"
 
-#: src/view/com/posts/FeedItem.tsx:249
+#: src/view/com/posts/FeedItem.tsx:250
 msgid "Reposted by {0}"
 msgstr "{0} 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:267
+#: src/view/com/posts/FeedItem.tsx:265
 msgid "Reposted by <0><1/></0>"
 msgstr "<0><1/></0> 님이 재게시함"
 
-#: src/view/com/notifications/FeedItem.tsx:169
+#: src/view/com/notifications/FeedItem.tsx:170
 msgid "reposted your post"
 msgstr "이(가) 내 게시물을 재게시했습니다"
 
@@ -4581,8 +4581,8 @@ msgid "Show less like this"
 msgstr "이런 항목 덜 보기"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:543
-#: src/view/com/post/Post.tsx:217
-#: src/view/com/posts/FeedItem.tsx:394
+#: src/view/com/post/Post.tsx:227
+#: src/view/com/posts/FeedItem.tsx:392
 msgid "Show More"
 msgstr "더 보기"
 
@@ -5637,7 +5637,7 @@ msgstr "비디오 게임"
 msgid "View {0}'s avatar"
 msgstr "{0} 님의 아바타를 봅니다"
 
-#: src/view/com/notifications/FeedItem.tsx:212
+#: src/view/com/notifications/FeedItem.tsx:213
 msgid "View {0}'s profile"
 msgstr "{0} 님의 프로필 보기"
 
