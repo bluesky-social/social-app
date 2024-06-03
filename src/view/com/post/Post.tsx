@@ -22,6 +22,7 @@ import {makeProfileLink} from 'lib/routes/links'
 import {countLines} from 'lib/strings/helpers'
 import {colors, s} from 'lib/styles'
 import {precacheProfile} from 'state/queries/profile'
+import {AviFollowButton} from '#/view/com/posts/AviFollowButton'
 import {atoms as a} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
@@ -35,6 +36,7 @@ import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {UserInfoText} from '../util/UserInfoText'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function Post({
   post,
@@ -146,12 +148,14 @@ function PostInner({
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={52}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-          />
+          <AviFollowButton author={post.author} moderation={moderation}>
+            <PreviewableUserAvatar
+              size={52}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+            />
+          </AviFollowButton>
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
@@ -239,15 +243,15 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     paddingBottom: 5,
     paddingLeft: 10,
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     // @ts-ignore web only -prf
     cursor: 'pointer',
   },
   layout: {
     flexDirection: 'row',
+    gap: 10,
   },
   layoutAvi: {
-    width: 70,
     paddingLeft: 8,
   },
   layoutContent: {

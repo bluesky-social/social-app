@@ -1,4 +1,8 @@
-import {AppBskyFeedDefs, AppBskyFeedSearchPosts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AppBskyFeedSearchPosts,
+} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -25,7 +29,7 @@ export function useSearchPostsQuery({
   sort?: 'top' | 'latest'
   enabled?: boolean
 }) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,
@@ -35,7 +39,7 @@ export function useSearchPostsQuery({
   >({
     queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.feed.searchPosts({
+      const res = await agent.app.bsky.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,
@@ -70,6 +74,33 @@ export function* findAllPostsInQueryData(
         const quotedPost = getEmbeddedPost(post.embed)
         if (quotedPost?.uri === uri) {
           yield embedViewRecordToPostView(quotedPost)
+        }
+      }
+    }
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, undefined> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
+  >({
+    queryKey: [searchPostsQueryKeyRoot],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const post of page.posts) {
+        if (post.author.did === did) {
+          yield post.author
+        }
+        const quotedPost = getEmbeddedPost(post.embed)
+        if (quotedPost?.author.did === did) {
+          yield quotedPost.author
         }
       }
     }

@@ -1,47 +1,97 @@
 import React from 'react'
-import {View} from 'react-native'
-import Animated from 'react-native-reanimated'
+import {Pressable, View} from 'react-native'
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Trans} from '@lingui/macro'
 
 import {
   ScaleAndFadeIn,
   ScaleAndFadeOut,
 } from 'lib/custom-animations/ScaleAndFade'
+import {useHaptics} from 'lib/haptics'
+import {isAndroid, isIOS, isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-export function NewMessagesPill() {
-  const t = useTheme()
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-  React.useEffect(() => {}, [])
+export function NewMessagesPill({
+  onPress: onPressInner,
+}: {
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const playHaptic = useHaptics()
+  const {bottom: bottomInset} = useSafeAreaInsets()
+  const bottomBarHeight = isIOS ? 42 : isAndroid ? 60 : 0
+  const bottomOffset = isWeb ? 0 : bottomInset + bottomBarHeight
+
+  const scale = useSharedValue(1)
+
+  const onPressIn = React.useCallback(() => {
+    if (isWeb) return
+    scale.value = withTiming(1.075, {duration: 100})
+  }, [scale])
+
+  const onPressOut = React.useCallback(() => {
+    if (isWeb) return
+    scale.value = withTiming(1, {duration: 100})
+  }, [scale])
+
+  const onPress = React.useCallback(() => {
+    runOnJS(playHaptic)()
+    onPressInner?.()
+  }, [onPressInner, playHaptic])
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{scale: scale.value}],
+  }))
 
   return (
-    <Animated.View
+    <View
       style={[
-        a.py_sm,
-        a.rounded_full,
-        a.shadow_sm,
-        a.border,
-        t.atoms.bg_contrast_50,
-        t.atoms.border_contrast_medium,
+        a.absolute,
+        a.w_full,
+        a.z_10,
+        a.align_center,
         {
-          position: 'absolute',
-          bottom: 70,
-          width: '40%',
-          left: '30%',
-          alignItems: 'center',
-          shadowOpacity: 0.125,
-          shadowRadius: 12,
-          shadowOffset: {width: 0, height: 5},
+          bottom: bottomOffset + 70,
+          // Don't prevent scrolling in this area _except_ for in the pill itself
+          pointerEvents: 'box-none',
         },
-      ]}
-      entering={ScaleAndFadeIn}
-      exiting={ScaleAndFadeOut}>
-      <View style={{flex: 1}}>
+      ]}>
+      <AnimatedPressable
+        style={[
+          a.py_sm,
+          a.rounded_full,
+          a.shadow_sm,
+          a.border,
+          t.atoms.bg_contrast_50,
+          t.atoms.border_contrast_medium,
+          {
+            width: 160,
+            alignItems: 'center',
+            shadowOpacity: 0.125,
+            shadowRadius: 12,
+            shadowOffset: {width: 0, height: 5},
+            pointerEvents: 'box-only',
+          },
+          animatedStyle,
+        ]}
+        entering={ScaleAndFadeIn}
+        exiting={ScaleAndFadeOut}
+        onPress={onPress}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}>
         <Text style={[a.font_bold]}>
           <Trans>New messages</Trans>
         </Text>
-      </View>
-    </Animated.View>
+      </AnimatedPressable>
+    </View>
   )
 }

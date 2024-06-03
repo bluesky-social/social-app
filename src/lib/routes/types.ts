@@ -38,7 +38,7 @@ export type CommonNavigatorParams = {
   AccessibilitySettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
-  MessagesConversation: {conversation: string}
+  MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
 }
 
@@ -72,7 +72,7 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-  Messages: {pushToConversation?: string}
+  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
@@ -81,7 +81,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Feeds: undefined
   Notifications: undefined
   Hashtag: {tag: string; author?: string}
-  Messages: {pushToConversation?: string}
+  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
@@ -96,7 +96,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   MyProfileTab: undefined
   Hashtag: {tag: string; author?: string}
   MessagesTab: undefined
-  Messages: undefined
+  Messages: {animation?: 'push' | 'pop'}
 }
 
 // NOTE

@@ -131,7 +131,7 @@ appId: xyz.blueskyweb.app
 - assertVisible:
     id: "feedItem-by-bob.test"
 - tapOn:
-    id: "bottomBarFeedsBtn"
+    id: "e2eGotoFeeds"
 - tapOn:
     id: "saved-feed-Good Ppl"
 - assertVisible:

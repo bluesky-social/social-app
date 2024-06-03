@@ -1,24 +1,26 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
+
+import {emitSoftReset} from '#/state/events'
+import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {useSetDrawerOpen} from '#/state/shell'
+import {BACK_HITSLOP} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Text} from '../util/text/Text'
-import {TextLink} from '../util/Link'
-import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {CenteredView} from '../util/Views'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {NavigationProp} from 'lib/routes/types'
-import {BACK_HITSLOP} from 'lib/constants'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {isNative} from 'platform/detection'
-import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {useSetDrawerOpen} from '#/state/shell'
-import {emitSoftReset} from '#/state/events'
+import {TextLink} from '../util/Link'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {Text} from '../util/text/Text'
+import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
+import {CenteredView} from '../util/Views'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -79,7 +81,7 @@ export function ProfileSubpageHeader({
             {
               flexDirection: 'row',
               alignItems: 'center',
-              borderBottomWidth: 1,
+              borderBottomWidth: hairlineWidth,
               paddingTop: isNative ? 0 : 8,
               paddingBottom: 8,
               paddingHorizontal: isMobile ? 12 : 14,

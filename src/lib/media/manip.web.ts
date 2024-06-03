@@ -159,3 +159,7 @@ async function downloadUrl(href: string, filename: string) {
   a.download = filename
   a.click()
 }
+
+export async function safeDeleteAsync() {
+  // no-op
+}

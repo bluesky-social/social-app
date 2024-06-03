@@ -2,6 +2,7 @@ import React from 'react'
 import {
   StyleProp,
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -31,7 +32,7 @@ import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {precacheProfile} from 'state/queries/profile'
 import {ComposerOptsQuote} from 'state/shell/composer'
-import {atoms as a} from '#/alf'
+import {atoms as a, flatten} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
@@ -39,15 +40,18 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function MaybeQuoteEmbed({
   embed,
   onOpen,
   style,
+  textStyle,
 }: {
   embed: AppBskyEmbedRecord.View
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }) {
   const pal = usePalette('default')
   if (
@@ -61,6 +65,7 @@ export function MaybeQuoteEmbed({
         postRecord={embed.record.value}
         onOpen={onOpen}
         style={style}
+        textStyle={textStyle}
       />
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
@@ -90,11 +95,13 @@ function QuoteEmbedModerated({
   postRecord,
   onOpen,
   style,
+  textStyle,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -119,6 +126,7 @@ function QuoteEmbedModerated({
       moderation={moderation}
       onOpen={onOpen}
       style={style}
+      textStyle={textStyle}
     />
   )
 }
@@ -128,11 +136,13 @@ export function QuoteEmbed({
   moderation,
   onOpen,
   style,
+  textStyle,
 }: {
   quote: ComposerOptsQuote
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -191,7 +201,7 @@ export function QuoteEmbed({
         {richText ? (
           <RichText
             value={richText}
-            style={[a.text_md]}
+            style={[a.text_md, flatten(textStyle)]}
             numberOfLines={20}
             disableLinks
           />
@@ -247,12 +257,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderWidth: 1,
-  },
-  quotePost: {
-    flex: 1,
-    paddingLeft: 13,
-    paddingRight: 8,
+    borderWidth: hairlineWidth,
   },
   errorContainer: {
     flexDirection: 'row',
@@ -262,7 +267,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
   },
   alert: {
     marginBottom: 6,

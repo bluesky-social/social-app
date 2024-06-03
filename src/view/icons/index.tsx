@@ -9,6 +9,7 @@ import {faCirclePlay} from '@fortawesome/free-regular-svg-icons/faCirclePlay'
 import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
 import {faClone as farClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
+import {faCommentDots} from '@fortawesome/free-regular-svg-icons/faCommentDots'
 import {faComments} from '@fortawesome/free-regular-svg-icons/faComments'
 import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
 import {faEyeSlash as farEyeSlash} from '@fortawesome/free-regular-svg-icons/faEyeSlash'
@@ -142,6 +143,7 @@ library.add(
   faClone,
   farClone,
   faComment,
+  faCommentDots,
   faCommentSlash,
   faComments,
   faCompass,
