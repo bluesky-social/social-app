@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingTop: 10,
     paddingBottom: isAndroid ? 10 : 0,
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
   },
   footerBtn: {
     paddingHorizontal: 24,
