@@ -150,16 +150,26 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         attributes: {
           class: modeClass,
         },
-        handlePaste: (_, event) => {
-          const items = event.clipboardData?.items
+        handlePaste: (view, event) => {
+          const clipboardData = event.clipboardData
 
-          if (items === undefined) {
-            return
+          if (clipboardData) {
+            if (clipboardData.types.includes('text/html')) {
+              // Rich-text formatting is pasted, try retrieving plain text
+              event.preventDefault()
+
+              const text = clipboardData.getData('text/plain')
+
+              // `pasteText` will invoke this handler again, but `clipboardData` will be empty.
+              view.pasteText(text)
+            } else {
+              // Otherwise, try retrieving images from the clipboard
+
+              getImageFromUri(clipboardData.items, (uri: string) => {
+                textInputWebEmitter.emit('photo-pasted', uri)
+              })
+            }
           }
-
-          getImageFromUri(items, (uri: string) => {
-            textInputWebEmitter.emit('photo-pasted', uri)
-          })
         },
         handleKeyDown: (_, event) => {
           if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
