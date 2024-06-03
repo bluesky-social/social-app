@@ -453,7 +453,7 @@ msgstr "你确定要删除这条私信吗？此操作仅会在你的对话中删
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr "您确定要离开这个对话吗？此操作仅会在你的私信列表中删除对话，而不会在其他人的私信列表中删除。"
+msgstr "你确定要离开这个对话吗？此操作仅会在你的私信列表中删除对话，而不会在其他人的私信列表中删除。"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:293
 msgid "Are you sure you want to remove {0} from your feeds?"
@@ -1602,7 +1602,7 @@ msgstr "嵌入帖子"
 
 #: src/components/dialogs/Embed.tsx:101
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
-msgstr "将这条帖子嵌入到你的网站。只需复制以下代码片段，并将其粘贴到您网站的 HTML 代码中即可。"
+msgstr "将这条帖子嵌入到你的网站。只需复制以下代码片段，并将其粘贴到你网站的 HTML 代码中即可。"
 
 #: src/components/dialogs/EmbedConsent.tsx:101
 msgid "Enable {0} only"
