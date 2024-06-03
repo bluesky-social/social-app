@@ -10,7 +10,7 @@ export function StarterPackCard({hideTopBorder}: {hideTopBorder?: boolean}) {
   const t = useTheme()
 
   return (
-    <Link to={{screen: 'StarterPack', params: {id: 123}}}>
+    <Link to={{screen: 'StarterPack', params: {id: '123'}}}>
       <View
         style={[
           a.flex_row,
