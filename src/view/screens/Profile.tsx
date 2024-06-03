@@ -279,7 +279,6 @@ function ProfileScreenLoaded({
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log('run')
       setDrawerSwipeDisabled(currentPage > 0)
       return () => {
         setDrawerSwipeDisabled(false)
