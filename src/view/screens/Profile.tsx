@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -34,6 +34,7 @@ import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
+import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
 import {ProfileLists} from '../com/lists/ProfileLists'
@@ -162,6 +163,7 @@ function ProfileScreenLoaded({
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
+  const starterPacksSectionRef = React.useRef<SectionRef>(null)
   const labelsSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
@@ -183,31 +185,21 @@ function ProfileScreenLoaded({
   const showMediaTab = !hasLabeler
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
+  const showStarterPacksTab = isMe || true
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
-  const sectionTitles = useMemo<string[]>(() => {
-    return [
-      showFiltersTab ? _(msg`Labels`) : undefined,
-      showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
-      showPostsTab ? _(msg`Posts`) : undefined,
-      showRepliesTab ? _(msg`Replies`) : undefined,
-      showMediaTab ? _(msg`Media`) : undefined,
-      showLikesTab ? _(msg`Likes`) : undefined,
-      showFeedsTab ? _(msg`Feeds`) : undefined,
-      showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
-    ].filter(Boolean) as string[]
-  }, [
-    showPostsTab,
-    showRepliesTab,
-    showMediaTab,
-    showLikesTab,
-    showFeedsTab,
-    showListsTab,
-    showFiltersTab,
-    hasLabeler,
-    _,
-  ])
+  const sectionTitles = [
+    showFiltersTab ? _(msg`Labels`) : undefined,
+    showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
+    showPostsTab ? _(msg`Posts`) : undefined,
+    showRepliesTab ? _(msg`Replies`) : undefined,
+    showMediaTab ? _(msg`Media`) : undefined,
+    showLikesTab ? _(msg`Likes`) : undefined,
+    showFeedsTab ? _(msg`Feeds`) : undefined,
+    showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
+    showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
+  ].filter(Boolean) as string[]
 
   let nextIndex = 0
   let filtersIndex: number | null = null
@@ -216,6 +208,7 @@ function ProfileScreenLoaded({
   let mediaIndex: number | null = null
   let likesIndex: number | null = null
   let feedsIndex: number | null = null
+  let starterPacksIndex: number | null = null
   let listsIndex: number | null = null
   if (showFiltersTab) {
     filtersIndex = nextIndex++
@@ -235,11 +228,14 @@ function ProfileScreenLoaded({
   if (showFeedsTab) {
     feedsIndex = nextIndex++
   }
+  if (showStarterPacksTab) {
+    starterPacksIndex = nextIndex++
+  }
   if (showListsTab) {
     listsIndex = nextIndex++
   }
 
-  const scrollSectionToTop = React.useCallback(
+  const scrollSectionToTop = useCallback(
     (index: number) => {
       if (index === filtersIndex) {
         labelsSectionRef.current?.scrollToTop()
@@ -253,18 +249,21 @@ function ProfileScreenLoaded({
         likesSectionRef.current?.scrollToTop()
       } else if (index === feedsIndex) {
         feedsSectionRef.current?.scrollToTop()
+      } else if (index === starterPacksIndex) {
+        starterPacksSectionRef.current?.scrollToTop()
       } else if (index === listsIndex) {
         listsSectionRef.current?.scrollToTop()
       }
     },
     [
+      feedsIndex,
       filtersIndex,
+      likesIndex,
+      listsIndex,
+      mediaIndex,
       postsIndex,
       repliesIndex,
-      mediaIndex,
-      likesIndex,
-      feedsIndex,
-      listsIndex,
+      starterPacksIndex,
     ],
   )
 
@@ -290,7 +289,7 @@ function ProfileScreenLoaded({
   // events
   // =
 
-  const onPressCompose = React.useCallback(() => {
+  const onPressCompose = () => {
     track('ProfileScreen:PressCompose')
     const mention =
       profile.handle === currentAccount?.handle ||
@@ -298,23 +297,20 @@ function ProfileScreenLoaded({
         ? undefined
         : profile.handle
     openComposer({mention})
-  }, [openComposer, currentAccount, track, profile])
+  }
 
-  const onPageSelected = React.useCallback((i: number) => {
+  const onPageSelected = (i: number) => {
     setCurrentPage(i)
-  }, [])
+  }
 
-  const onCurrentPageSelected = React.useCallback(
-    (index: number) => {
-      scrollSectionToTop(index)
-    },
-    [scrollSectionToTop],
-  )
+  const onCurrentPageSelected = (index: number) => {
+    scrollSectionToTop(index)
+  }
 
   // rendering
   // =
 
-  const renderHeader = React.useCallback(() => {
+  const renderHeader = () => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
@@ -327,16 +323,7 @@ function ProfileScreenLoaded({
         />
       </ExpoScrollForwarderView>
     )
-  }, [
-    scrollViewTag,
-    profile,
-    labelerInfo,
-    hasDescription,
-    descriptionRT,
-    moderationOpts,
-    hideBackButton,
-    showPlaceholder,
-  ])
+  }
 
   return (
     <ScreenHider
@@ -434,6 +421,18 @@ function ProfileScreenLoaded({
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedgens
                 ref={feedsSectionRef}
+                did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
+        {showStarterPacksTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileStarterPacks
+                ref={starterPacksSectionRef}
                 did={profile.did}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
