@@ -207,6 +207,7 @@ function Selectable({
       size="medium"
       variant={isSelected ? 'solid' : 'outline'}
       accessibilityRole="checkbox"
+      aria-checked={isSelected}
       accessibilityState={{
         checked: isSelected,
       }}>
