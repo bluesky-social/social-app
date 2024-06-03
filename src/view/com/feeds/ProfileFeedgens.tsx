@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -18,12 +18,11 @@ import {isNative} from '#/platform/detection'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
-import {usePalette} from 'lib/hooks/usePalette'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {EmptyState} from 'view/com/util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {Text} from '../util/text/Text'
 import {FeedSourceCardLoaded} from './FeedSourceCard'
 
 const LOADING = {_reactKey: '__loading__'}
@@ -52,7 +51,6 @@ export const ProfileFeedgens = React.forwardRef<
   {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
   ref,
 ) {
-  const pal = usePalette('default')
   const {_} = useLingui()
   const theme = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -138,13 +136,11 @@ export const ProfileFeedgens = React.forwardRef<
     ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY) {
         return (
-          <View
+          <EmptyState
+            icon="hashtag"
+            message={_(msg`You have no feeds.`)}
             testID="listsEmpty"
-            style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
-            <Text style={pal.textLight}>
-              <Trans>You have no feeds.</Trans>
-            </Text>
-          </View>
+          />
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -176,7 +172,7 @@ export const ProfileFeedgens = React.forwardRef<
       }
       return null
     },
-    [error, refetch, onPressRetryLoadMore, pal, preferences, _],
+    [error, refetch, onPressRetryLoadMore, preferences, _],
   )
 
   React.useEffect(() => {
