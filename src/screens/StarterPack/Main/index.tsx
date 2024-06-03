@@ -9,7 +9,6 @@ import {shareUrl} from 'lib/sharing'
 import {isWeb} from 'platform/detection'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
-import {EventStopper} from 'view/com/util/EventStopper'
 import {CenteredView} from 'view/com/util/Views'
 import {FeedsList} from '#/screens/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/screens/StarterPack/Main/ProfilesList'
@@ -157,50 +156,48 @@ function Header({isOwn}: {isOwn: boolean}) {
         creator={undefined}
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm]}>
-          <EventStopper onKeyDown={false}>
-            <Menu.Root>
-              <Menu.Trigger label={_(msg`Repost or quote post`)}>
-                {({props}) => {
-                  return (
-                    <Button
-                      label={_(msg`Share`)}
-                      variant="solid"
-                      color="primary"
-                      size="small"
-                      {...props}>
-                      <ButtonText>
-                        <Trans>Share</Trans>
-                      </ButtonText>
-                    </Button>
-                  )
-                }}
-              </Menu.Trigger>
-              <Menu.Outer style={{minWidth: 170}}>
-                <Menu.Group>
-                  <Menu.Item
-                    label={_(msg`Share link`)}
-                    testID="shareStarterPackLinkBtn"
-                    onPress={() => {
-                      shareUrl('https://bsky.app')
-                    }}>
-                    <Menu.ItemText>
-                      <Trans>Share link</Trans>
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
-                  </Menu.Item>
-                  <Menu.Item
-                    label={_(msg`Create QR code`)}
-                    testID="createQRCodeBtn"
-                    onPress={qrCodeDialogControl.open}>
-                    <Menu.ItemText>
-                      <Trans>Create QR code</Trans>
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={QrCode} position="right" />
-                  </Menu.Item>
-                </Menu.Group>
-              </Menu.Outer>
-            </Menu.Root>
-          </EventStopper>
+          <Menu.Root>
+            <Menu.Trigger label={_(msg`Repost or quote post`)}>
+              {({props}) => {
+                return (
+                  <Button
+                    label={_(msg`Share`)}
+                    variant="solid"
+                    color="primary"
+                    size="small"
+                    {...props}>
+                    <ButtonText>
+                      <Trans>Share</Trans>
+                    </ButtonText>
+                  </Button>
+                )
+              }}
+            </Menu.Trigger>
+            <Menu.Outer style={{minWidth: 170}}>
+              <Menu.Group>
+                <Menu.Item
+                  label={_(msg`Share link`)}
+                  testID="shareStarterPackLinkBtn"
+                  onPress={() => {
+                    shareUrl('https://bsky.app')
+                  }}>
+                  <Menu.ItemText>
+                    <Trans>Share link</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
+                </Menu.Item>
+                <Menu.Item
+                  label={_(msg`Create QR code`)}
+                  testID="createQRCodeBtn"
+                  onPress={qrCodeDialogControl.open}>
+                  <Menu.ItemText>
+                    <Trans>Create QR code</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={QrCode} position="right" />
+                </Menu.Item>
+              </Menu.Group>
+            </Menu.Outer>
+          </Menu.Root>
           {isOwn && (
             <Button
               label={_(msg`Edit`)}
