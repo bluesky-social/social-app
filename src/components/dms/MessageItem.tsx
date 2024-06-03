@@ -6,10 +6,19 @@ import {
   TextStyle,
   View,
 } from 'react-native'
-import {ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  ChatBskyConvoDefs,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {
+  postUriToRelativePath,
+  toBskyAppUrl,
+  toShortUrl,
+} from '#/lib/strings/url-helpers'
 import {ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
@@ -74,6 +83,29 @@ let MessageItem = ({
     return new RichTextAPI({text: message.text, facets: message.facets})
   }, [message.text, message.facets])
 
+  const maybeEmbedLink = React.useMemo(() => {
+    if (AppBskyEmbedRecord.isView(message.embed)) {
+      const embed = message.embed
+
+      if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+        const record = embed.record
+        const path = postUriToRelativePath(record.uri, {
+          handle: record.author.handle,
+        })
+        const href = path ? toBskyAppUrl(path) : undefined
+
+        if (!href) return undefined
+
+        const short = href ? toShortUrl(href) : undefined
+        if (short && message.text.includes(short)) return undefined
+
+        const rt = new RichTextAPI({text: ' ' + href})
+        rt.detectFacetsWithoutResolution()
+        return rt
+      }
+    }
+  }, [message.embed, message.text])
+
   return (
     <View style={[isFromSelf ? a.mr_md : a.ml_md]}>
       <ActionsWrapper isFromSelf={isFromSelf} message={message}>
@@ -96,17 +128,34 @@ let MessageItem = ({
               ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
               : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
           ]}>
-          <RichText
-            value={rt}
-            style={[
-              a.text_md,
-              a.leading_snug,
-              isFromSelf && {color: t.palette.white},
-              isPending && t.name !== 'light' && {color: t.palette.primary_300},
-            ]}
-            interactiveStyle={a.underline}
-            enableTags
-          />
+          <Text>
+            <RichText
+              value={rt}
+              style={[
+                a.text_md,
+                a.leading_snug,
+                isFromSelf && {color: t.palette.white},
+                isPending &&
+                  t.name !== 'light' && {color: t.palette.primary_300},
+              ]}
+              interactiveStyle={a.underline}
+              enableTags
+            />
+            {maybeEmbedLink && (
+              <RichText
+                value={maybeEmbedLink}
+                style={[
+                  a.text_md,
+                  a.leading_snug,
+                  isFromSelf && {color: t.palette.white},
+                  isPending &&
+                    t.name !== 'light' && {color: t.palette.primary_300},
+                ]}
+                interactiveStyle={a.underline}
+                enableTags
+              />
+            )}
+          </Text>
         </View>
       </ActionsWrapper>
 
