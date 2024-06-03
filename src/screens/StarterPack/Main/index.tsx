@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {CommonNavigatorParams} from 'lib/routes/types'
+import {shareUrl} from 'lib/sharing'
 import {isWeb} from 'platform/detection'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -14,9 +15,11 @@ import {FeedsList} from '#/screens/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/screens/StarterPack/Main/ProfilesList'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {QrCode_Stroke2_Corner0_Rounded as QrCode} from '#/components/icons/QrCode'
 import * as Menu from '#/components/Menu'
+import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 
 /**
  * TEMPORARY CONTENT, DO NOT TRANSLATE
@@ -140,6 +143,7 @@ function StarterPackScreenInner() {
 
 function Header({isOwn}: {isOwn: boolean}) {
   const {_} = useLingui()
+  const qrCodeDialogControl = useDialogControl()
 
   return (
     <>
@@ -175,7 +179,9 @@ function Header({isOwn}: {isOwn: boolean}) {
                   <Menu.Item
                     label={_(msg`Share link`)}
                     testID="shareStarterPackLinkBtn"
-                    onPress={() => {}}>
+                    onPress={() => {
+                      shareUrl('https://bsky.app')
+                    }}>
                     <Menu.ItemText>
                       <Trans>Share link</Trans>
                     </Menu.ItemText>
@@ -184,7 +190,7 @@ function Header({isOwn}: {isOwn: boolean}) {
                   <Menu.Item
                     label={_(msg`Create QR code`)}
                     testID="createQRCodeBtn"
-                    onPress={() => {}}>
+                    onPress={qrCodeDialogControl.open}>
                     <Menu.ItemText>
                       <Trans>Create QR code</Trans>
                     </Menu.ItemText>
@@ -214,6 +220,8 @@ function Header({isOwn}: {isOwn: boolean}) {
           started with the science community on Bluesky!
         </Text>
       </View>
+
+      <QrCodeDialog control={qrCodeDialogControl} url="https://bsky.app" />
     </>
   )
 }
