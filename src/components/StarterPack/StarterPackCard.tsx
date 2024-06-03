@@ -13,7 +13,8 @@ export function StarterPackCard({hideTopBorder}: {hideTopBorder?: boolean}) {
       style={[
         a.flex_row,
         !hideTopBorder && a.border_t,
-        a.p_lg,
+        a.px_xl,
+        a.py_lg,
         a.gap_md,
         t.atoms.border_contrast_low,
       ]}>
