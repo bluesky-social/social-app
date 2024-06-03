@@ -3,16 +3,19 @@ import {
   ActivityIndicator,
   AppState,
   Dimensions,
+  ListRenderItemInfo,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
+import {KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -29,18 +32,21 @@ import {
 import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useTheme} from 'lib/ThemeContext'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedErrorMessage} from './FeedErrorMessage'
+import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {FeedSlice} from './FeedSlice'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const FEED_SHUTDOWN_MSG_ITEM = {_reactKey: '__feed_shutdown_msg_item__'}
 
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
@@ -64,6 +70,7 @@ let Feed = ({
   desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
+  savedFeedConfig,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -82,6 +89,7 @@ let Feed = ({
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
+  savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -93,7 +101,8 @@ let Feed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
-  const feedType = feed.split('|')[0]
+  const [feedType, feedUri] = feed.split('|')
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -140,7 +149,6 @@ let Feed = ({
     if (
       data?.pages.length === 1 &&
       (feed === 'following' ||
-        feed === 'home' ||
         feed === `author|${myDid}|posts_and_author_threads`)
     ) {
       queryClient.invalidateQueries({queryKey: RQKEY(feed)})
@@ -194,6 +202,9 @@ let Feed = ({
 
   const feedItems = React.useMemo(() => {
     let arr: any[] = []
+    if (KNOWN_SHUTDOWN_FEEDS.includes(feedUri)) {
+      arr = arr.concat([FEED_SHUTDOWN_MSG_ITEM])
+    }
     if (isFetched) {
       if (isError && isEmpty) {
         arr = arr.concat([ERROR_ITEM])
@@ -211,14 +222,14 @@ let Feed = ({
       arr.push(LOADING_ITEM)
     }
     return arr
-  }, [isFetched, isError, isEmpty, data])
+  }, [isFetched, isError, isEmpty, data, feedUri])
 
   // events
   // =
 
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
-    logEvent('feed:refresh', {
+    logEvent('feed:refresh:sampled', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
@@ -236,7 +247,7 @@ let Feed = ({
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    logEvent('feed:endReached', {
+    logEvent('feed:endReached:sampled', {
       feedType: feedType,
       feedUrl: feed,
       itemCount: feedItems.length,
@@ -271,7 +282,7 @@ let Feed = ({
   // =
 
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
@@ -280,6 +291,7 @@ let Feed = ({
             feedDesc={feed}
             error={error ?? undefined}
             onPressTryAgain={onPressTryAgain}
+            savedFeedConfig={savedFeedConfig}
           />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
@@ -293,6 +305,8 @@ let Feed = ({
         )
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
+      } else if (item === FEED_SHUTDOWN_MSG_ITEM) {
+        return <FeedShutdownMsg feedUri={feedUri} />
       } else if (item.rootUri === FALLBACK_MARKER_POST.post.uri) {
         // HACK
         // tell the user we fell back to discover
@@ -300,9 +314,24 @@ let Feed = ({
         // -prf
         return <DiscoverFallbackHeader />
       }
-      return <FeedSlice slice={item} />
+      return (
+        <FeedSlice
+          slice={item}
+          hideTopBorder={index === 0 && isTabletOrMobile}
+        />
+      )
     },
-    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState, _],
+    [
+      isTabletOrMobile,
+      renderEmptyState,
+      feed,
+      error,
+      onPressTryAgain,
+      savedFeedConfig,
+      _,
+      onPressRetryLoadMore,
+      feedUri,
+    ],
   )
 
   const shouldRenderEndOfFeed =

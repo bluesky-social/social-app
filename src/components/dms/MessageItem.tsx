@@ -1,39 +1,49 @@
 import React, {useCallback, useMemo, useRef} from 'react'
-import {LayoutAnimation, StyleProp, TextStyle, View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {
+  GestureResponderEvent,
+  LayoutAnimation,
+  StyleProp,
+  TextStyle,
+  View,
+} from 'react-native'
+import {
+  AppBskyEmbedRecord,
+  ChatBskyConvoDefs,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {ConvoItem} from '#/state/messages/convo/types'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {isOnlyEmoji, RichText} from '../RichText'
+import {MessageItemEmbed} from './MessageItemEmbed'
 
-export let MessageItem = ({
+let MessageItem = ({
   item,
-  next,
-  pending,
 }: {
-  item: ChatBskyConvoDefs.MessageView
-  next:
-    | ChatBskyConvoDefs.MessageView
-    | ChatBskyConvoDefs.DeletedMessageView
-    | null
-  pending?: boolean
+  item: ConvoItem & {type: 'message' | 'pending-message'}
 }): React.ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
 
-  const isFromSelf = item.sender?.did === currentAccount?.did
+  const {message, nextMessage} = item
+  const isPending = item.type === 'pending-message'
+
+  const isFromSelf = message.sender?.did === currentAccount?.did
 
   const isNextFromSelf =
-    ChatBskyConvoDefs.isMessageView(next) &&
-    next.sender?.did === currentAccount?.did
+    ChatBskyConvoDefs.isMessageView(nextMessage) &&
+    nextMessage.sender?.did === currentAccount?.did
 
   const isLastInGroup = useMemo(() => {
-    // TODO this means it's a placeholder. Let's figure out the right way to do this though!
-    if (item.id.length > 13) {
+    // if this message is pending, it means the next message is pending too
+    if (isPending && nextMessage) {
       return false
     }
 
@@ -43,9 +53,9 @@ export let MessageItem = ({
     }
 
     // or, if there's a 3 minute gap between this message and the next
-    if (ChatBskyConvoDefs.isMessageView(next)) {
-      const thisDate = new Date(item.sentAt)
-      const nextDate = new Date(next.sentAt)
+    if (ChatBskyConvoDefs.isMessageView(nextMessage)) {
+      const thisDate = new Date(message.sentAt)
+      const nextDate = new Date(nextMessage.sentAt)
 
       const diff = nextDate.getTime() - thisDate.getTime()
 
@@ -54,7 +64,7 @@ export let MessageItem = ({
     }
 
     return true
-  }, [item, next, isFromSelf, isNextFromSelf])
+  }, [message, nextMessage, isFromSelf, isNextFromSelf, isPending])
 
   const lastInGroupRef = useRef(isLastInGroup)
   if (lastInGroupRef.current !== isLastInGroup) {
@@ -65,61 +75,88 @@ export let MessageItem = ({
   const pendingColor =
     t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
 
+  const rt = useMemo(() => {
+    return new RichTextAPI({text: message.text, facets: message.facets})
+  }, [message.text, message.facets])
+
   return (
-    <View>
-      <ActionsWrapper isFromSelf={isFromSelf} message={item}>
-        <View
-          style={[
-            a.py_sm,
-            a.my_2xs,
-            a.rounded_md,
-            {
-              paddingLeft: 14,
-              paddingRight: 14,
-              backgroundColor: isFromSelf
-                ? pending
-                  ? pendingColor
-                  : t.palette.primary_500
-                : t.palette.contrast_50,
-              borderRadius: 17,
-            },
-            isFromSelf
-              ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
-              : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
-          ]}>
-          <Text
-            style={[
-              a.text_md,
-              a.leading_snug,
-              isFromSelf && {color: t.palette.white},
-              pending && t.name !== 'light' && {color: t.palette.primary_300},
-            ]}>
-            {item.text}
-          </Text>
-        </View>
+    <View style={[isFromSelf ? a.mr_md : a.ml_md]}>
+      <ActionsWrapper isFromSelf={isFromSelf} message={message}>
+        {AppBskyEmbedRecord.isView(message.embed) && (
+          <MessageItemEmbed embed={message.embed} />
+        )}
+        {rt.text.length > 0 && (
+          <View
+            style={
+              !isOnlyEmoji(message.text) && [
+                a.py_sm,
+                a.my_2xs,
+                a.rounded_md,
+                {
+                  paddingLeft: 14,
+                  paddingRight: 14,
+                  backgroundColor: isFromSelf
+                    ? isPending
+                      ? pendingColor
+                      : t.palette.primary_500
+                    : t.palette.contrast_50,
+                  borderRadius: 17,
+                },
+                isFromSelf ? a.self_end : a.self_start,
+                isFromSelf
+                  ? {borderBottomRightRadius: isLastInGroup ? 2 : 17}
+                  : {borderBottomLeftRadius: isLastInGroup ? 2 : 17},
+              ]
+            }>
+            <RichText
+              value={rt}
+              style={[
+                a.text_md,
+                isFromSelf && {color: t.palette.white},
+                isPending &&
+                  t.name !== 'light' && {color: t.palette.primary_300},
+              ]}
+              interactiveStyle={a.underline}
+              enableTags
+              emojiMultiplier={3}
+            />
+          </View>
+        )}
       </ActionsWrapper>
-      <MessageItemMetadata
-        message={item}
-        isLastInGroup={isLastInGroup}
-        style={isFromSelf ? a.text_right : a.text_left}
-      />
+
+      {isLastInGroup && (
+        <MessageItemMetadata
+          item={item}
+          style={isFromSelf ? a.text_right : a.text_left}
+        />
+      )}
     </View>
   )
 }
-
 MessageItem = React.memo(MessageItem)
+export {MessageItem}
 
 let MessageItemMetadata = ({
-  message,
-  isLastInGroup,
+  item,
   style,
 }: {
-  message: ChatBskyConvoDefs.MessageView
-  isLastInGroup: boolean
+  item: ConvoItem & {type: 'message' | 'pending-message'}
   style: StyleProp<TextStyle>
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
+  const {message} = item
+
+  const handleRetry = useCallback(
+    (e: GestureResponderEvent) => {
+      if (item.type === 'pending-message' && item.retry) {
+        e.preventDefault()
+        item.retry()
+        return false
+      }
+    },
+    [item],
+  )
 
   const relativeTimestamp = useCallback(
     (timestamp: string) => {
@@ -129,7 +166,6 @@ let MessageItemMetadata = ({
       const time = new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
-        hour12: true,
       }).format(date)
 
       const diff = now.getTime() - date.getTime()
@@ -155,7 +191,6 @@ let MessageItemMetadata = ({
       return new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: 'numeric',
-        hour12: true,
         day: 'numeric',
         month: 'numeric',
         year: 'numeric',
@@ -164,29 +199,57 @@ let MessageItemMetadata = ({
     [_],
   )
 
-  if (!isLastInGroup) {
-    return null
-  }
-
   return (
-    <TimeElapsed timestamp={message.sentAt} timeToString={relativeTimestamp}>
-      {({timeElapsed}) => (
-        <Text
-          style={[
-            t.atoms.text_contrast_medium,
-            a.text_xs,
-            a.mt_2xs,
-            a.mb_lg,
-            style,
-          ]}>
-          {timeElapsed}
-        </Text>
+    <Text
+      style={[
+        a.text_xs,
+        a.mt_2xs,
+        a.mb_lg,
+        t.atoms.text_contrast_medium,
+        style,
+      ]}>
+      <TimeElapsed timestamp={message.sentAt} timeToString={relativeTimestamp}>
+        {({timeElapsed}) => (
+          <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            {timeElapsed}
+          </Text>
+        )}
+      </TimeElapsed>
+
+      {item.type === 'pending-message' && item.failed && (
+        <>
+          {' '}
+          &middot;{' '}
+          <Text
+            style={[
+              a.text_xs,
+              {
+                color: t.palette.negative_400,
+              },
+            ]}>
+            {_(msg`Failed to send`)}
+          </Text>
+          {item.retry && (
+            <>
+              {' '}
+              &middot;{' '}
+              <InlineLinkText
+                label={_(msg`Click to retry failed message`)}
+                to="#"
+                onPress={handleRetry}
+                style={[a.text_xs]}>
+                {_(msg`Retry`)}
+              </InlineLinkText>
+            </>
+          )}
+        </>
       )}
-    </TimeElapsed>
+    </Text>
   )
 }
 
 MessageItemMetadata = React.memo(MessageItemMetadata)
+export {MessageItemMetadata}
 
 function localDateString(date: Date) {
   // can't use toISOString because it should be in local time

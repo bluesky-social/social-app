@@ -11,6 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -30,7 +31,7 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
@@ -44,7 +45,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestAccountDelete()
+      await agent.com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -61,7 +62,17 @@ export function Component({}: {}) {
     const token = confirmCode.replace(/\s/g, '')
 
     try {
-      await getAgent().com.atproto.server.deleteAccount({
+      // inform chat service of intent to delete account
+      const {success} = await agent.api.chat.bsky.actor.deleteAccount(
+        undefined,
+        {
+          headers: DM_SERVICE_HEADERS,
+        },
+      )
+      if (!success) {
+        throw new Error('Failed to inform chat service of account deletion')
+      }
+      await agent.com.atproto.server.deleteAccount({
         did: currentAccount.did,
         password,
         token,

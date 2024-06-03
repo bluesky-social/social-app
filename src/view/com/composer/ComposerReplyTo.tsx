@@ -10,16 +10,16 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {ComposerOptsPostRef} from 'state/shell/composer'
 import {QuoteEmbed} from 'view/com/util/post-embeds/QuoteEmbed'
 import {Text} from 'view/com/util/text/Text'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
+import {useTheme} from '#/alf'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const {embed} = replyTo
 
@@ -75,7 +75,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
 
   return (
     <Pressable
-      style={[pal.border, styles.replyToLayout]}
+      style={[t.atoms.border_contrast_medium, styles.replyToLayout]}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(
@@ -91,7 +91,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />
       <View style={styles.replyToPost}>
-        <Text type="xl-medium" style={[pal.text]}>
+        <Text type="xl-medium" style={t.atoms.text}>
           {sanitizeDisplayName(
             replyTo.author.displayName || sanitizeHandle(replyTo.author.handle),
           )}
@@ -100,7 +100,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
           <View style={styles.replyToText}>
             <Text
               type="post-text"
-              style={pal.text}
+              style={t.atoms.text}
               numberOfLines={!showFull ? 6 : undefined}>
               {replyTo.text}
             </Text>
@@ -218,9 +218,10 @@ const styles = StyleSheet.create({
   replyToLayout: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    borderTopWidth: 1,
-    paddingTop: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingTop: 4,
     paddingBottom: 16,
+    marginBottom: 12,
   },
   replyToPost: {
     flex: 1,

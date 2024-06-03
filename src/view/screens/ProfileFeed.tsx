@@ -16,12 +16,11 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
-  usePinFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
-  useSaveFeedMutation,
-  useUnpinFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -163,37 +162,20 @@ export function ProfileFeedScreenInner({
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
-  const {
-    mutateAsync: saveFeed,
-    variables: savedFeed,
-    reset: resetSaveFeed,
-    isPending: isSavePending,
-  } = useSaveFeedMutation()
-  const {
-    mutateAsync: removeFeed,
-    variables: removedFeed,
-    reset: resetRemoveFeed,
-    isPending: isRemovePending,
-  } = useRemoveFeedMutation()
-  const {
-    mutateAsync: pinFeed,
-    variables: pinnedFeed,
-    reset: resetPinFeed,
-    isPending: isPinPending,
-  } = usePinFeedMutation()
-  const {
-    mutateAsync: unpinFeed,
-    variables: unpinnedFeed,
-    reset: resetUnpinFeed,
-    isPending: isUnpinPending,
-  } = useUnpinFeedMutation()
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
+  const {mutateAsync: removeFeed, isPending: isRemovePending} =
+    useRemoveFeedMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
+    useUpdateSavedFeedsMutation()
 
-  const isSaved =
-    !removedFeed &&
-    (!!savedFeed || preferences.feeds.saved.includes(feedInfo.uri))
-  const isPinned =
-    !unpinnedFeed &&
-    (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
+  const isPending =
+    isAddSavedFeedPending || isRemovePending || isUpdateFeedPending
+  const savedFeedConfig = preferences.savedFeeds.find(
+    f => f.value === feedInfo.uri,
+  )
+  const isSaved = Boolean(savedFeedConfig)
+  const isPinned = Boolean(savedFeedConfig?.pinned)
 
   useSetTitle(feedInfo?.displayName)
 
@@ -204,13 +186,17 @@ export function ProfileFeedScreenInner({
     try {
       playHaptic()
 
-      if (isSaved) {
-        await removeFeed({uri: feedInfo.uri})
-        resetRemoveFeed()
+      if (savedFeedConfig) {
+        await removeFeed(savedFeedConfig)
         Toast.show(_(msg`Removed from your feeds`))
       } else {
-        await saveFeed({uri: feedInfo.uri})
-        resetSaveFeed()
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: false,
+          },
+        ])
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (err) {
@@ -221,27 +207,27 @@ export function ProfileFeedScreenInner({
       )
       logger.error('Failed up update feeds', {message: err})
     }
-  }, [
-    playHaptic,
-    isSaved,
-    removeFeed,
-    feedInfo,
-    resetRemoveFeed,
-    _,
-    saveFeed,
-    resetSaveFeed,
-  ])
+  }, [_, playHaptic, feedInfo, removeFeed, addSavedFeeds, savedFeedConfig])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
       playHaptic()
 
-      if (isPinned) {
-        await unpinFeed({uri: feedInfo.uri})
-        resetUnpinFeed()
+      if (savedFeedConfig) {
+        await updateSavedFeeds([
+          {
+            ...savedFeedConfig,
+            pinned: !savedFeedConfig.pinned,
+          },
+        ])
       } else {
-        await pinFeed({uri: feedInfo.uri})
-        resetPinFeed()
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: true,
+          },
+        ])
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
@@ -249,13 +235,11 @@ export function ProfileFeedScreenInner({
     }
   }, [
     playHaptic,
-    isPinned,
-    unpinFeed,
     feedInfo,
-    resetUnpinFeed,
-    pinFeed,
-    resetPinFeed,
     _,
+    savedFeedConfig,
+    updateSavedFeeds,
+    addSavedFeeds,
   ])
 
   const onPressShare = React.useCallback(() => {
@@ -296,7 +280,7 @@ export function ProfileFeedScreenInner({
             {feedInfo && hasSession && (
               <NewButton
                 testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-                disabled={isPinPending || isUnpinPending}
+                disabled={isPending}
                 size="small"
                 variant="solid"
                 color={isPinned ? 'secondary' : 'primary'}
@@ -339,7 +323,7 @@ export function ProfileFeedScreenInner({
                   {hasSession && (
                     <>
                       <Menu.Item
-                        disabled={isSavePending || isRemovePending}
+                        disabled={isPending}
                         testID="feedHeaderDropdownToggleSavedBtn"
                         label={
                           isSaved
@@ -395,14 +379,11 @@ export function ProfileFeedScreenInner({
     onTogglePinned,
     onToggleSaved,
     currentAccount?.did,
-    isPinPending,
-    isRemovePending,
-    isSavePending,
     isSaved,
-    isUnpinPending,
     onPressReport,
     onPressShare,
     t,
+    isPending,
   ])
 
   return (

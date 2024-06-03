@@ -31,7 +31,7 @@ export function useExternalLinkFetch({
   )
   const getPost = useGetPost()
   const fetchDid = useFetchDid()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   useEffect(() => {
     let aborted = false
@@ -59,7 +59,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getFeedAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -77,7 +77,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getListAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -95,7 +95,7 @@ export function useExternalLinkFetch({
           },
         )
       } else {
-        getLinkMeta(getAgent(), extLink.uri).then(meta => {
+        getLinkMeta(agent, extLink.uri).then(meta => {
           if (aborted) {
             return
           }
@@ -137,7 +137,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost, fetchDid, getAgent])
+  }, [extLink, setQuote, getPost, fetchDid, agent])
 
   return {extLink, setExtLink}
 }

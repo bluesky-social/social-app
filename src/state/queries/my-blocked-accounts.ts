@@ -13,7 +13,7 @@ export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyBlockedAccountsQuery() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetBlocks.OutputSchema,
     Error,
@@ -23,7 +23,7 @@ export function useMyBlockedAccountsQuery() {
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getBlocks({
+      const res = await agent.app.bsky.graph.getBlocks({
         limit: 30,
         cursor: pageParam,
       })

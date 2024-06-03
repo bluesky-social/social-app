@@ -1,17 +1,35 @@
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
+  AtUri,
+  ModerationDecision,
+  ModerationOpts,
 } from '@atproto/api'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
-import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
-import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
-import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {
+  findAllPostsInQueryData as findAllPostsInSearchQueryData,
+  findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
+} from 'state/queries/search-posts'
+import {
+  findAllPostsInQueryData as findAllPostsInNotifsQueryData,
+  findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
+} from './notifications/feed'
+import {
+  findAllPostsInQueryData as findAllPostsInFeedQueryData,
+  findAllProfilesInQueryData as findAllProfilesInFeedQueryData,
+} from './post-feed'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from './util'
 
 const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
@@ -21,8 +39,6 @@ export interface ThreadCtx {
   depth: number
   isHighlightedPost?: boolean
   hasMore?: boolean
-  showChildReplyLine?: boolean
-  showParentReplyLine?: boolean
   isParentLoading?: boolean
   isChildLoading?: boolean
 }
@@ -63,14 +79,16 @@ export type ThreadNode =
   | ThreadBlocked
   | ThreadUnknown
 
+export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
+
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery<ThreadNode, Error>({
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await getAgent().getPostThread({uri: uri!})
+      const res = await agent.getPostThread({uri: uri!})
       if (res.success) {
         return responseToThreadNodes(res.data.thread)
       }
@@ -78,23 +96,38 @@ export function usePostThreadQuery(uri: string | undefined) {
     },
     enabled: !!uri,
     placeholderData: () => {
-      if (!uri) {
-        return undefined
-      }
-      {
-        const post = findPostInQueryData(queryClient, uri)
-        if (post) {
-          return post
-        }
+      if (!uri) return
+      const post = findPostInQueryData(queryClient, uri)
+      if (post) {
+        return post
       }
       return undefined
     },
   })
 }
 
+export function fillThreadModerationCache(
+  cache: ThreadModerationCache,
+  node: ThreadNode,
+  moderationOpts: ModerationOpts,
+) {
+  if (node.type === 'post') {
+    cache.set(node, moderatePost(node.post, moderationOpts))
+    if (node.parent) {
+      fillThreadModerationCache(cache, node.parent, moderationOpts)
+    }
+    if (node.replies) {
+      for (const reply of node.replies) {
+        fillThreadModerationCache(cache, reply, moderationOpts)
+      }
+    }
+  }
+}
+
 export function sortThread(
   node: ThreadNode,
   opts: UsePreferencesQueryResponse['threadViewPrefs'],
+  modCache: ThreadModerationCache,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -117,6 +150,18 @@ export function sortThread(
       } else if (bIsByOp) {
         return 1 // op's own reply
       }
+
+      const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
+      const bBlur = Boolean(modCache.get(b)?.ui('contentList').blur)
+      if (aBlur !== bBlur) {
+        if (aBlur) {
+          return 1
+        }
+        if (bBlur) {
+          return -1
+        }
+      }
+
       if (opts.prioritizeFollowedUsers) {
         const af = a.post.author.viewer?.following
         const bf = b.post.author.viewer?.following
@@ -126,6 +171,7 @@ export function sortThread(
           return 1
         }
       }
+
       if (opts.sort === 'oldest') {
         return a.post.indexedAt.localeCompare(b.post.indexedAt)
       } else if (opts.sort === 'newest') {
@@ -141,7 +187,7 @@ export function sortThread(
       }
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
-    node.replies.forEach(reply => sortThread(reply, opts))
+    node.replies.forEach(reply => sortThread(reply, opts, modCache))
   }
   return node
 }
@@ -188,12 +234,6 @@ function responseToThreadNodes(
         isHighlightedPost: depth === 0,
         hasMore:
           direction === 'down' && !node.replies?.length && !!node.replyCount,
-        showChildReplyLine:
-          direction === 'up' ||
-          (direction === 'down' && !!node.replies?.length),
-        showParentReplyLine:
-          (direction === 'up' && !!node.parent) ||
-          (direction === 'down' && depth !== 1),
       },
     }
   } else if (AppBskyFeedDefs.isBlockedPost(node)) {
@@ -232,6 +272,8 @@ export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
 ): Generator<ThreadNode, void> {
+  const atUri = new AtUri(uri)
+
   const queryDatas = queryClient.getQueriesData<ThreadNode>({
     queryKey: [RQKEY_ROOT],
   })
@@ -240,7 +282,7 @@ export function* findAllPostsInQueryData(
       continue
     }
     for (const item of traverseThread(queryData)) {
-      if (item.uri === uri) {
+      if (item.type === 'post' && didOrHandleUriMatches(atUri, item.post)) {
         const placeholder = threadNodeToPlaceholderThread(item)
         if (placeholder) {
           yield placeholder
@@ -248,7 +290,7 @@ export function* findAllPostsInQueryData(
       }
       const quotedPost =
         item.type === 'post' ? getEmbeddedPost(item.post.embed) : undefined
-      if (quotedPost?.uri === uri) {
+      if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
         yield embedViewRecordToPlaceholderThread(quotedPost)
       }
     }
@@ -261,6 +303,39 @@ export function* findAllPostsInQueryData(
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<ThreadNode>({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const item of traverseThread(queryData)) {
+      if (item.type === 'post' && item.post.author.did === did) {
+        yield item.post.author
+      }
+      const quotedPost =
+        item.type === 'post' ? getEmbeddedPost(item.post.embed) : undefined
+      if (quotedPost?.author.did === did) {
+        yield quotedPost?.author
+      }
+    }
+  }
+  for (let profile of findAllProfilesInFeedQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInNotifsQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInSearchQueryData(queryClient, did)) {
+    yield profile
   }
 }
 
@@ -296,8 +371,6 @@ function threadNodeToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!node.record.reply,
       isChildLoading: !!node.post.replyCount,
     },
@@ -319,8 +392,6 @@ function postViewToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // assume yes (show the spinner) just in case
     },
@@ -342,8 +413,6 @@ function embedViewRecordToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      showChildReplyLine: false,
-      showParentReplyLine: false,
       isParentLoading: !!(record.value as AppBskyFeedPost.Record).reply,
       isChildLoading: true, // not available, so assume yes (to show the spinner)
     },

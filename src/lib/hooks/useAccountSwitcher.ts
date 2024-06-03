@@ -53,6 +53,11 @@ export function useAccountSwitcher() {
         logger.error(`switch account: selectAccount failed`, {
           message: e.message,
         })
+        requestSwitchToAccount({requestedAccount: account.did})
+        Toast.show(
+          _(msg`Please sign in as @${account.handle}`),
+          'circle-exclamation',
+        )
       } finally {
         setPendingDid(null)
       }

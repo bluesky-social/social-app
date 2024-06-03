@@ -1,4 +1,9 @@
-import {AppBskyFeedDefs, AppBskyFeedPost, RichText} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyRichtextFacet,
+  RichText,
+} from '@atproto/api'
 import {h} from 'preact'
 
 import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
@@ -56,7 +61,7 @@ export function Post({thread}: Props) {
           <Link
             href={href}
             className="transition-transform hover:scale-110 shrink-0 self-start">
-            <img src={logo as string} className="h-8" />
+            <img src={logo} className="h-8" />
           </Link>
         </div>
         <PostContent record={record} />
@@ -71,7 +76,7 @@ export function Post({thread}: Props) {
         <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">
           {!!post.likeCount && (
             <div className="flex items-center gap-2 cursor-pointer">
-              <img src={likeIcon as string} className="w-5 h-5" />
+              <img src={likeIcon} className="w-5 h-5" />
               <p className="font-bold text-neutral-500 mb-px">
                 {post.likeCount}
               </p>
@@ -79,14 +84,14 @@ export function Post({thread}: Props) {
           )}
           {!!post.repostCount && (
             <div className="flex items-center gap-2 cursor-pointer">
-              <img src={repostIcon as string} className="w-5 h-5" />
+              <img src={repostIcon} className="w-5 h-5" />
               <p className="font-bold text-neutral-500 mb-px">
                 {post.repostCount}
               </p>
             </div>
           )}
           <div className="flex items-center gap-2 cursor-pointer">
-            <img src={replyIcon as string} className="w-5 h-5" />
+            <img src={replyIcon} className="w-5 h-5" />
             <p className="font-bold text-neutral-500 mb-px">Reply</p>
           </div>
           <div className="flex-1" />
@@ -118,16 +123,23 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
 
   let counter = 0
   for (const segment of rt.segments()) {
-    if (segment.isLink() && segment.link) {
+    if (
+      segment.link &&
+      AppBskyRichtextFacet.validateLink(segment.link).success
+    ) {
       richText.push(
         <Link
           key={counter}
           href={segment.link.uri}
-          className="text-blue-400 hover:underline">
+          className="text-blue-400 hover:underline"
+          disableTracking={!segment.link.uri.startsWith('https://bsky.app')}>
           {segment.text}
         </Link>,
       )
-    } else if (segment.isMention() && segment.mention) {
+    } else if (
+      segment.mention &&
+      AppBskyRichtextFacet.validateMention(segment.mention).success
+    ) {
       richText.push(
         <Link
           key={counter}
@@ -136,7 +148,10 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
           {segment.text}
         </Link>,
       )
-    } else if (segment.isTag() && segment.tag) {
+    } else if (
+      segment.tag &&
+      AppBskyRichtextFacet.validateTag(segment.tag).success
+    ) {
       richText.push(
         <Link
           key={counter}
