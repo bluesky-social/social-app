@@ -1,7 +1,7 @@
 import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 
-const steps = ['Landing', 'Details', 'Profiles', 'Feeds'] as const
+const steps = ['Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
 
 type Action =
@@ -42,7 +42,7 @@ function reducer(state: State, action: Action): State {
   if (action.type === 'Next' && state.currentStep !== 'Feeds') {
     const currentIndex = steps.indexOf(state.currentStep)
     updatedState = {...state, currentStep: steps[currentIndex + 1]}
-  } else if (action.type === 'Back' && state.currentStep !== 'Landing') {
+  } else if (action.type === 'Back' && state.currentStep !== 'Details') {
     const currentIndex = steps.indexOf(state.currentStep)
     updatedState = {...state, currentStep: steps[currentIndex - 1]}
   }
@@ -80,16 +80,16 @@ function reducer(state: State, action: Action): State {
   }
 
   switch (updatedState.currentStep) {
-    case 'Landing':
-      updatedState = {
-        ...updatedState,
-        canNext: true,
-      }
-      break
     case 'Details':
       updatedState = {
         ...updatedState,
         canNext: Boolean(updatedState.description),
+      }
+      break
+    default:
+      updatedState = {
+        ...updatedState,
+        canNext: true,
       }
       break
   }
@@ -100,7 +100,7 @@ function reducer(state: State, action: Action): State {
 // TODO supply the initial state to this component
 export function Provider({
   initialState,
-  initialStep = 'Landing',
+  initialStep = 'Details',
   children,
 }: {
   initialState?: any // TODO update this type
