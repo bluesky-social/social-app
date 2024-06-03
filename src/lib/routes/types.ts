@@ -38,7 +38,7 @@ export type CommonNavigatorParams = {
   AccessibilitySettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
-  MessagesConversation: {conversation: string}
+  MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
 }
 

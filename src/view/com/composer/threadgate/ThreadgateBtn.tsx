@@ -7,7 +7,7 @@ import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
@@ -22,6 +22,7 @@ export function ThreadgateBtn({
 }) {
   const {track} = useAnalytics()
   const {_} = useLingui()
+  const t = useTheme()
   const {openModal} = useModalControls()
 
   const onPress = () => {
@@ -45,7 +46,7 @@ export function ThreadgateBtn({
     : _(msg`Some people can reply`)
 
   return (
-    <View style={[a.flex_row, a.pb_sm, a.px_md]}>
+    <View style={[a.flex_row, a.py_xs, a.px_sm, t.atoms.bg]}>
       <Button
         variant="solid"
         color="secondary"

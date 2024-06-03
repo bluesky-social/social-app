@@ -12,12 +12,12 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
@@ -37,6 +37,7 @@ import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
+import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
@@ -49,6 +50,7 @@ import {
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
@@ -102,13 +104,14 @@ let PostDropdownBtn = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
+  const sendViaChatControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -229,6 +232,16 @@ let PostDropdownBtn = ({
     Toast.show('Feedback sent!')
   }, [feedFeedback, postUri, postFeedContext])
 
+  const onSelectChatToShareTo = React.useCallback(
+    (conversation: string) => {
+      navigation.navigate('MessagesConversation', {
+        conversation,
+        embed: postUri,
+      })
+    },
+    [navigation, postUri],
+  )
+
   const canEmbed = isWeb && gtMobile && !hideInPWI
 
   return (
@@ -278,6 +291,18 @@ let PostDropdownBtn = ({
                   <Menu.ItemIcon icon={ClipboardIcon} position="right" />
                 </Menu.Item>
               </>
+            )}
+
+            {hasSession && (
+              <Menu.Item
+                testID="postDropdownSendViaDMBtn"
+                label={_(msg`Send via direct message`)}
+                onPress={sendViaChatControl.open}>
+                <Menu.ItemText>
+                  <Trans>Send via direct message</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Send} position="right" />
+              </Menu.Item>
             )}
 
             <Menu.Item
@@ -449,6 +474,11 @@ let PostDropdownBtn = ({
           timestamp={timestamp}
         />
       )}
+
+      <SendViaChatDialog
+        control={sendViaChatControl}
+        onSelectChat={onSelectChatToShareTo}
+      />
     </EventStopper>
   )
 }
