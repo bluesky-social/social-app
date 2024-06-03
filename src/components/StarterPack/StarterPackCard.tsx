@@ -14,6 +14,7 @@ export function StarterPackCard({hideTopBorder}: {hideTopBorder?: boolean}) {
       <View
         style={[
           a.flex_row,
+          a.w_full,
           !hideTopBorder && a.border_t,
           a.px_xl,
           a.py_lg,
