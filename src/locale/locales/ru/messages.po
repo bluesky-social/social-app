@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Kirill Plotnikov <ponfertato@ya.ru>\n"
-"Language-Team: ponfertato, Potato Energy, Ukrainian\n"
+"Language-Team: DearFox, ponfertato, Potato Energy, Ukrainian\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:151
@@ -19,7 +19,7 @@ msgstr "(нет эл. почты)"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
-msgstr "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
+msgstr "{0, plural, one {еще один} other {{formattedCount} других}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:55
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
@@ -2206,7 +2206,7 @@ msgstr "Только ваши подписки"
 
 #: src/view/com/notifications/FeedItem.tsx:165
 msgid "followed you"
-msgstr "подписка на вас"
+msgstr "подписал(ся/ись) на вас"
 
 #: src/view/com/profile/ProfileFollowers.tsx:104
 #: src/view/screens/ProfileFollowers.tsx:25
@@ -2825,7 +2825,7 @@ msgstr "полюбил(-ла) вашу ленту"
 
 #: src/view/com/notifications/FeedItem.tsx:154
 msgid "liked your post"
-msgstr "понравился ваш пост"
+msgstr "оценил(и) ваш пост"
 
 #: src/view/screens/Profile.tsx:196
 msgid "Likes"
