@@ -797,7 +797,8 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 4,
-    paddingLeft: 8,
+    // should be 8 but due to visual alignment we have to fudge it
+    paddingLeft: 7,
     paddingRight: 16,
     alignItems: 'center',
     borderTopWidth: hairlineWidth,
