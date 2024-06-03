@@ -36,6 +36,7 @@ export function GifSelectDialog({
   onClose: () => void
   onSelectGif: (gif: Gif) => void
 }) {
+  const t = useTheme()
   const [open, setOpen] = useState(false)
 
   useImperativeHandle(controlRef, () => ({
@@ -68,10 +69,12 @@ export function GifSelectDialog({
       onRequestClose={close}
       aria-modal
       accessibilityViewIsModal>
-      <Handle />
-      <ErrorBoundary renderError={renderErrorBoundary}>
-        <GifList onSelectGif={onSelectGif} close={close} />
-      </ErrorBoundary>
+      <View style={[a.flex_1, t.atoms.bg]}>
+        <Handle />
+        <ErrorBoundary renderError={renderErrorBoundary}>
+          <GifList onSelectGif={onSelectGif} close={close} />
+        </ErrorBoundary>
+      </View>
     </Modal>
   )
 }
