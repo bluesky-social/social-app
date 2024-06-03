@@ -698,7 +698,7 @@ function useAnimatedBorders() {
 
   const topBarAnimatedStyle = useAnimatedStyle(() => {
     return {
-      borderWidth: hairlineWidth,
+      borderBottomWidth: hairlineWidth,
       borderColor: interpolateColor(
         hasScrolledTop.value,
         [0, 1],
@@ -708,7 +708,7 @@ function useAnimatedBorders() {
   })
   const bottomBarAnimatedStyle = useAnimatedStyle(() => {
     return {
-      borderWidth: hairlineWidth,
+      borderTopWidth: hairlineWidth,
       borderColor: interpolateColor(
         hasScrolledBottom.value,
         [0, 1],
