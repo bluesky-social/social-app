@@ -1,6 +1,9 @@
 {
-  "platforms": ["ios"],
+  "platforms": ["ios", "android"],
   "ios": {
     "modules": ["ExpoBlueskyTranslateModule"]
+  }, 
+  "android": {
+    "modules": ["expo.modules.blueskytranslate.ExpoBlueskyTranslateModule"]
   }
 }
