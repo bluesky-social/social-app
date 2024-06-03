@@ -71,7 +71,7 @@ const PLACEHOLDER_USERS = [
   },
 ]
 
-export function Landing({
+export function LandingScreen({
   navigation,
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackLanding'>) {
   const {_} = useLingui()
