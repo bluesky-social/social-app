@@ -148,6 +148,7 @@ let FeedItem = ({
                   borderColor: pal.colors.unreadNotifBorder,
                 }
           }
+          hideTopBorder={hideTopBorder}
         />
       </Link>
     )
