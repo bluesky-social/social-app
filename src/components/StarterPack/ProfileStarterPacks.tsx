@@ -3,7 +3,6 @@ import {
   findNodeHandle,
   ListRenderItemInfo,
   StyleProp,
-  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
@@ -20,11 +19,11 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {FeedSourceCardLoaded} from 'view/com/feeds/FeedSourceCard'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {List, ListRef} from 'view/com/util/List'
 import {LoadMoreRetryBtn} from 'view/com/util/LoadMoreRetryBtn'
 import {Text} from 'view/com/util/text/Text'
+import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -157,16 +156,7 @@ export const ProfileStarterPacks = React.forwardRef<
         return <FeedLoadingPlaceholder />
       }
       if (preferences) {
-        return (
-          <FeedSourceCardLoaded
-            feedUri={item.uri}
-            feed={item}
-            preferences={preferences}
-            style={styles.item}
-            showLikes
-            hideTopBorder={index === 0}
-          />
-        )
+        return <StarterPackCard hideTopBorder={index === 0} />
       }
       return null
     },
@@ -200,10 +190,4 @@ export const ProfileStarterPacks = React.forwardRef<
       />
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  item: {
-    paddingHorizontal: 18,
-  },
 })
