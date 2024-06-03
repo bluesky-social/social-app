@@ -31,21 +31,21 @@ import {Text} from '#/components/Typography'
 export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
-  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
+  const {track} = useAnalytics()
+
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
   )
   const onboardDispatch = useOnboardingDispatch()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {isLoading, isError, error, data, refetch, isFetching} = useQuery({
     queryKey: ['interests'],
     queryFn: async () => {
       try {
-        const {data} =
-          await getAgent().app.bsky.unspecced.getTaggedSuggestions()
+        const {data} = await agent.app.bsky.unspecced.getTaggedSuggestions()
         return data.suggestions.reduce(
           (agg, s) => {
             const {tag, subject, subjectType} = s

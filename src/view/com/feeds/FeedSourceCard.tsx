@@ -1,29 +1,31 @@
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {RichText} from '#/components/RichText'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {UserAvatar} from '../util/UserAvatar'
 import {AtUri} from '@atproto/api'
-import * as Toast from 'view/com/util/Toast'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {logger} from '#/logger'
-import {Trans, msg, Plural} from '@lingui/macro'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
+import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
-  usePinFeedMutation,
-  UsePreferencesQueryResponse,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
-  useSaveFeedMutation,
+  UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
-import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {useTheme} from '#/alf'
-import * as Prompt from '#/components/Prompt'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
+import {usePalette} from 'lib/hooks/usePalette'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {s} from 'lib/styles'
+import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import * as Toast from 'view/com/util/Toast'
+import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function FeedSourceCard({
   feedUri,
@@ -33,6 +35,7 @@ export function FeedSourceCard({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  hideTopBorder,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
@@ -41,6 +44,7 @@ export function FeedSourceCard({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  hideTopBorder?: boolean
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
@@ -56,6 +60,7 @@ export function FeedSourceCard({
       showLikes={showLikes}
       pinOnSave={pinOnSave}
       showMinimalPlaceholder={showMinimalPlaceholder}
+      hideTopBorder={hideTopBorder}
     />
   )
 }
@@ -70,6 +75,7 @@ export function FeedSourceCardLoaded({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  hideTopBorder,
 }: {
   feedUri: string
   feed?: FeedSourceInfo
@@ -80,6 +86,7 @@ export function FeedSourceCardLoaded({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  hideTopBorder?: boolean
 }) {
   const t = useTheme()
   const pal = usePalette('default')
@@ -87,53 +94,54 @@ export function FeedSourceCardLoaded({
   const removePromptControl = Prompt.usePromptControl()
   const navigation = useNavigationDeduped()
 
-  const {isPending: isSavePending, mutateAsync: saveFeed} =
-    useSaveFeedMutation()
+  const {isPending: isAddSavedFeedPending, mutateAsync: addSavedFeeds} =
+    useAddSavedFeedsMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
-  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
 
-  const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed?.uri || ''))
+  const savedFeedConfig = preferences?.savedFeeds?.find(
+    f => f.value === feedUri,
+  )
+  const isSaved = Boolean(savedFeedConfig)
 
   const onSave = React.useCallback(async () => {
-    if (!feed) return
+    if (!feed || isSaved) return
 
     try {
-      if (pinOnSave) {
-        await pinFeed({uri: feed.uri})
-      } else {
-        await saveFeed({uri: feed.uri})
-      }
+      await addSavedFeeds([
+        {
+          type: 'feed',
+          value: feed.uri,
+          pinned: pinOnSave,
+        },
+      ])
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to save feed', {message: e})
     }
-  }, [_, feed, pinFeed, pinOnSave, saveFeed])
+  }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
 
   const onUnsave = React.useCallback(async () => {
-    if (!feed) return
+    if (!savedFeedConfig) return
 
     try {
-      await removeFeed({uri: feed.uri})
+      await removeFeed(savedFeedConfig)
       // await item.unsave()
       Toast.show(_(msg`Removed from my feeds`))
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting your server`))
       logger.error('Failed to unsave feed', {message: e})
     }
-  }, [_, feed, removeFeed])
+  }, [_, removeFeed, savedFeedConfig])
 
   const onToggleSaved = React.useCallback(async () => {
-    // Only feeds can be un/saved, lists are handled elsewhere
-    if (feed?.type !== 'feed') return
-
     if (isSaved) {
       removePromptControl.open()
     } else {
       await onSave()
     }
-  }, [feed?.type, isSaved, removePromptControl, onSave])
+  }, [isSaved, removePromptControl, onSave])
 
   /*
    * LOAD STATE
@@ -147,7 +155,7 @@ export function FeedSourceCardLoaded({
         style={[
           pal.border,
           {
-            borderTopWidth: showMinimalPlaceholder ? 0 : 1,
+            borderTopWidth: showMinimalPlaceholder || hideTopBorder ? 0 : 1,
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,
@@ -171,7 +179,7 @@ export function FeedSourceCardLoaded({
             accessibilityRole="button"
             accessibilityLabel={_(msg`Remove from my feeds`)}
             accessibilityHint=""
-            onPress={onToggleSaved}
+            onPress={onUnsave}
             hitSlop={15}
             style={styles.btn}>
             <FontAwesomeIcon
@@ -189,7 +197,12 @@ export function FeedSourceCardLoaded({
       <Pressable
         testID={`feed-${feed.displayName}`}
         accessibilityRole="button"
-        style={[styles.container, pal.border, style]}
+        style={[
+          styles.container,
+          pal.border,
+          style,
+          {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+        ]}
         onPress={() => {
           if (feed.type === 'feed') {
             navigation.push('ProfileFeed', {
@@ -204,15 +217,15 @@ export function FeedSourceCardLoaded({
           }
         }}
         key={feed.uri}>
-        <View style={[styles.headerContainer]}>
+        <View style={[styles.headerContainer, a.align_center]}>
           <View style={[s.mr10]}>
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
           <View style={[styles.headerTextContainer]}>
-            <Text style={[pal.text, s.bold]} numberOfLines={3}>
+            <Text style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
-            <Text style={[pal.textLight]} numberOfLines={3}>
+            <Text style={[pal.textLight]} numberOfLines={1}>
               {feed.type === 'feed' ? (
                 <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
               ) : (
@@ -221,11 +234,11 @@ export function FeedSourceCardLoaded({
             </Text>
           </View>
 
-          {showSaveBtn && feed.type === 'feed' && (
-            <View style={[s.justifyCenter]}>
+          {showSaveBtn && (
+            <View style={{alignSelf: 'center'}}>
               <Pressable
                 testID={`feed-${feed.displayName}-toggleSave`}
-                disabled={isSavePending || isPinPending || isRemovePending}
+                disabled={isAddSavedFeedPending || isRemovePending}
                 accessibilityRole="button"
                 accessibilityLabel={
                   isSaved
@@ -293,7 +306,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     flexDirection: 'column',
     flex: 1,
-    borderTopWidth: 1,
     gap: 14,
   },
   headerContainer: {
