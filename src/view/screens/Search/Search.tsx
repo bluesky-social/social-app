@@ -637,9 +637,6 @@ export function SearchScreen(
 
   const handleProfileClick = React.useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      if (!isWeb) {
-        textInput.current?.blur()
-      }
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
         updateSelectedProfiles(profile)
