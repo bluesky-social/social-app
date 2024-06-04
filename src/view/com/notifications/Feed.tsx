@@ -24,6 +24,7 @@ import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceho
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -44,7 +45,7 @@ export function Feed({
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
-  const {isTabletOrMobile} = useWebMediaQueries()
+  const {isTabletOrMobile, isDesktop} = useWebMediaQueries()
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -128,7 +129,8 @@ export function Feed({
         )
       } else if (item === LOADING_ITEM) {
         return (
-          <View style={[pal.border]}>
+          <View
+            style={[pal.border, isDesktop && {borderTopWidth: hairlineWidth}]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
@@ -141,7 +143,14 @@ export function Feed({
         />
       )
     },
-    [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
+    [
+      moderationOpts,
+      isTabletOrMobile,
+      _,
+      onPressRetryLoadMore,
+      pal.border,
+      isDesktop,
+    ],
   )
 
   const FeedFooter = React.useCallback(
