@@ -17,11 +17,13 @@ export async function read(): Promise<Schema | undefined> {
   if (parsed.success) {
     return objData
   } else {
-    const errors = parsed.error.errors.map(e => ({
-      code: e.code,
-      expected: e.expected,
-      path: e.path,
-    }))
+    const errors =
+      parsed.error?.errors?.map(e => ({
+        code: e.code,
+        // @ts-ignore exists on some types
+        expected: e?.expected,
+        path: e.path,
+      })) || []
     logger.error(`persisted store: data failed validation on read`, {errors})
     return undefined
   }
