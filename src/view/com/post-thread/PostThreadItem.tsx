@@ -40,7 +40,6 @@ import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {PostHider} from '../../../components/moderation/PostHider'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {AviFollowButton} from '../posts/AviFollowButton'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link, TextLink} from '../util/Link'
@@ -472,16 +471,12 @@ let PostThreadItemLoaded = ({
               {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
               {!isThreadedChild && (
                 <View style={styles.layoutAvi}>
-                  <AviFollowButton author={post.author} moderation={moderation}>
-                    <PreviewableUserAvatar
-                      size={38}
-                      profile={post.author}
-                      moderation={moderation.ui('avatar')}
-                      type={
-                        post.author.associated?.labeler ? 'labeler' : 'user'
-                      }
-                    />
-                  </AviFollowButton>
+                  <PreviewableUserAvatar
+                    size={38}
+                    profile={post.author}
+                    moderation={moderation.ui('avatar')}
+                    type={post.author.associated?.labeler ? 'labeler' : 'user'}
+                  />
 
                   {showChildReplyLine && (
                     <View

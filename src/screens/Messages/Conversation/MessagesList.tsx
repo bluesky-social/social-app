@@ -13,9 +13,13 @@ import {
 } from 'react-native-reanimated'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyEmbedRecord, RichText} from '@atproto/api'
+import {AppBskyEmbedRecord, AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
+import {
+  convertBskyAppUrlIfNeeded,
+  isBskyPostUrl,
+} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {isConvoActive, useConvoActive} from '#/state/messages/convo'
@@ -288,6 +292,39 @@ export function MessagesList({
                 uri: post.uri,
                 cid: post.cid,
               },
+            }
+
+            // look for the embed uri in the facets, so we can remove it from the text
+            const postLinkFacet = rt.facets?.find(facet => {
+              return facet.features.find(feature => {
+                if (AppBskyRichtextFacet.isLink(feature)) {
+                  if (isBskyPostUrl(feature.uri)) {
+                    const url = convertBskyAppUrlIfNeeded(feature.uri)
+                    const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
+
+                    // this might have a handle instead of a DID
+                    // so just compare the rkey - not particularly dangerous
+                    return post.uri.endsWith(rkey)
+                  }
+                }
+                return false
+              })
+            })
+
+            if (postLinkFacet) {
+              const isAtStart = postLinkFacet.index.byteStart === 0
+              const isAtEnd =
+                postLinkFacet.index.byteEnd === rt.unicodeText.graphemeLength
+
+              // remove the post link from the text
+              if (isAtStart || isAtEnd) {
+                rt.delete(
+                  postLinkFacet.index.byteStart,
+                  postLinkFacet.index.byteEnd,
+                )
+              }
+
+              rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
             }
           }
         } catch (error) {
