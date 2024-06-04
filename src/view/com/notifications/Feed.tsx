@@ -184,6 +184,7 @@ export function Feed({
         desktopFixedHeight
         initialNumToRender={initialNumToRender}
         windowSize={11}
+        sideBorders={false}
       />
     </View>
   )
