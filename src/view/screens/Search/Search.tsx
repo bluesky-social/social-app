@@ -958,6 +958,7 @@ function SearchHistory({
 }) {
   const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <CenteredView
@@ -1010,8 +1011,10 @@ function SearchHistory({
                   </Link>
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel="Remove profile"
-                    accessibilityHint="Remove profile from search history"
+                    accessibilityLabel={_(msg`Remove profile`)}
+                    accessibilityHint={_(
+                      msg`Remove profile from search history`,
+                    )}
                     onPress={() => onRemoveProfileClick(profile)}
                     hitSlop={createHitslop(6)}
                     style={styles.profileRemoveBtn}>
