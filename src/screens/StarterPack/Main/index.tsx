@@ -115,7 +115,7 @@ function StarterPackScreenInner() {
   return (
     <View style={isWeb ? {minHeight: '100%'} : {height: '100%'}}>
       <PagerWithHeader
-        items={['Profiles', 'Feeds']}
+        items={['People', 'Feeds']}
         isHeaderReady={true}
         renderHeader={() => <Header isOwn={isOwn} />}>
         {({headerHeight, scrollElRef}) => (

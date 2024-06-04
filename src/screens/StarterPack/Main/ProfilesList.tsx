@@ -49,6 +49,8 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
           <View style={[{height: initialHeaderHeight + bottomBarOffset}]} />
         }
         showsVerticalScrollIndicator={false}
+        // @ts-ignore
+        desktopFixedHeight
       />
     )
   },
