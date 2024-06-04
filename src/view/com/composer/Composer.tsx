@@ -396,7 +396,7 @@ export const ComposePost = observer(function ComposePost({
         testID="composePostView"
         behavior="padding"
         style={a.flex_1}
-        keyboardVerticalOffset={replyTo ? 110 : isAndroid ? 180 : 140}>
+        keyboardVerticalOffset={replyTo ? 115 : isAndroid ? 180 : 162}>
         <View
           style={[a.flex_1, viewStyles]}
           aria-modal
@@ -657,7 +657,7 @@ function useAnimatedBorders() {
         scrollViewHeight.value = Math.floor(newScrollViewHeight)
 
       hasScrolledBottom.value = withTiming(
-        contentHeight.value - contentOffset.value > scrollViewHeight.value
+        contentHeight.value - contentOffset.value - 5 > scrollViewHeight.value
           ? 1
           : 0,
       )
