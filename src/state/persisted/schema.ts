@@ -17,7 +17,10 @@ const accountSchema = z.object({
   emailAuthFactor: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
-  deactivated: z.boolean().optional(),
+  signupQueued: z.boolean().optional(),
+  status: z
+    .enum(['active', 'takendown', 'suspended', 'deactivated'])
+    .optional(),
   pdsUrl: z.string().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>

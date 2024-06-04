@@ -60,6 +60,7 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -306,6 +307,11 @@ export function SettingsScreen({}: Props) {
     await clearLegacyStorage()
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
   }, [_])
+
+  const deactivateAccountControl = useDialogControl()
+  const onPressDeactivateAccount = React.useCallback(() => {
+    deactivateAccountControl.open()
+  }, [deactivateAccountControl])
 
   const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
@@ -791,6 +797,29 @@ export function SettingsScreen({}: Props) {
             <Trans>Export My Data</Trans>
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[pal.view, styles.linkCard]}
+          onPress={onPressDeactivateAccount}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Deactivate account`)}
+          accessibilityHint={_(
+            msg`Opens modal for account deactivation confirmation`,
+          )}>
+          <View style={[styles.iconContainer, dangerBg]}>
+            <FontAwesomeIcon
+              icon={'users-slash'}
+              style={dangerText as FontAwesomeIconStyle}
+              size={18}
+            />
+          </View>
+          <Text type="lg" style={dangerText}>
+            <Trans>Deactivate my account</Trans>
+          </Text>
+        </TouchableOpacity>
+        <DeactivateAccountDialog control={deactivateAccountControl} />
+
         <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}

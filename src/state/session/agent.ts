@@ -16,7 +16,7 @@ import {
   configureModerationForGuest,
 } from './moderation'
 import {SessionAccount} from './types'
-import {isSessionDeactivated, isSessionExpired} from './util'
+import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
@@ -51,7 +51,7 @@ export async function createAgentAndResume(
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
     agent.session = prevSession
-    if (!storedAccount.deactivated) {
+    if (!storedAccount.signupQueued) {
       // Intentionally not awaited to unblock the UI:
       networkRetry(3, () => agent.resumeSession(prevSession)).catch(
         (e: any) => {
@@ -135,7 +135,7 @@ export async function createAgentAndCreateAccount(
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  if (!account.deactivated) {
+  if (!account.signupQueued) {
     /*dont await*/ agent.upsertProfile(_existing => {
       return {
         displayName: '',
@@ -234,7 +234,9 @@ export function agentToSessionAccount(
     emailAuthFactor: agent.session.emailAuthFactor || false,
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
-    deactivated: isSessionDeactivated(agent.session.accessJwt),
+    signupQueued: isSignupQueued(agent.session.accessJwt),
+    // @ts-expect-error TODO remove when backend is ready
+    status: agent.session.status || 'active',
     pdsUrl: agent.pdsUrl?.toString(),
   }
 }
