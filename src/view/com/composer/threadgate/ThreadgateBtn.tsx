@@ -16,7 +16,6 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export function ThreadgateBtn({
@@ -149,25 +148,23 @@ function DialogContent({
             isSelected={!!threadgate.find(v => v.type === 'following')}
             onPress={() => onPressAudience({type: 'following'})}
           />
-          {lists ? (
-            lists.length > 0 &&
-            lists.map(list => (
-              <Selectable
-                key={list.uri}
-                label={_(msg`Users in "${list.name}"`)}
-                isSelected={
-                  !!threadgate.find(
-                    v => v.type === 'list' && v.list === list.uri,
-                  )
-                }
-                onPress={() => onPressAudience({type: 'list', list: list.uri})}
-              />
-            ))
-          ) : (
-            <View style={[a.flex_1, a.py_md, a.align_center]}>
-              <Loader />
-            </View>
-          )}
+          {lists && lists.length > 0
+            ? lists.map(list => (
+                <Selectable
+                  key={list.uri}
+                  label={_(msg`Users in "${list.name}"`)}
+                  isSelected={
+                    !!threadgate.find(
+                      v => v.type === 'list' && v.list === list.uri,
+                    )
+                  }
+                  onPress={() =>
+                    onPressAudience({type: 'list', list: list.uri})
+                  }
+                />
+              ))
+            : // No loading states to avoid jumps for the common case (no lists)
+              null}
         </View>
       </View>
       <Button
