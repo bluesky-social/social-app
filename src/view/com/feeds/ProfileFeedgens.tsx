@@ -14,7 +14,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
@@ -166,7 +166,7 @@ export const ProfileFeedgens = React.forwardRef<
             preferences={preferences}
             style={styles.item}
             showLikes
-            hideTopBorder={index === 0}
+            hideTopBorder={index === 0 && !isWeb}
           />
         )
       }
