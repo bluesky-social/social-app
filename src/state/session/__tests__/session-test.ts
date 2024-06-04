@@ -59,7 +59,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -97,7 +97,7 @@ describe('session', () => {
             "refreshJwt": undefined,
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -147,7 +147,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -195,7 +195,7 @@ describe('session', () => {
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": "alice-access-jwt-1",
@@ -208,7 +208,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -256,7 +256,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": "bob-access-jwt-1",
@@ -269,7 +269,7 @@ describe('session', () => {
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -315,7 +315,7 @@ describe('session', () => {
             "refreshJwt": "jay-refresh-jwt-1",
             "service": "https://jay.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": "alice-access-jwt-2",
@@ -328,7 +328,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": "bob-access-jwt-1",
@@ -341,7 +341,7 @@ describe('session', () => {
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -383,7 +383,7 @@ describe('session', () => {
             "refreshJwt": undefined,
             "service": "https://jay.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": undefined,
@@ -396,7 +396,7 @@ describe('session', () => {
             "refreshJwt": undefined,
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": undefined,
@@ -409,7 +409,7 @@ describe('session', () => {
             "refreshJwt": undefined,
             "service": "https://bob.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -468,7 +468,7 @@ describe('session', () => {
             "refreshJwt": undefined,
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -513,7 +513,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -625,7 +625,7 @@ describe('session', () => {
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -706,7 +706,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -757,7 +757,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-3",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -808,7 +808,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-4",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -965,7 +965,7 @@ describe('session', () => {
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": "alice-access-jwt-2",
@@ -978,7 +978,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1027,7 +1027,7 @@ describe('session', () => {
             "refreshJwt": "bob-refresh-jwt-2",
             "service": "https://bob.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": "alice-access-jwt-2",
@@ -1040,7 +1040,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1188,7 +1188,7 @@ describe('session', () => {
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1251,7 +1251,7 @@ describe('session', () => {
             "refreshJwt": undefined,
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1314,7 +1314,7 @@ describe('session', () => {
             "refreshJwt": undefined,
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1406,7 +1406,7 @@ describe('session', () => {
             "refreshJwt": "jay-refresh-jwt-1",
             "service": "https://jay.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
           {
             "accessJwt": "bob-access-jwt-2",
@@ -1419,7 +1419,7 @@ describe('session', () => {
             "refreshJwt": "bob-refresh-jwt-2",
             "service": "https://alice.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1466,7 +1466,7 @@ describe('session', () => {
             "refreshJwt": "clarence-refresh-jwt-2",
             "service": "https://clarence.com/",
             "signupQueued": false,
-            "status": "active",
+            "status": undefined,
           },
         ],
         "currentAgentState": {
