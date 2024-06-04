@@ -173,7 +173,7 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const onPressCancel = useCallback(() => {
-    if (graphemeLength > 0 || !gallery.isEmpty) {
+    if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
       closeAllDialogs()
       if (Keyboard) {
         Keyboard.dismiss()
@@ -183,6 +183,7 @@ export const ComposePost = observer(function ComposePost({
       onClose()
     }
   }, [
+    extGif,
     graphemeLength,
     gallery.isEmpty,
     closeAllDialogs,
@@ -728,8 +729,6 @@ function useAnimatedBorders() {
 const styles = StyleSheet.create({
   topbar: {},
   topbarDesktop: {
-    paddingTop: 10,
-    paddingBottom: 10,
     height: 50,
   },
   topbarInner: {
