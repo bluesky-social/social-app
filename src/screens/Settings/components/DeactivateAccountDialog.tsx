@@ -35,10 +35,22 @@ export function DeactivateAccountDialog({
         logout('Deactivated')
       })
     } catch (e: any) {
+      switch (e.message) {
+        case 'Bad token scope':
+          setError(
+            _(
+              msg`You're logged in with an App Password. Please log in with your main password to continue deactivating your account.`,
+            ),
+          )
+          break
+        default:
+          setError(_(msg`Something went wrong, please try again`))
+          break
+      }
+
       logger.error(e, {
         context: 'Failed to deactivate account',
       })
-      setError(_(msg`Something went wrong, please try again`))
     } finally {
       setPending(false)
     }
@@ -98,7 +110,7 @@ export function DeactivateAccountDialog({
             t.atoms.bg_contrast_25,
           ]}>
           <CircleInfo size="md" fill={t.palette.negative_400} />
-          <Text style={[a.leading_snug]}>{error}</Text>
+          <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
         </View>
       )}
     </Prompt.Outer>
