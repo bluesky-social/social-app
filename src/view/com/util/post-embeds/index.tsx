@@ -4,7 +4,6 @@ import {
   StyleProp,
   StyleSheet,
   Text,
-  TextStyle,
   View,
   ViewStyle,
 } from 'react-native'
@@ -42,13 +41,13 @@ export function PostEmbeds({
   moderation,
   onOpen,
   style,
-  quoteTextStyle,
+  allowNestedQuotes,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
-  quoteTextStyle?: StyleProp<TextStyle>
+  allowNestedQuotes?: boolean
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
@@ -63,11 +62,7 @@ export function PostEmbeds({
           moderation={moderation}
           onOpen={onOpen}
         />
-        <MaybeQuoteEmbed
-          embed={embed.record}
-          onOpen={onOpen}
-          textStyle={quoteTextStyle}
-        />
+        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
       </View>
     )
   }
@@ -98,8 +93,8 @@ export function PostEmbeds({
       <MaybeQuoteEmbed
         embed={embed}
         style={style}
-        textStyle={quoteTextStyle}
         onOpen={onOpen}
+        allowNestedQuotes={allowNestedQuotes}
       />
     )
   }

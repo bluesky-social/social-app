@@ -14,7 +14,7 @@ let MessageItemEmbed = ({
 
   return (
     <View style={[a.my_xs, t.atoms.bg, native({flexBasis: 0})]}>
-      <PostEmbeds embed={embed} />
+      <PostEmbeds embed={embed} allowNestedQuotes />
     </View>
   )
 }
