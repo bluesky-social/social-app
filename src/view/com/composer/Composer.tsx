@@ -117,7 +117,7 @@ export const ComposePost = observer(function ComposePost({
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
-  const {hasOpenDialogs} = useDialogStateContext()
+  const {getAreDialogsActive} = useDialogStateContext()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -199,18 +199,18 @@ export const ComposePost = observer(function ComposePost({
   // listen to escape key on desktop web
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && !getAreDialogsActive()) {
         onPressCancel()
       }
     },
-    [onPressCancel],
+    [onPressCancel, getAreDialogsActive],
   )
   useEffect(() => {
-    if (isWeb && !isModalActive && !hasOpenDialogs) {
+    if (isWeb && !isModalActive) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
-  }, [onEscape, isModalActive, hasOpenDialogs])
+  }, [onEscape, isModalActive])
 
   const onNewLink = useCallback(
     (uri: string) => {

@@ -6,9 +6,9 @@ import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 
 interface IDialogContext {
   /**
-   * Whether any dialogs are currently open.
+   * Returns true if any dialogs are currently open.
    */
-  hasOpenDialogs: boolean
+  getAreDialogsActive: () => boolean
   /**
    * The currently active `useDialogControl` hooks.
    */
@@ -56,27 +56,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const importantForAccessibility = useSharedValue<
     'auto' | 'no-hide-descendants'
   >('auto')
-  const [hasOpenDialogs, setHasOpenDialogs] = React.useState(false)
 
   const closeAllDialogs = React.useCallback(() => {
     openDialogs.current.forEach(id => {
       const dialog = activeDialogs.current.get(id)
       if (dialog) dialog.current.close()
     })
-    setHasOpenDialogs(openDialogs.current.size > 0)
     return openDialogs.current.size > 0
   }, [])
 
   const setDialogIsOpen = React.useCallback(
     (id: string, isOpen: boolean) => {
       if (isOpen) {
-        setHasOpenDialogs(true)
         openDialogs.current.add(id)
         importantForAccessibility.value = 'no-hide-descendants'
       } else {
         openDialogs.current.delete(id)
         if (openDialogs.current.size < 1) {
-          setHasOpenDialogs(false)
           importantForAccessibility.value = 'auto'
         }
       }
@@ -86,12 +82,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const context = React.useMemo<IDialogContext>(
     () => ({
-      hasOpenDialogs,
+      getAreDialogsActive: () => openDialogs.current.size > 0,
       activeDialogs,
       openDialogs,
       importantForAccessibility,
     }),
-    [importantForAccessibility, activeDialogs, openDialogs, hasOpenDialogs],
+    [importantForAccessibility, activeDialogs, openDialogs],
   )
   const controls = React.useMemo(
     () => ({closeAllDialogs, setDialogIsOpen}),
