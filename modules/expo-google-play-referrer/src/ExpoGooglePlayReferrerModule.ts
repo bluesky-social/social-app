@@ -4,8 +4,8 @@ import {
 } from './ExpoGooglePlayReferrer.types'
 
 export const GooglePlayReferrerModule = {
-  getReferrerInfoAsync(): Promise<GooglePlayReferrerInfo | null> {
+  getReferrerInfoAsync(): Promise<GooglePlayReferrerInfo> {
     console.error('getReferrerInfoAsync is only available on Android')
-    return Promise.resolve(null)
+    return Promise.reject('getReferrerInfoAsync is only available on Android')
   },
 } as ExpoGooglePlayReferrerModule
