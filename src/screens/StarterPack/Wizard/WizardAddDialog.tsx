@@ -10,8 +10,10 @@ import debounce from 'lodash.debounce'
 
 import {isWeb} from 'platform/detection'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
-import {useSearchPopularFeedsMutation} from 'state/queries/feed'
-import {useProfileFeedgensQuery} from 'state/queries/profile-feedgens'
+import {
+  useGetPopularFeedsQuery,
+  useSearchPopularFeedsMutation,
+} from 'state/queries/feed'
 import {useProfileFollowsQuery} from 'state/queries/profile-follows'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
@@ -31,8 +33,11 @@ interface Props {
   dispatch: (action: WizardAction) => void
 }
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
-  return item.did
+function keyExtractor(
+  item: AppBskyActorDefs.ProfileViewBasic | GeneratorView,
+  index: number,
+) {
+  return `${item.did}-${index}`
 }
 
 export function WizardAddDialog(props: Props) {
@@ -65,13 +70,14 @@ function AddProfiles(props: Props) {
 
 function AddFeeds(props: Props) {
   const [searchText, setSearchText] = useState('')
-  const {currentAccount} = useSession()
 
-  const {data: myFeedsPages} = useProfileFeedgensQuery(currentAccount!.did)
-  const myFeeds = myFeedsPages?.pages.flatMap(page => page.feeds) || []
+  const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery()
+
+  const popularFeeds =
+    popularFeedsPages?.pages.flatMap(page => page.feeds) || []
 
   const {
-    data: feeds,
+    data: searchResults,
     mutate: search,
     reset: resetSearch,
   } = useSearchPopularFeedsMutation()
@@ -93,7 +99,8 @@ function AddFeeds(props: Props) {
   return (
     <AddDialog
       {...props}
-      data={searchText ? feeds : myFeeds}
+      data={searchText ? searchResults : popularFeeds}
+      onEndReached={() => fetchNextPage()}
       searchText={searchText}
       setSearchText={onChangeText}
     />
@@ -148,6 +155,7 @@ function AddDialog({
             searchText={searchText}
             setSearchText={setSearchText}
             inputRef={inputRef}
+            type={type}
           />
         }
         stickyHeaderIndices={[0]}

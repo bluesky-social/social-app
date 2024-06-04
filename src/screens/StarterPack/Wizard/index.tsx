@@ -187,12 +187,14 @@ function WizardInner() {
         </View>
       </KeyboardStickyView>
 
-      <WizardAddDialog
-        control={searchDialogControl}
-        state={state}
-        dispatch={dispatch}
-        type={state.currentStep === 'Profiles' ? 'profiles' : 'feeds'}
-      />
+      {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
+        <WizardAddDialog
+          control={searchDialogControl}
+          state={state}
+          dispatch={dispatch}
+          type={state.currentStep === 'Profiles' ? 'profiles' : 'feeds'}
+        />
+      )}
     </CenteredView>
   )
 }
