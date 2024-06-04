@@ -650,14 +650,14 @@ function useAnimatedBorders() {
       'worklet'
 
       if (typeof newContentHeight === 'number')
-        contentHeight.value = newContentHeight
+        contentHeight.value = Math.floor(newContentHeight)
       if (typeof newContentOffset === 'number')
-        contentOffset.value = newContentOffset
+        contentOffset.value = Math.floor(newContentOffset)
       if (typeof newScrollViewHeight === 'number')
-        scrollViewHeight.value = newScrollViewHeight
+        scrollViewHeight.value = Math.floor(newScrollViewHeight)
 
       hasScrolledBottom.value = withTiming(
-        contentHeight.value - contentOffset.value >= scrollViewHeight.value
+        contentHeight.value - contentOffset.value > scrollViewHeight.value
           ? 1
           : 0,
       )
