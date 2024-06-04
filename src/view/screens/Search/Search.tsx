@@ -957,6 +957,7 @@ function SearchHistory({
 }) {
   const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <CenteredView
