@@ -117,7 +117,7 @@ export const ComposePost = observer(function ComposePost({
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
-  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -400,12 +400,7 @@ export const ComposePost = observer(function ComposePost({
           style={[a.flex_1, viewStyles]}
           aria-modal
           accessibilityViewIsModal>
-          <Animated.View
-            style={[
-              styles.topbar,
-              topBarAnimatedStyle,
-              isWeb && isTabletOrDesktop && styles.topbarDesktop,
-            ]}>
+          <Animated.View style={topBarAnimatedStyle}>
             <View style={styles.topbarInner}>
               <TouchableOpacity
                 testID="composerDiscardButton"
@@ -727,10 +722,6 @@ function useAnimatedBorders() {
 }
 
 const styles = StyleSheet.create({
-  topbar: {},
-  topbarDesktop: {
-    height: 50,
-  },
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
