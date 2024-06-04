@@ -49,7 +49,7 @@ function HomeHeaderLayoutDesktopAndTablet({
           style={[
             a.relative,
             a.flex_row,
-            a.justify_between,
+            a.justify_end,
             a.align_center,
             a.pt_lg,
             a.px_lg,
@@ -57,9 +57,22 @@ function HomeHeaderLayoutDesktopAndTablet({
             t.atoms.bg,
             t.atoms.border_contrast_low,
             styles.bar,
-            kawaii && {paddingTop: 4, paddingBottom: 0, paddingLeft: 10},
           ]}>
-          <Logo width={kawaii ? 60 : 22} />
+          <View
+            style={[
+              a.absolute,
+              a.inset_0,
+              a.pt_lg,
+              a.pb_sm,
+              a.m_auto,
+              kawaii && {paddingTop: 4, paddingBottom: 0},
+              {
+                width: kawaii ? 60 : 28,
+              },
+            ]}>
+            <Logo width={kawaii ? 60 : 28} />
+          </View>
+
           <Link
             to="/feeds"
             hitSlop={10}
