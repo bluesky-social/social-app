@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 
 import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
 import {Image} from 'expo-image'
@@ -46,8 +46,8 @@ const ImageItem = ({
   onRequestClose,
   isScrollViewBeingDragged,
 }: Props) => {
-  const [isScaled, setIsScaled] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isScaled, setIsScaled] = React.useState(false)
+  const [isLoaded, setIsLoaded] = React.useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})

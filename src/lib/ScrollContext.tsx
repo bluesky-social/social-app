@@ -1,7 +1,7 @@
-import React, {createContext, useContext, useMemo} from 'react'
+import React from 'react'
 import {ScrollHandlers} from 'react-native-reanimated'
 
-const ScrollContext = createContext<ScrollHandlers<any>>({
+const ScrollContext = React.createContext<ScrollHandlers<any>>({
   onBeginDrag: undefined,
   onEndDrag: undefined,
   onScroll: undefined,
@@ -9,7 +9,7 @@ const ScrollContext = createContext<ScrollHandlers<any>>({
 })
 
 export function useScrollHandlers(): ScrollHandlers<any> {
-  return useContext(ScrollContext)
+  return React.useContext(ScrollContext)
 }
 
 type ProviderProps = {children: React.ReactNode} & ScrollHandlers<any>
@@ -23,7 +23,7 @@ export function ScrollProvider({
   onScroll,
   onMomentumEnd,
 }: ProviderProps) {
-  const handlers = useMemo(
+  const handlers = React.useMemo(
     () => ({
       onBeginDrag,
       onEndDrag,

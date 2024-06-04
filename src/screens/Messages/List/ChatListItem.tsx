@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -160,22 +160,22 @@ function ChatListItemReady({
     }
   }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
 
-  const [showActions, setShowActions] = useState(false)
+  const [showActions, setShowActions] = React.useState(false)
 
-  const onMouseEnter = useCallback(() => {
+  const onMouseEnter = React.useCallback(() => {
     setShowActions(true)
   }, [])
 
-  const onMouseLeave = useCallback(() => {
+  const onMouseLeave = React.useCallback(() => {
     setShowActions(false)
   }, [])
 
-  const onFocus = useCallback<React.FocusEventHandler>(e => {
+  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
     setShowActions(true)
   }, [])
 
-  const onPress = useCallback(
+  const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
       if (isDeletedAccount) {
         e.preventDefault()
@@ -187,7 +187,7 @@ function ChatListItemReady({
     [isDeletedAccount],
   )
 
-  const onLongPress = useCallback(() => {
+  const onLongPress = React.useCallback(() => {
     playHaptic()
     menuControl.open()
   }, [playHaptic, menuControl])

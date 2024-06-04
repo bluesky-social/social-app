@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -221,5 +221,5 @@ let ListMaybePlaceholder = ({
 
   return null
 }
-ListMaybePlaceholder = memo(ListMaybePlaceholder)
+ListMaybePlaceholder = React.memo(ListMaybePlaceholder)
 export {ListMaybePlaceholder}

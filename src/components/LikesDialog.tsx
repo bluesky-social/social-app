@@ -1,4 +1,4 @@
-import React, {useMemo, useCallback} from 'react'
+import React from 'react'
 import {ActivityIndicator, FlatList, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -52,14 +52,14 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
   } = useLikedByQuery(resolvedUri?.uri)
 
   const isLoading = !hasFetchedResolvedUri || !hasFetchedLikedBy
-  const likes = useMemo(() => {
+  const likes = React.useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
     }
     return []
   }, [data])
 
-  const onEndReached = useCallback(async () => {
+  const onEndReached = React.useCallback(async () => {
     if (isFetchingLikedBy || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -68,7 +68,7 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
     }
   }, [isFetchingLikedBy, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = useCallback(
+  const renderItem = React.useCallback(
     ({item}: {item: GetLikes.Like}) => {
       return (
         <ProfileCardWithFollowBtn

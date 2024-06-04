@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -50,12 +50,12 @@ export function Component({
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = React.useState('')
   const autocomplete = useActorAutocompleteQuery(query)
   const {data: memberships} = useDangerousListMembershipsQuery()
   const [isKeyboardVisible] = useIsKeyboardVisible()
 
-  const onPressCancelSearch = useCallback(() => setQuery(''), [setQuery])
+  const onPressCancelSearch = React.useCallback(() => setQuery(''), [setQuery])
 
   return (
     <SafeAreaView
@@ -169,7 +169,7 @@ function UserResult({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [isProcessing, setIsProcessing] = React.useState(false)
   const membership = React.useMemo(
     () => getMembership(memberships, list.uri, profile.did),
     [memberships, list.uri, profile.did],
@@ -177,7 +177,7 @@ function UserResult({
   const listMembershipAddMutation = useListMembershipAddMutation()
   const listMembershipRemoveMutation = useListMembershipRemoveMutation()
 
-  const onToggleMembership = useCallback(async () => {
+  const onToggleMembership = React.useCallback(async () => {
     if (typeof membership === 'undefined') {
       return
     }

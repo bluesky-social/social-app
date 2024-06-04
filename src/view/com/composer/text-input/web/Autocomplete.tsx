@@ -1,9 +1,4 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {ReactRenderer} from '@tiptap/react'
 import tippy, {Instance as TippyInstance} from 'tippy.js'
@@ -93,9 +88,9 @@ export function createSuggestion({
   }
 }
 
-const MentionList = forwardRef<MentionListRef, SuggestionProps>(
+const MentionList = React.forwardRef<MentionListRef, SuggestionProps>(
   function MentionListImpl(props: SuggestionProps, ref) {
-    const [selectedIndex, setSelectedIndex] = useState(0)
+    const [selectedIndex, setSelectedIndex] = React.useState(0)
     const pal = usePalette('default')
     const {getGraphemeString} = useGrapheme()
 
@@ -121,9 +116,9 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
       selectItem(selectedIndex)
     }
 
-    useEffect(() => setSelectedIndex(0), [props.items])
+    React.useEffect(() => setSelectedIndex(0), [props.items])
 
-    useImperativeHandle(ref, () => ({
+    React.useImperativeHandle(ref, () => ({
       onKeyDown: ({event}) => {
         if (event.key === 'ArrowUp') {
           upHandler()

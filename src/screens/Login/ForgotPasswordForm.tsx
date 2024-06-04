@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {ActivityIndicator, Keyboard, View} from 'react-native'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {BskyAgent} from '@atproto/api'
@@ -39,12 +39,12 @@ export const ForgotPasswordForm = ({
   onEmailSent: () => void
 }) => {
   const t = useTheme()
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [email, setEmail] = useState<string>('')
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
+  const [email, setEmail] = React.useState<string>('')
   const {screen} = useAnalytics()
   const {_} = useLingui()
 
-  useEffect(() => {
+  React.useEffect(() => {
     screen('Signin:ForgotPassword')
   }, [screen])
 

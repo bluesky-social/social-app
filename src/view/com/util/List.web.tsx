@@ -1,4 +1,4 @@
-import React, {isValidElement, memo, startTransition, useRef} from 'react'
+import React from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 
@@ -74,7 +74,7 @@ function ListImpl<ItemT>(
 
   let header: JSX.Element | null = null
   if (ListHeaderComponent != null) {
-    if (isValidElement(ListHeaderComponent)) {
+    if (React.isValidElement(ListHeaderComponent)) {
       header = ListHeaderComponent
     } else {
       // @ts-ignore Nah it's fine.
@@ -84,7 +84,7 @@ function ListImpl<ItemT>(
 
   let footer: JSX.Element | null = null
   if (ListFooterComponent != null) {
-    if (isValidElement(ListFooterComponent)) {
+    if (React.isValidElement(ListFooterComponent)) {
       footer = ListFooterComponent
     } else {
       // @ts-ignore Nah it's fine.
@@ -206,7 +206,7 @@ function ListImpl<ItemT>(
   )
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
-  const containerRef = useRef(null)
+  const containerRef = React.useRef(null)
   useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
@@ -257,12 +257,12 @@ function ListImpl<ItemT>(
   }, [isInsideVisibleTree, handleScroll, containWeb, getScrollableNode])
 
   // --- onScrolledDownChange ---
-  const isScrolledDown = useRef(false)
+  const isScrolledDown = React.useRef(false)
   function handleAboveTheFoldVisibleChange(isAboveTheFold: boolean) {
     const didScrollDown = !isAboveTheFold
     if (isScrolledDown.current !== didScrollDown) {
       isScrolledDown.current = didScrollDown
-      startTransition(() => {
+      React.startTransition(() => {
         onScrolledDownChange?.(didScrollDown)
       })
     }
@@ -511,7 +511,7 @@ let Visibility = ({
 }
 Visibility = React.memo(Visibility)
 
-export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
+export const List = React.memo(React.forwardRef(ListImpl)) as <ItemT>(
   props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
 ) => React.ReactElement
 

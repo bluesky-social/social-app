@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -36,7 +36,7 @@ export function MessagesSettingsScreen({}: Props) {
     },
   })
 
-  const onSelectMessagesFrom = useCallback(
+  const onSelectMessagesFrom = React.useCallback(
     (keys: string[]) => {
       const key = keys[0]
       if (!key) return
@@ -45,7 +45,7 @@ export function MessagesSettingsScreen({}: Props) {
     [updateDeclaration],
   )
 
-  const onSelectSoundSetting = useCallback(
+  const onSelectSoundSetting = React.useCallback(
     (keys: string[]) => {
       const key = keys[0]
       if (!key) return

@@ -6,7 +6,7 @@
  *
  */
 
-import React, {useState} from 'react'
+import React from 'react'
 
 import {Dimensions, StyleSheet} from 'react-native'
 import {Image} from 'expo-image'
@@ -51,8 +51,8 @@ const ImageItem = ({
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
-  const [loaded, setLoaded] = useState(false)
-  const [scaled, setScaled] = useState(false)
+  const [loaded, setLoaded] = React.useState(false)
+  const [scaled, setScaled] = React.useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const maxZoomScale = imageDimensions
     ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM

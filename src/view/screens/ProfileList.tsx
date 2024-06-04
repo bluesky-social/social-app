@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -128,12 +128,12 @@ function ProfileListScreenLoaded({
   useSetTitle(list.name)
 
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPressAddUser = useCallback(() => {
+  const onPressAddUser = React.useCallback(() => {
     openModal({
       name: 'list-add-remove-users',
       list,
@@ -156,7 +156,7 @@ function ProfileListScreenLoaded({
     [feedSectionRef],
   )
 
-  const renderHeader = useCallback(() => {
+  const renderHeader = React.useCallback(() => {
     return <Header rkey={rkey} list={list} />
   }, [rkey, list])
 
@@ -324,7 +324,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
 
-  const onSubscribeMute = useCallback(async () => {
+  const onSubscribeMute = React.useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
       Toast.show(_(msg`List muted`))
@@ -338,7 +338,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listMuteMutation, track, _])
 
-  const onUnsubscribeMute = useCallback(async () => {
+  const onUnsubscribeMute = React.useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
       Toast.show(_(msg`List unmuted`))
@@ -352,7 +352,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listMuteMutation, track, _])
 
-  const onSubscribeBlock = useCallback(async () => {
+  const onSubscribeBlock = React.useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: true})
       Toast.show(_(msg`List blocked`))
@@ -366,7 +366,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listBlockMutation, track, _])
 
-  const onUnsubscribeBlock = useCallback(async () => {
+  const onUnsubscribeBlock = React.useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
       Toast.show(_(msg`List unblocked`))
@@ -380,14 +380,14 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listBlockMutation, track, _])
 
-  const onPressEdit = useCallback(() => {
+  const onPressEdit = React.useCallback(() => {
     openModal({
       name: 'create-or-edit-list',
       list,
     })
   }, [openModal, list])
 
-  const onPressDelete = useCallback(async () => {
+  const onPressDelete = React.useCallback(async () => {
     await listDeleteMutation.mutateAsync({uri: list.uri})
 
     if (savedFeedConfig) {
@@ -411,17 +411,17 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     savedFeedConfig,
   ])
 
-  const onPressReport = useCallback(() => {
+  const onPressReport = React.useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const onPressShare = useCallback(() => {
+  const onPressShare = React.useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
     shareUrl(url)
     track('Lists:Share')
   }, [list, rkey, track])
 
-  const dropdownItems: DropdownItem[] = useMemo(() => {
+  const dropdownItems: DropdownItem[] = React.useMemo(() => {
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
@@ -565,7 +565,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     onRemoveFromSavedFeeds,
   ])
 
-  const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
+  const subscribeDropdownItems: DropdownItem[] = React.useMemo(() => {
     return [
       {
         testID: 'subscribeDropdownMuteBtn',
@@ -706,7 +706,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const isScreenFocused = useIsFocused()
     const {_} = useLingui()
 
-    const onScrollToTop = useCallback(() => {
+    const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,
@@ -725,7 +725,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return listenSoftReset(onScrollToTop)
     }, [onScrollToTop, isScreenFocused])
 
-    const renderPostsEmpty = useCallback(() => {
+    const renderPostsEmpty = React.useCallback(() => {
       return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
     }, [_])
 
@@ -775,7 +775,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
     const isOwner = list.creator.did === currentAccount?.did
 
-    const descriptionRT = useMemo(
+    const descriptionRT = React.useMemo(
       () =>
         list.description
           ? new RichTextAPI({
@@ -786,7 +786,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       [list],
     )
 
-    const onScrollToTop = useCallback(() => {
+    const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,
@@ -900,7 +900,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       onPressAddUser,
     ])
 
-    const renderEmptyState = useCallback(() => {
+    const renderEmptyState = React.useCallback(() => {
       return (
         <EmptyState
           icon="users-slash"
@@ -937,7 +937,8 @@ function ErrorScreen({error}: {error: string}) {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
-  const onPressBack = useCallback(() => {
+
+  const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {

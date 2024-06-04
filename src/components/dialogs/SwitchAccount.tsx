@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -21,7 +21,7 @@ export function SwitchAccountDialog({
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
-  const onSelectAccount = useCallback(
+  const onSelectAccount = React.useCallback(
     (account: SessionAccount) => {
       if (account.did !== currentAccount?.did) {
         control.close(() => {
@@ -34,7 +34,7 @@ export function SwitchAccountDialog({
     [currentAccount, control, onPressSwitchAccount],
   )
 
-  const onPressAddAccount = useCallback(() => {
+  const onPressAddAccount = React.useCallback(() => {
     control.close(() => {
       setShowLoggedOut(true)
     })

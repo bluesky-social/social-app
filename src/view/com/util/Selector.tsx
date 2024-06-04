@@ -1,4 +1,4 @@
-import React, {createRef, useState, useMemo, useRef} from 'react'
+import React from 'react'
 import {Animated, Pressable, StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -22,17 +22,17 @@ export function Selector({
   onSelect?: (index: number) => void
 }) {
   const {_} = useLingui()
-  const containerRef = useRef<View>(null)
+  const containerRef = React.useRef<View>(null)
   const pal = usePalette('default')
-  const [itemLayouts, setItemLayouts] = useState<undefined | Layout[]>(
+  const [itemLayouts, setItemLayouts] = React.useState<undefined | Layout[]>(
     undefined,
   )
-  const itemRefs = useMemo(
-    () => Array.from({length: items.length}).map(() => createRef<View>()),
+  const itemRefs = React.useMemo(
+    () => Array.from({length: items.length}).map(() => React.createRef<View>()),
     [items.length],
   )
 
-  const currentLayouts = useMemo(() => {
+  const currentLayouts = React.useMemo(() => {
     const left = itemLayouts?.[selectedIndex - 1] || {x: 0, width: 0}
     const middle = itemLayouts?.[selectedIndex] || {x: 0, width: 0}
     const right = itemLayouts?.[selectedIndex + 1] || {

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -19,7 +19,7 @@ export function GifPreview({
   const {_} = useLingui()
   const t = useTheme()
 
-  const onPress = useCallback(() => {
+  const onPress = React.useCallback(() => {
     logEvent('composer:gif:select', {})
     onSelectGif(gif)
   }, [onSelectGif, gif])

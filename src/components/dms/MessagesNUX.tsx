@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {ChatBskyActorDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -23,7 +23,7 @@ export function MessagesNUX() {
     did: currentAccount!.did,
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (profile && typeof profile.associated?.chat === 'undefined') {
       const timeout = setTimeout(() => {
         control.open()
@@ -61,7 +61,7 @@ function DialogInner({
     },
   })
 
-  const onSelectItem = useCallback(
+  const onSelectItem = React.useCallback(
     (keys: string[]) => {
       const key = keys[0]
       if (!key) return
@@ -70,7 +70,7 @@ function DialogInner({
     [updateDeclaration],
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!chatDeclation && !initialized) {
       updateDeclaration('following')
       setInitialzed(true)

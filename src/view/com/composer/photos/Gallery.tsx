@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {ImageStyle, Keyboard, LayoutChangeEvent} from 'react-native'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
@@ -23,7 +23,7 @@ interface GalleryProps {
 }
 
 export const Gallery = (props: GalleryProps) => {
-  const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
+  const [containerInfo, setContainerInfo] = React.useState<Dimensions | undefined>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
     const {width, height} = evt.nativeEvent.layout

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React from 'react'
 import {
   ImageStyle,
   ScrollView as RNScrollView,
@@ -35,7 +35,7 @@ export function Component({image}: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {_} = useLingui()
-  const [altText, setAltText] = useState(image.altText)
+  const [altText, setAltText] = React.useState(image.altText)
   const windim = useWindowDimensions()
   const {closeModal} = useModalControls()
   const inputRef = React.useRef<RNTextInput>(null)
@@ -58,7 +58,7 @@ export function Component({image}: Props) {
     }
   }, [keyboardShown])
 
-  const imageStyles = useMemo<ImageStyle>(() => {
+  const imageStyles = React.useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
     if (image.height > image.width) {
       return {
@@ -75,7 +75,7 @@ export function Component({image}: Props) {
     }
   }, [image, windim])
 
-  const onUpdate = useCallback(
+  const onUpdate = React.useCallback(
     (v: string) => {
       v = enforceLen(v, MAX_ALT_TEXT)
       setAltText(v)
@@ -84,7 +84,7 @@ export function Component({image}: Props) {
     [setAltText, image],
   )
 
-  const onPressSave = useCallback(() => {
+  const onPressSave = React.useCallback(() => {
     image.setAltText(altText)
     closeModal()
   }, [closeModal, image, altText])

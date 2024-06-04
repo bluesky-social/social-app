@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -27,7 +27,7 @@ export function AccountList({
   const t = useTheme()
   const {_} = useLingui()
 
-  const onPressAddAccount = useCallback(() => {
+  const onPressAddAccount = React.useCallback(() => {
     onSelectOther()
   }, [onSelectOther])
 

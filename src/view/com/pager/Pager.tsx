@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react'
+import React from 'react'
 import {Animated, View} from 'react-native'
 import PagerView, {
   PagerViewOnPageScrollEvent,
@@ -39,7 +39,7 @@ interface Props {
   ) => void
   testID?: string
 }
-export const Pager = forwardRef<PagerRef, React.PropsWithChildren<Props>>(
+export const Pager = React.forwardRef<PagerRef, React.PropsWithChildren<Props>>(
   function PagerImpl(
     {
       children,

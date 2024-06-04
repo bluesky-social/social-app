@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -85,7 +85,7 @@ export function PostThreadItem({
   hideTopBorder?: boolean
 }) {
   const postShadowed = usePostShadow(post)
-  const richText = useMemo(
+  const richText = React.useMemo(
     () =>
       new RichTextAPI({
         text: record.text,
@@ -209,7 +209,7 @@ let PostThreadItemLoaded = ({
     record?.text || '',
     langPrefs.primaryLanguage,
   )
-  const needsTranslation = useMemo(
+  const needsTranslation = React.useMemo(
     () =>
       Boolean(
         langPrefs.primaryLanguage &&
@@ -590,7 +590,7 @@ let PostThreadItemLoaded = ({
     )
   }
 }
-PostThreadItemLoaded = memo(PostThreadItemLoaded)
+PostThreadItemLoaded = React.memo(PostThreadItemLoaded)
 
 function PostOuterWrapper({
   post,

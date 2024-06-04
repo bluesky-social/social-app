@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -51,29 +51,29 @@ export function Component({
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const updateMutation = useProfileUpdateMutation()
-  const [imageError, setImageError] = useState<string>('')
-  const [displayName, setDisplayName] = useState<string>(
+  const [imageError, setImageError] = React.useState<string>('')
+  const [displayName, setDisplayName] = React.useState<string>(
     profile.displayName || '',
   )
-  const [description, setDescription] = useState<string>(
+  const [description, setDescription] = React.useState<string>(
     profile.description || '',
   )
-  const [userBanner, setUserBanner] = useState<string | undefined | null>(
+  const [userBanner, setUserBanner] = React.useState<string | undefined | null>(
     profile.banner,
   )
-  const [userAvatar, setUserAvatar] = useState<string | undefined | null>(
+  const [userAvatar, setUserAvatar] = React.useState<string | undefined | null>(
     profile.avatar,
   )
-  const [newUserBanner, setNewUserBanner] = useState<
+  const [newUserBanner, setNewUserBanner] = React.useState<
     RNImage | undefined | null
   >()
-  const [newUserAvatar, setNewUserAvatar] = useState<
+  const [newUserAvatar, setNewUserAvatar] = React.useState<
     RNImage | undefined | null
   >()
   const onPressCancel = () => {
     closeModal()
   }
-  const onSelectNewAvatar = useCallback(
+  const onSelectNewAvatar = React.useCallback(
     async (img: RNImage | null) => {
       setImageError('')
       if (img === null) {
@@ -93,7 +93,7 @@ export function Component({
     [track, setNewUserAvatar, setUserAvatar, setImageError],
   )
 
-  const onSelectNewBanner = useCallback(
+  const onSelectNewBanner = React.useCallback(
     async (img: RNImage | null) => {
       setImageError('')
       if (!img) {
@@ -113,7 +113,7 @@ export function Component({
     [track, setNewUserBanner, setUserBanner, setImageError],
   )
 
-  const onPressSave = useCallback(async () => {
+  const onPressSave = React.useCallback(async () => {
     track('EditProfile:Save')
     setImageError('')
     try {

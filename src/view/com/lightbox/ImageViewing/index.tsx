@@ -8,7 +8,7 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {ComponentType, useCallback, useMemo, useState} from 'react'
+import React from 'react'
 import {StyleSheet, View, Platform} from 'react-native'
 
 import ImageItem from './components/ImageItem/ImageItem'
@@ -25,8 +25,8 @@ type Props = {
   visible: boolean
   onRequestClose: () => void
   backgroundColor?: string
-  HeaderComponent?: ComponentType<{imageIndex: number}>
-  FooterComponent?: ComponentType<{imageIndex: number}>
+  HeaderComponent?: React.ComponentType<{imageIndex: number}>
+  FooterComponent?: React.ComponentType<{imageIndex: number}>
 }
 
 const DEFAULT_BG_COLOR = '#000'
@@ -40,10 +40,10 @@ function ImageViewing({
   HeaderComponent,
   FooterComponent,
 }: Props) {
-  const [isScaled, setIsScaled] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
-  const [imageIndex, setImageIndex] = useState(initialImageIndex)
-  const [showControls, setShowControls] = useState(true)
+  const [isScaled, setIsScaled] = React.useState(false)
+  const [isDragging, setIsDragging] = React.useState(false)
+  const [imageIndex, setImageIndex] = React.useState(initialImageIndex)
+  const [showControls, setShowControls] = React.useState(true)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
     pointerEvents: showControls ? 'auto' : 'none',
@@ -64,18 +64,18 @@ function ImageViewing({
     ],
   }))
 
-  const onTap = useCallback(() => {
+  const onTap = React.useCallback(() => {
     setShowControls(show => !show)
   }, [])
 
-  const onZoom = useCallback((nextIsScaled: boolean) => {
+  const onZoom = React.useCallback((nextIsScaled: boolean) => {
     setIsScaled(nextIsScaled)
     if (nextIsScaled) {
       setShowControls(false)
     }
   }, [])
 
-  const edges = useMemo(() => {
+  const edges = React.useMemo(() => {
     if (Platform.OS === 'android') {
       return ['top', 'bottom', 'left', 'right'] satisfies Edge[]
     }

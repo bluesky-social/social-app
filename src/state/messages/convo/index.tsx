@@ -1,4 +1,4 @@
-import React, {useContext, useState, useSyncExternalStore} from 'react'
+import React from 'react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -24,7 +24,7 @@ export * from '#/state/messages/convo/util'
 const ChatContext = React.createContext<ConvoState | null>(null)
 
 export function useConvo() {
-  const ctx = useContext(ChatContext)
+  const ctx = React.useContext(ChatContext)
   if (!ctx) {
     throw new Error('useConvo must be used within a ConvoProvider')
   }
@@ -37,7 +37,7 @@ export function useConvo() {
  * and ready for resumption.
  */
 export function useConvoActive() {
-  const ctx = useContext(ChatContext) as
+  const ctx = React.useContext(ChatContext) as
     | ConvoStateReady
     | ConvoStateBackgrounded
     | ConvoStateSuspended
@@ -60,7 +60,7 @@ export function ConvoProvider({
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
-  const [convo] = useState(
+  const [convo] = React.useState(
     () =>
       new Convo({
         convoId,
@@ -68,7 +68,7 @@ export function ConvoProvider({
         events,
       }),
   )
-  const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
+  const service = React.useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
   const appState = useAppState()

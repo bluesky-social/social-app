@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -35,7 +35,7 @@ export function MessagesConversationScreen({route}: Props) {
   const {setCurrentConvoId} = useCurrentConvoId()
 
   useFocusEffect(
-    useCallback(() => {
+    React.useCallback(() => {
       setCurrentConvoId(convoId)
 
       if (isWeb && !gtMobile) {

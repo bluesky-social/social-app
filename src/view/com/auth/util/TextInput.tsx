@@ -1,11 +1,11 @@
-import React, {ComponentProps} from 'react'
+import React from 'react'
 import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 
-interface Props extends Omit<ComponentProps<typeof RNTextInput>, 'onChange'> {
+interface Props extends Omit<React.ComponentProps<typeof RNTextInput>, 'onChange'> {
   testID?: string
   icon: IconProp
   onChange: (v: string) => void
@@ -14,6 +14,7 @@ interface Props extends Omit<ComponentProps<typeof RNTextInput>, 'onChange'> {
 export function TextInput({testID, icon, onChange, ...props}: Props) {
   const theme = useTheme()
   const pal = usePalette('default')
+  
   return (
     <View style={[pal.border, styles.container]}>
       <FontAwesomeIcon icon={icon} style={[pal.textLight, styles.icon]} />

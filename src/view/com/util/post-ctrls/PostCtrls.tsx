@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React from 'react'
 import {
   Pressable,
   type PressableStateCallbackType,
@@ -115,7 +115,7 @@ let PostCtrls = ({
     feedContext,
   ])
 
-  const onRepost = useCallback(async () => {
+  const onRepost = React.useCallback(async () => {
     try {
       if (!post.viewer?.repost) {
         sendInteraction({
@@ -141,7 +141,7 @@ let PostCtrls = ({
     feedContext,
   ])
 
-  const onQuote = useCallback(() => {
+  const onQuote = React.useCallback(() => {
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionQuote',
@@ -167,7 +167,7 @@ let PostCtrls = ({
     feedContext,
   ])
 
-  const onShare = useCallback(() => {
+  const onShare = React.useCallback(() => {
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
@@ -331,5 +331,5 @@ let PostCtrls = ({
     </View>
   )
 }
-PostCtrls = memo(PostCtrls)
+PostCtrls = React.memo(PostCtrls)
 export {PostCtrls}

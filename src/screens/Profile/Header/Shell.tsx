@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -128,7 +128,7 @@ let ProfileHeaderShell = ({
     </View>
   )
 }
-ProfileHeaderShell = memo(ProfileHeaderShell)
+ProfileHeaderShell = React.memo(ProfileHeaderShell)
 export {ProfileHeaderShell}
 
 const styles = StyleSheet.create({

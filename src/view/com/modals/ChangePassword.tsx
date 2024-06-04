@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -39,11 +39,11 @@ export function Component() {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {_} = useLingui()
-  const [stage, setStage] = useState<Stages>(Stages.RequestCode)
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [resetCode, setResetCode] = useState<string>('')
-  const [newPassword, setNewPassword] = useState<string>('')
-  const [error, setError] = useState<string>('')
+  const [stage, setStage] = React.useState<Stages>(Stages.RequestCode)
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
+  const [resetCode, setResetCode] = React.useState<string>('')
+  const [newPassword, setNewPassword] = React.useState<string>('')
+  const [error, setError] = React.useState<string>('')
   const {isMobile} = useWebMediaQueries()
   const {closeModal} = useModalControls()
 

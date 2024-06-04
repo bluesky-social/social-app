@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -381,7 +381,7 @@ let Feed = ({
     </View>
   )
 }
-Feed = memo(Feed)
+Feed = React.memo(Feed)
 export {Feed}
 
 const styles = StyleSheet.create({

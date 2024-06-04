@@ -1,4 +1,4 @@
-import React, {ComponentProps, FC} from 'react'
+import React from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
@@ -15,10 +15,10 @@ interface GalleryItemProps {
   onPress?: EventFunction
   onLongPress?: EventFunction
   onPressIn?: EventFunction
-  imageStyle: ComponentProps<typeof Image>['style']
+  imageStyle: React.ComponentProps<typeof Image>['style']
 }
 
-export const GalleryItem: FC<GalleryItemProps> = ({
+export const GalleryItem: React.FC<GalleryItemProps> = ({
   images,
   index,
   imageStyle,
@@ -28,6 +28,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
 }) => {
   const {_} = useLingui()
   const image = images[index]
+  
   return (
     <View style={styles.fullWidth}>
       <Pressable

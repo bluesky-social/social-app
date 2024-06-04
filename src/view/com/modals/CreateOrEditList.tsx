@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -51,7 +51,7 @@ export function Component({
 }) {
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
-  const [error, setError] = useState<string>('')
+  const [error, setError] = React.useState<string>('')
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -60,7 +60,7 @@ export function Component({
   const listMetadataMutation = useListMetadataMutation()
   const agent = useAgent()
 
-  const activePurpose = useMemo(() => {
+  const activePurpose = React.useMemo(() => {
     if (list?.purpose) {
       return list.purpose
     }
@@ -71,10 +71,10 @@ export function Component({
   }, [list, purpose])
   const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
 
-  const [isProcessing, setProcessing] = useState<boolean>(false)
-  const [name, setName] = useState<string>(list?.name || '')
+  const [isProcessing, setProcessing] = React.useState<boolean>(false)
+  const [name, setName] = React.useState<string>(list?.name || '')
 
-  const [descriptionRt, setDescriptionRt] = useState<RichTextAPI>(() => {
+  const [descriptionRt, setDescriptionRt] = React.useState<RichTextAPI>(() => {
     const text = list?.description
     const facets = list?.descriptionFacets
 
@@ -91,15 +91,15 @@ export function Component({
 
     return richText
   })
-  const graphemeLength = useMemo(() => {
+  const graphemeLength = React.useMemo(() => {
     return shortenLinks(descriptionRt).graphemeLength
   }, [descriptionRt])
   const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
 
-  const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
-  const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
+  const [avatar, setAvatar] = React.useState<string | undefined>(list?.avatar)
+  const [newAvatar, setNewAvatar] = React.useState<RNImage | undefined | null>()
 
-  const onDescriptionChange = useCallback(
+  const onDescriptionChange = React.useCallback(
     (newText: string) => {
       const richText = new RichTextAPI({text: newText})
       richText.detectFacetsWithoutResolution()
@@ -109,11 +109,11 @@ export function Component({
     [setDescriptionRt],
   )
 
-  const onPressCancel = useCallback(() => {
+  const onPressCancel = React.useCallback(() => {
     closeModal()
   }, [closeModal])
 
-  const onSelectNewAvatar = useCallback(
+  const onSelectNewAvatar = React.useCallback(
     async (img: RNImage | null) => {
       if (!img) {
         setNewAvatar(null)
@@ -132,7 +132,7 @@ export function Component({
     [track, setNewAvatar, setAvatar, setError],
   )
 
-  const onPressSave = useCallback(async () => {
+  const onPressSave = React.useCallback(async () => {
     if (isCurateList) {
       track('CreateList:SaveCurateList')
     } else {

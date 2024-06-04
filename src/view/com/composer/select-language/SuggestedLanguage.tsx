@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import lande from 'lande'
 import {Trans, msg} from '@lingui/macro'
@@ -23,7 +23,7 @@ const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
 export function SuggestedLanguage({text}: {text: string}) {
-  const [suggestedLanguage, setSuggestedLanguage] = useState<
+  const [suggestedLanguage, setSuggestedLanguage] = React.useState<
     string | undefined
   >()
   const langPrefs = useLanguagePrefs()
@@ -31,7 +31,7 @@ export function SuggestedLanguage({text}: {text: string}) {
   const pal = usePalette('default')
   const {_} = useLingui()
 
-  useEffect(() => {
+  React.useEffect(() => {
     const textTrimmed = text.trim()
 
     // Don't run the language model on small posts, the results are likely

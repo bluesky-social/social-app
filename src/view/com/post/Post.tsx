@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -50,7 +50,7 @@ export function Post({
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
-  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+  const record = React.useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
       AppBskyFeedPost.isRecord(post.record) &&
       AppBskyFeedPost.validateRecord(post.record).success
@@ -59,7 +59,7 @@ export function Post({
     [post],
   )
   const postShadowed = usePostShadow(post)
-  const richText = useMemo(
+  const richText = React.useMemo(
     () =>
       record
         ? new RichTextAPI({
@@ -69,7 +69,7 @@ export function Post({
         : undefined,
     [record],
   )
-  const moderation = useMemo(
+  const moderation = React.useMemo(
     () => (moderationOpts ? moderatePost(post, moderationOpts) : undefined),
     [moderationOpts, post],
   )
@@ -113,7 +113,7 @@ function PostInner({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
-  const [limitLines, setLimitLines] = useState(
+  const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const itemUrip = new AtUri(post.uri)

@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react'
+import React from 'react'
 import {Modal, View} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -91,7 +91,7 @@ function Providers({
 function IOSModalBackground({active}: {active: boolean}) {
   const theme = useThemeName()
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     SystemUI.setBackgroundColorAsync('black')
 
     return () => {

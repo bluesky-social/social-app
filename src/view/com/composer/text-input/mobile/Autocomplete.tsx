@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React from 'react'
 import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -21,14 +21,14 @@ export function Autocomplete({
   const {getGraphemeString} = useGrapheme()
   const isActive = !!prefix
   const {data: suggestions, isFetching} = useActorAutocompleteQuery(prefix)
-  const suggestionsRef = useRef<
+  const suggestionsRef = React.useRef<
     AppBskyActorDefs.ProfileViewBasic[] | undefined
   >(undefined)
   if (suggestions) {
     suggestionsRef.current = suggestions
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     Animated.timing(positionInterp, {
       toValue: isActive ? 1 : 0,
       duration: 200,

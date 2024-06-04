@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
@@ -132,8 +132,8 @@ export function PostThread({
   }, [rootPost, moderationOpts])
 
   // Values used for proper rendering of parents
-  const ref = useRef<ListMethods>(null)
-  const highlightedPostRef = useRef<View | null>(null)
+  const ref = React.useRef<ListMethods>(null)
+  const highlightedPostRef = React.useRef<View | null>(null)
   const [maxParents, setMaxParents] = React.useState(
     isWeb ? Infinity : PARENTS_CHUNK_SIZE,
   )
@@ -208,7 +208,7 @@ export function PostThread({
     return null
   }, [thread, skeleton?.highlightedPost, isThreadError, _, threadError])
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (error) {
       onCanReply(false)
     } else if (rootPost) {
@@ -256,7 +256,7 @@ export function PostThread({
 
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
-  const didAdjustScrollWeb = useRef<boolean>(false)
+  const didAdjustScrollWeb = React.useRef<boolean>(false)
   const onContentSizeChangeWeb = React.useCallback(() => {
     // only run once
     if (didAdjustScrollWeb.current) {

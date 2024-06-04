@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import React from 'react'
 import {
   Linking,
   SafeAreaView,
@@ -359,7 +359,7 @@ let DrawerFooter = ({
 }
 DrawerFooter = React.memo(DrawerFooter)
 
-interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
+interface MenuItemProps extends React.ComponentProps<typeof TouchableOpacity> {
   icon: JSX.Element
   label: string
   count?: string

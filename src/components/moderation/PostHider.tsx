@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -17,7 +17,7 @@ import {
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
 
-interface Props extends ComponentProps<typeof Link> {
+interface Props extends React.ComponentProps<typeof Link> {
   disabled: boolean
   iconSize: number
   iconStyles: StyleProp<ViewStyle>

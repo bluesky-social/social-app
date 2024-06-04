@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react'
+import React from 'react'
 import {FlatList, LayoutChangeEvent, View} from 'react-native'
 import {
   KeyboardStickyView,
@@ -107,8 +107,8 @@ export function MessagesList({
 
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
-  const prevContentHeight = useRef(0)
-  const prevItemCount = useRef(0)
+  const prevContentHeight = React.useRef(0)
+  const prevItemCount = React.useRef(0)
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
@@ -131,7 +131,7 @@ export function MessagesList({
   // Subsequent resizes will only scroll to the bottom if the user is at the bottom of the list (within 100 pixels of
   // the bottom). Therefore, any new messages that come in or are sent will result in an animated scroll to end. However
   // we will not scroll whenever new items get prepended to the top.
-  const onContentSizeChange = useCallback(
+  const onContentSizeChange = React.useCallback(
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
@@ -198,7 +198,7 @@ export function MessagesList({
     ],
   )
 
-  const onStartReached = useCallback(() => {
+  const onStartReached = React.useCallback(() => {
     if (hasScrolled && prevContentHeight.current > layoutHeight.value) {
       convoState.fetchMessageHistory()
     }
@@ -271,7 +271,7 @@ export function MessagesList({
   }))
 
   // -- Message sending
-  const onSendMessage = useCallback(
+  const onSendMessage = React.useCallback(
     async (text: string) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 

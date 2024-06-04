@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -64,7 +64,7 @@ function AppealDialog() {
 function DialogInner() {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
-  const [details, setDetails] = useState('')
+  const [details, setDetails] = React.useState('')
   const {gtMobile} = useBreakpoints()
   const agent = useAgent()
   const {currentAccount} = useSession()
@@ -92,8 +92,8 @@ function DialogInner() {
     },
   })
 
-  const onSubmit = useCallback(() => mutate(), [mutate])
-  const onBack = useCallback(() => control.close(), [control])
+  const onSubmit = React.useCallback(() => mutate(), [mutate])
+  const onBack = React.useCallback(() => control.close(), [control])
 
   return (
     <Dialog.ScrollableInner label={_(msg`Appeal this decision`)}>

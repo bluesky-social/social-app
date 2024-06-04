@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react'
+import React from 'react'
 import {View, ScrollView, Modal, FlatList, TextInput} from 'react-native'
 
 const BottomSheetModalContext = React.createContext(null)
@@ -8,7 +8,7 @@ const BottomSheetModalProvider = (props: any) => {
 }
 class BottomSheet extends React.Component<{
   onClose?: () => void
-  children?: ReactNode
+  children?: React.ReactNode
 }> {
   snapToIndex() {}
   snapToPosition() {}

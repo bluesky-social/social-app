@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React from 'react'
 import {
   View,
   StyleSheet,
@@ -138,11 +138,11 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     }
   })
 
-  const onFinish = useCallback(() => setIsAnimationComplete(true), [])
-  const onLayout = useCallback(() => setIsLayoutReady(true), [])
-  const onLoadEnd = useCallback(() => setIsImageLoaded(true), [])
+  const onFinish = React.useCallback(() => setIsAnimationComplete(true), [])
+  const onLayout = React.useCallback(() => setIsLayoutReady(true), [])
+  const onLoadEnd = React.useCallback(() => setIsImageLoaded(true), [])
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isReady) {
       SplashScreen.hideAsync()
         .then(() => {
@@ -175,7 +175,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     }
   }, [onFinish, intro, outroLogo, outroApp, outroAppOpacity, isReady])
 
-  useEffect(() => {
+  React.useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion)
   }, [])
 

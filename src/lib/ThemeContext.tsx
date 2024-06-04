@@ -1,4 +1,4 @@
-import React, {ReactNode, createContext, useContext} from 'react'
+import React from 'react'
 import {TextStyle, ViewStyle} from 'react-native'
 import {darkTheme, defaultTheme, dimTheme} from './themes'
 import {ThemeName} from '#/alf/themes'
@@ -79,13 +79,13 @@ export interface Theme {
 }
 
 export interface ThemeProviderProps {
-  children?: ReactNode
+  children?: React.ReactNode
   theme: ThemeName
 }
 
-export const ThemeContext = createContext<Theme>(defaultTheme)
+export const ThemeContext = React.createContext<Theme>(defaultTheme)
 
-export const useTheme = () => useContext(ThemeContext)
+export const useTheme = () => React.useContext(ThemeContext)
 
 function getTheme(theme: ThemeName) {
   switch (theme) {

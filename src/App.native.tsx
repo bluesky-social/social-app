@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto'
 import 'lib/sentry' // must be near top
 import 'view/icons'
 
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -64,7 +64,7 @@ function InnerApp() {
   useIntentHandler()
 
   // init
-  useEffect(() => {
+  React.useEffect(() => {
     async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
@@ -80,7 +80,7 @@ function InnerApp() {
     onLaunch(account)
   }, [resumeSession])
 
-  useEffect(() => {
+  React.useEffect(() => {
     return listenSessionDropped(() => {
       Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
     })
@@ -128,7 +128,7 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setReady] = useState(false)
+  const [isReady, setReady] = React.useState(false)
 
   React.useEffect(() => {
     initPersistedState().then(() => setReady(true))

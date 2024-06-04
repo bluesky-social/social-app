@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {useWindowDimensions} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -65,22 +65,22 @@ export const Component = observer(function EditImageImpl({
     // rotate = 0
   } = image.attributes
 
-  const editorRef = useRef<ImageEditor>(null)
-  const [scale, setScale] = useState<number>(image.attributes.scale ?? 1)
-  const [position, setPosition] = useState<Position | undefined>(
+  const editorRef = React.useRef<ImageEditor>(null)
+  const [scale, setScale] = React.useState<number>(image.attributes.scale ?? 1)
+  const [position, setPosition] = React.useState<Position | undefined>(
     image.attributes.position,
   )
-  const [altText, setAltText] = useState(image?.altText ?? '')
+  const [altText, setAltText] = React.useState(image?.altText ?? '')
 
-  const onFlipHorizontal = useCallback(() => {
+  const onFlipHorizontal = React.useCallback(() => {
     image.flipHorizontal()
   }, [image])
 
-  const onFlipVertical = useCallback(() => {
+  const onFlipVertical = React.useCallback(() => {
     image.flipVertical()
   }, [image])
 
-  // const onSetRotate = useCallback(
+  // const onSetRotate = React.useCallback(
   //   (direction: 'left' | 'right') => {
   //     const rotation = (rotate + 90 * (direction === 'left' ? -1 : 1)) % 360
   //     image.setRotate(rotation)
@@ -88,14 +88,14 @@ export const Component = observer(function EditImageImpl({
   //   [rotate, image],
   // )
 
-  const onSetRatio = useCallback(
+  const onSetRatio = React.useCallback(
     (ratio: AspectRatio) => {
       image.setRatio(ratio)
     },
     [image],
   )
 
-  const adjustments = useMemo(
+  const adjustments = React.useMemo(
     () => [
       // {
       //   name: 'rotate-left' as const,
@@ -125,22 +125,22 @@ export const Component = observer(function EditImageImpl({
     [onFlipHorizontal, onFlipVertical, _],
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     image.prev = image.cropped
     image.prevAttributes = image.attributes
     image.resetCropped()
   }, [image])
 
-  const onCloseModal = useCallback(() => {
+  const onCloseModal = React.useCallback(() => {
     closeModal()
   }, [closeModal])
 
-  const onPressCancel = useCallback(async () => {
+  const onPressCancel = React.useCallback(async () => {
     await gallery.previous(image)
     onCloseModal()
   }, [onCloseModal, gallery, image])
 
-  const onPressSave = useCallback(async () => {
+  const onPressSave = React.useCallback(async () => {
     image.setAltText(altText)
 
     const crop = editorRef.current?.getCroppingRect()
@@ -165,7 +165,7 @@ export const Component = observer(function EditImageImpl({
     onCloseModal()
   }, [altText, image, position, scale, onCloseModal])
 
-  const getLabelIconSize = useCallback((as: AspectRatio) => {
+  const getLabelIconSize = React.useCallback((as: AspectRatio) => {
     switch (as) {
       case 'None':
         return 22

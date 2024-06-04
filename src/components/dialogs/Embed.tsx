@@ -1,4 +1,4 @@
-import React, {memo, useRef, useState} from 'react'
+import React from 'react'
 import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -32,7 +32,7 @@ let EmbedDialog = ({control, ...rest}: EmbedDialogProps): React.ReactNode => {
     </Dialog.Outer>
   )
 }
-EmbedDialog = memo(EmbedDialog)
+EmbedDialog = React.memo(EmbedDialog)
 export {EmbedDialog}
 
 function EmbedDialogInner({
@@ -44,8 +44,8 @@ function EmbedDialogInner({
 }: Omit<EmbedDialogProps, 'control'>) {
   const t = useTheme()
   const {_} = useLingui()
-  const ref = useRef<TextInput>(null)
-  const [copied, setCopied] = useState(false)
+  const ref = React.useRef<TextInput>(null)
+  const [copied, setCopied] = React.useState(false)
 
   // reset copied state after 2 seconds
   React.useEffect(() => {

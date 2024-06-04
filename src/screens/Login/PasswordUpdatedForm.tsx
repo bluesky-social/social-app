@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,7 +18,7 @@ export const PasswordUpdatedForm = ({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
 
-  useEffect(() => {
+  React.useEffect(() => {
     screen('Signin:PasswordUpdatedForm')
   }, [screen])
 

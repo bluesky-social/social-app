@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -44,7 +44,7 @@ export let MessagesListHeader = ({
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
 
-  const onPressBack = useCallback(() => {
+  const onPressBack = React.useCallback(() => {
     if (isWeb) {
       navigation.replace('Messages', {})
     } else {

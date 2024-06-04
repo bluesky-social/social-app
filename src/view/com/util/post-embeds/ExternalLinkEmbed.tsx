@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
@@ -110,7 +110,7 @@ function LinkWrapper({
 }) {
   const t = useTheme()
 
-  const onShareExternal = useCallback(() => {
+  const onShareExternal = React.useCallback(() => {
     if (link.uri && isNative) {
       shareUrl(link.uri)
     }

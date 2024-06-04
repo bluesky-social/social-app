@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -52,7 +52,7 @@ export function Component({
   const {_} = useLingui()
   const {data: memberships} = useDangerousListMembershipsQuery()
 
-  const onPressDone = useCallback(() => {
+  const onPressDone = React.useCallback(() => {
     closeModal()
   }, [closeModal])
 
@@ -143,7 +143,7 @@ function ListItem({
   const listMembershipAddMutation = useListMembershipAddMutation()
   const listMembershipRemoveMutation = useListMembershipRemoveMutation()
 
-  const onToggleMembership = useCallback(async () => {
+  const onToggleMembership = React.useCallback(async () => {
     if (typeof membership === 'undefined') {
       return
     }

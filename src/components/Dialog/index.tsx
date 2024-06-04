@@ -1,4 +1,4 @@
-import React, {useImperativeHandle} from 'react'
+import React from 'react'
 import {
   Dimensions,
   Keyboard,
@@ -151,7 +151,7 @@ export function Outer({
     onClose?.()
   }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
-  useImperativeHandle(
+  React.useImperativeHandle(
     control.ref,
     () => ({
       open,

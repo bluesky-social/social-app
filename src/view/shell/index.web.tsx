@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -31,7 +31,7 @@ function ShellInner() {
 
   useWebBodyScrollLock(isDrawerOpen)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const unsubscribe = navigator.addListener('state', () => {
       closeAllActiveElements()
     })

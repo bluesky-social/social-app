@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -31,7 +31,7 @@ export function SendViaChatDialog({
     },
   })
 
-  const onCreateChat = useCallback(
+  const onCreateChat = React.useCallback(
     (did: string) => {
       control.close(() => createChat([did]))
     },

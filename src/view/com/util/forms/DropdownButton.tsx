@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useMemo, useRef} from 'react'
+import React from 'react'
 import {
   Dimensions,
   GestureResponderEvent,
@@ -81,11 +81,11 @@ export function DropdownButton({
   rightOffset = 0,
   bottomOffset = 0,
   accessibilityLabel,
-}: PropsWithChildren<DropdownButtonProps>) {
+}: React.PropsWithChildren<DropdownButtonProps>) {
   const {_} = useLingui()
 
-  const ref1 = useRef<TouchableOpacity>(null)
-  const ref2 = useRef<View>(null)
+  const ref1 = React.useRef<TouchableOpacity>(null)
+  const ref2 = React.useRef<View>(null)
 
   const onPress = (e: GestureResponderEvent) => {
     const ref = ref1.current || ref2.current
@@ -134,7 +134,7 @@ export function DropdownButton({
     )
   }
 
-  const numItems = useMemo(
+  const numItems = React.useMemo(
     () =>
       items.filter(item => {
         if (item === undefined || item === false) {

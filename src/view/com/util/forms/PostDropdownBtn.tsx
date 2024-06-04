@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {
   Pressable,
   type PressableProps,
@@ -483,5 +483,5 @@ let PostDropdownBtn = ({
   )
 }
 
-PostDropdownBtn = memo(PostDropdownBtn)
+PostDropdownBtn = React.memo(PostDropdownBtn)
 export {PostDropdownBtn}

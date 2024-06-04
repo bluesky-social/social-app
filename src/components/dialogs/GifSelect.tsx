@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React from 'react'
 import {TextInput, View} from 'react-native'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
@@ -40,18 +34,18 @@ export function GifSelectDialog({
 }) {
   const control = Dialog.useDialogControl()
 
-  useImperativeHandle(controlRef, () => ({
+  React.useImperativeHandle(controlRef, () => ({
     open: () => control.open(),
   }))
 
-  const onSelectGif = useCallback(
+  const onSelectGif = React.useCallback(
     (gif: Gif) => {
       control.close(() => onSelectGifProp(gif))
     },
     [control, onSelectGifProp],
   )
 
-  const renderErrorBoundary = useCallback(
+  const renderErrorBoundary = React.useCallback(
     (error: any) => <DialogError details={String(error)} />,
     [],
   )
@@ -79,9 +73,9 @@ function GifList({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const textInputRef = useRef<TextInput>(null)
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
-  const [undeferredSearch, setSearch] = useState('')
+  const textInputRef = React.useRef<TextInput>(null)
+  const listRef = React.useRef<BottomSheetFlatListMethods>(null)
+  const [undeferredSearch, setSearch] = React.useState('')
   const search = useThrottledValue(undeferredSearch, 500)
 
   const isSearching = search.length > 0
@@ -100,11 +94,11 @@ function GifList({
     refetch,
   } = isSearching ? searchQuery : trendingQuery
 
-  const flattenedData = useMemo(() => {
+  const flattenedData = React.useMemo(() => {
     return data?.pages.flatMap(page => page.results) || []
   }, [data])
 
-  const renderItem = useCallback(
+  const renderItem = React.useCallback(
     ({item}: {item: Gif}) => {
       return <GifPreview gif={item} onSelectGif={onSelectGif} />
     },
@@ -118,7 +112,7 @@ function GifList({
 
   const hasData = flattenedData.length > 0
 
-  const onGoBack = useCallback(() => {
+  const onGoBack = React.useCallback(() => {
     if (isSearching) {
       // clear the input and reset the state
       textInputRef.current?.clear()
@@ -128,7 +122,7 @@ function GifList({
     }
   }, [control, isSearching])
 
-  const listHeader = useMemo(() => {
+  const listHeader = React.useMemo(() => {
     return (
       <View
         style={[

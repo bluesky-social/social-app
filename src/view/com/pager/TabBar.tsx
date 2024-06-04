@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
 import {isNative} from '#/platform/detection'
@@ -31,17 +31,17 @@ export function TabBar({
   onPressSelected,
 }: TabBarProps) {
   const pal = usePalette('default')
-  const scrollElRef = useRef<ScrollView>(null)
-  const itemRefs = useRef<Array<Element>>([])
-  const [itemXs, setItemXs] = useState<number[]>([])
-  const indicatorStyle = useMemo(
+  const scrollElRef = React.useRef<ScrollView>(null)
+  const itemRefs = React.useRef<Array<Element>>([])
+  const [itemXs, setItemXs] = React.useState<number[]>([])
+  const indicatorStyle = React.useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
   const {isDesktop, isTablet} = useWebMediaQueries()
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isNative) {
       // On native, the primary interaction is swiping.
       // We adjust the scroll little by little on every tab change.
@@ -95,7 +95,7 @@ export function TabBar({
     }
   }, [scrollElRef, itemXs, selectedPage, styles])
 
-  const onPressItem = useCallback(
+  const onPressItem = React.useCallback(
     (index: number) => {
       onSelect?.(index)
       if (index === selectedPage) {

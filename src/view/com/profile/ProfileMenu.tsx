@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {TouchableOpacity} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -378,5 +378,5 @@ let ProfileMenu = ({
   )
 }
 
-ProfileMenu = memo(ProfileMenu)
+ProfileMenu = React.memo(ProfileMenu)
 export {ProfileMenu}

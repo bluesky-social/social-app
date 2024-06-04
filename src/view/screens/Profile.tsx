@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -170,7 +170,7 @@ function ProfileScreenLoaded({
   const hasDescription = description !== ''
   const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
   const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
-  const moderation = useMemo(
+  const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
@@ -186,7 +186,7 @@ function ProfileScreenLoaded({
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
-  const sectionTitles = useMemo<string[]>(() => {
+  const sectionTitles = React.useMemo<string[]>(() => {
     return [
       showFiltersTab ? _(msg`Labels`) : undefined,
       showListsTab && hasLabeler ? _(msg`Lists`) : undefined,

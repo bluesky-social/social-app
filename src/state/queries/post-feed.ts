@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import React from 'react'
 import {AppState} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -122,12 +122,12 @@ export function usePostFeedQuery(
     ) ?? -1
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
   const agent = useAgent()
-  const lastRun = useRef<{
+  const lastRun = React.useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
     result: InfiniteData<FeedPage>
   } | null>(null)
-  const lastPageCountRef = useRef(0)
+  const lastPageCountRef = React.useRef(0)
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -212,7 +212,7 @@ export function usePostFeedQuery(
             cursor: lastPage.cursor,
           }
         : undefined,
-    select: useCallback(
+    select: React.useCallback(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
@@ -343,7 +343,7 @@ export function usePostFeedQuery(
     ),
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     const {isFetching, hasNextPage, data} = query
     if (isFetching || !hasNextPage) {
       return

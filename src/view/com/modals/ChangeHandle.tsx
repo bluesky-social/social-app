@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -73,7 +73,7 @@ export function Inner({
     useUpdateHandleMutation()
   const agent = useAgent()
 
-  const [error, setError] = useState<string>('')
+  const [error, setError] = React.useState<string>('')
 
   const [isCustom, setCustom] = React.useState<boolean>(false)
   const [handle, setHandle] = React.useState<string>('')

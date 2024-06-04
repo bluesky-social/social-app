@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -70,7 +70,7 @@ let ProfileHeaderLabeler = ({
   const cantSubscribePrompt = Prompt.usePromptControl()
   const isSelf = currentAccount?.did === profile.did
 
-  const moderation = useMemo(
+  const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
@@ -314,7 +314,7 @@ let ProfileHeaderLabeler = ({
     </ProfileHeaderShell>
   )
 }
-ProfileHeaderLabeler = memo(ProfileHeaderLabeler)
+ProfileHeaderLabeler = React.memo(ProfileHeaderLabeler)
 export {ProfileHeaderLabeler}
 
 function CantSubscribePrompt({

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React from 'react'
 import type {TextInput as TextInputType} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
@@ -63,11 +57,11 @@ export function SearchablePeopleList({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
-  const listRef = useRef<BottomSheetFlatListMethods>(null)
+  const listRef = React.useRef<BottomSheetFlatListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = useRef<TextInputType>(null)
+  const inputRef = React.useRef<TextInputType>(null)
 
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = React.useState('')
 
   const {
     data: results,
@@ -76,7 +70,7 @@ export function SearchablePeopleList({
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
 
-  const items = useMemo(() => {
+  const items = React.useMemo(() => {
     let _items: Item[] = []
 
     if (isError) {
@@ -138,7 +132,7 @@ export function SearchablePeopleList({
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
   }
 
-  const renderItems = useCallback(
+  const renderItems = React.useCallback(
     ({item}: {item: Item}) => {
       switch (item.type) {
         case 'profile': {
@@ -165,7 +159,7 @@ export function SearchablePeopleList({
     [moderationOpts, onSelectChat],
   )
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     if (isWeb) {
       setImmediate(() => {
         inputRef?.current?.focus()
@@ -173,7 +167,7 @@ export function SearchablePeopleList({
     }
   }, [])
 
-  const listHeader = useMemo(() => {
+  const listHeader = React.useMemo(() => {
     return (
       <View
         style={[
@@ -297,7 +291,7 @@ function ProfileCard({
     moderation.ui('displayName'),
   )
 
-  const handleOnPress = useCallback(() => {
+  const handleOnPress = React.useCallback(() => {
     onPress(profile.did)
   }, [onPress, profile.did])
 

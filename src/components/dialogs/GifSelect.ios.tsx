@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React from 'react'
 import {Modal, ScrollView, TextInput, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -37,18 +31,18 @@ export function GifSelectDialog({
   onSelectGif: (gif: Gif) => void
 }) {
   const t = useTheme()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = React.useState(false)
 
-  useImperativeHandle(controlRef, () => ({
+  React.useImperativeHandle(controlRef, () => ({
     open: () => setOpen(true),
   }))
 
-  const close = useCallback(() => {
+  const close = React.useCallback(() => {
     setOpen(false)
     onClose()
   }, [onClose])
 
-  const onSelectGif = useCallback(
+  const onSelectGif = React.useCallback(
     (gif: Gif) => {
       onSelectGifProp(gif)
       close()
@@ -56,7 +50,7 @@ export function GifSelectDialog({
     [onSelectGifProp, close],
   )
 
-  const renderErrorBoundary = useCallback(
+  const renderErrorBoundary = React.useCallback(
     (error: any) => <ModalError details={String(error)} close={close} />,
     [close],
   )
@@ -88,9 +82,9 @@ function GifList({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const textInputRef = useRef<TextInput>(null)
-  const listRef = useRef<FlatList_INTERNAL>(null)
-  const [undeferredSearch, setSearch] = useState('')
+  const textInputRef = React.useRef<TextInput>(null)
+  const listRef = React.useRef<FlatList_INTERNAL>(null)
+  const [undeferredSearch, setSearch] = React.useState('')
   const search = useThrottledValue(undeferredSearch, 500)
 
   const isSearching = search.length > 0
@@ -109,11 +103,11 @@ function GifList({
     refetch,
   } = isSearching ? searchQuery : trendingQuery
 
-  const flattenedData = useMemo(() => {
+  const flattenedData = React.useMemo(() => {
     return data?.pages.flatMap(page => page.results) || []
   }, [data])
 
-  const renderItem = useCallback(
+  const renderItem = React.useCallback(
     ({item}: {item: Gif}) => {
       return <GifPreview gif={item} onSelectGif={onSelectGif} />
     },
@@ -127,7 +121,7 @@ function GifList({
 
   const hasData = flattenedData.length > 0
 
-  const onGoBack = useCallback(() => {
+  const onGoBack = React.useCallback(() => {
     if (isSearching) {
       // clear the input and reset the state
       textInputRef.current?.clear()
@@ -137,7 +131,7 @@ function GifList({
     }
   }, [isSearching])
 
-  const listHeader = useMemo(() => {
+  const listHeader = React.useMemo(() => {
     return (
       <View style={[a.relative, a.mb_lg, a.pt_4xl, a.flex_row, a.align_center]}>
         {/* cover top corners */}

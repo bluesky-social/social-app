@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React from 'react'
 import {NativeScrollEvent} from 'react-native'
 import {interpolate, useSharedValue} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
@@ -23,7 +23,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isWeb) {
       return listenToForcedWindowScroll(() => {
         startDragOffset.value = null
@@ -33,7 +33,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     }
   })
 
-  const snapToClosestState = useCallback(
+  const snapToClosestState = React.useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -58,7 +58,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [startDragOffset, startMode, setMode, mode, headerHeight],
   )
 
-  const onBeginDrag = useCallback(
+  const onBeginDrag = React.useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -69,7 +69,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [mode, startDragOffset, startMode],
   )
 
-  const onEndDrag = useCallback(
+  const onEndDrag = React.useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -83,7 +83,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [snapToClosestState],
   )
 
-  const onMomentumEnd = useCallback(
+  const onMomentumEnd = React.useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -93,7 +93,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [snapToClosestState],
   )
 
-  const onScroll = useCallback(
+  const onScroll = React.useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {

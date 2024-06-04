@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -59,7 +59,7 @@ let ProfileHeaderStandard = ({
   const {_} = useLingui()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
-  const moderation = useMemo(
+  const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
@@ -299,5 +299,5 @@ let ProfileHeaderStandard = ({
     </ProfileHeaderShell>
   )
 }
-ProfileHeaderStandard = memo(ProfileHeaderStandard)
+ProfileHeaderStandard = React.memo(ProfileHeaderStandard)
 export {ProfileHeaderStandard}

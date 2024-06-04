@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -72,7 +72,7 @@ let ConvoMenu = ({
 
   const {data: convo} = useConvoQuery(initialConvo)
 
-  const onNavigateToProfile = useCallback(() => {
+  const onNavigateToProfile = React.useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 

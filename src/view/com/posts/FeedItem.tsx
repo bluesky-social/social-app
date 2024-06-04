@@ -1,4 +1,4 @@
-import React, {memo, useMemo, useState} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -72,7 +72,7 @@ export function FeedItem({
   hideTopBorder,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
-  const richText = useMemo(
+  const richText = React.useMemo(
     () =>
       new RichTextAPI({
         text: record.text,
@@ -127,7 +127,7 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const href = useMemo(() => {
+  const href = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
@@ -343,7 +343,7 @@ let FeedItemInner = ({
     </Link>
   )
 }
-FeedItemInner = memo(FeedItemInner)
+FeedItemInner = React.memo(FeedItemInner)
 
 let PostContent = ({
   moderation,
@@ -360,7 +360,7 @@ let PostContent = ({
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const [limitLines, setLimitLines] = useState(
+  const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
 
@@ -407,7 +407,7 @@ let PostContent = ({
     </ContentHider>
   )
 }
-PostContent = memo(PostContent)
+PostContent = React.memo(PostContent)
 
 function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
   const pal = usePalette('default')

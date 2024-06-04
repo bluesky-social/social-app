@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef} from 'react'
+import React from 'react'
 import {
   GestureResponderEvent,
   LayoutAnimation,
@@ -41,7 +41,7 @@ let MessageItem = ({
     ChatBskyConvoDefs.isMessageView(nextMessage) &&
     nextMessage.sender?.did === currentAccount?.did
 
-  const isLastInGroup = useMemo(() => {
+  const isLastInGroup = React.useMemo(() => {
     // if this message is pending, it means the next message is pending too
     if (isPending && nextMessage) {
       return false
@@ -66,7 +66,7 @@ let MessageItem = ({
     return true
   }, [message, nextMessage, isFromSelf, isNextFromSelf, isPending])
 
-  const lastInGroupRef = useRef(isLastInGroup)
+  const lastInGroupRef = React.useRef(isLastInGroup)
   if (lastInGroupRef.current !== isLastInGroup) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     lastInGroupRef.current = isLastInGroup
@@ -75,7 +75,7 @@ let MessageItem = ({
   const pendingColor =
     t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
 
-  const rt = useMemo(() => {
+  const rt = React.useMemo(() => {
     return new RichTextAPI({text: message.text, facets: message.facets})
   }, [message.text, message.facets])
 
@@ -147,7 +147,7 @@ let MessageItemMetadata = ({
   const {_} = useLingui()
   const {message} = item
 
-  const handleRetry = useCallback(
+  const handleRetry = React.useCallback(
     (e: GestureResponderEvent) => {
       if (item.type === 'pending-message' && item.retry) {
         e.preventDefault()
@@ -158,7 +158,7 @@ let MessageItemMetadata = ({
     [item],
   )
 
-  const relativeTimestamp = useCallback(
+  const relativeTimestamp = React.useCallback(
     (timestamp: string) => {
       const date = new Date(timestamp)
       const now = new Date()

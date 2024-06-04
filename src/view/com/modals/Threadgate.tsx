@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {
   Pressable,
   StyleProp,
@@ -32,7 +32,7 @@ export function Component({
 }) {
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
-  const [selected, setSelected] = useState(settings)
+  const [selected, setSelected] = React.useState(settings)
   const {_} = useLingui()
   const {data: lists} = useMyListsQuery('curate')
 

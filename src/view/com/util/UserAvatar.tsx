@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import React from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
@@ -154,7 +154,7 @@ let DefaultAvatar = ({
     </Svg>
   )
 }
-DefaultAvatar = memo(DefaultAvatar)
+DefaultAvatar = React.memo(DefaultAvatar)
 export {DefaultAvatar}
 
 let UserAvatar = ({
@@ -167,7 +167,7 @@ let UserAvatar = ({
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
 
-  const aviStyle = useMemo(() => {
+  const aviStyle = React.useMemo(() => {
     if (type === 'algo' || type === 'list' || type === 'labeler') {
       return {
         width: size,
@@ -184,7 +184,7 @@ let UserAvatar = ({
     }
   }, [type, size, backgroundColor])
 
-  const alert = useMemo(() => {
+  const alert = React.useMemo(() => {
     if (!moderation?.alert) {
       return null
     }
@@ -229,7 +229,7 @@ let UserAvatar = ({
     </View>
   )
 }
-UserAvatar = memo(UserAvatar)
+UserAvatar = React.memo(UserAvatar)
 export {UserAvatar}
 
 let EditableUserAvatar = ({
@@ -244,7 +244,7 @@ let EditableUserAvatar = ({
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
-  const aviStyle = useMemo(() => {
+  const aviStyle = React.useMemo(() => {
     if (type === 'algo' || type === 'list') {
       return {
         width: size,
@@ -379,7 +379,7 @@ let EditableUserAvatar = ({
     </Menu.Root>
   )
 }
-EditableUserAvatar = memo(EditableUserAvatar)
+EditableUserAvatar = React.memo(EditableUserAvatar)
 export {EditableUserAvatar}
 
 let PreviewableUserAvatar = ({
@@ -417,7 +417,7 @@ let PreviewableUserAvatar = ({
     </ProfileHoverCard>
   )
 }
-PreviewableUserAvatar = memo(PreviewableUserAvatar)
+PreviewableUserAvatar = React.memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}
 
 const styles = StyleSheet.create({

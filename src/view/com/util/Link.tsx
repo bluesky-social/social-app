@@ -1,4 +1,4 @@
-import React, {ComponentProps, memo, useMemo} from 'react'
+import React from 'react'
 import {
   GestureResponderEvent,
   Platform,
@@ -36,7 +36,7 @@ type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
 
-interface Props extends ComponentProps<typeof TouchableOpacity> {
+interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   testID?: string
   style?: StyleProp<ViewStyle>
   href?: string
@@ -52,7 +52,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   onBeforePress?: () => void
 }
 
-export const Link = memo(function Link({
+export const Link = React.memo(function Link({
   testID,
   style,
   href,
@@ -153,7 +153,7 @@ export const Link = memo(function Link({
   )
 })
 
-export const TextLink = memo(function TextLink({
+export const TextLink = React.memo(function TextLink({
   testID,
   type = 'md',
   style,
@@ -248,7 +248,7 @@ export const TextLink = memo(function TextLink({
       openLink,
     ],
   )
-  const hrefAttrs = useMemo(() => {
+  const hrefAttrs = React.useMemo(() => {
     const isExternal = isExternalUrl(href)
     if (isExternal) {
       return {
@@ -298,7 +298,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   onPointerEnter?: () => void
   anchorNoUnderline?: boolean
 }
-export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
+export const TextLinkOnWebOnly = React.memo(function DesktopWebTextLink({
   testID,
   type = 'md',
   style,

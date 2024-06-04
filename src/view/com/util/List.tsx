@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {FlatListProps, RefreshControl, ViewToken} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 
@@ -141,6 +141,6 @@ function ListImpl<ItemT>(
   )
 }
 
-export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
+export const List = React.memo(React.forwardRef(ListImpl)) as <ItemT>(
   props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
 ) => React.ReactElement

@@ -1,4 +1,4 @@
-import React, {Component, ErrorInfo, ReactNode} from 'react'
+import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -7,8 +7,8 @@ import {ErrorScreen} from './error/ErrorScreen'
 import {CenteredView} from './Views'
 
 interface Props {
-  children?: ReactNode
-  renderError?: (error: any) => ReactNode
+  children?: React.ReactNode
+  renderError?: (error: any) => React.ReactNode
 }
 
 interface State {
@@ -16,7 +16,7 @@ interface State {
   error: any
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
     hasError: false,
     error: undefined,
@@ -26,7 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
     return {hasError: true, error}
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     logger.error(error, {errorInfo})
   }
 

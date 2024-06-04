@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react'
+import React from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -30,7 +30,7 @@ interface Props {
 }
 
 export function DateInput(props: Props) {
-  const [show, setShow] = useState(false)
+  const [show, setShow] = React.useState(false)
   const theme = useTheme()
   const pal = usePalette('default')
 
@@ -40,7 +40,7 @@ export function DateInput(props: Props) {
     })
   }, [props.handleAsUTC])
 
-  const onChangeInternal = useCallback(
+  const onChangeInternal = React.useCallback(
     (date: Date) => {
       setShow(false)
       props.onChange(date)
@@ -48,11 +48,11 @@ export function DateInput(props: Props) {
     [setShow, props],
   )
 
-  const onPress = useCallback(() => {
+  const onPress = React.useCallback(() => {
     setShow(true)
   }, [setShow])
 
-  const onCancel = useCallback(() => {
+  const onCancel = React.useCallback(() => {
     setShow(false)
   }, [])
 

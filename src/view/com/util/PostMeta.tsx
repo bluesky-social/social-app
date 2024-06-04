@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
@@ -45,11 +45,13 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
-  const onBeforePressAuthor = useCallback(() => {
+
+  const onBeforePressAuthor = React.useCallback(() => {
     precacheProfile(queryClient, opts.author)
     onOpenAuthor?.()
   }, [queryClient, opts.author, onOpenAuthor])
-  const onBeforePressPost = useCallback(() => {
+
+  const onBeforePressPost = React.useCallback(() => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
 
@@ -125,7 +127,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     </View>
   )
 }
-PostMeta = memo(PostMeta)
+PostMeta = React.memo(PostMeta)
 export {PostMeta}
 
 const styles = StyleSheet.create({

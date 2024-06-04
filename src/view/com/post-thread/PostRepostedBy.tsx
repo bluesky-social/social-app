@@ -1,4 +1,4 @@
-import React, {useMemo, useCallback, useState} from 'react'
+import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
@@ -12,7 +12,7 @@ import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
 import {cleanError} from '#/lib/strings/errors'
 
 export function PostRepostedBy({uri}: {uri: string}) {
-  const [isPTRing, setIsPTRing] = useState(false)
+  const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data: resolvedUri,
     error: resolveError,
@@ -29,13 +29,13 @@ export function PostRepostedBy({uri}: {uri: string}) {
     error,
     refetch,
   } = usePostRepostedByQuery(resolvedUri?.uri)
-  const repostedBy = useMemo(() => {
+  const repostedBy = React.useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.repostedBy)
     }
   }, [data])
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -45,7 +45,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = useCallback(async () => {
+  const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -54,7 +54,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = useCallback(
+  const renderItem = React.useCallback(
     ({item}: {item: ActorDefs.ProfileViewBasic}) => {
       return <ProfileCardWithFollowBtn key={item.did} profile={item} />
     },

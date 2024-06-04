@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import React from 'react'
 import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -326,7 +326,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
 interface BtnProps
   extends Pick<
-    ComponentProps<typeof TouchableOpacity>,
+    React.ComponentProps<typeof TouchableOpacity>,
     | 'accessible'
     | 'accessibilityRole'
     | 'accessibilityHint'

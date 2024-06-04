@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -58,13 +58,13 @@ export const LoginForm = ({
 }) => {
   const {track} = useAnalytics()
   const t = useTheme()
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
-    useState<boolean>(false)
-  const [identifier, setIdentifier] = useState<string>(initialHandle)
-  const [password, setPassword] = useState<string>('')
-  const [authFactorToken, setAuthFactorToken] = useState<string>('')
-  const passwordInputRef = useRef<TextInput>(null)
+    React.useState<boolean>(false)
+  const [identifier, setIdentifier] = React.useState<string>(initialHandle)
+  const [password, setPassword] = React.useState<string>('')
+  const [authFactorToken, setAuthFactorToken] = React.useState<string>('')
+  const passwordInputRef = React.useRef<TextInput>(null)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()

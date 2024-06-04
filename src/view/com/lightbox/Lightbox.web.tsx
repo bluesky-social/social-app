@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React from 'react'
 import {
   Image,
   ImageStyle,
@@ -79,23 +79,23 @@ function LightboxInner({
   onClose: () => void
 }) {
   const {_} = useLingui()
-  const [index, setIndex] = useState<number>(initialIndex)
-  const [isAltExpanded, setAltExpanded] = useState(false)
+  const [index, setIndex] = React.useState<number>(initialIndex)
+  const [isAltExpanded, setAltExpanded] = React.useState(false)
 
   const canGoLeft = index >= 1
   const canGoRight = index < imgs.length - 1
-  const onPressLeft = useCallback(() => {
+  const onPressLeft = React.useCallback(() => {
     if (canGoLeft) {
       setIndex(index - 1)
     }
   }, [index, canGoLeft])
-  const onPressRight = useCallback(() => {
+  const onPressRight = React.useCallback(() => {
     if (canGoRight) {
       setIndex(index + 1)
     }
   }, [index, canGoRight])
 
-  const onKeyDown = useCallback(
+  const onKeyDown = React.useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
@@ -108,7 +108,7 @@ function LightboxInner({
     [onClose, onPressLeft, onPressRight],
   )
 
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onKeyDown])

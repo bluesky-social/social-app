@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import {CenteredView} from '../util/Views'
@@ -12,7 +12,7 @@ import {useLikedByQuery} from '#/state/queries/post-liked-by'
 import {cleanError} from '#/lib/strings/errors'
 
 export function PostLikedBy({uri}: {uri: string}) {
-  const [isPTRing, setIsPTRing] = useState(false)
+  const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data: resolvedUri,
     error: resolveError,
@@ -29,13 +29,13 @@ export function PostLikedBy({uri}: {uri: string}) {
     error,
     refetch,
   } = useLikedByQuery(resolvedUri?.uri)
-  const likes = useMemo(() => {
+  const likes = React.useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
     }
   }, [data])
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = React.useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -45,7 +45,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = useCallback(async () => {
+  const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -54,7 +54,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = useCallback(({item}: {item: GetLikes.Like}) => {
+  const renderItem = React.useCallback(({item}: {item: GetLikes.Like}) => {
     return (
       <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
     )

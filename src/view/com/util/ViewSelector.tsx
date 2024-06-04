@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -59,7 +59,7 @@ export const ViewSelector = React.forwardRef<
   ref,
 ) {
   const pal = usePalette('default')
-  const [selectedIndex, setSelectedIndex] = useState<number>(0)
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
   const flatListRef = React.useRef<FlatList_INTERNAL>(null)
 
   // events
@@ -71,7 +71,8 @@ export const ViewSelector = React.forwardRef<
     (index: number) => setSelectedIndex(clamp(index, 0, sections.length)),
     [setSelectedIndex, sections],
   )
-  useEffect(() => {
+
+  React.useEffect(() => {
     onSelectView?.(selectedIndex)
   }, [selectedIndex, onSelectView])
 

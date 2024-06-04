@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
@@ -141,8 +141,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [setIsDropping])
 
-  const pastSuggestedUris = useRef(new Set<string>())
-  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
+  const pastSuggestedUris = React.useRef(new Set<string>())
+  const prevDetectedUris = React.useRef(new Map<string, LinkFacetMatch>())
   const editor = useEditor(
     {
       extensions,

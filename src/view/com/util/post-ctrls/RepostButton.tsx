@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -40,7 +40,7 @@ let RepostButton = ({
     [t, isReposted],
   )
 
-  const close = useCallback(() => dialogControl.close(), [dialogControl])
+  const close = React.useCallback(() => dialogControl.close(), [dialogControl])
 
   return (
     <>
@@ -140,5 +140,5 @@ let RepostButton = ({
     </>
   )
 }
-RepostButton = memo(RepostButton)
+RepostButton = React.memo(RepostButton)
 export {RepostButton}

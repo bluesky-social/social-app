@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react'
+import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -80,7 +80,7 @@ export function ProfileFeedScreen(props: Props) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
-  const uri = useMemo(
+  const uri = React.useMemo(
     () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
     [rkey, handleOrDid],
   )
@@ -261,7 +261,7 @@ export function ProfileFeedScreenInner({
     [feedSectionRef],
   )
 
-  const renderHeader = useCallback(() => {
+  const renderHeader = React.useCallback(() => {
     return (
       <>
         <ProfileSubpageHeader
@@ -447,7 +447,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const {hasSession} = useSession()
     const feedFeedback = useFeedFeedback(feed, hasSession)
 
-    const onScrollToTop = useCallback(() => {
+    const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,
@@ -467,7 +467,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return listenSoftReset(onScrollToTop)
     }, [onScrollToTop, isScreenFocused])
 
-    const renderPostsEmpty = useCallback(() => {
+    const renderPostsEmpty = React.useCallback(() => {
       return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
     }, [_])
 

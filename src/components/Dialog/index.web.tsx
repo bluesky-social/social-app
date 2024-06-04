@@ -1,4 +1,4 @@
-import React, {useImperativeHandle} from 'react'
+import React from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -75,7 +75,7 @@ export function Outer({
     close()
   }, [close])
 
-  useImperativeHandle(
+  React.useImperativeHandle(
     control.ref,
     () => ({
       open,

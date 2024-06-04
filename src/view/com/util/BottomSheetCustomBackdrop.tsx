@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {TouchableWithoutFeedback} from 'react-native'
 import Animated, {
   Extrapolation,
@@ -25,7 +25,7 @@ export function createCustomBackdrop(
       ),
     }))
 
-    const containerStyle = useMemo(
+    const containerStyle = React.useMemo(
       () => [style, {backgroundColor: '#000'}, opacity],
       [style, opacity],
     )

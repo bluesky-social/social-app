@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {LayoutAnimation} from 'react-native'
 import {
   ComAtprotoServerCreateAccount,
@@ -204,7 +204,7 @@ export function useSubmitSignup({
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
 
-  return useCallback(
+  return React.useCallback(
     async (verificationCode?: string) => {
       if (!state.email) {
         dispatch({type: 'setStep', value: SignupStep.INFO})

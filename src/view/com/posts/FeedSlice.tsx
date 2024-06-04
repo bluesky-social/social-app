@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
@@ -88,7 +88,7 @@ let FeedSlice = ({
     </>
   )
 }
-FeedSlice = memo(FeedSlice)
+FeedSlice = React.memo(FeedSlice)
 export {FeedSlice}
 
 function ViewFullThread({slice}: {slice: FeedPostSlice}) {

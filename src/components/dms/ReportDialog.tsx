@@ -1,4 +1,4 @@
-import React, {memo, useMemo, useState} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {
   ChatBskyConvoDefs,
@@ -51,11 +51,11 @@ let ReportDialog = ({
     </Dialog.Outer>
   )
 }
-ReportDialog = memo(ReportDialog)
+ReportDialog = React.memo(ReportDialog)
 export {ReportDialog}
 
 function DialogInner({params}: {params: ReportDialogParams}) {
-  const [reportOption, setReportOption] = useState<ReportOption | null>(null)
+  const [reportOption, setReportOption] = React.useState<ReportOption | null>(null)
 
   return reportOption ? (
     <SubmitStep
@@ -100,7 +100,7 @@ function SubmitStep({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
-  const [details, setDetails] = useState('')
+  const [details, setDetails] = React.useState('')
   const control = Dialog.useDialogContext()
   const agent = useAgent()
 
@@ -134,7 +134,7 @@ function SubmitStep({
     },
   })
 
-  const copy = useMemo(() => {
+  const copy = React.useMemo(() => {
     return {
       convoMessage: {
         title: _(msg`Report this message`),
@@ -243,7 +243,7 @@ function SubmitStep({
 
 function PreviewMessage({message}: {message: ChatBskyConvoDefs.MessageView}) {
   const t = useTheme()
-  const rt = useMemo(() => {
+  const rt = React.useMemo(() => {
     return new RichTextAPI({text: message.text, facets: message.facets})
   }, [message.text, message.facets])
 

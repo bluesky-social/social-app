@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import * as MediaLibrary from 'expo-media-library'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -27,7 +27,7 @@ export function OpenCameraBtn({gallery, disabled}: Props) {
     MediaLibrary.usePermissions()
   const t = useTheme()
 
-  const onPressTakePicture = useCallback(async () => {
+  const onPressTakePicture = React.useCallback(async () => {
     track('Composer:CameraOpened')
     try {
       if (!(await requestCameraAccessIfNeeded())) {

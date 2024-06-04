@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -29,7 +29,7 @@ let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
     </View>
   )
 }
-ProfileHeaderLoading = memo(ProfileHeaderLoading)
+ProfileHeaderLoading = React.memo(ProfileHeaderLoading)
 export {ProfileHeaderLoading}
 
 interface Props {
