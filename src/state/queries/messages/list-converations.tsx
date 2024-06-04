@@ -89,9 +89,11 @@ export function ListConvosProviderInner({
       events => {
         if (events.type !== 'logs') return
 
+        let shouldRefetch = false
+
         events.logs.forEach(log => {
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
-            refetch()
+            shouldRefetch = true
           } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
             queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) =>
               optimisticDelete(log.convoId, old),
@@ -165,11 +167,15 @@ export function ListConvosProviderInner({
                   }),
                 }
               } else {
-                refetch()
+                shouldRefetch = true
               }
             })
           }
         })
+
+        if (shouldRefetch) {
+          refetch()
+        }
       },
       {
         // get events for all chats
