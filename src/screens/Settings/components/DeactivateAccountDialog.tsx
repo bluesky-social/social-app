@@ -19,6 +19,18 @@ export function DeactivateAccountDialog({
 }: {
   control: DialogOuterProps['control']
 }) {
+  return (
+    <Prompt.Outer control={control}>
+      <DeactivateAccountDialogInner control={control} />
+    </Prompt.Outer>
+  )
+}
+
+function DeactivateAccountDialogInner({
+  control,
+}: {
+  control: DialogOuterProps['control']
+}) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
@@ -57,7 +69,7 @@ export function DeactivateAccountDialog({
   }, [agent, control, logout, _, setPending])
 
   return (
-    <Prompt.Outer control={control} testID="confirmModal">
+    <>
       <Prompt.TitleText>{_(msg`Deactivate account`)}</Prompt.TitleText>
       <Prompt.DescriptionText>
         <Trans>
@@ -113,6 +125,6 @@ export function DeactivateAccountDialog({
           <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
         </View>
       )}
-    </Prompt.Outer>
+    </>
   )
 }
