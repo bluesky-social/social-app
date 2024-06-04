@@ -395,11 +395,13 @@ function ProfileCard({
           />
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
-              style={[t.atoms.text, a.font_bold, a.leading_snug]}
+              style={[t.atoms.text, a.font_bold, a.leading_tight]}
               numberOfLines={1}>
               {displayName}
             </Text>
-            <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
+            <Text
+              style={[a.leading_tight, t.atoms.text_contrast_high]}
+              numberOfLines={2}>
               {!enabled ? <Trans>{handle} can't be messaged</Trans> : handle}
             </Text>
           </View>
