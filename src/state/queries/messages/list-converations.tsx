@@ -26,10 +26,15 @@ import {useAgent, useSession} from '#/state/session'
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
-export function useListConvosQuery() {
+export function useListConvosQuery({
+  enabled,
+}: {
+  enabled?: boolean
+} = {}) {
   const agent = useAgent()
 
   return useInfiniteQuery({
+    enabled,
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
       const {data} = await agent.api.chat.bsky.convo.listConvos(
