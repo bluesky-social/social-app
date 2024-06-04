@@ -21,9 +21,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
+import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
@@ -49,6 +51,7 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -612,25 +615,6 @@ export function SearchScreen(
     [updateSearchHistory, navigation],
   )
 
-  const navigateToProfile = React.useCallback(
-    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      await updateSelectedProfiles(profile)
-      if (isWeb) {
-        navigation.reset({
-          index: 1,
-          routes: [
-            {name: 'Search', params: {q: searchText}},
-            {name: 'Profile', params: {name: profile.handle}},
-          ],
-        })
-      } else {
-        textInput.current?.blur()
-        navigation.navigate('Profile', {name: profile.handle})
-      }
-    },
-    [navigation, searchText, updateSelectedProfiles],
-  )
-
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
   }, [navigateToItem, searchText])
@@ -653,9 +637,15 @@ export function SearchScreen(
 
   const handleProfileClick = React.useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
-      navigateToProfile(profile)
+      if (!isWeb) {
+        textInput.current?.blur()
+      }
+      // Slight delay to avoid updating during push nav animation.
+      setTimeout(() => {
+        updateSelectedProfiles(profile)
+      }, 400)
     },
-    [navigateToProfile],
+    [updateSelectedProfiles],
   )
 
   const onSoftReset = React.useCallback(() => {
@@ -1003,10 +993,12 @@ function SearchHistory({
                     styles.profileItem,
                     isMobile && styles.profileItemMobile,
                   ]}>
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={() => onProfileClick(profile)}
-                    hitSlop={HITSLOP_10}
+                  <Link
+                    href={makeProfileLink(profile)}
+                    title={profile.handle}
+                    asAnchor
+                    anchorNoUnderline
+                    onBeforePress={() => onProfileClick(profile)}
                     style={styles.profilePressable}>
                     <Image
                       source={{uri: profile.avatar}}
@@ -1016,13 +1008,13 @@ function SearchHistory({
                     <Text style={[pal.text, styles.profileName]}>
                       {truncateText(profile.displayName || '', 12)}
                     </Text>
-                  </Pressable>
+                  </Link>
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel="Remove profile"
                     accessibilityHint="Remove profile from search history"
                     onPress={() => onRemoveProfileClick(profile)}
-                    hitSlop={HITSLOP_10}
+                    hitSlop={createHitslop(6)}
                     style={styles.profileRemoveBtn}>
                     <FontAwesomeIcon
                       icon="xmark"
