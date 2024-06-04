@@ -50,6 +50,7 @@ export async function createAgentAndResume(
      * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
      */
     active: storedAccount.active ?? true,
+    status: storedAccount.status,
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
