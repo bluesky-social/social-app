@@ -88,6 +88,7 @@ export function Outer({
     if (!isOpen) return
 
     function handler(e: KeyboardEvent) {
+      e.stopPropagation()
       if (e.key === 'Escape') close()
     }
 

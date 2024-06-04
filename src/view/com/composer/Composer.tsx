@@ -64,7 +64,10 @@ import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {colors, gradients, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
-import {useDialogStateControlContext} from 'state/dialogs'
+import {
+  useDialogStateContext,
+  useDialogStateControlContext,
+} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
@@ -114,6 +117,7 @@ export const ComposePost = observer(function ComposePost({
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
+  const {hasOpenDialogs} = useDialogStateContext()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -202,11 +206,11 @@ export const ComposePost = observer(function ComposePost({
     [onPressCancel],
   )
   useEffect(() => {
-    if (isWeb && !isModalActive) {
+    if (isWeb && !isModalActive && !hasOpenDialogs) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
-  }, [onEscape, isModalActive])
+  }, [onEscape, isModalActive, hasOpenDialogs])
 
   const onNewLink = useCallback(
     (uri: string) => {
