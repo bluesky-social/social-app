@@ -20,7 +20,6 @@ import {
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
-  runOnUI,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -667,9 +666,8 @@ function useAnimatedBorders() {
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
+      'worklet'
       hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
-
-      // already on UI thread
       showHideBottomBorder({
         newContentOffset: event.contentOffset.y,
         newContentHeight: event.contentSize.height,
@@ -680,7 +678,8 @@ function useAnimatedBorders() {
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      runOnUI(showHideBottomBorder)({
+      'worklet'
+      showHideBottomBorder({
         newContentHeight: height,
       })
     },
@@ -689,7 +688,8 @@ function useAnimatedBorders() {
 
   const onScrollViewLayout = useCallback(
     (evt: LayoutChangeEvent) => {
-      runOnUI(showHideBottomBorder)({
+      'worklet'
+      showHideBottomBorder({
         newScrollViewHeight: evt.nativeEvent.layout.height,
       })
     },
