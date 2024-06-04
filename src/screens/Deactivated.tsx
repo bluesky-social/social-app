@@ -4,6 +4,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger} from '#/logger'
@@ -41,6 +42,7 @@ export function Deactivated() {
   const agent = useAgent()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
+  const queryClient = useQueryClient()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -77,6 +79,8 @@ export function Deactivated() {
     try {
       setPending(true)
       await agent.com.atproto.server.activateAccount()
+      await queryClient.resetQueries()
+      await agent.resumeSession(agent.session!)
     } catch (e: any) {
       logger.error(e, {
         context: 'Failed to activate account',
@@ -85,7 +89,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError])
+  }, [_, agent, setPending, setError, queryClient])
 
   return (
     <View style={[a.h_full_vh, a.flex_1, t.atoms.bg]}>
