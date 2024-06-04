@@ -1,22 +1,18 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {CogIcon} from '#/lib/icons'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
+import {atoms as a, useTheme} from '#/alf'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {Link} from '#/components/Link'
 import {useKawaiiMode} from '../../../state/preferences/kawaii'
-import {Link} from '../util/Link'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
@@ -38,7 +34,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   children: React.ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
@@ -51,31 +47,24 @@ function HomeHeaderLayoutDesktopAndTablet({
       {hasSession && (
         <View
           style={[
-            pal.view,
-            pal.border,
+            a.relative,
+            a.flex_row,
+            a.justify_between,
+            a.align_center,
+            a.pt_lg,
+            a.px_lg,
+            a.pb_sm,
+            t.atoms.bg,
+            t.atoms.border_contrast_low,
             styles.bar,
-            styles.topBar,
-            kawaii && {paddingTop: 4, paddingBottom: 0},
+            kawaii && {paddingTop: 4, paddingBottom: 0, paddingLeft: 10},
           ]}>
+          <Logo width={kawaii ? 60 : 22} />
           <Link
-            href="/settings/following-feed"
+            to="/feeds"
             hitSlop={10}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Following Feed Preferences`)}
-            accessibilityHint="">
-            <FontAwesomeIcon
-              icon="sliders"
-              style={pal.textLight as FontAwesomeIconStyle}
-            />
-          </Link>
-          <Logo width={kawaii ? 60 : 28} />
-          <Link
-            href="/settings/saved-feeds"
-            hitSlop={10}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Edit Saved Feeds`)}
-            accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-            <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+            label={_(msg`View your feeds and explore more`)}>
+            <ListSparkle size="lg" fill={t.atoms.text_contrast_medium.color} />
           </Link>
         </View>
       )}
@@ -85,8 +74,8 @@ function HomeHeaderLayoutDesktopAndTablet({
           headerHeight.value = e.nativeEvent.layout.height
         }}
         style={[
-          pal.view,
-          pal.border,
+          t.atoms.bg,
+          t.atoms.border_contrast_low,
           styles.bar,
           styles.tabBar,
           headerMinimalShellTransform,
