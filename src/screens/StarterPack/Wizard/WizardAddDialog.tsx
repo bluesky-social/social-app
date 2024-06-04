@@ -31,7 +31,7 @@ interface Props {
   dispatch: (action: WizardAction) => void
 }
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
+function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
   return item.did
 }
 
@@ -173,10 +173,12 @@ function AddDialog({
 }
 
 function ListHeader({
+  type,
   searchText,
   setSearchText,
   inputRef,
 }: {
+  type: 'profiles' | 'feeds'
   searchText: string
   setSearchText: (text: string) => void
   inputRef: React.Ref<RNTextInput>
@@ -218,7 +220,11 @@ function ListHeader({
             a.leading_tight,
             t.atoms.text_contrast_high,
           ]}>
-          <Trans>Select profiles to add</Trans>
+          {type === 'profiles' ? (
+            <Trans>Select profiles to add</Trans>
+          ) : (
+            <Trans>Select feeds to add</Trans>
+          )}
         </Text>
       </View>
 

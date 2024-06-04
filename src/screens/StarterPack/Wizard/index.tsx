@@ -150,7 +150,7 @@ function WizardInner() {
         showBorder={true}
         showOnDesktop={true}
         renderButton={
-          state.currentStep === 'Profiles'
+          state.currentStep === 'Profiles' || state.currentStep === 'Feeds'
             ? () => (
                 <Button
                   label={_(msg`Cancel`)}

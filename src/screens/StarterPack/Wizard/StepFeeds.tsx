@@ -14,6 +14,8 @@ function keyExtractor(item: GeneratorView) {
 export function StepFeeds() {
   const [state, dispatch] = useWizardState()
 
+  console.log(state)
+
   const renderItem = ({item}: ListRenderItemInfo<GeneratorView>) => {
     return <WizardFeedCard generator={item} state={state} dispatch={dispatch} />
   }
