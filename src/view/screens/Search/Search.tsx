@@ -981,6 +981,7 @@ function SearchHistory({
               isMobile && styles.selectedProfilesContainerMobile,
             ]}>
             <ScrollView
+              keyboardShouldPersistTaps="handled"
               horizontal={true}
               style={styles.profilesRow}
               contentContainerStyle={{
