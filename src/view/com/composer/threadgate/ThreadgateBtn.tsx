@@ -149,7 +149,8 @@ function DialogContent({
             isSelected={!!threadgate.find(v => v.type === 'following')}
             onPress={() => onPressAudience({type: 'following'})}
           />
-          {lists?.length ? (
+          {lists ? (
+            lists.length > 0 &&
             lists.map(list => (
               <Selectable
                 key={list.uri}
