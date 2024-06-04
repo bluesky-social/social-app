@@ -2,6 +2,7 @@ import React, {useLayoutEffect, useRef, useState} from 'react'
 import type {ListRenderItemInfo, TextInput as RNTextInput} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,6 +13,7 @@ import {useProfileFollowsQuery} from 'state/queries/profile-follows'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {WizardProfileCard} from '#/screens/StarterPack/Wizard/StepProfiles/WizardProfileCard'
+import {WizardFeedCard} from '#/screens/StarterPack/Wizard/WizardFeedCard'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {TextInput} from '#/components/dms/dialogs/TextInput'
@@ -19,28 +21,73 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {Text} from '#/components/Typography'
 
+interface Props {
+  control: Dialog.DialogControlProps
+  type: 'profiles' | 'feeds'
+  state: WizardState
+  dispatch: (action: WizardAction) => void
+}
+
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item.did
 }
 
-export function WizardAddDialog({
-  control,
-  state,
-  dispatch,
-}: {
-  control: Dialog.DialogControlProps
-  state: WizardState
-  dispatch: (action: WizardAction) => void
-}) {
+export function WizardAddDialog(props: Props) {
+  if (props.type === 'profiles') {
+    return <AddProfiles {...props} />
+  }
+  return <AddFeeds {...props} />
+}
+
+function AddProfiles(props: Props) {
   const [searchText, setSearchText] = useState('')
 
   const {currentAccount} = useSession()
-  const {data: results} = useActorAutocompleteQuery(searchText, true, 12)
   const {data: followsPages, fetchNextPage} = useProfileFollowsQuery(
     currentAccount?.did,
   )
   const follows = followsPages?.pages.flatMap(page => page.follows) || []
+  const {data: results} = useActorAutocompleteQuery(searchText, true, 12)
 
+  return (
+    <AddDialog
+      {...props}
+      data={searchText ? results : follows}
+      onEndReached={searchText ? undefined : () => fetchNextPage()}
+      searchText={searchText}
+      setSearchText={setSearchText}
+    />
+  )
+}
+
+function AddFeeds(props: Props) {
+  const {currentAccount} = useSession()
+  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
+  return (
+    <AddDialog
+      {...props}
+      data={follows}
+      searchText=""
+      setSearchText={() => {}}
+    />
+  )
+}
+
+function AddDialog({
+  type,
+  control,
+  state,
+  dispatch,
+  data,
+  onEndReached,
+  searchText,
+  setSearchText,
+}: Props & {
+  data?: AppBskyActorDefs.ProfileViewBasic[] | GeneratorView[]
+  onEndReached?: () => void
+  searchText: string
+  setSearchText: (text: string) => void
+}) {
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const inputRef = useRef<RNTextInput>(null)
 
@@ -52,13 +99,12 @@ export function WizardAddDialog({
     }
   }, [])
 
-  const renderItem = ({
-    item,
-  }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
-    return (
+  const renderItem = ({item}: ListRenderItemInfo<any>) =>
+    type === 'profiles' ? (
       <WizardProfileCard profile={item} state={state} dispatch={dispatch} />
+    ) : (
+      <WizardFeedCard generator={item} state={state} dispatch={dispatch} />
     )
-  }
 
   return (
     <Dialog.Outer
@@ -67,7 +113,7 @@ export function WizardAddDialog({
       nativeOptions={{sheet: {snapPoints: ['100%']}}}>
       <Dialog.InnerFlatList
         ref={listRef}
-        data={searchText.length > 0 ? results : follows}
+        data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={
@@ -91,7 +137,7 @@ export function WizardAddDialog({
         ]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         keyboardDismissMode="on-drag"
-        onEndReached={() => fetchNextPage()}
+        onEndReached={onEndReached}
         onEndReachedThreshold={2}
         removeClippedSubviews={true}
       />

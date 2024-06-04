@@ -83,7 +83,7 @@ function WizardInner() {
     staleTime: 0,
   })
   const bottomBarOffset = useBottomBarOffset()
-  const addProfilesControl = useDialogControl()
+  const searchDialogControl = useDialogControl()
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -157,7 +157,7 @@ function WizardInner() {
                   variant="solid"
                   color="primary"
                   size="xsmall"
-                  onPress={addProfilesControl.open}
+                  onPress={searchDialogControl.open}
                   style={{marginLeft: -15}}>
                   <ButtonText>
                     <Trans>Add</Trans>
@@ -188,9 +188,10 @@ function WizardInner() {
       </KeyboardStickyView>
 
       <WizardAddDialog
-        control={addProfilesControl}
+        control={searchDialogControl}
         state={state}
         dispatch={dispatch}
+        type={state.currentStep === 'Profiles' ? 'profiles' : 'feeds'}
       />
     </CenteredView>
   )
