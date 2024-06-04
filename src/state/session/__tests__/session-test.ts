@@ -50,7 +50,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -59,6 +58,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -87,7 +88,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -96,6 +96,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -136,7 +138,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -145,6 +146,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -183,7 +186,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -192,10 +194,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -204,6 +207,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -242,7 +247,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -251,10 +255,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -263,6 +268,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -299,7 +306,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "jay-access-jwt-1",
-            "deactivated": false,
             "did": "jay-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -308,10 +314,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "jay-refresh-jwt-1",
             "service": "https://jay.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -320,10 +327,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -332,6 +340,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -364,7 +374,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
             "did": "jay-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -373,10 +382,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://jay.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": undefined,
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -385,10 +395,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": undefined,
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -397,6 +408,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -446,7 +459,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -455,6 +467,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -490,7 +504,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -499,6 +512,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -601,7 +616,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -610,6 +624,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -681,7 +697,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
             "did": "alice-did",
             "email": "alice@foo.bar",
             "emailAuthFactor": false,
@@ -690,6 +705,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -731,7 +748,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-3",
-            "deactivated": false,
             "did": "alice-did",
             "email": "alice@foo.baz",
             "emailAuthFactor": true,
@@ -740,6 +756,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-3",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -781,7 +799,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-4",
-            "deactivated": false,
             "did": "alice-did",
             "email": "alice@foo.baz",
             "emailAuthFactor": false,
@@ -790,6 +807,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-4",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -937,7 +956,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -946,10 +964,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
             "did": "alice-did",
             "email": "alice@foo.bar",
             "emailAuthFactor": false,
@@ -958,6 +977,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -997,7 +1018,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-2",
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1006,10 +1026,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-2",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
             "did": "alice-did",
             "email": "alice@foo.bar",
             "emailAuthFactor": false,
@@ -1018,6 +1039,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -1156,7 +1179,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1165,6 +1187,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -1218,7 +1242,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1227,6 +1250,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -1280,7 +1305,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1289,6 +1313,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -1371,7 +1397,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "jay-access-jwt-1",
-            "deactivated": false,
             "did": "jay-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1380,10 +1405,11 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "jay-refresh-jwt-1",
             "service": "https://jay.com/",
+            "signupQueued": false,
+            "status": "active",
           },
           {
             "accessJwt": "bob-access-jwt-2",
-            "deactivated": false,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1392,6 +1418,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {
@@ -1429,7 +1457,6 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "clarence-access-jwt-2",
-            "deactivated": false,
             "did": "clarence-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1438,6 +1465,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "clarence-refresh-jwt-2",
             "service": "https://clarence.com/",
+            "signupQueued": false,
+            "status": "active",
           },
         ],
         "currentAgentState": {

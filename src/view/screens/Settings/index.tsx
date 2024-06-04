@@ -60,6 +60,7 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -103,10 +104,10 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={pal.text}>
+        <Text type="md-bold" style={pal.text} numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
-        <Text type="sm" style={pal.textLight}>
+        <Text type="sm" style={pal.textLight} numberOfLines={1}>
           {account.handle}
         </Text>
       </View>
@@ -307,6 +308,11 @@ export function SettingsScreen({}: Props) {
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
   }, [_])
 
+  const deactivateAccountControl = useDialogControl()
+  const onPressDeactivateAccount = React.useCallback(() => {
+    deactivateAccountControl.open()
+  }, [deactivateAccountControl])
+
   const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
   return (
@@ -381,7 +387,7 @@ export function SettingsScreen({}: Props) {
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
 
             <View style={[s.flexRow, styles.heading]}>
-              <Text type="xl-bold" style={pal.text}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
                 <Trans>Signed in as</Trans>
               </Text>
               <View style={s.flex1} />
@@ -791,6 +797,29 @@ export function SettingsScreen({}: Props) {
             <Trans>Export My Data</Trans>
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[pal.view, styles.linkCard]}
+          onPress={onPressDeactivateAccount}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Deactivate account`)}
+          accessibilityHint={_(
+            msg`Opens modal for account deactivation confirmation`,
+          )}>
+          <View style={[styles.iconContainer, dangerBg]}>
+            <FontAwesomeIcon
+              icon={'users-slash'}
+              style={dangerText as FontAwesomeIconStyle}
+              size={18}
+            />
+          </View>
+          <Text type="lg" style={dangerText}>
+            <Trans>Deactivate my account</Trans>
+          </Text>
+        </TouchableOpacity>
+        <DeactivateAccountDialog control={deactivateAccountControl} />
+
         <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}

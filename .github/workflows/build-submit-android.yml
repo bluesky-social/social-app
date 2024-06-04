@@ -120,6 +120,32 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
+      - name: 🏗️ Build Production APK
+        if: ${{ inputs.profile == 'production' }}
+        run: yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
+
+      - name: 🚀 Upload Production APK Artifact
+        id: upload-artifact-production-apk
+        if: ${{ inputs.profile == 'production' }}
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 30
+          compression-level: 6
+          name: build-${{ steps.timestamp.outputs.time }}.apk
+          path: build.apk
+
+      - name: 🔔 Notify Slack of Production APK Build
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android production APK build is ready for download. This is a production build, and you should add it to the GitHub release! Download the artifact here: ${{ steps.upload-artifact-production-apk.outputs.artifact-url }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
       - name: ⬇️ Restore Cache
         id: get-base-commit
         uses: actions/cache@v4

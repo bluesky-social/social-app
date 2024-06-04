@@ -1,12 +1,16 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Image,
+  ImageStyle,
   Platform,
   Pressable,
+  StyleProp,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native'
+import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -18,9 +22,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
+import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {s} from '#/lib/styles'
@@ -46,6 +52,7 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -488,6 +495,9 @@ export function SearchScreen(
 
   const [showAutocomplete, setShowAutocomplete] = React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
+  const [selectedProfiles, setSelectedProfiles] = React.useState<
+    AppBskyActorDefs.ProfileViewBasic[]
+  >([])
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -503,6 +513,10 @@ export function SearchScreen(
         const history = await AsyncStorage.getItem('searchHistory')
         if (history !== null) {
           setSearchHistory(JSON.parse(history))
+        }
+        const profiles = await AsyncStorage.getItem('selectedProfiles')
+        if (profiles !== null) {
+          setSelectedProfiles(JSON.parse(profiles))
         }
       } catch (e: any) {
         logger.error('Failed to load search history', {message: e})
@@ -562,6 +576,30 @@ export function SearchScreen(
     [searchHistory, setSearchHistory],
   )
 
+  const updateSelectedProfiles = React.useCallback(
+    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      let newProfiles = [
+        profile,
+        ...selectedProfiles.filter(p => p.did !== profile.did),
+      ]
+
+      if (newProfiles.length > 5) {
+        newProfiles = newProfiles.slice(0, 5)
+      }
+
+      setSelectedProfiles(newProfiles)
+      try {
+        await AsyncStorage.setItem(
+          'selectedProfiles',
+          JSON.stringify(newProfiles),
+        )
+      } catch (e: any) {
+        logger.error('Failed to save selected profiles', {message: e})
+      }
+    },
+    [selectedProfiles, setSelectedProfiles],
+  )
+
   const navigateToItem = React.useCallback(
     (item: string) => {
       scrollToTopWeb()
@@ -598,6 +636,16 @@ export function SearchScreen(
     [navigateToItem],
   )
 
+  const handleProfileClick = React.useCallback(
+    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      // Slight delay to avoid updating during push nav animation.
+      setTimeout(() => {
+        updateSelectedProfiles(profile)
+      }, 400)
+    },
+    [updateSelectedProfiles],
+  )
+
   const onSoftReset = React.useCallback(() => {
     if (isWeb) {
       // Empty params resets the URL to be /search rather than /search?q=
@@ -627,6 +675,22 @@ export function SearchScreen(
       })
     },
     [searchHistory],
+  )
+
+  const handleRemoveProfile = React.useCallback(
+    (profileToRemove: AppBskyActorDefs.ProfileViewBasic) => {
+      const updatedProfiles = selectedProfiles.filter(
+        profile => profile.did !== profileToRemove.did,
+      )
+      setSelectedProfiles(updatedProfiles)
+      AsyncStorage.setItem(
+        'selectedProfiles',
+        JSON.stringify(updatedProfiles),
+      ).catch(e => {
+        logger.error('Failed to update selected profiles', {message: e})
+      })
+    },
+    [selectedProfiles],
   )
 
   return (
@@ -689,12 +753,16 @@ export function SearchScreen(
             searchText={searchText}
             onSubmit={onSubmit}
             onResultPress={onAutocompleteResultPress}
+            onProfileClick={handleProfileClick}
           />
         ) : (
           <SearchHistory
             searchHistory={searchHistory}
+            selectedProfiles={selectedProfiles}
             onItemClick={handleHistoryItemClick}
+            onProfileClick={handleProfileClick}
             onRemoveItemClick={handleRemoveHistoryItem}
+            onRemoveProfileClick={handleRemoveProfile}
           />
         )}
       </View>
@@ -814,12 +882,14 @@ let AutocompleteResults = ({
   searchText,
   onSubmit,
   onResultPress,
+  onProfileClick,
 }: {
   isAutocompleteFetching: boolean
   autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
   searchText: string
   onSubmit: () => void
   onResultPress: () => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }): React.ReactNode => {
   const moderationOpts = useModerationOpts()
   const {_} = useLingui()
@@ -850,7 +920,10 @@ let AutocompleteResults = ({
               key={item.did}
               profile={item}
               moderation={moderateProfile(item, moderationOpts)}
-              onPress={onResultPress}
+              onPress={() => {
+                onProfileClick(item)
+                onResultPress()
+              }}
             />
           ))}
           <View style={{height: 200}} />
@@ -861,17 +934,32 @@ let AutocompleteResults = ({
 }
 AutocompleteResults = React.memo(AutocompleteResults)
 
+function truncateText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...'
+  }
+  return text
+}
+
 function SearchHistory({
   searchHistory,
+  selectedProfiles,
   onItemClick,
+  onProfileClick,
   onRemoveItemClick,
+  onRemoveProfileClick,
 }: {
   searchHistory: string[]
+  selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
   onItemClick: (item: string) => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
   onRemoveItemClick: (item: string) => void
+  onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }) {
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   return (
     <CenteredView
       sideBorders={isTabletOrDesktop}
@@ -880,12 +968,70 @@ function SearchHistory({
         height: isWeb ? '100vh' : undefined,
       }}>
       <View style={styles.searchHistoryContainer}>
+        {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
+          <Text style={[pal.text, styles.searchHistoryTitle]}>
+            <Trans>Recent Searches</Trans>
+          </Text>
+        )}
+        {selectedProfiles.length > 0 && (
+          <View
+            style={[
+              styles.selectedProfilesContainer,
+              isMobile && styles.selectedProfilesContainerMobile,
+            ]}>
+            <RNGHScrollView
+              keyboardShouldPersistTaps="handled"
+              horizontal={true}
+              style={styles.profilesRow}
+              contentContainerStyle={{
+                borderWidth: 0,
+              }}>
+              {selectedProfiles.slice(0, 5).map((profile, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.profileItem,
+                    isMobile && styles.profileItemMobile,
+                  ]}>
+                  <Link
+                    href={makeProfileLink(profile)}
+                    title={profile.handle}
+                    asAnchor
+                    anchorNoUnderline
+                    onBeforePress={() => onProfileClick(profile)}
+                    style={styles.profilePressable}>
+                    <Image
+                      source={{uri: profile.avatar}}
+                      style={styles.profileAvatar as StyleProp<ImageStyle>}
+                      accessibilityIgnoresInvertColors
+                    />
+                    <Text style={[pal.text, styles.profileName]}>
+                      {truncateText(profile.displayName || '', 12)}
+                    </Text>
+                  </Link>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={_(msg`Remove profile`)}
+                    accessibilityHint={_(
+                      msg`Remove profile from search history`,
+                    )}
+                    onPress={() => onRemoveProfileClick(profile)}
+                    hitSlop={createHitslop(6)}
+                    style={styles.profileRemoveBtn}>
+                    <FontAwesomeIcon
+                      icon="xmark"
+                      size={14}
+                      style={pal.textLight as FontAwesomeIconStyle}
+                    />
+                  </Pressable>
+                </View>
+              ))}
+            </RNGHScrollView>
+          </View>
+        )}
         {searchHistory.length > 0 && (
           <View style={styles.searchHistoryContent}>
-            <Text style={[pal.text, styles.searchHistoryTitle]}>
-              <Trans>Recent Searches</Trans>
-            </Text>
-            {searchHistory.map((historyItem, index) => (
+            {searchHistory.slice(0, 5).map((historyItem, index) => (
               <View
                 key={index}
                 style={[
@@ -982,11 +1128,57 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 12,
   },
+  selectedProfilesContainer: {
+    marginTop: 10,
+    paddingHorizontal: 12,
+    height: 80,
+  },
+  selectedProfilesContainerMobile: {
+    height: 100,
+  },
+  profilesRow: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+  },
+  profileItem: {
+    alignItems: 'center',
+    marginRight: 15,
+    width: 78,
+  },
+  profileItemMobile: {
+    width: 70,
+  },
+  profilePressable: {
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 45,
+  },
+  profileName: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  profileRemoveBtn: {
+    position: 'absolute',
+    top: 0,
+    right: 5,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   searchHistoryContent: {
-    padding: 10,
+    paddingHorizontal: 10,
     borderRadius: 8,
   },
   searchHistoryTitle: {
     fontWeight: 'bold',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
   },
 })

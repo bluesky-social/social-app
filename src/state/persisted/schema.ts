@@ -17,7 +17,10 @@ const accountSchema = z.object({
   emailAuthFactor: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
-  deactivated: z.boolean().optional(),
+  signupQueued: z.boolean().optional(),
+  status: z
+    .enum(['active', 'takendown', 'suspended', 'deactivated'])
+    .optional(),
   pdsUrl: z.string().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
@@ -65,6 +68,7 @@ export const schema = z.object({
       spotify: z.enum(externalEmbedOptions).optional(),
       appleMusic: z.enum(externalEmbedOptions).optional(),
       soundcloud: z.enum(externalEmbedOptions).optional(),
+      flickr: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   mutedThreads: z.array(z.string()), // should move to server

@@ -480,6 +480,26 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://media.tenor.com/someID/someName.gif',
     'https://media.tenor.com/someID',
     'https://media.tenor.com',
+
+    'https://www.flickr.com/photos/username/albums/72177720308493661',
+    'https://flickr.com/photos/username/albums/72177720308493661',
+    'https://flickr.com/photos/username/albums/72177720308493661/',
+    'https://flickr.com/photos/username/albums/72177720308493661//',
+    'https://flic.kr/s/aHBqjAES3i',
+
+    'https://flickr.com/foetoes/username/albums/3903',
+    'https://flickr.com/albums/3903',
+    'https://flic.kr/s/OolI',
+    'https://flic.kr/t/aHBqjAES3i',
+
+    'https://www.flickr.com/groups/898944@N23/pool',
+    'https://flickr.com/groups/898944@N23/pool',
+    'https://flickr.com/groups/898944@N23/pool/',
+    'https://flickr.com/groups/898944@N23/pool//',
+    'https://flic.kr/go/8WJtR',
+
+    'https://www.flickr.com/groups/898944@N23/',
+    'https://www.flickr.com/groups',
   ]
 
   const outputs = [
@@ -775,6 +795,66 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     undefined,
     undefined,
+    undefined,
+    undefined,
+
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+
     undefined,
     undefined,
   ]

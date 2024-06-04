@@ -23,6 +23,7 @@ export const embedPlayerSources = [
   'vimeo',
   'giphy',
   'tenor',
+  'flickr',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -42,6 +43,7 @@ export type EmbedPlayerType =
   | 'vimeo_video'
   | 'giphy_gif'
   | 'tenor_gif'
+  | 'flickr_album'
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
@@ -53,6 +55,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   spotify: 'Spotify',
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
+  flickr: 'Flickr',
 }
 
 export interface EmbedPlayerParams {
@@ -373,6 +376,79 @@ export function parseEmbedPlayerFromUrl(
         playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
         dimensions,
       }
+    }
+  }
+
+  // this is a standard flickr path! we can use the embedder for albums and groups, so validate the path
+  if (urlp.hostname === 'www.flickr.com' || urlp.hostname === 'flickr.com') {
+    let i = urlp.pathname.length - 1
+    while (i > 0 && urlp.pathname.charAt(i) === '/') {
+      --i
+    }
+
+    const path_components = urlp.pathname.slice(1, i + 1).split('/')
+    if (path_components.length === 4) {
+      // discard username - it's not relevant
+      const [photos, _, albums, id] = path_components
+      if (photos === 'photos' && albums === 'albums') {
+        // this at least has the shape of a valid photo-album URL!
+        return {
+          type: 'flickr_album',
+          source: 'flickr',
+          playerUri: `https://embedr.flickr.com/photosets/${id}`,
+        }
+      }
+    }
+
+    if (path_components.length === 3) {
+      const [groups, id, pool] = path_components
+      if (groups === 'groups' && pool === 'pool') {
+        return {
+          type: 'flickr_album',
+          source: 'flickr',
+          playerUri: `https://embedr.flickr.com/groups/${id}`,
+        }
+      }
+    }
+    // not an album or a group pool, don't know what to do with this!
+    return undefined
+  }
+
+  // link shortened flickr path
+  if (urlp.hostname === 'flic.kr') {
+    const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
+    let [_, type, idBase58Enc] = urlp.pathname.split('/')
+    let id = 0n
+    for (const char of idBase58Enc) {
+      const nextIdx = b58alph.indexOf(char)
+      if (nextIdx >= 0) {
+        id = id * 58n + BigInt(nextIdx)
+      } else {
+        // not b58 encoded, ergo not a valid link to embed
+        return undefined
+      }
+    }
+
+    switch (type) {
+      case 'go':
+        const formattedGroupId = `${id}`
+        return {
+          type: 'flickr_album',
+          source: 'flickr',
+          playerUri: `https://embedr.flickr.com/groups/${formattedGroupId.slice(
+            0,
+            -2,
+          )}@N${formattedGroupId.slice(-2)}`,
+        }
+      case 's':
+        return {
+          type: 'flickr_album',
+          source: 'flickr',
+          playerUri: `https://embedr.flickr.com/photosets/${id}`,
+        }
+      default:
+        // we don't know what this is so we can't embed it
+        return undefined
     }
   }
 }
