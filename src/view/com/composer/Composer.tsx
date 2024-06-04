@@ -20,7 +20,6 @@ import {
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
-  runOnUI,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -396,7 +395,7 @@ export const ComposePost = observer(function ComposePost({
         testID="composePostView"
         behavior="padding"
         style={a.flex_1}
-        keyboardVerticalOffset={replyTo ? 110 : isAndroid ? 180 : 140}>
+        keyboardVerticalOffset={replyTo ? 115 : isAndroid ? 180 : 162}>
         <View
           style={[a.flex_1, viewStyles]}
           aria-modal
@@ -650,14 +649,14 @@ function useAnimatedBorders() {
       'worklet'
 
       if (typeof newContentHeight === 'number')
-        contentHeight.value = newContentHeight
+        contentHeight.value = Math.floor(newContentHeight)
       if (typeof newContentOffset === 'number')
-        contentOffset.value = newContentOffset
+        contentOffset.value = Math.floor(newContentOffset)
       if (typeof newScrollViewHeight === 'number')
-        scrollViewHeight.value = newScrollViewHeight
+        scrollViewHeight.value = Math.floor(newScrollViewHeight)
 
       hasScrolledBottom.value = withTiming(
-        contentHeight.value - contentOffset.value >= scrollViewHeight.value
+        contentHeight.value - contentOffset.value - 5 > scrollViewHeight.value
           ? 1
           : 0,
       )
@@ -667,9 +666,8 @@ function useAnimatedBorders() {
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
+      'worklet'
       hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
-
-      // already on UI thread
       showHideBottomBorder({
         newContentOffset: event.contentOffset.y,
         newContentHeight: event.contentSize.height,
@@ -680,7 +678,8 @@ function useAnimatedBorders() {
 
   const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
-      runOnUI(showHideBottomBorder)({
+      'worklet'
+      showHideBottomBorder({
         newContentHeight: height,
       })
     },
@@ -689,7 +688,8 @@ function useAnimatedBorders() {
 
   const onScrollViewLayout = useCallback(
     (evt: LayoutChangeEvent) => {
-      runOnUI(showHideBottomBorder)({
+      'worklet'
+      showHideBottomBorder({
         newScrollViewHeight: evt.nativeEvent.layout.height,
       })
     },
