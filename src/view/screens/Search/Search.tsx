@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -977,7 +978,7 @@ function SearchHistory({
               styles.selectedProfilesContainer,
               isMobile && styles.selectedProfilesContainerMobile,
             ]}>
-            <ScrollView
+            <RNGHScrollView
               keyboardShouldPersistTaps="handled"
               horizontal={true}
               style={styles.profilesRow}
@@ -1022,7 +1023,7 @@ function SearchHistory({
                   </Pressable>
                 </View>
               ))}
-            </ScrollView>
+            </RNGHScrollView>
           </View>
         )}
         {searchHistory.length > 0 && (
