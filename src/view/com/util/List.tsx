@@ -26,6 +26,7 @@ export type ListProps<ItemT> = Omit<
   onItemSeen?: (item: ItemT) => void
   containWeb?: boolean
   sideBorders?: boolean
+  desktopFixedHeight?: boolean
   // Web only prop to disable a perf optimization (which would otherwise be on).
   disableContentVisibility?: boolean
 }

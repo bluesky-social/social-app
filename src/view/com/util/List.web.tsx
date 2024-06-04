@@ -22,7 +22,7 @@ export type ListProps<ItemT> = Omit<
   refreshing?: boolean
   onRefresh?: () => void
   onItemSeen?: (item: ItemT) => void
-  desktopFixedHeight: any // TODO: Better types.
+  desktopFixedHeight?: boolean
   containWeb?: boolean
   sideBorders?: boolean
   disableContentVisibility?: boolean
