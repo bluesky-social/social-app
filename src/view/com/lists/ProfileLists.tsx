@@ -14,7 +14,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -170,7 +170,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
             list={item}
             testID={`list-${item.name}`}
             style={styles.item}
-            noBorder={index === 0}
+            noBorder={index === 0 && !isWeb}
           />
         )
       },
