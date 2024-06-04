@@ -312,25 +312,19 @@ export function MessagesList({
             })
 
             if (postLinkFacet) {
-              // remove the post link from the text
-              rt.delete(
-                postLinkFacet.index.byteStart,
-                postLinkFacet.index.byteEnd,
-              )
+              const isAtStart = postLinkFacet.index.byteStart === 0
+              const isAtEnd =
+                postLinkFacet.index.byteEnd === rt.unicodeText.graphemeLength
 
-              // re-trim the text, now that we've removed the post link
-              //
-              // if the post link is at the start of the text, we don't want to leave a leading space
-              // so trim on both sides
-              if (postLinkFacet.index.byteStart === 0) {
-                rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
-              } else {
-                // otherwise just trim the end
-                rt = new RichText(
-                  {text: rt.text.trimEnd()},
-                  {cleanNewlines: true},
+              // remove the post link from the text
+              if (isAtStart || isAtEnd) {
+                rt.delete(
+                  postLinkFacet.index.byteStart,
+                  postLinkFacet.index.byteEnd,
                 )
               }
+
+              rt = new RichText({text: rt.text.trim()}, {cleanNewlines: true})
             }
           }
         } catch (error) {
