@@ -90,7 +90,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eGotoFeeds"
-        onPress={() => navigate('FeedsTab')}
+        onPress={() => navigate('Feeds')}
         accessibilityRole="button"
         style={BTN}
       />
