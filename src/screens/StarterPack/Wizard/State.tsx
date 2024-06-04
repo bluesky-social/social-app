@@ -1,5 +1,6 @@
 import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
+import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
 const steps = ['Landing', 'Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
@@ -12,8 +13,8 @@ type Action =
   | {type: 'SetDescription'; description: string}
   | {type: 'AddProfile'; profile: AppBskyActorDefs.ProfileViewBasic}
   | {type: 'RemoveProfile'; profileDid: string}
-  | {type: 'AddFeed'; uri: string}
-  | {type: 'RemoveFeed'; uri: string}
+  | {type: 'AddFeed'; feed: GeneratorView}
+  | {type: 'RemoveFeed'; feedUri: string}
   | {type: 'SetProcessing'; processing: boolean}
 
 interface State {
@@ -23,7 +24,7 @@ interface State {
   description?: string
   avatar?: string
   profiles: AppBskyActorDefs.ProfileViewBasic[]
-  feedUris: string[]
+  feeds: GeneratorView[]
   processing: boolean
 }
 
@@ -66,12 +67,12 @@ function reducer(state: State, action: Action): State {
       }
       break
     case 'AddFeed':
-      updatedState = {...state, feedUris: [...state.feedUris, action.uri]}
+      updatedState = {...state, feeds: [...state.feeds, action.feed]}
       break
     case 'RemoveFeed':
       updatedState = {
         ...state,
-        feedUris: state.feedUris.filter(uri => uri !== action.uri),
+        feeds: state.feeds.filter(f => f.uri !== action.feedUri),
       }
       break
     case 'SetProcessing':

@@ -6,9 +6,12 @@ import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import debounce from 'lodash.debounce'
 
 import {isWeb} from 'platform/detection'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
+import {useSearchPopularFeedsMutation} from 'state/queries/feed'
+import {useProfileFeedgensQuery} from 'state/queries/profile-feedgens'
 import {useProfileFollowsQuery} from 'state/queries/profile-follows'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
@@ -61,14 +64,38 @@ function AddProfiles(props: Props) {
 }
 
 function AddFeeds(props: Props) {
+  const [searchText, setSearchText] = useState('')
   const {currentAccount} = useSession()
-  const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
+
+  const {data: myFeedsPages} = useProfileFeedgensQuery(currentAccount!.did)
+  const myFeeds = myFeedsPages?.pages.flatMap(page => page.feeds) || []
+
+  const {
+    data: feeds,
+    mutate: search,
+    reset: resetSearch,
+  } = useSearchPopularFeedsMutation()
+
+  const debouncedSearch = React.useMemo(
+    () => debounce(q => search(q), 500), // debounce for 500ms
+    [search],
+  )
+
+  const onChangeText = (text: string) => {
+    setSearchText(text)
+    if (text.length > 1) {
+      debouncedSearch(text)
+    } else {
+      resetSearch()
+    }
+  }
+
   return (
     <AddDialog
       {...props}
-      data={follows}
-      searchText=""
-      setSearchText={() => {}}
+      data={searchText ? feeds : myFeeds}
+      searchText={searchText}
+      setSearchText={onChangeText}
     />
   )
 }

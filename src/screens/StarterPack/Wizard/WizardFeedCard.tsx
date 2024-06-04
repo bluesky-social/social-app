@@ -22,12 +22,12 @@ export function WizardFeedCard({
   const {_} = useLingui()
   const t = useTheme()
 
-  const includesFeed = state.feedUris.includes(generator.uri)
+  const includesFeed = state.feeds.some(f => f.uri === generator.uri)
   const onAdd = () => {
     if (includesFeed) {
-      dispatch({type: 'RemoveFeed', uri: generator.uri})
+      dispatch({type: 'RemoveFeed', feedUri: generator.uri})
     } else {
-      dispatch({type: 'AddFeed', uri: generator.uri})
+      dispatch({type: 'AddFeed', feed: generator})
     }
   }
 
