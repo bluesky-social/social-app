@@ -45,7 +45,7 @@ export function Feed({
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
-  const {isTabletOrMobile, isDesktop} = useWebMediaQueries()
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -130,7 +130,10 @@ export function Feed({
       } else if (item === LOADING_ITEM) {
         return (
           <View
-            style={[pal.border, isDesktop && {borderTopWidth: hairlineWidth}]}>
+            style={[
+              pal.border,
+              !isTabletOrMobile && {borderTopWidth: hairlineWidth},
+            ]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
@@ -143,14 +146,7 @@ export function Feed({
         />
       )
     },
-    [
-      moderationOpts,
-      isTabletOrMobile,
-      _,
-      onPressRetryLoadMore,
-      pal.border,
-      isDesktop,
-    ],
+    [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
   )
 
   const FeedFooter = React.useCallback(
