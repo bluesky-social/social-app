@@ -381,13 +381,13 @@ export function parseEmbedPlayerFromUrl(
 
   // this is a standard flickr path! we can use the embedder for albums and groups, so validate the path
   if (urlp.hostname === 'www.flickr.com' || urlp.hostname === 'flickr.com') {
-    var i = urlp.pathname.length - 1
+    let i = urlp.pathname.length - 1
     while (i > 0 && urlp.pathname.charAt(i) === '/') {
       --i
     }
 
     const path_components = urlp.pathname.slice(1, i + 1).split('/')
-    if (path_components.length == 4) {
+    if (path_components.length === 4) {
       // discard username - it's not relevant
       const [photos, _, albums, id] = path_components
       if (photos === 'photos' && albums === 'albums') {
@@ -400,7 +400,7 @@ export function parseEmbedPlayerFromUrl(
       }
     }
 
-    if (path_components.length == 3) {
+    if (path_components.length === 3) {
       const [groups, id, pool] = path_components
       if (groups === 'groups' && pool === 'pool') {
         return {
@@ -418,8 +418,8 @@ export function parseEmbedPlayerFromUrl(
   if (urlp.hostname === 'flic.kr') {
     const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
     let [_, type, idBase58Enc] = urlp.pathname.split('/')
-    var id = 0n
-    for (var char of idBase58Enc) {
+    let id = 0n
+    for (const char of idBase58Enc) {
       const nextIdx = b58alph.indexOf(char)
       if (nextIdx >= 0) {
         id = id * 58n + BigInt(nextIdx)
