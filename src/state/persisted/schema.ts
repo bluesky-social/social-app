@@ -19,9 +19,11 @@ const accountSchema = z.object({
   accessJwt: z.string().optional(), // optional because it can expire
   signupQueued: z.boolean().optional(),
   active: z.boolean().optional(), // optional for backwards compat
-  status: z
-    .enum(['takendown', 'suspended', 'deleted', 'deactivated'])
-    .optional(),
+  /**
+   * Known values: takendown, suspended, deactivated
+   * @see https://github.com/bluesky-social/atproto/blob/5441fbde9ed3b22463e91481ec80cb095643e141/lexicons/com/atproto/server/getSession.json
+   */
+  status: z.string().optional(),
   pdsUrl: z.string().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
