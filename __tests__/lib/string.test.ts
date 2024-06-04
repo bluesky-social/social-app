@@ -183,26 +183,26 @@ describe('dateDiff', () => {
     [new Date('2001-02-25Z'), new Date('2001-03-03Z'), '6d'],
     [new Date('2004-02-25Z'), new Date('2004-03-03Z'), '7d'],
     [new Date('2001-01-01Z'), new Date('2001-01-30T00:00Z'), '29d'],
-    // [new Date('2004-01-01Z'), new Date('2004-01-30T23:59:59.999Z'), '29d'],
+    [new Date('2004-01-01Z'), new Date('2004-01-30T23:59:59.999Z'), '29d'],
     [new Date('2001-01-01Z'), new Date('2001-01-31T00:00Z'), '1mo'],
     [new Date('2001-02-01Z'), new Date('2001-03-01Z'), '28d'],
     [new Date('2001-01-01Z'), new Date('2001-01-31Z'), '1mo'],
     [new Date('2001-02-01Z'), new Date('2001-03-01Z'), '28d'],
     [new Date('2004-02-01Z'), new Date('2004-03-01Z'), '29d'],
     [new Date('2001-03-01Z'), new Date('2001-04-01Z'), '1mo'],
-    // [new Date('2001-01-01Z'), new Date('2001-03-01Z'), '1mo'], // 31 + 28 = 59 days -> 1 months
+    [new Date('2001-01-01Z'), new Date('2001-03-01Z'), '1mo'], // 31 + 28 = 59 days -> 1 months
     [new Date('2001-01-01Z'), new Date('2001-04-01Z'), '3mo'], // 31 + 28 + 31 = 90 days -> 3 months
-    // [new Date('2001-02-01Z'), new Date('2001-05-01Z'), '2mo'], // 28 + 31 + 30 = 89 days -> 2 months
+    [new Date('2001-02-01Z'), new Date('2001-05-01Z'), '2mo'], // 28 + 31 + 30 = 89 days -> 2 months
     [new Date('2001-01-01Z'), new Date('2001-05-01Z'), '4mo'], // 31 + 28 + 31 + 30 = 120 days -> 4 months
     [new Date('2001-02-01Z'), new Date('2001-06-01Z'), '4mo'], // 28 + 31 + 30 + 31 = 120 days -> 4 months
     [new Date('2001-01-01Z'), new Date('2001-12-01Z'), '11mo'],
     [new Date('2001-01-01Z'), new Date('2001-12-26Z'), '11mo'],
     [new Date('2001-01-01Z'), new Date('2001-12-26T23:59:59.999Z'), '11mo'],
-    // [
-    //   new Date('2001-01-01Z'),
-    //   new Date('2001-12-27Z'),
-    //   new Date('2001-01-01Z').toLocaleDateString(),
-    // ],
+    [
+      new Date('2001-01-01Z'),
+      new Date('2001-12-27Z'),
+      new Date('2001-01-01Z').toLocaleDateString(),
+    ],
     [
       new Date('2001-01-01Z'),
       new Date('2002-01-01Z'),

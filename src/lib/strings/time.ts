@@ -7,7 +7,7 @@ const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH_30 = DAY * 30
-const MONTH = DAY * 30.41675 // This results in 365.001 days in a year, which is close enough for nearly all cases
+/** Returns the difference between date1 and date2 in full seconds, minutes, hours etc. All month are considered exactly 30 days. Assuming that date1 <= date2. Differences >= 360 days are returned as the "M/D/YYYY" string. */
 export function dateDiff(
   date1: number | string | Date,
   date2: number | string | Date,
@@ -38,17 +38,11 @@ export function dateDiff(
   } else if (diffSeconds < DAY) {
     return `${Math.floor(diffSeconds / HOUR)}h`
   } else if (diffSeconds < MONTH_30) {
-    return `${Math.round(diffSeconds / DAY)}d`
+    return `${Math.floor(diffSeconds / DAY)}d`
   } else {
-    let months = diffSeconds / MONTH
-    if (months % 1 >= 0.9) {
-      months = Math.ceil(months)
-    } else {
-      months = Math.floor(months)
-    }
-
-    if (months < 12) {
-      return `${months}mo`
+    const diffMonths30 = Math.floor(diffSeconds / MONTH_30)
+    if (diffMonths30 < 12) {
+      return `${diffMonths30}mo`
     } else {
       return new Date(ts1).toLocaleDateString()
     }
