@@ -236,7 +236,7 @@ export function agentToSessionAccount(
     accessJwt: agent.session.accessJwt,
     signupQueued: isSignupQueued(agent.session.accessJwt),
     // @ts-expect-error TODO remove when backend is ready
-    status: agent.session.status || 'active',
+    status: agent.session.status,
     pdsUrl: agent.pdsUrl?.toString(),
   }
 }
