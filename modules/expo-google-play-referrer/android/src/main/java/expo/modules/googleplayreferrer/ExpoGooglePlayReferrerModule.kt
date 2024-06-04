@@ -30,6 +30,7 @@ class ExpoGooglePlayReferrerModule : Module() {
               Exception("Failed to get referrer info")
             )
           }
+          referrerClient.endConnection()
         }
 
         override fun onInstallReferrerServiceDisconnected() {
@@ -38,6 +39,7 @@ class ExpoGooglePlayReferrerModule : Module() {
             "Failed to get referrer info",
             Exception("Failed to get referrer info")
           )
+          referrerClient.endConnection()
         }
       })
     }
