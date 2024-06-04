@@ -20,7 +20,7 @@ import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import {WizardAddProfilesDialog} from '#/screens/StarterPack/Wizard/StepProfiles/WizardAddProfilesDialog'
+import {WizardAddDialog} from '#/screens/StarterPack/Wizard/WizardAddDialog'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -187,7 +187,7 @@ function WizardInner() {
         </View>
       </KeyboardStickyView>
 
-      <WizardAddProfilesDialog
+      <WizardAddDialog
         control={addProfilesControl}
         state={state}
         dispatch={dispatch}

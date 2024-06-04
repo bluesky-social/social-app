@@ -6,7 +6,7 @@ import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
+import {isWeb} from 'platform/detection'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {useProfileFollowsQuery} from 'state/queries/profile-follows'
 import {useSession} from 'state/session'
@@ -23,7 +23,7 @@ function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item.did
 }
 
-export function WizardAddProfilesDialog({
+export function WizardAddDialog({
   control,
   state,
   dispatch,
