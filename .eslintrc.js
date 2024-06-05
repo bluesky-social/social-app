@@ -20,6 +20,7 @@ module.exports = {
     'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
     'react/react-in-jsx-scope': 0,
+    'react/jsx-uses-react': 1,
     'react-native/no-inline-styles': 0,
     'bsky-internal/avoid-unwrapped-text': [
       'error',
