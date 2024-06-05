@@ -18,12 +18,12 @@ import {useProfileFollowsQuery} from 'state/queries/profile-follows'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {WizardProfileCard} from '#/screens/StarterPack/Wizard/StepProfiles/WizardProfileCard'
-import {WizardFeedCard} from '#/screens/StarterPack/Wizard/WizardFeedCard'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {TextInput} from '#/components/dms/dialogs/TextInput'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardFeedCard'
 import {Text} from '#/components/Typography'
 
 interface Props {
