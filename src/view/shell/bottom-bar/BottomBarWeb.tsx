@@ -16,6 +16,8 @@ import {s} from '#/lib/styles'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useUnreadMessageCount} from 'state/queries/messages/list-converations'
+import {useUnreadNotifications} from 'state/queries/notifications/unread'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
@@ -62,6 +64,9 @@ export function BottomBarWeb() {
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
+  const unreadMessageCountStr = useUnreadMessageCount()
+  const notificationCountStr = useUnreadNotifications()
+
   return (
     <Animated.View
       style={[
@@ -103,10 +108,19 @@ export function BottomBarWeb() {
                 {({isActive}) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (
-                    <Icon
-                      width={iconWidth - 1}
-                      style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
-                    />
+                    <>
+                      <Icon
+                        width={iconWidth - 1}
+                        style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
+                      />
+                      {unreadMessageCountStr.numUnread && (
+                        <View style={[styles.notificationCount]}>
+                          <Text style={styles.notificationCountLabel}>
+                            {unreadMessageCountStr.numUnread}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )
                 }}
               </NavItem>
@@ -114,10 +128,19 @@ export function BottomBarWeb() {
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (
-                    <Icon
-                      width={iconWidth}
-                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                    />
+                    <>
+                      <Icon
+                        width={iconWidth}
+                        style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                      />
+                      {notificationCountStr && (
+                        <View style={[styles.notificationCount]}>
+                          <Text style={styles.notificationCountLabel}>
+                            {notificationCountStr}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )
                 }}
               </NavItem>
