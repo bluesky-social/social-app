@@ -95,15 +95,15 @@ function WizardInner() {
     {
       Landing: {
         header: _(msg`Create a starter pack`),
-        button: _(msg`Create`),
+        button: _(msg`Get started`),
       },
       Details: {
         header: _(msg`Details`),
-        button: _(msg`Add profiles`),
+        button: _(msg`Continue`),
       },
       Profiles: {
         header: _(msg`Add profiles`),
-        button: _(msg`Add feeds`),
+        button: _(msg`Continue`),
       },
       Feeds: {
         header: _(msg`Add feeds`),
