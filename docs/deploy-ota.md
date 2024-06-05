@@ -14,15 +14,20 @@ diff results in incompatible native changes, a new client build will automatical
 
 ### Prerequisites
 
-- Remove any internal client from your device and download the client from the App Store/Google Play. This will help for 
-testing as well as retrieving the build number.
-- You should have signed in to EAS locally through npx eas login. You will need to modify the build number in a 
-subsequent step.
-- Identify the build number of the production app you want to deploy an update for. iOS and Android build numbers are 
-divergent, so you will need to find both. Save these build numbers for later steps.
+- Find the latest production build number for both iOS and Android in Slack. These are listed in #client-builds
+  - Production builds always send the Version Number and Build Number in the Slack message. Search for the latest
+  production version number, and you should find the correct information.
+  
+    ![slack-build-info](./img/slack-build-info.png)
+
+- It may also be useful to check the current production clients for these values. This will also help for testing. Note
+that you will need to _fully_ remove the existing internal client build from your device, otherwise the given values in
+the app may differ from the actual production values.
 
   ![app-build-number](./img/app-build-number.png)
 
+- You should have signed in to EAS locally through npx eas login. You will need to modify the build number in a
+subsequent step.
 - Ensure that the commit the initial client was cut from is properly tagged in git. The tag should be in the format of 1.X.0
   - Note: If the commit is not properly tagged, then the OTA deployment will simply fail since the GitHub Action will 
   not be able to find a commit to fingerprint and diff against.
