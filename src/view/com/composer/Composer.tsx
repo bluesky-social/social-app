@@ -156,6 +156,7 @@ export const ComposePost = observer(function ComposePost({
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
 
   React.useEffect(() => {
+    if (!isAndroid) return
     setTimeout(() => textInput.current?.focus(), 100)
   }, [])
 
@@ -345,7 +346,6 @@ export const ComposePost = observer(function ComposePost({
   }, [openPicker])
 
   const focusTextInput = useCallback(() => {
-    if (!isAndroid) return
     textInput.current?.focus()
   }, [])
 
