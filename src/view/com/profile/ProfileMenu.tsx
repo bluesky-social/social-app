@@ -234,6 +234,24 @@ let ProfileMenu = ({
           {hasSession && (
             <>
               <Menu.Divider />
+
+              {/* This group is seperated so users can use this button on their own account. */}
+              <Menu.Group>
+                <Menu.Item
+                  testID="profileHeaderDropdownSearchPostsBtn"
+                  label={_(msg`Search Posts`)}
+                  onPress={() => {
+                    navigate('Search', {
+                      q: `from:${profile.handle}`,
+                    })
+                  }}>
+                  <Menu.ItemText>
+                    <Trans>Search Posts</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={MagnifyingGlass} />
+                </Menu.Item>
+              </Menu.Group>
+
               <Menu.Group>
                 {!isSelf && (
                   <>
@@ -332,23 +350,6 @@ let ProfileMenu = ({
               </Menu.Group>
             </>
           )}
-
-          {/* This group is seperated so users can use this button on their own account. */}
-          <Menu.Group>
-            <Menu.Item
-              testID="profileHeaderDropdownSearchPostsBtn"
-              label={_(msg`Search Posts`)}
-              onPress={() => {
-                navigate('Search', {
-                  q: `from:${profile.handle}`,
-                })
-              }}>
-              <Menu.ItemText>
-                <Trans>Search Posts</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={MagnifyingGlass} />
-            </Menu.Item>
-          </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
 
