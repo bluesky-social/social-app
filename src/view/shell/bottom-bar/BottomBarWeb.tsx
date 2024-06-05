@@ -115,8 +115,8 @@ export function BottomBarWeb() {
                         width={iconWidth - 1}
                         style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
                       />
-                      {gate('show_notification_badge_mobile_web') &&
-                        unreadMessageCount.numUnread && (
+                      {unreadMessageCount.count > 0 &&
+                        gate('show_notification_badge_mobile_web') && (
                           <View style={styles.notificationCount}>
                             <Text style={styles.notificationCountLabel}>
                               {unreadMessageCount.numUnread}
@@ -136,8 +136,8 @@ export function BottomBarWeb() {
                         width={iconWidth}
                         style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
                       />
-                      {gate('show_notification_badge_mobile_web') &&
-                        notificationCountStr && (
+                      {notificationCountStr !== '' &&
+                        gate('show_notification_badge_mobile_web') && (
                           <View style={styles.notificationCount}>
                             <Text style={styles.notificationCountLabel}>
                               {notificationCountStr}
