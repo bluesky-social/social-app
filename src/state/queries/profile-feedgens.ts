@@ -30,13 +30,24 @@ export function useProfileFeedgensQuery(
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      res.data.feeds = res.data.feeds.sort((a, b) => {
-        return (b.likeCount || 0) - (a.likeCount || 0)
-      })
       return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
+    select: data => {
+      const sorted = data.pages
+        .flatMap(p => p.feeds)
+        .sort((a, b) => {
+          return (b.likeCount || 0) - (a.likeCount || 0)
+        })
+      data.pages = data.pages.map((p, i) => {
+        return {
+          ...p,
+          feeds: sorted.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE),
+        }
+      })
+      return data
+    },
   })
 }
