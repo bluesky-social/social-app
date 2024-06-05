@@ -19,6 +19,7 @@ import {
   TextInput,
   View,
 } from 'react-native'
+import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -966,6 +967,7 @@ function SearchHistory({
 }) {
   const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <CenteredView
@@ -986,7 +988,7 @@ function SearchHistory({
               styles.selectedProfilesContainer,
               isMobile && styles.selectedProfilesContainerMobile,
             ]}>
-            <ScrollView
+            <RNGHScrollView
               keyboardShouldPersistTaps="handled"
               horizontal={true}
               style={styles.profilesRow}
@@ -1018,8 +1020,10 @@ function SearchHistory({
                   </Link>
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel="Remove profile"
-                    accessibilityHint="Remove profile from search history"
+                    accessibilityLabel={_(msg`Remove profile`)}
+                    accessibilityHint={_(
+                      msg`Remove profile from search history`,
+                    )}
                     onPress={() => onRemoveProfileClick(profile)}
                     hitSlop={createHitslop(6)}
                     style={styles.profileRemoveBtn}>
@@ -1031,7 +1035,7 @@ function SearchHistory({
                   </Pressable>
                 </View>
               ))}
-            </ScrollView>
+            </RNGHScrollView>
           </View>
         )}
         {searchHistory.length > 0 && (
