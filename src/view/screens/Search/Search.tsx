@@ -1070,13 +1070,14 @@ function scrollToTopWeb() {
   }
 }
 
-const HEADER_HEIGHT = 50
+const HEADER_HEIGHT = 46
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
+    paddingLeft: 13,
     paddingVertical: 4,
     height: HEADER_HEIGHT,
     // @ts-ignore web only
@@ -1089,7 +1090,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 30,
     marginRight: 6,
-    paddingTop: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },

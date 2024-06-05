@@ -99,7 +99,7 @@ export function ViewHeader({
                     style={[styles.backIcon, pal.text]}
                   />
                 ) : !isTablet ? (
-                  <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
+                  <Menu size="lg" style={[{marginTop: 3}, pal.textLight]} />
                 ) : null}
               </TouchableOpacity>
             ) : null}
