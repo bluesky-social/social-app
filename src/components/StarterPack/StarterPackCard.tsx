@@ -28,12 +28,12 @@ export function StarterPackCard({
           !hideTopBorder && type !== 'notification' && a.border_t,
           type === 'notification' && [a.mt_sm, a.py_md, a.border, a.rounded_sm],
         ]}>
-        {type === 'notification' && <StarterPackIcon width={36} height={36} />}
+        {type !== 'notification' && <StarterPackIcon width={36} height={36} />}
         <View style={a.gap_md}>
           <View>
-            <Text style={[a.font_bold, a.text_md]}>Science</Text>
+            <Text style={[a.font_bold, a.text_md]}>React Native</Text>
             <Text style={[t.atoms.text_contrast_medium]}>
-              Starter pack by @bossett.social
+              Starter pack by @haileyok.com
             </Text>
           </View>
           <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
