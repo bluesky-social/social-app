@@ -4,9 +4,9 @@ import {AppBskyActorDefs} from '@atproto/api'
 
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
-import {WizardProfileCard} from '#/screens/StarterPack/Wizard/StepProfiles/WizardProfileCard'
 import {atoms as a} from '#/alf'
 import {WizardListEmpty} from '#/components/StarterPack/Wizard/WizardListEmpty'
+import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item.did
