@@ -2,45 +2,131 @@ import React, {useLayoutEffect, useRef, useState} from 'react'
 import type {ListRenderItemInfo, TextInput as RNTextInput} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import debounce from 'lodash.debounce'
 
-import {isWeb} from '#/platform/detection'
+import {isWeb} from 'platform/detection'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
+import {
+  useGetPopularFeedsQuery,
+  useSearchPopularFeedsMutation,
+} from 'state/queries/feed'
 import {useProfileFollowsQuery} from 'state/queries/profile-follows'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
-import {WizardProfileCard} from '#/screens/StarterPack/Wizard/StepProfiles/WizardProfileCard'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {TextInput} from '#/components/dms/dialogs/TextInput'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardFeedCard'
+import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
 import {Text} from '#/components/Typography'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
-  return item.did
-}
-
-export function WizardAddProfilesDialog({
-  control,
-  state,
-  dispatch,
-}: {
+interface Props {
   control: Dialog.DialogControlProps
+  type: 'profiles' | 'feeds'
   state: WizardState
   dispatch: (action: WizardAction) => void
-}) {
+}
+
+function keyExtractor(
+  item: AppBskyActorDefs.ProfileViewBasic | GeneratorView,
+  index: number,
+) {
+  return `${item.did}-${index}`
+}
+
+export function WizardAddDialog(props: Props) {
+  if (props.type === 'profiles') {
+    return <AddProfiles {...props} />
+  }
+  return <AddFeeds {...props} />
+}
+
+function AddProfiles(props: Props) {
   const [searchText, setSearchText] = useState('')
 
   const {currentAccount} = useSession()
-  const {data: results} = useActorAutocompleteQuery(searchText, true, 12)
   const {data: followsPages, fetchNextPage} = useProfileFollowsQuery(
     currentAccount?.did,
   )
   const follows = followsPages?.pages.flatMap(page => page.follows) || []
 
+  const {data: searchedProfiles} = useActorAutocompleteQuery(
+    searchText,
+    true,
+    12,
+  )
+
+  return (
+    <AddDialog
+      {...props}
+      data={searchText ? searchedProfiles : follows}
+      onEndReached={searchText ? undefined : () => fetchNextPage()}
+      searchText={searchText}
+      setSearchText={setSearchText}
+    />
+  )
+}
+
+function AddFeeds(props: Props) {
+  const [searchText, setSearchText] = useState('')
+
+  const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery()
+
+  const popularFeeds =
+    popularFeedsPages?.pages.flatMap(page => page.feeds) || []
+
+  const {
+    data: searchedFeeds,
+    mutate: search,
+    reset: resetSearch,
+  } = useSearchPopularFeedsMutation()
+
+  const debouncedSearch = React.useMemo(
+    () => debounce(q => search(q), 500), // debounce for 500ms
+    [search],
+  )
+
+  const onChangeText = (text: string) => {
+    setSearchText(text)
+    if (text.length > 1) {
+      debouncedSearch(text)
+    } else {
+      resetSearch()
+    }
+  }
+
+  return (
+    <AddDialog
+      {...props}
+      data={searchText ? searchedFeeds : popularFeeds}
+      onEndReached={() => fetchNextPage()}
+      searchText={searchText}
+      setSearchText={onChangeText}
+    />
+  )
+}
+
+function AddDialog({
+  type,
+  control,
+  state,
+  dispatch,
+  data,
+  onEndReached,
+  searchText,
+  setSearchText,
+}: Props & {
+  data?: AppBskyActorDefs.ProfileViewBasic[] | GeneratorView[]
+  onEndReached?: () => void
+  searchText: string
+  setSearchText: (text: string) => void
+}) {
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const inputRef = useRef<RNTextInput>(null)
 
@@ -52,13 +138,12 @@ export function WizardAddProfilesDialog({
     }
   }, [])
 
-  const renderItem = ({
-    item,
-  }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
-    return (
+  const renderItem = ({item}: ListRenderItemInfo<any>) =>
+    type === 'profiles' ? (
       <WizardProfileCard profile={item} state={state} dispatch={dispatch} />
+    ) : (
+      <WizardFeedCard generator={item} state={state} dispatch={dispatch} />
     )
-  }
 
   return (
     <Dialog.Outer
@@ -67,7 +152,7 @@ export function WizardAddProfilesDialog({
       nativeOptions={{sheet: {snapPoints: ['100%']}}}>
       <Dialog.InnerFlatList
         ref={listRef}
-        data={searchText.length > 0 ? results : follows}
+        data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={
@@ -75,6 +160,7 @@ export function WizardAddProfilesDialog({
             searchText={searchText}
             setSearchText={setSearchText}
             inputRef={inputRef}
+            type={type}
           />
         }
         stickyHeaderIndices={[0]}
@@ -91,7 +177,7 @@ export function WizardAddProfilesDialog({
         ]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         keyboardDismissMode="on-drag"
-        onEndReached={() => fetchNextPage()}
+        onEndReached={onEndReached}
         onEndReachedThreshold={2}
         removeClippedSubviews={true}
       />
@@ -100,10 +186,12 @@ export function WizardAddProfilesDialog({
 }
 
 function ListHeader({
+  type,
   searchText,
   setSearchText,
   inputRef,
 }: {
+  type: 'profiles' | 'feeds'
   searchText: string
   setSearchText: (text: string) => void
   inputRef: React.Ref<RNTextInput>
@@ -145,7 +233,11 @@ function ListHeader({
             a.leading_tight,
             t.atoms.text_contrast_high,
           ]}>
-          <Trans>Select profiles to add</Trans>
+          {type === 'profiles' ? (
+            <Trans>Select profiles to add</Trans>
+          ) : (
+            <Trans>Select feeds to add</Trans>
+          )}
         </Text>
       </View>
 

@@ -20,11 +20,11 @@ import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import {WizardAddProfilesDialog} from '#/screens/StarterPack/Wizard/StepProfiles/WizardAddProfilesDialog'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import {WizardAddDialog} from '#/components/StarterPack/Wizard/WizardAddDialog'
 import {Provider} from './State'
 
 export function Wizard({
@@ -83,7 +83,7 @@ function WizardInner() {
     staleTime: 0,
   })
   const bottomBarOffset = useBottomBarOffset()
-  const addProfilesControl = useDialogControl()
+  const searchDialogControl = useDialogControl()
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -95,15 +95,15 @@ function WizardInner() {
     {
       Landing: {
         header: _(msg`Create a starter pack`),
-        button: _(msg`Create`),
+        button: _(msg`Get started`),
       },
       Details: {
         header: _(msg`Details`),
-        button: _(msg`Add profiles`),
+        button: _(msg`Continue`),
       },
       Profiles: {
         header: _(msg`Add profiles`),
-        button: _(msg`Add feeds`),
+        button: _(msg`Continue`),
       },
       Feeds: {
         header: _(msg`Add feeds`),
@@ -150,14 +150,14 @@ function WizardInner() {
         showBorder={true}
         showOnDesktop={true}
         renderButton={
-          state.currentStep === 'Profiles'
+          state.currentStep === 'Profiles' || state.currentStep === 'Feeds'
             ? () => (
                 <Button
                   label={_(msg`Cancel`)}
                   variant="solid"
                   color="primary"
                   size="xsmall"
-                  onPress={addProfilesControl.open}
+                  onPress={searchDialogControl.open}
                   style={{marginLeft: -15}}>
                   <ButtonText>
                     <Trans>Add</Trans>
@@ -187,11 +187,14 @@ function WizardInner() {
         </View>
       </KeyboardStickyView>
 
-      <WizardAddProfilesDialog
-        control={addProfilesControl}
-        state={state}
-        dispatch={dispatch}
-      />
+      {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
+        <WizardAddDialog
+          control={searchDialogControl}
+          state={state}
+          dispatch={dispatch}
+          type={state.currentStep === 'Profiles' ? 'profiles' : 'feeds'}
+        />
+      )}
     </CenteredView>
   )
 }
