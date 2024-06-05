@@ -10,7 +10,7 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
-import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {ListPlus_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/ListPlus'
 import {Link} from '#/components/Link'
 import {useKawaiiMode} from '../../../state/preferences/kawaii'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
@@ -77,7 +77,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             to="/feeds"
             hitSlop={10}
             label={_(msg`View your feeds and explore more`)}>
-            <ListSparkle size="lg" fill={t.atoms.text_contrast_medium.color} />
+            <FeedsIcon size="lg" fill={t.atoms.text_contrast_medium.color} />
           </Link>
         </View>
       )}

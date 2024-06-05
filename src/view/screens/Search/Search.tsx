@@ -59,6 +59,7 @@ import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 function Loader() {
   const pal = usePalette('default')
@@ -712,11 +713,7 @@ export function SearchScreen(
             accessibilityRole="button"
             accessibilityLabel={_(msg`Menu`)}
             accessibilityHint={_(msg`Access navigation links and settings`)}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
+            <Menu size="lg" fill={pal.colors.textLight} />
           </Pressable>
         )}
         <SearchInputBox

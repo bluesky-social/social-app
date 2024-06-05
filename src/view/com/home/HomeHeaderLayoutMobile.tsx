@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,7 +15,8 @@ import {Logo} from '#/view/icons/Logo'
 import {atoms} from '#/alf'
 import {useTheme} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
-import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {ListPlus_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/ListPlus'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Link} from '#/components/Link'
 import {IS_DEV} from '#/env'
 
@@ -55,11 +55,7 @@ export function HomeHeaderLayoutMobile({
               msg`Access profile and other navigation links`,
             )}
             hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
+            <Menu size="lg" fill={t.atoms.text_contrast_medium.color} />
           </TouchableOpacity>
         </View>
         <View>
@@ -85,10 +81,7 @@ export function HomeHeaderLayoutMobile({
               to="/feeds"
               hitSlop={HITSLOP_10}
               label={_(msg`View your feeds and explore more`)}>
-              <ListSparkle
-                size="lg"
-                fill={t.atoms.text_contrast_medium.color}
-              />
+              <FeedsIcon size="lg" fill={t.atoms.text_contrast_medium.color} />
             </Link>
           )}
         </View>
@@ -112,7 +105,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
     paddingVertical: 8,
     width: '100%',
   },
