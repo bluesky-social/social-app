@@ -77,7 +77,7 @@ function WizardInner() {
     did: currentAccount?.did,
     staleTime: 0,
   })
-  const searchDialogControl = useDialogControl()
+  const addDialogControl = useDialogControl()
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -177,9 +177,27 @@ function WizardInner() {
         <StepView />
       </Container>
 
+      {state.currentStep !== 'Details' && (
+        <Button
+          label={_(msg`Cancel`)}
+          onPress={addDialogControl.open}
+          variant="solid"
+          color="primary"
+          size="medium"
+          style={[a.mx_2xl]}>
+          <ButtonText>
+            {state.currentStep === 'Profiles' ? (
+              <Trans>Find People</Trans>
+            ) : (
+              <Trans>Find Feeds</Trans>
+            )}
+          </ButtonText>
+        </Button>
+      )}
+
       {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
         <WizardAddDialog
-          control={searchDialogControl}
+          control={addDialogControl}
           state={state}
           dispatch={dispatch}
           type={state.currentStep === 'Profiles' ? 'profiles' : 'feeds'}
