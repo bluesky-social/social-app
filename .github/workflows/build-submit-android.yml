@@ -109,7 +109,7 @@ jobs:
 
       - name: 📚 Get version from package.json
         id: get-build-info
-        run: bash scripts/setGitHubOutputs.sh
+        run: bash scripts/setGitHubOutput.sh
 
       - name: 🔔 Notify Slack of Production Build
 #        if: ${{ inputs.profile == 'production' }}
