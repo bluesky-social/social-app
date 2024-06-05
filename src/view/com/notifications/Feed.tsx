@@ -161,7 +161,11 @@ export function Feed({
         )
       } else if (item === LOADING_ITEM) {
         return (
-          <View style={[pal.border, {borderTopWidth: hairlineWidth}]}>
+          <View
+            style={[
+              pal.border,
+              !isTabletOrMobile && {borderTopWidth: hairlineWidth},
+            ]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
@@ -217,6 +221,7 @@ export function Feed({
         desktopFixedHeight
         initialNumToRender={initialNumToRender}
         windowSize={11}
+        sideBorders={false}
       />
     </View>
   )
