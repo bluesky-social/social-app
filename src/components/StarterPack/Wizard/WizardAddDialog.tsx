@@ -55,12 +55,17 @@ function AddProfiles(props: Props) {
     currentAccount?.did,
   )
   const follows = followsPages?.pages.flatMap(page => page.follows) || []
-  const {data: results} = useActorAutocompleteQuery(searchText, true, 12)
+
+  const {data: searchedProfiles} = useActorAutocompleteQuery(
+    searchText,
+    true,
+    12,
+  )
 
   return (
     <AddDialog
       {...props}
-      data={searchText ? results : follows}
+      data={searchText ? searchedProfiles : follows}
       onEndReached={searchText ? undefined : () => fetchNextPage()}
       searchText={searchText}
       setSearchText={setSearchText}
@@ -77,7 +82,7 @@ function AddFeeds(props: Props) {
     popularFeedsPages?.pages.flatMap(page => page.feeds) || []
 
   const {
-    data: searchResults,
+    data: searchedFeeds,
     mutate: search,
     reset: resetSearch,
   } = useSearchPopularFeedsMutation()
@@ -99,7 +104,7 @@ function AddFeeds(props: Props) {
   return (
     <AddDialog
       {...props}
-      data={searchText ? searchResults : popularFeeds}
+      data={searchText ? searchedFeeds : popularFeeds}
       onEndReached={() => fetchNextPage()}
       searchText={searchText}
       setSearchText={onChangeText}
