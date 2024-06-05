@@ -38,6 +38,7 @@ const PLACEHOLDER_USERS = [
     displayName: 'Bossett',
     avatar:
       'https://cdn.bsky.app/img/avatar/plain/did:plc:jfhpnnst6flqway4eaeqzj2a/bafkreid42e2su4sju7hl2nm4ouacw3icvvytf7r6gab3pvc2qxhqhc5ji4@jpeg',
+    description: 'he/him\n' + '📍 🇦🇺',
   },
   {
     did: 'did:plc:qjeavhlw222ppsre4rscd3n2',
@@ -45,6 +46,8 @@ const PLACEHOLDER_USERS = [
     displayName: 'hailey',
     avatar:
       'https://cdn.bsky.app/img/avatar/plain/did:plc:oisofpd7lj26yvgiivf3lxsi/bafkreia4lpswywb5yx3gsezqb5io73kt7icw634ks4m4mmbfvp7e62cxku@jpeg',
+    description:
+      'React Native @ Bluesky\n' + 'Tomato hater 🍅 ❌\n' + 'she/her',
   },
   {
     did: 'did:plc:qjeavhlw222ppsre4rscd3n2',
@@ -52,6 +55,7 @@ const PLACEHOLDER_USERS = [
     displayName: 'samuel',
     avatar:
       'https://cdn.bsky.app/img/avatar/plain/did:plc:p2cp5gopk7mgjegy6wadk3ep/bafkreias5vktko4jpg4mwp4audptcbdfkb4o3cfyzt4426mj2h7ewwvg7q@jpeg',
+    description: 'formerly mozzius. developer at bluesky\n' + '📍London',
   },
 
   {
@@ -60,6 +64,7 @@ const PLACEHOLDER_USERS = [
     displayName: 'Paul “Frazee” 🦋',
     avatar:
       'https://cdn.bsky.app/img/avatar/plain/did:plc:ragtjsm2j2vknwkz3zp4oxrd/bafkreihhpqdyntku66himwor5wlhtdo44hllmngj2ofmbqnm25bdm454wq@jpeg',
+    description: 'Developer at Bluesky. Go Mets.',
   },
   {
     did: 'did:plc:qjeavhlw222ppsre4rscd3n2',

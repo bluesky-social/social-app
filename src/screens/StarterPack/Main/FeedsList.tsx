@@ -48,6 +48,7 @@ export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
           <View style={[{height: initialHeaderHeight + bottomBarOffset}]} />
         }
         showsVerticalScrollIndicator={false}
+        desktopFixedHeight={true}
       />
     )
   },
