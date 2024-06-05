@@ -8,9 +8,9 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {isAndroid, isWeb} from 'platform/detection'
 import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
-import {Text} from 'view/com/util/text/Text'
 import {CenteredView} from 'view/com/util/Views'
 import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
@@ -20,6 +20,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {WizardAddDialog} from '#/components/StarterPack/Wizard/WizardAddDialog'
+import {Text} from '#/components/Typography'
 import {Provider} from './State'
 
 export function Wizard({
@@ -85,6 +86,7 @@ function WizardInner() {
     })
   }, [navigation])
 
+  // TODO move to state if we keep this
   const continueIsCta = () => {
     if (state.currentStep === 'Details') {
       return true
@@ -146,15 +148,20 @@ function WizardInner() {
     <CenteredView
       style={[a.flex_1, {marginBottom: bottomOffset + 20}]}
       sideBorders>
-      <View
-        style={[
-          a.pb_sm,
-          a.px_md,
-          a.border_b,
-          t.atoms.border_contrast_medium,
-          a.gap_sm,
-        ]}>
-        <View style={[a.flex_row, a.justify_between, a.align_center]}>
+      <View style={[]}>
+        <View
+          style={[
+            a.flex_row,
+            a.pb_sm,
+            a.px_md,
+            a.border_b,
+            t.atoms.border_contrast_medium,
+            a.gap_sm,
+            a.justify_between,
+            a.align_center,
+            isAndroid && a.pt_sm,
+            isWeb && [a.py_md],
+          ]}>
           <View style={[{width: 65}]}>
             {state.currentStep !== 'Details' && (
               <Button
@@ -185,7 +192,7 @@ function WizardInner() {
           <Button
             label={_(msg`Cancel`)}
             onPress={addDialogControl.open}
-            variant={!continueIsCta() ? 'solid' : 'ghost'}
+            variant="ghost"
             color="primary"
             size="medium"
             style={[a.mx_2xl]}>
@@ -203,7 +210,7 @@ function WizardInner() {
           label={_(msg`Cancel`)}
           onPress={onNext}
           variant={continueIsCta() ? 'solid' : 'ghost'}
-          color="primary"
+          color={continueIsCta() ? 'primary' : 'secondary'}
           size="medium"
           style={[a.mx_2xl]}>
           <ButtonText>{uiStrings.nextBtn}</ButtonText>
