@@ -271,6 +271,8 @@
   "resolutions": {
     "@types/react": "^18",
     "**/zeed-dom": "0.10.9",
+    "**/expo-constants": "16.0.1",
+    "**/expo-device": "6.0.2",
     "@react-native/babel-preset": "0.74.1"
   },
   "jest": {
