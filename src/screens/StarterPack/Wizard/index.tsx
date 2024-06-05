@@ -102,11 +102,11 @@ function WizardInner() {
         button: _(msg`Continue`),
       },
       Profiles: {
-        header: _(msg`Add profiles`),
+        header: _(msg`Profiles`),
         button: _(msg`Continue`),
       },
       Feeds: {
-        header: _(msg`Add feeds`),
+        header: _(msg`Feeds`),
         button: _(msg`Finish`),
       },
     }
