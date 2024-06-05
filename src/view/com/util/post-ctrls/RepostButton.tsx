@@ -108,6 +108,7 @@ let RepostButton = ({
                 </Text>
               </Button>
               <Button
+                testID="quoteBtn"
                 style={[a.justify_start, a.px_md]}
                 label={_(msg`Quote post`)}
                 onPress={() => {

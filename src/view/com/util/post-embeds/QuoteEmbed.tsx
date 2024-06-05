@@ -181,9 +181,11 @@ export function QuoteEmbed({
   }, [queryClient, quote.author, onOpen])
 
   return (
-    <ContentHider modui={moderation?.ui('contentList')}>
+    <ContentHider
+      modui={moderation?.ui('contentList')}
+      style={[styles.container, pal.borderDark, style]}
+      childContainerStyle={[a.pt_sm]}>
       <Link
-        style={[styles.container, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
         title={itemTitle}
