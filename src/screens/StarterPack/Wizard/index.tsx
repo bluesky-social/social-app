@@ -18,8 +18,6 @@ import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {WizardAddDialog} from '#/components/StarterPack/Wizard/WizardAddDialog'
 import {Provider} from './State'
 
 export function Wizard({
@@ -77,7 +75,6 @@ function WizardInner() {
     did: currentAccount?.did,
     staleTime: 0,
   })
-  const searchDialogControl = useDialogControl()
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -176,15 +173,6 @@ function WizardInner() {
       <Container>
         <StepView />
       </Container>
-
-      {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
-        <WizardAddDialog
-          control={searchDialogControl}
-          state={state}
-          dispatch={dispatch}
-          type={state.currentStep === 'Profiles' ? 'profiles' : 'feeds'}
-        />
-      )}
     </CenteredView>
   )
 }
