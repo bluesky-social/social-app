@@ -12083,7 +12083,7 @@ expo-constants@^13.0.2:
     "@expo/config" "~7.0.0"
     uuid "^3.3.2"
 
-expo-constants@~16.0.0, expo-constants@~16.0.1:
+expo-constants@~16.0.0:
   version "16.0.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-16.0.1.tgz#1285e29c85513c6e88e118289e2baab72596d3f7"
   integrity sha512-s6aTHtglp926EsugWtxN7KnpSsE9FCEjb7CgEjQQ78Gpu4btj4wB+IXot2tlqNwqv+x7xFe5veoPGfJDGF/kVg==
