@@ -18,7 +18,6 @@ import {CenteredView} from 'view/com/util/Views'
 import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
-import {StepLanding} from '#/screens/StarterPack/Wizard/StepLanding'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -93,12 +92,8 @@ function WizardInner() {
 
   const wizardUiStrings: Record<WizardStep, {header: string; button: string}> =
     {
-      Landing: {
-        header: _(msg`Create a starter pack`),
-        button: _(msg`Get started`),
-      },
       Details: {
-        header: _(msg`Details`),
+        header: _(msg`Create a Starter Pack`),
         button: _(msg`Continue`),
       },
       Profiles: {
@@ -143,7 +138,7 @@ function WizardInner() {
       <ViewHeader
         title={uiStrings.header}
         onBackPress={
-          state.currentStep !== 'Landing'
+          state.currentStep !== 'Details'
             ? () => dispatch({type: 'Back'})
             : undefined
         }
@@ -216,9 +211,6 @@ function Container({children}: {children: React.ReactNode}) {
 function StepView() {
   const [state] = useWizardState()
 
-  if (state.currentStep === 'Landing') {
-    return <StepLanding />
-  }
   if (state.currentStep === 'Details') {
     return <StepDetails />
   }

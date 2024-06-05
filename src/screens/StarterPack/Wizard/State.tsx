@@ -2,7 +2,7 @@ import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
-const steps = ['Landing', 'Details', 'Profiles', 'Feeds'] as const
+const steps = ['Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
 
 type Action =
@@ -40,11 +40,10 @@ function reducer(state: State, action: Action): State {
   let updatedState = state
 
   // -- Navigation
+  const currentIndex = steps.indexOf(state.currentStep)
   if (action.type === 'Next' && state.currentStep !== 'Feeds') {
-    const currentIndex = steps.indexOf(state.currentStep)
     updatedState = {...state, currentStep: steps[currentIndex + 1]}
-  } else if (action.type === 'Back' && state.currentStep !== 'Landing') {
-    const currentIndex = steps.indexOf(state.currentStep)
+  } else if (action.type === 'Back' && state.currentStep !== 'Details') {
     updatedState = {...state, currentStep: steps[currentIndex - 1]}
   }
 
@@ -81,18 +80,18 @@ function reducer(state: State, action: Action): State {
   }
 
   switch (updatedState.currentStep) {
-    case 'Landing':
-      updatedState = {
-        ...updatedState,
-        canNext: true,
-      }
-      break
     case 'Details':
       updatedState = {
         ...updatedState,
         canNext: Boolean(updatedState.description),
       }
       break
+    default: {
+      updatedState = {
+        ...updatedState,
+        canNext: true,
+      }
+    }
   }
 
   return updatedState
@@ -101,7 +100,7 @@ function reducer(state: State, action: Action): State {
 // TODO supply the initial state to this component
 export function Provider({
   initialState,
-  initialStep = 'Landing',
+  initialStep = 'Details',
   children,
 }: {
   initialState?: any // TODO update this type
