@@ -76,8 +76,8 @@ jobs:
 #        if: ${{ inputs.profile != 'production' }}
 #        run: mv build.aab build.apk
 
-      - name: Temp, RM me
-        run: |
+       - name: Temp, RM me
+         run: |
           echo "temp test" > build.aab
           echo "temp test" > build.apk
 
