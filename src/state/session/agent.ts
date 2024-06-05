@@ -46,6 +46,11 @@ export async function createAgentAndResume(
     emailConfirmed: storedAccount.emailConfirmed,
     handle: storedAccount.handle,
     refreshJwt: storedAccount.refreshJwt ?? '',
+    /**
+     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
+     */
+    active: storedAccount.active ?? true,
+    status: storedAccount.status,
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
@@ -235,8 +240,8 @@ export function agentToSessionAccount(
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
     signupQueued: isSignupQueued(agent.session.accessJwt),
-    // @ts-expect-error TODO remove when backend is ready
-    status: agent.session.status,
+    active: agent.session.active,
+    status: agent.session.status as SessionAccount['status'],
     pdsUrl: agent.pdsUrl?.toString(),
   }
 }
