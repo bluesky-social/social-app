@@ -89,7 +89,6 @@ export function HomeHeaderLayoutMobile({
               style={[
                 a.justify_center,
                 {
-                  marginTop: -4,
                   marginRight: -6,
                 },
               ]}>
@@ -118,7 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 4,
     width: '100%',
   },
   title: {
