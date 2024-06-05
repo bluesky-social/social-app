@@ -1,10 +1,9 @@
 import React from 'react'
-import {ListRenderItemInfo, View} from 'react-native'
+import {ListRenderItemInfo} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
-import {atoms as a} from '#/alf'
 import {WizardListEmpty} from '#/components/StarterPack/Wizard/WizardListEmpty'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
 
@@ -24,15 +23,11 @@ export function StepProfiles() {
   }
 
   return (
-    <>
-      <View style={[a.flex_1]}>
-        <List
-          data={state.profiles}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          ListEmptyComponent={<WizardListEmpty type="profiles" />}
-        />
-      </View>
-    </>
+    <List
+      data={state.profiles}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      ListEmptyComponent={<WizardListEmpty type="profiles" />}
+    />
   )
 }
