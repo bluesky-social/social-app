@@ -9,6 +9,7 @@ import React, {
 import {
   ActivityIndicator,
   Keyboard,
+  LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -116,7 +117,7 @@ export const ComposePost = observer(function ComposePost({
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
-  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -153,6 +154,13 @@ export const ComposePost = observer(function ComposePost({
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
+
+  React.useEffect(() => {
+    if (!isAndroid) return
+    const id = setTimeout(() => textInput.current?.focus(), 100)
+    return () => clearTimeout(id)
+  }, [])
+
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
@@ -170,24 +178,8 @@ export const ComposePost = observer(function ComposePost({
     [insets, isKeyboardVisible],
   )
 
-  const hasScrolled = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      hasScrolled.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
-    },
-  })
-  const topBarAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      borderColor: interpolateColor(
-        hasScrolled.value,
-        [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
-      ),
-    }
-  })
-
   const onPressCancel = useCallback(() => {
-    if (graphemeLength > 0 || !gallery.isEmpty) {
+    if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
       closeAllDialogs()
       if (Keyboard) {
         Keyboard.dismiss()
@@ -197,6 +189,7 @@ export const ComposePost = observer(function ComposePost({
       onClose()
     }
   }, [
+    extGif,
     graphemeLength,
     gallery.isEmpty,
     closeAllDialogs,
@@ -395,23 +388,26 @@ export const ComposePost = observer(function ComposePost({
     [setExtLink],
   )
 
+  const {
+    scrollHandler,
+    onScrollViewContentSizeChange,
+    onScrollViewLayout,
+    topBarAnimatedStyle,
+    bottomBarAnimatedStyle,
+  } = useAnimatedBorders()
+
   return (
     <>
       <KeyboardAvoidingView
         testID="composePostView"
         behavior="padding"
         style={a.flex_1}
-        keyboardVerticalOffset={replyTo ? 120 : isAndroid ? 180 : 150}>
+        keyboardVerticalOffset={replyTo ? 115 : isAndroid ? 180 : 162}>
         <View
           style={[a.flex_1, viewStyles]}
           aria-modal
           accessibilityViewIsModal>
-          <Animated.View
-            style={[
-              styles.topbar,
-              topBarAnimatedStyle,
-              isWeb && isTabletOrDesktop && styles.topbarDesktop,
-            ]}>
+          <Animated.View style={topBarAnimatedStyle}>
             <View style={styles.topbarInner}>
               <TouchableOpacity
                 testID="composerDiscardButton"
@@ -509,7 +505,9 @@ export const ComposePost = observer(function ComposePost({
           <Animated.ScrollView
             onScroll={scrollHandler}
             style={styles.scrollView}
-            keyboardShouldPersistTaps="always">
+            keyboardShouldPersistTaps="always"
+            onContentSizeChange={onScrollViewContentSizeChange}
+            onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
             <View
@@ -526,7 +524,7 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                autoFocus={true}
+                autoFocus={!isAndroid}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
@@ -575,7 +573,11 @@ export const ComposePost = observer(function ComposePost({
       <KeyboardStickyView
         offset={{closed: isIOS ? -insets.bottom : 0, opened: 0}}>
         {replyTo ? null : (
-          <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
+          <ThreadgateBtn
+            threadgate={threadgate}
+            onChange={setThreadgate}
+            style={bottomBarAnimatedStyle}
+          />
         )}
         <View
           style={[
@@ -625,15 +627,108 @@ export function useComposerCancelRef() {
   return useRef<CancelRef>(null)
 }
 
+function useAnimatedBorders() {
+  const t = useTheme()
+  const hasScrolledTop = useSharedValue(0)
+  const hasScrolledBottom = useSharedValue(0)
+  const contentOffset = useSharedValue(0)
+  const scrollViewHeight = useSharedValue(Infinity)
+  const contentHeight = useSharedValue(0)
+
+  /**
+   * Make sure to run this on the UI thread!
+   */
+  const showHideBottomBorder = useCallback(
+    ({
+      newContentHeight,
+      newContentOffset,
+      newScrollViewHeight,
+    }: {
+      newContentHeight?: number
+      newContentOffset?: number
+      newScrollViewHeight?: number
+    }) => {
+      'worklet'
+
+      if (typeof newContentHeight === 'number')
+        contentHeight.value = Math.floor(newContentHeight)
+      if (typeof newContentOffset === 'number')
+        contentOffset.value = Math.floor(newContentOffset)
+      if (typeof newScrollViewHeight === 'number')
+        scrollViewHeight.value = Math.floor(newScrollViewHeight)
+
+      hasScrolledBottom.value = withTiming(
+        contentHeight.value - contentOffset.value - 5 > scrollViewHeight.value
+          ? 1
+          : 0,
+      )
+    },
+    [contentHeight, contentOffset, scrollViewHeight, hasScrolledBottom],
+  )
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      'worklet'
+      hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+      showHideBottomBorder({
+        newContentOffset: event.contentOffset.y,
+        newContentHeight: event.contentSize.height,
+        newScrollViewHeight: event.layoutMeasurement.height,
+      })
+    },
+  })
+
+  const onScrollViewContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      'worklet'
+      showHideBottomBorder({
+        newContentHeight: height,
+      })
+    },
+    [showHideBottomBorder],
+  )
+
+  const onScrollViewLayout = useCallback(
+    (evt: LayoutChangeEvent) => {
+      'worklet'
+      showHideBottomBorder({
+        newScrollViewHeight: evt.nativeEvent.layout.height,
+      })
+    },
+    [showHideBottomBorder],
+  )
+
+  const topBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderBottomWidth: hairlineWidth,
+      borderColor: interpolateColor(
+        hasScrolledTop.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
+  const bottomBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderTopWidth: hairlineWidth,
+      borderColor: interpolateColor(
+        hasScrolledBottom.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
+
+  return {
+    scrollHandler,
+    onScrollViewContentSizeChange,
+    onScrollViewLayout,
+    topBarAnimatedStyle,
+    bottomBarAnimatedStyle,
+  }
+}
+
 const styles = StyleSheet.create({
-  topbar: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  topbarDesktop: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    height: 50,
-  },
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -698,7 +793,8 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 4,
-    paddingLeft: 8,
+    // should be 8 but due to visual alignment we have to fudge it
+    paddingLeft: 7,
     paddingRight: 16,
     alignItems: 'center',
     borderTopWidth: hairlineWidth,

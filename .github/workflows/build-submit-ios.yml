@@ -34,6 +34,9 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
+      - name: 🪛 Setup jq
+        uses: dcarbone/install-jq-action@v2
+
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@v8
         with:
@@ -80,6 +83,22 @@ jobs:
 
       - name: 🚀 Deploy
         run: eas submit -p ios --non-interactive --path build.ipa
+
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🔔 Notify Slack of Production Build
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}```"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - name: ⬇️ Restore Cache
         id: get-base-commit

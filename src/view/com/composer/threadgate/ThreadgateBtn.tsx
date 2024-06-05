@@ -1,5 +1,6 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, StyleProp, ViewStyle} from 'react-native'
+import Animated, {AnimatedStyle} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,9 +17,11 @@ import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 export function ThreadgateBtn({
   threadgate,
   onChange,
+  style,
 }: {
   threadgate: ThreadgateSetting[]
   onChange: (v: ThreadgateSetting[]) => void
+  style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
   const {track} = useAnalytics()
   const {_} = useLingui()
@@ -46,7 +49,7 @@ export function ThreadgateBtn({
     : _(msg`Some people can reply`)
 
   return (
-    <View style={[a.flex_row, a.py_xs, a.px_sm, t.atoms.bg]}>
+    <Animated.View style={[a.flex_row, a.p_sm, t.atoms.bg, style]}>
       <Button
         variant="solid"
         color="secondary"
@@ -59,6 +62,6 @@ export function ThreadgateBtn({
         />
         <ButtonText>{label}</ButtonText>
       </Button>
-    </View>
+    </Animated.View>
   )
 }

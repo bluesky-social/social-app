@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
   ModerationOpts,
@@ -9,6 +10,11 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {
+  postUriToRelativePath,
+  toBskyAppUrl,
+  toShortUrl,
+} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -95,21 +101,64 @@ function ChatListItemReady({
 
   const isDimStyle = convo.muted || moderation.blocked || isDeletedAccount
 
-  let lastMessage = _(msg`No messages yet`)
-  let lastMessageSentAt: string | null = null
-  if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
-    if (convo.lastMessage.sender?.did === currentAccount?.did) {
-      lastMessage = _(msg`You: ${convo.lastMessage.text}`)
-    } else {
-      lastMessage = convo.lastMessage.text
+  const {lastMessage, lastMessageSentAt} = React.useMemo(() => {
+    let lastMessage = _(msg`No messages yet`)
+    let lastMessageSentAt: string | null = null
+
+    if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+      const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
+
+      if (convo.lastMessage.text) {
+        if (isFromMe) {
+          lastMessage = _(msg`You: ${convo.lastMessage.text}`)
+        } else {
+          lastMessage = convo.lastMessage.text
+        }
+      } else if (convo.lastMessage.embed) {
+        const defaultEmbeddedContentMessage = _(
+          msg`(contains embedded content)`,
+        )
+
+        if (AppBskyEmbedRecord.isView(convo.lastMessage.embed)) {
+          const embed = convo.lastMessage.embed
+
+          if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+            const record = embed.record
+            const path = postUriToRelativePath(record.uri, {
+              handle: record.author.handle,
+            })
+            const href = path ? toBskyAppUrl(path) : undefined
+            const short = href
+              ? toShortUrl(href)
+              : defaultEmbeddedContentMessage
+            if (isFromMe) {
+              lastMessage = _(msg`You: ${short}`)
+            } else {
+              lastMessage = short
+            }
+          }
+        } else {
+          if (isFromMe) {
+            lastMessage = _(msg`You: ${defaultEmbeddedContentMessage}`)
+          } else {
+            lastMessage = defaultEmbeddedContentMessage
+          }
+        }
+      }
+
+      lastMessageSentAt = convo.lastMessage.sentAt
     }
-    lastMessageSentAt = convo.lastMessage.sentAt
-  }
-  if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
-    lastMessage = isDeletedAccount
-      ? _(msg`Conversation deleted`)
-      : _(msg`Message deleted`)
-  }
+    if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+      lastMessage = isDeletedAccount
+        ? _(msg`Conversation deleted`)
+        : _(msg`Message deleted`)
+    }
+
+    return {
+      lastMessage,
+      lastMessageSentAt,
+    }
+  }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
 
   const [showActions, setShowActions] = useState(false)
 
