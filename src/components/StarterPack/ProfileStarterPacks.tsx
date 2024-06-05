@@ -156,7 +156,7 @@ export const ProfileStarterPacks = React.forwardRef<
         return <FeedLoadingPlaceholder />
       }
       if (preferences) {
-        return <StarterPackCard hideTopBorder={index === 0} />
+        return <StarterPackCard type="list" hideTopBorder={index === 0} />
       }
       return null
     },
