@@ -1,6 +1,6 @@
 import {
-  AppBskyNotificationListNotifications,
   AppBskyFeedDefs,
+  AppBskyNotificationListNotifications,
 } from '@atproto/api'
 
 export type NotificationType =
@@ -11,6 +11,7 @@ export type NotificationType =
   | 'reply'
   | 'quote'
   | 'follow'
+  | 'starter-pack-signup'
   | 'unknown'
 
 export interface FeedNotification {

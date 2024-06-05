@@ -51,6 +51,7 @@ import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 import hairlineWidth = StyleSheet.hairlineWidth
+import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
 
 const MAX_AUTHORS = 5
 
@@ -92,6 +93,10 @@ let FeedItem = ({
         const urip = new AtUri(item.subjectUri)
         return `/profile/${urip.host}/feed/${urip.rkey}`
       }
+    } else if (item.type === 'starter-pack-signup') {
+      // TODO create the right href for navigating to the starterpack
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const urip = '/'
     }
     return ''
   }, [item])
@@ -119,7 +124,12 @@ let FeedItem = ({
     ]
   }, [item, moderationOpts])
 
-  if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
+  if (
+    item.subjectUri &&
+    !item.subject &&
+    item.type !== 'feedgen-like' &&
+    item.type !== 'starter-pack-signup'
+  ) {
     // don't render anything if the target post was deleted or unfindable
     return <View />
   }
@@ -174,6 +184,14 @@ let FeedItem = ({
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
+  } else if (item.type === 'starter-pack-signup') {
+    console.log('has one')
+    icon = (
+      <View style={{height: 30, width: 30}}>
+        <StarterPackIcon />
+      </View>
+    )
+    action = _(msg`signed up with your starter pack`)
   } else {
     return null
   }
@@ -287,6 +305,7 @@ let FeedItem = ({
             showLikes
           />
         ) : null}
+        {item.type === 'starter-pack-signup' ? <></> : null}
       </View>
     </Link>
   )
