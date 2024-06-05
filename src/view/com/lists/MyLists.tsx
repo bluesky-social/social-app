@@ -9,7 +9,8 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -17,11 +18,10 @@ import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {EmptyState} from 'view/com/util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
-import {Text} from '../util/text/Text'
 import {ListCard} from './ListCard'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -42,6 +42,7 @@ export function MyLists({
 }) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
+  const {_} = useLingui()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
     useMyListsQuery(filter)
@@ -83,14 +84,12 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <View
+          <EmptyState
             key={item._reactKey}
+            icon="list-ul"
+            message={_(msg`You have no lists.`)}
             testID="listsEmpty"
-            style={[{padding: 18, borderTopWidth: hairlineWidth}, pal.border]}>
-            <Text style={pal.textLight}>
-              <Trans>You have no lists.</Trans>
-            </Text>
-          </View>
+          />
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -118,7 +117,7 @@ export function MyLists({
         />
       )
     },
-    [error, onRefresh, renderItem, pal],
+    [error, onRefresh, renderItem, _],
   )
 
   if (inline) {

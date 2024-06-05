@@ -16,6 +16,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useListConvosQuery} from '#/state/queries/messages/list-converations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
@@ -55,9 +56,11 @@ type Item =
 export function SearchablePeopleList({
   title,
   onSelectChat,
+  showRecentConvos,
 }: {
   title: string
   onSelectChat: (did: string) => void
+  showRecentConvos?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -75,6 +78,7 @@ export function SearchablePeopleList({
     isFetching,
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
+  const {data: convos} = useListConvosQuery({enabled: showRecentConvos})
 
   const items = useMemo(() => {
     let _items: Item[] = []
@@ -103,7 +107,65 @@ export function SearchablePeopleList({
         })
       }
     } else {
-      if (follows) {
+      const placeholders: Item[] = Array(10)
+        .fill(0)
+        .map((_, i) => ({
+          type: 'placeholder',
+          key: i + '',
+        }))
+
+      if (showRecentConvos) {
+        if (convos && follows) {
+          const usedDids = new Set()
+
+          for (const page of convos.pages) {
+            for (const convo of page.convos) {
+              const profiles = convo.members.filter(
+                m => m.did !== currentAccount?.did,
+              )
+
+              for (const profile of profiles) {
+                if (usedDids.has(profile.did)) continue
+
+                usedDids.add(profile.did)
+
+                _items.push({
+                  type: 'profile',
+                  key: profile.did,
+                  enabled: true,
+                  profile,
+                })
+              }
+            }
+          }
+
+          let followsItems: typeof _items = []
+
+          for (const page of follows.pages) {
+            for (const profile of page.follows) {
+              if (usedDids.has(profile.did)) continue
+
+              followsItems.push({
+                type: 'profile',
+                key: profile.did,
+                enabled: canBeMessaged(profile),
+                profile,
+              })
+            }
+          }
+
+          // only sort follows
+          followsItems = followsItems.sort(a => {
+            // @ts-ignore
+            return a.enabled ? -1 : 1
+          })
+
+          // then append
+          _items.push(...followsItems)
+        } else {
+          _items.push(...placeholders)
+        }
+      } else if (follows) {
         for (const page of follows.pages) {
           for (const profile of page.follows) {
             _items.push({
@@ -120,19 +182,21 @@ export function SearchablePeopleList({
           return a.enabled ? -1 : 1
         })
       } else {
-        Array(10)
-          .fill(0)
-          .forEach((_, i) => {
-            _items.push({
-              type: 'placeholder',
-              key: i + '',
-            })
-          })
+        _items.push(...placeholders)
       }
     }
 
     return _items
-  }, [_, searchText, results, isError, currentAccount?.did, follows])
+  }, [
+    _,
+    searchText,
+    results,
+    isError,
+    currentAccount?.did,
+    follows,
+    convos,
+    showRecentConvos,
+  ])
 
   if (searchText && !isFetching && !items.length && !isError) {
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
@@ -331,11 +395,13 @@ function ProfileCard({
           />
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
-              style={[t.atoms.text, a.font_bold, a.leading_snug]}
+              style={[t.atoms.text, a.font_bold, a.leading_tight]}
               numberOfLines={1}>
               {displayName}
             </Text>
-            <Text style={t.atoms.text_contrast_high} numberOfLines={2}>
+            <Text
+              style={[a.leading_tight, t.atoms.text_contrast_high]}
+              numberOfLines={2}>
               {!enabled ? <Trans>{handle} can't be messaged</Trans> : handle}
             </Text>
           </View>

@@ -52,12 +52,12 @@ export function ListsScreen({}: Props) {
     <View style={s.hContentRegion} testID="listsScreen">
       <SimpleViewHeader
         showBackButton={isMobile}
-        style={
-          !isMobile && [
-            pal.border,
-            {borderLeftWidth: hairlineWidth, borderRightWidth: hairlineWidth},
-          ]
-        }>
+        style={[
+          pal.border,
+          isMobile
+            ? {borderBottomWidth: hairlineWidth}
+            : {borderLeftWidth: hairlineWidth, borderRightWidth: hairlineWidth},
+        ]}>
         <View style={{flex: 1}}>
           <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
             <Trans>User Lists</Trans>

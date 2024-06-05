@@ -3,6 +3,7 @@ import psl from 'psl'
 import TLDs from 'tlds'
 
 import {BSKY_SERVICE} from 'lib/constants'
+import {isInvalidHandle} from 'lib/strings/handles'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
@@ -81,6 +82,10 @@ export function toShareUrl(url: string): string {
     url = urlp.toString()
   }
   return url
+}
+
+export function toBskyAppUrl(url: string): string {
+  return new URL(url, BSKY_APP_HOST).toString()
 }
 
 export function isBskyAppUrl(url: string): boolean {
@@ -180,6 +185,22 @@ export function feedUriToHref(url: string): string {
     return `/profile/${hostname}/feed/${rkey}`
   } catch {
     return ''
+  }
+}
+
+export function postUriToRelativePath(
+  uri: string,
+  options?: {handle?: string},
+): string | undefined {
+  try {
+    const {hostname, rkey} = new AtUri(uri)
+    const handleOrDid =
+      options?.handle && !isInvalidHandle(options.handle)
+        ? options.handle
+        : hostname
+    return `/profile/${handleOrDid}/post/${rkey}`
+  } catch {
+    return undefined
   }
 }
 
