@@ -2,10 +2,10 @@
 name: Build and Submit Android
 
 on:
+  push:
+    branches:
+      - ota-docs
   workflow_dispatch:
-    push:
-      branches:
-        - ota-docs
     inputs:
       profile:
         type: choice
