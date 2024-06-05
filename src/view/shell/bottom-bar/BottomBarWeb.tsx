@@ -117,7 +117,7 @@ export function BottomBarWeb() {
                       />
                       {gate('show_notification_badge_mobile_web') &&
                         unreadMessageCount.numUnread && (
-                          <View style={[styles.notificationCount]}>
+                          <View style={styles.notificationCount}>
                             <Text style={styles.notificationCountLabel}>
                               {unreadMessageCount.numUnread}
                             </Text>
@@ -138,7 +138,7 @@ export function BottomBarWeb() {
                       />
                       {gate('show_notification_badge_mobile_web') &&
                         notificationCountStr && (
-                          <View style={[styles.notificationCount]}>
+                          <View style={styles.notificationCount}>
                             <Text style={styles.notificationCountLabel}>
                               {notificationCountStr}
                             </Text>
