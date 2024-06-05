@@ -3,6 +3,9 @@ name: Build and Submit Android
 
 on:
   workflow_dispatch:
+    push:
+      branches:
+        - ota-docs
     inputs:
       profile:
         type: choice
@@ -47,31 +50,36 @@ jobs:
       - name: ⛏️ Setup EAS local builds
         run: yarn global add eas-cli-local-build-plugin
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+#      - uses: actions/setup-java@v4
+#        with:
+#          distribution: 'temurin'
+#          java-version: '17'
 
       - name: ⚙️ Install dependencies
         run: yarn install
 
-      - name: 🔤 Compile translations
-        run: yarn intl:build
+#      - name: 🔤 Compile translations
+#        run: yarn intl:build
 
-      - name: ✏️ Write environment variables
-        run: |
-          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
-          echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
-          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
-          echo "$json" > google-services.json
+#      - name: ✏️ Write environment variables
+#        run: |
+#          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+#          echo "${{ secrets.ENV_TOKEN }}" > .env
+#          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+#          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+#          echo "$json" > google-services.json
 
-      - name: 🏗️ EAS Build
-        run: yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
+#      - name: 🏗️ EAS Build
+#        run: yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
 
-      - name: ✍️ Rename Testflight bundle
-        if: ${{ inputs.profile != 'production' }}
-        run: mv build.aab build.apk
+#      - name: ✍️ Rename Testflight bundle
+#        if: ${{ inputs.profile != 'production' }}
+#        run: mv build.aab build.apk
+
+       - name: Temp, RM me
+         run: |
+          echo "temp test" > build.aab
+          echo "temp test" > build.apk
 
       - name: ⏰ Get a timestamp
         id: timestamp
@@ -81,7 +89,7 @@ jobs:
 
       - name: 🚀 Upload Production Artifact
         id: upload-artifact-production
-        if: ${{ inputs.profile == 'production' }}
+#        if: ${{ inputs.profile == 'production' }}
         uses: actions/upload-artifact@v4
         with:
           retention-days: 30
@@ -89,22 +97,22 @@ jobs:
           name: build-${{ steps.timestamp.outputs.time }}.aab
           path: build.aab
 
-      - name: 🚀 Upload Testflight Artifact
-        id: upload-artifact-testflight
-        if: ${{ inputs.profile != 'production' }}
-        uses: actions/upload-artifact@v4
-        with:
-          retention-days: 30
-          compression-level: 6
-          name: build-${{ steps.timestamp.outputs.time }}.apk
-          path: build.apk
+#      - name: 🚀 Upload Testflight Artifact
+#        id: upload-artifact-testflight
+#        if: ${{ inputs.profile != 'production' }}
+#        uses: actions/upload-artifact@v4
+#        with:
+#          retention-days: 30
+#          compression-level: 6
+#          name: build-${{ steps.timestamp.outputs.time }}.apk
+#          path: build.apk
 
       - name: 📚 Get version from package.json
         id: get-build-info
         run: bash scripts/setGitHubOutputs.sh
 
       - name: 🔔 Notify Slack of Production Build
-        if: ${{ inputs.profile == 'production' }}
+#        if: ${{ inputs.profile == 'production' }}
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
@@ -115,25 +123,25 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-      - name: 🔔 Notify Slack of Testflight Build
-        if: ${{ inputs.profile != 'production' }}
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+#      - name: 🔔 Notify Slack of Testflight Build
+#        if: ${{ inputs.profile != 'production' }}
+#        uses: slackapi/slack-github-action@v1.25.0
+#        with:
+#          payload: |
+#            {
+#              "text": "Android build is ready for testing. Download the artifact here: ${{ steps.upload-artifact-testflight.outputs.artifact-url }}"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+#          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-      - name: 🏗️ Build Production APK
-        if: ${{ inputs.profile == 'production' }}
-        run: yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
+#      - name: 🏗️ Build Production APK
+#        if: ${{ inputs.profile == 'production' }}
+#        run: yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
 
       - name: 🚀 Upload Production APK Artifact
         id: upload-artifact-production-apk
-        if: ${{ inputs.profile == 'production' }}
+#        if: ${{ inputs.profile == 'production' }}
         uses: actions/upload-artifact@v4
         with:
           retention-days: 30
@@ -142,7 +150,7 @@ jobs:
           path: build.apk
 
       - name: 🔔 Notify Slack of Production APK Build
-        if: ${{ inputs.profile == 'production' }}
+#        if: ${{ inputs.profile == 'production' }}
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
@@ -153,14 +161,14 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-      - name: ⬇️ Restore Cache
-        id: get-base-commit
-        uses: actions/cache@v4
-        if: ${{ inputs.profile == 'testflight' }}
-        with:
-          path: most-recent-testflight-commit.txt
-          key: most-recent-testflight-commit
+#      - name: ⬇️ Restore Cache
+#        id: get-base-commit
+#        uses: actions/cache@v4
+#        if: ${{ inputs.profile == 'testflight' }}
+#        with:
+#          path: most-recent-testflight-commit.txt
+#          key: most-recent-testflight-commit
 
-      - name: ✏️ Write commit hash to cache
-        if: ${{ inputs.profile == 'testflight' }}
-        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
+#      - name: ✏️ Write commit hash to cache
+#        if: ${{ inputs.profile == 'testflight' }}
+#        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
