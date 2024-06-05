@@ -64,7 +64,7 @@ export function BottomBarWeb() {
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const unreadMessageCountStr = useUnreadMessageCount()
+  const unreadMessageCount = useUnreadMessageCount()
   const notificationCountStr = useUnreadNotifications()
 
   return (
@@ -113,10 +113,10 @@ export function BottomBarWeb() {
                         width={iconWidth - 1}
                         style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
                       />
-                      {unreadMessageCountStr.numUnread && (
+                      {unreadMessageCount.numUnread && (
                         <View style={[styles.notificationCount]}>
                           <Text style={styles.notificationCountLabel}>
-                            {unreadMessageCountStr.numUnread}
+                            {unreadMessageCount.numUnread}
                           </Text>
                         </View>
                       )}
