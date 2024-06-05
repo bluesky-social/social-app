@@ -147,7 +147,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "Android production build for GitHub/Obtanium is ready!\n```Artifact: ${{ steps.upload-artifact-production.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
+              "text": "Android production build for GitHub/Obtanium is ready!\n```Artifact: ${{ steps.upload-artifact-production-apk.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
