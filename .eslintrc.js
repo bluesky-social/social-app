@@ -22,6 +22,18 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/jsx-uses-react': 1,
     'react-native/no-inline-styles': 0,
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: 'react',
+            importNames: ['default'],
+            message: 'Please use named imports instead.',
+          },
+        ],
+      },
+    ],
     'bsky-internal/avoid-unwrapped-text': [
       'error',
       {
