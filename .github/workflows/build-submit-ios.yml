@@ -2,6 +2,9 @@
 name: Build and Submit iOS
 
 on:
+  push:
+    branches:
+      - ota-docs
   workflow_dispatch:
     inputs:
       profile:
@@ -34,6 +37,9 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
+      - name: 🪛 Setup jq
+        uses: dcarbone/install-jq-action@v2
+
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@v8
         with:
@@ -47,39 +53,55 @@ jobs:
       - name: ⚙️ Install dependencies
         run: yarn install
 
-      - uses: maxim-lobanov/setup-xcode@v1
+#      - uses: maxim-lobanov/setup-xcode@v1
+#        with:
+#          xcode-version: '15.3'
+#
+#      - name: ☕️ Setup Cocoapods
+#        uses: maxim-lobanov/setup-cocoapods@v1
+#        with:
+#          version: 1.14.3
+
+#      - name: 💾 Cache Pods
+#        uses: actions/cache@v3
+#        id: pods-cache
+#        with:
+#          path: ./ios/Pods
+#          # We'll use the yarn.lock for our hash since we don't yet have a Podfile.lock. Pod versions will not
+#          # change unless the yarn version changes as well.
+#          key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
+
+#      - name: 🔤 Compile translations
+#        run: yarn intl:build
+#
+#      - name: ✏️ Write environment variables
+#        run: |
+#          echo "${{ secrets.ENV_TOKEN }}" > .env
+#          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+#          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+#          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
+#
+#      - name: 🏗️ EAS Build
+#        run: yarn use-build-number-with-bump eas build -p ios --profile ${{ inputs.profile || 'testflight' }} --local --output build.ipa --non-interactive
+#
+#      - name: 🚀 Deploy
+#        run: eas submit -p ios --non-interactive --path build.ipa
+
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
+      - name: 🔔 Notify Slack of Production Build
+#        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
         with:
-          xcode-version: '15.3'
-
-      - name: ☕️ Setup Cocoapods
-        uses: maxim-lobanov/setup-cocoapods@v1
-        with:
-          version: 1.14.3
-
-      - name: 💾 Cache Pods
-        uses: actions/cache@v3
-        id: pods-cache
-        with:
-          path: ./ios/Pods
-          # We'll use the yarn.lock for our hash since we don't yet have a Podfile.lock. Pod versions will not
-          # change unless the yarn version changes as well.
-          key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
-
-      - name: 🔤 Compile translations
-        run: yarn intl:build
-
-      - name: ✏️ Write environment variables
-        run: |
-          echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
-          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
-          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
-
-      - name: 🏗️ EAS Build
-        run: yarn use-build-number-with-bump eas build -p ios --profile ${{ inputs.profile || 'testflight' }} --local --output build.ipa --non-interactive
-
-      - name: 🚀 Deploy
-        run: eas submit -p ios --non-interactive --path build.ipa
+          payload: |
+            {
+              "text": "iOS production build for App Store submission is ready!\n```Artifact: Check App Store Connect\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}```"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - name: ⬇️ Restore Cache
         id: get-base-commit
