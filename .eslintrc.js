@@ -19,6 +19,7 @@ module.exports = {
     // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
     'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
+    'react/react-in-jsx-scope': 0,
     'react-native/no-inline-styles': 0,
     'bsky-internal/avoid-unwrapped-text': [
       'error',

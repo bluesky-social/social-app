@@ -26,7 +26,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   const styles = StyleSheet.flatten(props.style)
   const _fill = gradient ? 'url(#sky)' : fill || styles?.color || colors.blue3
   // @ts-ignore it's fiiiiine
-  const size = parseInt(rest.width || '32', 10)
+  const size = parseInt(rest.width || '32')
 
   const isKawaii = useKawaiiMode()
 

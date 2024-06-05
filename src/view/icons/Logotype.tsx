@@ -10,7 +10,7 @@ export function Logotype({
 }: {fill?: PathProps['fill']} & SvgProps) {
   const pal = usePalette('default')
   // @ts-ignore it's fiiiiine
-  const size = parseInt(rest.width || '32', 10)
+  const size = parseInt(rest.width || '32')
 
   return (
     <Svg
