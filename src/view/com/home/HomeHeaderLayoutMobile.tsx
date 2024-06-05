@@ -14,6 +14,7 @@ import {isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
 import {atoms} from '#/alf'
 import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/SettingsSlider'
@@ -80,8 +81,19 @@ export function HomeHeaderLayoutMobile({
               testID="viewHeaderHomeFeedPrefsBtn"
               to="/feeds"
               hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}>
-              <FeedsIcon size="lg" fill={t.atoms.text_contrast_medium.color} />
+              label={_(msg`View your feeds and explore more`)}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="square"
+              style={[
+                a.justify_center,
+                {
+                  marginTop: -4,
+                  marginRight: -6,
+                },
+              ]}>
+              <FeedsIcon size="md" fill={t.atoms.text_contrast_medium.color} />
             </Link>
           )}
         </View>
