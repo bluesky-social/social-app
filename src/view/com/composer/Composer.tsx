@@ -345,6 +345,7 @@ export const ComposePost = observer(function ComposePost({
   }, [openPicker])
 
   const focusTextInput = useCallback(() => {
+    if (!isAndroid) return
     textInput.current?.focus()
   }, [])
 
