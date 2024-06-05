@@ -83,20 +83,27 @@ export function ModerationMutedAccounts({}: Props) {
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
-    item: ActorDefs.ProfileView
-    index: number
-  }) => (
-    <ProfileCard
-      testID={`mutedAccount-${index}`}
-      key={item.did}
-      profile={item}
-      noModFilter
-    />
+  const renderItem = useCallback(
+    ({item, index}: {item: ActorDefs.ProfileView; index: number}) => (
+      <ProfileCard
+        testID={`mutedAccount-${index}`}
+        key={item.did}
+        profile={item}
+        noModFilter
+      />
+    ),
+    [],
   )
+
+  const ListFooterComponent = useCallback(
+    () => (
+      <View style={styles.footer}>
+        {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
+      </View>
+    ),
+    [isFetching, isFetchingNextPage],
+  )
+
   return (
     <CenteredView
       style={[
@@ -157,12 +164,7 @@ export function ModerationMutedAccounts({}: Props) {
           initialNumToRender={15}
           // FIXME(dan)
 
-          // eslint-disable-next-line react/no-unstable-nested-components
-          ListFooterComponent={() => (
-            <View style={styles.footer}>
-              {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
-            </View>
-          )}
+          ListFooterComponent={ListFooterComponent}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
         />

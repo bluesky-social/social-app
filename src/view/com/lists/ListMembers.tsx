@@ -73,7 +73,7 @@ export function ListMembers({
   const isOwner =
     currentAccount && data?.pages[0].list.creator.did === currentAccount.did
 
-  const updatedItems = useMemo(() => {
+  const items = useMemo(() => {
     let items: any[] = []
     if (isFetched) {
       if (isEmpty && isError) {
@@ -215,7 +215,7 @@ export function ListMembers({
       <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={updatedItems}
+        data={items}
         keyExtractor={(item: any) => item.subject?.did || item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={renderHeader}
