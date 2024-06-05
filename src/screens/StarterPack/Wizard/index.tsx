@@ -93,7 +93,7 @@ function WizardInner() {
   const wizardUiStrings: Record<WizardStep, {header: string; button: string}> =
     {
       Details: {
-        header: _(msg`Create a Starter Pack`),
+        header: _(msg`Starter Pack`),
         button: _(msg`Continue`),
       },
       Profiles: {

@@ -115,7 +115,7 @@ export function Provider({
           step: initialStep,
         }
       : {
-          canNext: true,
+          canNext: false,
           currentStep: initialStep,
           profiles: [],
           feeds: [],
