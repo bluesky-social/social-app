@@ -102,6 +102,7 @@ export function StepProfile() {
         mediaTypes: MediaTypeOptions.Images,
         quality: 1,
         ...opts,
+        legacy: true,
       })
 
       return (response.assets ?? [])
