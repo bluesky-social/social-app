@@ -211,6 +211,7 @@ module.exports = function (config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
+        ['@config-plugins/ffmpeg-kit-react-native', {package: 'video'}],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
